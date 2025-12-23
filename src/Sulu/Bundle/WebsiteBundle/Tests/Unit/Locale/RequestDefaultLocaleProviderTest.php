@@ -75,6 +75,7 @@ class RequestDefaultLocaleProviderTest extends TestCase
         $request->getPreferredLanguage(['de_AT', 'de_DE', 'en'])->shouldBeCalled()->willReturn('en');
         $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
 
+        /** @var Localization $defaultLocale */
         $defaultLocale = $this->defaultLocaleProvider->getDefaultLocale();
         $this->assertEquals('en', $defaultLocale->getLocale(Localization::ISO6391));
     }
@@ -83,6 +84,7 @@ class RequestDefaultLocaleProviderTest extends TestCase
     {
         $this->requestStack->getCurrentRequest()->willReturn(null);
 
+        /** @var Localization $defaultLocale */
         $defaultLocale = $this->defaultLocaleProvider->getDefaultLocale();
         $this->assertEquals('de-AT', $defaultLocale->getLocale(Localization::ISO6391));
     }

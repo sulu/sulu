@@ -50,6 +50,11 @@ class SegmentController
         }
 
         $webspace = $this->requestAnalyzer->getWebspace();
+
+        if (null === $webspace) {
+            throw new BadRequestHttpException('No webspace found for the current request.');
+        }
+
         $defaultSegment = $webspace->getDefaultSegment();
         $segmentKey = $request->query->get('segment');
 

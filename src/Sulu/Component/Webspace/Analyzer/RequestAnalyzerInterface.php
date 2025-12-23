@@ -74,28 +74,28 @@ interface RequestAnalyzerInterface
     /**
      * Returns the current or simulate DateTime object for this request.
      *
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getDateTime();
 
     /**
      * Returns the current webspace for this request.
      *
-     * @return Webspace
+     * @return Webspace|null
      */
     public function getWebspace();
 
     /**
      * Returns the current portal for this request.
      *
-     * @return Portal
+     * @return Portal|null
      */
     public function getPortal();
 
     /**
      * Returns the current segment for this request.
      *
-     * @return Segment
+     * @return Segment|null
      */
     public function getSegment();
 
@@ -109,28 +109,28 @@ interface RequestAnalyzerInterface
     /**
      * Returns the current localization for this Request.
      *
-     * @return Localization
+     * @return Localization|null
      */
     public function getCurrentLocalization();
 
     /**
      * Returns the redirect url.
      *
-     * @return string
+     * @return string|null
      */
     public function getRedirect();
 
     /**
      * Returns the url of the current portal.
      *
-     * @return string
+     * @return string|null
      */
     public function getPortalUrl();
 
     /**
      * Returns the path of the current request, which is the url without host, language and so on.
      *
-     * @return string
+     * @return string|false
      */
     public function getResourceLocator();
 
@@ -144,7 +144,7 @@ interface RequestAnalyzerInterface
     /**
      * Returns portal-information of request.
      *
-     * @return PortalInformation
+     * @return PortalInformation|null
      */
     public function getPortalInformation();
 

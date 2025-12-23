@@ -21,7 +21,7 @@ interface DefaultLocaleProviderInterface
     /**
      * Return default locale.
      *
-     * @return Localization
+     * @return Localization|null
      */
     public function getDefaultLocale();
 }

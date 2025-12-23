@@ -223,18 +223,6 @@ parameters:
 			path: packages/page/src/Infrastructure/Sulu/Content/PropertyResolver/BlockVisitor/SegmentBlockVisitor.php
 
 		-
-			message: '#^Right side of && is always true\.$#'
-			identifier: booleanAnd.rightAlwaysTrue
-			count: 1
-			path: packages/page/src/Infrastructure/Sulu/Content/PropertyResolver/BlockVisitor/SegmentBlockVisitor.php
-
-		-
-			message: '#^Ternary operator condition is always true\.$#'
-			identifier: ternary.alwaysTrue
-			count: 1
-			path: packages/page/src/Infrastructure/Sulu/Content/PropertyResolver/BlockVisitor/SegmentBlockVisitor.php
-
-		-
 			message: '#^Parameter \#1 \$entityName of method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\DoctrineListBuilderFactoryInterface\:\:create\(\) expects class\-string, string given\.$#'
 			identifier: argument.type
 			count: 1
@@ -3895,18 +3883,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Metadata/FormMetadata/Visitor/LocalesOptionFormMetadataVisitorTest.php
 
 		-
-			message: '#^Parameter \#1 \$cacheDir of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\XmlFormMetadataLoader\:\:warmUp\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
-			message: '#^Parameter \#4 \$cacheDir of class Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\XmlFormMetadataLoader constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Metadata\\SchemaMetadata\\ArrayMetadataTest\:\:provideToJsonSchema\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -4948,12 +4924,6 @@ parameters:
 			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\TargetGroup\\TargetGroupEvaluator\:\:evaluate\(\) should return Sulu\\Bundle\\AudienceTargetingBundle\\Entity\\TargetGroupInterface but returns Sulu\\Bundle\\AudienceTargetingBundle\\Entity\\TargetGroupInterface\|null\.$#'
 			identifier: return.type
 			count: 2
-			path: src/Sulu/Bundle/AudienceTargetingBundle/TargetGroup/TargetGroupEvaluator.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/TargetGroup/TargetGroupEvaluator.php
 
 		-
@@ -31417,12 +31387,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/EventListener/AppendAnalyticsListener.php
 
 		-
-			message: '#^Strict comparison using \=\=\= between null and Sulu\\Component\\Webspace\\PortalInformation will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/EventListener/AppendAnalyticsListener.php
-
-		-
 			message: '#^Binary operation "\." between ''\#'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -31579,12 +31543,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/EventListener/SegmentCacheListener.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/EventListener/SegmentSubscriber.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\EventListener\\SegmentSubscriber\:\:addCookieHeader\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -31594,12 +31552,6 @@ parameters:
 			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\EventListener\\SegmentSubscriber\:\:addVaryHeader\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/EventListener/SegmentSubscriber.php
-
-		-
-			message: '#^Ternary operator condition is always true\.$#'
-			identifier: ternary.alwaysTrue
-			count: 3
 			path: src/Sulu/Bundle/WebsiteBundle/EventListener/SegmentSubscriber.php
 
 		-
@@ -31663,12 +31615,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/EventSubscriber/GeneratorEventSubscriber.php
 
 		-
-			message: '#^Cannot call method getPreferredLanguage\(\) on Symfony\\Component\\HttpFoundation\\Request\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Locale/RequestDefaultLocaleProvider.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Resolver\\RequestAnalyzerResolver\:\:__construct\(\) has parameter \$environment with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -31696,12 +31642,6 @@ parameters:
 			message: '#^Property Sulu\\Bundle\\WebsiteBundle\\Resolver\\RequestAnalyzerResolver\:\:\$webspaceManager is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Resolver/RequestAnalyzerResolver.php
-
-		-
-			message: '#^Ternary operator condition is always true\.$#'
-			identifier: ternary.alwaysTrue
-			count: 2
 			path: src/Sulu/Bundle/WebsiteBundle/Resolver/RequestAnalyzerResolver.php
 
 		-
@@ -31811,12 +31751,6 @@ parameters:
 			identifier: offsetAccess.invalidOffset
 			count: 2
 			path: src/Sulu/Bundle/WebsiteBundle/Routing/PortalLoader.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Routing/RequestListener.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Sitemap\\SitemapUrl\:\:__construct\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
@@ -38407,13 +38341,13 @@ parameters:
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:getCurrentLocalization\(\) should return Sulu\\Component\\Localization\\Localization but returns mixed\.$#'
+			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:getCurrentLocalization\(\) should return Sulu\\Component\\Localization\\Localization\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:getDateTime\(\) should return DateTime but returns mixed\.$#'
+			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:getDateTime\(\) should return DateTime\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
@@ -38425,31 +38359,31 @@ parameters:
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:getPortal\(\) should return Sulu\\Component\\Webspace\\Portal but returns mixed\.$#'
+			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:getPortal\(\) should return Sulu\\Component\\Webspace\\Portal\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:getPortalInformation\(\) should return Sulu\\Component\\Webspace\\PortalInformation but returns mixed\.$#'
+			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:getPortalInformation\(\) should return Sulu\\Component\\Webspace\\PortalInformation\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:getPortalUrl\(\) should return string but returns mixed\.$#'
+			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:getPortalUrl\(\) should return string\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:getRedirect\(\) should return string but returns mixed\.$#'
+			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:getRedirect\(\) should return string\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:getResourceLocator\(\) should return string but returns mixed\.$#'
+			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:getResourceLocator\(\) should return string\|false but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
@@ -38461,13 +38395,13 @@ parameters:
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:getSegment\(\) should return Sulu\\Component\\Webspace\\Segment but returns mixed\.$#'
+			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:getSegment\(\) should return Sulu\\Component\\Webspace\\Segment\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:getWebspace\(\) should return Sulu\\Component\\Webspace\\Webspace but returns mixed\.$#'
+			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:getWebspace\(\) should return Sulu\\Component\\Webspace\\Webspace\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php

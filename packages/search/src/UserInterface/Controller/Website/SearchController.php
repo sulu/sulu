@@ -36,9 +36,14 @@ class SearchController
     {
         $query = $request->query->get('q', '');
 
-        $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
+        $localization = $this->requestAnalyzer->getCurrentLocalization();
         $webspace = $this->requestAnalyzer->getWebspace();
 
+        if (null === $localization || null === $webspace) {
+            throw new NotFoundHttpException();
+        }
+
+        $locale = $localization->getLocale();
         $hits = [];
 
         if ($query) {

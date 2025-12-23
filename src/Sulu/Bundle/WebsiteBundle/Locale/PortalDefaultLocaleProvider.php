@@ -30,6 +30,6 @@ class PortalDefaultLocaleProvider implements DefaultLocaleProviderInterface
 
     public function getDefaultLocale()
     {
-        return $this->requestAnalyzer->getPortal()->getDefaultLocalization();
+        return $this->requestAnalyzer->getPortal()?->getDefaultLocalization();
     }
 }

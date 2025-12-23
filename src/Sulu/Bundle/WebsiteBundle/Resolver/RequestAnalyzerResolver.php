@@ -37,8 +37,11 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
 
     public function resolve(RequestAnalyzerInterface $requestAnalyzer)
     {
+        $portal = $requestAnalyzer->getPortal();
+        $webspace = $requestAnalyzer->getWebspace();
+
         // determine default locale (if one exists)
-        $defaultLocalization = $requestAnalyzer->getPortal()->getDefaultLocalization();
+        $defaultLocalization = $portal?->getDefaultLocalization();
         $defaultLocale = $defaultLocalization ? $defaultLocalization->getLocale() : null;
 
         $segment = $requestAnalyzer->getSegment();
@@ -46,11 +49,11 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
 
         return [
             'request' => [
-                'webspaceKey' => $requestAnalyzer->getWebspace()->getKey(),
-                'webspaceName' => $requestAnalyzer->getWebspace()->getName(),
+                'webspaceKey' => $webspace?->getKey(),
+                'webspaceName' => $webspace?->getName(),
                 'segmentKey' => $segmentKey,
-                'portalKey' => $requestAnalyzer->getPortal()->getKey(),
-                'portalName' => $requestAnalyzer->getPortal()->getName(),
+                'portalKey' => $portal?->getKey(),
+                'portalName' => $portal?->getName(),
                 'defaultLocale' => $defaultLocale,
                 'portalUrl' => $requestAnalyzer->getPortalUrl(),
                 'resourceLocatorPrefix' => $requestAnalyzer->getResourceLocatorPrefix(),

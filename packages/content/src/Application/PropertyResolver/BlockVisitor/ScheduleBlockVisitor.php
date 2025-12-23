@@ -35,7 +35,7 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
             return $block;
         }
 
-        $now = $this->requestAnalyzer->getDateTime();
+        $now = $this->requestAnalyzer->getDateTime() ?? new \DateTime();
         $nowTimestamp = $now->getTimestamp();
 
         $returnBlock = false;

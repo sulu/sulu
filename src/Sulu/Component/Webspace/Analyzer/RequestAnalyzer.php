@@ -115,7 +115,13 @@ class RequestAnalyzer implements RequestAnalyzerInterface
 
     public function changeSegment(string $segmentKey)
     {
-        $segment = $this->getWebspace()->getSegment($segmentKey);
+        $webspace = $this->getWebspace();
+
+        if (null === $webspace) {
+            return;
+        }
+
+        $segment = $webspace->getSegment($segmentKey);
 
         $requestAttributes = (new RequestAttributes(['segment' => $segment]))->merge($this->getAttributes());
 
