@@ -16,7 +16,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\MediaBundle\Api\Media as MediaApi;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
@@ -39,7 +39,7 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         private MediaManagerInterface $mediaManager,
         private $mediaEntityName,
         private $collectionEntityName,
-        ?AccessControlQueryEnhancer $accessControlQueryEnhancer = null
+        ?AccessControlQueryEnhancerInterface $accessControlQueryEnhancer = null
     ) {
         $this->accessControlQueryEnhancer = $accessControlQueryEnhancer;
     }
