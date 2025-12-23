@@ -189,6 +189,7 @@ class MediaOverview extends React.Component<ViewProps> {
             this.collectionListStore.reload();
             this.showMediaMoveOverlay = false;
             this.mediaMoving = false;
+            this.mediaListStore.clearSelection();
         }));
     };
 
