@@ -666,6 +666,7 @@ test('Media should be moved when overlay is confirmed', () => {
             .toEqual(false);
         expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('confirmLoading'))
             .toEqual(false);
+        expect(mediaOverview.instance().mediaListStore.clearSelection).toBeCalled();
     });
 });
 

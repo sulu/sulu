@@ -18,6 +18,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
 
@@ -120,7 +121,7 @@ class DataProviderRepositoryTraitTest extends TestCase
             use DataProviderRepositoryTrait;
 
             public function __construct(
-                AccessControlQueryEnhancer $accessControlQueryEnhancer,
+                AccessControlQueryEnhancerInterface $accessControlQueryEnhancer,
                 private QueryBuilder $queryBuilder,
             ) {
                 $this->accessControlQueryEnhancer = $accessControlQueryEnhancer;
