@@ -15,6 +15,7 @@ namespace Sulu\Content\Infrastructure\Sulu\Preview;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\Expr\Join;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TemplateMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
@@ -102,8 +103,18 @@ class ContentObjectProvider implements PreviewDefaultsProviderInterface
             $contentRichEntity = $this->entityManager->createQueryBuilder()
                 ->select('entity')
                 ->from($this->contentRichEntityClass, 'entity')
+                ->leftJoin(
+                    'entity.dimensionContents',
+                    'dimensionContent',
+                    Join::WITH,
+                    'dimensionContent.stage = :stage AND dimensionContent.version = :version AND (dimensionContent.locale IS NULL OR dimensionContent.locale = :locale)'
+                )
+                ->addSelect('dimensionContent')
                 ->where('entity = :id')
                 ->setParameter('id', $id)
+                ->setParameter('locale', $locale)
+                ->setParameter('stage', DimensionContentInterface::STAGE_DRAFT)
+                ->setParameter('version', DimensionContentInterface::CURRENT_VERSION)
                 ->getQuery()
                 ->getSingleResult();
         } catch (NoResultException $exception) {
