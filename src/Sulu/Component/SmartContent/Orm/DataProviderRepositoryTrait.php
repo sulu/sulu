@@ -12,7 +12,7 @@
 namespace Sulu\Component\SmartContent\Orm;
 
 use Doctrine\ORM\QueryBuilder;
-use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
@@ -21,7 +21,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 trait DataProviderRepositoryTrait
 {
     /**
-     * @var AccessControlQueryEnhancer|null
+     * @var AccessControlQueryEnhancerInterface|null
      */
     private $accessControlQueryEnhancer = null;
 

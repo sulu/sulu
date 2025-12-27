@@ -3,8 +3,7 @@ version: '3'
 services:
 ###> doctrine/doctrine-bundle ###
   database:
-    # arm compatible mysql docker image
-    image: mysql/mysql-server:${MYSQL_VERSION:-8.0} # arm and x86/x64 compatible mysql image
+    image: mysql:${MYSQL_VERSION:-8.4}
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE:-sulu}
       # You should definitely change the password in production

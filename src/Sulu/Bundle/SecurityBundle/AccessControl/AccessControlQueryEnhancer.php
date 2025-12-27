@@ -18,7 +18,7 @@ use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
-class AccessControlQueryEnhancer
+class AccessControlQueryEnhancer implements AccessControlQueryEnhancerInterface
 {
     public function __construct(
         private SystemStoreInterface $systemStore,
