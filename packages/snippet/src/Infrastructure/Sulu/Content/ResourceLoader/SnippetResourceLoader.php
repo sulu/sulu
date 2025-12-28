@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader;
 
+use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
+use Sulu\Content\Application\ContentResolver\ContentResolverInterface;
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
@@ -28,6 +30,8 @@ class SnippetResourceLoader implements ResourceLoaderInterface
 
     public function __construct(
         private SnippetRepositoryInterface $snippetRepository,
+        private ContentAggregatorInterface $contentAggregator,
+        private ContentResolverInterface $contentResolver,
     ) {
     }
 
@@ -52,7 +56,17 @@ class SnippetResourceLoader implements ResourceLoaderInterface
 
         $mappedResult = [];
         foreach ($result as $snippet) {
-            $mappedResult[$snippet->getId()] = $snippet;
+            // Aggregate the snippet with STAGE_LIVE to get the DimensionContent
+            $dimensionContent = $this->contentAggregator->aggregate($snippet, [
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+            ]);
+
+            // Fully resolve the snippet content and return the resolved data structure.
+            // This ensures snippets are always resolved with STAGE_LIVE, regardless of
+            // the parent's stage (e.g., draft in preview mode), preventing
+            // ContentNotFoundException when previewing pages with snippet_selection.
+            $mappedResult[$snippet->getId()] = $this->contentResolver->resolve($dimensionContent);
         }
 
         return $mappedResult;
