@@ -337,6 +337,8 @@ final class SuluSnippetBundle extends AbstractBundle
             ->class(SnippetResourceLoader::class)
             ->args([
                 new Reference('sulu_snippet.snippet_repository'),
+                new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_content.content_resolver'),
             ])
             ->tag('sulu_content.resource_loader', ['type' => SnippetResourceLoader::RESOURCE_LOADER_KEY]);
 
