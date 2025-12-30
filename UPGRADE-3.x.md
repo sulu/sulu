@@ -305,7 +305,7 @@ ALTER TABLE ro_routes RENAME TO ro_routes_old;
 And create a new `ro_routes` table with the following structure:
 
 ```sql
-CREATE TABLE ro_routes (id INT AUTO_INCREMENT NOT NULL, parent_id INT DEFAULT NULL, site VARCHAR(31) DEFAULT NULL, locale VARCHAR(15) NOT NULL, slug VARCHAR(144) NOT NULL, resource_key VARCHAR(32) NOT NULL, resource_id VARCHAR(70) NOT NULL, INDEX IDX_BD51B2DA727ACA70 (parent_id), INDEX ro_routes_resource_idx (locale, resource_key, resource_id), UNIQUE INDEX ro_routes_unique (site, locale, slug), PRIMARY KEY(id));
+CREATE TABLE ro_routes (id INT AUTO_INCREMENT NOT NULL, parent_id INT DEFAULT NULL, webspace VARCHAR(31) DEFAULT NULL, locale VARCHAR(15) NOT NULL, slug VARCHAR(144) NOT NULL, resource_key VARCHAR(32) NOT NULL, resource_id VARCHAR(70) NOT NULL, INDEX IDX_BD51B2DA727ACA70 (parent_id), INDEX ro_routes_resource_idx (locale, resource_key, resource_id), UNIQUE INDEX ro_routes_unique (site, locale, slug), PRIMARY KEY(id));
 ALTER TABLE ro_routes ADD CONSTRAINT FK_BD51B2DA727ACA70 FOREIGN KEY (parent_id) REFERENCES ro_routes (id) ON DELETE SET NULL;
 ```
 
