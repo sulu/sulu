@@ -1,5 +1,27 @@
 # Upgrade
 
+## 3.0.1
+
+## Support for doctrine/orm 3 dependencies added
+
+Sulu now supports also the following doctrine package versions: `doctrine/orm:^3.1`, `doctrine/dbal:^4.0` and `doctrine/persistence:^4.0`.
+
+It is recommended doing such upgrade as its own Step.
+To freeze your project doctrine versions run:
+
+```bash
+composer require doctrine/orm:"^2.17" doctrine/persistence:"^3.1" doctrine/dbal:"^3.9"
+```
+
+Later after you tackled Sulu upgrade and all is working as expected,
+you can tackle the doctrine upgrade via:
+
+```bash
+composer require doctrine/orm:"^3.1" doctrine/persistence:"^4.0" doctrine/dbal:"^4.0"
+```
+
+Required changes you will find in the doctrine repositories UPGRADE and CHANGELOG files.
+
 ## 3.0.0
 
 The upgrade from Sulu 2.6 to Sulu 3.0 is a major upgrade and will require some migration steps.
