@@ -66,7 +66,7 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
         $segmentKey
     ) {
         $value = $property->getValue();
-        if (null != $value) {
+        if (null !== $value) {
             $node->setProperty($property->getName(), $this->removeIllegalCharacters($this->encodeValue($value)));
         } else {
             $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
