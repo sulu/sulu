@@ -15,6 +15,7 @@ namespace Sulu\Content\Domain\Exception;
 
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class ContentNotFoundException extends \Exception
 {
@@ -26,10 +27,34 @@ class ContentNotFoundException extends \Exception
      */
     public function __construct(ContentRichEntityInterface $contentRichEntity, array $dimensionAttributes)
     {
-        parent::__construct(\sprintf(
-            'Could not load content with id "%s" and attributes: %s',
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+        $attributeKeys = \array_keys($dimensionAttributes);
+
+        $availableAttributes = [];
+        foreach ($contentRichEntity->getDimensionContents() as $dimensionContent) {
+            if (null === $dimensionContent->getLocale()) {
+                continue;
+            }
+            $attributes = [];
+            foreach ($attributeKeys as $key) {
+                $value = $propertyAccessor->getValue($dimensionContent, $key);
+                $attributes[] = $key . '=' . (\is_scalar($value) ? (string) $value : '');
+            }
+            $availableAttributes[] = '[' . \implode(', ', $attributes) . ']';
+        }
+
+        $requestedAttributes = [];
+        foreach ($dimensionAttributes as $key => $value) {
+            $requestedAttributes[] = $key . '=' . (\is_scalar($value) ? (string) $value : '');
+        }
+
+        $message = \sprintf(
+            'No content found for attributes [%s] with id: "%s". Available attributes: %s',
+            \implode(', ', $requestedAttributes),
             $contentRichEntity->getId(),
-            \json_encode($dimensionAttributes)
-        ));
+            \implode(', ', $availableAttributes),
+        );
+
+        parent::__construct($message);
     }
 }

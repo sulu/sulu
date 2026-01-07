@@ -19,6 +19,8 @@ use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentResolver\ContentResolverInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
+use Sulu\Content\Tests\Application\ExampleTestBundle\Repository\ExampleRepository;
 use Sulu\Content\Tests\Functional\Traits\CreateCategoryTrait;
 use Sulu\Content\Tests\Functional\Traits\CreateMediaTrait;
 use Sulu\Content\Tests\Functional\Traits\CreateTagTrait;
@@ -42,8 +44,8 @@ class ContentResolverTest extends SuluTestCase
         $this->contentAggregator = self::getContainer()->get('sulu_content.content_aggregator');
     }
 
-    //TODO add tests for
-    //account selection / contact selection / image map / blocks 2 / excerpt / seo
+    // TODO add tests for
+    // account selection / contact selection / image map / blocks 2 / excerpt / seo
 
     public function testResolveContentDefaultFields(): void
     {
@@ -90,7 +92,7 @@ class ContentResolverTest extends SuluTestCase
             ],
             [
                 'create_route' => true,
-            ]
+            ],
         );
 
         static::getEntityManager()->flush();
@@ -204,7 +206,7 @@ class ContentResolverTest extends SuluTestCase
                 'url' => 'url',
                 'examplesWithProperties' => 'examples_with_properties',
                 'examplesWithoutProperties' => 'examples',
-            ]
+            ],
         );
 
         self::assertEmpty($result['content']); // content is empty because all fields are extracted to root // TODO is this correct?
@@ -284,7 +286,7 @@ class ContentResolverTest extends SuluTestCase
             ],
             [
                 'create_route' => true,
-            ]
+            ],
         );
 
         static::getEntityManager()->flush();
@@ -349,7 +351,7 @@ class ContentResolverTest extends SuluTestCase
             ],
             [
                 'create_route' => true,
-            ]
+            ],
         );
 
         static::getEntityManager()->flush();
@@ -396,7 +398,7 @@ class ContentResolverTest extends SuluTestCase
             ],
             [
                 'create_route' => true,
-            ]
+            ],
         );
 
         static::getEntityManager()->flush();
@@ -454,7 +456,7 @@ class ContentResolverTest extends SuluTestCase
             ],
             [
                 'create_route' => true,
-            ]
+            ],
         );
 
         static::getEntityManager()->flush();
@@ -524,7 +526,7 @@ class ContentResolverTest extends SuluTestCase
             ],
             [
                 'create_route' => true,
-            ]
+            ],
         );
 
         static::getEntityManager()->flush();
@@ -786,7 +788,7 @@ class ContentResolverTest extends SuluTestCase
             ],
             [
                 'create_route' => true,
-            ]
+            ],
         );
 
         static::getEntityManager()->flush();
@@ -849,7 +851,7 @@ class ContentResolverTest extends SuluTestCase
                         'description' => 'This example will be referenced in block settings',
                     ],
                 ],
-            ]
+            ],
         );
 
         $example2 = static::createExample(
@@ -862,7 +864,7 @@ class ContentResolverTest extends SuluTestCase
                         'description' => 'Another example for multi-selection testing',
                     ],
                 ],
-            ]
+            ],
         );
 
         static::getEntityManager()->flush();
@@ -891,7 +893,7 @@ class ContentResolverTest extends SuluTestCase
                         ],
                     ],
                 ],
-            ]
+            ],
         );
 
         static::getEntityManager()->flush();
@@ -993,7 +995,7 @@ class ContentResolverTest extends SuluTestCase
             ],
             [
                 'create_route' => true,
-            ]
+            ],
         );
 
         static::getEntityManager()->flush();
@@ -1078,7 +1080,7 @@ class ContentResolverTest extends SuluTestCase
             ],
             [
                 'create_route' => true,
-            ]
+            ],
         );
 
         static::getEntityManager()->flush();
@@ -1106,7 +1108,7 @@ class ContentResolverTest extends SuluTestCase
             ],
             [
                 'create_route' => true,
-            ]
+            ],
         );
 
         static::getEntityManager()->flush();
@@ -1128,7 +1130,7 @@ class ContentResolverTest extends SuluTestCase
             ],
             [
                 'create_route' => true,
-            ]
+            ],
         );
 
         static::getEntityManager()->flush();
@@ -1141,5 +1143,75 @@ class ContentResolverTest extends SuluTestCase
         self::assertArrayHasKey('link', $content);
         $link = $content['link'];
         self::assertSame('/linked-example', $link);
+    }
+
+    public function testResolveNestedContentWithDraftStage(): void
+    {
+        $nestedExample = static::createExample(
+            [
+                'en' => [
+                    'live' => [
+                        'template' => 'default',
+                        'title' => 'Nested Example Live',
+                        'url' => '/nested-example',
+                        'description' => 'Nested content live description',
+                    ],
+                    'draft' => [
+                        'template' => 'default',
+                        'title' => 'Nested Example Draft',
+                        'url' => '/nested-example',
+                        'description' => 'Nested content draft description',
+                    ],
+                ],
+            ],
+        );
+        static::getEntityManager()->flush();
+
+        $mainExample = static::createExample(
+            [
+                'en' => [
+                    'draft' => [
+                        'template' => 'default-example-selection',
+                        'title' => 'Main Example',
+                        'url' => '/main-example',
+                        'examples' => [$nestedExample->getId()],
+                    ],
+                ],
+            ],
+        );
+        static::getEntityManager()->flush();
+        static::getEntityManager()->clear();
+
+        /** @var ExampleRepository $exampleRepository */
+        $exampleRepository = static::getContainer()->get('example_test.example_repository');
+
+        // We need to refetch the main example to have the correct dimension content loaded
+        $mainExample = $exampleRepository->findOneBy(
+            [
+                'id' => $mainExample->getId(),
+                'locale' => 'en',
+                'stage' => 'draft',
+            ],
+            [
+                ExampleRepository::SELECT_EXAMPLE_CONTENT => [
+                    DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true,
+                ],
+            ],
+        );
+        self::assertNotNull($mainExample);
+
+        $dimensionContent = $this->contentAggregator->aggregate($mainExample, ['locale' => 'en', 'stage' => 'draft']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        $content = $result['content'];
+        self::assertArrayHasKey('examples', $content);
+        $examples = $content['examples'];
+        self::assertIsArray($examples);
+        self::assertCount(1, $examples);
+
+        $resolvedNested = $examples[0];
+        self::assertIsArray($resolvedNested);
+        self::assertSame('Nested Example Live', $resolvedNested['title']);
+        self::assertSame('Nested content live description', $resolvedNested['description']);
     }
 }
