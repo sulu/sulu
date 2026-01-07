@@ -13,7 +13,6 @@ namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Infrastructure\Symfony\EventSubsc
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Command\InitCommand;
@@ -60,9 +59,13 @@ class CacheCommandSubscriberTest extends TestCase
         $this->cacheCommandSubscriber->setApplication($this->application->reveal());
     }
 
+    /**
+     * @param class-string $commandClass
+     */
     #[DataProvider('dataCommandIsRunProvider')]
     public function testCommandIsRun(string $commandClass): void
     {
+        /** @var ObjectProphecy<Command> */
         $command = $this->prophesize($commandClass);
 
         $this->kernelFactory->create()
@@ -76,6 +79,9 @@ class CacheCommandSubscriberTest extends TestCase
         $this->cacheCommandSubscriber->onCommand($event);
     }
 
+    /**
+     * @return array<array{class-string}>
+     */
     public static function dataCommandIsRunProvider(): array
     {
         return [
