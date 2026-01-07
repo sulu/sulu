@@ -76,7 +76,7 @@ readonly class ContentResolver implements ContentResolverInterface
                             // For content-rich entities, get the dimension content and resolve it
                             $childContent = $this->contentAggregator->aggregate($resource, [
                                 'locale' => $locale,
-                                'stage' => $stage,
+                                'stage' => DimensionContentInterface::STAGE_LIVE,
                             ]);
 
                             /** @var ResolvableInterface $resolvableResource */
