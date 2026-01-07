@@ -247,6 +247,38 @@ final class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('template_groups')
+                    ->useAttributeAsKey('resource_key')
+                    ->prototype('array')
+                        ->useAttributeAsKey('group')
+                        ->beforeNormalization()
+                            ->always(function ($v) {
+                                // Normalize string values to array format and assign order based on array index
+                                $index = 0;
+                                foreach ($v as $key => $value) {
+                                    if (\is_string($value)) {
+                                        $v[$key] = [
+                                            'translation_key' => $value,
+                                            'order' => $index,
+                                        ];
+                                    } elseif (!\array_key_exists('order', $value)) {
+                                        // If order is not set, use array index
+                                        $v[$key]['order'] = $index;
+                                    }
+                                    ++$index;
+                                }
+
+                                return $v;
+                            })
+                        ->end()
+                        ->prototype('array')
+                            ->children()
+                                ->integerNode('order')->defaultValue(9999)->end()
+                                ->scalarNode('translation_key')->defaultNull()->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ->end();
 

@@ -1,5 +1,95 @@
 # Upgrade
 
+## 3.0.1
+
+### Template Group Ordering and Custom Translations
+
+Template groups can now be ordered and configured with custom translation keys via the `sulu_admin.template_groups` configuration.
+
+**Configuration Example:**
+
+You can configure the order and custom translation keys for template groups in your `config/packages/sulu_admin.yaml`:
+
+```yaml
+sulu_admin:
+    template_groups:
+        articles:  # resource key
+            blog:
+                order: 1
+                translation_key: 'app.blog_articles'
+            news:
+                order: 2
+                translation_key: 'app.news_articles'
+            archive: 'app.archive_articles'  # shorthand for translation_key only
+```
+
+**Configuration Options:**
+
+- **Full format**: Specify both `order` and `translation_key`
+  ```yaml
+  blog:
+      order: 1
+      translation_key: 'app.blog_articles'
+  ```
+
+- **Shorthand format**: Specify only the translation key (order defaults to array index)
+  ```yaml
+  archive: 'app.archive_articles'  # order will be set based on position (0, 1, 2, ...)
+  ```
+
+- **Mixed format**: Combine both approaches
+  ```yaml
+  sulu_admin:
+      template_groups:
+          articles:
+              blog: 'app.blog_articles'      # order: 0 (array index)
+              news: 'app.news_articles'      # order: 1 (array index)
+              archive:
+                  order: 99
+                  translation_key: 'app.archive'  # explicit order overrides array index
+  ```
+
+Groups without configuration will:
+- Use default order of 9999
+- Appear alphabetically at the end
+- Use `sulu_admin.template_group.<group_name>` as translation key
+
+
+### Deprecated: GroupProvider::getGroups() without arguments
+
+**What changed?**
+
+The `GroupProviderInterface::getGroups()` method now accepts optional `$resourceKey` and `$templateType` parameters.
+Calling it without arguments is deprecated and will be removed in Sulu 4.0.
+
+**Before (deprecated):**
+```php
+$groups = $groupProvider->getGroups();
+```
+
+**After (recommended):**
+```php
+use Sulu\Article\Domain\Model\ArticleInterface;
+
+$groups = $groupProvider->getGroups(
+    ArticleInterface::RESOURCE_KEY,
+    ArticleInterface::TEMPLATE_TYPE
+);
+```
+
+**Migration:**
+
+If you're calling `getGroups()` in your custom code, update the calls to pass both arguments:
+
+```diff
+- $groups = $this->groupProvider->getGroups();
++ $groups = $this->groupProvider->getGroups('articles', 'articles');
+```
+
+This change allows you to retrieve groups for different resource types, making the system more flexible and avoiding
+hardcoded dependencies on the Article entity.
+
+
 ## 3.0.0
 
 The upgrade from Sulu 2.6 to Sulu 3.0 is a major upgrade and will require some migration steps.
@@ -1586,6 +1676,11 @@ separate permission contexts, so you'll need to grant permissions for each group
 1. Log in to the Sulu admin interface
 2. Navigate to Settings → User Roles
 3. Edit each role and grant permissions for the new template groups under the Articles section
+
+**5. Configure Template Group Ordering and Translations (Optional)**
+
+Template groups can now be ordered and configured with custom translation keys. See the [3.0.1 upgrade notes](#301)
+above for details on how to configure template group ordering and custom translations.
 
 
 ### Changing deprecated signatures
