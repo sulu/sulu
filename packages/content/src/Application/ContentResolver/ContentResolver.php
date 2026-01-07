@@ -44,7 +44,6 @@ readonly class ContentResolver implements ContentResolverInterface
     {
         $locale = $dimensionContent->getLocale();
         Assert::string($locale, 'Locale must be a string');
-        $stage = $dimensionContent->getStage();
 
         // Initial resolution to gather ResolvableResources
         /** @var array<int, array<string, array<int, array<int|string, array<string, ResolvableInterface>>>>> $priorityQueue */
