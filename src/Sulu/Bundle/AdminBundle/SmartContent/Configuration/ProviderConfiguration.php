@@ -245,11 +245,6 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         $this->resultToView = $resultToView;
     }
 
-    public function hasProperties(): bool
-    {
-        return null !== $this->properties && [] !== $this->properties;
-    }
-
     /**
      * @return array<string, string>|null
      */
@@ -259,9 +254,9 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     }
 
     /**
-     * @param array<string, string> $properties
+     * @param array<string, string>|null $properties
      */
-    public function setProperties(array $properties): void
+    public function setProperties(?array $properties): void
     {
         $this->properties = $properties;
     }

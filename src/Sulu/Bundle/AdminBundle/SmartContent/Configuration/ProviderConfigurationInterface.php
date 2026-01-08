@@ -109,11 +109,6 @@ interface ProviderConfigurationInterface
     public function getResultToView(): ?array;
 
     /**
-     * Returns TRUE if properties are configured.
-     */
-    public function hasProperties(): bool;
-
-    /**
      * Returns properties to include when resolving items.
      *
      * @return array<string, string>|null

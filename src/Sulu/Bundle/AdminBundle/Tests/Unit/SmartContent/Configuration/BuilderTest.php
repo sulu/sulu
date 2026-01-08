@@ -230,7 +230,6 @@ class BuilderTest extends TestCase
 
         $configuration = $builder->getConfiguration();
 
-        $this->assertTrue($configuration->hasProperties());
         $this->assertSame(['title' => 'title', 'url' => 'url'], $configuration->getProperties());
     }
 
@@ -240,7 +239,6 @@ class BuilderTest extends TestCase
 
         $configuration = $builder->getConfiguration();
 
-        $this->assertFalse($configuration->hasProperties());
         $this->assertNull($configuration->getProperties());
     }
 }
