@@ -131,4 +131,22 @@ class SnippetAreaTwigExtensionTest extends SuluTestCase
 
         $this->assertNull($result);
     }
+
+    public function testLoadSnippetByAreaReturnsNullWhenSnippetNotTranslatedInLocale(): void
+    {
+        $snippet = static::createSnippet([
+            'en' => [
+                'live' => [
+                    'template' => 'snippet',
+                    'title' => 'English Only Snippet',
+                ],
+            ],
+        ]);
+        static::createSnippetArea('hotel', 'sulu-io', $snippet);
+        self::getEntityManager()->flush();
+        self::getEntityManager()->clear();
+
+        $result = $this->snippetAreaTwigExtension->loadSnippetByArea('hotel', [], 'sulu-io', 'de');
+        $this->assertNull($result);
+    }
 }
