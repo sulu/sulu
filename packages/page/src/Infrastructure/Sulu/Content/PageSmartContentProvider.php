@@ -145,7 +145,11 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
                 ],
             )
             ->enableTypes($this->getTypes())
-            ->enableView(PageAdmin::EDIT_FORM_VIEW, ['id' => 'id', 'webspace' => 'webspace']);
+            ->enableView(PageAdmin::EDIT_FORM_VIEW, ['id' => 'id', 'webspace' => 'webspace'])
+            ->enableProperties([
+                'title' => 'title',
+                'url' => 'url',
+            ]);
 
         if ($this->bundles['SuluAudienceTargetingBundle'] ?? false) {
             $builder->enableAudienceTargeting();
