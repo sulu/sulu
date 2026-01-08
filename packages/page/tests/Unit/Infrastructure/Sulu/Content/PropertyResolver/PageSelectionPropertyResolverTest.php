@@ -149,6 +149,8 @@ class PageSelectionPropertyResolverTest extends TestCase
             'properties' => [
                 'property1' => 'value1',
                 'property2' => 'value2',
+                'title' => 'title',
+                'url' => 'url',
             ],
         ], $content[0]->getMetadata());
 
@@ -167,7 +169,10 @@ class PageSelectionPropertyResolverTest extends TestCase
         $this->assertInstanceOf(ResolvableResource::class, $content[0]);
 
         $this->assertSame([
-            'properties' => null,
+            'properties' => [
+                'title' => 'title',
+                'url' => 'url',
+            ],
         ], $content[0]->getMetadata());
 
         $references = $contentView->getReferences();
@@ -187,7 +192,10 @@ class PageSelectionPropertyResolverTest extends TestCase
         $this->assertInstanceOf(ResolvableResource::class, $content[0]);
 
         $this->assertSame([
-            'properties' => null,
+            'properties' => [
+                'title' => 'title',
+                'url' => 'url',
+            ],
         ], $content[0]->getMetadata());
 
         $references = $contentView->getReferences();
