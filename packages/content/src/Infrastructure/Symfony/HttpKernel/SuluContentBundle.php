@@ -38,7 +38,16 @@ final class SuluContentBundle extends AbstractBundle
      */
     public function configure(DefinitionConfigurator $definition): void
     {
-        $definition->rootNode();
+        $definition->rootNode() // @phpstan-ignore-line
+            ->children()
+                ->arrayNode('content_resolver')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('max_depth')->defaultValue(5)->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
     }
 
     /**
@@ -61,6 +70,12 @@ final class SuluContentBundle extends AbstractBundle
         $loader->load('reference.xml');
 
         $services = $container->services();
+
+        /** @var array{max_depth: int} $contentResolverConfig */
+        $contentResolverConfig = $config['content_resolver'];
+
+        $builder->getDefinition('sulu_content.content_resolver')
+            ->setArgument('$maxDepth', $contentResolverConfig['max_depth']);
 
         $services->set('sulu_content.doctrine_route_cleanup_listener')
             ->class(RouteCleanupListener::class)
