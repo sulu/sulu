@@ -16,6 +16,7 @@ namespace Sulu\Content\Tests\Unit\Application\SmartResolver\Resolver;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
@@ -93,6 +94,7 @@ class SmartContentSmartResolverTest extends TestCase
         $smartContentProvider->countBy($countByFilters, ['value' => $data['value'], ...$data['parameters']])
             ->willReturn(10);
         $smartContentProvider->getResourceLoaderKey()->willReturn('pages');
+        $smartContentProvider->getConfiguration()->willReturn(new ProviderConfiguration());
 
         $result = $this->smartResolver->resolve($smartResolvable->reveal(), 'en');
 
@@ -198,6 +200,7 @@ class SmartContentSmartResolverTest extends TestCase
         $smartContentProvider->countBy($countByFilters, ['value' => $data['value'], ...$data['parameters']])
             ->willReturn(3);
         $smartContentProvider->getResourceLoaderKey()->willReturn('pages');
+        $smartContentProvider->getConfiguration()->willReturn(new ProviderConfiguration());
 
         $result = $this->smartResolver->resolve($smartResolvable->reveal(), 'en');
 

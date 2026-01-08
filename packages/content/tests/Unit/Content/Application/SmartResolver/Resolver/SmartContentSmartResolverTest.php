@@ -17,6 +17,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Content\Application\SmartResolver\Resolver\SmartContentSmartResolver;
@@ -42,6 +43,7 @@ class SmartContentSmartResolverTest extends TestCase
     {
         $this->smartContentProvider = $this->prophesize(SmartContentProviderInterface::class);
         $this->smartContentProvider->getResourceLoaderKey()->willReturn('test_resource_loader');
+        $this->smartContentProvider->getConfiguration()->willReturn(new ProviderConfiguration());
 
         $this->serviceLocator = $this->prophesize(ServiceLocator::class); // @phpstan-ignore assign.propertyType
         $this->serviceLocator->getProvidedServices()->willReturn(['test_provider' => 'service']);
