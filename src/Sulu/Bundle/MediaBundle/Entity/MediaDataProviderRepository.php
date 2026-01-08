@@ -212,7 +212,7 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
                     Join::WITH,
                     'parentCollection.id = :collectionId'
                 )
-                ->where('collection.lft BETWEEN parentCollection.lft AND parentCollection.rgt');
+                ->andWhere('collection.lft BETWEEN parentCollection.lft AND parentCollection.rgt');
         }
 
         return ['collectionId' => $datasource];
