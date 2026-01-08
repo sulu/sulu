@@ -122,4 +122,3 @@ class SingleSelectTest extends TestCase
         $this->singleSelect->read($this->node->reveal(), $this->property->reveal(), 'sulu_io', 'de', null);
     }
 }
-
