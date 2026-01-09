@@ -64,7 +64,7 @@ class SnippetAreaRemovedEvent extends DomainEvent
     public function getResourceSecurityContext(): ?string
     {
         $webspaceKey = $this->context['webspaceKey'] ?? null;
-        if (null === $webspaceKey) {
+        if (null === $webspaceKey || !\is_string($webspaceKey)) {
             return null;
         }
 
