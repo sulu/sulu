@@ -107,4 +107,11 @@ interface ProviderConfigurationInterface
      * @return array<string, string>|null
      */
     public function getResultToView(): ?array;
+
+    /**
+     * Returns default properties to include when resolving items.
+     *
+     * @return array<string, string>|null
+     */
+    public function getDefaultProperties(): ?array;
 }

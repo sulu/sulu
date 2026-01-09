@@ -143,12 +143,20 @@ class SmartContentSmartResolver implements SmartResolverInterface
             'excluded' => [],
         ];
 
+        $configuration = $smartContentProvider->getConfiguration();
+        $defaultProperties = $configuration->getDefaultProperties();
+        /** @var array<string, string> $passedProperties */
+        $passedProperties = $params['properties'] ?? [];
+        $properties = null !== $defaultProperties
+            ? \array_replace($defaultProperties, $passedProperties)
+            : ($passedProperties ?: null);
+
         return ContentView::createResolvables(
             ids: \array_map(static fn (array $item) => $item['id'], $result),
             resourceLoaderKey: $smartContentProvider->getResourceLoaderKey(),
             view: $view,
             metadata: [
-                'properties' => $params['properties'] ?? null,
+                'properties' => $properties,
             ]
         );
     }

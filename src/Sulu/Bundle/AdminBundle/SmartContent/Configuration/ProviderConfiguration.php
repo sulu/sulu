@@ -83,6 +83,11 @@ class ProviderConfiguration implements ProviderConfigurationInterface
      */
     private $resultToView;
 
+    /**
+     * @var array<string, string>|null
+     */
+    private ?array $defaultProperties = null;
+
     public function hasDatasource(): bool
     {
         return null !== $this->datasourceResourceKey && '' !== $this->datasourceResourceKey;
@@ -238,5 +243,21 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     public function setResultToView(?array $resultToView): void
     {
         $this->resultToView = $resultToView;
+    }
+
+    /**
+     * @return array<string, string>|null
+     */
+    public function getDefaultProperties(): ?array
+    {
+        return $this->defaultProperties;
+    }
+
+    /**
+     * @param array<string, string>|null $defaultProperties
+     */
+    public function setDefaultProperties(?array $defaultProperties): void
+    {
+        $this->defaultProperties = $defaultProperties;
     }
 }

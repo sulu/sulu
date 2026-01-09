@@ -117,6 +117,13 @@ class Builder implements BuilderInterface
         return $this;
     }
 
+    public function enableProperties(array $defaultProperties): self
+    {
+        $this->configuration->setDefaultProperties($defaultProperties);
+
+        return $this;
+    }
+
     public function getConfiguration(): ProviderConfigurationInterface
     {
         return $this->configuration;

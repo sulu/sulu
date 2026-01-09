@@ -129,7 +129,11 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
                     ];
                 },
                 $this->groupProvider->getGroups(),
-            )));
+            )))
+            ->enableProperties([
+                'title' => 'title',
+                'url' => 'url',
+            ]);
 
         // TODO
         //        if ($this->hasAudienceTargeting) {
