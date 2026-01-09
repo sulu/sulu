@@ -219,26 +219,26 @@ class BuilderTest extends TestCase
         $this->assertSame('News Group', $types[2]->getName());
     }
 
-    public function testProperties(): void
+    public function testDefaultProperties(): void
     {
         $builder = Builder::create();
 
-        $this->assertSame($builder, $builder->enableProperties([
+        $this->assertSame($builder, $builder->enableDefaultProperties([
             'title' => 'title',
             'url' => 'url',
         ]));
 
         $configuration = $builder->getConfiguration();
 
-        $this->assertSame(['title' => 'title', 'url' => 'url'], $configuration->getProperties());
+        $this->assertSame(['title' => 'title', 'url' => 'url'], $configuration->getDefaultProperties());
     }
 
-    public function testPropertiesDefault(): void
+    public function testDefaultPropertiesDefault(): void
     {
         $builder = Builder::create();
 
         $configuration = $builder->getConfiguration();
 
-        $this->assertNull($configuration->getProperties());
+        $this->assertNull($configuration->getDefaultProperties());
     }
 }

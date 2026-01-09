@@ -109,13 +109,13 @@ interface BuilderInterface
     public function enableView(string $view, array $resultToView);
 
     /**
-     * Sets properties to be included when resolving smart content items.
+     * Sets default properties to be included when resolving smart content items.
      *
-     * @param array<string, string> $properties
+     * @param array<string, string> $defaultProperties
      *
      * @return BuilderInterface
      */
-    public function enableProperties(array $properties);
+    public function enableDefaultProperties(array $defaultProperties);
 
     /**
      * Returns build configuration.

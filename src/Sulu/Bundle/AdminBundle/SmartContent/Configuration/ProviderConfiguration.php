@@ -86,7 +86,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     /**
      * @var array<string, string>|null
      */
-    private ?array $properties = null;
+    private ?array $defaultProperties = null;
 
     public function hasDatasource(): bool
     {
@@ -248,16 +248,16 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     /**
      * @return array<string, string>|null
      */
-    public function getProperties(): ?array
+    public function getDefaultProperties(): ?array
     {
-        return $this->properties;
+        return $this->defaultProperties;
     }
 
     /**
-     * @param array<string, string>|null $properties
+     * @param array<string, string>|null $defaultProperties
      */
-    public function setProperties(?array $properties): void
+    public function setDefaultProperties(?array $defaultProperties): void
     {
-        $this->properties = $properties;
+        $this->defaultProperties = $defaultProperties;
     }
 }

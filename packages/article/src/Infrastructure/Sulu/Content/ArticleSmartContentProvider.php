@@ -130,7 +130,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
                 },
                 $this->groupProvider->getGroups(),
             )))
-            ->enableProperties([
+            ->enableDefaultProperties([
                 'title' => 'title',
                 'url' => 'url',
             ]);

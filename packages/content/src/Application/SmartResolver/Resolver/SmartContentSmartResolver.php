@@ -144,11 +144,11 @@ class SmartContentSmartResolver implements SmartResolverInterface
         ];
 
         $configuration = $smartContentProvider->getConfiguration();
-        $configProperties = $configuration->getProperties();
+        $defaultProperties = $configuration->getDefaultProperties();
         /** @var array<string, string> $passedProperties */
         $passedProperties = $params['properties'] ?? [];
-        $properties = null !== $configProperties
-            ? \array_replace($configProperties, $passedProperties)
+        $properties = null !== $defaultProperties
+            ? \array_replace($defaultProperties, $passedProperties)
             : ($passedProperties ?: null);
 
         return ContentView::createResolvables(
