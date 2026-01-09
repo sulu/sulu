@@ -14,6 +14,7 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\FormMetadata;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TemplateMetadata;
 
 class FormMetadataTest extends TestCase
 {
@@ -61,5 +62,37 @@ class FormMetadataTest extends TestCase
         $this->assertNull($formMetadata->getGroup());
         $formMetadata->setGroup('test-group');
         $this->assertSame('test-group', $formMetadata->getGroup());
+    }
+
+    public function testMergeCopiesTemplate(): void
+    {
+        $originalForm = new FormMetadata();
+        $originalForm->setKey('test_key');
+
+        $overrideForm = new FormMetadata();
+        $overrideForm->setKey('test_key');
+
+        $templateStub = $this->createStub(TemplateMetadata::class);
+        $overrideForm->setTemplate($templateStub);
+
+        $mergedForm = $originalForm->merge($overrideForm);
+
+        $this->assertInstanceOf(TemplateMetadata::class, $mergedForm->getTemplate());
+        $this->assertSame($templateStub, $mergedForm->getTemplate());
+        $this->assertSame('test_key', $mergedForm->getKey());
+    }
+
+    public function testMergeWithUninitializedProperties(): void
+    {
+        $form1 = new FormMetadata();
+        $form1->setKey('key1');
+
+        $form2 = new FormMetadata();
+        $form2->setKey('key1');
+
+        $merged = $form1->merge($form2);
+
+        $this->assertNull($merged->getTemplate());
+        $this->assertSame('key1', $merged->getKey());
     }
 }
