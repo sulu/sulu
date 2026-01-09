@@ -33,23 +33,19 @@ class SnippetAreaControllerTest extends SuluTestCase
             [],
             ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json']
         );
+
+        self::purgeDatabase();
     }
 
     public function testGetList(): void
     {
-        self::purgeDatabase();
-
         $this->client->jsonRequest('GET', '/admin/api/snippet-areas?webspaceKey=sulu-io');
 
         $this->assertResponseSnapshot('snippet_area_cget.json', $this->client->getResponse(), 200);
-
-        self::ensureKernelShutdown();
     }
 
     public function testPost(): void
     {
-        self::purgeDatabase();
-
         $this->client->jsonRequest('POST', '/admin/api/snippets?locale=en&action=publish', [
             'template' => 'snippet',
             'title' => 'Test Snippet',
@@ -76,14 +72,10 @@ class SnippetAreaControllerTest extends SuluTestCase
 
         $this->client->jsonRequest('GET', '/admin/api/snippet-areas?webspaceKey=sulu-io');
         $this->assertResponseSnapshot('snippet_area_cget_partially_filled.json', $this->client->getResponse(), 200);
-
-        self::ensureKernelShutdown();
     }
 
     public function testPostWithInvalidSnippetUuid(): void
     {
-        self::purgeDatabase();
-
         $this->client->jsonRequest('PUT', '/admin/api/snippet-areas/hotel?webspaceKey=sulu-io', [
             'snippetUuid' => 'invalid-uuid',
         ]);
@@ -96,8 +88,6 @@ class SnippetAreaControllerTest extends SuluTestCase
 
     public function testPostWithoutSnippetUuid(): void
     {
-        self::purgeDatabase();
-
         $this->client->jsonRequest('PUT', '/admin/api/snippet-areas/hotel?webspaceKey=sulu-io', []);
 
         $this->assertResponseStatusCodeSame(500);
@@ -107,8 +97,6 @@ class SnippetAreaControllerTest extends SuluTestCase
 
     public function testPostWithNonStringSnippetUuid(): void
     {
-        self::purgeDatabase();
-
         $this->client->jsonRequest('PUT', '/admin/api/snippet-areas/hotel?webspaceKey=sulu-io', [
             'snippetUuid' => 123,
         ]);
@@ -120,8 +108,6 @@ class SnippetAreaControllerTest extends SuluTestCase
 
     public function testPostWithNonExistentAreaKey(): void
     {
-        self::purgeDatabase();
-
         $this->client->jsonRequest('PUT', '/admin/api/snippet-areas/nonexistent?webspaceKey=sulu-io', [
             'snippetUuid' => '01234567-1234-1234-1234-123456789abc',
         ]);
@@ -145,8 +131,6 @@ class SnippetAreaControllerTest extends SuluTestCase
 
     public function testPutWithoutEditPermission(): void
     {
-        self::purgeDatabase();
-
         $this->client->jsonRequest('POST', '/admin/api/snippets?locale=en&action=publish', [
             'template' => 'snippet',
             'title' => 'Test Snippet',
@@ -165,6 +149,8 @@ class SnippetAreaControllerTest extends SuluTestCase
         /** @var array{id: string} $responseContent */
         $id = $responseContent['id'];
 
+        self::ensureKernelShutdown();
+
         // Create a client without permissions
         $clientWithoutPermissions = $this->createClient();
 
@@ -173,14 +159,10 @@ class SnippetAreaControllerTest extends SuluTestCase
         ]);
 
         $this->assertResponseStatusCodeSame(401);
-
-        self::ensureKernelShutdown();
     }
 
     public function testDeleteWithoutEditPermission(): void
     {
-        self::purgeDatabase();
-
         $this->client->jsonRequest('POST', '/admin/api/snippets?locale=en&action=publish', [
             'template' => 'snippet',
             'title' => 'Test Snippet',
@@ -203,20 +185,18 @@ class SnippetAreaControllerTest extends SuluTestCase
             'snippetUuid' => (string) $id,
         ]);
 
+        self::ensureKernelShutdown();
+
         // Create a client without permissions
         $clientWithoutPermissions = $this->createClient();
 
         $clientWithoutPermissions->jsonRequest('DELETE', '/admin/api/snippet-areas/hotel?webspaceKey=sulu-io');
 
         $this->assertResponseStatusCodeSame(401);
-
-        self::ensureKernelShutdown();
     }
 
     public function testDelete(): void
     {
-        self::purgeDatabase();
-
         $this->client->jsonRequest('POST', '/admin/api/snippets?locale=en&action=publish', [
             'template' => 'snippet',
             'title' => 'Test Snippet',
@@ -252,8 +232,6 @@ class SnippetAreaControllerTest extends SuluTestCase
         $this->assertNull($responseContent['snippetUuid']);
         $this->assertArrayHasKey('snippetTitle', $responseContent);
         $this->assertNull($responseContent['snippetTitle']);
-
-        self::ensureKernelShutdown();
     }
 
     protected function getSnapshotFolder(): string
