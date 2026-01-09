@@ -44,7 +44,7 @@ readonly class ModifySnippetAreaMessageHandler
         $snippet = $this->snippetRepository->getOneBy($message->getSnippetIdentifier());
         $snippetArea->setSnippet($snippet);
 
-        $this->domainEventCollector->collect(new SnippetAreaModifiedEvent($snippetArea, $message->getLocale(), $message->getData()));
+        $this->domainEventCollector->collect(new SnippetAreaModifiedEvent($snippetArea, $message->getLocale(), $message->getData(), ['webspaceKey' => $webspaceKey]));
 
         return $snippetArea;
     }

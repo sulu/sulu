@@ -225,7 +225,9 @@ class SnippetAreaControllerTest extends SuluTestCase
         $this->assertResponseStatusCodeSame(200);
 
         $response = $this->client->getResponse();
+
         $responseContent = \json_decode((string) $response->getContent(), true) ?? [];
+        $this->assertIsArray($responseContent);
 
         // Verify the snippet area is cleared
         $this->assertArrayHasKey('snippetUuid', $responseContent);
