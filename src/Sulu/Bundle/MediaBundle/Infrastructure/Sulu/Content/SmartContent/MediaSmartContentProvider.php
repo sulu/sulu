@@ -270,7 +270,7 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
                         Join::WITH,
                         'parentCollection.id = :collectionId',
                     )
-                    ->where('collection.lft BETWEEN parentCollection.lft AND parentCollection.rgt')
+                    ->andWhere('collection.lft BETWEEN parentCollection.lft AND parentCollection.rgt')
                     ->setParameter('collectionId', $filters['dataSource']);
             }
         }
