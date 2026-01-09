@@ -46,16 +46,22 @@ final class ValidateBuildCommand extends Command
         $jsAdminBuildVersion = $this->getJavascriptBuildVersion($io);
 
         if (null === $jsAdminBuildVersion) {
-            $io->error('Invalid JS Admin build version.');
+            $io->error(<<<TEXT
+                Invalid JS Admin build version.
+
+                Run `sulu:admin:update-build` command to update the JS Build.
+                TEXT);
 
             return self::FAILURE;
         }
 
         if ($jsAdminBuildVersion !== $this->suluVersion) {
             $io->error(<<<TEXT
-                Version missmatch:
-                Admin bundle version: {$jsAdminBuildVersion}
-                Sulu Backend version: {$this->suluVersion}
+                Version mismatch:
+                Sulu JS Build version: {$jsAdminBuildVersion}
+                Sulu PHP Package version: {$this->suluVersion}
+
+                Run `sulu:admin:update-build` command to update the JS Build.
                 TEXT);
 
             return self::FAILURE;
@@ -72,8 +78,8 @@ final class ValidateBuildCommand extends Command
 
         if (!\file_exists($filePath)) {
             $io->error('Couldn\'t find JS Admin build path: ' . $filePath);
-        } else {
-            $io->info('JS Admin build path: ' . $filePath);
+
+            return null;
         }
 
         $content = \file_get_contents($filePath);
