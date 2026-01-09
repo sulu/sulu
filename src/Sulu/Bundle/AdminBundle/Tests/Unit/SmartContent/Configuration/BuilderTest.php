@@ -223,7 +223,7 @@ class BuilderTest extends TestCase
     {
         $builder = Builder::create();
 
-        $this->assertSame($builder, $builder->enableDefaultProperties([
+        $this->assertSame($builder, $builder->enableProperties([
             'title' => 'title',
             'url' => 'url',
         ]));

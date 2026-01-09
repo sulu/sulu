@@ -112,10 +112,8 @@ interface BuilderInterface
      * Sets default properties to be included when resolving smart content items.
      *
      * @param array<string, string> $defaultProperties
-     *
-     * @return BuilderInterface
      */
-    public function enableDefaultProperties(array $defaultProperties);
+    public function enableProperties(array $defaultProperties): BuilderInterface;
 
     /**
      * Returns build configuration.
