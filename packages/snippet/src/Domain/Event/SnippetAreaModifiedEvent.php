@@ -77,6 +77,6 @@ class SnippetAreaModifiedEvent extends DomainEvent
             return null;
         }
 
-        return SnippetAreaAdmin::getDefaultSnippetsSecurityContext($webspaceKey);
+        return SnippetAreaAdmin::getSecurityContext($webspaceKey);
     }
 }

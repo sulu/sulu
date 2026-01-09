@@ -17,10 +17,14 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
 use Sulu\Snippet\Application\Message\ModifySnippetAreaMessage;
 use Sulu\Snippet\Application\Message\RemoveSnippetAreaMessage;
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
+use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAreaAdmin;
 use Sulu\Snippet\Infrastructure\Symfony\CompilerPass\SnippetAreaCompilerPass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,6 +54,7 @@ final class SnippetAreaController
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         private DoctrineListBuilderFactoryInterface $listBuilderFactory,
         private RestHelperInterface $restHelper,
+        protected SecurityCheckerInterface $securityChecker,
         private array $snippetAreas,
     ) {
         $this->messageBus = $messageBus;
@@ -57,6 +62,12 @@ final class SnippetAreaController
 
     public function cgetAction(Request $request): Response
     {
+        $webspaceKey = $request->query->getString('webspaceKey');
+        $this->securityChecker->checkPermission(
+            new SecurityCondition(SnippetAreaAdmin::getSecurityContext($webspaceKey)),
+            PermissionTypes::VIEW,
+        );
+
         /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetAreaInterface::RESOURCE_KEY);
 
@@ -69,7 +80,6 @@ final class SnippetAreaController
 
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
-        $webspaceKey = $request->query->getString('webspaceKey');
         if ($webspaceKey) {
             $listBuilder->where($fieldDescriptors['webspaceKey'], $webspaceKey);
         }

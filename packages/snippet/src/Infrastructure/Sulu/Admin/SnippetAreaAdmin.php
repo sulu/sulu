@@ -29,7 +29,7 @@ class SnippetAreaAdmin extends Admin
 {
     public const LIST_VIEW = 'sulu_snippet.snippet_areas.list';
 
-    public static function getDefaultSnippetsSecurityContext(string $webspaceKey): string
+    public static function getSecurityContext(string $webspaceKey): string
     {
         return \sprintf('%s%s.%s', PageAdmin::SECURITY_CONTEXT_PREFIX, $webspaceKey, 'snippet-areas');
     }
@@ -63,10 +63,8 @@ class SnippetAreaAdmin extends Admin
         $webspaceContexts = [];
         /* @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            $webspaceContexts[self::getDefaultSnippetsSecurityContext($webspace->getKey())] = [
-                PermissionTypes::VIEW,
-                PermissionTypes::EDIT,
-            ];
+            $securityContextKey = self::getSecurityContext($webspace->getKey());
+            $webspaceContexts[$securityContextKey] = self::getSecurityContextPermissions();
         }
 
         return [
@@ -81,12 +79,20 @@ class SnippetAreaAdmin extends Admin
         return [
             self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Webspaces' => [
-                    self::getDefaultSnippetsSecurityContext('#webspace#') => [
-                        PermissionTypes::VIEW,
-                        PermissionTypes::EDIT,
-                    ],
+                    self::getSecurityContext('#webspace#') => self::getSecurityContextPermissions(),
                 ],
             ],
+        ];
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    private static function getSecurityContextPermissions(): array
+    {
+        return [
+            PermissionTypes::VIEW,
+            PermissionTypes::EDIT,
         ];
     }
 
@@ -94,7 +100,7 @@ class SnippetAreaAdmin extends Admin
     {
         foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
             if ($this->securityChecker->hasPermission(
-                self::getDefaultSnippetsSecurityContext($webspace->getKey()),
+                self::getSecurityContext($webspace->getKey()),
                 PermissionTypes::EDIT,
             )) {
                 return true;

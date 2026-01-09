@@ -46,6 +46,26 @@ class SnippetAreaControllerTest extends SuluTestCase
         self::ensureKernelShutdown();
     }
 
+    public function testGetListWithoutPermission(): void
+    {
+        self::purgeDatabase();
+
+        // Create a client without snippet area permissions
+        $client = $this->createAuthenticatedClient(
+            [],
+            ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json'],
+            [
+                'sulu.webspaces.sulu-io.snippet-areas' => [],
+            ]
+        );
+
+        $client->jsonRequest('GET', '/admin/api/snippet-areas?webspaceKey=sulu-io');
+
+        $this->assertResponseStatusCodeSame(403);
+
+        self::ensureKernelShutdown();
+    }
+
     public function testPost(): void
     {
         self::purgeDatabase();
