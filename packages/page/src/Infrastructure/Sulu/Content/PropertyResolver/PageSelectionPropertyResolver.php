@@ -54,7 +54,13 @@ class PageSelectionPropertyResolver implements PropertyResolverInterface
             ],
             priority: 150,
             metadata: [
-                'properties' => $params['properties'] ?? null,
+                'properties' => \array_merge(
+                    $params['properties'] ?? [],
+                    [
+                        'title' => 'title',
+                        'url' => 'url',
+                    ],
+                ),
             ]
         );
     }

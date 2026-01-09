@@ -152,6 +152,8 @@ class ArticleSelectionPropertyResolverTest extends TestCase
             'properties' => [
                 'property1' => 'value1',
                 'property2' => 'value2',
+                'title' => 'title',
+                'url' => 'url',
             ],
         ], $content[0]->getMetadata());
 
@@ -170,7 +172,10 @@ class ArticleSelectionPropertyResolverTest extends TestCase
         $this->assertInstanceOf(ResolvableResource::class, $content[0]);
 
         $this->assertSame([
-            'properties' => null,
+            'properties' => [
+                'title' => 'title',
+                'url' => 'url',
+            ],
         ], $content[0]->getMetadata());
 
         $references = $contentView->getReferences();
@@ -190,7 +195,10 @@ class ArticleSelectionPropertyResolverTest extends TestCase
         $this->assertInstanceOf(ResolvableResource::class, $content[0]);
 
         $this->assertSame([
-            'properties' => null,
+            'properties' => [
+                'title' => 'title',
+                'url' => 'url',
+            ],
         ], $content[0]->getMetadata());
 
         $references = $contentView->getReferences();

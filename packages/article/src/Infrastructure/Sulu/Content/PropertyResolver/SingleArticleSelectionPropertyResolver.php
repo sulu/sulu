@@ -48,7 +48,13 @@ class SingleArticleSelectionPropertyResolver implements PropertyResolverInterfac
             ],
             priority: 100,
             metadata: [
-                'properties' => $params['properties'] ?? null,
+                'properties' => \array_merge(
+                    $params['properties'] ?? [],
+                    [
+                        'title' => 'title',
+                        'url' => 'url',
+                    ],
+                ),
             ]
         );
     }
