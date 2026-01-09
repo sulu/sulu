@@ -128,7 +128,7 @@ final class SnippetAreaController
         ));
     }
 
-    public function putAction(Request $request, string $key): JsonResponse
+    public function putAction(Request $request, string $key): Response
     {
         $webspaceKey = $request->query->getString('webspaceKey');
         $this->securityChecker->checkPermission(
