@@ -21,11 +21,13 @@ class SnippetAreaModifiedEvent extends DomainEvent
 {
     /**
      * @param mixed[] $payload
+     * @param array<string, mixed> $context
      */
     public function __construct(
         private SnippetAreaInterface $snippetArea,
         private string $locale,
-        private array $payload
+        private array $payload,
+        private array $context = [],
     ) {
         parent::__construct();
     }
@@ -38,6 +40,11 @@ class SnippetAreaModifiedEvent extends DomainEvent
     public function getEventType(): string
     {
         return 'modified';
+    }
+
+    public function getEventContext(): array
+    {
+        return $this->context;
     }
 
     public function getEventPayload(): ?array
@@ -72,6 +79,11 @@ class SnippetAreaModifiedEvent extends DomainEvent
 
     public function getResourceSecurityContext(): ?string
     {
-        return SnippetAreaAdmin::SECURITY_CONTEXT;
+        $webspaceKey = $this->context['webspaceKey'] ?? null;
+        if (!\is_string($webspaceKey)) {
+            return null;
+        }
+
+        return SnippetAreaAdmin::getSecurityContext($webspaceKey);
     }
 }

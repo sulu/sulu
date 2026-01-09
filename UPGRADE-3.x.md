@@ -1,12 +1,51 @@
 # Upgrade
 
+## 3.0.2
+
+### Snippet Area Security Context Migration
+
+The security context for snippet areas changed from `sulu.snippet.snippet_areas` to `sulu.webspaces.{webspaceKey}.snippet-areas`
+to align with Sulu's webspace-based permission architecture.
+
+**Migration:** Configure snippet area permissions per webspace in **Settings** → **User Roles** → **Permissions** → **Webspaces**,
+or run this SQL to automatically migrate all roles with the old permission:
+
+```sql
+-- Migrate permissions to all webspaces automatically
+INSERT INTO se_permissions (context, permissions, idRoles)
+SELECT
+    CONCAT(SUBSTRING_INDEX(p2.context, '.', 3), '.snippet-areas') as context,
+    p.permissions,
+    p.idRoles
+FROM se_permissions p
+CROSS JOIN (
+    SELECT DISTINCT SUBSTRING_INDEX(context, '.', 3) as context
+    FROM se_permissions
+    WHERE context LIKE 'sulu.webspaces.%'
+    AND (
+        LENGTH(context) - LENGTH(REPLACE(context, '.', '')) = 2
+        OR LENGTH(context) - LENGTH(REPLACE(context, '.', '')) = 3
+    )
+) p2
+WHERE p.context = 'sulu.snippet.snippet_areas'
+AND NOT EXISTS (
+    SELECT 1 FROM se_permissions p3
+    WHERE p3.context = CONCAT(SUBSTRING_INDEX(p2.context, '.', 3), '.snippet-areas')
+    AND p3.idRoles = p.idRoles
+);
+
+-- Remove old permission
+DELETE FROM se_permissions WHERE context = 'sulu.snippet.snippet_areas';
+```
+
 ## 3.0.1
 
-## Support for doctrine/orm 3 dependencies added
+### Support for doctrine/orm 3 dependencies added
 
 Sulu now also supports the following Doctrine package versions: `doctrine/orm:^3.1`, `doctrine/dbal:^4.0`, and `doctrine/persistence:^4.0`.
 
-It is recommended to perform this upgrade as a separate step.  
+It is recommended to perform this upgrade as a separate step.
+
 To freeze your project's current Doctrine versions, run:
 
 ```bash
