@@ -182,3 +182,43 @@ test('Delete snippet area when delete is calld', () => {
         });
     });
 });
+
+test('Handle 403 forbidden error when loading snippet areas', () => {
+    const listPromise = Promise.reject({status: 403});
+    ResourceRequester.getList.mockReturnValue(listPromise);
+
+    const snippetAreaStore = new SnippetAreaStore('sulu');
+
+    expect(snippetAreaStore.loading).toEqual(true);
+    expect(snippetAreaStore.forbidden).toEqual(false);
+    expect(snippetAreaStore.unexpectedError).toEqual(false);
+
+    return listPromise.catch(() => {
+        // Wait for MobX action to complete
+    }).then(() => {
+        expect(snippetAreaStore.loading).toEqual(false);
+        expect(snippetAreaStore.forbidden).toEqual(true);
+        expect(snippetAreaStore.unexpectedError).toEqual(false);
+        expect(snippetAreaStore.snippetAreas).toEqual({});
+    });
+});
+
+test('Handle unexpected error when loading snippet areas', () => {
+    const listPromise = Promise.reject({status: 500});
+    ResourceRequester.getList.mockReturnValue(listPromise);
+
+    const snippetAreaStore = new SnippetAreaStore('sulu');
+
+    expect(snippetAreaStore.loading).toEqual(true);
+    expect(snippetAreaStore.forbidden).toEqual(false);
+    expect(snippetAreaStore.unexpectedError).toEqual(false);
+
+    return listPromise.catch(() => {
+        // Wait for MobX action to complete
+    }).then(() => {
+        expect(snippetAreaStore.loading).toEqual(false);
+        expect(snippetAreaStore.forbidden).toEqual(false);
+        expect(snippetAreaStore.unexpectedError).toEqual(true);
+        expect(snippetAreaStore.snippetAreas).toEqual({});
+    });
+});
