@@ -6,6 +6,8 @@ import type {SnippetArea} from '../types';
 export default class SnippetAreaStore {
     @observable snippetAreas: {[key: string]: SnippetArea} = {};
     @observable loading: boolean = true;
+    @observable forbidden: boolean = false;
+    @observable unexpectedError: boolean = false;
     @observable saving: boolean = false;
     @observable deleting: boolean = false;
     webspaceKey: string;
@@ -19,6 +21,18 @@ export default class SnippetAreaStore {
 
                 return snippetAreas;
             }, {});
+            this.forbidden = false;
+            this.unexpectedError = false;
+            this.loading = false;
+        })).catch(action((response: Object) => {
+            if (response.status === 403) {
+                this.forbidden = true;
+                this.loading = false;
+
+                return;
+            }
+
+            this.unexpectedError = true;
             this.loading = false;
         }));
     }
