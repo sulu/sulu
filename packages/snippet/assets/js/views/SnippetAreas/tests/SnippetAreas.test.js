@@ -291,3 +291,47 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
     toolbarFunction.call(snippetAreas.instance());
     expect(cacheClearToolbarAction.getToolbarItemConfig).toBeCalled();
 });
+
+test('Show forbidden hint when user has no permission', () => {
+    const SnippetAreas = require('../SnippetAreas').default;
+    const SnippetAreaStore = require('../stores/SnippetAreaStore');
+
+    const router = new Router();
+
+    // $FlowFixMe
+    SnippetAreaStore.mockImplementation(function() {
+        this.loading = false;
+        this.forbidden = true;
+        this.unexpectedError = false;
+        this.snippetAreas = {};
+    });
+
+    const snippetAreas = shallow(<SnippetAreas route={router.route} router={router} />);
+    const hint = snippetAreas.find('Hint');
+
+    expect(hint).toHaveLength(1);
+    expect(hint.prop('icon')).toEqual('su-lock');
+    expect(hint.prop('title')).toEqual('sulu_admin.no_permissions');
+});
+
+test('Show error hint when unexpected error occurs', () => {
+    const SnippetAreas = require('../SnippetAreas').default;
+    const SnippetAreaStore = require('../stores/SnippetAreaStore');
+
+    const router = new Router();
+
+    // $FlowFixMe
+    SnippetAreaStore.mockImplementation(function() {
+        this.loading = false;
+        this.forbidden = false;
+        this.unexpectedError = true;
+        this.snippetAreas = {};
+    });
+
+    const snippetAreas = shallow(<SnippetAreas route={router.route} router={router} />);
+    const hint = snippetAreas.find('Hint');
+
+    expect(hint).toHaveLength(1);
+    expect(hint.prop('icon')).toEqual('su-exclamation-triangle');
+    expect(hint.prop('title')).toEqual('sulu_admin.unexpected_error');
+});

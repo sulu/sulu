@@ -6,6 +6,7 @@ import {Button, Dialog, Loader, Table} from 'sulu-admin-bundle/components';
 import {SingleListOverlay, withToolbar} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
 import {CacheClearToolbarAction} from 'sulu-website-bundle/containers';
+import Hint from 'sulu-admin-bundle/components/Hint';
 import SnippetAreaStore from './stores/SnippetAreaStore';
 import snippetAreasStyles from './snippetAreas.scss';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
@@ -83,6 +84,14 @@ class SnippetAreas extends React.Component<ViewProps> {
     render() {
         if (this.snippetAreaStore.loading) {
             return <Loader />;
+        }
+
+        if (this.snippetAreaStore.forbidden) {
+            return <Hint icon="su-lock" title={translate('sulu_admin.no_permissions')} />;
+        }
+
+        if (this.snippetAreaStore.unexpectedError) {
+            return <Hint icon="su-exclamation-triangle" title={translate('sulu_admin.unexpected_error')} />;
         }
 
         const {
