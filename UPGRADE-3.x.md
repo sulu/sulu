@@ -1,6 +1,6 @@
 # Upgrade
 
-## 3.0.3
+## 3.0.2
 
 ### Snippet Area Security Context Migration
 
@@ -45,6 +45,7 @@ DELETE FROM se_permissions WHERE context = 'sulu.snippet.snippet_areas';
 Sulu now also supports the following Doctrine package versions: `doctrine/orm:^3.1`, `doctrine/dbal:^4.0`, and `doctrine/persistence:^4.0`.
 
 It is recommended to perform this upgrade as a separate step.
+
 To freeze your project's current Doctrine versions, run:
 
 ```bash

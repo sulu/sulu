@@ -130,6 +130,12 @@ final class SnippetAreaController
 
     public function putAction(Request $request, string $key): JsonResponse
     {
+        $webspaceKey = $request->query->getString('webspaceKey');
+        $this->securityChecker->checkPermission(
+            new SecurityCondition(SnippetAreaAdmin::getSecurityContext($webspaceKey)),
+            PermissionTypes::EDIT,
+        );
+
         $locale = $this->getLocale($request);
         $snippetUuid = $request->request->get('snippetUuid');
         if (!\is_string($snippetUuid)) {
@@ -137,7 +143,7 @@ final class SnippetAreaController
         }
 
         $data = [
-            'webspaceKey' => $request->query->getString('webspaceKey'),
+            'webspaceKey' => $webspaceKey,
             'snippetIdentifier' => ['uuid' => $snippetUuid],
             'areaKey' => $key,
             'locale' => $locale,
@@ -160,8 +166,14 @@ final class SnippetAreaController
 
     public function deleteAction(Request $request, string $key): Response
     {
+        $webspaceKey = $request->query->getString('webspaceKey');
+        $this->securityChecker->checkPermission(
+            new SecurityCondition(SnippetAreaAdmin::getSecurityContext($webspaceKey)),
+            PermissionTypes::EDIT,
+        );
+
         $data = [
-            'webspaceKey' => $request->query->getString('webspaceKey'),
+            'webspaceKey' => $webspaceKey,
             'areaKey' => $key,
             'locale' => $this->getLocale($request),
         ];

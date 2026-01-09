@@ -29,7 +29,6 @@ class Permissions extends React.Component<Props> {
 
     @observable securityContextGroups: SecurityContextGroups;
 
-    // Store removed webspace permissions so they can be restored if re-added
     removedWebspacePermissions: Map<string, ContextPermission> = new Map();
 
     @action componentDidMount() {
@@ -119,18 +118,15 @@ class Permissions extends React.Component<Props> {
     @action handleWebspaceChange = (newSelectedWebspaces: Array<string>) => {
         const newContextPermissions = [];
 
-        // Process existing permissions and track removed ones
         for (const contextPermission of this.props.value) {
             if (contextPermission.context.startsWith(this.webspaceContextPermissionPrefix)) {
                 const suffix = contextPermission.context.replace(this.webspaceContextPermissionPrefix, '');
                 const webspaceKey = !suffix.includes('.') ? suffix : suffix.substring(0, suffix.indexOf('.'));
 
                 if (!newSelectedWebspaces.includes(webspaceKey)) {
-                    // Store removed permissions so they can be restored if webspace is re-added
                     this.removedWebspacePermissions.set(contextPermission.context, contextPermission);
                     continue;
                 } else {
-                    // If this webspace is now selected again, remove it from the removed list
                     this.removedWebspacePermissions.delete(contextPermission.context);
                 }
             }
@@ -146,13 +142,10 @@ class Permissions extends React.Component<Props> {
             const securityContexts = this.getWebspaceSecurityContexts(webspaceToAdd.toString());
 
             Object.keys(securityContexts).map((securityContextKey) => {
-                // Check if this context was previously removed - if so, restore it
                 const existingContextPermission = this.removedWebspacePermissions.get(securityContextKey);
 
                 if (existingContextPermission) {
-                    // Restore the original permission with its ID
                     newContextPermissions.push(existingContextPermission);
-                    // Remove from the removed list since it's now active again
                     this.removedWebspacePermissions.delete(securityContextKey);
                 } else {
                     // Create new permission only if it didn't exist before
