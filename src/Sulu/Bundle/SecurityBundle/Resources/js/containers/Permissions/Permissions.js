@@ -29,6 +29,8 @@ class Permissions extends React.Component<Props> {
 
     @observable securityContextGroups: SecurityContextGroups;
 
+    removedWebspacePermissions: Map<string, ContextPermission> = new Map();
+
     @action componentDidMount() {
         this.systemDisposer = autorun(
             () => this.setSecurityContextGroups(securityContextStore.getSecurityContextGroups(this.system))
@@ -115,13 +117,17 @@ class Permissions extends React.Component<Props> {
 
     @action handleWebspaceChange = (newSelectedWebspaces: Array<string>) => {
         const newContextPermissions = [];
+
         for (const contextPermission of this.props.value) {
             if (contextPermission.context.startsWith(this.webspaceContextPermissionPrefix)) {
                 const suffix = contextPermission.context.replace(this.webspaceContextPermissionPrefix, '');
                 const webspaceKey = !suffix.includes('.') ? suffix : suffix.substring(0, suffix.indexOf('.'));
 
                 if (!newSelectedWebspaces.includes(webspaceKey)) {
+                    this.removedWebspacePermissions.set(contextPermission.context, contextPermission);
                     continue;
+                } else {
+                    this.removedWebspacePermissions.delete(contextPermission.context);
                 }
             }
 
@@ -131,23 +137,32 @@ class Permissions extends React.Component<Props> {
         const webspacesToAdd = newSelectedWebspaces.filter((newSelectedWebspace) => {
             return !this.selectedWebspaces.includes(newSelectedWebspace);
         });
+
         for (const webspaceToAdd of webspacesToAdd) {
             const securityContexts = this.getWebspaceSecurityContexts(webspaceToAdd.toString());
 
             Object.keys(securityContexts).map((securityContextKey) => {
-                const permissions = {};
-                const actions = securityContexts[securityContextKey];
+                const existingContextPermission = this.removedWebspacePermissions.get(securityContextKey);
 
-                for (const action of actions) {
-                    permissions[action] = false;
+                if (existingContextPermission) {
+                    newContextPermissions.push(existingContextPermission);
+                    this.removedWebspacePermissions.delete(securityContextKey);
+                } else {
+                    // Create new permission only if it didn't exist before
+                    const permissions = {};
+                    const actions = securityContexts[securityContextKey];
+
+                    for (const action of actions) {
+                        permissions[action] = false;
+                    }
+
+                    const newContextPermission: ContextPermission = {
+                        'id': undefined,
+                        'context': securityContextKey,
+                        permissions,
+                    };
+                    newContextPermissions.push(newContextPermission);
                 }
-
-                const newContextPermission: ContextPermission = {
-                    'id': undefined,
-                    'context': securityContextKey,
-                    permissions,
-                };
-                newContextPermissions.push(newContextPermission);
             });
         }
 
