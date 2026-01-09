@@ -164,8 +164,8 @@ class SnippetAdmin extends Admin
     public function getSecurityContexts()
     {
         return [
-            'Sulu' => [
-                'Global' => [
+            self::SULU_ADMIN_SECURITY_SYSTEM => [
+                'Snippet' => [
                     static::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
                         PermissionTypes::ADD,

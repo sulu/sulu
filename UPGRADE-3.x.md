@@ -1,12 +1,75 @@
 # Upgrade
 
+## 3.0.3
+
+### Snippet Area Security Context Migration
+
+As a regression in Sulu 3.0.0, the global security context `sulu.snippet.snippet_areas` was incorrectly removed.
+In Sulu 3.0.3, we've properly migrated to webspace-specific snippet area security contexts to align with the
+webspace-based architecture used throughout Sulu.
+
+**What Changed:**
+
+The single global security context has been replaced with per-webspace security contexts:
+
+- **Old (3.0.0-3.0.2)**: `sulu.snippet.snippet_areas`
+- **New (3.0.3+)**: `sulu.webspaces.{webspaceKey}.snippet-areas`
+
+**Why This Changed:**
+
+These webspace-specific permission contexts existed in Sulu 2.6 but were accidentally removed during the 3.0.0
+migration. In Sulu 3.0.3, we've reintroduced them to restore the proper security isolation between webspaces
+and maintain consistency with other webspace-specific features in Sulu.
+
+**Required Action:**
+
+After upgrading to 3.0.3, you **must manually add the webspace-specific permission contexts** to your user roles.
+You can do this either through the Sulu admin interface or by running SQL commands directly.
+
+**Option 1: Via Sulu Admin Interface**
+
+Navigate to **Settings** → **User Roles** → **Permissions** → **Webspaces** and grant snippet area access per
+webspace for each role that needs it.
+
+**Option 2: Via SQL (recommended for multiple roles)**
+
+If you have many roles to update, you can migrate the permissions directly in the database. Replace `your_webspace_key`
+with your actual webspace key(s) from your webspace configuration files.
+
+```sql
+-- Step 1: Check which roles currently have the old permission
+SELECT r.id, r.name, p.permissions
+FROM se_permissions p
+JOIN se_roles r ON p.idRoles = r.id
+WHERE p.context = 'sulu.snippet.snippet_areas';
+
+-- Step 2: Create new permissions for each webspace
+-- Replace 'your_webspace_key' with your actual webspace key (e.g., 'example', 'example_uk', etc.)
+-- Run this for EACH of your webspaces
+INSERT INTO se_permissions (context, permissions, idRoles)
+SELECT
+    'sulu.webspaces.your_webspace_key.snippet-areas' as context,
+    p.permissions,
+    p.idRoles
+FROM se_permissions p
+WHERE p.context = 'sulu.snippet.snippet_areas'
+AND NOT EXISTS (
+    SELECT 1 FROM se_permissions p2
+    WHERE p2.context = 'sulu.webspaces.your_webspace_key.snippet-areas'
+    AND p2.idRoles = p.idRoles
+);
+
+-- Step 3: Remove the old permission context
+DELETE FROM se_permissions WHERE context = 'sulu.snippet.snippet_areas';
+```
+
 ## 3.0.1
 
 ## Support for doctrine/orm 3 dependencies added
 
 Sulu now also supports the following Doctrine package versions: `doctrine/orm:^3.1`, `doctrine/dbal:^4.0`, and `doctrine/persistence:^4.0`.
 
-It is recommended to perform this upgrade as a separate step.  
+It is recommended to perform this upgrade as a separate step.
 To freeze your project's current Doctrine versions, run:
 
 ```bash
