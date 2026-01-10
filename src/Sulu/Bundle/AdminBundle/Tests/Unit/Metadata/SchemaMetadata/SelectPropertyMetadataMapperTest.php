@@ -20,14 +20,14 @@ use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 
 class SelectPropertyMetadataMapperTest extends TestCase
 {
-    private $selectPropertyMetadataMapper;
+    private SelectPropertyMetadataMapper $selectPropertyMetadataMapper;
 
     public function setUp(): void
     {
         $this->selectPropertyMetadataMapper = new SelectPropertyMetadataMapper();
     }
 
-    public function testMapPropertyMetadata()
+    public function testMapPropertyMetadata(): void
     {
         $propertyMetadata = $this->createStub(ContentPropertyMetadata::class);
         $propertyMetadata->method('getName')->willReturn('property');
@@ -48,7 +48,7 @@ class SelectPropertyMetadataMapperTest extends TestCase
         $this->assertEquals(['type' => 'number'], $jsonSchema['anyOf'][1]);
     }
 
-    public function testMapPropertyMetadataOptional()
+    public function testMapPropertyMetadataOptional(): void
     {
         $propertyMetadata = $this->createStub(ContentPropertyMetadata::class);
         $propertyMetadata->method('getName')->willReturn('property');
