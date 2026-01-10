@@ -262,10 +262,9 @@ class FormMetadata extends AbstractMetadata
         $mergedForm->setResources(\array_merge($this->getResources(), $otherForm->getResources()));
         $mergedForm->setSchema($this->getSchema()->merge($otherForm->getSchema()));
 
-        if ($otherForm->getTemplate()) {
-            $mergedForm->setTemplate($otherForm->getTemplate());
-        } elseif ($this->getTemplate()) {
-            $mergedForm->setTemplate($this->getTemplate());
+        $mergedFormTemplate = $otherForm->getTemplate() ?? $this->getTemplate();
+        if ($mergedFormTemplate) {
+            $mergedForm->setTemplate($mergedFormTemplate);
         }
 
         return $mergedForm;
