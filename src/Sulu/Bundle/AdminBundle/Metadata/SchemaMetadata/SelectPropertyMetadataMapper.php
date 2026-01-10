@@ -33,6 +33,6 @@ class SelectPropertyMetadataMapper implements PropertyMetadataMapperInterface
             ]);
         }
 
-        return new PropertyMetadata($propertyMetadata->getName(), $mandatory, $selectMetadata);
+        return new PropertyMetadata((string) $propertyMetadata->getName(), $mandatory, $selectMetadata);
     }
 }
