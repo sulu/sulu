@@ -1,5 +1,28 @@
 {
-    "teaser": [],
+    "teaser": {
+        "examples": {
+            "displayProperties": [
+                "title"
+            ],
+            "listAdapter": "table",
+            "overlayTitle": "Select examples",
+            "resourceKey": "examples",
+            "resultToView": null,
+            "title": "Example",
+            "view": null
+        },
+        "pages": {
+            "displayProperties": [
+                "title"
+            ],
+            "listAdapter": "table",
+            "overlayTitle": "Choose page",
+            "resourceKey": "pages",
+            "resultToView": null,
+            "title": "Page",
+            "view": null
+        }
+    },
     "versioning": true,
     "webspaces": {
         "blog": {
