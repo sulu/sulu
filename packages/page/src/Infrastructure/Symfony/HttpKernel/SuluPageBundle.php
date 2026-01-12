@@ -331,6 +331,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_security.security_checker'),
                 new Reference('sulu_content.content_view_builder_factory'),
                 new Reference('sulu_activity.activity_list_view_builder_factory'),
+                new Reference('sulu_admin.teaser_provider_pool'),
             ])
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu.admin');
