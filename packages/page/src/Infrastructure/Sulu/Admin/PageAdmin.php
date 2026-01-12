@@ -21,6 +21,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\SaveWithFormDialogToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
+use Sulu\Bundle\AdminBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -420,7 +421,7 @@ class PageAdmin extends Admin
 
     /**
      * @return array{
-     *     teaser: array<string, mixed>,
+     *     teaser: array<int|string, TeaserConfiguration>,
      *     versioning: bool,
      *     webspaces: array<string, Webspace>
      * }
