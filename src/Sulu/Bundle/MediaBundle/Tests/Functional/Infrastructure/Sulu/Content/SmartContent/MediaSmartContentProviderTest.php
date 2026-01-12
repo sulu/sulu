@@ -115,6 +115,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 'description' => 'Technology image',
                 'locale' => 'en',
                 'type' => MediaInterface::TYPE_IMAGE,
+                'mimetype' => 'image/png',
             ],
             [self::$categories['tech']->getId()],
             [self::$tags['mobile'], self::$tags['web']],
@@ -128,6 +129,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 'description' => 'Cloud video',
                 'locale' => 'en',
                 'type' => MediaInterface::TYPE_VIDEO,
+                'mimetype' => 'video/mp4',
             ],
             [self::$categories['tech']->getId(), self::$categories['business']->getId()],
             [self::$tags['cloud']],
@@ -142,6 +144,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 'description' => 'Football image',
                 'locale' => 'en',
                 'type' => MediaInterface::TYPE_IMAGE,
+                'mimetype' => 'image/jpeg',
             ],
             [self::$categories['sports']->getId()],
             [self::$tags['football']],
@@ -155,6 +158,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 'description' => 'Tennis video',
                 'locale' => 'en',
                 'type' => MediaInterface::TYPE_VIDEO,
+                'mimetype' => 'video/x-matroska',
             ],
             [self::$categories['sports']->getId()],
             [self::$tags['tennis']],
@@ -169,6 +173,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 'description' => 'Fitness document',
                 'locale' => 'en',
                 'type' => MediaInterface::TYPE_DOCUMENT,
+                'mimetype' => 'application/pdf',
             ],
             [self::$categories['health']->getId()],
             [self::$tags['fitness']],
@@ -182,6 +187,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 'description' => 'Diet image',
                 'locale' => 'en',
                 'type' => MediaInterface::TYPE_IMAGE,
+                'mimetype' => 'image/svg+xml',
             ],
             [self::$categories['health']->getId()],
             [self::$tags['diet'], self::$tags['fitness']],
@@ -196,6 +202,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 'description' => 'Startup document',
                 'locale' => 'en',
                 'type' => MediaInterface::TYPE_DOCUMENT,
+                'mimetype' => 'application/pdf',
             ],
             [self::$categories['business']->getId()],
             [self::$tags['startup']],
@@ -209,6 +216,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 'description' => 'Finance image',
                 'locale' => 'en',
                 'type' => MediaInterface::TYPE_IMAGE,
+                'mimetype' => 'image/png',
             ],
             [self::$categories['business']->getId()],
             [self::$tags['finance']],
@@ -223,6 +231,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 'description' => 'Movie video',
                 'locale' => 'en',
                 'type' => MediaInterface::TYPE_VIDEO,
+                'mimetype' => 'video/mp4',
             ],
             [self::$categories['entertainment']->getId()],
             [self::$tags['movies']],
@@ -236,6 +245,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 'description' => 'Music video',
                 'locale' => 'en',
                 'type' => MediaInterface::TYPE_VIDEO,
+                'mimetype' => 'video/mp4',
             ],
             [self::$categories['entertainment']->getId()],
             [self::$tags['music']],
@@ -250,6 +260,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 'description' => 'Tech health image',
                 'locale' => 'en',
                 'type' => MediaInterface::TYPE_IMAGE,
+                'mimetype' => 'image/svg+xml',
             ],
             [self::$categories['tech']->getId(), self::$categories['health']->getId()],
             [self::$tags['mobile'], self::$tags['fitness']],
@@ -263,6 +274,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 'description' => 'Sports nutrition document',
                 'locale' => 'en',
                 'type' => MediaInterface::TYPE_DOCUMENT,
+                'mimetype' => 'application/richtext',
             ],
             [self::$categories['sports']->getId(), self::$categories['health']->getId()],
             [self::$tags['fitness'], self::$tags['diet']],
@@ -276,6 +288,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 'description' => 'Tech investment document',
                 'locale' => 'en',
                 'type' => MediaInterface::TYPE_DOCUMENT,
+                'mimetype' => 'application/pdf',
             ],
             [self::$categories['business']->getId(), self::$categories['tech']->getId()],
             [self::$tags['startup'], self::$tags['cloud']],
@@ -289,6 +302,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 'description' => 'Entertainment business video',
                 'locale' => 'en',
                 'type' => MediaInterface::TYPE_VIDEO,
+                'mimetype' => 'video/x-matroska',
             ],
             [self::$categories['entertainment']->getId(), self::$categories['business']->getId()],
             [self::$tags['movies'], self::$tags['finance']],
@@ -302,6 +316,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 'description' => 'Digital lifestyle image',
                 'locale' => 'en',
                 'type' => MediaInterface::TYPE_IMAGE,
+                'mimetype' => 'image/svg+xml',
             ],
             [
                 self::$categories['tech']->getId(),
@@ -736,6 +751,121 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 ],
             ]),
         );
+    }
+
+    /**
+     * @return array<string, array{0: string, 1: string[], 2: int}>
+     */
+    public static function mimetypeFilterProvider(): array
+    {
+        return [
+            'svg' => [
+                'image/svg+xml',
+                ['health2', 'tech_health', 'multi_category_multi_tag'],
+                3,
+            ],
+            'jpeg' => [
+                'image/jpeg',
+                ['sports1'],
+                1,
+            ],
+            'png' => [
+                'image/png',
+                ['tech1', 'business2'],
+                2,
+            ],
+            'mp4' => [
+                'video/mp4',
+                ['tech2', 'entertainment1', 'entertainment2'],
+                3,
+            ],
+            'mkv' => [
+                'video/x-matroska',
+                ['sports2', 'entertainment_business'],
+                2,
+            ],
+            'pdf' => [
+                'application/pdf',
+                ['health1', 'business1', 'business_tech'],
+                3,
+            ],
+            'richtext' => [
+                'application/richtext',
+                ['sports_health'],
+                1,
+            ],
+        ];
+    }
+
+    /**
+     * @param string[] $expectedKeys
+     */
+    #[DataProvider('mimetypeFilterProvider')]
+    public function testMimeTypeFiltering(string $mimeType, array $expectedKeys, int $expectedCount): void
+    {
+        $result = $this->smartContentProvider->findFlatBy([
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'mimetype' => $mimeType,
+            ],
+        ], []);
+
+        $this->assertCount($expectedCount, $result);
+        $actualKeys = $this->getMediaKeysFromResults($result);
+
+        foreach ($expectedKeys as $key) {
+            $this->assertContains($key, $actualKeys, "Media '$key' should be in {$mimeType} mimetype results");
+        }
+
+        $this->assertSame(
+            $expectedCount,
+            $this->smartContentProvider->countBy([
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'mimetype' => $mimeType,
+                ],
+            ]),
+        );
+    }
+
+    public function testFindFlatByPartialCombinedFilters(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy([
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'dataSource' => (string) self::$collections['main']->getId(),
+                'mimetype' => 'video/mp4',
+                'includeSubFolders' => true,
+            ],
+        ], []);
+
+        $this->assertCount(2, $result); // entertainment1, entertainment2 (all media with video/mp4 mimetype in main collection)
+        $this->assertSame(
+            2,
+            $this->smartContentProvider->countBy([
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'dataSource' => (string) self::$collections['main']->getId(),
+                    'mimetype' => 'video/mp4',
+                    'includeSubFolders' => true,
+                ],
+            ]),
+        );
+
+        $resultIds = \array_map(
+            fn ($media) => $media['id'],
+            $result,
+        );
+
+        $expectedKeys = ['entertainment1', 'entertainment2'];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$media[$key]->getId(), $resultIds, "Media '$key' should be in the partial combined filter result");
+        }
+        $this->assertCount(\count($expectedKeys), $resultIds);
     }
 
     public function testFindFlatByCombinedFilters(): void
