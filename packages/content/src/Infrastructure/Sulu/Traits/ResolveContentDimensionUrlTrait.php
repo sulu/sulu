@@ -23,6 +23,8 @@ use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 
 /**
  * @internal
+ *
+ * @deprecated since 3.0, implement URL resolution directly in your teaser provider
  */
 trait ResolveContentDimensionUrlTrait
 {
@@ -41,7 +43,7 @@ trait ResolveContentDimensionUrlTrait
                 return $routeGenerator->generate(
                     $route->getSlug(),
                     $route->getLocale(),
-                    $route->getWebspace()
+                    $route->getWebspace() ?? $route->getParentRoute()?->getWebspace(),
                 );
             }
         }

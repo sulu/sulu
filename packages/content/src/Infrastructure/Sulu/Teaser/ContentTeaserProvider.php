@@ -30,6 +30,8 @@ use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 /**
  * @template B of DimensionContentInterface
  * @template T of ContentRichEntityInterface<B>
+ *
+ * @deprecated since 3.0, use entity-specific teaser providers instead (ArticleTeaserProvider, PageTeaserProvider)
  */
 abstract class ContentTeaserProvider implements TeaserProviderInterface
 {
@@ -65,7 +67,12 @@ abstract class ContentTeaserProvider implements TeaserProviderInterface
             return [];
         }
 
-        $contentRichEntities = $this->findEntitiesByIds($ids);
+        $defaultAttributes = [
+            'locale' => $locale,
+            'stage' => DimensionContentInterface::STAGE_LIVE,
+            'version' => DimensionContentInterface::CURRENT_VERSION,
+        ];
+        $contentRichEntities = $this->findEntitiesByIds($ids, $defaultAttributes);
 
         return \array_values(
             \array_filter(
@@ -143,17 +150,26 @@ abstract class ContentTeaserProvider implements TeaserProviderInterface
 
     /**
      * @param B $dimensionContent
-     * @param array{description?: string|null} $data
+     * @param array{description?: string|null, article?: string|null} $data
      */
     protected function getDescription(DimensionContentInterface $dimensionContent, array $data): ?string
     {
+        $description = null;
         if ($dimensionContent instanceof ExcerptInterface) {
             if ($excerptDescription = $dimensionContent->getExcerptDescription()) {
-                return $excerptDescription;
+                $description = $excerptDescription;
             }
         }
 
-        return $data['description'] ?? null;
+        if (null === $description) {
+            $description = $data['description'] ?? $data['article'] ?? null;
+        }
+
+        if (null === $description) {
+            return null;
+        }
+
+        return \strip_tags($description);
     }
 
     /**

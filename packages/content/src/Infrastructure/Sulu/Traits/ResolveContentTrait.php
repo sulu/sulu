@@ -20,6 +20,8 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 /**
  * @internal
+ *
+ * @deprecated since 3.0, implement content resolution directly in your teaser provider
  */
 trait ResolveContentTrait
 {
@@ -38,10 +40,12 @@ trait ResolveContentTrait
             : DimensionContentInterface::STAGE_LIVE;
 
         try {
-            $resolvedDimensionContent = $this->getContentManager()->resolve($contentRichEntity, [
-                'locale' => $locale,
-                'stage' => $stage,
-            ]);
+            $resolvedDimensionContent = $this->getContentManager()->resolve(
+                $contentRichEntity, [
+                    'locale' => $locale,
+                    'stage' => $stage,
+                ]
+            );
         } catch (ContentNotFoundException $exception) {
             return null;
         }
