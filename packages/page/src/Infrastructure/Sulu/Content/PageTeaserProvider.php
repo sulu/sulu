@@ -24,6 +24,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Sulu\Teaser\ContentTeaserProvider;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -50,8 +51,9 @@ class PageTeaserProvider extends ContentTeaserProvider
         MetadataProviderRegistry $metadataProviderRegistry,
         TranslatorInterface $translator,
         ContentEnhancerInterface $contentEnhancer,
+        ?RouteGeneratorInterface $routeGenerator = null,
     ) {
-        parent::__construct($contentManager, $entityManager, $contentMetadataInspector, $metadataProviderRegistry, PageInterface::class);
+        parent::__construct($contentManager, $entityManager, $contentMetadataInspector, $metadataProviderRegistry, PageInterface::class, $routeGenerator);
 
         $this->translator = $translator;
         $this->contentEnhancer = $contentEnhancer;
@@ -62,7 +64,7 @@ class PageTeaserProvider extends ContentTeaserProvider
         return new TeaserConfiguration(
             $this->translator->trans('sulu_page.page', [], 'admin'),
             $this->getResourceKey(),
-            'table',
+            'column_list',
             ['title'],
             $this->translator->trans('sulu_page.single_selection_overlay_title', [], 'admin'),
         );

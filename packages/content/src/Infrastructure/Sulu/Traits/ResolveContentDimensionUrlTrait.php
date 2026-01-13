@@ -17,7 +17,10 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
+use Sulu\Route\Domain\Model\Route;
 
 /**
  * @internal
@@ -32,6 +35,18 @@ trait ResolveContentDimensionUrlTrait
      */
     protected function getUrl(DimensionContentInterface $dimensionContent, array $data): ?string
     {
+        if ($dimensionContent instanceof RoutableInterface) {
+            $route = $dimensionContent->getRoute();
+            $routeGenerator = $this->getRouteGenerator();
+            if (null !== $route && null !== $routeGenerator) {
+                return $routeGenerator->generate(
+                    $this->buildFullSlug($route),
+                    $route->getLocale(),
+                    $route->getWebspace()
+                );
+            }
+        }
+
         if (!$dimensionContent instanceof TemplateInterface) {
             // TODO FIXME add testcase for it
             return null; // @codeCoverageIgnore
@@ -60,10 +75,33 @@ trait ResolveContentDimensionUrlTrait
                 /** @var string|null */
                 return $dimensionContent->getTemplateData()[$property->getName()] ?? null;
             }
+
+            if ('page_tree_route' === $property->getType()) {
+                /** @var array{page?: array{path?: string}, suffix?: string}|null $pageTreeRoute */
+                $pageTreeRoute = $dimensionContent->getTemplateData()[$property->getName()] ?? null;
+                if (\is_array($pageTreeRoute) && isset($pageTreeRoute['page']['path'], $pageTreeRoute['suffix'])) {
+                    return \rtrim($pageTreeRoute['page']['path'], '/') . '/' . \ltrim($pageTreeRoute['suffix'], '/');
+                }
+            }
         }
 
         return null;
     }
 
+    private function buildFullSlug(Route $route): string
+    {
+        $slugParts = [];
+        $currentRoute = $route;
+
+        while (null !== $currentRoute) {
+            $slugParts[] = $currentRoute->getSlug();
+            $currentRoute = $currentRoute->getParentRoute();
+        }
+
+        return \implode('', \array_reverse($slugParts));
+    }
+
     abstract protected function getMetadataProviderRegistry(): MetadataProviderRegistry;
+
+    abstract protected function getRouteGenerator(): ?RouteGeneratorInterface;
 }

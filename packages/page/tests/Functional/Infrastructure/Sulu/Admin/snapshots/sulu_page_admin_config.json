@@ -15,7 +15,7 @@
             "displayProperties": [
                 "title"
             ],
-            "listAdapter": "table",
+            "listAdapter": "column_list",
             "overlayTitle": "Choose page",
             "resourceKey": "pages",
             "resultToView": null,

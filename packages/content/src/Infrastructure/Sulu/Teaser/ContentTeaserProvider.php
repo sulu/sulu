@@ -25,6 +25,7 @@ use Sulu\Content\Domain\Model\ExcerptInterface;
 use Sulu\Content\Infrastructure\Sulu\Traits\FindContentRichEntitiesTrait;
 use Sulu\Content\Infrastructure\Sulu\Traits\ResolveContentDimensionUrlTrait;
 use Sulu\Content\Infrastructure\Sulu\Traits\ResolveContentTrait;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 
 /**
  * @template B of DimensionContentInterface
@@ -60,6 +61,11 @@ abstract class ContentTeaserProvider implements TeaserProviderInterface
     protected $metadataProviderRegistry;
 
     /**
+     * @var RouteGeneratorInterface|null
+     */
+    protected $routeGenerator;
+
+    /**
      * @var class-string<T>
      */
     protected $contentRichEntityClass;
@@ -73,12 +79,23 @@ abstract class ContentTeaserProvider implements TeaserProviderInterface
         ContentMetadataInspectorInterface $contentMetadataInspector,
         MetadataProviderRegistry $metadataProviderRegistry,
         string $contentRichEntityClass,
+        ?RouteGeneratorInterface $routeGenerator = null,
     ) {
+        if (null === $routeGenerator) {
+            trigger_deprecation(
+                'sulu/sulu',
+                '3.0',
+                'Not passing a RouteGeneratorInterface to "%s" is deprecated and will be required in 4.0.',
+                static::class
+            );
+        }
+
         $this->contentManager = $contentManager;
         $this->entityManager = $entityManager;
         $this->contentMetadataInspector = $contentMetadataInspector;
         $this->metadataProviderRegistry = $metadataProviderRegistry;
         $this->contentRichEntityClass = $contentRichEntityClass;
+        $this->routeGenerator = $routeGenerator;
     }
 
     /**
@@ -254,6 +271,11 @@ abstract class ContentTeaserProvider implements TeaserProviderInterface
     protected function getMetadataProviderRegistry(): MetadataProviderRegistry
     {
         return $this->metadataProviderRegistry;
+    }
+
+    protected function getRouteGenerator(): ?RouteGeneratorInterface
+    {
+        return $this->routeGenerator;
     }
 
     protected function getContentManager(): ContentManagerInterface
