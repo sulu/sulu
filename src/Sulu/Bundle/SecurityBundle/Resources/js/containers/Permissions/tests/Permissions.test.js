@@ -848,3 +848,429 @@ test('Dispose autorun on unmount', () => {
 
     expect(systemDisposerSpy).toBeCalledWith();
 });
+
+test('Should restore original permission when webspace is removed and re-added without saving', () => {
+    const value: Array<ContextPermission> = [
+        {
+            id: 1,
+            context: 'sulu.contact.people',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+            },
+        },
+        {
+            id: 3,
+            context: 'sulu.webspaces.example',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+                'live': false,
+                'security': false,
+            },
+        },
+        {
+            id: 5,
+            context: 'sulu.webspaces.example.analytics',
+            permissions: {
+                'view': true,
+                'delete': false,
+                'add': true,
+                'edit': false,
+            },
+        },
+    ];
+
+    const securityContextGroups: SecurityContextGroups = {
+        'Contacts': {
+            'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
+        },
+        'Webspaces': {
+            'sulu.webspaces.#webspace#': ['view', 'add', 'edit', 'delete', 'live', 'security'],
+            'sulu.webspaces.#webspace#.analytics': ['view', 'add', 'edit', 'delete'],
+        },
+    };
+    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
+
+    webspaceStore.allWebspaces = [
+        {
+            ...defaultWebspace,
+            'key': 'example',
+            'name': 'Example',
+        },
+        {
+            ...defaultWebspace,
+            'key': 'example2',
+            'name': 'Example 2',
+        },
+    ];
+
+    const onChange = jest.fn();
+    const permissions = mount(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={value}
+        />
+    );
+
+    // First remove the webspace
+    permissions.find('MultiSelect').prop('onChange')([]);
+
+    const expectedAfterRemove: Array<ContextPermission> = [
+        {
+            id: 1,
+            context: 'sulu.contact.people',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+            },
+        },
+    ];
+
+    expect(onChange).toHaveBeenLastCalledWith(expectedAfterRemove);
+
+    // Update component props to reflect the removed state
+    permissions.setProps({value: expectedAfterRemove});
+    permissions.update();
+
+    // Now re-add the same webspace - it should restore the original permissions with their IDs
+    permissions.find('MultiSelect').prop('onChange')(['example']);
+
+    const expectedAfterReAdd: Array<ContextPermission> = [
+        {
+            id: 1,
+            context: 'sulu.contact.people',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+            },
+        },
+        {
+            // IMPORTANT: This should have the original id: 3, not id: undefined
+            id: 3,
+            context: 'sulu.webspaces.example',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+                'live': false,
+                'security': false,
+            },
+        },
+        {
+            // IMPORTANT: This should have the original id: 5, not id: undefined
+            id: 5,
+            context: 'sulu.webspaces.example.analytics',
+            permissions: {
+                'view': true,
+                'delete': false,
+                'add': true,
+                'edit': false,
+            },
+        },
+    ];
+
+    expect(onChange).toHaveBeenLastCalledWith(expectedAfterReAdd);
+});
+
+test('Should restore multiple webspaces independently when removed and re-added', () => {
+    const value: Array<ContextPermission> = [
+        {
+            id: 1,
+            context: 'sulu.webspaces.example',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+                'live': false,
+                'security': false,
+            },
+        },
+        {
+            id: 2,
+            context: 'sulu.webspaces.example2',
+            permissions: {
+                'view': false,
+                'delete': true,
+                'add': false,
+                'edit': true,
+                'live': false,
+                'security': true,
+            },
+        },
+    ];
+
+    const securityContextGroups: SecurityContextGroups = {
+        'Webspaces': {
+            'sulu.webspaces.#webspace#': ['view', 'add', 'edit', 'delete', 'live', 'security'],
+        },
+    };
+    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
+
+    webspaceStore.allWebspaces = [
+        {
+            ...defaultWebspace,
+            'key': 'example',
+            'name': 'Example',
+        },
+        {
+            ...defaultWebspace,
+            'key': 'example2',
+            'name': 'Example 2',
+        },
+    ];
+
+    const onChange = jest.fn();
+    const permissions = mount(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={value}
+        />
+    );
+
+    // Remove both webspaces
+    permissions.find('MultiSelect').prop('onChange')([]);
+    expect(onChange).toHaveBeenLastCalledWith([]);
+
+    // Update component props
+    permissions.setProps({value: []});
+    permissions.update();
+
+    // Re-add only example2 - should restore its original permissions
+    permissions.find('MultiSelect').prop('onChange')(['example2']);
+
+    const expectedWithExample2: Array<ContextPermission> = [
+        {
+            id: 2,
+            context: 'sulu.webspaces.example2',
+            permissions: {
+                'view': false,
+                'delete': true,
+                'add': false,
+                'edit': true,
+                'live': false,
+                'security': true,
+            },
+        },
+    ];
+
+    expect(onChange).toHaveBeenLastCalledWith(expectedWithExample2);
+
+    // Update component props again
+    permissions.setProps({value: expectedWithExample2});
+    permissions.update();
+
+    // Now also add example - should restore its original permissions
+    permissions.find('MultiSelect').prop('onChange')(['example2', 'example']);
+
+    const expectedWithBoth: Array<ContextPermission> = [
+        {
+            id: 2,
+            context: 'sulu.webspaces.example2',
+            permissions: {
+                'view': false,
+                'delete': true,
+                'add': false,
+                'edit': true,
+                'live': false,
+                'security': true,
+            },
+        },
+        {
+            id: 1,
+            context: 'sulu.webspaces.example',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+                'live': false,
+                'security': false,
+            },
+        },
+    ];
+
+    expect(onChange).toHaveBeenLastCalledWith(expectedWithBoth);
+});
+
+test('Should create new permission when adding a webspace that was never selected before', () => {
+    const value: Array<ContextPermission> = [
+        {
+            id: 1,
+            context: 'sulu.webspaces.example',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+                'live': false,
+                'security': false,
+            },
+        },
+    ];
+
+    const securityContextGroups: SecurityContextGroups = {
+        'Webspaces': {
+            'sulu.webspaces.#webspace#': ['view', 'add', 'edit', 'delete', 'live', 'security'],
+        },
+    };
+    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
+
+    webspaceStore.allWebspaces = [
+        {
+            ...defaultWebspace,
+            'key': 'example',
+            'name': 'Example',
+        },
+        {
+            ...defaultWebspace,
+            'key': 'example2',
+            'name': 'Example 2',
+        },
+    ];
+
+    const onChange = jest.fn();
+    const permissions = mount(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={value}
+        />
+    );
+
+    // Add example2 which was never selected before - should create new permission with id: undefined
+    permissions.find('MultiSelect').prop('onChange')(['example', 'example2']);
+
+    const expected: Array<ContextPermission> = [
+        {
+            id: 1,
+            context: 'sulu.webspaces.example',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+                'live': false,
+                'security': false,
+            },
+        },
+        {
+            // Should be undefined because this webspace was never selected before
+            id: undefined,
+            context: 'sulu.webspaces.example2',
+            permissions: {
+                'view': false,
+                'delete': false,
+                'add': false,
+                'edit': false,
+                'live': false,
+                'security': false,
+            },
+        },
+    ];
+
+    expect(onChange).toHaveBeenLastCalledWith(expected);
+});
+
+test('Should maintain removed permissions cache when toggling same webspace multiple times', () => {
+    const value: Array<ContextPermission> = [
+        {
+            id: 1,
+            context: 'sulu.webspaces.example',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+                'live': false,
+                'security': false,
+            },
+        },
+    ];
+
+    const securityContextGroups: SecurityContextGroups = {
+        'Webspaces': {
+            'sulu.webspaces.#webspace#': ['view', 'add', 'edit', 'delete', 'live', 'security'],
+        },
+    };
+    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
+
+    webspaceStore.allWebspaces = [
+        {
+            ...defaultWebspace,
+            'key': 'example',
+            'name': 'Example',
+        },
+    ];
+
+    const onChange = jest.fn();
+    const permissions = mount(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={value}
+        />
+    );
+
+    // Remove the webspace
+    permissions.find('MultiSelect').prop('onChange')([]);
+    expect(onChange).toHaveBeenLastCalledWith([]);
+    permissions.setProps({value: []});
+    permissions.update();
+
+    // Re-add it - should restore original
+    permissions.find('MultiSelect').prop('onChange')(['example']);
+    const firstReAdd = [
+        {
+            id: 1,
+            context: 'sulu.webspaces.example',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+                'live': false,
+                'security': false,
+            },
+        },
+    ];
+    expect(onChange).toHaveBeenLastCalledWith(firstReAdd);
+    permissions.setProps({value: firstReAdd});
+    permissions.update();
+
+    // Remove it again
+    permissions.find('MultiSelect').prop('onChange')([]);
+    expect(onChange).toHaveBeenLastCalledWith([]);
+    permissions.setProps({value: []});
+    permissions.update();
+
+    // Re-add it again - should still restore the original permission
+    permissions.find('MultiSelect').prop('onChange')(['example']);
+    const secondReAdd = [
+        {
+            id: 1,
+            context: 'sulu.webspaces.example',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+                'live': false,
+                'security': false,
+            },
+        },
+    ];
+    expect(onChange).toHaveBeenLastCalledWith(secondReAdd);
+});
