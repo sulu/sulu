@@ -25,6 +25,7 @@ use Sulu\Content\Domain\Model\ExcerptInterface;
 use Sulu\Content\Infrastructure\Sulu\Traits\FindContentRichEntitiesTrait;
 use Sulu\Content\Infrastructure\Sulu\Traits\ResolveContentDimensionUrlTrait;
 use Sulu\Content\Infrastructure\Sulu\Traits\ResolveContentTrait;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 
 /**
  * @template B of DimensionContentInterface
@@ -40,45 +41,16 @@ abstract class ContentTeaserProvider implements TeaserProviderInterface
     use ResolveContentTrait;
 
     /**
-     * @var ContentManagerInterface
-     */
-    protected $contentManager;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
-
-    /**
-     * @var ContentMetadataInspectorInterface
-     */
-    private $contentMetadataInspector;
-
-    /**
-     * @var MetadataProviderRegistry
-     */
-    protected $metadataProviderRegistry;
-
-    /**
-     * @var class-string<T>
-     */
-    protected $contentRichEntityClass;
-
-    /**
      * @param class-string<T> $contentRichEntityClass
      */
     public function __construct(
-        ContentManagerInterface $contentManager,
-        EntityManagerInterface $entityManager,
-        ContentMetadataInspectorInterface $contentMetadataInspector,
-        MetadataProviderRegistry $metadataProviderRegistry,
-        string $contentRichEntityClass,
+        private ContentManagerInterface $contentManager,
+        private EntityManagerInterface $entityManager,
+        private ContentMetadataInspectorInterface $contentMetadataInspector,
+        private MetadataProviderRegistry $metadataProviderRegistry,
+        private string $contentRichEntityClass,
+        private RouteGeneratorInterface $routeGenerator,
     ) {
-        $this->contentManager = $contentManager;
-        $this->entityManager = $entityManager;
-        $this->contentMetadataInspector = $contentMetadataInspector;
-        $this->metadataProviderRegistry = $metadataProviderRegistry;
-        $this->contentRichEntityClass = $contentRichEntityClass;
     }
 
     /**
@@ -254,6 +226,11 @@ abstract class ContentTeaserProvider implements TeaserProviderInterface
     protected function getMetadataProviderRegistry(): MetadataProviderRegistry
     {
         return $this->metadataProviderRegistry;
+    }
+
+    protected function getRouteGenerator(): RouteGeneratorInterface
+    {
+        return $this->routeGenerator;
     }
 
     protected function getContentManager(): ContentManagerInterface

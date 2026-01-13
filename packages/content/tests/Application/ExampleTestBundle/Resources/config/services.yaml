@@ -41,6 +41,7 @@ services:
             - '@sulu_content.content_metadata_inspector'
             - '@sulu_admin.metadata_provider_registry'
             - '@translator'
+            - '@sulu_route.route_generator'
         tags:
             - { name: sulu.teaser.provider, alias: examples }
 

@@ -325,6 +325,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_content.content_metadata_inspector'),
                 new Reference('sulu_admin.metadata_provider_registry'),
                 new Reference('translator'),
+                new Reference('sulu_route.route_generator'),
             ])
             ->tag('sulu.teaser.provider', ['alias' => ArticleInterface::RESOURCE_KEY]);
 

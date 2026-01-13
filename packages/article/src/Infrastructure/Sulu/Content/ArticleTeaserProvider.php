@@ -22,6 +22,7 @@ use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Sulu\Teaser\ContentTeaserProvider;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -40,8 +41,9 @@ class ArticleTeaserProvider extends ContentTeaserProvider
         ContentMetadataInspectorInterface $contentMetadataInspector,
         MetadataProviderRegistry $metadataProviderRegistry,
         TranslatorInterface $translator,
+        RouteGeneratorInterface $routeGenerator,
     ) {
-        parent::__construct($contentManager, $entityManager, $contentMetadataInspector, $metadataProviderRegistry, ArticleInterface::class);
+        parent::__construct($contentManager, $entityManager, $contentMetadataInspector, $metadataProviderRegistry, ArticleInterface::class, $routeGenerator);
 
         $this->translator = $translator;
     }
