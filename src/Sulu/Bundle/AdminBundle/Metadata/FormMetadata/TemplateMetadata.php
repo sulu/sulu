@@ -49,4 +49,13 @@ class TemplateMetadata
     {
         $this->cacheLifetime = $cacheLifetime;
     }
+
+    public function merge(self $other): self
+    {
+        return new self(
+            $other->getController() ?: $this->getController(),
+            $other->getView() ?: $this->getView(),
+            $other->getCacheLifetime() ?? $this->getCacheLifetime()
+        );
+    }
 }

@@ -36,7 +36,7 @@ class FormMetadata extends AbstractMetadata
     private SchemaMetadata $schema;
 
     #[Exclude()]
-    private ?TemplateMetadata $template = null;
+    private ?TemplateMetadata $template;
 
     #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
     private string $key;
@@ -262,10 +262,18 @@ class FormMetadata extends AbstractMetadata
         $mergedForm->setResources(\array_merge($this->getResources(), $otherForm->getResources()));
         $mergedForm->setSchema($this->getSchema()->merge($otherForm->getSchema()));
 
-        $mergedFormTemplate = $otherForm->getTemplate() ?? $this->getTemplate();
-        if ($mergedFormTemplate) {
-            $mergedForm->setTemplate($mergedFormTemplate);
+        $formTemplate = $this->getTemplate();
+        $otherFormTemplate = $otherForm->getTemplate();
+        $mergedFormTemplate = null;
+
+        if ($formTemplate instanceof TemplateMetadata || $otherFormTemplate instanceof TemplateMetadata) {
+            $formTemplate ??= new TemplateMetadata('', '', null);
+            $otherFormTemplate ??= new TemplateMetadata('', '', null);
+
+            $mergedFormTemplate = $formTemplate->merge($otherFormTemplate);
         }
+
+        $mergedForm->setTemplate($mergedFormTemplate);
 
         return $mergedForm;
     }
