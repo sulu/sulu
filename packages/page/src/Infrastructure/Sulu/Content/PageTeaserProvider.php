@@ -144,12 +144,6 @@ class PageTeaserProvider implements TeaserProviderInterface
             return null;
         }
 
-        if (DimensionContentInterface::STAGE_LIVE !== $dimensionContent->getStage()
-            || $locale !== $dimensionContent->getLocale()
-        ) {
-            return null;
-        }
-
         return $dimensionContent;
     }
 
