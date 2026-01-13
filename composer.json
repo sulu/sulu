@@ -123,7 +123,7 @@
         "symfony/yaml": "^5.4 || ^6.0 || ^7.0",
         "toflar/psr6-symfony-http-cache-store": "^3.0 || ^4.0",
         "twig/twig": "^2.13 || ^3.0",
-        "webmozart/assert": "^1.9"
+        "webmozart/assert": "^1.9 || ^2.0"
     },
     "require-dev": {
         "google/cloud-storage": "^1.0",
