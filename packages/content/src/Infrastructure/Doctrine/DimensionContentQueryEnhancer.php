@@ -19,6 +19,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
+use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\TaxonomyInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
 use Webmozart\Assert\Assert;
@@ -38,6 +39,7 @@ class DimensionContentQueryEnhancer
     public const SELECT_EXCERPT_CATEGORIES = 'excerpt-categories';
     public const SELECT_EXCERPT_CATEGORIES_TRANSLATION = 'excerpt-categories-translation';
     public const SELECT_EXCERPT_AUDIENCE_TARGET_GROUPS = 'excerpt-audience-target-groups';
+    public const SELECT_ROUTE = 'route';
 
     /**
      * Groups are used in controllers and represents serialization / resolver group,
@@ -55,11 +57,13 @@ class DimensionContentQueryEnhancer
         self::GROUP_SELECT_CONTENT_ADMIN => [
             self::SELECT_EXCERPT_TAGS => true,
             self::SELECT_EXCERPT_CATEGORIES => true,
+            self::SELECT_ROUTE => true,
         ],
         self::GROUP_SELECT_CONTENT_WEBSITE => [
             self::SELECT_EXCERPT_TAGS => true,
             self::SELECT_EXCERPT_CATEGORIES => true,
             self::SELECT_EXCERPT_CATEGORIES_TRANSLATION => true,
+            self::SELECT_ROUTE => true,
         ],
     ];
 
@@ -301,6 +305,13 @@ class DimensionContentQueryEnhancer
             if ($selects[self::SELECT_EXCERPT_AUDIENCE_TARGET_GROUPS] ?? false) {
                 $queryBuilder->leftJoin('dimensionContent.excerptAudienceTargetGroups', 'contentExcerptAudienceTargetGroup')
                     ->addSelect('contentExcerptAudienceTargetGroup');
+            }
+        }
+
+        if (\is_subclass_of($dimensionContentClassName, RoutableInterface::class)) {
+            if ($selects[self::SELECT_ROUTE] ?? false) {
+                $queryBuilder->leftJoin('dimensionContent.route', 'route')
+                    ->addSelect('route');
             }
         }
     }
