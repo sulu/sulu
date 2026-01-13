@@ -51,7 +51,7 @@ class PageTeaserProvider extends ContentTeaserProvider
         MetadataProviderRegistry $metadataProviderRegistry,
         TranslatorInterface $translator,
         ContentEnhancerInterface $contentEnhancer,
-        ?RouteGeneratorInterface $routeGenerator = null,
+        RouteGeneratorInterface $routeGenerator,
     ) {
         parent::__construct($contentManager, $entityManager, $contentMetadataInspector, $metadataProviderRegistry, PageInterface::class, $routeGenerator);
 

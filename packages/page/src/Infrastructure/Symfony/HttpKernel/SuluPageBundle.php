@@ -424,6 +424,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_admin.metadata_provider_registry'),
                 new Reference('translator'),
                 new Reference('sulu_content.content_enhancer'),
+                new Reference('sulu_route.route_generator'),
             ])
             ->tag('sulu.teaser.provider', ['alias' => PageInterface::RESOURCE_KEY]);
 

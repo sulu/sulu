@@ -41,61 +41,16 @@ abstract class ContentTeaserProvider implements TeaserProviderInterface
     use ResolveContentTrait;
 
     /**
-     * @var ContentManagerInterface
-     */
-    protected $contentManager;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
-
-    /**
-     * @var ContentMetadataInspectorInterface
-     */
-    private $contentMetadataInspector;
-
-    /**
-     * @var MetadataProviderRegistry
-     */
-    protected $metadataProviderRegistry;
-
-    /**
-     * @var RouteGeneratorInterface|null
-     */
-    protected $routeGenerator;
-
-    /**
-     * @var class-string<T>
-     */
-    protected $contentRichEntityClass;
-
-    /**
      * @param class-string<T> $contentRichEntityClass
      */
     public function __construct(
-        ContentManagerInterface $contentManager,
-        EntityManagerInterface $entityManager,
-        ContentMetadataInspectorInterface $contentMetadataInspector,
-        MetadataProviderRegistry $metadataProviderRegistry,
-        string $contentRichEntityClass,
-        ?RouteGeneratorInterface $routeGenerator = null,
+        private ContentManagerInterface $contentManager,
+        private EntityManagerInterface $entityManager,
+        private ContentMetadataInspectorInterface $contentMetadataInspector,
+        private MetadataProviderRegistry $metadataProviderRegistry,
+        private string $contentRichEntityClass,
+        private RouteGeneratorInterface $routeGenerator,
     ) {
-        if (null === $routeGenerator) {
-            trigger_deprecation(
-                'sulu/sulu',
-                '3.0',
-                'Not passing a RouteGeneratorInterface to "%s" is deprecated and will be required in 4.0.',
-                static::class
-            );
-        }
-
-        $this->contentManager = $contentManager;
-        $this->entityManager = $entityManager;
-        $this->contentMetadataInspector = $contentMetadataInspector;
-        $this->metadataProviderRegistry = $metadataProviderRegistry;
-        $this->contentRichEntityClass = $contentRichEntityClass;
-        $this->routeGenerator = $routeGenerator;
     }
 
     /**
@@ -273,7 +228,7 @@ abstract class ContentTeaserProvider implements TeaserProviderInterface
         return $this->metadataProviderRegistry;
     }
 
-    protected function getRouteGenerator(): ?RouteGeneratorInterface
+    protected function getRouteGenerator(): RouteGeneratorInterface
     {
         return $this->routeGenerator;
     }

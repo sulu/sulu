@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Unit\Infrastructure\Sulu\Traits;
 
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -23,10 +22,6 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
-use Sulu\Bundle\AdminBundle\Teaser\Configuration\TeaserConfiguration;
-use Sulu\Content\Application\ContentManager\ContentManagerInterface;
-use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
-use Sulu\Content\Infrastructure\Sulu\Teaser\ContentTeaserProvider;
 use Sulu\Content\Infrastructure\Sulu\Traits\ResolveContentDimensionUrlTrait;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
@@ -43,9 +38,9 @@ class ResolveContentDimensionUrlTraitTestImpl
     }
 
     private MetadataProviderRegistry $metadataProviderRegistry;
-    private ?RouteGeneratorInterface $routeGenerator;
+    private RouteGeneratorInterface $routeGenerator;
 
-    public function __construct(MetadataProviderRegistry $metadataProviderRegistry, ?RouteGeneratorInterface $routeGenerator)
+    public function __construct(MetadataProviderRegistry $metadataProviderRegistry, RouteGeneratorInterface $routeGenerator)
     {
         $this->metadataProviderRegistry = $metadataProviderRegistry;
         $this->routeGenerator = $routeGenerator;
@@ -56,7 +51,7 @@ class ResolveContentDimensionUrlTraitTestImpl
         return $this->metadataProviderRegistry;
     }
 
-    protected function getRouteGenerator(): ?RouteGeneratorInterface
+    protected function getRouteGenerator(): RouteGeneratorInterface
     {
         return $this->routeGenerator;
     }
@@ -82,11 +77,11 @@ class ResolveContentDimensionUrlTraitTest extends TestCase
         $this->metadataContainer = $this->prophesize(ContainerInterface::class);
     }
 
-    private function createTraitInstance(?RouteGeneratorInterface $routeGenerator = null, bool $useNullRouteGenerator = false): ResolveContentDimensionUrlTraitTestImpl
+    private function createTraitInstance(?RouteGeneratorInterface $routeGenerator = null): ResolveContentDimensionUrlTraitTestImpl
     {
         $metadataProviderRegistry = new MetadataProviderRegistry($this->metadataContainer->reveal());
 
-        if (!$useNullRouteGenerator && null === $routeGenerator) {
+        if (null === $routeGenerator) {
             $routeGenerator = $this->routeGenerator->reveal();
         }
 
@@ -112,47 +107,6 @@ class ResolveContentDimensionUrlTraitTest extends TestCase
         $this->assertSame('/en/my-example', $url);
     }
 
-    public function testGetUrlWithRoutableInterfaceAndParentRoute(): void
-    {
-        $example = new Example();
-        $dimensionContent = new ExampleDimensionContent($example);
-        $dimensionContent->setLocale('en');
-
-        $parentRoute = new Route('pages', 'parent-1', 'en', '/products', 'sulu-io');
-        $childRoute = new Route('examples', '1', 'en', '/laptop', 'sulu-io', $parentRoute);
-        $dimensionContent->setRoute($childRoute);
-
-        $this->routeGenerator->generate('/products/laptop', 'en', 'sulu-io')
-            ->willReturn('/en/products/laptop')
-            ->shouldBeCalledOnce();
-
-        $traitInstance = $this->createTraitInstance();
-        $url = $traitInstance->getUrl($dimensionContent, []);
-
-        $this->assertSame('/en/products/laptop', $url);
-    }
-
-    public function testGetUrlWithRoutableInterfaceAndDeepParentChain(): void
-    {
-        $example = new Example();
-        $dimensionContent = new ExampleDimensionContent($example);
-        $dimensionContent->setLocale('en');
-
-        $grandparentRoute = new Route('pages', 'gp-1', 'en', '/shop', 'sulu-io');
-        $parentRoute = new Route('pages', 'p-1', 'en', '/electronics', 'sulu-io', $grandparentRoute);
-        $childRoute = new Route('examples', '1', 'en', '/laptop', 'sulu-io', $parentRoute);
-        $dimensionContent->setRoute($childRoute);
-
-        $this->routeGenerator->generate('/shop/electronics/laptop', 'en', 'sulu-io')
-            ->willReturn('/en/shop/electronics/laptop')
-            ->shouldBeCalledOnce();
-
-        $traitInstance = $this->createTraitInstance();
-        $url = $traitInstance->getUrl($dimensionContent, []);
-
-        $this->assertSame('/en/shop/electronics/laptop', $url);
-    }
-
     public function testGetUrlWithRoutableInterfaceNoRoute(): void
     {
         $example = new Example();
@@ -165,25 +119,6 @@ class ResolveContentDimensionUrlTraitTest extends TestCase
         $dimensionContent->setTemplateData(['url' => '/fallback-url']);
 
         $traitInstance = $this->createTraitInstance();
-        $url = $traitInstance->getUrl($dimensionContent, []);
-
-        $this->assertSame('/fallback-url', $url);
-    }
-
-    public function testGetUrlWithRoutableInterfaceNoRouteGenerator(): void
-    {
-        $example = new Example();
-        $dimensionContent = new ExampleDimensionContent($example);
-        $dimensionContent->setLocale('en');
-        $dimensionContent->setTemplateKey('default');
-
-        $route = new Route('examples', '1', 'en', '/my-example', 'sulu-io');
-        $dimensionContent->setRoute($route);
-
-        $this->setupMetadataForRouteField('url', 'route');
-        $dimensionContent->setTemplateData(['url' => '/fallback-url']);
-
-        $traitInstance = $this->createTraitInstance(useNullRouteGenerator: true);
         $url = $traitInstance->getUrl($dimensionContent, []);
 
         $this->assertSame('/fallback-url', $url);
@@ -290,32 +225,6 @@ class ResolveContentDimensionUrlTraitTest extends TestCase
         $url = $traitInstance->getUrl($dimensionContent, []);
 
         $this->assertNull($url);
-    }
-
-    public function testDeprecationWhenRouteGeneratorNull(): void
-    {
-        $this->expectUserDeprecationMessageMatches(
-            '/Not passing a RouteGeneratorInterface to .+ is deprecated/'
-        );
-
-        $contentManager = $this->prophesize(ContentManagerInterface::class);
-        $entityManager = $this->prophesize(EntityManagerInterface::class);
-        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
-        $metadataProviderRegistry = new MetadataProviderRegistry($this->metadataContainer->reveal());
-
-        new class(
-            $contentManager->reveal(),
-            $entityManager->reveal(),
-            $contentMetadataInspector->reveal(),
-            $metadataProviderRegistry,
-            Example::class, /* @phpstan-ignore-line */
-            null
-        ) extends ContentTeaserProvider {
-            public function getConfiguration(): TeaserConfiguration
-            {
-                throw new \RuntimeException('Not implemented');
-            }
-        };
     }
 
     private function setupMetadataForRouteField(string $fieldName, string $fieldType): void

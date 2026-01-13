@@ -41,7 +41,7 @@ class ExampleTeaserProvider extends ContentTeaserProvider
         ContentMetadataInspectorInterface $contentMetadataInspector,
         MetadataProviderRegistry $metadataProviderRegistry,
         TranslatorInterface $translator,
-        ?RouteGeneratorInterface $routeGenerator = null,
+        RouteGeneratorInterface $routeGenerator,
     ) {
         parent::__construct($contentManager, $entityManager, $contentMetadataInspector, $metadataProviderRegistry, Example::class, $routeGenerator);
 
