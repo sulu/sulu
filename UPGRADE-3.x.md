@@ -5,7 +5,7 @@
 ### TeaserProvider Refactoring
 
 The generic `ContentTeaserProvider` and related traits have been removed due to architectural issues.
-Each content type now has its own standalone teaser provider implementation:
+Each resource now has its own standalone teaser provider implementation:
 
 - `PageTeaserProvider` - Standalone implementation for pages
 - `ArticleTeaserProvider` - Standalone implementation with multi-webspace support for articles
