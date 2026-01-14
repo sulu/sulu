@@ -76,7 +76,8 @@ trait CreateMediaTrait
      * @param array{
      *     title?: string,
      *     description?: string,
-     *     type ?: string,
+     *     type?: string,
+     *     mimetype?: string,
      *     locale?: string,
      * } $data
      */
@@ -106,12 +107,14 @@ trait CreateMediaTrait
             ->setType($data['type'] ?? MediaInterface::TYPE_IMAGE)
             ->setCollection($collection);
 
+        $mimeType = $data['mimetype'] ?? $uploadedFile->getMimeType();
+
         $fileVersion = new FileVersion();
         $fileVersion->setVersion($file->getVersion())
             ->setSize($uploadedFile->getSize())
             ->setName($fileName)
             ->setStorageOptions($storageOptions)
-            ->setMimeType($uploadedFile->getMimeType() ?: 'image/jpeg')
+            ->setMimeType($mimeType ?: 'image/jpeg')
             ->setFile($file);
 
         $file->addFileVersion($fileVersion);
