@@ -36,12 +36,11 @@ services:
         class: Sulu\Content\Tests\Application\ExampleTestBundle\Teaser\ExampleTeaserProvider
         public: true
         arguments:
-            - '@sulu_content.content_manager'
-            - '@doctrine.orm.entity_manager'
-            - '@sulu_content.content_metadata_inspector'
-            - '@sulu_admin.metadata_provider_registry'
-            - '@translator'
+            - '@example_test.example_repository'
+            - '@sulu_content.content_aggregator'
+            - '@sulu_content.content_enhancer'
             - '@sulu_route.route_generator'
+            - '@translator'
         tags:
             - { name: sulu.teaser.provider, alias: examples }
 

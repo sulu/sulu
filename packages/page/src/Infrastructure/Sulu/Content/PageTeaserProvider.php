@@ -13,57 +13,36 @@ declare(strict_types=1);
 
 namespace Sulu\Page\Infrastructure\Sulu\Content;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\Teaser\Configuration\TeaserConfiguration;
+use Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderInterface;
+use Sulu\Bundle\AdminBundle\Teaser\Teaser;
+use Sulu\Bundle\AdminBundle\Teaser\TeaserTagPropertyExtractor;
+use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentEnhancer\ContentEnhancerInterface;
-use Sulu\Content\Application\ContentManager\ContentManagerInterface;
-use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
-use Sulu\Content\Domain\Model\ContentRichEntityInterface;
+use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Infrastructure\Sulu\Teaser\ContentTeaserProvider;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
-use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
+use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @extends ContentTeaserProvider<PageDimensionContentInterface, PageInterface>
- *
- * TODO should not inherit from a generic TeaserProvider
- */
-class PageTeaserProvider extends ContentTeaserProvider
+class PageTeaserProvider implements TeaserProviderInterface
 {
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
-    /**
-     * @var ContentEnhancerInterface
-     */
-    private $contentEnhancer;
-
     public function __construct(
-        ContentManagerInterface $contentManager,
-        EntityManagerInterface $entityManager,
-        ContentMetadataInspectorInterface $contentMetadataInspector,
-        MetadataProviderRegistry $metadataProviderRegistry,
-        TranslatorInterface $translator,
-        ContentEnhancerInterface $contentEnhancer,
-        RouteGeneratorInterface $routeGenerator,
+        protected PageRepositoryInterface $pageRepository,
+        protected ContentAggregatorInterface $contentAggregator,
+        protected ContentEnhancerInterface $contentEnhancer,
+        protected TranslatorInterface $translator,
+        protected TeaserTagPropertyExtractor $teaserTagPropertyExtractor,
     ) {
-        parent::__construct($contentManager, $entityManager, $contentMetadataInspector, $metadataProviderRegistry, PageInterface::class, $routeGenerator);
-
-        $this->translator = $translator;
-        $this->contentEnhancer = $contentEnhancer;
     }
 
     public function getConfiguration(): TeaserConfiguration
     {
         return new TeaserConfiguration(
             $this->translator->trans('sulu_page.page', [], 'admin'),
-            $this->getResourceKey(),
+            PageInterface::RESOURCE_KEY,
             'column_list',
             ['title'],
             $this->translator->trans('sulu_page.single_selection_overlay_title', [], 'admin'),
@@ -71,42 +50,180 @@ class PageTeaserProvider extends ContentTeaserProvider
     }
 
     /**
-     * @param array{
-     *     page?: string|null,
-     *     description?: string|null,
-     * } $data
+     * @param array<string> $ids
+     *
+     * @return Teaser[]
      */
-    protected function getDescription(DimensionContentInterface $dimensionContent, array $data): ?string
+    public function find(array $ids, $locale): array
     {
-        $page = \strip_tags($data['page'] ?? '');
+        if (0 === \count($ids)) {
+            return [];
+        }
 
-        return $page ?: parent::getDescription($dimensionContent, $data);
-    }
+        $pages = $this->findPagesByUuids($ids, $locale);
 
-    protected function getEntityIdField(): string
-    {
-        return 'uuid';
+        $teasers = [];
+        foreach ($pages as $page) {
+            $teaser = $this->createTeaserFromPage($page, $locale);
+            if (null !== $teaser) {
+                $teasers[] = $teaser;
+            }
+        }
+
+        return $teasers;
     }
 
     /**
-     * Override to add content enhancement for page links.
+     * @param array<string> $uuids
      *
-     * @template E of DimensionContentInterface
-     *
-     * @param ContentRichEntityInterface<E> $contentRichEntity
-     *
-     * @return E|null
+     * @return array<PageInterface>
      */
-    protected function resolveContent(ContentRichEntityInterface $contentRichEntity, string $locale, bool $showDrafts = false): ?DimensionContentInterface
+    private function findPagesByUuids(array $uuids, string $locale): array
     {
-        $dimensionContent = parent::resolveContent($contentRichEntity, $locale, $showDrafts);
+        /** @var array<PageInterface> $pages */
+        $pages = \iterator_to_array($this->pageRepository->findBy(
+            filters: [
+                'uuids' => $uuids,
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+            ],
+            selects: [
+                PageRepositoryInterface::SELECT_PAGE_CONTENT => [
+                    DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true,
+                ],
+            ]
+        ));
 
+        // Sort by original order
+        $uuidPositions = \array_flip($uuids);
+        \usort(
+            $pages,
+            static fn (PageInterface $a, PageInterface $b) => ($uuidPositions[$a->getUuid()] ?? 0) - ($uuidPositions[$b->getUuid()] ?? 0)
+        );
+
+        return $pages;
+    }
+
+    private function createTeaserFromPage(PageInterface $page, string $locale): ?Teaser
+    {
+        $dimensionContent = $this->resolveDimensionContent($page, $locale);
         if (null === $dimensionContent) {
             return null;
         }
 
-        // Enhance the content to resolve page links and other enhancements
-        /** @var E */
-        return $this->contentEnhancer->enhance($dimensionContent);
+        /** @var PageDimensionContentInterface $dimensionContent */
+        $dimensionContent = $this->contentEnhancer->enhance($dimensionContent);
+
+        $url = $this->resolveUrl($dimensionContent);
+        if (null === $url) {
+            return null;
+        }
+
+        return new Teaser(
+            $page->getUuid(),
+            PageInterface::RESOURCE_KEY,
+            $locale,
+            $this->resolveTitle($dimensionContent) ?? '',
+            $this->resolveDescription($dimensionContent) ?? '',
+            $this->resolveMoreText($dimensionContent) ?? '',
+            $url,
+            $this->resolveMediaId($dimensionContent),
+            $this->getAttributes($dimensionContent),
+        );
+    }
+
+    protected function resolveDimensionContent(PageInterface $page, string $locale): ?PageDimensionContentInterface
+    {
+        try {
+            /** @var PageDimensionContentInterface $dimensionContent */
+            $dimensionContent = $this->contentAggregator->aggregate($page, [
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+            ]);
+        } catch (ContentNotFoundException) {
+            return null;
+        }
+
+        return $dimensionContent;
+    }
+
+    protected function resolveUrl(PageDimensionContentInterface $dimensionContent): ?string
+    {
+        $linkData = $dimensionContent->getLinkData();
+        if ('external' === ($linkData['provider'] ?? null) && \is_string($linkData['href'] ?? null)) {
+            return $linkData['href'];
+        }
+
+        $route = $dimensionContent->getRoute();
+
+        return $route?->getSlug();
+    }
+
+    protected function resolveTitle(PageDimensionContentInterface $dimensionContent): ?string
+    {
+        $title = $dimensionContent->getExcerptTitle() ?? $dimensionContent->getTitle();
+
+        return '' !== ($title ?? '') ? $title : null;
+    }
+
+    protected function resolveDescription(PageDimensionContentInterface $dimensionContent): ?string
+    {
+        $description = $dimensionContent->getExcerptDescription();
+        if (null !== $description && '' !== $description) {
+            return \strip_tags($description);
+        }
+
+        // Fallback to tagged property
+        $templateKey = $dimensionContent->getTemplateKey();
+        $locale = $dimensionContent->getLocale();
+        if (null === $templateKey || null === $locale) {
+            return null;
+        }
+
+        $description = $this->teaserTagPropertyExtractor->extractDescription(
+            PageInterface::TEMPLATE_TYPE,
+            $templateKey,
+            $locale,
+            $dimensionContent->getTemplateData()
+        );
+
+        return null !== $description ? \strip_tags($description) : null;
+    }
+
+    protected function resolveMoreText(PageDimensionContentInterface $dimensionContent): ?string
+    {
+        $moreText = $dimensionContent->getExcerptMore();
+
+        return '' !== ($moreText ?? '') ? $moreText : null;
+    }
+
+    protected function resolveMediaId(PageDimensionContentInterface $dimensionContent): ?int
+    {
+        $mediaId = $dimensionContent->getExcerptImage()['id'] ?? null;
+        if (null !== $mediaId) {
+            return $mediaId;
+        }
+
+        // Fallback to tagged property
+        $templateKey = $dimensionContent->getTemplateKey();
+        $locale = $dimensionContent->getLocale();
+        if (null === $templateKey || null === $locale) {
+            return null;
+        }
+
+        return $this->teaserTagPropertyExtractor->extractMediaId(
+            PageInterface::TEMPLATE_TYPE,
+            $templateKey,
+            $locale,
+            $dimensionContent->getTemplateData()
+        );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function getAttributes(PageDimensionContentInterface $dimensionContent): array
+    {
+        return [];
     }
 }

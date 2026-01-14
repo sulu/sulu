@@ -13,46 +13,36 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Infrastructure\Sulu\Content;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
-use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
+use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\AdminBundle\Teaser\Configuration\TeaserConfiguration;
-use Sulu\Content\Application\ContentManager\ContentManagerInterface;
-use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
+use Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderInterface;
+use Sulu\Bundle\AdminBundle\Teaser\Teaser;
+use Sulu\Bundle\AdminBundle\Teaser\TeaserTagPropertyExtractor;
+use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
+use Sulu\Content\Application\ContentEnhancer\ContentEnhancerInterface;
+use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Infrastructure\Sulu\Teaser\ContentTeaserProvider;
-use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @extends ContentTeaserProvider<ArticleDimensionContentInterface, ArticleInterface>
- */
-class ArticleTeaserProvider extends ContentTeaserProvider
+class ArticleTeaserProvider implements TeaserProviderInterface
 {
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
     public function __construct(
-        ContentManagerInterface $contentManager,
-        EntityManagerInterface $entityManager,
-        ContentMetadataInspectorInterface $contentMetadataInspector,
-        MetadataProviderRegistry $metadataProviderRegistry,
-        TranslatorInterface $translator,
-        RouteGeneratorInterface $routeGenerator,
+        protected ArticleRepositoryInterface $articleRepository,
+        protected ContentAggregatorInterface $contentAggregator,
+        protected ContentEnhancerInterface $contentEnhancer,
+        protected TranslatorInterface $translator,
+        protected TeaserTagPropertyExtractor $teaserTagPropertyExtractor,
     ) {
-        parent::__construct($contentManager, $entityManager, $contentMetadataInspector, $metadataProviderRegistry, ArticleInterface::class, $routeGenerator);
-
-        $this->translator = $translator;
     }
 
     public function getConfiguration(): TeaserConfiguration
     {
         return new TeaserConfiguration(
             $this->translator->trans('sulu_article.article', [], 'admin'),
-            $this->getResourceKey(),
+            ArticleInterface::RESOURCE_KEY,
             'table',
             ['title'],
             $this->translator->trans('sulu_article.single_selection_overlay_title', [], 'admin'),
@@ -60,20 +50,179 @@ class ArticleTeaserProvider extends ContentTeaserProvider
     }
 
     /**
-     * @param array{
-     *     article?: string|null,
-     *     description?: string|null,
-     * } $data
+     * @param array<string> $ids
+     *
+     * @return Teaser[]
      */
-    protected function getDescription(DimensionContentInterface $dimensionContent, array $data): ?string
+    public function find(array $ids, $locale): array
     {
-        $article = \strip_tags($data['article'] ?? '');
+        if (0 === \count($ids)) {
+            return [];
+        }
 
-        return $article ?: parent::getDescription($dimensionContent, $data);
+        $articles = $this->findArticlesByUuids($ids, $locale);
+
+        $teasers = [];
+        foreach ($articles as $article) {
+            $teaser = $this->createTeaserFromArticle($article, $locale);
+            if (null !== $teaser) {
+                $teasers[] = $teaser;
+            }
+        }
+
+        return $teasers;
     }
 
-    protected function getEntityIdField(): string
+    /**
+     * @param array<string> $uuids
+     *
+     * @return array<ArticleInterface>
+     */
+    private function findArticlesByUuids(array $uuids, string $locale): array
     {
-        return 'uuid';
+        /** @var array<ArticleInterface> $articles */
+        $articles = \iterator_to_array($this->articleRepository->findBy(
+            filters: [
+                'uuids' => $uuids,
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+            ],
+            selects: [
+                ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
+                    DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true,
+                ],
+            ]
+        ));
+
+        // Sort by original order
+        $uuidPositions = \array_flip($uuids);
+        \usort(
+            $articles,
+            static fn (ArticleInterface $a, ArticleInterface $b) => ($uuidPositions[$a->getUuid()] ?? 0) - ($uuidPositions[$b->getUuid()] ?? 0)
+        );
+
+        return $articles;
+    }
+
+    private function createTeaserFromArticle(ArticleInterface $article, string $locale): ?Teaser
+    {
+        $dimensionContent = $this->resolveDimensionContent($article, $locale);
+        if (null === $dimensionContent) {
+            return null;
+        }
+
+        /** @var ArticleDimensionContentInterface $dimensionContent */
+        $dimensionContent = $this->contentEnhancer->enhance($dimensionContent);
+
+        $url = $this->resolveUrl($dimensionContent);
+        if (null === $url) {
+            return null;
+        }
+
+        return new Teaser(
+            $article->getUuid(),
+            ArticleInterface::RESOURCE_KEY,
+            $locale,
+            $this->resolveTitle($dimensionContent) ?? '',
+            $this->resolveDescription($dimensionContent) ?? '',
+            $this->resolveMoreText($dimensionContent) ?? '',
+            $url,
+            $this->resolveMediaId($dimensionContent),
+            $this->getAttributes($dimensionContent),
+        );
+    }
+
+    protected function resolveDimensionContent(ArticleInterface $article, string $locale): ?ArticleDimensionContentInterface
+    {
+        try {
+            /** @var ArticleDimensionContentInterface $dimensionContent */
+            $dimensionContent = $this->contentAggregator->aggregate($article, [
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+            ]);
+        } catch (ContentNotFoundException) {
+            return null;
+        }
+
+        return $dimensionContent;
+    }
+
+    protected function resolveUrl(ArticleDimensionContentInterface $dimensionContent): ?string
+    {
+        $route = $dimensionContent->getRoute();
+
+        return $route?->getSlug();
+    }
+
+    protected function resolveTitle(ArticleDimensionContentInterface $dimensionContent): ?string
+    {
+        $title = $dimensionContent->getExcerptTitle() ?? $dimensionContent->getTitle();
+
+        return '' !== ($title ?? '') ? $title : null;
+    }
+
+    protected function resolveDescription(ArticleDimensionContentInterface $dimensionContent): ?string
+    {
+        $description = $dimensionContent->getExcerptDescription();
+        if (null !== $description && '' !== $description) {
+            return \strip_tags($description);
+        }
+
+        // Fallback to tagged property
+        $templateKey = $dimensionContent->getTemplateKey();
+        $locale = $dimensionContent->getLocale();
+        if (null === $templateKey || null === $locale) {
+            return null;
+        }
+
+        $description = $this->teaserTagPropertyExtractor->extractDescription(
+            ArticleInterface::TEMPLATE_TYPE,
+            $templateKey,
+            $locale,
+            $dimensionContent->getTemplateData()
+        );
+
+        return null !== $description ? \strip_tags($description) : null;
+    }
+
+    protected function resolveMoreText(ArticleDimensionContentInterface $dimensionContent): ?string
+    {
+        $moreText = $dimensionContent->getExcerptMore();
+
+        return '' !== ($moreText ?? '') ? $moreText : null;
+    }
+
+    protected function resolveMediaId(ArticleDimensionContentInterface $dimensionContent): ?int
+    {
+        $mediaId = $dimensionContent->getExcerptImage()['id'] ?? null;
+        if (null !== $mediaId) {
+            return $mediaId;
+        }
+
+        // Fallback to tagged property
+        $templateKey = $dimensionContent->getTemplateKey();
+        $locale = $dimensionContent->getLocale();
+        if (null === $templateKey || null === $locale) {
+            return null;
+        }
+
+        return $this->teaserTagPropertyExtractor->extractMediaId(
+            ArticleInterface::TEMPLATE_TYPE,
+            $templateKey,
+            $locale,
+            $dimensionContent->getTemplateData()
+        );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function getAttributes(ArticleDimensionContentInterface $dimensionContent): array
+    {
+        return [
+            'uuid' => $dimensionContent->getResourceId(),
+            'webspace' => $dimensionContent->getMainWebspace(),
+            'additionalWebspaces' => $dimensionContent->getAdditionalWebspaces(),
+        ];
     }
 }

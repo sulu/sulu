@@ -320,12 +320,11 @@ final class SuluArticleBundle extends AbstractBundle
         $services->set('sulu_article.article_teaser_provider')
             ->class(ArticleTeaserProvider::class)
             ->args([
-                new Reference('sulu_content.content_manager'), // TODO teaser provider should not build on manager
-                new Reference('doctrine.orm.entity_manager'),
-                new Reference('sulu_content.content_metadata_inspector'),
-                new Reference('sulu_admin.metadata_provider_registry'),
+                new Reference('sulu_article.article_repository'),
+                new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_content.content_enhancer'),
                 new Reference('translator'),
-                new Reference('sulu_route.route_generator'),
+                new Reference('sulu_admin.teaser_tag_property_extractor'),
             ])
             ->tag('sulu.teaser.provider', ['alias' => ArticleInterface::RESOURCE_KEY]);
 

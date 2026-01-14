@@ -4,6 +4,10 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <!-- Merger -->
+        <service id="sulu_content.routable_merger" class="Sulu\Content\Application\ContentMerger\Merger\RoutableMerger">
+            <tag name="sulu_content.merger" priority="512"/>
+        </service>
+
         <service id="sulu_content.dimension_content_merger" class="Sulu\Content\Application\ContentMerger\Merger\DimensionContentMerger">
             <tag name="sulu_content.merger" priority="256"/>
         </service>

@@ -125,10 +125,10 @@ class ExampleProfilerWebsiteTest extends SuluTestCase
                 'ro_routes',
                 // Load start example entity with dimension content, tags, and categories (eager loaded)
                 'test_examples.test_example_dimension_contents.test_example_dimension_content_excerpt_tags.ta_tags.test_example_dimension_content_excerpt_categories.ca_categories.ca_category_translations',
-                // Load inner example entity with dimension content, tags, and categories (eager loaded)
-                'test_examples.test_example_dimension_contents.test_example_dimension_contents.test_example_dimension_content_excerpt_tags.ta_tags.test_example_dimension_content_excerpt_categories.ca_categories.ca_category_translations',
-                // Load inner-inner example entity with dimension content, tags, and categories (eager loaded)
-                'test_examples.test_example_dimension_contents.test_example_dimension_contents.test_example_dimension_content_excerpt_tags.ta_tags.test_example_dimension_content_excerpt_categories.ca_categories.ca_category_translations',
+                // Load inner example entity with dimension content, tags, categories, and routes (eager loaded)
+                'test_examples.test_example_dimension_contents.test_example_dimension_contents.test_example_dimension_content_excerpt_tags.ta_tags.test_example_dimension_content_excerpt_categories.ca_categories.ca_category_translations.ro_routes',
+                // Load inner-inner example entity with dimension content, tags, categories, and routes (eager loaded)
+                'test_examples.test_example_dimension_contents.test_example_dimension_contents.test_example_dimension_content_excerpt_tags.ta_tags.test_example_dimension_content_excerpt_categories.ca_categories.ca_category_translations.ro_routes',
                 // Batch load all media references (once for all 3 examples)
                 'me_media.me_collections.me_files.me_file_versions.me_file_version_tags.ta_tags.me_file_version_meta.me_file_version_meta.se_users.co_contacts.se_users.co_contacts',
                 // Route resolution for locale switcher

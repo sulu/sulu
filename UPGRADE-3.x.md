@@ -1,5 +1,23 @@
 # Upgrade
 
+## 3.0.3
+
+### TeaserProvider Refactoring
+
+The generic `ContentTeaserProvider` and related traits have been removed due to architectural issues.
+Each resource now has its own standalone teaser provider implementation:
+
+- `PageTeaserProvider` - Standalone implementation for pages
+- `ArticleTeaserProvider` - Standalone implementation with multi-webspace support for articles
+
+**Removed classes:**
+- `Sulu\Bundle\ContentBundle\Infrastructure\Sulu\Teaser\ContentTeaserProvider`
+- `Sulu\Bundle\ContentBundle\Infrastructure\Sulu\Traits\FindContentRichEntitiesTrait`
+- `Sulu\Bundle\ContentBundle\Infrastructure\Sulu\Traits\ResolveContentDimensionUrlTrait`
+- `Sulu\Bundle\ContentBundle\Infrastructure\Sulu\Traits\ResolveContentTrait`
+
+If you extended these classes or traits in custom teaser providers, refactor your implementation to be standalone following the pattern in `PageTeaserProvider` or `ArticleTeaserProvider`.
+
 ## 3.0.2
 
 ### Snippet Area Security Context Migration
