@@ -82,7 +82,7 @@ class FormMetadataTest extends TestCase
         $this->assertSame('test_key', $mergedForm->getKey());
     }
 
-    public function testMergeWithUninitializedProperties(): void
+    public function testMergeWithUninitializedTemplateMetadata(): void
     {
         $form1 = new FormMetadata();
         $form1->setKey('key1');
