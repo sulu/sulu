@@ -42,4 +42,12 @@ class CacheLifetimeMetadata
     {
         $this->value = $value;
     }
+
+    public function merge(self $other): self
+    {
+        return new self(
+            '' !== $other->type ? $other->type : $this->type,
+            '' !== $other->value ? $other->value : $this->value
+        );
+    }
 }
