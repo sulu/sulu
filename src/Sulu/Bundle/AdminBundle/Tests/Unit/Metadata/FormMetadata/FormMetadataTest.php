@@ -72,13 +72,13 @@ class FormMetadataTest extends TestCase
         $overrideForm = new FormMetadata();
         $overrideForm->setKey('test_key');
 
-        $templateStub = $this->createStub(TemplateMetadata::class);
-        $overrideForm->setTemplate($templateStub);
+        $template = new TemplateMetadata(null, null, null);
+        $overrideForm->setTemplate($template);
 
         $mergedForm = $originalForm->merge($overrideForm);
 
         $this->assertInstanceOf(TemplateMetadata::class, $mergedForm->getTemplate());
-        $this->assertSame($templateStub, $mergedForm->getTemplate());
+        $this->assertSame($template, $mergedForm->getTemplate());
         $this->assertSame('test_key', $mergedForm->getKey());
     }
 

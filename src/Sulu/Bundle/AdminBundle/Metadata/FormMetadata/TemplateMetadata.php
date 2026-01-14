@@ -53,8 +53,8 @@ class TemplateMetadata
     public function merge(self $other): self
     {
         return new self(
-            $other->getController() ?: $this->getController(),
-            $other->getView() ?: $this->getView(),
+            $other->getController() ?? $this->getController(),
+            $other->getView() ?? $this->getView(),
             $other->getCacheLifetime() ?? $this->getCacheLifetime()
         );
     }
