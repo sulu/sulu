@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Bundle\AdminBundle\Teaser;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 
 class TeaserTagPropertyExtractor
@@ -95,6 +96,9 @@ class TeaserTagPropertyExtractor
     private function getFormMetadata(string $templateType, string $templateKey, string $locale): ?FormMetadata
     {
         $typedFormMetadata = $this->formMetadataProvider->getMetadata($templateType, $locale, []);
+        if (!$typedFormMetadata instanceof TypedFormMetadata) {
+            return null;
+        }
 
         return $typedFormMetadata->getForms()[$templateKey] ?? null;
     }

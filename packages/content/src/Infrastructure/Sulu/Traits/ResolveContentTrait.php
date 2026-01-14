@@ -21,7 +21,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 /**
  * @internal
  *
- * @deprecated since 3.0, implement content resolution directly in your teaser provider
+ * @deprecated since 3.0.3, implement content resolution directly in your teaser provider
  */
 trait ResolveContentTrait
 {

@@ -24,7 +24,7 @@ use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 /**
  * @internal
  *
- * @deprecated since 3.0, implement URL resolution directly in your teaser provider
+ * @deprecated since 3.0.3, implement URL resolution directly in your teaser provider
  */
 trait ResolveContentDimensionUrlTrait
 {

@@ -171,8 +171,9 @@ class ExampleTeaserProvider implements TeaserProviderInterface
         }
 
         $templateData = $dimensionContent->getTemplateData();
+        $url = $templateData['url'] ?? null;
 
-        return $templateData['url'] ?? null;
+        return \is_string($url) ? $url : null;
     }
 
     protected function resolveTitle(ExampleDimensionContent $dimensionContent): ?string
@@ -192,7 +193,8 @@ class ExampleTeaserProvider implements TeaserProviderInterface
     protected function resolveDescription(ExampleDimensionContent $dimensionContent): ?string
     {
         $templateData = $dimensionContent->getTemplateData();
-        $article = \strip_tags($templateData['article'] ?? '');
+        $articleValue = $templateData['article'] ?? '';
+        $article = \is_string($articleValue) ? \strip_tags($articleValue) : '';
 
         if ('' !== $article) {
             return $article;

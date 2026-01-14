@@ -31,7 +31,7 @@ use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
  * @template B of DimensionContentInterface
  * @template T of ContentRichEntityInterface<B>
  *
- * @deprecated since 3.0, use entity-specific teaser providers instead (ArticleTeaserProvider, PageTeaserProvider)
+ * @deprecated since 3.0.3, use entity-specific teaser providers instead (ArticleTeaserProvider, PageTeaserProvider)
  */
 abstract class ContentTeaserProvider implements TeaserProviderInterface
 {

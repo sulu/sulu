@@ -30,9 +30,9 @@ class ContentTeaserProviderTest extends WebsiteTestCase
     private $exampleTeaserProvider;
 
     /**
-     * @var array<int|string>
+     * @var array<string>
      */
-    private static $exampleIds = [];
+    private static array $exampleIds = [];
 
     public static function setUpBeforeClass(): void
     {
@@ -108,11 +108,11 @@ class ContentTeaserProviderTest extends WebsiteTestCase
 
         static::getEntityManager()->flush();
 
-        self::$exampleIds[] = $example1->getId();
-        self::$exampleIds[] = $example2->getId();
-        self::$exampleIds[] = $example3->getId();
-        self::$exampleIds[] = $example4->getId();
-        self::$exampleIds[] = $example5->getId();
+        self::$exampleIds[] = (string) $example1->getId();
+        self::$exampleIds[] = (string) $example2->getId();
+        self::$exampleIds[] = (string) $example3->getId();
+        self::$exampleIds[] = (string) $example4->getId();
+        self::$exampleIds[] = (string) $example5->getId();
     }
 
     protected function setUp(): void
@@ -158,7 +158,7 @@ class ContentTeaserProviderTest extends WebsiteTestCase
 
         static::getEntityManager()->flush();
 
-        $teasers = $this->exampleTeaserProvider->find([$example6->getId()], 'en');
+        $teasers = $this->exampleTeaserProvider->find([(string) $example6->getId()], 'en');
 
         $teasers = $this->mapTeasers($teasers);
 

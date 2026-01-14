@@ -24,7 +24,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
  *
  * @internal
  *
- * @deprecated since 3.0, implement entity loading directly in your teaser provider
+ * @deprecated since 3.0.3, implement entity loading directly in your teaser provider
  */
 trait FindContentRichEntitiesTrait
 {

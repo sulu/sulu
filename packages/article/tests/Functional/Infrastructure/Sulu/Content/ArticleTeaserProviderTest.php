@@ -94,7 +94,7 @@ class ArticleTeaserProviderTest extends WebsiteTestCase
         $this->assertSame('Excerpt Title', $teaser->getTitle());
         $this->assertSame('Excerpt description text', $teaser->getDescription());
         $this->assertSame('Read more', $teaser->getMoreText());
-        $this->assertNotNull($teaser->getUrl());
+        $this->assertNotEmpty($teaser->getUrl());
     }
 
     public function testFindReturnsEmptyTitleWhenNoExcerptTitle(): void

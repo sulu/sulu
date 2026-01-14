@@ -35,7 +35,7 @@ class TeaserTagPropertyExtractorTest extends TestCase
     protected function setUp(): void
     {
         $this->metadataProvider = $this->prophesize(MetadataProviderInterface::class);
-        $this->resolver = new TeaserTagPropertyExtractor($this->metadataProvider->reveal());
+        $this->extractor = new TeaserTagPropertyExtractor($this->metadataProvider->reveal());
     }
 
     public function testExtractDescriptionWithTaggedProperty(): void
@@ -43,7 +43,7 @@ class TeaserTagPropertyExtractorTest extends TestCase
         $templateData = ['teaser_text' => 'This is the teaser description'];
         $this->setupMetadataWithTag('page', 'default', 'en', 'teaser_text', TeaserTagPropertyExtractor::TAG_TEASER_DESCRIPTION);
 
-        $result = $this->resolver->extractDescription('page', 'default', 'en', $templateData);
+        $result = $this->extractor->extractDescription('page', 'default', 'en', $templateData);
 
         $this->assertSame('This is the teaser description', $result);
     }
@@ -53,7 +53,7 @@ class TeaserTagPropertyExtractorTest extends TestCase
         $templateData = ['some_field' => 'Some value'];
         $this->setupMetadataWithoutTag('page', 'default', 'en');
 
-        $result = $this->resolver->extractDescription('page', 'default', 'en', $templateData);
+        $result = $this->extractor->extractDescription('page', 'default', 'en', $templateData);
 
         $this->assertNull($result);
     }
@@ -63,7 +63,7 @@ class TeaserTagPropertyExtractorTest extends TestCase
         $templateData = ['teaser_text' => ''];
         $this->setupMetadataWithTag('page', 'default', 'en', 'teaser_text', TeaserTagPropertyExtractor::TAG_TEASER_DESCRIPTION);
 
-        $result = $this->resolver->extractDescription('page', 'default', 'en', $templateData);
+        $result = $this->extractor->extractDescription('page', 'default', 'en', $templateData);
 
         $this->assertNull($result);
     }
@@ -73,7 +73,7 @@ class TeaserTagPropertyExtractorTest extends TestCase
         $templateData = ['teaser_text' => null];
         $this->setupMetadataWithTag('page', 'default', 'en', 'teaser_text', TeaserTagPropertyExtractor::TAG_TEASER_DESCRIPTION);
 
-        $result = $this->resolver->extractDescription('page', 'default', 'en', $templateData);
+        $result = $this->extractor->extractDescription('page', 'default', 'en', $templateData);
 
         $this->assertNull($result);
     }
@@ -83,7 +83,7 @@ class TeaserTagPropertyExtractorTest extends TestCase
         $templateData = ['other_field' => 'value'];
         $this->setupMetadataWithTag('page', 'default', 'en', 'teaser_text', TeaserTagPropertyExtractor::TAG_TEASER_DESCRIPTION);
 
-        $result = $this->resolver->extractDescription('page', 'default', 'en', $templateData);
+        $result = $this->extractor->extractDescription('page', 'default', 'en', $templateData);
 
         $this->assertNull($result);
     }
@@ -93,7 +93,7 @@ class TeaserTagPropertyExtractorTest extends TestCase
         $templateData = ['teaser_text' => 'value'];
         $this->setupMetadataWithMissingTemplate('page', 'missing-template', 'en');
 
-        $result = $this->resolver->extractDescription('page', 'missing-template', 'en', $templateData);
+        $result = $this->extractor->extractDescription('page', 'missing-template', 'en', $templateData);
 
         $this->assertNull($result);
     }
@@ -103,7 +103,7 @@ class TeaserTagPropertyExtractorTest extends TestCase
         $templateData = ['teaser_image' => ['id' => 42, 'displayOption' => 'left']];
         $this->setupMetadataWithTag('page', 'default', 'en', 'teaser_image', TeaserTagPropertyExtractor::TAG_TEASER_MEDIA);
 
-        $result = $this->resolver->extractMediaId('page', 'default', 'en', $templateData);
+        $result = $this->extractor->extractMediaId('page', 'default', 'en', $templateData);
 
         $this->assertSame(42, $result);
     }
@@ -113,7 +113,7 @@ class TeaserTagPropertyExtractorTest extends TestCase
         $templateData = ['teaser_images' => ['ids' => [10, 20, 30], 'displayOption' => 'left']];
         $this->setupMetadataWithTag('page', 'default', 'en', 'teaser_images', TeaserTagPropertyExtractor::TAG_TEASER_MEDIA);
 
-        $result = $this->resolver->extractMediaId('page', 'default', 'en', $templateData);
+        $result = $this->extractor->extractMediaId('page', 'default', 'en', $templateData);
 
         $this->assertSame(10, $result);
     }
@@ -123,7 +123,7 @@ class TeaserTagPropertyExtractorTest extends TestCase
         $templateData = ['some_field' => ['id' => 42]];
         $this->setupMetadataWithoutTag('page', 'default', 'en');
 
-        $result = $this->resolver->extractMediaId('page', 'default', 'en', $templateData);
+        $result = $this->extractor->extractMediaId('page', 'default', 'en', $templateData);
 
         $this->assertNull($result);
     }
@@ -133,7 +133,7 @@ class TeaserTagPropertyExtractorTest extends TestCase
         $templateData = ['teaser_image' => []];
         $this->setupMetadataWithTag('page', 'default', 'en', 'teaser_image', TeaserTagPropertyExtractor::TAG_TEASER_MEDIA);
 
-        $result = $this->resolver->extractMediaId('page', 'default', 'en', $templateData);
+        $result = $this->extractor->extractMediaId('page', 'default', 'en', $templateData);
 
         $this->assertNull($result);
     }
@@ -143,7 +143,7 @@ class TeaserTagPropertyExtractorTest extends TestCase
         $templateData = ['teaser_image' => null];
         $this->setupMetadataWithTag('page', 'default', 'en', 'teaser_image', TeaserTagPropertyExtractor::TAG_TEASER_MEDIA);
 
-        $result = $this->resolver->extractMediaId('page', 'default', 'en', $templateData);
+        $result = $this->extractor->extractMediaId('page', 'default', 'en', $templateData);
 
         $this->assertNull($result);
     }
@@ -153,7 +153,7 @@ class TeaserTagPropertyExtractorTest extends TestCase
         $templateData = ['teaser_images' => []];
         $this->setupMetadataWithTag('page', 'default', 'en', 'teaser_images', TeaserTagPropertyExtractor::TAG_TEASER_MEDIA);
 
-        $result = $this->resolver->extractMediaId('page', 'default', 'en', $templateData);
+        $result = $this->extractor->extractMediaId('page', 'default', 'en', $templateData);
 
         $this->assertNull($result);
     }
