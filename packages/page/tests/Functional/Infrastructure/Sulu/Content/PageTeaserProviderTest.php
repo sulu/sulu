@@ -118,7 +118,7 @@ class PageTeaserProviderTest extends WebsiteTestCase
     {
         $collection = self::createCollection();
         $media = self::createMedia($collection, ['title' => 'Teaser Image']);
-        self::getContainer()->get('doctrine.orm.entity_manager')->flush();
+        self::getEntityManager()->flush();
 
         $page = self::createPage([
             'en' => [
@@ -324,5 +324,84 @@ class PageTeaserProviderTest extends WebsiteTestCase
         $this->assertSame('Target excerpt description', $teasers[0]->getDescription());
         // URL should point to target page
         $this->assertStringEndsWith('/target-page', $teasers[0]->getUrl());
+    }
+
+    public function testFindUsesTaggedDescriptionWhenExcerptEmpty(): void
+    {
+        $page = self::createPage([
+            'en' => [
+                'live' => [
+                    'title' => 'Page With Tagged Description',
+                    'url' => '/tagged-description',
+                    'template' => 'teaser-tagged',
+                    'teaser_description' => 'Description from tagged property',
+                    'excerpt' => [
+                        'title' => 'Excerpt Title Only',
+                    ],
+                ],
+            ],
+        ]);
+
+        $teasers = $this->teaserProvider->find([$page->getUuid()], 'en');
+
+        $this->assertCount(1, $teasers);
+        $this->assertSame('Description from tagged property', $teasers[0]->getDescription());
+    }
+
+    public function testFindUsesTaggedMediaWhenExcerptEmpty(): void
+    {
+        $collection = self::createCollection();
+        $media = self::createMedia($collection, ['title' => 'Tagged Teaser Image']);
+        self::getEntityManager()->flush();
+
+        $page = self::createPage([
+            'en' => [
+                'live' => [
+                    'title' => 'Page With Tagged Media',
+                    'url' => '/tagged-media',
+                    'template' => 'teaser-tagged',
+                    'teaser_image' => ['id' => $media->getId()],
+                    'excerpt' => [
+                        'title' => 'Excerpt Title Only',
+                    ],
+                ],
+            ],
+        ]);
+
+        $teasers = $this->teaserProvider->find([$page->getUuid()], 'en');
+
+        $this->assertCount(1, $teasers);
+        $this->assertSame($media->getId(), $teasers[0]->getMediaId());
+    }
+
+    public function testFindPrefersExcerptOverTaggedProperty(): void
+    {
+        $collection = self::createCollection();
+        $excerptMedia = self::createMedia($collection, ['title' => 'Excerpt Image']);
+        $taggedMedia = self::createMedia($collection, ['title' => 'Tagged Image']);
+        self::getEntityManager()->flush();
+
+        $page = self::createPage([
+            'en' => [
+                'live' => [
+                    'title' => 'Page With Both Excerpt and Tagged',
+                    'url' => '/excerpt-priority',
+                    'template' => 'teaser-tagged',
+                    'teaser_description' => 'Tagged description should be ignored',
+                    'teaser_image' => ['id' => $taggedMedia->getId()],
+                    'excerpt' => [
+                        'title' => 'Excerpt Title',
+                        'description' => 'Excerpt description takes priority',
+                        'image' => ['id' => $excerptMedia->getId()],
+                    ],
+                ],
+            ],
+        ]);
+
+        $teasers = $this->teaserProvider->find([$page->getUuid()], 'en');
+
+        $this->assertCount(1, $teasers);
+        $this->assertSame('Excerpt description takes priority', $teasers[0]->getDescription());
+        $this->assertSame($excerptMedia->getId(), $teasers[0]->getMediaId());
     }
 }

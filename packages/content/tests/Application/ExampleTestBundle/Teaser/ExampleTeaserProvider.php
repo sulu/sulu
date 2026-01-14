@@ -94,6 +94,7 @@ class ExampleTeaserProvider implements TeaserProviderInterface
             ]
         ));
 
+        // Sort by original order
         $idPositions = \array_flip($ids);
         \usort(
             $examples,
@@ -211,7 +212,7 @@ class ExampleTeaserProvider implements TeaserProviderInterface
 
         return '' !== ($moreText ?? '') ? $moreText : null;
     }
-    
+
     protected function resolveMediaId(ExampleDimensionContent $dimensionContent): ?int
     {
         return $dimensionContent->getExcerptImage()['id'] ?? null;

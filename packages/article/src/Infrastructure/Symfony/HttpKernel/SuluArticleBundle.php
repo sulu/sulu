@@ -326,6 +326,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_route.route_generator'),
                 new Reference('translator'),
                 new Reference('router.request_context'),
+                new Reference('sulu_admin.teaser_tag_property_extractor'),
             ])
             ->tag('sulu.teaser.provider', ['alias' => ArticleInterface::RESOURCE_KEY]);
 

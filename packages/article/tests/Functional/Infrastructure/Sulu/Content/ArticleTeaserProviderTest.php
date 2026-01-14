@@ -120,7 +120,7 @@ class ArticleTeaserProviderTest extends WebsiteTestCase
     {
         $collection = self::createCollection();
         $media = self::createMedia($collection, ['title' => 'Teaser Image']);
-        self::getContainer()->get('doctrine.orm.entity_manager')->flush();
+        self::getEntityManager()->flush();
 
         $article = self::createArticle([
             'en' => [
@@ -310,5 +310,81 @@ class ArticleTeaserProviderTest extends WebsiteTestCase
 
         $this->assertCount(1, $teasers);
         $this->assertStringContainsString('sulu.io', $teasers[0]->getUrl());
+    }
+
+    public function testFindUsesTaggedDescriptionWhenExcerptEmpty(): void
+    {
+        $article = self::createArticle([
+            'en' => [
+                'live' => [
+                    'title' => 'Article With Tagged Description',
+                    'template' => 'teaser-tagged',
+                    'url' => '/tagged-description',
+                    'mainWebspace' => 'blog',
+                    'teaser_description' => 'Description from tagged property',
+                ],
+            ],
+        ]);
+
+        $teasers = $this->teaserProvider->find([$article->getUuid()], 'en');
+
+        $this->assertCount(1, $teasers);
+        $this->assertSame('Description from tagged property', $teasers[0]->getDescription());
+    }
+
+    public function testFindUsesTaggedMediaWhenExcerptEmpty(): void
+    {
+        $collection = self::createCollection();
+        $media1 = self::createMedia($collection, ['title' => 'Tagged Teaser Image 1']);
+        $media2 = self::createMedia($collection, ['title' => 'Tagged Teaser Image 2']);
+        self::getEntityManager()->flush();
+
+        $article = self::createArticle([
+            'en' => [
+                'live' => [
+                    'title' => 'Article With Tagged Media',
+                    'template' => 'teaser-tagged',
+                    'url' => '/tagged-media',
+                    'mainWebspace' => 'blog',
+                    'teaser_image' => ['ids' => [$media1->getId(), $media2->getId()], 'displayOption' => 'left'],
+                ],
+            ],
+        ]);
+
+        $teasers = $this->teaserProvider->find([$article->getUuid()], 'en');
+
+        $this->assertCount(1, $teasers);
+        $this->assertSame($media1->getId(), $teasers[0]->getMediaId());
+    }
+
+    public function testFindPrefersExcerptOverTaggedProperty(): void
+    {
+        $collection = self::createCollection();
+        $excerptMedia = self::createMedia($collection, ['title' => 'Excerpt Image']);
+        $taggedMedia = self::createMedia($collection, ['title' => 'Tagged Image']);
+        self::getEntityManager()->flush();
+
+        $article = self::createArticle([
+            'en' => [
+                'live' => [
+                    'title' => 'Article With Both Excerpt And Tagged',
+                    'template' => 'teaser-tagged',
+                    'url' => '/excerpt-over-tagged',
+                    'mainWebspace' => 'blog',
+                    'excerpt' => [
+                        'description' => 'Excerpt description',
+                        'image' => ['id' => $excerptMedia->getId()],
+                    ],
+                    'teaser_description' => 'Tagged description',
+                    'teaser_image' => ['ids' => [$taggedMedia->getId()], 'displayOption' => 'left'],
+                ],
+            ],
+        ]);
+
+        $teasers = $this->teaserProvider->find([$article->getUuid()], 'en');
+
+        $this->assertCount(1, $teasers);
+        $this->assertSame('Excerpt description', $teasers[0]->getDescription());
+        $this->assertSame($excerptMedia->getId(), $teasers[0]->getMediaId());
     }
 }

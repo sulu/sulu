@@ -19,6 +19,7 @@ use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\AdminBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderInterface;
 use Sulu\Bundle\AdminBundle\Teaser\Teaser;
+use Sulu\Bundle\AdminBundle\Teaser\TeaserTagPropertyExtractor;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentEnhancer\ContentEnhancerInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
@@ -37,6 +38,7 @@ class ArticleTeaserProvider implements TeaserProviderInterface
         protected RouteGeneratorInterface $routeGenerator,
         protected TranslatorInterface $translator,
         protected RequestContext $requestContext,
+        protected TeaserTagPropertyExtractor $teaserTagPropertyExtractor,
     ) {
     }
 
@@ -186,11 +188,25 @@ class ArticleTeaserProvider implements TeaserProviderInterface
     protected function resolveDescription(ArticleDimensionContentInterface $dimensionContent): ?string
     {
         $description = $dimensionContent->getExcerptDescription();
-        if (null === $description || '' === $description) {
+        if (null !== $description && '' !== $description) {
+            return \strip_tags($description);
+        }
+
+        // Fallback to tagged property
+        $templateKey = $dimensionContent->getTemplateKey();
+        $locale = $dimensionContent->getLocale();
+        if (null === $templateKey || null === $locale) {
             return null;
         }
 
-        return \strip_tags($description);
+        $description = $this->teaserTagPropertyExtractor->extractDescription(
+            ArticleInterface::TEMPLATE_TYPE,
+            $templateKey,
+            $locale,
+            $dimensionContent->getTemplateData()
+        );
+
+        return null !== $description ? \strip_tags($description) : null;
     }
 
     protected function resolveMoreText(ArticleDimensionContentInterface $dimensionContent): ?string
@@ -202,7 +218,24 @@ class ArticleTeaserProvider implements TeaserProviderInterface
 
     protected function resolveMediaId(ArticleDimensionContentInterface $dimensionContent): ?int
     {
-        return $dimensionContent->getExcerptImage()['id'] ?? null;
+        $mediaId = $dimensionContent->getExcerptImage()['id'] ?? null;
+        if (null !== $mediaId) {
+            return $mediaId;
+        }
+
+        // Fallback to tagged property
+        $templateKey = $dimensionContent->getTemplateKey();
+        $locale = $dimensionContent->getLocale();
+        if (null === $templateKey || null === $locale) {
+            return null;
+        }
+
+        return $this->teaserTagPropertyExtractor->extractMediaId(
+            ArticleInterface::TEMPLATE_TYPE,
+            $templateKey,
+            $locale,
+            $dimensionContent->getTemplateData()
+        );
     }
 
     /**

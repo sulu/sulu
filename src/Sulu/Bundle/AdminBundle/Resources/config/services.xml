@@ -470,6 +470,10 @@
             <argument type="service" id="sulu_admin.teaser_provider_pool"/>
         </service>
 
+        <service id="sulu_admin.teaser_tag_property_extractor" class="Sulu\Bundle\AdminBundle\Teaser\TeaserTagPropertyExtractor">
+            <argument type="service" id="sulu_admin.form_metadata_provider"/>
+        </service>
+
         <!-- Block ID Generator -->
         <service
             id="sulu_admin.block_id_generator"
