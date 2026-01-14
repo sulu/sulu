@@ -52,10 +52,16 @@ class TemplateMetadata
 
     public function merge(self $other): self
     {
+        $mergedCacheLifetime = match (true) {
+            null !== $other->cacheLifetime => clone ($other->cacheLifetime),
+            null !== $this->cacheLifetime => clone ($this->cacheLifetime),
+            default => null,
+        };
+
         return new self(
             $other->getController() ?? $this->getController(),
             $other->getView() ?? $this->getView(),
-            $other->getCacheLifetime() ?? $this->getCacheLifetime()
+            $mergedCacheLifetime,
         );
     }
 }

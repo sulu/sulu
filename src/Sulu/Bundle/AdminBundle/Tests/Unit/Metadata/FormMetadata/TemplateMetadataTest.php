@@ -39,7 +39,10 @@ class TemplateMetadataTest extends TestCase
         $this->assertNotSame($otherTemplate, $merged);
         $this->assertSame('App\Controller\OverrideController::indexAction', $merged->getController());
         $this->assertSame('@Override/view', $merged->getView());
-        $this->assertSame('7200', $merged->getCacheLifetime()?->getValue());
+        $mergedCacheLifetime = $merged->getCacheLifetime();
+        $this->assertNotNull($mergedCacheLifetime);
+        $this->assertSame('7200', $mergedCacheLifetime->getValue());
+        $this->assertSame('seconds', $mergedCacheLifetime->getType());
     }
 
     public function testMergeFallsBackToOriginalValues(): void
@@ -78,7 +81,9 @@ class TemplateMetadataTest extends TestCase
 
         $this->assertSame('App\Controller\OverrideController::indexAction', $merged->getController());
         $this->assertSame('@Original/view', $merged->getView());
-        $this->assertSame('3600', $merged->getCacheLifetime()?->getValue());
+        $mergedCacheLifetime = $merged->getCacheLifetime();
+        $this->assertNotNull($mergedCacheLifetime);
+        $this->assertSame('3600', $mergedCacheLifetime->getValue());
     }
 
     public function testMergePartialEmptyStringOverride(): void
@@ -99,15 +104,20 @@ class TemplateMetadataTest extends TestCase
 
         $this->assertSame('App\Controller\OverrideController::indexAction', $merged->getController());
         $this->assertSame('', $merged->getView());
-        $this->assertSame('3600', $merged->getCacheLifetime()?->getValue());
+        $mergedCacheLifetime = $merged->getCacheLifetime();
+        $this->assertNotNull($mergedCacheLifetime);
+        $this->assertSame('3600', $mergedCacheLifetime->getValue());
+        $this->assertSame('seconds', $mergedCacheLifetime->getType());
     }
 
     public function testMergeCreatesNewInstance(): void
     {
+        $cacheLifetime = new CacheLifetimeMetadata('seconds', '3600');
+
         $template = new TemplateMetadata(
             'App\Controller\TestController::indexAction',
             '@Test/view',
-            null
+            $cacheLifetime
         );
 
         $otherTemplate = new TemplateMetadata(
@@ -120,5 +130,8 @@ class TemplateMetadataTest extends TestCase
 
         $this->assertNotSame($template, $merged);
         $this->assertNotSame($otherTemplate, $merged);
+        $mergedCacheLifetime = $merged->getCacheLifetime();
+        $this->assertNotNull($mergedCacheLifetime);
+        $this->assertNotSame($cacheLifetime, $mergedCacheLifetime);
     }
 }

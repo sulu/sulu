@@ -72,14 +72,17 @@ class FormMetadataTest extends TestCase
         $overrideForm = new FormMetadata();
         $overrideForm->setKey('test_key');
 
-        $template = new TemplateMetadata(null, null, null);
-        $overrideForm->setTemplate($template);
+        $overrideTemplate = new TemplateMetadata('App\\Controller\\TestController', 'templates/default', null);
+        $overrideForm->setTemplate($overrideTemplate);
 
         $mergedForm = $originalForm->merge($overrideForm);
 
-        $this->assertInstanceOf(TemplateMetadata::class, $mergedForm->getTemplate());
-        $this->assertSame($template, $mergedForm->getTemplate());
         $this->assertSame('test_key', $mergedForm->getKey());
+        $mergedTemplate = $mergedForm->getTemplate();
+        $this->assertInstanceOf(TemplateMetadata::class, $mergedTemplate);
+        $this->assertNotSame($overrideTemplate, $mergedForm->getTemplate());
+        $this->assertSame('App\\Controller\\TestController', $mergedTemplate->getController());
+        $this->assertSame('templates/default', $mergedTemplate->getView());
     }
 
     public function testMergeWithUninitializedTemplateMetadata(): void
