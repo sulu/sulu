@@ -24,8 +24,8 @@ class TagFactory implements TagFactoryInterface
      * @param EntityRepository<TagInterface> $tagRepository
      */
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly EntityRepository $tagRepository
+        private EntityManagerInterface $entityManager,
+        private EntityRepository $tagRepository
     ) {
     }
 

@@ -67,21 +67,15 @@ class ExampleRepository
     ];
 
     /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
      * @var EntityRepository<Example>
      */
     private $entityRepository;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
+        private EntityManagerInterface $entityManager,
         private DimensionContentQueryEnhancer $dimensionContentQueryEnhancer
     ) {
         $this->entityRepository = $entityManager->getRepository(Example::class);
-        $this->entityManager = $entityManager;
     }
 
     /**
