@@ -24,7 +24,7 @@ class Teaser
      * @param string $description
      * @param string $moreText
      * @param string $url
-     * @param int $mediaId
+     * @param int|null $mediaId
      * @param array<string, mixed> $attributes
      */
     public function __construct(
@@ -103,7 +103,7 @@ class Teaser
     /**
      * Returns media-id.
      *
-     * @return int
+     * @return int|null
      */
     public function getMediaId()
     {
@@ -141,7 +141,9 @@ class Teaser
         $this->description = $this->getValue('description', $item, $this->getDescription());
         $this->moreText = $this->getValue('moreText', $item, $this->getMoreText());
         $this->url = $this->getValue('url', $item, $this->getUrl());
-        $this->mediaId = $this->getValue('mediaId', $item, $this->getMediaId());
+        /** @var int|null $mediaId */
+        $mediaId = $this->getValue('mediaId', $item, $this->getMediaId());
+        $this->mediaId = $mediaId;
 
         return $this;
     }

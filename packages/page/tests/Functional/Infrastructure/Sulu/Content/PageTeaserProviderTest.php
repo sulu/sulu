@@ -96,7 +96,7 @@ class PageTeaserProviderTest extends WebsiteTestCase
         $this->assertStringEndsWith('/test-page', $teaser->getUrl());
     }
 
-    public function testFindReturnsEmptyTitleWhenNoExcerptTitle(): void
+    public function testFindReturnsPageTitleWhenNoExcerptTitle(): void
     {
         $page = self::createPage([
             'en' => [
@@ -111,7 +111,7 @@ class PageTeaserProviderTest extends WebsiteTestCase
         $teasers = $this->teaserProvider->find([$page->getUuid()], 'en');
 
         $this->assertCount(1, $teasers);
-        $this->assertSame('', $teasers[0]->getTitle());
+        $this->assertSame('Page Without Excerpt Title', $teasers[0]->getTitle());
     }
 
     public function testFindReturnsTeaserWithMediaId(): void

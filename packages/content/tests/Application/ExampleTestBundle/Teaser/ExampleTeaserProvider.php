@@ -178,14 +178,7 @@ class ExampleTeaserProvider implements TeaserProviderInterface
 
     protected function resolveTitle(ExampleDimensionContent $dimensionContent): ?string
     {
-        $title = $dimensionContent->getExcerptTitle();
-
-        if ('' !== ($title ?? '')) {
-            return $title;
-        }
-
-        $templateData = $dimensionContent->getTemplateData();
-        $title = $templateData['title'] ?? null;
+        $title = $dimensionContent->getExcerptTitle() ?? $dimensionContent->getTitle();
 
         return \is_string($title) && '' !== $title ? $title : null;
     }

@@ -64,10 +64,6 @@ final class RouteGenerator implements RouteGeneratorInterface
 
         \assert($webspaceRouteGenerator instanceof WebspaceRouteGeneratorInterface, 'The WebspaceRouteGenerator for "' . $webspace . '" must implement WebspaceRouteGeneratorInterface but got: ' . \get_debug_type($webspaceRouteGenerator));
 
-        if (null === $this->requestContext->getParameter(RequestAttributeEnum::WEBSPACE->value)) {
-            $this->requestContext->setParameter(RequestAttributeEnum::WEBSPACE->value, $webspace);
-        }
-
         $generatedUrl = $webspaceRouteGenerator->generate($this->requestContext, $slug, $locale);
 
         $schemeAndHttpHost = \sprintf(

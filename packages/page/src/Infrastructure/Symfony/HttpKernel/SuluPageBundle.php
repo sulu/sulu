@@ -421,7 +421,6 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_page.page_repository'),
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_content.content_enhancer'),
-                new Reference('sulu_route.route_generator'),
                 new Reference('translator'),
                 new Reference('sulu_admin.teaser_tag_property_extractor'),
             ])

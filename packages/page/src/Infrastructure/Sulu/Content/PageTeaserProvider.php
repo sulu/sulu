@@ -25,7 +25,6 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
-use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PageTeaserProvider implements TeaserProviderInterface
@@ -34,7 +33,6 @@ class PageTeaserProvider implements TeaserProviderInterface
         protected PageRepositoryInterface $pageRepository,
         protected ContentAggregatorInterface $contentAggregator,
         protected ContentEnhancerInterface $contentEnhancer,
-        protected RouteGeneratorInterface $routeGenerator,
         protected TranslatorInterface $translator,
         protected TeaserTagPropertyExtractor $teaserTagPropertyExtractor,
     ) {
@@ -129,7 +127,7 @@ class PageTeaserProvider implements TeaserProviderInterface
             $this->resolveDescription($dimensionContent) ?? '',
             $this->resolveMoreText($dimensionContent) ?? '',
             $url,
-            $this->resolveMediaId($dimensionContent) ?? 0,
+            $this->resolveMediaId($dimensionContent),
             $this->getAttributes($dimensionContent),
         );
     }
@@ -157,20 +155,13 @@ class PageTeaserProvider implements TeaserProviderInterface
         }
 
         $route = $dimensionContent->getRoute();
-        if (null === $route) {
-            return null;
-        }
 
-        return $this->routeGenerator->generate(
-            $route->getSlug(),
-            $route->getLocale(),
-            $route->getWebspace() ?? $dimensionContent->getResource()->getWebspaceKey(),
-        );
+        return $route?->getSlug();
     }
 
     protected function resolveTitle(PageDimensionContentInterface $dimensionContent): ?string
     {
-        $title = $dimensionContent->getExcerptTitle();
+        $title = $dimensionContent->getExcerptTitle() ?? $dimensionContent->getTitle();
 
         return '' !== ($title ?? '') ? $title : null;
     }

@@ -25,8 +25,6 @@ use Sulu\Content\Application\ContentEnhancer\ContentEnhancerInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
-use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
-use Symfony\Component\Routing\RequestContext;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ArticleTeaserProvider implements TeaserProviderInterface
@@ -35,9 +33,7 @@ class ArticleTeaserProvider implements TeaserProviderInterface
         protected ArticleRepositoryInterface $articleRepository,
         protected ContentAggregatorInterface $contentAggregator,
         protected ContentEnhancerInterface $contentEnhancer,
-        protected RouteGeneratorInterface $routeGenerator,
         protected TranslatorInterface $translator,
-        protected RequestContext $requestContext,
         protected TeaserTagPropertyExtractor $teaserTagPropertyExtractor,
     ) {
     }
@@ -131,7 +127,7 @@ class ArticleTeaserProvider implements TeaserProviderInterface
             $this->resolveDescription($dimensionContent) ?? '',
             $this->resolveMoreText($dimensionContent) ?? '',
             $url,
-            $this->resolveMediaId($dimensionContent) ?? 0,
+            $this->resolveMediaId($dimensionContent),
             $this->getAttributes($dimensionContent),
         );
     }
@@ -154,33 +150,13 @@ class ArticleTeaserProvider implements TeaserProviderInterface
     protected function resolveUrl(ArticleDimensionContentInterface $dimensionContent): ?string
     {
         $route = $dimensionContent->getRoute();
-        if (null === $route) {
-            return null;
-        }
 
-        $webspace = $this->resolveWebspace($dimensionContent);
-
-        return $this->routeGenerator->generate(
-            $route->getSlug(),
-            $route->getLocale(),
-            $webspace,
-        );
-    }
-
-    protected function resolveWebspace(ArticleDimensionContentInterface $dimensionContent): ?string
-    {
-        $requestWebspace = $this->requestContext->getParameter('webspace');
-
-        if ($requestWebspace && \in_array($requestWebspace, $dimensionContent->getAdditionalWebspaces(), true)) {
-            return $requestWebspace;
-        }
-
-        return $dimensionContent->getMainWebspace();
+        return $route?->getSlug();
     }
 
     protected function resolveTitle(ArticleDimensionContentInterface $dimensionContent): ?string
     {
-        $title = $dimensionContent->getExcerptTitle();
+        $title = $dimensionContent->getExcerptTitle() ?? $dimensionContent->getTitle();
 
         return '' !== ($title ?? '') ? $title : null;
     }
@@ -243,6 +219,10 @@ class ArticleTeaserProvider implements TeaserProviderInterface
      */
     protected function getAttributes(ArticleDimensionContentInterface $dimensionContent): array
     {
-        return [];
+        return [
+            'uuid' => $dimensionContent->getResourceId(),
+            'webspace' => $dimensionContent->getMainWebspace(),
+            'additionalWebspaces' => $dimensionContent->getAdditionalWebspaces(),
+        ];
     }
 }

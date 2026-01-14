@@ -97,7 +97,7 @@ class ArticleTeaserProviderTest extends WebsiteTestCase
         $this->assertNotEmpty($teaser->getUrl());
     }
 
-    public function testFindReturnsEmptyTitleWhenNoExcerptTitle(): void
+    public function testFindReturnsArticleTitleWhenNoExcerptTitle(): void
     {
         $article = self::createArticle([
             'en' => [
@@ -113,7 +113,7 @@ class ArticleTeaserProviderTest extends WebsiteTestCase
         $teasers = $this->teaserProvider->find([$article->getUuid()], 'en');
 
         $this->assertCount(1, $teasers);
-        $this->assertSame('', $teasers[0]->getTitle());
+        $this->assertSame('Article Without Excerpt Title', $teasers[0]->getTitle());
     }
 
     public function testFindReturnsTeaserWithMediaId(): void
@@ -260,56 +260,6 @@ class ArticleTeaserProviderTest extends WebsiteTestCase
         $this->assertCount(1, $germanTeasers);
         $this->assertSame('EN Excerpt', $englishTeasers[0]->getTitle());
         $this->assertSame('DE Excerpt', $germanTeasers[0]->getTitle());
-    }
-
-    public function testFindUsesMainWebspaceWhenRequestWebspaceNotInAdditionalWebspaces(): void
-    {
-        $article = self::createArticle([
-            'en' => [
-                'live' => [
-                    'title' => 'Multi Webspace Article',
-                    'template' => 'article',
-                    'url' => '/multi-webspace',
-                    'mainWebspace' => 'blog',
-                    'additionalWebspaces' => ['sulu-io'],
-                    'excerpt' => ['title' => 'Multi Webspace Excerpt'],
-                ],
-            ],
-        ]);
-
-        /** @var RequestContext $requestContext */
-        $requestContext = self::getContainer()->get('router')->getContext();
-        $requestContext->setParameter('webspace', 'blog');
-
-        $teasers = $this->teaserProvider->find([$article->getUuid()], 'en');
-
-        $this->assertCount(1, $teasers);
-        $this->assertStringContainsString('blog.io', $teasers[0]->getUrl());
-    }
-
-    public function testFindUsesRequestWebspaceWhenInAdditionalWebspaces(): void
-    {
-        $article = self::createArticle([
-            'en' => [
-                'live' => [
-                    'title' => 'Multi Webspace Article 2',
-                    'template' => 'article',
-                    'url' => '/multi-webspace-2',
-                    'mainWebspace' => 'blog',
-                    'additionalWebspaces' => ['sulu-io'],
-                    'excerpt' => ['title' => 'Multi Webspace Excerpt 2'],
-                ],
-            ],
-        ]);
-
-        /** @var RequestContext $requestContext */
-        $requestContext = self::getContainer()->get('router')->getContext();
-        $requestContext->setParameter('webspace', 'sulu-io');
-
-        $teasers = $this->teaserProvider->find([$article->getUuid()], 'en');
-
-        $this->assertCount(1, $teasers);
-        $this->assertStringContainsString('sulu.io', $teasers[0]->getUrl());
     }
 
     public function testFindUsesTaggedDescriptionWhenExcerptEmpty(): void
