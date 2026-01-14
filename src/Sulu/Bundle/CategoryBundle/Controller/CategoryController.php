@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\CategoryBundle\Controller;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Api\RootCategory;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
@@ -24,8 +23,8 @@ use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
-use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
+use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
@@ -36,14 +35,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Makes categories available through a REST API.
  */
-class CategoryController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
+class CategoryController extends AbstractRestController implements SecuredControllerInterface
 {
     use RequestParametersTrait;
-
-    /**
-     * @deprecated Use the CategoryInterface::RESOURCE_KEY constant instead
-     */
-    protected static $entityKey = 'categories';
 
     /**
      * @param class-string $categoryClass
@@ -87,14 +81,9 @@ class CategoryController extends AbstractRestController implements ClassResource
             $parentId = null;
         }
 
-        if ($request->query->has('ids')) {
-            $ids = \array_filter(\explode(',', $request->query->get('ids')));
-            $entities = $this->categoryManager->findByIds($ids);
-            $categories = $this->categoryManager->getApiObjects($entities, $locale);
-            $list = new CollectionRepresentation($categories, CategoryInterface::RESOURCE_KEY);
-        } elseif ('true' == $request->get('flat')) {
+        if ('true' == $request->get('flat')) {
             $rootId = ($rootKey) ? $this->categoryManager->findByKey($rootKey)->getId() : null;
-            $expandedIds = \array_filter(\explode(',', $request->get('expandedIds', $request->get('selectedIds', ''))));
+            $expandedIds = \array_filter(\explode(',', $request->get('expandedIds', $request->get('selectedIds', $request->query->get('ids')))));
             $defaultSort = !$request->query->has('sortBy');
             $list = $this->getListRepresentation(
                 $request,
@@ -105,6 +94,11 @@ class CategoryController extends AbstractRestController implements ClassResource
                 $includeRoot,
                 $defaultSort
             );
+        } elseif ($request->query->has('ids')) {
+            $ids = \array_filter(\explode(',', $request->query->get('ids')));
+            $entities = $this->categoryManager->findByIds($ids);
+            $categories = $this->categoryManager->getApiObjects($entities, $locale);
+            $list = new CollectionRepresentation($categories, CategoryInterface::RESOURCE_KEY);
         } else {
             $entities = $this->categoryManager->findChildrenByParentKey($rootKey);
             $categories = $this->categoryManager->getApiObjects($entities, $locale);
@@ -199,11 +193,11 @@ class CategoryController extends AbstractRestController implements ClassResource
 
     protected function getListRepresentation(
         Request $request,
-        $locale,
-        $parentId = null,
-        $expandedIds = [],
-        $expandSelf = false,
-        $includeRoot = false,
+                $locale,
+                $parentId = null,
+                $expandedIds = [],
+                $expandSelf = false,
+                $includeRoot = false,
         bool $defaultSort = true
     ) {
         $listBuilder = $this->initializeListBuilder($locale, $defaultSort);
@@ -262,7 +256,7 @@ class CategoryController extends AbstractRestController implements ClassResource
             }
         }
 
-        if (!empty($expandedIds) && !$search) {
+        if (!empty($expandedIds) && !$search && !empty($parentId)) {
             $categoriesByParentId = [];
             foreach ($categories as &$category) {
                 $categoryParentId = $category['parent'];
@@ -294,14 +288,12 @@ class CategoryController extends AbstractRestController implements ClassResource
             ];
         }
 
-        return new ListRepresentation(
+        return new PaginatedRepresentation(
             $categories,
             CategoryInterface::RESOURCE_KEY,
-            'sulu_category.get_categories',
-            $request->query->all(),
-            $listBuilder->getCurrentPage(),
-            $listBuilder->getLimit(),
-            $listBuilder->count()
+            (int) $listBuilder->getCurrentPage(),
+            (int) $listBuilder->getLimit(),
+            (int) $listBuilder->count()
         );
     }
 
