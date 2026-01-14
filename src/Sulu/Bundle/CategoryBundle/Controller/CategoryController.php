@@ -87,7 +87,12 @@ class CategoryController extends AbstractRestController implements ClassResource
             $parentId = null;
         }
 
-        if ('true' == $request->get('flat')) {
+        if ($request->query->has('ids')) {
+            $ids = \array_filter(\explode(',', $request->query->get('ids')));
+            $entities = $this->categoryManager->findByIds($ids);
+            $categories = $this->categoryManager->getApiObjects($entities, $locale);
+            $list = new CollectionRepresentation($categories, CategoryInterface::RESOURCE_KEY);
+        } elseif ('true' == $request->get('flat')) {
             $rootId = ($rootKey) ? $this->categoryManager->findByKey($rootKey)->getId() : null;
             $expandedIds = \array_filter(\explode(',', $request->get('expandedIds', $request->get('selectedIds', ''))));
             $defaultSort = !$request->query->has('sortBy');
@@ -100,11 +105,6 @@ class CategoryController extends AbstractRestController implements ClassResource
                 $includeRoot,
                 $defaultSort
             );
-        } elseif ($request->query->has('ids')) {
-            $ids = \array_filter(\explode(',', $request->query->get('ids')));
-            $entities = $this->categoryManager->findByIds($ids);
-            $categories = $this->categoryManager->getApiObjects($entities, $locale);
-            $list = new CollectionRepresentation($categories, CategoryInterface::RESOURCE_KEY);
         } else {
             $entities = $this->categoryManager->findChildrenByParentKey($rootKey);
             $categories = $this->categoryManager->getApiObjects($entities, $locale);
