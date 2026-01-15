@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Functional\Application\ContentResolver;
 
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer as SuluRequestAnalyzer;
@@ -126,6 +127,10 @@ class SmartContentContentResolverTest extends SuluTestCase
 
     public function testResolveExampleSmartContentWithProperties(): void
     {
+        $category = self::createCategory(['key' => 'test-cat']);
+        $tag = self::createTag(['name' => 'test-tag']);
+        static::getEntityManager()->flush();
+
         $example0 = static::createExample(
             [
                 'en' => [
@@ -138,6 +143,8 @@ class SmartContentContentResolverTest extends SuluTestCase
                             'title' => 'excerpt-example-title-0',
                             'description' => 'excerpt-example-description-0',
                         ],
+                        'excerptCategories' => [$category->getId()],
+                        'excerptTags' => [$tag->getName()],
                         'seo' => [
                             'title' => 'seo-example-title-0',
                             'description' => 'seo-example-description-0',
@@ -183,7 +190,7 @@ class SmartContentContentResolverTest extends SuluTestCase
         $examplesWithProps = $content['examples_with_properties'];
         self::assertCount(1, $examplesWithProps);
 
-        /** @var array{id: int, title: string, description: string, excerptTitle: string, excerptDescription: string, seoTitle: string, seoDescription: string} $example */
+        /** @var array{id: int, title: string, description: string, excerptTitle: string, excerptDescription: string, excerptCategories: array<int, CategoryInterface>, excerptTags: array<int, string>, seoTitle: string, seoDescription: string} $example */
         $example = $examplesWithProps[0];
         self::assertSame($example0->getId(), $example['id']);
         self::assertSame('Example 0', $example['title']);
@@ -192,8 +199,11 @@ class SmartContentContentResolverTest extends SuluTestCase
         self::assertSame('excerpt-example-description-0', $example['excerptDescription']);
         self::assertSame('seo-example-title-0', $example['seoTitle']);
         self::assertSame('seo-example-description-0', $example['seoDescription']);
+        self::assertCount(1, $example['excerptCategories']);
+        self::assertCount(1, $example['excerptTags']);
+        self::assertSame($category->getId(), $example['excerptCategories'][0]->getId());
+        self::assertSame($tag->getName(), $example['excerptTags'][0]);
 
-        // Check view information for smart content with properties
         /** @var array<string, mixed> $view */
         $view = $result['view'];
         self::assertArrayHasKey('examples_with_properties', $view);
