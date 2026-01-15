@@ -253,6 +253,12 @@
         </service>
 
         <service
+            id="sulu_admin.property_metadata_mapper.select"
+            class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\SelectPropertyMetadataMapper">
+            <argument type="service" id="sulu_admin.property_metadata_min_max_value_resolver"/>
+        </service>
+
+        <service
             id="sulu_admin.property_metadata_mapper.single_selection"
             class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\SingleSelectionPropertyMetadataMapper"/>
 
