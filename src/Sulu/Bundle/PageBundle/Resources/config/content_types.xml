@@ -65,6 +65,7 @@
         <service id="sulu.content.type.select" class="Sulu\Bundle\PageBundle\Content\Types\Select">
             <tag name="sulu.content.type" alias="select"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+            <tag name="sulu_admin.property_metadata_mapper" type="select"/>
         </service>
         <service id="sulu.content.type.single_select" class="Sulu\Bundle\PageBundle\Content\Types\SingleSelect">
             <tag name="sulu.content.type" alias="single_select"/>
