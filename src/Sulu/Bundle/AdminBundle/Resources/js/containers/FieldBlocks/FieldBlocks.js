@@ -12,7 +12,6 @@ import FormOverlay from '../FormOverlay';
 import snackbarStore from '../../stores/snackbarStore';
 import conditionDataProviderRegistry from '../Form/registries/conditionDataProviderRegistry';
 import {getDifference} from '../../utils/DifferenceCalculator';
-import blockIdGenerator from '../../services/blockIdGenerator';
 import blockPreviewTransformerRegistry from './registries/blockPreviewTransformerRegistry';
 import FieldRenderer from './FieldRenderer';
 import type {BlockError, FieldTypeProps, FormStoreInterface} from '../Form/types';
@@ -172,22 +171,6 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         }
 
         return movable;
-    }
-
-    @computed get generateBlockIds() {
-        const {
-            schemaOptions: {
-                block_id_generator: {
-                    value: blockIdGenerator,
-                } = {},
-            },
-        } = this.props;
-
-        if (blockIdGenerator !== undefined && typeof blockIdGenerator !== 'boolean') {
-            throw new Error('The "block" field types only accepts booleans as "block_id_generator" schema option!');
-        }
-
-        return blockIdGenerator;
     }
 
     @computed get iconsMapping() {
@@ -554,7 +537,6 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
                     collapsable={this.collapsable}
                     defaultType={defaultType}
                     disabled={!!disabled}
-                    generateBlockIds={this.generateBlockIds ? blockIdGenerator.generateBlockIds : undefined}
                     icons={this.icons}
                     maxOccurs={maxOccurs}
                     minOccurs={minOccurs}

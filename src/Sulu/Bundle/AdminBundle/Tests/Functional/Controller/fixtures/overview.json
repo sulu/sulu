@@ -119,11 +119,6 @@
                     "name": "settings_form_key",
                     "type": null,
                     "value": "content_block_settings"
-                },
-                "block_id_generator": {
-                    "name": "block_id_generator",
-                    "type": null,
-                    "value": true
                 }
             },
             "types": {
@@ -183,11 +178,6 @@
                     "name": "settings_form_key",
                     "type": "string",
                     "value": "custom_block_settings"
-                },
-                "block_id_generator": {
-                    "name": "block_id_generator",
-                    "type": null,
-                    "value": true
                 }
             },
             "types": {

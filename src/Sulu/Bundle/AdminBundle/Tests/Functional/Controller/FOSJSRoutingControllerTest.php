@@ -52,7 +52,6 @@ class FOSJSRoutingControllerTest extends SuluTestCase
             'sulu_admin.get_icons',
             'sulu_admin.get_items',
             'sulu_admin.metadata',
-            'sulu_admin.post_block_ids',
             'sulu_admin.put_collaborations',
             'sulu_audience_targeting.get_target-group',
             'sulu_audience_targeting.get_target-groups',

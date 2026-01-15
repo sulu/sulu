@@ -416,11 +416,6 @@
             <tag name="sulu_admin.typed_form_metadata_visitor" />
         </service>
 
-        <service id="sulu_admin.block_id_generator_form_metadata_visitor"
-                 class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Visitor\BlockIdGeneratorFormMetadataVisitor">
-            <tag name="sulu_admin.typed_form_metadata_visitor" />
-        </service>
-
         <service id="sulu_admin.icon_controller"
                 class="Sulu\Bundle\AdminBundle\Controller\IconController"
                 public="true">
@@ -478,28 +473,6 @@
 
         <service id="sulu_admin.teaser_tag_property_extractor" class="Sulu\Bundle\AdminBundle\Teaser\TeaserTagPropertyExtractor">
             <argument type="service" id="sulu_admin.form_metadata_provider"/>
-        </service>
-
-        <!-- Block ID Generator -->
-        <service
-            id="sulu_admin.block_id_generator"
-            class="Sulu\Bundle\AdminBundle\Application\BlockIdGenerator\BlockIdGenerator"
-        />
-
-        <service
-            id="Sulu\Bundle\AdminBundle\Application\BlockIdGenerator\BlockIdGeneratorInterface"
-            alias="sulu_admin.block_id_generator"
-        />
-
-        <!-- Block ID Generator Controller -->
-        <service
-            id="sulu_admin.block_id_controller"
-            class="Sulu\Bundle\AdminBundle\Controller\BlockIdController"
-            public="true"
-        >
-            <argument type="service" id="Sulu\Bundle\AdminBundle\Application\BlockIdGenerator\BlockIdGeneratorInterface"/>
-
-            <tag name="sulu.context" context="admin"/>
         </service>
     </services>
 </container>

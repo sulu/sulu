@@ -112,15 +112,9 @@ class BlockPropertyResolver implements PropertyResolverMetadataAwareInterface
                 $formMetadata = $globalBlocksMetadata[$globalBlockType];
             }
 
-            $blockDefaults = ['type' => $type];
-            $blockIdGeneratorOption = $metadata->findOption('block_id_generator');
-            if ($blockIdGeneratorOption && true === $blockIdGeneratorOption->getValue() && isset($block['_id'])) {
-                $blockDefaults['_id'] = $block['_id'];
-            }
-
             $resolvedBlock = \array_merge(
-                $blockDefaults,
-                $this->metadataResolver->resolveItems($formMetadata->getItems(), $block, $locale),
+                ['type' => $type],
+                $this->metadataResolver->resolveItems($formMetadata->getItems(), $block, $locale)
             );
 
             $settingsFormKeyOption = $metadata->findOption('settings_form_key');
@@ -173,7 +167,7 @@ class BlockPropertyResolver implements PropertyResolverMetadataAwareInterface
 
         return ContentView::create(
             $this->metadataResolver->resolveItems($formMetadata->getItems(), $settingsData, $locale),
-            [],
+            []
         );
     }
 

@@ -396,7 +396,7 @@ test('Should add a new block at the end', () => {
     expect(changeSpy).toBeCalledWith([...value, {type: 'editor'}]);
 });
 
-test('Should throw an exception if a new block is added and the maximum has already been reached', async() => {
+test('Should throw an exception if a new block is added and the maximum has already been reached', () => {
     const changeSpy = jest.fn();
     const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
 
@@ -410,10 +410,10 @@ test('Should throw an exception if a new block is added and the maximum has alre
         />
     );
 
-    await expect(blockCollection.instance().handleAddBlock()).rejects.toThrow(/maximum amount of blocks/);
+    expect(() => blockCollection.instance().handleAddBlock()).toThrow(/maximum amount of blocks/);
 });
 
-test('Should paste block between existing blocks', async() => {
+test('Should paste block between existing blocks', () => {
     clipboard.set('blocks', [{content: 'Clipboard', type: 'editor'}]);
 
     const changeSpy = jest.fn();
@@ -427,8 +427,7 @@ test('Should paste block between existing blocks', async() => {
         />
     );
 
-    await blockCollection.find('Button[icon="su-copy"]').at(0).simulate('click');
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    blockCollection.find('Button[icon="su-copy"]').at(0).simulate('click');
 
     expect(changeSpy).toBeCalledWith([
         {content: 'Test 1', type: 'editor'},
@@ -437,7 +436,7 @@ test('Should paste block between existing blocks', async() => {
     ]);
 });
 
-test('Should paste block at the end', async() => {
+test('Should paste block at the end', () => {
     clipboard.set('blocks', [{content: 'Clipboard', type: 'editor'}]);
 
     const changeSpy = jest.fn();
@@ -451,13 +450,12 @@ test('Should paste block at the end', async() => {
         />
     );
 
-    await blockCollection.find('Button[icon="su-copy"]').last().simulate('click');
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    blockCollection.find('Button[icon="su-copy"]').last().simulate('click');
 
     expect(changeSpy).toBeCalledWith([...value, {content: 'Clipboard', type: 'editor'}]);
 });
 
-test('Should paste block with default type if type of block in clipboard block is not known', async() => {
+test('Should paste block with default type if type of block in clipboard block is not known', () => {
     clipboard.set('blocks', [{content: 'Clipboard', type: 'unkown-type'}]);
 
     const changeSpy = jest.fn();
@@ -471,13 +469,12 @@ test('Should paste block with default type if type of block in clipboard block i
         />
     );
 
-    await blockCollection.find('Button[icon="su-copy"]').last().simulate('click');
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    blockCollection.find('Button[icon="su-copy"]').last().simulate('click');
 
     expect(changeSpy).toBeCalledWith([...value, {content: 'Clipboard', type: 'editor'}]);
 });
 
-test('Should throw an exception if a block is pasted and the maximum has already been reached', async() => {
+test('Should throw an exception if a block is pasted and the maximum has already been reached', () => {
     clipboard.set('blocks', [{content: 'Clipboard', type: 'editor'}]);
 
     const changeSpy = jest.fn();
@@ -493,7 +490,7 @@ test('Should throw an exception if a block is pasted and the maximum has already
         />
     );
 
-    await expect(blockCollection.instance().handlePasteBlocks()).rejects.toThrow(/maximum amount of blocks/);
+    expect(() => blockCollection.instance().handlePasteBlocks()).toThrow(/maximum amount of blocks/);
 });
 
 test('Should pass duplicate action that allows to duplicate an existing block', () => {
@@ -553,7 +550,7 @@ test('Should not pass duplicate action to Block component if maxOccurs limit is 
     );
 });
 
-test('Should throw an exception if a block is duplicated and maxOccurs limit is reached', async() => {
+test('Should throw an exception if a block is duplicated and maxOccurs limit is reached', () => {
     const changeSpy = jest.fn();
     const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
 
@@ -567,7 +564,7 @@ test('Should throw an exception if a block is duplicated and maxOccurs limit is 
         />
     );
 
-    await expect(blockCollection.instance().duplicateBlocks([0], 0)).rejects.toThrow(/maximum amount of blocks/);
+    expect(() => blockCollection.instance().handleDuplicateBlock(0)).toThrow(/maximum amount of blocks/);
 });
 
 test('Should pass remove action that allows to remove an existing block', () => {
@@ -1386,166 +1383,4 @@ test('Remove selected blocks via the BlockToolbar', () => {
 
     expect(clipboardSpy).not.toBeCalled();
     expect(changeSpy).toBeCalledWith([]);
-});
-
-test('Should generate ID when adding new block with generateBlockIds enabled', async() => {
-    const mockId = 'abc12345';
-    const generateBlockIdsSpy = jest.fn().mockReturnValue(Promise.resolve([mockId]));
-
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}];
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            generateBlockIds={generateBlockIdsSpy}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    // Call the handler directly to properly await the async operation
-    await blockCollection.instance().handleAddBlock(1);
-
-    expect(generateBlockIdsSpy).toHaveBeenCalledWith(1);
-    expect(changeSpy).toHaveBeenCalledWith([
-        {content: 'Test 1', type: 'editor'},
-        {type: 'editor', _id: mockId},
-    ]);
-});
-
-test('Should not generate ID when adding block without generateBlockIds', async() => {
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}];
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    blockCollection.find('Button[icon="su-plus"]').last().simulate('click');
-
-    expect(changeSpy).toHaveBeenCalledWith([
-        {content: 'Test 1', type: 'editor'},
-        {type: 'editor'},
-    ]);
-});
-
-test('Should generate new ID when pasting cut blocks', async() => {
-    const existingId = 'existing123';
-    const newId = 'newid789';
-    clipboard.set('blocks', [{content: 'Clipboard', type: 'editor', _id: existingId}]);
-
-    const generateBlockIdsSpy = jest.fn().mockReturnValue(Promise.resolve([newId]));
-
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}];
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            generateBlockIds={generateBlockIdsSpy}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    // Call the handler directly to properly await the async operation
-    await blockCollection.instance().handlePasteBlocks(1);
-
-    expect(generateBlockIdsSpy).toHaveBeenCalledWith(1);
-    expect(changeSpy).toHaveBeenCalledWith([
-        {content: 'Test 1', type: 'editor'},
-        {content: 'Clipboard', type: 'editor', _id: newId},
-    ]);
-});
-
-test('Should generate new ID when pasting copied blocks without ID', async() => {
-    const mockId = 'newid456';
-    clipboard.set('blocks', [{content: 'Clipboard', type: 'editor'}]);
-
-    const generateBlockIdsSpy = jest.fn().mockReturnValue(Promise.resolve([mockId]));
-
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}];
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            generateBlockIds={generateBlockIdsSpy}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    await blockCollection.find('Button[icon="su-copy"]').last().simulate('click');
-
-    // Wait for async operation
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
-    expect(generateBlockIdsSpy).toHaveBeenCalledWith(1);
-    expect(changeSpy).toHaveBeenCalledWith([
-        {content: 'Test 1', type: 'editor'},
-        {content: 'Clipboard', type: 'editor', _id: mockId},
-    ]);
-});
-
-test('Should remove ID from clipboard when copying blocks', () => {
-    const clipboardSpy = jest.fn();
-    clipboard.observe('blocks', clipboardSpy);
-
-    const generateBlockIdsSpy = jest.fn();
-    const value: any = observable([{content: 'Test 1', type: 'editor', _id: 'testid123'}]);
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            generateBlockIds={generateBlockIdsSpy}
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    blockCollection.find('Block').at(0).simulate('click');
-    blockCollection.find('Block').at(0).find('Icon[name="su-more-circle"]').simulate('click');
-    blockCollection.find('Block').at(0).find('Icon[name="su-copy"]').simulate('click');
-
-    expect(clipboardSpy).toHaveBeenCalledWith([
-        {content: 'Test 1', type: 'editor'}, // _id should be removed
-    ]);
-});
-
-test('Should remove ID from clipboard when cutting blocks', () => {
-    const clipboardSpy = jest.fn();
-    clipboard.observe('blocks', clipboardSpy);
-
-    const generateBlockIdsSpy = jest.fn();
-    const value: any = observable([
-        {content: 'Test 1', type: 'editor', _id: 'testid123'},
-        {content: 'Test 2', type: 'editor'},
-    ]);
-    const changeSpy = jest.fn().mockImplementation((newValue) => {
-        value.splice(0, value.length);
-        value.push(...newValue);
-    });
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            generateBlockIds={generateBlockIdsSpy}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    blockCollection.find('Block').at(0).simulate('click');
-    blockCollection.find('Block').at(0).find('Icon[name="su-more-circle"]').simulate('click');
-    blockCollection.find('Block').at(0).find('Icon[name="su-scissors"]').simulate('click');
-
-    expect(clipboardSpy).toHaveBeenCalledWith([
-        {content: 'Test 1', type: 'editor'}, // _id should be removed for cut blocks too
-    ]);
 });
