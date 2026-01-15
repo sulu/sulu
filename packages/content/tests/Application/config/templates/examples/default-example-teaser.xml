@@ -1,0 +1,70 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>default-example-teaser</key>
+
+    <view>@ExampleTest/examples/default</view>
+    <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
+    <cacheLifetime>604800</cacheLifetime>
+
+    <meta>
+        <title lang="en">Example with Teaser</title>
+        <title lang="de">Example with Teaser</title>
+    </meta>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title lang="en">Title</title>
+                <title lang="de">Titel</title>
+            </meta>
+
+            <params>
+                <param name="headline" value="true"/>
+            </params>
+
+            <tag name="sulu.rlp.part"/>
+        </property>
+
+        <property name="url" type="route">
+            <meta>
+                <title lang="en">Resourcelocator</title>
+                <title lang="de">Adresse</title>
+            </meta>
+
+            <tag name="sulu.rlp"/>
+        </property>
+
+        <property name="teasers" type="teaser_selection">
+            <meta>
+                <title lang="en">Teasers</title>
+                <title lang="de">Anreiser</title>
+            </meta>
+
+            <params>
+                <param name="present_as" type="collection">
+                    <param name="one-column">
+                        <meta>
+                            <title lang="en">1 Column</title>
+                            <title lang="de">1 Spalte</title>
+                        </meta>
+                    </param>
+                    <param name="two-columns">
+                        <meta>
+                            <title lang="en">2 Columns</title>
+                            <title lang="de">2 Spalten</title>
+                        </meta>
+                    </param>
+                    <param name="three-columns">
+                        <meta>
+                            <title lang="en">3 Columns</title>
+                            <title lang="de">3 Spalten</title>
+                        </meta>
+                    </param>
+                </param>
+            </params>
+        </property>
+    </properties>
+</template>
