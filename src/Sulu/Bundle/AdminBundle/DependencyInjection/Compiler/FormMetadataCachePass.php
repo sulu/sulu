@@ -17,10 +17,15 @@ use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ * @internal no backwards compatibility promise, only for internal use.
+ */
 class FormMetadataCachePass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
+        $kernelProjectDir = $container->getParameter('kernel.project_dir');
+
         foreach ($container->getParameter('sulu_admin.forms.directories') as $directory) {
             $this->addDirectory($directory, $container);
         }
@@ -41,9 +46,27 @@ class FormMetadataCachePass implements CompilerPassInterface
     private function addDirectory(string $directory, ContainerBuilder $container): void
     {
         // Resolving container parameters
-        $directory = \preg_replace_callback('#%([^%]+)%#', fn ($match) => $container->getParameter($match[1]), $directory);
-        if (\file_exists($directory)) {
-            $container->addResource(new DirectoryResource($directory, '/\.xml$/'));
+        $directory = $container->resolveEnvPlaceholders(
+            \preg_replace_callback(
+                '#%([^%]+)%#',
+                static function(array $match) use ($container): string {
+                    /** @var string $param */
+                    $param = $container->getParameter($match[1]);
+
+                    return $param;
+                },
+                $directory
+            )
+        );
+
+        if (!\is_string($directory)) {
+            return;
         }
+
+        if (!\file_exists($directory) || !\is_dir($directory)) {
+            return;
+        }
+
+        $container->addResource(new DirectoryResource($directory, '/\.xml$/'));
     }
 }

@@ -14,6 +14,7 @@ namespace Sulu\Bundle\AdminBundle;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\ExposeResourceRoutesPass;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\FormMetadataCachePass;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\SuluVersionPass;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -32,6 +33,6 @@ final class SuluAdminBundle extends Bundle
             $container->addCompilerPass(new ExposeResourceRoutesPass());
         }
 
-        $container->addCompilerPass(new FormMetadataCachePass());
+        $container->addCompilerPass(new FormMetadataCachePass(), PassConfig::TYPE_BEFORE_REMOVING);
     }
 }
