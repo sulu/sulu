@@ -196,7 +196,6 @@ class DoctrineListBuilder extends AbstractListBuilder
     {
         $applyDistinct = $this->distinct || $this->hasJoins();
 
-        // Use COUNT(DISTINCT ...) when distinct is needed to avoid counting duplicates from JOINs
         $countExpression = $applyDistinct
             ? 'COUNT(DISTINCT ' . $this->idField->getSelect() . ')'
             : 'COUNT(' . $this->idField->getSelect() . ')';
@@ -363,8 +362,6 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function findIdsByGivenCriteria()
     {
-        // Apply DISTINCT if user explicitly called distinct(true) OR JOINs are present
-        // to prevent duplicate IDs when filtering by joined fields
         $applyDistinct = $this->distinct || $this->hasJoins();
 
         $subQueryBuilder = $this->createSubQueryBuilder(
