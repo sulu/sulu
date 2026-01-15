@@ -42,8 +42,8 @@ class SearchResult extends React.Component<FieldTypeProps<typeof undefined>> {
         const {formInspector} = this.props;
         const locale = formInspector.locale ? formInspector.locale.get() : undefined;
 
-        const description = formInspector.getValueByPath('/ext/seo/description');
-        const title = formInspector.getValueByPath('/ext/seo/title');
+        const description = formInspector.getValueByPath('/seo/description');
+        const title = formInspector.getValueByPath('/seo/title');
         const url = this.extractUrl(formInspector.getValueByPath('/url'));
 
         if (title !== undefined && typeof title !== 'string') {

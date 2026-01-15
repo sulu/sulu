@@ -27,9 +27,9 @@ test('Pass correct fields to SearchResult component', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     formInspector.getValueByPath.mockImplementation((path) => {
         switch (path) {
-            case '/ext/seo/description':
+            case '/seo/description':
                 return 'SEO description';
-            case '/ext/seo/title':
+            case '/seo/title':
                 return 'SEO title';
             case '/url':
                 return '/url';
@@ -52,9 +52,9 @@ test('Pass correct fields to SearchResult component with PageTreeRoute', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     formInspector.getValueByPath.mockImplementation((path) => {
         switch (path) {
-            case '/ext/seo/description':
+            case '/seo/description':
                 return 'SEO description';
-            case '/ext/seo/title':
+            case '/seo/title':
                 return 'SEO title';
             case '/url':
                 return {
@@ -88,9 +88,9 @@ test('Pass correct fields to SearchResult component', () => {
     );
     formInspector.getValueByPath.mockImplementation((path) => {
         switch (path) {
-            case '/ext/seo/description':
+            case '/seo/description':
                 return 'SEO description';
-            case '/ext/seo/title':
+            case '/seo/title':
                 return 'SEO title';
             case '/url':
                 return '/url';
