@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Functional\Application\ContentResolver;
 
+use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Api\Media;
@@ -413,14 +414,14 @@ class ContentResolverTest extends SuluTestCase
         self::assertCount(2, $categorySelection);
 
         $contentCategory1 = $categorySelection[0];
-        self::assertInstanceOf(Category::class, $contentCategory1);
+        self::assertInstanceOf(CategoryWrapper::class, $contentCategory1);
         self::assertSame($category1->getId(), $contentCategory1->getId());
         $contentCategory2 = $categorySelection[1];
-        self::assertInstanceOf(Category::class, $contentCategory2);
+        self::assertInstanceOf(CategoryWrapper::class, $contentCategory2);
         self::assertSame($category2->getId(), $contentCategory2->getId());
 
         $singleCategorySelection = $content['single_category_selection'];
-        self::assertInstanceOf(Category::class, $singleCategorySelection);
+        self::assertInstanceOf(CategoryWrapper::class, $singleCategorySelection);
         self::assertSame($category1->getId(), $singleCategorySelection->getId());
 
         /** @var mixed[] $excerpt */
@@ -429,10 +430,10 @@ class ContentResolverTest extends SuluTestCase
         self::assertIsArray($excerptCategories);
         self::assertCount(2, $excerptCategories);
         $excerptCategory1 = $excerptCategories[0];
-        self::assertInstanceOf(Category::class, $excerptCategory1);
+        self::assertInstanceOf(CategoryWrapper::class, $excerptCategory1);
         self::assertSame($category1->getId(), $excerptCategory1->getId());
         $excerptCategory2 = $excerptCategories[1];
-        self::assertInstanceOf(Category::class, $excerptCategory2);
+        self::assertInstanceOf(CategoryWrapper::class, $excerptCategory2);
         self::assertSame($category2->getId(), $excerptCategory2->getId());
     }
 
