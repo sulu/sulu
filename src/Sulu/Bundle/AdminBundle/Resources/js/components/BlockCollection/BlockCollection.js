@@ -50,7 +50,6 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
     @observable expandedBlocks: Array<boolean> = [];
     @observable selectedBlocks: Array<boolean> = [];
     @observable mode: BlockMode = 'sortable';
-    @observable isGeneratingIds: boolean = false;
 
     fillArraysDisposer: ?() => *;
     setPasteableBlocksDisposer: ?() => *;
@@ -92,71 +91,12 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
         if (props.movable === false) {
             this.mode = 'static';
         }
-
-        // Ensure IDs are generated for initial value
-        this.ensureBlockIds();
-    }
-
-    componentDidUpdate(prevProps: Props<T, U>) {
-        const {generateBlockIds, value} = this.props;
-
-        // Only call ensureBlockIds if:
-        // 1. generateBlockIds function is provided
-        // 2. The value reference changed
-        // 3. There are actually blocks without IDs
-        if (generateBlockIds && prevProps.value !== value) {
-            const hasBlocksWithoutIds = value && value.some((block) => !block._id);
-            if (hasBlocksWithoutIds) {
-                this.ensureBlockIds();
-            }
-        }
     }
 
     componentWillUnmount() {
         this.fillArraysDisposer?.();
         this.setPasteableBlocksDisposer?.();
     }
-
-    @action ensureBlockIds = async() => {
-        const {generateBlockIds, onChange, value} = this.props;
-
-        // Prevent multiple simultaneous ID generation operations
-        if (this.isGeneratingIds || !value || !generateBlockIds) {
-            return;
-        }
-
-        // Find all blocks without IDs
-        const blocksWithoutIds = value.filter((block) => !block._id);
-
-        if (blocksWithoutIds.length === 0) {
-            return;
-        }
-
-        this.isGeneratingIds = true;
-
-        try {
-            // Generate IDs for all blocks without IDs
-            const generatedIds = await generateBlockIds(blocksWithoutIds.length);
-
-            // Ensure generated IDs is a valid array
-            if (!generatedIds || !Array.isArray(generatedIds) || generatedIds.length !== blocksWithoutIds.length) {
-                return;
-            }
-
-            // Update the value with the generated IDs
-            let generatedIdIndex = 0;
-            const updatedValue = value.map((block) => {
-                if (!block._id) {
-                    return {...block, _id: generatedIds[generatedIdIndex++]};
-                }
-                return block;
-            });
-
-            onChange(updatedValue);
-        } finally {
-            this.isGeneratingIds = false;
-        }
-    };
 
     fillArrays = () => {
         const {collapsable, defaultType, onChange, minOccurs, value} = this.props;
