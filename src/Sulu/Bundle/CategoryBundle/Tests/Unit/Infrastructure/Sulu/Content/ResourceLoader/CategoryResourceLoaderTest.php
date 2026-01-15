@@ -14,8 +14,10 @@ namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Infrastructure\Sulu\Content\Reso
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CategoryBundle\Infrastructure\Sulu\Content\ResourceLoader\CategoryResourceLoader;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 
@@ -58,7 +60,12 @@ class CategoryResourceLoaderTest extends TestCase
         $this->assertSame([
             1 => $category1,
             3 => $category2,
-        ], $result);
+        ], \array_map(function($object) {
+            $this->assertInstanceOf(CategoryWrapper::class, $object);
+            $this->assertSame('en', $object->getLocale());
+
+            return $object->getEntity();
+        }, $result));
     }
 
     private static function createCategory(int $id): Category
@@ -66,6 +73,11 @@ class CategoryResourceLoaderTest extends TestCase
         $category = new Category();
         static::setPrivateProperty($category, 'id', $id);
         $category->setKey('category-' . $id);
+
+        $categoryTranslation = new CategoryTranslation();
+        $categoryTranslation->setCategory($category);
+        $categoryTranslation->setLocale('en');
+        $category->addTranslation($categoryTranslation);
 
         return $category;
     }

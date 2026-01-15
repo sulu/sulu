@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\CategoryBundle\Infrastructure\Sulu\Content\ResourceLoader;
 
+use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
 
@@ -26,7 +27,7 @@ class CategoryResourceLoader implements ResourceLoaderInterface
     public const RESOURCE_LOADER_KEY = 'category';
 
     public function __construct(
-        private CategoryManagerInterface $categoryManager
+        private CategoryManagerInterface $categoryManager,
     ) {
     }
 
@@ -36,7 +37,7 @@ class CategoryResourceLoader implements ResourceLoaderInterface
 
         $mappedResult = [];
         foreach ($result as $category) {
-            $mappedResult[$category->getId()] = $category;
+            $mappedResult[$category->getId()] = new CategoryWrapper($category, $locale);
         }
 
         return $mappedResult;
