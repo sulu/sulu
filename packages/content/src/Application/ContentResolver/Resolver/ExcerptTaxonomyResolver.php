@@ -27,6 +27,8 @@ use Sulu\Content\Domain\Model\TaxonomyInterface;
 
 readonly class ExcerptTaxonomyResolver implements ResolverInterface
 {
+    private const TAXONOMY_FIELDS = ['categories', 'tags', 'segment', 'audienceTargetGroups'];
+
     public function __construct(
         private MetadataProviderInterface $formMetadataProvider,
         private MetadataResolver $metadataResolver,
@@ -85,7 +87,12 @@ readonly class ExcerptTaxonomyResolver implements ResolverInterface
         $filteredProperties = [];
         foreach ($properties as $key => $value) {
             if (\str_starts_with((string) $value, self::getPrefix())) {
-                $normalizedValue = 'excerpt/' . \substr((string) $value, \strlen(self::getPrefix()));
+                $suffix = \substr((string) $value, \strlen(self::getPrefix()));
+
+                $normalizedValue = match (true) {
+                    \in_array($suffix, self::TAXONOMY_FIELDS, true) => 'excerpt' . \ucfirst($suffix),
+                    default => 'excerpt/' . $suffix,
+                };
                 $filteredProperties[$key] = $normalizedValue;
             }
         }

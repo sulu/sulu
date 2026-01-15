@@ -73,6 +73,8 @@
                     <param name="description" value="description"/>
                     <param name="excerptTitle" value="excerpt.title"/>
                     <param name="excerptDescription" value="excerpt.description"/>
+                    <param name="excerptCategories" value="excerpt.categories"/>
+                    <param name="excerptTags" value="excerpt.tags"/>
                     <param name="seoTitle" value="seo.title"/>
                     <param name="seoDescription" value="seo.description"/>
                 </param>
