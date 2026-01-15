@@ -363,9 +363,33 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
     @action duplicateBlocks = async(indexes: Array<number>, insertAfterIndex: number) => {
         const {generateBlockIds, onChange, onDisplaySnackbar, value} = this.props;
 
-        if (!value) {
+        if (!value || indexes.length === 0) {
             return;
         }
+
+        // Validate maximum limit before any operations
+        if (value.length + indexes.length > (this.props.maxOccurs || Infinity)) {
+            throw new Error('The maximum amount of blocks has already been reached!');
+        }
+
+        const insertionIndex = insertAfterIndex + 1;
+
+        // Update tracking arrays BEFORE async operations (must be in action context)
+        this.expandedBlocks.splice(
+            insertionIndex,
+            0,
+            ...indexes.map(() => true)
+        );
+        this.selectedBlocks.splice(
+            insertionIndex,
+            0,
+            ...indexes.map(() => false)
+        );
+        this.generatedBlockIds.splice(
+            insertionIndex,
+            0,
+            ...indexes.map(() => ++BlockCollection.idCounter)
+        );
 
         // Generate all IDs upfront in a single batch request
         let generatedIds = [];
@@ -373,38 +397,24 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
             generatedIds = await generateBlockIds(indexes.length);
         }
 
-        let newValue = [...value];
-
-        for (let count = 0; count < indexes.length; count++) {
-            const index = indexes[count];
-            if (this.hasMaximumReached) {
-                // TODO throw snackbar message or maybe its not required as fillArrays already refill the array
-                throw new Error('The maximum amount of blocks has already been reached!');
-            }
-
-            const currentInsertAfterIndex = insertAfterIndex + count;
-
-            this.expandedBlocks.splice(currentInsertAfterIndex, 0, true);
-            this.selectedBlocks.splice(currentInsertAfterIndex, 0, false);
-            this.generatedBlockIds.splice(currentInsertAfterIndex, 0, ++BlockCollection.idCounter);
-
-            const elementsBefore = newValue.slice(0, currentInsertAfterIndex);
-            const elementsAfter = newValue.slice(currentInsertAfterIndex);
-
+        // Build all duplicated blocks from the ORIGINAL value array
+        const duplicatedBlocks = indexes.map((sourceIndex, count) => {
             // Remove all _id fields (including nested ones) from the duplicated block
             const duplicatedBlock = generateBlockIds
-                ? this.removeBlockIds(toJS(newValue[index]))
-                : {...toJS(newValue[index])};
+                ? this.removeBlockIds(toJS(value[sourceIndex]))
+                : {...toJS(value[sourceIndex])};
 
             // Assign new ID to top-level block
             if (generateBlockIds && generatedIds.length > count) {
                 duplicatedBlock._id = generatedIds[count];
             }
 
-            newValue = [...elementsBefore, duplicatedBlock, ...elementsAfter];
-        }
+            return duplicatedBlock;
+        });
 
-        onChange(newValue);
+        const elementsBefore = value.slice(0, insertionIndex);
+        const elementsAfter = value.slice(insertionIndex);
+        onChange([...elementsBefore, ...duplicatedBlocks, ...elementsAfter]);
 
         if (onDisplaySnackbar) {
             onDisplaySnackbar({

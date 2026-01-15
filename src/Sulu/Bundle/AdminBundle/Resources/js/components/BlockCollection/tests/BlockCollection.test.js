@@ -1300,6 +1300,153 @@ test('Duplicate selected blocks via the BlockToolbar', () => {
     expect(changeSpy).toBeCalledWith([...value, ...value]);
 });
 
+test('Duplicate multiple non-contiguous blocks correctly', async() => {
+    const changeSpy = jest.fn();
+    const generateBlockIdsSpy = jest.fn().mockResolvedValue(['id1', 'id2']);
+
+    const types = {
+        type1: 'Type 1',
+        type2: 'Type 2',
+        type3: 'Type 3',
+        type4: 'Type 4',
+    };
+
+    const value = [
+        {type: 'type1', content: 'Block 0'},
+        {type: 'type2', content: 'Block 1'},
+        {type: 'type3', content: 'Block 2'},
+        {type: 'type4', content: 'Block 3'},
+    ];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            generateBlockIds={generateBlockIdsSpy}
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            types={types}
+            value={value}
+        />
+    );
+
+    const instance = blockCollection.instance();
+
+    await instance.duplicateBlocks([0, 2], value.length);
+
+    expect(generateBlockIdsSpy).toBeCalledWith(2);
+    expect(changeSpy).toHaveBeenCalledTimes(1);
+
+    const newValue = changeSpy.mock.calls[0][0];
+    expect(newValue).toHaveLength(6);
+    expect(newValue[0].content).toBe('Block 0');
+    expect(newValue[1].content).toBe('Block 1');
+    expect(newValue[2].content).toBe('Block 2');
+    expect(newValue[3].content).toBe('Block 3');
+    expect(newValue[4].content).toBe('Block 0');
+    expect(newValue[4]._id).toBe('id1');
+    expect(newValue[5].content).toBe('Block 2');
+    expect(newValue[5]._id).toBe('id2');
+});
+
+test('Duplicate single block maintains correct position', async() => {
+    const changeSpy = jest.fn();
+
+    const types = {
+        type1: 'Type 1',
+        type2: 'Type 2',
+        type3: 'Type 3',
+    };
+
+    const value = [
+        {type: 'type1', content: 'Block 0'},
+        {type: 'type2', content: 'Block 1'},
+        {type: 'type3', content: 'Block 2'},
+    ];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            types={types}
+            value={value}
+        />
+    );
+
+    const instance = blockCollection.instance();
+
+    await instance.duplicateBlocks([1], 1);
+
+    const newValue = changeSpy.mock.calls[0][0];
+    expect(newValue).toHaveLength(4);
+    expect(newValue[0].content).toBe('Block 0');
+    expect(newValue[1].content).toBe('Block 1');
+    expect(newValue[2].content).toBe('Block 1');
+    expect(newValue[3].content).toBe('Block 2');
+});
+
+test('Tracking arrays stay synchronized after block duplication', async() => {
+    const changeSpy = jest.fn();
+
+    const types = {
+        type1: 'Type 1',
+        type2: 'Type 2',
+    };
+
+    const value = [
+        {type: 'type1', content: 'Block 0'},
+        {type: 'type2', content: 'Block 1'},
+    ];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            types={types}
+            value={value}
+        />
+    );
+
+    const instance = blockCollection.instance();
+
+    await instance.duplicateBlocks([0, 1], value.length);
+
+    const newValue = changeSpy.mock.calls[0][0];
+
+    expect(instance.expandedBlocks).toHaveLength(newValue.length);
+    expect(instance.selectedBlocks).toHaveLength(newValue.length);
+    expect(instance.generatedBlockIds).toHaveLength(newValue.length);
+
+    expect(instance.expandedBlocks[2]).toBe(true);
+    expect(instance.expandedBlocks[3]).toBe(true);
+
+    expect(instance.selectedBlocks[2]).toBe(false);
+    expect(instance.selectedBlocks[3]).toBe(false);
+});
+
+test('Empty selection does not trigger duplication', async() => {
+    const changeSpy = jest.fn();
+
+    const value = [{type: 'type1', content: 'Block 0'}];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            types={{type1: 'Type 1'}}
+            value={value}
+        />
+    );
+
+    const instance = blockCollection.instance();
+
+    await instance.duplicateBlocks([], 0);
+
+    expect(changeSpy).not.toHaveBeenCalled();
+});
+
 test('Cut selected blocks via the BlockToolbar', () => {
     const changeSpy = jest.fn();
     const clipboardSpy = jest.fn();
