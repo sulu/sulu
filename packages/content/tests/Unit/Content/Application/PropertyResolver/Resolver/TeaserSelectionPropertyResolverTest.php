@@ -33,7 +33,7 @@ class TeaserSelectionPropertyResolverTest extends TestCase
         $contentView = $this->resolver->resolve([], 'en');
 
         $this->assertSame([], $contentView->getContent());
-        $this->assertSame(['presentsAs' => null], $contentView->getView());
+        $this->assertSame(['presentAs' => null], $contentView->getView());
     }
 
     public function testResolveWrongData(): void
@@ -41,7 +41,7 @@ class TeaserSelectionPropertyResolverTest extends TestCase
         $contentView = $this->resolver->resolve(['source' => 1], 'en');
 
         $this->assertSame([], $contentView->getContent());
-        $this->assertSame(['presentsAs' => null], $contentView->getView());
+        $this->assertSame(['presentAs' => null], $contentView->getView());
     }
 
     public function testResolveParams(): void
@@ -49,13 +49,13 @@ class TeaserSelectionPropertyResolverTest extends TestCase
         $contentView = $this->resolver->resolve([], 'en', ['custom' => 'params']);
 
         $this->assertSame([], $contentView->getContent());
-        $this->assertSame(['presentsAs' => null, 'custom' => 'params'], $contentView->getView());
+        $this->assertSame(['presentAs' => null, 'custom' => 'params'], $contentView->getView());
     }
 
     public function testResolveData(): void
     {
         $data = [
-            'presentsAs' => 'two-columns',
+            'presentAs' => 'two-columns',
             'items' => [
                 ['id' => '123', 'type' => 'article'],
                 ['id' => '456', 'type' => 'page'],
@@ -84,7 +84,7 @@ class TeaserSelectionPropertyResolverTest extends TestCase
         $this->assertSame('teaser', $resolvableResource->getResourceLoaderKey());
         $this->assertSame(['id' => '456', 'type' => 'page'], $innerContentView2->getView());
 
-        $this->assertSame(['presentsAs' => 'two-columns'], $contentView->getView());
+        $this->assertSame(['presentAs' => 'two-columns'], $contentView->getView());
     }
 
     public function testResolveCustomResourceLoader(): void

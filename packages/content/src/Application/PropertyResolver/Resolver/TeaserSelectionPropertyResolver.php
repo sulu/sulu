@@ -22,7 +22,7 @@ class TeaserSelectionPropertyResolver implements PropertyResolverInterface
     public function resolve(mixed $data, string $locale, array $params = []): ContentView
     {
         $returnedParams = [
-            ...(\is_array($data) && isset($data['presentsAs']) && \is_string($data['presentsAs']) ? ['presentsAs' => $data['presentsAs']] : ['presentsAs' => null]),
+            ...(\is_array($data) && isset($data['presentAs']) && \is_string($data['presentAs']) ? ['presentAs' => $data['presentAs']] : ['presentAs' => null]),
             ...$params,
         ];
         unset($returnedParams['metadata']);
