@@ -24,5 +24,9 @@ class FormMetadataCachePass implements CompilerPassInterface
         foreach ($container->getParameter('sulu_admin.forms.directories') as $directory) {
             $container->addResource(new DirectoryResource($directory, '/\.xml$/'));
         }
+        foreach ($container->getParameter('sulu_admin.list.directories') as $directory) {
+            $container->addResource(new DirectoryResource($directory, '/\.xml$/'));
+        }
+        $container->addResource(new DirectoryResource($container->getParameter('sulu_core.webspace.config_dir'), '/\.xml$/'));
     }
 }
