@@ -1099,4 +1099,177 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('Page 4', $pagesAfter[2]['title'], 'After moving Page 2 to position 4: Page 4 should be at index 2');
         $this->assertEquals('Page 2', $pagesAfter[3]['title'], 'After moving Page 2 to position 4: Page 2 should be at index 3 (position 4)');
     }
+
+    public function testGetListByIdsIncludesNestedPages(): void
+    {
+        self::purgeDatabase();
+        $homepage = $this->createHomepage('0199ee04-c220-784e-a6fa-ac985870f2d5', 'sulu-io');
+
+        $rootPage = $this->createPage($homepage->getUuid(), [
+            'template' => 'default',
+            'title' => 'Root Page',
+            'url' => '/root',
+            'locale' => 'en',
+        ]);
+
+        $childPage1 = $this->createPage($rootPage->getUuid(), [
+            'template' => 'default',
+            'title' => 'Child Page 1',
+            'url' => '/root/child1',
+            'locale' => 'en',
+        ]);
+
+        $grandchildPage = $this->createPage($childPage1->getUuid(), [
+            'template' => 'default',
+            'title' => 'Grandchild Page',
+            'url' => '/root/child1/grandchild',
+            'locale' => 'en',
+        ]);
+
+        $childPage2 = $this->createPage($rootPage->getUuid(), [
+            'template' => 'default',
+            'title' => 'Child Page 2',
+            'url' => '/root/child2',
+            'locale' => 'en',
+        ]);
+
+        self::getEntityManager()->clear();
+
+        // Request pages by IDs - this simulates what the page_selection does
+        $ids = \sprintf('%s,%s', $grandchildPage->getUuid(), $childPage2->getUuid());
+        $this->client->request(
+            'GET',
+            \sprintf('/admin/api/pages?locale=en&ids=%s&page=1&flat=true', $ids)
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{_embedded: array{pages?: array<int, array{title: string, id: string}>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $pages = $content['_embedded']['pages'] ?? [];
+
+        $this->assertCount(2, $pages, 'Should load both nested pages');
+
+        $pageIds = \array_column($pages, 'id');
+        $this->assertContains($grandchildPage->getUuid(), $pageIds, 'Should include grandchild page');
+        $this->assertContains($childPage2->getUuid(), $pageIds, 'Should include child page 2');
+
+        $titles = \array_column($pages, 'title');
+        $this->assertContains('Grandchild Page', $titles);
+        $this->assertContains('Child Page 2', $titles);
+    }
+
+    public function testFlatListIncludesPermissions(): void
+    {
+        self::purgeDatabase();
+
+        $homepage = $this->createHomepage('test-flat-permissions', 'sulu-io');
+        $this->createPage($homepage->getId(), [
+            'title' => 'Test Page 1',
+            'template' => 'default',
+            'url' => '/test1',
+        ]);
+        $this->createPage($homepage->getId(), [
+            'title' => 'Test Page 2',
+            'template' => 'default',
+            'url' => '/test2',
+        ]);
+
+        self::ensureKernelShutdown();
+
+        $this->client->request(
+            'GET',
+            \sprintf('/admin/api/pages?locale=en&webspace=sulu-io&parentId=%s', $homepage->getId())
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{_embedded?: array{pages?: list<array<string, mixed>>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $pages = $content['_embedded']['pages'] ?? [];
+
+        $this->assertNotEmpty($pages, 'Should have pages in result');
+        foreach ($pages as $page) {
+            $this->assertArrayHasKey('_hasPermissions', $page, 'Each page should have _hasPermissions field');
+            $this->assertIsBool($page['_hasPermissions'], '_hasPermissions should be boolean');
+
+            if ($page['_hasPermissions']) {
+                $this->assertArrayHasKey('_permissions', $page, 'Pages with permissions should have _permissions array');
+                $this->assertIsArray($page['_permissions'], '_permissions should be array');
+            }
+        }
+    }
+
+    public function testNestedListIncludesPermissions(): void
+    {
+        self::purgeDatabase();
+
+        $homepage = $this->createHomepage('test-nested-permissions', 'sulu-io');
+        $parentPage = $this->createPage($homepage->getId(), [
+            'title' => 'Parent Page',
+            'template' => 'default',
+            'url' => '/parent',
+        ]);
+        $this->createPage($parentPage->getId(), [
+            'title' => 'Child Page',
+            'template' => 'default',
+            'url' => '/parent/child',
+        ]);
+
+        self::ensureKernelShutdown();
+
+        $this->client->request(
+            'GET',
+            \sprintf('/admin/api/pages?locale=en&webspace=sulu-io&expandedIds=%s', $homepage->getId())
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{_embedded?: array{pages?: list<array{_hasPermissions?: bool, _embedded?: array{pages?: list<array<string, mixed>>}}>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $pages = $content['_embedded']['pages'] ?? [];
+
+        $this->assertNotEmpty($pages, 'Should have pages in result');
+        $this->assertArrayHasKey('_hasPermissions', $pages[0], 'Root page should have _hasPermissions field');
+
+        $nestedPages = $pages[0]['_embedded']['pages'] ?? [];
+        foreach ($nestedPages as $child) {
+            $this->assertArrayHasKey('_hasPermissions', $child, 'Child pages should have _hasPermissions field');
+        }
+    }
+
+    public function testEnhanceRowsAddsHasChildrenProperty(): void
+    {
+        self::purgeDatabase();
+
+        $homepage = $this->createHomepage('test-has-children', 'sulu-io');
+        $parentPage = $this->createPage($homepage->getId(), [
+            'title' => 'Parent Page',
+            'template' => 'default',
+            'url' => '/parent',
+        ]);
+        $this->createPage($parentPage->getId(), [
+            'title' => 'Child Page',
+            'template' => 'default',
+            'url' => '/parent/child',
+        ]);
+
+        self::ensureKernelShutdown();
+
+        $this->client->request(
+            'GET',
+            \sprintf('/admin/api/pages?locale=en&webspace=sulu-io&parentId=%s', $homepage->getId())
+        );
+
+        $response = $this->client->getResponse();
+        /** @var array{_embedded: array{pages: array<int, array{hasChildren: bool}>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $pages = $content['_embedded']['pages'];
+
+        $this->assertCount(1, $pages);
+        $this->assertTrue($pages[0]['hasChildren'], 'Parent page should have hasChildren=true');
+    }
 }
