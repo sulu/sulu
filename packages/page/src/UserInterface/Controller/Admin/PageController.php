@@ -11,7 +11,6 @@
 
 namespace Sulu\Page\UserInterface\Controller\Admin;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
@@ -70,7 +69,6 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         private DoctrineListBuilderFactoryInterface $listBuilderFactory,
         private RestHelperInterface $restHelper,
-        private EntityManagerInterface $entityManager,
         private AccessControlManagerInterface $accessControlManager,
         private TokenStorageInterface $tokenStorage,
     ) {
@@ -85,6 +83,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         $excludeGhosts = $request->query->getBoolean('exclude-ghosts', false);
         $excludeShadows = $request->query->getBoolean('exclude-shadows', false);
         $expandedIds = \array_filter(\explode(',', (string) $request->query->get('expandedIds')));
+        $ids = $request->query->get('ids');
 
         $filters = [];
 
@@ -113,6 +112,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             expandedIds: $expandedIds,
             includedFields: $includedFields,
             listKey: 'pages',
+            filterByParentId: empty($ids),
         );
 
         return new JsonResponse($this->normalizer->normalize(
@@ -295,7 +295,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             /** @see \Sulu\Page\Application\MessageHandler\MovePageMessageHandler */
             /** @var PageInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
-        } elseif ('copy' == $action) {
+        } elseif ('copy' === $action) {
             $destinationUuid = $request->query->getString('destination');
             $message = new CopyPageMessage(['uuid' => $uuid], ['uuid' => $destinationUuid], $this->getLocale($request));
 
@@ -354,6 +354,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         array $includedFields = [],
         array $groupByFields = [],
         ?string $listKey = null,
+        bool $filterByParentId = true,
     ): CollectionRepresentation {
         $listKey = $listKey ?? $resourceKey;
 
@@ -389,10 +390,43 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         $listBuilder->addSelectField($fieldDescriptors['version']);
         $listBuilder->sort($fieldDescriptors['lft'], 'asc');
 
+        // If no expandedIds provided, return flat list
+        if (empty($expandedIds)) {
+            if ($filterByParentId) {
+                $listBuilder->where($fieldDescriptors['parentId'], $parentId);
+            }
+
+            /** @var mixed[][] $rows */
+            $rows = $listBuilder->execute();
+            $enhancedRows = $this->enhanceRows($rows);
+
+            // Remove tree properties for flat list
+            foreach ($enhancedRows as &$row) {
+                unset($row['rgt']);
+                unset($row['lft']);
+                unset($row['parentId']);
+            }
+
+            return new CollectionRepresentation(
+                $enhancedRows,
+                $resourceKey,
+            );
+        }
+
+        // Generate nested structure when expandedIds are provided
         // collect entities of which the children should be included in the response
+        $pathIds = $parentId
+            ? \iterator_to_array($this->pageRepository->findIdentifiersBy([
+                'ancestorsOfIds' => $expandedIds,
+                'descendantOfId' => $parentId,
+            ]))
+            : \iterator_to_array($this->pageRepository->findIdentifiersBy([
+                'ancestorsOfIds' => $expandedIds,
+            ]));
+
         $idsToExpand = \array_merge(
             [$parentId],
-            $this->findIdsOnPathsBetween($fieldDescriptors['id']->getEntityName(), $parentId, $expandedIds),
+            $pathIds,
             $expandedIds,
         );
 
@@ -415,96 +449,46 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
 
         /** @var mixed[][] $rows */
         $rows = $listBuilder->execute();
+        $enhancedRows = $this->enhanceRows($rows);
 
         return new CollectionRepresentation(
-            $this->generateNestedRows($parentId, $resourceKey, $rows),
+            $this->generateNestedRows($parentId, $resourceKey, $enhancedRows),
             $resourceKey,
         );
     }
 
     /**
-     * @param string[] $endIds
+     * @param mixed[][] $rows
      *
-     * @return mixed[]
+     * @return mixed[][]
      */
-    private function findIdsOnPathsBetween(string $entityClass, int|string|null $startId, array $endIds): array
+    private function enhanceRows(array $rows): array
     {
-        // there are no paths and therefore no ids if we dont have any end-ids
-        if (0 === \count($endIds)) {
-            return [];
-        }
-
-        $queryBuilder = $this->entityManager->createQueryBuilder()
-            ->from($entityClass, 'entity')
-            ->select('entity.uuid');
-
-        // if this start-id is not set we want to include all paths from the root to our end-ids
-        if ($startId) {
-            $queryBuilder->from($entityClass, 'startEntity')
-                ->andWhere('startEntity.uuid = :startIds')
-                ->andWhere('entity.lft > startEntity.lft')
-                ->andWhere('entity.rgt < startEntity.rgt')
-                ->setParameter('startIds', $startId);
-        }
-
-        $queryBuilder->from($entityClass, 'endEntity')
-            ->andWhere('endEntity.uuid IN (:endIds)')
-            ->andWhere('entity.lft < endEntity.lft')
-            ->andWhere('entity.rgt > endEntity.rgt')
-            ->setParameter('endIds', $endIds);
-
-        return \array_map('current', $queryBuilder->getQuery()->getScalarResult()); // @phpstan-ignore argument.type
-    }
-
-    /**
-     * @param mixed[][] $flatRows
-     *
-     * @return mixed[]
-     */
-    private function generateNestedRows(?string $parentId, string $resourceKey, array $flatRows): array
-    {
-        // add hasChildren property that is expected by the sulu frontend
-        foreach ($flatRows as &$row) {
+        foreach ($rows as &$row) {
             /** @var int $lft */
             $lft = $row['lft'];
             $row['hasChildren'] = ($lft + 1) !== $row['rgt'];
         }
 
-        // group rows by the id of their parent
-        $rowsByParentId = [];
-        foreach ($flatRows as &$row) {
-            /** @var string $rowParentId */
-            $rowParentId = $row['parentId'];
-            if (!\array_key_exists($rowParentId, $rowsByParentId)) {
-                $rowsByParentId[$rowParentId] = [];
-            }
-            $rowsByParentId[$rowParentId][] = &$row;
-        }
-
-        // embed children rows int their parent rows
-        foreach ($flatRows as &$row) {
+        foreach ($rows as &$row) {
             // TODO this should be handled by the listbuilder
             $row['publishedState'] = WorkflowInterface::WORKFLOW_PLACE_PUBLISHED === $row['publishedState'];
 
-            // Add permissions data for each row
             /** @var string $rowId */
             $rowId = $row['id'];
             /** @var string $webspaceKey */
             $webspaceKey = $row['webspaceKey'];
 
-            // Get all permissions for the page
             $allPermissions = $this->accessControlManager->getPermissions(
                 Page::class,
                 $rowId
             );
             $row['_hasPermissions'] = !empty($allPermissions);
 
-            // Get user-specific permissions
             if (!empty($allPermissions)) {
                 $token = $this->tokenStorage->getToken();
                 $user = $token?->getUser();
 
-                // Ensure user is compatible with Sulu's UserInterface
                 if ($user instanceof UserInterface) {
                     $permissions = $this->accessControlManager->getUserPermissionByArray(
                         null,
@@ -517,6 +501,31 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
                     $row['_permissions'] = [];
                 }
             }
+        }
+
+        return $rows;
+    }
+
+    /**
+     * @param mixed[][] $flatRows
+     *
+     * @return mixed[]
+     */
+    private function generateNestedRows(?string $parentId, string $resourceKey, array $flatRows): array
+    {
+        $rowsByParentId = [];
+        foreach ($flatRows as &$row) {
+            /** @var string $rowParentId */
+            $rowParentId = $row['parentId'];
+            if (!\array_key_exists($rowParentId, $rowsByParentId)) {
+                $rowsByParentId[$rowParentId] = [];
+            }
+            $rowsByParentId[$rowParentId][] = &$row;
+        }
+
+        foreach ($flatRows as &$row) {
+            /** @var string $rowId */
+            $rowId = $row['id'];
 
             if (\array_key_exists($rowId, $rowsByParentId)) {
                 $row['_embedded'] = [
@@ -525,7 +534,6 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             }
         }
 
-        // remove tree related properties from the response
         foreach ($flatRows as &$row) {
             unset($row['rgt']);
             unset($row['lft']);

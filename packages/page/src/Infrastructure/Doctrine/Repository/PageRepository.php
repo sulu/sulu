@@ -267,6 +267,7 @@ class PageRepository implements PageRepositoryInterface
      *     loadGhost?: bool,
      *     parentId?: string|null,
      *     descendantOfId?: string,
+     *     ancestorsOfIds?: string[],
      *     webspaceKey?: string,
      *     page?: int,
      *     limit?: int,
@@ -345,6 +346,22 @@ class PageRepository implements PageRepositoryInterface
                 )
                 ->andWhere('ancestorPage.uuid = :descendantOfId')
                 ->setParameter('descendantOfId', $descendantOfId);
+        }
+
+        $ancestorsOfIds = $filters['ancestorsOfIds'] ?? null;
+        if (null !== $ancestorsOfIds) {
+            Assert::isArray($ancestorsOfIds); // @phpstan-ignore staticMethod.alreadyNarrowedType
+            Assert::allString($ancestorsOfIds); // @phpstan-ignore staticMethod.alreadyNarrowedType
+
+            $queryBuilder
+                ->innerJoin(
+                    PageInterface::class,
+                    'descendantPage',
+                    Join::WITH,
+                    'page.lft < descendantPage.lft AND page.rgt > descendantPage.rgt'
+                )
+                ->andWhere('descendantPage.uuid IN (:ancestorsOfIds)')
+                ->setParameter('ancestorsOfIds', $ancestorsOfIds);
         }
 
         $depth = $filters['depth'] ?? null;
