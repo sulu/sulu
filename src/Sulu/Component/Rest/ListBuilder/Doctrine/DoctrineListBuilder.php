@@ -35,6 +35,8 @@ use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineOrExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineWhereExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Exception\InvalidExpressionArgumentException;
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Expression\IsNotNullExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Expression\IsNullExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Filter\FilterTypeRegistry;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -916,6 +918,9 @@ class DoctrineListBuilder extends AbstractListBuilder
             || $field instanceof DoctrineGroupConcatFieldDescriptor;
     }
 
+    /**
+     * @return IsNullExpressionInterface
+     */
     public function createIsNullExpression(FieldDescriptorInterface $fieldDescriptor)
     {
         if (!$fieldDescriptor instanceof DoctrineFieldDescriptorInterface) {
@@ -925,6 +930,9 @@ class DoctrineListBuilder extends AbstractListBuilder
         return new DoctrineIsNullExpression($fieldDescriptor);
     }
 
+    /**
+     * @return IsNotNullExpressionInterface
+     */
     public function createIsNotNullExpression(FieldDescriptorInterface $fieldDescriptor)
     {
         if (!$fieldDescriptor instanceof DoctrineFieldDescriptorInterface) {
