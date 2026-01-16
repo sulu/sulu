@@ -28,11 +28,15 @@ use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\AbstractDoctrineExpressi
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineAndExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineBetweenExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineInExpression;
+use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineIsNotNullExpression;
+use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineIsNullExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineNotExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineOrExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineWhereExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Exception\InvalidExpressionArgumentException;
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Expression\IsNotNullExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Expression\IsNullExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Filter\FilterTypeRegistry;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -912,5 +916,29 @@ class DoctrineListBuilder extends AbstractListBuilder
     {
         return $field instanceof DoctrineCountFieldDescriptor
             || $field instanceof DoctrineGroupConcatFieldDescriptor;
+    }
+
+    /**
+     * @return IsNullExpressionInterface
+     */
+    public function createIsNullExpression(FieldDescriptorInterface $fieldDescriptor)
+    {
+        if (!$fieldDescriptor instanceof DoctrineFieldDescriptorInterface) {
+            throw new InvalidExpressionArgumentException('is_null', 'fieldDescriptor');
+        }
+
+        return new DoctrineIsNullExpression($fieldDescriptor);
+    }
+
+    /**
+     * @return IsNotNullExpressionInterface
+     */
+    public function createIsNotNullExpression(FieldDescriptorInterface $fieldDescriptor)
+    {
+        if (!$fieldDescriptor instanceof DoctrineFieldDescriptorInterface) {
+            throw new InvalidExpressionArgumentException('is_not_null', 'fieldDescriptor');
+        }
+
+        return new DoctrineIsNotNullExpression($fieldDescriptor);
     }
 }

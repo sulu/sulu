@@ -118,7 +118,7 @@ class AccessControlQueryEnhancer implements AccessControlQueryEnhancerInterface
         $ids = \array_column($result, 'id');
 
         if (\count($ids) > 0) {
-            $queryBuilder->andWhere(\sprintf('%s.id NOT IN (:accessControlIds)', $entityAlias));
+            $queryBuilder->andWhere(\sprintf('(%s.id NOT IN (:accessControlIds) OR %s.id IS NULL)', $entityAlias, $entityAlias));
             $queryBuilder->setParameter('accessControlIds', $ids);
         }
     }
