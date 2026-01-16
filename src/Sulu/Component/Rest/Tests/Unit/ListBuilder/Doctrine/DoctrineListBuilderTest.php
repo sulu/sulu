@@ -11,9 +11,9 @@
 
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Doctrine;
 
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Select;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
@@ -81,7 +81,7 @@ class DoctrineListBuilderTest extends TestCase
     private $queryBuilder;
 
     /**
-     * @var ObjectProphecy<Query<int, object>>
+     * @var ObjectProphecy<AbstractQuery>
      */
     private $query;
 
@@ -127,7 +127,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->entityManager = $this->prophesize(EntityManager::class);
         $this->filterTypeRegistry = $this->prophesize(FilterTypeRegistry::class);
         $this->queryBuilder = $this->prophesize(QueryBuilder::class);
-        $this->query = $this->prophesize(Query::class); // @phpstan-ignore-line assign.propertyType
+        $this->query = $this->prophesize(AbstractQuery::class); // @phpstan-ignore-line assign.propertyType
         $this->classMetadata = $this->prophesize(ClassMetadata::class); // @phpstan-ignore-line assign.propertyType
 
         $this->entityManager->createQueryBuilder()->willReturn($this->queryBuilder->reveal());
@@ -1300,11 +1300,11 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->addOrderBy(Argument::cetera())->shouldNotBeCalled();
 
         $queryBuilder1 = $this->prophesize(QueryBuilder::class);
-        $query1 = $this->prophesize(Query::class);
+        $query1 = $this->prophesize(AbstractQuery::class);
         $queryBuilder2 = $this->prophesize(QueryBuilder::class);
-        $query2 = $this->prophesize(Query::class);
+        $query2 = $this->prophesize(AbstractQuery::class);
         $queryBuilder3 = $this->prophesize(QueryBuilder::class);
-        $query3 = $this->prophesize(Query::class);
+        $query3 = $this->prophesize(AbstractQuery::class);
         $this->entityManager->createQueryBuilder()->willReturn(
             $queryBuilder1->reveal(),
             $queryBuilder2->reveal(),
@@ -1575,7 +1575,7 @@ class DoctrineListBuilderTest extends TestCase
         $accessQueryBuilder->setParameter('permission', 64)
             ->willReturn($accessQueryBuilder->reveal())->shouldBeCalled();
 
-        $accessQuery = $this->prophesize(Query::class);
+        $accessQuery = $this->prophesize(AbstractQuery::class);
         $accessQueryBuilder->getQuery()
             ->willReturn($accessQueryBuilder->reveal())
             ->willReturn($accessQuery->reveal());
@@ -1661,7 +1661,7 @@ class DoctrineListBuilderTest extends TestCase
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQuery = $this->prophesize(Query::class);
+        $accessQuery = $this->prophesize(AbstractQuery::class);
         $accessQueryBuilder->getQuery()
             ->willReturn($accessQueryBuilder->reveal())
             ->willReturn($accessQuery->reveal());
@@ -1744,7 +1744,7 @@ class DoctrineListBuilderTest extends TestCase
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQuery = $this->prophesize(Query::class);
+        $accessQuery = $this->prophesize(AbstractQuery::class);
         $accessQueryBuilder->getQuery()->willReturn($accessQuery->reveal());
         $accessQuery->getScalarResult()->willReturn([['id' => 42]]);
 
@@ -1834,7 +1834,7 @@ class DoctrineListBuilderTest extends TestCase
         $accessQueryBuilder->setParameter('roleIds', [1])->willReturn($accessQueryBuilder->reveal())->shouldBeCalled();
         $accessQueryBuilder->setParameter('permission', 64)->willReturn($accessQueryBuilder->reveal())->shouldBeCalled();
 
-        $accessQuery = $this->prophesize(Query::class);
+        $accessQuery = $this->prophesize(AbstractQuery::class);
         $accessQueryBuilder->getQuery()->willReturn($accessQuery->reveal());
         $accessQuery->getScalarResult()->willReturn([['id' => 42]]);
 
