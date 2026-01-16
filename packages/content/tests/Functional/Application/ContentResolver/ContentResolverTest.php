@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Functional\Application\ContentResolver;
 
+use Sulu\Bundle\AdminBundle\Teaser\Teaser;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Api\Media;
@@ -322,6 +323,86 @@ class ContentResolverTest extends SuluTestCase
         $contentMedia2 = $excerpt['image'];
         self::assertInstanceOf(Media::class, $contentMedia2);
         self::assertSame($media2->getId(), $contentMedia2->getId());
+
+        $view = $result['view'];
+        /** @var array{ids: int[], displayOption: string|null} $mediaSelectionView */
+        $mediaSelectionView = $view['media_selection'];
+        self::assertSame('left', $mediaSelectionView['displayOption']);
+        self::assertSame([$media1->getId(), $media2->getId(), $media3->getId()], $mediaSelectionView['ids']);
+
+        /** @var array{id: int|null, displayOption: string|null} $singleMediaSelectionView */
+        $singleMediaSelectionView = $view['single_media_selection'];
+        self::assertSame('left', $singleMediaSelectionView['displayOption']);
+        self::assertSame($media1->getId(), $singleMediaSelectionView['id']);
+    }
+
+    public function testResolveTeaserSelection(): void
+    {
+        $example1 = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Example 1',
+                    'url' => '/example-1',
+                    'description' => 'First example description',
+                ],
+            ],
+        ]);
+
+        $example2 = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Example 2',
+                    'url' => '/example-2',
+                    'description' => 'Second example description',
+                ],
+            ],
+        ]);
+
+        static::getEntityManager()->flush();
+
+        $page = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default-example-teaser',
+                    'title' => 'Teaser Page',
+                    'url' => '/teaser-page',
+                    'teasers' => [
+                        'presentAs' => 'two-columns',
+                        'items' => [
+                            ['id' => (string) $example1->getId(), 'type' => 'examples'],
+                            ['id' => (string) $example2->getId(), 'type' => 'examples'],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        static::getEntityManager()->flush();
+
+        $dimensionContent = $this->contentAggregator->aggregate($page, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        $content = $result['content'];
+        self::assertArrayHasKey('teasers', $content);
+        $teasers = $content['teasers'];
+        self::assertIsArray($teasers);
+        self::assertCount(2, $teasers);
+
+        $teaser1 = $teasers[0];
+        self::assertInstanceOf(Teaser::class, $teaser1);
+        self::assertSame('Example 1', $teaser1->getTitle());
+
+        $teaser2 = $teasers[1];
+        self::assertInstanceOf(Teaser::class, $teaser2);
+        self::assertSame('Example 2', $teaser2->getTitle());
+
+        $view = $result['view'];
+        /** @var array{presentAs: string|null, items: array<int, array<string, mixed>>} $teasersView */
+        $teasersView = $view['teasers'];
+        self::assertSame('two-columns', $teasersView['presentAs']);
+        self::assertCount(2, $teasersView['items']);
     }
 
     public function testResolveCollections(): void
