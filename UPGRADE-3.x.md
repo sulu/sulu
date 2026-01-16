@@ -220,18 +220,75 @@ composer remove massive/search-bundle --no-scripts
 composer remove handcraftedinthealps/zendsearch --no-scripts
 ```
 
-Remove the bundles from your `config/bundles.php` file:
+Remove the bundle from your `config/bundles.php` file:
 
 ```diff
 // config/bundles.php
 
 return [
 -    Massive\Bundle\SearchBundle\MassiveSearchBundle::class => ['all' => true],
--    Sulu\Bundle\SearchBundle\SuluSearchBundle::class => ['all' => true],
 ```
 
-Remove eventually registered routes `config/routes/sulu_website.yaml` and `config/routes/sulu_admin.yaml`
-or usages in the twig templates e.g.: `{{ path('sulu_search.website_search') }}`.
+Remove also the `config/packages/massive_search.yaml` if not tackled by composer already:
+
+```bash
+rm config/packages/massive_search.yaml
+```
+
+Update `config/routes/sulu_website.yaml`:
+
+```diff
+sulu_search:
+    type: portal
+-    resource: "@SuluSearchBundle/Resources/config/routing_website.yaml"
++    resource: "@SuluSearchBundle/config/routing_website.yaml"
+```
+
+The new `SearchBundle` is build on top of [SEAL](https://github.com/PHP-CMSIG/search) and supports
+a wide range of search engines. If your project did use ZendSearch before the best way is to
+update to the Loupe Adapter which only requires SQLite.
+
+```yaml
+# config/packages/cmsig_seal.yaml
+cmsig_seal:
+    schemas:
+        default:
+            dir: '%kernel.project_dir%/config/schemas'
+            engine: default
+    engines:
+        default:
+            adapter: '%env(resolve:SEAL_DSN)%'
+
+when@test:
+    cmsig_seal:
+        # "TEST_TOKEN" is typically set by ParaTest
+        index_name_prefix: 'test_%env(default::TEST_TOKEN)%'
+```
+
+And:
+
+```dotenv
+SEAL_DSN=loupe://%kernel.project_dir%/var/indexes
+```
+
+To install the adapter use:
+
+```bash
+composer require cmsig/search-loupe-adapter --no-scripts
+```
+
+Make sure you have the `pdo_sqlite` extension installed and enabled.
+In Linux package manager it is provided via e.g.: `php8.4-sqlite3` package:
+
+```php
+apt-get update
+apt-get install php8.4-sqlite3
+```
+
+If you are in docker the extension may already pre-installed else check your installer ([source](https://github.com/mlocati/docker-php-extension-installer?tab=readme-ov-file#supported-php-extensions)).
+
+Have a look at the [SEAL Documentation](https://php-cmsig.github.io/search/) if you want to use other adapters,
+like Elasticsearch, Meilisearch, Algolia, Redis and more.
 
 ### Template Controller changes
 
