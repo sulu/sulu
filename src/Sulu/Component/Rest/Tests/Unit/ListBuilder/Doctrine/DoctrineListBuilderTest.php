@@ -142,7 +142,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->getQuery()->willReturn($this->query->reveal());
         $this->queryBuilder->getDQL()->willReturn('');
 
-        $this->queryBuilder->distinct(false)->should(function() {});
+        $this->queryBuilder->distinct(Argument::any())->willReturn($this->queryBuilder->reveal());
         $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->should(function() {});
         $this->queryBuilder->addOrderBy(Argument::cetera())->shouldBeCalled();
 
@@ -1887,5 +1887,128 @@ class DoctrineListBuilderTest extends TestCase
 
         $this->assertInstanceOf(DoctrineIsNotNullExpression::class, $expression);
         $this->assertEquals('test', $expression->getFieldName());
+    }
+
+    public function testPaginationWithJoinsAppliesDistinct(): void
+    {
+        // Test the fix for #8467: DISTINCT should be applied when filtering by joined fields
+        $fieldDescriptor = new DoctrineFieldDescriptor(
+            'name',
+            'name',
+            self::$translationEntityName,
+            'translation',
+            [
+                self::$translationEntityName => new DoctrineJoinDescriptor(
+                    self::$translationEntityName,
+                    self::$entityNameAlias . '.translations'
+                ),
+            ]
+        );
+
+        $this->doctrineListBuilder->where($fieldDescriptor, 'test-value');
+
+        // The ID subquery should call distinct(true) because JOINs are present
+        $this->queryBuilder->distinct(true)->willReturn($this->queryBuilder->reveal())->shouldBeCalledTimes(1);
+        // The final query should call distinct(false) (default behavior)
+        $this->queryBuilder->distinct(false)->willReturn($this->queryBuilder->reveal())->shouldBeCalledTimes(1);
+
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->andWhere(Argument::containingString('.name = :name'))->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter(Argument::containingString('name'), 'test-value')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->leftJoin(
+            self::$entityNameAlias . '.translations',
+            self::$translationEntityNameAlias,
+            'WITH',
+            ''
+        )->willReturn($this->queryBuilder->reveal())->shouldBeCalledTimes(1);
+        $this->queryBuilder->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->where(self::$entityNameAlias . '.id IN (:ids)')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testPaginationWithoutJoinsNoDistinct(): void
+    {
+        // Test that DISTINCT is NOT applied when no JOINs are present (no performance overhead)
+        $fieldDescriptor = new DoctrineFieldDescriptor('name', 'name', self::$entityName);
+        $this->doctrineListBuilder->where($fieldDescriptor, 'test-value');
+
+        // distinct(true) should NOT be called for ID subquery
+        $this->queryBuilder->distinct(true)->willReturn($this->queryBuilder->reveal())->shouldNotBeCalled();
+        // Only distinct(false) should be called for the final query
+        $this->queryBuilder->distinct(false)->willReturn($this->queryBuilder->reveal())->shouldBeCalledTimes(1);
+
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->andWhere(Argument::containingString('.name = :name'))->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter(Argument::containingString('name'), 'test-value')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->where(self::$entityNameAlias . '.id IN (:ids)')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testExplicitDistinctAppliedToIdSubquery(): void
+    {
+        // Test that explicit distinct(true) is applied to both ID subquery and final query
+        $this->doctrineListBuilder->distinct(true);
+
+        // distinct(true) should be called twice: once for ID subquery, once for final query
+        $this->queryBuilder->distinct(true)->willReturn($this->queryBuilder->reveal())->shouldBeCalledTimes(2);
+
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->where(self::$entityNameAlias . '.id IN (:ids)')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testCountWithJoinsUsesDistinct(): void
+    {
+        // Test the fix for #8467: COUNT(DISTINCT id) should be used when JOINs are present
+        $this->doctrineListBuilder->addSearchField(
+            new DoctrineFieldDescriptor(
+                'desc',
+                'desc',
+                self::$translationEntityName,
+                'translation',
+                [
+                    self::$translationEntityName => new DoctrineJoinDescriptor(
+                        self::$translationEntityName,
+                        self::$entityName . '.translations'
+                    ),
+                ]
+            )
+        );
+        $this->doctrineListBuilder->search('value');
+
+        // Verify COUNT(DISTINCT ...) is used in the select
+        $this->queryBuilder->select(Argument::containingString('COUNT(DISTINCT'))->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->leftJoin(Argument::cetera())->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->andWhere(Argument::cetera())->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter('search', '%value%')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        $this->queryBuilder->addOrderBy(Argument::cetera())->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->count();
+    }
+
+    public function testCountWithoutJoinsNoDistinct(): void
+    {
+        // Test that regular COUNT(id) is used when no JOINs are present
+        $this->doctrineListBuilder->addSelectField(
+            new DoctrineFieldDescriptor('name', 'name', self::$entityName)
+        );
+
+        // Verify COUNT(...) without DISTINCT is used
+        $this->queryBuilder->select(Argument::that(function($arg) {
+            return \is_string($arg) && \str_contains($arg, 'COUNT(') && !\str_contains($arg, 'DISTINCT');
+        }))->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
+
+        $this->queryBuilder->addOrderBy(Argument::cetera())->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->count();
     }
 }

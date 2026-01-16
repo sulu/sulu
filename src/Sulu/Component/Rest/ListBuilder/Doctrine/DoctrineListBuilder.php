@@ -194,7 +194,13 @@ class DoctrineListBuilder extends AbstractListBuilder
 
     public function count()
     {
-        $subQueryBuilder = $this->createSubQueryBuilder('COUNT( ' . $this->idField->getSelect() . ')', false);
+        $applyDistinct = $this->distinct || $this->hasJoins();
+
+        $countExpression = $applyDistinct
+            ? 'COUNT(DISTINCT ' . $this->idField->getSelect() . ')'
+            : 'COUNT(' . $this->idField->getSelect() . ')';
+
+        $subQueryBuilder = $this->createSubQueryBuilder($countExpression, false);
 
         $this->assignParameters($subQueryBuilder);
 
@@ -359,7 +365,13 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function findIdsByGivenCriteria()
     {
-        $subQueryBuilder = $this->createSubQueryBuilder($this->getSelectAs($this->idField));
+        $applyDistinct = $this->distinct || $this->hasJoins();
+
+        $subQueryBuilder = $this->createSubQueryBuilder(
+            $this->getSelectAs($this->idField),
+            true,
+            $applyDistinct
+        );
         if (null != $this->limit) {
             $subQueryBuilder->setMaxResults((int) $this->limit)->setFirstResult((int) ($this->limit * ($this->page - 1)));
         }
@@ -545,7 +557,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @return QueryBuilder
      */
-    protected function createSubQueryBuilder(string $select, bool $includeSortFields = true)
+    protected function createSubQueryBuilder(string $select, bool $includeSortFields = true, bool $applyDistinct = false)
     {
         // get all filter-fields
         $filterFields = $this->getAllFields(true, $includeSortFields);
@@ -558,6 +570,10 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         // create querybuilder and add select
         $queryBuilder = $this->createQueryBuilder($addJoins)->select($select);
+
+        if ($applyDistinct) {
+            $queryBuilder->distinct(true);
+        }
 
         if ($this->user && $this->permission && \array_key_exists($this->permission, $this->permissions)) {
             if ($this->permissionCheckWithDynamicEntityClass) {
@@ -780,6 +796,22 @@ class DoctrineListBuilder extends AbstractListBuilder
     public function distinct($flag = true)
     {
         $this->distinct = $flag;
+    }
+
+    /**
+     * This is used to determine if DISTINCT should be applied to ID subqueries
+     * to prevent duplicate IDs when filtering by joined fields.
+     */
+    protected function hasJoins(): bool
+    {
+        $filterFields = $this->getAllFields(true, true);
+        foreach ($filterFields as $field) {
+            if (!empty($field->getJoins())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
