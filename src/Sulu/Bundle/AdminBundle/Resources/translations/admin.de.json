@@ -31,6 +31,7 @@
     "sulu_admin.no": "Nein",
     "sulu_admin.type": "Typ",
     "sulu_admin.default": "Standard",
+    "sulu_admin.draft": "Veröffentlicht mit Änderungen",
     "sulu_admin.language": "Sprache",
     "sulu_admin.error_required": "Dieses Feld muss ausgefüllt werden",
     "sulu_admin.error_minlength": "Die minimale Länge dieses Feldes wurde unterschritten",
