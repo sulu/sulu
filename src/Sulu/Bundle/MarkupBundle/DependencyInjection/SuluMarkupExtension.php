@@ -13,8 +13,8 @@ namespace Sulu\Bundle\MarkupBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
 /**
  * Extends the container and initializes the markup bundle.
@@ -27,11 +27,11 @@ class SuluMarkupExtension extends Extension
 
         $container->setParameter('sulu_markup.link_tag.provider_attribute', $config['link_tag']['provider_attribute']);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.php');
 
         if (\class_exists(\Swift_Mailer::class)) {
-            $loader->load('swiftmailer.xml');
+            $loader->load('swiftmailer.php');
         }
     }
 }
