@@ -116,9 +116,13 @@
             </field>
         </concatenation-property>
 
-        <property name="authored" type="date" visibility="no" translation="sulu_admin.authored" sortable="false">
+        <property name="authored" type="date" visibility="no" translation="sulu_admin.authored">
+            <field-name>authored</field-name>
+            <entity-name>dimensionContent</entity-name>
+
+            <joins ref="dimensionContent"/>
+
             <transformer type="datetime"/>
-            <filter type="date"/>
         </property>
 
         <property name="created" translation="sulu_admin.created">
