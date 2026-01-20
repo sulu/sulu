@@ -36,7 +36,7 @@ class ArticleSelectionPropertyResolverTest extends TestCase
         $contentView = $this->resolver->resolve([], 'en');
 
         $this->assertEmpty($contentView->getContent());
-        $this->assertSame(['ids' => []], $contentView->getView());
+        $this->assertSame([], $contentView->getView());
     }
 
     public function testResolveParams(): void
@@ -44,10 +44,7 @@ class ArticleSelectionPropertyResolverTest extends TestCase
         $contentView = $this->resolver->resolve([], 'en', ['custom' => 'params']);
 
         $this->assertEmpty($contentView->getContent());
-        $this->assertSame([
-            'ids' => [],
-            'custom' => 'params',
-        ], $contentView->getView());
+        $this->assertSame([], $contentView->getView());
     }
 
     /**
@@ -105,9 +102,7 @@ class ArticleSelectionPropertyResolverTest extends TestCase
             $this->assertSame(ArticleInterface::RESOURCE_KEY, $reference->getResourceKey());
         }
 
-        $this->assertSame([
-            'ids' => $data,
-        ], $contentView->getView());
+        $this->assertSame([], $contentView->getView());
     }
 
     /**

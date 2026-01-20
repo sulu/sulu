@@ -126,9 +126,11 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
                     // Replace first 'content' with 'view' in the path
                     $viewPath = \substr_replace($viewPath, '[view]', 0, $contentLength);
 
-                    // Only override empty view paths
-                    if (($this->propertyAccessor->getValue($contentData, $viewPath) ?? []) === []) {
-                        $pathValues[$viewPath] = $value;
+                    $existingViewData = $this->propertyAccessor->getValue($contentData, $viewPath) ?? [];
+                    if (\is_array($existingViewData) && \is_array($value)) {
+                        $pathValues[$viewPath] = [] === $existingViewData
+                            ? $value
+                            : \array_merge($value, $existingViewData);
                     }
                 } elseif ('content' === $key) {
                     $value = $this->propertyAccessor->getValue($contentData, $path . '[' . $key . ']');

@@ -13,6 +13,9 @@ namespace Sulu\Content\Tests\Application\ExampleTestBundle\PropertyResolver;
 
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
+use Sulu\Content\Domain\Model\AuthorInterface;
+use Sulu\Content\Domain\Model\TemplateInterface;
+use Sulu\Content\Domain\Model\WebspaceInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\ResourceLoader\ExampleResourceLoader;
 
@@ -43,14 +46,29 @@ class ExampleSelectionPropertyResolver implements PropertyResolverInterface
             ids: $ids,
             resourceLoaderKey: $resourceLoaderKey,
             resourceKey: Example::RESOURCE_KEY,
-            view: [
-                'ids' => $ids,
-                ...$params,
-            ],
+            view: [],
             priority: 150,
             metadata: [
                 'properties' => $params['properties'] ?? null,
-            ]
+            ],
+            viewCallback: static function(mixed $source): array {
+                $view = [];
+
+                if ($source instanceof TemplateInterface) {
+                    $view['template'] = $source->getTemplateKey();
+                }
+
+                if ($source instanceof WebspaceInterface) {
+                    $view['mainWebspace'] = $source->getMainWebspace();
+                }
+
+                if ($source instanceof AuthorInterface) {
+                    $view['authored'] = $source->getAuthored()?->format('c');
+                    $view['lastModified'] = $source->getLastModified()?->format('c');
+                }
+
+                return $view;
+            },
         );
     }
 

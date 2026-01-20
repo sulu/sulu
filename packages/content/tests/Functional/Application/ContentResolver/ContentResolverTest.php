@@ -26,6 +26,7 @@ use Sulu\Content\Tests\Functional\Traits\CreateCategoryTrait;
 use Sulu\Content\Tests\Functional\Traits\CreateMediaTrait;
 use Sulu\Content\Tests\Functional\Traits\CreateTagTrait;
 use Sulu\Content\Tests\Traits\CreateExampleTrait;
+use Sulu\Snippet\Tests\Traits\CreateSnippetTrait;
 use Symfony\Component\Routing\RequestContext;
 
 class ContentResolverTest extends SuluTestCase
@@ -33,6 +34,7 @@ class ContentResolverTest extends SuluTestCase
     use CreateCategoryTrait;
     use CreateExampleTrait;
     use CreateMediaTrait;
+    use CreateSnippetTrait;
     use CreateTagTrait;
 
     private ContentResolverInterface $contentResolver;
@@ -1302,5 +1304,165 @@ class ContentResolverTest extends SuluTestCase
         self::assertIsArray($resolvedNested);
         self::assertSame('Nested Example Live', $resolvedNested['title']);
         self::assertSame('Nested content live description', $resolvedNested['description']);
+    }
+
+    public function testResolveSnippetSelectionWithTemplateInView(): void
+    {
+        $snippet1 = static::createSnippet([
+            'en' => [
+                'live' => [
+                    'template' => 'snippet-1',
+                    'title' => 'First Snippet',
+                    'description' => '<p>First snippet description</p>',
+                ],
+            ],
+        ]);
+
+        $snippet2 = static::createSnippet([
+            'en' => [
+                'live' => [
+                    'template' => 'snippet-2',
+                    'title' => 'Second Snippet',
+                ],
+            ],
+        ]);
+
+        $snippet3 = static::createSnippet([
+            'en' => [
+                'live' => [
+                    'template' => 'snippet-1',
+                    'title' => 'Third Snippet',
+                    'description' => '<p>Third snippet description</p>',
+                ],
+            ],
+        ]);
+
+        static::getEntityManager()->flush();
+
+        $page = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default-example-with-snippets',
+                    'title' => 'Page with Snippets',
+                    'url' => '/page-with-snippets',
+                    'snippets' => [$snippet1->getUuid(), $snippet2->getUuid(), $snippet3->getUuid()],
+                ],
+            ],
+        ]);
+
+        static::getEntityManager()->flush();
+
+        $dimensionContent = $this->contentAggregator->aggregate($page, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        /** @var array<string, mixed> $content */
+        $content = $result['content'];
+        self::assertArrayHasKey('snippets', $content);
+        $snippets = $content['snippets'];
+        self::assertIsArray($snippets);
+        self::assertCount(3, $snippets);
+
+        /** @var array<string, mixed> $snippet0 */
+        $snippet0 = $snippets[0];
+        /** @var array<string, mixed> $snippet1Data */
+        $snippet1Data = $snippets[1];
+        /** @var array<string, mixed> $snippet2Data */
+        $snippet2Data = $snippets[2];
+
+        self::assertSame('First Snippet', $snippet0['title']);
+        self::assertSame('Second Snippet', $snippet1Data['title']);
+        self::assertSame('Third Snippet', $snippet2Data['title']);
+
+        /** @var array<string, mixed> $view */
+        $view = $result['view'];
+        self::assertArrayHasKey('snippets', $view);
+        $snippetsView = $view['snippets'];
+        self::assertIsArray($snippetsView);
+
+        self::assertCount(3, $snippetsView);
+
+        /** @var array<string, mixed> $snippetView0 */
+        $snippetView0 = $snippetsView[0];
+        /** @var array<string, mixed> $snippetView1 */
+        $snippetView1 = $snippetsView[1];
+        /** @var array<string, mixed> $snippetView2 */
+        $snippetView2 = $snippetsView[2];
+
+        self::assertSame($snippet1->getUuid(), $snippetView0['uuid']);
+        self::assertSame('snippet-1', $snippetView0['template']);
+
+        self::assertSame($snippet2->getUuid(), $snippetView1['uuid']);
+        self::assertSame('snippet-2', $snippetView1['template']);
+
+        self::assertSame($snippet3->getUuid(), $snippetView2['uuid']);
+        self::assertSame('snippet-1', $snippetView2['template']);
+    }
+
+    public function testResolveSnippetSelectionWithSingleSnippet(): void
+    {
+        $snippet = static::createSnippet([
+            'en' => [
+                'live' => [
+                    'template' => 'snippet-1',
+                    'title' => 'Single Snippet',
+                    'description' => '<p>Single snippet test</p>',
+                ],
+            ],
+        ]);
+
+        static::getEntityManager()->flush();
+
+        $page = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default-example-with-snippets',
+                    'title' => 'Page with Single Snippet',
+                    'url' => '/page-with-single-snippet',
+                    'snippets' => [$snippet->getUuid()],
+                ],
+            ],
+        ]);
+
+        static::getEntityManager()->flush();
+
+        $dimensionContent = $this->contentAggregator->aggregate($page, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        /** @var array<string, mixed> $view */
+        $view = $result['view'];
+        self::assertArrayHasKey('snippets', $view);
+        $snippetsView = $view['snippets'];
+        self::assertIsArray($snippetsView);
+
+        self::assertCount(1, $snippetsView);
+
+        /** @var array<string, mixed> $snippetView0 */
+        $snippetView0 = $snippetsView[0];
+        self::assertSame($snippet->getUuid(), $snippetView0['uuid']);
+        self::assertSame('snippet-1', $snippetView0['template']);
+    }
+
+    public function testResolveSnippetSelectionEmpty(): void
+    {
+        $page = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default-example-with-snippets',
+                    'title' => 'Page without Snippets',
+                    'url' => '/page-without-snippets',
+                    'snippets' => [],
+                ],
+            ],
+        ]);
+
+        static::getEntityManager()->flush();
+
+        $dimensionContent = $this->contentAggregator->aggregate($page, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        /** @var array<string, mixed> $view */
+        $view = $result['view'];
+        self::assertArrayHasKey('snippets', $view);
+        self::assertSame([], $view['snippets']);
     }
 }

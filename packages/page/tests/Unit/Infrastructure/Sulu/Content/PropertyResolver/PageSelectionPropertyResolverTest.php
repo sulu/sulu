@@ -101,7 +101,7 @@ class PageSelectionPropertyResolverTest extends TestCase
             $this->assertSame(PageInterface::RESOURCE_KEY, $reference->getResourceKey());
         }
 
-        $this->assertSame(['ids' => $data], $contentView->getView());
+        $this->assertSame([], $contentView->getView());
     }
 
     /**
@@ -111,7 +111,6 @@ class PageSelectionPropertyResolverTest extends TestCase
      */
     public static function provideResolvableData(): iterable
     {
-        yield 'empty' => [[]];
         yield 'string_list' => [['1', '2']];
     }
 

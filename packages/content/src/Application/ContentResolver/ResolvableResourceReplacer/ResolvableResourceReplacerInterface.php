@@ -21,9 +21,12 @@ interface ResolvableResourceReplacerInterface
 {
     /**
      * @param array<string, mixed> $content
-     * @param array<string, array<string|int, array<string, mixed>>> $resolvedResources
+     * @param array<string, array<string|int, array<string, array{source: mixed, resolved: mixed}>>> $resolvedResources
      *
-     * @return array<string, mixed>
+     * @return array{
+     *     content: array<string, mixed>,
+     *     viewEnhancements: array<string, array{items: list<mixed>, isList: bool}>,
+     * }
      */
     public function replaceResolvableResourcesWithResolvedValues(
         array $content,

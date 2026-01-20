@@ -18,7 +18,7 @@ namespace Sulu\Content\Application\ContentResolver\Value;
  */
 class ResolvableResource implements ResolvableInterface
 {
-    private \Closure $callback;
+    private \Closure $resourceCallback;
 
     /**
      * @param array<string, mixed>|null $metadata Optional metadata for additional context
@@ -30,8 +30,9 @@ class ResolvableResource implements ResolvableInterface
         ?\Closure $resourceCallback = null,
         private ?array $metadata = null,
         private ?string $resourceKey = null,
+        private ?\Closure $viewCallback = null,
     ) {
-        $this->callback = $resourceCallback ?? (static fn (mixed $resource) => $resource);
+        $this->resourceCallback = $resourceCallback ?? (static fn (mixed $resource) => $resource);
     }
 
     public function getId(): string|int
@@ -46,7 +47,16 @@ class ResolvableResource implements ResolvableInterface
 
     public function executeResourceCallback(mixed $resource): mixed
     {
-        return ($this->callback)($resource);
+        return ($this->resourceCallback)($resource);
+    }
+
+    public function executeViewCallback(mixed $source): mixed
+    {
+        if (null === $this->viewCallback) {
+            return null;
+        }
+
+        return ($this->viewCallback)($source);
     }
 
     public function getPriority(): int

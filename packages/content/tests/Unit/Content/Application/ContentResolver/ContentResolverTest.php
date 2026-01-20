@@ -214,6 +214,103 @@ class ContentResolverTest extends TestCase
         self::assertSame(['title' => 'Title Field', 'content' => 'Content Field'], $result['view']);
         self::assertSame([], $result['extension']);
     }
+
+    public function testResolveSingleSelectionEnhancementMergesIntoObjectView(): void
+    {
+        $example = new TestExample();
+        $example->id = 445;
+
+        $dimensionContent = new TestExampleDimensionContent($example);
+        $example->addDimensionContent($dimensionContent);
+        $dimensionContent->setStage('live');
+        $dimensionContent->setLocale('en');
+
+        $singleResource = new ResolvableResource(
+            'single-1',
+            'example',
+            10,
+            static function(array $resource) {
+                return $resource['title'];
+            },
+            null,
+            'examples',
+            static function(array $source): array {
+                return ['uuid' => $source['uuid']];
+            }
+        );
+
+        $templateContentView = ContentView::create(
+            ['single_selection' => $singleResource],
+            ['single_selection' => ['id' => 'single-1']]
+        );
+        $this->templateResolver->setContentView($templateContentView);
+
+        $this->resolvableResourceLoader->loadResources(
+            ['example' => ['single-1' => [$singleResource->getMetadataIdentifier() => $singleResource]]],
+            'en'
+        )->willReturn(
+            ['example' => ['single-1' => [$singleResource->getMetadataIdentifier() => ['title' => 'Single Title', 'uuid' => 'uuid-single-1']]]]
+        );
+
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        self::assertSame('Single Title', $result['content']['single_selection']);
+        self::assertSame(
+            ['id' => 'single-1', 'uuid' => 'uuid-single-1'],
+            $result['view']['single_selection']
+        );
+    }
+
+    public function testResolveMultiSelectionEnhancementWithSingleItemUsesItemsEnvelope(): void
+    {
+        $example = new TestExample();
+        $example->id = 446;
+
+        $dimensionContent = new TestExampleDimensionContent($example);
+        $example->addDimensionContent($dimensionContent);
+        $dimensionContent->setStage('live');
+        $dimensionContent->setLocale('en');
+
+        $multiResource = new ResolvableResource(
+            'multi-1',
+            'example',
+            10,
+            static function(array $resource) {
+                return $resource['title'];
+            },
+            null,
+            'examples',
+            static function(array $source): array {
+                return ['uuid' => $source['uuid']];
+            }
+        );
+
+        $templateContentView = ContentView::create(
+            ['multi_selection' => ContentView::create([$multiResource], ['presentAs' => 'grid'])],
+            []
+        );
+        $this->templateResolver->setContentView($templateContentView);
+
+        $this->resolvableResourceLoader->loadResources(
+            ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => $multiResource]]],
+            'en'
+        )->willReturn(
+            ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => ['title' => 'Multi Title', 'uuid' => 'uuid-multi-1']]]]
+        );
+
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        self::assertSame(['Multi Title'], $result['content']['multi_selection']);
+        self::assertSame(
+            [
+                'presentAs' => 'grid',
+                'items' => [
+                    ['uuid' => 'uuid-multi-1'],
+                ],
+            ],
+            $result['view']['multi_selection']
+        );
+    }
 }
 
 class TestTemplateResolver implements ResolverInterface

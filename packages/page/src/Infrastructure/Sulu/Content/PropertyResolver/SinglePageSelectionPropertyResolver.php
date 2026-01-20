@@ -13,6 +13,7 @@ namespace Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver;
 
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
+use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
 
@@ -55,7 +56,24 @@ class SinglePageSelectionPropertyResolver implements PropertyResolverInterface
                         'url' => 'url',
                     ],
                 ),
-            ]
+            ],
+            viewCallback: static function(mixed $source): array {
+                if ($source instanceof PageDimensionContentInterface) {
+                    /** @var PageInterface $resource */
+                    $resource = $source->getResource();
+
+                    return [
+                        'uuid' => $resource->getUuid(),
+                        'template' => $source->getTemplateKey(),
+                        'webspaceKey' => $resource->getWebspaceKey(),
+                        'authored' => $source->getAuthored()?->format('c'),
+                        'lastModified' => $source->getLastModified()?->format('c'),
+                        'parent' => $resource->getParent()?->getUuid(),
+                    ];
+                }
+
+                return [];
+            },
         );
     }
 

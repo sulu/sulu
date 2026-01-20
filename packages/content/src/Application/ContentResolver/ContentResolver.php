@@ -26,10 +26,14 @@ use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Webmozart\Assert\Assert;
 
 readonly class ContentResolver implements ContentResolverInterface
 {
+    private PropertyAccessorInterface $propertyAccessor;
+
     public function __construct(
         private ContentViewResolverInterface $contentViewResolver,
         private ResolvableResourceLoaderInterface $resolvableResourceLoader,
@@ -40,6 +44,7 @@ readonly class ContentResolver implements ContentResolverInterface
         private int $maxDepth,
         private ContentEnhancerInterface $contentEnhancer
     ) {
+        $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
     }
 
     public function resolve(DimensionContentInterface $dimensionContent, ?array $properties = null): array
@@ -100,6 +105,7 @@ readonly class ContentResolver implements ContentResolverInterface
 
                             /** @var ResolvableInterface $resolvableResource */
                             $resolvableResource = $resourcesToLoad[$loaderKey][$id][$metadataIdentifier];
+
                             $metadata = $resolvableResource->getMetadata();
                             /** @var array<string, string>|null $internalProperties */
                             $internalProperties = $metadata['properties'] ?? null;
@@ -119,6 +125,8 @@ readonly class ContentResolver implements ContentResolverInterface
                                     isRoot: false
                                 );
                             }
+
+                            $sourceValue = $childContent;
                         } elseif ($resource instanceof ContentView) {
                             /** @var array{
                              *     content: array{'0': array<string, mixed>},
@@ -138,28 +146,51 @@ readonly class ContentResolver implements ContentResolverInterface
                                 $normalizedContentData['resolvableResources'],
                                 $priorityQueue,
                             );
+
+                            $sourceValue = $resolvedValue;
                         } else {
-                            // For non-entity resources, just store the resource directly
                             $resolvedValue = $resource;
+                            $sourceValue = $resource;
                         }
 
-                        $resolvedResources[$loaderKey][$id][$metadataIdentifier] = $resolvedValue;
+                        $resolvedResources[$loaderKey][$id][$metadataIdentifier] = [
+                            'source' => $sourceValue,
+                            'resolved' => $resolvedValue,
+                        ];
                     }
                 }
             }
         }
 
-        // Replace all ResolvableResource references with their actual resolved values
-        $finalContent = $this->resolvableResourceReplacer->replaceResolvableResourcesWithResolvedValues(
+        $replacerResult = $this->resolvableResourceReplacer->replaceResolvableResourcesWithResolvedValues(
             $resolvedContent['content'],
             $resolvedResources,
             1, // Start at depth 1 since the initial resolution was at depth 0
             $this->maxDepth,
         );
 
+        $finalContent = $replacerResult['content'];
+        $viewEnhancements = $replacerResult['viewEnhancements'];
+
+        foreach ($viewEnhancements as $path => $enhancement) {
+            $items = $enhancement['items'];
+            if ([] === $items) {
+                continue;
+            }
+
+            $existing = $this->propertyAccessor->getValue($resolvedContent['view'], $path);
+            $existingView = \is_array($existing) ? $existing : [];
+
+            $merged = $this->mergeViewEnhancement($existingView, $items, $enhancement['isList']);
+            $this->propertyAccessor->setValue($resolvedContent['view'], $path, $merged);
+        }
+
+        /** @var array<string, mixed> $viewData */
+        $viewData = $resolvedContent['view'];
+
         $normalizedContentData = $this->contentViewDataNormalizer->normalizeContentViewData(
             $finalContent,
-            $resolvedContent['view'],
+            $viewData,
             $dimensionContent->getResource(),
         );
 
@@ -212,5 +243,45 @@ readonly class ContentResolver implements ContentResolverInterface
         );
 
         return $resolvedContent;
+    }
+
+    /**
+     * @param array<string|int, mixed> $existingView
+     * @param list<mixed> $items
+     *
+     * @return array<string|int, mixed>
+     */
+    private function mergeViewEnhancement(array $existingView, array $items, bool $isList): array
+    {
+        if ([] === $existingView) {
+            if (!$isList && 1 === \count($items) && \is_array($items[0])) {
+                return $items[0];
+            }
+
+            return $items;
+        }
+
+        if ($isList) {
+            if (\array_is_list($existingView)) {
+                return [...$existingView, ...$items];
+            }
+
+            $existingItems = $existingView['items'] ?? [];
+            if (\is_array($existingItems) && \array_is_list($existingItems)) {
+                $existingView['items'] = [...$existingItems, ...$items];
+            } else {
+                $existingView['items'] = $items;
+            }
+
+            return $existingView;
+        }
+
+        if (1 === \count($items) && \is_array($items[0])) {
+            return \array_merge($existingView, $items[0]);
+        }
+
+        $existingView['items'] = $items;
+
+        return $existingView;
     }
 }

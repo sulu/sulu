@@ -30,15 +30,52 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
 
     /**
      * @param array<int|string, mixed> $content
-     * @param array<string, array<string|int, array<string, mixed>>> $resolvedResources
+     * @param array<string, array<string|int, array<string, array{source: mixed, resolved: mixed}>>> $resolvedResources
      *
-     * @return array<int|string, mixed>
+     * @return array{
+     *     content: array<int|string, mixed>,
+     *     viewEnhancements: array<string, array{items: list<mixed>, isList: bool}>,
+     * }
      */
     public function replaceResolvableResourcesWithResolvedValues(
         array $content,
         array $resolvedResources,
         int $depth,
         int $maxDepth
+    ): array {
+        /** @var array<string, array{items: list<mixed>, isList: bool}> $viewEnhancements */
+        $viewEnhancements = [];
+
+        $transformedContent = $this->replaceRecursively(
+            $content,
+            $resolvedResources,
+            $depth,
+            $maxDepth,
+            [],
+            $viewEnhancements
+        );
+
+        return [
+            'content' => $transformedContent,
+            'viewEnhancements' => $viewEnhancements,
+        ];
+    }
+
+    /**
+     * @param array<int|string, mixed> $content
+     * @param array<string, array<string|int, array<string, array{source: mixed, resolved: mixed}>>> $resolvedResources
+     * @param list<int|string> $path Current path in the content structure
+     * @param array<string, array{items: list<mixed>, isList: bool}> $viewEnhancements
+     *
+     * @return array<int|string, mixed>
+     */
+    private function replaceRecursively(
+        array $content,
+        array $resolvedResources,
+        int $depth,
+        int $maxDepth,
+        array $path,
+        array &$viewEnhancements
     ): array {
         if ($depth > $maxDepth) {
             return $this->replaceUnresolvedWithNull($content);
@@ -50,18 +87,42 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
 
         $onlyResolvableResources = true;
         foreach ($content as $key => $value) {
+            $currentPath = [...$path, $key];
+
             if ($value instanceof ResolvableInterface) {
-                $content[$key] = $this->resolveValue(
-                    $value,
-                    $resolvedResources
-                );
+                $resolveResult = $this->resolveValue($value, $resolvedResources);
+                $resolved = $resolveResult['resolved'];
+                $source = $resolveResult['source'];
+
+                if ($value instanceof ResolvableResource && null !== $source) {
+                    $viewData = $value->executeViewCallback($source);
+                    if (null !== $viewData) {
+                        $viewPath = \is_int($key) ? $path : $currentPath;
+                        if ([] !== $viewPath) {
+                            $pathKey = $this->buildPropertyPath($viewPath);
+
+                            if (!isset($viewEnhancements[$pathKey])) {
+                                $viewEnhancements[$pathKey] = [
+                                    'items' => [],
+                                    'isList' => false,
+                                ];
+                            }
+                            $viewEnhancements[$pathKey]['items'][] = $viewData;
+                            $viewEnhancements[$pathKey]['isList'] = $viewEnhancements[$pathKey]['isList'] || \is_int($key);
+                        }
+                    }
+                }
+
+                $content[$key] = $resolved;
 
                 if (\is_array($content[$key])) {
-                    $content[$key] = $this->replaceResolvableResourcesWithResolvedValues(
+                    $content[$key] = $this->replaceRecursively(
                         $content[$key],
                         $resolvedResources,
                         $depth + 1,
-                        $maxDepth
+                        $maxDepth,
+                        $currentPath,
+                        $viewEnhancements
                     );
                 }
                 continue;
@@ -69,11 +130,13 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
             $onlyResolvableResources = false;
 
             if (\is_array($value)) {
-                $content[$key] = $this->replaceResolvableResourcesWithResolvedValues(
+                $content[$key] = $this->replaceRecursively(
                     $value,
                     $resolvedResources,
                     $depth, // only increase depth for ResolvableInterface
-                    $maxDepth
+                    $maxDepth,
+                    $currentPath,
+                    $viewEnhancements
                 );
             }
         }
@@ -93,23 +156,40 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
     }
 
     /**
-     * @param array<string, array<string|int, array<string, mixed>>> $resolvedResources
+     * @param list<int|string> $path
+     */
+    private function buildPropertyPath(array $path): string
+    {
+        return '[' . \implode('][', $path) . ']';
+    }
+
+    /**
+     * @param array<string, array<string|int, array<string, array{source: mixed, resolved: mixed}>>> $resolvedResources
+     *
+     * @return array{source: mixed, resolved: mixed}
      */
     private function resolveValue(
         ResolvableInterface $value,
         array $resolvedResources
-    ): mixed {
+    ): array {
         $loaderKey = $value->getResourceLoaderKey();
         $id = $value->getId();
         $metadataIdentifier = $value->getMetadataIdentifier();
 
-        $resource = $resolvedResources[$loaderKey][$id][$metadataIdentifier] ?? null;
+        $entry = $resolvedResources[$loaderKey][$id][$metadataIdentifier] ?? null;
 
-        if (null !== $resource && $value instanceof ResolvableResource && $value->getResourceKey()) {
+        if (null === $entry) {
+            return ['source' => null, 'resolved' => null];
+        }
+
+        if ($value instanceof ResolvableResource && $value->getResourceKey()) {
             $this->populateReferenceStore($value->getId(), $value->getResourceKey());
         }
 
-        return null === $resource ? null : $value->executeResourceCallback($resource);
+        return [
+            'source' => $entry['source'],
+            'resolved' => $value->executeResourceCallback($entry['resolved']),
+        ];
     }
 
     /**
