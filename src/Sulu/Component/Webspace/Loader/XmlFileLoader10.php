@@ -213,6 +213,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
      */
     protected function generateLocalizationsFromNodeList(\DOMNodeList $localizationNodes, Portal $portal, $flat = false)
     {
+        /** @var \DOMElement $localizationNode */
         foreach ($localizationNodes as $localizationNode) {
             $localization = $this->generateLocalizationFromNode($localizationNode, $flat);
 
