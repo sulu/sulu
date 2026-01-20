@@ -138,8 +138,8 @@ class ExampleControllerTest extends SuluTestCase
         });
 
         $this->assertSame([
-            'en' => '/en/my-example',
             'de' => '/',
+            'en' => '/en/my-example',
         ], $urls);
 
         return $id;
