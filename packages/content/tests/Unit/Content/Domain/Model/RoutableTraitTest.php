@@ -29,20 +29,20 @@ class RoutableTraitTest extends TestCase
      */
     protected function getRoutableInstance(ContentRichEntityInterface $contentRichEntity): RoutableInterface
     {
-        return new class($contentRichEntity) implements RoutableInterface {
+        return new /** @template Tc of ContentRichEntityInterface */ class($contentRichEntity) implements RoutableInterface {
             use RoutableTrait;
 
             /**
-             * @var T
+             * @var Tc
              */
             private ContentRichEntityInterface $resource;
 
             /**
-             * @param T $resource
+             * @param Tc $resource
              */
             public function __construct(ContentRichEntityInterface $resource)
             {
-                $this->resource = $resource; // @phpstan-ignore-line assign.propertyType
+                $this->resource = $resource;
             }
 
             public static function getResourceKey(): string
@@ -56,11 +56,11 @@ class RoutableTraitTest extends TestCase
             }
 
             /**
-             * @return T
+             * @return Tc
              */
             public function getResource(): ContentRichEntityInterface
             {
-                return $this->resource; // @phpstan-ignore-line return.type
+                return $this->resource;
             }
         };
     }
