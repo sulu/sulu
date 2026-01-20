@@ -172,12 +172,13 @@ class ExampleReferenceRefresher implements ReferenceRefresherInterface
         $groupedExampleDimensionContents = [];
         /** @var ExampleDimensionContent $exampleDimensionContent */
         foreach ($exampleDimensionContents as $exampleDimensionContent) {
-            $groupedExampleDimensionContents[$exampleDimensionContent->getResourceId()][$exampleDimensionContent->getStage()][$exampleDimensionContent->getLocale()] = $exampleDimensionContent;
+            $locale = $exampleDimensionContent->getLocale() ?? '';
+            $groupedExampleDimensionContents[$exampleDimensionContent->getResourceId()][$exampleDimensionContent->getStage()][$locale] = $exampleDimensionContent;
         }
 
         foreach ($groupedExampleDimensionContents as $exampleDimensionContentByStage) {
             foreach ($exampleDimensionContentByStage as $stage => $exampleDimensionContentByLocale) {
-                $unlocalizedDimensionContent = $exampleDimensionContentByLocale[null] ?? null;
+                $unlocalizedDimensionContent = $exampleDimensionContentByLocale[''] ?? null;
                 /** @var ExampleDimensionContent $exampleDimensionContent */
                 foreach ($exampleDimensionContentByLocale as $locale => $exampleDimensionContent) {
                     if ('' === $locale) {

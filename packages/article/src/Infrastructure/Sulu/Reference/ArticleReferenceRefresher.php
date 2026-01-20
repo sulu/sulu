@@ -178,12 +178,13 @@ class ArticleReferenceRefresher implements ReferenceRefresherInterface
         $groupedArticleDimensionContents = [];
         /** @var ArticleDimensionContentInterface $articleDimensionContent */
         foreach ($articleDimensionContents as $articleDimensionContent) {
-            $groupedArticleDimensionContents[$articleDimensionContent->getResource()->getId()][$articleDimensionContent->getStage()][$articleDimensionContent->getLocale()] = $articleDimensionContent;
+            $locale = $articleDimensionContent->getLocale() ?? '';
+            $groupedArticleDimensionContents[$articleDimensionContent->getResource()->getId()][$articleDimensionContent->getStage()][$locale] = $articleDimensionContent;
         }
 
         foreach ($groupedArticleDimensionContents as $articleDimensionContentByStage) {
             foreach ($articleDimensionContentByStage as $stage => $articleDimensionContentByLocale) {
-                $unlocalizedDimensionContent = $articleDimensionContentByLocale[null] ?? null;
+                $unlocalizedDimensionContent = $articleDimensionContentByLocale[''] ?? null;
                 /** @var ArticleDimensionContentInterface $articleDimensionContent */
                 foreach ($articleDimensionContentByLocale as $locale => $articleDimensionContent) {
                     if ('' === $locale) {

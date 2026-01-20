@@ -178,12 +178,13 @@ class SnippetReferenceRefresher implements ReferenceRefresherInterface
         $groupedSnippetDimensionContents = [];
         /** @var SnippetDimensionContentInterface $snippetDimensionContent */
         foreach ($snippetDimensionContents as $snippetDimensionContent) {
-            $groupedSnippetDimensionContents[$snippetDimensionContent->getResource()->getId()][$snippetDimensionContent->getStage()][$snippetDimensionContent->getLocale()] = $snippetDimensionContent;
+            $locale = $snippetDimensionContent->getLocale() ?? '';
+            $groupedSnippetDimensionContents[$snippetDimensionContent->getResource()->getId()][$snippetDimensionContent->getStage()][$locale] = $snippetDimensionContent;
         }
 
         foreach ($groupedSnippetDimensionContents as $snippetDimensionContentByStage) {
             foreach ($snippetDimensionContentByStage as $stage => $snippetDimensionContentByLocale) {
-                $unlocalizedDimensionContent = $snippetDimensionContentByLocale[null] ?? null;
+                $unlocalizedDimensionContent = $snippetDimensionContentByLocale[''] ?? null;
                 /** @var SnippetDimensionContentInterface $snippetDimensionContent */
                 foreach ($snippetDimensionContentByLocale as $locale => $snippetDimensionContent) {
                     if ('' === $locale) {

@@ -179,12 +179,13 @@ class PageReferenceRefresher implements ReferenceRefresherInterface
         $groupedPageDimensionContents = [];
         /** @var PageDimensionContentInterface $pageDimensionContent */
         foreach ($pageDimensionContents as $pageDimensionContent) {
-            $groupedPageDimensionContents[$pageDimensionContent->getResourceId()][$pageDimensionContent->getStage()][$pageDimensionContent->getLocale()] = $pageDimensionContent;
+            $locale = $pageDimensionContent->getLocale() ?? '';
+            $groupedPageDimensionContents[$pageDimensionContent->getResourceId()][$pageDimensionContent->getStage()][$locale] = $pageDimensionContent;
         }
 
         foreach ($groupedPageDimensionContents as $pageDimensionContentByStage) {
             foreach ($pageDimensionContentByStage as $stage => $pageDimensionContentByLocale) {
-                $unlocalizedDimensionContent = $pageDimensionContentByLocale[null] ?? null;
+                $unlocalizedDimensionContent = $pageDimensionContentByLocale[''] ?? null;
                 /** @var PageDimensionContentInterface $pageDimensionContent */
                 foreach ($pageDimensionContentByLocale as $locale => $pageDimensionContent) {
                     if ('' === $locale) {
