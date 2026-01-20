@@ -174,6 +174,25 @@ class ContentController extends AbstractController
             return [];
         }
 
+        $webspaceLocales = $this->container->get('sulu_core.webspace.webspace_manager')
+            ->getWebspaceCollection()
+            ->getWebspace($webspaceKey)
+            ?->getAllLocalizations() ?? [];
+
+        $localizations = [];
+        foreach ($webspaceLocales as $webspaceLocale) {
+            $locale = $webspaceLocale->getLocale(Localization::UNDERSCORE);
+            $localizations[$locale] = [
+                'url' => $this->container->get('sulu_route.route_generator')->generate(
+                    '/',
+                    $locale,
+                    $webspaceKey,
+                ),
+                'locale' => $locale,
+                'alternate' => false,
+            ];
+        }
+
         $routes = [];
         foreach ($this->container->get('sulu_route.route_repository')->findBy([
             'resourceKey' => $object::getResourceKey(),
@@ -183,7 +202,6 @@ class ContentController extends AbstractController
             $routes[] = $route;
         }
 
-        $localizations = [];
         foreach ($routes as $route) {
             $locale = $route->getLocale();
             $localizations[$locale] = [
@@ -194,28 +212,6 @@ class ContentController extends AbstractController
                 ),
                 'locale' => $locale,
                 'alternate' => true,
-            ];
-        }
-
-        $webspaceLocales = $this->container->get('sulu_core.webspace.webspace_manager')
-            ->getWebspaceCollection()
-            ->getWebspace($webspaceKey)
-            ?->getAllLocalizations() ?? [];
-
-        foreach ($webspaceLocales as $webspaceLocale) {
-            $locale = $webspaceLocale->getLocale(Localization::UNDERSCORE);
-            if (\array_key_exists($locale, $localizations)) {
-                continue;
-            }
-
-            $localizations[$locale] = [
-                'url' => $this->container->get('sulu_route.route_generator')->generate(
-                    '/',
-                    $locale,
-                    $webspaceKey,
-                ),
-                'locale' => $locale,
-                'alternate' => false,
             ];
         }
 
