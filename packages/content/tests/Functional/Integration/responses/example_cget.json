@@ -2,6 +2,7 @@
     "_embedded": {
         "examples": [
             {
+                "authored": "@datetime@",
                 "id": "@integer@",
                 "title": "Test Example 2"
             }

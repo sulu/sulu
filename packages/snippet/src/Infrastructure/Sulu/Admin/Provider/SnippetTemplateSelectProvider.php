@@ -17,6 +17,9 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
 
+/**
+ * @internal
+ */
 class SnippetTemplateSelectProvider
 {
     public function __construct(

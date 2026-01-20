@@ -140,7 +140,7 @@
             <transformer type="datetime"/>
         </property>
 
-        <property name="publishedState" translation="sulu_snippet.published_state" visibility="never">
+        <property name="publishedState" translation="sulu_content.published_state" visibility="never">
             <field-name>workflowPlace</field-name>
             <entity-name>dimensionContent</entity-name>
 
@@ -149,8 +149,8 @@
             <filter type="select">
                 <params>
                     <param name="options" type="collection">
-                        <param name="published" value="sulu_snippet.published" />
-                        <param name="unpublished" value="sulu_snippet.not_published" />
+                        <param name="published" value="sulu_content.state_published" />
+                        <param name="unpublished" value="sulu_content.state_not_published" />
                         <param name="draft" value="sulu_admin.draft" />
                     </param>
                 </params>
