@@ -35,14 +35,14 @@ class RoutableTraitTest extends TestCase
             /**
              * @var T
              */
-            private $resource;
+            private ContentRichEntityInterface $resource;
 
             /**
              * @param T $resource
              */
             public function __construct(ContentRichEntityInterface $resource)
             {
-                $this->resource = $resource;
+                $this->resource = $resource; // @phpstan-ignore-line assign.propertyType
             }
 
             public static function getResourceKey(): string
@@ -60,7 +60,7 @@ class RoutableTraitTest extends TestCase
              */
             public function getResource(): ContentRichEntityInterface
             {
-                return $this->resource;
+                return $this->resource; // @phpstan-ignore-line return.type
             }
         };
     }
