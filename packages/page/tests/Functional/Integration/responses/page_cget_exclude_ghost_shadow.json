@@ -7,6 +7,7 @@
                 "version" : null,
                 "title": null,
                 "author": null,
+                "authored": null,
                 "created" : null,
                 "changed" : null,
                 "creator": null,
@@ -24,6 +25,7 @@
                         {
                             "_hasPermissions": false,
                             "author": "@string@",
+                            "authored": "@datetime@",
                             "changed": "@datetime@",
                             "changer": "Max Mustermann",
                             "created": "@datetime@",
