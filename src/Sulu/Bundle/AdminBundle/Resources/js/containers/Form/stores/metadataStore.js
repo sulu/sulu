@@ -21,6 +21,7 @@ class MetadataStore {
                         transformedTypes[key] = {
                             key,
                             title: types[key].title || key,
+                            priority: types[key].priority || 0,
                         };
 
                         return transformedTypes;

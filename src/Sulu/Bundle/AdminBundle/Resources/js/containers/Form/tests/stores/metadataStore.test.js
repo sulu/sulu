@@ -331,3 +331,27 @@ test('Return empty object as available types for given resourceKey if types are 
         expect(snippetTypes).toEqual(null);
     });
 });
+
+test('Return available types with priority for given resourceKey', () => {
+    const snippetMetadata = {
+        types: {
+            sidebar: {
+                title: 'Sidebar Snippet',
+                priority: 100,
+            },
+            footer: {
+                title: 'Footer Snippet',
+            },
+        },
+        defaultType: 'sidebar',
+    };
+    const snippetPromise = Promise.resolve(snippetMetadata);
+    generalMetadataStore.loadMetadata.mockReturnValue(snippetPromise);
+
+    const snippetTypesPromise = metadataStore.getSchemaTypes('snippets');
+
+    return snippetTypesPromise.then((snippetTypes) => {
+        expect(snippetTypes.types.sidebar.priority).toEqual(100);
+        expect(snippetTypes.types.footer.priority).toEqual(0);
+    });
+});

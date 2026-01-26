@@ -1803,7 +1803,7 @@ parameters:
 		-
 			message: '#^Parameter \#3 \$context of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\MetaXmlParser\:\:getValueFromXPath\(\) expects DOMNode\|null, DOMNameSpaceNode\|DOMNode given\.$#'
 			identifier: argument.type
-			count: 1
+			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/MetaXmlParser.php
 
 		-
@@ -1963,7 +1963,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadParam\(\) should return array\{name\: string\|null, type\: string\|null, meta\: array\{title\?\: array\<string, string\>, info_text\?\: array\<string, string\>, placeholder\?\: array\<string, string\>\}, collection\?\: array\<mixed\>\} but returns array\{name\: bool\|int\|string\|null, type\: bool\|int\|string\|null, meta\: array\{title\?\: array\<string, string\>, info_text\?\: array\<string, string\>, placeholder\?\: array\<string, string\>\}, value\: array\<array\{name\: string\|null, type\: string\|null, meta\: array\{title\?\: array\<string, string\>, info_text\?\: array\<string, string\>, placeholder\?\: array\<string, string\>\}, collection\?\: array\<mixed\>\}\>\|bool\|int\|string\|null\}\.$#'
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadParam\(\) should return array\{name\: string\|null, type\: string\|null, meta\: array\{title\?\: array\<string, string\>, info_text\?\: array\<string, string\>, placeholder\?\: array\<string, string\>, priority\?\: int\}, collection\?\: array\<mixed\>\} but returns array\{name\: bool\|int\|string\|null, type\: bool\|int\|string\|null, meta\: array\{title\?\: array\<string, string\>, info_text\?\: array\<string, string\>, placeholder\?\: array\<string, string\>, priority\?\: int\}, value\: array\<array\{name\: string\|null, type\: string\|null, meta\: array\{title\?\: array\<string, string\>, info_text\?\: array\<string, string\>, placeholder\?\: array\<string, string\>, priority\?\: int\}, collection\?\: array\<mixed\>\}\>\|bool\|int\|string\|null\}\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
@@ -3843,7 +3843,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$context of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\MetaXmlParser\:\:load\(\) expects DOMNode, DOMNameSpaceNode\|DOMNode given\.$#'
 			identifier: argument.type
-			count: 1
+			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Metadata/FormMetadata/Parser/MetaXmlParserTest.php
 
 		-
