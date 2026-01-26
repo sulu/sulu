@@ -57,10 +57,7 @@ class TimestampableSubscriberTest extends TestCase
      */
     private $entityManager;
 
-    /**
-     * @var TimestampableSubscriber
-     */
-    private $subscriber;
+    private TimestampableSubscriber $subscriber;
 
     /** @var ObjectProphecy<ClockInterface> */
     private ObjectProphecy $clock;
@@ -104,21 +101,32 @@ class TimestampableSubscriberTest extends TestCase
     public function testOnPreUpdate($created): void
     {
         $entity = $this->timestampableObject->reveal();
-        $timestamp = new \DateTimeImmutable();
+
+        $dateCreated = '2015-01-01 00:10:12';
+        $timeStamp = new \DateTimeImmutable($dateCreated);
+        $this->clock->now()->willReturn($timeStamp);
+
         $this->lifecycleEvent->getObject()->willReturn($this->timestampableObject->reveal());
         $this->lifecycleEvent->getObjectManager()->willReturn($this->entityManager->reveal());
         $this->entityManager->getClassMetadata(\get_class($entity))->willReturn($this->classMetadata);
-        $this->clock->now()->shouldBeCalled()->willReturn($timestamp);
 
         $this->classMetadata->getFieldValue($entity, 'created')->willReturn($created);
 
         if (null === $created) {
-            $this->classMetadata->setFieldValue($entity, 'created', $timestamp)->shouldBeCalled();
+            $this->classMetadata->setFieldValue(
+                $entity,
+                'created',
+                Argument::that(fn (\DateTimeInterface $dateTime) => $dateTime->format('Y-m-d H:i:s') === $dateCreated),
+            )->shouldBeCalled();
         } else {
             $this->classMetadata->setFieldValue(Argument::any())->shouldNotBeCalled();
         }
 
-        $this->classMetadata->setFieldValue($entity, 'changed', $timestamp)->shouldBeCalled();
+        $this->classMetadata->setFieldValue(
+            $entity,
+            'changed',
+            Argument::that(fn (\DateTimeInterface $dateTime) => $dateTime->format('Y-m-d H:i:s') === $dateCreated),
+        )->shouldBeCalled();
 
         $this->subscriber->preUpdate($this->lifecycleEvent->reveal());
     }
