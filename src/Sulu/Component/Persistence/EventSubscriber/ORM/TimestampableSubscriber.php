@@ -35,6 +35,8 @@ class TimestampableSubscriber
     /**
      * Load the class data, mapping the created and changed fields
      * to datetime fields.
+     *
+     * @return void
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)
     {
