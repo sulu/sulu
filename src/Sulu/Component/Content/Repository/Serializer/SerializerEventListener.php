@@ -57,7 +57,7 @@ class SerializerEventListener implements EventSubscriberInterface
         /** @var SerializationVisitorInterface $visitor */
         $visitor = $event->getVisitor();
 
-        if (!($content instanceof Content)) {
+        if (!$content instanceof Content) {
             return;
         }
 
