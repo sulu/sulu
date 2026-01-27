@@ -127,7 +127,7 @@ class AccessControlManager implements AccessControlManagerInterface
             return $this->maskConverter->convertPermissionsToArray(127);
         }
 
-        if (!($user instanceof UserInterface)) {
+        if (!$user instanceof UserInterface) {
             $user = null;
         }
 
@@ -329,7 +329,7 @@ class AccessControlManager implements AccessControlManagerInterface
 
     private function getRolesForLocale(?UserInterface $user, ?string $locale)
     {
-        if (!($user instanceof UserInterface)) {
+        if (!$user instanceof UserInterface) {
             return $this->roleRepository->findAllRoles(['anonymous' => true]);
         }
 
