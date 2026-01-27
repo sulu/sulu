@@ -38,7 +38,7 @@ class AnalyticsSerializeEventSubscriber implements EventSubscriberInterface
     {
         $analytics = $event->getObject();
 
-        if (!($analytics instanceof AnalyticsInterface)) {
+        if (!$analytics instanceof AnalyticsInterface) {
             return;
         }
 

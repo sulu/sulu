@@ -60,7 +60,7 @@ final class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
         $visitor = $event->getVisitor();
         $context = $event->getContext();
 
-        if (!($webspace instanceof Webspace)) {
+        if (!$webspace instanceof Webspace) {
             return;
         }
 

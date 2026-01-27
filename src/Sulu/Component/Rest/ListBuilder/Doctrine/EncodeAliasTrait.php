@@ -17,11 +17,9 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 trait EncodeAliasTrait
 {
     /**
-     * @template T of array<string>|string
+     * @param string|null $value
      *
-     * @param T|null $value
-     *
-     * @return T
+     * @return string
      */
     protected function encodeAlias($value)
     {
@@ -29,11 +27,11 @@ trait EncodeAliasTrait
             return '';
         }
 
-        /** @var T */
+        /** @var string */
         return \preg_replace_callback(
             '/(?:"[^"]+")|([\\\])|(?<=\S)(:)/',
-            function($matches) {
-                if (false !== \strpos($matches[0], '"')) {
+            function(array $matches): string {
+                if (\str_contains($matches[0], '"')) {
                     return $matches[0];
                 }
 

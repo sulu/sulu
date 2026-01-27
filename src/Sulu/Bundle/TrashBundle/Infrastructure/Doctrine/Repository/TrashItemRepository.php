@@ -108,7 +108,7 @@ final class TrashItemRepository implements TrashItemRepositoryInterface
 
         $user = $this->security->getUser();
 
-        if (!($user instanceof UserInterface)) {
+        if (!$user instanceof UserInterface) {
             return null;
         }
 
