@@ -74,7 +74,7 @@ interface ListBuilderInterface
      *
      * @param string $fieldName
      *
-     * @return FieldDescriptorInterface
+     * @return FieldDescriptorInterface|null
      */
     public function getSelectField($fieldName);
 

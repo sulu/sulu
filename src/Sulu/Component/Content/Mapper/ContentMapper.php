@@ -805,8 +805,6 @@ class ContentMapper implements ContentMapperInterface
             // not extension data but property of node
             return $this->getPropertyData($document, $field['property']);
         }
-
-        return;
     }
 
     /**

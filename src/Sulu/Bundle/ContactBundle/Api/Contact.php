@@ -731,8 +731,6 @@ class Contact extends ApiWrapper
                 'thumbnails' => $this->avatar->getFormats(),
             ];
         }
-
-        return;
     }
 
     /**
@@ -855,8 +853,6 @@ class Contact extends ApiWrapper
         if (!\is_null($mainAccount)) {
             return new Account($mainAccount, $this->locale);
         }
-
-        return;
     }
 
     /**
@@ -1008,8 +1004,6 @@ class Contact extends ApiWrapper
                 }
             }
         }
-
-        return;
     }
 
     /**

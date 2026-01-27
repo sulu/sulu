@@ -83,7 +83,7 @@ class PropertyType
             }
         }
 
-        return;
+        return null;
     }
 
     public function addChild(PropertyInterface $property)

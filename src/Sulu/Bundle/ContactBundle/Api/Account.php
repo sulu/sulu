@@ -191,7 +191,7 @@ class Account extends ApiWrapper
     /**
      * Get parent.
      *
-     * @return AccountInterface
+     * @return self|null
      */
     #[VirtualProperty]
     #[SerializedName('parent')]
@@ -203,7 +203,7 @@ class Account extends ApiWrapper
             return new self($account, $this->locale);
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -951,8 +951,6 @@ class Account extends ApiWrapper
                 }
             }
         }
-
-        return;
     }
 
     /**
@@ -1003,8 +1001,6 @@ class Account extends ApiWrapper
                 'thumbnails' => $this->logo->getFormats(),
             ];
         }
-
-        return;
     }
 
     /**

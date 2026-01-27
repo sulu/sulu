@@ -181,7 +181,7 @@ class Category extends ApiEntityWrapper
     /**
      * Returns the name of the Category dependent on the locale.
      *
-     * @return array
+     * @return array|null
      */
     #[VirtualProperty]
     #[SerializedName('meta')]
@@ -206,7 +206,7 @@ class Category extends ApiEntityWrapper
             return $arrReturn;
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -355,7 +355,7 @@ class Category extends ApiEntityWrapper
             return new self($parent, $this->locale);
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -373,7 +373,7 @@ class Category extends ApiEntityWrapper
             return $parent->getId();
         }
 
-        return;
+        return null;
     }
 
     /**

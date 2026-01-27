@@ -72,7 +72,7 @@ class SuluNodeHelper
     /**
      * Return the structure type for the given node.
      *
-     * @return string
+     * @return string|null
      */
     public function getStructureTypeForNode(NodeInterface $node)
     {
@@ -86,7 +86,7 @@ class SuluNodeHelper
             return Structure::TYPE_SNIPPET;
         }
 
-        return;
+        return null;
     }
 
     /**

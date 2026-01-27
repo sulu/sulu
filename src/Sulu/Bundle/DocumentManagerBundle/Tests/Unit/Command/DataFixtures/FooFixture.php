@@ -18,7 +18,6 @@ class FooFixture implements DocumentFixtureInterface
 {
     public function load(DocumentManager $documentManager): void
     {
-        return;
     }
 
     public function getOrder()

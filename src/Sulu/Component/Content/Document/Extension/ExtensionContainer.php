@@ -53,8 +53,6 @@ class ExtensionContainer implements \ArrayAccess, \Iterator
         if (isset($this->data[$extensionName])) {
             return $this->data[$extensionName];
         }
-
-        return;
     }
 
     #[\ReturnTypeWillChange]

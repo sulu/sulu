@@ -227,7 +227,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
             return $contacts;
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -315,7 +315,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
             return $accounts;
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -331,8 +331,6 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
         if ($account) {
             return $this->getApiObject($account, $locale);
         }
-
-        return;
     }
 
     public function deleteAllRelations($entity)

@@ -48,8 +48,6 @@ $config->setRiskyAllowed(true)
         'new_with_parentheses' => true,
         'trailing_comma_in_multiline' => ['after_heredoc' => true, 'elements' => ['array_destructuring', 'arrays', 'match']],
         'no_useless_else' => false,
-        // Disabling this because php-cs-fixer doesn't know that it implicitly returns null
-        'no_useless_return' => false
     ])
     ->setFinder($finder);
 
