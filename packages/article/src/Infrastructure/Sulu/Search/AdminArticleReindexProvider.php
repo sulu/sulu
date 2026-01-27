@@ -40,25 +40,18 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 final class AdminArticleReindexProvider implements ReindexProviderInterface
 {
     /**
-     * @var EntityRepository<ArticleInterface>
-     */
-    protected EntityRepository $articleRepository;
-
-    /**
      * @var EntityRepository<ArticleDimensionContentInterface>
      */
-    protected EntityRepository $dimensionContentRepository;
+    private EntityRepository $dimensionContentRepository;
 
-    protected GroupProviderInterface $groupProvider;
+    private GroupProviderInterface $groupProvider;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         GroupProviderInterface $groupProvider,
     ) {
-        $repository = $entityManager->getRepository(ArticleInterface::class);
         $dimensionContentRepository = $entityManager->getRepository(ArticleDimensionContentInterface::class);
 
-        $this->articleRepository = $repository;
         $this->dimensionContentRepository = $dimensionContentRepository;
         $this->groupProvider = $groupProvider;
     }

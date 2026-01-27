@@ -38,7 +38,7 @@ final class AdminCollectionReindexProvider implements ReindexProviderInterface
     /**
      * @var EntityRepository<CollectionMeta>
      */
-    protected EntityRepository $collectionMetaRepository;
+    private EntityRepository $collectionMetaRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,

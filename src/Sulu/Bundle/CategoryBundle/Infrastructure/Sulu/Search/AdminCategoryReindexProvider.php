@@ -36,22 +36,15 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 final class AdminCategoryReindexProvider implements ReindexProviderInterface
 {
     /**
-     * @var EntityRepository<CategoryInterface>
-     */
-    protected EntityRepository $categoryRepository;
-
-    /**
      * @var EntityRepository<CategoryTranslationInterface>
      */
-    protected EntityRepository $categoryTranslationRepository;
+    private EntityRepository $categoryTranslationRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,
     ) {
-        $repository = $entityManager->getRepository(CategoryInterface::class);
         $translationRepository = $entityManager->getRepository(CategoryTranslationInterface::class);
 
-        $this->categoryRepository = $repository;
         $this->categoryTranslationRepository = $translationRepository;
     }
 

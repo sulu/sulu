@@ -90,7 +90,7 @@ class WebsitePageReindexContentEnhancer implements WebsitePageReindexProviderEnh
     private function collectSearchableFields(array $items, array &$fields, string $prefix = ''): void
     {
         foreach ($items as $item) {
-            if (!($item instanceof FieldMetadata)) {
+            if (!$item instanceof FieldMetadata) {
                 continue;
             }
 
