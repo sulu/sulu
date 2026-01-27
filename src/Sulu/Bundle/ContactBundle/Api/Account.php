@@ -19,6 +19,7 @@ use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress as AccountAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
@@ -935,6 +936,8 @@ class Account extends ApiWrapper
 
     /**
      * Returns the main address.
+     *
+     * @return null|AddressEntity
      */
     #[VirtualProperty]
     #[SerializedName('mainAddress')]
@@ -951,6 +954,8 @@ class Account extends ApiWrapper
                 }
             }
         }
+
+        return null;
     }
 
     /**
