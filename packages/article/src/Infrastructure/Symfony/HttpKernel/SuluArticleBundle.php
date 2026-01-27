@@ -54,6 +54,7 @@ use Sulu\Article\Infrastructure\Sulu\Route\ArticleRouteDefaultsProvider;
 use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleIndexListener;
 use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleReindexProvider;
 use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexContentEnhancer;
+use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexExcerptEnhancer;
 use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexProviderEnhancerInterface;
 use Sulu\Article\Infrastructure\Sulu\Search\WebsiteArticleIndexListener;
 use Sulu\Article\Infrastructure\Sulu\Search\WebsiteArticleReindexProvider;
@@ -482,6 +483,10 @@ final class SuluArticleBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_admin.form_metadata_provider'),
             ])
+            ->tag('sulu_article.website_article_reindex_provider_enhancer');
+
+        $services->set('sulu_article.website_article_reindex_excerpt_enhancer')
+            ->class(WebsiteArticleReindexExcerptEnhancer::class)
             ->tag('sulu_article.website_article_reindex_provider_enhancer');
 
         $services->set('sulu_article.website_article_reindex_provider')

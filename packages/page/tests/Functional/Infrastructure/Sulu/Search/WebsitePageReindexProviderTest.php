@@ -19,6 +19,7 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Page\Infrastructure\Sulu\Search\Visitor\WebsitePageReindexExcerptEnhancer;
 use Sulu\Page\Infrastructure\Sulu\Search\WebsitePageReindexProvider;
 use Sulu\Page\Tests\Traits\CreatePageTrait;
 use Sulu\Page\Tests\Traits\CreatePageWithPermissionsTrait;
@@ -128,6 +129,7 @@ class WebsitePageReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable('1995-11-29 12:00:00'))->format('c'),
+                'properties' => [],
             ],
             [
                 'id' => PageInterface::RESOURCE_KEY . '__' . $page2->getUuid() . '__en',
@@ -140,6 +142,7 @@ class WebsitePageReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
+                'properties' => [],
             ],
         ];
 
@@ -150,5 +153,151 @@ class WebsitePageReindexProviderTest extends SuluTestCase
             $expectedResult,
             $results,
         );
+    }
+
+    public function testExcerptEnhancerPopulatesExcerptProperties(): void
+    {
+        $provider = new WebsitePageReindexProvider(
+            $this->entityManager,
+            [new WebsitePageReindexExcerptEnhancer()],
+        );
+
+        $page = $this->createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Page With Excerpt',
+                    'url' => '/page-excerpt',
+                    'excerpt' => [
+                        'title' => 'Excerpt Title',
+                        'description' => '<p>Excerpt <strong>description</strong></p>',
+                        'more' => 'Read more',
+                        'image' => ['id' => 1],
+                        'icon' => ['id' => 2],
+                    ],
+                ],
+            ],
+        ], 'sulu-io');
+        $this->entityManager->clear();
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertSame('Excerpt Title', $result['title']);
+
+        $this->assertIsArray($result['properties']);
+        $excerpt = $result['properties']['excerpt'];
+        $this->assertIsArray($excerpt);
+
+        $this->assertSame('Excerpt Title', $excerpt['title']);
+        $this->assertSame('Excerpt description', $excerpt['description']);
+        $this->assertSame('Read more', $excerpt['more']);
+        $this->assertSame(1, $excerpt['imageId']);
+        $this->assertSame(2, $excerpt['iconId']);
+    }
+
+    public function testExcerptTitleFallbackWhenNoContentTitle(): void
+    {
+        $provider = new WebsitePageReindexProvider(
+            $this->entityManager,
+            [new WebsitePageReindexExcerptEnhancer()],
+        );
+
+        $page = $this->createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Original Title',
+                    'url' => '/page-title-fallback',
+                    'excerpt' => [
+                        'title' => 'Excerpt Title Override',
+                    ],
+                ],
+            ],
+        ], 'sulu-io');
+        $this->entityManager->clear();
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertSame('Excerpt Title Override', $result['title']);
+
+        $this->assertIsArray($result['properties']);
+        $excerpt = $result['properties']['excerpt'];
+        $this->assertIsArray($excerpt);
+        $this->assertSame('Excerpt Title Override', $excerpt['title']);
+    }
+
+    public function testExcerptImageFallbackToMediaId(): void
+    {
+        $provider = new WebsitePageReindexProvider(
+            $this->entityManager,
+            [new WebsitePageReindexExcerptEnhancer()],
+        );
+
+        $page = $this->createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Page With Excerpt Image',
+                    'url' => '/page-excerpt-image',
+                    'excerpt' => [
+                        'image' => ['id' => 55],
+                    ],
+                ],
+            ],
+        ], 'sulu-io');
+        $this->entityManager->clear();
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertSame('55', $result['mediaId']);
+
+        $this->assertIsArray($result['properties']);
+        $excerpt = $result['properties']['excerpt'];
+        $this->assertIsArray($excerpt);
+        $this->assertSame(55, $excerpt['imageId']);
+    }
+
+    public function testNoExcerptDataProducesEmptyProperties(): void
+    {
+        $provider = new WebsitePageReindexProvider(
+            $this->entityManager,
+            [new WebsitePageReindexExcerptEnhancer()],
+        );
+
+        $page = $this->createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'No Excerpt Page',
+                    'url' => '/no-excerpt',
+                ],
+            ],
+        ], 'sulu-io');
+        $this->entityManager->clear();
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertSame('No Excerpt Page', $result['title']);
+        $this->assertSame([], $result['properties']);
     }
 }

@@ -101,15 +101,20 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
                 'resourceId' => (string) $article['articleId'],
                 'locale' => $article['locale'],
                 'webspaces' => $webspaces,
-                'title' => $article['title'],
+                'title' => '',
                 'url' => $article['slug'],
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => $authoredAt->format('c'),
+                'properties' => [],
             ];
 
             foreach ($this->enhancers as $enhancer) {
                 $data = $enhancer->enhanceDocument($article, $data);
+            }
+
+            if ('' === $data['title']) {
+                $data['title'] = $article['title'];
             }
 
             yield $data;

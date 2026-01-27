@@ -23,4 +23,5 @@ return new Index('website', [
     'content' => new Field\TextField('content', multiple: true),
     'mediaId' => new Field\IntegerField('mediaId'),
     'authoredAt' => new Field\DateTimeField('authoredAt'),
+    'properties' => new Field\JsonObjectField('properties'),
 ]);

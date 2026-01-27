@@ -78,15 +78,20 @@ final class WebsitePageReindexProvider implements ReindexProviderInterface
                 'resourceId' => (string) $page['pageId'],
                 'locale' => $page['locale'],
                 'webspaces' => [$page['webspaceKey']],
-                'title' => $page['title'],
+                'title' => '',
                 'url' => $page['slug'],
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => $authoredAt->format('c'),
+                'properties' => [],
             ];
 
             foreach ($this->enhancers as $enhancer) {
                 $data = $enhancer->enhanceDocument($page, $data);
+            }
+
+            if ('' === $data['title']) {
+                $data['title'] = $page['title'];
             }
 
             yield $data;

@@ -16,6 +16,7 @@ namespace Sulu\Article\Tests\Functional\Infrastructure\Sulu\Search;
 use CmsIg\Seal\Reindex\ReindexConfig;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexExcerptEnhancer;
 use Sulu\Article\Infrastructure\Sulu\Search\WebsiteArticleReindexProvider;
 use Sulu\Article\Tests\Traits\CreateArticleTrait;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
@@ -147,6 +148,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable('1995-11-29 12:00:00'))->format('c'),
+                'properties' => [],
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__de',
@@ -159,6 +161,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
+                'properties' => [],
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__en',
@@ -171,6 +174,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
+                'properties' => [],
             ],
         ];
 
@@ -257,6 +261,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable('1995-11-29 12:00:00'))->format('c'),
+                'properties' => [],
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__de',
@@ -269,6 +274,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
+                'properties' => [],
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__en',
@@ -281,6 +287,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
+                'properties' => [],
             ],
         ];
 
@@ -358,5 +365,147 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
         $this->assertNotContains('Article TWO EN', $resultTitles);
         $this->assertNotContains('Article THREE DE', $resultTitles);
         $this->assertNotContains('Article THREE EN', $resultTitles);
+    }
+
+    public function testExcerptEnhancerPopulatesExcerptProperties(): void
+    {
+        $provider = new WebsiteArticleReindexProvider(
+            $this->entityManager,
+            [new WebsiteArticleReindexExcerptEnhancer()],
+        );
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Article With Excerpt',
+                    'url' => '/article-excerpt',
+                    'excerpt' => [
+                        'title' => 'Excerpt Title',
+                        'description' => '<p>Excerpt <strong>description</strong></p>',
+                        'more' => 'Read more',
+                        'image' => ['id' => 1],
+                        'icon' => ['id' => 2],
+                    ],
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertSame('Excerpt Title', $result['title']);
+
+        $this->assertIsArray($result['properties']);
+        $excerpt = $result['properties']['excerpt'];
+        $this->assertIsArray($excerpt);
+
+        $this->assertSame('Excerpt Title', $excerpt['title']);
+        $this->assertSame('Excerpt description', $excerpt['description']);
+        $this->assertSame('Read more', $excerpt['more']);
+        $this->assertSame(1, $excerpt['imageId']);
+        $this->assertSame(2, $excerpt['iconId']);
+    }
+
+    public function testExcerptTitleFallbackWhenNoContentTitle(): void
+    {
+        $provider = new WebsiteArticleReindexProvider(
+            $this->entityManager,
+            [new WebsiteArticleReindexExcerptEnhancer()],
+        );
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Original Title',
+                    'url' => '/article-title-fallback',
+                    'excerpt' => [
+                        'title' => 'Excerpt Title Override',
+                    ],
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertSame('Excerpt Title Override', $result['title']);
+
+        $this->assertIsArray($result['properties']);
+        $excerpt = $result['properties']['excerpt'];
+        $this->assertIsArray($excerpt);
+        $this->assertSame('Excerpt Title Override', $excerpt['title']);
+    }
+
+    public function testExcerptImageFallbackToMediaId(): void
+    {
+        $provider = new WebsiteArticleReindexProvider(
+            $this->entityManager,
+            [new WebsiteArticleReindexExcerptEnhancer()],
+        );
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Article With Excerpt Image',
+                    'url' => '/article-excerpt-image',
+                    'excerpt' => [
+                        'image' => ['id' => 55],
+                    ],
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertSame('55', $result['mediaId']);
+
+        $this->assertIsArray($result['properties']);
+        $excerpt = $result['properties']['excerpt'];
+        $this->assertIsArray($excerpt);
+        $this->assertSame(55, $excerpt['imageId']);
+    }
+
+    public function testNoExcerptDataProducesEmptyProperties(): void
+    {
+        $provider = new WebsiteArticleReindexProvider(
+            $this->entityManager,
+            [new WebsiteArticleReindexExcerptEnhancer()],
+        );
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'No Excerpt Article',
+                    'url' => '/no-excerpt',
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertSame('No Excerpt Article', $result['title']);
+        $this->assertSame([], $result['properties']);
     }
 }

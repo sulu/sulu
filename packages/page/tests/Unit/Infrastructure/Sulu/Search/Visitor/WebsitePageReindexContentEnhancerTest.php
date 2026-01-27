@@ -412,6 +412,229 @@ class WebsitePageReindexContentEnhancerTest extends TestCase
         ];
     }
 
+    public function testRoleImageSingleMediaSelectionSetsMediaId(): void
+    {
+        $imageField = new FieldMetadata('header_image');
+        $imageField->setType('single_media_selection');
+        $imageField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG, 'image'));
+
+        $formMetadata = new FormMetadata();
+        $formMetadata->setKey('default');
+        $formMetadata->addItem($imageField);
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('default', $formMetadata);
+
+        $this->formMetadataProvider->getMetadata('page', 'en')
+            ->willReturn($typedFormMetadata)
+            ->shouldBeCalledOnce();
+
+        $result = [
+            'templateKey' => 'default',
+            'locale' => 'en',
+            'templateData' => [
+                'header_image' => ['id' => 42],
+            ],
+        ];
+
+        $returnedData = $this->enhancer->enhanceDocument($result, ['content' => []]);
+
+        $this->assertSame('42', $returnedData['mediaId']);
+    }
+
+    public function testRoleImageMediaSelectionSetsMediaIdFromFirstId(): void
+    {
+        $imageField = new FieldMetadata('images');
+        $imageField->setType('media_selection');
+        $imageField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG, 'image'));
+
+        $formMetadata = new FormMetadata();
+        $formMetadata->setKey('default');
+        $formMetadata->addItem($imageField);
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('default', $formMetadata);
+
+        $this->formMetadataProvider->getMetadata('page', 'en')
+            ->willReturn($typedFormMetadata)
+            ->shouldBeCalledOnce();
+
+        $result = [
+            'templateKey' => 'default',
+            'locale' => 'en',
+            'templateData' => [
+                'images' => ['ids' => [10, 20, 30]],
+            ],
+        ];
+
+        $returnedData = $this->enhancer->enhanceDocument($result, ['content' => []]);
+
+        $this->assertSame('10', $returnedData['mediaId']);
+    }
+
+    public function testRoleImageWithEmptyDataDoesNotSetMediaId(): void
+    {
+        $imageField = new FieldMetadata('header_image');
+        $imageField->setType('single_media_selection');
+        $imageField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG, 'image'));
+
+        $formMetadata = new FormMetadata();
+        $formMetadata->setKey('default');
+        $formMetadata->addItem($imageField);
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('default', $formMetadata);
+
+        $this->formMetadataProvider->getMetadata('page', 'en')
+            ->willReturn($typedFormMetadata)
+            ->shouldBeCalledOnce();
+
+        $result = [
+            'templateKey' => 'default',
+            'locale' => 'en',
+            'templateData' => [
+                'header_image' => [],
+            ],
+        ];
+
+        $returnedData = $this->enhancer->enhanceDocument($result, ['content' => []]);
+
+        $this->assertArrayNotHasKey('mediaId', $returnedData);
+    }
+
+    public function testRoleTitleOverridesDocumentTitle(): void
+    {
+        $titleField = new FieldMetadata('headline');
+        $titleField->setType('text_line');
+        $titleField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG, 'title'));
+
+        $descriptionField = new FieldMetadata('description');
+        $descriptionField->setType('text_area');
+        $descriptionField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG));
+
+        $formMetadata = new FormMetadata();
+        $formMetadata->setKey('default');
+        $formMetadata->addItem($titleField);
+        $formMetadata->addItem($descriptionField);
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('default', $formMetadata);
+
+        $this->formMetadataProvider->getMetadata('page', 'en')
+            ->willReturn($typedFormMetadata)
+            ->shouldBeCalledOnce();
+
+        $result = [
+            'templateKey' => 'default',
+            'locale' => 'en',
+            'templateData' => [
+                'headline' => 'Custom Headline',
+                'description' => 'Some description',
+            ],
+        ];
+
+        $returnedData = $this->enhancer->enhanceDocument($result, ['content' => [], 'title' => 'Original Title']);
+
+        $this->assertSame('Custom Headline', $returnedData['title']);
+        $this->assertSame(['Some description'], $returnedData['content']);
+    }
+
+    public function testRoleTitleFieldExcludedFromContent(): void
+    {
+        $titleField = new FieldMetadata('headline');
+        $titleField->setType('text_line');
+        $titleField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG, 'title'));
+
+        $formMetadata = new FormMetadata();
+        $formMetadata->setKey('default');
+        $formMetadata->addItem($titleField);
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('default', $formMetadata);
+
+        $this->formMetadataProvider->getMetadata('page', 'en')
+            ->willReturn($typedFormMetadata)
+            ->shouldBeCalledOnce();
+
+        $result = [
+            'templateKey' => 'default',
+            'locale' => 'en',
+            'templateData' => [
+                'headline' => 'Custom Headline',
+            ],
+        ];
+
+        $returnedData = $this->enhancer->enhanceDocument($result, ['content' => []]);
+
+        $this->assertSame([], $returnedData['content']);
+    }
+
+    public function testRoleUrlFieldExcludedFromContent(): void
+    {
+        $urlField = new FieldMetadata('custom_url');
+        $urlField->setType('text_line');
+        $urlField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG, 'url'));
+
+        $descriptionField = new FieldMetadata('description');
+        $descriptionField->setType('text_area');
+        $descriptionField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG));
+
+        $formMetadata = new FormMetadata();
+        $formMetadata->setKey('default');
+        $formMetadata->addItem($urlField);
+        $formMetadata->addItem($descriptionField);
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('default', $formMetadata);
+
+        $this->formMetadataProvider->getMetadata('page', 'en')
+            ->willReturn($typedFormMetadata)
+            ->shouldBeCalledOnce();
+
+        $result = [
+            'templateKey' => 'default',
+            'locale' => 'en',
+            'templateData' => [
+                'custom_url' => '/some-url',
+                'description' => 'Some description',
+            ],
+        ];
+
+        $returnedData = $this->enhancer->enhanceDocument($result, ['content' => []]);
+
+        $this->assertSame(['Some description'], $returnedData['content']);
+    }
+
+    public function testNoRoleFieldIncludedInContent(): void
+    {
+        $textField = new FieldMetadata('body');
+        $textField->setType('text_editor');
+        $textField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG));
+
+        $formMetadata = new FormMetadata();
+        $formMetadata->setKey('default');
+        $formMetadata->addItem($textField);
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('default', $formMetadata);
+
+        $this->formMetadataProvider->getMetadata('page', 'en')
+            ->willReturn($typedFormMetadata)
+            ->shouldBeCalledOnce();
+
+        $result = [
+            'templateKey' => 'default',
+            'locale' => 'en',
+            'templateData' => [
+                'body' => '<p>Body content</p>',
+            ],
+        ];
+
+        $returnedData = $this->enhancer->enhanceDocument($result, ['content' => []]);
+
+        $this->assertSame(['Body content'], $returnedData['content']);
+    }
+
     private function createBlockFormMetadata(): FormMetadata
     {
         $titleField = new FieldMetadata('title');
@@ -469,10 +692,14 @@ class WebsitePageReindexContentEnhancerTest extends TestCase
         return $formMetadata;
     }
 
-    private function createTag(string $name): TagMetadata
+    private function createTag(string $name, ?string $role = null): TagMetadata
     {
         $tag = new TagMetadata();
         $tag->setName($name);
+
+        if (null !== $role) {
+            $tag->setAttributes(['role' => $role]);
+        }
 
         return $tag;
     }

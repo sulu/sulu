@@ -71,6 +71,7 @@ use Sulu\Page\Infrastructure\Sulu\Route\PageWebspaceRouteGenerator;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageIndexListener;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageReindexProvider;
 use Sulu\Page\Infrastructure\Sulu\Search\Visitor\WebsitePageReindexContentEnhancer;
+use Sulu\Page\Infrastructure\Sulu\Search\Visitor\WebsitePageReindexExcerptEnhancer;
 use Sulu\Page\Infrastructure\Sulu\Search\Visitor\WebsitePageReindexProviderEnhancerInterface;
 use Sulu\Page\Infrastructure\Sulu\Search\WebsitePageIndexListener;
 use Sulu\Page\Infrastructure\Sulu\Search\WebsitePageReindexProvider;
@@ -607,6 +608,10 @@ final class SuluPageBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_admin.form_metadata_provider'),
             ])
+            ->tag('sulu_page.website_page_reindex_provider_enhancer');
+
+        $services->set('sulu_page.website_page_reindex_excerpt_enhancer')
+            ->class(WebsitePageReindexExcerptEnhancer::class)
             ->tag('sulu_page.website_page_reindex_provider_enhancer');
 
         $services->set('sulu_page.website_page_reindex_provider')
