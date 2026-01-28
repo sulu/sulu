@@ -31,7 +31,7 @@
             </options>
         </field>
         <field name="privateKey" type="string" column="privateKey" length="2000" nullable="true"/>
-        <field name="apiKey" type="guid" column="apiKey" length="128" nullable="true"/>
+        <field name="apiKey" type="string" column="apiKey" length="128" nullable="true"/>
         <field name="email" column="email" type="string" length="191" unique="true" nullable="true"/>
 
         <one-to-one field="contact" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactInterface">

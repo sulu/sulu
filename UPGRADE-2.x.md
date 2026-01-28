@@ -1,5 +1,13 @@
 # Upgrade
 
+## 2.6.21
+
+The type of the `apiKey` in the `se_users` table has been changed to `string`.
+
+```sql
+ALTER TABLE se_users CHANGE apiKey apiKey VARCHAR(128) DEFAULT NULL;
+```
+
 ## 2.6.16
 
 * Deprecated \Sulu\Bundle\MediaBundle\Controller\AbstractMediaController::getTitleFromUpload -> MediaManager::getTitleFromUpload
