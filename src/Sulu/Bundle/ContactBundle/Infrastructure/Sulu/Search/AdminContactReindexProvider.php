@@ -38,7 +38,7 @@ final class AdminContactReindexProvider implements ReindexProviderInterface
     /**
      * @var EntityRepository<ContactInterface>
      */
-    protected EntityRepository $contactRepository;
+    private EntityRepository $contactRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,

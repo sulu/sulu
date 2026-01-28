@@ -38,22 +38,15 @@ use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 final class AdminPageReindexProvider implements ReindexProviderInterface
 {
     /**
-     * @var EntityRepository<PageInterface>
-     */
-    protected EntityRepository $pageRepository;
-
-    /**
      * @var EntityRepository<PageDimensionContentInterface>
      */
-    protected EntityRepository $dimensionContentRepository;
+    private EntityRepository $dimensionContentRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,
     ) {
-        $repository = $entityManager->getRepository(PageInterface::class);
         $dimensionContentRepository = $entityManager->getRepository(PageDimensionContentInterface::class);
 
-        $this->pageRepository = $repository;
         $this->dimensionContentRepository = $dimensionContentRepository;
     }
 

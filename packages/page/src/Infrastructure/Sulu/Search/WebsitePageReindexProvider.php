@@ -42,14 +42,9 @@ use Sulu\Page\Infrastructure\Sulu\Search\Visitor\WebsitePageReindexProviderEnhan
 final class WebsitePageReindexProvider implements ReindexProviderInterface
 {
     /**
-     * @var EntityRepository<PageInterface>
-     */
-    protected EntityRepository $pageRepository;
-
-    /**
      * @var EntityRepository<PageDimensionContentInterface>
      */
-    protected EntityRepository $dimensionContentRepository;
+    private EntityRepository $dimensionContentRepository;
 
     /**
      * @param iterable<WebsitePageReindexProviderEnhancerInterface> $enhancers
@@ -58,10 +53,8 @@ final class WebsitePageReindexProvider implements ReindexProviderInterface
         EntityManagerInterface $entityManager,
         private iterable $enhancers = [],
     ) {
-        $repository = $entityManager->getRepository(PageInterface::class);
         $dimensionContentRepository = $entityManager->getRepository(PageDimensionContentInterface::class);
 
-        $this->pageRepository = $repository;
         $this->dimensionContentRepository = $dimensionContentRepository;
     }
 

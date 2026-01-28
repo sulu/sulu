@@ -37,7 +37,7 @@ final class AdminAccountReindexProvider implements ReindexProviderInterface
     /**
      * @var EntityRepository<AccountInterface>
      */
-    protected EntityRepository $accountRepository;
+    private EntityRepository $accountRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,

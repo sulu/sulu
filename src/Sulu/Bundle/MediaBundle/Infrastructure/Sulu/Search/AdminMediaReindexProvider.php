@@ -38,7 +38,7 @@ final class AdminMediaReindexProvider implements ReindexProviderInterface
     /**
      * @var EntityRepository<MediaInterface>
      */
-    protected EntityRepository $mediaRepository;
+    private EntityRepository $mediaRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,

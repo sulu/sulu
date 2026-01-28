@@ -37,22 +37,15 @@ use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 final class AdminSnippetReindexProvider implements ReindexProviderInterface
 {
     /**
-     * @var EntityRepository<SnippetInterface>
-     */
-    protected EntityRepository $snippetRepository;
-
-    /**
      * @var EntityRepository<SnippetDimensionContentInterface>
      */
-    protected EntityRepository $dimensionContentRepository;
+    private EntityRepository $dimensionContentRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,
     ) {
-        $repository = $entityManager->getRepository(SnippetInterface::class);
         $dimensionContentRepository = $entityManager->getRepository(SnippetDimensionContentInterface::class);
 
-        $this->snippetRepository = $repository;
         $this->dimensionContentRepository = $dimensionContentRepository;
     }
 

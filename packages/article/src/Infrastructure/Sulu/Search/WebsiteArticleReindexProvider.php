@@ -44,12 +44,12 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
     /**
      * @var EntityRepository<ArticleDimensionContentInterface>
      */
-    protected EntityRepository $dimensionContentRepository;
+    private EntityRepository $dimensionContentRepository;
 
     /**
      * @var EntityRepository<ArticleDimensionContentAdditionalWebspace>
      */
-    protected EntityRepository $additionalWebspacesRepository;
+    private EntityRepository $additionalWebspacesRepository;
 
     /**
      * @param iterable<WebsiteArticleReindexProviderEnhancerInterface> $enhancers
