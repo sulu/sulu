@@ -46,10 +46,11 @@ class SnippetAreaTwigExtension extends AbstractExtension
      * @param string $area
      * @param string $webspaceKey
      * @param string $locale
+     * @param bool $loadExcerpt
      *
      * @return array
      */
-    public function loadByArea($area, $webspaceKey = null, $locale = null)
+    public function loadByArea($area, $webspaceKey = null, $locale = null, $loadExcerpt = false)
     {
         if (!$webspaceKey) {
             $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
@@ -72,7 +73,7 @@ class SnippetAreaTwigExtension extends AbstractExtension
             return null;
         }
 
-        $snippets = $this->snippetResolver->resolve([$snippet->getUuid()], $webspaceKey, $locale);
+        $snippets = $this->snippetResolver->resolve([$snippet->getUuid()], $webspaceKey, $locale, null, $loadExcerpt);
 
         if (!\array_key_exists(0, $snippets)) {
             return null;
