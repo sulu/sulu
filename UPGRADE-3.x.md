@@ -540,7 +540,7 @@ DROP TABLE me_file_version_content_languages;
 DROP TABLE me_file_version_publish_languages;
 ```
 
-Also the media types have been moved to the `me_media` table itself:
+Also the `MediaType` entity has been removed the value has been moved to the `me_media` table itself as a string column:
 
 ```sql
 ALTER TABLE me_media ADD COLUMN type VARCHAR(10) DEFAULT NULL;
