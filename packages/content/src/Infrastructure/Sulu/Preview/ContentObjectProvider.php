@@ -37,52 +37,16 @@ use Sulu\Content\Domain\Model\TemplateInterface;
 class ContentObjectProvider implements PreviewDefaultsProviderInterface
 {
     /**
-     * @var MetadataProviderRegistry
-     */
-    private $metadataProviderRegistry;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var ContentAggregatorInterface
-     */
-    private $contentAggregator;
-
-    /**
-     * @var ContentDataMapperInterface
-     */
-    private $contentDataMapper;
-
-    /**
-     * @var class-string<T>
-     */
-    private $contentRichEntityClass;
-
-    /**
-     * @var string|null
-     */
-    private $securityContext;
-
-    /**
      * @param class-string<T> $contentRichEntityClass
      */
     public function __construct(
-        MetadataProviderRegistry $metadataProviderRegistry,
-        EntityManagerInterface $entityManager,
-        ContentAggregatorInterface $contentAggregator,
-        ContentDataMapperInterface $contentDataMapper,
-        string $contentRichEntityClass,
-        ?string $securityContext = null
+        private MetadataProviderRegistry $metadataProviderRegistry,
+        private EntityManagerInterface $entityManager,
+        private ContentAggregatorInterface $contentAggregator,
+        private ContentDataMapperInterface $contentDataMapper,
+        private string $contentRichEntityClass,
+        private ?string $securityContext = null
     ) {
-        $this->metadataProviderRegistry = $metadataProviderRegistry;
-        $this->entityManager = $entityManager;
-        $this->contentAggregator = $contentAggregator;
-        $this->contentDataMapper = $contentDataMapper;
-        $this->contentRichEntityClass = $contentRichEntityClass;
-        $this->securityContext = $securityContext;
     }
 
     public function getDefaults(PreviewContext $previewContext): array

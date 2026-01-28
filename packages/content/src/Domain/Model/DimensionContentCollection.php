@@ -24,19 +24,9 @@ use Doctrine\Common\Collections\Criteria;
 class DimensionContentCollection implements DimensionContentCollectionInterface
 {
     /**
-     * @var Collection<int, T>
-     */
-    private Collection $dimensionContents;
-
-    /**
      * @var mixed[]
      */
     private array $dimensionAttributes;
-
-    /**
-     * @var class-string<T>
-     */
-    private string $dimensionContentClass;
 
     /**
      * @var mixed[]
@@ -51,15 +41,12 @@ class DimensionContentCollection implements DimensionContentCollectionInterface
      * @param class-string<T> $dimensionContentClass
      */
     public function __construct(
-        Collection $dimensionContents,
+        private Collection $dimensionContents,
         array $dimensionAttributes,
-        string $dimensionContentClass
+        private string $dimensionContentClass
     ) {
-        $this->dimensionContentClass = $dimensionContentClass;
-        $this->defaultDimensionAttributes = $dimensionContentClass::getDefaultDimensionAttributes();
-        $this->dimensionAttributes = $dimensionContentClass::getEffectiveDimensionAttributes($dimensionAttributes);
-
-        $this->dimensionContents = $dimensionContents;
+        $this->defaultDimensionAttributes = $this->dimensionContentClass::getDefaultDimensionAttributes();
+        $this->dimensionAttributes = $this->dimensionContentClass::getEffectiveDimensionAttributes($dimensionAttributes);
     }
 
     public function getDimensionContentClass(): string

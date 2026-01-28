@@ -33,16 +33,10 @@ class RoutableTraitTest extends TestCase
             use RoutableTrait;
 
             /**
-             * @var Tc
-             */
-            private ContentRichEntityInterface $resource;
-
-            /**
              * @param Tc $resource
              */
-            public function __construct(ContentRichEntityInterface $resource)
+            public function __construct(private ContentRichEntityInterface $resource)
             {
-                $this->resource = $resource;
             }
 
             public static function getResourceKey(): string
