@@ -109,5 +109,7 @@ class MediaTwigExtension extends AbstractExtension
         } elseif ($media instanceof MediaApi) {
             return $this->mediaManager->addFormatsAndUrl($media);
         }
+
+        return null;
     }
 }

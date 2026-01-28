@@ -43,7 +43,7 @@ class Account extends ApiWrapper
     public const TYPE = 'account';
 
     /**
-     * @var Media
+     * @var Media|null
      */
     private $logo = null;
 
@@ -992,7 +992,7 @@ class Account extends ApiWrapper
     /**
      * Get the accounts logo and return the array of different formats.
      *
-     * @return Media
+     * @return array{id: int, url: string, thumbnails: array<mixed>}|null
      */
     #[VirtualProperty]
     #[SerializedName('logo')]
@@ -1006,6 +1006,8 @@ class Account extends ApiWrapper
                 'thumbnails' => $this->logo->getFormats(),
             ];
         }
+
+        return null;
     }
 
     /**

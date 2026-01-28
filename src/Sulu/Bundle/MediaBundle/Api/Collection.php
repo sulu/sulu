@@ -29,7 +29,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 class Collection extends ApiWrapper
 {
     /**
-     * @var array|null
+     * @var array
      */
     protected $preview = [];
 
@@ -273,7 +273,7 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * @return array|null
+     * @return array
      */
     #[VirtualProperty]
     #[SerializedName('preview')]
@@ -283,7 +283,7 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * @param array|null $preview
+     * @param array $preview
      *
      * @return $this
      */

@@ -665,7 +665,7 @@ class CollectionManager implements CollectionManagerInterface
      * @param int $id
      * @param string $locale
      *
-     * @return array|null
+     * @return array
      */
     protected function getPreview($id, $locale)
     {
@@ -687,7 +687,7 @@ class CollectionManager implements CollectionManagerInterface
             }
         }
 
-        return null;
+        return [];
     }
 
     /**
