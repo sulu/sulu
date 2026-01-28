@@ -53,7 +53,7 @@ class SnippetResolver implements SnippetResolverInterface, ResetInterface
     {
         $snippets = [];
         foreach ($uuids as $uuid) {
-            $cacheKey = \sprintf('%s|%s', $locale, $uuid);
+            $cacheKey = \sprintf('%s|%s|%s|%s', $locale, $uuid, $shadowLocale ?? 'null', $loadExcerpt ? 'true' : 'false');
             if (!\array_key_exists($cacheKey, $this->snippetCache)) {
                 try {
                     $snippet = $this->contentMapper->load($uuid, $webspaceKey, $locale);
