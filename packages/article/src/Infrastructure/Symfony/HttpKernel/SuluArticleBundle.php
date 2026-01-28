@@ -56,6 +56,7 @@ use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleReindexProvider;
 use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexContentEnhancer;
 use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexExcerptEnhancer;
 use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexProviderEnhancerInterface;
+use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexTaxonomyEnhancer;
 use Sulu\Article\Infrastructure\Sulu\Search\WebsiteArticleIndexListener;
 use Sulu\Article\Infrastructure\Sulu\Search\WebsiteArticleReindexProvider;
 use Sulu\Article\Infrastructure\Sulu\Sitemap\ArticlesSitemapProvider;
@@ -487,6 +488,13 @@ final class SuluArticleBundle extends AbstractBundle
 
         $services->set('sulu_article.website_article_reindex_excerpt_enhancer')
             ->class(WebsiteArticleReindexExcerptEnhancer::class)
+            ->tag('sulu_article.website_article_reindex_provider_enhancer');
+
+        $services->set('sulu_article.website_article_reindex_taxonomy_enhancer')
+            ->class(WebsiteArticleReindexTaxonomyEnhancer::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+            ])
             ->tag('sulu_article.website_article_reindex_provider_enhancer');
 
         $services->set('sulu_article.website_article_reindex_provider')

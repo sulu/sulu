@@ -17,11 +17,14 @@ use CmsIg\Seal\Reindex\ReindexConfig;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexExcerptEnhancer;
+use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexTaxonomyEnhancer;
 use Sulu\Article\Infrastructure\Sulu\Search\WebsiteArticleReindexProvider;
 use Sulu\Article\Tests\Traits\CreateArticleTrait;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Tests\Traits\CreateCategoryTrait;
+use Sulu\Content\Tests\Traits\CreateTagTrait;
 
 /**
  * @phpstan-type ArticleData array{
@@ -39,6 +42,8 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
 {
     use SetGetPrivatePropertyTrait;
     use CreateArticleTrait;
+    use CreateCategoryTrait;
+    use CreateTagTrait;
 
     private EntityManagerInterface $entityManager;
     private WebsiteArticleReindexProvider $provider;
@@ -507,5 +512,198 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
         $result = $results[0];
         $this->assertSame('No Excerpt Article', $result['title']);
         $this->assertSame([], $result['properties']);
+    }
+
+    public function testTaxonomyEnhancerPopulatesCategoriesAndTags(): void
+    {
+        $category1 = static::createCategory(['en' => ['title' => 'Category 1']]);
+        $category2 = static::createCategory(['en' => ['title' => 'Category 2']]);
+        $tag1 = static::createTag(['name' => 'tag-one']);
+        $tag2 = static::createTag(['name' => 'tag-two']);
+
+        $this->entityManager->flush();
+
+        $provider = new WebsiteArticleReindexProvider(
+            $this->entityManager,
+            [new WebsiteArticleReindexTaxonomyEnhancer($this->entityManager)],
+        );
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Article With Taxonomy',
+                    'url' => '/article-taxonomy',
+                    'excerptCategories' => [$category1->getId(), $category2->getId()],
+                    'excerptTags' => [$tag1->getName(), $tag2->getName()],
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertIsArray($result['properties']);
+        $excerpt = $result['properties']['excerpt'];
+        $this->assertIsArray($excerpt);
+
+        $this->assertSame([$category1->getId(), $category2->getId()], $excerpt['categoryIds']);
+        $this->assertSame(['tag-one', 'tag-two'], $excerpt['tagNames']);
+    }
+
+    public function testTaxonomyEnhancerPopulatesOnlyCategories(): void
+    {
+        $category1 = static::createCategory(['en' => ['title' => 'Category 1']]);
+        $category2 = static::createCategory(['en' => ['title' => 'Category 2']]);
+
+        $this->entityManager->flush();
+
+        $provider = new WebsiteArticleReindexProvider(
+            $this->entityManager,
+            [new WebsiteArticleReindexTaxonomyEnhancer($this->entityManager)],
+        );
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Article With Categories',
+                    'url' => '/article-categories',
+                    'excerptCategories' => [$category1->getId(), $category2->getId()],
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertIsArray($result['properties']);
+        $excerpt = $result['properties']['excerpt'];
+        $this->assertIsArray($excerpt);
+
+        $this->assertSame([$category1->getId(), $category2->getId()], $excerpt['categoryIds']);
+        $this->assertArrayNotHasKey('tagNames', $excerpt);
+    }
+
+    public function testTaxonomyEnhancerPopulatesOnlyTags(): void
+    {
+        $tag1 = static::createTag(['name' => 'php']);
+        $tag2 = static::createTag(['name' => 'sulu']);
+
+        $this->entityManager->flush();
+
+        $provider = new WebsiteArticleReindexProvider(
+            $this->entityManager,
+            [new WebsiteArticleReindexTaxonomyEnhancer($this->entityManager)],
+        );
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Article With Tags',
+                    'url' => '/article-tags',
+                    'excerptTags' => [$tag1->getName(), $tag2->getName()],
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertIsArray($result['properties']);
+        $excerpt = $result['properties']['excerpt'];
+        $this->assertIsArray($excerpt);
+
+        $this->assertArrayNotHasKey('categoryIds', $excerpt);
+        $this->assertSame(['php', 'sulu'], $excerpt['tagNames']);
+    }
+
+    public function testTaxonomyEnhancerWithEmptyTaxonomyDoesNotAddKeys(): void
+    {
+        $provider = new WebsiteArticleReindexProvider(
+            $this->entityManager,
+            [new WebsiteArticleReindexTaxonomyEnhancer($this->entityManager)],
+        );
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Article Without Taxonomy',
+                    'url' => '/article-no-taxonomy',
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertIsArray($result['properties']);
+        $this->assertArrayNotHasKey('excerpt', $result['properties']);
+    }
+
+    public function testTaxonomyEnhancerPreservesExistingExcerptProperties(): void
+    {
+        $category = static::createCategory(['en' => ['title' => 'Category 1']]);
+        $tag = static::createTag(['name' => 'test-tag']);
+
+        $this->entityManager->flush();
+
+        $provider = new WebsiteArticleReindexProvider(
+            $this->entityManager,
+            [
+                new WebsiteArticleReindexExcerptEnhancer(),
+                new WebsiteArticleReindexTaxonomyEnhancer($this->entityManager),
+            ],
+        );
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Article With Excerpt and Taxonomy',
+                    'url' => '/article-excerpt-taxonomy',
+                    'excerpt' => [
+                        'title' => 'Excerpt Title',
+                        'description' => '<p>Excerpt description</p>',
+                    ],
+                    'excerptCategories' => [$category->getId()],
+                    'excerptTags' => [$tag->getName()],
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertIsArray($result['properties']);
+        $excerpt = $result['properties']['excerpt'];
+        $this->assertIsArray($excerpt);
+
+        $this->assertSame('Excerpt Title', $excerpt['title']);
+        $this->assertSame('Excerpt description', $excerpt['description']);
+        $this->assertSame([$category->getId()], $excerpt['categoryIds']);
+        $this->assertSame(['test-tag'], $excerpt['tagNames']);
     }
 }
