@@ -618,10 +618,10 @@ DROP TABLE se_user_groups;
 
 ### Migrate User entity columns
 
-The `apiKey` column type was changed to `guid` and the `idContacts` join column is now nullable:
+The `idContacts` join column is now nullable to be consistent with the entity property.
 
 ```sql
-ALTER TABLE se_users CHANGE apiKey apiKey CHAR(36) DEFAULT NULL, CHANGE idContacts idContacts INT DEFAULT NULL;
+ALTER TABLE se_users CHANGE idContacts idContacts INT DEFAULT NULL;
 ```
 
 ### Migrate on TimestampableInterface depend entities to DateTimeImmutable
