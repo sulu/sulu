@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Snippet\Tests\Functional\Integration;
 
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -149,7 +150,12 @@ class SnippetControllerTest extends SuluTestCase
     {
         self::purgeDatabase();
 
-        $this->client->request('POST', '/admin/api/snippets?locale=en', [], [], [], \json_encode([
+        return $this->doTestPost();
+    }
+
+    public function doTestPost(string $locale = 'en'): string
+    {
+        $this->client->request('POST', "/admin/api/snippets?locale={$locale}", [], [], [], \json_encode([
             'template' => 'snippet',
             'title' => 'Test Snippet',
             'images' => null,
@@ -359,5 +365,27 @@ class SnippetControllerTest extends SuluTestCase
     protected function getSnapshotFolder(): string
     {
         return 'responses';
+    }
+
+    #[DataProvider('getLocaleProvider')]
+    public function testGetLocale(string $locale): void
+    {
+        $id = $this->doTestPost($locale);
+
+        $this->client->request('GET', "/admin/api/snippets/{$id}?locale={$locale}");
+        $response = $this->client->getResponse();
+
+        $this->assertResponseSnapshot('snippet_get_locale.json', $response);
+    }
+
+    public static function getLocaleProvider(): \Generator
+    {
+        yield [
+            'de',
+        ];
+
+        yield [
+            'de_ch',
+        ];
     }
 }
