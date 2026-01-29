@@ -103,7 +103,7 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
         $targetDimensionContent = $this->contentAggregator->aggregate($page, $dimensionAttributes);
 
         $url = $targetDimensionContent->getTemplateData()['url'] ?? null;
-        if (\is_string($url)) {
+        if (\is_string($url) && null !== $linkData) {
             $url = $this->appendQueryAndAnchor($url, $linkData);
         }
 
@@ -143,7 +143,10 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
             return $pageDimensionContent;
         }
 
-        $url = $this->appendQueryAndAnchor($linkItem->getUrl(), $linkData);
+        $url = $linkItem->getUrl();
+        if (null !== $linkData) {
+            $url = $this->appendQueryAndAnchor($url, $linkData);
+        }
 
         $pageDimensionContent->setTemplateData([
             ...$pageDimensionContent->getTemplateData(),
