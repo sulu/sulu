@@ -102,10 +102,16 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
         /** @var PageDimensionContentInterface $targetDimensionContent */
         $targetDimensionContent = $this->contentAggregator->aggregate($page, $dimensionAttributes);
 
+        $url = $targetDimensionContent->getTemplateData()['url'] ?? null;
+        if (\is_string($url)) {
+            $url = $this->appendQueryAndAnchor($url, $linkData);
+        }
+
         $targetDimensionContent->setTemplateData([
             ...$targetDimensionContent->getTemplateData(),
             ...[
                 'title' => $pageDimensionContent->getTitle(),
+                'url' => $url,
             ],
         ]);
 
@@ -137,13 +143,7 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
             return $pageDimensionContent;
         }
 
-        $url = $linkItem->getUrl();
-        if (isset($linkData['query']) && \is_string($linkData['query'])) {
-            $url = \sprintf('%s?%s', $url, \ltrim($linkData['query'], '?'));
-        }
-        if (isset($linkData['anchor']) && \is_string($linkData['anchor'])) {
-            $url = \sprintf('%s#%s', $url, \ltrim($linkData['anchor'], '#'));
-        }
+        $url = $this->appendQueryAndAnchor($linkItem->getUrl(), $linkData);
 
         $pageDimensionContent->setTemplateData([
             ...$pageDimensionContent->getTemplateData(),
@@ -153,5 +153,22 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
         ]);
 
         return $pageDimensionContent;
+    }
+
+    /**
+     * Append query string and anchor to a URL based on linkData.
+     *
+     * @param array<string, mixed> $linkData
+     */
+    private function appendQueryAndAnchor(string $url, array $linkData): string
+    {
+        if (isset($linkData['query']) && \is_string($linkData['query'])) {
+            $url = \sprintf('%s?%s', $url, \ltrim($linkData['query'], '?'));
+        }
+        if (isset($linkData['anchor']) && \is_string($linkData['anchor'])) {
+            $url = \sprintf('%s#%s', $url, \ltrim($linkData['anchor'], '#'));
+        }
+
+        return $url;
     }
 }
