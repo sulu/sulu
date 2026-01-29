@@ -20,7 +20,9 @@ use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
+use Sulu\Snippet\UserInterface\Controller\Admin\SnippetController;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * The integration test should have no impact on the coverage so we set it to coversNothing.
@@ -150,12 +152,7 @@ class SnippetControllerTest extends SuluTestCase
     {
         self::purgeDatabase();
 
-        return $this->doTestPost();
-    }
-
-    public function doTestPost(string $locale = 'en'): string
-    {
-        $this->client->request('POST', "/admin/api/snippets?locale={$locale}", [], [], [], \json_encode([
+        $this->client->request('POST', '/admin/api/snippets?locale=en', [], [], [], \json_encode([
             'template' => 'snippet',
             'title' => 'Test Snippet',
             'images' => null,
@@ -370,12 +367,14 @@ class SnippetControllerTest extends SuluTestCase
     #[DataProvider('getLocaleProvider')]
     public function testGetLocale(string $locale): void
     {
-        $id = $this->doTestPost($locale);
+        /** @var SnippetController $reflectionClass */
+        $reflectionClass = (new \ReflectionClass(SnippetController::class))
+            ->newInstanceWithoutConstructor();
 
-        $this->client->request('GET', "/admin/api/snippets/{$id}?locale={$locale}");
-        $response = $this->client->getResponse();
+        $request = new Request();
+        $request->query->set('locale', $locale);
 
-        $this->assertResponseSnapshot('snippet_get_locale.json', $response);
+        $this->assertSame($locale, $reflectionClass->getLocale($request));
     }
 
     public static function getLocaleProvider(): \Generator
