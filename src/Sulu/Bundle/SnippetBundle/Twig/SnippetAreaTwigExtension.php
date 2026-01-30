@@ -46,13 +46,12 @@ class SnippetAreaTwigExtension extends AbstractExtension
      * @param string $area
      * @param string $webspaceKey
      * @param string $locale
-     * @param bool $loadExcerpt
      *
      * @return array
      */
     public function loadByArea($area, $webspaceKey = null, $locale = null/*, $loadExcerpt = false */)
-{
-         $loadExcerpt = func_num_args() > 3 ? func_get_args()[3] : false;
+    {
+        $loadExcerpt = \func_num_args() > 3 ? \func_get_args()[3] : false;
         if (!$webspaceKey) {
             $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         }
