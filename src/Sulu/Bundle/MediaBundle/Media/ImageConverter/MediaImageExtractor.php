@@ -74,7 +74,7 @@ class MediaImageExtractor implements MediaImageExtractorInterface
     {
         // Create temporary file for source PDF
         $sourcePdfPath = $this->createTemporaryFile($resource);
-        
+
         // Create a separate temporary file for output image
         $outputImagePath = \tempnam(\sys_get_temp_dir(), 'media') . '.jpg';
 
@@ -83,10 +83,10 @@ class MediaImageExtractor implements MediaImageExtractorInterface
             '-dJPEGQ=100 -r300x300 -q ' . $sourcePdfPath . ' -c quit';
 
         \shell_exec($command);
-        
+
         // Read generated image
         $output = \file_get_contents($outputImagePath);
-        
+
         // Clean up temporary files
         \unlink($sourcePdfPath);
         \unlink($outputImagePath);
