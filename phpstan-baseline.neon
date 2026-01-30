@@ -3247,7 +3247,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Admin/View/ViewRegistryTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Admin\\View\\ViewRegistryTest\:\:readObjectAttribute\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Admin\\View\\ViewRegistryTest\:\:readObjectAttribute\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Admin/View/ViewRegistryTest.php
@@ -6121,37 +6121,37 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Tests\\Unit\\Analyzer\\Attributes\\ForwardedUrlRequestProcessorTest\:\:provideProcess\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Tests\\Unit\\Request\\ForwardedUrlRequestProcessorTest\:\:provideProcess\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Request/ForwardedUrlRequestProcessorTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Tests\\Unit\\Analyzer\\Attributes\\ForwardedUrlRequestProcessorTest\:\:testProcess\(\) has parameter \$host with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Tests\\Unit\\Request\\ForwardedUrlRequestProcessorTest\:\:testProcess\(\) has parameter \$host with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Request/ForwardedUrlRequestProcessorTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Tests\\Unit\\Analyzer\\Attributes\\ForwardedUrlRequestProcessorTest\:\:testProcess\(\) has parameter \$path with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Tests\\Unit\\Request\\ForwardedUrlRequestProcessorTest\:\:testProcess\(\) has parameter \$path with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Request/ForwardedUrlRequestProcessorTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Tests\\Unit\\Analyzer\\Attributes\\ForwardedUrlRequestProcessorTest\:\:testProcess\(\) has parameter \$port with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Tests\\Unit\\Request\\ForwardedUrlRequestProcessorTest\:\:testProcess\(\) has parameter \$port with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Request/ForwardedUrlRequestProcessorTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Tests\\Unit\\Analyzer\\Attributes\\ForwardedUrlRequestProcessorTest\:\:testProcess\(\) has parameter \$url with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Tests\\Unit\\Request\\ForwardedUrlRequestProcessorTest\:\:testProcess\(\) has parameter \$url with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Request/ForwardedUrlRequestProcessorTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Tests\\Unit\\Analyzer\\Attributes\\ForwardedUrlRequestProcessorTest\:\:testProcess\(\) has parameter \$urlHeader with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Tests\\Unit\\Request\\ForwardedUrlRequestProcessorTest\:\:testProcess\(\) has parameter \$urlHeader with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Request/ForwardedUrlRequestProcessorTest.php
@@ -18613,43 +18613,43 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/ContactTwigExtensionTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Util\\CustomerIdConverterTest\:\:convertGroupedIdsToIdsProvider\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Unit\\CustomerIdConverterTest\:\:convertGroupedIdsToIdsProvider\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/CustomerIdConverterTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Util\\CustomerIdConverterTest\:\:convertIdsToGroupedIdsProvider\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Unit\\CustomerIdConverterTest\:\:convertIdsToGroupedIdsProvider\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/CustomerIdConverterTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Util\\CustomerIdConverterTest\:\:testConvertGroupedIdsToIds\(\) has parameter \$expected with no value type specified in iterable type array\.$#'
+			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Unit\\CustomerIdConverterTest\:\:testConvertGroupedIdsToIds\(\) has parameter \$expected with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/CustomerIdConverterTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Util\\CustomerIdConverterTest\:\:testConvertGroupedIdsToIds\(\) has parameter \$groupedIds with no value type specified in iterable type array\.$#'
+			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Unit\\CustomerIdConverterTest\:\:testConvertGroupedIdsToIds\(\) has parameter \$groupedIds with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/CustomerIdConverterTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Util\\CustomerIdConverterTest\:\:testConvertIdsToGroupedIds\(\) has parameter \$default with no value type specified in iterable type array\.$#'
+			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Unit\\CustomerIdConverterTest\:\:testConvertIdsToGroupedIds\(\) has parameter \$default with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/CustomerIdConverterTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Util\\CustomerIdConverterTest\:\:testConvertIdsToGroupedIds\(\) has parameter \$expected with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Unit\\CustomerIdConverterTest\:\:testConvertIdsToGroupedIds\(\) has parameter \$expected with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/CustomerIdConverterTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Util\\CustomerIdConverterTest\:\:testConvertIdsToGroupedIds\(\) has parameter \$ids with no value type specified in iterable type array\.$#'
+			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Unit\\CustomerIdConverterTest\:\:testConvertIdsToGroupedIds\(\) has parameter \$ids with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/CustomerIdConverterTest.php
@@ -18661,31 +18661,31 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/IndexComparatorTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Util\\IndexComparatorTest\:\:testUsortCallback\(\) has parameter \$array with no value type specified in iterable type array\.$#'
+			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Unit\\IndexComparatorTest\:\:testUsortCallback\(\) has parameter \$array with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/IndexComparatorTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Util\\IndexComparatorTest\:\:testUsortCallback\(\) has parameter \$contains with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Unit\\IndexComparatorTest\:\:testUsortCallback\(\) has parameter \$contains with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/IndexComparatorTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Util\\IndexComparatorTest\:\:testUsortCallback\(\) has parameter \$ids with no value type specified in iterable type array\.$#'
+			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Unit\\IndexComparatorTest\:\:testUsortCallback\(\) has parameter \$ids with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/IndexComparatorTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Util\\IndexComparatorTest\:\:testUsortCallback\(\) has parameter \$startsWith with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Unit\\IndexComparatorTest\:\:testUsortCallback\(\) has parameter \$startsWith with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/IndexComparatorTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Util\\IndexComparatorTest\:\:usortProvider\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Unit\\IndexComparatorTest\:\:usortProvider\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/IndexComparatorTest.php
@@ -31867,49 +31867,49 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaRedirectControllerTest.php
 
 		-
-			message: '#^Method Functional\\Controller\\MediaRedirectControllerTest\:\:cleanImage\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\MediaRedirectControllerTest\:\:cleanImage\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaRedirectControllerTest.php
 
 		-
-			message: '#^Method Functional\\Controller\\MediaRedirectControllerTest\:\:createMedia\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\MediaRedirectControllerTest\:\:createMedia\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaRedirectControllerTest.php
 
 		-
-			message: '#^Method Functional\\Controller\\MediaRedirectControllerTest\:\:createMedia\(\) has parameter \$locale with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\MediaRedirectControllerTest\:\:createMedia\(\) has parameter \$locale with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaRedirectControllerTest.php
 
 		-
-			message: '#^Method Functional\\Controller\\MediaRedirectControllerTest\:\:createMedia\(\) has parameter \$name with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\MediaRedirectControllerTest\:\:createMedia\(\) has parameter \$name with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaRedirectControllerTest.php
 
 		-
-			message: '#^Method Functional\\Controller\\MediaRedirectControllerTest\:\:recursiveRemoveDirectory\(\) has parameter \$counter with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\MediaRedirectControllerTest\:\:recursiveRemoveDirectory\(\) has parameter \$counter with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaRedirectControllerTest.php
 
 		-
-			message: '#^Method Functional\\Controller\\MediaRedirectControllerTest\:\:recursiveRemoveDirectory\(\) has parameter \$directory with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\MediaRedirectControllerTest\:\:recursiveRemoveDirectory\(\) has parameter \$directory with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaRedirectControllerTest.php
 
 		-
-			message: '#^Method Functional\\Controller\\MediaRedirectControllerTest\:\:setUpCollection\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\MediaRedirectControllerTest\:\:setUpCollection\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaRedirectControllerTest.php
 
 		-
-			message: '#^Method Functional\\Controller\\MediaRedirectControllerTest\:\:setUpMedia\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\MediaRedirectControllerTest\:\:setUpMedia\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaRedirectControllerTest.php
@@ -31933,7 +31933,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaRedirectControllerTest.php
 
 		-
-			message: '#^Property Functional\\Controller\\MediaRedirectControllerTest\:\:\$em \(Doctrine\\ORM\\EntityManager\) does not accept Doctrine\\ORM\\EntityManagerInterface\.$#'
+			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\MediaRedirectControllerTest\:\:\$em \(Doctrine\\ORM\\EntityManager\) does not accept Doctrine\\ORM\\EntityManagerInterface\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaRedirectControllerTest.php
@@ -33439,7 +33439,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/FormatManager/FormatManagerTest.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Media\\FormatManager\\FormatManagerTest\:\:\$formats type has no value type specified in iterable type array\.$#'
+			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Unit\\Media\\FormatManager\\FormatManagerTest\:\:\$formats type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/FormatManager/FormatManagerTest.php
@@ -33493,7 +33493,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/FormatOptionsManager/FormatOptionsManagerTest.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Media\\FormatOptionsManager\\FormatOptionsManagerTest\:\:\$formatOptionsRepository with generic class Doctrine\\ORM\\EntityRepository does not specify its types\: TEntityClass$#'
+			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Unit\\Media\\FormatOptionsManager\\FormatOptionsManagerTest\:\:\$formatOptionsRepository with generic class Doctrine\\ORM\\EntityRepository does not specify its types\: TEntityClass$#'
 			identifier: missingType.generics
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/FormatOptionsManager/FormatOptionsManagerTest.php
@@ -33835,7 +33835,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/TypeManager/TypeManagerTest.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Media\\TypeManager\\TypeManagerTest\:\:\$mediaTypes has no type specified\.$#'
+			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Unit\\Media\\TypeManager\\TypeManagerTest\:\:\$mediaTypes has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/TypeManager/TypeManagerTest.php
@@ -33907,13 +33907,13 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Search/Subscriber/MediaSearchSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Twig\\DispositionTypeTwigExtensionTest\:\:getMediaMock\(\) return type with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
+			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Unit\\Twig\\DispositionTypeTwigExtensionTest\:\:getMediaMock\(\) return type with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Twig/DispositionTypeTwigExtensionTest.php
 
 		-
-			message: '#^Parameter \#1 \$media of method Sulu\\Bundle\\MediaBundle\\Twig\\DispositionTypeTwigExtensionTest\:\:getExtensionGetMediaUrlResult\(\) expects Sulu\\Bundle\\MediaBundle\\Api\\Media, object given\.$#'
+			message: '#^Parameter \#1 \$media of method Sulu\\Bundle\\MediaBundle\\Tests\\Unit\\Twig\\DispositionTypeTwigExtensionTest\:\:getExtensionGetMediaUrlResult\(\) expects Sulu\\Bundle\\MediaBundle\\Api\\Media, object given\.$#'
 			identifier: argument.type
 			count: 4
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Twig/DispositionTypeTwigExtensionTest.php
@@ -46855,25 +46855,25 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Search/EventSubscriber/StructureSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Search\\EventSubscriber\\StructureSubscriberTest\:\:getPersistEventMock\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\PageBundle\\Tests\\Unit\\Search\\EventSubscriber\\StructureSubscriberTest\:\:getPersistEventMock\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Search/EventSubscriber/StructureSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Search\\EventSubscriber\\StructureSubscriberTest\:\:getPersistEventMock\(\) has parameter \$document with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\PageBundle\\Tests\\Unit\\Search\\EventSubscriber\\StructureSubscriberTest\:\:getPersistEventMock\(\) has parameter \$document with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Search/EventSubscriber/StructureSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Search\\EventSubscriber\\StructureSubscriberTest\:\:getPublishEventMock\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\PageBundle\\Tests\\Unit\\Search\\EventSubscriber\\StructureSubscriberTest\:\:getPublishEventMock\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Search/EventSubscriber/StructureSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Search\\EventSubscriber\\StructureSubscriberTest\:\:getPublishEventMock\(\) has parameter \$document with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\PageBundle\\Tests\\Unit\\Search\\EventSubscriber\\StructureSubscriberTest\:\:getPublishEventMock\(\) has parameter \$document with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Search/EventSubscriber/StructureSubscriberTest.php
@@ -46891,19 +46891,19 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Search/EventSubscriber/StructureSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Tests\\Unit\\Sulu\\Bundle\\WebsiteBundle\\Sitemap\\PagesSitemapProviderTest\:\:createContent\(\) has parameter \$locale with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\PageBundle\\Tests\\Unit\\Sitemap\\PagesSitemapProviderTest\:\:createContent\(\) has parameter \$locale with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Sitemap/PagesSitemapProviderTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Tests\\Unit\\Sulu\\Bundle\\WebsiteBundle\\Sitemap\\PagesSitemapProviderTest\:\:createContent\(\) has parameter \$permissions with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\PageBundle\\Tests\\Unit\\Sitemap\\PagesSitemapProviderTest\:\:createContent\(\) has parameter \$permissions with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Sitemap/PagesSitemapProviderTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Tests\\Unit\\Sulu\\Bundle\\WebsiteBundle\\Sitemap\\PagesSitemapProviderTest\:\:createContent\(\) has parameter \$urls with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\PageBundle\\Tests\\Unit\\Sitemap\\PagesSitemapProviderTest\:\:createContent\(\) has parameter \$urls with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Sitemap/PagesSitemapProviderTest.php
@@ -53455,49 +53455,49 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/EventListener/PermissionInheritanceSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\EventListener\\SuluSecurityListenerTest\:\:createControllerEvent\(\) has parameter \$controller with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Tests\\Unit\\EventListener\\SuluSecurityListenerTest\:\:createControllerEvent\(\) has parameter \$controller with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/EventListener/SuluSecurityListenerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\EventListener\\SuluSecurityListenerTest\:\:provideInvokeMethodActionMapping\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Tests\\Unit\\EventListener\\SuluSecurityListenerTest\:\:provideInvokeMethodActionMapping\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/EventListener/SuluSecurityListenerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\EventListener\\SuluSecurityListenerTest\:\:provideMethodActionMapping\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Tests\\Unit\\EventListener\\SuluSecurityListenerTest\:\:provideMethodActionMapping\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/EventListener/SuluSecurityListenerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\EventListener\\SuluSecurityListenerTest\:\:testCallableControllerPermission\(\) has parameter \$method with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Tests\\Unit\\EventListener\\SuluSecurityListenerTest\:\:testCallableControllerPermission\(\) has parameter \$method with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/EventListener/SuluSecurityListenerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\EventListener\\SuluSecurityListenerTest\:\:testCallableControllerPermission\(\) has parameter \$permission with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Tests\\Unit\\EventListener\\SuluSecurityListenerTest\:\:testCallableControllerPermission\(\) has parameter \$permission with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/EventListener/SuluSecurityListenerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\EventListener\\SuluSecurityListenerTest\:\:testMethodPermissionMapping\(\) has parameter \$action with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Tests\\Unit\\EventListener\\SuluSecurityListenerTest\:\:testMethodPermissionMapping\(\) has parameter \$action with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/EventListener/SuluSecurityListenerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\EventListener\\SuluSecurityListenerTest\:\:testMethodPermissionMapping\(\) has parameter \$method with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Tests\\Unit\\EventListener\\SuluSecurityListenerTest\:\:testMethodPermissionMapping\(\) has parameter \$method with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/EventListener/SuluSecurityListenerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\EventListener\\SuluSecurityListenerTest\:\:testMethodPermissionMapping\(\) has parameter \$permission with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Tests\\Unit\\EventListener\\SuluSecurityListenerTest\:\:testMethodPermissionMapping\(\) has parameter \$permission with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/EventListener/SuluSecurityListenerTest.php
@@ -56575,13 +56575,13 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Export/SnippetTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Tests\\Functional\\Export\\SnippetTest\:\:getExportResultData\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Export\\SnippetTest\:\:getExportResultData\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Export/SnippetTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Tests\\Functional\\Export\\SnippetTest\:\:prepareData\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Export\\SnippetTest\:\:prepareData\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Export/SnippetTest.php
@@ -56695,61 +56695,61 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Snippet/SnippetRepositoryTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Content\\SnippetRepositoryTest\:\:provideGetSnippets\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Snippet\\SnippetRepositoryTest\:\:provideGetSnippets\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Snippet/SnippetRepositoryTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Content\\SnippetRepositoryTest\:\:provideGetSnippetsByUuids\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Snippet\\SnippetRepositoryTest\:\:provideGetSnippetsByUuids\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Snippet/SnippetRepositoryTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Content\\SnippetRepositoryTest\:\:testGetSnippets\(\) has parameter \$expectedCount with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Snippet\\SnippetRepositoryTest\:\:testGetSnippets\(\) has parameter \$expectedCount with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Snippet/SnippetRepositoryTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Content\\SnippetRepositoryTest\:\:testGetSnippets\(\) has parameter \$limit with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Snippet\\SnippetRepositoryTest\:\:testGetSnippets\(\) has parameter \$limit with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Snippet/SnippetRepositoryTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Content\\SnippetRepositoryTest\:\:testGetSnippets\(\) has parameter \$offset with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Snippet\\SnippetRepositoryTest\:\:testGetSnippets\(\) has parameter \$offset with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Snippet/SnippetRepositoryTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Content\\SnippetRepositoryTest\:\:testGetSnippets\(\) has parameter \$search with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Snippet\\SnippetRepositoryTest\:\:testGetSnippets\(\) has parameter \$search with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Snippet/SnippetRepositoryTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Content\\SnippetRepositoryTest\:\:testGetSnippets\(\) has parameter \$type with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Snippet\\SnippetRepositoryTest\:\:testGetSnippets\(\) has parameter \$type with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Snippet/SnippetRepositoryTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Content\\SnippetRepositoryTest\:\:testGetSnippetsByUuids\(\) has parameter \$expectedCount with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Snippet\\SnippetRepositoryTest\:\:testGetSnippetsByUuids\(\) has parameter \$expectedCount with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Snippet/SnippetRepositoryTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Content\\SnippetRepositoryTest\:\:testGetSnippetsByUuids\(\) has parameter \$languageCode with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Snippet\\SnippetRepositoryTest\:\:testGetSnippetsByUuids\(\) has parameter \$languageCode with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Snippet/SnippetRepositoryTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Content\\SnippetRepositoryTest\:\:testGetSnippetsByUuids\(\) has parameter \$snippets with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Snippet\\SnippetRepositoryTest\:\:testGetSnippetsByUuids\(\) has parameter \$snippets with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Snippet/SnippetRepositoryTest.php
@@ -57475,25 +57475,25 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Snippet/SnippetResolverTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Snippet\\SnippetResolverTest\:\:dataProvider\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Unit\\Snippet\\SnippetResolverTest\:\:dataProvider\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Snippet/SnippetResolverTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Snippet\\SnippetResolverTest\:\:testResolve\(\) has parameter \$locale with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Unit\\Snippet\\SnippetResolverTest\:\:testResolve\(\) has parameter \$locale with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Snippet/SnippetResolverTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Snippet\\SnippetResolverTest\:\:testResolve\(\) has parameter \$uuids with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Unit\\Snippet\\SnippetResolverTest\:\:testResolve\(\) has parameter \$uuids with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Snippet/SnippetResolverTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Snippet\\SnippetResolverTest\:\:testResolve\(\) has parameter \$webspaceKey with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Tests\\Unit\\Snippet\\SnippetResolverTest\:\:testResolve\(\) has parameter \$webspaceKey with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Snippet/SnippetResolverTest.php
@@ -62719,7 +62719,7 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/EventListener/SegmentSubscriberTest.php
 
 		-
-			message: '#^Method RequestAnalyzerResolverTest\:\:prepareWebspaceManager\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Resolver\\RequestAnalyzerResolverTest\:\:prepareWebspaceManager\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Resolver/RequestAnalyzerResolverTest.php
@@ -62983,25 +62983,25 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Twig/ContentTwigExtensionTest.php
 
 		-
-			message: '#^Method NavigationTwigExtensionTest\:\:activeElementProvider\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Twig\\NavigationTwigExtensionTest\:\:activeElementProvider\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Twig/NavigationTwigExtensionTest.php
 
 		-
-			message: '#^Method NavigationTwigExtensionTest\:\:testActiveElement\(\) has parameter \$expected with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Twig\\NavigationTwigExtensionTest\:\:testActiveElement\(\) has parameter \$expected with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Twig/NavigationTwigExtensionTest.php
 
 		-
-			message: '#^Method NavigationTwigExtensionTest\:\:testActiveElement\(\) has parameter \$itemPath with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Twig\\NavigationTwigExtensionTest\:\:testActiveElement\(\) has parameter \$itemPath with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Twig/NavigationTwigExtensionTest.php
 
 		-
-			message: '#^Method NavigationTwigExtensionTest\:\:testActiveElement\(\) has parameter \$requestPath with no type specified\.$#'
+			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Twig\\NavigationTwigExtensionTest\:\:testActiveElement\(\) has parameter \$requestPath with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Twig/NavigationTwigExtensionTest.php
@@ -63685,25 +63685,25 @@ parameters:
 			path: src/Sulu/Component/Cache/MemoizeInterface.php
 
 		-
-			message: '#^Method Sulu\\Component\\Cache\\Tests\\Unit\\DataCacheTest\:\:provideIsFreshData\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\Cache\\Tests\\Unit\\Cache\\DataCacheTest\:\:provideIsFreshData\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Cache/Tests/Unit/Cache/DataCacheTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Cache\\Tests\\Unit\\DataCacheTest\:\:testIsFresh\(\) has parameter \$createFile with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Cache\\Tests\\Unit\\Cache\\DataCacheTest\:\:testIsFresh\(\) has parameter \$createFile with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Cache/Tests/Unit/Cache/DataCacheTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Cache\\Tests\\Unit\\DataCacheTest\:\:testIsFresh\(\) has parameter \$expected with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Cache\\Tests\\Unit\\Cache\\DataCacheTest\:\:testIsFresh\(\) has parameter \$expected with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Cache/Tests/Unit/Cache/DataCacheTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Cache\\Tests\\Unit\\DataCacheTest\:\:testIsFresh\(\) has parameter \$file with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Cache\\Tests\\Unit\\Cache\\DataCacheTest\:\:testIsFresh\(\) has parameter \$file with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Cache/Tests/Unit/Cache/DataCacheTest.php
@@ -74635,31 +74635,31 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Structure/ManagedStructureTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Document\\Property\\ManagedStructureTest\:\:doGetProperty\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Document\\Structure\\ManagedStructureTest\:\:doGetProperty\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Structure/ManagedStructureTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Document\\Property\\ManagedStructureTest\:\:doGetProperty\(\) has parameter \$contentTypeName with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Document\\Structure\\ManagedStructureTest\:\:doGetProperty\(\) has parameter \$contentTypeName with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Structure/ManagedStructureTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Document\\Property\\ManagedStructureTest\:\:doGetProperty\(\) has parameter \$locale with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Document\\Structure\\ManagedStructureTest\:\:doGetProperty\(\) has parameter \$locale with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Structure/ManagedStructureTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Document\\Property\\ManagedStructureTest\:\:doGetProperty\(\) has parameter \$localized with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Document\\Structure\\ManagedStructureTest\:\:doGetProperty\(\) has parameter \$localized with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Structure/ManagedStructureTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Document\\Property\\ManagedStructureTest\:\:doGetProperty\(\) has parameter \$name with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Document\\Structure\\ManagedStructureTest\:\:doGetProperty\(\) has parameter \$name with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Structure/ManagedStructureTest.php
@@ -74671,7 +74671,7 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Structure/ManagedStructureTest.php
 
 		-
-			message: '#^Property Sulu\\Component\\Content\\Tests\\Unit\\Document\\Property\\ManagedStructureTest\:\:\$encoder is never read, only written\.$#'
+			message: '#^Property Sulu\\Component\\Content\\Tests\\Unit\\Document\\Structure\\ManagedStructureTest\:\:\$encoder is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Structure/ManagedStructureTest.php
@@ -75433,7 +75433,7 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/Rlp/Strategy/TreeFullEditStrategyTest.php
 
 		-
-			message: '#^Property Sulu\\Component\\Content\\Tests\\Unit\\ResourceLocator\\Strategy\\TreeFullEditStrategyTest\:\:\$treeStrategy \(Sulu\\Component\\Content\\Types\\ResourceLocator\\Strategy\\TreeLeafEditStrategy\) does not accept Sulu\\Component\\Content\\Types\\ResourceLocator\\Strategy\\TreeFullEditStrategy\.$#'
+			message: '#^Property Sulu\\Component\\Content\\Tests\\Unit\\Rlp\\Strategy\\TreeFullEditStrategyTest\:\:\$treeStrategy \(Sulu\\Component\\Content\\Types\\ResourceLocator\\Strategy\\TreeLeafEditStrategy\) does not accept Sulu\\Component\\Content\\Types\\ResourceLocator\\Strategy\\TreeFullEditStrategy\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Rlp/Strategy/TreeFullEditStrategyTest.php
@@ -77671,13 +77671,13 @@ parameters:
 			path: src/Sulu/Component/CustomUrl/Tests/Functional/Generator/GeneratorTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\CustomUrl\\Tests\\Unit\\Manager\\CustomUrlManagerTest\:\:getMapping\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\CustomUrl\\Tests\\Unit\\Manager\\Manager\\CustomUrlManagerTest\:\:getMapping\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Tests/Unit/Manager/Manager/CustomUrlManagerTest.php
 
 		-
-			message: '#^Property Sulu\\Component\\CustomUrl\\Tests\\Unit\\Manager\\CustomUrlManagerTest\:\:\$environment is never written, only read\.$#'
+			message: '#^Property Sulu\\Component\\CustomUrl\\Tests\\Unit\\Manager\\Manager\\CustomUrlManagerTest\:\:\$environment is never written, only read\.$#'
 			identifier: property.onlyRead
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Tests/Unit/Manager/Manager/CustomUrlManagerTest.php
@@ -80941,7 +80941,7 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/PathBuilderTest.php
 
 		-
-			message: '#^Property Sulu\\Component\\DocumentManager\\tests\\Unit\\PathBuilderTest\:\:\$pathBuilder has no type specified\.$#'
+			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\PathBuilderTest\:\:\$pathBuilder has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/PathBuilderTest.php
@@ -81073,19 +81073,19 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Query/QueryTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\DocumentManager\\tests\\Unit\\Slugifier\\NodeNameSlugifierTest\:\:provide10eData\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Slugifier\\NodeNameSlugifierTest\:\:provide10eData\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Slugifier/NodeNameSlugifierTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\DocumentManager\\tests\\Unit\\Slugifier\\NodeNameSlugifierTest\:\:testSlugify10e\(\) has parameter \$actual with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Slugifier\\NodeNameSlugifierTest\:\:testSlugify10e\(\) has parameter \$actual with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Slugifier/NodeNameSlugifierTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\DocumentManager\\tests\\Unit\\Slugifier\\NodeNameSlugifierTest\:\:testSlugify10e\(\) has parameter \$expected with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Slugifier\\NodeNameSlugifierTest\:\:testSlugify10e\(\) has parameter \$expected with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Slugifier/NodeNameSlugifierTest.php
@@ -81097,61 +81097,61 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Slugifier/NodeNameSlugifierTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\TestLocaleDocument\:\:getLocale\(\) should return string but returns mixed\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Mapping\\TestLocaleDocument\:\:getLocale\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/LocaleSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\TestLocaleDocument\:\:getOriginalLocale\(\) should return string but returns mixed\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Mapping\\TestLocaleDocument\:\:getOriginalLocale\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/LocaleSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\TestLocaleDocument\:\:setLocale\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Mapping\\TestLocaleDocument\:\:setLocale\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/LocaleSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\TestLocaleDocument\:\:setOriginalLocale\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Mapping\\TestLocaleDocument\:\:setOriginalLocale\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/LocaleSubscriberTest.php
 
 		-
-			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\LocaleSubscriberTest\:\:\$node is never read, only written\.$#'
+			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Mapping\\LocaleSubscriberTest\:\:\$node is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/LocaleSubscriberTest.php
 
 		-
-			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\TestLocaleDocument\:\:\$locale has no type specified\.$#'
+			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Mapping\\TestLocaleDocument\:\:\$locale has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/LocaleSubscriberTest.php
 
 		-
-			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\TestLocaleDocument\:\:\$originalLocale has no type specified\.$#'
+			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Mapping\\TestLocaleDocument\:\:\$originalLocale has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/LocaleSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Mapping\\Mapping\\TestNodeNameDocument\:\:getNodeName\(\) should return string but returns mixed\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Mapping\\TestNodeNameDocument\:\:getNodeName\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/NodeNameSubscriberTest.php
 
 		-
-			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Mapping\\Mapping\\TestNodeNameDocument\:\:\$nodeName has no type specified\.$#'
+			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Mapping\\TestNodeNameDocument\:\:\$nodeName has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/NodeNameSubscriberTest.php
 
 		-
-			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Mapping\\Mapping\\TestNodeNameDocument\:\:\$nodeName is never written, only read\.$#'
+			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Mapping\\TestNodeNameDocument\:\:\$nodeName is never written, only read\.$#'
 			identifier: property.onlyRead
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/NodeNameSubscriberTest.php
@@ -81193,13 +81193,13 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/UuidSubscriberTest.php
 
 		-
-			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Audit\\Path\\AliasFilingSubscriberTest\:\:\$documentManager is never read, only written\.$#'
+			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Path\\AliasFilingSubscriberTest\:\:\$documentManager is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Path/AliasFilingSubscriberTest.php
 
 		-
-			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Audit\\Path\\AliasFilingSubscriberTest\:\:\$parentDocument is never read, only written\.$#'
+			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Path\\AliasFilingSubscriberTest\:\:\$parentDocument is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Path/AliasFilingSubscriberTest.php
@@ -81211,55 +81211,55 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Path/AutoNameSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\DocumentManager\\tests\\Unit\\Subscriber\\Behavior\\Path\\AutoNameSubscriberTest\:\:doTestAutoName\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Path\\AutoNameSubscriberTest\:\:doTestAutoName\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Path/AutoNameSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\DocumentManager\\tests\\Unit\\Subscriber\\Behavior\\Path\\AutoNameSubscriberTest\:\:doTestAutoName\(\) has parameter \$create with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Path\\AutoNameSubscriberTest\:\:doTestAutoName\(\) has parameter \$create with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Path/AutoNameSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\DocumentManager\\tests\\Unit\\Subscriber\\Behavior\\Path\\AutoNameSubscriberTest\:\:doTestAutoName\(\) has parameter \$expectedName with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Path\\AutoNameSubscriberTest\:\:doTestAutoName\(\) has parameter \$expectedName with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Path/AutoNameSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\DocumentManager\\tests\\Unit\\Subscriber\\Behavior\\Path\\AutoNameSubscriberTest\:\:doTestAutoName\(\) has parameter \$hasNode with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Path\\AutoNameSubscriberTest\:\:doTestAutoName\(\) has parameter \$hasNode with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Path/AutoNameSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\DocumentManager\\tests\\Unit\\Subscriber\\Behavior\\Path\\AutoNameSubscriberTest\:\:doTestAutoName\(\) has parameter \$slugifiedName with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Path\\AutoNameSubscriberTest\:\:doTestAutoName\(\) has parameter \$slugifiedName with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Path/AutoNameSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\DocumentManager\\tests\\Unit\\Subscriber\\Behavior\\Path\\AutoNameSubscriberTest\:\:doTestAutoName\(\) has parameter \$title with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Path\\AutoNameSubscriberTest\:\:doTestAutoName\(\) has parameter \$title with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Path/AutoNameSubscriberTest.php
 
 		-
-			message: '#^Property Sulu\\Component\\DocumentManager\\tests\\Unit\\Subscriber\\Behavior\\Path\\AutoNameSubscriberTest\:\:\$metadata is never read, only written\.$#'
+			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Path\\AutoNameSubscriberTest\:\:\$metadata is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Path/AutoNameSubscriberTest.php
 
 		-
-			message: '#^Property Sulu\\Component\\DocumentManager\\tests\\Unit\\Subscriber\\Behavior\\Path\\AutoNameSubscriberTest\:\:\$parentDocument is never read, only written\.$#'
+			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Path\\AutoNameSubscriberTest\:\:\$parentDocument is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Path/AutoNameSubscriberTest.php
 
 		-
-			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Audit\\Path\\BasePathSubscriberTest\:\:\$subscriber \(Sulu\\Component\\DocumentManager\\Subscriber\\Behavior\\Path\\AliasFilingSubscriber\) does not accept Sulu\\Component\\DocumentManager\\Subscriber\\Behavior\\Path\\BasePathSubscriber\.$#'
+			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Path\\BasePathSubscriberTest\:\:\$subscriber \(Sulu\\Component\\DocumentManager\\Subscriber\\Behavior\\Path\\AliasFilingSubscriber\) does not accept Sulu\\Component\\DocumentManager\\Subscriber\\Behavior\\Path\\BasePathSubscriber\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Path/BasePathSubscriberTest.php
@@ -81271,13 +81271,13 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Path/ExplicitSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Audit\\Path\\ExplicitSubscriberTest\:\:resolveOptions\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Path\\ExplicitSubscriberTest\:\:resolveOptions\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Path/ExplicitSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Audit\\Path\\ExplicitSubscriberTest\:\:resolveOptions\(\) has parameter \$options with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Behavior\\Path\\ExplicitSubscriberTest\:\:resolveOptions\(\) has parameter \$options with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Path/ExplicitSubscriberTest.php
@@ -81307,37 +81307,37 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/FindSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Comonent\\DocumentManager\\tests\\Unit\\Subscriber\\Phpcr\\FindSubscriberTest\:\:doTestFind\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Phpcr\\FindSubscriberTest\:\:doTestFind\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/FindSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Comonent\\DocumentManager\\tests\\Unit\\Subscriber\\Phpcr\\FindSubscriberTest\:\:doTestFind\(\) has parameter \$options with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Phpcr\\FindSubscriberTest\:\:doTestFind\(\) has parameter \$options with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/FindSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Comonent\\DocumentManager\\tests\\Unit\\Subscriber\\Phpcr\\FindSubscriberTest\:\:provideFindWithTypeOrClass\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Phpcr\\FindSubscriberTest\:\:provideFindWithTypeOrClass\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/FindSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Comonent\\DocumentManager\\tests\\Unit\\Subscriber\\Phpcr\\FindSubscriberTest\:\:testFindWithTypeOrClass\(\) has parameter \$shouldThrow with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Phpcr\\FindSubscriberTest\:\:testFindWithTypeOrClass\(\) has parameter \$shouldThrow with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/FindSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Comonent\\DocumentManager\\tests\\Unit\\Subscriber\\Phpcr\\FindSubscriberTest\:\:testFindWithTypeOrClass\(\) has parameter \$type with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Phpcr\\FindSubscriberTest\:\:testFindWithTypeOrClass\(\) has parameter \$type with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/FindSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Comonent\\DocumentManager\\tests\\Unit\\Subscriber\\Phpcr\\FindSubscriberTest\:\:testFindWithTypeOrClass\(\) has parameter \$typeOrClass with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Phpcr\\FindSubscriberTest\:\:testFindWithTypeOrClass\(\) has parameter \$typeOrClass with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/FindSubscriberTest.php
@@ -81349,7 +81349,7 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/FindSubscriberTest.php
 
 		-
-			message: '#^Property Sulu\\Comonent\\DocumentManager\\Tests\\Unit\\Subscriber\\GeneralSubscriberTest\:\:\$refreshEvent is never read, only written\.$#'
+			message: '#^Property Sulu\\Component\\DocumentManager\\Tests\\Unit\\Subscriber\\Phpcr\\GeneralSubscriberTest\:\:\$refreshEvent is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/GeneralSubscriberTest.php
@@ -87259,109 +87259,109 @@ parameters:
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\General\\Driver\\ListXmlLoaderTest\:\:assertConcatenationMetadata\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\ListXmlLoaderTest\:\:assertConcatenationMetadata\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\General\\Driver\\ListXmlLoaderTest\:\:assertConcatenationMetadata\(\) has parameter \$expected with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\ListXmlLoaderTest\:\:assertConcatenationMetadata\(\) has parameter \$expected with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\General\\Driver\\ListXmlLoaderTest\:\:assertCountMetadata\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\ListXmlLoaderTest\:\:assertCountMetadata\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\General\\Driver\\ListXmlLoaderTest\:\:assertCountMetadata\(\) has parameter \$expected with no value type specified in iterable type array\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\ListXmlLoaderTest\:\:assertCountMetadata\(\) has parameter \$expected with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\General\\Driver\\ListXmlLoaderTest\:\:assertFieldMetadata\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\ListXmlLoaderTest\:\:assertFieldMetadata\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\General\\Driver\\ListXmlLoaderTest\:\:assertFieldMetadata\(\) has parameter \$expected with no value type specified in iterable type array\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\ListXmlLoaderTest\:\:assertFieldMetadata\(\) has parameter \$expected with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\General\\Driver\\ListXmlLoaderTest\:\:assertGroupConcatMetadata\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\ListXmlLoaderTest\:\:assertGroupConcatMetadata\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\General\\Driver\\ListXmlLoaderTest\:\:assertGroupConcatMetadata\(\) has parameter \$expected with no value type specified in iterable type array\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\ListXmlLoaderTest\:\:assertGroupConcatMetadata\(\) has parameter \$expected with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\General\\Driver\\ListXmlLoaderTest\:\:assertIdentityMetadata\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\ListXmlLoaderTest\:\:assertIdentityMetadata\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\General\\Driver\\ListXmlLoaderTest\:\:assertIdentityMetadata\(\) has parameter \$expected with no value type specified in iterable type array\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\ListXmlLoaderTest\:\:assertIdentityMetadata\(\) has parameter \$expected with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\General\\Driver\\ListXmlLoaderTest\:\:assertJoin\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\ListXmlLoaderTest\:\:assertJoin\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\General\\Driver\\ListXmlLoaderTest\:\:assertJoin\(\) has parameter \$expected with no value type specified in iterable type array\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\ListXmlLoaderTest\:\:assertJoin\(\) has parameter \$expected with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\General\\Driver\\ListXmlLoaderTest\:\:assertPropertyMetadata\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\ListXmlLoaderTest\:\:assertPropertyMetadata\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\General\\Driver\\ListXmlLoaderTest\:\:assertPropertyMetadata\(\) has parameter \$expected with no value type specified in iterable type array\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\ListXmlLoaderTest\:\:assertPropertyMetadata\(\) has parameter \$expected with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\General\\Driver\\ListXmlLoaderTest\:\:assertSingleMetadata\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\ListXmlLoaderTest\:\:assertSingleMetadata\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\General\\Driver\\ListXmlLoaderTest\:\:assertSingleMetadata\(\) has parameter \$expected with no value type specified in iterable type array\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\ListXmlLoaderTest\:\:assertSingleMetadata\(\) has parameter \$expected with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
 
 		-
-			message: '#^Parameter \#1 \$expected of method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\General\\Driver\\ListXmlLoaderTest\:\:assertFieldMetadata\(\) expects array, mixed given\.$#'
+			message: '#^Parameter \#1 \$expected of method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\ListXmlLoaderTest\:\:assertFieldMetadata\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
 
 		-
-			message: '#^Parameter \#1 \$expected of method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\General\\Driver\\ListXmlLoaderTest\:\:assertJoin\(\) expects array, mixed given\.$#'
+			message: '#^Parameter \#1 \$expected of method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\ListXmlLoaderTest\:\:assertJoin\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
@@ -87373,7 +87373,7 @@ parameters:
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
 
 		-
-			message: '#^Parameter \#2 \$fieldMetadata of method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\General\\Driver\\ListXmlLoaderTest\:\:assertFieldMetadata\(\) expects Sulu\\Component\\Rest\\ListBuilder\\Metadata\\FieldMetadata, mixed given\.$#'
+			message: '#^Parameter \#2 \$fieldMetadata of method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Metadata\\ListXmlLoaderTest\:\:assertFieldMetadata\(\) expects Sulu\\Component\\Rest\\ListBuilder\\Metadata\\FieldMetadata, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
@@ -89287,13 +89287,13 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\SmartContent\\Tests\\Orm\\DataProviderRepositoryTraitTest\:\:findByFilters\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
+			message: '#^Method Sulu\\Component\\SmartContent\\Tests\\Unit\\Orm\\DataProviderRepositoryTraitTest\:\:findByFilters\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\SmartContent\\Tests\\Orm\\DataProviderRepositoryTraitTest\:\:findByFiltersIds\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
+			message: '#^Method Sulu\\Component\\SmartContent\\Tests\\Unit\\Orm\\DataProviderRepositoryTraitTest\:\:findByFiltersIds\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
@@ -89311,7 +89311,7 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: '#^Parameter \#1 \$datasource of method Sulu\\Component\\SmartContent\\Tests\\Orm\\DataProviderRepositoryTraitTest\:\:appendDatasource\(\) expects int\|string, mixed given\.$#'
+			message: '#^Parameter \#1 \$datasource of method Sulu\\Component\\SmartContent\\Tests\\Unit\\Orm\\DataProviderRepositoryTraitTest\:\:appendDatasource\(\) expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
@@ -89329,7 +89329,7 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: '#^Parameter \#1 \$sortBy of method Sulu\\Component\\SmartContent\\Tests\\Orm\\DataProviderRepositoryTraitTest\:\:appendSortBy\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$sortBy of method Sulu\\Component\\SmartContent\\Tests\\Unit\\Orm\\DataProviderRepositoryTraitTest\:\:appendSortBy\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
@@ -89347,7 +89347,7 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: '#^Parameter \#1 \$value of method Sulu\\Component\\SmartContent\\Tests\\Orm\\DataProviderRepositoryTraitTest\:\:getBoolean\(\) expects bool\|string, mixed given\.$#'
+			message: '#^Parameter \#1 \$value of method Sulu\\Component\\SmartContent\\Tests\\Unit\\Orm\\DataProviderRepositoryTraitTest\:\:getBoolean\(\) expects bool\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
@@ -89359,7 +89359,7 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: '#^Parameter \#2 \$sortMethod of method Sulu\\Component\\SmartContent\\Tests\\Orm\\DataProviderRepositoryTraitTest\:\:appendSortBy\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#2 \$sortMethod of method Sulu\\Component\\SmartContent\\Tests\\Unit\\Orm\\DataProviderRepositoryTraitTest\:\:appendSortBy\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
@@ -89371,13 +89371,13 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: '#^Parameter \#3 \$values of method Sulu\\Component\\SmartContent\\Tests\\Orm\\DataProviderRepositoryTraitTest\:\:appendRelation\(\) expects array\<int\>, array\<int, mixed\> given\.$#'
+			message: '#^Parameter \#3 \$values of method Sulu\\Component\\SmartContent\\Tests\\Unit\\Orm\\DataProviderRepositoryTraitTest\:\:appendRelation\(\) expects array\<int\>, array\<int, mixed\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: '#^Parameter \#3 \$values of method Sulu\\Component\\SmartContent\\Tests\\Orm\\DataProviderRepositoryTraitTest\:\:appendRelation\(\) expects array\<int\>, mixed given\.$#'
+			message: '#^Parameter \#3 \$values of method Sulu\\Component\\SmartContent\\Tests\\Unit\\Orm\\DataProviderRepositoryTraitTest\:\:appendRelation\(\) expects array\<int\>, mixed given\.$#'
 			identifier: argument.type
 			count: 5
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
@@ -89983,79 +89983,79 @@ parameters:
 			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Mapper\\Translation\\SuluNodeHelperTest\:\:provideExtractSnippetTypeFromPath\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\Util\\Tests\\Unit\\SuluNodeHelperTest\:\:provideExtractSnippetTypeFromPath\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Mapper\\Translation\\SuluNodeHelperTest\:\:provideExtractWebspaceFromPath\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\Util\\Tests\\Unit\\SuluNodeHelperTest\:\:provideExtractWebspaceFromPath\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Mapper\\Translation\\SuluNodeHelperTest\:\:provideGetStructureTypeForNode\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\Util\\Tests\\Unit\\SuluNodeHelperTest\:\:provideGetStructureTypeForNode\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Mapper\\Translation\\SuluNodeHelperTest\:\:provideHasSuluNodeType\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\Util\\Tests\\Unit\\SuluNodeHelperTest\:\:provideHasSuluNodeType\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Mapper\\Translation\\SuluNodeHelperTest\:\:testExtractSnippetTypeFromPath\(\) has parameter \$expected with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Util\\Tests\\Unit\\SuluNodeHelperTest\:\:testExtractSnippetTypeFromPath\(\) has parameter \$expected with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Mapper\\Translation\\SuluNodeHelperTest\:\:testExtractSnippetTypeFromPath\(\) has parameter \$path with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Util\\Tests\\Unit\\SuluNodeHelperTest\:\:testExtractSnippetTypeFromPath\(\) has parameter \$path with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Mapper\\Translation\\SuluNodeHelperTest\:\:testExtractSnippetTypeFromPath\(\) has parameter \$valid with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Util\\Tests\\Unit\\SuluNodeHelperTest\:\:testExtractSnippetTypeFromPath\(\) has parameter \$valid with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Mapper\\Translation\\SuluNodeHelperTest\:\:testExtractWebspaceFromPath\(\) has parameter \$expected with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Util\\Tests\\Unit\\SuluNodeHelperTest\:\:testExtractWebspaceFromPath\(\) has parameter \$expected with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Mapper\\Translation\\SuluNodeHelperTest\:\:testExtractWebspaceFromPath\(\) has parameter \$path with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Util\\Tests\\Unit\\SuluNodeHelperTest\:\:testExtractWebspaceFromPath\(\) has parameter \$path with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Mapper\\Translation\\SuluNodeHelperTest\:\:testGetStructureTypeForNode\(\) has parameter \$expected with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Util\\Tests\\Unit\\SuluNodeHelperTest\:\:testGetStructureTypeForNode\(\) has parameter \$expected with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Mapper\\Translation\\SuluNodeHelperTest\:\:testGetStructureTypeForNode\(\) has parameter \$nodeType with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Util\\Tests\\Unit\\SuluNodeHelperTest\:\:testGetStructureTypeForNode\(\) has parameter \$nodeType with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Mapper\\Translation\\SuluNodeHelperTest\:\:testHasSuluNodeType\(\) has parameter \$expected with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Util\\Tests\\Unit\\SuluNodeHelperTest\:\:testHasSuluNodeType\(\) has parameter \$expected with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Mapper\\Translation\\SuluNodeHelperTest\:\:testHasSuluNodeType\(\) has parameter \$nodeTypes with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Util\\Tests\\Unit\\SuluNodeHelperTest\:\:testHasSuluNodeType\(\) has parameter \$nodeTypes with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
@@ -92755,19 +92755,7 @@ parameters:
 			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
 
 		-
-			message: '#^Property Sulu\\Component\\Webspace\\Tests\\Unit\\WebspaceCollectionBuilderTest\:\:\$logger \(PHPUnit\\Framework\\MockObject_MockObject\) does not accept PHPUnit\\Framework\\MockObject\\MockObject&Psr\\Log\\LoggerInterface\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Property Sulu\\Component\\Webspace\\Tests\\Unit\\WebspaceCollectionBuilderTest\:\:\$logger has unknown class PHPUnit\\Framework\\MockObject_MockObject as its type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Property Sulu\\Component\\Webspace\\Tests\\Unit\\WebspaceCollectionBuilderTest\:\:\$logger is never read, only written\.$#'
+			message: '#^Property Sulu\\Component\\Webspace\\Tests\\Unit\\Manager\\WebspaceCollectionBuilderTest\:\:\$logger is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php

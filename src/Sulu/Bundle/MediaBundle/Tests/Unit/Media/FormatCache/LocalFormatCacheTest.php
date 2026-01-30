@@ -9,10 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\FormatCache;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\FormatCache;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Bundle\MediaBundle\Media\FormatCache\LocalFormatCache;
 use Symfony\Component\Filesystem\Filesystem;
 
 class LocalFormatCacheTest extends TestCase

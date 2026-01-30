@@ -9,13 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PageBundle\Search\EventListener;
+namespace Sulu\Bundle\PageBundle\Tests\Unit\Search\EventListener;
 
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\PageBundle\Search\EventListener\PermissionListener;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;

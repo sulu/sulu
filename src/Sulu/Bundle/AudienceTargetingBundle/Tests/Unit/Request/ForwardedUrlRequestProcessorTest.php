@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Webspace\Tests\Unit\Analyzer\Attributes;
+namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Request;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AudienceTargetingBundle\Request\ForwardedUrlRequestProcessor;

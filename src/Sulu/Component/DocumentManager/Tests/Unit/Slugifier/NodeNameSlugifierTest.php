@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\DocumentManager\tests\Unit\Slugifier;
+namespace Sulu\Component\DocumentManager\Tests\Unit\Slugifier;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;

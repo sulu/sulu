@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\FormatManager;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -20,6 +20,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
+use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManager;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Symfony\Component\ErrorHandler\BufferingLogger;

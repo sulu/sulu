@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Content;
+namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Snippet;
 
 use PHPCR\SessionInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;

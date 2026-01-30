@@ -9,6 +9,8 @@
  * with this source code in the file LICENSE.
  */
 
+namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Resolver;
+
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;

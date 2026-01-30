@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Cache\Tests\Unit;
+namespace Sulu\Component\Cache\Tests\Unit\Cache;
 
 use Doctrine\Common\Cache\CacheProvider;
 use PHPUnit\Framework\TestCase;

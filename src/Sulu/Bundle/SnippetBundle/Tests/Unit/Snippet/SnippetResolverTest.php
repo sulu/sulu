@@ -9,13 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SnippetBundle\Snippet;
+namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Snippet;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
+use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Compat\StructureInterface;

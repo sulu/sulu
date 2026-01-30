@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\DocumentManager\tests\Unit\Subscriber\Behavior\Path;
+namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Path;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
