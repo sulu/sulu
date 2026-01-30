@@ -247,7 +247,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
             $this->snippetAreaReferenceStore
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             ['title' => 'Test Snippet EN'],
             $twigExtension->loadByArea('test', 'demo_io', null, true)
         );
