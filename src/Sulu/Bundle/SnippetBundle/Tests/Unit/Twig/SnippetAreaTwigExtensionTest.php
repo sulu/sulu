@@ -222,7 +222,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLoadByAreWithLoadExcerpt(): void
+    public function testLoadByAreaWithLoadExcerpt(): void
     {
         $this->defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
