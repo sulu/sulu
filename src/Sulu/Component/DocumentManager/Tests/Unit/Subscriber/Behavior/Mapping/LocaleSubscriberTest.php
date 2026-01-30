@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior;
+namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Mapping;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;

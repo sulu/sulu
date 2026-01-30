@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Audit\Path;
+namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Path;
 
 use PHPCR\ItemExistsException;
 use PHPCR\NodeInterface;

@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Webspace\Tests\Unit;
+namespace Sulu\Component\Webspace\Tests\Unit\Manager;
 
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;

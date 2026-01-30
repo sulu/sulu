@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SecurityBundle\Tests\Unit\SingleSignOn\Adapter\OpenId;
+namespace Sulu\Bundle\SecurityBundle\Tests\Unit\SingleSignOn;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
