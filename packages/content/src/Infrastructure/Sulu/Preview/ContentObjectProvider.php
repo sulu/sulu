@@ -24,6 +24,7 @@ use Sulu\Bundle\PreviewBundle\Preview\PreviewContext;
 use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapperInterface;
+use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -44,6 +45,7 @@ class ContentObjectProvider implements PreviewDefaultsProviderInterface
         private EntityManagerInterface $entityManager,
         private ContentAggregatorInterface $contentAggregator,
         private ContentDataMapperInterface $contentDataMapper,
+        private ContentMergerInterface $contentMerger,
         private string $contentRichEntityClass,
         private ?string $securityContext = null
     ) {
@@ -128,6 +130,8 @@ class ContentObjectProvider implements PreviewDefaultsProviderInterface
             $previewDimensionContentCollection->getDimensionAttributes(),
             $data
         );
+
+        $defaults['object'] = $this->contentMerger->merge($previewDimensionContentCollection);
 
         return $defaults;
     }
