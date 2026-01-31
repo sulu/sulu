@@ -443,6 +443,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_content.content_data_mapper'),
+                new Reference('sulu_content.content_merger'),
                 '%sulu.model.page.class%',
                 null, // pages resolve their webspace context via SecuredEntityInterface
             ])
