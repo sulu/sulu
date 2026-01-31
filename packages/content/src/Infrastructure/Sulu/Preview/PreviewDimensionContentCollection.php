@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Infrastructure\Sulu\Preview;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Sulu\Content\Domain\Model\DimensionContentCollectionInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 
@@ -23,10 +22,18 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
  * @template-covariant T of DimensionContentInterface
  *
  * @implements DimensionContentCollectionInterface<T>
- * @implements \IteratorAggregate<T>
  */
-class PreviewDimensionContentCollection implements \IteratorAggregate, DimensionContentCollectionInterface
+class PreviewDimensionContentCollection implements DimensionContentCollectionInterface
 {
+    /**
+     * @var T
+     */
+    private readonly DimensionContentInterface $unlocalizedDimensionContent;
+    /**
+     * @var T
+     */
+    private readonly DimensionContentInterface $localizedDimensionContent;
+
     /**
      * @param T $previewDimensionContent
      */
@@ -34,6 +41,8 @@ class PreviewDimensionContentCollection implements \IteratorAggregate, Dimension
         private DimensionContentInterface $previewDimensionContent,
         private string $previewLocale
     ) {
+        $this->localizedDimensionContent = clone $previewDimensionContent;
+        $this->unlocalizedDimensionContent = clone $previewDimensionContent;
     }
 
     public function getDimensionContentClass(): string
@@ -43,7 +52,11 @@ class PreviewDimensionContentCollection implements \IteratorAggregate, Dimension
 
     public function getDimensionContent(array $dimensionAttributes): ?DimensionContentInterface
     {
-        return $this->previewDimensionContent;
+        if (($dimensionAttributes['locale'] ?? null) === null) {
+            return $this->unlocalizedDimensionContent;
+        } else {
+            return $this->localizedDimensionContent;
+        }
     }
 
     public function getDimensionAttributes(): array
@@ -56,11 +69,15 @@ class PreviewDimensionContentCollection implements \IteratorAggregate, Dimension
 
     public function getIterator(): \Traversable
     {
-        return new ArrayCollection([$this->previewDimensionContent]);
+        return new \ArrayIterator([
+            $this->previewDimensionContent,
+            $this->localizedDimensionContent,
+            $this->unlocalizedDimensionContent,
+        ]);
     }
 
     public function count(): int
     {
-        return 1;
+        return 3;
     }
 }
