@@ -36,6 +36,10 @@ class XmlTemplateFormMetadataLoader implements FormMetadataLoaderInterface, Cach
 
     public function getMetadata(string $key, ?string $locale = null, array $metadataOptions = []): ?TypedFormMetadata
     {
+        if (false === \array_key_exists($key, $this->templateDirectories)) {
+            return null;
+        }
+
         $path = $this->getCachePath($key);
 
         $typedFormMetadata = @include $path;
