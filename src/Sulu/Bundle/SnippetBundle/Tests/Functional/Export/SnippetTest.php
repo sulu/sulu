@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PageBundle\Tests\Functional\Export;
+namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Export;
 
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;

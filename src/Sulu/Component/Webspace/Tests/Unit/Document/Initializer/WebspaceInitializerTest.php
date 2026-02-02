@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Webspace\Document\Initializer;
+namespace Sulu\Component\Webspace\Tests\Unit\Document\Initializer;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -23,6 +23,7 @@ use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\DocumentManager\PathBuilder;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Document\Initializer\WebspaceInitializer;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;

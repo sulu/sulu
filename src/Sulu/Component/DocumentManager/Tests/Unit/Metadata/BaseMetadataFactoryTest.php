@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\DocumentManager\tests\Unit\Metadata;
+namespace Sulu\Component\DocumentManager\Tests\Unit\Metadata;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
