@@ -221,8 +221,8 @@
         "symfony/monolog-bundle": "^3.1"
     },
     "autoload": {
-        "psr-0": {
-            "Sulu\\": "src/"
+        "psr-4": {
+            "Sulu\\": "src/Sulu/"
         },
         "exclude-from-classmap": [
             "src/Sulu/Component/*/Tests/",
