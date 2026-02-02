@@ -279,7 +279,7 @@ class UserControllerTest extends SuluTestCase
     {
         $this->client->jsonRequest(
             'POST',
-            '/api/users?contactId=' . $this->contact1->getId(),
+            '/api/users?contactId=' . (int) $this->contact1->getId(),
             [
                 'username' => 'manager',
                 'email' => 'manager@test.com',
@@ -844,7 +844,7 @@ class UserControllerTest extends SuluTestCase
     {
         $this->client->jsonRequest(
             'GET',
-            '/api/users?contactId=' . $this->contact2->getId()
+            '/api/users?contactId=' . (int) $this->contact2->getId()
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());

@@ -1822,7 +1822,7 @@ class ContactControllerTest extends SuluTestCase
         $this->em->persist($contact3);
         $this->em->flush();
 
-        $ids = \sprintf('%s,%s,%s', $contact1->getId(), $contact2->getId(), $contact3->getId());
+        $ids = \sprintf('%s,%s,%s', (int) $contact1->getId(), (int) $contact2->getId(), (int) $contact3->getId());
 
         $this->client->jsonRequest('GET', '/api/contacts?flat=true&ids=' . $ids . '&fields=id');
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -1860,7 +1860,7 @@ class ContactControllerTest extends SuluTestCase
         $this->em->persist($contact3);
         $this->em->flush();
 
-        $ids = \sprintf('%s,%s,%s', $contact3->getId(), $contact1->getId(), $contact2->getId());
+        $ids = \sprintf('%s,%s,%s', (int) $contact3->getId(), (int) $contact1->getId(), (int) $contact2->getId());
 
         $this->client->jsonRequest('GET', '/api/contacts?flat=true&ids=' . $ids . '&fields=id');
         $response = \json_decode($this->client->getResponse()->getContent());

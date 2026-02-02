@@ -252,6 +252,9 @@ class Contact extends ApiEntity implements ContactInterface
         $this->medias = new ArrayCollection();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId()
     {
         return $this->id;

@@ -193,7 +193,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             $this->em->remove($contact);
 
             $this->domainEventCollector->collect(
-                new ContactRemovedEvent($contactId, $contactFullName)
+                new ContactRemovedEvent((int) $contactId, $contactFullName)
             );
 
             /** @var UserInterface|null $user */

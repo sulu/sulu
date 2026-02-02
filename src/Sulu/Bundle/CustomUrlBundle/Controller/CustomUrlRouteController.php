@@ -78,6 +78,9 @@ class CustomUrlRouteController extends AbstractRestController implements Secured
         return CustomUrlAdmin::getCustomUrlSecurityContext($request->get('webspace'));
     }
 
+    /**
+     * @return string|null
+     */
     public function getLocale(Request $request)
     {
         return null;
