@@ -27325,24 +27325,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Entity\\Collection\:\:\$changer type mapping mismatch\: property can contain Sulu\\Component\\Security\\Authentication\\UserInterface\|null but database expects Sulu\\Bundle\\SecurityBundle\\Entity\\User\|null\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Entity\\Collection\:\:\$children type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection\<int, Sulu\\Bundle\\MediaBundle\\Entity\\CollectionInterface\> but database expects Doctrine\\Common\\Collections\\Collection&iterable\<Sulu\\Bundle\\MediaBundle\\Entity\\Collection\>\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Entity\\Collection\:\:\$creator type mapping mismatch\: property can contain Sulu\\Component\\Security\\Authentication\\UserInterface\|null but database expects Sulu\\Bundle\\SecurityBundle\\Entity\\User\|null\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\MediaBundle\\Entity\\Collection\:\:\$defaultMeta \(Sulu\\Bundle\\MediaBundle\\Entity\\CollectionMeta\) does not accept Sulu\\Bundle\\MediaBundle\\Entity\\CollectionMeta\|null\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -27350,12 +27332,6 @@ parameters:
 
 		-
 			message: '#^Property Sulu\\Bundle\\MediaBundle\\Entity\\Collection\:\:\$defaultMeta type mapping mismatch\: database can contain Sulu\\Bundle\\MediaBundle\\Entity\\CollectionMeta\|null but property expects Sulu\\Bundle\\MediaBundle\\Entity\\CollectionMeta\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Entity\\Collection\:\:\$media type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection\<int, Sulu\\Bundle\\MediaBundle\\Entity\\MediaInterface\> but database expects Doctrine\\Common\\Collections\\Collection&iterable\<Sulu\\Bundle\\MediaBundle\\Entity\\Media\>\.$#'
 			identifier: doctrine.associationType
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
@@ -58969,12 +58945,6 @@ parameters:
 			path: src/Sulu/Bundle/TrashBundle/Application/TrashManager/TrashManager.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\TrashBundle\\Domain\\Model\\TrashItem\:\:\$user type mapping mismatch\: property can contain Sulu\\Component\\Security\\Authentication\\UserInterface\|null but database expects Sulu\\Bundle\\SecurityBundle\\Entity\\User\|null\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Domain/Model/TrashItem.php
-
-		-
 			message: '#^Call to method getUser\(\) on an unknown class Symfony\\Component\\Security\\Core\\Security\.$#'
 			identifier: class.notFound
 			count: 1
@@ -89281,7 +89251,7 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: '#^Class Sulu\\Component\\SmartContent\\Tests\\Orm\\Query extends generic class Doctrine\\ORM\\AbstractQuery but does not specify its types\: TKey, TResult$#'
+			message: '#^Class Sulu\\Component\\SmartContent\\Tests\\Unit\\Orm\\Query extends generic class Doctrine\\ORM\\AbstractQuery but does not specify its types\: TKey, TResult$#'
 			identifier: missingType.generics
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
