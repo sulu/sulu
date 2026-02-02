@@ -18,10 +18,16 @@ use Symfony\Component\DependencyInjection\Reference;
 
 return static function(ContainerConfigurator $container) {
     $services = $container->services();
+
     $services->set('sulu_media.ffmpeg', FFMpeg::class)
         ->lazy()
         ->args([
-            ['ffmpeg.binaries' => '%sulu_media.ffmpeg.binary%', 'ffprobe.binaries' => '%sulu_media.ffprobe.binary%', 'timeout' => '%sulu_media.ffmpeg.binary_timeout%', 'ffmpeg.threads' => '%sulu_media.ffmpeg.threads_count%'],
+            [
+                'ffmpeg.binaries' => '%sulu_media.ffmpeg.binary%',
+                'ffprobe.binaries' => '%sulu_media.ffprobe.binary%',
+                'timeout' => '%sulu_media.ffmpeg.binary_timeout%',
+                'ffmpeg.threads' => '%sulu_media.ffmpeg.threads_count%',
+            ],
             new Reference('logger', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
         ->factory([FFMpeg::class, 'create']);
@@ -29,7 +35,10 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_media.ffprobe', FFProbe::class)
         ->lazy()
         ->args([
-            ['ffmpeg.binaries' => '%sulu_media.ffmpeg.binary%', 'ffprobe.binaries' => '%sulu_media.ffprobe.binary%'],
+            [
+                'ffmpeg.binaries' => '%sulu_media.ffmpeg.binary%',
+                'ffprobe.binaries' => '%sulu_media.ffprobe.binary%',
+            ],
             new Reference('logger', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
         ->factory([FFProbe::class, 'create']);
