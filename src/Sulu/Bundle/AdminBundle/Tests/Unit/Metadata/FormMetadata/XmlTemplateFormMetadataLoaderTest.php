@@ -177,4 +177,33 @@ class XmlTemplateFormMetadataLoaderTest extends TestCase
 
         $this->assertInstanceOf(TypedFormMetadata::class, $loadedMetadata);
     }
+
+    public function testGetMetadataNoAutoRebuildsInDebugModeUnknownKey(): void
+    {
+        $debugLoader = new XmlTemplateFormMetadataLoader(
+            $this->templateXmlLoader->reveal(),
+            $this->fieldMetadataValidator->reveal(),
+            [
+                'page' => [
+                    'default_type' => 'default',
+                    'directories' => [__DIR__ . '/dummy-templates'],
+                ],
+            ],
+            self::getCacheDir(),
+            true
+        );
+
+        $this->templateXmlLoader->load(Argument::cetera())
+            ->willReturn($this->createFormMetadata('default', [
+                $this->createFieldMetadata('title', 'text_line'),
+            ]))
+            ->shouldNotBeCalled();
+        $this->fieldMetadataValidator->validate(Argument::cetera())
+            ->shouldNotBeCalled();
+
+        $loadedMetadata = $debugLoader->getMetadata('contact_details', 'en');
+
+        $this->assertNull($loadedMetadata);
+        $this->assertFileDoesNotExist(self::getCacheDir() . '/page.php');
+    }
 }
