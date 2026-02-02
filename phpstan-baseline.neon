@@ -15067,7 +15067,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
 
 		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\ContactBundle\\Controller\\ContactController\:\:getList\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\ContactBundle\\Controller\\ContactController\:\:getList\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
@@ -15421,12 +15421,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
 		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepository\:\:countDistinctAccountChildrenAndContacts\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -15706,12 +15700,6 @@ parameters:
 			message: '#^Binary operation "\." between ''entity\.'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
 		-
@@ -16810,12 +16798,6 @@ parameters:
 			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 48
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$middleName of method Sulu\\Bundle\\ContactBundle\\Entity\\Contact\:\:setMiddleName\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -26827,7 +26809,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaPreviewController.php
 
 		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\MediaBundle\\Media\\Manager\\MediaManagerInterface\:\:getById\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\MediaBundle\\Media\\Manager\\MediaManagerInterface\:\:getById\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaPreviewController.php
@@ -27343,6 +27325,24 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
 
 		-
+			message: '#^Property Sulu\\Bundle\\MediaBundle\\Entity\\Collection\:\:\$changer type mapping mismatch\: property can contain Sulu\\Component\\Security\\Authentication\\UserInterface\|null but database expects Sulu\\Bundle\\SecurityBundle\\Entity\\User\|null\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\MediaBundle\\Entity\\Collection\:\:\$children type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection\<int, Sulu\\Bundle\\MediaBundle\\Entity\\CollectionInterface\> but database expects Doctrine\\Common\\Collections\\Collection&iterable\<Sulu\\Bundle\\MediaBundle\\Entity\\Collection\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\MediaBundle\\Entity\\Collection\:\:\$creator type mapping mismatch\: property can contain Sulu\\Component\\Security\\Authentication\\UserInterface\|null but database expects Sulu\\Bundle\\SecurityBundle\\Entity\\User\|null\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
+
+		-
 			message: '#^Property Sulu\\Bundle\\MediaBundle\\Entity\\Collection\:\:\$defaultMeta \(Sulu\\Bundle\\MediaBundle\\Entity\\CollectionMeta\) does not accept Sulu\\Bundle\\MediaBundle\\Entity\\CollectionMeta\|null\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -27350,6 +27350,12 @@ parameters:
 
 		-
 			message: '#^Property Sulu\\Bundle\\MediaBundle\\Entity\\Collection\:\:\$defaultMeta type mapping mismatch\: database can contain Sulu\\Bundle\\MediaBundle\\Entity\\CollectionMeta\|null but property expects Sulu\\Bundle\\MediaBundle\\Entity\\CollectionMeta\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\MediaBundle\\Entity\\Collection\:\:\$media type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection\<int, Sulu\\Bundle\\MediaBundle\\Entity\\MediaInterface\> but database expects Doctrine\\Common\\Collections\\Collection&iterable\<Sulu\\Bundle\\MediaBundle\\Entity\\Media\>\.$#'
 			identifier: doctrine.associationType
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
@@ -27751,12 +27757,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
 		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
 			message: '#^Default value of the parameter \#6 \$options \(array\{\}\) of method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:findByFilters\(\) is incompatible with type array\{webspaceKey\?\: string, locale\: string\}\.$#'
 			identifier: parameter.defaultValue
 			count: 1
@@ -28079,12 +28079,6 @@ parameters:
 			identifier: missingType.generics
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/EventListener/MediaAudienceTargetingSubscriber.php
-
-		-
-			message: '#^Parameter \#1 \$files of method Sulu\\Bundle\\MediaBundle\\FileInspector\\UploadFileSubscriber\:\:inspectFiles\(\) expects array\<string, mixed\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/FileInspector/UploadFileSubscriber.php
 
 		-
 			message: '#^Strict comparison using \!\=\= between null and string will always evaluate to true\.$#'
@@ -36535,12 +36529,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Controller\\PageResourcelocatorController\:\:getLocale\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/PageResourcelocatorController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Controller\\PageResourcelocatorController\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -36583,7 +36571,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/PageResourcelocatorController.php
 
 		-
-			message: '#^Parameter \#4 \$languageCode of method Sulu\\Bundle\\PageBundle\\Repository\\ResourceLocatorRepositoryInterface\:\:generate\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#4 \$languageCode of method Sulu\\Bundle\\PageBundle\\Repository\\ResourceLocatorRepositoryInterface\:\:generate\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/PageResourcelocatorController.php
@@ -36679,12 +36667,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/SmartContentItemController.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Controller\\SmartContentItemController\:\:getLocale\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/SmartContentItemController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Controller\\SmartContentItemController\:\:getParams\(\) has parameter \$params with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -36775,7 +36757,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/SmartContentItemController.php
 
 		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\PageBundle\\Teaser\\TeaserManagerInterface\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\PageBundle\\Teaser\\TeaserManagerInterface\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/TeaserController.php
@@ -55273,12 +55255,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
 
 		-
-			message: '#^Parameter \#2 \$default of method Symfony\\Component\\HttpFoundation\\InputBag\<string\>\:\:get\(\) expects string\|null, false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
-
-		-
 			message: '#^Parameter \#2 \$document of method Sulu\\Bundle\\SnippetBundle\\Controller\\SnippetController\:\:checkAreaSnippet\(\) expects Sulu\\Bundle\\SnippetBundle\\Document\\SnippetDocument, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -58991,6 +58967,12 @@ parameters:
 			identifier: missingType.generics
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/Application/TrashManager/TrashManager.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\TrashBundle\\Domain\\Model\\TrashItem\:\:\$user type mapping mismatch\: property can contain Sulu\\Component\\Security\\Authentication\\UserInterface\|null but database expects Sulu\\Bundle\\SecurityBundle\\Entity\\User\|null\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Sulu/Bundle/TrashBundle/Domain/Model/TrashItem.php
 
 		-
 			message: '#^Call to method getUser\(\) on an unknown class Symfony\\Component\\Security\\Core\\Security\.$#'
@@ -70795,12 +70777,6 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
 
 		-
-			message: '#^Parameter \#3 \$context of method Sulu\\Component\\Content\\Metadata\\Loader\\AbstractLoader\:\:loadMeta\(\) expects DOMNode\|null, DOMNameSpaceNode\|DOMNode given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
-
-		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
 			count: 7
@@ -81559,12 +81535,6 @@ parameters:
 			path: src/Sulu/Component/Hash/AuditableHasher.php
 
 		-
-			message: '#^Parameter \#2 \$default of method Symfony\\Component\\HttpFoundation\\InputBag\<string\>\:\:get\(\) expects string\|null, false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Hash/RequestHashChecker.php
-
-		-
 			message: '#^Method Sulu\\Component\\Hash\\Serializer\\Subscriber\\HashSerializeEventSubscriber\:\:getSubscribedEvents\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -83845,12 +83815,6 @@ parameters:
 			path: src/Sulu/Component/Rest/AbstractRestController.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\AbstractRestController\:\:getLocale\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Rest/AbstractRestController.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\AbstractRestController\:\:getUser\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -84487,12 +84451,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\DoctrineListBuilder\:\:encodeAlias\(\) should return T of array\<string\>\|string but returns string\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\DoctrineListBuilder\:\:execute\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -84691,40 +84649,16 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineDescriptor.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\FieldDescriptor\\DoctrineDescriptor\:\:encodeAlias\(\) should return T of array\<string\>\|string but returns string\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineDescriptor.php
-
-		-
 			message: '#^Property Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\FieldDescriptor\\DoctrineDescriptor\:\:\$joins \(array\<Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\FieldDescriptor\\DoctrineJoinDescriptor\>\) does not accept array\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineDescriptor.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\FieldDescriptor\\DoctrineFieldDescriptor\:\:encodeAlias\(\) should return T of array\<string\>\|string but returns string\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineFieldDescriptor.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\FieldDescriptor\\DoctrineFieldDescriptor\:\:getJoins\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineFieldDescriptor.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\FieldDescriptor\\DoctrineIdentityFieldDescriptor\:\:encodeAlias\(\) should return T of array\<string\>\|string but returns string\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineIdentityFieldDescriptor.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\FieldDescriptor\\DoctrineJoinDescriptor\:\:encodeAlias\(\) should return T of array\<string\>\|string but returns string\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineJoinDescriptor.php
 
 		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Expression\\BetweenExpressionInterface\:\:getEnd\(\) return type has no value type specified in iterable type array\.$#'
@@ -86773,12 +86707,6 @@ parameters:
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/DoctrineListBuilderTest.php
 
 		-
-			message: '#^Property Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Doctrine\\DoctrineListBuilderTest\:\:\$classMetadata with generic interface Doctrine\\Persistence\\Mapping\\ClassMetadata does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/DoctrineListBuilderTest.php
-
-		-
 			message: '#^Property Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Doctrine\\DoctrineListBuilderTest\:\:\$idResult type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -86789,12 +86717,6 @@ parameters:
 			identifier: missingType.generics
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/DoctrineListBuilderTest.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Doctrine\\EncodeAliasTraitTest\:\:encodeAlias\(\) should return T of array\<string\>\|string but returns string\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/EncodeAliasTraitTest.php
 
 		-
 			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\Doctrine\\EncodeAliasTraitTest\:\:encodeAliasDataProvider\(\) has no return type specified\.$#'
@@ -89359,12 +89281,6 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
 			message: '#^Class Sulu\\Component\\SmartContent\\Tests\\Orm\\Query extends generic class Doctrine\\ORM\\AbstractQuery but does not specify its types\: TKey, TResult$#'
 			identifier: missingType.generics
 			count: 1
@@ -91065,7 +90981,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$localizationNode of method Sulu\\Component\\Webspace\\Loader\\XmlFileLoader10\:\:generateLocalizationFromNode\(\) expects DOMElement, DOMNameSpaceNode\|DOMNode given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 2
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
