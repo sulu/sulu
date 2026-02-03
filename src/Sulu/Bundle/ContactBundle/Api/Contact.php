@@ -17,6 +17,7 @@ use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as CategoryEntity;
+use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface as ContactEntity;
@@ -43,7 +44,7 @@ class Contact extends ApiWrapper
     public const TYPE = 'contact';
 
     /**
-     * @var Media
+     * @var Media|null
      */
     private $avatar = null;
 
@@ -717,7 +718,7 @@ class Contact extends ApiWrapper
     /**
      * Get the contacts avatar and return the array of different formats.
      *
-     * @return Media
+     * @return array{id: int, url: string, thumbnails: array<mixed>}|null
      */
     #[VirtualProperty]
     #[SerializedName('avatar')]
@@ -731,6 +732,8 @@ class Contact extends ApiWrapper
                 'thumbnails' => $this->avatar->getFormats(),
             ];
         }
+
+        return null;
     }
 
     /**
@@ -843,6 +846,8 @@ class Contact extends ApiWrapper
 
     /**
      * Returns main account.
+     *
+     * @return Account|null
      */
     #[VirtualProperty]
     #[SerializedName('account')]
@@ -853,6 +858,8 @@ class Contact extends ApiWrapper
         if (!\is_null($mainAccount)) {
             return new Account($mainAccount, $this->locale);
         }
+
+        return null;
     }
 
     /**
@@ -988,6 +995,8 @@ class Contact extends ApiWrapper
 
     /**
      * Returns the main address.
+     *
+     * @return AddressEntity|null
      */
     #[VirtualProperty]
     #[SerializedName('mainAddress')]
@@ -1004,6 +1013,8 @@ class Contact extends ApiWrapper
                 }
             }
         }
+
+        return null;
     }
 
     /**
