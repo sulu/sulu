@@ -106,7 +106,7 @@ class MetadataSubscriber
                     $value['sourceEntity'] = $metadata->getName();
                     // can be removed if min version is doctrine/orm 3+
                     // @phpstan-ignore-next-line function.impossibleType
-                    if (\is_array($value)) {
+                    if (\is_array($value) || $value instanceof \Doctrine\ORM\Mapping\AssociationMapping) {
                         $metadata->associationMappings[$key] = $value;
                     }
                 }
