@@ -7941,25 +7941,13 @@ parameters:
 		-
 			message: '#^Binary operation "\." between ''/api/categories/'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 27
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/api/categories…'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 16
+			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
 			message: '#^Binary operation "\." between mixed and ''\.'' results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 4
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -8091,12 +8079,6 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 63
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
-			message: '#^Cannot call method getKey\(\) on mixed\.$#'
-			identifier: method.nonObject
 			count: 9
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
@@ -8109,13 +8091,7 @@ parameters:
 		-
 			message: '#^Cannot cast mixed to string\.$#'
 			identifier: cast.string
-			count: 3
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Tests\\Functional\\Controller\\CategoryControllerTest\:\:createCategory\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
+			count: 2
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -8182,18 +8158,6 @@ parameters:
 			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(Sulu\\Bundle\\MediaBundle\\Entity\\Media\)\: int given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$category of method Sulu\\Bundle\\CategoryBundle\\Tests\\Functional\\Controller\\CategoryControllerTest\:\:createCategoryMeta\(\) expects Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$category of method Sulu\\Bundle\\CategoryBundle\\Tests\\Functional\\Controller\\CategoryControllerTest\:\:createCategoryTranslation\(\) expects Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 110
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -8266,12 +8230,6 @@ parameters:
 			message: '#^Parameter \#2 \$string2 of function strcmp expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
-			message: '#^Parameter \#3 \$parentCategory of method Sulu\\Bundle\\CategoryBundle\\Tests\\Functional\\Controller\\CategoryControllerTest\:\:createCategory\(\) expects Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryInterface\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 40
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -40729,12 +40687,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
-			message: '#^Cannot access property \$webspaces on mixed\.$#'
-			identifier: property.nonObject
-			count: 23
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/AdminControllerTest.php
-
-		-
 			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 9
@@ -41791,87 +41743,9 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/VersionControllerTest.php
 
 		-
-			message: '#^Cannot access offset ''_embedded'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/WebspaceControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''allLocalizations'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/WebspaceControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''inputType'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/WebspaceControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''key'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 6
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/WebspaceControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''localization'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/WebspaceControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''name'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/WebspaceControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''navigations'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 9
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/WebspaceControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''resourceLocatorStrategy'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/WebspaceControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''webspaces'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/WebspaceControllerTest.php
-
-		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 6
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/WebspaceControllerTest.php
-
-		-
-			message: '#^Cannot access offset 1 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 6
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/WebspaceControllerTest.php
-
-		-
-			message: '#^Cannot access offset 2 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/WebspaceControllerTest.php
-
-		-
 			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/WebspaceControllerTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
-			identifier: argument.type
-			count: 5
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/WebspaceControllerTest.php
 
 		-
@@ -43999,12 +43873,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Repository/NodeRepositoryTest.php
 
 		-
-			message: '#^Cannot access offset ''_embedded'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Repository/NodeRepositoryTest.php
-
-		-
 			message: '#^Cannot access offset ''a'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -44061,7 +43929,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''pages'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 25
+			count: 21
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Repository/NodeRepositoryTest.php
 
 		-
@@ -44073,7 +43941,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''title'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 23
+			count: 19
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Repository/NodeRepositoryTest.php
 
 		-
@@ -44097,19 +43965,19 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 17
+			count: 15
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Repository/NodeRepositoryTest.php
 
 		-
 			message: '#^Cannot access offset 1 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Repository/NodeRepositoryTest.php
 
 		-
 			message: '#^Cannot access offset 2 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Repository/NodeRepositoryTest.php
 
 		-
@@ -82507,14 +82375,8 @@ parameters:
 			path: src/Sulu/Component/Rest/ApiWrapper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Csv\\CsvHandler\:\:convertValue\(\) has parameter \$map with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/Csv/CsvHandler.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\Csv\\CsvHandler\:\:convertValue\(\) should return string but returns mixed\.$#'
-			identifier: return.type
+			message: '#^Call to function method_exists\(\) with Symfony\\Component\\HttpFoundation\\InputBag\<string\> and ''getString'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Component/Rest/Csv/CsvHandler.php
 
@@ -82539,36 +82401,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$array of function array_keys expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Rest/Csv/CsvHandler.php
-
-		-
-			message: '#^Parameter \#1 \$enclosure of method Goodby\\CSV\\Export\\Standard\\ExporterConfig\:\:setEnclosure\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Rest/Csv/CsvHandler.php
-
-		-
-			message: '#^Parameter \#1 \$escape of method Goodby\\CSV\\Export\\Standard\\ExporterConfig\:\:setEscape\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Rest/Csv/CsvHandler.php
-
-		-
-			message: '#^Parameter \#1 \$value of method Sulu\\Component\\Rest\\Csv\\CsvHandler\:\:convertValue\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Component/Rest/Csv/CsvHandler.php
-
-		-
-			message: '#^Property Sulu\\Component\\Rest\\Csv\\CsvHandler\:\:\$delimiterMap type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/Csv/CsvHandler.php
-
-		-
-			message: '#^Property Sulu\\Component\\Rest\\Csv\\CsvHandler\:\:\$newLineMap type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Rest/Csv/CsvHandler.php
 
@@ -85107,7 +84939,7 @@ parameters:
 		-
 			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, string\|null given\.$#'
 			identifier: argument.type
-			count: 5
+			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/Csv/CsvHandlerTest.php
 
 		-
