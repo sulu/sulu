@@ -17,13 +17,19 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentResolver\ContentResolverInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
+use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\NavigationRepositoryInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Webmozart\Assert\Assert;
 
 class NavigationRepository implements NavigationRepositoryInterface
@@ -48,12 +54,19 @@ class NavigationRepository implements NavigationRepositoryInterface
      */
     protected string $pageDimensionContentClassName;
 
+    /**
+     * @param array<string, int>|null $permissions
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
         private DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
         private ContentAggregatorInterface $contentAggregator,
         private ContentResolverInterface $contentResolver,
         private bool $audienceTargetingEnabled = false,
+        private ?WebspaceManagerInterface $webspaceManager = null,
+        private ?AccessControlQueryEnhancer $accessControlQueryEnhancer = null,
+        private ?Security $security = null,
+        private ?array $permissions = null,
     ) {
         $repository = $entityManager->getRepository(PageInterface::class);
         Assert::isInstanceOf($repository, NestedTreeRepository::class);
@@ -158,6 +171,7 @@ class NavigationRepository implements NavigationRepositoryInterface
             'webspaceKey' => $webspaceKey,
             'locale' => $locale,
             'stage' => DimensionContentInterface::STAGE_LIVE,
+            'skipAccessControl' => true,
         ])->getQuery()->getResult();
 
         /** @var PageInterface[] $pages */
@@ -353,6 +367,7 @@ class NavigationRepository implements NavigationRepositoryInterface
      *     ancestorRgt?: int,
      *     childrenOf?: string,
      *     childrenDepth?: int,
+     *     skipAccessControl?: bool,
      * } $filters
      */
     private function createQueryBuilder(array $filters): QueryBuilder
@@ -493,7 +508,42 @@ class NavigationRepository implements NavigationRepositoryInterface
 
         $queryBuilder->addOrderBy('page.lft', 'asc');
 
+        $skipAccessControl = $filters['skipAccessControl'] ?? false;
+        $webspaceKey = $filters['webspaceKey'] ?? null;
+        if (null !== $webspaceKey && !$skipAccessControl) {
+            $this->enhanceQueryBuilderWithAccessControl($queryBuilder, $webspaceKey, 'page');
+        }
+
         return $queryBuilder;
+    }
+
+    private function enhanceQueryBuilderWithAccessControl(
+        QueryBuilder $queryBuilder,
+        string $webspaceKey,
+        string $alias
+    ): void {
+        if (!$this->webspaceManager || !$this->accessControlQueryEnhancer) {
+            return;
+        }
+
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+        /** @var UserInterface|null $user */
+        $user = $webspace && $webspace->hasWebsiteSecurity() && $this->security ? $this->security->getUser() : null;
+        /** @var int|null $permission */
+        $permission = $webspace && $webspace->hasWebsiteSecurity() && $this->permissions
+            ? $this->permissions[PermissionTypes::VIEW]
+            : null;
+
+        if ($permission) {
+            $this->accessControlQueryEnhancer->enhance(
+                $queryBuilder,
+                $user instanceof UserInterface ? $user : null,
+                $permission,
+                Page::class,
+                $alias,
+                'uuid'
+            );
+        }
     }
 
     private function leftJoinDimensionContent(QueryBuilder $queryBuilder): void
