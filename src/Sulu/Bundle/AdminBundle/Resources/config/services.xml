@@ -149,7 +149,7 @@
             <argument>%sulu.cache_dir%/forms</argument>
             <argument>%kernel.debug%</argument>
 
-            <tag name="sulu_admin.form_metadata_loader" priority="256"/>
+            <tag name="sulu_admin.form_metadata_loader" priority="-64"/>
             <tag name="kernel.cache_warmer" />
         </service>
 
