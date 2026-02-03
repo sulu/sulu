@@ -321,7 +321,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     /**
      * Returns an api entity for an doctrine entity.
      *
-     * @param AccountInterface $account
+     * @param AccountInterface|null $account
      * @param string $locale
      *
      * @return null|AccountApi
@@ -331,6 +331,8 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
         if ($account) {
             return $this->getApiObject($account, $locale);
         }
+
+        return null;
     }
 
     public function deleteAllRelations($entity)

@@ -11017,26 +11017,8 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Contact\:\:getAccount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Contact\:\:getAddresses\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Contact\:\:getAvatar\(\) should return Sulu\\Bundle\\MediaBundle\\Api\\Media but returns array\<string, array\|int\|string\>\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
 
@@ -11127,12 +11109,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Contact\:\:getLocales\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Contact\:\:getMainAddress\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
 
@@ -13251,7 +13227,7 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
