@@ -36,6 +36,10 @@ class XmlTemplateFormMetadataLoader implements FormMetadataLoaderInterface, Cach
 
     public function getMetadata(string $key, ?string $locale = null, array $metadataOptions = []): ?TypedFormMetadata
     {
+        if (false === \array_key_exists($key, $this->templateDirectories)) {
+            return null;
+        }
+
         $path = $this->getCachePath($key);
 
         $typedFormMetadata = @include $path;
@@ -49,9 +53,13 @@ class XmlTemplateFormMetadataLoader implements FormMetadataLoaderInterface, Cach
 
         $this->warmUp($this->cacheDir);
 
-        $typedFormMetadata = @include $path;
+        // we know that the file need exist because of $templateDirectories
+        // so we can include without "@" operator here:
+        $typedFormMetadata = include $path;
 
-        return $typedFormMetadata instanceof TypedFormMetadata ? $typedFormMetadata : null;
+        \assert($typedFormMetadata instanceof TypedFormMetadata, 'The cache file must return an instance of TypedFormMetadata.');
+
+        return $typedFormMetadata;
     }
 
     public function warmUp(string $cacheDir, ?string $buildDir = null): array

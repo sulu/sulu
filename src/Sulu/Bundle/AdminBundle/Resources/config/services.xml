@@ -149,7 +149,7 @@
             <argument>%sulu.cache_dir%/forms</argument>
             <argument>%kernel.debug%</argument>
 
-            <tag name="sulu_admin.form_metadata_loader"/>
+            <tag name="sulu_admin.form_metadata_loader" priority="-64"/>
             <tag name="kernel.cache_warmer" />
         </service>
 
@@ -160,7 +160,7 @@
             <argument>%sulu.cache_dir%/templates</argument>
             <argument>%kernel.debug%</argument>
 
-            <tag name="sulu_admin.form_metadata_loader"/>
+            <tag name="sulu_admin.form_metadata_loader" priority="512"/>
             <tag name="kernel.cache_warmer" priority="512" />
         </service>
 
