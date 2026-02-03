@@ -100,13 +100,16 @@ class MetadataSubscriber
 
             // map relations
             foreach ($parentMetadata->getAssociationMappings() as $key => $value) {
-                // can be changed to $value->type and $value->sourceEntity if min version is doctrine/orm 3+
+                // The following code is littered with phpstan-ignore-next-line because of doctrine/orm 2/3 compat
+                // doctrine/orm 3: changed to $value->type and $value->sourceEntity (AssociationMapping object)
+                // doctrine/orm 2: changed to $value['type'] and $value['sourceEntity'] (array/ArrayAccess object)
+
                 // @phpstan-ignore-next-line argument.type
                 if ($this->hasRelation($value['type'])) {
                     $value['sourceEntity'] = $metadata->getName();
-                    // can be removed if min version is doctrine/orm 3+
-                    // @phpstan-ignore-next-line function.impossibleType
-                    if (\is_array($value)) {
+                    // @phpstan-ignore-next-line
+                    if (\is_array($value) || $value instanceof \Doctrine\ORM\Mapping\AssociationMapping) {
+                        // @phpstan-ignore-next-line
                         $metadata->associationMappings[$key] = $value;
                     }
                 }
