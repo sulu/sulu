@@ -24973,7 +24973,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
 		-
-			message: '#^Instanceof between array\<Sulu\\Bundle\\MediaBundle\\Entity\\Collection\> and Doctrine\\ORM\\Tools\\Pagination\\Paginator will always evaluate to false\.$#'
+			message: '#^Instanceof between array\<Sulu\\Bundle\\MediaBundle\\Entity\\CollectionInterface\> and Doctrine\\ORM\\Tools\\Pagination\\Paginator will always evaluate to false\.$#'
 			identifier: instanceof.alwaysFalse
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
@@ -25117,7 +25117,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
 		-
-<<<<<<< HEAD
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManager\:\:setBreadcrumbToCollection\(\) has parameter \$breadcrumbEntities with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -25138,7 +25137,7 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
 		-
@@ -25166,7 +25165,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
 		-
-			message: '#^Parameter \#1 \$entity of method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManager\:\:getApiEntity\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\CollectionInterface, Sulu\\Bundle\\MediaBundle\\Entity\\Collection\|null given\.$#'
+			message: '#^Parameter \#1 \$entity of method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManager\:\:getApiEntity\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\CollectionInterface, Sulu\\Bundle\\MediaBundle\\Entity\\CollectionInterface\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
@@ -27104,12 +27103,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
@@ -27124,28 +27117,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:countCollections\(\) has parameter \$filter with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:findCollectionById\(\) should return Sulu\\Bundle\\MediaBundle\\Entity\\Collection\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:findCollectionByKey\(\) should return Sulu\\Bundle\\MediaBundle\\Entity\\Collection but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:findCollectionByKey\(\) should return Sulu\\Bundle\\MediaBundle\\Entity\\Collection but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
@@ -27170,12 +27141,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:findCollections\(\) has parameter \$sortBy with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:findCollections\(\) should return array\<Sulu\\Bundle\\MediaBundle\\Entity\\Collection\> but empty return statement found\.$#'
-			identifier: return.empty
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
