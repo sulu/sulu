@@ -9595,12 +9595,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Account\:\:getAddresses\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -9669,18 +9663,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Account\:\:getId\(\) should return int but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Account\:\:getLogo\(\) should return Sulu\\Bundle\\MediaBundle\\Api\\Media but returns array\<string, array\|int\|string\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Account\:\:getMainAddress\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
@@ -66759,7 +66741,7 @@ parameters:
 		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
-			count: 5
+			count: 4
 			path: src/Sulu/Component/Content/Document/Extension/ExtensionContainer.php
 
 		-
@@ -89089,6 +89071,7 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
+			message: '#^Class Sulu\\Component\\SmartContent\\Tests\\Unit\\Orm\\Query extends generic class Doctrine\\ORM\\AbstractQuery but does not specify its types\: TKey, TResult$#'
 			identifier: missingType.generics
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
