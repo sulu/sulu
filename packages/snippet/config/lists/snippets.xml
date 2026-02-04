@@ -140,9 +140,21 @@
             <transformer type="datetime"/>
         </property>
 
-        <property name="publishedState" type="string" visibility="never">
+        <property name="publishedState" translation="sulu_content.published_state" visibility="never">
             <field-name>workflowPlace</field-name>
             <entity-name>dimensionContent</entity-name>
+
+            <joins ref="dimensionContent"/>
+
+            <filter type="select">
+                <params>
+                    <param name="options" type="collection">
+                        <param name="published" value="sulu_content.state_published" />
+                        <param name="unpublished" value="sulu_content.state_not_published" />
+                        <param name="draft" value="sulu_admin.draft" />
+                    </param>
+                </params>
+            </filter>
         </property>
 
         <property name="templateKey" type="string" visibility="yes" translation="sulu_admin.type">
@@ -150,6 +162,12 @@
             <entity-name>dimensionContent</entity-name>
 
             <joins ref="dimensionContent"/>
+
+            <filter type="select">
+                <params>
+                    <param name="options" type="expression" value="service('sulu_snippet.template_select_provider').getFilterValues(locale)" />
+                </params>
+            </filter>
         </property>
 
         <property name="dimensionContentTemplateKey" visibility="never">
@@ -164,6 +182,44 @@
             <entity-name>ghostDimensionContent</entity-name>
 
             <joins ref="ghostDimensionContent"/>
+        </property>
+
+        <property name="categoryId" translation="sulu_category.categories" visibility="never">
+            <field-name>id</field-name>
+            <entity-name>excerptCategory</entity-name>
+
+            <joins name="excerptCategory" ref="dimensionContent">
+                <join>
+                    <entity-name>excerptCategory</entity-name>
+                    <field-name>dimensionContent.excerptCategories</field-name>
+                </join>
+            </joins>
+
+            <filter type="selection">
+                <params>
+                    <param name="displayProperty" value="name" />
+                    <param name="resourceKey" value="categories" />
+                </params>
+            </filter>
+        </property>
+
+        <property name="tagId" translation="sulu_tag.tags" visibility="never">
+            <field-name>id</field-name>
+            <entity-name>excerptTag</entity-name>
+
+            <joins name="excerptTag" ref="dimensionContent">
+                <join>
+                    <entity-name>excerptTag</entity-name>
+                    <field-name>dimensionContent.excerptTags</field-name>
+                </join>
+            </joins>
+
+            <filter type="selection">
+                <params>
+                    <param name="displayProperty" value="name" />
+                    <param name="resourceKey" value="tags" />
+                </params>
+            </filter>
         </property>
     </properties>
 </list>

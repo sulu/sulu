@@ -50,7 +50,7 @@
         </join>
     </joins>
 
-    <joins name="author">
+    <joins name="author" ref="dimensionContent">
         <join>
             <entity-name>authorEntity</entity-name>
             <field-name>dimensionContent.author</field-name>
@@ -59,7 +59,7 @@
 
     <properties>
         <!-- TODO should be uuid not id -->
-        <property name="id" translation="sulu_admin.uuid">
+        <property name="id" translation="sulu_admin.id">
             <field-name>uuid</field-name>
             <entity-name>Sulu\Article\Domain\Model\ArticleInterface</entity-name>
         </property>
@@ -116,7 +116,64 @@
             </field>
         </concatenation-property>
 
-        <property name="authored" type="date" visibility="no" translation="sulu_admin.authored" sortable="false">
+        <property name="contactId" translation="sulu_admin.author" visibility="never">
+            <field-name>id</field-name>
+            <entity-name>authorEntity</entity-name>
+
+            <joins ref="author"/>
+
+            <filter type="selection">
+                <params>
+                    <param name="displayProperty" value="fullName" />
+                    <param name="resourceKey" value="contacts" />
+                </params>
+            </filter>
+        </property>
+
+        <property name="categoryId" translation="sulu_category.categories" visibility="never">
+            <field-name>id</field-name>
+            <entity-name>excerptCategory</entity-name>
+
+            <joins name="excerptCategory" ref="dimensionContent">
+                <join>
+                    <entity-name>excerptCategory</entity-name>
+                    <field-name>dimensionContent.excerptCategories</field-name>
+                </join>
+            </joins>
+
+            <filter type="selection">
+                <params>
+                    <param name="displayProperty" value="name" />
+                    <param name="resourceKey" value="categories" />
+                </params>
+            </filter>
+        </property>
+
+        <property name="tagId" translation="sulu_tag.tags" visibility="never">
+            <field-name>id</field-name>
+            <entity-name>excerptTag</entity-name>
+
+            <joins name="excerptTag" ref="dimensionContent">
+                <join>
+                    <entity-name>excerptTag</entity-name>
+                    <field-name>dimensionContent.excerptTags</field-name>
+                </join>
+            </joins>
+
+            <filter type="selection">
+                <params>
+                    <param name="displayProperty" value="name" />
+                    <param name="resourceKey" value="tags" />
+                </params>
+            </filter>
+        </property>
+
+        <property name="authored" type="date" visibility="no" translation="sulu_admin.authored">
+            <field-name>authored</field-name>
+            <entity-name>dimensionContent</entity-name>
+
+            <joins ref="dimensionContent"/>
+
             <transformer type="datetime"/>
             <filter type="date"/>
         </property>
@@ -187,9 +244,21 @@
             <transformer type="datetime"/>
         </property>
 
-        <property name="publishedState" type="string" visibility="never">
+        <property name="publishedState" translation="sulu_content.published_state" visibility="never">
             <field-name>workflowPlace</field-name>
             <entity-name>dimensionContent</entity-name>
+
+            <joins ref="dimensionContent"/>
+
+            <filter type="select">
+                <params>
+                    <param name="options" type="collection">
+                        <param name="published" value="sulu_content.state_published" />
+                        <param name="unpublished" value="sulu_content.state_not_published" />
+                        <param name="draft" value="sulu_admin.draft" />
+                    </param>
+                </params>
+            </filter>
         </property>
     </properties>
 </list>

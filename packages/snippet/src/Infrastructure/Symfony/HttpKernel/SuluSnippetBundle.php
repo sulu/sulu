@@ -44,6 +44,7 @@ use Sulu\Snippet\Domain\Repository\SnippetAreaRepositoryInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 use Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetAreaRepository;
 use Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetRepository;
+use Sulu\Snippet\Infrastructure\Sulu\Admin\Provider\SnippetTemplateSelectProvider;
 use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAreaAdmin;
 use Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver\SingleSnippetSelectionPropertyResolver;
@@ -242,6 +243,13 @@ final class SuluSnippetBundle extends AbstractBundle
             ])
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu.admin');
+
+        $services->set('sulu_snippet.template_select_provider')
+            ->class(SnippetTemplateSelectProvider::class)
+            ->public()
+            ->args([
+                new Reference('sulu_admin.form_metadata_provider'),
+            ]);
 
         $services->set('sulu_snippet.snippet_area_normalizer', SnippetAreaNormalizer::class)
             ->args([

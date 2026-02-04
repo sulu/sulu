@@ -3,6 +3,7 @@
         "articles": [
             {
                 "author": "@string@",
+                "authored": "@datetime@",
                 "changed": "@datetime@",
                 "changer": "@string@",
                 "created": "@datetime@",

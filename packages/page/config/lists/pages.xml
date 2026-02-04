@@ -145,6 +145,11 @@
         </concatenation-property>
 
         <property name="authored" type="date" visibility="no" translation="sulu_admin.authored" sortable="false">
+            <field-name>authored</field-name>
+            <entity-name>dimensionContent</entity-name>
+
+            <joins ref="dimensionContent"/>
+
             <transformer type="datetime"/>
         </property>
 
@@ -223,7 +228,7 @@
             <transformer type="datetime"/>
         </property>
 
-        <property name="publishedState" type="string" visibility="never">
+        <property name="publishedState" translation="sulu_content.published_state" visibility="never">
             <field-name>workflowPlace</field-name>
             <entity-name>dimensionContent</entity-name>
         </property>
