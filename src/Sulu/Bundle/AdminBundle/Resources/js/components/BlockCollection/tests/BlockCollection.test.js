@@ -204,6 +204,34 @@ test('Should add at least the minOccurs amount of blocks with types', () => {
     ]);
 });
 
+test('Should generate IDs for minOccurs blocks with generateBlockIds enabled', async() => {
+    const mockIds = ['id1', 'id2', 'id3'];
+    const generateBlockIdsSpy = jest.fn().mockReturnValue(Promise.resolve(mockIds));
+    const changeSpy = jest.fn();
+    const value = [];
+
+    mount(
+        <BlockCollection
+            defaultType="editor"
+            generateBlockIds={generateBlockIdsSpy}
+            minOccurs={3}
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    // Wait for async fillArrays to complete
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(generateBlockIdsSpy).toHaveBeenCalledWith(3);
+    expect(changeSpy).toHaveBeenCalledWith([
+        {type: 'editor', _id: 'id1'},
+        {type: 'editor', _id: 'id2'},
+        {type: 'editor', _id: 'id3'},
+    ]);
+});
+
 test('Choosing a different type should call the onChange callback', () => {
     const changeSpy = jest.fn();
     const renderBlockContent = jest.fn();
@@ -1579,6 +1607,175 @@ test('Should not generate ID when adding block without generateBlockIds', async(
         {content: 'Test 1', type: 'editor'},
         {type: 'editor'},
     ]);
+});
+
+test('Should create blocks with minimal structure to allow field components to apply defaults', async() => {
+    const changeSpy = jest.fn();
+    const value = [{content: 'Test 1', type: 'editor'}];
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    await blockCollection.instance().handleAddBlock(1);
+
+    // Verify block is created with only type (no field values pre-populated)
+    // This allows field components to apply defaults in their constructors
+    expect(changeSpy).toHaveBeenCalledWith([
+        {content: 'Test 1', type: 'editor'},
+        {type: 'editor'},
+    ]);
+});
+
+test('Should synchronize observables atomically when adding block', async() => {
+    const changeSpy = jest.fn();
+    const value = [{content: 'Test 1', type: 'editor'}];
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    const instance = blockCollection.instance();
+
+    // Verify observables are empty initially (only for existing block)
+    expect(instance.expandedBlocks.length).toBe(1);
+    expect(instance.selectedBlocks.length).toBe(1);
+    expect(instance.generatedBlockIds.length).toBe(1);
+
+    await instance.handleAddBlock(1);
+
+    // After adding block, observables should be updated to match new value length
+    expect(instance.expandedBlocks.length).toBe(2);
+    expect(instance.selectedBlocks.length).toBe(2);
+    expect(instance.generatedBlockIds.length).toBe(2);
+});
+
+test('Should synchronize observables atomically when adding block with generateBlockIds', async() => {
+    const mockId = 'test123';
+    const generateBlockIdsSpy = jest.fn().mockReturnValue(Promise.resolve([mockId]));
+    const changeSpy = jest.fn();
+    const value = [{content: 'Test 1', type: 'editor'}];
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            generateBlockIds={generateBlockIdsSpy}
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    const instance = blockCollection.instance();
+
+    // Capture observable lengths before operation
+    const expandedBefore = instance.expandedBlocks.length;
+    const selectedBefore = instance.selectedBlocks.length;
+    const generatedIdsBefore = instance.generatedBlockIds.length;
+
+    await instance.handleAddBlock(1);
+
+    // Observables should be updated atomically AFTER async operation
+    // No intermediate state where observables have different lengths than value
+    expect(instance.expandedBlocks.length).toBe(expandedBefore + 1);
+    expect(instance.selectedBlocks.length).toBe(selectedBefore + 1);
+    expect(instance.generatedBlockIds.length).toBe(generatedIdsBefore + 1);
+
+    expect(changeSpy).toHaveBeenCalledWith([
+        {content: 'Test 1', type: 'editor'},
+        {type: 'editor', _id: mockId},
+    ]);
+});
+
+test('Should create minOccurs blocks with minimal structure for field component defaults', async() => {
+    const changeSpy = jest.fn();
+    const value = [];
+
+    mount(
+        <BlockCollection
+            defaultType="editor"
+            minOccurs={2}
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    // fillArrays runs automatically via reaction
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    // Verify blocks created with only type to allow field components to apply defaults
+    expect(changeSpy).toHaveBeenCalledWith([
+        {type: 'editor'},
+        {type: 'editor'},
+    ]);
+});
+
+test('Should synchronize observables atomically when creating minOccurs blocks', async() => {
+    const changeSpy = jest.fn();
+    const value = [];
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            minOccurs={3}
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    // fillArrays runs automatically via reaction
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    const instance = blockCollection.instance();
+
+    // All observables should have same length as value after fillArrays
+    expect(instance.expandedBlocks.length).toBe(3);
+    expect(instance.selectedBlocks.length).toBe(3);
+    expect(instance.generatedBlockIds.length).toBe(3);
+});
+
+test('Should generate IDs for minOccurs blocks atomically', async() => {
+    const mockIds = ['id1', 'id2', 'id3'];
+    const generateBlockIdsSpy = jest.fn().mockReturnValue(Promise.resolve(mockIds));
+    const changeSpy = jest.fn();
+    const value = [];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            generateBlockIds={generateBlockIdsSpy}
+            minOccurs={3}
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    // fillArrays runs automatically and generates IDs
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    const instance = blockCollection.instance();
+
+    // Verify IDs were generated before onChange was called
+    expect(generateBlockIdsSpy).toHaveBeenCalledWith(3);
+    expect(changeSpy).toHaveBeenCalledWith([
+        {type: 'editor', _id: 'id1'},
+        {type: 'editor', _id: 'id2'},
+        {type: 'editor', _id: 'id3'},
+    ]);
+
+    // Observables should be synchronized with value
+    expect(instance.expandedBlocks.length).toBe(3);
+    expect(instance.selectedBlocks.length).toBe(3);
+    expect(instance.generatedBlockIds.length).toBe(3);
 });
 
 test('Should generate new ID when pasting cut blocks', async() => {

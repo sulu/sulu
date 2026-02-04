@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable, toJS, reaction, computed} from 'mobx';
+import {action, observable, toJS, reaction, computed, runInAction} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import {arrayMove, translate, clipboard} from '../../utils';
@@ -158,8 +158,8 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
         }
     };
 
-    fillArrays = () => {
-        const {collapsable, defaultType, onChange, minOccurs, value} = this.props;
+    @action fillArrays = async() => {
+        const {collapsable, defaultType, generateBlockIds, minOccurs, onChange, value} = this.props;
         const {expandedBlocks, generatedBlockIds, selectedBlocks} = this;
 
         if (!value) {
@@ -180,26 +180,43 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
 
         const collapsed = collapsable ? false : true;
 
+        // Fill existing blocks' observables
         expandedBlocks.push(...new Array(value.length - expandedBlocks.length).fill(collapsed));
         selectedBlocks.push(...new Array(value.length - selectedBlocks.length).fill(false));
         generatedBlockIds.push(
             ...new Array(value.length - generatedBlockIds.length).fill(false).map(() => ++BlockCollection.idCounter)
         );
+
+        // For minOccurs blocks, generate IDs and update everything atomically
         if (minOccurs && value.length < minOccurs) {
-            expandedBlocks.push(...new Array(minOccurs - value.length).fill(true));
-            selectedBlocks.push(...new Array(minOccurs - value.length).fill(false));
-            generatedBlockIds.push(
-                ...new Array(minOccurs - value.length).fill(false).map(() => ++BlockCollection.idCounter)
+            const newBlockCount = minOccurs - value.length;
+
+            // Create new blocks with just the type
+            const newBlocks = Array.from(
+                {length: newBlockCount},
+                // $FlowFixMe
+                () => ({type: defaultType})
             );
 
-            onChange([
-                ...value,
-                ...Array.from(
-                    {length: minOccurs - value.length},
-                    // $FlowFixMe
-                    () => ({type: defaultType})
-                ),
-            ]);
+            // Generate IDs for new blocks if needed
+            if (generateBlockIds) {
+                const blockIds = await generateBlockIds(newBlockCount);
+                newBlocks.forEach((block, index) => {
+                    block._id = blockIds[index];
+                });
+            }
+
+            runInAction(() => {
+                // Update observables
+                expandedBlocks.push(...new Array(newBlockCount).fill(true));
+                selectedBlocks.push(...new Array(newBlockCount).fill(false));
+                generatedBlockIds.push(
+                    ...new Array(newBlockCount).fill(false).map(() => ++BlockCollection.idCounter)
+                );
+
+                // Update value array - field components will apply defaults in their constructors
+                onChange([...value, ...newBlocks]);
+            });
         }
     };
 
@@ -223,22 +240,29 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
         }
 
         if (value) {
-            this.expandedBlocks.splice(insertionIndex, 0, true);
-            this.selectedBlocks.splice(insertionIndex, 0, false);
-            this.generatedBlockIds.splice(insertionIndex, 0, ++BlockCollection.idCounter);
-
             const elementsBefore = value.slice(0, insertionIndex);
             const elementsAfter = value.slice(insertionIndex);
 
-            const newBlock: { _id?: string, type: string } = {type: defaultType};
+            // Create new block with just the type - field components will apply defaults in their constructors
+            const newBlock = {
+                type: defaultType,
+            };
 
             if (generateBlockIds) {
                 const [newBlockId] = await generateBlockIds(1);
                 newBlock._id = newBlockId;
             }
 
-            // $FlowFixMe
-            onChange([...elementsBefore, newBlock, ...elementsAfter]);
+            // Wrap post-await code in runInAction to maintain action context
+            runInAction(() => {
+                // Update MobX observables AFTER async operation to ensure atomic state update
+                this.expandedBlocks.splice(insertionIndex, 0, true);
+                this.selectedBlocks.splice(insertionIndex, 0, false);
+                this.generatedBlockIds.splice(insertionIndex, 0, ++BlockCollection.idCounter);
+
+                // $FlowFixMe
+                onChange([...elementsBefore, newBlock, ...elementsAfter]);
+            });
         }
     };
 
