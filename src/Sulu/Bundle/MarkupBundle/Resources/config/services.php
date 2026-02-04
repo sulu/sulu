@@ -17,9 +17,12 @@ use Sulu\Bundle\MarkupBundle\Markup\HtmlTagExtractor;
 use Sulu\Bundle\MarkupBundle\Markup\Link\ExternalLinkProvider;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPool;
 use Sulu\Bundle\MarkupBundle\Markup\LinkTag;
+use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagRegistry;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\expr;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 
@@ -50,6 +53,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_markup.parser.delegating_html_extractor'),
         ])
         ->tag('sulu_markup.parser', ['type' => 'html']);
+    $services->alias(MarkupParserInterface::class, 'sulu_markup.parser');
 
     $services->set('sulu_markup.response_listener', MarkupListener::class)
         ->args([tagged_iterator('sulu_markup.parser', indexAttribute: 'type')])
@@ -57,8 +61,8 @@ return static function(ContainerConfigurator $container) {
 
     $services->set('sulu_markup.mailer_listener', MailerListener::class)
         ->args([
-            new Reference('sulu_markup.parser'),
-            new Reference('request_stack'),
+            new Reference(MarkupParserInterface::class),
+            new Reference(RequestStack::class),
             '%kernel.default_locale%',
         ])
         ->tag('kernel.event_subscriber');
@@ -76,6 +80,6 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu_markup.tag', ['tag' => 'link', 'type' => 'html']);
 
     $services->set('sulu_markup.external_link_provider', ExternalLinkProvider::class)
-        ->args([new Reference('translator')])
+        ->args([new Reference(TranslatorInterface::class)])
         ->tag('sulu.link.provider', ['alias' => 'external']);
 };
