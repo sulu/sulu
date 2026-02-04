@@ -28,7 +28,7 @@ use Symfony\Component\DependencyInjection\Reference;
 return static function(ContainerConfigurator $container) {
     $services = $container->services();
 
-    /**
+    /*
      * Arguments are filled by a compiler pass.
      *
      * @see Sulu\Bundle\MarkupBundle\DependencyInjection\CompilerPass\TagCompilerPass
