@@ -21,12 +21,12 @@ use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagRegistry;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\expr;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 return static function(ContainerConfigurator $container) {
     $services = $container->services();
@@ -73,7 +73,7 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_markup.link_tag', LinkTag::class)
         ->args([
             new Reference('sulu_markup.link_tag.provider_pool'),
-            expr('container.hasParameter(\'sulu.preview\') ? parameter(\'sulu.preview\') : false'),
+            new Expression('container.hasParameter(\'sulu.preview\') ? parameter(\'sulu.preview\') : false'),
             new Reference('url_helper'),
             '%sulu_markup.link_tag.provider_attribute%',
         ])
