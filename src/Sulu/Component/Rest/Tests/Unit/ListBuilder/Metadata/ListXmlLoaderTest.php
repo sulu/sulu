@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata\General\Driver;
+namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;

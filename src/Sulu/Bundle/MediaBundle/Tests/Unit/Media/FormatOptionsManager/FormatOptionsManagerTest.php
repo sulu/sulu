@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\FormatOptionsManager;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\FormatOptionsManager;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;

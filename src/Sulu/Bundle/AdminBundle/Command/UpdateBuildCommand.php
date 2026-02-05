@@ -17,13 +17,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\Process\Process;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[AsCommand(name: 'sulu:admin:update-build', description: 'Updates the administration application JavaScript build by downloading the official build from the sulu/skeleton repository or building the assets via npm.')]
 class UpdateBuildCommand extends Command
 {
+    private const DEFAULT_DEV_VERSION = '3.0';
+
     public const EXIT_CODE_ABORTED_MANUAL_BUILD = 1;
     public const EXIT_CODE_COULD_NOT_INSTALL_NPM_PACKAGES = 2;
     public const EXIT_CODE_COULD_NOT_BUILD_ADMIN_ASSETS = 3;
@@ -79,7 +80,7 @@ class UpdateBuildCommand extends Command
             if (0 === \strpos($suluVersion, 'dev-')) {
                 $suluVersion = $ui->ask(
                     \sprintf('Cannot detect "sulu/skeleton" branch for version "%s". Which "sulu/skeleton" branch do you want to use to update your "assets/admin" folder?', $suluVersion),
-                    '2.x'
+                    self::DEFAULT_DEV_VERSION,
                 );
             }
 
@@ -257,13 +258,9 @@ class UpdateBuildCommand extends Command
     {
         $path = \str_replace(\DIRECTORY_SEPARATOR, '/', $path);
 
-        try {
-            $response = $this->httpClient->request('GET', $remoteRepository . $path);
+        $response = $this->httpClient->request('GET', $remoteRepository . $path);
 
-            return $response->getContent();
-        } catch (ClientException $e) {
-            return '';
-        }
+        return $response->getContent();
     }
 
     private function hash(string $content): string

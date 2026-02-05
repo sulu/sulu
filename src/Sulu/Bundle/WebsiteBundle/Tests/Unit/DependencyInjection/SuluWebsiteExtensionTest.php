@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Unit\Sulu\Bundle\WebsiteBundle\EventListener;
+namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Sulu\Bundle\WebsiteBundle\DependencyInjection\SuluWebsiteExtension;
