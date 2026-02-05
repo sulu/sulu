@@ -15,6 +15,12 @@ The type of the `apiKey` in the `se_users` table has been changed to `string`.
 ALTER TABLE se_users CHANGE apiKey apiKey VARCHAR(128) DEFAULT NULL;
 ```
 
+An index on the `idRoles` column has been added to the `se_access_controls` table to improve query performance for permission checks with multiple roles.
+
+```sql
+CREATE INDEX IDX_C526DC5238C751C4 ON se_access_controls (idRoles);
+```
+
 ## 2.6.16
 
 * Deprecated \Sulu\Bundle\MediaBundle\Controller\AbstractMediaController::getTitleFromUpload -> MediaManager::getTitleFromUpload
