@@ -58,7 +58,7 @@ class IconController extends AbstractRestController
     {
         $iconSetName = $request->query->getString('icon_set');
 
-        if ($iconSetName === '') {
+        if ('' === $iconSetName) {
             throw new MissingParameterException(\get_class($this), 'icon_set');
         }
 

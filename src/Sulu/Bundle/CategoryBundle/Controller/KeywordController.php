@@ -217,9 +217,4 @@ class KeywordController extends AbstractRestController implements SecuredControl
     {
         return CategoryAdmin::SECURITY_CONTEXT;
     }
-
-    private function getLocale(Request $request): string
-    {
-        return $request->query->getString('locale') ?: $request->getLocale();
-    }
 }
