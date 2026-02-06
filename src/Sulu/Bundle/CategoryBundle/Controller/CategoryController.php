@@ -72,18 +72,18 @@ class CategoryController extends AbstractRestController implements SecuredContro
     public function cgetAction(Request $request)
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
-        $rootKey = $request->get('rootKey');
-        $parentId = $request->get('parentId');
-        $includeRoot = $this->getBooleanRequestParameter($request, 'includeRoot', false, false);
+        $rootKey = $request->query->get('rootKey');
+        $parentId = $request->query->get('parentId');
+        $includeRoot = $request->query->getBoolean('includeRoot');
 
         if ('root' === $parentId) {
             $includeRoot = false;
             $parentId = null;
         }
 
-        if ('true' == $request->get('flat')) {
+        if ($request->query->getBoolean('flat')) {
             $rootId = ($rootKey) ? $this->categoryManager->findByKey($rootKey)->getId() : null;
-            $expandedIds = \array_filter(\explode(',', $request->get('expandedIds', $request->get('selectedIds', ''))));
+            $expandedIds = \array_filter(\explode(',', $request->query->getString('expandedIds', $request->query->getString('selectedIds', ''))));
             $defaultSort = !$request->query->has('sortBy');
             $list = $this->getListRepresentation(
                 $request,
@@ -134,7 +134,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
         $category = $this->categoryManager->move($id, $destination);
 
         return $this->handleView($this->view(
-            $this->categoryManager->getApiObject($category, $request->get('locale')))
+            $this->categoryManager->getApiObject($category, $request->query->getString('locale')))
         );
     }
 
@@ -169,22 +169,19 @@ class CategoryController extends AbstractRestController implements SecuredContro
      */
     protected function saveCategory(Request $request, $id = null, $patch = false)
     {
-        $mediasData = $request->get('medias');
-        $medias = null;
-        if ($mediasData && \array_key_exists('ids', $mediasData)) {
-            $medias = $mediasData['ids'];
-        }
+        $payload = $request->getPayload();
 
-        $locale = $this->getRequestParameter($request, 'locale', true);
         $data = [
             'id' => $id,
-            'name' => (empty($request->get('name'))) ? null : $request->get('name'),
-            'description' => (empty($request->get('description'))) ? null : $request->get('description'),
-            'medias' => $medias,
-            'key' => (empty($request->get('key'))) ? null : $request->get('key'),
-            'meta' => $request->get('meta'),
-            'parent' => $request->get('parentId'),
+            'name' => $payload['name'] ?: null,
+            'description' => $payload['description'] ?: null,
+            'medias' => $payload['medias']['ids'] ?? null,
+            'key' => $payload['key'] ?: null,
+            'meta' => $payload['meta'],
+            'parent' => $payload['parentId'],
         ];
+
+        $locale = $request->query->getString('locale');
         $entity = $this->categoryManager->save($data, null, $locale, $patch);
         $category = $this->categoryManager->getApiObject($entity, $locale);
 
@@ -231,7 +228,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
             );
         }
 
-        $search = $request->get('search');
+        $search = $request->query->get('search');
 
         if (!$search) {
             // expand collected parents if search is not set

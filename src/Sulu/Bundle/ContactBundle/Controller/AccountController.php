@@ -245,7 +245,7 @@ class AccountController extends AbstractRestController implements SecuredControl
             $accountContact->setContact($contact);
 
             // Set position on contact.
-            $positionId = $request->get('position');
+            $positionId = $request->request->get('position');
             $position = null;
 
             if ($positionId) {
@@ -385,11 +385,11 @@ class AccountController extends AbstractRestController implements SecuredControl
      */
     protected function applyRequestParameters(Request $request, $listBuilder)
     {
-        if (\json_decode($request->get('hasNoParent', ''))) {
+        if (\json_decode($request->query->get('hasNoParent', '[]'))) {
             $listBuilder->where($this->getFieldDescriptorForNoParent(), null);
         }
 
-        if (\json_decode($request->get('hasEmail', ''))) {
+        if (\json_decode($request->query->get('hasEmail', '[]'))) {
             /** @var FieldDescriptorInterface $fieldDescriptor */
             $fieldDescriptor = $this->getFieldDescriptors()['mainEmail'];
 
@@ -429,7 +429,8 @@ class AccountController extends AbstractRestController implements SecuredControl
      */
     public function postAction(Request $request)
     {
-        $name = $request->get('name');
+        $payload = $request->getPayload();
+        $name = $payload->get('name');
 
         try {
             if (null === $name) {
@@ -438,7 +439,7 @@ class AccountController extends AbstractRestController implements SecuredControl
 
             $account = $this->doPost($request);
             $this->entityManager->persist($account);
-            $this->domainEventCollector->collect(new AccountCreatedEvent($account, $request->request->all()));
+            $this->domainEventCollector->collect(new AccountCreatedEvent($account, $payload->all()));
             $this->entityManager->flush();
 
             $locale = $this->getUser()->getLocale();
@@ -466,32 +467,33 @@ class AccountController extends AbstractRestController implements SecuredControl
      */
     protected function doPost(Request $request)
     {
+        $payload = $request->getPayload();
         $account = $this->accountFactory->createEntity();
-        $account->setName($request->get('name'));
-        $account->setCorporation($request->get('corporation'));
+        $account->setName($payload->get('name'));
+        $account->setCorporation($payload->get('corporation'));
 
-        if (null !== $request->get('uid')) {
-            $account->setUid($request->get('uid'));
+        if (null !== $payload->get('uid')) {
+            $account->setUid($payload->get('uid'));
         }
 
-        if (null !== $request->get('note')) {
-            $account->setNote($request->get('note'));
+        if (null !== $payload->get('note')) {
+            $account->setNote($payload->get('note'));
         }
 
-        $logo = $request->get('logo', []);
+        $logo = $payload->get('logo', []);
         if ($logo && \array_key_exists('id', $logo)) {
-            $this->accountManager->setLogo($account, $request->get('logo')['id']);
+            $this->accountManager->setLogo($account, $payload->get('logo')['id']);
         }
 
-        $this->setParent($request->get('parent'), $account);
+        $this->setParent($payload->get('parent'), $account);
 
-        $this->accountManager->processCategories($account, $request->get('categories', []));
+        $this->accountManager->processCategories($account, $payload->get('categories', []));
 
         $account->setCreator($this->getUser());
         $account->setChanger($this->getUser());
 
         // Add urls, phones, emails, tags, bankAccounts, notes, addresses,..
-        $this->accountManager->addNewContactRelations($account, $request->request->all());
+        $this->accountManager->addNewContactRelations($account, $payload->all());
 
         return $account;
     }
@@ -545,22 +547,23 @@ class AccountController extends AbstractRestController implements SecuredControl
      */
     protected function doPut(AccountInterface $account, Request $request, ObjectManager $entityManager)
     {
-        $account->setName($request->get('name'));
-        $account->setCorporation($request->get('corporation'));
+        $payload = $request->getPayload();
+        $account->setName($payload->get('name'));
+        $account->setCorporation($payload->get('corporation'));
         $accountManager = $this->accountManager;
 
-        $account->setUid($request->get('uid'));
-        $account->setNote($request->get('note'));
+        $account->setUid($payload->get('uid'));
+        $account->setNote($payload->get('note'));
 
-        $logo = $request->get('logo', []);
+        $logo = $payload->get('logo', []);
         if ($logo && \array_key_exists('id', $logo)) {
-            $accountManager->setLogo($account, $request->get('logo')['id']);
+            $accountManager->setLogo($account, $payload->get('logo')['id']);
         }
 
-        $this->setParent($request->get('parent'), $account);
+        $this->setParent($payload->get('parent'), $account);
 
         $mainContact = null;
-        $mainContactRequest = $request->get('mainContact');
+        $mainContactRequest = $payload->get('mainContact');
         if (null !== $mainContactRequest && '' !== $mainContactRequest && 0 !== $mainContactRequest) {
             $mainContactId = \is_array($mainContactRequest) ? ($mainContactRequest['id'] ?? null) : $mainContactRequest;
             if (null !== $mainContactId) {
@@ -575,7 +578,7 @@ class AccountController extends AbstractRestController implements SecuredControl
         $user = $this->getUser();
         $account->setChanger($user);
 
-        $contactDetailsData = $request->get('contactDetails', []);
+        $contactDetailsData = $payload->get('contactDetails', []);
 
         // Process details
         if (!($accountManager->processUrls($account, $contactDetailsData['websites'] ?? [])
@@ -583,11 +586,11 @@ class AccountController extends AbstractRestController implements SecuredControl
             && $accountManager->processFaxes($account, $contactDetailsData['faxes'] ?? [])
             && $accountManager->processSocialMediaProfiles($account, $contactDetailsData['socialMedia'] ?? [])
             && $accountManager->processPhones($account, $contactDetailsData['phones'] ?? [])
-            && $accountManager->processAddresses($account, $request->get('addresses', []))
-            && $accountManager->processTags($account, $request->get('tags', []))
-            && $accountManager->processNotes($account, $request->get('notes', []))
-            && $accountManager->processCategories($account, $request->get('categories', []))
-            && $accountManager->processBankAccounts($account, $request->get('bankAccounts', [])))
+            && $accountManager->processAddresses($account, $payload->get('addresses', []))
+            && $accountManager->processTags($account, $payload->get('tags', []))
+            && $accountManager->processNotes($account, $payload->get('notes', []))
+            && $accountManager->processCategories($account, $payload->get('categories', []))
+            && $accountManager->processBankAccounts($account, $payload->get('bankAccounts', [])))
         ) {
             throw new RestException('Updating dependencies is not possible', 0);
         }
@@ -659,33 +662,35 @@ class AccountController extends AbstractRestController implements SecuredControl
     {
         $accountManager = $this->accountManager;
 
+        $payload = $request->getPayload();
+
         $accountModified = false;
-        if (null !== $request->get('uid')) {
-            $account->setUid($request->get('uid'));
+        if (null !== $payload->get('uid')) {
+            $account->setUid($payload->get('uid'));
             $accountModified = true;
         }
-        if (null !== $request->get('registerNumber')) {
-            $account->setRegisterNumber($request->get('registerNumber'));
+        if (null !== $payload->get('registerNumber')) {
+            $account->setRegisterNumber($payload->get('registerNumber'));
             $accountModified = true;
         }
-        if (null !== $request->get('number')) {
-            $account->setNumber($request->get('number'));
+        if (null !== $payload->get('number')) {
+            $account->setNumber($payload->get('number'));
             $accountModified = true;
         }
-        if (null !== $request->get('placeOfJurisdiction')) {
-            $account->setPlaceOfJurisdiction($request->get('placeOfJurisdiction'));
+        if (null !== $payload->get('placeOfJurisdiction')) {
+            $account->setPlaceOfJurisdiction($payload->get('placeOfJurisdiction'));
             $accountModified = true;
         }
-        if (\array_key_exists('id', $request->get('logo', []))) {
-            $accountManager->setLogo($account, $request->get('logo')['id']);
+        if (\array_key_exists('id', $payload->get('logo', []))) {
+            $accountManager->setLogo($account, $payload->get('logo')['id']);
             $accountModified = true;
         }
-        if (null !== $request->get('medias')) {
-            $accountManager->setMedias($account, $request->get('medias'));
+        if (null !== $payload->get('medias')) {
+            $accountManager->setMedias($account, $payload->get('medias'));
         }
 
         $mainContact = null;
-        $mainContactRequest = $request->get('mainContact');
+        $mainContactRequest = $payload->get('mainContact');
         if (null !== $mainContactRequest && '' !== $mainContactRequest && 0 !== $mainContactRequest) {
             $mainContactId = \is_array($mainContactRequest) ? ($mainContactRequest['id'] ?? null) : $mainContactRequest;
             if (null !== $mainContactId) {
@@ -694,15 +699,15 @@ class AccountController extends AbstractRestController implements SecuredControl
             }
         }
 
-        if (null !== $request->get('bankAccounts')) {
-            $accountManager->processBankAccounts($account, $request->get('bankAccounts', []));
+        if (null !== $payload->get('bankAccounts')) {
+            $accountManager->processBankAccounts($account, $payload->get('bankAccounts', []));
             $accountModified = true;
         }
 
         $account->setMainContact($mainContact);
 
         if ($accountModified) {
-            $this->domainEventCollector->collect(new AccountModifiedEvent($account, $request->request->all()));
+            $this->domainEventCollector->collect(new AccountModifiedEvent($account, $payload->all()));
         }
     }
 
@@ -749,9 +754,7 @@ class AccountController extends AbstractRestController implements SecuredControl
             }
 
             // Remove related contacts if removeContacts is true.
-            if (null !== $request->get('removeContacts')
-                && 'true' == $request->get('removeContacts')
-            ) {
+            if ($request->query->getBoolean('removeContacts')) {
                 foreach ($account->getAccountContacts() as $accountContact) {
                     $this->entityManager->remove($accountContact->getContact());
                 }
@@ -880,7 +883,7 @@ class AccountController extends AbstractRestController implements SecuredControl
      */
     public function getAction($id, Request $request)
     {
-        $includes = \explode(',', $request->get('include'));
+        $includes = \explode(',', $request->query->getString('include'));
         $locale = $this->getUser()->getLocale();
 
         try {

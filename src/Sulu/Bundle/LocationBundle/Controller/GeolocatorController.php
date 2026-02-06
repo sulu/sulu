@@ -28,7 +28,7 @@ class GeolocatorController
      */
     public function queryAction(Request $request): JsonResponse
     {
-        $query = $request->get('search', '');
+        $query = $request->query->getString('search');
 
         $geolocatorOptions = new GeolocatorOptions();
         $geolocatorOptions->setAcceptLanguage(

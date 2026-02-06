@@ -85,8 +85,7 @@ class KeywordController extends AbstractRestController implements SecuredControl
         $listBuilder = $this->listBuilderFactory->create($this->keywordClass);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptor);
 
-        /** @var string $locale */
-        $locale = $request->get('locale');
+        $locale = $this->getLocale($request);
         $categoryTranslation = $category->findTranslationByLocale($locale);
 
         if (false == $categoryTranslation) {
@@ -128,8 +127,8 @@ class KeywordController extends AbstractRestController implements SecuredControl
         /** @var KeywordInterface $keyword */
         $keyword = $this->keywordRepository->createNew();
         $category = $this->categoryRepository->findCategoryById($categoryId);
-        $keyword->setKeyword($request->get('keyword'));
-        $keyword->setLocale($request->get('locale'));
+        $keyword->setKeyword($request->request->getString('keyword'));
+        $keyword->setLocale($this->getLocale($request));
 
         $keyword = $this->keywordManager->save($keyword, $category);
 
@@ -164,7 +163,7 @@ class KeywordController extends AbstractRestController implements SecuredControl
 
         $force = $request->get('force');
         $category = $this->categoryRepository->findCategoryById($categoryId);
-        $keyword->setKeyword($request->get('keyword'));
+        $keyword->setKeyword($request->request->getString('keyword'));
 
         $keyword = $this->keywordManager->save($keyword, $category, $force);
 
@@ -217,5 +216,10 @@ class KeywordController extends AbstractRestController implements SecuredControl
     public function getSecurityContext()
     {
         return CategoryAdmin::SECURITY_CONTEXT;
+    }
+
+    private function getLocale(Request $request): string
+    {
+        return $request->query->getString('locale') ?: $request->getLocale();
     }
 }
