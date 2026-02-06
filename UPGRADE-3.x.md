@@ -274,7 +274,7 @@ SEAL_DSN=loupe://%kernel.project_dir%/var/indexes
 To install the adapter use:
 
 ```bash
-composer require cmsig/search-loupe-adapter --no-scripts
+composer require cmsig/seal-loupe-adapter --no-scripts
 ```
 
 Make sure you have the `pdo_sqlite` extension installed and enabled.
