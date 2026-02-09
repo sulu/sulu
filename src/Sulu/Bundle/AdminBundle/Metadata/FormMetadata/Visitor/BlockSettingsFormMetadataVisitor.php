@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -23,6 +25,10 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadataVisitorInterf
  */
 class BlockSettingsFormMetadataVisitor implements TypedFormMetadataVisitorInterface
 {
+    public function __construct()
+    {
+    }
+
     public function visitTypedFormMetadata(TypedFormMetadata $formMetadata, string $key, string $locale, array $metadataOptions = []): void
     {
         foreach ($formMetadata->getForms() as $formMetadata) {

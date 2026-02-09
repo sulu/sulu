@@ -45,6 +45,8 @@ use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Infrastructure\Doctrine\Repository\NavigationRepository;
 use Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository;
 use Sulu\Page\Infrastructure\JMS\Serializer\WebspaceSerializeEventSubscriber;
+use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\BlockSettingsFormMetadataVisitor;
+use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\DefaultTemplateTypedFormMetadataVisitor;
 use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\WebspaceRouteModeTypedFormMetadataVisitor;
 use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\WebspaceTypedFormMetadataVisitor;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
@@ -361,6 +363,14 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_core.webspace.webspace_manager'),
             ])
             ->tag('sulu_admin.typed_form_metadata_visitor');
+
+        $services->set('sulu_page.block_settings_form_metadata_visitor')
+            ->class(BlockSettingsFormMetadataVisitor::class)
+            ->args([
+                new Reference('sulu_admin.xml_form_metadata_loader'),
+                new Reference('sulu_core.webspace.webspace_manager'),
+            ])
+            ->tag('sulu_admin.form_metadata_visitor');
 
         // Repositories services
         $services->set('sulu_page.page_repository')
