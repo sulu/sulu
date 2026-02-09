@@ -34,12 +34,21 @@ final class DefaultTemplateTypedFormMetadataVisitor implements TypedFormMetadata
         if (null === $webspaceKey) {
             return;
         }
+
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
-        $defaultTemplate = $webspace?->getDefaultTemplate('page');
-        if (null === $defaultTemplate) {
+        if (null === $webspace) {
             return;
         }
 
+        $excludedTemplates = $webspace->getExcludedTemplates();
+        foreach ($excludedTemplates as $excludedTemplate) {
+            $formMetadata->removeForm($excludedTemplate);
+        }
+
+        $defaultTemplate = $webspace->getDefaultTemplate('page');
+        if (null === $defaultTemplate) {
+            return;
+        }
         $formMetadata->setDefaultType($defaultTemplate);
     }
 }
