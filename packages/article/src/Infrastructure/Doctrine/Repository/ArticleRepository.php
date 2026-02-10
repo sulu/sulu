@@ -51,27 +51,27 @@ final class ArticleRepository implements ArticleRepositoryInterface
     /**
      * @var EntityRepository<ArticleInterface>
      */
-    protected $entityRepository;
+    private $entityRepository;
 
     /**
      * @var EntityRepository<ArticleDimensionContentInterface>
      */
-    protected $entityDimensionContentRepository;
+    private $entityDimensionContentRepository;
 
     /**
      * @var DimensionContentQueryEnhancer
      */
-    protected $dimensionContentQueryEnhancer;
+    private $dimensionContentQueryEnhancer;
 
     /**
      * @var class-string<ArticleInterface>
      */
-    protected $articleClassName;
+    private $articleClassName;
 
     /**
      * @var class-string<ArticleDimensionContentInterface>
      */
-    protected $articleDimensionContentClassName;
+    private $articleDimensionContentClassName;
 
     public function __construct(
         EntityManagerInterface $entityManager,

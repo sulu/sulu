@@ -51,27 +51,27 @@ final class SnippetRepository implements SnippetRepositoryInterface
     /**
      * @var EntityRepository<SnippetInterface>
      */
-    protected $entityRepository;
+    private $entityRepository;
 
     /**
      * @var EntityRepository<SnippetDimensionContentInterface>
      */
-    protected $entityDimensionContentRepository;
+    private $entityDimensionContentRepository;
 
     /**
      * @var DimensionContentQueryEnhancer
      */
-    protected $dimensionContentQueryEnhancer;
+    private $dimensionContentQueryEnhancer;
 
     /**
      * @var class-string<SnippetInterface>
      */
-    protected $snippetClassName;
+    private $snippetClassName;
 
     /**
      * @var class-string<SnippetDimensionContentInterface>
      */
-    protected $snippetDimensionContentClassName;
+    private $snippetDimensionContentClassName;
 
     public function __construct(
         EntityManagerInterface $entityManager,

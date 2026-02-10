@@ -58,17 +58,17 @@ final class PageRepository implements PageRepositoryInterface
     /**
      * @var NestedTreeRepository<PageInterface>
      */
-    protected $entityRepository;
+    private $entityRepository;
 
     /**
      * @var EntityRepository<PageDimensionContentInterface>
      */
-    protected $entityDimensionContentRepository;
+    private $entityDimensionContentRepository;
 
     /**
      * @var DimensionContentQueryEnhancer
      */
-    protected $dimensionContentQueryEnhancer;
+    private $dimensionContentQueryEnhancer;
 
     /**
      * @var AccessControlQueryEnhancer
@@ -78,12 +78,12 @@ final class PageRepository implements PageRepositoryInterface
     /**
      * @var class-string<PageInterface>
      */
-    protected $pageClassName;
+    private $pageClassName;
 
     /**
      * @var class-string<PageDimensionContentInterface>
      */
-    protected $pageDimensionContentClassName;
+    private $pageDimensionContentClassName;
 
     public function __construct(
         EntityManagerInterface $entityManager,
