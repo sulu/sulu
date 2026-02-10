@@ -32,7 +32,8 @@ final class SuluAdminBundle extends Bundle
         if ($container->hasExtension('fos_js_routing')) {
             $container->addCompilerPass(new ExposeResourceRoutesPass());
         }
-
-        $container->addCompilerPass(new FormMetadataCachePass(), PassConfig::TYPE_BEFORE_REMOVING);
+        if ($container->getParameter('kernel.debug')) {
+            $container->addCompilerPass(new FormMetadataCachePass(), PassConfig::TYPE_BEFORE_REMOVING);
+        }
     }
 }

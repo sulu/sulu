@@ -24,8 +24,6 @@ class FormMetadataCachePass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        $kernelProjectDir = $container->getParameter('kernel.project_dir');
-
         foreach ($container->getParameter('sulu_admin.forms.directories') as $directory) {
             $this->addDirectory($directory, $container);
         }
