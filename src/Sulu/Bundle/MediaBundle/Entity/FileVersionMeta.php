@@ -23,6 +23,8 @@ class FileVersionMeta
 
     private ?string $credits = null;
 
+    private ?string $seoFilename = null;
+
     private string $locale;
 
     private FileVersion $fileVersion;
@@ -78,6 +80,35 @@ class FileVersionMeta
     public function getCredits(): ?string
     {
         return $this->credits;
+    }
+
+    public function setSeoFilename(?string $seoFilename): static
+    {
+        $this->seoFilename = $seoFilename;
+
+        return $this;
+    }
+
+    public function getSeoFilename(): ?string
+    {
+        return $this->seoFilename;
+    }
+
+    /**
+     * Returns the SEO filename if set, otherwise falls back to the FileVersion name.
+     */
+    public function getEffectiveFilename(): string
+    {
+        if (null !== $this->seoFilename && '' !== $this->seoFilename) {
+            // Preserve the original file extension
+            $fileVersionName = $this->fileVersion->getName();
+            $extension = \pathinfo($fileVersionName, \PATHINFO_EXTENSION);
+            $seoBasename = \pathinfo($this->seoFilename, \PATHINFO_FILENAME);
+
+            return $seoBasename . '.' . $extension;
+        }
+
+        return $this->fileVersion->getName();
     }
 
     public function setLocale(string $locale): static
