@@ -370,6 +370,7 @@ final class SuluPageBundle extends AbstractBundle
             ->tag('sulu.descendant_provider');
 
         $services->alias(PageRepositoryInterface::class, 'sulu_page.page_repository');
+        $services->alias(PageRepository::class, 'sulu_page.page_repository');
 
         // Commands services
         $services->set('sulu_page.command.initialize_homepage')

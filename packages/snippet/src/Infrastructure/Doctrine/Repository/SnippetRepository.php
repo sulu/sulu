@@ -24,7 +24,7 @@ use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 use Webmozart\Assert\Assert;
 
-class SnippetRepository implements SnippetRepositoryInterface
+final class SnippetRepository implements SnippetRepositoryInterface
 {
     /**
      * TODO it should be possible to extend fields and groups inside the SELECTS.
@@ -214,7 +214,7 @@ class SnippetRepository implements SnippetRepositoryInterface
      *     with-snippet-content?: bool|array<string, mixed>,
      * }|array<string, mixed> $selects
      */
-    private function createQueryBuilder(array $filters, array $sortBy = [], array $selects = []): QueryBuilder
+    public function createQueryBuilder(array $filters, array $sortBy = [], array $selects = []): QueryBuilder
     {
         foreach ($selects as $selectGroup => $value) {
             if (!$value) {

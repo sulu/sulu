@@ -273,6 +273,7 @@ final class SuluArticleBundle extends AbstractBundle
             ]);
 
         $services->alias(ArticleRepositoryInterface::class, 'sulu_article.article_repository');
+        $services->alias(ArticleRepository::class, 'sulu_article.article_repository');
 
         $services->set('sulu_article.admin_article_controller')
             ->class(ArticleController::class)

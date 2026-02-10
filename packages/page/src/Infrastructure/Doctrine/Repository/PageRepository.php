@@ -31,7 +31,7 @@ use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Webmozart\Assert\Assert;
 
-class PageRepository implements PageRepositoryInterface
+final class PageRepository implements PageRepositoryInterface
 {
     /**
      * TODO it should be possible to extend fields and groups inside the SELECTS.
@@ -286,7 +286,7 @@ class PageRepository implements PageRepositoryInterface
      *     with-page-content?: bool|array<string, mixed>,
      * }|array<string, mixed> $selects
      */
-    private function createQueryBuilder(array $filters, array $sortBy = [], array $selects = []): QueryBuilder
+    public function createQueryBuilder(array $filters, array $sortBy = [], array $selects = []): QueryBuilder
     {
         $accessControl = $filters['accessControl'] ?? null;
         unset($filters['accessControl']);

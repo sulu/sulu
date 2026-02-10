@@ -280,6 +280,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ]);
 
         $services->alias(SnippetRepositoryInterface::class, 'sulu_snippet.snippet_repository');
+        $services->alias(SnippetRepository::class, 'sulu_snippet.snippet_repository');
 
         $services->set('sulu_snippet.snippet_area_repository')
             ->class(SnippetAreaRepository::class)
