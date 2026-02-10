@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * @internal no backwards compatibility promise, only for internal use.
+ * @internal no backwards compatibility promise, only for internal use
  */
 class FormMetadataCachePass implements CompilerPassInterface
 {
