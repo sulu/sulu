@@ -818,6 +818,46 @@ sulu_media:
 
 This will only create the service `sulu_media.storage` as the alias to `sulu_media.storage.*` services has been removed.
 
+### PHPCR, Jackalope and DocumentManager related service got removed
+
+A completely new content storage was written for Sulu 3.0. Instead of `PHPCR` and `Jackalope`,
+the new content storage uses `Doctrine ORM` entities, which most Symfony developers should be more familiar with.
+
+So, all queries you previously wrote with `PHPCR` and `Jackalope` now need to be rewritten using the `Doctrine ORM Query Builder`.
+Take a look at examples in the repositories of the new entities.
+
+Also, the DocumentManager and its functions were removed.
+The new bundles use a hexagonal architecture and a command bus to dispatch commands for creating, editing, publishing, and unpublishing content.
+
+Here are some quick examples of the most commonly used functions:
+
+ - `DocumentManager::find`
+    - `PageRepositoryInterface::getOneBy(['uuid' => $uuid])`
+    - `ArticleRepository::getOneBy(['uuid' => $uuid])`
+    - `SnippetRepository::getOneBy(['uuid' => $uuid])`
+ - `DocumentManager::create`
+    - `MessageBusInterface::dispatch(new Envelope(new CreatePageMessage($webspaceKey, $parentId, $data), [new EnableFlushStamp()]));`
+    - `MessageBusInterface::dispatch(new Envelope(new CreateArticleMessage($webspaceKey, $parentId, $data), [new EnableFlushStamp()]));`
+    - `MessageBusInterface::dispatch(new Envelope(new CreateSnipetMessage($webspaceKey, $parentId, $data), [new EnableFlushStamp()]));`
+ - `DocumentManager::find` and `edit`:
+    - `MessageBusInterface::dispatch(new Envelope(new ModifyPageMessage($webspaceKey, $parentId, $data), [new EnableFlushStamp()]));`
+    - `MessageBusInterface::dispatch(new Envelope(new ModifyArticleMessage($webspaceKey, $parentId, $data), [new EnableFlushStamp()]));`
+    - `MessageBusInterface::dispatch(new Envelope(new ModifySnipetMessage($webspaceKey, $parentId, $data), [new EnableFlushStamp()]));`
+ - `DocumentManager::publish`:
+    - `MessageBusInterface::dispatch(new Envelope(new ApplyWorkflowTransitionPageMessage(['uuid' => $uuid], $data, WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH), [new EnableFlushStamp()]));`
+    - `MessageBusInterface::dispatch(new Envelope(new ApplyWorkflowTransitionArticleMessage(['uuid' => $uuid], $data, WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH), [new EnableFlushStamp()]));`
+    - `MessageBusInterface::dispatch(new Envelope(new ApplyWorkflowTransitionSnippetMessage(['uuid' => $uuid], $data, WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH), [new EnableFlushStamp()]));`
+ - `DocumentManager::unpublish`:
+    - `MessageBusInterface::dispatch(new Envelope(new ApplyWorkflowTransitionPageMessage(['uuid' => $uuid], $locale, WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH), [new EnableFlushStamp()]));`
+    - `MessageBusInterface::dispatch(new Envelope(new ApplyWorkflowTransitionArticleMessage(['uuid' => $uuid], $locale, WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH), [new EnableFlushStamp()]));`
+    - `MessageBusInterface::dispatch(new Envelope(new ApplyWorkflowTransitionSnippetMessage(['uuid' => $uuid], $locale, WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH), [new EnableFlushStamp()]));`
+
+Instead of DocumentManager events use Doctrine ORM event listeners or listen to the domain events provided by 
+the new bundles. You will find them in the `src/Domain/Event` directory of the different bundles under `/packages/*`.
+
+If you want deeper understand the new storage works under the hood checkout following presentation from SymfonyCon 2024:
+[From Translations to Multi Dimension Entities](https://speakerdeck.com/alexanderschranz/from-translations-to-multi-dimension-entities).
+
 ### Preview Services changed
 
 Most of the services in the PreviewBundle are now internal. The new `PreviewDefaultsProviderInterface` is
