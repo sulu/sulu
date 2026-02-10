@@ -65,7 +65,7 @@
         "psr/container": "^1.0 || ^2.0",
         "psr/log": "^1.0 || ^2.0 || ^3.0",
         "stof/doctrine-extensions-bundle": "^1.7",
-        "sulu/messenger": "^0.2",
+        "sulu/messenger": "^0.2 || ^1.0",
         "symfony-cmf/routing": "^3.0",
         "symfony-cmf/routing-bundle": "^3.0",
         "symfony/asset": "^6.4 || ^7.1",
