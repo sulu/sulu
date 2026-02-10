@@ -52,6 +52,9 @@ class NavigationRepositoryPermissionTest extends SuluTestCase
         $this->navigationRepository = $this->getContainer()->get('sulu_page.navigation_repository');
         $this->anonymousRole = $this->createAnonymousRoleWithWebspacePermissions('sulu-test-secure');
 
+        $systemStore = $this->getContainer()->get('sulu_security.system_store');
+        $systemStore->setSystem('sulu-test-secure');
+
         $this->homepageNonSecure = $this->createPage([
             'en' => [
                 'live' => [
@@ -121,6 +124,7 @@ class NavigationRepositoryPermissionTest extends SuluTestCase
         );
 
         $uuids = \array_column($result, 'uuid');
+        $this->assertCount(2, $result);
         $this->assertContains($allowedPage->getUuid(), $uuids);
         $this->assertNotContains($deniedPage1->getUuid(), $uuids);
         $this->assertNotContains($deniedPage2->getUuid(), $uuids);
@@ -135,16 +139,17 @@ class NavigationRepositoryPermissionTest extends SuluTestCase
         $this->denyAccessToPage($deniedPage, $this->anonymousRole);
         $this->entityManager->clear();
 
-        $result = $this->navigationRepository->getNavigationTreeByUuid(
-            $this->homepageSecure->getUuid(),
+        $result = $this->navigationRepository->getNavigationTree(
+            'main',
             'en',
             'sulu-test-secure',
-            1,
-            'main',
+            null,
+            2,
             $this->getDefaultProperties()
         );
 
-        $uuids = \array_column($result, 'uuid');
+        $uuids = $this->collectTreeUuids($result);
+        $this->assertCount(2, $uuids);
         $this->assertContains($allowedPage->getUuid(), $uuids);
         $this->assertNotContains($deniedPage->getUuid(), $uuids);
     }
@@ -168,6 +173,7 @@ class NavigationRepositoryPermissionTest extends SuluTestCase
         );
 
         $uuids = \array_column($result, 'uuid');
+        $this->assertCount(1, $result);
         $this->assertContains($allowedPage->getUuid(), $uuids);
         $this->assertNotContains($deniedPage->getUuid(), $uuids);
     }
@@ -191,6 +197,7 @@ class NavigationRepositoryPermissionTest extends SuluTestCase
         );
 
         $uuids = \array_column($result, 'uuid');
+        $this->assertCount(1, $result);
         $this->assertContains($allowedPage->getUuid(), $uuids);
         $this->assertNotContains($deniedPage->getUuid(), $uuids);
     }
@@ -218,6 +225,7 @@ class NavigationRepositoryPermissionTest extends SuluTestCase
         );
 
         $uuids = \array_column($result, 'uuid');
+        $this->assertCount(2, $result);
         $this->assertContains($allowed1->getUuid(), $uuids);
         $this->assertContains($allowed2->getUuid(), $uuids);
         $this->assertNotContains($denied1->getUuid(), $uuids);
@@ -278,6 +286,7 @@ class NavigationRepositoryPermissionTest extends SuluTestCase
         $this->assertIsArray($parentInResult['children']);
 
         $childUuids = \array_column($parentInResult['children'], 'uuid');
+        $this->assertCount(1, $childUuids);
         $this->assertContains($allowedChild->getUuid(), $childUuids);
         $this->assertNotContains($deniedChild->getUuid(), $childUuids);
     }
@@ -285,7 +294,8 @@ class NavigationRepositoryPermissionTest extends SuluTestCase
     public function testNavigationWithPageWithoutAccessControlEntryUsesWebspacePermissions(): void
     {
         $pageWithoutAcl = $this->createSimplePage('sulu-test-secure', 'en', 'Page Without ACL');
-
+        $deniedPage = $this->createSimplePage('sulu-test-secure', 'en', 'Denied Page');
+        $this->denyAccessToPage($deniedPage, $this->anonymousRole);
         $this->entityManager->clear();
 
         $result = $this->navigationRepository->getNavigationFlat(
@@ -298,7 +308,9 @@ class NavigationRepositoryPermissionTest extends SuluTestCase
         );
 
         $uuids = \array_column($result, 'uuid');
+        $this->assertCount(2, $result);
         $this->assertContains($pageWithoutAcl->getUuid(), $uuids);
+        $this->assertNotContains($deniedPage->getUuid(), $uuids);
     }
 
     public function testBreadcrumbShowsAllAncestorsRegardlessOfPermissions(): void
@@ -321,6 +333,18 @@ class NavigationRepositoryPermissionTest extends SuluTestCase
         $this->grantViewAccessToPage($childPage, $this->anonymousRole);
         $this->entityManager->clear();
 
+        $navResult = $this->navigationRepository->getNavigationFlat(
+            'main',
+            'en',
+            'sulu-test-secure',
+            null,
+            2,
+            $this->getDefaultProperties()
+        );
+
+        $navUuids = \array_column($navResult, 'uuid');
+        $this->assertNotContains($parentPage->getUuid(), $navUuids, 'Denied parent should be filtered from regular navigation');
+
         $result = $this->navigationRepository->getBreadcrumb(
             $childPage->getUuid(),
             'en',
@@ -332,6 +356,66 @@ class NavigationRepositoryPermissionTest extends SuluTestCase
         $uuids = \array_column($result, 'uuid');
         $this->assertContains($parentPage->getUuid(), $uuids);
         $this->assertContains($childPage->getUuid(), $uuids);
+    }
+
+    public function testNavigationTreeWithDeniedParentStillShowsAllowedChildren(): void
+    {
+        $deniedParent = $this->createSimplePage('sulu-test-secure', 'en', 'Denied Parent');
+
+        $childOfDenied = $this->createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Child of Denied',
+                    'url' => '/denied-parent/child-of-denied',
+                    'navigationContexts' => ['main'],
+                    'parentId' => $deniedParent->getUuid(),
+                ],
+            ],
+        ], 'sulu-test-secure');
+
+        $allowedPage = $this->createSimplePage('sulu-test-secure', 'en', 'Allowed Page');
+
+        $this->denyAccessToPage($deniedParent, $this->anonymousRole);
+        $this->grantViewAccessToPage($childOfDenied, $this->anonymousRole);
+        $this->grantViewAccessToPage($allowedPage, $this->anonymousRole);
+        $this->entityManager->clear();
+
+        $result = $this->navigationRepository->getNavigationTree(
+            'main',
+            'en',
+            'sulu-test-secure',
+            null,
+            2,
+            $this->getDefaultProperties()
+        );
+
+        $uuids = $this->collectTreeUuids($result);
+        $this->assertContains($allowedPage->getUuid(), $uuids);
+        $this->assertNotContains($deniedParent->getUuid(), $uuids);
+        $this->assertContains($childOfDenied->getUuid(), $uuids);
+    }
+
+    /**
+     * @param array<array<string, mixed>> $items
+     *
+     * @return string[]
+     */
+    private function collectTreeUuids(array $items): array
+    {
+        $uuids = [];
+        foreach ($items as $item) {
+            if (isset($item['uuid']) && \is_string($item['uuid'])) {
+                $uuids[] = $item['uuid'];
+            }
+            if (!empty($item['children']) && \is_array($item['children'])) {
+                /** @var array<array<string, mixed>> $children */
+                $children = $item['children'];
+                $uuids = \array_merge($uuids, $this->collectTreeUuids($children));
+            }
+        }
+
+        return $uuids;
     }
 
     private function createSimplePage(string $webspaceKey, string $locale, string $title, string $template = 'default'): Page

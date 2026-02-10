@@ -68,6 +68,10 @@ class NavigationRepository implements NavigationRepositoryInterface
         private ?Security $security = null,
         private ?array $permissions = null,
     ) {
+        if (null === $webspaceManager || null === $accessControlQueryEnhancer || null === $permissions) {
+            @trigger_deprecation('sulu/sulu', '3.0', 'Not passing the "$webspaceManager", "$accessControlQueryEnhancer" and "$permissions" arguments to "%s" is deprecated and they will be required in a future version.', __METHOD__);
+        }
+
         $repository = $entityManager->getRepository(PageInterface::class);
         Assert::isInstanceOf($repository, NestedTreeRepository::class);
 
@@ -238,13 +242,13 @@ class NavigationRepository implements NavigationRepositoryInterface
      */
     private function fetchNestedSetValues(string $uuid, array $fields): ?array
     {
-        $qb = $this->entityRepository->createQueryBuilder('page');
-        $qb->select(...\array_map(fn ($f) => "page.{$f}", $fields))
+        $queryBuilder = $this->entityRepository->createQueryBuilder('page');
+        $queryBuilder->select(...\array_map(fn ($f) => "page.{$f}", $fields))
             ->where('page.uuid = :uuid')
             ->setParameter('uuid', $uuid);
 
         /** @var array<string, int|string>|null $result */
-        $result = $qb->getQuery()->getOneOrNullResult();
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
 
         return $result;
     }
@@ -537,7 +541,7 @@ class NavigationRepository implements NavigationRepositoryInterface
         if ($permission) {
             $this->accessControlQueryEnhancer->enhance(
                 $queryBuilder,
-                $user instanceof UserInterface ? $user : null,
+                $user,
                 $permission,
                 Page::class,
                 $alias,
