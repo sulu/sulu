@@ -20,42 +20,15 @@ use Symfony\Component\VarExporter\VarExporter;
 class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerInterface
 {
     /**
-     * @var FormXmlLoader
+     * @param array<string> $formDirectories
      */
-    private $formXmlLoader;
-
-    /**
-     * @var FieldMetadataValidatorInterface
-     */
-    private $fieldMetadataValidator;
-
-    /**
-     * @var string[]
-     */
-    private $formDirectories;
-
-    /**
-     * @var string
-     */
-    private $cacheDir;
-
-    /**
-     * @var bool
-     */
-    private $debug;
-
     public function __construct(
-        FormXmlLoader $formXmlLoader,
-        FieldMetadataValidatorInterface $fieldMetadataValidator,
-        array $formDirectories,
-        string $cacheDir,
-        bool $debug
+        private FormXmlLoader $formXmlLoader,
+        private FieldMetadataValidatorInterface $fieldMetadataValidator,
+        private array $formDirectories,
+        private string $cacheDir,
+        private bool $debug
     ) {
-        $this->formXmlLoader = $formXmlLoader;
-        $this->fieldMetadataValidator = $fieldMetadataValidator;
-        $this->formDirectories = $formDirectories;
-        $this->cacheDir = $cacheDir;
-        $this->debug = $debug;
     }
 
     public function getMetadata(string $key, string $locale, array $metadataOptions = []): ?FormMetadata
