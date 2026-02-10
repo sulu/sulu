@@ -91,12 +91,12 @@ final class ArticleController implements SecuredControllerInterface
         /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create(ArticleInterface::class);
         $listBuilder->setIdField($fieldDescriptors['id']); // TODO should be uuid field descriptor
+        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
         $listBuilder->addSelectField($fieldDescriptors['locale']);
         $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);
         $listBuilder->addSelectField($fieldDescriptors['published']);
         $listBuilder->addSelectField($fieldDescriptors['publishedState']);
         $listBuilder->setParameter('locale', $request->query->get('locale'));
-        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
         if (0 !== \count($templates)) {
             $dimensionContentTemplateKey = $fieldDescriptors['dimensionContentTemplateKey'];
             $ghostDimensionContentTemplateKey = $fieldDescriptors['ghostDimensionContentTemplateKey'];

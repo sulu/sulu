@@ -2,7 +2,7 @@
     "_embedded": {
         "articles": [
             {
-                "author": "@string@",
+                "author": null,
                 "authored": "@datetime@",
                 "changed": "@datetime@",
                 "changer": "@string@",
@@ -11,9 +11,9 @@
                 "ghostLocale": null,
                 "id": "@string@",
                 "locale": "@string@",
-                "published": null,
-                "publishedState": false,
-                "title": "Test Article 2"
+                "published": "@datetime@",
+                "publishedState": true,
+                "title": "Test Article"
             }
         ]
     },
