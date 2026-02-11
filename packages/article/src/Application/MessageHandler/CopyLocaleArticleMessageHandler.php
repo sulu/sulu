@@ -13,6 +13,7 @@ namespace Sulu\Article\Application\MessageHandler;
 
 use Sulu\Article\Application\Message\CopyLocaleArticleMessage;
 use Sulu\Article\Domain\Event\ArticleTranslationCopiedEvent;
+use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
@@ -31,7 +32,7 @@ final class CopyLocaleArticleMessageHandler
     ) {
     }
 
-    public function __invoke(CopyLocaleArticleMessage $message): void
+    public function __invoke(CopyLocaleArticleMessage $message): ArticleInterface
     {
         $article = $this->articleRepository->getOneBy(
             $message->getIdentifier(),
@@ -63,5 +64,7 @@ final class CopyLocaleArticleMessageHandler
         );
 
         $this->domainEventCollector->collect(new ArticleTranslationCopiedEvent($article, $message->getTargetLocale(), $message->getSourceLocale(), []));
+
+        return $article;
     }
 }

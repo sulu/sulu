@@ -17,6 +17,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Snippet\Application\Message\ApplyWorkflowTransitionSnippetMessage;
 use Sulu\Snippet\Domain\Event\SnippetWorkflowTransitionAppliedEvent;
+use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 
 /**
@@ -32,7 +33,7 @@ final class ApplyWorkflowTransitionSnippetMessageHandler
     ) {
     }
 
-    public function __invoke(ApplyWorkflowTransitionSnippetMessage $message): void
+    public function __invoke(ApplyWorkflowTransitionSnippetMessage $message): SnippetInterface
     {
         $snippet = $this->snippetRepository->getOneBy(
             $message->getIdentifier(),
@@ -54,5 +55,7 @@ final class ApplyWorkflowTransitionSnippetMessageHandler
         );
 
         $this->domainEventCollector->collect(new SnippetWorkflowTransitionAppliedEvent($snippet, $message->getTransitionName(), $message->getLocale()));
+
+        return $snippet;
     }
 }
