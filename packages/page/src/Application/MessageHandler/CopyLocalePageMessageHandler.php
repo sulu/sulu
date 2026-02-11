@@ -60,13 +60,12 @@ final class CopyLocalePageMessageHandler
             ]
         );
 
-        $this->domainEventCollector->collect(
-            new PageTranslationCopiedEvent(
-                $page,
-                $message->getSourceLocale(),
-                $message->getTargetLocale()
-            )
-        );
+        $this->domainEventCollector->collect(new PageTranslationCopiedEvent(
+            $page,
+            $message->getTargetLocale(),
+            $message->getSourceLocale(),
+            [],
+        ));
         
         return $page;
     }
