@@ -299,7 +299,7 @@ class Localization implements \Stringable, \JsonSerializable, ArrayableInterface
             }
         }
 
-        return;
+        return null;
     }
 
     /**

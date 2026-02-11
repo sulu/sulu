@@ -690,7 +690,7 @@ class CollectionManager implements CollectionManagerInterface
             }
         }
 
-        return;
+        return [];
     }
 
     /**

@@ -42,9 +42,7 @@ class AbstractRestControllerTest extends TestCase
         $method->setAccessible(true);
 
         $id = 1;
-        $findCallback = function($id) {
-            return ['id' => $id];
-        };
+        $findCallback = fn ($id) => ['id' => $id];
 
         /** @var View $view */
         $view = $method->invoke($this->controller, $id, $findCallback);
@@ -59,9 +57,7 @@ class AbstractRestControllerTest extends TestCase
         $method->setAccessible(true);
 
         $id = 1;
-        $findCallback = function($id) {
-            return;
-        };
+        $findCallback = fn ($id) => null;
 
         /** @var View $view */
         $view = $method->invoke($this->controller, $id, $findCallback);

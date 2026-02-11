@@ -117,6 +117,15 @@ class ArticleControllerTest extends SuluTestCase
     }
 
     #[Depends('testPostPublish')]
+    public function testGetListPublished(): void
+    {
+        $this->client->request('GET', '/admin/api/articles?locale=en');
+        $response = $this->client->getResponse();
+
+        $this->assertResponseSnapshot('article_cget_published.json', $response, 200);
+    }
+
+    #[Depends('testPostPublish')]
     public function testVersionListAfterPublish(string $id): string
     {
         $this->client->request('GET', '/admin/api/articles/' . $id . '/versions?page=1&locale=en&fields=title,version,changer,id');

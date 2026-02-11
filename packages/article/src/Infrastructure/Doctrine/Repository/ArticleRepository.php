@@ -24,7 +24,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Webmozart\Assert\Assert;
 
-class ArticleRepository implements ArticleRepositoryInterface
+final class ArticleRepository implements ArticleRepositoryInterface
 {
     /**
      * TODO it should be possible to extend fields and groups inside the SELECTS.
@@ -51,27 +51,27 @@ class ArticleRepository implements ArticleRepositoryInterface
     /**
      * @var EntityRepository<ArticleInterface>
      */
-    protected $entityRepository;
+    private $entityRepository;
 
     /**
      * @var EntityRepository<ArticleDimensionContentInterface>
      */
-    protected $entityDimensionContentRepository;
+    private $entityDimensionContentRepository;
 
     /**
      * @var DimensionContentQueryEnhancer
      */
-    protected $dimensionContentQueryEnhancer;
+    private $dimensionContentQueryEnhancer;
 
     /**
      * @var class-string<ArticleInterface>
      */
-    protected $articleClassName;
+    private $articleClassName;
 
     /**
      * @var class-string<ArticleDimensionContentInterface>
      */
-    protected $articleDimensionContentClassName;
+    private $articleDimensionContentClassName;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -214,7 +214,7 @@ class ArticleRepository implements ArticleRepositoryInterface
      *     with-article-content?: bool|array<string, mixed>,
      * }|array<string, mixed> $selects
      */
-    private function createQueryBuilder(array $filters, array $sortBy = [], array $selects = []): QueryBuilder
+    public function createQueryBuilder(array $filters, array $sortBy = [], array $selects = []): QueryBuilder
     {
         foreach ($selects as $selectGroup => $value) {
             if (!$value) {
