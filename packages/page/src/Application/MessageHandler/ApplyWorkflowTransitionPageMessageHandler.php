@@ -32,7 +32,7 @@ final class ApplyWorkflowTransitionPageMessageHandler
     ) {
     }
 
-    public function __invoke(ApplyWorkflowTransitionPageMessage $message): void
+    public function __invoke(ApplyWorkflowTransitionPageMessage $message): PageInterface
     {
         $page = $this->pageRepository->getOneBy(
             $message->getIdentifier(),
@@ -54,5 +54,7 @@ final class ApplyWorkflowTransitionPageMessageHandler
         );
 
         $this->domainEventCollector->collect(new PageWorkflowTransitionAppliedEvent($page, $message->getTransitionName(), $message->getLocale()));
+        
+        return $page;
     }
 }

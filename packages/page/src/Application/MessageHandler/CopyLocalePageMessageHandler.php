@@ -31,7 +31,7 @@ final class CopyLocalePageMessageHandler
     ) {
     }
 
-    public function __invoke(CopyLocalePageMessage $message): void
+    public function __invoke(CopyLocalePageMessage $message): PageInterface
     {
         $page = $this->pageRepository->getOneBy(
             $message->getIdentifier(),
@@ -59,11 +59,14 @@ final class CopyLocalePageMessageHandler
             ]
         );
 
-        $this->domainEventCollector->collect(new PageTranslationCopiedEvent(
-            $page,
-            $message->getTargetLocale(),
-            $message->getSourceLocale(),
-            [],
-        ));
+        $this->domainEventCollector->collect(
+            new PageTranslationCopiedEvent(
+                $page,
+                $message->getSourceLocale(),
+                $message->getTargetLocale()
+            )
+        );
+        
+        return $page;
     }
 }
