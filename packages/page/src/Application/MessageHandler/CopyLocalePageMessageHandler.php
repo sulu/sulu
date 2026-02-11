@@ -16,8 +16,8 @@ use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Application\Message\CopyLocalePageMessage;
 use Sulu\Page\Domain\Event\PageTranslationCopiedEvent;
-use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 
 /**
  * @internal This class should not be instantiated by a project.
@@ -66,7 +66,7 @@ final class CopyLocalePageMessageHandler
             $message->getSourceLocale(),
             [],
         ));
-        
+
         return $page;
     }
 }
