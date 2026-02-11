@@ -6655,25 +6655,7 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\Category\:\:getMeta\(\) should return array but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\Category\:\:getName\(\) should return string but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\Category\:\:getParent\(\) should return Sulu\\Bundle\\CategoryBundle\\Api\\Category\|null but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\Category\:\:getParentId\(\) should return Sulu\\Bundle\\CategoryBundle\\Api\\Category\|null but empty return statement found\.$#'
 			identifier: return.empty
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
@@ -9613,12 +9595,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Account\:\:getAddresses\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -9691,18 +9667,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Account\:\:getLogo\(\) should return Sulu\\Bundle\\MediaBundle\\Api\\Media but returns array\<string, array\|int\|string\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Account\:\:getMainAddress\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Account\:\:getMainContact\(\) should return Sulu\\Bundle\\ContactBundle\\Api\\Account but returns Sulu\\Bundle\\ContactBundle\\Api\\Contact\.$#'
 			identifier: return.type
 			count: 1
@@ -9764,18 +9728,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Account\:\:getNumber\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Account\:\:getParent\(\) should return Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Account\:\:getParent\(\) should return Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface but returns Sulu\\Bundle\\ContactBundle\\Api\\Account\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
@@ -9963,12 +9915,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$array of function array_map expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
@@ -11071,26 +11017,8 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Contact\:\:getAccount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Contact\:\:getAddresses\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Contact\:\:getAvatar\(\) should return Sulu\\Bundle\\MediaBundle\\Api\\Media but returns array\<string, array\|int\|string\>\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
 
@@ -11181,12 +11109,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Contact\:\:getLocales\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Contact\:\:getMainAddress\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
 
@@ -11451,12 +11373,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$array of function array_map expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
 
@@ -13311,18 +13227,12 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:findAll\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:findAll\(\) should return array\|null but empty return statement found\.$#'
-			identifier: return.empty
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
@@ -13335,12 +13245,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:findContactsByAccountId\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:findContactsByAccountId\(\) should return array\|null but empty return statement found\.$#'
-			identifier: return.empty
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
@@ -13455,12 +13359,6 @@ parameters:
 		-
 			message: '#^Unable to resolve the template type TMaybeContained in call to method Doctrine\\Common\\Collections\\ReadableCollection\<int,Sulu\\Bundle\\MediaBundle\\Entity\\MediaInterface\>\:\:contains\(\)$#'
 			identifier: argument.templateType
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
@@ -21475,20 +21373,8 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/Bridge/DocumentInspector.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\DocumentManagerBundle\\Bridge\\DocumentInspector\:\:extractWebspaceFromPath\(\) should return string but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Bridge/DocumentInspector.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\DocumentManagerBundle\\Bridge\\DocumentInspector\:\:getConcreteLocales\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Bridge/DocumentInspector.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\DocumentManagerBundle\\Bridge\\DocumentInspector\:\:getLocale\(\) should return string\|null but empty return statement found\.$#'
-			identifier: return.empty
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Bridge/DocumentInspector.php
 
@@ -21513,6 +21399,12 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\DocumentManagerBundle\\Bridge\\DocumentInspector\:\:getStructureMetadata\(\) should return Sulu\\Component\\Content\\Metadata\\StructureMetadata\|null but empty return statement found\.$#'
 			identifier: return.empty
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Bridge/DocumentInspector.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\DocumentManagerBundle\\Bridge\\DocumentInspector\:\:getWebspace\(\) should return string but returns string\|null\.$#'
+			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Bridge/DocumentInspector.php
 
@@ -24955,18 +24847,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:getCollection\(\) should return int but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:getCollection\(\) should return int but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:getContentLanguages\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -25323,12 +25203,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManager\:\:getPreview\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManager\:\:getPreview\(\) should return array but empty return statement found\.$#'
-			identifier: return.empty
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
@@ -28513,12 +28387,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/XmlFormatLoader10.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\FormatLoader\\XmlFormatLoader10\:\:getScaleFromFormatNode\(\) should return array but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/XmlFormatLoader10.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\FormatLoader\\XmlFormatLoader10\:\:getTransformationsFromFormatNode\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -28575,12 +28443,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\FormatLoader\\XmlFormatLoader11\:\:getScaleFromFormatNode\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/XmlFormatLoader11.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\FormatLoader\\XmlFormatLoader11\:\:getScaleFromFormatNode\(\) should return array but returns array\<string, mixed\>\|null\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/XmlFormatLoader11.php
 
@@ -65035,12 +64897,6 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/PropertyType.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Compat\\PropertyType\:\:getProperty\(\) should return Sulu\\Component\\Content\\Compat\\PropertyInterface\|null but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Component/Content/Compat/PropertyType.php
-
-		-
 			message: '#^Parameter \#1 \$metadata of class Sulu\\Component\\Content\\Compat\\Metadata constructor expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -65235,18 +65091,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Component\\Content\\Compat\\Structure\:\:copyFrom\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Structure.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Compat\\Structure\:\:findProperty\(\) never returns null so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Structure.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Compat\\Structure\:\:findProperty\(\) should return Sulu\\Component\\Content\\Compat\\PropertyInterface\|null but empty return statement found\.$#'
-			identifier: return.empty
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Structure.php
 
@@ -66873,7 +66717,7 @@ parameters:
 		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
-			count: 5
+			count: 4
 			path: src/Sulu/Component/Content/Document/Extension/ExtensionContainer.php
 
 		-
@@ -76783,18 +76627,6 @@ parameters:
 			path: src/Sulu/Component/CustomUrl/Document/CustomUrlDocument.php
 
 		-
-			message: '#^Method Sulu\\Component\\CustomUrl\\Document\\CustomUrlNodeType\:\:getPrimaryItemName\(\) should return string but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Document/CustomUrlNodeType.php
-
-		-
-			message: '#^Method Sulu\\Component\\CustomUrl\\Document\\CustomUrlRouteNodeType\:\:getPrimaryItemName\(\) should return string but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Document/CustomUrlRouteNodeType.php
-
-		-
 			message: '#^Method Sulu\\Component\\CustomUrl\\Document\\Initializer\\CustomUrlInitializer\:\:initialize\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -82093,12 +81925,6 @@ parameters:
 			path: src/Sulu/Component/Localization/Localization.php
 
 		-
-			message: '#^Method Sulu\\Component\\Localization\\Localization\:\:findLocalization\(\) should return Sulu\\Component\\Localization\\Localization\|null but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Component/Localization/Localization.php
-
-		-
 			message: '#^Method Sulu\\Component\\Localization\\Localization\:\:setChildren\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -83173,20 +82999,8 @@ parameters:
 			path: src/Sulu/Component/PHPCR/NodeTypes/Base/SuluNodeType.php
 
 		-
-			message: '#^Method Sulu\\Component\\PHPCR\\NodeTypes\\Base\\SuluNodeType\:\:getPrimaryItemName\(\) should return string but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Component/PHPCR/NodeTypes/Base/SuluNodeType.php
-
-		-
 			message: '#^Method Sulu\\Component\\PHPCR\\NodeTypes\\Content\\ContentNodeType\:\:getDeclaredSupertypeNames\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/PHPCR/NodeTypes/Content/ContentNodeType.php
-
-		-
-			message: '#^Method Sulu\\Component\\PHPCR\\NodeTypes\\Content\\ContentNodeType\:\:getPrimaryItemName\(\) should return string but empty return statement found\.$#'
-			identifier: return.empty
 			count: 1
 			path: src/Sulu/Component/PHPCR/NodeTypes/Content/ContentNodeType.php
 
@@ -83259,12 +83073,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Component\\PHPCR\\NodeTypes\\Path\\PathNodeType\:\:getDeclaredSupertypeNames\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/PHPCR/NodeTypes/Path/PathNodeType.php
-
-		-
-			message: '#^Method Sulu\\Component\\PHPCR\\NodeTypes\\Path\\PathNodeType\:\:getPrimaryItemName\(\) should return string but empty return statement found\.$#'
-			identifier: return.empty
 			count: 1
 			path: src/Sulu/Component/PHPCR/NodeTypes/Path/PathNodeType.php
 
@@ -84139,20 +83947,8 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/AbstractListBuilder.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:getFieldDescriptor\(\) should return Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface\|null but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/AbstractListBuilder.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:getIds\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/AbstractListBuilder.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:getSelectField\(\) should return Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface but empty return statement found\.$#'
-			identifier: return.empty
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/AbstractListBuilder.php
 
@@ -89719,12 +89515,6 @@ parameters:
 			path: src/Sulu/Component/Util/SuluNodeHelper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Util\\SuluNodeHelper\:\:getStructureTypeForNode\(\) should return string but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Component/Util/SuluNodeHelper.php
-
-		-
 			message: '#^Method Sulu\\Component\\Util\\SuluNodeHelper\:\:hasSuluNodeType\(\) has parameter \$suluNodeTypes with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -90171,12 +89961,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Component\\Util\\WildcardUrlUtil\:\:match\(\) should return bool but returns int\|false\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Util/WildcardUrlUtil.php
-
-		-
-			message: '#^Method Sulu\\Component\\Util\\WildcardUrlUtil\:\:resolve\(\) should return string but empty return statement found\.$#'
-			identifier: return.empty
 			count: 1
 			path: src/Sulu/Component/Util/WildcardUrlUtil.php
 

@@ -806,7 +806,7 @@ class ContentMapper implements ContentMapperInterface
             return $this->getPropertyData($document, $field['property']);
         }
 
-        return;
+        return null;
     }
 
     /**

@@ -110,6 +110,6 @@ class MediaTwigExtension extends AbstractExtension
             return $this->mediaManager->addFormatsAndUrl($media);
         }
 
-        return;
+        return null;
     }
 }

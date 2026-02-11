@@ -150,13 +150,13 @@ class SuluNodeType implements NodeTypeDefinitionInterface
      * NodeTypeDefinitionInterface object is actually a newly-created empty
      * NodeTypeTemplateInterface, then this method will return null.
      *
-     * @return string The name of the primary item
+     * @return string|null The name of the primary item
      *
      * @api
      */
     public function getPrimaryItemName()
     {
-        return;
+        return null;
     }
 
     /**

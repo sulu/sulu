@@ -544,7 +544,7 @@ abstract class Structure implements StructureInterface
             }
         }
 
-        return;
+        return null;
     }
 
     /**
