@@ -45699,13 +45699,13 @@ parameters:
 		-
 			message: '#^Cannot call method createSearch\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 4
+			count: 5
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Search/SaveDocumentTest.php
 
 		-
 			message: '#^Cannot call method execute\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 4
+			count: 5
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Search/SaveDocumentTest.php
 
 		-
@@ -45735,13 +45735,13 @@ parameters:
 		-
 			message: '#^Cannot call method index\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 4
+			count: 5
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Search/SaveDocumentTest.php
 
 		-
 			message: '#^Cannot call method locale\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 4
+			count: 5
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Search/SaveDocumentTest.php
 
 		-
