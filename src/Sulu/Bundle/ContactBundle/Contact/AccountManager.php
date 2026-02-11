@@ -226,7 +226,7 @@ class AccountManager extends AbstractContactManager
             return $contacts;
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -292,7 +292,7 @@ class AccountManager extends AbstractContactManager
     /**
      * Returns an api entity for an doctrine entity.
      *
-     * @param AccountInterface $account
+     * @param AccountInterface|null $account
      * @param string $locale
      *
      * @return null|AccountApi
@@ -303,7 +303,7 @@ class AccountManager extends AbstractContactManager
             return $this->getApiObject($account, $locale);
         }
 
-        return;
+        return null;
     }
 
     public function deleteAllRelations($entity)

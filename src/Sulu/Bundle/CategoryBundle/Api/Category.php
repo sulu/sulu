@@ -295,7 +295,7 @@ class Category extends ApiEntityWrapper
             return new self($parent, $this->locale);
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -313,7 +313,7 @@ class Category extends ApiEntityWrapper
             return $parent->getId();
         }
 
-        return;
+        return null;
     }
 
     /**

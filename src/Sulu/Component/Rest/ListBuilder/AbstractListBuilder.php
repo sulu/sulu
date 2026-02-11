@@ -150,7 +150,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
             return $this->selectFields[$fieldName];
         }
 
-        return;
+        return null;
     }
 
     public function hasSelectField($name)
@@ -169,7 +169,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
             return $this->fieldDescriptors[$fieldName];
         }
 
-        return;
+        return null;
     }
 
     public function addSearchField(FieldDescriptorInterface $fieldDescriptor)

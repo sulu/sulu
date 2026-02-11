@@ -19,6 +19,7 @@ use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress as AccountAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
@@ -42,7 +43,7 @@ class Account extends ApiWrapper
     public const TYPE = 'account';
 
     /**
-     * @var Media
+     * @var Media|null
      */
     private $logo = null;
 
@@ -191,7 +192,7 @@ class Account extends ApiWrapper
     /**
      * Get parent.
      *
-     * @return AccountInterface
+     * @return self|null
      */
     #[VirtualProperty]
     #[SerializedName('parent')]
@@ -203,7 +204,7 @@ class Account extends ApiWrapper
             return new self($account, $this->locale);
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -937,6 +938,8 @@ class Account extends ApiWrapper
 
     /**
      * Returns the main address.
+     *
+     * @return null|AddressEntity
      */
     #[VirtualProperty]
     #[SerializedName('mainAddress')]
@@ -954,7 +957,7 @@ class Account extends ApiWrapper
             }
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -991,7 +994,7 @@ class Account extends ApiWrapper
     /**
      * Get the accounts logo and return the array of different formats.
      *
-     * @return Media
+     * @return array{id: int, url: string, thumbnails: array<mixed>}|null
      */
     #[VirtualProperty]
     #[SerializedName('logo')]
@@ -1006,7 +1009,7 @@ class Account extends ApiWrapper
             ];
         }
 
-        return;
+        return null;
     }
 
     /**
