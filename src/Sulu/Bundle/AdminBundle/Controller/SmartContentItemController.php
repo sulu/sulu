@@ -113,6 +113,7 @@ class SmartContentItemController extends AbstractRestController
             'maxPerPage' => ($params['max_per_page'] ?? null) ? $params['max_per_page']->getValue() : null,
             'includeSubFolders' => isset($filters['includeSubFolders']) && ('true' === $filters['includeSubFolders'] || true === $filters['includeSubFolders']),
             'excludeDuplicates' => isset($params['exclude_duplicates']) && ('true' === $params['exclude_duplicates']->getValue() || true === $params['exclude_duplicates']->getValue()),
+            'webspaceKey' => $filters['webspace'] ?? null,
         ];
 
         // Transform page/maxPerPage to offset for provider compatibility

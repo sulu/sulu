@@ -48,6 +48,7 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
  *       segmentKey?: string,
+ *       webspaceKey?: string,
  *   }
  * @phpstan-type ArticleSmartContentCountFilters array{
  *        categories: int[],
@@ -69,6 +70,7 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
  *        audienceTargeting?: bool,
  *        targetGroupId?: int,
  *        segmentKey?: string,
+ *        webspaceKey?: string,
  *    }
  */
 readonly class ArticleSmartContentProvider implements SmartContentProviderInterface
@@ -247,7 +249,8 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      *         offset?: int,
      *         includeSubFolders: bool,
      *         excludeDuplicates: bool,
-     *         audienceTargeting?: bool
+     *         audienceTargeting?: bool,
+     *         webspaceKey?: string
      *     }
      */
     protected function mapFilters(array $filters): array
@@ -283,6 +286,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      *     websiteCategoryOperator: 'AND'|'OR',
      *     websiteTags: string[],
      *     websiteTagOperator: 'AND'|'OR',
+     *     webspaceKey?: string,
      *  } $filters
      */
     protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
@@ -311,6 +315,13 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
                 $websiteTagNames,
                 $filters['websiteTagOperator'],
             );
+        }
+
+        $webspaceKey = $filters['webspaceKey'] ?? null;
+        if (null !== $webspaceKey) {
+            $queryBuilder->leftJoin('filterDimensionContent.additionalWebspaces', 'additionalWebspace');
+            $queryBuilder->andWhere('filterDimensionContent.mainWebspace = :webspaceKey OR additionalWebspace.additionalWebspace = :webspaceKey');
+            $queryBuilder->setParameter('webspaceKey', $webspaceKey);
         }
     }
 

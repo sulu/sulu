@@ -397,6 +397,8 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_core.doctrine_rest_helper'),
                 new Reference('sulu_security.access_control_manager'),
                 new Reference('security.token_storage'),
+                new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('sulu_security.security_checker'),
             ])
             ->tag('sulu.context', ['context' => 'admin']);
 

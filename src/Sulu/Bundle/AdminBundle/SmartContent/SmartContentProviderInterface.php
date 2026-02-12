@@ -33,6 +33,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInte
  *      offset: int,
  *      includeSubFolders: bool,
  *      excludeDuplicates: bool,
+ *      webspaceKey?: string|null,
  *  }
  * @phpstan-type SmartContentCountBaseFilters array{
  *       categories: int[],
