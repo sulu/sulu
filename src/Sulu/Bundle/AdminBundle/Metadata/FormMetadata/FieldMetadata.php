@@ -98,9 +98,6 @@ class FieldMetadata extends ItemMetadata
 
     public function removeType(string $type): void
     {
-        if (!isset($this->types[$type])) {
-            return;
-        }
         unset($this->types[$type]);
     }
 
