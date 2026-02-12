@@ -41,6 +41,8 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
  */
 final class WebsiteArticleReindexProvider implements ReindexProviderInterface
 {
+    private const BATCH_SIZE = 100;
+
     /**
      * @var EntityRepository<ArticleDimensionContentInterface>
      */
@@ -67,63 +69,68 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
 
     public function total(): ?int
     {
-        // Todo: Add correct count for multiple locales.
         return null;
     }
 
     public function provide(ReindexConfig $reindexConfig): \Generator
     {
-        $articles = $this->loadArticles($reindexConfig->getIdentifiers());
-        $dimesionContentIds = [];
-        $resolvedArticles = [];
+        $identifiers = $reindexConfig->getIdentifiers();
+        $offset = 0;
+        $batch = $this->loadBatch($identifiers, $offset);
 
-        foreach ($articles as $article) {
-            $dimesionContentIds[] = $article['dimensionContentId'];
-            $resolvedArticles[$article['dimensionContentId']] = $article;
-        }
+        while ([] !== $batch) {
+            $dimensionContentIds = \array_column($batch, 'dimensionContentId');
+            $additionalWebspacesResult = $this->loadAdditionalWebspaces($dimensionContentIds);
 
-        $additionalWebspacesResult = $this->loadAdditionalWebspaces($dimesionContentIds);
+            /** @var Article $article */
+            foreach ($batch as $article) {
+                $authoredAt = $article['authored'] ?? $article['changed'];
+                $webspaces = $article['mainWebspace'] ? [$article['mainWebspace']] : [];
 
-        /** @var Article $article */
-        foreach ($resolvedArticles as $article) {
-            $authoredAt = $article['authored'] ?? $article['changed'];
-            $webspaces = $article['mainWebspace'] ? [$article['mainWebspace']] : [];
-
-            foreach ($additionalWebspacesResult as $additionalWebspaceRow) {
-                if ($additionalWebspaceRow['articleDimensionContentId'] === $article['dimensionContentId'] && !\in_array($additionalWebspaceRow['webspace'], $webspaces, true)) {
-                    $webspaces[] = $additionalWebspaceRow['webspace'];
+                foreach ($additionalWebspacesResult as $additionalWebspaceRow) {
+                    if ($additionalWebspaceRow['articleDimensionContentId'] === $article['dimensionContentId'] && !\in_array($additionalWebspaceRow['webspace'], $webspaces, true)) {
+                        $webspaces[] = $additionalWebspaceRow['webspace'];
+                    }
                 }
+
+                $data = [
+                    'id' => ArticleInterface::RESOURCE_KEY . '__' . ((string) $article['articleId']) . '__' . $article['locale'],
+                    'resourceKey' => ArticleInterface::RESOURCE_KEY,
+                    'resourceId' => (string) $article['articleId'],
+                    'locale' => $article['locale'],
+                    'webspaces' => $webspaces,
+                    'title' => '',
+                    'url' => $article['slug'],
+                    'content' => [],
+                    'mediaId' => '',
+                    'authoredAt' => $authoredAt->format('c'),
+                    'metadata' => [],
+                ];
+
+                foreach ($this->enhancers as $enhancer) {
+                    $data = $enhancer->enhanceDocument($article, $data);
+                }
+
+                if ('' === $data['title']) {
+                    $data['title'] = $article['title'];
+                }
+
+                yield $data;
             }
 
-            $data = [
-                'id' => ArticleInterface::RESOURCE_KEY . '__' . ((string) $article['articleId']) . '__' . $article['locale'],
-                'resourceKey' => ArticleInterface::RESOURCE_KEY,
-                'resourceId' => (string) $article['articleId'],
-                'locale' => $article['locale'],
-                'webspaces' => $webspaces,
-                'title' => $article['title'],
-                'url' => $article['slug'],
-                'content' => [],
-                'mediaId' => '',
-                'authoredAt' => $authoredAt->format('c'),
-            ];
-
-            foreach ($this->enhancers as $enhancer) {
-                $data = $enhancer->enhanceDocument($article, $data);
-            }
-
-            yield $data;
+            $offset += self::BATCH_SIZE;
+            $batch = $this->loadBatch($identifiers, $offset);
         }
     }
 
     /**
      * @param string[] $identifiers
      *
-     * @return iterable<Article>
+     * @return array<int, Article>
      */
-    private function loadArticles(array $identifiers = []): iterable
+    private function loadBatch(array $identifiers, int $offset): array
     {
-        $qb = $this->dimensionContentRepository->createQueryBuilder('dimensionContent')
+        $queryBuilder = $this->dimensionContentRepository->createQueryBuilder('dimensionContent')
             ->leftJoin('dimensionContent.route', 'route')
             ->select('IDENTITY(dimensionContent.article) AS articleId')
             ->addSelect('dimensionContent.authored')
@@ -164,39 +171,43 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
                 return [];
             }
 
-            $qb->andWhere(\implode(' OR ', $conditions));
+            $queryBuilder->andWhere(\implode(' OR ', $conditions));
         }
 
         foreach ($parameters as $parameterKey => $parameterValue) {
-            $qb->setParameter($parameterKey, $parameterValue);
+            $queryBuilder->setParameter($parameterKey, $parameterValue);
         }
 
         foreach ($this->enhancers as $enhancer) {
-            $enhancer->enhanceQuery($qb);
+            $enhancer->enhanceQuery($queryBuilder);
         }
 
-        /** @var iterable<Article> */
-        return $qb->getQuery()->toIterable();
+        $queryBuilder->orderBy('dimensionContent.id', 'ASC')
+            ->setFirstResult($offset)
+            ->setMaxResults(self::BATCH_SIZE);
+
+        /** @var array<int, Article> */
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**
-     * @param int[] $dimesionContentIds
+     * @param int[] $dimensionContentIds
      *
      * @return array<int, array{articleDimensionContentId: int, webspace: string}>
      */
-    private function loadAdditionalWebspaces(array $dimesionContentIds = []): array
+    private function loadAdditionalWebspaces(array $dimensionContentIds = []): array
     {
-        if (0 === \count($dimesionContentIds)) {
+        if (0 === \count($dimensionContentIds)) {
             return [];
         }
 
-        $qb = $this->additionalWebspacesRepository->createQueryBuilder('additionalWebspace')
+        $queryBuilder = $this->additionalWebspacesRepository->createQueryBuilder('additionalWebspace')
             ->select('IDENTITY(additionalWebspace.articleDimensionContent) AS articleDimensionContentId')
             ->addSelect('additionalWebspace.additionalWebspace AS webspace')
-            ->where('additionalWebspace.articleDimensionContent IN (:dimesionContentIds)')
-            ->setParameter('dimesionContentIds', $dimesionContentIds);
+            ->where('additionalWebspace.articleDimensionContent IN (:dimensionContentIds)')
+            ->setParameter('dimensionContentIds', $dimensionContentIds);
 
-        return $qb->getQuery()->getResult();
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public static function getIndex(): string

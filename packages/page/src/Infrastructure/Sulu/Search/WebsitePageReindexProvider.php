@@ -34,6 +34,7 @@ use Sulu\Page\Infrastructure\Sulu\Search\Visitor\WebsitePageReindexProviderEnhan
  *     slug: string,
  *     authored: \DateTimeImmutable|null,
  *     webspaceKey: string,
+ *     dimensionContentId: int,
  * }
  *
  * @internal this class is internal no backwards compatibility promise is given for this class
@@ -41,6 +42,8 @@ use Sulu\Page\Infrastructure\Sulu\Search\Visitor\WebsitePageReindexProviderEnhan
  */
 final class WebsitePageReindexProvider implements ReindexProviderInterface
 {
+    private const BATCH_SIZE = 100;
+
     /**
      * @var EntityRepository<PageDimensionContentInterface>
      */
@@ -60,47 +63,58 @@ final class WebsitePageReindexProvider implements ReindexProviderInterface
 
     public function total(): ?int
     {
-        // Todo: Add correct count for multiple locales.
         return null;
     }
 
     public function provide(ReindexConfig $reindexConfig): \Generator
     {
-        $pages = $this->loadPages($reindexConfig->getIdentifiers());
+        $identifiers = $reindexConfig->getIdentifiers();
+        $offset = 0;
+        $batch = $this->loadBatch($identifiers, $offset);
 
-        /** @var PageData $page */
-        foreach ($pages as $page) {
-            $authoredAt = $page['authored'] ?? $page['changed'];
+        while ([] !== $batch) {
+            /** @var PageData $page */
+            foreach ($batch as $page) {
+                $authoredAt = $page['authored'] ?? $page['changed'];
 
-            $data = [
-                'id' => PageInterface::RESOURCE_KEY . '__' . ((string) $page['pageId']) . '__' . $page['locale'],
-                'resourceKey' => PageInterface::RESOURCE_KEY,
-                'resourceId' => (string) $page['pageId'],
-                'locale' => $page['locale'],
-                'webspaces' => [$page['webspaceKey']],
-                'title' => $page['title'],
-                'url' => $page['slug'],
-                'content' => [],
-                'mediaId' => '',
-                'authoredAt' => $authoredAt->format('c'),
-            ];
+                $data = [
+                    'id' => PageInterface::RESOURCE_KEY . '__' . ((string) $page['pageId']) . '__' . $page['locale'],
+                    'resourceKey' => PageInterface::RESOURCE_KEY,
+                    'resourceId' => (string) $page['pageId'],
+                    'locale' => $page['locale'],
+                    'webspaces' => [$page['webspaceKey']],
+                    'title' => '',
+                    'url' => $page['slug'],
+                    'content' => [],
+                    'mediaId' => '',
+                    'authoredAt' => $authoredAt->format('c'),
+                    'metadata' => [],
+                ];
 
-            foreach ($this->enhancers as $enhancer) {
-                $data = $enhancer->enhanceDocument($page, $data);
+                foreach ($this->enhancers as $enhancer) {
+                    $data = $enhancer->enhanceDocument($page, $data);
+                }
+
+                if ('' === $data['title']) {
+                    $data['title'] = $page['title'];
+                }
+
+                yield $data;
             }
 
-            yield $data;
+            $offset += self::BATCH_SIZE;
+            $batch = $this->loadBatch($identifiers, $offset);
         }
     }
 
     /**
      * @param string[] $identifiers
      *
-     * @return iterable<PageData>
+     * @return array<int, PageData>
      */
-    private function loadPages(array $identifiers = []): iterable
+    private function loadBatch(array $identifiers, int $offset): array
     {
-        $qb = $this->dimensionContentRepository->createQueryBuilder('dimensionContent')
+        $queryBuilder = $this->dimensionContentRepository->createQueryBuilder('dimensionContent')
             ->leftJoin('dimensionContent.route', 'route')
             ->leftJoin('dimensionContent.page', 'page')
             ->leftJoin(
@@ -149,19 +163,23 @@ final class WebsitePageReindexProvider implements ReindexProviderInterface
                 return [];
             }
 
-            $qb->andWhere(\implode(' OR ', $conditions));
+            $queryBuilder->andWhere(\implode(' OR ', $conditions));
         }
 
         foreach ($parameters as $parameterKey => $parameterValue) {
-            $qb->setParameter($parameterKey, $parameterValue);
+            $queryBuilder->setParameter($parameterKey, $parameterValue);
         }
 
         foreach ($this->enhancers as $enhancer) {
-            $enhancer->enhanceQuery($qb);
+            $enhancer->enhanceQuery($queryBuilder);
         }
 
-        /** @var iterable<PageData> */
-        return $qb->getQuery()->toIterable();
+        $queryBuilder->orderBy('dimensionContent.id', 'ASC')
+            ->setFirstResult($offset)
+            ->setMaxResults(self::BATCH_SIZE);
+
+        /** @var array<int, PageData> */
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public static function getIndex(): string

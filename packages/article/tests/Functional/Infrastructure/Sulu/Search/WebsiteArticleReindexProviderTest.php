@@ -16,11 +16,15 @@ namespace Sulu\Article\Tests\Functional\Infrastructure\Sulu\Search;
 use CmsIg\Seal\Reindex\ReindexConfig;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexExcerptEnhancer;
+use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexTaxonomyEnhancer;
 use Sulu\Article\Infrastructure\Sulu\Search\WebsiteArticleReindexProvider;
 use Sulu\Article\Tests\Traits\CreateArticleTrait;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Tests\Traits\CreateCategoryTrait;
+use Sulu\Content\Tests\Traits\CreateTagTrait;
 
 /**
  * @phpstan-type ArticleData array{
@@ -38,6 +42,8 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
 {
     use SetGetPrivatePropertyTrait;
     use CreateArticleTrait;
+    use CreateCategoryTrait;
+    use CreateTagTrait;
 
     private EntityManagerInterface $entityManager;
     private WebsiteArticleReindexProvider $provider;
@@ -147,6 +153,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable('1995-11-29 12:00:00'))->format('c'),
+                'metadata' => [],
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__de',
@@ -159,6 +166,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
+                'metadata' => [],
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__en',
@@ -171,6 +179,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
+                'metadata' => [],
             ],
         ];
 
@@ -257,6 +266,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable('1995-11-29 12:00:00'))->format('c'),
+                'metadata' => [],
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__de',
@@ -269,6 +279,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
+                'metadata' => [],
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__en',
@@ -281,6 +292,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
+                'metadata' => [],
             ],
         ];
 
@@ -358,5 +370,340 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
         $this->assertNotContains('Article TWO EN', $resultTitles);
         $this->assertNotContains('Article THREE DE', $resultTitles);
         $this->assertNotContains('Article THREE EN', $resultTitles);
+    }
+
+    public function testExcerptEnhancerPopulatesExcerptProperties(): void
+    {
+        $provider = new WebsiteArticleReindexProvider(
+            $this->entityManager,
+            [new WebsiteArticleReindexExcerptEnhancer()],
+        );
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Article With Excerpt',
+                    'url' => '/article-excerpt',
+                    'excerpt' => [
+                        'title' => 'Excerpt Title',
+                        'description' => '<p>Excerpt <strong>description</strong></p>',
+                        'more' => 'Read more',
+                        'image' => ['id' => 1],
+                        'icon' => ['id' => 2],
+                    ],
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertSame('Excerpt Title', $result['title']);
+
+        $this->assertIsArray($result['metadata']);
+        $excerpt = $result['metadata']['excerpt'];
+        $this->assertIsArray($excerpt);
+
+        $this->assertSame('Excerpt Title', $excerpt['title']);
+        $this->assertSame('<p>Excerpt <strong>description</strong></p>', $excerpt['description']);
+        $this->assertSame('Read more', $excerpt['more']);
+        $this->assertSame(1, $excerpt['imageId']);
+        $this->assertSame(2, $excerpt['iconId']);
+    }
+
+    public function testExcerptTitleFallbackWhenNoContentTitle(): void
+    {
+        $provider = new WebsiteArticleReindexProvider(
+            $this->entityManager,
+            [new WebsiteArticleReindexExcerptEnhancer()],
+        );
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Original Title',
+                    'url' => '/article-title-fallback',
+                    'excerpt' => [
+                        'title' => 'Excerpt Title Override',
+                    ],
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertSame('Excerpt Title Override', $result['title']);
+
+        $this->assertIsArray($result['metadata']);
+        $excerpt = $result['metadata']['excerpt'];
+        $this->assertIsArray($excerpt);
+        $this->assertSame('Excerpt Title Override', $excerpt['title']);
+    }
+
+    public function testExcerptImageFallbackToMediaId(): void
+    {
+        $provider = new WebsiteArticleReindexProvider(
+            $this->entityManager,
+            [new WebsiteArticleReindexExcerptEnhancer()],
+        );
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Article With Excerpt Image',
+                    'url' => '/article-excerpt-image',
+                    'excerpt' => [
+                        'image' => ['id' => 55],
+                    ],
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertSame('55', $result['mediaId']);
+
+        $this->assertIsArray($result['metadata']);
+        $excerpt = $result['metadata']['excerpt'];
+        $this->assertIsArray($excerpt);
+        $this->assertSame(55, $excerpt['imageId']);
+    }
+
+    public function testNoExcerptDataProducesEmptyProperties(): void
+    {
+        $provider = new WebsiteArticleReindexProvider(
+            $this->entityManager,
+            [new WebsiteArticleReindexExcerptEnhancer()],
+        );
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'No Excerpt Article',
+                    'url' => '/no-excerpt',
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertSame('No Excerpt Article', $result['title']);
+        $this->assertSame([], $result['metadata']);
+    }
+
+    public function testTaxonomyEnhancerPopulatesCategoriesAndTags(): void
+    {
+        $category1 = static::createCategory(['en' => ['title' => 'Category 1']]);
+        $category2 = static::createCategory(['en' => ['title' => 'Category 2']]);
+        $tag1 = static::createTag(['name' => 'tag-one']);
+        $tag2 = static::createTag(['name' => 'tag-two']);
+
+        $this->entityManager->flush();
+
+        $provider = new WebsiteArticleReindexProvider(
+            $this->entityManager,
+            [new WebsiteArticleReindexTaxonomyEnhancer()],
+        );
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Article With Taxonomy',
+                    'url' => '/article-taxonomy',
+                    'excerptCategories' => [$category1->getId(), $category2->getId()],
+                    'excerptTags' => [$tag1->getName(), $tag2->getName()],
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertIsArray($result['metadata']);
+        $excerpt = $result['metadata']['excerpt'];
+        $this->assertIsArray($excerpt);
+
+        $this->assertSame([$category1->getId(), $category2->getId()], $excerpt['categoryIds']);
+        $this->assertSame(['tag-one', 'tag-two'], $excerpt['tagNames']);
+    }
+
+    public function testTaxonomyEnhancerPopulatesOnlyCategories(): void
+    {
+        $category1 = static::createCategory(['en' => ['title' => 'Category 1']]);
+        $category2 = static::createCategory(['en' => ['title' => 'Category 2']]);
+
+        $this->entityManager->flush();
+
+        $provider = new WebsiteArticleReindexProvider(
+            $this->entityManager,
+            [new WebsiteArticleReindexTaxonomyEnhancer()],
+        );
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Article With Categories',
+                    'url' => '/article-categories',
+                    'excerptCategories' => [$category1->getId(), $category2->getId()],
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertIsArray($result['metadata']);
+        $excerpt = $result['metadata']['excerpt'];
+        $this->assertIsArray($excerpt);
+
+        $this->assertSame([$category1->getId(), $category2->getId()], $excerpt['categoryIds']);
+        $this->assertArrayNotHasKey('tagNames', $excerpt);
+    }
+
+    public function testTaxonomyEnhancerPopulatesOnlyTags(): void
+    {
+        $tag1 = static::createTag(['name' => 'php']);
+        $tag2 = static::createTag(['name' => 'sulu']);
+
+        $this->entityManager->flush();
+
+        $provider = new WebsiteArticleReindexProvider(
+            $this->entityManager,
+            [new WebsiteArticleReindexTaxonomyEnhancer()],
+        );
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Article With Tags',
+                    'url' => '/article-tags',
+                    'excerptTags' => [$tag1->getName(), $tag2->getName()],
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertIsArray($result['metadata']);
+        $excerpt = $result['metadata']['excerpt'];
+        $this->assertIsArray($excerpt);
+
+        $this->assertArrayNotHasKey('categoryIds', $excerpt);
+        $this->assertSame(['php', 'sulu'], $excerpt['tagNames']);
+    }
+
+    public function testTaxonomyEnhancerWithEmptyTaxonomyDoesNotAddKeys(): void
+    {
+        $provider = new WebsiteArticleReindexProvider(
+            $this->entityManager,
+            [new WebsiteArticleReindexTaxonomyEnhancer()],
+        );
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Article Without Taxonomy',
+                    'url' => '/article-no-taxonomy',
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertIsArray($result['metadata']);
+        $this->assertArrayNotHasKey('excerpt', $result['metadata']);
+    }
+
+    public function testTaxonomyEnhancerPreservesExistingExcerptProperties(): void
+    {
+        $category = static::createCategory(['en' => ['title' => 'Category 1']]);
+        $tag = static::createTag(['name' => 'test-tag']);
+
+        $this->entityManager->flush();
+
+        $provider = new WebsiteArticleReindexProvider(
+            $this->entityManager,
+            [
+                new WebsiteArticleReindexExcerptEnhancer(),
+                new WebsiteArticleReindexTaxonomyEnhancer(),
+            ],
+        );
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Article With Excerpt and Taxonomy',
+                    'url' => '/article-excerpt-taxonomy',
+                    'excerpt' => [
+                        'title' => 'Excerpt Title',
+                        'description' => '<p>Excerpt description</p>',
+                    ],
+                    'excerptCategories' => [$category->getId()],
+                    'excerptTags' => [$tag->getName()],
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array<string, mixed>> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+
+        $result = $results[0];
+        $this->assertIsArray($result['metadata']);
+        $excerpt = $result['metadata']['excerpt'];
+        $this->assertIsArray($excerpt);
+
+        $this->assertSame('Excerpt Title', $excerpt['title']);
+        $this->assertSame('<p>Excerpt description</p>', $excerpt['description']);
+        $this->assertSame([$category->getId()], $excerpt['categoryIds']);
+        $this->assertSame(['test-tag'], $excerpt['tagNames']);
     }
 }

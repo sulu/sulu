@@ -35,6 +35,11 @@ class WebsiteArticleReindexContentEnhancer implements WebsiteArticleReindexProvi
         'text_editor',
     ];
 
+    private const MEDIA_FIELD_TYPES = [
+        'media_selection',
+        'single_media_selection',
+    ];
+
     public function __construct(
         private FormMetadataProvider $formMetadataProvider,
     ) {
@@ -66,9 +71,18 @@ class WebsiteArticleReindexContentEnhancer implements WebsiteArticleReindexProvi
 
         $searchableFields = [];
         $this->collectSearchableFields($metadata->getFlatFieldMetadata(), $searchableFields);
-        $content = $this->extractContent($templateData, $searchableFields);
 
-        $document['content'] = $content;
+        $document['content'] = $this->extractContent($templateData, $searchableFields);
+
+        $title = $this->extractTitle($templateData, $searchableFields);
+        if (null !== $title) {
+            $document['title'] = $title;
+        }
+
+        $mediaId = $this->extractMediaId($templateData, $searchableFields);
+        if ('' !== $mediaId) {
+            $document['mediaId'] = $mediaId;
+        }
 
         return $document;
     }
@@ -85,7 +99,7 @@ class WebsiteArticleReindexContentEnhancer implements WebsiteArticleReindexProvi
 
     /**
      * @param array<ItemMetadata> $items
-     * @param array<string, string> $fields
+     * @param array<string, array{type: string, role: string|null}> $fields
      */
     private function collectSearchableFields(array $items, array &$fields, string $prefix = ''): void
     {
@@ -94,17 +108,22 @@ class WebsiteArticleReindexContentEnhancer implements WebsiteArticleReindexProvi
                 continue;
             }
 
+            $role = null;
             $hasSearchTag = false;
             foreach ($item->getTags() as $tag) {
                 if (TagMetadata::SEARCH_FIELD_TAG === $tag->getName()) {
                     $hasSearchTag = true;
+                    $role = $tag->getAttribute('role');
                     break;
                 }
             }
 
             if ($hasSearchTag) {
                 $fieldPath = $prefix ? $prefix . '.' . $item->getName() : $item->getName();
-                $fields[$fieldPath] = $item->getType();
+                $fields[$fieldPath] = [
+                    'type' => $item->getType(),
+                    'role' => \is_string($role) ? $role : null,
+                ];
             }
 
             if ('block' === $item->getType()) {
@@ -122,7 +141,7 @@ class WebsiteArticleReindexContentEnhancer implements WebsiteArticleReindexProvi
 
     /**
      * @param array<string, mixed> $templateData
-     * @param array<string, string> $searchableFields
+     * @param array<string, array{type: string, role: string|null}> $searchableFields
      *
      * @return array<int, string>
      */
@@ -130,8 +149,12 @@ class WebsiteArticleReindexContentEnhancer implements WebsiteArticleReindexProvi
     {
         $content = [];
 
-        foreach ($searchableFields as $fieldPath => $fieldType) {
-            if (!\in_array($fieldType, self::SUPPORTED_FIELD_TYPES, true)) {
+        foreach ($searchableFields as $fieldPath => $fieldInfo) {
+            if (!\in_array($fieldInfo['type'], self::SUPPORTED_FIELD_TYPES, true)) {
+                continue;
+            }
+
+            if (\in_array($fieldInfo['role'], ['image', 'title', 'url'], true)) {
                 continue;
             }
 
@@ -143,6 +166,65 @@ class WebsiteArticleReindexContentEnhancer implements WebsiteArticleReindexProvi
         }
 
         return $content;
+    }
+
+    /**
+     * @param array<string, mixed> $templateData
+     * @param array<string, array{type: string, role: string|null}> $searchableFields
+     */
+    private function extractTitle(array $templateData, array $searchableFields): ?string
+    {
+        foreach ($searchableFields as $fieldPath => $fieldInfo) {
+            if ('title' !== $fieldInfo['role']) {
+                continue;
+            }
+
+            if (!\in_array($fieldInfo['type'], self::SUPPORTED_FIELD_TYPES, true)) {
+                continue;
+            }
+
+            $value = $this->getValueByPath($templateData, $fieldPath);
+            if (\is_string($value) && '' !== \trim($value)) {
+                return $this->stripHtml($value);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array<string, mixed> $templateData
+     * @param array<string, array{type: string, role: string|null}> $searchableFields
+     */
+    private function extractMediaId(array $templateData, array $searchableFields): string
+    {
+        foreach ($searchableFields as $fieldPath => $fieldInfo) {
+            if ('image' !== $fieldInfo['role']) {
+                continue;
+            }
+
+            if (!\in_array($fieldInfo['type'], self::MEDIA_FIELD_TYPES, true)) {
+                continue;
+            }
+
+            $value = $this->getValueByPath($templateData, $fieldPath);
+            if (!\is_array($value)) {
+                continue;
+            }
+
+            if (isset($value['id']) && \is_numeric($value['id'])) {
+                return (string) $value['id'];
+            }
+
+            if (isset($value['ids']) && \is_array($value['ids']) && [] !== $value['ids']) {
+                $firstId = $value['ids'][0] ?? null;
+                if (null !== $firstId && \is_numeric($firstId)) {
+                    return (string) $firstId;
+                }
+            }
+        }
+
+        return '';
     }
 
     /**
