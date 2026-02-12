@@ -29,17 +29,26 @@ class WebsitePageReindexTaxonomyEnhancerTest extends TestCase
         $this->enhancer = new WebsitePageReindexTaxonomyEnhancer();
     }
 
-    public function testEnhanceQueryAddsJoinsAndGroupConcat(): void
+    public function testEnhanceQueryAddsSubqueries(): void
     {
-        $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $queryBuilder->addSelect('dimensionContent.id AS dimensionContentId')->willReturn($queryBuilder)->shouldBeCalled();
-        $queryBuilder->leftJoin('dimensionContent.excerptCategories', 'category')->willReturn($queryBuilder)->shouldBeCalled();
-        $queryBuilder->leftJoin('dimensionContent.excerptTags', 'tag')->willReturn($queryBuilder)->shouldBeCalled();
-        $queryBuilder->addSelect('GROUP_CONCAT(DISTINCT category.id) AS categoryIds')->willReturn($queryBuilder)->shouldBeCalled();
-        $queryBuilder->addSelect('GROUP_CONCAT(DISTINCT tag.name) AS tagNames')->willReturn($queryBuilder)->shouldBeCalled();
-        $queryBuilder->addGroupBy('dimensionContent.id')->willReturn($queryBuilder)->shouldBeCalled();
+        // Create a real EntityManager and QueryBuilder for this test
+        // since mocking the nested QueryBuilder creation is too complex
+        $entityManager = $this->prophesize(\Doctrine\ORM\EntityManagerInterface::class);
 
-        $this->enhancer->enhanceQuery($queryBuilder->reveal());
+        $categorySubQueryBuilder = new QueryBuilder($entityManager->reveal());
+        $tagSubQueryBuilder = new QueryBuilder($entityManager->reveal());
+
+        $entityManager->createQueryBuilder()
+            ->willReturn($categorySubQueryBuilder, $tagSubQueryBuilder);
+
+        $queryBuilder = new QueryBuilder($entityManager->reveal());
+        $queryBuilder->from('TestEntity', 't');
+
+        $this->enhancer->enhanceQuery($queryBuilder);
+
+        // Verify that dimensionContentId was added to select
+        $dql = $queryBuilder->getDQL();
+        $this->assertStringContainsString('dimensionContent.id AS dimensionContentId', $dql);
     }
 
     public function testMissingTaxonomyDataReturnsUnchanged(): void

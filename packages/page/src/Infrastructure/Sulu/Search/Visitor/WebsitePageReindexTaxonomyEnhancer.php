@@ -25,13 +25,22 @@ class WebsitePageReindexTaxonomyEnhancer implements WebsitePageReindexProviderEn
 {
     public function enhanceQuery(QueryBuilder $queryBuilder): void
     {
+        $entityManager = $queryBuilder->getEntityManager();
+
+        $categorySubquery = $entityManager->createQueryBuilder()
+            ->select('GROUP_CONCAT(DISTINCT excerptCategory.id)')
+            ->from(\Sulu\Bundle\CategoryBundle\Entity\CategoryInterface::class, 'excerptCategory')
+            ->where('excerptCategory MEMBER OF dimensionContent.excerptCategories');
+
+        $tagSubquery = $entityManager->createQueryBuilder()
+            ->select('GROUP_CONCAT(DISTINCT excerptTag.name)')
+            ->from(\Sulu\Bundle\TagBundle\Tag\TagInterface::class, 'excerptTag')
+            ->where('excerptTag MEMBER OF dimensionContent.excerptTags');
+
         $queryBuilder
             ->addSelect('dimensionContent.id AS dimensionContentId')
-            ->leftJoin('dimensionContent.excerptCategories', 'category')
-            ->leftJoin('dimensionContent.excerptTags', 'tag')
-            ->addSelect('GROUP_CONCAT(DISTINCT category.id) AS categoryIds')
-            ->addSelect('GROUP_CONCAT(DISTINCT tag.name) AS tagNames')
-            ->addGroupBy('dimensionContent.id');
+            ->addSelect('(' . $categorySubquery->getDQL() . ') AS categoryIds')
+            ->addSelect('(' . $tagSubquery->getDQL() . ') AS tagNames');
     }
 
     public function enhanceDocument(array $queryResult, array $document): array

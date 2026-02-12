@@ -29,16 +29,27 @@ class WebsiteArticleReindexTaxonomyEnhancerTest extends TestCase
         $this->enhancer = new WebsiteArticleReindexTaxonomyEnhancer();
     }
 
-    public function testEnhanceQueryAddsJoinsAndGroupConcat(): void
+    public function testEnhanceQueryAddsSubqueries(): void
     {
-        $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $queryBuilder->leftJoin('dimensionContent.excerptCategories', 'category')->willReturn($queryBuilder)->shouldBeCalled();
-        $queryBuilder->leftJoin('dimensionContent.excerptTags', 'tag')->willReturn($queryBuilder)->shouldBeCalled();
-        $queryBuilder->addSelect('GROUP_CONCAT(DISTINCT category.id) AS categoryIds')->willReturn($queryBuilder)->shouldBeCalled();
-        $queryBuilder->addSelect('GROUP_CONCAT(DISTINCT tag.name) AS tagNames')->willReturn($queryBuilder)->shouldBeCalled();
-        $queryBuilder->addGroupBy('dimensionContent.id')->willReturn($queryBuilder)->shouldBeCalled();
+        // Create a real EntityManager and QueryBuilder for this test
+        // since mocking the nested QueryBuilder creation is too complex
+        $entityManager = $this->prophesize(\Doctrine\ORM\EntityManagerInterface::class);
 
-        $this->enhancer->enhanceQuery($queryBuilder->reveal());
+        $categorySubQueryBuilder = new QueryBuilder($entityManager->reveal());
+        $tagSubQueryBuilder = new QueryBuilder($entityManager->reveal());
+
+        $entityManager->createQueryBuilder()
+            ->willReturn($categorySubQueryBuilder, $tagSubQueryBuilder);
+
+        $queryBuilder = new QueryBuilder($entityManager->reveal());
+        $queryBuilder->from('TestEntity', 't');
+
+        $this->enhancer->enhanceQuery($queryBuilder);
+
+        // Verify that subqueries were added
+        $dql = $queryBuilder->getDQL();
+        $this->assertStringContainsString('categoryIds', $dql);
+        $this->assertStringContainsString('tagNames', $dql);
     }
 
     public function testMissingTaxonomyDataReturnsUnchanged(): void
