@@ -110,6 +110,11 @@ class FieldMetadata extends ItemMetadata
         $this->types[$type->getKey()] = $type;
     }
 
+    public function removeType(string $type): void
+    {
+        unset($this->types[$type]);
+    }
+
     public function isRequired(): bool
     {
         return $this->required;
