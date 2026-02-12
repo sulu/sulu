@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Search;
 
+use Composer\InstalledVersions;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\QueryHit;
 use Massive\Bundle\SearchBundle\Search\SearchResult;
@@ -176,6 +177,11 @@ class SaveDocumentTest extends BaseTestCase
 
     public function testSaveDocumentStripTags(): void
     {
+        $version = InstalledVersions::getPrettyVersion('massive/search-bundle');
+        if (\version_compare($version, '2.10.0', '<')) {
+            $this->markTestSkipped('This feature requires atleast "massive/search-bundle" of 2.10.0.');
+        }
+
         $document = new PageDocument();
         $document->setTitle('Places');
         $document->setStructureType('text_editor');
