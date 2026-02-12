@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Page\Domain\Repository\NavigationRepositoryInterface;
 use Sulu\Page\Tests\Traits\CreatePageTrait;
+use Symfony\Component\Routing\RequestContext;
 
 #[CoversNothing]
 class NavigationRepositoryLinkTest extends SuluTestCase
@@ -62,6 +63,10 @@ class NavigationRepositoryLinkTest extends SuluTestCase
     {
         parent::setUp();
         $this->navigationRepository = $this->getContainer()->get('sulu_page.navigation_repository');
+
+        /** @var RequestContext $requestContext */
+        $requestContext = self::getContainer()->get('router')->getContext();
+        $requestContext->setParameter('webspace', 'sulu-io');
     }
 
     public static function setUpBeforeClass(): void

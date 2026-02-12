@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
 use Sulu\Page\Tests\Traits\CreatePageTrait;
+use Symfony\Component\Routing\RequestContext;
 
 #[CoversNothing]
 class PageLinkProviderTest extends SuluTestCase
@@ -37,6 +38,10 @@ class PageLinkProviderTest extends SuluTestCase
         parent::setUp();
 
         $this->linkProvider = self::getContainer()->get('sulu_page.page_link_provider');
+
+        /** @var RequestContext $requestContext */
+        $requestContext = self::getContainer()->get('router')->getContext();
+        $requestContext->setParameter('webspace', 'sulu-io');
     }
 
     public function testPreloadWithContentLinks(): void
