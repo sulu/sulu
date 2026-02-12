@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * @internal This class should not be instantiated by a project.
  *           Create your own smart content filters visitor to change its behaviour.
  */
-class PageSmartContentFiltersVisitor implements SmartContentFiltersVisitorInterface
+class WebspaceSmartContentFiltersVisitor implements SmartContentFiltersVisitorInterface
 {
     public function __construct(
         private RequestAnalyzerInterface $requestAnalyzer,

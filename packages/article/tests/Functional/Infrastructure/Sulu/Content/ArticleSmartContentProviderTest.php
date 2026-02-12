@@ -16,6 +16,7 @@ namespace Sulu\Article\Tests\Functional\Infrastructure\Sulu\Content;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Sulu\Article\Application\Message\ApplyWorkflowTransitionArticleMessage;
 use Sulu\Article\Application\Message\CreateArticleMessage;
+use Sulu\Article\Application\Message\ModifyArticleMessage;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
@@ -41,6 +42,8 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
  *     excerptTags?: string[],
  *     author?: int|null,
  *     authored?: string|null,
+ *     mainWebspace?: string,
+ *     additionalWebspace?: string[],
  * }
  *
  * @phpstan-import-type SmartContentBaseFilters from SmartContentProviderInterface
@@ -128,12 +131,35 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             'template' => 'blog',
         ]);
 
+        self::modifyArticle(
+            self::$articles['tech2']->getUuid(),
+            [
+                'title' => 'Cloud Computing',
+                'excerptCategories' => [self::$categories['tech']->getId(), self::$categories['business']->getId()],
+                'excerptTags' => [self::$tags['cloud']],
+                'authored' => '2023-02-20T14:30:00+00:00',
+                'template' => 'blog',
+                'mainWebspaceKey' => 'blog',
+            ],
+        );
+
         self::$articles['sports1'] = self::createArticle([
             'title' => 'Football Season',
             'excerptCategories' => [self::$categories['sports']->getId()],
             'excerptTags' => [self::$tags['football']],
             'authored' => '2023-03-10T09:15:00+00:00',
         ]);
+
+        self::modifyArticle(
+            self::$articles['sports1']->getUuid(),
+            [
+                'title' => 'Football Season',
+                'excerptCategories' => [self::$categories['sports']->getId()],
+                'excerptTags' => [self::$tags['football']],
+                'authored' => '2023-03-10T09:15:00+00:00',
+                'additionalWebspace' => ['blog'],
+            ],
+        );
 
         self::$articles['sports2'] = self::createArticle([
             'title' => 'Tennis Championship',
@@ -704,6 +730,45 @@ class ArticleSmartContentProviderTest extends SuluTestCase
     }
 
     /**
+     * @param ArticleData $data
+     */
+    private static function modifyArticle(
+        string $identifier,
+        array $data,
+    ): ArticleInterface {
+        $data = \array_merge([
+            'title' => 'Example Article',
+            'url' => '/example-article-' . \uniqid(),
+            'template' => 'article',
+            'locale' => 'en',
+            'mainWebspace' => 'blog',
+            'customizeWebspaceSettings' => true,
+            'additionalWebspaces' => [],
+        ], $data);
+
+        $messageBus = self::getContainer()->get('sulu_message_bus');
+
+        $envelope = $messageBus->dispatch(new Envelope(new ModifyArticleMessage(identifier: ['uuid' => $identifier], data: $data), [new EnableFlushStamp()]));
+        /** @var HandledStamp[] $handledStamps */
+        $handledStamps = $envelope->all(HandledStamp::class);
+
+        /** @var ArticleInterface $article */
+        $article = $handledStamps[0]->getResult();
+        $messageBus->dispatch(
+            new Envelope(
+                new ApplyWorkflowTransitionArticleMessage(
+                    identifier: ['uuid' => $article->getUuid()],
+                    locale: $data['locale'],
+                    transitionName: WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH,
+                ),
+                [new EnableFlushStamp()],
+            ),
+        );
+
+        return $article;
+    }
+
+    /**
      * @param string[] $groups
      * @param string[] $articleKeys
      */
@@ -735,6 +800,20 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             }
             $this->assertContains($article->getUuid(), $resultIds, "Article '$key' should be in the default group");
         }
+    }
+
+    public function testFindFlatByWebspace(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), ...['locale' => 'en', 'webspaceKey' => 'blog']], []);
+        $this->assertCount(2, $result);
+
+        $resultIds = \array_map(
+            fn ($article) => $article['id'],
+            $result,
+        );
+
+        $this->assertContains(self::$articles['tech2']->getUuid(), $resultIds);
+        $this->assertContains(self::$articles['sports1']->getUuid(), $resultIds);
     }
 
     /**

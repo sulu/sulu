@@ -63,8 +63,8 @@ use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageSelectionProperty
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageTreeRoutePropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\SinglePageSelectionPropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
-use Sulu\Page\Infrastructure\Sulu\Content\Visitor\PageSmartContentFiltersVisitor;
 use Sulu\Page\Infrastructure\Sulu\Content\Visitor\SegmentSmartContentFiltersVisitor;
+use Sulu\Page\Infrastructure\Sulu\Content\Visitor\WebspaceSmartContentFiltersVisitor;
 use Sulu\Page\Infrastructure\Sulu\HttpCache\EventSubscriber\PageCacheInvalidationSubscriber;
 use Sulu\Page\Infrastructure\Sulu\Reference\PageReferenceRefresher;
 use Sulu\Page\Infrastructure\Sulu\Route\PageWebspaceRouteGenerator;
@@ -398,6 +398,8 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_core.doctrine_rest_helper'),
                 new Reference('sulu_security.access_control_manager'),
                 new Reference('security.token_storage'),
+                new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('sulu_security.security_checker'),
             ])
             ->tag('sulu.context', ['context' => 'admin']);
 
@@ -454,8 +456,8 @@ final class SuluPageBundle extends AbstractBundle
             ])
             ->tag('sulu_content.smart_content_provider', ['type' => PageInterface::RESOURCE_KEY]);
 
-        $services->set('sulu_page.page_smart_content_filters_visitor_webspace')
-            ->class(PageSmartContentFiltersVisitor::class)
+        $services->set('sulu_page.webspace_smart_content_filters_visitor_webspace')
+            ->class(WebspaceSmartContentFiltersVisitor::class)
             ->args([
                 new Reference('sulu_core.webspace.request_analyzer'),
                 new Reference('request_stack'),

@@ -18,11 +18,11 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;
-use Sulu\Page\Infrastructure\Sulu\Content\Visitor\PageSmartContentFiltersVisitor;
+use Sulu\Page\Infrastructure\Sulu\Content\Visitor\WebspaceSmartContentFiltersVisitor;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class PageSmartContentFiltersVisitorTest extends TestCase
+class WebspaceSmartContentFiltersVisitorTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -34,14 +34,14 @@ class PageSmartContentFiltersVisitorTest extends TestCase
      * @var ObjectProphecy<RequestStack>
      */
     private ObjectProphecy $requestStack;
-    private PageSmartContentFiltersVisitor $visitor;
+    private WebspaceSmartContentFiltersVisitor $visitor;
 
     protected function setUp(): void
     {
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
 
-        $this->visitor = new PageSmartContentFiltersVisitor(
+        $this->visitor = new WebspaceSmartContentFiltersVisitor(
             $this->requestAnalyzer->reveal(),
             $this->requestStack->reveal()
         );

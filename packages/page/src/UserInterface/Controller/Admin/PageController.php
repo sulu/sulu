@@ -24,7 +24,11 @@ use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
@@ -43,6 +47,7 @@ use Sulu\Page\Domain\Exception\PageNotFoundException;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
+use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -71,6 +76,8 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         private RestHelperInterface $restHelper,
         private AccessControlManagerInterface $accessControlManager,
         private TokenStorageInterface $tokenStorage,
+        private WebspaceManagerInterface $webspaceManager,
+        private SecurityCheckerInterface $securityChecker,
     ) {
         // TODO controller should not need more then Repository, MessageBus, Serializer
     }
@@ -150,7 +157,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
                 $listRepresentation->toArray(),
                 'json',
                 ['sulu_admin' => true, 'sulu_admin_page' => true, 'sulu_admin_page_list' => true],
-            )
+            ),
         );
     }
 
@@ -179,7 +186,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
 
             return new JsonResponse(
                 $exception->toArray(),
-                404
+                404,
             );
         }
 
@@ -314,7 +321,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             /** @var PageInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('restore' === $action) {
-            $version = \intval($request->query->get('version'));
+            $version = $request->query->getInt('version');
             if (!$version) {
                 throw new \InvalidArgumentException('The "version" query parameter is required for restoring a version.');
             }
@@ -369,6 +376,18 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         foreach ($parameters as $key => $value) {
             $listBuilder->setParameter($key, $value);
         }
+
+        /** @var string|null $webspaceKey */
+        $webspaceKey = $filters['webspaceKey'] ?? null;
+        unset($filters['webspaceKey']);
+
+        if ($webspaceKey) {
+            $webspaces = [$this->getWebspaceKey($webspaceKey)];
+        } else {
+            $webspaces = $this->getWebspaceKeys();
+        }
+
+        $listBuilder->in($fieldDescriptors['webspaceKey'], $webspaces);
 
         foreach ($filters as $key => $value) {
             $listBuilder->where($fieldDescriptors[$key], $value); // @phpstan-ignore argument.type
@@ -481,7 +500,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
 
             $allPermissions = $this->accessControlManager->getPermissions(
                 Page::class,
-                $rowId
+                $rowId,
             );
             $row['_hasPermissions'] = !empty($allPermissions);
 
@@ -494,7 +513,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
                         null,
                         \sprintf('sulu.webspaces.%s', $webspaceKey),
                         $allPermissions,
-                        $user
+                        $user,
                     );
                     $row['_permissions'] = $permissions;
                 } else {
@@ -570,5 +589,39 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         $id = $request->get('id');
 
         return \is_string($id) ? $id : '';
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getWebspaceKeys(): array
+    {
+        $webspaceKeys = [];
+
+        foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
+            if ($this->securityChecker->hasPermission(
+                PageAdmin::getPageSecurityContext($webspace->getKey()),
+                PermissionTypes::VIEW,
+            )) {
+                $webspaceKeys[] = $webspace->getKey();
+            }
+        }
+
+        return $webspaceKeys;
+    }
+
+    private function getWebspaceKey(string $webspaceKey): ?string
+    {
+        /** @var Webspace $webspace */
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+
+        if ($this->securityChecker->hasPermission(
+            PageAdmin::getPageSecurityContext($webspace->getKey()),
+            PermissionTypes::VIEW,
+        )) {
+            return $webspace->getKey();
+        }
+
+        return null;
     }
 }
