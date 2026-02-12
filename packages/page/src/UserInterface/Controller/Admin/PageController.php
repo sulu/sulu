@@ -321,7 +321,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             /** @var PageInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('restore' === $action) {
-            $version = (int) $request->query->get('version');
+            $version = $request->query->getInt('version');
             if (!$version) {
                 throw new \InvalidArgumentException('The "version" query parameter is required for restoring a version.');
             }
