@@ -13,26 +13,28 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Infrastructure\Sulu\Content;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Article\Domain\Model\ArticleDimensionContent;
 use Sulu\Article\Domain\Model\ArticleInterface;
-use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
-use Sulu\Content\Application\ContentManager\ContentManagerInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @interal This class is an integration to the SuluMarkupBundle and can be changed any time.
- *          Use Symfony dependency injection service decoration and change the behaviour if you need.
+ * @internal This class is an integration to the SuluMarkupBundle and can be changed any time.
+ *           Use Symfony dependency injection service decoration and change the behaviour if you need.
  */
 final class ArticleLinkProvider implements LinkProviderInterface
 {
     public function __construct(
-        private readonly ContentManagerInterface $contentManager,
-        private readonly ArticleRepositoryInterface $articleRepository,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly WebspaceManagerInterface $webspaceManager,
+        private readonly RequestAnalyzerInterface $requestAnalyzer,
         private readonly ReferenceStoreInterface $referenceStore,
         private readonly TranslatorInterface $translator,
     ) {
@@ -52,46 +54,106 @@ final class ArticleLinkProvider implements LinkProviderInterface
 
     public function preload(array $hrefs, string $locale, bool $published = true): iterable
     {
-        $dimensionAttributes = [
-            'locale' => $locale,
-            'stage' => $published ? DimensionContentInterface::STAGE_LIVE : DimensionContentInterface::STAGE_DRAFT,
-            'version' => DimensionContentInterface::CURRENT_VERSION,
-        ];
+        if ([] === $hrefs) {
+            return [];
+        }
 
-        $articles = $this->articleRepository->findBy(
-            filters: [
-                'uuids' => $hrefs,
-                'locale' => $locale,
-                'stage' => $dimensionAttributes['stage'],
-                'version' => DimensionContentInterface::CURRENT_VERSION,
-            ],
-            selects: [
-                ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
-                    DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true,
-                ],
-            ]
-        );
+        $stage = $published ? DimensionContentInterface::STAGE_LIVE : DimensionContentInterface::STAGE_DRAFT;
+        $version = DimensionContentInterface::CURRENT_VERSION;
+
+        $requestWebspace = $this->requestAnalyzer->getWebspace()?->getKey();
+        $rows = $this->findArticlesByUuids($hrefs, $locale, $stage, $version, $requestWebspace);
 
         $result = [];
-        foreach ($articles as $article) {
-            $dimensionContent = $this->contentManager->resolve($article, $dimensionAttributes);
-            $this->referenceStore->add($article->getId(), ArticleInterface::RESOURCE_KEY);
+        foreach ($rows as $row) {
+            $this->referenceStore->add($row['uuid'], ArticleInterface::RESOURCE_KEY);
 
-            /** @var string|null $url */
-            $url = $dimensionContent->getTemplateData()['url'] ?? null;
+            if (null === $row['slug']) {
+                continue;
+            }
+
+            $webspace = $this->determineWebspace($row, $requestWebspace);
+            if (null === $webspace) {
+                continue;
+            }
+
+            $url = $this->webspaceManager->findUrlByResourceLocator(
+                $row['slug'],
+                null,
+                $locale,
+                $webspace,
+            );
+
             if (null === $url) {
-                // TODO what to do when there is no url?
                 continue;
             }
 
             $result[] = new LinkItem(
-                $article->getUuid(),
-                (string) $dimensionContent->getTitle(),
+                $row['uuid'],
+                (string) ($row['title'] ?? ''),
                 $url,
-                $published
+                $published,
             );
         }
 
         return $result;
+    }
+
+    /**
+     * @param string[] $uuids
+     *
+     * @return list<array{uuid: string, title: ?string, slug: ?string, mainWebspace: ?string, additionalWebspace?: ?string}>
+     */
+    private function findArticlesByUuids(
+        array $uuids,
+        string $locale,
+        string $stage,
+        int $version,
+        ?string $requestWebspace,
+    ): array {
+        $queryBuilder = $this->entityManager->createQueryBuilder()
+            ->select('article.uuid', 'dimensionContent.title', 'route.slug', 'dimensionContent.mainWebspace')
+            ->from(ArticleDimensionContent::class, 'dimensionContent')
+            ->join('dimensionContent.article', 'article')
+            ->leftJoin('dimensionContent.route', 'route')
+            ->where('article.uuid IN (:uuids)')
+            ->andWhere('dimensionContent.locale = :locale')
+            ->andWhere('dimensionContent.stage = :stage')
+            ->andWhere('dimensionContent.version = :version')
+            ->setParameter('uuids', $uuids)
+            ->setParameter('locale', $locale)
+            ->setParameter('stage', $stage)
+            ->setParameter('version', $version);
+
+        if (null !== $requestWebspace) {
+            $queryBuilder
+                ->addSelect('additionalWebspace.additionalWebspace')
+                ->leftJoin(
+                    'dimensionContent.additionalWebspaces',
+                    'additionalWebspace',
+                    'WITH',
+                    'additionalWebspace.additionalWebspace = :requestWebspace',
+                )
+                ->setParameter('requestWebspace', $requestWebspace);
+        }
+
+        /** @var list<array{uuid: string, title: ?string, slug: ?string, mainWebspace: ?string, additionalWebspace?: ?string}> */
+        return $queryBuilder->getQuery()->getArrayResult();
+    }
+
+    /**
+     * @param array{mainWebspace: ?string, additionalWebspace?: ?string} $row
+     */
+    private function determineWebspace(array $row, ?string $requestWebspace): ?string
+    {
+        if (null === $requestWebspace) {
+            return $row['mainWebspace'];
+        }
+
+        if ($row['mainWebspace'] === $requestWebspace || ($row['additionalWebspace'] ?? null) !== null) {
+            return $requestWebspace;
+        }
+
+        return $row['mainWebspace'];
     }
 }

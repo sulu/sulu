@@ -13,30 +13,29 @@ declare(strict_types=1);
 
 namespace Sulu\Page\Infrastructure\Sulu\Content;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
-use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
-use Sulu\Content\Application\ContentEnhancer\ContentEnhancerInterface;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkUrlTrait;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
-use Sulu\Page\Domain\Model\PageDimensionContentInterface;
+use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageInterface;
-use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Webmozart\Assert\Assert;
 
 /**
- * @interal This class is an integration to the SuluMarkupBundle and can be changed any time.
- *          Use Symfony dependency injection service decoration and change the behaviour if you need.
+ * @internal This class is an integration to the SuluMarkupBundle and can be changed any time.
+ *           Use Symfony dependency injection service decoration and change the behaviour if you need.
  */
 final class PageLinkProvider implements LinkProviderInterface
 {
+    use LinkUrlTrait;
+
     public function __construct(
-        private readonly ContentAggregatorInterface $contentAggregator,
-        private readonly ContentEnhancerInterface $contentEnhancer,
-        private readonly PageRepositoryInterface $pageRepository,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly WebspaceManagerInterface $webspaceManager,
         private readonly ReferenceStoreInterface $referenceStore,
         private readonly TranslatorInterface $translator,
     ) {
@@ -56,51 +55,149 @@ final class PageLinkProvider implements LinkProviderInterface
 
     public function preload(array $hrefs, string $locale, bool $published = true): iterable
     {
-        $dimensionAttributes = [
-            'locale' => $locale,
-            'stage' => $published ? DimensionContentInterface::STAGE_LIVE : DimensionContentInterface::STAGE_DRAFT,
-            'version' => DimensionContentInterface::CURRENT_VERSION,
-        ];
+        if ([] === $hrefs) {
+            return [];
+        }
 
-        $pages = $this->pageRepository->findBy(
-            filters: [
-                'uuids' => $hrefs,
-                'locale' => $locale,
-                'stage' => $dimensionAttributes['stage'],
-                'version' => DimensionContentInterface::CURRENT_VERSION,
-            ],
-            selects: [
-                PageRepositoryInterface::SELECT_PAGE_CONTENT => [
-                    DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true,
-                ],
-            ]
-        );
+        $stage = $published ? DimensionContentInterface::STAGE_LIVE : DimensionContentInterface::STAGE_DRAFT;
+        $version = DimensionContentInterface::CURRENT_VERSION;
+
+        $rows = $this->findPagesByUuids($hrefs, $locale, $stage, $version);
+
+        $internalLinkTargetUuids = [];
+        foreach ($rows as $row) {
+            if ('page' === $row['linkProvider'] && \is_array($row['linkData']) && \is_string($row['linkData']['href'] ?? null)) {
+                $internalLinkTargetUuids[] = $row['linkData']['href'];
+            }
+        }
+
+        $targetRoutes = [];
+        if ([] !== $internalLinkTargetUuids) {
+            $targetRows = $this->findTargetPageRoutes($internalLinkTargetUuids, $locale, $stage, $version);
+
+            foreach ($targetRows as $targetRow) {
+                $targetRoutes[$targetRow['uuid']] = [
+                    'slug' => $targetRow['slug'],
+                    'webspaceKey' => $targetRow['webspaceKey'],
+                ];
+            }
+        }
 
         $result = [];
-        foreach ($pages as $page) {
-            $dimensionContent = $this->contentAggregator->aggregate($page, $dimensionAttributes);
-            $dimensionContent = $this->contentEnhancer->enhance($dimensionContent);
-            Assert::isInstanceOf($dimensionContent, PageDimensionContentInterface::class);
+        foreach ($rows as $row) {
+            $this->referenceStore->add($row['uuid'], PageInterface::RESOURCE_KEY);
 
-            $this->referenceStore->add($page->getId(), PageInterface::RESOURCE_KEY);
-
-            /** @var array<string, mixed> $templateData */
-            $templateData = $dimensionContent->getTemplateData();
-            /** @var string|null $url */
-            $url = $templateData['url'] ?? null;
+            $url = $this->resolveUrl($row, $targetRoutes, $locale);
             if (null === $url) {
-                // TODO what to do when there is no url?
                 continue;
             }
 
             $result[] = new LinkItem(
-                $page->getUuid(),
-                (string) $dimensionContent->getTitle(),
+                $row['uuid'],
+                (string) ($row['title'] ?? ''),
                 $url,
-                $published
+                $published,
             );
         }
 
         return $result;
+    }
+
+    /**
+     * @param string[] $uuids
+     *
+     * @return list<array{uuid: string, title: ?string, slug: ?string, webspaceKey: string, linkProvider: ?string, linkData: ?array<string, mixed>}>
+     */
+    private function findPagesByUuids(array $uuids, string $locale, string $stage, int $version): array
+    {
+        /** @var list<array{uuid: string, title: ?string, slug: ?string, webspaceKey: string, linkProvider: ?string, linkData: ?array<string, mixed>}> */
+        return $this->entityManager->createQueryBuilder()
+            ->select('page.uuid', 'dimensionContent.title', 'route.slug', 'page.webspaceKey',
+                'dimensionContent.linkProvider', 'dimensionContent.linkData')
+            ->from(PageDimensionContent::class, 'dimensionContent')
+            ->join('dimensionContent.page', 'page')
+            ->leftJoin('dimensionContent.route', 'route')
+            ->where('page.uuid IN (:uuids)')
+            ->andWhere('dimensionContent.locale = :locale')
+            ->andWhere('dimensionContent.stage = :stage')
+            ->andWhere('dimensionContent.version = :version')
+            ->setParameter('uuids', $uuids)
+            ->setParameter('locale', $locale)
+            ->setParameter('stage', $stage)
+            ->setParameter('version', $version)
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    /**
+     * @param string[] $targetUuids
+     *
+     * @return list<array{uuid: string, slug: ?string, webspaceKey: string}>
+     */
+    private function findTargetPageRoutes(array $targetUuids, string $locale, string $stage, int $version): array
+    {
+        /** @var list<array{uuid: string, slug: ?string, webspaceKey: string}> */
+        return $this->entityManager->createQueryBuilder()
+            ->select('page.uuid', 'route.slug', 'page.webspaceKey')
+            ->from(PageDimensionContent::class, 'dimensionContent')
+            ->join('dimensionContent.page', 'page')
+            ->leftJoin('dimensionContent.route', 'route')
+            ->where('page.uuid IN (:targetUuids)')
+            ->andWhere('dimensionContent.locale = :locale')
+            ->andWhere('dimensionContent.stage = :stage')
+            ->andWhere('dimensionContent.version = :version')
+            ->setParameter('targetUuids', $targetUuids)
+            ->setParameter('locale', $locale)
+            ->setParameter('stage', $stage)
+            ->setParameter('version', $version)
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    /**
+     * @param array{uuid: string, title: ?string, slug: ?string, webspaceKey: string, linkProvider: ?string, linkData: ?array<string, mixed>} $row
+     * @param array<string, array{slug: ?string, webspaceKey: string}> $targetRoutes
+     */
+    private function resolveUrl(array $row, array $targetRoutes, string $locale): ?string
+    {
+        $linkProvider = $row['linkProvider'];
+        $linkData = $row['linkData'];
+
+        if ('external' === $linkProvider && \is_array($linkData) && \is_string($linkData['href'] ?? null)) {
+            return $this->appendQueryAndAnchor($linkData['href'], $linkData);
+        }
+
+        if ('page' === $linkProvider && \is_array($linkData) && \is_string($linkData['href'] ?? null)) {
+            $targetUuid = $linkData['href'];
+            $target = $targetRoutes[$targetUuid] ?? null;
+            if (null === $target || null === $target['slug']) {
+                return null;
+            }
+
+            $url = $this->webspaceManager->findUrlByResourceLocator(
+                $target['slug'],
+                null,
+                $locale,
+                $target['webspaceKey'],
+            );
+
+            if (null === $url) {
+                return null;
+            }
+
+            return $this->appendQueryAndAnchor($url, $linkData);
+        }
+
+        // Unknown link providers (or no link provider) fall through to using the page's own route
+        if (null === $row['slug']) {
+            return null;
+        }
+
+        return $this->webspaceManager->findUrlByResourceLocator(
+            $row['slug'],
+            null,
+            $locale,
+            $row['webspaceKey'],
+        );
     }
 }

@@ -162,7 +162,7 @@ class PageSmartContentResolverTest extends SuluTestCase
 
         // Test internal link - resolves to target page's URL with custom title
         $this->assertArrayHasKey('Internal Link Page', $pagesByTitle);
-        $this->assertSame('/target-page', $pagesByTitle['Internal Link Page']['url']);
+        $this->assertSame('http://sulu.io/en/target-page', $pagesByTitle['Internal Link Page']['url']);
         $this->assertSame('Internal Link Page', $pagesByTitle['Internal Link Page']['title']);
     }
 }

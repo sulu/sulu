@@ -332,8 +332,9 @@ final class SuluArticleBundle extends AbstractBundle
         $services->set('sulu_article.article_link_provider')
             ->class(ArticleLinkProvider::class)
             ->args([
-                new Reference('sulu_content.content_manager'),
-                new Reference('sulu_article.article_repository'),
+                new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('sulu_core.webspace.request_analyzer'),
                 new Reference('sulu_http_cache.reference_store'),
                 new Reference('translator'),
             ])

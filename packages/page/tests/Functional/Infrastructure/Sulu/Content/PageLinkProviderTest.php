@@ -108,10 +108,10 @@ class PageLinkProviderTest extends SuluTestCase
             $linksByUuid[$link->getId()] = $link;
         }
 
-        // Test content link - shows own title and URL
+        // Test content link - shows own title and URL resolved via webspace manager
         $this->assertArrayHasKey($contentPage->getUuid(), $linksByUuid);
         $this->assertSame('Content Page', $linksByUuid[$contentPage->getUuid()]->getTitle());
-        $this->assertSame('/content-page', $linksByUuid[$contentPage->getUuid()]->getUrl());
+        $this->assertSame('http://sulu.io/en/content-page', $linksByUuid[$contentPage->getUuid()]->getUrl());
 
         // Test external link - shows external URL with page's own title
         $this->assertArrayHasKey($externalPage->getUuid(), $linksByUuid);
@@ -121,6 +121,6 @@ class PageLinkProviderTest extends SuluTestCase
         // Test internal link - resolves to target page's URL with custom title
         $this->assertArrayHasKey($internalPage->getUuid(), $linksByUuid);
         $this->assertSame('Internal Link Page', $linksByUuid[$internalPage->getUuid()]->getTitle());
-        $this->assertSame('/link-target', $linksByUuid[$internalPage->getUuid()]->getUrl());
+        $this->assertSame('http://sulu.io/en/link-target', $linksByUuid[$internalPage->getUuid()]->getUrl());
     }
 }
