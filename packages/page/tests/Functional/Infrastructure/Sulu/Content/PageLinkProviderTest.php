@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
 use Sulu\Page\Tests\Traits\CreatePageTrait;
+use Symfony\Component\Routing\RequestContext;
 
 #[CoversNothing]
 class PageLinkProviderTest extends SuluTestCase
@@ -37,6 +38,10 @@ class PageLinkProviderTest extends SuluTestCase
         parent::setUp();
 
         $this->linkProvider = self::getContainer()->get('sulu_page.page_link_provider');
+
+        /** @var RequestContext $requestContext */
+        $requestContext = self::getContainer()->get('router')->getContext();
+        $requestContext->setParameter('webspace', 'sulu-io');
     }
 
     public function testPreloadWithContentLinks(): void
@@ -108,10 +113,10 @@ class PageLinkProviderTest extends SuluTestCase
             $linksByUuid[$link->getId()] = $link;
         }
 
-        // Test content link - shows own title and URL
+        // Test content link - shows own title and URL resolved via webspace manager
         $this->assertArrayHasKey($contentPage->getUuid(), $linksByUuid);
         $this->assertSame('Content Page', $linksByUuid[$contentPage->getUuid()]->getTitle());
-        $this->assertSame('/content-page', $linksByUuid[$contentPage->getUuid()]->getUrl());
+        $this->assertSame('http://sulu.io/en/content-page', $linksByUuid[$contentPage->getUuid()]->getUrl());
 
         // Test external link - shows external URL with page's own title
         $this->assertArrayHasKey($externalPage->getUuid(), $linksByUuid);
@@ -121,6 +126,6 @@ class PageLinkProviderTest extends SuluTestCase
         // Test internal link - resolves to target page's URL with custom title
         $this->assertArrayHasKey($internalPage->getUuid(), $linksByUuid);
         $this->assertSame('Internal Link Page', $linksByUuid[$internalPage->getUuid()]->getTitle());
-        $this->assertSame('/link-target', $linksByUuid[$internalPage->getUuid()]->getUrl());
+        $this->assertSame('http://sulu.io/en/link-target', $linksByUuid[$internalPage->getUuid()]->getUrl());
     }
 }

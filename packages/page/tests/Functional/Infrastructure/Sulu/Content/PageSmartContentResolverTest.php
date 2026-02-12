@@ -18,6 +18,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentResolver\ContentResolverInterface;
 use Sulu\Page\Tests\Traits\CreatePageTrait;
+use Symfony\Component\Routing\RequestContext;
 
 #[CoversNothing]
 class PageSmartContentResolverTest extends SuluTestCase
@@ -40,6 +41,10 @@ class PageSmartContentResolverTest extends SuluTestCase
 
         $this->contentResolver = self::getContainer()->get('sulu_content.content_resolver');
         $this->contentAggregator = self::getContainer()->get('sulu_content.content_aggregator');
+
+        /** @var RequestContext $requestContext */
+        $requestContext = self::getContainer()->get('router')->getContext();
+        $requestContext->setParameter('webspace', 'sulu-io');
     }
 
     public function testResolveSmartContentWithLinks(): void
@@ -162,7 +167,7 @@ class PageSmartContentResolverTest extends SuluTestCase
 
         // Test internal link - resolves to target page's URL with custom title
         $this->assertArrayHasKey('Internal Link Page', $pagesByTitle);
-        $this->assertSame('/target-page', $pagesByTitle['Internal Link Page']['url']);
+        $this->assertSame('http://sulu.io/en/target-page', $pagesByTitle['Internal Link Page']['url']);
         $this->assertSame('Internal Link Page', $pagesByTitle['Internal Link Page']['title']);
     }
 }

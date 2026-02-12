@@ -14,11 +14,14 @@ declare(strict_types=1);
 namespace Sulu\Page\Infrastructure\Sulu\Content\ContentResolver;
 
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkUrlTrait;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentEnhancer\DimensionContentEnhancerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
+use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 
 /**
  * @internal This class should not be instantiated by a project.
@@ -26,16 +29,23 @@ use Sulu\Page\Domain\Repository\PageRepositoryInterface;
  */
 class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterface
 {
+    use LinkUrlTrait;
+
     public function __construct(
         private PageRepositoryInterface $pageRepository,
         private ContentAggregatorInterface $contentAggregator,
         private LinkProviderPoolInterface $linkProviderPool,
+        private RouteGeneratorInterface $routeGenerator,
     ) {
     }
 
     public function enhance(DimensionContentInterface $dimensionContent): DimensionContentInterface
     {
         if (!$dimensionContent instanceof PageDimensionContentInterface) {
+            return $dimensionContent;
+        }
+
+        if (null === $dimensionContent->getLocale()) {
             return $dimensionContent;
         }
 
@@ -102,8 +112,19 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
         /** @var PageDimensionContentInterface $targetDimensionContent */
         $targetDimensionContent = $this->contentAggregator->aggregate($page, $dimensionAttributes);
 
-        $url = $targetDimensionContent->getTemplateData()['url'] ?? null;
-        if (\is_string($url) && null !== $linkData) {
+        $route = $targetDimensionContent->getRoute();
+        $targetLocale = $targetDimensionContent->getLocale();
+        /** @var PageInterface $targetPage */
+        $targetPage = $targetDimensionContent->getResource();
+        $url = null !== $route && null !== $targetLocale
+            ? $this->routeGenerator->generate(
+                $route->getSlug(),
+                $targetLocale,
+                $targetPage->getWebspaceKey(),
+            )
+            : null;
+
+        if (null !== $url && null !== $linkData) {
             $url = $this->appendQueryAndAnchor($url, $linkData);
         }
 
@@ -131,12 +152,13 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
 
         $url = $linkData['href'] ?? null;
         $provider = $linkData['provider'] ?? null;
-        if (!\is_string($provider) || !\is_string($url)) {
+        $locale = $pageDimensionContent->getLocale();
+        if (!\is_string($provider) || !\is_string($url) || null === $locale) {
             return $pageDimensionContent;
         }
 
         $linkProvider = $this->linkProviderPool->getProvider($provider);
-        $preloadResult = $linkProvider->preload([$url], $pageDimensionContent->getLocale() ?? 'en');
+        $preloadResult = $linkProvider->preload([$url], $locale);
         $linkItem = [...$preloadResult][0] ?? null;
 
         if (null === $linkItem) {
@@ -156,22 +178,5 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
         ]);
 
         return $pageDimensionContent;
-    }
-
-    /**
-     * Append query string and anchor to a URL based on linkData.
-     *
-     * @param array<string, mixed> $linkData
-     */
-    private function appendQueryAndAnchor(string $url, array $linkData): string
-    {
-        if (isset($linkData['query']) && \is_string($linkData['query'])) {
-            $url = \sprintf('%s?%s', $url, \ltrim($linkData['query'], '?'));
-        }
-        if (isset($linkData['anchor']) && \is_string($linkData['anchor'])) {
-            $url = \sprintf('%s#%s', $url, \ltrim($linkData['anchor'], '#'));
-        }
-
-        return $url;
     }
 }
