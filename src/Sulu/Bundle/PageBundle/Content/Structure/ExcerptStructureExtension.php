@@ -191,6 +191,7 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
                 'field' => $this->factory->createMetadataExpression(
                     \sprintf('object.getExtensionsData()["excerpt"]["%s"]', $property->getName())
                 ),
+                'html' => 'text_editor' === $property->getContentTypeName(),
             ];
         }
 
