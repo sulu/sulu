@@ -36,10 +36,13 @@ class WebsiteArticleReindexExcerptEnhancer implements WebsiteArticleReindexProvi
         }
 
         $excerpt = [];
+        /** @var list<string> */
+        $content = \is_array($document['content'] ?? null) ? $document['content'] : [];
 
         $excerptTitle = $excerptData['title'] ?? null;
         if (\is_string($excerptTitle) && '' !== \trim($excerptTitle)) {
             $excerpt['title'] = \trim($excerptTitle);
+            $content[] = \trim($excerptTitle);
 
             if ('' === ($document['title'] ?? '')) {
                 $document['title'] = \trim($excerptTitle);
@@ -48,7 +51,8 @@ class WebsiteArticleReindexExcerptEnhancer implements WebsiteArticleReindexProvi
 
         $excerptDescription = $excerptData['description'] ?? null;
         if (\is_string($excerptDescription) && '' !== \trim($excerptDescription)) {
-            $excerpt['description'] = \trim(\strip_tags($excerptDescription));
+            $excerpt['description'] = \trim($excerptDescription);
+            $content[] = \trim(\strip_tags($excerptDescription));
         }
 
         $excerptMore = $excerptData['more'] ?? null;
@@ -70,10 +74,12 @@ class WebsiteArticleReindexExcerptEnhancer implements WebsiteArticleReindexProvi
             $excerpt['iconId'] = (int) $icon['id'];
         }
 
+        $document['content'] = $content;
+
         if ([] !== $excerpt) {
-            $properties = \is_array($document['properties'] ?? null) ? $document['properties'] : [];
-            $properties['excerpt'] = $excerpt;
-            $document['properties'] = $properties;
+            $metadata = \is_array($document['metadata'] ?? null) ? $document['metadata'] : [];
+            $metadata['excerpt'] = $excerpt;
+            $document['metadata'] = $metadata;
         }
 
         return $document;

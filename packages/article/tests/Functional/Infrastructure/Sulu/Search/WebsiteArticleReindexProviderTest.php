@@ -153,7 +153,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable('1995-11-29 12:00:00'))->format('c'),
-                'properties' => [],
+                'metadata' => [],
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__de',
@@ -166,7 +166,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
-                'properties' => [],
+                'metadata' => [],
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__en',
@@ -179,7 +179,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
-                'properties' => [],
+                'metadata' => [],
             ],
         ];
 
@@ -266,7 +266,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable('1995-11-29 12:00:00'))->format('c'),
-                'properties' => [],
+                'metadata' => [],
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__de',
@@ -279,7 +279,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
-                'properties' => [],
+                'metadata' => [],
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__en',
@@ -292,7 +292,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
-                'properties' => [],
+                'metadata' => [],
             ],
         ];
 
@@ -405,12 +405,12 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
         $result = $results[0];
         $this->assertSame('Excerpt Title', $result['title']);
 
-        $this->assertIsArray($result['properties']);
-        $excerpt = $result['properties']['excerpt'];
+        $this->assertIsArray($result['metadata']);
+        $excerpt = $result['metadata']['excerpt'];
         $this->assertIsArray($excerpt);
 
         $this->assertSame('Excerpt Title', $excerpt['title']);
-        $this->assertSame('Excerpt description', $excerpt['description']);
+        $this->assertSame('<p>Excerpt <strong>description</strong></p>', $excerpt['description']);
         $this->assertSame('Read more', $excerpt['more']);
         $this->assertSame(1, $excerpt['imageId']);
         $this->assertSame(2, $excerpt['iconId']);
@@ -445,8 +445,8 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
         $result = $results[0];
         $this->assertSame('Excerpt Title Override', $result['title']);
 
-        $this->assertIsArray($result['properties']);
-        $excerpt = $result['properties']['excerpt'];
+        $this->assertIsArray($result['metadata']);
+        $excerpt = $result['metadata']['excerpt'];
         $this->assertIsArray($excerpt);
         $this->assertSame('Excerpt Title Override', $excerpt['title']);
     }
@@ -480,8 +480,8 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
         $result = $results[0];
         $this->assertSame('55', $result['mediaId']);
 
-        $this->assertIsArray($result['properties']);
-        $excerpt = $result['properties']['excerpt'];
+        $this->assertIsArray($result['metadata']);
+        $excerpt = $result['metadata']['excerpt'];
         $this->assertIsArray($excerpt);
         $this->assertSame(55, $excerpt['imageId']);
     }
@@ -511,7 +511,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
 
         $result = $results[0];
         $this->assertSame('No Excerpt Article', $result['title']);
-        $this->assertSame([], $result['properties']);
+        $this->assertSame([], $result['metadata']);
     }
 
     public function testTaxonomyEnhancerPopulatesCategoriesAndTags(): void
@@ -547,8 +547,8 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
         $this->assertCount(1, $results);
 
         $result = $results[0];
-        $this->assertIsArray($result['properties']);
-        $excerpt = $result['properties']['excerpt'];
+        $this->assertIsArray($result['metadata']);
+        $excerpt = $result['metadata']['excerpt'];
         $this->assertIsArray($excerpt);
 
         $this->assertSame([$category1->getId(), $category2->getId()], $excerpt['categoryIds']);
@@ -585,8 +585,8 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
         $this->assertCount(1, $results);
 
         $result = $results[0];
-        $this->assertIsArray($result['properties']);
-        $excerpt = $result['properties']['excerpt'];
+        $this->assertIsArray($result['metadata']);
+        $excerpt = $result['metadata']['excerpt'];
         $this->assertIsArray($excerpt);
 
         $this->assertSame([$category1->getId(), $category2->getId()], $excerpt['categoryIds']);
@@ -623,8 +623,8 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
         $this->assertCount(1, $results);
 
         $result = $results[0];
-        $this->assertIsArray($result['properties']);
-        $excerpt = $result['properties']['excerpt'];
+        $this->assertIsArray($result['metadata']);
+        $excerpt = $result['metadata']['excerpt'];
         $this->assertIsArray($excerpt);
 
         $this->assertArrayNotHasKey('categoryIds', $excerpt);
@@ -655,8 +655,8 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
         $this->assertCount(1, $results);
 
         $result = $results[0];
-        $this->assertIsArray($result['properties']);
-        $this->assertArrayNotHasKey('excerpt', $result['properties']);
+        $this->assertIsArray($result['metadata']);
+        $this->assertArrayNotHasKey('excerpt', $result['metadata']);
     }
 
     public function testTaxonomyEnhancerPreservesExistingExcerptProperties(): void
@@ -697,12 +697,12 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
         $this->assertCount(1, $results);
 
         $result = $results[0];
-        $this->assertIsArray($result['properties']);
-        $excerpt = $result['properties']['excerpt'];
+        $this->assertIsArray($result['metadata']);
+        $excerpt = $result['metadata']['excerpt'];
         $this->assertIsArray($excerpt);
 
         $this->assertSame('Excerpt Title', $excerpt['title']);
-        $this->assertSame('Excerpt description', $excerpt['description']);
+        $this->assertSame('<p>Excerpt description</p>', $excerpt['description']);
         $this->assertSame([$category->getId()], $excerpt['categoryIds']);
         $this->assertSame(['test-tag'], $excerpt['tagNames']);
     }

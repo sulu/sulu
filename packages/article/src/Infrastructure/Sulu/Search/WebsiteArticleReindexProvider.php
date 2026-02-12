@@ -106,7 +106,7 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
                 'content' => [],
                 'mediaId' => '',
                 'authoredAt' => $authoredAt->format('c'),
-                'properties' => [],
+                'metadata' => [],
             ];
 
             foreach ($this->enhancers as $enhancer) {

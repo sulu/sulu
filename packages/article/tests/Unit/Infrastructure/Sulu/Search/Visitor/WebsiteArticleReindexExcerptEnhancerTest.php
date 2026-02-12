@@ -96,7 +96,7 @@ class WebsiteArticleReindexExcerptEnhancerTest extends TestCase
 
         $returnedData = $this->enhancer->enhanceDocument($queryResult, $document);
 
-        $this->assertArrayNotHasKey('properties', $returnedData);
+        $this->assertArrayNotHasKey('metadata', $returnedData);
         $this->assertSame('', $returnedData['title']);
     }
 
@@ -109,7 +109,7 @@ class WebsiteArticleReindexExcerptEnhancerTest extends TestCase
 
         $returnedData = $this->enhancer->enhanceDocument($queryResult, $document);
 
-        $this->assertArrayNotHasKey('properties', $returnedData);
+        $this->assertArrayNotHasKey('metadata', $returnedData);
     }
 
     public function testExcerptDescriptionSetsField(): void
@@ -122,7 +122,7 @@ class WebsiteArticleReindexExcerptEnhancerTest extends TestCase
         $returnedData = $this->enhancer->enhanceDocument($queryResult, $document);
         $excerpt = $this->getExcerpt($returnedData);
 
-        $this->assertSame('Some rich description', $excerpt['description']);
+        $this->assertSame('<p>Some <strong>rich</strong> description</p>', $excerpt['description']);
     }
 
     public function testExcerptDescriptionEmptyIsSkipped(): void
@@ -134,7 +134,7 @@ class WebsiteArticleReindexExcerptEnhancerTest extends TestCase
 
         $returnedData = $this->enhancer->enhanceDocument($queryResult, $document);
 
-        $this->assertArrayNotHasKey('properties', $returnedData);
+        $this->assertArrayNotHasKey('metadata', $returnedData);
     }
 
     public function testExcerptMoreSetsField(): void
@@ -159,7 +159,7 @@ class WebsiteArticleReindexExcerptEnhancerTest extends TestCase
 
         $returnedData = $this->enhancer->enhanceDocument($queryResult, $document);
 
-        $this->assertArrayNotHasKey('properties', $returnedData);
+        $this->assertArrayNotHasKey('metadata', $returnedData);
     }
 
     public function testExcerptImageSetsExcerptImageIdAndFallsBackToMediaId(): void
@@ -199,7 +199,7 @@ class WebsiteArticleReindexExcerptEnhancerTest extends TestCase
 
         $returnedData = $this->enhancer->enhanceDocument($queryResult, $document);
 
-        $this->assertArrayNotHasKey('properties', $returnedData);
+        $this->assertArrayNotHasKey('metadata', $returnedData);
     }
 
     public function testExcerptImageNonNumericIdIsSkipped(): void
@@ -211,7 +211,7 @@ class WebsiteArticleReindexExcerptEnhancerTest extends TestCase
 
         $returnedData = $this->enhancer->enhanceDocument($queryResult, $document);
 
-        $this->assertArrayNotHasKey('properties', $returnedData);
+        $this->assertArrayNotHasKey('metadata', $returnedData);
     }
 
     public function testExcerptIconSetsField(): void
@@ -236,7 +236,7 @@ class WebsiteArticleReindexExcerptEnhancerTest extends TestCase
 
         $returnedData = $this->enhancer->enhanceDocument($queryResult, $document);
 
-        $this->assertArrayNotHasKey('properties', $returnedData);
+        $this->assertArrayNotHasKey('metadata', $returnedData);
     }
 
     public function testExcerptIconNonNumericIdIsSkipped(): void
@@ -248,7 +248,47 @@ class WebsiteArticleReindexExcerptEnhancerTest extends TestCase
 
         $returnedData = $this->enhancer->enhanceDocument($queryResult, $document);
 
-        $this->assertArrayNotHasKey('properties', $returnedData);
+        $this->assertArrayNotHasKey('metadata', $returnedData);
+    }
+
+    public function testExcerptTitleAddedToContent(): void
+    {
+        $queryResult = [
+            'excerptData' => ['title' => 'Excerpt Title'],
+        ];
+        $document = ['content' => ['existing content'], 'title' => ''];
+
+        $returnedData = $this->enhancer->enhanceDocument($queryResult, $document);
+
+        $this->assertIsArray($returnedData['content']);
+        $this->assertContains('Excerpt Title', $returnedData['content']);
+        $this->assertContains('existing content', $returnedData['content']);
+    }
+
+    public function testExcerptDescriptionAddedToContentStripped(): void
+    {
+        $queryResult = [
+            'excerptData' => ['description' => '<p>Some <strong>rich</strong> description</p>'],
+        ];
+        $document = ['content' => []];
+
+        $returnedData = $this->enhancer->enhanceDocument($queryResult, $document);
+
+        $this->assertIsArray($returnedData['content']);
+        $this->assertContains('Some rich description', $returnedData['content']);
+    }
+
+    public function testExcerptDescriptionInMetadataKeepsHtml(): void
+    {
+        $queryResult = [
+            'excerptData' => ['description' => '<p>Some <strong>rich</strong> description</p>'],
+        ];
+        $document = ['content' => []];
+
+        $returnedData = $this->enhancer->enhanceDocument($queryResult, $document);
+        $excerpt = $this->getExcerpt($returnedData);
+
+        $this->assertSame('<p>Some <strong>rich</strong> description</p>', $excerpt['description']);
     }
 
     public function testAllExcerptFieldsPopulated(): void
@@ -269,7 +309,7 @@ class WebsiteArticleReindexExcerptEnhancerTest extends TestCase
 
         $this->assertSame('Excerpt Title', $excerpt['title']);
         $this->assertSame('Excerpt Title', $returnedData['title']);
-        $this->assertSame('Description', $excerpt['description']);
+        $this->assertSame('<p>Description</p>', $excerpt['description']);
         $this->assertSame('Read more', $excerpt['more']);
         $this->assertSame(55, $excerpt['imageId']);
         $this->assertSame('55', $returnedData['mediaId']);
@@ -283,10 +323,10 @@ class WebsiteArticleReindexExcerptEnhancerTest extends TestCase
      */
     private function getExcerpt(array $returnedData): array
     {
-        $properties = $returnedData['properties'] ?? null;
-        $this->assertIsArray($properties);
+        $metadata = $returnedData['metadata'] ?? null;
+        $this->assertIsArray($metadata);
 
-        $excerpt = $properties['excerpt'] ?? null;
+        $excerpt = $metadata['excerpt'] ?? null;
         $this->assertIsArray($excerpt);
 
         /** @var array<string, mixed> $excerpt */

@@ -38,65 +38,79 @@ class WebsitePageReindexTaxonomyEnhancer implements WebsitePageReindexProviderEn
     public function enhanceDocument(array $queryResult, array $document): array
     {
         $dimensionContentId = $queryResult['dimensionContentId'] ?? null;
-        if (null === $dimensionContentId || !\is_int($dimensionContentId)) {
+        if (!\is_int($dimensionContentId)) {
             return $document;
         }
 
-        $categoryIds = $this->loadCategoryIds($dimensionContentId);
-        $tagNames = $this->loadTagNames($dimensionContentId);
+        $taxonomy = $this->loadTaxonomy($dimensionContentId);
+        $categoryIds = $taxonomy['categoryIds'];
+        $tagNames = $taxonomy['tagNames'];
 
-        if ([] !== $categoryIds || [] !== $tagNames) {
-            $properties = \is_array($document['properties'] ?? null) ? $document['properties'] : [];
-            $excerpt = \is_array($properties['excerpt'] ?? null) ? $properties['excerpt'] : [];
-
-            if ([] !== $categoryIds) {
-                $excerpt['categoryIds'] = $categoryIds;
-            }
-
-            if ([] !== $tagNames) {
-                $excerpt['tagNames'] = $tagNames;
-            }
-
-            $properties['excerpt'] = $excerpt;
-            $document['properties'] = $properties;
+        if ([] === $categoryIds && [] === $tagNames) {
+            return $document;
         }
+
+        $metadata = \is_array($document['metadata'] ?? null) ? $document['metadata'] : [];
+        $excerpt = \is_array($metadata['excerpt'] ?? null) ? $metadata['excerpt'] : [];
+
+        if ([] !== $categoryIds) {
+            $excerpt['categoryIds'] = $categoryIds;
+        }
+
+        if ([] !== $tagNames) {
+            $excerpt['tagNames'] = $tagNames;
+        }
+
+        $metadata['excerpt'] = $excerpt;
+        $document['metadata'] = $metadata;
 
         return $document;
     }
 
     /**
-     * @return int[]
+     * @return array{categoryIds: int[], tagNames: string[]}
      */
-    private function loadCategoryIds(int $dimensionContentId): array
+    private function loadTaxonomy(int $dimensionContentId): array
     {
-        /** @var list<array{id: int|null}> $results */
-        $results = $this->entityManager->createQueryBuilder()
-            ->select('category.id')
+        /** @var array{categoryIds: string|null, tagNames: string|null} $result */
+        $result = $this->entityManager->createQueryBuilder()
+            ->select('GROUP_CONCAT(DISTINCT category.id) AS categoryIds')
+            ->addSelect("GROUP_CONCAT(DISTINCT tag.name SEPARATOR '||') AS tagNames")
             ->from(PageDimensionContentInterface::class, 'dimensionContent')
             ->leftJoin('dimensionContent.excerptCategories', 'category')
+            ->leftJoin('dimensionContent.excerptTags', 'tag')
             ->where('dimensionContent.id = :id')
             ->setParameter('id', $dimensionContentId)
             ->getQuery()
-            ->getScalarResult();
+            ->getSingleResult();
 
-        return \array_map(static fn (array $row): int => (int) $row['id'], \array_filter($results, static fn (array $row): bool => null !== $row['id']));
+        return [
+            'categoryIds' => $this->parseCategoryIds($result['categoryIds']),
+            'tagNames' => $this->parseTagNames($result['tagNames']),
+        ];
+    }
+
+    /**
+     * @return int[]
+     */
+    private function parseCategoryIds(?string $categoryIds): array
+    {
+        if (null === $categoryIds || '' === $categoryIds) {
+            return [];
+        }
+
+        return \array_map(static fn (string $id): int => (int) $id, \explode(',', $categoryIds));
     }
 
     /**
      * @return string[]
      */
-    private function loadTagNames(int $dimensionContentId): array
+    private function parseTagNames(?string $tagNames): array
     {
-        /** @var list<array{name: string|null}> $results */
-        $results = $this->entityManager->createQueryBuilder()
-            ->select('tag.name')
-            ->from(PageDimensionContentInterface::class, 'dimensionContent')
-            ->leftJoin('dimensionContent.excerptTags', 'tag')
-            ->where('dimensionContent.id = :id')
-            ->setParameter('id', $dimensionContentId)
-            ->getQuery()
-            ->getScalarResult();
+        if (null === $tagNames || '' === $tagNames) {
+            return [];
+        }
 
-        return \array_map(static fn (array $row): string => (string) $row['name'], \array_filter($results, static fn (array $row): bool => null !== $row['name']));
+        return \explode('||', $tagNames);
     }
 }

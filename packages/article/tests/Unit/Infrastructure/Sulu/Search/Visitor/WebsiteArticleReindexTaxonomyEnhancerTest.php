@@ -50,76 +50,76 @@ class WebsiteArticleReindexTaxonomyEnhancerTest extends TestCase
 
     public function testCategoriesPopulated(): void
     {
-        $enhancer = $this->createEnhancerWithResults(
-            categoryResults: [['id' => 1], ['id' => 2], ['id' => 3]],
-            tagResults: [['name' => null]],
+        $enhancer = $this->createEnhancerWithTaxonomyResult(
+            categoryIds: '1,2,3',
+            tagNames: null,
         );
 
-        $document = ['title' => 'Test', 'properties' => []];
+        $document = ['title' => 'Test', 'metadata' => []];
         $result = $enhancer->enhanceDocument(['dimensionContentId' => 42], $document);
 
-        $this->assertIsArray($result['properties']);
-        $this->assertIsArray($result['properties']['excerpt']);
-        $this->assertSame([1, 2, 3], $result['properties']['excerpt']['categoryIds']);
-        $this->assertArrayNotHasKey('tagNames', $result['properties']['excerpt']);
+        $this->assertIsArray($result['metadata']);
+        $this->assertIsArray($result['metadata']['excerpt']);
+        $this->assertSame([1, 2, 3], $result['metadata']['excerpt']['categoryIds']);
+        $this->assertArrayNotHasKey('tagNames', $result['metadata']['excerpt']);
     }
 
     public function testTagsPopulated(): void
     {
-        $enhancer = $this->createEnhancerWithResults(
-            categoryResults: [['id' => null]],
-            tagResults: [['name' => 'php'], ['name' => 'sulu']],
+        $enhancer = $this->createEnhancerWithTaxonomyResult(
+            categoryIds: null,
+            tagNames: 'php||sulu',
         );
 
-        $document = ['title' => 'Test', 'properties' => []];
+        $document = ['title' => 'Test', 'metadata' => []];
         $result = $enhancer->enhanceDocument(['dimensionContentId' => 42], $document);
 
-        $this->assertIsArray($result['properties']);
-        $this->assertIsArray($result['properties']['excerpt']);
-        $this->assertArrayNotHasKey('categoryIds', $result['properties']['excerpt']);
-        $this->assertSame(['php', 'sulu'], $result['properties']['excerpt']['tagNames']);
+        $this->assertIsArray($result['metadata']);
+        $this->assertIsArray($result['metadata']['excerpt']);
+        $this->assertArrayNotHasKey('categoryIds', $result['metadata']['excerpt']);
+        $this->assertSame(['php', 'sulu'], $result['metadata']['excerpt']['tagNames']);
     }
 
     public function testBothCategoriesAndTagsPopulated(): void
     {
-        $enhancer = $this->createEnhancerWithResults(
-            categoryResults: [['id' => 5], ['id' => 10]],
-            tagResults: [['name' => 'cms'], ['name' => 'web']],
+        $enhancer = $this->createEnhancerWithTaxonomyResult(
+            categoryIds: '5,10',
+            tagNames: 'cms||web',
         );
 
-        $document = ['title' => 'Test', 'properties' => []];
+        $document = ['title' => 'Test', 'metadata' => []];
         $result = $enhancer->enhanceDocument(['dimensionContentId' => 42], $document);
 
-        $this->assertIsArray($result['properties']);
-        $this->assertIsArray($result['properties']['excerpt']);
-        $this->assertSame([5, 10], $result['properties']['excerpt']['categoryIds']);
-        $this->assertSame(['cms', 'web'], $result['properties']['excerpt']['tagNames']);
+        $this->assertIsArray($result['metadata']);
+        $this->assertIsArray($result['metadata']['excerpt']);
+        $this->assertSame([5, 10], $result['metadata']['excerpt']['categoryIds']);
+        $this->assertSame(['cms', 'web'], $result['metadata']['excerpt']['tagNames']);
     }
 
     public function testEmptyTaxonomyDoesNotAddKeys(): void
     {
-        $enhancer = $this->createEnhancerWithResults(
-            categoryResults: [['id' => null]],
-            tagResults: [['name' => null]],
+        $enhancer = $this->createEnhancerWithTaxonomyResult(
+            categoryIds: null,
+            tagNames: null,
         );
 
-        $document = ['title' => 'Test', 'properties' => []];
+        $document = ['title' => 'Test', 'metadata' => []];
         $result = $enhancer->enhanceDocument(['dimensionContentId' => 42], $document);
 
-        $this->assertIsArray($result['properties']);
-        $this->assertArrayNotHasKey('excerpt', $result['properties']);
+        $this->assertIsArray($result['metadata']);
+        $this->assertArrayNotHasKey('excerpt', $result['metadata']);
     }
 
-    public function testPreservesExistingExcerptProperties(): void
+    public function testPreservesExistingExcerptMetadata(): void
     {
-        $enhancer = $this->createEnhancerWithResults(
-            categoryResults: [['id' => 1]],
-            tagResults: [['name' => 'tag1']],
+        $enhancer = $this->createEnhancerWithTaxonomyResult(
+            categoryIds: '1',
+            tagNames: 'tag1',
         );
 
         $document = [
             'title' => 'Test',
-            'properties' => [
+            'metadata' => [
                 'excerpt' => [
                     'title' => 'Existing Excerpt Title',
                 ],
@@ -127,38 +127,34 @@ class WebsiteArticleReindexTaxonomyEnhancerTest extends TestCase
         ];
         $result = $enhancer->enhanceDocument(['dimensionContentId' => 42], $document);
 
-        $this->assertIsArray($result['properties']);
-        $this->assertIsArray($result['properties']['excerpt']);
-        $this->assertSame('Existing Excerpt Title', $result['properties']['excerpt']['title']);
-        $this->assertSame([1], $result['properties']['excerpt']['categoryIds']);
-        $this->assertSame(['tag1'], $result['properties']['excerpt']['tagNames']);
+        $this->assertIsArray($result['metadata']);
+        $this->assertIsArray($result['metadata']['excerpt']);
+        $this->assertSame('Existing Excerpt Title', $result['metadata']['excerpt']['title']);
+        $this->assertSame([1], $result['metadata']['excerpt']['categoryIds']);
+        $this->assertSame(['tag1'], $result['metadata']['excerpt']['tagNames']);
     }
 
-    /**
-     * @param list<array{id: int|null}> $categoryResults
-     * @param list<array{name: string|null}> $tagResults
-     */
-    private function createEnhancerWithResults(array $categoryResults, array $tagResults): WebsiteArticleReindexTaxonomyEnhancer
+    private function createEnhancerWithTaxonomyResult(?string $categoryIds, ?string $tagNames): WebsiteArticleReindexTaxonomyEnhancer
     {
-        $categoryQb = $this->createQueryBuilderStub($categoryResults);
-        $tagQb = $this->createQueryBuilderStub($tagResults);
+        $qb = $this->createQueryBuilderStub(['categoryIds' => $categoryIds, 'tagNames' => $tagNames]);
 
         $entityManager = $this->prophesize(EntityManagerInterface::class);
-        $entityManager->createQueryBuilder()->willReturn($categoryQb, $tagQb);
+        $entityManager->createQueryBuilder()->willReturn($qb);
 
         return new WebsiteArticleReindexTaxonomyEnhancer($entityManager->reveal());
     }
 
     /**
-     * @param list<array<string, mixed>> $scalarResult
+     * @param array<string, mixed> $singleResult
      */
-    private function createQueryBuilderStub(array $scalarResult): QueryBuilder
+    private function createQueryBuilderStub(array $singleResult): QueryBuilder
     {
         $query = $this->prophesize(Query::class);
-        $query->getScalarResult()->willReturn($scalarResult);
+        $query->getSingleResult()->willReturn($singleResult);
 
         $qb = $this->prophesize(QueryBuilder::class);
         $qb->select(Argument::any())->willReturn($qb);
+        $qb->addSelect(Argument::any())->willReturn($qb);
         $qb->from(Argument::any(), Argument::any())->willReturn($qb);
         $qb->leftJoin(Argument::any(), Argument::any())->willReturn($qb);
         $qb->where(Argument::any())->willReturn($qb);
