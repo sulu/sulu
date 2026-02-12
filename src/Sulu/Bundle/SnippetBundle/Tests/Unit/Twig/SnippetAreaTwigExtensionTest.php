@@ -82,7 +82,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
         $snippet->getUuid()->willReturn('1234');
 
         $this->defaultSnippetManager->load('sulu_io', 'test', 'de')->shouldBeCalled()->willReturn($snippet->reveal());
-        $this->snippetResolver->resolve(['1234'], 'sulu_io', 'de')->shouldBeCalled()->willReturn([['title' => 'Test Snippet']]);
+        $this->snippetResolver->resolve(['1234'], 'sulu_io', 'de', null, false)->shouldBeCalled()->willReturn([['title' => 'Test Snippet']]);
 
         $twigExtension = new SnippetAreaTwigExtension(
             $this->defaultSnippetManager->reveal(),
@@ -120,7 +120,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
             ->shouldBeCalled()
             ->willThrow(new WrongSnippetTypeException('', '', $snippet->reveal()));
 
-        $this->snippetResolver->resolve(['1234'], 'sulu_io', 'de')->shouldNotBeCalled();
+        $this->snippetResolver->resolve(['1234'], 'sulu_io', 'de', null, false)->shouldNotBeCalled();
 
         $twigExtension = new SnippetAreaTwigExtension(
             $this->defaultSnippetManager->reveal(),
@@ -176,7 +176,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
         $snippet->getUuid()->willReturn('1234');
 
         $this->defaultSnippetManager->load('sulu_io', 'test', 'en')->shouldBeCalled()->willReturn($snippet->reveal());
-        $this->snippetResolver->resolve(['1234'], 'sulu_io', 'en')->shouldBeCalled()->willReturn([['title' => 'Test Snippet EN']]);
+        $this->snippetResolver->resolve(['1234'], 'sulu_io', 'en', null, false)->shouldBeCalled()->willReturn([['title' => 'Test Snippet EN']]);
 
         $twigExtension = new SnippetAreaTwigExtension(
             $this->defaultSnippetManager->reveal(),
@@ -207,7 +207,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
         $snippet->getUuid()->willReturn('1234');
 
         $this->defaultSnippetManager->load('demo_io', 'test', 'en')->shouldBeCalled()->willReturn($snippet->reveal());
-        $this->snippetResolver->resolve(['1234'], 'demo_io', 'en')->shouldBeCalled()->willReturn([['title' => 'Test Snippet EN']]);
+        $this->snippetResolver->resolve(['1234'], 'demo_io', 'en', null, false)->shouldBeCalled()->willReturn([['title' => 'Test Snippet EN']]);
 
         $twigExtension = new SnippetAreaTwigExtension(
             $this->defaultSnippetManager->reveal(),
@@ -219,6 +219,37 @@ class SnippetAreaTwigExtensionTest extends TestCase
         $this->assertEquals(
             ['title' => 'Test Snippet EN'],
             $twigExtension->loadByArea('test', 'demo_io', 'en')
+        );
+    }
+
+    public function testLoadByAreaWithLoadExcerpt(): void
+    {
+        $this->defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
+        $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $this->webspace = $this->prophesize(Webspace::class);
+        $this->webspace->getKey()->willReturn('sulu_io');
+        $this->localization = $this->prophesize(Localization::class);
+        $this->localization->getLocale()->willReturn('de');
+        $this->requestAnalyzer->getWebspace()->willReturn($this->webspace->reveal());
+        $this->requestAnalyzer->getCurrentLocalization()->willReturn($this->localization);
+        $this->snippetResolver = $this->prophesize(SnippetResolverInterface::class);
+
+        $snippet = $this->prophesize(SnippetDocument::class);
+        $snippet->getUuid()->willReturn('1234');
+
+        $this->defaultSnippetManager->load('demo_io', 'test', 'de')->shouldBeCalled()->willReturn($snippet->reveal());
+        $this->snippetResolver->resolve(['1234'], 'demo_io', 'de', null, true)->shouldBeCalled()->willReturn([['title' => 'Test Snippet EN']]);
+
+        $twigExtension = new SnippetAreaTwigExtension(
+            $this->defaultSnippetManager->reveal(),
+            $this->requestAnalyzer->reveal(),
+            $this->snippetResolver->reveal(),
+            $this->snippetAreaReferenceStore
+        );
+
+        $this->assertSame(
+            ['title' => 'Test Snippet EN'],
+            $twigExtension->loadByArea('test', 'demo_io', null, true)
         );
     }
 }
