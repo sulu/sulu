@@ -19,7 +19,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
  * @internal no backwards compatibility promise is given for this class it could be removed or changed at any time.
  *           create your own service based on `TypedFormMetadataVisitorInterface` to customize the behavior if needed.
  */
-final class DefaultTemplateTypedFormMetadataVisitor implements TypedFormMetadataVisitorInterface
+final class WebspaceTypedFormMetadataVisitor implements TypedFormMetadataVisitorInterface
 {
     public function __construct(private WebspaceManagerInterface $webspaceManager)
     {

@@ -18,15 +18,15 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
-use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\DefaultTemplateTypedFormMetadataVisitor;
+use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\WebspaceTypedFormMetadataVisitor;
 
-class DefaultTemplateTypedFormMetadataVisitorTest extends TestCase
+class WebspaceTypedFormMetadataVisitorTest extends TestCase
 {
     use ProphecyTrait;
 
     private Webspace $webspace;
 
-    private DefaultTemplateTypedFormMetadataVisitor $defaultTemplateTypedFormMetadataVisitor;
+    private WebspaceTypedFormMetadataVisitor $webspaceTypedFormMetadataVisitor;
 
     public function setUp(): void
     {
@@ -36,7 +36,7 @@ class DefaultTemplateTypedFormMetadataVisitorTest extends TestCase
         $webspaceManager->findWebspaceByKey(Argument::cetera())
             ->willReturn($this->webspace);
 
-        $this->defaultTemplateTypedFormMetadataVisitor = new DefaultTemplateTypedFormMetadataVisitor(
+        $this->webspaceTypedFormMetadataVisitor = new WebspaceTypedFormMetadataVisitor(
             $webspaceManager->reveal(),
         );
     }
@@ -47,7 +47,7 @@ class DefaultTemplateTypedFormMetadataVisitorTest extends TestCase
 
         $typedFormMetadata = new TypedFormMetadata();
 
-        $this->defaultTemplateTypedFormMetadataVisitor->visitTypedFormMetadata(
+        $this->webspaceTypedFormMetadataVisitor->visitTypedFormMetadata(
             $typedFormMetadata,
             'page',
             'en',
@@ -64,7 +64,7 @@ class DefaultTemplateTypedFormMetadataVisitorTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->setDefaultType('default');
 
-        $this->defaultTemplateTypedFormMetadataVisitor->visitTypedFormMetadata(
+        $this->webspaceTypedFormMetadataVisitor->visitTypedFormMetadata(
             $typedFormMetadata,
             'page',
             'en',
@@ -82,7 +82,7 @@ class DefaultTemplateTypedFormMetadataVisitorTest extends TestCase
         $typedFormMetadata->addForm('overview', new FormMetadata());
         $typedFormMetadata->addForm('homepage', new FormMetadata());
 
-        $this->defaultTemplateTypedFormMetadataVisitor->visitTypedFormMetadata(
+        $this->webspaceTypedFormMetadataVisitor->visitTypedFormMetadata(
             $typedFormMetadata,
             'page',
             'en',
@@ -106,7 +106,7 @@ class DefaultTemplateTypedFormMetadataVisitorTest extends TestCase
         $typedFormMetadata->addForm('overview', new FormMetadata());
         $typedFormMetadata->addForm('homepage', new FormMetadata());
 
-        $this->defaultTemplateTypedFormMetadataVisitor->visitTypedFormMetadata(
+        $this->webspaceTypedFormMetadataVisitor->visitTypedFormMetadata(
             $typedFormMetadata,
             'page',
             'en',
@@ -128,7 +128,7 @@ class DefaultTemplateTypedFormMetadataVisitorTest extends TestCase
         $typedFormMetadata->addForm('default', new FormMetadata());
         $typedFormMetadata->addForm('overview', new FormMetadata());
 
-        $this->defaultTemplateTypedFormMetadataVisitor->visitTypedFormMetadata(
+        $this->webspaceTypedFormMetadataVisitor->visitTypedFormMetadata(
             $typedFormMetadata,
             'page',
             'en',
