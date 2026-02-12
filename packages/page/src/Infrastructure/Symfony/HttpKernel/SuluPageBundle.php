@@ -46,7 +46,6 @@ use Sulu\Page\Infrastructure\Doctrine\Repository\NavigationRepository;
 use Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository;
 use Sulu\Page\Infrastructure\JMS\Serializer\WebspaceSerializeEventSubscriber;
 use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\BlockSettingsFormMetadataVisitor;
-use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\DefaultTemplateTypedFormMetadataVisitor;
 use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\WebspaceRouteModeTypedFormMetadataVisitor;
 use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\WebspaceTypedFormMetadataVisitor;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
