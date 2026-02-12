@@ -24,7 +24,7 @@ final class BlockSettingsFormMetadataVisitor implements FormMetadataVisitorInter
 {
     public function __construct(
         private readonly XmlFormMetadataLoader $xmlFormMetadataLoader,
-        private WebspaceManagerInterface $webspaceManager,
+        private readonly WebspaceManagerInterface $webspaceManager,
     ) {
     }
 
@@ -52,6 +52,7 @@ final class BlockSettingsFormMetadataVisitor implements FormMetadataVisitorInter
         foreach ($webspaces as $webspace) {
             if ($webspace->getSegments()) {
                 $segments = 'true';
+                break;
             }
         }
 
