@@ -277,7 +277,7 @@ final class SnippetController implements SecuredControllerInterface
 
     public function getLocale(Request $request): string
     {
-        return $request->query->getAlnum('locale', $request->getLocale());
+        return $request->query->getString('locale', $request->getLocale());
     }
 
     private function handleAction(Request $request, string $uuid): ?SnippetInterface // @phpstan-ignore-line

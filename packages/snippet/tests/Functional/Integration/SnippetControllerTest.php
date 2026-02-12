@@ -14,12 +14,15 @@ declare(strict_types=1);
 namespace Sulu\Snippet\Tests\Functional\Integration;
 
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
+use Sulu\Snippet\UserInterface\Controller\Admin\SnippetController;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * The integration test should have no impact on the coverage so we set it to coversNothing.
@@ -359,5 +362,29 @@ class SnippetControllerTest extends SuluTestCase
     protected function getSnapshotFolder(): string
     {
         return 'responses';
+    }
+
+    #[DataProvider('getLocaleProvider')]
+    public function testGetLocale(string $locale): void
+    {
+        /** @var SnippetController $reflectionClass */
+        $reflectionClass = (new \ReflectionClass(SnippetController::class))
+            ->newInstanceWithoutConstructor();
+
+        $request = new Request();
+        $request->query->set('locale', $locale);
+
+        $this->assertSame($locale, $reflectionClass->getLocale($request));
+    }
+
+    public static function getLocaleProvider(): \Generator
+    {
+        yield [
+            'de',
+        ];
+
+        yield [
+            'de_ch',
+        ];
     }
 }
