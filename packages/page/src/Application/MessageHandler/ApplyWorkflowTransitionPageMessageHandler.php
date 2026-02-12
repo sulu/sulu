@@ -17,6 +17,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage;
 use Sulu\Page\Domain\Event\PageWorkflowTransitionAppliedEvent;
+use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 
 /**
@@ -32,7 +33,7 @@ final class ApplyWorkflowTransitionPageMessageHandler
     ) {
     }
 
-    public function __invoke(ApplyWorkflowTransitionPageMessage $message): void
+    public function __invoke(ApplyWorkflowTransitionPageMessage $message): PageInterface
     {
         $page = $this->pageRepository->getOneBy(
             $message->getIdentifier(),
@@ -54,5 +55,7 @@ final class ApplyWorkflowTransitionPageMessageHandler
         );
 
         $this->domainEventCollector->collect(new PageWorkflowTransitionAppliedEvent($page, $message->getTransitionName(), $message->getLocale()));
+
+        return $page;
     }
 }

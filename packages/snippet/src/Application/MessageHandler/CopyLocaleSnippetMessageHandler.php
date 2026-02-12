@@ -16,6 +16,7 @@ use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Snippet\Application\Message\CopyLocaleSnippetMessage;
 use Sulu\Snippet\Domain\Event\SnippetTranslationCopiedEvent;
+use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 
 /**
@@ -31,7 +32,7 @@ final class CopyLocaleSnippetMessageHandler
     ) {
     }
 
-    public function __invoke(CopyLocaleSnippetMessage $message): void
+    public function __invoke(CopyLocaleSnippetMessage $message): SnippetInterface
     {
         $snippet = $this->snippetRepository->getOneBy(
             $message->getIdentifier(),
@@ -60,5 +61,7 @@ final class CopyLocaleSnippetMessageHandler
         );
 
         $this->domainEventCollector->collect(new SnippetTranslationCopiedEvent($snippet, $message->getTargetLocale(), $message->getSourceLocale(), []));
+
+        return $snippet;
     }
 }

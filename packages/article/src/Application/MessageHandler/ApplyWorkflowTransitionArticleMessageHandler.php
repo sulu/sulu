@@ -13,6 +13,7 @@ namespace Sulu\Article\Application\MessageHandler;
 
 use Sulu\Article\Application\Message\ApplyWorkflowTransitionArticleMessage;
 use Sulu\Article\Domain\Event\ArticleWorkflowTransitionAppliedEvent;
+use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
@@ -32,7 +33,7 @@ final class ApplyWorkflowTransitionArticleMessageHandler
     ) {
     }
 
-    public function __invoke(ApplyWorkflowTransitionArticleMessage $message): void
+    public function __invoke(ApplyWorkflowTransitionArticleMessage $message): ArticleInterface
     {
         $article = $this->articleRepository->getOneBy(
             $message->getIdentifier(),
@@ -54,5 +55,7 @@ final class ApplyWorkflowTransitionArticleMessageHandler
         );
 
         $this->domainEventCollector->collect(new ArticleWorkflowTransitionAppliedEvent($article, $message->getTransitionName(), $message->getLocale()));
+
+        return $article;
     }
 }

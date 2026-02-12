@@ -16,6 +16,7 @@ use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Page\Application\Message\MovePageMessage;
 use Sulu\Page\Domain\Event\PageMovedEvent;
 use Sulu\Page\Domain\Model\PageDimensionContent;
+use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 
 /**
@@ -30,7 +31,7 @@ class MovePageMessageHandler
     ) {
     }
 
-    public function __invoke(MovePageMessage $message): void
+    public function __invoke(MovePageMessage $message): PageInterface
     {
         $page = $this->pageRepository->getOneBy($message->getIdentifier());
         $previousParent = $page->getParent();
@@ -46,7 +47,7 @@ class MovePageMessageHandler
                 null,
             ));
 
-            return;
+            return $page;
         }
 
         $previousParentDimensionContentCollection = new DimensionContentCollection($previousParent->getDimensionContents(), [], PageDimensionContent::class);
@@ -60,5 +61,7 @@ class MovePageMessageHandler
             $previousParent->getWebspaceKey(),
             $previousParentLocalizedDimensionContent->getTitle(),
         ));
+
+        return $page;
     }
 }

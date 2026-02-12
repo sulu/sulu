@@ -32,7 +32,7 @@ final class RemovePageTranslationMessageHandler
     ) {
     }
 
-    public function __invoke(RemovePageTranslationMessage $message): void
+    public function __invoke(RemovePageTranslationMessage $message): PageInterface
     {
         $page = $this->pageRepository->getOneBy($message->getIdentifier());
         $locale = $message->getLocale();
@@ -64,6 +64,8 @@ final class RemovePageTranslationMessageHandler
             $page,
             $locale
         ));
+
+        return $page;
     }
 
     private function handleGhostLocaleRemoval(

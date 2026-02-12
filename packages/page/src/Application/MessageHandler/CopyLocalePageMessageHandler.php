@@ -16,6 +16,7 @@ use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Application\Message\CopyLocalePageMessage;
 use Sulu\Page\Domain\Event\PageTranslationCopiedEvent;
+use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 
 /**
@@ -31,7 +32,7 @@ final class CopyLocalePageMessageHandler
     ) {
     }
 
-    public function __invoke(CopyLocalePageMessage $message): void
+    public function __invoke(CopyLocalePageMessage $message): PageInterface
     {
         $page = $this->pageRepository->getOneBy(
             $message->getIdentifier(),
@@ -65,5 +66,7 @@ final class CopyLocalePageMessageHandler
             $message->getSourceLocale(),
             [],
         ));
+
+        return $page;
     }
 }
