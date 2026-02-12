@@ -5,6 +5,7 @@ framework:
     workflows: null
     messenger:
         transports:
+            sync: 'sync://'
         routing:
     translator:
         default_path: '%kernel.project_dir%/translations'

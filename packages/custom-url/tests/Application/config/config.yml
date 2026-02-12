@@ -3,4 +3,5 @@ framework:
     workflows: null
     messenger:
         transports:
+            sync: 'sync://'
         routing:
