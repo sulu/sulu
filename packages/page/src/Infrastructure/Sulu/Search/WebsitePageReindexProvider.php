@@ -34,6 +34,7 @@ use Sulu\Page\Infrastructure\Sulu\Search\Visitor\WebsitePageReindexProviderEnhan
  *     slug: string,
  *     authored: \DateTimeImmutable|null,
  *     webspaceKey: string,
+ *     dimensionContentId: int,
  * }
  *
  * @internal this class is internal no backwards compatibility promise is given for this class
