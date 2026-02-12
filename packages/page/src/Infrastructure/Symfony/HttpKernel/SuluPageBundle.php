@@ -477,6 +477,10 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_content.dimension_content_query_enhancer'),
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_content.content_resolver'),
+                new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('sulu_security.access_control_query_enhancer'),
+                new Reference('security.helper', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+                param('sulu_security.permissions'),
                 expr("container.hasParameter('sulu_audience_targeting.enabled')"),
             ]);
 

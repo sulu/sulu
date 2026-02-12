@@ -22,6 +22,9 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentResolver\ContentResolverInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -29,6 +32,7 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Doctrine\Repository\NavigationRepository;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class NavigationRepositoryTest extends TestCase
 {
@@ -47,6 +51,12 @@ class NavigationRepositoryTest extends TestCase
     private ObjectProphecy $contentAggregator;
     /** @var ObjectProphecy<ContentResolverInterface> */
     private ObjectProphecy $contentResolver;
+    /** @var ObjectProphecy<WebspaceManagerInterface> */
+    private ObjectProphecy $webspaceManager;
+    /** @var ObjectProphecy<AccessControlQueryEnhancer> */
+    private ObjectProphecy $accessControlQueryEnhancer;
+    /** @var ObjectProphecy<Security> */
+    private ObjectProphecy $security;
 
     /**
      * @return array<string, string>
@@ -91,6 +101,9 @@ class NavigationRepositoryTest extends TestCase
         $this->dimensionContentQueryEnhancer = $this->prophesize(DimensionContentQueryEnhancer::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->contentResolver = $this->prophesize(ContentResolverInterface::class);
+        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $this->accessControlQueryEnhancer = $this->prophesize(AccessControlQueryEnhancer::class);
+        $this->security = $this->prophesize(Security::class);
 
         $this->entityManager->getRepository(PageInterface::class)->willReturn($this->nestedTreeRepository->reveal());
         $this->entityManager->getRepository(PageDimensionContentInterface::class)->willReturn($this->dimensionContentRepository->reveal());
@@ -103,6 +116,10 @@ class NavigationRepositoryTest extends TestCase
             $this->dimensionContentQueryEnhancer->reveal(),
             $this->contentAggregator->reveal(),
             $this->contentResolver->reveal(),
+            $this->webspaceManager->reveal(),
+            $this->accessControlQueryEnhancer->reveal(),
+            $this->security->reveal(),
+            [PermissionTypes::VIEW => 64],
             false
         );
     }
