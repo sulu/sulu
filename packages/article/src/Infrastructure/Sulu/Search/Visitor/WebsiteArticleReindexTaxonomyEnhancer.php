@@ -74,7 +74,7 @@ class WebsiteArticleReindexTaxonomyEnhancer implements WebsiteArticleReindexProv
         /** @var array{categoryIds: string|null, tagNames: string|null} $result */
         $result = $this->entityManager->createQueryBuilder()
             ->select('GROUP_CONCAT(DISTINCT category.id) AS categoryIds')
-            ->addSelect("GROUP_CONCAT(DISTINCT tag.name SEPARATOR '||') AS tagNames")
+            ->addSelect('GROUP_CONCAT(DISTINCT tag.name) AS tagNames')
             ->from(ArticleDimensionContentInterface::class, 'dimensionContent')
             ->leftJoin('dimensionContent.excerptCategories', 'category')
             ->leftJoin('dimensionContent.excerptTags', 'tag')
@@ -110,6 +110,6 @@ class WebsiteArticleReindexTaxonomyEnhancer implements WebsiteArticleReindexProv
             return [];
         }
 
-        return \explode('||', $tagNames);
+        return \explode(',', $tagNames);
     }
 }

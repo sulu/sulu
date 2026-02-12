@@ -68,7 +68,7 @@ class WebsitePageReindexTaxonomyEnhancerTest extends TestCase
     {
         $enhancer = $this->createEnhancerWithTaxonomyResult(
             categoryIds: null,
-            tagNames: 'php||sulu',
+            tagNames: 'php,sulu',
         );
 
         $document = ['title' => 'Test', 'metadata' => []];
@@ -84,7 +84,7 @@ class WebsitePageReindexTaxonomyEnhancerTest extends TestCase
     {
         $enhancer = $this->createEnhancerWithTaxonomyResult(
             categoryIds: '5,10',
-            tagNames: 'cms||web',
+            tagNames: 'cms,web',
         );
 
         $document = ['title' => 'Test', 'metadata' => []];
