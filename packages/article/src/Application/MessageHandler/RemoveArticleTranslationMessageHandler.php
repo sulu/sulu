@@ -32,7 +32,7 @@ final class RemoveArticleTranslationMessageHandler
     ) {
     }
 
-    public function __invoke(RemoveArticleTranslationMessage $message): void
+    public function __invoke(RemoveArticleTranslationMessage $message): ArticleInterface
     {
         $article = $this->articleRepository->getOneBy($message->getIdentifier());
         $locale = $message->getLocale();
@@ -64,6 +64,8 @@ final class RemoveArticleTranslationMessageHandler
             $article,
             $locale
         ));
+
+        return $article;
     }
 
     private function handleGhostLocaleRemoval(

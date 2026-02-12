@@ -32,7 +32,7 @@ final class RemoveSnippetTranslationMessageHandler
     ) {
     }
 
-    public function __invoke(RemoveSnippetTranslationMessage $message): void
+    public function __invoke(RemoveSnippetTranslationMessage $message): SnippetInterface
     {
         $snippet = $this->snippetRepository->getOneBy($message->getIdentifier());
         $locale = $message->getLocale();
@@ -64,6 +64,8 @@ final class RemoveSnippetTranslationMessageHandler
             $snippet,
             $locale
         ));
+
+        return $snippet;
     }
 
     private function handleGhostLocaleRemoval(
