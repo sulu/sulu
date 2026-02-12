@@ -177,7 +177,7 @@ class SaveDocumentTest extends BaseTestCase
 
     public function testSaveDocumentStripTags(): void
     {
-        $version = InstalledVersions::getPrettyVersion('massive/search-bundle');
+        $version = InstalledVersions::getPrettyVersion('massive/search-bundle') ?? '2.10.0';
         if (\version_compare($version, '2.10.0', '<')) {
             $this->markTestSkipped('This feature requires atleast "massive/search-bundle" of 2.10.0.');
         }

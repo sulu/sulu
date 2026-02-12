@@ -65935,7 +65935,7 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Structure/StructureBridge.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Compat\\Structure\\StructureBridge\:\:getProperties\(\) should return array\<Sulu\\Component\\Content\\Compat\\PropertyInterface\> but returns array\.$#'
+			message: '#^Method Sulu\\Component\\Content\\Compat\\Structure\\StructureBridge\:\:getProperties\(\) should return array\<Sulu\\Component\\Content\\Compat\\PropertyInterface\> but returns array\<int\|string, mixed\>\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Structure/StructureBridge.php
