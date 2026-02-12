@@ -13,7 +13,6 @@ namespace Sulu\Component\Webspace\Tests\Unit\Manager;
 
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Psr\Log\LoggerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Exception\InvalidTemplateException;
 use Sulu\Component\Webspace\Loader\XmlFileLoader10;
@@ -34,11 +33,6 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
      */
     private $loader;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&LoggerInterface
-     */
-    private $logger;
-
     public function setUp(): void
     {
         $locator = $this->prophesize(FileLocatorInterface::class);
@@ -52,8 +46,6 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         ]);
 
         $this->loader = new DelegatingLoader($resolver);
-
-        $this->logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
     }
 
     public function testBuild(): void
