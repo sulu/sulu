@@ -19,10 +19,10 @@ use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkUrlTrait;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -35,7 +35,7 @@ final class PageLinkProvider implements LinkProviderInterface
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly WebspaceManagerInterface $webspaceManager,
+        private readonly RouteGeneratorInterface $routeGenerator,
         private readonly ReferenceStoreInterface $referenceStore,
         private readonly TranslatorInterface $translator,
     ) {
@@ -174,16 +174,11 @@ final class PageLinkProvider implements LinkProviderInterface
                 return null;
             }
 
-            $url = $this->webspaceManager->findUrlByResourceLocator(
+            $url = $this->routeGenerator->generate(
                 $target['slug'],
-                null,
                 $locale,
                 $target['webspaceKey'],
             );
-
-            if (null === $url) {
-                return null;
-            }
 
             return $this->appendQueryAndAnchor($url, $linkData);
         }
@@ -193,9 +188,8 @@ final class PageLinkProvider implements LinkProviderInterface
             return null;
         }
 
-        return $this->webspaceManager->findUrlByResourceLocator(
+        return $this->routeGenerator->generate(
             $row['slug'],
-            null,
             $locale,
             $row['webspaceKey'],
         );

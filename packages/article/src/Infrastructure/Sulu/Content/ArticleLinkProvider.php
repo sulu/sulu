@@ -21,8 +21,8 @@ use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -33,7 +33,7 @@ final class ArticleLinkProvider implements LinkProviderInterface
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly WebspaceManagerInterface $webspaceManager,
+        private readonly RouteGeneratorInterface $routeGenerator,
         private readonly RequestAnalyzerInterface $requestAnalyzer,
         private readonly ReferenceStoreInterface $referenceStore,
         private readonly TranslatorInterface $translator,
@@ -73,20 +73,12 @@ final class ArticleLinkProvider implements LinkProviderInterface
             }
 
             $webspace = $this->determineWebspace($row, $requestWebspace);
-            if (null === $webspace) {
-                continue;
-            }
 
-            $url = $this->webspaceManager->findUrlByResourceLocator(
+            $url = $this->routeGenerator->generate(
                 $row['slug'],
-                null,
                 $locale,
                 $webspace,
             );
-
-            if (null === $url) {
-                continue;
-            }
 
             $result[] = new LinkItem(
                 $row['uuid'],

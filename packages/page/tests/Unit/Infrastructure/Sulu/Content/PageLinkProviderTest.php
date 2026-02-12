@@ -20,9 +20,11 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
+use Sulu\Route\Application\Routing\Generator\WebspaceRouteGeneratorInterface;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PageLinkProviderTest extends TestCase
@@ -35,10 +37,7 @@ class PageLinkProviderTest extends TestCase
      */
     private ObjectProphecy $entityManager;
 
-    /**
-     * @var ObjectProphecy<WebspaceManagerInterface>
-     */
-    private ObjectProphecy $webspaceManager;
+    private RouteGeneratorInterface $routeGenerator;
 
     /**
      * @var ObjectProphecy<ReferenceStoreInterface>
@@ -55,14 +54,31 @@ class PageLinkProviderTest extends TestCase
     protected function setUp(): void
     {
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
-        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $this->translator = $this->prophesize(TranslatorInterface::class);
         $this->translator->trans(Argument::cetera())->willReturnArgument(0);
 
+        $webspaceRouteGenerator = new class() implements WebspaceRouteGeneratorInterface {
+            public function generate(RequestContext $requestContext, string $slug, string $locale): string
+            {
+                return \sprintf('/%s%s', $locale, $slug);
+            }
+        };
+
+        $this->routeGenerator = new class($webspaceRouteGenerator) implements RouteGeneratorInterface {
+            public function __construct(private WebspaceRouteGeneratorInterface $webspaceRouteGenerator)
+            {
+            }
+
+            public function generate(string $slug, ?string $locale = null, ?string $webspace = null, int $referenceType = 0): string
+            {
+                return $this->webspaceRouteGenerator->generate(new RequestContext(), $slug, $locale ?? 'en');
+            }
+        };
+
         $this->pageLinkProvider = new PageLinkProvider(
             $this->entityManager->reveal(),
-            $this->webspaceManager->reveal(),
+            $this->routeGenerator,
             $this->referenceStore->reveal(),
             $this->translator->reveal(),
         );
@@ -112,9 +128,6 @@ class PageLinkProviderTest extends TestCase
             'en',
             'live',
         );
-
-        $this->webspaceManager->findUrlByResourceLocator('/test-page', null, 'en', 'sulu_io')
-            ->willReturn('/en/test-page');
 
         $this->referenceStore->add('uuid-1', PageInterface::RESOURCE_KEY)->shouldBeCalled();
 
@@ -188,9 +201,6 @@ class PageLinkProviderTest extends TestCase
         $this->entityManager->createQueryBuilder()
             ->willReturn($mainQueryBuilder->reveal(), $targetQueryBuilder->reveal());
 
-        $this->webspaceManager->findUrlByResourceLocator('/target-page', null, 'en', 'sulu_io')
-            ->willReturn('/en/target-page');
-
         $this->referenceStore->add('uuid-link', PageInterface::RESOURCE_KEY)->shouldBeCalled();
 
         $result = [...$this->pageLinkProvider->preload(['uuid-link'], 'en', true)];
@@ -243,9 +253,6 @@ class PageLinkProviderTest extends TestCase
             'en',
             'draft',
         );
-
-        $this->webspaceManager->findUrlByResourceLocator('/draft-page', null, 'en', 'sulu_io')
-            ->willReturn('/en/draft-page');
 
         $this->referenceStore->add('uuid-draft', PageInterface::RESOURCE_KEY)->shouldBeCalled();
 

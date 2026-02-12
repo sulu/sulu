@@ -15,13 +15,13 @@ namespace Sulu\Page\Infrastructure\Sulu\Content\ContentResolver;
 
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkUrlTrait;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentEnhancer\DimensionContentEnhancerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 
 /**
  * @internal This class should not be instantiated by a project.
@@ -35,7 +35,7 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
         private PageRepositoryInterface $pageRepository,
         private ContentAggregatorInterface $contentAggregator,
         private LinkProviderPoolInterface $linkProviderPool,
-        private WebspaceManagerInterface $webspaceManager,
+        private RouteGeneratorInterface $routeGenerator,
     ) {
     }
 
@@ -117,15 +117,14 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
         /** @var PageInterface $targetPage */
         $targetPage = $targetDimensionContent->getResource();
         $url = null !== $route && null !== $targetLocale
-            ? $this->webspaceManager->findUrlByResourceLocator(
+            ? $this->routeGenerator->generate(
                 $route->getSlug(),
-                null,
                 $targetLocale,
                 $targetPage->getWebspaceKey(),
             )
             : null;
 
-        if (\is_string($url) && null !== $linkData) {
+        if (null !== $url && null !== $linkData) {
             $url = $this->appendQueryAndAnchor($url, $linkData);
         }
 

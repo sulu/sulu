@@ -278,7 +278,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_page.page_repository'),
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_markup.link_tag.provider_pool'),
-                new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('sulu_route.route_generator'),
             ])
             ->tag('sulu_content.dimension_content_enhancer');
 
@@ -431,7 +431,7 @@ final class SuluPageBundle extends AbstractBundle
             ->class(PageLinkProvider::class)
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
-                new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('sulu_route.route_generator'),
                 new Reference('sulu_http_cache.reference_store'),
                 new Reference('translator'),
             ])

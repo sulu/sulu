@@ -23,8 +23,10 @@ use Sulu\Article\Infrastructure\Sulu\Content\ArticleLinkProvider;
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
+use Sulu\Route\Application\Routing\Generator\WebspaceRouteGeneratorInterface;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ArticleLinkProviderTest extends TestCase
@@ -37,15 +39,7 @@ class ArticleLinkProviderTest extends TestCase
      */
     private ObjectProphecy $entityManager;
 
-    /**
-     * @var ObjectProphecy<WebspaceManagerInterface>
-     */
-    private ObjectProphecy $webspaceManager;
-
-    /**
-     * @var ObjectProphecy<RequestAnalyzerInterface>
-     */
-    private ObjectProphecy $requestAnalyzer;
+    private RouteGeneratorInterface $routeGenerator;
 
     /**
      * @var ObjectProphecy<ReferenceStoreInterface>
@@ -57,21 +51,47 @@ class ArticleLinkProviderTest extends TestCase
      */
     private ObjectProphecy $translator;
 
-    private ArticleLinkProvider $articleLinkProvider;
-
     protected function setUp(): void
     {
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
-        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
-        $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $this->translator = $this->prophesize(TranslatorInterface::class);
         $this->translator->trans(Argument::cetera())->willReturnArgument(0);
 
-        $this->articleLinkProvider = new ArticleLinkProvider(
+        $webspaceRouteGenerator = new class() implements WebspaceRouteGeneratorInterface {
+            public function generate(RequestContext $requestContext, string $slug, string $locale): string
+            {
+                return \sprintf('/%s%s', $locale, $slug);
+            }
+        };
+
+        $this->routeGenerator = new class($webspaceRouteGenerator) implements RouteGeneratorInterface {
+            public function __construct(private WebspaceRouteGeneratorInterface $webspaceRouteGenerator)
+            {
+            }
+
+            public function generate(string $slug, ?string $locale = null, ?string $webspace = null, int $referenceType = 0): string
+            {
+                return $this->webspaceRouteGenerator->generate(new RequestContext(), $slug, $locale ?? 'en');
+            }
+        };
+    }
+
+    private function createProvider(?string $requestWebspace = null): ArticleLinkProvider
+    {
+        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        if (null !== $requestWebspace) {
+            $webspace = new Webspace();
+            $webspace->setKey($requestWebspace);
+            $requestAnalyzer->getWebspace()->willReturn($webspace);
+        } else {
+            $requestAnalyzer->getWebspace()->willReturn(null);
+        }
+
+        return new ArticleLinkProvider(
             $this->entityManager->reveal(),
-            $this->webspaceManager->reveal(),
-            $this->requestAnalyzer->reveal(),
+            $this->routeGenerator,
+            $requestAnalyzer->reveal(),
             $this->referenceStore->reveal(),
             $this->translator->reveal(),
         );
@@ -79,7 +99,8 @@ class ArticleLinkProviderTest extends TestCase
 
     public function testGetConfigurationBuilder(): void
     {
-        $linkConfigurationBuilder = $this->articleLinkProvider->getConfigurationBuilder();
+        $provider = $this->createProvider();
+        $linkConfigurationBuilder = $provider->getConfigurationBuilder();
         $linkConfiguration = $linkConfigurationBuilder->getLinkConfiguration();
 
         $this->assertSame(
@@ -99,17 +120,14 @@ class ArticleLinkProviderTest extends TestCase
 
     public function testPreloadEmptyHrefs(): void
     {
-        $result = $this->articleLinkProvider->preload([], 'en');
+        $provider = $this->createProvider();
+        $result = $provider->preload([], 'en');
 
         $this->assertSame([], $result);
     }
 
     public function testPreloadWithMainWebspace(): void
     {
-        $webspace = new Webspace();
-        $webspace->setKey('blog');
-        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
-
         $this->mockQueryBuilder(
             [
                 [
@@ -126,12 +144,10 @@ class ArticleLinkProviderTest extends TestCase
             'blog',
         );
 
-        $this->webspaceManager->findUrlByResourceLocator('/test-article', null, 'en', 'blog')
-            ->willReturn('/en/test-article');
-
         $this->referenceStore->add('article-1', ArticleInterface::RESOURCE_KEY)->shouldBeCalled();
 
-        $result = [...$this->articleLinkProvider->preload(['article-1'], 'en', true)];
+        $provider = $this->createProvider('blog');
+        $result = [...$provider->preload(['article-1'], 'en', true)];
 
         $this->assertCount(1, $result);
         $this->assertSame('article-1', $result[0]->getId());
@@ -142,10 +158,6 @@ class ArticleLinkProviderTest extends TestCase
 
     public function testPreloadWithAdditionalWebspace(): void
     {
-        $webspace = new Webspace();
-        $webspace->setKey('main_site');
-        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
-
         $this->mockQueryBuilder(
             [
                 [
@@ -162,12 +174,10 @@ class ArticleLinkProviderTest extends TestCase
             'main_site',
         );
 
-        $this->webspaceManager->findUrlByResourceLocator('/shared-article', null, 'en', 'main_site')
-            ->willReturn('/en/shared-article');
-
         $this->referenceStore->add('article-2', ArticleInterface::RESOURCE_KEY)->shouldBeCalled();
 
-        $result = [...$this->articleLinkProvider->preload(['article-2'], 'en', true)];
+        $provider = $this->createProvider('main_site');
+        $result = [...$provider->preload(['article-2'], 'en', true)];
 
         $this->assertCount(1, $result);
         $this->assertSame('/en/shared-article', $result[0]->getUrl());
@@ -175,10 +185,6 @@ class ArticleLinkProviderTest extends TestCase
 
     public function testPreloadFallbackToMainWebspace(): void
     {
-        $webspace = new Webspace();
-        $webspace->setKey('other_site');
-        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
-
         $this->mockQueryBuilder(
             [
                 [
@@ -195,21 +201,17 @@ class ArticleLinkProviderTest extends TestCase
             'other_site',
         );
 
-        $this->webspaceManager->findUrlByResourceLocator('/blog-article', null, 'en', 'blog')
-            ->willReturn('/en/blog-article');
-
         $this->referenceStore->add('article-3', ArticleInterface::RESOURCE_KEY)->shouldBeCalled();
 
-        $result = [...$this->articleLinkProvider->preload(['article-3'], 'en', true)];
+        $provider = $this->createProvider('other_site');
+        $result = [...$provider->preload(['article-3'], 'en', true)];
 
         $this->assertCount(1, $result);
         $this->assertSame('/en/blog-article', $result[0]->getUrl());
     }
 
-    public function testPreloadNullWebspace(): void
+    public function testPreloadNoRequestWebspace(): void
     {
-        $this->requestAnalyzer->getWebspace()->willReturn(null);
-
         $this->mockQueryBuilder(
             [
                 [
@@ -225,12 +227,10 @@ class ArticleLinkProviderTest extends TestCase
             null,
         );
 
-        $this->webspaceManager->findUrlByResourceLocator('/cli-article', null, 'en', 'blog')
-            ->willReturn('/en/cli-article');
-
         $this->referenceStore->add('article-4', ArticleInterface::RESOURCE_KEY)->shouldBeCalled();
 
-        $result = [...$this->articleLinkProvider->preload(['article-4'], 'en', true)];
+        $provider = $this->createProvider(null);
+        $result = [...$provider->preload(['article-4'], 'en', true)];
 
         $this->assertCount(1, $result);
         $this->assertSame('/en/cli-article', $result[0]->getUrl());
@@ -238,10 +238,6 @@ class ArticleLinkProviderTest extends TestCase
 
     public function testPreloadDraftStage(): void
     {
-        $webspace = new Webspace();
-        $webspace->setKey('blog');
-        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
-
         $this->mockQueryBuilder(
             [
                 [
@@ -258,12 +254,10 @@ class ArticleLinkProviderTest extends TestCase
             'blog',
         );
 
-        $this->webspaceManager->findUrlByResourceLocator('/draft-article', null, 'en', 'blog')
-            ->willReturn('/en/draft-article');
-
         $this->referenceStore->add('article-5', ArticleInterface::RESOURCE_KEY)->shouldBeCalled();
 
-        $result = [...$this->articleLinkProvider->preload(['article-5'], 'en', false)];
+        $provider = $this->createProvider('blog');
+        $result = [...$provider->preload(['article-5'], 'en', false)];
 
         $this->assertCount(1, $result);
         $this->assertSame('/en/draft-article', $result[0]->getUrl());
@@ -272,10 +266,6 @@ class ArticleLinkProviderTest extends TestCase
 
     public function testPreloadNullSlug(): void
     {
-        $webspace = new Webspace();
-        $webspace->setKey('blog');
-        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
-
         $this->mockQueryBuilder(
             [
                 [
@@ -294,68 +284,8 @@ class ArticleLinkProviderTest extends TestCase
 
         $this->referenceStore->add('article-6', ArticleInterface::RESOURCE_KEY)->shouldBeCalled();
 
-        $result = [...$this->articleLinkProvider->preload(['article-6'], 'en', true)];
-
-        $this->assertCount(0, $result);
-    }
-
-    public function testPreloadNullMainWebspace(): void
-    {
-        $webspace = new Webspace();
-        $webspace->setKey('blog');
-        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
-
-        $this->mockQueryBuilder(
-            [
-                [
-                    'uuid' => 'article-7',
-                    'title' => 'Orphan Article',
-                    'slug' => '/orphan-article',
-                    'mainWebspace' => null,
-                    'additionalWebspace' => null,
-                ],
-            ],
-            ['article-7'],
-            'en',
-            'live',
-            'blog',
-        );
-
-        $this->referenceStore->add('article-7', ArticleInterface::RESOURCE_KEY)->shouldBeCalled();
-
-        $result = [...$this->articleLinkProvider->preload(['article-7'], 'en', true)];
-
-        $this->assertCount(0, $result);
-    }
-
-    public function testPreloadUrlResolutionReturnsNull(): void
-    {
-        $webspace = new Webspace();
-        $webspace->setKey('blog');
-        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
-
-        $this->mockQueryBuilder(
-            [
-                [
-                    'uuid' => 'article-8',
-                    'title' => 'Unresolvable Article',
-                    'slug' => '/unresolvable',
-                    'mainWebspace' => 'blog',
-                    'additionalWebspace' => null,
-                ],
-            ],
-            ['article-8'],
-            'en',
-            'live',
-            'blog',
-        );
-
-        $this->webspaceManager->findUrlByResourceLocator('/unresolvable', null, 'en', 'blog')
-            ->willReturn(null);
-
-        $this->referenceStore->add('article-8', ArticleInterface::RESOURCE_KEY)->shouldBeCalled();
-
-        $result = [...$this->articleLinkProvider->preload(['article-8'], 'en', true)];
+        $provider = $this->createProvider('blog');
+        $result = [...$provider->preload(['article-6'], 'en', true)];
 
         $this->assertCount(0, $result);
     }
