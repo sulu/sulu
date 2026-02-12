@@ -32,52 +32,45 @@ use Sulu\Page\Domain\Repository\NavigationRepositoryInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Webmozart\Assert\Assert;
 
-class NavigationRepository implements NavigationRepositoryInterface
+/**
+ * @internal
+ */
+final class NavigationRepository implements NavigationRepositoryInterface
 {
     /**
      * @var NestedTreeRepository<PageInterface>
      */
-    protected NestedTreeRepository $entityRepository;
+    private NestedTreeRepository $entityRepository;
 
     /**
      * @var EntityRepository<PageDimensionContentInterface>
      */
-    protected EntityRepository $entityDimensionContentRepository;
-
-    /**
-     * @var class-string<PageInterface>
-     */
-    protected string $pageClassName;
+    private EntityRepository $entityDimensionContentRepository;
 
     /**
      * @var class-string<PageDimensionContentInterface>
      */
-    protected string $pageDimensionContentClassName;
+    private string $pageDimensionContentClassName;
 
     /**
-     * @param array<string, int>|null $permissions
+     * @param array<string, int> $permissions
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         private DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
         private ContentAggregatorInterface $contentAggregator,
         private ContentResolverInterface $contentResolver,
+        private WebspaceManagerInterface $webspaceManager,
+        private AccessControlQueryEnhancer $accessControlQueryEnhancer,
+        private ?Security $security,
+        private array $permissions,
         private bool $audienceTargetingEnabled = false,
-        private ?WebspaceManagerInterface $webspaceManager = null,
-        private ?AccessControlQueryEnhancer $accessControlQueryEnhancer = null,
-        private ?Security $security = null,
-        private ?array $permissions = null,
     ) {
-        if (null === $webspaceManager || null === $accessControlQueryEnhancer || null === $permissions) {
-            @trigger_deprecation('sulu/sulu', '3.0', 'Not passing the "$webspaceManager", "$accessControlQueryEnhancer" and "$permissions" arguments to "%s" is deprecated and they will be required in a future version.', __METHOD__);
-        }
-
         $repository = $entityManager->getRepository(PageInterface::class);
         Assert::isInstanceOf($repository, NestedTreeRepository::class);
 
         $this->entityRepository = $repository;
         $this->entityDimensionContentRepository = $entityManager->getRepository(PageDimensionContentInterface::class);
-        $this->pageClassName = $this->entityRepository->getClassName();
         $this->pageDimensionContentClassName = $this->entityDimensionContentRepository->getClassName();
     }
 
@@ -334,7 +327,7 @@ class NavigationRepository implements NavigationRepositoryInterface
      *
      * @return array<string, mixed>
      */
-    protected function resolvePageContent(PageInterface $page, string $locale, array $properties): array
+    private function resolvePageContent(PageInterface $page, string $locale, array $properties): array
     {
         $pageDimensionContent = $this->contentAggregator->aggregate($page, [
             'locale' => $locale,
@@ -526,15 +519,18 @@ class NavigationRepository implements NavigationRepositoryInterface
         string $webspaceKey,
         string $alias
     ): void {
-        if (!$this->webspaceManager || !$this->accessControlQueryEnhancer) {
-            return;
-        }
-
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
-        /** @var UserInterface|null $user */
-        $user = $webspace && $webspace->hasWebsiteSecurity() && $this->security ? $this->security->getUser() : null;
+        $user = null;
+
+        if ($webspace && $webspace->hasWebsiteSecurity()) {
+            $user = $this->security?->getUser();
+
+            if (!$user instanceof UserInterface) {
+                $user = null;
+            }
+        }
         /** @var int|null $permission */
-        $permission = $webspace && $webspace->hasWebsiteSecurity() && $this->permissions
+        $permission = $webspace && $webspace->hasWebsiteSecurity()
             ? $this->permissions[PermissionTypes::VIEW]
             : null;
 
