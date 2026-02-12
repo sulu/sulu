@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 
-class FieldMetaDataTest extends TestCase
+class FieldMetadataTest extends TestCase
 {
     public function testAddTypeAddsToTypes(): void
     {
