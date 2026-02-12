@@ -525,7 +525,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
 
         $provider = new WebsiteArticleReindexProvider(
             $this->entityManager,
-            [new WebsiteArticleReindexTaxonomyEnhancer($this->entityManager)],
+            [new WebsiteArticleReindexTaxonomyEnhancer()],
         );
 
         $article = static::createArticle([
@@ -564,7 +564,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
 
         $provider = new WebsiteArticleReindexProvider(
             $this->entityManager,
-            [new WebsiteArticleReindexTaxonomyEnhancer($this->entityManager)],
+            [new WebsiteArticleReindexTaxonomyEnhancer()],
         );
 
         $article = static::createArticle([
@@ -602,7 +602,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
 
         $provider = new WebsiteArticleReindexProvider(
             $this->entityManager,
-            [new WebsiteArticleReindexTaxonomyEnhancer($this->entityManager)],
+            [new WebsiteArticleReindexTaxonomyEnhancer()],
         );
 
         $article = static::createArticle([
@@ -635,7 +635,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
     {
         $provider = new WebsiteArticleReindexProvider(
             $this->entityManager,
-            [new WebsiteArticleReindexTaxonomyEnhancer($this->entityManager)],
+            [new WebsiteArticleReindexTaxonomyEnhancer()],
         );
 
         $article = static::createArticle([
@@ -670,7 +670,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
             $this->entityManager,
             [
                 new WebsiteArticleReindexExcerptEnhancer(),
-                new WebsiteArticleReindexTaxonomyEnhancer($this->entityManager),
+                new WebsiteArticleReindexTaxonomyEnhancer(),
             ],
         );
 

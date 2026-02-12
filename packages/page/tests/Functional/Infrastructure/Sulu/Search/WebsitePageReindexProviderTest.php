@@ -317,7 +317,7 @@ class WebsitePageReindexProviderTest extends SuluTestCase
 
         $provider = new WebsitePageReindexProvider(
             $this->entityManager,
-            [new WebsitePageReindexTaxonomyEnhancer($this->entityManager)],
+            [new WebsitePageReindexTaxonomyEnhancer()],
         );
 
         $page = $this->createPage([
@@ -357,7 +357,7 @@ class WebsitePageReindexProviderTest extends SuluTestCase
 
         $provider = new WebsitePageReindexProvider(
             $this->entityManager,
-            [new WebsitePageReindexTaxonomyEnhancer($this->entityManager)],
+            [new WebsitePageReindexTaxonomyEnhancer()],
         );
 
         $page = $this->createPage([
@@ -396,7 +396,7 @@ class WebsitePageReindexProviderTest extends SuluTestCase
 
         $provider = new WebsitePageReindexProvider(
             $this->entityManager,
-            [new WebsitePageReindexTaxonomyEnhancer($this->entityManager)],
+            [new WebsitePageReindexTaxonomyEnhancer()],
         );
 
         $page = $this->createPage([
@@ -430,7 +430,7 @@ class WebsitePageReindexProviderTest extends SuluTestCase
     {
         $provider = new WebsitePageReindexProvider(
             $this->entityManager,
-            [new WebsitePageReindexTaxonomyEnhancer($this->entityManager)],
+            [new WebsitePageReindexTaxonomyEnhancer()],
         );
 
         $page = $this->createPage([
@@ -466,7 +466,7 @@ class WebsitePageReindexProviderTest extends SuluTestCase
             $this->entityManager,
             [
                 new WebsitePageReindexExcerptEnhancer(),
-                new WebsitePageReindexTaxonomyEnhancer($this->entityManager),
+                new WebsitePageReindexTaxonomyEnhancer(),
             ],
         );
 

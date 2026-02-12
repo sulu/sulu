@@ -13,9 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Page\Infrastructure\Sulu\Search\Visitor;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
-use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 
 /**
  * @internal if you need to override this service, create a new service based on the WebsitePageReindexProviderEnhancerInterface
@@ -25,26 +23,24 @@ use Sulu\Page\Domain\Model\PageDimensionContentInterface;
  */
 class WebsitePageReindexTaxonomyEnhancer implements WebsitePageReindexProviderEnhancerInterface
 {
-    public function __construct(
-        private EntityManagerInterface $entityManager,
-    ) {
-    }
-
     public function enhanceQuery(QueryBuilder $queryBuilder): void
     {
-        $queryBuilder->addSelect('dimensionContent.id AS dimensionContentId');
+        $queryBuilder
+            ->addSelect('dimensionContent.id AS dimensionContentId')
+            ->leftJoin('dimensionContent.excerptCategories', 'category')
+            ->leftJoin('dimensionContent.excerptTags', 'tag')
+            ->addSelect('GROUP_CONCAT(DISTINCT category.id) AS categoryIds')
+            ->addSelect('GROUP_CONCAT(DISTINCT tag.name) AS tagNames')
+            ->addGroupBy('dimensionContent.id');
     }
 
     public function enhanceDocument(array $queryResult, array $document): array
     {
-        $dimensionContentId = $queryResult['dimensionContentId'] ?? null;
-        if (!\is_int($dimensionContentId)) {
-            return $document;
-        }
+        $rawCategoryIds = $queryResult['categoryIds'] ?? null;
+        $rawTagNames = $queryResult['tagNames'] ?? null;
 
-        $taxonomy = $this->loadTaxonomy($dimensionContentId);
-        $categoryIds = $taxonomy['categoryIds'];
-        $tagNames = $taxonomy['tagNames'];
+        $categoryIds = $this->parseCategoryIds(\is_string($rawCategoryIds) ? $rawCategoryIds : null);
+        $tagNames = $this->parseTagNames(\is_string($rawTagNames) ? $rawTagNames : null);
 
         if ([] === $categoryIds && [] === $tagNames) {
             return $document;
@@ -65,29 +61,6 @@ class WebsitePageReindexTaxonomyEnhancer implements WebsitePageReindexProviderEn
         $document['metadata'] = $metadata;
 
         return $document;
-    }
-
-    /**
-     * @return array{categoryIds: int[], tagNames: string[]}
-     */
-    private function loadTaxonomy(int $dimensionContentId): array
-    {
-        /** @var array{categoryIds: string|null, tagNames: string|null} $result */
-        $result = $this->entityManager->createQueryBuilder()
-            ->select('GROUP_CONCAT(DISTINCT category.id) AS categoryIds')
-            ->addSelect('GROUP_CONCAT(DISTINCT tag.name) AS tagNames')
-            ->from(PageDimensionContentInterface::class, 'dimensionContent')
-            ->leftJoin('dimensionContent.excerptCategories', 'category')
-            ->leftJoin('dimensionContent.excerptTags', 'tag')
-            ->where('dimensionContent.id = :id')
-            ->setParameter('id', $dimensionContentId)
-            ->getQuery()
-            ->getSingleResult();
-
-        return [
-            'categoryIds' => $this->parseCategoryIds($result['categoryIds']),
-            'tagNames' => $this->parseTagNames($result['tagNames']),
-        ];
     }
 
     /**

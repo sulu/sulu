@@ -617,7 +617,6 @@ final class SuluPageBundle extends AbstractBundle
 
         $services->set('sulu_page.website_page_reindex_taxonomy_enhancer')
             ->class(WebsitePageReindexTaxonomyEnhancer::class)
-            ->args([new Reference('doctrine.orm.entity_manager')])
             ->tag('sulu_page.website_page_reindex_provider_enhancer');
 
         $services->set('sulu_page.website_page_reindex_provider')

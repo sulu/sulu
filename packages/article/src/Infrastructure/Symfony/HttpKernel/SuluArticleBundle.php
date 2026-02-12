@@ -492,7 +492,6 @@ final class SuluArticleBundle extends AbstractBundle
 
         $services->set('sulu_article.website_article_reindex_taxonomy_enhancer')
             ->class(WebsiteArticleReindexTaxonomyEnhancer::class)
-            ->args([new Reference('doctrine.orm.entity_manager')])
             ->tag('sulu_article.website_article_reindex_provider_enhancer');
 
         $services->set('sulu_article.website_article_reindex_provider')

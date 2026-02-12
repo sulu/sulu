@@ -13,11 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Tests\Unit\Infrastructure\Sulu\Search\Visitor;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexTaxonomyEnhancer;
 
@@ -25,38 +22,38 @@ class WebsiteArticleReindexTaxonomyEnhancerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testEnhanceQueryDoesNotModifyQuery(): void
+    private WebsiteArticleReindexTaxonomyEnhancer $enhancer;
+
+    protected function setUp(): void
     {
-        $entityManager = $this->prophesize(EntityManagerInterface::class);
-        $enhancer = new WebsiteArticleReindexTaxonomyEnhancer($entityManager->reveal());
-
-        $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $queryBuilder->addSelect(Argument::any())->shouldNotBeCalled();
-
-        $enhancer->enhanceQuery($queryBuilder->reveal());
+        $this->enhancer = new WebsiteArticleReindexTaxonomyEnhancer();
     }
 
-    public function testMissingDimensionContentIdReturnsUnchanged(): void
+    public function testEnhanceQueryAddsJoinsAndGroupConcat(): void
     {
-        $entityManager = $this->prophesize(EntityManagerInterface::class);
-        $enhancer = new WebsiteArticleReindexTaxonomyEnhancer($entityManager->reveal());
+        $queryBuilder = $this->prophesize(QueryBuilder::class);
+        $queryBuilder->leftJoin('dimensionContent.excerptCategories', 'category')->willReturn($queryBuilder)->shouldBeCalled();
+        $queryBuilder->leftJoin('dimensionContent.excerptTags', 'tag')->willReturn($queryBuilder)->shouldBeCalled();
+        $queryBuilder->addSelect('GROUP_CONCAT(DISTINCT category.id) AS categoryIds')->willReturn($queryBuilder)->shouldBeCalled();
+        $queryBuilder->addSelect('GROUP_CONCAT(DISTINCT tag.name) AS tagNames')->willReturn($queryBuilder)->shouldBeCalled();
+        $queryBuilder->addGroupBy('dimensionContent.id')->willReturn($queryBuilder)->shouldBeCalled();
 
-        $document = ['title' => 'Test'];
+        $this->enhancer->enhanceQuery($queryBuilder->reveal());
+    }
 
-        $result = $enhancer->enhanceDocument([], $document);
+    public function testMissingTaxonomyDataReturnsUnchanged(): void
+    {
+        $document = ['title' => 'Test', 'metadata' => []];
+
+        $result = $this->enhancer->enhanceDocument([], $document);
 
         $this->assertSame($document, $result);
     }
 
     public function testCategoriesPopulated(): void
     {
-        $enhancer = $this->createEnhancerWithTaxonomyResult(
-            categoryIds: '1,2,3',
-            tagNames: null,
-        );
-
         $document = ['title' => 'Test', 'metadata' => []];
-        $result = $enhancer->enhanceDocument(['dimensionContentId' => 42], $document);
+        $result = $this->enhancer->enhanceDocument(['categoryIds' => '1,2,3', 'tagNames' => null], $document);
 
         $this->assertIsArray($result['metadata']);
         $this->assertIsArray($result['metadata']['excerpt']);
@@ -66,13 +63,8 @@ class WebsiteArticleReindexTaxonomyEnhancerTest extends TestCase
 
     public function testTagsPopulated(): void
     {
-        $enhancer = $this->createEnhancerWithTaxonomyResult(
-            categoryIds: null,
-            tagNames: 'php,sulu',
-        );
-
         $document = ['title' => 'Test', 'metadata' => []];
-        $result = $enhancer->enhanceDocument(['dimensionContentId' => 42], $document);
+        $result = $this->enhancer->enhanceDocument(['categoryIds' => null, 'tagNames' => 'php,sulu'], $document);
 
         $this->assertIsArray($result['metadata']);
         $this->assertIsArray($result['metadata']['excerpt']);
@@ -82,13 +74,8 @@ class WebsiteArticleReindexTaxonomyEnhancerTest extends TestCase
 
     public function testBothCategoriesAndTagsPopulated(): void
     {
-        $enhancer = $this->createEnhancerWithTaxonomyResult(
-            categoryIds: '5,10',
-            tagNames: 'cms,web',
-        );
-
         $document = ['title' => 'Test', 'metadata' => []];
-        $result = $enhancer->enhanceDocument(['dimensionContentId' => 42], $document);
+        $result = $this->enhancer->enhanceDocument(['categoryIds' => '5,10', 'tagNames' => 'cms,web'], $document);
 
         $this->assertIsArray($result['metadata']);
         $this->assertIsArray($result['metadata']['excerpt']);
@@ -98,13 +85,8 @@ class WebsiteArticleReindexTaxonomyEnhancerTest extends TestCase
 
     public function testEmptyTaxonomyDoesNotAddKeys(): void
     {
-        $enhancer = $this->createEnhancerWithTaxonomyResult(
-            categoryIds: null,
-            tagNames: null,
-        );
-
         $document = ['title' => 'Test', 'metadata' => []];
-        $result = $enhancer->enhanceDocument(['dimensionContentId' => 42], $document);
+        $result = $this->enhancer->enhanceDocument(['categoryIds' => null, 'tagNames' => null], $document);
 
         $this->assertIsArray($result['metadata']);
         $this->assertArrayNotHasKey('excerpt', $result['metadata']);
@@ -112,11 +94,6 @@ class WebsiteArticleReindexTaxonomyEnhancerTest extends TestCase
 
     public function testPreservesExistingExcerptMetadata(): void
     {
-        $enhancer = $this->createEnhancerWithTaxonomyResult(
-            categoryIds: '1',
-            tagNames: 'tag1',
-        );
-
         $document = [
             'title' => 'Test',
             'metadata' => [
@@ -125,42 +102,12 @@ class WebsiteArticleReindexTaxonomyEnhancerTest extends TestCase
                 ],
             ],
         ];
-        $result = $enhancer->enhanceDocument(['dimensionContentId' => 42], $document);
+        $result = $this->enhancer->enhanceDocument(['categoryIds' => '1', 'tagNames' => 'tag1'], $document);
 
         $this->assertIsArray($result['metadata']);
         $this->assertIsArray($result['metadata']['excerpt']);
         $this->assertSame('Existing Excerpt Title', $result['metadata']['excerpt']['title']);
         $this->assertSame([1], $result['metadata']['excerpt']['categoryIds']);
         $this->assertSame(['tag1'], $result['metadata']['excerpt']['tagNames']);
-    }
-
-    private function createEnhancerWithTaxonomyResult(?string $categoryIds, ?string $tagNames): WebsiteArticleReindexTaxonomyEnhancer
-    {
-        $qb = $this->createQueryBuilderStub(['categoryIds' => $categoryIds, 'tagNames' => $tagNames]);
-
-        $entityManager = $this->prophesize(EntityManagerInterface::class);
-        $entityManager->createQueryBuilder()->willReturn($qb);
-
-        return new WebsiteArticleReindexTaxonomyEnhancer($entityManager->reveal());
-    }
-
-    /**
-     * @param array<string, mixed> $singleResult
-     */
-    private function createQueryBuilderStub(array $singleResult): QueryBuilder
-    {
-        $query = $this->prophesize(Query::class);
-        $query->getSingleResult()->willReturn($singleResult);
-
-        $qb = $this->prophesize(QueryBuilder::class);
-        $qb->select(Argument::any())->willReturn($qb);
-        $qb->addSelect(Argument::any())->willReturn($qb);
-        $qb->from(Argument::any(), Argument::any())->willReturn($qb);
-        $qb->leftJoin(Argument::any(), Argument::any())->willReturn($qb);
-        $qb->where(Argument::any())->willReturn($qb);
-        $qb->setParameter(Argument::any(), Argument::any())->willReturn($qb);
-        $qb->getQuery()->willReturn($query->reveal());
-
-        return $qb->reveal();
     }
 }
