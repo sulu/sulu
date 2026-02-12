@@ -161,5 +161,10 @@
         <service id="sulu_audience_targeting.target_group_factory" class="Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupFactory">
             <argument type="service" id="doctrine.orm.entity_manager"/>
         </service>
+
+        <service id="sulu_audience_targeting.block_settings_form_metadata_visitor" class="Sulu\Bundle\AudienceTargetingBundle\Infrastructure\Sulu\Admin\MetadataVisitor\BlockSettingsFormMetadataVisitor">
+            <argument type="service" id="sulu_admin.xml_form_metadata_loader"/>
+            <tag name="sulu_admin.form_metadata_visitor" />
+        </service>
     </services>
 </container>
