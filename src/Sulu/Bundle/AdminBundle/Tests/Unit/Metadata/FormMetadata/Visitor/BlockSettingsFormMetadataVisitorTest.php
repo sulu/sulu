@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\FormMetadata\Visitor;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
@@ -21,8 +20,6 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Visitor\BlockSettingsFormMetad
 
 class BlockSettingsFormMetadataVisitorTest extends TestCase
 {
-    use ProphecyTrait;
-
     private BlockSettingsFormMetadataVisitor $blockSettingsFormMetadataVisitor;
 
     public function setUp(): void

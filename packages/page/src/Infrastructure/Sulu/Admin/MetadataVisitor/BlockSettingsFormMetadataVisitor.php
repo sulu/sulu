@@ -67,9 +67,12 @@ final class BlockSettingsFormMetadataVisitor implements FormMetadataVisitorInter
                 continue;
             }
 
-            $item->setVisibleCondition(\str_replace('true', $segments, $visibleCondition));
+            $updatedVisibleCondition = \preg_replace('/:\s*true\s*$/', ': ' . $segments, $visibleCondition, 1);
+            $item->setVisibleCondition($updatedVisibleCondition);
         }
 
-        $formMetadata->setItems(\array_merge($formMetadata->getItems(), $segmentsForm->getItems()));
+        foreach ($segmentsForm->getItems() as $item) {
+            $formMetadata->addItem($item);
+        }
     }
 }

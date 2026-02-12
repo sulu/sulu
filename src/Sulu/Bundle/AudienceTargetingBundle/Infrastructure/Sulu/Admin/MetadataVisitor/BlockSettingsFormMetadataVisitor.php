@@ -34,12 +34,14 @@ class BlockSettingsFormMetadataVisitor implements FormMetadataVisitorInterface
             }
         }
 
-        $segmentsForm = $this->xmlFormMetadataLoader->getMetadata('content_block_settings_target_groups', $locale, $metadataOptions);
+        $targetGroupsFormMetadata = $this->xmlFormMetadataLoader->getMetadata('content_block_settings_target_groups', $locale, $metadataOptions);
 
-        if (!$segmentsForm) {
+        if (!$targetGroupsFormMetadata) {
             return;
         }
 
-        $formMetadata->setItems(\array_merge($formMetadata->getItems(), $segmentsForm->getItems()));
+        foreach ($targetGroupsFormMetadata->getItems() as $item) {
+            $formMetadata->addItem($item);
+        }
     }
 }
