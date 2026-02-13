@@ -21,10 +21,7 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Page\Application\Message\CreatePageMessage;
-use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
-use Sulu\Page\Domain\Model\Page;
-use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Page\Tests\Traits\CreatePageTrait;
 use Sulu\Page\Tests\Traits\CreatePageWithPermissionsTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -35,56 +32,13 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 class PageControllerPermissionsTest extends SuluTestCase
 {
     use AssertSnapshotTrait;
+    use CreatePageTrait;
     use CreatePageWithPermissionsTrait;
 
     /**
      * @var KernelBrowser
      */
     protected $client;
-
-    protected function setUp(): void
-    {
-    }
-
-    private function createHomepage(string $uuid, string $webspaceKey): PageInterface
-    {
-        $homepage = new Page($uuid);
-        $homepage->setLft(0);
-        $homepage->setRgt(1);
-        $homepage->setDepth(0);
-        $homepage->setWebspaceKey($webspaceKey);
-        self::getEntityManager()->persist($homepage);
-        self::getEntityManager()->flush();
-
-        return $homepage;
-    }
-
-    /**
-     * @param array<string, mixed> $data
-     */
-    private function createPage(
-        string $parentId,
-        array $data = [],
-        string $webspaceKey = 'sulu-io',
-    ): PageInterface {
-        $data = \array_merge(
-            [
-                'title' => 'Test Page',
-                'locale' => 'en',
-                'url' => '/test-page-' . \uniqid(),
-                'template' => 'default',
-            ],
-            $data,
-        );
-        $message = new CreatePageMessage($webspaceKey, $parentId, $data);
-
-        /** @var CreatePageMessageHandler $messageHandler */
-        $messageHandler = self::getContainer()->get('sulu_page.create_page_handler');
-        $page = $messageHandler->__invoke($message);
-        self::getEntityManager()->flush();
-
-        return $page;
-    }
 
     public function testCgetActionWithoutWebspacePermissionsReturnsEmpty(): void
     {
@@ -134,27 +88,54 @@ class PageControllerPermissionsTest extends SuluTestCase
 
         self::ensureKernelShutdown();
 
-        $homepage = $this->createHomepage('sulu-io-test-permissions-uuid', 'sulu-io');
-        $this->createPage($homepage->getId(), [
-            'title' => 'Sulu-io Page',
-            'template' => 'default',
-            'url' => '/sulu-io-test-no-permission',
-        ]);
-        $this->createPage($homepage->getId(), [
-            'title' => 'Sulu-io Page 2',
-            'template' => 'default',
-            'url' => '/sulu-io-test-no-permission2',
-        ]);
-        $homepage2 = $this->createHomepage('blog-test-permissions-uuid', 'blog');
-        $this->createPage(
-            $homepage2->getId(),
-            [
-                'title' => 'Blog Page',
-                'template' => 'default',
-                'url' => '/blog-test-no-permission',
+        $homepage = $this->createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Homepage',
+                    'url' => '/',
+                ],
             ],
-            'blog',
-        );
+        ]);
+        $this->createPage([
+            'en' => [
+                'live' => [
+                    'parentId' => $homepage->getUuid(),
+                    'title' => 'Sulu-io Page',
+                    'template' => 'default',
+                    'url' => '/sulu-io-test-no-permission',
+                ],
+            ],
+        ]);
+        $this->createPage([
+            'en' => [
+                'live' => [
+                    'parentId' => $homepage->getUuid(),
+                    'title' => 'Sulu-io Page 2',
+                    'template' => 'default',
+                    'url' => '/sulu-io-test-no-permission2',
+                ],
+            ],
+        ]);
+        $homepage2 = $this->createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Homepage 2',
+                    'url' => '/',
+                ],
+            ],
+        ], 'blog');
+        $this->createPage([
+            'en' => [
+                'live' => [
+                    'parentId' => $homepage2->getUuid(),
+                    'title' => 'Blog Page',
+                    'template' => 'default',
+                    'url' => '/blog-test-no-permission',
+                ],
+            ],
+        ], 'blog');
 
         self::ensureKernelShutdown();
 
