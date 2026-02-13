@@ -78,6 +78,9 @@
                 <link rel="alternate" href="{{ localization.url }}" hreflang="{{ localization.locale|replace({'_': '-'}) }}">
             {%- endif -%}
         {%- endfor -%}
+        {%- if request.defaultLocale is defined and localizations[request.defaultLocale] is defined -%}
+            <link rel="alternate" href="{{ localizations[request.defaultLocale].url }}" hreflang="x-default">
+        {%- endif -%}
     {%- endif -%}
 {%- endblock -%}
 
