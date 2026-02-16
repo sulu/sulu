@@ -21,6 +21,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
+use Sulu\Snippet\Infrastructure\Sulu\Search\Visitor\AdminSnippetReindexProviderEnhancerInterface;
 
 /**
  * @phpstan-type Snippet array{
@@ -41,12 +42,14 @@ final class AdminSnippetReindexProvider implements ReindexProviderInterface
      */
     private EntityRepository $dimensionContentRepository;
 
+    /**
+     * @param iterable<AdminSnippetReindexProviderEnhancerInterface> $enhancers
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
+        private readonly iterable $enhancers = [],
     ) {
-        $dimensionContentRepository = $entityManager->getRepository(SnippetDimensionContentInterface::class);
-
-        $this->dimensionContentRepository = $dimensionContentRepository;
+        $this->dimensionContentRepository = $entityManager->getRepository(SnippetDimensionContentInterface::class);
     }
 
     public function total(): ?int
@@ -61,7 +64,7 @@ final class AdminSnippetReindexProvider implements ReindexProviderInterface
 
         /** @var Snippet $snippet */
         foreach ($snippets as $snippet) {
-            yield [
+            $data = [
                 'id' => SnippetInterface::RESOURCE_KEY . '__' . ((string) $snippet['snippetId']) . '__' . $snippet['locale'],
                 'resourceKey' => SnippetInterface::RESOURCE_KEY,
                 'resourceId' => (string) $snippet['snippetId'],
@@ -71,6 +74,12 @@ final class AdminSnippetReindexProvider implements ReindexProviderInterface
                 'locale' => $snippet['locale'],
                 'securityContext' => SnippetAdmin::SECURITY_CONTEXT,
             ];
+
+            foreach ($this->enhancers as $enhancer) {
+                $data = $enhancer->enhanceDocument($snippet, $data);
+            }
+
+            yield $data;
         }
     }
 
@@ -123,6 +132,10 @@ final class AdminSnippetReindexProvider implements ReindexProviderInterface
 
         foreach ($parameters as $parameterKey => $parameterValue) {
             $qb->setParameter($parameterKey, $parameterValue);
+        }
+
+        foreach ($this->enhancers as $enhancer) {
+            $enhancer->enhanceQuery($qb);
         }
 
         /** @var iterable<Snippet> */

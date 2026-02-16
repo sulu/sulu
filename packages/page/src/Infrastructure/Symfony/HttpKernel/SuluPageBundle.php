@@ -71,6 +71,7 @@ use Sulu\Page\Infrastructure\Sulu\Reference\PageReferenceRefresher;
 use Sulu\Page\Infrastructure\Sulu\Route\PageWebspaceRouteGenerator;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageIndexListener;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageReindexProvider;
+use Sulu\Page\Infrastructure\Sulu\Search\Visitor\AdminPageReindexProviderEnhancerInterface;
 use Sulu\Page\Infrastructure\Sulu\Search\Visitor\WebsitePageReindexContentEnhancer;
 use Sulu\Page\Infrastructure\Sulu\Search\Visitor\WebsitePageReindexExcerptEnhancer;
 use Sulu\Page\Infrastructure\Sulu\Search\Visitor\WebsitePageReindexProviderEnhancerInterface;
@@ -598,6 +599,7 @@ final class SuluPageBundle extends AbstractBundle
             ->class(AdminPageReindexProvider::class)
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
+                tagged_iterator('sulu_page.admin_page_reindex_provider_enhancer'),
             ])
             ->tag('cmsig_seal.reindex_provider');
 
@@ -609,6 +611,9 @@ final class SuluPageBundle extends AbstractBundle
             ->tag('kernel.event_listener', ['event' => PageWorkflowTransitionAppliedEvent::class, 'method' => 'onPageChanged'])
             ->tag('kernel.event_listener', ['event' => PageRemovedEvent::class, 'method' => 'onPageChanged'])
             ->tag('kernel.event_listener', ['event' => PageTranslationRemovedEvent::class, 'method' => 'onPageChanged']);
+
+        $builder->registerForAutoconfiguration(AdminPageReindexProviderEnhancerInterface::class)
+            ->addTag('sulu_page.admin_page_reindex_provider_enhancer');
 
         $builder->registerForAutoconfiguration(WebsitePageReindexProviderEnhancerInterface::class)
             ->addTag('sulu_page.website_page_reindex_provider_enhancer');

@@ -53,6 +53,7 @@ use Sulu\Article\Infrastructure\Sulu\Reference\ArticleReferenceRefresher;
 use Sulu\Article\Infrastructure\Sulu\Route\ArticleRouteDefaultsProvider;
 use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleIndexListener;
 use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleReindexProvider;
+use Sulu\Article\Infrastructure\Sulu\Search\Visitor\AdminArticleReindexProviderEnhancerInterface;
 use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexContentEnhancer;
 use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexExcerptEnhancer;
 use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexProviderEnhancerInterface;
@@ -464,6 +465,7 @@ final class SuluArticleBundle extends AbstractBundle
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_admin.metadata_group_provider'),
+                tagged_iterator('sulu_article.admin_article_reindex_provider_enhancer'),
             ])
             ->tag('cmsig_seal.reindex_provider');
 
@@ -475,6 +477,9 @@ final class SuluArticleBundle extends AbstractBundle
             ->tag('kernel.event_listener', ['event' => ArticleWorkflowTransitionAppliedEvent::class, 'method' => 'onArticleChanged'])
             ->tag('kernel.event_listener', ['event' => ArticleRemovedEvent::class, 'method' => 'onArticleChanged'])
             ->tag('kernel.event_listener', ['event' => ArticleTranslationRemovedEvent::class, 'method' => 'onArticleChanged']);
+
+        $builder->registerForAutoconfiguration(AdminArticleReindexProviderEnhancerInterface::class)
+            ->addTag('sulu_article.admin_article_reindex_provider_enhancer');
 
         $builder->registerForAutoconfiguration(WebsiteArticleReindexProviderEnhancerInterface::class)
             ->addTag('sulu_article.website_article_reindex_provider_enhancer');
