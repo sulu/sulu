@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
+use Doctrine\Bundle\DoctrineBundle\DataCollector\DoctrineDataCollector;
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
@@ -1305,7 +1306,7 @@ class MediaControllerTest extends SuluTestCase
         $mediaId = $media->getId();
         $this->assertFileExists($this->getStoragePath() . '/1/photo.jpeg');
 
-        $this->client->jsonRequest('DELETE', '/api/media/' . $mediaId);
+        $this->requestPageAndGetQueries('DELETE', '/api/media/' . $mediaId);
         $this->assertNotNull($this->client->getResponse()->getStatusCode());
 
         $this->client->jsonRequest(
@@ -1461,5 +1462,32 @@ class MediaControllerTest extends SuluTestCase
     private function getFilePath()
     {
         return __DIR__ . '/../../Fixtures/files/small.txt';
+    }
+
+    private function requestPageAndGetQueries(string $method, string $url): array
+    {
+        self::ensureKernelShutdown();
+        $this->client = static::createWebsiteClient();
+        $this->client->enableProfiler();
+        $this->client->request($method, $url);
+        $response = $this->client->getResponse();
+
+        $profiler = $this->client->getProfile();
+        $this->assertNotFalse($profiler, 'Profiler must be enabled');
+        $this->assertNotNull($profiler);
+
+        $dbCollector = $profiler->getCollector('db');
+        $this->assertInstanceOf(DoctrineDataCollector::class, $dbCollector);
+
+        $queriesData = $dbCollector->getQueries();
+        $this->assertArrayHasKey('default', $queriesData);
+
+        /** @var list<array{sql: string}> $queries */
+        $queries = $queriesData['default'];
+
+        return [
+            'queries' => $queries,
+            'response' => $response,
+        ];
     }
 }
