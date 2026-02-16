@@ -564,6 +564,34 @@ class FormXmlLoaderTest extends TestCase
         );
     }
 
+    public function testLoadFormWithAutoFocus(): void
+    {
+        /**
+         * @var LocalizedFormMetadataCollection
+         */
+        $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form_with_autofocus.xml');
+
+        $formMetadata = $formMetadataCollection->get('en');
+
+        $this->assertInstanceOf(FormMetadata::class, $formMetadata);
+        $this->assertCount(3, $formMetadata->getItems());
+
+        // First property has autoFocus="true"
+        $firstNameField = $formMetadata->getItems()['firstName'];
+        $this->assertEquals('firstName', $firstNameField->getName());
+        $this->assertTrue($firstNameField->isAutoFocus(), 'firstName field should have autoFocus=true');
+
+        // Second property has no autoFocus attribute (defaults to false)
+        $lastNameField = $formMetadata->getItems()['lastName'];
+        $this->assertEquals('lastName', $lastNameField->getName());
+        $this->assertFalse($lastNameField->isAutoFocus(), 'lastName field should have autoFocus=false by default');
+
+        // Third property has autoFocus="false"
+        $emailField = $formMetadata->getItems()['email'];
+        $this->assertEquals('email', $emailField->getName());
+        $this->assertFalse($emailField->isAutoFocus(), 'email field should have autoFocus=false');
+    }
+
     private function getFormDirectory()
     {
         return __DIR__ . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR
