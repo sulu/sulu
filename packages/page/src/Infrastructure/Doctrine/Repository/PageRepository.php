@@ -115,7 +115,7 @@ final class PageRepository implements PageRepositoryInterface
 
         try {
             /** @var PageInterface $page */
-            $page = $queryBuilder->getQuery()->getSingleResult();
+            $page = $this->dimensionContentQueryEnhancer->createQuery($queryBuilder)->getSingleResult();
         } catch (NoResultException $e) {
             throw new PageNotFoundException($filters, 0, $e);
         }
@@ -129,7 +129,7 @@ final class PageRepository implements PageRepositoryInterface
 
         try {
             /** @var PageInterface $page */
-            $page = $queryBuilder->getQuery()->getSingleResult();
+            $page = $this->dimensionContentQueryEnhancer->createQuery($queryBuilder)->getSingleResult();
         } catch (NoResultException $e) {
             return null;
         }
@@ -161,7 +161,7 @@ final class PageRepository implements PageRepositoryInterface
         $queryBuilder = $this->createQueryBuilder($filters, $sortBy, $selects);
 
         /** @var iterable<PageInterface> $pages */
-        $pages = $queryBuilder->getQuery()->getResult();
+        $pages = $this->dimensionContentQueryEnhancer->createQuery($queryBuilder)->getResult();
 
         foreach ($pages as $page) {
             yield $page;
@@ -206,7 +206,7 @@ final class PageRepository implements PageRepositoryInterface
     {
         $queryBuilder = $this->createQueryBuilder($filters, $sortBy, $selects);
 
-        $query = $queryBuilder->getQuery();
+        $query = $this->dimensionContentQueryEnhancer->createQuery($queryBuilder);
         // Hint is necessary for the TreeObjectHydrator to work
         // https://github.com/doctrine-extensions/DoctrineExtensions/blob/main/doc/tree.md#building-trees-from-your-entities
         $query->setHint(Query::HINT_INCLUDE_META_COLUMNS, true);
