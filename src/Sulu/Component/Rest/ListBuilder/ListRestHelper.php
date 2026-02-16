@@ -106,7 +106,7 @@ class ListRestHelper implements ListRestHelperInterface
     {
         $default = 10;
         if ('csv' === $this->getRequest()->getRequestFormat()) {
-            $default = null;
+            $default = 0;
         }
 
         // set default limit to count of ids if result is restricted to specific ids
