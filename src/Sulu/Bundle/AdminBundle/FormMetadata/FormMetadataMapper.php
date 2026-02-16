@@ -127,6 +127,7 @@ class FormMetadataMapper
         $field->setType($property->getType());
         $field->setColSpan($property->getColSpan());
         $field->setRequired($property->isRequired());
+        $field->setAutoFocus($property->isAutoFocus());
         $field->setOnInvalid($property->getOnInvalid());
         $field->setSpaceAfter($property->getSpaceAfter());
         $field->setMinOccurs($property->getMinOccurs());

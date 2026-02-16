@@ -7,7 +7,6 @@ import React, {Fragment} from 'react';
 import {Portal} from 'react-portal';
 import Icon from '../Icon';
 import Button from '../Button';
-import AutofocusableContent from '../AutofocusableContent';
 import {afterElementsRendered} from '../../utils/DOM';
 import Backdrop from '../Backdrop';
 import Snackbar, {type SnackbarType} from '../Snackbar';
@@ -155,7 +154,7 @@ class Overlay extends React.Component<Props> {
                                             onClick={this.handleIconClick}
                                         />
                                     </header>
-                                    <AutofocusableContent className={overlayStyles.article}>{children}</AutofocusableContent>
+                                    <article className={overlayStyles.article}>{children}</article>
                                     {footerVisible &&
                                         <footer className={overlayStyles.footer}>
                                             {actions.length > 0 && (

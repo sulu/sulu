@@ -163,6 +163,7 @@ class Field extends React.Component<Props> {
         } = this.props;
 
         const {
+            autoFocus,
             defaultType,
             description,
             label,
@@ -221,6 +222,7 @@ class Field extends React.Component<Props> {
                 <div className={fieldStyles.fieldContainer}>
                     <div className={fieldStyles.field}>
                         <FieldType
+                            autoFocus={autoFocus}
                             data={data}
                             dataPath={dataPath}
                             defaultType={defaultType}

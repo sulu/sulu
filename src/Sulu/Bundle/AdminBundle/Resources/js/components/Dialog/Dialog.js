@@ -7,7 +7,6 @@ import {Portal} from 'react-portal';
 import {afterElementsRendered} from '../../utils/DOM';
 import Backdrop from '../Backdrop';
 import Button from '../Button';
-import AutofocusableContent from '../AutofocusableContent';
 import Snackbar, {type SnackbarType} from '../Snackbar';
 import dialogStyles from './dialog.scss';
 import type {Node} from 'react';
@@ -139,9 +138,9 @@ class Dialog extends React.Component<Props> {
                                             {title}
                                         </span>
                                     </header>
-                                    <AutofocusableContent className={articleStyle}>
+                                    <article className={articleStyle}>
                                         {children}
-                                    </AutofocusableContent>
+                                    </article>
                                     <footer className={dialogStyles.footer}>
                                         <Button
                                             disabled={confirmDisabled}

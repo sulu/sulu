@@ -58,6 +58,11 @@ class FieldMetadata extends ItemMetadata
      */
     protected $tags;
 
+    /**
+     * @var bool
+     */
+    protected $autoFocus = false;
+
     public function setType(string $type): void
     {
         $this->type = $type;
@@ -170,5 +175,15 @@ class FieldMetadata extends ItemMetadata
     public function setTags(array $tags): void
     {
         $this->tags = $tags;
+    }
+
+    public function isAutoFocus(): bool
+    {
+        return $this->autoFocus;
+    }
+
+    public function setAutoFocus(bool $autoFocus): void
+    {
+        $this->autoFocus = $autoFocus;
     }
 }

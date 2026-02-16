@@ -47,6 +47,7 @@ export type SchemaOption = {
 export type SchemaOptions = {[key: string]: SchemaOption | typeof undefined};
 
 export type SchemaEntry = {
+    autoFocus?: boolean,
     colSpan?: ColSpan,
     defaultType?: string,
     description?: string,
@@ -115,6 +116,7 @@ export interface FormStoreInterface {
 }
 
 export type FieldTypeProps<T> = {|
+    autoFocus?: boolean,
     data: Object,
     dataPath: string,
     defaultType: ?string,
