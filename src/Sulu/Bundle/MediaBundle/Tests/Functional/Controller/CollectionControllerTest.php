@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
+use Doctrine\Bundle\DoctrineBundle\DataCollector\DoctrineDataCollector;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\AssignedGenerator;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -159,10 +160,10 @@ class CollectionControllerTest extends SuluTestCase
 
     private function createCollection(
         CollectionType $collectionType,
-        $title = [],
-        $parent = null,
-        $key = null,
-        $numberOfMedia = 0
+        array $title = [],
+        ?string $parent = null,
+        ?string $key = null,
+        int $numberOfMedia = 0
     ) {
         // Collection
         $collection = new Collection();
@@ -1177,8 +1178,10 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->em->clear();
 
-        $this->client->jsonRequest('DELETE', '/api/collections/' . $collectionId);
-        $this->assertHttpStatusCode(204, $this->client->getResponse());
+        ['queries' => $queries, 'response' => $response] = $this->requestPageAndGetQueries('DELETE', '/api/collections/' . $collectionId);
+        dump(\array_map(fn ($x) => $x['sql'], $queries));
+        //dump(count($queries));
+        $this->assertHttpStatusCode(204, $response);
 
         $this->client->jsonRequest(
             'GET',
@@ -1190,6 +1193,10 @@ class CollectionControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(5005, $response->code);
         $this->assertObjectHasProperty('message', $response);
+
+        // Check all meta info has been deleted
+        $meta = self::getEntityManager()->getRepository(CollectionMeta::class)->findBy(['collection' => $collectionId]);
+        self::assertCount(0, $meta);
 
         $trashItemRepository = $this->em->getRepository(TrashItemInterface::class);
         $trashItem = $trashItemRepository->findOneBy(['resourceKey' => 'collections', 'resourceId' => $collectionId]);
@@ -1774,5 +1781,32 @@ class CollectionControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
+    }
+
+    private function requestPageAndGetQueries(string $method, string $url): array
+    {
+        self::ensureKernelShutdown();
+        $this->client = static::createAuthenticatedClient();
+        $this->client->enableProfiler();
+        $this->client->request($method, $url);
+        $response = $this->client->getResponse();
+
+        $profiler = $this->client->getProfile();
+        $this->assertNotFalse($profiler, 'Profiler must be enabled');
+        $this->assertNotNull($profiler);
+
+        $dbCollector = $profiler->getCollector('db');
+        $this->assertInstanceOf(DoctrineDataCollector::class, $dbCollector);
+
+        $queriesData = $dbCollector->getQueries();
+        $this->assertArrayHasKey('default', $queriesData);
+
+        /** @var list<array{sql: string}> $queries */
+        $queries = $queriesData['default'];
+
+        return [
+            'queries' => $queries,
+            'response' => $response,
+        ];
     }
 }

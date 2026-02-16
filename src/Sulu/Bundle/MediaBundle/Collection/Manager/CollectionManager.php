@@ -596,10 +596,6 @@ class CollectionManager implements CollectionManagerInterface
 
         $this->em->remove($collectionEntity);
 
-        foreach ($collectionEntity->getMeta() as $meta) {
-            $this->em->remove($meta);
-        }
-
         $this->domainEventCollector->collect(
             new CollectionRemovedEvent($collectionId, $collectionTitle, $locale, ['locales' => $metaLocales])
         );
