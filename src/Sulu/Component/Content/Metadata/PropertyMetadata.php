@@ -47,13 +47,6 @@ class PropertyMetadata extends ItemMetadata
     protected $required = false;
 
     /**
-     * If the property should receive focus automatically.
-     *
-     * @var bool
-     */
-    protected $autoFocus = false;
-
-    /**
      * The number of grid columns the property should use in the admin interface.
      *
      * @var int
@@ -221,18 +214,6 @@ class PropertyMetadata extends ItemMetadata
     public function setRequired(bool $required): self
     {
         $this->required = $required;
-
-        return $this;
-    }
-
-    public function isAutoFocus(): bool
-    {
-        return $this->autoFocus;
-    }
-
-    public function setAutoFocus(bool $autoFocus): self
-    {
-        $this->autoFocus = $autoFocus;
 
         return $this;
     }

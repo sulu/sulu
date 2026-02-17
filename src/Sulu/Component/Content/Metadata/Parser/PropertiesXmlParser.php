@@ -90,7 +90,6 @@ class PropertiesXmlParser
         $result['mandatory'] = $this->getValueFromXPath('@mandatory', $xpath, $node, false);
         $result['multilingual'] = $this->getValueFromXPath('@multilingual', $xpath, $node, true);
         $result['onInvalid'] = $this->getValueFromXPath('@onInvalid', $xpath, $node);
-        $result['autoFocus'] = $this->getValueFromXPath('@autoFocus', $xpath, $node, false);
         $result['tags'] = $this->loadTags($tags, $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
         $result['meta'] = $this->loadMeta($xpath, $node);
@@ -412,7 +411,6 @@ class PropertiesXmlParser
         $property->setType($data['type']);
         $property->setLocalized($data['multilingual']);
         $property->setRequired($data['mandatory']);
-        $property->setAutoFocus($data['autoFocus']);
         if (isset($data['colspan'])) {
             $property->setColSpan($data['colspan']);
         }
