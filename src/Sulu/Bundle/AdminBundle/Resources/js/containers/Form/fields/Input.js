@@ -29,7 +29,7 @@ export default class Input extends React.Component<FieldTypeProps<?string>> {
                 headline: {
                     value: headline,
                 } = {},
-                autoFocus: {
+                autofocus: {
                     value: autoFocus,
                 } = {},
                 max_characters: {
