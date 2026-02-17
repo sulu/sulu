@@ -21,7 +21,6 @@ export default class Input extends React.Component<FieldTypeProps<?string>> {
 
     render() {
         const {
-            autoFocus,
             dataPath,
             error,
             disabled,
@@ -29,6 +28,9 @@ export default class Input extends React.Component<FieldTypeProps<?string>> {
             schemaOptions: {
                 headline: {
                     value: headline,
+                } = {},
+                autoFocus: {
+                    value: autoFocus,
                 } = {},
                 max_characters: {
                     value: maxCharacters,
@@ -77,7 +79,7 @@ export default class Input extends React.Component<FieldTypeProps<?string>> {
 
         return (
             <InputComponent
-                autoFocus={autoFocus}
+                autoFocus={!!autoFocus}
                 disabled={!!disabled}
                 headline={headline}
                 id={dataPath}
