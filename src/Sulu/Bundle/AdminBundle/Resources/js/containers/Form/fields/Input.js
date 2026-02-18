@@ -79,7 +79,7 @@ export default class Input extends React.Component<FieldTypeProps<?string>> {
 
         return (
             <InputComponent
-                autoFocus={!!autoFocus}
+                autoFocus={!!autofocus}
                 disabled={!!disabled}
                 headline={headline}
                 id={dataPath}
