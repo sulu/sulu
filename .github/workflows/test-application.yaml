@@ -247,6 +247,7 @@ jobs:
             - name: Install additional lowest dependencies
               if: ${{ matrix.dependency-versions == 'lowest' }}
               run: |
+                  composer config "audit.block-insecure" false
                   composer require symfony/swiftmailer-bundle --no-interaction --no-update
 
             - name: Set composer stability
