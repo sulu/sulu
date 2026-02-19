@@ -583,7 +583,7 @@ class CollectionManager implements CollectionManagerInterface
         $collectionMeta = $collectionEntity->getDefaultMeta();
         $collectionTitle = $collectionMeta ? $collectionMeta->getTitle() : null;
         $locale = $collectionMeta ? $collectionMeta->getLocale() : null;
-        $metaLocales = $collectionEntity->getMeta()->map(fn (CollectionMeta $meta) => $meta->getId())->toArray();
+        $metaLocales = $collectionEntity->getMeta()->map(fn (CollectionMeta $meta): string => $meta->getLocale())->toArray();
 
         if (!$forceRemoveChildren) {
             $this->checkDescendantPermissionsForDelete($id);
