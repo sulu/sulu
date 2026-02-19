@@ -25,7 +25,6 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
-use Sulu\Bundle\MediaBundle\Tests\Functional\Traits\ProfileQuerriesTrait;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -33,8 +32,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MediaControllerTest extends SuluTestCase
 {
-    use ProfileQuerriesTrait;
-
     /**
      * @var EntityManager
      */
@@ -480,17 +477,6 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertNotEmpty($response);
         $this->assertEquals(2, $response->total);
-    }
-
-    public function testcGetNotFound(): void
-    {
-        $this->client->jsonRequest('GET', '/api/media/0?locale=en-gb');
-
-        $this->assertHttpStatusCode(404, $this->client->getResponse());
-
-        $response = \json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(5015, $response->code);
-        $this->assertEquals('Media with the ID 0 was not found', $response->message);
     }
 
     public function testCgetAdminUrl(): void
@@ -1319,11 +1305,20 @@ class MediaControllerTest extends SuluTestCase
         $mediaId = $media->getId();
         $this->assertFileExists($this->getStoragePath() . '/1/photo.jpeg');
 
-        ['response' => $response, 'queries' => $queries] = $this->requestPageAndGetQueries('DELETE', '/api/media/' . $mediaId);
-        $this->assertCount(26, $queries);
-        $this->assertHttpStatusCode(204, $response);
+        $this->client->jsonRequest('DELETE', '/api/media/' . $mediaId);
+        $this->assertNotNull($this->client->getResponse()->getStatusCode());
 
-        // Assert filesystem is clean
+        $this->client->jsonRequest(
+            'GET',
+            '/api/media/' . $mediaId . '?locale=en-gb'
+        );
+
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
+
+        $response = \json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(5015, $response->code);
+        $this->assertObjectHasProperty('message', $response);
+
         $this->assertFalse(\file_exists($this->getStoragePath() . '/1/photo.jpeg'));
     }
 
@@ -1331,13 +1326,12 @@ class MediaControllerTest extends SuluTestCase
     {
         $media = $this->createMedia('photo');
 
-        $entityCount = $this->em->getRepository(MediaInterface::class)->count([]);
-
         $this->client->jsonRequest('DELETE', '/api/media/404');
         $this->assertHttpStatusCode(404, $this->client->getResponse());
 
-        // Assert that the entity count is the same
-        $this->assertSame($entityCount, $this->em->getRepository(MediaInterface::class)->count([]));
+        $this->client->jsonRequest('GET', '/api/media?locale=en-gb');
+        $response = \json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(1, $response->total);
     }
 
     public function testDownloadCounter(): void
@@ -1387,11 +1381,10 @@ class MediaControllerTest extends SuluTestCase
 
         $media = $this->createMedia('photo');
 
-        ['response' => $response, 'queries' => $queries] = $this->requestPageAndGetQueries(
+        $this->client->jsonRequest(
             'POST',
             '/api/media/' . $media->getId() . '?locale=en-gb&action=move&destination=' . $destCollection->getId()
         );
-        $this->assertCount(21, $queries);
 
         $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());

@@ -8,7 +8,6 @@ sulu_media:
 framework:
     assets: ~
     router: { resource: '%kernel.project_dir%/config/routing_admin.yml' }
-    profiler: { enabled: true, collect: false }
 
 services:
     sulu_media_test.system_collections.cache:
