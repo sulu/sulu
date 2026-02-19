@@ -22,11 +22,6 @@ use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 class FormMetadataProvider implements MetadataProviderInterface
 {
     /**
-     * @var array<string, MetadataInterface>
-     */
-    private array $cache = [];
-
-    /**
      * @param iterable<FormMetadataLoaderInterface> $formMetadataLoaders
      * @param iterable<FormMetadataVisitorInterface> $formMetadataVisitors
      * @param iterable<TypedFormMetadataVisitorInterface> $typedFormMetadataVisitors
@@ -41,12 +36,6 @@ class FormMetadataProvider implements MetadataProviderInterface
 
     public function getMetadata(string $key, string $locale, array $metadataOptions = []): MetadataInterface
     {
-        $cacheKey = $key . '.' . $locale . '.' . \serialize($metadataOptions);
-
-        if (isset($this->cache[$cacheKey])) {
-            return $this->cache[$cacheKey];
-        }
-
         $formMetadata = null;
         foreach ($this->formMetadataLoaders as $metadataLoader) {
             $formMetadata = $metadataLoader->getMetadata($key, $locale, $metadataOptions);
@@ -78,6 +67,6 @@ class FormMetadataProvider implements MetadataProviderInterface
             }
         }
 
-        return $this->cache[$cacheKey] = $formMetadata;
+        return $formMetadata;
     }
 }
