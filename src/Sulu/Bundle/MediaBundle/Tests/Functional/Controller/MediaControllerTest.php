@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
-use Doctrine\Bundle\DoctrineBundle\DataCollector\DoctrineDataCollector;
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
@@ -26,6 +25,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
+use Sulu\Bundle\MediaBundle\Tests\Functional\Traits\ProfileQuerriesTrait;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -33,6 +33,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MediaControllerTest extends SuluTestCase
 {
+    use ProfileQuerriesTrait;
+
     /**
      * @var EntityManager
      */
@@ -1445,33 +1447,6 @@ class MediaControllerTest extends SuluTestCase
         $this->client->jsonRequest('POST', '/api/media/' . $media->getId() . '?action=test');
 
         $this->assertHttpStatusCode(400, $this->client->getResponse());
-    }
-
-    private function requestPageAndGetQueries(string $method, string $url): array
-    {
-        self::ensureKernelShutdown();
-        $this->client = static::createAuthenticatedClient();
-        $this->client->enableProfiler();
-        $this->client->request($method, $url);
-        $response = $this->client->getResponse();
-
-        $profiler = $this->client->getProfile();
-        $this->assertNotFalse($profiler, 'Profiler must be enabled');
-        $this->assertNotNull($profiler);
-
-        $dbCollector = $profiler->getCollector('db');
-        $this->assertInstanceOf(DoctrineDataCollector::class, $dbCollector);
-
-        $queriesData = $dbCollector->getQueries();
-        $this->assertArrayHasKey('default', $queriesData);
-
-        /** @var list<array{sql: string}> $queries */
-        $queries = $queriesData['default'];
-
-        return [
-            'queries' => $queries,
-            'response' => $response,
-        ];
     }
 
     private function getStoragePath()

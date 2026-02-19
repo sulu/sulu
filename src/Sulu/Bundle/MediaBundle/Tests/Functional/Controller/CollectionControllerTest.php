@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
-use Doctrine\Bundle\DoctrineBundle\DataCollector\DoctrineDataCollector;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -20,6 +19,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
+use Sulu\Bundle\MediaBundle\Tests\Functional\Traits\ProfileQuerriesTrait;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -30,6 +30,8 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class CollectionControllerTest extends SuluTestCase
 {
+    use ProfileQuerriesTrait;
+
     /**
      * @var EntityManagerInterface
      */
@@ -1762,32 +1764,5 @@ class CollectionControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-    }
-
-    private function requestPageAndGetQueries(string $method, string $url): array
-    {
-        self::ensureKernelShutdown();
-        $this->client = static::createAuthenticatedClient();
-        $this->client->enableProfiler();
-        $this->client->request($method, $url);
-        $response = $this->client->getResponse();
-
-        $profiler = $this->client->getProfile();
-        $this->assertNotFalse($profiler, 'Profiler must be enabled');
-        $this->assertNotNull($profiler);
-
-        $dbCollector = $profiler->getCollector('db');
-        $this->assertInstanceOf(DoctrineDataCollector::class, $dbCollector);
-
-        $queriesData = $dbCollector->getQueries();
-        $this->assertArrayHasKey('default', $queriesData);
-
-        /** @var list<array{sql: string}> $queries */
-        $queries = $queriesData['default'];
-
-        return [
-            'queries' => $queries,
-            'response' => $response,
-        ];
     }
 }
