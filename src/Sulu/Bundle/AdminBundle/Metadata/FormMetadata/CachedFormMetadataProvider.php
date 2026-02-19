@@ -18,7 +18,7 @@ use Symfony\Contracts\Service\ResetInterface;
 /**
  * @internal this class should not be extended or initialized by any application outside of sulu
  */
-class CachedFormMetadataProvider implements MetadataProviderInterface, ResetInterface
+final class CachedFormMetadataProvider implements MetadataProviderInterface, ResetInterface
 {
     /**
      * @var array<string, MetadataInterface>
@@ -30,23 +30,17 @@ class CachedFormMetadataProvider implements MetadataProviderInterface, ResetInte
     ) {
     }
 
-    public function getMetadata(string $key, string $locale, array $metadataOptions = []): MetadataInterface
+    public function getMetadata(...$args): MetadataInterface // @phpstan-ignore missingType.parameter
     {
-        $cacheKey = $this->buildCacheKey([
-            'key' => $key,
-            'locale' => $locale,
-            'metadataOptions' => $metadataOptions,
-        ]);
+        $cacheKey = $this->buildCacheKey($args);
 
         if (isset($this->cache[$cacheKey])) {
             return $this->cache[$cacheKey];
         }
 
-        $metadata = $this->inner->getMetadata($key, $locale, $metadataOptions);
+        $metadata = $this->inner->getMetadata(...$args); // @phpstan-ignore argument.type
 
-        if ($metadata->isCacheable()) {
-            $this->cache[$cacheKey] = $metadata;
-        }
+        $this->cache[$cacheKey] = $metadata;
 
         return $metadata;
     }
@@ -57,7 +51,7 @@ class CachedFormMetadataProvider implements MetadataProviderInterface, ResetInte
     }
 
     /**
-     * @param array<string, mixed> $input
+     * @param array<int|string, mixed> $input
      */
     private function buildCacheKey(array $input): string
     {
@@ -67,7 +61,6 @@ class CachedFormMetadataProvider implements MetadataProviderInterface, ResetInte
     private function normalizeValue(mixed $value): string
     {
         if (\is_array($value)) {
-            \ksort($value);
             $parts = [];
             foreach ($value as $k => $v) {
                 $parts[] = $k . ':' . $this->normalizeValue($v);
@@ -80,9 +73,7 @@ class CachedFormMetadataProvider implements MetadataProviderInterface, ResetInte
             return \spl_object_hash($value);
         }
 
-        if (!\is_scalar($value) && null !== $value) {
-            return '';
-        }
+        \assert(\is_scalar($value) || null === $value, 'Expected a scalar value here got: ' . \get_debug_type($value));
 
         return (string) $value;
     }

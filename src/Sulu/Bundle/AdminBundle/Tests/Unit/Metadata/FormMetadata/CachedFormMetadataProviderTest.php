@@ -21,7 +21,7 @@ class CachedFormMetadataProviderTest extends TestCase
 {
     public function testGetMetadataDelegatesToInner(): void
     {
-        $metadata = $this->createCacheableMetadata();
+        $metadata = $this->createMetadata();
         $callCount = 0;
         $inner = $this->createInnerProvider(['page' => ['en' => $metadata]], $callCount);
         $cached = new CachedFormMetadataProvider($inner);
@@ -32,9 +32,9 @@ class CachedFormMetadataProviderTest extends TestCase
         $this->assertSame(1, $callCount);
     }
 
-    public function testGetMetadataCachesCacheableResult(): void
+    public function testGetMetadataCachesResult(): void
     {
-        $metadata = $this->createCacheableMetadata();
+        $metadata = $this->createMetadata();
         $callCount = 0;
         $inner = $this->createInnerProvider(['page' => ['en' => $metadata]], $callCount);
         $cached = new CachedFormMetadataProvider($inner);
@@ -47,23 +47,10 @@ class CachedFormMetadataProviderTest extends TestCase
         $this->assertSame(1, $callCount);
     }
 
-    public function testGetMetadataDoesNotCacheNonCacheableResult(): void
-    {
-        $metadata = $this->createNonCacheableMetadata();
-        $callCount = 0;
-        $inner = $this->createInnerProvider(['page' => ['en' => $metadata]], $callCount);
-        $cached = new CachedFormMetadataProvider($inner);
-
-        $cached->getMetadata('page', 'en', []);
-        $cached->getMetadata('page', 'en', []);
-
-        $this->assertSame(2, $callCount);
-    }
-
     public function testGetMetadataWithDifferentKeyProducesSeparateCacheEntries(): void
     {
-        $metadata1 = $this->createCacheableMetadata();
-        $metadata2 = $this->createCacheableMetadata();
+        $metadata1 = $this->createMetadata();
+        $metadata2 = $this->createMetadata();
         $callCount = 0;
         $inner = $this->createInnerProvider([
             'page' => ['en' => $metadata1],
@@ -81,8 +68,8 @@ class CachedFormMetadataProviderTest extends TestCase
 
     public function testGetMetadataWithDifferentLocaleProducesSeparateCacheEntries(): void
     {
-        $metadata1 = $this->createCacheableMetadata();
-        $metadata2 = $this->createCacheableMetadata();
+        $metadata1 = $this->createMetadata();
+        $metadata2 = $this->createMetadata();
         $callCount = 0;
         $inner = $this->createInnerProvider([
             'page' => ['en' => $metadata1, 'de' => $metadata2],
@@ -97,24 +84,27 @@ class CachedFormMetadataProviderTest extends TestCase
         $this->assertSame(2, $callCount);
     }
 
-    public function testGetMetadataWithReorderedOptionsHitsSameCache(): void
+    public function testGetMetadataCachesNonCacheableResult(): void
     {
-        $metadata = $this->createCacheableMetadata();
+        $metadata = new class() implements MetadataInterface {
+            public function isCacheable(): bool
+            {
+                return false;
+            }
+        };
         $callCount = 0;
         $inner = $this->createInnerProvider(['page' => ['en' => $metadata]], $callCount);
         $cached = new CachedFormMetadataProvider($inner);
 
-        $result1 = $cached->getMetadata('page', 'en', ['a' => '1', 'b' => '2']);
-        $result2 = $cached->getMetadata('page', 'en', ['b' => '2', 'a' => '1']);
+        $cached->getMetadata('page', 'en', []);
+        $cached->getMetadata('page', 'en', []);
 
-        $this->assertSame($metadata, $result1);
-        $this->assertSame($metadata, $result2);
         $this->assertSame(1, $callCount);
     }
 
     public function testResetClearsCache(): void
     {
-        $metadata = $this->createCacheableMetadata();
+        $metadata = $this->createMetadata();
         $callCount = 0;
         $inner = $this->createInnerProvider(['page' => ['en' => $metadata]], $callCount);
         $cached = new CachedFormMetadataProvider($inner);
@@ -165,22 +155,12 @@ class CachedFormMetadataProviderTest extends TestCase
         };
     }
 
-    private function createCacheableMetadata(): MetadataInterface
+    private function createMetadata(): MetadataInterface
     {
         return new class() implements MetadataInterface {
             public function isCacheable(): bool
             {
                 return true;
-            }
-        };
-    }
-
-    private function createNonCacheableMetadata(): MetadataInterface
-    {
-        return new class() implements MetadataInterface {
-            public function isCacheable(): bool
-            {
-                return false;
             }
         };
     }
