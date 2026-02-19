@@ -22,16 +22,16 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexContentEnhancer;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 
 class WebsiteArticleReindexContentEnhancerTest extends TestCase
 {
     use ProphecyTrait;
 
     /**
-     * @var ObjectProphecy<FormMetadataProvider>
+     * @var ObjectProphecy<MetadataProviderInterface>
      */
     private ObjectProphecy $formMetadataProvider;
 
@@ -39,7 +39,7 @@ class WebsiteArticleReindexContentEnhancerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
+        $this->formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
         $this->enhancer = new WebsiteArticleReindexContentEnhancer($this->formMetadataProvider->reveal());
     }
 
@@ -120,7 +120,7 @@ class WebsiteArticleReindexContentEnhancerTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('default', $formMetadata);
 
-        $this->formMetadataProvider->getMetadata('article', 'en')
+        $this->formMetadataProvider->getMetadata('article', 'en', [])
             ->willReturn($typedFormMetadata)
             ->shouldBeCalledOnce();
 
@@ -154,7 +154,7 @@ class WebsiteArticleReindexContentEnhancerTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('default', $formMetadata);
 
-        $this->formMetadataProvider->getMetadata('article', 'en')
+        $this->formMetadataProvider->getMetadata('article', 'en', [])
             ->willReturn($typedFormMetadata)
             ->shouldBeCalledOnce();
 
@@ -206,7 +206,7 @@ class WebsiteArticleReindexContentEnhancerTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('default', $formMetadata);
 
-        $this->formMetadataProvider->getMetadata('article', 'en')
+        $this->formMetadataProvider->getMetadata('article', 'en', [])
             ->willReturn($typedFormMetadata)
             ->shouldBeCalledOnce();
 
@@ -241,7 +241,7 @@ class WebsiteArticleReindexContentEnhancerTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('default', $formMetadata);
 
-        $this->formMetadataProvider->getMetadata('article', 'en')
+        $this->formMetadataProvider->getMetadata('article', 'en', [])
             ->willReturn($typedFormMetadata)
             ->shouldBeCalledOnce();
 
@@ -425,7 +425,7 @@ class WebsiteArticleReindexContentEnhancerTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('default', $formMetadata);
 
-        $this->formMetadataProvider->getMetadata('article', 'en')
+        $this->formMetadataProvider->getMetadata('article', 'en', [])
             ->willReturn($typedFormMetadata)
             ->shouldBeCalledOnce();
 
@@ -455,7 +455,7 @@ class WebsiteArticleReindexContentEnhancerTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('default', $formMetadata);
 
-        $this->formMetadataProvider->getMetadata('article', 'en')
+        $this->formMetadataProvider->getMetadata('article', 'en', [])
             ->willReturn($typedFormMetadata)
             ->shouldBeCalledOnce();
 
@@ -485,7 +485,7 @@ class WebsiteArticleReindexContentEnhancerTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('default', $formMetadata);
 
-        $this->formMetadataProvider->getMetadata('article', 'en')
+        $this->formMetadataProvider->getMetadata('article', 'en', [])
             ->willReturn($typedFormMetadata)
             ->shouldBeCalledOnce();
 
@@ -520,7 +520,7 @@ class WebsiteArticleReindexContentEnhancerTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('default', $formMetadata);
 
-        $this->formMetadataProvider->getMetadata('article', 'en')
+        $this->formMetadataProvider->getMetadata('article', 'en', [])
             ->willReturn($typedFormMetadata)
             ->shouldBeCalledOnce();
 
@@ -552,7 +552,7 @@ class WebsiteArticleReindexContentEnhancerTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('default', $formMetadata);
 
-        $this->formMetadataProvider->getMetadata('article', 'en')
+        $this->formMetadataProvider->getMetadata('article', 'en', [])
             ->willReturn($typedFormMetadata)
             ->shouldBeCalledOnce();
 
@@ -587,7 +587,7 @@ class WebsiteArticleReindexContentEnhancerTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('default', $formMetadata);
 
-        $this->formMetadataProvider->getMetadata('article', 'en')
+        $this->formMetadataProvider->getMetadata('article', 'en', [])
             ->willReturn($typedFormMetadata)
             ->shouldBeCalledOnce();
 
@@ -618,7 +618,7 @@ class WebsiteArticleReindexContentEnhancerTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('default', $formMetadata);
 
-        $this->formMetadataProvider->getMetadata('article', 'en')
+        $this->formMetadataProvider->getMetadata('article', 'en', [])
             ->willReturn($typedFormMetadata)
             ->shouldBeCalledOnce();
 
