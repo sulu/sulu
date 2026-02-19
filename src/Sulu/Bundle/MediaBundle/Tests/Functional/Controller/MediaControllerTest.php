@@ -480,6 +480,17 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(2, $response->total);
     }
 
+    public function testcGetNotFound(): void
+    {
+        $this->client->jsonRequest('GET', '/api/media/0?locale=en-gb');
+
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
+
+        $response = \json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(5015, $response->code);
+        $this->assertEquals('Media with the ID 0 was not found', $response->message);
+    }
+
     public function testCgetAdminUrl(): void
     {
         $media = $this->createMedia('photo');
@@ -1306,20 +1317,11 @@ class MediaControllerTest extends SuluTestCase
         $mediaId = $media->getId();
         $this->assertFileExists($this->getStoragePath() . '/1/photo.jpeg');
 
-        $this->requestPageAndGetQueries('DELETE', '/api/media/' . $mediaId);
-        $this->assertNotNull($this->client->getResponse()->getStatusCode());
+        ['response' => $response, 'queries' => $queries] = $this->requestPageAndGetQueries('DELETE', '/api/media/' . $mediaId);
+        $this->assertCount(26, $queries);
+        $this->assertHttpStatusCode(204, $response);
 
-        $this->client->jsonRequest(
-            'GET',
-            '/api/media/' . $mediaId . '?locale=en-gb'
-        );
-
-        $this->assertHttpStatusCode(404, $this->client->getResponse());
-
-        $response = \json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(5015, $response->code);
-        $this->assertObjectHasProperty('message', $response);
-
+        // Assert filesystem is clean
         $this->assertFalse(\file_exists($this->getStoragePath() . '/1/photo.jpeg'));
     }
 
@@ -1327,12 +1329,13 @@ class MediaControllerTest extends SuluTestCase
     {
         $media = $this->createMedia('photo');
 
+        $entityCount = $this->em->getRepository(MediaInterface::class)->count([]);
+
         $this->client->jsonRequest('DELETE', '/api/media/404');
         $this->assertHttpStatusCode(404, $this->client->getResponse());
 
-        $this->client->jsonRequest('GET', '/api/media?locale=en-gb');
-        $response = \json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(1, $response->total);
+        // Assert that the entity count is the same
+        $this->assertSame($entityCount, $this->em->getRepository(MediaInterface::class)->count([]));
     }
 
     public function testDownloadCounter(): void
@@ -1382,10 +1385,11 @@ class MediaControllerTest extends SuluTestCase
 
         $media = $this->createMedia('photo');
 
-        $this->client->jsonRequest(
+        ['response' => $response, 'queries' => $queries] = $this->requestPageAndGetQueries(
             'POST',
             '/api/media/' . $media->getId() . '?locale=en-gb&action=move&destination=' . $destCollection->getId()
         );
+        $this->assertCount(21, $queries);
 
         $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -1443,31 +1447,10 @@ class MediaControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    private function getStoragePath()
-    {
-        return $this->getContainer()->getParameter('kernel.project_dir') . '/var/uploads';
-    }
-
-    /**
-     * @return string
-     */
-    private function getImagePath()
-    {
-        return __DIR__ . '/../../Fixtures/files/photo.jpeg';
-    }
-
-    /**
-     * @return string
-     */
-    private function getFilePath()
-    {
-        return __DIR__ . '/../../Fixtures/files/small.txt';
-    }
-
     private function requestPageAndGetQueries(string $method, string $url): array
     {
         self::ensureKernelShutdown();
-        $this->client = static::createWebsiteClient();
+        $this->client = static::createAuthenticatedClient();
         $this->client->enableProfiler();
         $this->client->request($method, $url);
         $response = $this->client->getResponse();
@@ -1489,5 +1472,26 @@ class MediaControllerTest extends SuluTestCase
             'queries' => $queries,
             'response' => $response,
         ];
+    }
+
+    private function getStoragePath()
+    {
+        return $this->getContainer()->getParameter('kernel.project_dir') . '/var/uploads';
+    }
+
+    /**
+     * @return string
+     */
+    private function getImagePath()
+    {
+        return __DIR__ . '/../../Fixtures/files/photo.jpeg';
+    }
+
+    /**
+     * @return string
+     */
+    private function getFilePath()
+    {
+        return __DIR__ . '/../../Fixtures/files/small.txt';
     }
 }

@@ -13,9 +13,9 @@ namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use Doctrine\Bundle\DoctrineBundle\DataCollector\DoctrineDataCollector;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Id\AssignedGenerator;
-use Doctrine\ORM\Mapping\ClassMetadata;
+use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\Media;
@@ -25,7 +25,6 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Component\Cache\CacheInterface;
-use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManager;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -129,25 +128,9 @@ class CollectionControllerTest extends SuluTestCase
 
     protected function initOrm()
     {
-        // force id = 1
-        $metadata = $this->em->getClassMetaData(CollectionType::class);
-        $metadata->setIdGenerator(new AssignedGenerator());
-        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-
-        $this->collectionType1 = $this->createCollectionType(
-            1,
-            'collection.default',
-            'Default Collection Type',
-            'Default Collection Type'
-        );
-        $this->collectionType2 = $this->createCollectionType(
-            2,
-            SystemCollectionManagerInterface::COLLECTION_TYPE,
-            'System Collections'
-        );
-        $this->em->persist($this->collectionType1);
-        $this->em->persist($this->collectionType2);
-        $this->em->flush();
+        new LoadCollectionTypes()->load($this->em);
+        $this->collectionType1 = $this->em->getReference(CollectionType::class, 1);
+        $this->collectionType2 = $this->em->getReference(CollectionType::class, 2);
 
         $this->collection1 = $this->createCollection(
             $this->collectionType1,
@@ -161,10 +144,10 @@ class CollectionControllerTest extends SuluTestCase
     private function createCollection(
         CollectionType $collectionType,
         array $title = [],
-        ?string $parent = null,
+        ?CollectionInterface $parent = null,
         ?string $key = null,
         int $numberOfMedia = 0
-    ) {
+    ): CollectionInterface {
         // Collection
         $collection = new Collection();
 
@@ -287,16 +270,13 @@ class CollectionControllerTest extends SuluTestCase
 
     public function testGetById(): void
     {
-        $this->client->jsonRequest(
+        ['queries' => $queries, 'response' => $response] = $this->requestPageAndGetQueries(
             'GET',
-            '/api/collections/' . $this->collection1->getId() . '?' .
-            \http_build_query([
-                'locale' => 'en-gb',
-            ])
+            '/api/collections/' . $this->collection1->getId() . '?locale=en-gb'
         );
+        $this->assertCount(14, $queries);
 
-        $response = \json_decode($this->client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertHttpStatusCode(200, $response);
 
         $style = \json_decode(
             \json_encode(
@@ -308,6 +288,7 @@ class CollectionControllerTest extends SuluTestCase
             false
         );
 
+        $response = \json_decode($response->getContent());
         $this->assertEquals($style, $response->style);
         $this->assertEquals('This Description is only for testing', $response->description);
         $this->assertNotNull($response->id);
@@ -315,8 +296,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('Test Collection', $response->title);
         $this->assertNotNull($response->type->id);
-        $this->assertEquals('Default Collection Type', $response->type->name);
-        $this->assertEquals('Default Collection Type', $response->type->description);
+        $this->assertEquals('Default', $response->type->name);
         $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($response->created)));
         $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($response->changed)));
         $this->assertFalse($response->_hasPermissions);
@@ -331,17 +311,16 @@ class CollectionControllerTest extends SuluTestCase
             );
         }
 
-        $this->client->jsonRequest(
+        ['queries' => $queries, 'response' => $response] = $this->requestPageAndGetQueries(
             'GET',
-            '/api/collections?' .
-            \http_build_query([
-                'locale' => 'en-gb',
-            ])
+            '/api/collections?locale=en-gb'
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertCount(92, $queries);
 
+        $this->assertHttpStatusCode(200, $response);
+
+        $response = \json_decode($response->getContent());
         $this->assertNotEmpty($response->_embedded->collections);
 
         $this->assertCount(16, $response->_embedded->collections);
@@ -1179,8 +1158,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->em->clear();
 
         ['queries' => $queries, 'response' => $response] = $this->requestPageAndGetQueries('DELETE', '/api/collections/' . $collectionId);
-        dump(\array_map(fn ($x) => $x['sql'], $queries));
-        //dump(count($queries));
+        $this->assertCount(309, $queries);
         $this->assertHttpStatusCode(204, $response);
 
         $this->client->jsonRequest(
@@ -1220,7 +1198,8 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->em->clear();
 
-        $this->client->jsonRequest('DELETE', '/api/collections/' . $collectionId);
+        ['queries' => $queries, 'response' => $response] = $this->requestPageAndGetQueries('DELETE', '/api/collections/' . $collectionId);
+        $this->assertCount(293, $queries);
 
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(409, $response);
@@ -1360,8 +1339,10 @@ class CollectionControllerTest extends SuluTestCase
 
     public function testDeleteByIdNotExisting(): void
     {
-        $this->client->jsonRequest('DELETE', '/api/collections/404');
-        $this->assertHttpStatusCode(404, $this->client->getResponse());
+        ['queries' => $queries, 'response' => $response] = $this->requestPageAndGetQueries('DELETE', '/api/collections/404');
+        $this->assertCount(289, $queries);
+
+        $this->assertHttpStatusCode(404, $response);
 
         $this->client->jsonRequest('GET', '/api/collections?locale=en&flat=true');
         $response = \json_decode($this->client->getResponse()->getContent());
