@@ -60,7 +60,17 @@
             <argument type="tagged_iterator" tag="sulu_admin.typed_form_metadata_visitor"/>
             <argument>%sulu_core.fallback_locale%</argument>
 
-            <tag name="sulu_admin.metadata_provider" type="form" />
+            <tag name="sulu_admin.metadata_provider" type="form"/>
+        </service>
+
+        <service
+            id="sulu_admin.cached_form_metadata_provider"
+            class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\CachedFormMetadataProvider"
+            decorates="sulu_admin.form_metadata_provider"
+        >
+            <argument type="service" id=".inner"/>
+
+            <tag name="kernel.reset" method="reset"/>
         </service>
 
         <service id="sulu_admin.expression_language" class="Symfony\Component\ExpressionLanguage\ExpressionLanguage">

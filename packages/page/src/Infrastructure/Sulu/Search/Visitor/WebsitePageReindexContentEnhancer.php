@@ -16,10 +16,10 @@ namespace Sulu\Page\Infrastructure\Sulu\Search\Visitor;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 
 /**
  * @internal if you need to override this service, create a new service based on the WebsitePageReindexProviderEnhancerInterface
@@ -41,7 +41,7 @@ class WebsitePageReindexContentEnhancer implements WebsitePageReindexProviderEnh
     ];
 
     public function __construct(
-        private FormMetadataProvider $formMetadataProvider,
+        private MetadataProviderInterface $formMetadataProvider,
     ) {
     }
 
@@ -90,7 +90,7 @@ class WebsitePageReindexContentEnhancer implements WebsitePageReindexProviderEnh
     private function getTemplateFormMetadata(string $templateKey, string $locale): ?FormMetadata
     {
         /** @var TypedFormMetadata $formMetadata */
-        $formMetadata = $this->formMetadataProvider->getMetadata('page', $locale);
+        $formMetadata = $this->formMetadataProvider->getMetadata('page', $locale, []);
         /** @var array<string, FormMetadata> $forms */
         $forms = $formMetadata->getForms();
 
