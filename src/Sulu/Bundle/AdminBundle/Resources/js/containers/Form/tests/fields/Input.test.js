@@ -67,6 +67,25 @@ test('Pass headline prop correctly', () => {
     expect(inputValid.find(InputComponent).prop('headline')).toBe(true);
 });
 
+test('Pass autoFocus prop correctly', () => {
+    const schemaOptions = {
+        autofocus: {
+            name: 'autofocus',
+            value: true,
+        },
+    };
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    const inputValid = shallow(
+        <Input
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(inputValid.find(InputComponent).prop('autoFocus')).toBe(true);
+});
+
 test('Component correctly logs deprecated warning for max_characters', () => {
     const schemaOptions = {
         max_characters: {
