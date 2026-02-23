@@ -7,6 +7,11 @@
             "type": "text_line",
             "colSpan": 12,
             "options": {
+                "autofocus": {
+                    "name": "autofocus",
+                    "type": "string",
+                    "value": true
+                },
                 "headline": {
                     "name": "headline",
                     "type": "string",
