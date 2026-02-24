@@ -286,15 +286,23 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         }
 
         if ('copy_locale' === $action) {
-            $message = new CopyLocalePageMessage(
-                ['uuid' => $uuid],
-                (string) $request->query->get('src'),
-                (string) $request->query->get('dest'),
-            );
+            $srcLocale = (string) ($request->query->get('src') ?: $request->query->get('locale'));
+            $destLocales = \array_filter(\array_map('trim', \explode(',', (string) $request->query->get('dest'))));
 
-            /** @see \Sulu\Page\Application\MessageHandler\CopyLocalePageMessageHandler */
-            /** @var PageInterface|null */
-            return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+            $result = null;
+            foreach ($destLocales as $destLocale) {
+                $message = new CopyLocalePageMessage(
+                    ['uuid' => $uuid],
+                    $srcLocale,
+                    $destLocale,
+                );
+
+                /** @see \Sulu\Page\Application\MessageHandler\CopyLocalePageMessageHandler */
+                /** @var PageInterface|null */
+                $result = $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+            }
+
+            return $result;
         } elseif ('move' === $action) {
             $destinationUuid = $request->query->getString('destination');
             $message = new MovePageMessage(['uuid' => $uuid], ['uuid' => $destinationUuid], $this->getLocale($request));

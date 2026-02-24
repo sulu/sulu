@@ -525,6 +525,22 @@ class PageControllerTest extends SuluTestCase
     }
 
     #[Depends('testPost')]
+    public function testPostTriggerCopyLocaleWithLocaleFallbackAsSrc(string $id): void
+    {
+        $this->client->request('POST', '/admin/api/pages/' . $id . '?locale=en&action=copy_locale&dest=de');
+
+        $response = $this->client->getResponse();
+        $content = \json_decode((string) $response->getContent(), true);
+
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertIsArray($content);
+        $this->assertArrayHasKey('contentLocales', $content);
+        $this->assertIsArray($content['contentLocales']);
+        $this->assertContains('de', $content['contentLocales']);
+        $this->assertContains('en', $content['contentLocales']);
+    }
+
+    #[Depends('testPost')]
     #[Depends('testGet')]
     public function testPut(string $id): void
     {
