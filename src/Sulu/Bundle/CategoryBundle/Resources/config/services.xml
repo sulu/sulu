@@ -95,6 +95,7 @@
                 class="Sulu\Bundle\CategoryBundle\Infrastructure\Sulu\Search\AdminCategoryReindexProvider"
         >
             <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="tagged_iterator" tag="sulu_category.admin_category_reindex_provider_enhancer"/>
             <tag name="cmsig_seal.reindex_provider"/>
         </service>
     </services>

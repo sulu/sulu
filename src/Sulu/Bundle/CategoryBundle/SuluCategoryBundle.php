@@ -14,6 +14,7 @@ namespace Sulu\Bundle\CategoryBundle;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
+use Sulu\Bundle\CategoryBundle\Infrastructure\Sulu\Search\Visitor\AdminCategoryReindexProviderEnhancerInterface;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -35,5 +36,8 @@ final class SuluCategoryBundle extends Bundle
             ],
             $container
         );
+
+        $container->registerForAutoconfiguration(AdminCategoryReindexProviderEnhancerInterface::class)
+            ->addTag('sulu_category.admin_category_reindex_provider_enhancer');
     }
 }

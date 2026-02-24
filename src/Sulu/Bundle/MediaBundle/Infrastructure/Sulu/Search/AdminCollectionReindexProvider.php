@@ -20,6 +20,7 @@ use Doctrine\ORM\EntityRepository;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
+use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\Visitor\AdminCollectionReindexProviderEnhancerInterface;
 
 /**
  * @phpstan-type Collection array{
@@ -40,8 +41,12 @@ final class AdminCollectionReindexProvider implements ReindexProviderInterface
      */
     private EntityRepository $collectionMetaRepository;
 
+    /**
+     * @param iterable<AdminCollectionReindexProviderEnhancerInterface> $enhancers
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
+        private readonly iterable $enhancers = [],
     ) {
         $repository = $entityManager->getRepository(CollectionMeta::class);
 
@@ -59,7 +64,7 @@ final class AdminCollectionReindexProvider implements ReindexProviderInterface
 
         /** @var Collection $collection */
         foreach ($collections as $collection) {
-            yield [
+            $data = [
                 'id' => CollectionInterface::RESOURCE_KEY . '__' . ((string) $collection['collectionId']) . '__' . $collection['locale'],
                 'resourceKey' => CollectionInterface::RESOURCE_KEY,
                 'resourceId' => (string) $collection['collectionId'],
@@ -69,6 +74,12 @@ final class AdminCollectionReindexProvider implements ReindexProviderInterface
                 'locale' => $collection['locale'],
                 'securityContext' => MediaAdmin::SECURITY_CONTEXT,
             ];
+
+            foreach ($this->enhancers as $enhancer) {
+                $data = $enhancer->enhanceDocument($collection, $data);
+            }
+
+            yield $data;
         }
     }
 
@@ -115,6 +126,10 @@ final class AdminCollectionReindexProvider implements ReindexProviderInterface
             foreach ($parameters as $parameterKey => $parameterValue) {
                 $qb->setParameter($parameterKey, $parameterValue);
             }
+        }
+
+        foreach ($this->enhancers as $enhancer) {
+            $enhancer->enhanceQuery($qb);
         }
 
         /** @var iterable<Collection> */

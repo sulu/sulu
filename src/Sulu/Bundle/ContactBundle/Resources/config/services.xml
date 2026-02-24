@@ -225,6 +225,7 @@
                 class="Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\AdminAccountReindexProvider"
         >
             <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="tagged_iterator" tag="sulu_contact.admin_account_reindex_provider_enhancer"/>
             <tag name="cmsig_seal.reindex_provider"/>
         </service>
 
@@ -233,6 +234,7 @@
                 class="Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\AdminContactReindexProvider"
         >
             <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="tagged_iterator" tag="sulu_contact.admin_contact_reindex_provider_enhancer"/>
             <tag name="cmsig_seal.reindex_provider"/>
         </service>
     </services>

@@ -488,6 +488,7 @@
                 class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminMediaReindexProvider"
         >
             <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="tagged_iterator" tag="sulu_media.admin_media_reindex_provider_enhancer"/>
             <tag name="cmsig_seal.reindex_provider"/>
         </service>
 
@@ -496,6 +497,7 @@
                 class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminCollectionReindexProvider"
         >
             <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="tagged_iterator" tag="sulu_media.admin_collection_reindex_provider_enhancer"/>
             <tag name="cmsig_seal.reindex_provider"/>
         </service>
     </services>
