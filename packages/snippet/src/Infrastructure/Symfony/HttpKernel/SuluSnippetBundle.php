@@ -57,6 +57,7 @@ use Sulu\Snippet\Infrastructure\Sulu\HttpCache\EventSubscriber\SnippetCacheInval
 use Sulu\Snippet\Infrastructure\Sulu\Reference\SnippetReferenceRefresher;
 use Sulu\Snippet\Infrastructure\Sulu\Search\AdminSnippetIndexListener;
 use Sulu\Snippet\Infrastructure\Sulu\Search\AdminSnippetReindexProvider;
+use Sulu\Snippet\Infrastructure\Sulu\Search\Visitor\AdminSnippetReindexProviderEnhancerInterface;
 use Sulu\Snippet\Infrastructure\Sulu\Trash\SnippetTrashItemHandler;
 use Sulu\Snippet\Infrastructure\Symfony\CompilerPass\SnippetAreaCompilerPass;
 use Sulu\Snippet\Infrastructure\Symfony\Normalizer\SnippetAreaNormalizer;
@@ -427,10 +428,14 @@ final class SuluSnippetBundle extends AbstractBundle
             ->tag('kernel.event_listener', ['event' => SnippetTranslationAddedEvent::class, 'method' => 'onSnippetChanged'])
             ->tag('kernel.event_listener', ['event' => SnippetTranslationRemovedEvent::class, 'method' => 'onSnippetChanged']);
 
+        $builder->registerForAutoconfiguration(AdminSnippetReindexProviderEnhancerInterface::class)
+            ->addTag('sulu_snippet.admin_snippet_reindex_provider_enhancer');
+
         $services->set('sulu_snippet.admin_snippet_reindex_provider')
             ->class(AdminSnippetReindexProvider::class)
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
+                tagged_iterator('sulu_snippet.admin_snippet_reindex_provider_enhancer'),
             ])
             ->tag('cmsig_seal.reindex_provider');
     }

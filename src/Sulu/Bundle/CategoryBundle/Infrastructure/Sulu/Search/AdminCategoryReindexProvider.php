@@ -20,6 +20,7 @@ use Doctrine\ORM\EntityRepository;
 use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
+use Sulu\Bundle\CategoryBundle\Infrastructure\Sulu\Search\Visitor\AdminCategoryReindexProviderEnhancerInterface;
 
 /**
  * @phpstan-type Category array{
@@ -40,8 +41,12 @@ final class AdminCategoryReindexProvider implements ReindexProviderInterface
      */
     private EntityRepository $categoryTranslationRepository;
 
+    /**
+     * @param iterable<AdminCategoryReindexProviderEnhancerInterface> $enhancers
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
+        private readonly iterable $enhancers = [],
     ) {
         $translationRepository = $entityManager->getRepository(CategoryTranslationInterface::class);
 
@@ -60,7 +65,7 @@ final class AdminCategoryReindexProvider implements ReindexProviderInterface
 
         /** @var Category $category */
         foreach ($categories as $category) {
-            yield [
+            $data = [
                 'id' => CategoryInterface::RESOURCE_KEY . '__' . ((string) $category['id']) . '__' . $category['locale'],
                 'resourceKey' => CategoryInterface::RESOURCE_KEY,
                 'resourceId' => (string) $category['id'],
@@ -70,6 +75,12 @@ final class AdminCategoryReindexProvider implements ReindexProviderInterface
                 'locale' => $category['locale'],
                 'securityContext' => CategoryAdmin::SECURITY_CONTEXT,
             ];
+
+            foreach ($this->enhancers as $enhancer) {
+                $data = $enhancer->enhanceDocument($category, $data);
+            }
+
+            yield $data;
         }
     }
 
@@ -115,6 +126,10 @@ final class AdminCategoryReindexProvider implements ReindexProviderInterface
             foreach ($parameters as $parameterKey => $parameterValue) {
                 $qb->setParameter($parameterKey, $parameterValue);
             }
+        }
+
+        foreach ($this->enhancers as $enhancer) {
+            $enhancer->enhanceQuery($qb);
         }
 
         /** @var iterable<Category> */

@@ -19,6 +19,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\Visitor\AdminAccountReindexProviderEnhancerInterface;
 
 /**
  * @phpstan-type Account array{
@@ -39,8 +40,12 @@ final class AdminAccountReindexProvider implements ReindexProviderInterface
      */
     private EntityRepository $accountRepository;
 
+    /**
+     * @param iterable<AdminAccountReindexProviderEnhancerInterface> $enhancers
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
+        private readonly iterable $enhancers = [],
     ) {
         $repository = $entityManager->getRepository(AccountInterface::class);
 
@@ -58,7 +63,7 @@ final class AdminAccountReindexProvider implements ReindexProviderInterface
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            yield [
+            $data = [
                 'id' => AccountInterface::RESOURCE_KEY . '__' . ((string) $account['id']),
                 'resourceKey' => AccountInterface::RESOURCE_KEY,
                 'resourceId' => (string) $account['id'],
@@ -68,6 +73,12 @@ final class AdminAccountReindexProvider implements ReindexProviderInterface
                 'title' => $account['name'],
                 'securityContext' => ContactAdmin::ACCOUNT_SECURITY_CONTEXT,
             ];
+
+            foreach ($this->enhancers as $enhancer) {
+                $data = $enhancer->enhanceDocument($account, $data);
+            }
+
+            yield $data;
         }
     }
 
@@ -88,6 +99,10 @@ final class AdminAccountReindexProvider implements ReindexProviderInterface
         if (0 < \count($identifiers)) {
             $qb->where('account.id IN (:ids)')
                 ->setParameter('ids', \array_map(fn ($identifier) => (int) \str_replace(AccountInterface::RESOURCE_KEY . '__', '', $identifier), $identifiers));
+        }
+
+        foreach ($this->enhancers as $enhancer) {
+            $enhancer->enhanceQuery($qb);
         }
 
         /** @var iterable<Account> */

@@ -21,6 +21,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
+use Sulu\Page\Infrastructure\Sulu\Search\Visitor\AdminPageReindexProviderEnhancerInterface;
 
 /**
  * @phpstan-type Page array{
@@ -42,12 +43,14 @@ final class AdminPageReindexProvider implements ReindexProviderInterface
      */
     private EntityRepository $dimensionContentRepository;
 
+    /**
+     * @param iterable<AdminPageReindexProviderEnhancerInterface> $enhancers
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
+        private readonly iterable $enhancers = [],
     ) {
-        $dimensionContentRepository = $entityManager->getRepository(PageDimensionContentInterface::class);
-
-        $this->dimensionContentRepository = $dimensionContentRepository;
+        $this->dimensionContentRepository = $entityManager->getRepository(PageDimensionContentInterface::class);
     }
 
     public function total(): ?int
@@ -62,7 +65,7 @@ final class AdminPageReindexProvider implements ReindexProviderInterface
 
         /** @var Page $page */
         foreach ($pages as $page) {
-            yield [
+            $data = [
                 'id' => PageInterface::RESOURCE_KEY . '__' . ((string) $page['pageId']) . '__' . $page['locale'],
                 'resourceKey' => PageInterface::RESOURCE_KEY,
                 'resourceId' => (string) $page['pageId'],
@@ -75,6 +78,12 @@ final class AdminPageReindexProvider implements ReindexProviderInterface
                 ],
                 'securityContext' => PageAdmin::SECURITY_CONTEXT_PREFIX . $page['webspaceKey'],
             ];
+
+            foreach ($this->enhancers as $enhancer) {
+                $data = $enhancer->enhanceDocument($page, $data);
+            }
+
+            yield $data;
         }
     }
 
@@ -129,6 +138,10 @@ final class AdminPageReindexProvider implements ReindexProviderInterface
 
         foreach ($parameters as $parameterKey => $parameterValue) {
             $qb->setParameter($parameterKey, $parameterValue);
+        }
+
+        foreach ($this->enhancers as $enhancer) {
+            $enhancer->enhanceQuery($qb);
         }
 
         /** @var iterable<Page> */

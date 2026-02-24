@@ -13,6 +13,8 @@ namespace Sulu\Bundle\ContactBundle;
 
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
+use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\Visitor\AdminAccountReindexProviderEnhancerInterface;
+use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\Visitor\AdminContactReindexProviderEnhancerInterface;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -35,5 +37,11 @@ final class SuluContactBundle extends Bundle
             ],
             $container
         );
+
+        $container->registerForAutoconfiguration(AdminContactReindexProviderEnhancerInterface::class)
+            ->addTag('sulu_contact.admin_contact_reindex_provider_enhancer');
+
+        $container->registerForAutoconfiguration(AdminAccountReindexProviderEnhancerInterface::class)
+            ->addTag('sulu_contact.admin_account_reindex_provider_enhancer');
     }
 }

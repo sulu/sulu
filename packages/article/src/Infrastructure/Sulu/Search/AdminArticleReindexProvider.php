@@ -20,6 +20,7 @@ use Doctrine\ORM\EntityRepository;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
+use Sulu\Article\Infrastructure\Sulu\Search\Visitor\AdminArticleReindexProviderEnhancerInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormGroup;
 use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -44,16 +45,15 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
      */
     private EntityRepository $dimensionContentRepository;
 
-    private GroupProviderInterface $groupProvider;
-
+    /**
+     * @param iterable<AdminArticleReindexProviderEnhancerInterface> $enhancers
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
-        GroupProviderInterface $groupProvider,
+        private readonly GroupProviderInterface $groupProvider,
+        private readonly iterable $enhancers = [],
     ) {
-        $dimensionContentRepository = $entityManager->getRepository(ArticleDimensionContentInterface::class);
-
-        $this->dimensionContentRepository = $dimensionContentRepository;
-        $this->groupProvider = $groupProvider;
+        $this->dimensionContentRepository = $entityManager->getRepository(ArticleDimensionContentInterface::class);
     }
 
     public function total(): ?int
@@ -79,7 +79,7 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
                 }
             }
 
-            yield [
+            $data = [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . ((string) $article['articleId']) . '__' . $article['locale'],
                 'resourceKey' => ArticleInterface::RESOURCE_KEY,
                 'resourceId' => (string) $article['articleId'],
@@ -92,6 +92,12 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
                 ],
                 'securityContext' => ArticleAdmin::getArticleSecurityContext($groupIdentifier ?? 'default'),
             ];
+
+            foreach ($this->enhancers as $enhancer) {
+                $data = $enhancer->enhanceDocument($article, $data);
+            }
+
+            yield $data;
         }
     }
 
@@ -145,6 +151,10 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
 
         foreach ($parameters as $parameterKey => $parameterValue) {
             $qb->setParameter($parameterKey, $parameterValue);
+        }
+
+        foreach ($this->enhancers as $enhancer) {
+            $enhancer->enhanceQuery($qb);
         }
 
         /** @var iterable<Article> */

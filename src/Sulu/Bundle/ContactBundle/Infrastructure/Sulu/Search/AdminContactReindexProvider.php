@@ -19,6 +19,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
+use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\Visitor\AdminContactReindexProviderEnhancerInterface;
 
 /**
  * @phpstan-type Contact array{
@@ -40,8 +41,12 @@ final class AdminContactReindexProvider implements ReindexProviderInterface
      */
     private EntityRepository $contactRepository;
 
+    /**
+     * @param iterable<AdminContactReindexProviderEnhancerInterface> $enhancers
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
+        private readonly iterable $enhancers = [],
     ) {
         $repository = $entityManager->getRepository(ContactInterface::class);
 
@@ -59,7 +64,7 @@ final class AdminContactReindexProvider implements ReindexProviderInterface
 
         /** @var Contact $contact */
         foreach ($contacts as $contact) {
-            yield [
+            $data = [
                 'id' => ContactInterface::RESOURCE_KEY . '__' . ((string) $contact['id']),
                 'resourceKey' => ContactInterface::RESOURCE_KEY,
                 'resourceId' => (string) $contact['id'],
@@ -69,6 +74,12 @@ final class AdminContactReindexProvider implements ReindexProviderInterface
                 'title' => $contact['firstName'] . ' ' . $contact['lastName'],
                 'securityContext' => ContactAdmin::CONTACT_SECURITY_CONTEXT,
             ];
+
+            foreach ($this->enhancers as $enhancer) {
+                $data = $enhancer->enhanceDocument($contact, $data);
+            }
+
+            yield $data;
         }
     }
 
@@ -90,6 +101,10 @@ final class AdminContactReindexProvider implements ReindexProviderInterface
         if (0 < \count($identifiers)) {
             $qb->where('contact.id IN (:ids)')
                 ->setParameter('ids', \array_map(fn ($identifier) => (int) \str_replace(ContactInterface::RESOURCE_KEY . '__', '', $identifier), $identifiers));
+        }
+
+        foreach ($this->enhancers as $enhancer) {
+            $enhancer->enhanceQuery($qb);
         }
 
         /** @var iterable<Contact> */

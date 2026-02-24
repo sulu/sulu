@@ -19,6 +19,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
+use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\Visitor\AdminMediaReindexProviderEnhancerInterface;
 
 /**
  * @phpstan-type Media array{
@@ -40,8 +41,12 @@ final class AdminMediaReindexProvider implements ReindexProviderInterface
      */
     private EntityRepository $mediaRepository;
 
+    /**
+     * @param iterable<AdminMediaReindexProviderEnhancerInterface> $enhancers
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
+        private readonly iterable $enhancers = [],
     ) {
         $repository = $entityManager->getRepository(MediaInterface::class);
 
@@ -60,7 +65,7 @@ final class AdminMediaReindexProvider implements ReindexProviderInterface
 
         /** @var Media $media */
         foreach ($medias as $media) {
-            yield [
+            $data = [
                 'id' => MediaInterface::RESOURCE_KEY . '__' . ((string) $media['id']) . '__' . $media['locale'],
                 'resourceKey' => MediaInterface::RESOURCE_KEY,
                 'resourceId' => (string) $media['id'],
@@ -71,6 +76,12 @@ final class AdminMediaReindexProvider implements ReindexProviderInterface
                 'locale' => $media['locale'],
                 'securityContext' => MediaAdmin::SECURITY_CONTEXT,
             ];
+
+            foreach ($this->enhancers as $enhancer) {
+                $data = $enhancer->enhanceDocument($media, $data);
+            }
+
+            yield $data;
         }
     }
 
@@ -121,6 +132,10 @@ final class AdminMediaReindexProvider implements ReindexProviderInterface
             foreach ($parameters as $parameterKey => $parameterValue) {
                 $qb->setParameter($parameterKey, $parameterValue);
             }
+        }
+
+        foreach ($this->enhancers as $enhancer) {
+            $enhancer->enhanceQuery($qb);
         }
 
         /** @var iterable<Media> */
