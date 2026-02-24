@@ -26,11 +26,11 @@ jobs:
             fail-fast: false
             matrix:
                 include:
-                    - node-version: '18'
+                    - node-version: '20'
                       styleguide: false
                       npm-version: '8'
-                    - node-version: '20'
-                      npm-version: '10'
+                    - node-version: '24'
+                      npm-version: '11'
                       styleguide: true
 
         env:
@@ -99,7 +99,7 @@ jobs:
             - name: Install and configure Node
               uses: actions/setup-node@v4
               with:
-                  node-version: '20'
+                  node-version: '24'
 
             - name: Assert error when using yarn
               run: tests/js/check-yarn-warning.sh
