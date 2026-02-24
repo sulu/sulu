@@ -1,21 +1,21 @@
 // @flow
 import React from 'react';
 import log from 'loglevel';
-import {Alignment as AlignmentPlugin} from '@ckeditor/ckeditor5-alignment/src/alignment';
-import {Bold as BoldPlugin} from '@ckeditor/ckeditor5-basic-styles/src/bold';
+import {Alignment} from '@ckeditor/ckeditor5-alignment/src/alignment';
+import {Bold} from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import {ClassicEditor} from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
-import {Essentials as EssentialsPlugin} from '@ckeditor/ckeditor5-essentials/src/essentials';
-import {Heading as HeadingPlugin} from '@ckeditor/ckeditor5-heading/src/heading';
-import {Italic as ItalicPlugin} from '@ckeditor/ckeditor5-basic-styles/src/italic';
-import {List as ListPlugin} from '@ckeditor/ckeditor5-list/src/list';
-import {Paragraph as ParagraphPlugin} from '@ckeditor/ckeditor5-paragraph/src/paragraph';
-import {Strikethrough as StrikethroughPlugin} from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
-import {Underline as UnderlinePlugin} from '@ckeditor/ckeditor5-basic-styles/src/underline';
-import {Subscript as SubscriptPlugin} from '@ckeditor/ckeditor5-basic-styles/src/subscript';
-import {Superscript as SuperscriptPlugin} from '@ckeditor/ckeditor5-basic-styles/src/superscript';
-import {Code as CodePlugin} from '@ckeditor/ckeditor5-basic-styles/src/code';
-import {Table as TablePlugin} from '@ckeditor/ckeditor5-table/src/table';
-import {TableToolbar as TableToolbarPlugin} from '@ckeditor/ckeditor5-table/src/tabletoolbar';
+import {Essentials} from '@ckeditor/ckeditor5-essentials/src/essentials';
+import {Heading} from '@ckeditor/ckeditor5-heading/src/heading';
+import {Italic} from '@ckeditor/ckeditor5-basic-styles/src/italic';
+import {List} from '@ckeditor/ckeditor5-list/src/list';
+import {Paragraph} from '@ckeditor/ckeditor5-paragraph/src/paragraph';
+import {Strikethrough} from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
+import {Underline} from '@ckeditor/ckeditor5-basic-styles/src/underline';
+import {Subscript} from '@ckeditor/ckeditor5-basic-styles/src/subscript';
+import {Superscript} from '@ckeditor/ckeditor5-basic-styles/src/superscript';
+import {Code} from '@ckeditor/ckeditor5-basic-styles/src/code';
+import {Table} from '@ckeditor/ckeditor5-table/src/table';
+import {TableToolbar} from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import {translate} from '../../utils/Translator';
 import {addPTags, removePTags} from './utils';
 import ExternalLinkPlugin from './plugins/ExternalLinkPlugin';
@@ -194,22 +194,22 @@ export default class CKEditor5 extends React.Component<Props> {
         ClassicEditor
             .create(this.containerRef, {
                 plugins: [
-                    AlignmentPlugin,
-                    BoldPlugin,
-                    EssentialsPlugin,
+                    Alignment,
+                    Bold,
+                    Essentials,
                     ExternalLinkPlugin,
-                    HeadingPlugin,
+                    Heading,
                     InternalLinkPlugin,
-                    ItalicPlugin,
-                    ListPlugin,
-                    ParagraphPlugin,
-                    StrikethroughPlugin,
-                    UnderlinePlugin,
-                    SubscriptPlugin,
-                    SuperscriptPlugin,
-                    CodePlugin,
-                    TablePlugin,
-                    TableToolbarPlugin,
+                    Italic,
+                    List,
+                    Paragraph,
+                    Strikethrough,
+                    Underline,
+                    Subscript,
+                    Superscript,
+                    Code,
+                    Table,
+                    TableToolbar,
                     ...pluginRegistry.plugins,
                 ],
                 ...configRegistry.configs.reduce((previousConfig, config) => {
