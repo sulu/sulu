@@ -534,6 +534,8 @@ class PageControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $response);
         $this->assertIsArray($content);
+        $this->assertArrayHasKey('contentLocales', $content);
+        $this->assertIsArray($content['contentLocales']);
         $this->assertContains('de', $content['contentLocales']);
         $this->assertContains('en', $content['contentLocales']);
     }
