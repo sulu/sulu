@@ -64,7 +64,7 @@ exports[`The component should render with initial selection 1`] = `
   <div
     class="rectangle hasBackdrop"
     role="button"
-    style="left: 100px; top: 66.66666666666667px; width: 500px; height: 266.6666666666667px;"
+    style="left: 100px; top: 66.66666666666667px; width: 500px; height: 266.66666666666663px;"
   >
     <div
       class="backdrop"

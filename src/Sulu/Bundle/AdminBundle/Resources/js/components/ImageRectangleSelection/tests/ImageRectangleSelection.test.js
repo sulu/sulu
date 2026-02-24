@@ -164,6 +164,39 @@ test('The component should not scale the value to exceed the natural image width
     expect(changeSpy).toBeCalledWith({width: 4896, height: 1769.1056910569105, top: 0, left: 0});
 });
 
+test('The component should keep converted bottom edge inside natural image bounds', () => {
+    const changeSpy = jest.fn();
+
+    const view = mount(
+        <ImageRectangleSelection
+            containerHeight={200}
+            containerWidth={200}
+            image="//:0"
+            onChange={changeSpy}
+            value={undefined}
+        />
+    );
+
+    const onImageLoad = view.instance().image.onload;
+    view.instance().image = {
+        naturalWidth: 253,
+        naturalHeight: 200,
+    };
+    onImageLoad();
+    view.update();
+
+    // Simulate a measured selection where the bottom edge is slightly below the actual scaled image.
+    view.find('RectangleSelectionComponent').prop('onChange')({width: 200, height: 100, top: 59, left: 0});
+
+    expect(changeSpy).toBeCalledWith(expect.objectContaining({
+        left: 0,
+        width: 253,
+    }));
+
+    const convertedSelection = changeSpy.mock.calls[changeSpy.mock.calls.length - 1][0];
+    expect(convertedSelection.top + convertedSelection.height).toBeLessThanOrEqual(200);
+});
+
 test.each([
     [300, 600, 360, 640, 100, 200],
     [200, 200, 400, 480, 50, 50],

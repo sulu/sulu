@@ -295,12 +295,16 @@ class ImagineImageConverter implements ImageConverterInterface
     private function getCropParameters(ImageInterface $image, $formatOptions, array $format)
     {
         if (isset($formatOptions)) {
-            $parameters = [
+            $parameters = $this->normalizeCropParameters($image, [
                 'x' => $formatOptions->getCropX(),
                 'y' => $formatOptions->getCropY(),
                 'width' => $formatOptions->getCropWidth(),
                 'height' => $formatOptions->getCropHeight(),
-            ];
+            ]);
+
+            if (!isset($parameters)) {
+                return null;
+            }
 
             if ($this->cropper->isValid(
                 $image,
@@ -315,6 +319,40 @@ class ImagineImageConverter implements ImageConverterInterface
         }
 
         return null;
+    }
+
+    /**
+     * @param array{x: int, y: int, width: int, height: int} $parameters
+     *
+     * @return ?array{x: int, y: int, width: int, height: int}
+     */
+    private function normalizeCropParameters(ImageInterface $image, array $parameters): ?array
+    {
+        $imageWidth = $image->getSize()->getWidth();
+        $imageHeight = $image->getSize()->getHeight();
+
+        $x = \max(0, $parameters['x']);
+        $y = \max(0, $parameters['y']);
+        $width = \max(0, $parameters['width']);
+        $height = \max(0, $parameters['height']);
+
+        if ($x >= $imageWidth || $y >= $imageHeight || 0 === $width || 0 === $height) {
+            return null;
+        }
+
+        $width = \min($width, $imageWidth - $x);
+        $height = \min($height, $imageHeight - $y);
+
+        if (0 === $width || 0 === $height) {
+            return null;
+        }
+
+        return [
+            'x' => $x,
+            'y' => $y,
+            'width' => $width,
+            'height' => $height,
+        ];
     }
 
     /**
