@@ -22,7 +22,7 @@ bin/adminconsole sulu:admin:update-build
 
 If you have any custom CKEditor plugins, you might need to adjust them to be compatible with CKEditor 47.
 
-Keep in mind that CKEditor also requires atleast `Node 20` to create a custom admin build.
+Keep in mind that CKEditor also requires at least `Node 20` to create a custom admin build.
 
 ### Swiftmailer incompatibility can appear
 
