@@ -39,6 +39,7 @@
             <argument type="service" id="sulu_document_manager.event_dispatcher" />
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument>%sulu_document_manager.mapping%</argument>
+            <argument type="service" id="sulu_core.webspace.webspace_manager" />
 
             <tag name="console.command" />
         </service>

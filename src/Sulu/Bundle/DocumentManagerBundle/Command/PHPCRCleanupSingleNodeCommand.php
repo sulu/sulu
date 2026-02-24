@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Bundle\DocumentManagerBundle\Command;
 
 use PHPCR\NodeInterface;
+use PHPCR\PathNotFoundException;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\HttpCacheBundle\EventSubscriber\InvalidationSubscriber;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
@@ -25,6 +26,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -40,7 +42,7 @@ use Webmozart\Assert\Assert;
 /**
  * @internal
  */
-#[AsCommand(name: 'sulu:document:phpcr-cleanup-single-node', description: 'Cleanup a single PHPCR node and remove unused properties.')]
+#[AsCommand(name: 'sulu:document:phpcr-cleanup-single-node', description: 'Cleanup PHPCR node(s) and remove unused properties.')]
 class PHPCRCleanupSingleNodeCommand extends Command
 {
     public const IGNORED = 101;
@@ -82,6 +84,7 @@ class PHPCRCleanupSingleNodeCommand extends Command
         private EventDispatcherInterface $documentManagerEventDispatcher,
         private DocumentManagerInterface $documentManager,
         array $mapping,
+        private WebspaceManagerInterface $webspaceManager,
     ) {
         parent::__construct();
 
@@ -95,7 +98,7 @@ class PHPCRCleanupSingleNodeCommand extends Command
 
     protected function configure(): void
     {
-        $this->addArgument('node', InputArgument::REQUIRED, 'Node identifier to cleanup.');
+        $this->addArgument('node', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Node identifier(s) to cleanup.');
         $this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Do not make any changes to the repository.');
         $this->addOption('debug', null, InputOption::VALUE_NONE, 'Write debug information to a file.');
     }
@@ -108,28 +111,138 @@ class PHPCRCleanupSingleNodeCommand extends Command
         }
 
         $io = new SymfonyStyle($input, $output);
-
         $dryRun = $input->getOption('dry-run');
-        $uuid = $input->getArgument('node');
+        $uuids = $input->getArgument('node');
 
+        $totalStats = [
+            'nodesProcessed' => 0,
+            'nodesIgnored' => 0,
+            'nodesErrored' => 0,
+            'documents' => 0,
+            'properties' => 0,
+            'removedProperties' => 0,
+            'removedStaleProperties' => 0,
+        ];
+
+        foreach ($uuids as $uuid) {
+            try {
+                $nodeStats = $this->processNode($uuid, $dryRun);
+
+                if (null === $nodeStats) {
+                    ++$totalStats['nodesIgnored'];
+
+                    continue;
+                }
+
+                ++$totalStats['nodesProcessed'];
+                $totalStats['documents'] += $nodeStats['documents'];
+                $totalStats['properties'] += $nodeStats['properties'];
+                $totalStats['removedProperties'] += $nodeStats['removedProperties'];
+                $totalStats['removedStaleProperties'] += $nodeStats['removedStaleProperties'];
+            } catch (\Exception $e) {
+                ++$totalStats['nodesErrored'];
+                \fwrite(\STDERR, (string) $e);
+                $this->session->refresh(false);
+                $this->liveSession->refresh(false);
+            }
+
+            $this->documentManager->clear();
+        }
+
+        $io->listing([
+            'Nodes processed: ' . $totalStats['nodesProcessed'],
+            'Nodes ignored: ' . $totalStats['nodesIgnored'],
+            'Nodes errored: ' . $totalStats['nodesErrored'],
+            'Documents: ' . $totalStats['documents'],
+            'Removed stale locale properties: ' . $totalStats['removedStaleProperties'],
+            'Removed properties: ' . $totalStats['removedProperties'],
+            'Total properties: ' . $totalStats['properties'],
+        ]);
+
+        if ($totalStats['nodesProcessed'] > 0) {
+            return self::SUCCESS;
+        }
+
+        if ($totalStats['nodesErrored'] > 0) {
+            return self::FAILURE;
+        }
+
+        return self::IGNORED;
+    }
+
+    /**
+     * @return array{documents: int, properties: int, removedProperties: int, removedStaleProperties: int}|null
+     */
+    private function processNode(string $uuid, bool $dryRun): ?array
+    {
         $stats = [
             'documents' => 0,
             'properties' => 0,
             'removedProperties' => 0,
+            'removedStaleProperties' => 0,
         ];
 
         $node = $this->session->getNodeByIdentifier($uuid);
         $alias = $this->getAliasForNode($node);
         if (null === $alias || !$this->structureMetaDataFactory->hasStructuresFor($alias)) {
-            return self::IGNORED;
+            return null;
         }
 
-        $locales = $this->getLocales($node);
-        if (0 === \count($locales)) {
-            return self::IGNORED;
+        $nodeLocales = $this->getLocales($node);
+        if (0 === \count($nodeLocales)) {
+            return null;
         }
 
-        foreach ($locales as $locale) {
+        $validLocales = $this->getValidLocales($node);
+        $staleLocales = \array_diff($nodeLocales, $validLocales);
+        $activeLocales = \array_intersect($nodeLocales, $validLocales);
+
+        $defaultSessionModified = false;
+        $liveSessionModified = false;
+
+        if ([] !== $staleLocales) {
+            $this->logger->writeln(\sprintf(
+                "# Removing stale locales [%s] from node \"%s\"\n",
+                \implode(', ', $staleLocales),
+                $node->getPath(),
+            ));
+
+            $stats['removedStaleProperties'] += $this->removeStaleLocaleProperties($node, $staleLocales, $dryRun);
+            $defaultSessionModified = true;
+
+            try {
+                $liveNode = $this->liveSession->getNode($node->getPath());
+                $stats['removedStaleProperties'] += $this->removeStaleLocaleProperties($liveNode, $staleLocales, $dryRun);
+                $liveSessionModified = true;
+            } catch (PathNotFoundException $e) {
+                // Node doesn't exist in live session
+            }
+        }
+
+        $cleanedShadows = $this->cleanInvalidShadowReferences($node, $activeLocales, $dryRun);
+        if ($cleanedShadows > 0) {
+            $defaultSessionModified = true;
+
+            try {
+                $liveNode = $this->liveSession->getNode($node->getPath());
+                $this->cleanInvalidShadowReferences($liveNode, $activeLocales, $dryRun);
+                $liveSessionModified = true;
+            } catch (PathNotFoundException $e) {
+                // Node doesn't exist in live session
+            }
+        }
+
+        // Only save now if there are no active locales to process (the per-locale loop saves after each locale)
+        if (!$dryRun && [] === $activeLocales) {
+            if ($defaultSessionModified) {
+                $this->session->save();
+            }
+            if ($liveSessionModified) {
+                $this->liveSession->save();
+            }
+        }
+
+        foreach ($activeLocales as $locale) {
             ++$stats['documents'];
 
             $document = $this->documentManager->find($uuid, $locale);
@@ -139,26 +252,21 @@ class PHPCRCleanupSingleNodeCommand extends Command
                 $workflowStage = $document->getWorkflowStage();
             }
 
-            try {
-                Assert::isInstanceOf($document, UuidBehavior::class);
+            Assert::isInstanceOf($document, UuidBehavior::class);
 
-                $node = $this->session->getNodeByIdentifier($document->getUuid());
-                $defaultCleanupNode = new CleanupNode(clone $node);
-                $this->persist($document, $defaultCleanupNode, $locale);
+            $node = $this->session->getNodeByIdentifier($document->getUuid());
+            $defaultCleanupNode = new CleanupNode(clone $node);
+            $this->persist($document, $defaultCleanupNode, $locale);
 
-                $wasPublished = WorkflowStage::PUBLISHED === $workflowStage;
-                if ($wasPublished) {
-                    $liveNode = $this->liveSession->getNodeByIdentifier($document->getUuid());
-                    $liveCleanupNode = new CleanupNode(clone $liveNode);
-                    $this->publish($document, $liveCleanupNode, $locale);
-                }
-
-                $this->documentManager->clear();
-            } catch (\Exception $e) {
-                \fwrite(\STDERR, (string) $e);
-
-                return self::INVALID;
+            $wasPublished = WorkflowStage::PUBLISHED === $workflowStage;
+            $liveCleanupNode = null;
+            if ($wasPublished) {
+                $liveNode = $this->liveSession->getNodeByIdentifier($document->getUuid());
+                $liveCleanupNode = new CleanupNode(clone $liveNode);
+                $this->publish($document, $liveCleanupNode, $locale);
             }
+
+            $this->documentManager->clear();
 
             $writtenProperties = $defaultCleanupNode->getWrittenPropertyKeys();
             foreach ($this->cleanupNode($node, $locale, $writtenProperties, $dryRun) as $result) {
@@ -184,18 +292,7 @@ class PHPCRCleanupSingleNodeCommand extends Command
             }
         }
 
-        $io->success(\sprintf(
-            'Cleaned up node "%s"',
-            $node->getPath(),
-        ));
-
-        $io->listing([
-            'Documents: ' . $stats['documents'],
-            'Removed properties: ' . $stats['removedProperties'],
-            'Total properties: ' . $stats['properties'],
-        ]);
-
-        return self::SUCCESS;
+        return $stats;
     }
 
     private function persist(object $document, CleanupNode $cleanupNode, string $locale): void
@@ -267,6 +364,114 @@ class PHPCRCleanupSingleNodeCommand extends Command
         $this->optionsResolvers[$eventName] = $resolver;
 
         return $resolver;
+    }
+
+    /**
+     * Determines which locales are valid for a given node based on webspace configuration.
+     *
+     * @return string[]
+     */
+    public function getValidLocales(NodeInterface $node): array
+    {
+        $path = $node->getPath();
+        $segments = \explode('/', \trim($path, '/'));
+
+        if (\count($segments) < 2) {
+            return [];
+        }
+
+        $key = $segments[1]; // segment after 'cmf': webspace key, 'snippets', or 'articles'
+
+        if ('snippets' === $key || 'articles' === $key) {
+            return $this->webspaceManager->getAllLocales();
+        }
+
+        $localesByWebspace = $this->webspaceManager->getAllLocalesByWebspaces();
+
+        if (!isset($localesByWebspace[$key])) {
+            return [];
+        }
+
+        return \array_keys($localesByWebspace[$key]);
+    }
+
+    /**
+     * Removes all localized properties for the given stale locales from a node.
+     *
+     * @param string[] $staleLocales
+     *
+     * @return int Number of properties removed (or that would be removed in dry-run)
+     */
+    public function removeStaleLocaleProperties(NodeInterface $node, array $staleLocales, bool $dryRun): int
+    {
+        if ([] === $staleLocales) {
+            return 0;
+        }
+
+        $removedCount = 0;
+
+        foreach ($node->getProperties() as $property) {
+            foreach ($staleLocales as $staleLocale) {
+                if (\str_starts_with($property->getName(), $this->languagePrefix . ':' . $staleLocale . '-')) {
+                    ++$removedCount;
+                    $this->logger->writeln(\sprintf('  Removing stale property: %s', $property->getName()));
+
+                    if (!$dryRun) {
+                        $property->remove();
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        return $removedCount;
+    }
+
+    /**
+     * Resets shadow locale properties where the shadow base locale no longer exists.
+     *
+     * @param string[] $validLocales
+     *
+     * @return int Number of shadow references cleaned
+     */
+    public function cleanInvalidShadowReferences(NodeInterface $node, array $validLocales, bool $dryRun): int
+    {
+        $cleaned = 0;
+
+        foreach ($validLocales as $locale) {
+            $shadowOnKey = $this->languagePrefix . ':' . $locale . '-shadow-on';
+            $shadowBaseKey = $this->languagePrefix . ':' . $locale . '-shadow-base';
+
+            if (!$node->hasProperty($shadowOnKey) || !$node->hasProperty($shadowBaseKey)) {
+                continue;
+            }
+
+            $shadowOn = $node->getProperty($shadowOnKey)->getValue();
+            if (!$shadowOn) {
+                continue;
+            }
+
+            $shadowBase = $node->getProperty($shadowBaseKey)->getValue();
+            if (\in_array($shadowBase, $validLocales, true)) {
+                continue;
+            }
+
+            $this->logger->writeln(\sprintf(
+                '  Resetting invalid shadow reference: %s shadows %s (locale no longer exists)',
+                $locale,
+                $shadowBase,
+            ));
+
+            ++$cleaned;
+
+            if (!$dryRun) {
+                $node->getProperty($shadowOnKey)->setValue(null);
+                $node->getProperty($shadowBaseKey)->setValue(null);
+            }
+        }
+
+        return $cleaned;
     }
 
     private function getLocales(NodeInterface $node): array
