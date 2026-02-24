@@ -23,6 +23,16 @@ class ImageRectangleSelection extends React.Component<Props> {
     image: Image;
     @observable imageLoaded = false;
 
+    normalizeNaturalSelection(data: SelectionData): SelectionData {
+        const {naturalHeight, naturalWidth} = this.image;
+        const width = Math.min(Math.max(data.width, 0), naturalWidth);
+        const height = Math.min(Math.max(data.height, 0), naturalHeight);
+        const left = Math.min(Math.max(data.left, 0), naturalWidth - width);
+        const top = Math.min(Math.max(data.top, 0), naturalHeight - height);
+
+        return {height, left, top, width};
+    }
+
     naturalHorizontalToScaled = (h: number) => {
         return Math.max(h * this.scaledImageWidth / this.image.naturalWidth, 0);
     };
@@ -37,21 +47,32 @@ class ImageRectangleSelection extends React.Component<Props> {
     };
 
     naturalDataToScaled(data: SelectionData): SelectionData {
+        const normalizedData = this.normalizeNaturalSelection(data);
+        const left = this.naturalHorizontalToScaled(normalizedData.left);
+        const top = this.naturalVerticalToScaled(normalizedData.top);
+        const right = this.naturalHorizontalToScaled(normalizedData.left + normalizedData.width);
+        const bottom = this.naturalVerticalToScaled(normalizedData.top + normalizedData.height);
+
         return {
-            width: this.naturalHorizontalToScaled(data.width),
-            height: this.naturalVerticalToScaled(data.height),
-            left: this.naturalHorizontalToScaled(data.left),
-            top: this.naturalVerticalToScaled(data.top),
+            width: right - left,
+            height: bottom - top,
+            left,
+            top,
         };
     }
 
     scaledDataToNatural(data: SelectionData): SelectionData {
-        return {
-            width: this.scaledHorizontalToNatural(data.width),
-            height: this.scaledVerticalToNatural(data.height),
-            left: this.scaledHorizontalToNatural(data.left),
-            top: this.scaledVerticalToNatural(data.top),
-        };
+        const left = this.scaledHorizontalToNatural(data.left);
+        const top = this.scaledVerticalToNatural(data.top);
+        const right = this.scaledHorizontalToNatural(data.left + data.width);
+        const bottom = this.scaledVerticalToNatural(data.top + data.height);
+
+        return this.normalizeNaturalSelection({
+            width: right - left,
+            height: bottom - top,
+            left,
+            top,
+        });
     }
 
     constructor(props: Props) {

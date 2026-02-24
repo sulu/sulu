@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter;
 
+use Imagine\Image\BoxInterface;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Palette\PaletteInterface;
@@ -20,6 +21,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropper\CropperInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Focus\FocusInterface;
@@ -135,6 +137,64 @@ class ImagineImageConverterTest extends TestCase
         $imagineImage->interlace(ImageInterface::INTERLACE_PLANE)->shouldBeCalled();
 
         $imagineImage->get('jpg', [])->willReturn('new-image-resource');
+
+        $this->focus->focus(Argument::any())->shouldNotBeCalled();
+
+        $this->assertEquals('new-image-resource', $this->imagineImageConverter->convert($fileVersion, '640x480', 'jpg'));
+    }
+
+    public function testConvertWithCropOutsideImageIsClampedToImageBounds(): void
+    {
+        $imagineImage = $this->prophesize(ImageInterface::class);
+        $palette = $this->prophesize(PaletteInterface::class);
+        $imageSize = $this->prophesize(BoxInterface::class);
+        $imageSize->getWidth()->willReturn(3264);
+        $imageSize->getHeight()->willReturn(1836);
+
+        $formatOptions = new FormatOptions();
+        $formatOptions->setFormatKey('640x480');
+        $formatOptions->setCropX(1390.2315297889866);
+        $formatOptions->setCropY(1216.6401957753455);
+        $formatOptions->setCropWidth(882.7375964718849);
+        $formatOptions->setCropHeight(629.9900771775082);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setName('test.jpg');
+        $fileVersion->setVersion(1);
+        $fileVersion->setStorageOptions(['option' => 'value']);
+        $fileVersion->setMimeType('image/jpeg');
+        $fileVersion->addFormatOptions($formatOptions);
+
+        $this->storage->load(['option' => 'value'])->willReturn('image-resource');
+        $this->mediaImageExtractor->extract('image-resource', 'image/jpeg')->willReturn('image-resource');
+        $this->imagine->read('image-resource')->willReturn($imagineImage->reveal());
+
+        $imagineImage->palette()->willReturn($palette->reveal());
+        $imagineImage->metadata()->willReturn(['']);
+        $imagineImage->getSize()->willReturn($imageSize->reveal());
+        $imagineImage->layers()->willReturn(['']);
+        $imagineImage->strip()->shouldBeCalled();
+        $imagineImage->interlace(ImageInterface::INTERLACE_PLANE)->shouldBeCalled();
+        $imagineImage->get('jpg', [])->willReturn('new-image-resource');
+
+        $this->cropper->isValid(
+            $imagineImage->reveal(),
+            1390,
+            1217,
+            883,
+            619,
+            Argument::that(
+                fn(array $format) => ['options' => []] === $format
+            )
+        )->willReturn(true)->shouldBeCalled();
+
+        $this->cropper->crop(
+            $imagineImage->reveal(),
+            1390,
+            1217,
+            883,
+            619
+        )->willReturn($imagineImage->reveal())->shouldBeCalled();
 
         $this->focus->focus(Argument::any())->shouldNotBeCalled();
 
