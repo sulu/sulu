@@ -33,9 +33,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
     const ManifestPlugin = require(path.resolve(nodeModulesPath, 'webpack-manifest-plugin')).WebpackManifestPlugin;
     const MiniCssExtractPlugin = require(path.resolve(nodeModulesPath, 'mini-css-extract-plugin'));
     const CssMinimizerPlugin = require(path.resolve(nodeModulesPath, 'css-minimizer-webpack-plugin'));
-    const {styles} = require.resolve('@ckeditor/ckeditor5-dev-utils', {
-        paths: [nodeModulesPath],
-    });
+    const {styles} = require(path.resolve(nodeModulesPath, '@ckeditor/ckeditor5-dev-utils'));
 
     return {
         entry: [path.resolve(__dirname, 'index.js')], // eslint-disable-line no-undef
