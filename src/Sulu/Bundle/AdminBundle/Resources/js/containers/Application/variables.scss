@@ -7,3 +7,7 @@ $sidebarShrinkAnimationDuration: 700ms;
 $navigationMoveAnimationDuration: 500ms;
 
 $sidebarMaxWidth: calc(100% - $viewMinWidth - 2 * $viewPaddingHorizontal);
+
+/* stylelint-disable-next-line value-keyword-case */
+$baseFontFamily: 'Open Sans', Helvetica, Arial, sans-serif;
+$baseFontSize: 12px;
