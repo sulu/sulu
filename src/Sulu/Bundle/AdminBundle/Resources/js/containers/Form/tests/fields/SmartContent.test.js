@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {extendObservable as mockExtendObservable} from 'mobx';
-import {mount, shallow} from 'enzyme';
+import {act, render, waitFor} from '@testing-library/react';
 import Router from '../../../../services/Router';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -11,8 +11,7 @@ import SmartContent from '../../fields/SmartContent';
 import SmartContentStore from '../../../SmartContent/stores/SmartContentStore';
 import smartContentConfigStore from '../../../SmartContent/stores/smartContentConfigStore';
 import smartContentStorePool from '../../fields/smartContentStorePool';
-
-jest.mock('../../../../containers/MultiListOverlay', () => jest.fn(() => null));
+import getLatestMockProps from '../../../../utils/TestHelper/getLatestMockProps';
 
 jest.mock('../../../../services/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
@@ -60,14 +59,38 @@ jest.mock('../../fields/smartContentStorePool', () => ({
     updateExcludedIds: jest.fn(),
 }));
 
+jest.mock('../../../SmartContent', () => ({
+    __esModule: true,
+    default: jest.fn(() => null),
+    smartContentConfigStore: jest.requireMock('../../../SmartContent/stores/smartContentConfigStore'),
+    SmartContentStore: jest.requireMock('../../../SmartContent/stores/SmartContentStore'),
+}));
+
+const SmartContentComponentMock: any = jest.requireMock('../../../SmartContent').default;
+const SmartContentStoreMock: any = jest.requireMock('../../../SmartContent/stores/SmartContentStore');
+
+const createFormInspector = (resourceKey = 'test', id = 1, metadataOptions) => new FormInspector(
+    new ResourceFormStore(new ResourceStore(resourceKey, id), 'test', {}, metadataOptions)
+);
+
+const createProps = (overrides = {}) => ({
+    ...fieldTypeDefaultProps,
+    formInspector: createFormInspector(),
+    ...overrides,
+});
+
+const renderSmartContent = (overrides = {}) => render(<SmartContent {...(createProps(overrides): any)} />);
+const getSmartContentStore = () => (
+    SmartContentStoreMock.mock.instances[SmartContentStoreMock.mock.instances.length - 1]
+);
+
 beforeEach(() => {
+    jest.clearAllMocks();
     smartContentConfigStore.getConfig.mockReturnValue({});
 });
 
 test('Should correctly initialize SmartContentStore', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(new ResourceStore('test', 1), 'test', {}, {webspace: 'sulu_io'})
-    );
+    const formInspector = createFormInspector('test', 1, {webspace: 'sulu_io'});
     smartContentConfigStore.getConfig.mockReturnValue({datasourceResourceKey: 'collections'});
 
     const value = {
@@ -92,30 +115,25 @@ test('Should correctly initialize SmartContentStore', () => {
         },
     };
 
-    const smartContent = shallow(
-        <SmartContent
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-            value={value}
-        />
-    );
+    const {unmount} = renderSmartContent({
+        formInspector,
+        schemaOptions,
+        value,
+    });
 
-    const smartContentStore = smartContent.instance().smartContentStore;
+    const smartContentStore = getSmartContentStore();
 
     expect(smartContentStore.start).toBeCalledWith();
-
     expect(smartContentStorePool.add).toBeCalledWith(smartContentStore, false);
     expect(smartContentConfigStore.getConfig).toBeCalledWith('media');
     expect(SmartContentStore)
         .toBeCalledWith('media', value, undefined, 'collections', undefined, schemaOptions, 'sulu_io');
 
-    smartContent.unmount();
+    unmount();
     expect(smartContentStorePool.remove).toBeCalledWith(smartContentStore);
 });
 
 test('Should correctly initialize SmartContentStore with a exclude_duplicates value of false', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test', 1), 'test'));
     smartContentConfigStore.getConfig.mockReturnValue({datasourceResourceKey: 'collections'});
 
     const schemaOptions = {
@@ -125,22 +143,17 @@ test('Should correctly initialize SmartContentStore with a exclude_duplicates va
         },
     };
 
-    const smartContent = shallow(
-        <SmartContent
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-        />
-    );
+    renderSmartContent({
+        formInspector: createFormInspector(),
+        schemaOptions,
+    });
 
-    const smartContentStore = smartContent.instance().smartContentStore;
-
+    const smartContentStore = getSmartContentStore();
     expect(smartContentStore.start).toBeCalledWith();
     expect(smartContentStorePool.add).toBeCalledWith(smartContentStore, true);
 });
 
-test('Defer start of smartContentStore until all previous stores have loaded their items', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test', 1), 'test'));
+test('Defer start of smartContentStore until all previous stores have loaded their items', async() => {
     const smartContentStore1 = new SmartContentStore('pages');
     smartContentStore1.itemsLoading = true;
     const smartContentStore2 = new SmartContentStore('pages');
@@ -154,30 +167,33 @@ test('Defer start of smartContentStore until all previous stores have loaded the
         },
     };
 
-    const smartContent = shallow(
-        <SmartContent
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-        />
-    );
+    renderSmartContent({
+        formInspector: createFormInspector(),
+        schemaOptions,
+    });
 
-    const smartContentStore = smartContent.instance().smartContentStore;
+    const smartContentStore = getSmartContentStore();
 
     expect(smartContentStorePool.updateExcludedIds).not.toBeCalled();
     expect(smartContentStore.start).not.toBeCalled();
 
-    smartContentStore1.itemsLoading = false;
+    act(() => {
+        smartContentStore1.itemsLoading = false;
+    });
     expect(smartContentStorePool.updateExcludedIds).not.toBeCalled();
     expect(smartContentStore.start).not.toBeCalled();
 
-    smartContentStore2.itemsLoading = false;
-    expect(smartContentStorePool.updateExcludedIds).toBeCalledWith();
+    act(() => {
+        smartContentStore2.itemsLoading = false;
+    });
+
+    await waitFor(() => {
+        expect(smartContentStorePool.updateExcludedIds).toBeCalledWith();
+    });
     expect(smartContentStore.start).toBeCalledWith();
 });
 
 test('Should pass id to SmartContentStore if resourceKeys match', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('pages', 4), 'pages'));
     smartContentConfigStore.getConfig.mockReturnValue({datasourceResourceKey: 'pages'});
 
     const value = {
@@ -202,22 +218,17 @@ test('Should pass id to SmartContentStore if resourceKeys match', () => {
         },
     };
 
-    shallow(
-        <SmartContent
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-            value={value}
-        />
-    );
+    renderSmartContent({
+        formInspector: createFormInspector('pages', 4),
+        schemaOptions,
+        value,
+    });
 
     expect(smartContentConfigStore.getConfig).toBeCalledWith('pages');
     expect(SmartContentStore).toBeCalledWith('pages', value, undefined, 'pages', 4, schemaOptions, undefined);
 });
 
 test('Pass correct props to SmartContent component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-
     const schemaOptions = {
         category_root: {
             name: 'category_root',
@@ -236,30 +247,26 @@ test('Pass correct props to SmartContent component', () => {
         },
     };
 
-    const smartContent = shallow(
-        <SmartContent
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            formInspector={formInspector}
-            label="Test"
-            schemaOptions={schemaOptions}
-        />
-    );
+    renderSmartContent({
+        disabled: true,
+        formInspector: createFormInspector('test', undefined),
+        label: 'Test',
+        schemaOptions,
+    });
 
-    expect(smartContent.find('SmartContent').prop('categoryRootKey')).toEqual('test1');
-    expect(smartContent.find('SmartContent').prop('presentations')).toEqual([
+    expect(getLatestMockProps(SmartContentComponentMock).categoryRootKey).toEqual('test1');
+    expect(getLatestMockProps(SmartContentComponentMock).presentations).toEqual([
         {name: 'one', value: 'One column'},
         {name: 'two', value: 'Two column'},
     ]);
-    expect(smartContent.find('SmartContent').prop('fieldLabel')).toEqual('Test');
-    expect(smartContent.find('SmartContent').prop('disabled')).toEqual(true);
-    expect(smartContent.find('SmartContent').prop('onItemClick')).toEqual(undefined);
+    expect(getLatestMockProps(SmartContentComponentMock).fieldLabel).toEqual('Test');
+    expect(getLatestMockProps(SmartContentComponentMock).disabled).toEqual(true);
+    expect(getLatestMockProps(SmartContentComponentMock).onItemClick).toEqual(undefined);
 });
 
 test('Should not call the onChange and onFinish callbacks if SmartContentStore is still loading', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const schemaOptions = {
         provider: {
@@ -268,23 +275,23 @@ test('Should not call the onChange and onFinish callbacks if SmartContentStore i
         },
     };
 
-    const smartContent = shallow(
-        <SmartContent
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
+    renderSmartContent({
+        formInspector: createFormInspector('test', undefined),
+        onChange: changeSpy,
+        onFinish: finishSpy,
+        schemaOptions,
+    });
 
     changeSpy.mockReset();
     finishSpy.mockReset();
 
-    smartContent.instance().smartContentStore.loading = true;
-    smartContent.instance().smartContentStore.filterCriteria = {
-        audienceTargeting: true,
-    };
+    const smartContentStore = getSmartContentStore();
+    act(() => {
+        smartContentStore.loading = true;
+        smartContentStore.filterCriteria = {
+            audienceTargeting: true,
+        };
+    });
 
     expect(changeSpy).not.toBeCalled();
     expect(finishSpy).not.toBeCalled();
@@ -293,7 +300,6 @@ test('Should not call the onChange and onFinish callbacks if SmartContentStore i
 test('Should call the onChange and onFinish callbacks if SmartContentStore changes', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const schemaOptions = {
         provider: {
@@ -302,21 +308,20 @@ test('Should call the onChange and onFinish callbacks if SmartContentStore chang
         },
     };
 
-    const smartContent = shallow(
-        <SmartContent
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
+    renderSmartContent({
+        formInspector: createFormInspector('test', undefined),
+        onChange: changeSpy,
+        onFinish: finishSpy,
+        schemaOptions,
+    });
 
-    smartContent.instance().smartContentStore.loading = false;
-    smartContent.instance().smartContentStore.filterCriteria = {
-        audienceTargeting: true,
-    };
-    smartContent.instance().handleFilterCriteriaChange();
+    const smartContentStore = getSmartContentStore();
+    act(() => {
+        smartContentStore.loading = false;
+        smartContentStore.filterCriteria = {
+            audienceTargeting: true,
+        };
+    });
 
     expect(changeSpy).toBeCalledWith({audienceTargeting: true});
     expect(finishSpy).toBeCalledWith();
@@ -325,7 +330,6 @@ test('Should call the onChange and onFinish callbacks if SmartContentStore chang
 test('Should not call the onChange and onFinish callbacks if categories only differ in order', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const value = {
         audienceTargeting: undefined,
@@ -349,25 +353,25 @@ test('Should not call the onChange and onFinish callbacks if categories only dif
         },
     };
 
-    const smartContent = shallow(
-        <SmartContent
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            schemaOptions={schemaOptions}
-            value={value}
-        />
-    );
+    renderSmartContent({
+        formInspector: createFormInspector('test', undefined),
+        onChange: changeSpy,
+        onFinish: finishSpy,
+        schemaOptions,
+        value,
+    });
 
     changeSpy.mockReset();
     finishSpy.mockReset();
 
-    smartContent.instance().smartContentStore.loading = false;
-    smartContent.instance().smartContentStore.filterCriteria = {
-        ...value,
-        categories: [2, 1],
-    };
+    const smartContentStore = getSmartContentStore();
+    act(() => {
+        smartContentStore.loading = false;
+        smartContentStore.filterCriteria = {
+            ...value,
+            categories: [2, 1],
+        };
+    });
 
     expect(changeSpy).not.toBeCalled();
     expect(finishSpy).not.toBeCalled();
@@ -376,7 +380,6 @@ test('Should not call the onChange and onFinish callbacks if categories only dif
 test('Should not call the onChange and onFinish callbacks if tags only differ in order', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const value = {
         audienceTargeting: undefined,
@@ -400,33 +403,31 @@ test('Should not call the onChange and onFinish callbacks if tags only differ in
         },
     };
 
-    const smartContent = shallow(
-        <SmartContent
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            schemaOptions={schemaOptions}
-            value={value}
-        />
-    );
+    renderSmartContent({
+        formInspector: createFormInspector('test', undefined),
+        onChange: changeSpy,
+        onFinish: finishSpy,
+        schemaOptions,
+        value,
+    });
 
     changeSpy.mockReset();
     finishSpy.mockReset();
 
-    smartContent.instance().smartContentStore.loading = false;
-    smartContent.instance().smartContentStore.filterCriteria = {
-        ...value,
-        tags: ['Programming', 'Design'],
-    };
+    const smartContentStore = getSmartContentStore();
+    act(() => {
+        smartContentStore.loading = false;
+        smartContentStore.filterCriteria = {
+            ...value,
+            tags: ['Programming', 'Design'],
+        };
+    });
 
     expect(changeSpy).not.toBeCalled();
     expect(finishSpy).not.toBeCalled();
 });
 
 test('Should navigate to view if item is clicked', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-
     const schemaOptions = {
         provider: {
             name: 'provider',
@@ -438,31 +439,19 @@ test('Should navigate to view if item is clicked', () => {
 
     const router = new Router();
 
-    const smartContent = mount(
-        <SmartContent
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            router={router}
-            schemaOptions={schemaOptions}
-        />
-    );
+    renderSmartContent({
+        formInspector: createFormInspector('test', undefined),
+        router,
+        schemaOptions,
+    });
 
-    smartContent.instance().smartContentStore.items = [
-        {id: 1},
-        {id: 3},
-        {id: 2},
-    ];
-    smartContent.update();
-
-    smartContent.find('MultiItemSelection .content').at(0).simulate('click');
+    getLatestMockProps(SmartContentComponentMock).onItemClick(1, {id: 1});
     expect(router.navigate).toHaveBeenLastCalledWith('sulu_media.form', {id: 1});
-    smartContent.find('MultiItemSelection .content').at(1).simulate('click');
+    getLatestMockProps(SmartContentComponentMock).onItemClick(3, {id: 3});
     expect(router.navigate).toHaveBeenLastCalledWith('sulu_media.form', {id: 3});
 });
 
 test('Should call destroy on SmartContentStore when unmounted', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-
     const schemaOptions = {
         provider: {
             name: 'provider',
@@ -470,15 +459,13 @@ test('Should call destroy on SmartContentStore when unmounted', () => {
         },
     };
 
-    const smartContent = shallow(
-        <SmartContent
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-        />
-    );
+    const {unmount} = renderSmartContent({
+        formInspector: createFormInspector('test', undefined),
+        schemaOptions,
+    });
 
-    const smartContentStore = smartContent.instance().smartContentStore;
-    smartContent.unmount();
+    const smartContentStore = getSmartContentStore();
+    unmount();
     expect(smartContentStore.destroy).toBeCalledWith();
+    expect(smartContentStorePool.remove).toBeCalledWith(smartContentStore);
 });

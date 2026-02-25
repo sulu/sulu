@@ -1,14 +1,16 @@
 // @flow
 import React from 'react';
-import {render, mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import MultiItemSelection from '../MultiItemSelection';
 
 test('Render an empty MultiItemSelection', () => {
-    expect(render(<MultiItemSelection label="I am empty" />)).toMatchSnapshot();
+    const {asFragment} = render(<MultiItemSelection label="I am empty" />);
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render an MultiItemSelection with children', () => {
-    expect(render(
+    const {asFragment} = render(
         <MultiItemSelection label="I have children">
             <MultiItemSelection.Item
                 id="1"
@@ -44,11 +46,13 @@ test('Render an MultiItemSelection with children', () => {
                 Child 4 (disabled with remove button)
             </MultiItemSelection.Item>
         </MultiItemSelection>
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a disabled MultiItemSelection with children', () => {
-    expect(render(
+    const {asFragment} = render(
         <MultiItemSelection disabled={true} label="I am disabled">
             <MultiItemSelection.Item
                 id="1"
@@ -69,13 +73,15 @@ test('Render a disabled MultiItemSelection with children', () => {
                 Child 3
             </MultiItemSelection.Item>
         </MultiItemSelection>
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a button on the right with options and a value', () => {
     const rightButton = {label: 'Test', onClick: jest.fn(), options: [{label: 'Test1', value: 'test-1'}]};
 
-    expect(render(
+    const {asFragment} = render(
         <MultiItemSelection rightButton={rightButton}>
             <MultiItemSelection.Item
                 id="1"
@@ -96,7 +102,9 @@ test('Render a button on the right with options and a value', () => {
                 Child 3
             </MultiItemSelection.Item>
         </MultiItemSelection>
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a button on the right with options including icons and a value', () => {
@@ -106,7 +114,7 @@ test('Render a button on the right with options including icons and a value', ()
         options: [{icon: 'su-default', label: 'Test1', value: 'test-1'}],
     };
 
-    expect(render(
+    const {asFragment} = render(
         <MultiItemSelection rightButton={rightButton}>
             <MultiItemSelection.Item
                 id="1"
@@ -127,11 +135,13 @@ test('Render a button on the right with options including icons and a value', ()
                 Child 3
             </MultiItemSelection.Item>
         </MultiItemSelection>
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a not sortable MultiItemSelection with children', () => {
-    expect(render(
+    const {asFragment} = render(
         <MultiItemSelection label="I have children" sortable={false}>
             <MultiItemSelection.Item
                 id="1"
@@ -152,16 +162,20 @@ test('Render a not sortable MultiItemSelection with children', () => {
                 Child 3
             </MultiItemSelection.Item>
         </MultiItemSelection>
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render an MultiItemSelection while loading', () => {
-    expect(render(<MultiItemSelection label="I am loading" loading={true} />)).toMatchSnapshot();
+    const {asFragment} = render(<MultiItemSelection label="I am loading" loading={true} />);
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Clicking the left and right button inside the header should call the right handler', () => {
+test('Clicking the left and right button inside the header should call the right handler', async() => {
     const leftClickHandler = jest.fn();
     const rightClickHandler = jest.fn();
+    const user = userEvent.setup();
     const leftButtonConfig = {
         icon: 'su-plus',
         onClick: leftClickHandler,
@@ -170,7 +184,7 @@ test('Clicking the left and right button inside the header should call the right
         icon: 'fa-gear',
         onClick: rightClickHandler,
     };
-    const multiItemSelection = mount(
+    const {asFragment} = render(
         <MultiItemSelection
             label="I have handler"
             leftButton={leftButtonConfig}
@@ -197,17 +211,21 @@ test('Clicking the left and right button inside the header should call the right
         </MultiItemSelection>
     );
 
-    expect(multiItemSelection.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 
-    multiItemSelection.find('.button.left').simulate('click');
+    const leftButton = screen.getByRole('button', {name: 'su-plus'});
+    const rightButton = screen.getByRole('button', {name: 'fa-gear'});
+
+    await user.click((leftButton: any));
     expect(leftClickHandler).toBeCalled();
 
-    multiItemSelection.find('.button.right').simulate('click');
+    await user.click((rightButton: any));
     expect(rightClickHandler).toBeCalled();
 });
 
-test('Clicking the left button inside the header should call the right handler after choosing an option', () => {
+test('Clicking the left button inside the header should call the right handler after choosing an option', async() => {
     const leftClickHandler = jest.fn();
+    const user = userEvent.setup();
     const leftButtonConfig = {
         icon: 'su-plus',
         onClick: leftClickHandler,
@@ -223,7 +241,7 @@ test('Clicking the left button inside the header should call the right handler a
         ],
     };
 
-    const multiItemSelection = mount(
+    render(
         <MultiItemSelection
             label="I have handler"
             leftButton={leftButtonConfig}
@@ -249,19 +267,22 @@ test('Clicking the left button inside the header should call the right handler a
         </MultiItemSelection>
     );
 
-    multiItemSelection.find('Button[icon="su-plus"]').simulate('click');
-    multiItemSelection.find('ArrowMenu Action').at(0).simulate('click');
+    const leftButton = screen.getByRole('button');
+
+    await user.click((leftButton: any));
+    await user.click(screen.getByText('Test1'));
     expect(leftClickHandler).toBeCalledWith('test1');
 
-    multiItemSelection.find('Button[icon="su-plus"]').simulate('click');
-    multiItemSelection.find('ArrowMenu Action').at(1).simulate('click');
+    await user.click((leftButton: any));
+    await user.click(screen.getByText('Test2'));
     expect(leftClickHandler).toBeCalledWith('test2');
 });
 
-test('Clicking on the remove button inside an item should call the remove handler on the parent component', () => {
+test('Clicking on the remove button inside an item should call the remove handler on the parent component', async() => {
     const removeHandler = jest.fn();
+    const user = userEvent.setup();
     const clickedItemId = 1;
-    const multiItemSelection = mount(
+    render(
         <MultiItemSelection
             label="I have handler"
             onItemRemove={removeHandler}
@@ -287,14 +308,19 @@ test('Clicking on the remove button inside an item should call the remove handle
         </MultiItemSelection>
     );
 
-    multiItemSelection.find('Icon[name="su-trash-alt"]').at(0).parent().prop('onClick')();
+    const removeIcon = screen.getAllByLabelText('su-trash-alt')[0];
+    const removeButton = removeIcon.closest('button');
+    expect(removeButton).toBeTruthy();
+
+    await user.click((removeButton: any));
     expect(removeHandler).toHaveBeenCalledWith(clickedItemId);
 });
 
-test('Clicking on the edit button inside an item should call the edit handler on the parent component', () => {
+test('Clicking on the edit button inside an item should call the edit handler on the parent component', async() => {
     const editHandler = jest.fn();
+    const user = userEvent.setup();
     const clickedItemId = 1;
-    const multiItemSelection = mount(
+    render(
         <MultiItemSelection
             label="I have handler"
             onItemEdit={editHandler}
@@ -320,13 +346,18 @@ test('Clicking on the edit button inside an item should call the edit handler on
         </MultiItemSelection>
     );
 
-    multiItemSelection.find('Icon[name="su-pen"]').at(0).parent().prop('onClick')();
+    const editIcon = screen.getAllByLabelText('su-pen')[0];
+    const editButton = editIcon.closest('button');
+    expect(editButton).toBeTruthy();
+
+    await user.click((editButton: any));
     expect(editHandler).toHaveBeenCalledWith(clickedItemId);
 });
 
-test('Clicking on an item should call its onClick handler', () => {
+test('Clicking on an item should call its onClick handler', async() => {
     const clickHandler = jest.fn();
-    const multiItemSelection = mount(
+    const user = userEvent.setup();
+    render(
         <MultiItemSelection
             label="I have handler"
             onItemClick={clickHandler}
@@ -349,9 +380,9 @@ test('Clicking on an item should call its onClick handler', () => {
         </MultiItemSelection>
     );
 
-    multiItemSelection.find('.content').at(0).prop('onClick')();
+    await user.click(screen.getByRole('button', {name: 'Child 1'}));
     expect(clickHandler).toHaveBeenLastCalledWith(6, 'value1');
 
-    multiItemSelection.find('.content').at(1).prop('onClick')();
+    await user.click(screen.getByRole('button', {name: 'Child 2'}));
     expect(clickHandler).toHaveBeenLastCalledWith(3, 'value2');
 });

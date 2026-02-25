@@ -2,20 +2,26 @@
 import React from 'react';
 import type {Element} from 'react';
 
-const WrapperComponent = (props: {children: Element<*>}) => {
+type BindValueToOnChangeOptions = {
+    valueArgIndex?: number,
+};
+
+const WrapperComponent = (props: {children: Element<*>, valueArgIndex: number}) => {
     const component = React.Children.only(props.children);
     const [boundValue, setBoundValue] = React.useState(component.props.value);
+    const {valueArgIndex} = props;
 
-    const wrappedOnChange = (newValue, ...remainingParameters) => {
+    const wrappedOnChange = (...parameters) => {
+        const newValue = parameters[valueArgIndex];
         setBoundValue(newValue);
-        component.props.onChange(newValue, ...remainingParameters);
+        component.props.onChange(...parameters);
     };
 
     return React.cloneElement(component, {value: boundValue, onChange: wrappedOnChange});
 };
 
-const bindValueToOnChange = (element: Element<*>) => {
-    return <WrapperComponent>{element}</WrapperComponent>;
+const bindValueToOnChange = (element: Element<*>, options: BindValueToOnChangeOptions = {}) => {
+    return <WrapperComponent valueArgIndex={options.valueArgIndex || 0}>{element}</WrapperComponent>;
 };
 
 // our form components are implemented as controlled components. to test them with @testing-library/react, we

@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render a generic select 1`] = `
+<div>
+  <div
+    data-testid="select"
+  >
+    <div
+      data-testid="option"
+    >
+      Option 1
+    </div>
+    <div
+      data-testid="option"
+    >
+      Option 2
+    </div>
+    <div
+      data-testid="divider"
+    />
+    <div
+      data-testid="option"
+    >
+      Option 3
+    </div>
+  </div>
+</div>
+`;

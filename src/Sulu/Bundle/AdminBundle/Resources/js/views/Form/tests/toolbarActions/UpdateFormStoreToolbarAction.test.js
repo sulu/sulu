@@ -1,5 +1,4 @@
 // @flow
-import {mount} from 'enzyme';
 import symfonyRouting from 'fos-jsrouting/router';
 import UpdateFormStoreToolbarAction from '../../toolbarActions/UpdateFormStoreToolbarAction';
 import {ResourceFormStore} from '../../../../containers/Form';
@@ -103,6 +102,10 @@ function createUpdateFormStoreToolbarAction(options = {}) {
     );
 }
 
+function getDialogProps(action: UpdateFormStoreToolbarAction): any {
+    return ((action.getNode(): any).props: any);
+}
+
 test('Throw error if required options are missing', () => {
     expect(() => createUpdateFormStoreToolbarAction({icon: undefined}))
         .toThrow(/Missing required options/);
@@ -158,8 +161,7 @@ test('Close dialog on cancel', () => {
     const action = createUpdateFormStoreToolbarAction();
     action.showDialog = true;
 
-    const element = mount(action.getNode());
-    element.find('Button[skin="secondary"]').simulate('click');
+    getDialogProps(action).onCancel();
 
     expect(action.showDialog).toBe(false);
 });
@@ -179,8 +181,7 @@ test('Fetch data on confirm', async() => {
     symfonyRouting.generate.mockReturnValue('/test/5?locale=en');
     Requester.post.mockResolvedValue({});
 
-    const element = mount(action.getNode());
-    element.find('Button[skin="primary"]').simulate('click');
+    getDialogProps(action).onConfirm();
 
     expect(action.loading).toBe(true);
 
@@ -203,8 +204,7 @@ test('Handle error on fetch', async() => {
     error.json = jest.fn().mockResolvedValue({messageKey: 'error.message'});
     Requester.post.mockRejectedValue(error);
 
-    const element = mount(action.getNode());
-    element.find('Button[skin="primary"]').simulate('click');
+    getDialogProps(action).onConfirm();
 
     await new Promise((resolve) => setTimeout(resolve));
 
@@ -220,11 +220,10 @@ test('Render dialog with correct props', () => {
     });
     action.showDialog = true;
 
-    const element = mount(action.getNode());
-    const dialog = element.find('Dialog');
+    const dialog = getDialogProps(action);
 
-    expect(dialog.prop('cancelText')).toBe('Cancel Test');
-    expect(dialog.prop('confirmText')).toBe('OK Test');
-    expect(dialog.prop('title')).toBe('Test Dialog');
-    expect(dialog.prop('children')).toContain('Test Description');
+    expect(dialog.cancelText).toBe('Cancel Test');
+    expect(dialog.confirmText).toBe('OK Test');
+    expect(dialog.title).toBe('Test Dialog');
+    expect(dialog.children).toContain('Test Description');
 });

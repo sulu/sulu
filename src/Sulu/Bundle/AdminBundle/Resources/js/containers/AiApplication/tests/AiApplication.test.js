@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import {render, fireEvent, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import symfonyRouting from 'fos-jsrouting/router';
 import {translate} from '../../../utils';
@@ -89,7 +89,7 @@ describe('AiApplication', () => {
         });
 
         // Simulate the sulu.focus event to set hasFocus to true
-        fireEvent(document, event);
+        document.dispatchEvent(event);
 
         // Now, hasFocus should be true and FeatureBadge should be rendered
         expect(screen.getByTitle('sulu_admin.translator')).toBeInTheDocument();
@@ -130,17 +130,17 @@ describe('AiApplication', () => {
                 setValue: jest.fn(),
             },
         });
-        fireEvent(document, event);
+        document.dispatchEvent(event);
 
         // Simulate scroll event
-        fireEvent.scroll(window);
+        window.dispatchEvent(new Event('scroll'));
 
         // Check if getBoundingClientRect was called
         // $FlowFixMe
         expect(mockElement.parentElement.getBoundingClientRect).toHaveBeenCalledTimes(2);
 
         // Simulate resize event
-        fireEvent.resize(window);
+        window.dispatchEvent(new Event('resize'));
 
         // Check if getBoundingClientRect was called again
         // $FlowFixMe
@@ -181,7 +181,7 @@ describe('AiApplication', () => {
                 setValue: jest.fn(),
             },
         });
-        fireEvent(document, focusEvent);
+        document.dispatchEvent(focusEvent);
 
         // Create a mock click event
         const clickEvent = new Event('click');
@@ -194,7 +194,7 @@ describe('AiApplication', () => {
         });
 
         // Simulate the global click event
-        fireEvent(document, clickEvent);
+        document.dispatchEvent(clickEvent);
 
         // Check if hasFocus is set to false
         expect(screen.getByTitle('sulu_admin.translator')).toBeInTheDocument();
@@ -234,7 +234,7 @@ describe('AiApplication', () => {
                 setValue: jest.fn(),
             },
         });
-        fireEvent(document, focusEvent);
+        document.dispatchEvent(focusEvent);
 
         // Simulate the writing assistant close action
         const instance = new AiApplication(props);
@@ -281,7 +281,7 @@ describe('AiApplication', () => {
                 setValue: jest.fn(),
             },
         });
-        fireEvent(document, focusEvent);
+        document.dispatchEvent(focusEvent);
 
         // Simulate the writing assistant confirm action
         const instance = new AiApplication(props);
@@ -335,7 +335,7 @@ describe('AiApplication', () => {
                 setValue: jest.fn(),
             },
         });
-        fireEvent(document, focusEvent);
+        document.dispatchEvent(focusEvent);
 
         // Simulate the translate close action
         const instance = new AiApplication(props);
@@ -382,7 +382,7 @@ describe('AiApplication', () => {
                 setValue: jest.fn(),
             },
         });
-        fireEvent(document, focusEvent);
+        document.dispatchEvent(focusEvent);
 
         // Simulate the translate confirm action
         const instance = new AiApplication(props);

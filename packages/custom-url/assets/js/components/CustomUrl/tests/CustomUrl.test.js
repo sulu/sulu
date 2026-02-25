@@ -1,45 +1,56 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import CustomUrl from '../../CustomUrl';
 
 test('Render with empty placeholder', () => {
-    expect(render(<CustomUrl baseDomain="*.sulu.io/*" onChange={jest.fn()} value={[]} />)).toMatchSnapshot();
+    const {asFragment} = render(<CustomUrl baseDomain="*.sulu.io/*" onChange={jest.fn()} value={[]} />);
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render with partially filled placeholder', () => {
-    expect(render(<CustomUrl baseDomain="*.*.sulu.io" onChange={jest.fn()} value={['test']} />)).toMatchSnapshot();
+    const {asFragment} = render(<CustomUrl baseDomain="*.*.sulu.io" onChange={jest.fn()} value={['test']} />);
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render with completely filled placeholder', () => {
-    expect(render(<CustomUrl baseDomain="sulu.io/*/*" onChange={jest.fn()} value={['test1', 'test2']} />))
-        .toMatchSnapshot();
+    const {asFragment} = render(<CustomUrl baseDomain="sulu.io/*/*" onChange={jest.fn()} value={['test1', 'test2']} />);
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Call onBlur for every input field', () => {
+test('Call onBlur for every input field', async() => {
+    const user = userEvent.setup();
     const blurSpy = jest.fn();
-    const customUrl = mount(<CustomUrl baseDomain="*.sulu.io/*" onBlur={blurSpy} onChange={jest.fn()} value={[]} />);
+    render(
+        <CustomUrl baseDomain="*.sulu.io/*" onBlur={blurSpy} onChange={jest.fn()} value={[]} />
+    );
 
+    const inputs = screen.getAllByRole('textbox');
     expect(blurSpy).not.toBeCalled();
 
-    customUrl.find('Input').at(0).prop('onBlur')();
-    expect(blurSpy).toHaveBeenLastCalledWith();
+    await user.click(inputs[0]);
+    await user.tab();
+    expect(blurSpy).toHaveBeenCalledTimes(1);
 
-    customUrl.find('Input').at(1).prop('onBlur')();
-    expect(blurSpy).toHaveBeenLastCalledWith();
-
+    await user.click(inputs[1]);
+    await user.tab();
     expect(blurSpy).toHaveBeenCalledTimes(2);
 });
 
-test('Call onChange after change of every input field', () => {
+test('Call onChange after change of every input field', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
-    const customUrl = mount(<CustomUrl baseDomain="*.sulu.io/*" onChange={changeSpy} value={[]} />);
+    render(<CustomUrl baseDomain="*.sulu.io/*" onChange={changeSpy} value={[]} />);
 
+    const inputs = screen.getAllByRole('textbox');
     expect(changeSpy).not.toBeCalled();
 
-    customUrl.find('Input').at(0).prop('onChange')('test1');
+    await user.click(inputs[0]);
+    await user.paste('test1');
     expect(changeSpy).toHaveBeenLastCalledWith(['test1']);
 
-    customUrl.find('Input').at(1).prop('onChange')('test2');
+    await user.tab();
+    await user.paste('test2');
     expect(changeSpy).toHaveBeenLastCalledWith([undefined, 'test2']);
 });

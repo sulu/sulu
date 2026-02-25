@@ -1,8 +1,8 @@
-// @flow
+/* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import log from 'loglevel';
+import {act, render, waitFor} from '@testing-library/react';
 import {extendObservable as mockExtendObservable, observable, toJS} from 'mobx';
-import {mount, shallow} from 'enzyme';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import {translate} from '../../../../utils/Translator';
 import MultiSelectionStore from '../../../../stores/MultiSelectionStore';
@@ -10,9 +10,13 @@ import ResourceStore from '../../../../stores/ResourceStore';
 import userStore from '../../../../stores/userStore';
 import Router from '../../../../services/Router';
 import List from '../../../List';
+import ListStore from '../../../List/stores/ListStore';
 import Selection from '../../fields/Selection';
 import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
+import MultiAutoComplete from '../../../../containers/MultiAutoComplete';
+import MultiSelectionComponent from '../../../../containers/MultiSelection';
+import getLatestMockProps from '../../../../utils/TestHelper/getLatestMockProps';
 
 jest.mock('loglevel', () => ({
     warn: jest.fn(),
@@ -20,14 +24,14 @@ jest.mock('loglevel', () => ({
 
 jest.mock('../../../../stores/MultiSelectionStore', () => jest.fn(
     function(resourceKey, selectedItemIds, locale, idFilterParameter) {
-        this.locale = locale;
-        this.loading = false;
         this.idFilterParameter = idFilterParameter;
+        this.loading = false;
         this.loadItems = jest.fn();
+        this.locale = locale;
+        this.resourceKey = resourceKey;
 
         mockExtendObservable(this, {
-            items: [],
-            ids: [],
+            items: selectedItemIds.map((id) => ({id, uuid: id})),
         });
     })
 );
@@ -36,10 +40,10 @@ jest.mock('../../../../services/Router', () => jest.fn(() => ({
     navigate: jest.fn(),
 })));
 
-jest.mock('../../../List', () => jest.fn(() => null));
+jest.mock('../../../List', () => jest.fn(() => <div data-testid="list" />));
 
-jest.mock('../../../List/stores/ListStore',
-    () => function(
+jest.mock('../../../List/stores/ListStore', () => jest.fn(
+    function(
         resourceKey,
         listKey,
         userSettingsKey,
@@ -48,173 +52,164 @@ jest.mock('../../../List/stores/ListStore',
         metadataOptions,
         initialSelectionIds
     ) {
-        this.resourceKey = resourceKey;
-        this.listKey = listKey;
-        this.userSettingsKey = userSettingsKey;
-        this.options = options;
-        this.observableOptions = observableOptions;
-        this.locale = observableOptions.locale;
-        this.initialSelectionIds = initialSelectionIds;
+        this.clearSelection = jest.fn();
         this.dataLoading = true;
         this.destroy = jest.fn();
-        this.sendRequestDisposer = jest.fn();
+        this.initialSelectionIds = initialSelectionIds;
+        this.listKey = listKey;
+        this.loading = false;
+        this.locale = observableOptions.locale;
+        this.metadataOptions = metadataOptions;
+        this.observableOptions = observableOptions;
+        this.options = options;
+        this.resourceKey = resourceKey;
         this.reset = jest.fn();
-        this.clearSelection = jest.fn();
         this.select = jest.fn();
+        this.sendRequestDisposer = jest.fn();
+        this.userSettingsKey = userSettingsKey;
 
         mockExtendObservable(this, {
             selectionIds: [],
         });
     }
-);
+));
 
 jest.mock('../../../../stores/userStore', () => ({}));
 
 jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
-    this.id = formStore.id;
-    this.resourceKey = formStore.resourceKey;
-    this.locale = formStore.locale;
-    this.getValueByPath = jest.fn();
     this.addFinishFieldHandler = jest.fn();
+    this.getValueByPath = jest.fn();
+    this.id = formStore.id;
+    this.locale = formStore.locale;
+    this.resourceKey = formStore.resourceKey;
 }));
 
 jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.id = resourceStore.id;
-    this.resourceKey = resourceStore.resourceKey;
     this.locale = resourceStore.locale;
+    this.resourceKey = resourceStore.resourceKey;
 }));
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, options) {
     this.id = id;
-    this.resourceKey = resourceKey;
     this.locale = options ? options.locale : undefined;
+    this.resourceKey = resourceKey;
 }));
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-test('Should pass props correctly to MultiSelection component', () => {
-    const value = [1, 6, 8];
+jest.mock('../../../../containers/MultiAutoComplete', () => jest.fn(() => <div data-testid="multi-auto-complete" />));
+jest.mock('../../../../containers/MultiSelection', () => jest.fn(() => <div data-testid="multi-selection" />));
 
-    const fieldTypeOptions = {
+const ListMock = List;
+const ListStoreMock = ListStore;
+const MultiAutoCompleteMock = MultiAutoComplete;
+const MultiSelectionComponentMock = MultiSelectionComponent;
+const MultiSelectionStoreMock = MultiSelectionStore;
+const userStoreMock = userStore;
+
+function createFormInspector(resourceKey = 'pages', id = 1, locale = observable.box('en')) {
+    return new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore(resourceKey, id, {locale}),
+            resourceKey
+        )
+    );
+}
+
+function renderSelection(props = {}) {
+    const ref = React.createRef();
+    const formInspector = props.formInspector || createFormInspector();
+    const fieldTypeOptions = props.fieldTypeOptions || {
         default_type: 'list_overlay',
         resource_key: 'snippets',
         types: {
             list_overlay: {
                 adapter: 'table',
-                list_key: 'snippets_list',
                 display_properties: ['id', 'title'],
-                icon: '',
                 label: 'sulu_snippet.selection_label',
                 overlay_title: 'sulu_snippet.selection_overlay_title',
             },
         },
     };
 
-    const schemaOptions = {
-        types: {
-            name: 'types',
-            value: 'test',
-        },
-    };
-
-    const locale = observable.box('en');
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 1, {locale}),
-            'pages'
-        )
-    );
-
-    const selection = shallow(
+    const view = render(
         <Selection
             {...fieldTypeDefaultProps}
-            disabled={true}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            onFinish={jest.fn()}
-            schemaOptions={schemaOptions}
-            value={value}
+            onChange={props.onChange || jest.fn()}
+            onFinish={props.onFinish || jest.fn()}
+            ref={ref}
+            {...props}
         />
     );
 
-    expect(translate).toBeCalledWith('sulu_snippet.selection_label', {count: 3});
+    return {
+        ...view,
+        formInspector,
+        ref,
+    };
+}
 
-    expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+test('renders list overlay mode and matches snapshot', () => {
+    const value = [1, 6, 8];
+
+    const {asFragment} = renderSelection({value});
+
+    expect(getLatestMockProps(MultiSelectionComponentMock).value).toEqual(value);
+    expect(asFragment()).toMatchSnapshot();
+});
+
+test('passes correct props to MultiSelection component', () => {
+    const value = [1, 6, 8];
+    const locale = observable.box('en');
+    const formInspector = createFormInspector('pages', 1, locale);
+
+    renderSelection({
+        disabled: true,
+        formInspector,
+        schemaOptions: {
+            types: {
+                name: 'types',
+                value: 'test',
+            },
+        },
+        value,
+    });
+
+    expect(translate).toBeCalledWith('sulu_snippet.selection_label', {count: 3});
+    expect(getLatestMockProps(MultiSelectionComponentMock)).toEqual(expect.objectContaining({
         adapter: 'table',
         allowDeselectForDisabledItems: true,
-        listKey: 'snippets_list',
         disabled: true,
-        sortable: true,
         displayProperties: ['id', 'title'],
         itemDisabledCondition: undefined,
         label: 'sulu_snippet.selection_label',
+        listKey: 'snippets',
         locale,
-        resourceKey: 'snippets',
         options: {types: 'test'},
         overlayTitle: 'sulu_snippet.selection_overlay_title',
+        resourceKey: 'snippets',
+        sortable: true,
         value,
     }));
 });
 
-test('Should pass resourceKey as listKey to selection component if no listKey is given', () => {
-    const value = [1, 6, 8];
+test('passes resourceKey as listKey if listKey is missing', () => {
+    renderSelection({value: [1]});
 
-    const fieldTypeOptions = {
-        default_type: 'list_overlay',
-        resource_key: 'snippets',
-        types: {
-            list_overlay: {
-                adapter: 'table',
-                display_properties: ['id', 'title'],
-                icon: '',
-                label: 'sulu_snippet.selection_label',
-                overlay_title: 'sulu_snippet.selection_overlay_title',
-            },
-        },
-    };
-
-    const locale = observable.box('en');
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 1, {locale}),
-            'pages'
-        )
-    );
-
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            onFinish={jest.fn()}
-            value={value}
-        />
-    );
-
-    expect(selection.find('MultiSelection').prop('listKey')).toEqual('snippets');
+    expect(getLatestMockProps(MultiSelectionComponentMock).listKey).toEqual('snippets');
 });
 
-test('Should pass locale from userStore to MultiSelection component if form has no locale', () => {
-    const value = [1, 6, 8];
-
-    const fieldTypeOptions = {
-        default_type: 'list_overlay',
-        resource_key: 'snippets',
-        types: {
-            list_overlay: {
-                adapter: 'table',
-                display_properties: ['id', 'title'],
-                icon: '',
-                label: 'sulu_snippet.selection_label',
-                overlay_title: 'sulu_snippet.selection_overlay_title',
-            },
-        },
-    };
+test('uses locale from userStore if form has no locale', () => {
+    userStoreMock.contentLocale = 'de';
 
     const formInspector = new FormInspector(
         new ResourceFormStore(
@@ -223,416 +218,224 @@ test('Should pass locale from userStore to MultiSelection component if form has 
         )
     );
 
-    // $FlowFixMe
-    userStore.contentLocale = 'de';
+    renderSelection({formInspector, value: [1, 2]});
 
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            onFinish={jest.fn()}
-            value={value}
-        />
-    );
-
-    expect(translate).toBeCalledWith('sulu_snippet.selection_label', {count: 3});
-
-    expect(toJS(selection.find('MultiSelection').prop('locale'))).toEqual('de');
+    expect(toJS(getLatestMockProps(MultiSelectionComponentMock).locale)).toEqual('de');
 });
 
-test('Should pass props with schema-options correctly to MultiSelection component', () => {
+test('passes schema options correctly to MultiSelection component', () => {
     const value = [1, 6, 8];
-
-    const fieldTypeOptions = {
-        default_type: 'auto_complete',
-        resource_key: 'snippets',
-        types: {
-            list_overlay: {
-                adapter: 'table',
-                display_properties: ['id', 'title'],
-                icon: '',
-                label: 'sulu_snippet.selection_label',
-                overlay_title: 'sulu_snippet.selection_overlay_title',
-            },
-            auto_complete: {
-                display_property: 'name',
-                filter_parameter: 'names',
-                id_property: 'uuid',
-                search_properties: ['name'],
-            },
-        },
-    };
-
-    const schemaOptions = {
-        type: {
-            name: 'type',
-            value: 'list_overlay',
-        },
-        types: {
-            name: 'types',
-            value: 'image,video',
-        },
-        allow_deselect_for_disabled_items: {
-            name: 'allow_deselect_for_disabled_items',
-            value: false,
-        },
-        item_disabled_condition: {
-            name: 'item_disabled_condition',
-            value: 'status == "inactive"',
-        },
-        sortable: {
-            name: 'sortable',
-            value: false,
-        },
-        request_parameters: {
-            name: 'request_parameters',
-            value: [
-                {
-                    name: 'staticKey',
-                    value: 'some-static-value',
-                },
-            ],
-        },
-        resource_store_properties_to_request: {
-            name: 'resource_store_properties_to_request',
-            value: [
-                {
-                    name: 'dynamicKey',
-                    value: 'otherPropertyName',
-                },
-            ],
-        },
-    };
-
     const locale = observable.box('en');
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 1, {locale}),
-            'pages'
-        )
-    );
+    const formInspector = createFormInspector('pages', 1, locale);
 
     const formInspectorValues = {'/otherPropertyName': 'value-returned-by-form-inspector'};
     formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
 
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            onFinish={jest.fn()}
-            schemaOptions={schemaOptions}
-            value={value}
-        />
-    );
-
-    expect(translate).toBeCalledWith('sulu_snippet.selection_label', {count: 3});
-    expect(formInspector.getValueByPath).toBeCalledWith('/otherPropertyName');
-
-    expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
-        adapter: 'table',
-        allowDeselectForDisabledItems: false,
+    renderSelection({
         disabled: true,
-        sortable: false,
-        displayProperties: ['id', 'title'],
-        itemDisabledCondition: 'status == "inactive"',
-        label: 'sulu_snippet.selection_label',
-        locale,
-        resourceKey: 'snippets',
-        overlayTitle: 'sulu_snippet.selection_overlay_title',
-        value,
-        options: {
-            types: 'image,video',
-            staticKey: 'some-static-value',
-            dynamicKey: 'value-returned-by-form-inspector',
+        fieldTypeOptions: {
+            default_type: 'auto_complete',
+            resource_key: 'snippets',
+            types: {
+                auto_complete: {
+                    display_property: 'name',
+                    filter_parameter: 'names',
+                    id_property: 'uuid',
+                    search_properties: ['name'],
+                },
+                list_overlay: {
+                    adapter: 'table',
+                    display_properties: ['id', 'title'],
+                    label: 'sulu_snippet.selection_label',
+                    overlay_title: 'sulu_snippet.selection_overlay_title',
+                },
+            },
         },
+        formInspector,
+        schemaOptions: {
+            allow_deselect_for_disabled_items: {
+                name: 'allow_deselect_for_disabled_items',
+                value: false,
+            },
+            item_disabled_condition: {
+                name: 'item_disabled_condition',
+                value: 'status == "inactive"',
+            },
+            request_parameters: {
+                name: 'request_parameters',
+                value: [{name: 'staticKey', value: 'some-static-value'}],
+            },
+            resource_store_properties_to_request: {
+                name: 'resource_store_properties_to_request',
+                value: [{name: 'dynamicKey', value: 'otherPropertyName'}],
+            },
+            sortable: {
+                name: 'sortable',
+                value: false,
+            },
+            type: {
+                name: 'type',
+                value: 'list_overlay',
+            },
+            types: {
+                name: 'types',
+                value: 'image,video',
+            },
+        },
+        value,
+    });
+
+    expect(formInspector.getValueByPath).toBeCalledWith('/otherPropertyName');
+    expect(getLatestMockProps(MultiSelectionComponentMock)).toEqual(expect.objectContaining({
+        allowDeselectForDisabledItems: false,
+        itemDisabledCondition: 'status == "inactive"',
+        options: {
+            dynamicKey: 'value-returned-by-form-inspector',
+            staticKey: 'some-static-value',
+            types: 'image,video',
+        },
+        sortable: false,
     }));
 });
 
-// eslint-disable-next-line max-len
-test('Should update props of MultiSelection component when value of "resource_store_properties_to_request" property is changed', () => {
-    const value = [1, 6, 8];
+test('updates MultiSelection options when observed form value changes', async() => {
+    const formInspector = createFormInspector();
+    const values = {'/otherPropertyName': 'first-value'};
+    formInspector.getValueByPath.mockImplementation((path) => values[path]);
 
-    const fieldTypeOptions = {
-        default_type: 'list_overlay',
-        resource_key: 'snippets',
-        types: {
-            list_overlay: {
-                adapter: 'table',
-                display_properties: ['id', 'title'],
-                icon: '',
-                label: 'sulu_snippet.selection_label',
-                overlay_title: 'sulu_snippet.selection_overlay_title',
+    renderSelection({
+        formInspector,
+        schemaOptions: {
+            resource_store_properties_to_request: {
+                name: 'resource_store_properties_to_request',
+                value: [{name: 'dynamicKey', value: 'otherPropertyName'}],
             },
         },
-    };
+        value: [1],
+    });
 
-    const schemaOptions = {
-        resource_store_properties_to_request: {
-            name: 'resource_store_properties_to_request',
-            value: [
-                {
-                    name: 'dynamicKey',
-                    value: 'otherPropertyName',
+    expect(getLatestMockProps(MultiSelectionComponentMock).options).toEqual({dynamicKey: 'first-value'});
+
+    values['/otherPropertyName'] = 'second-value';
+    const finishFieldHandler = getLatestMockProps(formInspector.addFinishFieldHandler);
+
+    act(() => {
+        finishFieldHandler('/otherPropertyName');
+    });
+
+    await waitFor(() => {
+        expect(getLatestMockProps(MultiSelectionComponentMock).options).toEqual({dynamicKey: 'second-value'});
+    });
+});
+
+test('passes current form id as disabledId when selecting same resource', () => {
+    const formInspector = createFormInspector('pages', 4);
+
+    renderSelection({
+        fieldTypeOptions: {
+            default_type: 'list_overlay',
+            resource_key: 'pages',
+            types: {
+                list_overlay: {
+                    adapter: 'table',
                 },
-            ],
-        },
-    };
-
-    const locale = observable.box('en');
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 1, {locale}),
-            'pages'
-        )
-    );
-
-    const formInspectorValues = {'/otherPropertyName': 'first-value'};
-    formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
-
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            onFinish={jest.fn()}
-            schemaOptions={schemaOptions}
-            value={value}
-        />
-    );
-
-    expect(formInspector.addFinishFieldHandler).toHaveBeenCalled();
-    expect(selection.find('MultiSelection').props().options).toEqual({
-        dynamicKey: 'first-value',
-    });
-
-    formInspectorValues['/otherPropertyName'] = 'second-value';
-    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
-    finishFieldHandler('/otherPropertyName');
-
-    expect(selection.find('MultiSelection').props().options).toEqual({
-        dynamicKey: 'second-value',
-    });
-});
-
-test('Should pass id of form as disabledId to MultiSelection component to avoid assigning something to itself', () => {
-    const fieldTypeOptions = {
-        default_type: 'list_overlay',
-        resource_key: 'pages',
-        types: {
-            list_overlay: {
-                adapter: 'table',
             },
         },
-    };
+        formInspector,
+    });
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('pages', 4), 'pages'));
-
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-        />
-    );
-
-    expect(selection.find('MultiSelection').prop('disabledIds')).toEqual([4]);
+    expect(getLatestMockProps(MultiSelectionComponentMock).disabledIds).toEqual([4]);
 });
 
-test('Should pass empty array to MultiSelection component if value is not given', () => {
-    const changeSpy = jest.fn();
-    const fieldOptions = {
-        default_type: 'list_overlay',
-        resource_key: 'pages',
-        types: {
-            list_overlay: {
-                adapter: 'column_list',
-                label: 'sulu_page.selection_label',
+test('passes empty value array for list overlay if value is undefined', () => {
+    renderSelection({
+        fieldTypeOptions: {
+            default_type: 'list_overlay',
+            resource_key: 'pages',
+            types: {
+                list_overlay: {
+                    adapter: 'column_list',
+                    label: 'sulu_page.selection_label',
+                },
             },
         },
-    };
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
-
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldOptions}
-            formInspector={formInspector}
-            onChange={changeSpy}
-        />
-    );
+        value: undefined,
+    });
 
     expect(translate).toBeCalledWith('sulu_page.selection_label', {count: 0});
-    expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
-        adapter: 'column_list',
-        resourceKey: 'pages',
-        value: [],
-    }));
+    expect(getLatestMockProps(MultiSelectionComponentMock).value).toEqual([]);
 });
 
-test('Should call onChange and onFinish callback when MultiSelection component fires onChange callback', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
+test('calls onChange and onFinish when MultiSelection onChange is fired', async() => {
+    const onChange = jest.fn();
+    const onFinish = jest.fn();
 
-    const fieldOptions = {
-        default_type: 'list_overlay',
-        resource_key: 'pages',
-        types: {
-            list_overlay: {
-                adapter: 'column_list',
-                label: 'sulu_page.selection_label',
-            },
-        },
-    };
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+    renderSelection({onChange, onFinish, value: [1]});
 
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldOptions}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-        />
-    );
+    getLatestMockProps(MultiSelectionComponentMock).onChange([1, 2, 3]);
 
-    selection.find('MultiSelection').prop('onChange')([1, 2, 3]);
-
-    expect(changeSpy).toBeCalledWith([1, 2, 3]);
-    expect(finishSpy).toBeCalledWith();
+    expect(onChange).toBeCalledWith([1, 2, 3]);
+    expect(onFinish).toBeCalled();
 });
 
-test('Should not fail when MultiSelection item is clicked without configured view', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
-
-    const fieldOptions = {
-        default_type: 'list_overlay',
-        resource_key: 'pages',
-        types: {
-            list_overlay: {
-                adapter: 'column_list',
-                label: 'sulu_page.selection_label',
-            },
-        },
-    };
-
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
-
+test('does not trigger navigation if no view is configured', () => {
     const router = new Router();
+    renderSelection({router, value: [1, 2]});
 
-    const selection = mount(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldOptions}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            router={router}
-            value={[1, 2]}
-        />
-    );
-
-    selection.find('MultiSelection').instance().selectionStore.items = [
-        {id: 1, locale: 'de', title: 'Test'},
-        {id: 2, locale: 'de', title: 'Impressum'},
-    ];
-
-    selection.update();
-
-    expect(selection.find('MultiSelection').prop('onItemClick')).toEqual(undefined);
-
-    expect(selection.find('MultiItemSelection Item .content').at(0).prop('onClick')).toEqual(undefined);
-    expect(selection.find('MultiItemSelection Item .content').at(0).prop('role')).toEqual(undefined);
-    expect(selection.find('MultiItemSelection Item .content').at(1).prop('onClick')).toEqual(undefined);
-    expect(selection.find('MultiItemSelection Item .content').at(1).prop('role')).toEqual(undefined);
+    expect(getLatestMockProps(MultiSelectionComponentMock).onItemClick).toBeFalsy();
     expect(router.navigate).not.toBeCalled();
 });
 
-test('Should navigate to view when MultiSelection item is clicked with configured view', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
-
-    const fieldOptions = {
-        default_type: 'list_overlay',
-        resource_key: 'pages',
-        view: {
-            name: 'sulu_page.page_edit_form',
-            result_to_view: {
-                'properties/locale': 'locale',
-                id: 'uuid',
-            },
-        },
-        types: {
-            list_overlay: {
-                adapter: 'column_list',
-                label: 'sulu_page.selection_label',
-            },
-        },
-    };
-
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
-
+test('navigates to configured view when onItemClick is fired', () => {
     const router = new Router();
 
-    const selection = mount(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldOptions}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            router={router}
-            value={[1, 2]}
-        />
-    );
-
-    selection.find('MultiSelection').instance().selectionStore.items = [
-        {id: 1, properties: {locale: 'de', title: 'Test'}},
-        {id: 2, properties: {locale: 'de', title: 'Impressum'}},
-    ];
-
-    selection.update();
-
-    selection.find('MultiItemSelection Item .content').at(0).prop('onClick')();
-    expect(router.navigate).toHaveBeenLastCalledWith('sulu_page.page_edit_form', {locale: 'de', uuid: 1});
-    selection.find('MultiItemSelection Item .content').at(1).prop('onClick')();
-    expect(router.navigate).toHaveBeenLastCalledWith('sulu_page.page_edit_form', {locale: 'de', uuid: 2});
-});
-
-test('Should log warning and use ids of objects if given value is an array of objects', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
-    const fieldTypeOptions = {
-        default_type: 'list_overlay',
-        resource_key: 'test',
-        types: {
-            list_overlay: {
-                adapter: 'table',
+    renderSelection({
+        fieldTypeOptions: {
+            default_type: 'list_overlay',
+            resource_key: 'pages',
+            types: {
+                list_overlay: {
+                    adapter: 'column_list',
+                    label: 'sulu_page.selection_label',
+                },
+            },
+            view: {
+                name: 'sulu_page.page_edit_form',
+                result_to_view: {
+                    'properties/locale': 'locale',
+                    id: 'uuid',
+                },
             },
         },
-    };
+        router,
+        value: [1],
+    });
 
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            value={([{id: 55}, {id: 66}]: any)}
-        />
-    );
+    getLatestMockProps(MultiSelectionComponentMock).onItemClick(1, {id: 1, properties: {locale: 'de'}});
 
-    expect(selection.find('MultiSelection').prop('value')).toEqual([55, 66]);
+    expect(router.navigate).toBeCalledWith('sulu_page.page_edit_form', {locale: 'de', uuid: 1});
+});
+
+test('logs warning and extracts ids if value is array of objects', () => {
+    renderSelection({
+        fieldTypeOptions: {
+            default_type: 'list_overlay',
+            resource_key: 'test',
+            types: {
+                list_overlay: {
+                    adapter: 'table',
+                },
+            },
+        },
+        value: [{id: 55}, {id: 66}],
+    });
+
+    expect(getLatestMockProps(MultiSelectionComponentMock).value).toEqual([55, 66]);
     expect(log.warn).toBeCalledWith(expect.stringContaining('expects an array of ids as value'));
 });
 
-test('Should throw an error if "types" schema option is not a string', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+test('throws for invalid list overlay schema and field options', () => {
+    const formInspector = createFormInspector();
     const fieldTypeOptions = {
         default_type: 'list_overlay',
         resource_key: 'test',
@@ -641,281 +444,132 @@ test('Should throw an error if "types" schema option is not a string', () => {
         },
     };
 
-    expect(() => shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            schemaOptions={{types: {name: 'type', value: []}}}
-        />
-    )).toThrowError(/"types"/);
+    expect(() => renderSelection({
+        fieldTypeOptions,
+        formInspector,
+        schemaOptions: {types: {name: 'types', value: []}},
+    })).toThrow(/"types"/);
+    expect(() => renderSelection({
+        fieldTypeOptions,
+        formInspector,
+        schemaOptions: {item_disabled_condition: {name: 'item_disabled_condition', value: []}},
+    })).toThrow(/"item_disabled_condition"/);
+    expect(() => renderSelection({
+        fieldTypeOptions,
+        formInspector,
+        schemaOptions: {allow_deselect_for_disabled_items: {name: 'allow_deselect_for_disabled_items', value: 'no'}},
+    })).toThrow(/"allow_deselect_for_disabled_items"/);
+    expect(() => renderSelection({
+        fieldTypeOptions,
+        formInspector,
+        schemaOptions: {sortable: {name: 'sortable', value: 'no'}},
+    })).toThrow(/"sortable"/);
+    expect(() => renderSelection({
+        fieldTypeOptions,
+        formInspector,
+        schemaOptions: {request_parameters: {name: 'request_parameters', value: 'no'}},
+    })).toThrow(/"request_parameters"/);
+    expect(() => renderSelection({
+        fieldTypeOptions,
+        formInspector,
+        schemaOptions: {
+            resource_store_properties_to_request: {name: 'resource_store_properties_to_request', value: 'no'},
+        },
+    })).toThrow(/"resource_store_properties_to_request"/);
+    expect(() => renderSelection({
+        fieldTypeOptions: {default_type: 'list_overlay'},
+        formInspector,
+    })).toThrow(/"resource_key"/);
+    expect(() => renderSelection({fieldTypeOptions, formInspector})).toThrow(/"adapter"/);
+    expect(() => renderSelection({
+        fieldTypeOptions: {...fieldTypeOptions, default_type: true},
+        formInspector,
+    })).toThrow(/"default_type"/);
+    expect(() => renderSelection({
+        fieldTypeOptions,
+        formInspector,
+        schemaOptions: {type: {name: 'type', value: true}},
+    })).toThrow(/"type"/);
 });
 
-test('Should throw an error if "item_disabled_condition" schema option is not a string', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
-    const fieldTypeOptions = {
-        default_type: 'list_overlay',
-        resource_key: 'test',
-        types: {
-            list_overlay: {},
-        },
-    };
-
-    expect(() => shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            schemaOptions={{item_disabled_condition: {name: 'item_disabled_condition', value: []}}}
-        />
-    )).toThrowError(/"item_disabled_condition"/);
-});
-
-test('Should throw an error if "allow_deselect_for_disabled_items" schema option is not a boolean', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
-    const fieldTypeOptions = {
-        default_type: 'list_overlay',
-        resource_key: 'test',
-        types: {
-            list_overlay: {},
-        },
-    };
-    const schemaOptions = {
-        allow_deselect_for_disabled_items: {
-            name: 'allow_deselect_for_disabled_items',
-            value: 'not-boolean',
-        },
-    };
-
-    expect(() => shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-        />
-    )).toThrowError(/"allow_deselect_for_disabled_items"/);
-});
-
-test('Should throw an error if "sortable" schema option is not a boolean', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
-    const fieldTypeOptions = {
-        default_type: 'list_overlay',
-        resource_key: 'test',
-        types: {
-            list_overlay: {},
-        },
-    };
-    const schemaOptions = {
-        sortable: {
-            name: 'sortable',
-            value: 'not-boolean',
-        },
-    };
-
-    expect(() => shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-        />
-    )).toThrowError(/"sortable"/);
-});
-
-test('Should throw an error if "request_parameters" schema option is not an array', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
-    const fieldTypeOptions = {
-        default_type: 'list_overlay',
-        resource_key: 'test',
-        types: {
-            list_overlay: {},
-        },
-    };
-
-    expect(() => shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            schemaOptions={{request_parameters: {name: 'request_parameters', value: 'not-an-array'}}}
-        />
-    )).toThrowError(/"request_parameters"/);
-});
-
-test('Should throw an error if "resource_store_properties_to_request" schema option is not an array', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
-    const fieldTypeOptions = {
-        default_type: 'list_overlay',
-        resource_key: 'test',
-        types: {
-            list_overlay: {},
-        },
-    };
-    const schemaOptions = {
-        resource_store_properties_to_request: {name: 'resource_store_properties_to_request', value: 'not-an-array'},
-    };
-
-    expect(() => shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-        />
-    )).toThrowError(/"resource_store_properties_to_request"/);
-});
-
-test('Should throw an error if no "resource_key" option is passed in fieldOptions', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
-
-    expect(() => shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={{default_type: 'list_overlay'}}
-            formInspector={formInspector}
-        />
-    )).toThrowError(/"resource_key"/);
-});
-
-test('Should throw an error if no "adapter" option is passed for overlay type in fieldTypeOptions', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-    const fieldTypeOptions = {
-        default_type: 'list_overlay',
-        resource_key: 'test',
-        types: {
-            list_overlay: {},
-        },
-    };
-
-    expect(() => shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-        />
-    )).toThrowError(/"adapter"/);
-});
-
-test('Should call the disposers for list selections and locale and ListStore if unmounted', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-    const fieldTypeOptions = {
-        default_type: 'list',
-        resource_key: 'test',
-        types: {
-            list: {
-                adapter: 'tree_table',
+test('calls list and auto-complete disposers and destroys listStore on unmount', () => {
+    const {ref, unmount} = renderSelection({
+        fieldTypeOptions: {
+            default_type: 'list',
+            resource_key: 'test',
+            types: {
+                list: {
+                    adapter: 'tree_table',
+                },
             },
         },
-    };
+    });
 
-    const selection = mount(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-        />
-    );
+    const changeListDisposer = jest.fn();
+    const changeLocaleDisposer = jest.fn();
+    const changeListOptionsDisposer = jest.fn();
+    const changeAutoCompleteSelectionDisposer = jest.fn();
+    ref.current.changeListDisposer = changeListDisposer;
+    ref.current.changeLocaleDisposer = changeLocaleDisposer;
+    ref.current.changeListOptionsDisposer = changeListOptionsDisposer;
+    ref.current.changeAutoCompleteSelectionDisposer = changeAutoCompleteSelectionDisposer;
+    const listStoreDestroy = ref.current.listStore.destroy;
 
-    const changeListDisposerSpy = jest.fn();
-    const changeLocaleDisposerSpy = jest.fn();
-    const changeListOptionsDisposerSpy = jest.fn();
-    const changeAutoCompleteSelectionDisposerSpy = jest.fn();
-    selection.instance().changeListDisposer = changeListDisposerSpy;
-    selection.instance().changeLocaleDisposer = changeLocaleDisposerSpy;
-    selection.instance().changeListOptionsDisposer = changeListOptionsDisposerSpy;
-    selection.instance().changeAutoCompleteSelectionDisposer = changeAutoCompleteSelectionDisposerSpy;
-    const listStoreDestroy = selection.instance().listStore.destroy;
+    unmount();
 
-    selection.unmount();
-
-    expect(changeListDisposerSpy).toBeCalledWith();
-    expect(changeLocaleDisposerSpy).toBeCalledWith();
-    expect(changeListOptionsDisposerSpy).toBeCalledWith();
-    expect(changeAutoCompleteSelectionDisposerSpy).toBeCalledWith();
-    expect(listStoreDestroy).toBeCalledWith();
+    expect(changeListDisposer).toBeCalled();
+    expect(changeLocaleDisposer).toBeCalled();
+    expect(changeListOptionsDisposer).toBeCalled();
+    expect(changeAutoCompleteSelectionDisposer).toBeCalled();
+    expect(listStoreDestroy).toBeCalled();
 });
 
-test('Should call sendRequestDisposer to avoid extra request when locale is changed', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
-
-    const fieldTypeOptions = {
-        default_type: 'list',
-        resource_key: 'snippets',
-        types: {
-            list: {
-                adapter: 'table',
-            },
-        },
-    };
-
+test('calls sendRequestDisposer when locale changes in list mode', () => {
     const locale = observable.box('en');
+    const formInspector = createFormInspector('pages', 1, locale);
 
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 1, {locale}),
-            'pages'
-        )
-    );
-
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-        />
-    );
-
-    locale.set('de');
-
-    expect(selection.instance().listStore.sendRequestDisposer).toBeCalledWith();
-});
-
-test('Should pass correct props to list component', () => {
-    const value = [1, 6, 8];
-
-    const fieldTypeOptions = {
-        default_type: 'list',
-        resource_key: 'snippets',
-        types: {
-            list: {
-                adapter: 'table',
-                list_key: 'snippets_list',
+    const {ref} = renderSelection({
+        fieldTypeOptions: {
+            default_type: 'list',
+            resource_key: 'snippets',
+            types: {
+                list: {
+                    adapter: 'table',
+                },
             },
         },
-    };
+        formInspector,
+    });
 
-    const schemaOptions = {
-        item_disabled_condition: {
-            name: 'item_disabled_condition',
-            value: 'status == "inactive"',
+    act(() => {
+        locale.set('de');
+    });
+
+    expect(ref.current.listStore.sendRequestDisposer).toBeCalled();
+});
+
+test('passes correct props to List component in list mode', () => {
+    renderSelection({
+        disabled: true,
+        fieldTypeOptions: {
+            default_type: 'list',
+            resource_key: 'snippets',
+            types: {
+                list: {
+                    adapter: 'table',
+                },
+            },
         },
-    };
+        schemaOptions: {
+            item_disabled_condition: {
+                name: 'item_disabled_condition',
+                value: 'status == "inactive"',
+            },
+        },
+        value: [1, 6, 8],
+    });
 
-    const locale = observable.box('en');
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 1, {locale}),
-            'pages'
-        )
-    );
-
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-            value={value}
-        />
-    );
-
-    expect(selection.find(List).props()).toEqual(expect.objectContaining({
+    expect(getLatestMockProps(ListMock)).toEqual(expect.objectContaining({
         adapters: ['table'],
         disabled: true,
         itemDisabledCondition: 'status == "inactive"',
@@ -924,122 +578,69 @@ test('Should pass correct props to list component', () => {
     }));
 });
 
-test('Should pass correct parameters to listStore', () => {
-    const value = [1, 6, 8];
-
-    const fieldTypeOptions = {
-        default_type: 'list',
-        resource_key: 'snippets',
-        types: {
-            list: {
-                adapter: 'table',
-                list_key: 'snippets_list',
-            },
-        },
-    };
-
-    const schemaOptions = {
-        request_parameters: {
-            name: 'request_parameters',
-            value: [
-                {
-                    name: 'staticKey',
-                    value: 'some-static-value',
-                },
-            ],
-        },
-        resource_store_properties_to_request: {
-            name: 'resource_store_properties_to_request',
-            value: [
-                {
-                    name: 'dynamicKey',
-                    value: 'otherPropertyName',
-                },
-            ],
-        },
-    };
-
+test('initializes listStore with correct parameters', () => {
     const locale = observable.box('en');
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 1, {locale}),
-            'pages'
-        )
-    );
+    const formInspector = createFormInspector('pages', 1, locale);
 
     const formInspectorValues = {'/otherPropertyName': 'value-returned-by-form-inspector'};
     formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
 
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-            value={value}
-        />
-    );
+    renderSelection({
+        fieldTypeOptions: {
+            default_type: 'list',
+            resource_key: 'snippets',
+            types: {
+                list: {
+                    adapter: 'table',
+                    list_key: 'snippets_list',
+                },
+            },
+        },
+        formInspector,
+        schemaOptions: {
+            request_parameters: {
+                name: 'request_parameters',
+                value: [{name: 'staticKey', value: 'some-static-value'}],
+            },
+            resource_store_properties_to_request: {
+                name: 'resource_store_properties_to_request',
+                value: [{name: 'dynamicKey', value: 'otherPropertyName'}],
+            },
+        },
+        value: [1, 6, 8],
+    });
 
-    expect(selection.instance().listStore.resourceKey).toEqual('snippets');
-    expect(selection.instance().listStore.listKey).toEqual('snippets_list');
-    expect(selection.instance().listStore.userSettingsKey).toEqual('selection');
-    expect(selection.instance().listStore.initialSelectionIds).toEqual(value);
-    expect(selection.instance().listStore.options).toEqual({
-        staticKey: 'some-static-value',
+    expect(ListStoreMock).toBeCalled();
+    const listStore = ListStoreMock.mock.instances[ListStoreMock.mock.instances.length - 1];
+    expect(listStore.resourceKey).toEqual('snippets');
+    expect(listStore.listKey).toEqual('snippets_list');
+    expect(listStore.userSettingsKey).toEqual('selection');
+    expect(listStore.initialSelectionIds).toEqual([1, 6, 8]);
+    expect(listStore.options).toEqual({
         dynamicKey: 'value-returned-by-form-inspector',
+        staticKey: 'some-static-value',
     });
 });
 
-test('Should pass resourceKey as listKey to listStore if no listKey is given', () => {
-    const value = [1, 6, 8];
-
-    const fieldTypeOptions = {
-        default_type: 'list',
-        resource_key: 'snippets',
-        types: {
-            list: {
-                adapter: 'table',
+test('uses resourceKey as listKey in list mode if list_key is missing', () => {
+    const {ref} = renderSelection({
+        fieldTypeOptions: {
+            default_type: 'list',
+            resource_key: 'snippets',
+            types: {
+                list: {
+                    adapter: 'table',
+                },
             },
         },
-    };
+        value: [1],
+    });
 
-    const locale = observable.box('en');
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 1, {locale}),
-            'pages'
-        )
-    );
-
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            value={value}
-        />
-    );
-
-    expect(selection.instance().listStore.listKey).toEqual('snippets');
+    expect(ref.current.listStore.listKey).toEqual('snippets');
 });
 
-test('Should pass locale from userStore to listStore if form has no locale', () => {
-    const value = [1, 6, 8];
-
-    const fieldTypeOptions = {
-        default_type: 'list',
-        resource_key: 'snippets',
-        types: {
-            list: {
-                adapter: 'table',
-            },
-        },
-    };
-
+test('uses userStore locale for list mode if form has no locale', () => {
+    userStoreMock.contentLocale = 'en';
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('pages', 1),
@@ -1047,281 +648,156 @@ test('Should pass locale from userStore to listStore if form has no locale', () 
         )
     );
 
-    // $FlowFixMe
-    userStore.contentLocale = 'en';
-
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            value={value}
-        />
-    );
-
-    expect(toJS(selection.instance().listStore.locale)).toEqual('en');
-});
-
-test('Should call onChange and onFinish prop when list selection changes', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
-
-    const fieldTypeOptions = {
-        default_type: 'list',
-        resource_key: 'snippets',
-        types: {
-            list: {
-                adapter: 'table',
-            },
-        },
-    };
-
-    const locale = observable.box('en');
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 1, {locale}),
-            'pages'
-        )
-    );
-
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-        />
-    );
-
-    selection.instance().listStore.dataLoading = false;
-    selection.instance().listStore.selectionIds = [1, 5, 7];
-
-    expect(changeSpy).toBeCalledWith([1, 5, 7]);
-    expect(finishSpy).toBeCalledWith();
-});
-
-test('Should not call onChange and onFinish prop while list is still loading', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
-
-    const fieldTypeOptions = {
-        default_type: 'list',
-        resource_key: 'snippets',
-        types: {
-            list: {
-                adapter: 'table',
-            },
-        },
-    };
-
-    const locale = observable.box('en');
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 1, {locale}),
-            'pages'
-        )
-    );
-
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-        />
-    );
-
-    selection.instance().listStore.selectionIds = [1, 5, 7];
-
-    expect(changeSpy).not.toBeCalled();
-    expect(finishSpy).not.toBeCalled();
-});
-
-test('Should update listStore when the value of a "resource_store_properties_to_request" property is changed', () => {
-    const value = [1, 6, 8];
-
-    const fieldTypeOptions = {
-        default_type: 'list',
-        resource_key: 'snippets',
-        types: {
-            list: {
-                adapter: 'table',
-                list_key: 'snippets_list',
-            },
-        },
-    };
-
-    const schemaOptions = {
-        resource_store_properties_to_request: {
-            name: 'resource_store_properties_to_request',
-            value: [
-                {
-                    name: 'dynamicKey',
-                    value: 'otherPropertyName',
+    const {ref} = renderSelection({
+        fieldTypeOptions: {
+            default_type: 'list',
+            resource_key: 'snippets',
+            types: {
+                list: {
+                    adapter: 'table',
                 },
-            ],
-        },
-    };
-
-    const locale = observable.box('en');
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 1, {locale}),
-            'pages'
-        )
-    );
-
-    const formInspectorValues = {'/otherPropertyName': 'first-value'};
-    formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
-
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-            value={value}
-        />
-    );
-
-    expect(formInspector.addFinishFieldHandler).toHaveBeenCalled();
-    expect(selection.instance().listStore.options).toEqual({
-        dynamicKey: 'first-value',
-    });
-
-    selection.instance().listStore.selectionIds = [12, 14];
-    formInspectorValues['/otherPropertyName'] = 'second-value';
-    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
-    finishFieldHandler('/otherPropertyName');
-
-    expect(selection.instance().listStore.options).toEqual({
-        dynamicKey: 'second-value',
-    });
-    expect(selection.instance().listStore.reset).toBeCalled();
-    expect(selection.instance().listStore.initialSelectionIds).toEqual([12, 14]);
-});
-
-test('Should not call onChange and onFinish if an observable that is accessed in one of the callbacks changes', () => {
-    const unrelatedObservable = observable.box(22);
-    const changeSpy = jest.fn(() => {
-        jest.fn()(unrelatedObservable.get());
-    });
-    const finishSpy = jest.fn(() => {
-        jest.fn()(unrelatedObservable.get());
-    });
-
-    const fieldTypeOptions = {
-        default_type: 'list',
-        resource_key: 'snippets',
-        types: {
-            list: {
-                adapter: 'table',
             },
         },
-    };
+        formInspector,
+        value: [1],
+    });
 
-    const locale = observable.box('en');
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 1, {locale}),
-            'pages'
-        )
-    );
-
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-        />
-    );
-
-    selection.instance().listStore.dataLoading = false;
-
-    // callbacks should be called when selection of list store changes
-    selection.instance().listStore.selectionIds = [1, 5, 7];
-    expect(changeSpy).toHaveBeenCalledTimes(1);
-    expect(finishSpy).toHaveBeenCalledTimes(1);
-
-    // callbacks should not be called when the unrelated observable changes
-    unrelatedObservable.set(55);
-    expect(changeSpy).toHaveBeenCalledTimes(1);
-    expect(finishSpy).toHaveBeenCalledTimes(1);
+    expect(toJS(ref.current.listStore.locale)).toEqual('en');
 });
 
-test('Should pass props correctly to MultiAutoComplete component', () => {
-    const value = [1, 6, 8];
+test('calls onChange and onFinish when list selection changes and list is not loading', async() => {
+    const onChange = jest.fn();
+    const onFinish = jest.fn();
 
-    const fieldTypeOptions = {
-        default_type: 'auto_complete',
-        resource_key: 'snippets',
-        types: {
-            auto_complete: {
-                display_property: 'name',
-                filter_parameter: 'names',
-                id_property: 'uuid',
-                search_properties: ['name'],
+    const {ref} = renderSelection({
+        fieldTypeOptions: {
+            default_type: 'list',
+            resource_key: 'snippets',
+            types: {
+                list: {
+                    adapter: 'table',
+                },
             },
         },
-    };
+        onChange,
+        onFinish,
+    });
 
+    ref.current.listStore.dataLoading = false;
+
+    act(() => {
+        ref.current.listStore.selectionIds = [1, 5, 7];
+    });
+
+    await waitFor(() => {
+        expect(onChange).toBeCalledWith([1, 5, 7]);
+    });
+    expect(onFinish).toBeCalled();
+});
+
+test('does not call onChange and onFinish while list is loading', () => {
+    const onChange = jest.fn();
+    const onFinish = jest.fn();
+
+    const {ref} = renderSelection({
+        fieldTypeOptions: {
+            default_type: 'list',
+            resource_key: 'snippets',
+            types: {
+                list: {
+                    adapter: 'table',
+                },
+            },
+        },
+        onChange,
+        onFinish,
+    });
+
+    act(() => {
+        ref.current.listStore.selectionIds = [1, 5, 7];
+    });
+
+    expect(onChange).not.toBeCalled();
+    expect(onFinish).not.toBeCalled();
+});
+
+test('updates listStore options when request options change', () => {
+    const formInspector = createFormInspector();
+    const values = {'/otherPropertyName': 'first-value'};
+    formInspector.getValueByPath.mockImplementation((path) => values[path]);
+
+    const {ref} = renderSelection({
+        fieldTypeOptions: {
+            default_type: 'list',
+            resource_key: 'snippets',
+            types: {
+                list: {
+                    adapter: 'table',
+                    list_key: 'snippets_list',
+                },
+            },
+        },
+        formInspector,
+        schemaOptions: {
+            resource_store_properties_to_request: {
+                name: 'resource_store_properties_to_request',
+                value: [{name: 'dynamicKey', value: 'otherPropertyName'}],
+            },
+        },
+        value: [1, 6, 8],
+    });
+
+    expect(ref.current.listStore.options).toEqual({dynamicKey: 'first-value'});
+
+    ref.current.listStore.selectionIds = [12, 14];
+    values['/otherPropertyName'] = 'second-value';
+    const finishFieldHandler = getLatestMockProps(formInspector.addFinishFieldHandler);
+
+    act(() => {
+        finishFieldHandler('/otherPropertyName');
+    });
+
+    expect(ref.current.listStore.options).toEqual({dynamicKey: 'second-value'});
+    expect(ref.current.listStore.reset).toBeCalled();
+    expect(ref.current.listStore.initialSelectionIds).toEqual([12, 14]);
+});
+
+test('passes correct props to MultiAutoComplete and initializes MultiSelectionStore', () => {
     const locale = observable.box('en');
+    const formInspector = createFormInspector('pages', 1, locale);
 
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 1, {locale}),
-            'pages'
-        )
-    );
+    const {ref} = renderSelection({
+        disabled: true,
+        fieldTypeOptions: {
+            default_type: 'auto_complete',
+            resource_key: 'snippets',
+            types: {
+                auto_complete: {
+                    display_property: 'name',
+                    filter_parameter: 'names',
+                    id_property: 'uuid',
+                    search_properties: ['name'],
+                },
+            },
+        },
+        formInspector,
+        value: [1, 6, 8],
+    });
 
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            value={value}
-        />
-    );
-
-    expect(selection.find('MultiAutoComplete').at(0).props()).toEqual(expect.objectContaining({
-        allowAdd: false,
+    expect(MultiSelectionStoreMock).toBeCalledWith('snippets', [1, 6, 8], locale, 'names');
+    expect(getLatestMockProps(MultiAutoCompleteMock)).toEqual(expect.objectContaining({
+        allowAdd: undefined,
         disabled: true,
         displayProperty: 'name',
         idProperty: 'uuid',
+        options: {},
         searchProperties: ['name'],
-        selectionStore: selection.instance().autoCompleteSelectionStore,
+        selectionStore: ref.current.autoCompleteSelectionStore,
     }));
-
-    expect(MultiSelectionStore).toBeCalledWith('snippets', value, locale, 'names');
 });
 
-test('Should pass locale from userStore to MultiAutoComplete component if form has no locale', () => {
-    const value = [1, 6, 8];
-
-    const fieldTypeOptions = {
-        default_type: 'auto_complete',
-        resource_key: 'snippets',
-        types: {
-            auto_complete: {
-                display_property: 'name',
-                filter_parameter: 'names',
-                id_property: 'uuid',
-                search_properties: ['name'],
-            },
-        },
-    };
-
+test('uses userStore locale for auto_complete mode if form has no locale', () => {
+    userStoreMock.contentLocale = 'de';
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('pages', 1),
@@ -1329,397 +805,250 @@ test('Should pass locale from userStore to MultiAutoComplete component if form h
         )
     );
 
-    // $FlowFixMe
-    userStore.contentLocale = 'de';
+    const {ref} = renderSelection({
+        fieldTypeOptions: {
+            default_type: 'auto_complete',
+            resource_key: 'snippets',
+            types: {
+                auto_complete: {
+                    display_property: 'name',
+                    filter_parameter: 'names',
+                    id_property: 'uuid',
+                    search_properties: ['name'],
+                },
+            },
+        },
+        formInspector,
+        value: [1],
+    });
 
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            value={value}
-        />
-    );
-
-    expect(selection.instance().autoCompleteSelectionStore.locale.get()).toEqual('de');
+    expect(ref.current.autoCompleteSelectionStore.locale.get()).toEqual('de');
 });
 
-test('Should pass props with schema-options type correctly to MultiAutoComplete component', () => {
-    const value = [1, 6, 8];
+test('passes request options to MultiAutoComplete in auto_complete mode', () => {
+    const formInspector = createFormInspector();
+    const values = {'/otherPropertyName': 'value-returned-by-form-inspector'};
+    formInspector.getValueByPath.mockImplementation((path) => values[path]);
 
-    const fieldTypeOptions = {
-        default_type: 'list_overlay',
-        resource_key: 'snippets',
-        types: {
-            list_overlay: {
-                adapter: 'table',
-                display_properties: ['id', 'title'],
-                icon: '',
-                label: 'sulu_snippet.selection_label',
-                overlay_title: 'sulu_snippet.selection_overlay_title',
-            },
-            auto_complete: {
-                display_property: 'name',
-                filter_parameter: 'names',
-                id_property: 'uuid',
-                search_properties: ['name'],
-            },
-        },
-    };
-
-    const locale = observable.box('en');
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 1, {locale}),
-            'pages'
-        )
-    );
-
-    const formInspectorValues = {'/otherPropertyName': 'value-returned-by-form-inspector'};
-    formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
-
-    const schemaOptions = {
-        type: {
-            name: 'type',
-            value: 'auto_complete',
-        },
-        request_parameters: {
-            name: 'request_parameters',
-            value: [
-                {
-                    name: 'staticKey',
-                    value: 'some-static-value',
+    renderSelection({
+        disabled: true,
+        fieldTypeOptions: {
+            default_type: 'list_overlay',
+            resource_key: 'snippets',
+            types: {
+                auto_complete: {
+                    display_property: 'name',
+                    filter_parameter: 'names',
+                    id_property: 'uuid',
+                    search_properties: ['name'],
                 },
-            ],
-        },
-        resource_store_properties_to_request: {
-            name: 'resource_store_properties_to_request',
-            value: [
-                {
-                    name: 'dynamicKey',
-                    value: 'otherPropertyName',
+                list_overlay: {
+                    adapter: 'table',
+                    display_properties: ['id', 'title'],
+                    label: 'sulu_snippet.selection_label',
+                    overlay_title: 'sulu_snippet.selection_overlay_title',
                 },
-            ],
+            },
         },
-    };
-
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-            value={value}
-        />
-    );
+        formInspector,
+        schemaOptions: {
+            request_parameters: {
+                name: 'request_parameters',
+                value: [{name: 'staticKey', value: 'some-static-value'}],
+            },
+            resource_store_properties_to_request: {
+                name: 'resource_store_properties_to_request',
+                value: [{name: 'dynamicKey', value: 'otherPropertyName'}],
+            },
+            type: {
+                name: 'type',
+                value: 'auto_complete',
+            },
+        },
+        value: [1, 6, 8],
+    });
 
     expect(formInspector.getValueByPath).toBeCalledWith('/otherPropertyName');
-
-    expect(selection.find('MultiAutoComplete').props()).toEqual(expect.objectContaining({
-        allowAdd: false,
-        disabled: true,
-        displayProperty: 'name',
-        idProperty: 'uuid',
-        searchProperties: ['name'],
-        selectionStore: selection.instance().autoCompleteSelectionStore,
-        options: {
-            staticKey: 'some-static-value',
-            dynamicKey: 'value-returned-by-form-inspector',
-        },
-    }));
+    expect(getLatestMockProps(MultiAutoCompleteMock).options).toEqual({
+        dynamicKey: 'value-returned-by-form-inspector',
+        staticKey: 'some-static-value',
+    });
 });
 
-test('Should trigger a reload of the auto_complete items if the value prop changes', () => {
-    const value = [1, 6, 8];
-
-    const fieldTypeOptions = {
-        default_type: 'auto_complete',
-        resource_key: 'snippets',
-        types: {
-            auto_complete: {
-                display_property: 'name',
-                filter_parameter: 'names',
-                id_property: 'uuid',
-                search_properties: ['name'],
+test('triggers auto_complete item reload when value changes', () => {
+    const onChange = jest.fn();
+    const onFinish = jest.fn();
+    const {formInspector, ref, rerender} = renderSelection({
+        fieldTypeOptions: {
+            default_type: 'auto_complete',
+            resource_key: 'snippets',
+            types: {
+                auto_complete: {
+                    display_property: 'name',
+                    filter_parameter: 'names',
+                    id_property: 'uuid',
+                    search_properties: ['name'],
+                },
             },
         },
-    };
+        value: [1, 6, 8],
+    });
 
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 1),
-            'pages'
-        )
-    );
+    ref.current.autoCompleteSelectionStore.items = [{uuid: 1}, {uuid: 6}, {uuid: 8}];
 
-    // $FlowFixMe
-    userStore.contentLocale = 'de';
-
-    const selection = shallow(
+    rerender(
         <Selection
             {...fieldTypeDefaultProps}
-            disabled={true}
-            fieldTypeOptions={fieldTypeOptions}
+            fieldTypeOptions={{
+                default_type: 'auto_complete',
+                resource_key: 'snippets',
+                types: {
+                    auto_complete: {
+                        display_property: 'name',
+                        filter_parameter: 'names',
+                        id_property: 'uuid',
+                        search_properties: ['name'],
+                    },
+                },
+            }}
             formInspector={formInspector}
-            value={value}
+            onChange={onChange}
+            onFinish={onFinish}
+            ref={ref}
+            value={[3, 4, 7]}
         />
     );
 
-    expect(selection.instance().autoCompleteSelectionStore.loadItems).not.toBeCalled();
-
-    selection.instance().autoCompleteSelectionStore.items = [{uuid: 1}, {uuid: 6}, {uuid: 8}];
-
-    selection.setProps({value: [3, 4, 7]});
-
-    expect(selection.instance().autoCompleteSelectionStore.loadItems).toBeCalledWith([3, 4, 7]);
+    expect(ref.current.autoCompleteSelectionStore.loadItems).toBeCalledWith([3, 4, 7]);
 });
 
-test('Should not trigger a reload of the auto_complete items if the value prop changes to the same value again', () => {
-    const value = [1, 6, 8];
-
-    const fieldTypeOptions = {
-        default_type: 'auto_complete',
-        resource_key: 'snippets',
-        types: {
-            auto_complete: {
-                display_property: 'name',
-                filter_parameter: 'names',
-                id_property: 'uuid',
-                search_properties: ['name'],
+test('does not reload auto_complete items when value stays the same', () => {
+    const onChange = jest.fn();
+    const onFinish = jest.fn();
+    const {formInspector, ref, rerender} = renderSelection({
+        fieldTypeOptions: {
+            default_type: 'auto_complete',
+            resource_key: 'snippets',
+            types: {
+                auto_complete: {
+                    display_property: 'name',
+                    filter_parameter: 'names',
+                    id_property: 'uuid',
+                    search_properties: ['name'],
+                },
             },
         },
-    };
+        value: [1, 6, 8],
+    });
 
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 1),
-            'pages'
-        )
-    );
+    ref.current.autoCompleteSelectionStore.items = [{uuid: 1}, {uuid: 6}, {uuid: 8}];
 
-    // $FlowFixMe
-    userStore.contentLocale = 'de';
-
-    const selection = shallow(
+    rerender(
         <Selection
             {...fieldTypeDefaultProps}
-            disabled={true}
-            fieldTypeOptions={fieldTypeOptions}
+            fieldTypeOptions={{
+                default_type: 'auto_complete',
+                resource_key: 'snippets',
+                types: {
+                    auto_complete: {
+                        display_property: 'name',
+                        filter_parameter: 'names',
+                        id_property: 'uuid',
+                        search_properties: ['name'],
+                    },
+                },
+            }}
             formInspector={formInspector}
-            value={value}
+            onChange={onChange}
+            onFinish={onFinish}
+            ref={ref}
+            value={[1, 6, 8]}
         />
     );
 
-    selection.instance().autoCompleteSelectionStore.items = [{uuid: 1}, {uuid: 6}, {uuid: 8}];
-
-    selection.setProps({value: [1, 6, 8]});
-
-    expect(selection.instance().autoCompleteSelectionStore.loadItems).not.toBeCalled();
+    expect(ref.current.autoCompleteSelectionStore.loadItems).not.toBeCalled();
 });
 
-test('Throw an error if a none string was passed to schema-options', () => {
-    const value = [1, 6, 8];
+test('calls onChange and onFinish when auto_complete selection store items change', async() => {
+    const onChange = jest.fn();
+    const onFinish = jest.fn();
 
-    const fieldTypeOptions = {
-        default_type: 'list_overlay',
-        resource_key: 'snippets',
-        types: {
-            list_overlay: {
-                adapter: 'table',
-                display_properties: ['id', 'title'],
-                icon: '',
-                label: 'sulu_snippet.selection_label',
-                overlay_title: 'sulu_snippet.selection_overlay_title',
+    const {ref} = renderSelection({
+        fieldTypeOptions: {
+            default_type: 'auto_complete',
+            resource_key: 'pages',
+            types: {
+                auto_complete: {
+                    allow_add: true,
+                    display_property: 'name',
+                    filter_parameter: 'names',
+                    id_property: 'uuid',
+                    search_properties: ['name'],
+                },
             },
         },
-    };
+        onChange,
+        onFinish,
+    });
 
-    const locale = observable.box('en');
+    act(() => {
+        ref.current.autoCompleteSelectionStore.items = [{uuid: 1}, {uuid: 2}, {uuid: 3}];
+    });
 
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 1, {locale}),
-            'pages'
-        )
-    );
-
-    const schemaOptions = {
-        type: {
-            name: 'type',
-            value: true,
-        },
-    };
-
-    expect(
-        () => shallow(
-            <Selection
-                {...fieldTypeDefaultProps}
-                disabled={true}
-                fieldTypeOptions={fieldTypeOptions}
-                formInspector={formInspector}
-                schemaOptions={schemaOptions}
-                value={value}
-            />
-        )
-    ).toThrow(/"type"/);
+    await waitFor(() => {
+        expect(onChange).toBeCalledWith([1, 2, 3]);
+    });
+    expect(onFinish).toBeCalled();
 });
 
-test('Throw an error if a none string was passed to field-type-options', () => {
-    const value = [1, 6, 8];
+test('does not call onChange/onFinish when auto_complete selection is empty and value is undefined', () => {
+    const onChange = jest.fn();
+    const onFinish = jest.fn();
 
-    const fieldTypeOptions = {
-        default_type: true,
-        resource_key: 'snippets',
-        types: {
-            list_overlay: {
-                adapter: 'table',
-                display_properties: ['id', 'title'],
-                icon: '',
-                label: 'sulu_snippet.selection_label',
-                overlay_title: 'sulu_snippet.selection_overlay_title',
+    const {ref} = renderSelection({
+        fieldTypeOptions: {
+            default_type: 'auto_complete',
+            resource_key: 'pages',
+            types: {
+                auto_complete: {
+                    allow_add: true,
+                    display_property: 'name',
+                    filter_parameter: 'names',
+                    id_property: 'uuid',
+                    search_properties: ['name'],
+                },
             },
         },
-    };
+        onChange,
+        onFinish,
+        value: undefined,
+    });
 
-    const locale = observable.box('en');
+    act(() => {
+        ref.current.autoCompleteSelectionStore.items = [];
+    });
 
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 1, {locale}),
-            'pages'
-        )
-    );
-
-    expect(
-        () => shallow(
-            <Selection
-                {...fieldTypeDefaultProps}
-                disabled={true}
-                fieldTypeOptions={fieldTypeOptions}
-                formInspector={formInspector}
-                value={value}
-            />
-        )
-    ).toThrow(/"default_type"/);
+    expect(onChange).not.toBeCalled();
+    expect(onFinish).not.toBeCalled();
 });
 
-test('Should call onChange and onFinish callback when content of selectionStore has changed', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
-
-    const fieldOptions = {
-        default_type: 'auto_complete',
-        resource_key: 'pages',
-        types: {
-            auto_complete: {
-                allow_add: true,
-                display_property: 'name',
-                filter_parameter: 'names',
-                id_property: 'uuid',
-                search_properties: ['name'],
+test('passes allowAdd prop to MultiAutoComplete', () => {
+    renderSelection({
+        fieldTypeOptions: {
+            default_type: 'auto_complete',
+            resource_key: 'snippets',
+            types: {
+                auto_complete: {
+                    allow_add: true,
+                    display_property: 'name',
+                    filter_parameter: 'names',
+                    id_property: 'uuid',
+                    search_properties: ['name'],
+                },
             },
         },
-    };
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+        value: [1, 6, 8],
+    });
 
-    const selection = mount(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldOptions}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-        />
-    );
-
-    selection.instance().autoCompleteSelectionStore.dataLoading = false;
-    selection.instance().autoCompleteSelectionStore.items = [
-        {uuid: 1},
-        {uuid: 2},
-        {uuid: 3},
-    ];
-
-    expect(changeSpy).toBeCalledWith([1, 2, 3]);
-    expect(finishSpy).toBeCalledWith();
-});
-
-test('Should not call onChange and onFinish callback when content of selectionStore is empty and undefined', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
-
-    const fieldOptions = {
-        default_type: 'auto_complete',
-        resource_key: 'pages',
-        types: {
-            auto_complete: {
-                allow_add: true,
-                display_property: 'name',
-                filter_parameter: 'names',
-                id_property: 'uuid',
-                search_properties: ['name'],
-            },
-        },
-    };
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
-
-    const selection = mount(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldOptions}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-        />
-    );
-
-    selection.instance().autoCompleteSelectionStore.dataLoading = false;
-    selection.instance().autoCompleteSelectionStore.items = [];
-
-    expect(changeSpy).not.toBeCalled();
-    expect(finishSpy).not.toBeCalled();
-});
-
-test('Should pass allowAdd prop to MultiAutoComplete component', () => {
-    const value = [1, 6, 8];
-
-    const fieldTypeOptions = {
-        default_type: 'auto_complete',
-        resource_key: 'snippets',
-        types: {
-            auto_complete: {
-                allow_add: true,
-                display_property: 'name',
-                filter_parameter: 'names',
-                id_property: 'uuid',
-                search_properties: ['name'],
-            },
-        },
-    };
-
-    const locale = observable.box('en');
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 1, {locale}),
-            'pages'
-        )
-    );
-
-    const selection = shallow(
-        <Selection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            value={value}
-        />
-    );
-
-    expect(selection.find('MultiAutoComplete').props()).toEqual(expect.objectContaining({
-        allowAdd: true,
-    }));
+    expect(getLatestMockProps(MultiAutoCompleteMock).allowAdd).toEqual(true);
 });

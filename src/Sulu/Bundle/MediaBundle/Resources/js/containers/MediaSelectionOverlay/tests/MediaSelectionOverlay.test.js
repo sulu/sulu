@@ -1,114 +1,92 @@
 // @flow
-import {mount, shallow} from 'enzyme';
-import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import React from 'react';
-import ListStore from 'sulu-admin-bundle/containers/List/stores/ListStore';
+import {observable} from 'mobx';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import MediaSelectionOverlay from '../../MediaSelectionOverlay';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function() {
-    this.destroy = jest.fn();
-    this.id = 1;
+jest.mock('sulu-admin-bundle/components', () => {
+    const React = require('react');
 
-    mockExtendObservable(this, {
-        data: {
-            id: 1,
-            _permissions: {},
-        },
+    const Overlay = jest.fn(function OverlayMock({children, onConfirm}) {
+        return React.createElement(
+            'div',
+            {'data-testid': 'overlay'},
+            children,
+            React.createElement('button', {onClick: onConfirm, type: 'button'}, 'confirm')
+        );
     });
-}));
 
-jest.mock('sulu-admin-bundle/containers/List/registries/listAdapterRegistry', () => {
-    return {
-        getOptions: jest.fn().mockReturnValue({}),
-        has: jest.fn().mockReturnValue(true),
-        get: jest.fn((key) => {
-            const adapters = {
-                'folder': require('sulu-admin-bundle/containers/List/adapters/FolderAdapter').default,
-                'media_card_selection': require('../../List/adapters/MediaCardSelectionAdapter').default,
-                'table': require('sulu-admin-bundle/containers/List/adapters/TableAdapter').default,
-            };
-            return adapters[key];
-        }),
-    };
+    return {Overlay};
 });
 
-jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () =>
-    jest.fn(function(resourceKey, userSettingsKey, observableOptions) {
-        mockExtendObservable(this, {
-            selections: [],
-            selectionIds: [],
-        });
-        this.observableOptions = observableOptions;
-        this.pageCount = 3;
-        this.filterOptions = {
-            get: jest.fn().mockReturnValue({}),
-        };
-        this.active = {
-            get: jest.fn(),
-        };
-        this.sortColumn = {
-            get: jest.fn(),
-        };
-        this.sortOrder = {
-            get: jest.fn(),
-        };
-        this.searchTerm = {
-            get: jest.fn(),
-        };
-        this.limit = {
-            get: jest.fn().mockReturnValue(10),
-        };
-        this.data = [];
-        this.getPage = jest.fn().mockReturnValue(2);
-        this.setPage = jest.fn();
+jest.mock('../../MediaCollection', () => {
+    const React = require('react');
 
-        this.updateLoadingStrategy = jest.fn();
-        this.updateStructureStrategy = jest.fn();
-        this.clearSelection = jest.fn();
-        this.reload = jest.fn();
-        this.clear = jest.fn();
-        this.getSchema = jest.fn().mockReturnValue({});
-        this.options = {};
-    })
-);
+    return jest.fn(function MediaCollectionMock({onCollectionNavigate}) {
+        function handleNavigate() {
+            onCollectionNavigate(1);
+        }
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(function() {
+        return React.createElement(
+            'button',
+            {'data-testid': 'navigate-collection', onClick: handleNavigate, type: 'button'},
+            'navigate'
+        );
+    });
+});
+
+jest.mock('../../../stores/CollectionStore', () => jest.fn(function() {
     this.destroy = jest.fn();
 }));
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/memoryFormStoreFactory', () => ({
-    createFromFormKey: jest.fn(),
-}));
+const overlayComponent = ((jest.requireMock('sulu-admin-bundle/components'): any): {
+    Overlay: {mock: {calls: Array<[Object]>}},
+    ...
+});
 
-let collectionListStoreMock: ListStore;
-let mediaListStoreMock: ListStore;
+function createListStore() {
+    return {
+        clear: jest.fn(),
+        clearSelection: jest.fn(),
+        data: [],
+        selections: [],
+        setPage: jest.fn(),
+    };
+}
+
+function getLatestOverlayProps(): any {
+    return getLatestMockProps(overlayComponent.Overlay);
+}
+
+let collectionListStoreMock: any;
+let mediaListStoreMock: any;
 
 beforeEach(() => {
     jest.clearAllMocks();
 
-    collectionListStoreMock = new ListStore('collections', 'collections', 'media_selection_overlay', {
-        page: observable.box(),
-    }, {});
-    collectionListStoreMock.data.push({
-        id: 1,
-        title: 'Title 1',
-        objectCount: 1,
-        description: 'Description 1',
-    },
-    {
-        id: 2,
-        title: 'Title 2',
-        objectCount: 0,
-        description: 'Description 2',
-    });
+    collectionListStoreMock = createListStore();
+    collectionListStoreMock.data.push(
+        {
+            id: 1,
+            title: 'Title 1',
+            objectCount: 1,
+            description: 'Description 1',
+        },
+        {
+            id: 2,
+            title: 'Title 2',
+            objectCount: 0,
+            description: 'Description 2',
+        }
+    );
 
-    mediaListStoreMock = new ListStore('media', 'media', 'media_selection_overlay', {
-        page: observable.box(),
-    }, {});
+    mediaListStoreMock = createListStore();
     mediaListStoreMock.data.push(
         {
             id: 1,
@@ -137,7 +115,7 @@ beforeEach(() => {
 
 test('Render an open MediaSelectionOverlay', () => {
     const locale = observable.box();
-    const mediaSelectionOverlay = mount(
+    const {asFragment} = render(
         <MediaSelectionOverlay
             collectionId={observable.box()}
             collectionListStore={collectionListStoreMock}
@@ -149,14 +127,14 @@ test('Render an open MediaSelectionOverlay', () => {
         />
     );
 
-    expect(mediaSelectionOverlay.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render an open MediaSelectionOverlay with selected items', () => {
     mediaListStoreMock.selections.push({id: 1});
-
     const locale = observable.box();
-    const mediaSelectionOverlay = mount(
+
+    const {asFragment} = render(
         <MediaSelectionOverlay
             collectionId={observable.box()}
             collectionListStore={collectionListStoreMock}
@@ -168,11 +146,11 @@ test('Render an open MediaSelectionOverlay with selected items', () => {
         />
     );
 
-    expect(mediaSelectionOverlay.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render the overlay with a loading confirm button', () => {
-    const mediaSelectionOverlay = mount(
+    render(
         <MediaSelectionOverlay
             collectionId={observable.box()}
             collectionListStore={collectionListStoreMock}
@@ -185,17 +163,19 @@ test('Render the overlay with a loading confirm button', () => {
         />
     );
 
-    expect(mediaSelectionOverlay.find('Overlay').at(0).prop('confirmLoading')).toEqual(true);
+    expect(getLatestOverlayProps().confirmLoading).toEqual(true);
 });
 
-test('Should call onConfirm callback with selected medias from media list', () => {
+test('Should call onConfirm callback with selected medias from media list', async() => {
     const confirmSpy = jest.fn();
-    const locale = observable.box();
-    const mediaSelectionOverlay = shallow(
+    const user = userEvent.setup();
+    mediaListStoreMock.selections = [{id: 1}, {id: 3}];
+
+    render(
         <MediaSelectionOverlay
             collectionId={observable.box()}
             collectionListStore={collectionListStoreMock}
-            locale={locale}
+            locale={observable.box()}
             mediaListStore={mediaListStoreMock}
             onClose={jest.fn()}
             onConfirm={confirmSpy}
@@ -203,41 +183,16 @@ test('Should call onConfirm callback with selected medias from media list', () =
         />
     );
 
-    const selections = [
-        {id: 1},
-        {id: 3},
-    ];
-    mediaListStoreMock.selections = selections;
-    mediaSelectionOverlay.find('Overlay').simulate('confirm');
-
-    expect(confirmSpy).toBeCalledWith(selections);
+    await user.click(screen.getByRole('button', {name: 'confirm'}));
+    expect(confirmSpy).toHaveBeenCalledWith(mediaListStoreMock.selections);
 });
 
 test('Should reset the selection of the media list when the reset-button is clicked', () => {
-    const locale = observable.box();
-    const mediaSelectionOverlayInstance = shallow(
+    render(
         <MediaSelectionOverlay
             collectionId={observable.box()}
             collectionListStore={collectionListStoreMock}
-            locale={locale}
-            mediaListStore={mediaListStoreMock}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-        />
-    ).instance();
-
-    mediaSelectionOverlayInstance.handleSelectionReset();
-    expect(mediaListStoreMock.clearSelection).toBeCalled();
-});
-
-test('Should reset the selection of the media list when the overlay is closed', () => {
-    const locale = observable.box();
-    const mediaSelectionOverlay = shallow(
-        <MediaSelectionOverlay
-            collectionId={observable.box()}
-            collectionListStore={collectionListStoreMock}
-            locale={locale}
+            locale={observable.box()}
             mediaListStore={mediaListStoreMock}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
@@ -245,18 +200,47 @@ test('Should reset the selection of the media list when the overlay is closed', 
         />
     );
 
-    mediaSelectionOverlay.setProps({open: false});
-    expect(mediaListStoreMock.clearSelection).toBeCalled();
+    getLatestOverlayProps().actions[0].onClick();
+    expect(mediaListStoreMock.clearSelection).toHaveBeenCalled();
 });
 
-test('Should change the current collection id and reset the page of the lists on collection-change', () => {
-    const locale = observable.box();
+test('Should reset the selection of the media list when the overlay is closed', () => {
+    const {rerender} = render(
+        <MediaSelectionOverlay
+            collectionId={observable.box()}
+            collectionListStore={collectionListStoreMock}
+            locale={observable.box()}
+            mediaListStore={mediaListStoreMock}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+        />
+    );
+
+    rerender(
+        <MediaSelectionOverlay
+            collectionId={observable.box()}
+            collectionListStore={collectionListStoreMock}
+            locale={observable.box()}
+            mediaListStore={mediaListStoreMock}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+        />
+    );
+
+    expect(mediaListStoreMock.clearSelection).toHaveBeenCalled();
+});
+
+test('Should change the current collection id and reset the page of the lists on collection-change', async() => {
+    const user = userEvent.setup();
     const collectionId = observable.box();
-    const mediaSelectionOverlay = mount(
+
+    render(
         <MediaSelectionOverlay
             collectionId={collectionId}
             collectionListStore={collectionListStoreMock}
-            locale={locale}
+            locale={observable.box()}
             mediaListStore={mediaListStoreMock}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
@@ -267,10 +251,10 @@ test('Should change the current collection id and reset the page of the lists on
     expect(collectionListStoreMock.setPage).not.toHaveBeenCalled();
     expect(mediaListStoreMock.setPage).not.toHaveBeenCalled();
 
-    mediaSelectionOverlay.find('Folder').at(0).simulate('click');
+    await user.click(screen.getByTestId('navigate-collection'));
 
     expect(collectionListStoreMock.setPage).toHaveBeenCalledWith(1);
     expect(mediaListStoreMock.setPage).toHaveBeenCalledWith(1);
     expect(collectionId.get()).toEqual(1);
-    expect(mediaListStoreMock.clearSelection).not.toBeCalled();
+    expect(mediaListStoreMock.clearSelection).not.toHaveBeenCalled();
 });

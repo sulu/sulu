@@ -1,15 +1,23 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {render} from '@testing-library/react';
+import {Button} from 'sulu-admin-bundle/components';
+import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import ConditionList from '../ConditionList';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: (key) => key,
 }));
+jest.mock('sulu-admin-bundle/components', () => ({
+    Button: jest.fn(() => null),
+}));
 
 test('Render an empty ConditionList', () => {
     const value = [];
-    expect(render(<ConditionList onChange={jest.fn()} value={value} />)).toMatchSnapshot();
+    render(<ConditionList onChange={jest.fn()} value={value} />);
+
+    const buttonProps: any = getLatestMockProps((Button: any));
+    expect(buttonProps.icon).toEqual('su-plus');
 });
 
 test('Add a new Condition', () => {
@@ -19,9 +27,8 @@ test('Add a new Condition', () => {
 
     const changeSpy = jest.fn();
 
-    const conditionList = shallow(<ConditionList onChange={changeSpy} value={value} />);
-
-    conditionList.find('Button[icon="su-plus"]').prop('onClick')();
+    const conditionList = new ConditionList({onChange: changeSpy, value});
+    conditionList.handleAddClick();
 
     expect(changeSpy).toBeCalledWith([{condition: {}, type: 'browser'}, {condition: {}, type: undefined}]);
 });
@@ -34,8 +41,8 @@ test('Edit an existing Condition', () => {
 
     const changeSpy = jest.fn();
 
-    const conditionList = shallow(<ConditionList onChange={changeSpy} value={value} />);
-    conditionList.find('Condition').at(1).prop('onChange')({condition: {test: 'value'}, type: 'test'}, 1);
+    const conditionList = new ConditionList({onChange: changeSpy, value});
+    conditionList.handleChange({condition: {test: 'value'}, type: 'test'}, 1);
 
     expect(changeSpy).toBeCalledWith([{condition: {}, type: 'browser'}, {condition: {test: 'value'}, type: 'test'}]);
 });
@@ -48,8 +55,8 @@ test('Remove an existing Condition', () => {
 
     const changeSpy = jest.fn();
 
-    const conditionList = shallow(<ConditionList onChange={changeSpy} value={value} />);
-    conditionList.find('Condition').at(1).prop('onRemove')(1);
+    const conditionList = new ConditionList({onChange: changeSpy, value});
+    conditionList.handleRemove(1);
 
     expect(changeSpy).toBeCalledWith([{condition: {}, type: 'browser'}]);
 });

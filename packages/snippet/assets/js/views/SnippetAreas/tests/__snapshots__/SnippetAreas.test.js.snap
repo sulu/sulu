@@ -1,104 +1,106 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render snippet areas with data as table 1`] = `
-<div
-  class="tableContainer light"
->
-  <table
-    class="table"
+<DocumentFragment>
+  <div
+    class="tableContainer light"
   >
-    <thead
-      class="header"
+    <table
+      class="table"
     >
-      <tr>
-        <th
-          class="headerCell"
-        >
-          <span>
-            sulu_snippet.snippet_area
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            sulu_snippet.snippet
-          </span>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+      <thead
+        class="header"
       >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
+        <tr>
+          <th
+            class="headerCell"
           >
-            Default
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
+            <span>
+              sulu_snippet.snippet_area
+            </span>
+          </th>
+          <th
+            class="headerCell"
           >
-            <button
-              class="button link addButton"
-              type="button"
+            <span>
+              sulu_snippet.snippet
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
             >
-              <span
-                aria-label="su-plus-circle"
-                class="su-plus-circle buttonIcon"
-              />
-            </button>
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
+              Default
+            </div>
+          </td>
+          <td
+            class="cell"
           >
-            Footer
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            <button
-              class="button text hasText titleButton"
-              type="button"
+            <div
+              class="cellContent"
             >
-              <span
-                class="buttonText"
+              <button
+                class="button link addButton"
+                type="button"
               >
-                Footer Snippet
-              </span>
-            </button>
-            <button
-              class="button link deleteButton"
-              type="button"
+                <span
+                  aria-label="su-plus-circle"
+                  class="su-plus-circle buttonIcon"
+                />
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
             >
-              <span
-                aria-label="su-trash-alt"
-                class="su-trash-alt buttonIcon"
-              />
-            </button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+              Footer
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <button
+                class="button text hasText titleButton"
+                type="button"
+              >
+                <span
+                  class="buttonText"
+                >
+                  Footer Snippet
+                </span>
+              </button>
+              <button
+                class="button link deleteButton"
+                type="button"
+              >
+                <span
+                  aria-label="su-trash-alt"
+                  class="su-trash-alt buttonIcon"
+                />
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</DocumentFragment>
 `;

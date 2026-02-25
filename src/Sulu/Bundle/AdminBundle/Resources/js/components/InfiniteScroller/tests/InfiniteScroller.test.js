@@ -1,6 +1,6 @@
 // @flow
-import {mount, render} from 'enzyme';
 import React from 'react';
+import {render} from '@testing-library/react';
 import InfiniteScroller from '../InfiniteScroller';
 
 window.getComputedStyle = jest.fn();
@@ -14,135 +14,132 @@ jest.mock('../../../utils/Translator', () => ({
     },
 }));
 
-test('InfiniteScroller traverses the dom upwards until it finds a scroll container', () => {
-    window.getComputedStyle.mockReturnValue({
-        'overflow-y': 'auto',
-    });
-
-    const loadSpy = jest.fn();
-    const infiniteScrollerWrapper = mount(
-        <div id="scrollable">
-            <InfiniteScroller
-                currentPage={1}
-                loading={false}
-                onPageChange={loadSpy}
-                totalPages={10}
-            >
-                <div />
-            </InfiniteScroller>
-        </div>
-    );
-
-    expect(infiniteScrollerWrapper.find('InfiniteScroller').instance().scrollContainer.id).toBe('scrollable');
+const createProps = (props = {}) => ({
+    currentPage: 1,
+    loading: false,
+    onPageChange: jest.fn(),
+    totalPages: 10,
+    ...props,
 });
 
-test('InfiniteScroller should call onPageChange if the the bottom of the content is reached', (done) => {
-    window.getComputedStyle.mockReturnValue({
-        'overflow-y': 'auto',
-    });
-
-    const loadSpy = jest.fn();
-    const infiniteScrollerWrapper = mount(
-        <div id="scrollable">
-            <InfiniteScroller
-                currentPage={1}
-                loading={false}
-                onPageChange={loadSpy}
-                totalPages={10}
-            >
-                <div />
-            </InfiniteScroller>
-        </div>
+const renderInfiniteScrollerSnapshot = (props = {}) => {
+    const bindScrollListenerSpy = jest.spyOn(InfiniteScroller.prototype, 'bindScrollListener')
+        .mockImplementation(() => {});
+    const unbindScrollListenerSpy = jest.spyOn(InfiniteScroller.prototype, 'unbindScrollListener')
+        .mockImplementation(() => {});
+    const view = render(
+        <InfiniteScroller
+            currentPage={1}
+            loading={false}
+            onPageChange={jest.fn()}
+            totalPages={10}
+            {...props}
+        >
+            <div />
+        </InfiniteScroller>
     );
 
-    const infiniteScroller = infiniteScrollerWrapper.find('InfiniteScroller').instance();
+    const snapshot = view.asFragment();
+    view.unmount();
+    bindScrollListenerSpy.mockRestore();
+    unbindScrollListenerSpy.mockRestore();
 
-    infiniteScroller.scrollContainer = {
-        getBoundingClientRect: () => ({
-            bottom: 260,
-        }),
+    return snapshot;
+};
+
+beforeEach(() => {
+    jest.useRealTimers();
+    window.getComputedStyle.mockReset();
+    window.getComputedStyle.mockReturnValue({'overflow-y': 'auto'});
+});
+
+test('InfiniteScroller traverses the dom upwards until it finds a scroll container', () => {
+    const scrollableContainer = {id: 'scrollable'};
+    const middleContainer = {parentNode: scrollableContainer};
+    const childContainer = {parentNode: middleContainer};
+
+    // $FlowFixMe - test provides minimal node-like objects for style lookup.
+    window.getComputedStyle.mockImplementation((element) => ({
+        'overflow-y': element === scrollableContainer ? 'auto' : 'visible',
+    }));
+
+    const ref: any = React.createRef();
+    const props = createProps();
+
+    render(
+        <InfiniteScroller {...props} ref={ref}>
+            <div />
+        </InfiniteScroller>
+    );
+
+    if (!ref.current) {
+        throw new Error('Expected InfiniteScroller ref to be set');
+    }
+
+    expect(ref.current.getScrollContainer(childContainer)).toBe(scrollableContainer);
+});
+
+test('InfiniteScroller should call onPageChange if the bottom of the content is reached', () => {
+    const loadSpy = jest.fn();
+    const ref: any = React.createRef();
+    const props = createProps({onPageChange: loadSpy});
+
+    render(
+        <InfiniteScroller {...props} ref={ref}>
+            <div />
+        </InfiniteScroller>
+    );
+
+    if (!ref.current) {
+        throw new Error('Expected InfiniteScroller ref to be set');
+    }
+
+    ref.current.scrollContainer = {
+        getBoundingClientRect: () => ({bottom: 260}),
         removeEventListener: jest.fn(),
     };
-    infiniteScroller.elementRef = {
-        getBoundingClientRect: () => ({
-            bottom: 300,
-        }),
+    ref.current.elementRef = {
+        getBoundingClientRect: () => ({bottom: 300}),
     };
-    infiniteScroller.scrollListener();
 
-    setTimeout(() => {
-        expect(loadSpy).toBeCalledWith(2);
-        done();
-    }, 250);
+    ref.current.scrollListener();
+    ref.current.scrollListener.flush();
+
+    expect(loadSpy).toBeCalledWith(2);
 });
 
 test('InfiniteScroller should unbind scroll and resize event on unmount', () => {
-    window.getComputedStyle.mockReturnValue({
-        'overflow-y': 'auto',
+    const getScrollContainerSpy = jest.spyOn(InfiniteScroller.prototype, 'getScrollContainer');
+    const removeEventListenerSpy = jest.fn();
+    getScrollContainerSpy.mockReturnValue({
+        addEventListener: jest.fn(),
+        getBoundingClientRect: jest.fn(() => ({bottom: 0})),
+        removeEventListener: removeEventListenerSpy,
     });
 
-    const loadSpy = jest.fn();
-    const removeEventListenerSpy = jest.fn();
-    const infiniteScrollerWrapper = mount(
-        <div id="scrollable">
-            <InfiniteScroller
-                currentPage={1}
-                loading={false}
-                onPageChange={loadSpy}
-                totalPages={10}
-            >
-                <div />
-            </InfiniteScroller>
-        </div>
+    const {unmount} = render(
+        <InfiniteScroller {...createProps()}>
+            <div />
+        </InfiniteScroller>
     );
 
-    const infiniteScroller = infiniteScrollerWrapper.find('InfiniteScroller').instance();
+    const scrollListener = getScrollContainerSpy.mock.instances[0].scrollListener;
+    unmount();
 
-    infiniteScroller.scrollContainer = {
-        removeEventListener: removeEventListenerSpy,
-    };
+    expect(removeEventListenerSpy).toBeCalledWith('resize', scrollListener, false);
+    expect(removeEventListenerSpy).toBeCalledWith('scroll', scrollListener, false);
 
-    infiniteScrollerWrapper.unmount();
-    expect(removeEventListenerSpy).toBeCalledWith('resize', infiniteScroller.scrollListener, false);
-    expect(removeEventListenerSpy).toBeCalledWith('scroll', infiniteScroller.scrollListener, false);
+    getScrollContainerSpy.mockRestore();
 });
 
 test('InfiniteScroller should show a loader when the loading prop is set to true', () => {
-    window.getComputedStyle.mockReturnValue({
-        'overflow-y': 'auto',
-    });
+    const tree = renderInfiniteScrollerSnapshot({loading: true});
 
-    const loadSpy = jest.fn();
-    expect(render(
-        <div id="scrollable">
-            <InfiniteScroller
-                currentPage={1}
-                loading={true}
-                onPageChange={loadSpy}
-                totalPages={10}
-            >
-                <div />
-            </InfiniteScroller>
-        </div>
-    )).toMatchSnapshot();
+    expect(tree).toMatchSnapshot();
 });
 
 test('InfiniteScroller should show an info message when the last page has been reached', () => {
-    window.getComputedStyle.mockReturnValue({
-        'overflow-y': 'auto',
-    });
+    const tree = renderInfiniteScrollerSnapshot({currentPage: 10});
 
-    const loadSpy = jest.fn();
-    expect(render(
-        <div id="scrollable">
-            <InfiniteScroller
-                currentPage={10}
-                loading={false}
-                onPageChange={loadSpy}
-                totalPages={10}
-            >
-                <div />
-            </InfiniteScroller>
-        </div>
-    )).toMatchSnapshot();
+    expect(tree).toMatchSnapshot();
 });

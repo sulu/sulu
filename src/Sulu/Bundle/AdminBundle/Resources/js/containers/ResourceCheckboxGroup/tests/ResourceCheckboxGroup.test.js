@@ -1,8 +1,11 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import ResourceCheckboxGroup from '../ResourceCheckboxGroup';
 import ResourceListStore from '../../../stores/ResourceListStore';
+import getMockCallArg from '../../../utils/TestHelper/getMockCallArg';
+import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
 
 jest.mock('../../../stores/ResourceListStore', () => jest.fn());
 
@@ -10,30 +13,73 @@ jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
-test('Render with data', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'id': 2,
-                'name': 'Test ABC',
-                'someOtherProperty': 'No no',
-            },
-            {
-                'id': 5,
-                'name': 'Test DEF',
-                'someOtherProperty': 'YES YES',
-            },
-            {
-                'id': 99,
-                'name': 'Test XYZ',
-                'someOtherProperty': 'maybe maybe',
-            },
-        ];
+jest.mock('../../../components/Loader', () => {
+    const React = require('react');
+
+    return jest.fn(function LoaderMock() {
+        return React.createElement('div', {'data-testid': 'loader'});
+    });
+});
+
+jest.mock('../../../components/Checkbox', () => {
+    const React = require('react');
+
+    const Checkbox = jest.fn(function CheckboxMock({children}) {
+        return React.createElement('div', {'data-testid': 'checkbox'}, children);
     });
 
-    const resourceCheckboxGroup = mount(
+    const CheckboxGroup = jest.fn(function CheckboxGroupMock({children, onChange, values}) {
+        const clonedChildren = React.Children.map(children, (child, index) => React.cloneElement(
+            child,
+            {
+                ...child.props,
+                checked: values.includes(child.props.value),
+                key: index,
+            }
+        ));
+
+        function handleChangeClick() {
+            onChange([5, 99]);
+        }
+
+        return React.createElement(
+            'div',
+            {'data-testid': 'checkbox-group'},
+            React.createElement('button', {onClick: handleChangeClick, type: 'button'}, 'change-values'),
+            clonedChildren
+        );
+    });
+
+    return {
+        __esModule: true,
+        default: Checkbox,
+        CheckboxGroup,
+    };
+});
+
+const checkboxModule = ((jest.requireMock('../../../components/Checkbox'): any): {
+    CheckboxGroup: {mock: {calls: Array<[Object]>}, ...},
+    default: {mock: {calls: Array<[Object]>}, ...},
+    ...
+});
+const checkboxMock = checkboxModule.default;
+
+function mockResourceListStoreData(data: ?Array<Object>, loading: boolean = false) {
+    // $FlowFixMe
+    ResourceListStore.mockImplementation(function() {
+        this.loading = loading;
+        this.data = data;
+    });
+}
+
+test('Render with data', () => {
+    mockResourceListStoreData([
+        {'id': 2, 'name': 'Test ABC', 'someOtherProperty': 'No no'},
+        {'id': 5, 'name': 'Test DEF', 'someOtherProperty': 'YES YES'},
+        {'id': 99, 'name': 'Test XYZ', 'someOtherProperty': 'maybe maybe'},
+    ]);
+
+    const {asFragment} = render(
         <ResourceCheckboxGroup
             displayProperty="name"
             onChange={jest.fn()}
@@ -42,29 +88,17 @@ test('Render with data', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', {});
-    expect(resourceCheckboxGroup.render()).toMatchSnapshot();
+    expect(ResourceListStore).toHaveBeenCalledWith('test', {});
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render in disabled state', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'id': 2,
-                'name': 'Test ABC',
-                'someOtherProperty': 'No no',
-            },
-            {
-                'id': 5,
-                'name': 'Test DEF',
-                'someOtherProperty': 'YES YES',
-            },
-        ];
-    });
+    mockResourceListStoreData([
+        {'id': 2, 'name': 'Test ABC', 'someOtherProperty': 'No no'},
+        {'id': 5, 'name': 'Test DEF', 'someOtherProperty': 'YES YES'},
+    ]);
 
-    const resourceCheckboxGroup = shallow(
+    render(
         <ResourceCheckboxGroup
             disabled={true}
             displayProperty="name"
@@ -74,18 +108,14 @@ test('Render in disabled state', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', {});
-    expect(resourceCheckboxGroup.find('CheckboxGroup').prop('disabled')).toEqual(true);
+    expect(ResourceListStore).toHaveBeenCalledWith('test', {});
+    expect(getLatestMockProps(checkboxModule.CheckboxGroup).disabled).toEqual(true);
 });
 
 test('Render in loading state', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = true;
-        this.data = undefined;
-    });
+    mockResourceListStoreData(undefined, true);
 
-    const resourceCheckboxGroup = shallow(
+    render(
         <ResourceCheckboxGroup
             displayProperty="name"
             onChange={jest.fn()}
@@ -94,35 +124,19 @@ test('Render in loading state', () => {
         />
     );
 
-    expect(resourceCheckboxGroup.find('Loader')).toHaveLength(1);
+    expect(screen.getByTestId('loader')).toBeInTheDocument();
 });
 
 test('Pass requestParameters', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'id': 2,
-                'name': 'Test ABC',
-                'someOtherProperty': 'No no',
-            },
-            {
-                'id': 5,
-                'name': 'Test DEF',
-                'someOtherProperty': 'YES YES',
-            },
-            {
-                'id': 99,
-                'name': 'Test XYZ',
-                'someOtherProperty': 'maybe maybe',
-            },
-        ];
-    });
+    mockResourceListStoreData([
+        {'id': 2, 'name': 'Test ABC', 'someOtherProperty': 'No no'},
+        {'id': 5, 'name': 'Test DEF', 'someOtherProperty': 'YES YES'},
+        {'id': 99, 'name': 'Test XYZ', 'someOtherProperty': 'maybe maybe'},
+    ]);
 
     const requestParameters = {'testOption': 'testValue'};
 
-    mount(
+    render(
         <ResourceCheckboxGroup
             displayProperty="name"
             onChange={jest.fn()}
@@ -132,26 +146,18 @@ test('Pass requestParameters', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', requestParameters);
+    expect(ResourceListStore).toHaveBeenCalledWith('test', requestParameters);
 });
 
 test('Pass requestParameters when requestParameters props changed', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'id': 2,
-                'name': 'Test ABC',
-                'someOtherProperty': 'No no',
-            },
-        ];
-    });
+    mockResourceListStoreData([
+        {'id': 2, 'name': 'Test ABC', 'someOtherProperty': 'No no'},
+    ]);
 
     const requestParameters1 = {};
     const requestParameters2 = {'testOption': 'testValue'};
 
-    const resourceCheckboxGroup = mount(
+    const {rerender} = render(
         <ResourceCheckboxGroup
             displayProperty="name"
             onChange={jest.fn()}
@@ -161,13 +167,15 @@ test('Pass requestParameters when requestParameters props changed', () => {
         />
     );
 
-    resourceCheckboxGroup.setProps({
-        requestParameters: requestParameters2,
-        displayProperty: 'name',
-        onChange: jest.fn(),
-        resourceKey: 'test',
-        values: undefined,
-    });
+    rerender(
+        <ResourceCheckboxGroup
+            displayProperty="name"
+            onChange={jest.fn()}
+            requestParameters={requestParameters2}
+            resourceKey="test"
+            values={undefined}
+        />
+    );
 
     // $FlowFixMe
     expect(ResourceListStore.mock.calls).toEqual([
@@ -177,21 +185,13 @@ test('Pass requestParameters when requestParameters props changed', () => {
 });
 
 test('Pass requestParameters when resourceKey props changed', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'id': 2,
-                'name': 'Test ABC',
-                'someOtherProperty': 'No no',
-            },
-        ];
-    });
+    mockResourceListStoreData([
+        {'id': 2, 'name': 'Test ABC', 'someOtherProperty': 'No no'},
+    ]);
 
     const requestParameters = {};
 
-    const resourceCheckboxGroup = mount(
+    const {rerender} = render(
         <ResourceCheckboxGroup
             displayProperty="name"
             onChange={jest.fn()}
@@ -201,13 +201,15 @@ test('Pass requestParameters when resourceKey props changed', () => {
         />
     );
 
-    resourceCheckboxGroup.setProps({
-        requestParameters,
-        displayProperty: 'name',
-        onChange: jest.fn(),
-        resourceKey: 'test2',
-        values: undefined,
-    });
+    rerender(
+        <ResourceCheckboxGroup
+            displayProperty="name"
+            onChange={jest.fn()}
+            requestParameters={requestParameters}
+            resourceKey="test2"
+            values={undefined}
+        />
+    );
 
     // $FlowFixMe
     expect(ResourceListStore.mock.calls).toEqual([
@@ -217,29 +219,13 @@ test('Pass requestParameters when resourceKey props changed', () => {
 });
 
 test('Render with values', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'id': 2,
-                'name': 'Test ABC',
-                'someOtherProperty': 'No no',
-            },
-            {
-                'id': 5,
-                'name': 'Test DEF',
-                'someOtherProperty': 'YES YES',
-            },
-            {
-                'id': 99,
-                'name': 'Test XYZ',
-                'someOtherProperty': 'maybe maybe',
-            },
-        ];
-    });
+    mockResourceListStoreData([
+        {'id': 2, 'name': 'Test ABC', 'someOtherProperty': 'No no'},
+        {'id': 5, 'name': 'Test DEF', 'someOtherProperty': 'YES YES'},
+        {'id': 99, 'name': 'Test XYZ', 'someOtherProperty': 'maybe maybe'},
+    ]);
 
-    const resourceCheckboxGroup = mount(
+    render(
         <ResourceCheckboxGroup
             displayProperty="name"
             onChange={jest.fn()}
@@ -248,36 +234,22 @@ test('Render with values', () => {
         />
     );
 
-    expect(resourceCheckboxGroup.find('Checkbox').at(0).prop('checked')).toEqual(false);
-    expect(resourceCheckboxGroup.find('Checkbox').at(1).prop('checked')).toEqual(true);
-    expect(resourceCheckboxGroup.find('Checkbox').at(2).prop('checked')).toEqual(true);
+    expect(getMockCallArg(checkboxMock, 0, 0).checked).toEqual(false);
+    expect(getMockCallArg(checkboxMock, 1, 0).checked).toEqual(true);
+    expect(getMockCallArg(checkboxMock, 2, 0).checked).toEqual(true);
 });
 
-test('The component should trigger the change callback', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'id': 2,
-                'name': 'Test ABC',
-                'someOtherProperty': 'No no',
-            },
-            {
-                'id': 5,
-                'name': 'Test DEF',
-                'someOtherProperty': 'YES YES',
-            },
-            {
-                'id': 99,
-                'name': 'Test XYZ',
-                'someOtherProperty': 'maybe maybe',
-            },
-        ];
-    });
+test('The component should trigger the change callback', async() => {
+    mockResourceListStoreData([
+        {'id': 2, 'name': 'Test ABC', 'someOtherProperty': 'No no'},
+        {'id': 5, 'name': 'Test DEF', 'someOtherProperty': 'YES YES'},
+        {'id': 99, 'name': 'Test XYZ', 'someOtherProperty': 'maybe maybe'},
+    ]);
 
     const onChangeSpy = jest.fn();
-    const resourceCheckboxGroup = shallow(
+    const user = userEvent.setup();
+
+    render(
         <ResourceCheckboxGroup
             displayProperty="name"
             onChange={onChangeSpy}
@@ -287,18 +259,10 @@ test('The component should trigger the change callback', () => {
     );
 
     const expectedValues = [
-        {
-            'id': 5,
-            'name': 'Test DEF',
-            'someOtherProperty': 'YES YES',
-        },
-        {
-            'id': 99,
-            'name': 'Test XYZ',
-            'someOtherProperty': 'maybe maybe',
-        },
+        {'id': 5, 'name': 'Test DEF', 'someOtherProperty': 'YES YES'},
+        {'id': 99, 'name': 'Test XYZ', 'someOtherProperty': 'maybe maybe'},
     ];
 
-    resourceCheckboxGroup.find('CheckboxGroup').props().onChange([5, 99]);
+    await user.click(screen.getByRole('button', {name: 'change-values'}));
     expect(onChangeSpy).toHaveBeenCalledWith([5, 99], expectedValues);
 });

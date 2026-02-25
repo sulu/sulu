@@ -1,6 +1,7 @@
 // @flow
-import {render, mount} from 'enzyme';
 import React from 'react';
+import {render, screen, within} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Table from '../Table';
 import Header from '../Header';
 import Body from '../Body';
@@ -8,14 +9,8 @@ import Row from '../Row';
 import Cell from '../Cell';
 import HeaderCell from '../HeaderCell';
 
-afterEach(() => {
-    if (document.body) {
-        document.body.innerHTML = '';
-    }
-});
-
 test('Render the Table component', () => {
-    expect(render(
+    const {asFragment} = render(
         <Table>
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
@@ -35,11 +30,13 @@ test('Render the Table component', () => {
                 </Row>
             </Body>
         </Table>
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render the Table component with a skin', () => {
-    expect(render(
+    const {asFragment} = render(
         <Table skin="light">
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
@@ -59,11 +56,13 @@ test('Render the Table component with a skin', () => {
                 </Row>
             </Body>
         </Table>
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render the Table component with shrunken cells', () => {
-    expect(render(
+    const {asFragment} = render(
         <Table>
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
@@ -83,11 +82,13 @@ test('Render the Table component with shrunken cells', () => {
                 </Row>
             </Body>
         </Table>
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render the Table component in tree structure', () => {
-    expect(render(
+    const {asFragment} = render(
         <Table>
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
@@ -112,13 +113,15 @@ test('Render the Table component in tree structure', () => {
                 </Row>
             </Body>
         </Table>
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render an empty table', () => {
     const placeholderText = 'No entries';
 
-    expect(render(
+    const {asFragment} = render(
         <Table placeholderText={placeholderText}>
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
@@ -127,7 +130,9 @@ test('Render an empty table', () => {
             </Header>
             <Body />
         </Table>
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a table with buttons', () => {
@@ -143,7 +148,7 @@ test('Render a table with buttons', () => {
         },
     ];
 
-    expect(render(
+    const {asFragment} = render(
         <Table buttons={buttons}>
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
@@ -158,7 +163,9 @@ test('Render a table with buttons', () => {
                 </Row>
             </Body>
         </Table>
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a table with different buttons for each row', () => {
@@ -167,7 +174,7 @@ test('Render a table with different buttons for each row', () => {
         onClick: jest.fn(),
     }];
 
-    expect(render(
+    const {asFragment} = render(
         <Table buttons={buttons}>
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
@@ -187,7 +194,9 @@ test('Render a table with different buttons for each row', () => {
                 </Row>
             </Body>
         </Table>
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a table with disabled rows', () => {
@@ -196,7 +205,7 @@ test('Render a table with disabled rows', () => {
         onClick: jest.fn(),
     }];
 
-    expect(render(
+    const {asFragment} = render(
         <Table buttons={buttons}>
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
@@ -213,17 +222,19 @@ test('Render a table with disabled rows', () => {
                 </Row>
             </Body>
         </Table>
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Table buttons should implement an onClick handler', () => {
+test('Table buttons should implement an onClick handler', async() => {
     const clickSpy = jest.fn();
     const buttons = [{
         icon: 'fa-pencil',
         onClick: clickSpy,
     }];
 
-    const table = mount(
+    render(
         <Table buttons={buttons}>
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
@@ -246,14 +257,18 @@ test('Table buttons should implement an onClick handler', () => {
     );
 
     expect(clickSpy).toHaveBeenCalledTimes(0);
-    table.find('.buttonCell button').at(0).simulate('click');
-    table.find('.buttonCell button').at(1).simulate('click');
+
+    const actionButtons = screen.getAllByRole('button');
+
+    await userEvent.click(actionButtons[0]);
+    await userEvent.click(actionButtons[1]);
+
     expect(clickSpy).toBeCalledWith(19, 0);
     expect(clickSpy).toBeCalledWith(25, 1);
     expect(clickSpy).toHaveBeenCalledTimes(2);
 });
 
-test('Table buttons should not call onClick handler if button is disabled', () => {
+test('Table buttons should not call onClick handler if button is disabled', async() => {
     const clickSpy = jest.fn();
     const buttons = [{
         disabled: true,
@@ -261,7 +276,7 @@ test('Table buttons should not call onClick handler if button is disabled', () =
         onClick: clickSpy,
     }];
 
-    const table = mount(
+    render(
         <Table buttons={buttons}>
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
@@ -284,13 +299,17 @@ test('Table buttons should not call onClick handler if button is disabled', () =
     );
 
     expect(clickSpy).toHaveBeenCalledTimes(0);
-    table.find('.buttonCell button').at(0).simulate('click');
-    table.find('.buttonCell button').at(1).simulate('click');
+
+    const actionButtons = screen.getAllByRole('button');
+
+    await userEvent.click(actionButtons[0]);
+    await userEvent.click(actionButtons[1]);
+
     expect(clickSpy).not.toBeCalled();
 });
 
 test('Render the Table component in single selection mode', () => {
-    expect(render(
+    const {asFragment} = render(
         <Table selectMode="single">
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
@@ -305,17 +324,20 @@ test('Render the Table component in single selection mode', () => {
                 </Row>
             </Body>
         </Table>
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Clicking on the radio button should call onRowSelectionChange with the row-id', () => {
+test('Clicking on the radio button should call onRowSelectionChange with the row-id', async() => {
     const onChangeSpy = jest.fn();
     const props = {
         selectMode: 'single',
         onRowSelectionChange: onChangeSpy,
     };
     const rowId = 'test-row-id';
-    const table = mount(
+
+    render(
         <Table {...props}>
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
@@ -333,12 +355,14 @@ test('Clicking on the radio button should call onRowSelectionChange with the row
     );
 
     expect(onChangeSpy).toHaveBeenCalledTimes(0);
-    table.find('Row Radio input').simulate('change');
+
+    await userEvent.click(screen.getByRole('radio'));
+
     expect(onChangeSpy).toHaveBeenCalledWith(rowId, undefined);
 });
 
 test('Render the Table component in multiple selection mode', () => {
-    expect(render(
+    const {asFragment} = render(
         <Table selectMode="multiple">
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
@@ -353,11 +377,13 @@ test('Render the Table component in multiple selection mode', () => {
                 </Row>
             </Body>
         </Table>
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render the Table component in multiple selection mode with select inside first cell', () => {
-    expect(render(
+    const {asFragment} = render(
         <Table onAllSelectionChange={jest.fn()} selectInFirstCell={true} selectMode="multiple">
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
@@ -372,10 +398,12 @@ test('Render the Table component in multiple selection mode with select inside f
                 </Row>
             </Body>
         </Table>
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Clicking a checkbox should call onRowSelectionChange with the selection state and row-id', () => {
+test('Clicking a checkbox should call onRowSelectionChange with the selection state and row-id', async() => {
     const onChangeSpy = jest.fn();
     const props = {
         selectMode: 'multiple',
@@ -383,7 +411,8 @@ test('Clicking a checkbox should call onRowSelectionChange with the selection st
     };
     const rowIdOne = 'test-row-id-1';
     const rowIdTwo = 'test-row-id-2';
-    const table = mount(
+
+    render(
         <Table {...props}>
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
@@ -407,15 +436,15 @@ test('Clicking a checkbox should call onRowSelectionChange with the selection st
 
     expect(onChangeSpy).toHaveBeenCalledTimes(0);
 
-    const checkboxOne = table.find('Row').at(0).find('Checkbox input');
-    checkboxOne.at(0).instance().checked = true;
+    const checkboxes = screen.getAllByRole('checkbox');
 
-    checkboxOne.simulate('change');
+    await userEvent.click(checkboxes[1]);
+
     expect(onChangeSpy).toHaveBeenCalledWith(rowIdOne, true);
 });
 
 test('Select-all checkbox should be checked if every line is selected', () => {
-    const allRowsSelectedTable = mount(
+    render(
         <Table selectMode="multiple">
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
@@ -431,11 +460,11 @@ test('Select-all checkbox should be checked if every line is selected', () => {
         </Table>
     );
 
-    expect(allRowsSelectedTable.find('Header').find('Checkbox input').props().checked).toEqual(true);
+    expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
 });
 
 test('Select-all checkbox should not be checked if at least one non-disabled line is not selected', () => {
-    const someRowsSelectedTable = mount(
+    render(
         <Table selectMode="multiple">
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
@@ -451,11 +480,11 @@ test('Select-all checkbox should not be checked if at least one non-disabled lin
         </Table>
     );
 
-    expect(someRowsSelectedTable.find('Header').find('Checkbox input').props().checked).toEqual(false);
+    expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
 });
 
 test('Select-all checkbox should be checked if every non-disabled line is selected', () => {
-    const allEnabledRowsSelectedTable = mount(
+    render(
         <Table selectMode="multiple">
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
@@ -471,16 +500,17 @@ test('Select-all checkbox should be checked if every non-disabled line is select
         </Table>
     );
 
-    expect(allEnabledRowsSelectedTable.find('Header').find('Checkbox input').props().checked).toEqual(true);
+    expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
 });
 
-test('Clicking the select-all checkbox should call the onAllSelectionChange callback', () => {
+test('Clicking the select-all checkbox should call the onAllSelectionChange callback', async() => {
     const onChangeSpy = jest.fn();
     const props = {
         selectMode: 'multiple',
         onAllSelectionChange: onChangeSpy,
     };
-    const table = mount(
+
+    render(
         <Table {...props}>
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
@@ -497,17 +527,15 @@ test('Clicking the select-all checkbox should call the onAllSelectionChange call
         </Table>
     );
 
-    const allCheckbox = table.find('Header').find('Checkbox input');
-    allCheckbox.at(0).instance().checked = true;
+    await userEvent.click(screen.getAllByRole('checkbox')[0]);
 
-    allCheckbox.simulate('change');
     expect(onChangeSpy).toHaveBeenCalledWith(true);
 });
 
 test('Header cells with a defined sortOrder must show a sort indicator', () => {
     const clickSpy = jest.fn();
 
-    expect(render(
+    const {asFragment} = render(
         <Table>
             <Header>
                 <HeaderCell onClick={clickSpy} sortOrder="asc">ColumnTitle</HeaderCell>
@@ -515,13 +543,15 @@ test('Header cells with a defined sortOrder must show a sort indicator', () => {
                 <HeaderCell>ColumnTitle</HeaderCell>
             </Header>
         </Table>
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Header cells with an attached onClick handler should be clickable', () => {
+test('Header cells with an attached onClick handler should be clickable', async() => {
     const clickSpy = jest.fn();
 
-    const table = mount(
+    render(
         <Table>
             <Header>
                 <HeaderCell name="column1" onClick={clickSpy}>Column Title</HeaderCell>
@@ -538,47 +568,52 @@ test('Header cells with an attached onClick handler should be clickable', () => 
         </Table>
     );
 
-    table.find('HeaderCell').at(0).find('button').simulate('click');
+    await userEvent.click(screen.getByRole('button', {name: 'Column Title'}));
+
     expect(clickSpy).toHaveBeenCalledTimes(1);
 });
 
-test('Header cells with an attached name should call the onClick callback with the name and the new sortOrder', () => {
-    const clickSpy = jest.fn();
+test(
+    'Header cells with an attached name should call onClick callback with name and new sortOrder',
+    async() => {
+        const clickSpy = jest.fn();
 
-    const table = mount(
-        <Table>
-            <Header>
-                <HeaderCell name="column1" onClick={clickSpy}>Column Title</HeaderCell>
-                <HeaderCell name="column2" onClick={clickSpy} sortOrder="asc">Column Title</HeaderCell>
-                <HeaderCell name="column3" onClick={clickSpy} sortOrder="desc">Column Title</HeaderCell>
-            </Header>
-            <Body>
-                <Row>
-                    <Cell>Column Text</Cell>
-                    <Cell>Column Text</Cell>
-                    <Cell>Column Text</Cell>
-                </Row>
-            </Body>
-        </Table>
-    );
+        render(
+            <Table>
+                <Header>
+                    <HeaderCell name="column1" onClick={clickSpy}>Column Title</HeaderCell>
+                    <HeaderCell name="column2" onClick={clickSpy} sortOrder="asc">Column Title</HeaderCell>
+                    <HeaderCell name="column3" onClick={clickSpy} sortOrder="desc">Column Title</HeaderCell>
+                </Header>
+                <Body>
+                    <Row>
+                        <Cell>Column Text</Cell>
+                        <Cell>Column Text</Cell>
+                        <Cell>Column Text</Cell>
+                    </Row>
+                </Body>
+            </Table>
+        );
 
-    table.find('HeaderCell').at(0).find('button').simulate('click');
-    expect(clickSpy).lastCalledWith('column1', 'asc');
+        const headerCells = screen.getAllByRole('columnheader');
+        const columnButtons = headerCells.map((headerCell) => within(headerCell).getByRole('button'));
 
-    table.find('HeaderCell').at(1).find('button').simulate('click');
-    expect(clickSpy).lastCalledWith('column2', 'desc');
+        await userEvent.click(columnButtons[0]);
+        expect(clickSpy).lastCalledWith('column1', 'asc');
 
-    table.find('HeaderCell').at(2).find('button').simulate('click');
-    expect(clickSpy).lastCalledWith('column3', 'asc');
-});
+        await userEvent.click(columnButtons[1]);
+        expect(clickSpy).lastCalledWith('column2', 'desc');
 
-test('Collapse should be called correctly', () => {
+        await userEvent.click(columnButtons[2]);
+        expect(clickSpy).lastCalledWith('column3', 'asc');
+    }
+);
+
+test('Collapse should be called correctly', async() => {
     const onRowCollapse = jest.fn();
 
-    const table = mount(
-        <Table
-            onRowCollapse={onRowCollapse}
-        >
+    render(
+        <Table onRowCollapse={onRowCollapse}>
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
                 <HeaderCell>Column Title</HeaderCell>
@@ -604,17 +639,16 @@ test('Collapse should be called correctly', () => {
         </Table>
     );
 
-    table.find('Row').at(1).find('span.toggleIcon Icon').simulate('click');
+    await userEvent.click(screen.getAllByRole('button', {name: 'su-angle-down'})[1]);
+
     expect(onRowCollapse).toHaveBeenCalledTimes(1);
 });
 
-test('Expand should be called correctly', () => {
+test('Expand should be called correctly', async() => {
     const onRowExpand = jest.fn();
 
-    const table = mount(
-        <Table
-            onRowExpand={onRowExpand}
-        >
+    render(
+        <Table onRowExpand={onRowExpand}>
             <Header>
                 <HeaderCell>Column Title</HeaderCell>
                 <HeaderCell>Column Title</HeaderCell>
@@ -640,6 +674,7 @@ test('Expand should be called correctly', () => {
         </Table>
     );
 
-    table.find('Row').at(1).find('span.toggleIcon Icon').simulate('click');
+    await userEvent.click(screen.getByRole('button', {name: 'su-angle-right'}));
+
     expect(onRowExpand).toHaveBeenCalledTimes(1);
 });

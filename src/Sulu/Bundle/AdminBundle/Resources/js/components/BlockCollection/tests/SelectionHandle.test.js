@@ -1,42 +1,50 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import SelectionHandle from '../SelectionHandle';
 
 test('Render selection handle unchecked', () => {
-    expect(render(
-        <SelectionHandle checked={false} onChange={jest.fn()} />
-    )).toMatchSnapshot();
+    const {asFragment} = render(<SelectionHandle checked={false} onChange={jest.fn()} />);
+    const checkbox = screen.getByRole('checkbox');
+
+    expect(checkbox).not.toBeChecked();
+    expect(checkbox.closest('span')).toHaveClass('dark');
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render selection handle checked', () => {
-    expect(render(
-        <SelectionHandle checked={true} onChange={jest.fn()} />
-    )).toMatchSnapshot();
+    render(<SelectionHandle checked={true} onChange={jest.fn()} />);
+    const checkbox = screen.getByRole('checkbox');
+
+    expect(checkbox).toBeChecked();
+    expect(checkbox.closest('span')).toHaveClass('light');
 });
 
-test('Change checkbox should trigger onChange', () => {
+test('Change checkbox should trigger onChange', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
+    render(<SelectionHandle checked={true} onChange={changeSpy} />);
 
-    const component = shallow(
-        <SelectionHandle checked={true} onChange={changeSpy} />
-    );
-
-    expect(component.find('Checkbox').length).toBe(1);
-
-    component.find('Checkbox').simulate('change');
+    await user.click(screen.getByRole('checkbox'));
 
     expect(changeSpy).toBeCalled();
 });
 
 test('Click on container should trigger onChange', () => {
     const changeSpy = jest.fn();
+    const stopPropagationSpy = jest.spyOn(Event.prototype, 'stopPropagation');
+    render(<SelectionHandle checked={true} onChange={changeSpy} />);
+    const checkbox = screen.getByRole('checkbox');
 
-    const component = mount(
-        <SelectionHandle checked={true} onChange={changeSpy} />
-    );
+    const container = checkbox.closest('div');
+    if (!container) {
+        throw new Error('Expected checkbox container element');
+    }
 
-    component.simulate('click', {stopPropagation: jest.fn()});
+    container.click();
 
+    expect(stopPropagationSpy).toBeCalled();
     expect(changeSpy).toBeCalled();
+    stopPropagationSpy.mockRestore();
 });

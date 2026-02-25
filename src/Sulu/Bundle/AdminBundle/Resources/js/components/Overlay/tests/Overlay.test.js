@@ -1,12 +1,17 @@
 // @flow
-import {mount, shallow} from 'enzyme';
 import Mousetrap from 'mousetrap';
 import React from 'react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Overlay from '../Overlay';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
+
+beforeEach(() => {
+    Mousetrap.reset();
+});
 
 test('The component should render in body when open', () => {
     const actions = [
@@ -14,7 +19,7 @@ test('The component should render in body when open', () => {
         {title: 'Action 2', onClick: () => {}},
     ];
 
-    const view = mount(
+    render(
         <Overlay
             actions={actions}
             confirmText="Apply"
@@ -28,11 +33,11 @@ test('The component should render in body when open', () => {
         </Overlay>
     );
 
-    expect(view.find('Overlay > Portal').at(0).render()).toMatchSnapshot();
+    expect(document.body).toMatchSnapshot();
 });
 
 test('The component should not render the footer where there is no onConfirm and no actions', () => {
-    const view = mount(
+    render(
         <Overlay
             actions={[]}
             confirmText="Apply"
@@ -46,11 +51,11 @@ test('The component should not render the footer where there is no onConfirm and
         </Overlay>
     );
 
-    expect(view.find('Overlay > Portal').at(0).render()).toMatchSnapshot();
+    expect(document.body).toMatchSnapshot();
 });
 
 test('The component should render with a disabled confirm button', () => {
-    const view = mount(
+    render(
         <Overlay
             confirmDisabled={true}
             confirmText="Apply"
@@ -63,16 +68,15 @@ test('The component should render with a disabled confirm button', () => {
         </Overlay>
     );
 
-    expect(view.find('Button[children="Apply"]').prop('disabled')).toEqual(true);
+    expect(screen.getByRole('button', {name: 'Apply'})).toBeDisabled();
 });
 
 test('The component should render in body with loader instead of confirm button', () => {
-    const onClose = jest.fn();
-    const view = mount(
+    render(
         <Overlay
             confirmLoading={true}
             confirmText="Apply"
-            onClose={onClose}
+            onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
             title="My overlay title"
@@ -81,15 +85,14 @@ test('The component should render in body with loader instead of confirm button'
         </Overlay>
     );
 
-    expect(view.find('Button[children="Apply"]').prop('loading')).toEqual(true);
+    expect(screen.getByRole('button', {name: 'Apply'})).toHaveClass('loading');
 });
 
 test('The component should not render in body when closed', () => {
-    const onClose = jest.fn();
-    const view = mount(
+    render(
         <Overlay
             confirmText="Apply"
-            onClose={onClose}
+            onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={false}
             title="My overlay title"
@@ -98,12 +101,14 @@ test('The component should not render in body when closed', () => {
         </Overlay>
     );
 
-    expect(view.find('Overlay > Portal')).toHaveLength(0);
+    expect(screen.queryByText('My overlay content')).not.toBeInTheDocument();
 });
 
-test('The component should request to be closed when the close icon is clicked', () => {
+test('The component should request to be closed when the close icon is clicked', async() => {
     const closeSpy = jest.fn();
-    const view = shallow(
+    const user = userEvent.setup();
+
+    render(
         <Overlay
             confirmText="Apply"
             onClose={closeSpy}
@@ -116,13 +121,16 @@ test('The component should request to be closed when the close icon is clicked',
     );
 
     expect(closeSpy).not.toBeCalled();
-    view.find('Icon').simulate('click');
+
+    await user.click(screen.getByRole('button', {name: 'su-times'}));
+
     expect(closeSpy).toBeCalled();
 });
 
 test('The component should request to be closed when the esc key is pressed', () => {
     const closeSpy = jest.fn();
-    mount(
+
+    render(
         <Overlay
             confirmText="Apply"
             onClose={closeSpy}
@@ -135,13 +143,16 @@ test('The component should request to be closed when the esc key is pressed', ()
     );
 
     expect(closeSpy).not.toBeCalled();
+
     Mousetrap.trigger('esc');
+
     expect(closeSpy).toBeCalled();
 });
 
 test('The component should bind and unbind the esc key when overlay is opened and closed', () => {
     const closeSpy = jest.fn();
-    const overlay = mount(
+
+    const {rerender} = render(
         <Overlay
             confirmText="Apply"
             onClose={closeSpy}
@@ -154,28 +165,51 @@ test('The component should bind and unbind the esc key when overlay is opened an
     );
 
     expect(closeSpy).not.toBeCalled();
+
     Mousetrap.trigger('esc');
     expect(closeSpy).toBeCalled();
+
     closeSpy.mockReset();
 
-    overlay.setProps({open: false});
+    rerender(
+        <Overlay
+            confirmText="Apply"
+            onClose={closeSpy}
+            onConfirm={jest.fn()}
+            open={false}
+            title="My overlay title"
+        >
+            <p>My overlay content</p>
+        </Overlay>
+    );
+
     Mousetrap.trigger('esc');
     expect(closeSpy).not.toBeCalled();
-    closeSpy.mockReset();
 
-    overlay.setProps({open: true});
+    rerender(
+        <Overlay
+            confirmText="Apply"
+            onClose={closeSpy}
+            onConfirm={jest.fn()}
+            open={true}
+            title="My overlay title"
+        >
+            <p>My overlay content</p>
+        </Overlay>
+    );
+
     Mousetrap.trigger('esc');
     expect(closeSpy).toBeCalled();
-    closeSpy.mockReset();
 });
 
-test('The component should call the callback when the confirm button is clicked', () => {
-    const onClose = jest.fn();
+test('The component should call the callback when the confirm button is clicked', async() => {
     const onConfirm = jest.fn();
-    const view = shallow(
+    const user = userEvent.setup();
+
+    render(
         <Overlay
             confirmText="Alright mate!"
-            onClose={onClose}
+            onClose={jest.fn()}
             onConfirm={onConfirm}
             open={true}
             title="My title"
@@ -185,18 +219,18 @@ test('The component should call the callback when the confirm button is clicked'
     );
 
     expect(onConfirm).not.toBeCalled();
-    view.find('Button').simulate('click');
+
+    await user.click(screen.getByRole('button', {name: 'Alright mate!'}));
+
     expect(onConfirm).toBeCalled();
 });
 
 test('The component should render with a warning', () => {
-    const onClose = jest.fn();
-    const onConfirm = jest.fn();
-    const view = mount(
+    render(
         <Overlay
             confirmText="Alright mate!"
-            onClose={onClose}
-            onConfirm={onConfirm}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
             open={true}
             snackbarMessage="Something really strange happened"
             snackbarType="warning"
@@ -206,19 +240,20 @@ test('The component should render with a warning', () => {
         </Overlay>
     );
 
-    expect(view.find('.snackbar.warning')).toHaveLength(1);
-    expect(view.find('.snackbar.warning').text()).toBe('sulu_admin.warning - Something really strange happened');
-    expect(view.find('.snackbar.error')).toHaveLength(0);
+    const warningSnackbar = document.querySelector('.snackbar.warning');
+    const errorSnackbar = document.querySelector('.snackbar.error');
+
+    expect(warningSnackbar).not.toBeNull();
+    expect(warningSnackbar).toHaveTextContent('sulu_admin.warning - Something really strange happened');
+    expect(errorSnackbar).toBeNull();
 });
 
 test('The component should render with an error', () => {
-    const onClose = jest.fn();
-    const onConfirm = jest.fn();
-    const view = mount(
+    render(
         <Overlay
             confirmText="Alright mate!"
-            onClose={onClose}
-            onConfirm={onConfirm}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
             open={true}
             snackbarMessage="Money transfer unsuccessful"
             snackbarType="error"
@@ -228,19 +263,20 @@ test('The component should render with an error', () => {
         </Overlay>
     );
 
-    expect(view.find('.snackbar.error')).toHaveLength(1);
-    expect(view.find('.snackbar.error').text()).toBe('sulu_admin.error - Money transfer unsuccessful');
-    expect(view.find('.snackbar.warning')).toHaveLength(0);
+    const errorSnackbar = document.querySelector('.snackbar.error');
+    const warningSnackbar = document.querySelector('.snackbar.warning');
+
+    expect(errorSnackbar).not.toBeNull();
+    expect(errorSnackbar).toHaveTextContent('sulu_admin.error - Money transfer unsuccessful');
+    expect(warningSnackbar).toBeNull();
 });
 
 test('The component should render with an error if type is unknown', () => {
-    const onClose = jest.fn();
-    const onConfirm = jest.fn();
-    const view = mount(
+    render(
         <Overlay
             confirmText="Alright mate!"
-            onClose={onClose}
-            onConfirm={onConfirm}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
             open={true}
             snackbarMessage="Money transfer unsuccessful"
             title="My title"
@@ -249,20 +285,23 @@ test('The component should render with an error if type is unknown', () => {
         </Overlay>
     );
 
-    expect(view.find('.snackbar.error')).toHaveLength(1);
-    expect(view.find('.snackbar.error').text()).toBe('sulu_admin.error - Money transfer unsuccessful');
-    expect(view.find('.snackbar.warning')).toHaveLength(0);
+    const errorSnackbar = document.querySelector('.snackbar.error');
+    const warningSnackbar = document.querySelector('.snackbar.warning');
+
+    expect(errorSnackbar).not.toBeNull();
+    expect(errorSnackbar).toHaveTextContent('sulu_admin.error - Money transfer unsuccessful');
+    expect(warningSnackbar).toBeNull();
 });
 
-test('The component should call the callback when the snackbar close button is clicked', () => {
+test('The component should call the callback when the snackbar close button is clicked', async() => {
     const onSnackbarCloseClick = jest.fn();
-    const onClose = jest.fn();
-    const onConfirm = jest.fn();
-    const view = mount(
+    const user = userEvent.setup();
+
+    render(
         <Overlay
             confirmText="Alright mate!"
-            onClose={onClose}
-            onConfirm={onConfirm}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
             onSnackbarCloseClick={onSnackbarCloseClick}
             open={true}
             snackbarMessage="Money transfer unsuccessful"
@@ -274,19 +313,26 @@ test('The component should call the callback when the snackbar close button is c
     );
 
     expect(onSnackbarCloseClick).not.toBeCalled();
-    view.find('.snackbar.error .su-times').simulate('click');
+
+    const closeIcon = document.querySelector('.snackbar.error .su-times');
+    if (!closeIcon) {
+        throw new Error('Expected snackbar close icon to be rendered');
+    }
+
+    await user.click(closeIcon);
+
     expect(onSnackbarCloseClick).toBeCalled();
 });
 
-test('The component should call the callback when the snackbar is clicked', () => {
+test('The component should call the callback when the snackbar is clicked', async() => {
     const onSnackbarClick = jest.fn();
-    const onClose = jest.fn();
-    const onConfirm = jest.fn();
-    const view = mount(
+    const user = userEvent.setup();
+
+    render(
         <Overlay
             confirmText="Alright mate!"
-            onClose={onClose}
-            onConfirm={onConfirm}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
             onSnackbarClick={onSnackbarClick}
             open={true}
             snackbarMessage="Something really strange happened"
@@ -298,6 +344,13 @@ test('The component should call the callback when the snackbar is clicked', () =
     );
 
     expect(onSnackbarClick).not.toBeCalled();
-    view.find('.snackbar.warning').simulate('click');
+
+    const warningSnackbar = document.querySelector('.snackbar.warning');
+    if (!warningSnackbar) {
+        throw new Error('Expected warning snackbar to be rendered');
+    }
+
+    await user.click(warningSnackbar);
+
     expect(onSnackbarClick).toBeCalled();
 });

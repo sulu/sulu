@@ -1,48 +1,44 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
-import ResourceStore from '../../../../stores/ResourceStore';
-import FormInspector from '../../FormInspector';
-import ResourceFormStore from '../../stores/ResourceFormStore';
 import Number from '../../fields/Number';
-import NumberComponent from '../../../../components/Number';
 
-jest.mock('../../../../stores/ResourceStore', () => jest.fn());
-jest.mock('../../stores/ResourceFormStore', () => jest.fn());
-jest.mock('../../FormInspector', () => jest.fn());
+const createProps = (props: Object = {}) => ({
+    ...fieldTypeDefaultProps,
+    formInspector: ({}: any),
+    ...props,
+});
 
 test('Pass error correctly to component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const error = {keyword: 'minLength', parameters: {}};
 
-    const field = shallow(
+    render(
         <Number
-            {...fieldTypeDefaultProps}
+            {...createProps()}
             error={error}
-            formInspector={formInspector}
         />
     );
+    const input = screen.getByRole('spinbutton');
 
-    expect(field.find(NumberComponent).prop('valid')).toBe(false);
+    expect(input.parentElement).toHaveClass('error');
 });
 
 test('Pass props correctly to component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const field = shallow(
+    render(
         <Number
-            {...fieldTypeDefaultProps}
+            {...createProps()}
             disabled={true}
-            formInspector={formInspector}
         />
     );
+    const input = screen.getByRole('spinbutton');
 
-    expect(field.find(NumberComponent).prop('valid')).toBe(true);
-    expect(field.find(NumberComponent).prop('disabled')).toBe(true);
+    expect(input).toBeDisabled();
+    expect(input.parentElement).not.toHaveClass('error');
 });
 
 test('Pass props correctly to component inclusive schemaOptions', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const schemaOptions = {
         min: {
             name: 'min',
@@ -58,33 +54,34 @@ test('Pass props correctly to component inclusive schemaOptions', () => {
         },
     };
 
-    const field = shallow(
+    render(
         <Number
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
+            {...createProps()}
             schemaOptions={schemaOptions}
         />
     );
+    const input = screen.getByRole('spinbutton');
 
-    expect(field.find(NumberComponent).prop('valid')).toBe(true);
-    expect(field.find(NumberComponent).prop('min')).toBe(50);
-    expect(field.find(NumberComponent).prop('max')).toBe(100);
-    expect(field.find(NumberComponent).prop('step')).toBe(10);
+    expect(input).toHaveAttribute('min', '50');
+    expect(input).toHaveAttribute('max', '100');
+    expect(input).toHaveAttribute('step', '10');
+    expect(input.parentElement).not.toHaveClass('error');
 });
 
-test('Should not pass any arguments to onFinish callback', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+test('Should not pass any arguments to onFinish callback', async() => {
+    const user = userEvent.setup();
     const finishSpy = jest.fn();
 
-    const input = shallow(
+    render(
         <Number
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
+            {...createProps()}
             onFinish={finishSpy}
         />
     );
 
-    input.find('Number').prop('onBlur')('Test');
+    const input = screen.getByRole('spinbutton');
+    await user.click(input);
+    await user.tab();
 
     expect(finishSpy).toBeCalledWith();
 });

@@ -1,6 +1,8 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import bindValueToOnChange from 'sulu-admin-bundle/utils/TestHelper/bindValueToOnChange';
 import KeyValue from '../../ruleTypes/KeyValue';
 
 test('Render a KeyValue RuleType', () => {
@@ -9,22 +11,28 @@ test('Render a KeyValue RuleType', () => {
         valuePlaceholder: 'value',
     };
 
-    expect(render(<KeyValue onChange={jest.fn()} options={options} value={{}} />)).toMatchSnapshot();
+    const {asFragment} = render(<KeyValue onChange={jest.fn()} options={options} value={{}} />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test.each([
     ['test1', 'value1', {}, {test1: 'value1'}],
     ['test2', 'value2', {test2: 'value1'}, {test2: 'value2'}],
     ['test2', 'value2', {test1: 'value1'}, {test1: 'value1', test2: 'value2'}],
-])('Call onChange handler when value is changed for "%s" to "%s"', (valueName, value, oldValue, result) => {
+])('Call onChange handler when value is changed for "%s" to "%s"', async(valueName, value, oldValue, result) => {
     const changeSpy = jest.fn();
+    const user = userEvent.setup();
 
     const options = {
         valueName,
     };
 
-    const keyValue = shallow(<KeyValue onChange={changeSpy} options={options} value={oldValue} />);
-    keyValue.find('Input').at(1).prop('onChange')(value);
+    render(bindValueToOnChange(<KeyValue onChange={changeSpy} options={options} value={oldValue} />));
+    const inputFields = screen.getAllByRole('textbox');
+    const valueInput = inputFields[1];
+    await user.clear(valueInput);
+    await user.type(valueInput, value);
 
     expect(changeSpy).toBeCalledWith(result);
 });
@@ -33,15 +41,18 @@ test.each([
     ['test1', 'key1', {}, {test1: 'key1'}],
     ['test2', 'key2', {test2: 'key1'}, {test2: 'key2'}],
     ['test2', 'key2', {test1: 'key1'}, {test1: 'key1', test2: 'key2'}],
-])('Call onChange handler when key is changed for "%s" to "%s"', (keyName, key, oldValue, result) => {
+])('Call onChange handler when key is changed for "%s" to "%s"', async(keyName, key, oldValue, result) => {
     const changeSpy = jest.fn();
+    const user = userEvent.setup();
 
     const options = {
         keyName,
     };
 
-    const keyValue = shallow(<KeyValue onChange={changeSpy} options={options} value={oldValue} />);
-    keyValue.find('Input').at(0).prop('onChange')(key);
+    render(bindValueToOnChange(<KeyValue onChange={changeSpy} options={options} value={oldValue} />));
+    const [keyInput] = screen.getAllByRole('textbox');
+    await user.clear(keyInput);
+    await user.type(keyInput, key);
 
     expect(changeSpy).toBeCalledWith(result);
 });

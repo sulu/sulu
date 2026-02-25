@@ -1,45 +1,47 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render section with children 1`] = `
-<div
-  class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
->
+<DocumentFragment>
   <div
-    class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
+    class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
-      class="divider"
+      class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
     >
-      Section
-    </div>
-  </div>
-  <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-  >
-    <div
-      class="field"
-    >
-      <label
-        class="label"
-        for=""
-      >
-        label1
-      </label>
       <div
-        class="fieldContainer"
+        class="divider"
       >
-        <div
-          class="field"
-        >
-          <input
-            type="text"
-          />
-        </div>
+        Section
       </div>
+    </div>
+    <div
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+    >
       <div
-        class="errorLabel"
-      />
+        class="field"
+      >
+        <label
+          class="label"
+          for=""
+        >
+          label1
+        </label>
+        <div
+          class="fieldContainer"
+        >
+          <div
+            class="field"
+          >
+            <input
+              type="text"
+            />
+          </div>
+        </div>
+        <div
+          class="errorLabel"
+        />
+      </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;

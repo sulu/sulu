@@ -1,13 +1,12 @@
-// @flow
+/* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import {mount} from 'enzyme';
+import {render, waitFor} from '@testing-library/react';
 import {webspaceStore} from 'sulu-page-bundle/stores';
 import {defaultWebspace} from 'sulu-admin-bundle/utils/TestHelper';
+import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import Permissions from '../Permissions';
 import securityContextStore from '../../../stores/securityContextStore/securityContextStore';
 import PermissionMatrix from '../PermissionMatrix';
-import type {ContextPermission} from '../types';
-import type {SecurityContextGroups} from '../../../stores/securityContextStore/types';
 
 jest.mock('sulu-page-bundle/stores/webspaceStore', () => ({
     allWebspaces: [],
@@ -21,149 +20,128 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: (key) => key,
 }));
 
-test('Render with minimal', () => {
-    const value: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-    ];
+jest.mock('../PermissionMatrix', () => jest.fn(() => <div data-testid="permission-matrix" />));
 
-    const securityContextGroups: SecurityContextGroups = {
-        'Contacts': {
-            'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-            'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
-        },
+jest.mock('sulu-admin-bundle/components', () => {
+    const React = require('react');
+    const Loader = jest.fn(() => <div data-testid="loader" />);
+    const MultiSelect = jest.fn(({children}) => <div data-testid="multi-select">{children}</div>);
+    function Option({children}) {
+        return <>{children}</>;
+    }
+    MultiSelect.Option = Option;
+
+    return {
+        Loader,
+        MultiSelect,
     };
-    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
+});
 
-    const permissions = mount(
+const {MultiSelect} = jest.requireMock('sulu-admin-bundle/components');
+const PermissionMatrixMock = PermissionMatrix;
+const MultiSelectMock = MultiSelect;
+
+const contactsContextGroups = {
+    'Contacts': {
+        'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
+        'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
+    },
+};
+
+const webspaceContextGroups = {
+    ...contactsContextGroups,
+    'Webspaces': {
+        'sulu.webspaces.#webspace#': ['view', 'add', 'edit', 'delete', 'live', 'security'],
+        'sulu.webspaces.#webspace#.analytics': ['view', 'add', 'edit', 'delete'],
+        'sulu.webspaces.#webspace#.default-snippets': ['view', 'add', 'edit', 'delete'],
+    },
+};
+
+const contactsValue = [
+    {
+        id: 1,
+        context: 'sulu.contact.people',
+        permissions: {
+            'view': true,
+            'delete': true,
+            'add': true,
+            'edit': true,
+        },
+    },
+    {
+        id: 2,
+        context: 'sulu.contact.organizations',
+        permissions: {
+            'view': true,
+            'delete': true,
+            'add': true,
+            'edit': true,
+        },
+    },
+];
+
+const setWebspaces = (keys) => {
+    webspaceStore.allWebspaces = keys.map((key) => ({
+        ...defaultWebspace,
+        key,
+        name: key,
+    }));
+};
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    webspaceStore.allWebspaces = [];
+});
+
+test('renders minimal configuration', async() => {
+    securityContextStore.getSecurityContextGroups.mockReturnValue(contactsContextGroups);
+
+    const {asFragment} = render(
         <Permissions
             onChange={jest.fn()}
             system="Sulu"
-            value={value}
+            value={contactsValue}
         />
     );
 
-    expect(securityContextStore.getSecurityContextGroups).toBeCalledWith('Sulu');
-    permissions.update();
-    expect(permissions.render()).toMatchSnapshot();
+    await waitFor(() => expect(PermissionMatrixMock).toHaveBeenCalled());
+    expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Sulu');
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Render in disabled state', () => {
-    const value: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-    ];
+test('renders disabled state', async() => {
+    securityContextStore.getSecurityContextGroups.mockReturnValue(contactsContextGroups);
 
-    const securityContextGroups: SecurityContextGroups = {
-        'Contacts': {
-            'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-            'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
-        },
-    };
-    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
-
-    const permissions = mount(
+    const {asFragment} = render(
         <Permissions
             disabled={true}
             onChange={jest.fn()}
             system="Sulu"
-            value={value}
+            value={contactsValue}
         />
     );
 
-    expect(securityContextStore.getSecurityContextGroups).toBeCalledWith('Sulu');
-    permissions.update();
-    expect(permissions.render()).toMatchSnapshot();
+    await waitFor(() => expect(PermissionMatrixMock).toHaveBeenCalled());
+    expect(getLatestMockProps(PermissionMatrixMock).disabled).toBe(true);
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Should trigger onChange correctly', () => {
-    const value: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-    ];
-
-    const securityContextGroups: SecurityContextGroups = {
-        'Contacts': {
-            'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-            'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
-        },
-    };
-    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
-
+test('triggers onChange when matrix changes', async() => {
+    securityContextStore.getSecurityContextGroups.mockReturnValue(contactsContextGroups);
     const onChange = jest.fn();
-    const permissions = mount(
+
+    render(
         <Permissions
             onChange={onChange}
             system="Sulu"
-            value={value}
+            value={contactsValue}
         />
     );
 
-    const newContextPermissions: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
+    await waitFor(() => expect(PermissionMatrixMock).toHaveBeenCalled());
+
+    const newContextPermissions = [
+        contactsValue[0],
         {
             id: 2,
             context: 'sulu.contact.organizations',
@@ -175,106 +153,33 @@ test('Should trigger onChange correctly', () => {
             },
         },
     ];
-    permissions.find(PermissionMatrix).at(0).instance().props.onChange(newContextPermissions);
-    expect(onChange).toBeCalledWith(newContextPermissions);
+    getLatestMockProps(PermissionMatrixMock).onChange(newContextPermissions);
+    expect(onChange).toHaveBeenCalledWith(newContextPermissions);
 });
 
-test('Render with empty webspace section', () => {
-    const value: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-    ];
+test('renders with webspace section', async() => {
+    securityContextStore.getSecurityContextGroups.mockReturnValue(webspaceContextGroups);
+    setWebspaces(['example', 'example2', 'example3']);
 
-    const securityContextGroups: SecurityContextGroups = {
-        'Contacts': {
-            'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-            'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
-        },
-        'Webspaces': {
-            'sulu.webspaces.#webspace#': ['view', 'add', 'edit', 'delete', 'live', 'security'],
-            'sulu.webspaces.#webspace#.analytics': ['view', 'add', 'edit', 'delete'],
-            'sulu.webspaces.#webspace#.default-snippets': ['view', 'add', 'edit', 'delete'],
-        },
-    };
-    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
-
-    webspaceStore.allWebspaces = [
-        {
-            ...defaultWebspace,
-            'key': 'example',
-            'name': 'Example',
-        },
-        {
-            ...defaultWebspace,
-            'key': 'example2',
-            'name': 'Example 2',
-        },
-        {
-            ...defaultWebspace,
-            'key': 'example3',
-            'name': 'Example 3!',
-        },
-    ];
-
-    const permissions = mount(
+    const {asFragment} = render(
         <Permissions
             onChange={jest.fn()}
             system="Sulu"
-            value={value}
+            value={contactsValue}
         />
     );
 
-    expect(securityContextStore.getSecurityContextGroups).toBeCalledWith('Sulu');
-
-    // Currently we have to load each child separately, because of a bug in enzyme.
-    // TODO: https://github.com/airbnb/enzyme/issues/1213
-    const permissionChildren = permissions.children();
-    expect(permissionChildren.at(0).render()).toMatchSnapshot();
-    expect(permissionChildren.at(1).render()).toMatchSnapshot();
-    expect(permissionChildren.at(2).render()).toMatchSnapshot();
-    expect(permissionChildren.at(3).render()).toMatchSnapshot();
+    await waitFor(() => expect(MultiSelectMock).toHaveBeenCalled());
+    expect(getLatestMockProps(MultiSelectMock).values).toEqual([]);
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Render with webspace section', () => {
-    const value: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
+test('triggers onChange when changing webspace matrix section', async() => {
+    securityContextStore.getSecurityContextGroups.mockReturnValue(webspaceContextGroups);
+    setWebspaces(['example', 'example2', 'example3']);
+
+    const value = [
+        ...contactsValue,
         {
             id: 3,
             context: 'sulu.webspaces.example',
@@ -286,129 +191,12 @@ test('Render with webspace section', () => {
                 'live': false,
                 'security': false,
             },
-        },
-    ];
-
-    const securityContextGroups: SecurityContextGroups = {
-        'Contacts': {
-            'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-            'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
-        },
-        'Webspaces': {
-            'sulu.webspaces.#webspace#': ['view', 'add', 'edit', 'delete', 'live', 'security'],
-            'sulu.webspaces.#webspace#.analytics': ['view', 'add', 'edit', 'delete'],
-            'sulu.webspaces.#webspace#.default-snippets': ['view', 'add', 'edit', 'delete'],
-        },
-    };
-    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
-
-    webspaceStore.allWebspaces = [
-        {
-            ...defaultWebspace,
-            'key': 'example',
-            'name': 'Example',
-        },
-        {
-            ...defaultWebspace,
-            'key': 'example2',
-            'name': 'Example 2',
-        },
-        {
-            ...defaultWebspace,
-            'key': 'example3',
-            'name': 'Example 3!',
-        },
-    ];
-
-    const permissions = mount(
-        <Permissions
-            onChange={jest.fn()}
-            system="Sulu"
-            value={value}
-        />
-    );
-
-    expect(securityContextStore.getSecurityContextGroups).toBeCalledWith('Sulu');
-    permissions.update();
-
-    // Currently we have to load each child separately, because of a bug in enzyme.
-    // TODO: https://github.com/airbnb/enzyme/issues/1213
-    const permissionChildren = permissions.children();
-    expect(permissionChildren.at(0).render()).toMatchSnapshot();
-    expect(permissionChildren.at(1).render()).toMatchSnapshot();
-    expect(permissionChildren.at(2).render()).toMatchSnapshot();
-    expect(permissionChildren.at(3).render()).toMatchSnapshot();
-});
-
-test('Should trigger onChange correctly when changing something in the webspace section', () => {
-    const value: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 3,
-            context: 'sulu.webspaces.example',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-                'live': false,
-                'security': false,
-            },
-        },
-    ];
-
-    const securityContextGroups: SecurityContextGroups = {
-        'Contacts': {
-            'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-            'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
-        },
-        'Webspaces': {
-            'sulu.webspaces.#webspace#': ['view', 'add', 'edit', 'delete', 'live', 'security'],
-            'sulu.webspaces.#webspace#.analytics': ['view', 'add', 'edit', 'delete'],
-            'sulu.webspaces.#webspace#.default-snippets': ['view', 'add', 'edit', 'delete'],
-        },
-    };
-    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
-
-    webspaceStore.allWebspaces = [
-        {
-            ...defaultWebspace,
-            'key': 'example',
-            'name': 'Example',
-        },
-        {
-            ...defaultWebspace,
-            'key': 'example2',
-            'name': 'Example 2',
-        },
-        {
-            ...defaultWebspace,
-            'key': 'example3',
-            'name': 'Example 3!',
         },
     ];
 
     const onChange = jest.fn();
-    const permissions = mount(
+
+    render(
         <Permissions
             onChange={onChange}
             system="Sulu"
@@ -416,27 +204,10 @@ test('Should trigger onChange correctly when changing something in the webspace 
         />
     );
 
-    const newContextPermissions: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
+    await waitFor(() => expect(PermissionMatrixMock).toHaveBeenCalledTimes(2));
+
+    const newContextPermissions = [
+        ...contactsValue,
         {
             id: 3,
             context: 'sulu.webspaces.example',
@@ -450,109 +221,42 @@ test('Should trigger onChange correctly when changing something in the webspace 
             },
         },
     ];
-    permissions.find(PermissionMatrix).at(0).instance().props.onChange(newContextPermissions);
-    expect(onChange).toBeCalledWith(newContextPermissions);
+    getLatestMockProps(PermissionMatrixMock).onChange(newContextPermissions);
+    expect(onChange).toHaveBeenCalledWith(newContextPermissions);
 });
 
-test('Should trigger onChange correctly when a webspace is added', () => {
-    const value: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 3,
-            context: 'sulu.webspaces.example',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-                'live': false,
-                'security': false,
-            },
-        },
-    ];
-
-    const securityContextGroups: SecurityContextGroups = {
-        'Contacts': {
-            'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-            'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
-        },
-        'Webspaces': {
-            'sulu.webspaces.#webspace#': ['view', 'add', 'edit', 'delete', 'live', 'security'],
-            'sulu.webspaces.#webspace#.analytics': ['view', 'add', 'edit', 'delete'],
-            'sulu.webspaces.#webspace#.default-snippets': ['view', 'add', 'edit', 'delete'],
-        },
-    };
-    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
-
-    webspaceStore.allWebspaces = [
-        {
-            ...defaultWebspace,
-            'key': 'example',
-            'name': 'Example',
-        },
-        {
-            ...defaultWebspace,
-            'key': 'example2',
-            'name': 'Example 2',
-        },
-        {
-            ...defaultWebspace,
-            'key': 'example3',
-            'name': 'Example 3!',
-        },
-    ];
+test('triggers onChange when a webspace is added', async() => {
+    securityContextStore.getSecurityContextGroups.mockReturnValue(webspaceContextGroups);
+    setWebspaces(['example', 'example2', 'example3']);
 
     const onChange = jest.fn();
-    const permissions = mount(
+    render(
         <Permissions
             onChange={onChange}
             system="Sulu"
-            value={value}
+            value={[
+                ...contactsValue,
+                {
+                    id: 3,
+                    context: 'sulu.webspaces.example',
+                    permissions: {
+                        'view': true,
+                        'delete': true,
+                        'add': true,
+                        'edit': true,
+                        'live': false,
+                        'security': false,
+                    },
+                },
+            ]}
         />
     );
 
-    permissions.find('MultiSelect').prop('onChange')(['example', 'example3']);
+    await waitFor(() => expect(MultiSelectMock).toHaveBeenCalled());
+    getLatestMockProps(MultiSelectMock).onChange(['example', 'example3']);
 
-    const expectedNewValue: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
+    expect(onChange).toHaveBeenCalledWith([
+        ...contactsValue,
         {
             id: 3,
             context: 'sulu.webspaces.example',
@@ -597,122 +301,53 @@ test('Should trigger onChange correctly when a webspace is added', () => {
                 'edit': false,
             },
         },
-    ];
-
-    expect(onChange).toBeCalledWith(expectedNewValue);
+    ]);
 });
 
-test('Should trigger onChange correctly when a webspace is removed', () => {
-    const value: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 3,
-            context: 'sulu.webspaces.example',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-                'live': false,
-                'security': false,
-            },
-        },
-        {
-            id: 4,
-            context: 'sulu.webspaces.example3',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-                'live': false,
-                'security': true,
-            },
-        },
-    ];
-
-    const securityContextGroups: SecurityContextGroups = {
-        'Contacts': {
-            'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-            'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
-        },
-        'Webspaces': {
-            'sulu.webspaces.#webspace#': ['view', 'add', 'edit', 'delete', 'live', 'security'],
-            'sulu.webspaces.#webspace#.analytics': ['view', 'add', 'edit', 'delete'],
-            'sulu.webspaces.#webspace#.default-snippets': ['view', 'add', 'edit', 'delete'],
-        },
-    };
-    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
-
-    webspaceStore.allWebspaces = [
-        {
-            ...defaultWebspace,
-            'key': 'example',
-            'name': 'Example',
-        },
-        {
-            ...defaultWebspace,
-            'key': 'example2',
-            'name': 'Example 2',
-        },
-        {
-            ...defaultWebspace,
-            'key': 'example3',
-            'name': 'Example 3!',
-        },
-    ];
+test('triggers onChange when a webspace is removed', async() => {
+    securityContextStore.getSecurityContextGroups.mockReturnValue(webspaceContextGroups);
+    setWebspaces(['example', 'example2', 'example3']);
 
     const onChange = jest.fn();
-    const permissions = mount(
+    render(
         <Permissions
             onChange={onChange}
             system="Sulu"
-            value={value}
+            value={[
+                ...contactsValue,
+                {
+                    id: 3,
+                    context: 'sulu.webspaces.example',
+                    permissions: {
+                        'view': true,
+                        'delete': true,
+                        'add': true,
+                        'edit': true,
+                        'live': false,
+                        'security': false,
+                    },
+                },
+                {
+                    id: 4,
+                    context: 'sulu.webspaces.example3',
+                    permissions: {
+                        'view': true,
+                        'delete': true,
+                        'add': true,
+                        'edit': true,
+                        'live': false,
+                        'security': true,
+                    },
+                },
+            ]}
         />
     );
 
-    permissions.find('MultiSelect').prop('onChange')(['example3']);
+    await waitFor(() => expect(MultiSelectMock).toHaveBeenCalled());
+    getLatestMockProps(MultiSelectMock).onChange(['example3']);
 
-    const expectedNewValue: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
+    expect(onChange).toHaveBeenCalledWith([
+        ...contactsValue,
         {
             id: 4,
             context: 'sulu.webspaces.example3',
@@ -725,70 +360,48 @@ test('Should trigger onChange correctly when a webspace is removed', () => {
                 'security': true,
             },
         },
-    ];
-
-    expect(onChange).toBeCalledWith(expectedNewValue);
+    ]);
 });
 
-test('Should trigger a mobx autorun if the prop system changes', () => {
-    const value: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-    ];
+test('reloads security contexts when system changes', async() => {
+    securityContextStore.getSecurityContextGroups.mockReturnValue(contactsContextGroups);
 
-    const securityContextGroups: SecurityContextGroups = {
-        'Contacts': {
-            'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-            'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
-        },
-    };
-    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
-
-    const permissions = mount(
+    const {rerender} = render(
         <Permissions
             onChange={jest.fn()}
             system="Sulu"
-            value={value}
+            value={contactsValue}
         />
     );
 
-    // update with the same system, nothing should happen
-    // update it with a other system it should trigger a reload
-    permissions.setProps({system: 'Sulu'});
-    permissions.setProps({system: 'Other-System'});
+    await waitFor(() => expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Sulu'));
+    rerender(
+        <Permissions
+            onChange={jest.fn()}
+            system="Sulu"
+            value={contactsValue}
+        />
+    );
+    rerender(
+        <Permissions
+            onChange={jest.fn()}
+            system="Other-System"
+            value={contactsValue}
+        />
+    );
 
-    expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Sulu');
-    expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Other-System');
+    await waitFor(() => expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Other-System'));
     expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledTimes(2);
 });
 
-test('Pass disabled state to MultiSelect', () => {
-    const securityContextGroups: SecurityContextGroups = {
+test('passes disabled state to MultiSelect', async() => {
+    securityContextStore.getSecurityContextGroups.mockReturnValue({
         'Webspaces': {
             'sulu.webspaces.#webspace#': ['view'],
         },
-    };
-    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
+    });
 
-    const permissions = mount(
+    render(
         <Permissions
             disabled={true}
             onChange={jest.fn()}
@@ -797,95 +410,33 @@ test('Pass disabled state to MultiSelect', () => {
         />
     );
 
-    expect(permissions.find('MultiSelect').prop('disabled')).toEqual(true);
+    await waitFor(() => expect(MultiSelectMock).toHaveBeenCalled());
+    expect(getLatestMockProps(MultiSelectMock).disabled).toBe(true);
 });
 
-test('Dispose autorun on unmount', () => {
-    const value: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-    ];
+test('disposes autorun on unmount', async() => {
+    securityContextStore.getSecurityContextGroups.mockReturnValue(contactsContextGroups);
+    const permissionsRef = React.createRef();
 
-    const securityContextGroups: SecurityContextGroups = {
-        'Contacts': {
-            'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-            'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
-        },
-    };
-    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
-
-    const permissions = mount(
+    const {unmount} = render(
         <Permissions
             onChange={jest.fn()}
+            ref={permissionsRef}
             system="Sulu"
-            value={value}
+            value={contactsValue}
         />
     );
 
-    permissions.update();
+    await waitFor(() => expect(permissionsRef.current).toBeTruthy());
+    const disposer = jest.fn();
+    permissionsRef.current.systemDisposer = disposer;
 
-    const systemDisposerSpy = jest.fn();
-    permissions.instance().systemDisposer = systemDisposerSpy;
-    permissions.unmount();
-
-    expect(systemDisposerSpy).toBeCalledWith();
+    unmount();
+    expect(disposer).toHaveBeenCalled();
 });
 
-test('Should restore original permission when webspace is removed and re-added without saving', () => {
-    const value: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 3,
-            context: 'sulu.webspaces.example',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-                'live': false,
-                'security': false,
-            },
-        },
-        {
-            id: 5,
-            context: 'sulu.webspaces.example.analytics',
-            permissions: {
-                'view': true,
-                'delete': false,
-                'add': true,
-                'edit': false,
-            },
-        },
-    ];
-
-    const securityContextGroups: SecurityContextGroups = {
+test('restores original permission when webspace is removed and re-added', async() => {
+    securityContextStore.getSecurityContextGroups.mockReturnValue({
         'Contacts': {
             'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
         },
@@ -893,57 +444,11 @@ test('Should restore original permission when webspace is removed and re-added w
             'sulu.webspaces.#webspace#': ['view', 'add', 'edit', 'delete', 'live', 'security'],
             'sulu.webspaces.#webspace#.analytics': ['view', 'add', 'edit', 'delete'],
         },
-    };
-    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
-
-    webspaceStore.allWebspaces = [
-        {
-            ...defaultWebspace,
-            'key': 'example',
-            'name': 'Example',
-        },
-        {
-            ...defaultWebspace,
-            'key': 'example2',
-            'name': 'Example 2',
-        },
-    ];
+    });
+    setWebspaces(['example', 'example2']);
 
     const onChange = jest.fn();
-    const permissions = mount(
-        <Permissions
-            onChange={onChange}
-            system="Sulu"
-            value={value}
-        />
-    );
-
-    // First remove the webspace
-    permissions.find('MultiSelect').prop('onChange')([]);
-
-    const expectedAfterRemove: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-    ];
-
-    expect(onChange).toHaveBeenLastCalledWith(expectedAfterRemove);
-
-    // Update component props to reflect the removed state
-    permissions.setProps({value: expectedAfterRemove});
-    permissions.update();
-
-    // Now re-add the same webspace - it should restore the original permissions with their IDs
-    permissions.find('MultiSelect').prop('onChange')(['example']);
-
-    const expectedAfterReAdd: Array<ContextPermission> = [
+    const value = [
         {
             id: 1,
             context: 'sulu.contact.people',
@@ -955,7 +460,6 @@ test('Should restore original permission when webspace is removed and re-added w
             },
         },
         {
-            // IMPORTANT: This should have the original id: 3, not id: undefined
             id: 3,
             context: 'sulu.webspaces.example',
             permissions: {
@@ -968,7 +472,6 @@ test('Should restore original permission when webspace is removed and re-added w
             },
         },
         {
-            // IMPORTANT: This should have the original id: 5, not id: undefined
             id: 5,
             context: 'sulu.webspaces.example.analytics',
             permissions: {
@@ -980,11 +483,79 @@ test('Should restore original permission when webspace is removed and re-added w
         },
     ];
 
-    expect(onChange).toHaveBeenLastCalledWith(expectedAfterReAdd);
+    const {rerender} = render(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={value}
+        />
+    );
+
+    await waitFor(() => expect(MultiSelectMock).toHaveBeenCalled());
+
+    getLatestMockProps(MultiSelectMock).onChange([]);
+    const expectedAfterRemove = [
+        {
+            id: 1,
+            context: 'sulu.contact.people',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+            },
+        },
+    ];
+    expect(onChange).toHaveBeenLastCalledWith(expectedAfterRemove);
+
+    rerender(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={expectedAfterRemove}
+        />
+    );
+
+    await waitFor(() => expect(MultiSelectMock).toHaveBeenCalled());
+    getLatestMockProps(MultiSelectMock).onChange(['example']);
+
+    expect(onChange).toHaveBeenLastCalledWith([
+        expectedAfterRemove[0],
+        {
+            id: 3,
+            context: 'sulu.webspaces.example',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+                'live': false,
+                'security': false,
+            },
+        },
+        {
+            id: 5,
+            context: 'sulu.webspaces.example.analytics',
+            permissions: {
+                'view': true,
+                'delete': false,
+                'add': true,
+                'edit': false,
+            },
+        },
+    ]);
 });
 
-test('Should restore multiple webspaces independently when removed and re-added', () => {
-    const value: Array<ContextPermission> = [
+test('restores multiple webspaces independently', async() => {
+    securityContextStore.getSecurityContextGroups.mockReturnValue({
+        'Webspaces': {
+            'sulu.webspaces.#webspace#': ['view', 'add', 'edit', 'delete', 'live', 'security'],
+        },
+    });
+    setWebspaces(['example', 'example2']);
+
+    const onChange = jest.fn();
+    const value = [
         {
             id: 1,
             context: 'sulu.webspaces.example',
@@ -1011,28 +582,7 @@ test('Should restore multiple webspaces independently when removed and re-added'
         },
     ];
 
-    const securityContextGroups: SecurityContextGroups = {
-        'Webspaces': {
-            'sulu.webspaces.#webspace#': ['view', 'add', 'edit', 'delete', 'live', 'security'],
-        },
-    };
-    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
-
-    webspaceStore.allWebspaces = [
-        {
-            ...defaultWebspace,
-            'key': 'example',
-            'name': 'Example',
-        },
-        {
-            ...defaultWebspace,
-            'key': 'example2',
-            'name': 'Example 2',
-        },
-    ];
-
-    const onChange = jest.fn();
-    const permissions = mount(
+    const {rerender} = render(
         <Permissions
             onChange={onChange}
             system="Sulu"
@@ -1040,120 +590,97 @@ test('Should restore multiple webspaces independently when removed and re-added'
         />
     );
 
-    // Remove both webspaces
-    permissions.find('MultiSelect').prop('onChange')([]);
+    await waitFor(() => expect(MultiSelectMock).toHaveBeenCalled());
+    getLatestMockProps(MultiSelectMock).onChange([]);
     expect(onChange).toHaveBeenLastCalledWith([]);
 
-    // Update component props
-    permissions.setProps({value: []});
-    permissions.update();
-
-    // Re-add only example2 - should restore its original permissions
-    permissions.find('MultiSelect').prop('onChange')(['example2']);
-
-    const expectedWithExample2: Array<ContextPermission> = [
-        {
-            id: 2,
-            context: 'sulu.webspaces.example2',
-            permissions: {
-                'view': false,
-                'delete': true,
-                'add': false,
-                'edit': true,
-                'live': false,
-                'security': true,
-            },
-        },
-    ];
-
-    expect(onChange).toHaveBeenLastCalledWith(expectedWithExample2);
-
-    // Update component props again
-    permissions.setProps({value: expectedWithExample2});
-    permissions.update();
-
-    // Now also add example - should restore its original permissions
-    permissions.find('MultiSelect').prop('onChange')(['example2', 'example']);
-
-    const expectedWithBoth: Array<ContextPermission> = [
-        {
-            id: 2,
-            context: 'sulu.webspaces.example2',
-            permissions: {
-                'view': false,
-                'delete': true,
-                'add': false,
-                'edit': true,
-                'live': false,
-                'security': true,
-            },
-        },
-        {
-            id: 1,
-            context: 'sulu.webspaces.example',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-                'live': false,
-                'security': false,
-            },
-        },
-    ];
-
-    expect(onChange).toHaveBeenLastCalledWith(expectedWithBoth);
-});
-
-test('Should create new permission when adding a webspace that was never selected before', () => {
-    const value: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.webspaces.example',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-                'live': false,
-                'security': false,
-            },
-        },
-    ];
-
-    const securityContextGroups: SecurityContextGroups = {
-        'Webspaces': {
-            'sulu.webspaces.#webspace#': ['view', 'add', 'edit', 'delete', 'live', 'security'],
-        },
-    };
-    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
-
-    webspaceStore.allWebspaces = [
-        {
-            ...defaultWebspace,
-            'key': 'example',
-            'name': 'Example',
-        },
-        {
-            ...defaultWebspace,
-            'key': 'example2',
-            'name': 'Example 2',
-        },
-    ];
-
-    const onChange = jest.fn();
-    const permissions = mount(
+    rerender(
         <Permissions
             onChange={onChange}
             system="Sulu"
-            value={value}
+            value={[]}
         />
     );
 
-    // Add example2 which was never selected before - should create new permission with id: undefined
-    permissions.find('MultiSelect').prop('onChange')(['example', 'example2']);
+    await waitFor(() => expect(MultiSelectMock).toHaveBeenCalled());
+    getLatestMockProps(MultiSelectMock).onChange(['example2']);
+    const expectedWithExample2 = [
+        {
+            id: 2,
+            context: 'sulu.webspaces.example2',
+            permissions: {
+                'view': false,
+                'delete': true,
+                'add': false,
+                'edit': true,
+                'live': false,
+                'security': true,
+            },
+        },
+    ];
+    expect(onChange).toHaveBeenLastCalledWith(expectedWithExample2);
 
-    const expected: Array<ContextPermission> = [
+    rerender(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={expectedWithExample2}
+        />
+    );
+
+    await waitFor(() => expect(MultiSelectMock).toHaveBeenCalled());
+    getLatestMockProps(MultiSelectMock).onChange(['example2', 'example']);
+    expect(onChange).toHaveBeenLastCalledWith([
+        expectedWithExample2[0],
+        {
+            id: 1,
+            context: 'sulu.webspaces.example',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+                'live': false,
+                'security': false,
+            },
+        },
+    ]);
+});
+
+test('creates new permission for new webspace', async() => {
+    securityContextStore.getSecurityContextGroups.mockReturnValue({
+        'Webspaces': {
+            'sulu.webspaces.#webspace#': ['view', 'add', 'edit', 'delete', 'live', 'security'],
+        },
+    });
+    setWebspaces(['example', 'example2']);
+
+    const onChange = jest.fn();
+    render(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={[
+                {
+                    id: 1,
+                    context: 'sulu.webspaces.example',
+                    permissions: {
+                        'view': true,
+                        'delete': true,
+                        'add': true,
+                        'edit': true,
+                        'live': false,
+                        'security': false,
+                    },
+                },
+            ]}
+        />
+    );
+
+    await waitFor(() => expect(MultiSelectMock).toHaveBeenCalled());
+    getLatestMockProps(MultiSelectMock).onChange(['example', 'example2']);
+
+    expect(onChange).toHaveBeenLastCalledWith([
         {
             id: 1,
             context: 'sulu.webspaces.example',
@@ -1167,7 +694,6 @@ test('Should create new permission when adding a webspace that was never selecte
             },
         },
         {
-            // Should be undefined because this webspace was never selected before
             id: undefined,
             context: 'sulu.webspaces.example2',
             permissions: {
@@ -1179,98 +705,5 @@ test('Should create new permission when adding a webspace that was never selecte
                 'security': false,
             },
         },
-    ];
-
-    expect(onChange).toHaveBeenLastCalledWith(expected);
-});
-
-test('Should maintain removed permissions cache when toggling same webspace multiple times', () => {
-    const value: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.webspaces.example',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-                'live': false,
-                'security': false,
-            },
-        },
-    ];
-
-    const securityContextGroups: SecurityContextGroups = {
-        'Webspaces': {
-            'sulu.webspaces.#webspace#': ['view', 'add', 'edit', 'delete', 'live', 'security'],
-        },
-    };
-    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
-
-    webspaceStore.allWebspaces = [
-        {
-            ...defaultWebspace,
-            'key': 'example',
-            'name': 'Example',
-        },
-    ];
-
-    const onChange = jest.fn();
-    const permissions = mount(
-        <Permissions
-            onChange={onChange}
-            system="Sulu"
-            value={value}
-        />
-    );
-
-    // Remove the webspace
-    permissions.find('MultiSelect').prop('onChange')([]);
-    expect(onChange).toHaveBeenLastCalledWith([]);
-    permissions.setProps({value: []});
-    permissions.update();
-
-    // Re-add it - should restore original
-    permissions.find('MultiSelect').prop('onChange')(['example']);
-    const firstReAdd = [
-        {
-            id: 1,
-            context: 'sulu.webspaces.example',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-                'live': false,
-                'security': false,
-            },
-        },
-    ];
-    expect(onChange).toHaveBeenLastCalledWith(firstReAdd);
-    permissions.setProps({value: firstReAdd});
-    permissions.update();
-
-    // Remove it again
-    permissions.find('MultiSelect').prop('onChange')([]);
-    expect(onChange).toHaveBeenLastCalledWith([]);
-    permissions.setProps({value: []});
-    permissions.update();
-
-    // Re-add it again - should still restore the original permission
-    permissions.find('MultiSelect').prop('onChange')(['example']);
-    const secondReAdd = [
-        {
-            id: 1,
-            context: 'sulu.webspaces.example',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-                'live': false,
-                'security': false,
-            },
-        },
-    ];
-    expect(onChange).toHaveBeenLastCalledWith(secondReAdd);
+    ]);
 });

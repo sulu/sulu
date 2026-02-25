@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render with selected and query 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="searchField"
   >
@@ -23,7 +23,6 @@ Array [
       class="inputContainer"
     >
       <input
-        autofocus=""
         class="input"
         value="Test"
       />
@@ -40,17 +39,17 @@ Array [
         tabindex="0"
       />
     </div>
-  </div>,
+  </div>
   <p
     class="hint"
   >
     sulu_search.search_hint
-  </p>,
-]
+  </p>
+</DocumentFragment>
 `;
 
 exports[`Render without selected searchResource 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="searchField"
   >
@@ -72,7 +71,6 @@ Array [
       class="inputContainer"
     >
       <input
-        autofocus=""
         class="input"
         value=""
       />
@@ -83,11 +81,11 @@ Array [
         tabindex="0"
       />
     </div>
-  </div>,
+  </div>
   <p
     class="hint"
   >
     sulu_search.search_hint
-  </p>,
-]
+  </p>
+</DocumentFragment>
 `;

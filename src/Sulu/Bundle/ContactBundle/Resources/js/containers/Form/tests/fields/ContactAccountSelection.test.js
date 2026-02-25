@@ -1,118 +1,79 @@
 // @flow
 import React from 'react';
-import {extendObservable as mockExtendObservable} from 'mobx';
-import {mount, shallow} from 'enzyme';
-import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
-import Router from 'sulu-admin-bundle/services/Router';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
-import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
+import {render} from '@testing-library/react';
+import {fieldTypeDefaultProps, getLatestMockProps} from 'sulu-admin-bundle/utils/TestHelper';
+import ContactAccountSelectionComponent from '../../../ContactAccountSelection';
 import ContactAccountSelection from '../../fields/ContactAccountSelection';
 
-jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn());
-
-jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn());
-
-jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(function() {
-    this.clearSelection = jest.fn();
-}));
-
-jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn());
-
-jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
-    this.navigate = jest.fn();
-}));
+jest.mock('../../../ContactAccountSelection', () => jest.fn(() => null));
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../../ContactAccountSelection/stores/ContactAccountSelectionStore', () => jest.fn(function() {
-    this.loadItems = jest.fn();
+beforeEach(() => {
+    ((ContactAccountSelectionComponent: any): {mockClear: () => void}).mockClear();
+});
 
-    mockExtendObservable(this, {
-        items: [],
-    });
-}));
+const createProps = (props: Object = {}) => ({
+    ...fieldTypeDefaultProps,
+    formInspector: ({}: any),
+    ...props,
+});
 
 test('Pass props correctly to ContactAccountSelection component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-
-    const contactAccountSelection = shallow(
-        <ContactAccountSelection {...fieldTypeDefaultProps} formInspector={formInspector} />
-    );
-
-    expect(contactAccountSelection.props()).toEqual(expect.objectContaining({
-        disabled: false,
-        value: [],
-    }));
-});
-
-test('Pass disabled prop to ContactAccountSelection component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-
-    const contactAccountSelection = shallow(
-        <ContactAccountSelection {...fieldTypeDefaultProps} disabled={true} formInspector={formInspector} />
-    );
-
-    expect(contactAccountSelection.prop('disabled')).toEqual(true);
-});
-
-test('Pass value prop to ContactAccountSelection component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-
-    const contactAccountSelection = shallow(
-        <ContactAccountSelection {...fieldTypeDefaultProps} formInspector={formInspector} value={['a1', 'c2']} />
-    );
-
-    expect(contactAccountSelection.prop('value')).toEqual(['a1', 'c2']);
-});
-
-test('Call onChange and onFinish calbacks', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
-
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-
-    const contactAccountSelection = shallow(
+    render(
         <ContactAccountSelection
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            value={['a1', 'c2']}
+            {...createProps({
+                disabled: true,
+                value: ['a1', 'c2'],
+            })}
         />
     );
 
-    contactAccountSelection.prop('onChange')(['a1', 'c6']);
+    const props: any = getLatestMockProps((ContactAccountSelectionComponent: any));
+
+    expect(props.disabled).toEqual(true);
+    expect(props.value).toEqual(['a1', 'c2']);
+});
+
+test('Call onChange and onFinish callbacks', async() => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    render(
+        <ContactAccountSelection
+            {...createProps({
+                onChange: changeSpy,
+                onFinish: finishSpy,
+                value: ['a1', 'c2'],
+            })}
+        />
+    );
+
+    getLatestMockProps((ContactAccountSelectionComponent: any)).onChange(['a1', 'c6']);
 
     expect(changeSpy).toBeCalledWith(['a1', 'c6']);
     expect(finishSpy).toBeCalledWith();
 });
 
 test('Call onItemClick callback', () => {
-    const router = new Router();
+    const router = {
+        navigate: jest.fn(),
+    };
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-
-    const contactAccountSelection = mount(
+    render(
         <ContactAccountSelection
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            router={router}
-            value={['a1', 'c2']}
+            {...createProps({
+                router: ((router: any): Object),
+                value: ['a1', 'c2'],
+            })}
         />
     );
 
-    contactAccountSelection.find('ContactAccountSelection').at(1).instance().store.items = [
-        {id: 'a1'},
-        {id: 'c2'},
-    ];
-
-    contactAccountSelection.update();
-
-    contactAccountSelection.find('MultiItemSelection .content').at(0).simulate('click');
+    getLatestMockProps((ContactAccountSelectionComponent: any)).onItemClick('a1');
     expect(router.navigate).toHaveBeenLastCalledWith('sulu_contact.account_edit_form', {id: '1'});
 
-    contactAccountSelection.find('MultiItemSelection .content').at(1).simulate('click');
+    getLatestMockProps((ContactAccountSelectionComponent: any)).onItemClick('c2');
     expect(router.navigate).toHaveBeenLastCalledWith('sulu_contact.contact_edit_form', {id: '2'});
 });

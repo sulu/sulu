@@ -1,9 +1,12 @@
 // @flow
+import React from 'react';
 import {extendObservable as mockExtendObservable} from 'mobx';
-import {shallow} from 'enzyme';
 import SelectionFieldFilterType from '../../fieldFilterTypes/SelectionFieldFilterType';
 import MultiSelectionStore from '../../../../stores/MultiSelectionStore';
+import MultiAutoComplete from '../../../../containers/MultiAutoComplete';
+import ResourceCheckboxGroup from '../../../../containers/ResourceCheckboxGroup';
 import userStore from '../../../../stores/userStore';
+import getMockCallArg from '../../../../utils/TestHelper/getMockCallArg';
 
 jest.mock('../../../../stores/MultiSelectionStore', () => jest.fn(function() {
     this.loadItems = jest.fn();
@@ -17,6 +20,18 @@ jest.mock('../../../../stores/MultiSelectionStore', () => jest.fn(function() {
 }));
 
 jest.mock('../../../../stores/userStore', () => ({}));
+
+const getFormChildren = (selectionFieldFilterType) => {
+    return React.Children.toArray(selectionFieldFilterType.getFormNode().props.children).filter(Boolean);
+};
+
+const getMultiAutoCompleteNode = (selectionFieldFilterType) => {
+    return getFormChildren(selectionFieldFilterType).find((child) => child.type === MultiAutoComplete);
+};
+
+const getResourceCheckboxGroupNode = (selectionFieldFilterType) => {
+    return getFormChildren(selectionFieldFilterType).find((child) => child.type === ResourceCheckboxGroup);
+};
 
 test.each([
     [undefined, 'parameters'],
@@ -38,11 +53,15 @@ test('Pass correct props to MultiAutoComplete', () => {
 
     expect(MultiSelectionStore).toBeCalledWith('accounts', [], expect.anything(), 'ids', {rootKey: 'rootKey'});
     // $FlowFixMe
-    expect(MultiSelectionStore.mock.calls[0][2].get()).toEqual('ru');
+    expect(getMockCallArg(MultiSelectionStore, 0, 2).get()).toEqual('ru');
 
-    const selectionFieldFilterTypeForm = shallow(selectionFieldFilterType.getFormNode());
+    const multiAutoCompleteNode = getMultiAutoCompleteNode(selectionFieldFilterType);
 
-    expect(selectionFieldFilterTypeForm.find('MultiAutoComplete').props()).toEqual(expect.objectContaining({
+    if (!multiAutoCompleteNode) {
+        throw new Error('MultiAutoComplete node was not found');
+    }
+
+    expect(multiAutoCompleteNode.props).toEqual(expect.objectContaining({
         displayProperty: 'name',
         searchProperties: ['name'],
         selectionStore: selectionFieldFilterType.selectionStore,
@@ -56,9 +75,13 @@ test('Pass correct props to Select', () => {
         [4, 6]
     );
 
-    const selectionFieldFilterTypeForm = shallow(selectionFieldFilterType.getFormNode());
+    const resourceCheckboxGroupNode = getResourceCheckboxGroupNode(selectionFieldFilterType);
 
-    expect(selectionFieldFilterTypeForm.find('ResourceCheckboxGroup').props()).toEqual(expect.objectContaining({
+    if (!resourceCheckboxGroupNode) {
+        throw new Error('ResourceCheckboxGroup node was not found');
+    }
+
+    expect(resourceCheckboxGroupNode.props).toEqual(expect.objectContaining({
         displayProperty: 'name',
         resourceKey: 'accounts',
         values: [4, 6],
@@ -88,12 +111,20 @@ test('Setting a new value should update the select', () => {
         [4, 6]
     );
 
-    const selectionFieldFilterTypeForm1 = shallow(selectionFieldFilterType.getFormNode());
-    expect(selectionFieldFilterTypeForm1.find('ResourceCheckboxGroup').prop('values')).toEqual([4, 6]);
+    const resourceCheckboxGroupNode1 = getResourceCheckboxGroupNode(selectionFieldFilterType);
+    if (!resourceCheckboxGroupNode1) {
+        throw new Error('ResourceCheckboxGroup node was not found');
+    }
+
+    expect(resourceCheckboxGroupNode1.props.values).toEqual([4, 6]);
 
     selectionFieldFilterType.setValue([4, 5]);
-    const selectionFieldFilterTypeForm2 = shallow(selectionFieldFilterType.getFormNode());
-    expect(selectionFieldFilterTypeForm2.find('ResourceCheckboxGroup').prop('values')).toEqual([4, 5]);
+    const resourceCheckboxGroupNode2 = getResourceCheckboxGroupNode(selectionFieldFilterType);
+    if (!resourceCheckboxGroupNode2) {
+        throw new Error('ResourceCheckboxGroup node was not found');
+    }
+
+    expect(resourceCheckboxGroupNode2.props.values).toEqual([4, 5]);
 });
 
 test('Setting a new value should update the selectionStore', () => {
@@ -144,9 +175,13 @@ test('Call onChange handler when selection changes for select type after filter 
         undefined
     );
 
-    const selectionFieldFilterTypeForm = shallow(selectionFieldFilterType.getFormNode());
+    const resourceCheckboxGroupNode = getResourceCheckboxGroupNode(selectionFieldFilterType);
+    if (!resourceCheckboxGroupNode) {
+        throw new Error('ResourceCheckboxGroup node was not found');
+    }
+
     changeSpy.mockReset();
-    selectionFieldFilterTypeForm.find('ResourceCheckboxGroup').prop('onChange')([4, 7]);
+    resourceCheckboxGroupNode.props.onChange([4, 7]);
 
     expect(changeSpy).not.toBeCalled();
     selectionFieldFilterType.confirm();
@@ -169,7 +204,7 @@ test('Return value node without a value', () => {
     });
 });
 
-test('Return value node with a value', (done) => {
+test('Return value node with a value', () => {
     const selectionFieldFilterType = new SelectionFieldFilterType(
         jest.fn(),
         {displayProperty: 'name', resourceKey: 'accounts'},
@@ -195,6 +230,5 @@ test('Return value node with a value', (done) => {
     return valueNodePromise.then((valueNode) => {
         expect(selectionFieldFilterType.selectionStore.loadItems).not.toBeCalled();
         expect(valueNode).toEqual('Max, Erika, John');
-        done();
     });
 });

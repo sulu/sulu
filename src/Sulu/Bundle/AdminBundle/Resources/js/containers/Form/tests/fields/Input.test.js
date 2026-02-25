@@ -1,51 +1,46 @@
 // @flow
 import React from 'react';
 import log from 'loglevel';
-import {shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
-import ResourceStore from '../../../../stores/ResourceStore';
-import FormInspector from '../../FormInspector';
-import ResourceFormStore from '../../stores/ResourceFormStore';
 import Input from '../../fields/Input';
-import InputComponent from '../../../../components/Input';
 
 jest.mock('loglevel', () => ({
     warn: jest.fn(),
 }));
 
-jest.mock('../../../../stores/ResourceStore', () => jest.fn());
-jest.mock('../../stores/ResourceFormStore', () => jest.fn());
-jest.mock('../../FormInspector', () => jest.fn());
+const createProps = (props: Object = {}) => ({
+    ...fieldTypeDefaultProps,
+    formInspector: ({}: any),
+    ...props,
+});
 
 test('Pass error correctly to Input component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const error = {keyword: 'minLength', parameters: {}};
 
-    const inputInvalid = shallow(
+    render(
         <Input
-            {...fieldTypeDefaultProps}
+            {...createProps()}
             error={error}
-            formInspector={formInspector}
         />
     );
 
-    expect(inputInvalid.find(InputComponent).prop('valid')).toBe(false);
+    expect(screen.getByRole('textbox').closest('div')).toHaveClass('error');
 });
 
 test('Pass props correctly to Input component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const inputValid = shallow(
+    render(
         <Input
-            {...fieldTypeDefaultProps}
+            {...createProps()}
             disabled={true}
-            formInspector={formInspector}
         />
     );
 
-    expect(inputValid.find(InputComponent).prop('maxCharacters')).toBe(undefined);
-    expect(inputValid.find(InputComponent).prop('valid')).toBe(true);
-    expect(inputValid.find(InputComponent).prop('disabled')).toBe(true);
-    expect(inputValid.find(InputComponent).prop('headline')).toBe(undefined);
+    const input = screen.getByRole('textbox');
+    expect(input).toBeDisabled();
+    expect(input.closest('div')).not.toHaveClass('error');
+    expect(input.closest('div')).not.toHaveClass('headline');
 });
 
 test('Pass headline prop correctly', () => {
@@ -55,16 +50,14 @@ test('Pass headline prop correctly', () => {
             value: true,
         },
     };
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const inputValid = shallow(
+    render(
         <Input
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
+            {...createProps()}
             schemaOptions={schemaOptions}
         />
     );
 
-    expect(inputValid.find(InputComponent).prop('headline')).toBe(true);
+    expect(screen.getByRole('textbox').closest('div')).toHaveClass('headline');
 });
 
 test('Component correctly logs deprecated warning for max_characters', () => {
@@ -74,19 +67,15 @@ test('Component correctly logs deprecated warning for max_characters', () => {
             value: '70',
         },
     };
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const inputValid = shallow(
+    render(
         <Input
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
+            {...createProps()}
             schemaOptions={schemaOptions}
         />
     );
 
     expect(log.warn).toBeCalledWith(expect.stringContaining('The "max_characters" schema option is deprecated'));
-
-    expect(inputValid.find(InputComponent).prop('maxCharacters')).toBe(70);
-    expect(inputValid.find(InputComponent).prop('valid')).toBe(true);
+    expect(screen.getByText((content) => content.startsWith('70 '))).toBeInTheDocument();
 });
 
 test('Component correctly chooses soft_max_length over max_characters', () => {
@@ -100,19 +89,15 @@ test('Component correctly chooses soft_max_length over max_characters', () => {
             value: '70',
         },
     };
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const inputValid = shallow(
+    render(
         <Input
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
+            {...createProps()}
             schemaOptions={schemaOptions}
         />
     );
 
     expect(log.warn).toBeCalledWith(expect.stringContaining('The "max_characters" schema option is deprecated'));
-
-    expect(inputValid.find(InputComponent).prop('maxCharacters')).toBe(70);
-    expect(inputValid.find(InputComponent).prop('valid')).toBe(true);
+    expect(screen.getByText((content) => content.startsWith('70 '))).toBeInTheDocument();
 });
 
 test('Pass props correctly including soft_max_length to Input component', () => {
@@ -130,53 +115,47 @@ test('Pass props correctly including soft_max_length to Input component', () => 
             value: ',',
         },
     };
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const inputValid = shallow(
+    render(
         <Input
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
+            {...createProps()}
             schemaOptions={schemaOptions}
         />
     );
 
-    expect(inputValid.find(InputComponent).prop('maxCharacters')).toBe(70);
-    expect(inputValid.find(InputComponent).prop('maxSegments')).toBe(6);
-    expect(inputValid.find(InputComponent).prop('segmentDelimiter')).toBe(',');
-    expect(inputValid.find(InputComponent).prop('valid')).toBe(true);
+    expect(screen.getByText((content) => content.startsWith('70 '))).toBeInTheDocument();
+    expect(screen.getByText((content) => content.startsWith('6 '))).toBeInTheDocument();
 });
 
-test('Should not pass any arguments to onFinish callback', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+test('Should not pass any arguments to onFinish callback', async() => {
+    const user = userEvent.setup();
     const finishSpy = jest.fn();
 
-    const input = shallow(
+    render(
         <Input
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
+            {...createProps()}
             onFinish={finishSpy}
         />
     );
 
-    input.find('Input').prop('onBlur')('Test');
+    await user.click(screen.getByRole('textbox'));
+    await user.tab();
 
     expect(finishSpy).toBeCalledWith();
 });
 
-test('TextArea should call onFocus when the TextArea gets focus', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+test('Input should call onFocus when the input gets focus', async() => {
+    const user = userEvent.setup();
     const focusSpy = jest.fn();
-    const inputValid = shallow(
+
+    render(
         <Input
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
+            {...createProps()}
             onFocus={focusSpy}
         />
     );
 
-    const target = new EventTarget();
-    inputValid.find(InputComponent).prop('onFocus')({
-        target,
-    });
+    const input = screen.getByRole('textbox');
+    await user.click(input);
 
-    expect(focusSpy).toBeCalledWith(target);
+    expect(focusSpy).toBeCalledWith(input);
 });

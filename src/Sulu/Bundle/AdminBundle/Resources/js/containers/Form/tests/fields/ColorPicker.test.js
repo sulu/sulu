@@ -1,51 +1,66 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
-import ResourceStore from '../../../../stores/ResourceStore';
-import FormInspector from '../../FormInspector';
-import ResourceFormStore from '../../stores/ResourceFormStore';
+import bindValueToOnChange from '../../../../utils/TestHelper/bindValueToOnChange';
 import ColorPicker from '../../fields/ColorPicker';
-import ColorPickerComponent from '../../../../components/ColorPicker';
 
-jest.mock('../../../../stores/ResourceStore', () => jest.fn());
-jest.mock('../../stores/ResourceFormStore', () => jest.fn());
-jest.mock('../../FormInspector', () => jest.fn());
+const createProps = (props: Object = {}) => ({
+    ...fieldTypeDefaultProps,
+    formInspector: ({}: any),
+    ...props,
+});
 
 test('Pass error correctly to component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const error = {keyword: 'minLength', parameters: {}};
 
-    const field = shallow(
+    render(
         <ColorPicker
-            {...fieldTypeDefaultProps}
+            {...createProps()}
             error={error}
-            formInspector={formInspector}
         />
     );
 
-    expect(field.find(ColorPickerComponent).prop('valid')).toBe(false);
+    expect(screen.getByRole('textbox').closest('div')).toHaveClass('error');
 });
 
 test('Pass props correctly to component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const onFinish = jest.fn();
-    const onChange = jest.fn();
-
-    const field = shallow(
+    render(
         <ColorPicker
-            {...fieldTypeDefaultProps}
+            {...createProps()}
             disabled={true}
-            formInspector={formInspector}
-            onChange={onChange}
-            onFinish={onFinish}
             value="#123123"
         />
     );
 
-    const component = field.find(ColorPickerComponent);
-    expect(component.prop('valid')).toBe(true);
-    expect(component.prop('onChange')).toBe(onChange);
-    expect(component.prop('onBlur')).toBe(onFinish);
-    expect(component.prop('disabled')).toBe(true);
+    const input = screen.getByRole('textbox');
+
+    expect(input).toBeDisabled();
+    expect(input).toHaveDisplayValue('#123123');
+    expect(input.closest('div')).not.toHaveClass('error');
+});
+
+test('Pass callbacks correctly to component', async() => {
+    const user = userEvent.setup();
+    const onFinish = jest.fn();
+    const onChange = jest.fn();
+
+    render(
+        bindValueToOnChange(
+            <ColorPicker
+                {...createProps()}
+                onChange={onChange}
+                onFinish={onFinish}
+                value=""
+            />
+        )
+    );
+
+    const input = screen.getByRole('textbox');
+    await user.type(input, '#abc');
+    expect(onChange).toHaveBeenLastCalledWith('#abc');
+
+    await user.tab();
+    expect(onFinish).toBeCalledWith();
 });

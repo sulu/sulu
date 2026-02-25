@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import {extendObservable as mockExtendObservable} from 'mobx';
-import {mount, shallow} from 'enzyme';
+import {fireEvent, render, screen, waitFor, within} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import ResourceListStore from 'sulu-admin-bundle/stores/ResourceListStore';
 import ResourceLocatorHistory from '../ResourceLocatorHistory';
 
@@ -10,16 +11,24 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 }));
 
 jest.mock('sulu-admin-bundle/stores/ResourceListStore', () => jest.fn(function() {
-    this.deleteList = jest.fn();
+    this.deleteList = jest.fn(() => Promise.resolve());
 
     mockExtendObservable(this, {
         data: [],
+        deleting: false,
         loading: true,
     });
 }));
 
-test('Pass props correctly to ResourceListStore', () => {
-    const resourceLocatorHistory = shallow(
+const resourceListStoreMock: any = ResourceListStore;
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+test('Pass props correctly to ResourceListStore', async() => {
+    const user = userEvent.setup();
+    render(
         <ResourceLocatorHistory
             options={{webspace: 'sulu', resourceKey: 'text', resourceId: 5}}
             resourceKey="history_routes"
@@ -27,27 +36,26 @@ test('Pass props correctly to ResourceListStore', () => {
     );
 
     expect(ResourceListStore).not.toBeCalled();
-    resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
+
+    await user.click(screen.getByRole('button', {name: /sulu_admin\.show_history/}));
     expect(ResourceListStore).toBeCalledWith('history_routes', {webspace: 'sulu', resourceKey: 'text', resourceId: 5});
 });
 
 test('Pass correct props to Button', () => {
-    const resourceLocatorHistory = shallow(
+    render(
         <ResourceLocatorHistory
             options={{webspace: 'sulu'}}
             resourceKey="history_routes"
         />
     );
 
-    expect(resourceLocatorHistory.find('Button[icon="su-process"]').props()).toEqual(expect.objectContaining({
-        disabled: false,
-        icon: 'su-process',
-        skin: 'link',
-    }));
+    const showHistoryButton = screen.getByRole('button', {name: /sulu_admin\.show_history/});
+    expect(within(showHistoryButton).getByLabelText('su-process')).toBeInTheDocument();
+    expect(showHistoryButton).toBeEnabled();
 });
 
 test('Disable button if disabled isset', () => {
-    const resourceLocatorHistory = shallow(
+    render(
         <ResourceLocatorHistory
             disabled={true}
             options={{webspace: 'sulu'}}
@@ -55,25 +63,23 @@ test('Disable button if disabled isset', () => {
         />
     );
 
-    expect(resourceLocatorHistory.find('Button[icon="su-process"]').props()).toEqual(expect.objectContaining({
-        disabled: true,
-    }));
+    expect(screen.getByRole('button', {name: /sulu_admin\.show_history/})).toBeDisabled();
 });
 
-test('Show history routes in overlay', () => {
-    const resourceLocatorHistory = mount(
+test('Show history routes in overlay', async() => {
+    const user = userEvent.setup();
+    const {asFragment} = render(
         <ResourceLocatorHistory
             options={{webspace: 'sulu'}}
             resourceKey="history_routes"
         />
     );
 
-    expect(resourceLocatorHistory.find('Overlay Loader')).toHaveLength(0);
-    resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
-    expect(resourceLocatorHistory.find('Overlay Loader')).toHaveLength(1);
+    await user.click(screen.getByRole('button', {name: /sulu_admin\.show_history/}));
+    expect(screen.getByText('sulu_admin.history')).toBeInTheDocument();
+    expect(document.querySelector('.spinner')).toBeInTheDocument();
 
-    // $FlowFixMe
-    const resourceListStore = ResourceListStore.mock.instances[0];
+    const resourceListStore = resourceListStoreMock.mock.instances[0];
     resourceListStore.loading = false;
     resourceListStore.data = [
         {
@@ -88,12 +94,13 @@ test('Show history routes in overlay', () => {
         },
     ];
 
-    resourceLocatorHistory.update();
-    expect(resourceLocatorHistory.find('Overlay').render()).toMatchSnapshot();
+    expect(await screen.findByText('/test')).toBeInTheDocument();
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Reload history routes each time overlay is opened', () => {
-    const resourceLocatorHistory = mount(
+test('Reload history routes each time overlay is opened', async() => {
+    const user = userEvent.setup();
+    render(
         <ResourceLocatorHistory
             options={{webspace: 'sulu'}}
             resourceKey="history_routes"
@@ -102,44 +109,50 @@ test('Reload history routes each time overlay is opened', () => {
 
     expect(ResourceListStore).toBeCalledTimes(0);
 
-    resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
+    await user.click(screen.getByRole('button', {name: /sulu_admin\.show_history/}));
     expect(ResourceListStore).toBeCalledTimes(1);
 
-    resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
+    await user.click(screen.getByRole('button', {name: /sulu_admin\.show_history/}));
     expect(ResourceListStore).toBeCalledTimes(2);
 });
 
-test('Close overlay if button is clicked', () => {
-    const resourceLocatorHistory = mount(
+test('Close overlay if button is clicked', async() => {
+    const user = userEvent.setup();
+    render(
         <ResourceLocatorHistory
             options={{webspace: 'sulu'}}
             resourceKey="history_routes"
         />
     );
 
-    expect(resourceLocatorHistory.find('Overlay').prop('open')).toEqual(false);
+    expect(screen.queryByText('sulu_admin.history')).not.toBeInTheDocument();
 
-    resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
-    expect(resourceLocatorHistory.find('Overlay').prop('open')).toEqual(true);
+    await user.click(screen.getByRole('button', {name: /sulu_admin\.show_history/}));
+    expect(screen.getByText('sulu_admin.history')).toBeInTheDocument();
 
-    resourceLocatorHistory.find('Overlay').prop('onConfirm')();
-    resourceLocatorHistory.update();
-    expect(resourceLocatorHistory.find('Overlay').prop('open')).toEqual(false);
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
+
+    const overlayContainer = screen.getByText('sulu_admin.history').closest('.container');
+    if (!overlayContainer) {
+        throw new Error('Expected overlay container to exist');
+    }
+
+    fireEvent.transitionEnd(overlayContainer);
+    await waitFor(() => expect(screen.queryByText('sulu_admin.history')).not.toBeInTheDocument());
 });
 
-test('Do not delete if confirmation dialog is cancelled', () => {
-    const resourceLocatorHistory = mount(
+test('Do not delete if confirmation dialog is cancelled', async() => {
+    const user = userEvent.setup();
+    render(
         <ResourceLocatorHistory
             options={{webspace: 'sulu'}}
             resourceKey="history_routes"
         />
     );
 
-    resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
+    await user.click(screen.getByRole('button', {name: /sulu_admin\.show_history/}));
 
-    // $FlowFixMe
-    const resourceListStore = ResourceListStore.mock.instances[0];
-
+    const resourceListStore = resourceListStoreMock.mock.instances[0];
     resourceListStore.loading = false;
     resourceListStore.data = [
         {
@@ -149,31 +162,31 @@ test('Do not delete if confirmation dialog is cancelled', () => {
         },
     ];
 
-    resourceLocatorHistory.update();
-    resourceLocatorHistory.find('ButtonCell[icon="su-trash-alt"] button').prop('onClick')();
-    resourceLocatorHistory.update();
+    expect(await screen.findByText('/test')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', {name: 'su-trash-alt'}));
 
-    expect(resourceLocatorHistory.find('Dialog').prop('open')).toEqual(true);
-    resourceLocatorHistory.find('Dialog Button[skin="secondary"]').prop('onClick')();
-    resourceLocatorHistory.update();
-    expect(resourceLocatorHistory.find('Dialog').prop('open')).toEqual(false);
+    const dialog = screen.getByText('sulu_admin.resource_locator_history_delete_warning').closest('section');
+    if (!dialog) {
+        throw new Error('Expected dialog section to exist');
+    }
+
+    await user.click(within(dialog).getByRole('button', {name: 'sulu_admin.cancel'}));
 
     expect(resourceListStore.deleteList).not.toBeCalled();
 });
 
-test('Delete if confirmation dialog is confirmed', () => {
-    const resourceLocatorHistory = mount(
+test('Delete if confirmation dialog is confirmed', async() => {
+    const user = userEvent.setup();
+    render(
         <ResourceLocatorHistory
             options={{webspace: 'sulu'}}
             resourceKey="history_routes"
         />
     );
 
-    resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
+    await user.click(screen.getByRole('button', {name: /sulu_admin\.show_history/}));
 
-    // $FlowFixMe
-    const resourceListStore = ResourceListStore.mock.instances[0];
-
+    const resourceListStore = resourceListStoreMock.mock.instances[0];
     resourceListStore.loading = false;
     resourceListStore.data = [
         {
@@ -186,19 +199,17 @@ test('Delete if confirmation dialog is confirmed', () => {
     const deleteListPromise = Promise.resolve();
     resourceListStore.deleteList.mockReturnValue(deleteListPromise);
 
-    resourceLocatorHistory.update();
-    resourceLocatorHistory.find('ButtonCell[icon="su-trash-alt"] button').prop('onClick')();
-    resourceLocatorHistory.update();
+    expect(await screen.findByText('sulu.io/test')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', {name: 'su-trash-alt'}));
 
-    expect(resourceLocatorHistory.find('Dialog').prop('open')).toEqual(true);
-    resourceLocatorHistory.find('Dialog Button[skin="primary"]').prop('onClick')();
-    resourceLocatorHistory.update();
-    expect(resourceLocatorHistory.find('Dialog').prop('open')).toEqual(true);
+    const dialog = screen.getByText('sulu_admin.resource_locator_history_delete_warning').closest('section');
+    if (!dialog) {
+        throw new Error('Expected dialog section to exist');
+    }
+
+    await user.click(within(dialog).getByRole('button', {name: 'sulu_admin.ok'}));
 
     expect(resourceListStore.deleteList).toBeCalledWith([3]);
 
-    return deleteListPromise.then(() => {
-        resourceLocatorHistory.update();
-        expect(resourceLocatorHistory.find('Dialog').prop('open')).toEqual(false);
-    });
+    await deleteListPromise;
 });

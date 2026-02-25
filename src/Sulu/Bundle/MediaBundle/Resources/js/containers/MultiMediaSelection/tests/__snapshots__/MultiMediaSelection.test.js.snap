@@ -1,791 +1,157 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render a MultiMediaSelection field 1`] = `
-Array [
-  <div
-    class="multiItemSelectionClass"
-  >
-    <div
-      class="header"
-    >
-      <button
-        class="button left"
-        type="button"
-      >
-        <span
-          aria-label="su-image"
-          class="su-image icon"
-        />
-      </button>
+<DocumentFragment>
+  <div>
+    <div>
       <div
-        class="label"
+        class="mediaItem"
       >
-        3 sulu_media.media_selected_plural
+        <img
+          alt="Media 1"
+          class="thumbnailImage"
+          src="http://lorempixel.com/25/25"
+        />
+        <div
+          class="mediaTitle"
+        >
+          <span>
+            Media 1
+          </span>
+        </div>
       </div>
     </div>
-    <ul
-      class="list"
-    >
-      <li
-        class="listElement"
+    <div>
+      <div
+        class="mediaItem"
       >
+        <img
+          alt="Media 2"
+          class="thumbnailImage"
+          src="http://lorempixel.com/25/25"
+        />
         <div
-          class="item"
+          class="mediaTitle"
         >
-          <span
-            class="dragHandle sortable"
-          >
-            <span
-              aria-label="su-more"
-              class="su-more"
-            />
-            <span
-              class="index"
-            >
-              1
-            </span>
+          <span>
+            Media 2
           </span>
-          <div
-            class="content clickable"
-            role="button"
-          >
-            <div
-              class="mediaItem"
-            >
-              <img
-                alt="Media 1"
-                class="thumbnailImage"
-                src="http://lorempixel.com/25/25"
-              />
-              <div
-                class="mediaTitle"
-              >
-                <div
-                  aria-label="Media 1"
-                  class="croppedText"
-                  title="Media 1"
-                >
-                  <div
-                    aria-hidden="true"
-                    class="front"
-                  >
-                    Medi
-                  </div>
-                  <div
-                    aria-hidden="true"
-                    class="back"
-                  >
-                    <span>
-                      a 1
-                    </span>
-                  </div>
-                  <div
-                    class="whole"
-                  >
-                    Media 1
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="buttons"
-          >
-            <button
-              class="button"
-              type="button"
-            >
-              <span
-                aria-label="su-trash-alt"
-                class="su-trash-alt"
-              />
-            </button>
-          </div>
         </div>
-      </li>
-      <li
-        class="listElement"
+      </div>
+    </div>
+    <div>
+      <div
+        class="mediaItem"
       >
+        <img
+          alt="Media 3"
+          class="thumbnailImage"
+          src="http://lorempixel.com/25/25"
+        />
         <div
-          class="item"
+          class="mediaTitle"
         >
-          <span
-            class="dragHandle sortable"
-          >
-            <span
-              aria-label="su-more"
-              class="su-more"
-            />
-            <span
-              class="index"
-            >
-              2
-            </span>
+          <span>
+            Media 3
           </span>
-          <div
-            class="content clickable"
-            role="button"
-          >
-            <div
-              class="mediaItem"
-            >
-              <img
-                alt="Media 2"
-                class="thumbnailImage"
-                src="http://lorempixel.com/25/25"
-              />
-              <div
-                class="mediaTitle"
-              >
-                <div
-                  aria-label="Media 2"
-                  class="croppedText"
-                  title="Media 2"
-                >
-                  <div
-                    aria-hidden="true"
-                    class="front"
-                  >
-                    Medi
-                  </div>
-                  <div
-                    aria-hidden="true"
-                    class="back"
-                  >
-                    <span>
-                      a 2
-                    </span>
-                  </div>
-                  <div
-                    class="whole"
-                  >
-                    Media 2
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="buttons"
-          >
-            <button
-              class="button"
-              type="button"
-            >
-              <span
-                aria-label="su-trash-alt"
-                class="su-trash-alt"
-              />
-            </button>
-          </div>
         </div>
-      </li>
-      <li
-        class="listElement"
-      >
-        <div
-          class="item"
-        >
-          <span
-            class="dragHandle sortable"
-          >
-            <span
-              aria-label="su-more"
-              class="su-more"
-            />
-            <span
-              class="index"
-            >
-              3
-            </span>
-          </span>
-          <div
-            class="content clickable"
-            role="button"
-          >
-            <div
-              class="mediaItem"
-            >
-              <img
-                alt="Media 3"
-                class="thumbnailImage"
-                src="http://lorempixel.com/25/25"
-              />
-              <div
-                class="mediaTitle"
-              >
-                <div
-                  aria-label="Media 3"
-                  class="croppedText"
-                  title="Media 3"
-                >
-                  <div
-                    aria-hidden="true"
-                    class="front"
-                  >
-                    Medi
-                  </div>
-                  <div
-                    aria-hidden="true"
-                    class="back"
-                  >
-                    <span>
-                      a 3
-                    </span>
-                  </div>
-                  <div
-                    class="whole"
-                  >
-                    Media 3
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="buttons"
-          >
-            <button
-              class="button"
-              type="button"
-            >
-              <span
-                aria-label="su-trash-alt"
-                class="su-trash-alt"
-              />
-            </button>
-          </div>
-        </div>
-      </li>
-    </ul>
-  </div>,
-  <div>
-    single media selection overlay
-  </div>,
-]
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Render a MultiMediaSelection field with display options 1`] = `
-Array [
-  <div
-    class="multiItemSelectionClass"
-  >
-    <div
-      class="header"
-    >
-      <button
-        class="button left"
-        type="button"
-      >
-        <span
-          aria-label="su-image"
-          class="su-image icon"
-        />
-      </button>
-      <div
-        class="label"
-      >
-        1 sulu_media.media_selected_singular
-      </div>
-      <button
-        class="button right hasOptions"
-        type="button"
-      >
-        <span
-          aria-label="su-display-default"
-          class="su-display-default icon"
-        />
-        <span
-          aria-label="su-angle-down"
-          class="su-angle-down"
-        />
-      </button>
-    </div>
-    <ul
-      class="list"
-    >
-      <li
-        class="listElement"
-      >
-        <div
-          class="item"
-        >
-          <span
-            class="dragHandle sortable"
-          >
-            <span
-              aria-label="su-more"
-              class="su-more"
-            />
-            <span
-              class="index"
-            >
-              1
-            </span>
-          </span>
-          <div
-            class="content clickable"
-            role="button"
-          >
-            <div
-              class="mediaItem"
-            >
-              <img
-                alt="Media 1"
-                class="thumbnailImage"
-                src="http://lorempixel.com/25/25"
-              />
-              <div
-                class="mediaTitle"
-              >
-                <div
-                  aria-label="Media 1"
-                  class="croppedText"
-                  title="Media 1"
-                >
-                  <div
-                    aria-hidden="true"
-                    class="front"
-                  >
-                    Medi
-                  </div>
-                  <div
-                    aria-hidden="true"
-                    class="back"
-                  >
-                    <span>
-                      a 1
-                    </span>
-                  </div>
-                  <div
-                    class="whole"
-                  >
-                    Media 1
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="buttons"
-          >
-            <button
-              class="button"
-              type="button"
-            >
-              <span
-                aria-label="su-trash-alt"
-                class="su-trash-alt"
-              />
-            </button>
-          </div>
-        </div>
-      </li>
-    </ul>
-  </div>,
+<DocumentFragment>
   <div>
-    single media selection overlay
-  </div>,
-]
-`;
-
-exports[`Render a MultiMediaSelection field with display options and selected icon 1`] = `
-Array [
-  <div
-    class="multiItemSelectionClass"
-  >
-    <div
-      class="header"
-    >
-      <button
-        class="button left"
-        type="button"
-      >
-        <span
-          aria-label="su-image"
-          class="su-image icon"
-        />
-      </button>
+    <div>
       <div
-        class="label"
+        class="mediaItem"
       >
-        1 sulu_media.media_selected_singular
-      </div>
-      <button
-        class="button right hasOptions"
-        type="button"
-      >
-        <span
-          aria-label="su-display-center-left"
-          class="su-display-center-left icon"
+        <img
+          alt="Media 1"
+          class="thumbnailImage"
+          src="http://lorempixel.com/25/25"
         />
-        <span
-          aria-label="su-angle-down"
-          class="su-angle-down"
-        />
-      </button>
-    </div>
-    <ul
-      class="list"
-    >
-      <li
-        class="listElement"
-      >
         <div
-          class="item"
+          class="mediaTitle"
         >
-          <span
-            class="dragHandle sortable"
-          >
-            <span
-              aria-label="su-more"
-              class="su-more"
-            />
-            <span
-              class="index"
-            >
-              1
-            </span>
+          <span>
+            Media 1
           </span>
-          <div
-            class="content clickable"
-            role="button"
-          >
-            <div
-              class="mediaItem"
-            >
-              <img
-                alt="Media 1"
-                class="thumbnailImage"
-                src="http://lorempixel.com/25/25"
-              />
-              <div
-                class="mediaTitle"
-              >
-                <div
-                  aria-label="Media 1"
-                  class="croppedText"
-                  title="Media 1"
-                >
-                  <div
-                    aria-hidden="true"
-                    class="front"
-                  >
-                    Medi
-                  </div>
-                  <div
-                    aria-hidden="true"
-                    class="back"
-                  >
-                    <span>
-                      a 1
-                    </span>
-                  </div>
-                  <div
-                    class="whole"
-                  >
-                    Media 1
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="buttons"
-          >
-            <button
-              class="button"
-              type="button"
-            >
-              <span
-                aria-label="su-trash-alt"
-                class="su-trash-alt"
-              />
-            </button>
-          </div>
         </div>
-      </li>
-    </ul>
-  </div>,
-  <div>
-    single media selection overlay
-  </div>,
-]
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Render a MultiMediaSelection field without thumbnails with MimeTypeIndicator 1`] = `
-Array [
-  <div
-    class="multiItemSelectionClass"
-  >
-    <div
-      class="header"
-    >
-      <button
-        class="button left"
-        type="button"
-      >
-        <span
-          aria-label="su-image"
-          class="su-image icon"
-        />
-      </button>
+<DocumentFragment>
+  <div>
+    <div>
       <div
-        class="label"
+        class="mediaItem"
       >
-        3 sulu_media.media_selected_plural
+        <div
+          class="mimeTypeIndicator"
+          style="color: rgb(255, 255, 255); font-size: 16px; background-color: rgb(88, 88, 88); width: 25px; height: 25px;"
+        >
+          <span
+            class="fa-file-code-o"
+          />
+        </div>
+        <div
+          class="mediaTitle"
+        >
+          <span>
+            Media 1
+          </span>
+        </div>
       </div>
     </div>
-    <ul
-      class="list"
-    >
-      <li
-        class="listElement"
+    <div>
+      <div
+        class="mediaItem"
       >
         <div
-          class="item"
+          class="mimeTypeIndicator"
+          style="color: rgb(255, 255, 255); font-size: 16px; background-color: rgb(187, 8, 6); width: 25px; height: 25px;"
         >
           <span
-            class="dragHandle sortable"
-          >
-            <span
-              aria-label="su-more"
-              class="su-more"
-            />
-            <span
-              class="index"
-            >
-              1
-            </span>
-          </span>
-          <div
-            class="content clickable"
-            role="button"
-          >
-            <div
-              class="mediaItem"
-            >
-              <div
-                class="mimeTypeIndicator"
-                style="color:#fff;font-size:16px;background-color:#585858;width:25px;height:25px"
-              >
-                <span
-                  aria-label="fa-file-code-o"
-                  class="fa fa-file-code-o"
-                />
-              </div>
-              <div
-                class="mediaTitle"
-              >
-                <div
-                  aria-label="Media 1"
-                  class="croppedText"
-                  title="Media 1"
-                >
-                  <div
-                    aria-hidden="true"
-                    class="front"
-                  >
-                    Medi
-                  </div>
-                  <div
-                    aria-hidden="true"
-                    class="back"
-                  >
-                    <span>
-                      a 1
-                    </span>
-                  </div>
-                  <div
-                    class="whole"
-                  >
-                    Media 1
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="buttons"
-          >
-            <button
-              class="button"
-              type="button"
-            >
-              <span
-                aria-label="su-trash-alt"
-                class="su-trash-alt"
-              />
-            </button>
-          </div>
+            class="fa-file-pdf-o"
+          />
         </div>
-      </li>
-      <li
-        class="listElement"
+        <div
+          class="mediaTitle"
+        >
+          <span>
+            Media 2
+          </span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div
+        class="mediaItem"
       >
         <div
-          class="item"
+          class="mimeTypeIndicator"
+          style="color: rgb(255, 255, 255); font-size: 16px; background-color: rgb(0, 114, 58); width: 25px; height: 25px;"
         >
           <span
-            class="dragHandle sortable"
-          >
-            <span
-              aria-label="su-more"
-              class="su-more"
-            />
-            <span
-              class="index"
-            >
-              2
-            </span>
-          </span>
-          <div
-            class="content clickable"
-            role="button"
-          >
-            <div
-              class="mediaItem"
-            >
-              <div
-                class="mimeTypeIndicator"
-                style="color:#fff;font-size:16px;background-color:#bb0806;width:25px;height:25px"
-              >
-                <span
-                  aria-label="fa-file-pdf-o"
-                  class="fa fa-file-pdf-o"
-                />
-              </div>
-              <div
-                class="mediaTitle"
-              >
-                <div
-                  aria-label="Media 2"
-                  class="croppedText"
-                  title="Media 2"
-                >
-                  <div
-                    aria-hidden="true"
-                    class="front"
-                  >
-                    Medi
-                  </div>
-                  <div
-                    aria-hidden="true"
-                    class="back"
-                  >
-                    <span>
-                      a 2
-                    </span>
-                  </div>
-                  <div
-                    class="whole"
-                  >
-                    Media 2
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="buttons"
-          >
-            <button
-              class="button"
-              type="button"
-            >
-              <span
-                aria-label="su-trash-alt"
-                class="su-trash-alt"
-              />
-            </button>
-          </div>
+            class="fa-file-excel-o"
+          />
         </div>
-      </li>
-      <li
-        class="listElement"
-      >
         <div
-          class="item"
+          class="mediaTitle"
         >
-          <span
-            class="dragHandle sortable"
-          >
-            <span
-              aria-label="su-more"
-              class="su-more"
-            />
-            <span
-              class="index"
-            >
-              3
-            </span>
+          <span>
+            Media 3
           </span>
-          <div
-            class="content clickable"
-            role="button"
-          >
-            <div
-              class="mediaItem"
-            >
-              <div
-                class="mimeTypeIndicator"
-                style="color:#fff;font-size:16px;background-color:#00723a;width:25px;height:25px"
-              >
-                <span
-                  aria-label="fa-file-excel-o"
-                  class="fa fa-file-excel-o"
-                />
-              </div>
-              <div
-                class="mediaTitle"
-              >
-                <div
-                  aria-label="Media 3"
-                  class="croppedText"
-                  title="Media 3"
-                >
-                  <div
-                    aria-hidden="true"
-                    class="front"
-                  >
-                    Medi
-                  </div>
-                  <div
-                    aria-hidden="true"
-                    class="back"
-                  >
-                    <span>
-                      a 3
-                    </span>
-                  </div>
-                  <div
-                    class="whole"
-                  >
-                    Media 3
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="buttons"
-          >
-            <button
-              class="button"
-              type="button"
-            >
-              <span
-                aria-label="su-trash-alt"
-                class="su-trash-alt"
-              />
-            </button>
-          </div>
         </div>
-      </li>
-    </ul>
-  </div>,
-  <div>
-    single media selection overlay
-  </div>,
-]
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
 `;

@@ -1,10 +1,12 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import fieldTypeDefaultProps from 'sulu-admin-bundle/utils/TestHelper/fieldTypeDefaultProps';
+import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import Permissions from '../../fields/Permissions';
+import PermissionsContainer from '../../../Permissions';
 import type {ContextPermission} from '../../../Permissions';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
@@ -23,6 +25,8 @@ jest.mock('sulu-admin-bundle/stores', () => ({
     }),
 }));
 
+jest.mock('../../../Permissions', () => jest.fn(() => null));
+
 test('Pass props correctly to Permissions', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     formInspector.getValueByPath.mockImplementation((path) => {
@@ -32,7 +36,7 @@ test('Pass props correctly to Permissions', () => {
         }
     });
 
-    const permissions = shallow(
+    render(
         <Permissions
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -40,9 +44,10 @@ test('Pass props correctly to Permissions', () => {
         />
     );
 
-    expect(permissions.prop('system')).toEqual('Sulu');
-    expect(permissions.prop('value')).toEqual([]);
-    expect(permissions.prop('disabled')).toEqual(true);
+    const permissionsProps: any = getLatestMockProps((PermissionsContainer: any));
+    expect(permissionsProps.system).toEqual('Sulu');
+    expect(permissionsProps.value).toEqual([]);
+    expect(permissionsProps.disabled).toEqual(true);
 });
 
 test('Pass props with value correctly to Permissions', () => {
@@ -59,25 +64,25 @@ test('Pass props with value correctly to Permissions', () => {
             id: 1,
             context: 'sulu.contact.people',
             permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
+                view: true,
+                delete: true,
+                add: true,
+                edit: true,
             },
         },
         {
             id: 2,
             context: 'sulu.contact.organizations',
             permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
+                view: true,
+                delete: true,
+                add: true,
+                edit: true,
             },
         },
     ];
 
-    const permissions = shallow(
+    render(
         <Permissions
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -85,6 +90,7 @@ test('Pass props with value correctly to Permissions', () => {
         />
     );
 
-    expect(permissions.prop('system')).toEqual('Sulu');
-    expect(permissions.prop('value')).toEqual(value);
+    const permissionsProps: any = getLatestMockProps((PermissionsContainer: any));
+    expect(permissionsProps.system).toEqual('Sulu');
+    expect(permissionsProps.value).toEqual(value);
 });

@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pass props correctly to Link component 1`] = `
+<DocumentFragment>
+  <div
+    data-testid="link-container"
+  />
+</DocumentFragment>
+`;

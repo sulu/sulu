@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Router from '../../../services/Router';
 import userStore from '../../../stores/userStore';
 import Login from '../Login';
@@ -11,9 +12,7 @@ jest.mock('../../../services/Router/Router', () => jest.fn(function() {
 }));
 
 jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn(function(key) {
-        return key;
-    }),
+    translate: jest.fn((key) => key),
 }));
 
 const mockUserStoreLogin = jest.fn().mockReturnValue(Promise.resolve({}));
@@ -28,7 +27,7 @@ const mockUserStoreSetResetSuccess = jest.fn();
 const mockUserStoreLoading = jest.fn().mockReturnValue(false);
 const mockUserStoreForgotPasswordSuccess = jest.fn().mockReturnValue(false);
 const mockUserStoreLoginMethod = jest.fn().mockReturnValue(false);
-const mockUserStoreHasSingleSignOn = jest.fn();
+const mockUserStoreHasSingleSignOn = jest.fn().mockReturnValue(false);
 const mockUserStoreRedirectUrl = jest.fn().mockReturnValue('');
 
 jest.mock('../../../stores/userStore', () => {
@@ -77,7 +76,7 @@ jest.mock('../../../stores/userStore', () => {
             return mockUserStoreHasSingleSignOn();
         }
 
-        redirectUrl() {
+        get redirectUrl() {
             return mockUserStoreRedirectUrl();
         }
 
@@ -95,172 +94,191 @@ jest.mock('../../../stores/userStore', () => {
     };
 });
 
+jest.mock('../../../stores', () => ({
+    userStore: jest.requireMock('../../../stores/userStore'),
+}));
+
 beforeEach(() => {
+    jest.clearAllMocks();
+
+    mockUserStoreLogin.mockReturnValue(Promise.resolve({}));
+    mockUserStoreTwoFactorLogin.mockReturnValue(Promise.resolve({}));
+    mockUserStoreForgotPassword.mockReturnValue(Promise.resolve({}));
+    mockUserStoreResetPassword.mockReturnValue(Promise.resolve({}));
+    mockUserStoreLoading.mockReturnValue(false);
+    mockUserStoreForgotPasswordSuccess.mockReturnValue(false);
+    mockUserStoreLoginMethod.mockReturnValue(false);
+    mockUserStoreHasSingleSignOn.mockReturnValue(false);
+    mockUserStoreRedirectUrl.mockReturnValue('');
+
     userStore.clear();
 });
 
 test('Should render the Login component when initialized is true', () => {
     const router = new Router();
 
-    expect(render(
-        <Login initialized={true} onLoginSuccess={jest.fn()} router={router} />)
-    ).toMatchSnapshot();
+    const {asFragment} = render(
+        <Login initialized={true} onLoginSuccess={jest.fn()} router={router} />
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should render the component with loader', () => {
     const router = new Router();
 
-    expect(render(
-        <Login initialized={false} onLoginSuccess={jest.fn()} router={router} />)
-    ).toMatchSnapshot();
+    const {asFragment} = render(
+        <Login initialized={false} onLoginSuccess={jest.fn()} router={router} />
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Should render the LoginForm component with error', () => {
+test('Should render the LoginForm component with loading state', async() => {
     const router = new Router();
+    const user = userEvent.setup();
 
     mockUserStoreLoading.mockReturnValueOnce(true);
-    expect(render(
-        <Login initialized={true} onLoginSuccess={jest.fn()} router={router} />
-    )).toMatchSnapshot();
-});
+    mockUserStoreHasSingleSignOn.mockReturnValueOnce(true);
+    mockUserStoreLoginMethod.mockReturnValueOnce('');
 
-test('Should render the Login with forgot password view', () => {
-    const router = new Router();
-
-    const loginForm = mount(
+    render(
         <Login initialized={true} onLoginSuccess={jest.fn()} router={router} />
     );
-    loginForm.instance().handleChangeToForgotPasswordForm();
 
-    expect(loginForm.render()).toMatchSnapshot();
+    await user.type(screen.getByLabelText('sulu_admin.username_or_email'), 'testUser');
+
+    expect(screen.getByRole('button', {name: 'sulu_admin.login'})).toBeDisabled();
 });
 
-test('Should render the Login with forgot password with success', () => {
+test('Should render the Login with forgot password view', async() => {
     const router = new Router();
+    const user = userEvent.setup();
+
+    const {asFragment} = render(
+        <Login initialized={true} onLoginSuccess={jest.fn()} router={router} />
+    );
+
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.forgot_password'}));
+    expect(asFragment()).toMatchSnapshot();
+});
+
+test('Should render the Login with forgot password with success', async() => {
+    const router = new Router();
+    const user = userEvent.setup();
 
     mockUserStoreForgotPasswordSuccess.mockReturnValueOnce(true);
-    const loginForm = shallow(
+
+    const {asFragment} = render(
         <Login initialized={true} onLoginSuccess={jest.fn()} router={router} />
     );
-    loginForm.instance().handleChangeToForgotPasswordForm();
 
-    expect(loginForm.render()).toMatchSnapshot();
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.forgot_password'}));
+
+    expect(asFragment()).toMatchSnapshot();
+    expect(screen.getByText('sulu_admin.forgot_password_success')).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'sulu_admin.reset_resend'})).toBeInTheDocument();
 });
 
 test('Should render the Login with reset password view', () => {
     const router = new Router();
     router.attributes.forgotPasswordToken = 'some-uuid';
 
-    const loginForm = mount(
+    const {asFragment} = render(
         <Login initialized={true} onLoginSuccess={jest.fn()} router={router} />
     );
 
-    expect(loginForm.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Should call the submit handler of the login view', () => {
+test('Should call the submit handler of the login view', async() => {
     const router = new Router();
+    const user = userEvent.setup();
 
-    const eventMock = {preventDefault: () => {}};
-    const login = mount(
+    render(
         <Login initialized={true} onLoginSuccess={jest.fn()} router={router} />
     );
 
-    login.find('Input[icon="su-user"]').prop('onChange')('testUser');
-    login.find('Input[icon="su-lock"]').prop('onChange')('testPassword');
+    await user.type(screen.getByLabelText('sulu_admin.username_or_email'), 'testUser');
+    await user.type(screen.getByLabelText('sulu_admin.password'), 'testPassword');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.login'}));
 
-    login.find('form').prop('onSubmit')(eventMock);
-
-    expect(mockUserStoreLogin).toBeCalledWith({username: 'testUser', password: 'testPassword'});
+    expect(mockUserStoreLogin).toHaveBeenCalledWith({password: 'testPassword', username: 'testUser'});
 });
 
-test('Should call the submit handler of the forgot password view', () => {
+test('Should call the submit handler of the forgot password view', async() => {
     const router = new Router();
+    const user = userEvent.setup();
 
-    const eventMock = {preventDefault: () => {}};
-    const login = mount(
+    render(
         <Login initialized={true} onLoginSuccess={jest.fn()} router={router} />
     );
 
-    login.find('Button[children="sulu_admin.forgot_password"]').prop('onClick')();
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.forgot_password'}));
+    await user.type(screen.getByLabelText('sulu_admin.username_or_email'), 'testUser');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.reset'}));
 
-    login.update();
-    login.find('Input[icon="su-user"]').prop('onChange')('testUser');
-    login.find('form').prop('onSubmit')(eventMock);
-
-    expect(mockUserStoreForgotPassword).toBeCalledWith({user: 'testUser'});
+    expect(mockUserStoreForgotPassword).toHaveBeenCalledWith({user: 'testUser'});
 });
 
-test('Should call the submit handler of the reset password view', () => {
-    const promise = Promise.resolve();
-    mockUserStoreResetPassword.mockReturnValue(promise);
-
+test('Should call the submit handler of the reset password view', async() => {
     const router = new Router();
     router.attributes.forgotPasswordToken = 'some-uuid';
 
-    const eventMock = {preventDefault: () => {}};
-    const login = mount(
-        <Login initialized={true} onLoginSuccess={jest.fn()} router={router} />
+    const onLoginSuccess = jest.fn();
+    const user = userEvent.setup();
+
+    render(
+        <Login initialized={true} onLoginSuccess={onLoginSuccess} router={router} />
     );
 
-    login.find('Input[icon="su-lock"]').at(0).prop('onChange')('testpassword');
-    login.find('Input[icon="su-lock"]').at(1).prop('onChange')('testpassword');
-    login.find('form').prop('onSubmit')(eventMock);
+    await user.type(screen.getByLabelText('sulu_admin.password'), 'testpassword');
+    await user.type(screen.getByLabelText('sulu_admin.repeat_password'), 'testpassword');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.reset_password'}));
 
-    expect(mockUserStoreResetPassword).toBeCalledWith({
+    expect(mockUserStoreResetPassword).toHaveBeenCalledWith({
         password: 'testpassword',
         token: 'some-uuid',
     });
 
-    return promise.then(() => {
-        expect(router.reset).toBeCalled();
-    });
+    await waitFor(() => expect(router.reset).toHaveBeenCalled());
+    await waitFor(() => expect(onLoginSuccess).toHaveBeenCalled());
 });
 
-test('Should not call the submit handler of the reset password view with an invalid password', () => {
-    const promise = Promise.resolve();
-    mockUserStoreResetPassword.mockReturnValue(promise);
-
+test('Should not call the submit handler of the reset password view with an invalid password', async() => {
     const router = new Router();
     router.attributes.forgotPasswordToken = 'some-uuid';
 
-    const eventMock = {preventDefault: () => {}};
-    const login = mount(
+    const user = userEvent.setup();
+
+    render(
         <Login initialized={true} onLoginSuccess={jest.fn()} router={router} />
     );
 
-    login.find('Input[icon="su-lock"]').at(0).prop('onChange')('test');
-    login.find('Input[icon="su-lock"]').at(1).prop('onChange')('test');
-    login.find('form').prop('onSubmit')(eventMock);
+    await user.type(screen.getByLabelText('sulu_admin.password'), 'short');
+    await user.type(screen.getByLabelText('sulu_admin.repeat_password'), 'short');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.reset_password'}));
 
-    expect(mockUserStoreResetPassword).not.toBeCalled();
-
-    return promise.then(() => {
-        expect(router.reset).not.toBeCalled();
-    });
+    expect(mockUserStoreResetPassword).not.toHaveBeenCalled();
+    expect(router.reset).not.toHaveBeenCalled();
 });
 
-test('Should not call the submit handler of the reset password view with not matching passwords', () => {
-    const promise = Promise.resolve();
-    mockUserStoreResetPassword.mockReturnValue(promise);
-
+test('Should not call the submit handler of the reset password view with not matching passwords', async() => {
     const router = new Router();
     router.attributes.forgotPasswordToken = 'some-uuid';
 
-    const eventMock = {preventDefault: () => {}};
-    const login = mount(
+    const user = userEvent.setup();
+
+    render(
         <Login initialized={true} onLoginSuccess={jest.fn()} router={router} />
     );
 
-    login.find('Input[icon="su-lock"]').at(0).prop('onChange')('test');
-    login.find('Input[icon="su-lock"]').at(1).prop('onChange')('testpassword');
-    login.find('form').prop('onSubmit')(eventMock);
+    await user.type(screen.getByLabelText('sulu_admin.password'), 'testpassword');
+    await user.type(screen.getByLabelText('sulu_admin.repeat_password'), 'mismatchpassword');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.reset_password'}));
 
-    expect(mockUserStoreResetPassword).not.toBeCalled();
-
-    return promise.then(() => {
-        expect(router.reset).not.toBeCalled();
-    });
+    expect(mockUserStoreResetPassword).not.toHaveBeenCalled();
+    expect(router.reset).not.toHaveBeenCalled();
 });
 
 test('Should render the Login with only username/email', () => {
@@ -268,11 +286,13 @@ test('Should render the Login with only username/email', () => {
     mockUserStoreHasSingleSignOn.mockReturnValue(true);
     mockUserStoreLoginMethod.mockReturnValueOnce('');
 
-    const loginForm = mount(
+    const {asFragment} = render(
         <Login initialized={true} onLoginSuccess={jest.fn()} router={router} />
     );
 
-    expect(loginForm.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
+    expect(screen.getByLabelText('sulu_admin.username_or_email')).toBeInTheDocument();
+    expect(screen.queryByLabelText('sulu_admin.password')).not.toBeInTheDocument();
 });
 
 test('Should render the Login with only password', () => {
@@ -280,9 +300,11 @@ test('Should render the Login with only password', () => {
     mockUserStoreHasSingleSignOn.mockReturnValue(true);
     mockUserStoreLoginMethod.mockReturnValue('json_login');
 
-    const loginForm = mount(
+    const {asFragment} = render(
         <Login initialized={true} onLoginSuccess={jest.fn()} router={router} />
     );
 
-    expect(loginForm.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
+    expect(screen.queryByLabelText('sulu_admin.username_or_email')).not.toBeInTheDocument();
+    expect(screen.getByLabelText('sulu_admin.password')).toBeInTheDocument();
 });

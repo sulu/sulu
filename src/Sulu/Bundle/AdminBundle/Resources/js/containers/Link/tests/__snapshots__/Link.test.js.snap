@@ -1,84 +1,52 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render Link container incl. loading a selected value 1`] = `
-<Fragment>
+<DocumentFragment>
   <div
-    className="link"
+    class="link"
   >
     <div
-      className="provider"
-    >
-      <SingleSelect
-        disabled={false}
-        onChange={[Function]}
-        skin="flat"
-        value="page"
-      >
-        <Option
-          anchorWidth={0}
-          disabled={false}
-          key="page"
-          selected={false}
-          selectedVisualization="icon"
-          value="page"
-        >
-          Page
-        </Option>
-      </SingleSelect>
-    </div>
-    <div
-      className="itemContainer"
+      class="provider"
     >
       <div
-        className="item clickable"
-        onClick={[Function]}
+        data-testid="single-select"
+      >
+        <div
+          data-testid="single-select-option"
+          data-value="page"
+        >
+          Page
+        </div>
+      </div>
+    </div>
+    <div
+      class="itemContainer"
+    >
+      <div
+        class="item clickable"
         role="button"
       >
         <div
-          className="columnList"
+          class="columnList"
         >
           <span
-            className="itemColumn"
-            key="0"
-            style={
-              Object {
-                "width": "100%",
-              }
-            }
+            class="itemColumn"
+            style="width: 100%;"
           >
             Page 1
           </span>
         </div>
       </div>
       <button
-        className="removeButton"
-        onClick={[Function]}
+        class="removeButton"
         type="button"
       >
-        <Icon
-          name="su-trash-alt"
+        <span
+          aria-label="su-trash-alt"
+          class="su-trash-alt"
         />
       </button>
     </div>
   </div>
-  <LinkTypeOverlay
-    key="page"
-    locale={"en"}
-    onCancel={[Function]}
-    onConfirm={[Function]}
-    onHrefChange={[Function]}
-    open={false}
-    options={
-      Object {
-        "displayProperties": Array [
-          "title",
-        ],
-        "overlayTitle": "Test Overlay",
-        "resourceKey": "pages",
-        "title": "Pages",
-      }
-    }
-    target="_self"
-  />
-</Fragment>
+</DocumentFragment>
 `;

@@ -1,5 +1,5 @@
 // @flow
-import {shallow} from 'enzyme';
+import {Dialog} from 'sulu-admin-bundle/components';
 import {Requester} from 'sulu-admin-bundle/services';
 import CacheClearToolbarAction from '../CacheClearToolbarAction';
 
@@ -20,8 +20,9 @@ test('Return item config with correct icon, type and label and return closed dia
         type: 'button',
     }));
 
-    const element = shallow(cacheClearToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    const dialogNode = cacheClearToolbarAction.getNode();
+    expect(dialogNode.type).toEqual(Dialog);
+    expect(dialogNode.props).toEqual(expect.objectContaining({
         cancelText: 'sulu_admin.cancel',
         children: 'sulu_website.cache_clear_warning_text',
         confirmText: 'sulu_admin.ok',
@@ -36,10 +37,8 @@ test('Open dialog on toolbar item click', () => {
     const toolbarItemConfig = cacheClearToolbarAction.getToolbarItemConfig();
     toolbarItemConfig.onClick();
 
-    const element = shallow(cacheClearToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
-        open: true,
-    }));
+    const dialogNode = cacheClearToolbarAction.getNode();
+    expect(dialogNode.props.open).toEqual(true);
 });
 
 test('Close dialog on cancel click', () => {
@@ -48,16 +47,12 @@ test('Close dialog on cancel click', () => {
     const toolbarItemConfig = cacheClearToolbarAction.getToolbarItemConfig();
     toolbarItemConfig.onClick();
 
-    let element = shallow(cacheClearToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
-        open: true,
-    }));
+    let dialogNode = cacheClearToolbarAction.getNode();
+    expect(dialogNode.props.open).toEqual(true);
 
-    element.find('Button[skin="secondary"]').simulate('click');
-    element = shallow(cacheClearToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
-        open: false,
-    }));
+    (dialogNode: any).props.onCancel();
+    dialogNode = cacheClearToolbarAction.getNode();
+    expect(dialogNode.props.open).toEqual(false);
 });
 
 test('Call delete when dialog is confirmed', () => {
@@ -70,24 +65,20 @@ test('Call delete when dialog is confirmed', () => {
     const toolbarItemConfig = cacheClearToolbarAction.getToolbarItemConfig();
     toolbarItemConfig.onClick();
 
-    let element = shallow(cacheClearToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
-        open: true,
-    }));
+    let dialogNode = cacheClearToolbarAction.getNode();
+    expect(dialogNode.props.open).toEqual(true);
+    expect(dialogNode.props.confirmLoading).toEqual(false);
 
-    expect(element.instance().props.confirmLoading).toEqual(false);
-    element.find('Button[skin="primary"]').simulate('click');
+    dialogNode.props.onConfirm();
     expect(Requester.delete).toBeCalledWith('/cache');
 
-    element = shallow(cacheClearToolbarAction.getNode());
-    expect(element.instance().props.confirmLoading).toEqual(true);
+    dialogNode = cacheClearToolbarAction.getNode();
+    expect(dialogNode.props.confirmLoading).toEqual(true);
 
     return deletePromise.then(() => {
-        element = shallow(cacheClearToolbarAction.getNode());
-        expect(element.instance().props.confirmLoading).toEqual(false);
-        expect(element.instance().props).toEqual(expect.objectContaining({
-            open: false,
-        }));
+        dialogNode = cacheClearToolbarAction.getNode();
+        expect(dialogNode.props.confirmLoading).toEqual(false);
+        expect(dialogNode.props.open).toEqual(false);
     });
 });
 
@@ -101,23 +92,19 @@ test('Call delete when dialog is confirmed with query parameter', () => {
     const toolbarItemConfig = cacheClearToolbarAction.getToolbarItemConfig();
     toolbarItemConfig.onClick();
 
-    let element = shallow(cacheClearToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
-        open: true,
-    }));
+    let dialogNode = cacheClearToolbarAction.getNode();
+    expect(dialogNode.props.open).toEqual(true);
+    expect(dialogNode.props.confirmLoading).toEqual(false);
 
-    expect(element.instance().props.confirmLoading).toEqual(false);
-    element.find('Button[skin="primary"]').simulate('click');
+    dialogNode.props.onConfirm();
     expect(Requester.delete).toBeCalledWith('/cache?webspaceKey=sulu-io');
 
-    element = shallow(cacheClearToolbarAction.getNode());
-    expect(element.instance().props.confirmLoading).toEqual(true);
+    dialogNode = cacheClearToolbarAction.getNode();
+    expect(dialogNode.props.confirmLoading).toEqual(true);
 
     return deletePromise.then(() => {
-        element = shallow(cacheClearToolbarAction.getNode());
-        expect(element.instance().props.confirmLoading).toEqual(false);
-        expect(element.instance().props).toEqual(expect.objectContaining({
-            open: false,
-        }));
+        dialogNode = cacheClearToolbarAction.getNode();
+        expect(dialogNode.props.confirmLoading).toEqual(false);
+        expect(dialogNode.props.open).toEqual(false);
     });
 });

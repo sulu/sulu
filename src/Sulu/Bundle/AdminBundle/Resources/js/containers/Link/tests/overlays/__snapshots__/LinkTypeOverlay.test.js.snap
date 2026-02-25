@@ -1,393 +1,654 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render overlay with anchor enabled 1`] = `
-<div
-  class="grid grid"
->
-  <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-  >
+<body>
+  <div />
+  <div>
     <div
-      class="field"
+      class="backdrop visible fixed"
+      data-testid="backdrop"
+      role="button"
+    />
+    <div
+      class="dialogContainer open"
     >
-      <label
-        class="label"
-      >
-        sulu_admin.link_url *
-      </label>
       <div
-        class="singleItemSelection"
+        class="dialog"
       >
-        <button
-          class="button left"
-          type="button"
-        >
-          <span
-            aria-label="su-document"
-            class="su-document icon"
-          />
-        </button>
-        <div
-          class="itemContainer"
+        <section
+          class="content"
         >
           <div
-            class="item"
-            role="button"
+            class="snackbar"
           >
             <div
-              class="empty"
+              class="snackbar error"
+              role="button"
             >
-              No page selected
+              <span
+                aria-label="su-exclamation-triangle"
+                class="su-exclamation-triangle icon"
+              />
+              <div
+                class="text"
+              >
+                <strong>
+                  sulu_admin.error
+                </strong>
+                 - 
+                
+              </div>
             </div>
           </div>
-        </div>
+          <header
+            class="header"
+          >
+            <span
+              class="headerItem"
+            >
+              sulu_admin.link
+            </span>
+          </header>
+          <article
+            class="article center"
+          >
+            <div
+              class="grid grid"
+            >
+              <div
+                class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+              >
+                <div
+                  class="field"
+                >
+                  <label
+                    class="label"
+                  >
+                    sulu_admin.link_url
+                     *
+                  </label>
+                  <div
+                    class="errorLabel"
+                  />
+                </div>
+              </div>
+              <div
+                class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+              >
+                <div
+                  class="field"
+                >
+                  <label
+                    class="label"
+                  >
+                    sulu_admin.link_anchor
+                  </label>
+                  <div
+                    class="input default left"
+                  >
+                    <input
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    class="errorLabel"
+                  />
+                </div>
+              </div>
+            </div>
+          </article>
+          <footer
+            class="footer"
+          >
+            <button
+              class="button primary hasText"
+              type="button"
+            >
+              <span
+                class="buttonText"
+              >
+                sulu_admin.confirm
+              </span>
+            </button>
+            <button
+              class="button secondary hasText"
+              type="button"
+            >
+              <span
+                class="buttonText"
+              >
+                sulu_admin.cancel
+              </span>
+            </button>
+          </footer>
+        </section>
       </div>
-      <div>
-        single list overlay
-      </div>
-      <div
-        class="errorLabel"
-      />
     </div>
   </div>
-  <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-  >
-    <div
-      class="field"
-    >
-      <label
-        class="label"
-      >
-        sulu_admin.link_anchor
-      </label>
-      <div
-        class="input default left"
-      >
-        <input
-          type="text"
-          value=""
-        />
-      </div>
-      <div
-        class="errorLabel"
-      />
-    </div>
-  </div>
-</div>
+</body>
 `;
 
 exports[`Render overlay with minimal config 1`] = `
-<div
-  class="grid grid"
->
-  <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-  >
+<body>
+  <div />
+  <div>
     <div
-      class="field"
+      class="backdrop visible fixed"
+      data-testid="backdrop"
+      role="button"
+    />
+    <div
+      class="dialogContainer open"
     >
-      <label
-        class="label"
-      >
-        sulu_admin.link_url *
-      </label>
       <div
-        class="singleItemSelection"
+        class="dialog"
       >
-        <button
-          class="button left"
-          type="button"
-        >
-          <span
-            aria-label="su-document"
-            class="su-document icon"
-          />
-        </button>
-        <div
-          class="itemContainer"
+        <section
+          class="content"
         >
           <div
-            class="item"
-            role="button"
+            class="snackbar"
           >
             <div
-              class="empty"
+              class="snackbar error"
+              role="button"
             >
-              No page selected
+              <span
+                aria-label="su-exclamation-triangle"
+                class="su-exclamation-triangle icon"
+              />
+              <div
+                class="text"
+              >
+                <strong>
+                  sulu_admin.error
+                </strong>
+                 - 
+                
+              </div>
             </div>
           </div>
-        </div>
+          <header
+            class="header"
+          >
+            <span
+              class="headerItem"
+            >
+              sulu_admin.link
+            </span>
+          </header>
+          <article
+            class="article center"
+          >
+            <div
+              class="grid grid"
+            >
+              <div
+                class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+              >
+                <div
+                  class="field"
+                >
+                  <label
+                    class="label"
+                  >
+                    sulu_admin.link_url
+                     *
+                  </label>
+                  <div
+                    class="errorLabel"
+                  />
+                </div>
+              </div>
+            </div>
+          </article>
+          <footer
+            class="footer"
+          >
+            <button
+              class="button primary hasText"
+              type="button"
+            >
+              <span
+                class="buttonText"
+              >
+                sulu_admin.confirm
+              </span>
+            </button>
+            <button
+              class="button secondary hasText"
+              type="button"
+            >
+              <span
+                class="buttonText"
+              >
+                sulu_admin.cancel
+              </span>
+            </button>
+          </footer>
+        </section>
       </div>
-      <div>
-        single list overlay
-      </div>
-      <div
-        class="errorLabel"
-      />
     </div>
   </div>
-</div>
+</body>
 `;
 
 exports[`Render overlay with query enabled 1`] = `
-<div
-  class="grid grid"
->
-  <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-  >
+<body>
+  <div />
+  <div>
     <div
-      class="field"
+      class="backdrop visible fixed"
+      data-testid="backdrop"
+      role="button"
+    />
+    <div
+      class="dialogContainer open"
     >
-      <label
-        class="label"
-      >
-        sulu_admin.link_url *
-      </label>
       <div
-        class="singleItemSelection"
+        class="dialog"
       >
-        <button
-          class="button left"
-          type="button"
-        >
-          <span
-            aria-label="su-document"
-            class="su-document icon"
-          />
-        </button>
-        <div
-          class="itemContainer"
+        <section
+          class="content"
         >
           <div
-            class="item"
-            role="button"
+            class="snackbar"
           >
             <div
-              class="empty"
+              class="snackbar error"
+              role="button"
             >
-              No page selected
+              <span
+                aria-label="su-exclamation-triangle"
+                class="su-exclamation-triangle icon"
+              />
+              <div
+                class="text"
+              >
+                <strong>
+                  sulu_admin.error
+                </strong>
+                 - 
+                
+              </div>
             </div>
           </div>
-        </div>
+          <header
+            class="header"
+          >
+            <span
+              class="headerItem"
+            >
+              sulu_admin.link
+            </span>
+          </header>
+          <article
+            class="article center"
+          >
+            <div
+              class="grid grid"
+            >
+              <div
+                class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+              >
+                <div
+                  class="field"
+                >
+                  <label
+                    class="label"
+                  >
+                    sulu_admin.link_url
+                     *
+                  </label>
+                  <div
+                    class="errorLabel"
+                  />
+                </div>
+              </div>
+              <div
+                class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+              >
+                <div
+                  class="field"
+                >
+                  <label
+                    class="label"
+                  >
+                    sulu_admin.link_query
+                  </label>
+                  <div
+                    class="input default left"
+                  >
+                    <input
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    class="errorLabel"
+                  />
+                </div>
+              </div>
+            </div>
+          </article>
+          <footer
+            class="footer"
+          >
+            <button
+              class="button primary hasText"
+              type="button"
+            >
+              <span
+                class="buttonText"
+              >
+                sulu_admin.confirm
+              </span>
+            </button>
+            <button
+              class="button secondary hasText"
+              type="button"
+            >
+              <span
+                class="buttonText"
+              >
+                sulu_admin.cancel
+              </span>
+            </button>
+          </footer>
+        </section>
       </div>
-      <div>
-        single list overlay
-      </div>
-      <div
-        class="errorLabel"
-      />
     </div>
   </div>
-  <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-  >
-    <div
-      class="field"
-    >
-      <label
-        class="label"
-      >
-        sulu_admin.link_query
-      </label>
-      <div
-        class="input default left"
-      >
-        <input
-          type="text"
-          value=""
-        />
-      </div>
-      <div
-        class="errorLabel"
-      />
-    </div>
-  </div>
-</div>
+</body>
 `;
 
 exports[`Render overlay with target enabled 1`] = `
-<div
-  class="grid grid"
->
-  <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-  >
+<body>
+  <div />
+  <div>
     <div
-      class="field"
+      class="backdrop visible fixed"
+      data-testid="backdrop"
+      role="button"
+    />
+    <div
+      class="dialogContainer open"
     >
-      <label
-        class="label"
-      >
-        sulu_admin.link_url *
-      </label>
       <div
-        class="singleItemSelection"
+        class="dialog"
       >
-        <button
-          class="button left"
-          type="button"
-        >
-          <span
-            aria-label="su-document"
-            class="su-document icon"
-          />
-        </button>
-        <div
-          class="itemContainer"
+        <section
+          class="content"
         >
           <div
-            class="item"
-            role="button"
+            class="snackbar"
           >
             <div
-              class="empty"
+              class="snackbar error"
+              role="button"
             >
-              No page selected
+              <span
+                aria-label="su-exclamation-triangle"
+                class="su-exclamation-triangle icon"
+              />
+              <div
+                class="text"
+              >
+                <strong>
+                  sulu_admin.error
+                </strong>
+                 - 
+                
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div>
-        single list overlay
-      </div>
-      <div
-        class="errorLabel"
-      />
-    </div>
-  </div>
-  <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-  >
-    <div
-      class="field"
-    >
-      <label
-        class="label"
-      >
-        sulu_admin.link_target *
-      </label>
-      <div
-        class="select"
-        role="none"
-      >
-        <button
-          class="displayValue default"
-          type="button"
-        >
-          <div
-            aria-label="sulu_admin.please_choose"
-            class="croppedText"
-            title="sulu_admin.please_choose"
+          <header
+            class="header"
+          >
+            <span
+              class="headerItem"
+            >
+              sulu_admin.link
+            </span>
+          </header>
+          <article
+            class="article center"
           >
             <div
-              aria-hidden="true"
-              class="front"
+              class="grid grid"
             >
-              sulu_admin.p
+              <div
+                class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+              >
+                <div
+                  class="field"
+                >
+                  <label
+                    class="label"
+                  >
+                    sulu_admin.link_url
+                     *
+                  </label>
+                  <div
+                    class="errorLabel"
+                  />
+                </div>
+              </div>
+              <div
+                class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+              >
+                <div
+                  class="field"
+                >
+                  <label
+                    class="label"
+                  >
+                    sulu_admin.link_target
+                     *
+                  </label>
+                  <div
+                    class="select"
+                    role="none"
+                  >
+                    <button
+                      class="displayValue default"
+                      type="button"
+                    >
+                      <div
+                        aria-label="sulu_admin.please_choose"
+                        class="croppedText"
+                        title="sulu_admin.please_choose"
+                      >
+                        <div
+                          aria-hidden="true"
+                          class="front"
+                        >
+                          sulu_admin.p
+                        </div>
+                        <div
+                          aria-hidden="true"
+                          class="back"
+                        >
+                          <span>
+                            lease_choose
+                          </span>
+                        </div>
+                        <div
+                          class="whole"
+                        >
+                          sulu_admin.please_choose
+                        </div>
+                      </div>
+                      <span
+                        aria-label="su-angle-down"
+                        class="su-angle-down toggle"
+                      />
+                    </button>
+                  </div>
+                  <div
+                    class="errorLabel"
+                  />
+                </div>
+              </div>
             </div>
-            <div
-              aria-hidden="true"
-              class="back"
+          </article>
+          <footer
+            class="footer"
+          >
+            <button
+              class="button primary hasText"
+              type="button"
             >
-              <span>
-                lease_choose
+              <span
+                class="buttonText"
+              >
+                sulu_admin.confirm
               </span>
-            </div>
-            <div
-              class="whole"
+            </button>
+            <button
+              class="button secondary hasText"
+              type="button"
             >
-              sulu_admin.please_choose
-            </div>
-          </div>
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down toggle"
-          />
-        </button>
+              <span
+                class="buttonText"
+              >
+                sulu_admin.cancel
+              </span>
+            </button>
+          </footer>
+        </section>
       </div>
-      <div
-        class="errorLabel"
-      />
     </div>
   </div>
-</div>
+</body>
 `;
 
 exports[`Render overlay with title enabled 1`] = `
-<div
-  class="grid grid"
->
-  <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-  >
+<body>
+  <div />
+  <div>
     <div
-      class="field"
+      class="backdrop visible fixed"
+      data-testid="backdrop"
+      role="button"
+    />
+    <div
+      class="dialogContainer open"
     >
-      <label
-        class="label"
-      >
-        sulu_admin.link_url *
-      </label>
       <div
-        class="singleItemSelection"
+        class="dialog"
       >
-        <button
-          class="button left"
-          type="button"
-        >
-          <span
-            aria-label="su-document"
-            class="su-document icon"
-          />
-        </button>
-        <div
-          class="itemContainer"
+        <section
+          class="content"
         >
           <div
-            class="item"
-            role="button"
+            class="snackbar"
           >
             <div
-              class="empty"
+              class="snackbar error"
+              role="button"
             >
-              No page selected
+              <span
+                aria-label="su-exclamation-triangle"
+                class="su-exclamation-triangle icon"
+              />
+              <div
+                class="text"
+              >
+                <strong>
+                  sulu_admin.error
+                </strong>
+                 - 
+                
+              </div>
             </div>
           </div>
-        </div>
+          <header
+            class="header"
+          >
+            <span
+              class="headerItem"
+            >
+              sulu_admin.link
+            </span>
+          </header>
+          <article
+            class="article center"
+          >
+            <div
+              class="grid grid"
+            >
+              <div
+                class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+              >
+                <div
+                  class="field"
+                >
+                  <label
+                    class="label"
+                  >
+                    sulu_admin.link_url
+                     *
+                  </label>
+                  <div
+                    class="errorLabel"
+                  />
+                </div>
+              </div>
+              <div
+                class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+              >
+                <div
+                  class="field"
+                >
+                  <label
+                    class="label"
+                  >
+                    sulu_admin.link_title
+                  </label>
+                  <div
+                    class="input default left"
+                  >
+                    <input
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    class="errorLabel"
+                  />
+                </div>
+              </div>
+            </div>
+          </article>
+          <footer
+            class="footer"
+          >
+            <button
+              class="button primary hasText"
+              type="button"
+            >
+              <span
+                class="buttonText"
+              >
+                sulu_admin.confirm
+              </span>
+            </button>
+            <button
+              class="button secondary hasText"
+              type="button"
+            >
+              <span
+                class="buttonText"
+              >
+                sulu_admin.cancel
+              </span>
+            </button>
+          </footer>
+        </section>
       </div>
-      <div>
-        single list overlay
-      </div>
-      <div
-        class="errorLabel"
-      />
     </div>
   </div>
-  <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-  >
-    <div
-      class="field"
-    >
-      <label
-        class="label"
-      >
-        sulu_admin.link_title
-      </label>
-      <div
-        class="input default left"
-      >
-        <input
-          type="text"
-          value=""
-        />
-      </div>
-      <div
-        class="errorLabel"
-      />
-    </div>
-  </div>
-</div>
+</body>
 `;

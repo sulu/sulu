@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders list overlay mode and matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    data-testid="multi-selection"
+  />
+</DocumentFragment>
+`;

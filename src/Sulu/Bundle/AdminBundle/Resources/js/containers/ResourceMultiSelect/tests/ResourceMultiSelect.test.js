@@ -1,9 +1,11 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import ResourceMultiSelect from '../ResourceMultiSelect';
 import MultiSelectComponent from '../../../components/MultiSelect';
 import ResourceListStore from '../../../stores/ResourceListStore';
+import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
 
 jest.mock('../../../stores/ResourceListStore', () => jest.fn());
 
@@ -11,30 +13,62 @@ jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
-test('Render with data', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'id': 2,
-                'name': 'Test ABC',
-                'someOtherProperty': 'No no',
-            },
-            {
-                'id': 5,
-                'name': 'Test DEF',
-                'someOtherProperty': 'YES YES',
-            },
-            {
-                'id': 99,
-                'name': 'Test XYZ',
-                'someOtherProperty': 'maybe maybe',
-            },
-        ];
+jest.mock('../../../components/Loader', () => {
+    const React = require('react');
+
+    return jest.fn(function LoaderMock() {
+        return React.createElement('div', {'data-testid': 'loader'});
+    });
+});
+
+jest.mock('../../../components/MultiSelect', () => {
+    const React = require('react');
+
+    const MultiSelect: any = jest.fn(function MultiSelectMock({children, onChange, onClose}) {
+        function handleChange() {
+            onChange([5, 99]);
+        }
+
+        function handleClose() {
+            if (onClose) {
+                onClose();
+            }
+        }
+
+        return React.createElement(
+            'div',
+            {'data-testid': 'multiselect'},
+            React.createElement('button', {onClick: handleChange, type: 'button'}, 'change-values'),
+            React.createElement('button', {onClick: handleClose, type: 'button'}, 'close-multiselect'),
+            children
+        );
     });
 
-    const resourceMultiSelect = mount(
+    MultiSelect.Option = jest.fn(function OptionMock({children}) {
+        return React.createElement('div', {'data-testid': 'multiselect-option'}, children);
+    });
+
+    return MultiSelect;
+});
+
+const multiSelectMock = (MultiSelectComponent: any);
+
+function mockResourceListStoreData(data: ?Array<Object>, loading: boolean = false) {
+    // $FlowFixMe
+    ResourceListStore.mockImplementation(function() {
+        this.loading = loading;
+        this.data = data;
+    });
+}
+
+test('Render with data', () => {
+    mockResourceListStoreData([
+        {'id': 2, 'name': 'Test ABC', 'someOtherProperty': 'No no'},
+        {'id': 5, 'name': 'Test DEF', 'someOtherProperty': 'YES YES'},
+        {'id': 99, 'name': 'Test XYZ', 'someOtherProperty': 'maybe maybe'},
+    ]);
+
+    const {asFragment} = render(
         <ResourceMultiSelect
             displayProperty="name"
             onChange={jest.fn()}
@@ -43,29 +77,17 @@ test('Render with data', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', {limit: ''}, 'id');
-    expect(resourceMultiSelect.render()).toMatchSnapshot();
+    expect(ResourceListStore).toHaveBeenCalledWith('test', {limit: ''}, 'id');
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render in disabled state', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'id': 2,
-                'name': 'Test ABC',
-                'someOtherProperty': 'No no',
-            },
-            {
-                'id': 5,
-                'name': 'Test DEF',
-                'someOtherProperty': 'YES YES',
-            },
-        ];
-    });
+    mockResourceListStoreData([
+        {'id': 2, 'name': 'Test ABC', 'someOtherProperty': 'No no'},
+        {'id': 5, 'name': 'Test DEF', 'someOtherProperty': 'YES YES'},
+    ]);
 
-    const resourceMultiSelect = shallow(
+    render(
         <ResourceMultiSelect
             disabled={true}
             displayProperty="name"
@@ -75,18 +97,14 @@ test('Render in disabled state', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', {limit: ''}, 'id');
-    expect(resourceMultiSelect.find('MultiSelect').prop('disabled')).toEqual(true);
+    expect(ResourceListStore).toHaveBeenCalledWith('test', {limit: ''}, 'id');
+    expect(getLatestMockProps(multiSelectMock).disabled).toEqual(true);
 });
 
 test('Render in loading state', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = true;
-        this.data = undefined;
-    });
+    mockResourceListStoreData(undefined, true);
 
-    const resourceMultiSelect = shallow(
+    render(
         <ResourceMultiSelect
             displayProperty="name"
             onChange={jest.fn()}
@@ -95,35 +113,19 @@ test('Render in loading state', () => {
         />
     );
 
-    expect(resourceMultiSelect.find('Loader')).toHaveLength(1);
+    expect(screen.getByTestId('loader')).toBeInTheDocument();
 });
 
 test('Pass requestParameters', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'id': 2,
-                'name': 'Test ABC',
-                'someOtherProperty': 'No no',
-            },
-            {
-                'id': 5,
-                'name': 'Test DEF',
-                'someOtherProperty': 'YES YES',
-            },
-            {
-                'id': 99,
-                'name': 'Test XYZ',
-                'someOtherProperty': 'maybe maybe',
-            },
-        ];
-    });
+    mockResourceListStoreData([
+        {'id': 2, 'name': 'Test ABC', 'someOtherProperty': 'No no'},
+        {'id': 5, 'name': 'Test DEF', 'someOtherProperty': 'YES YES'},
+        {'id': 99, 'name': 'Test XYZ', 'someOtherProperty': 'maybe maybe'},
+    ]);
 
     const requestParameters = {'testOption': 'testValue'};
 
-    mount(
+    render(
         <ResourceMultiSelect
             displayProperty="name"
             onChange={jest.fn()}
@@ -133,26 +135,18 @@ test('Pass requestParameters', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', {limit: '', testOption: 'testValue'}, 'id');
+    expect(ResourceListStore).toHaveBeenCalledWith('test', {limit: '', testOption: 'testValue'}, 'id');
 });
 
 test('Pass requestParameters when requestParameters props changed', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'id': 2,
-                'name': 'Test ABC',
-                'someOtherProperty': 'No no',
-            },
-        ];
-    });
+    mockResourceListStoreData([
+        {'id': 2, 'name': 'Test ABC', 'someOtherProperty': 'No no'},
+    ]);
 
     const requestParameters1 = {};
     const requestParameters2 = {'testOption': 'testValue'};
 
-    const resourceMultiSelect = mount(
+    const {rerender} = render(
         <ResourceMultiSelect
             displayProperty="name"
             onChange={jest.fn()}
@@ -162,13 +156,15 @@ test('Pass requestParameters when requestParameters props changed', () => {
         />
     );
 
-    resourceMultiSelect.setProps({
-        requestParameters: requestParameters2,
-        displayProperty: 'name',
-        onChange: jest.fn(),
-        resourceKey: 'test',
-        values: undefined,
-    });
+    rerender(
+        <ResourceMultiSelect
+            displayProperty="name"
+            onChange={jest.fn()}
+            requestParameters={requestParameters2}
+            resourceKey="test"
+            values={undefined}
+        />
+    );
 
     // $FlowFixMe
     expect(ResourceListStore.mock.calls).toEqual([
@@ -178,19 +174,11 @@ test('Pass requestParameters when requestParameters props changed', () => {
 });
 
 test('Pass requestParameters when resourceKey props changed', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'id': 2,
-                'name': 'Test ABC',
-                'someOtherProperty': 'No no',
-            },
-        ];
-    });
+    mockResourceListStoreData([
+        {'id': 2, 'name': 'Test ABC', 'someOtherProperty': 'No no'},
+    ]);
 
-    const resourceMultiSelect = mount(
+    const {rerender} = render(
         <ResourceMultiSelect
             displayProperty="name"
             onChange={jest.fn()}
@@ -199,12 +187,14 @@ test('Pass requestParameters when resourceKey props changed', () => {
         />
     );
 
-    resourceMultiSelect.setProps({
-        displayProperty: 'name',
-        onChange: jest.fn(),
-        resourceKey: 'test2',
-        values: undefined,
-    });
+    rerender(
+        <ResourceMultiSelect
+            displayProperty="name"
+            onChange={jest.fn()}
+            resourceKey="test2"
+            values={undefined}
+        />
+    );
 
     // $FlowFixMe
     expect(ResourceListStore.mock.calls).toEqual([
@@ -213,31 +203,17 @@ test('Pass requestParameters when resourceKey props changed', () => {
     ]);
 });
 
-test('The component should trigger the change callback', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'id': 2,
-                'name': 'Test ABC',
-                'someOtherProperty': 'No no',
-            },
-            {
-                'id': 5,
-                'name': 'Test DEF',
-                'someOtherProperty': 'YES YES',
-            },
-            {
-                'id': 99,
-                'name': 'Test XYZ',
-                'someOtherProperty': 'maybe maybe',
-            },
-        ];
-    });
+test('The component should trigger the change callback', async() => {
+    mockResourceListStoreData([
+        {'id': 2, 'name': 'Test ABC', 'someOtherProperty': 'No no'},
+        {'id': 5, 'name': 'Test DEF', 'someOtherProperty': 'YES YES'},
+        {'id': 99, 'name': 'Test XYZ', 'someOtherProperty': 'maybe maybe'},
+    ]);
 
     const onChangeSpy = jest.fn();
-    const resourceMultiSelect = shallow(
+    const user = userEvent.setup();
+
+    render(
         <ResourceMultiSelect
             displayProperty="name"
             onChange={onChangeSpy}
@@ -247,38 +223,23 @@ test('The component should trigger the change callback', () => {
     );
 
     const expectedValues = [
-        {
-            'id': 5,
-            'name': 'Test DEF',
-            'someOtherProperty': 'YES YES',
-        },
-        {
-            'id': 99,
-            'name': 'Test XYZ',
-            'someOtherProperty': 'maybe maybe',
-        },
+        {'id': 5, 'name': 'Test DEF', 'someOtherProperty': 'YES YES'},
+        {'id': 99, 'name': 'Test XYZ', 'someOtherProperty': 'maybe maybe'},
     ];
 
-    resourceMultiSelect.find(MultiSelectComponent).props().onChange([5, 99]);
+    await user.click(screen.getByRole('button', {name: 'change-values'}));
     expect(onChangeSpy).toHaveBeenCalledWith([5, 99], expectedValues);
 });
 
-test('The component should trigger the close callback', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'id': 2,
-                'name': 'Test ABC',
-                'someOtherProperty': 'No no',
-            },
-        ];
-    });
+test('The component should trigger the close callback', async() => {
+    mockResourceListStoreData([
+        {'id': 2, 'name': 'Test ABC', 'someOtherProperty': 'No no'},
+    ]);
 
     const closeSpy = jest.fn();
+    const user = userEvent.setup();
 
-    const resourceMultiSelect = shallow(
+    render(
         <ResourceMultiSelect
             displayProperty="name"
             onChange={jest.fn()}
@@ -288,7 +249,7 @@ test('The component should trigger the close callback', () => {
         />
     );
 
-    expect(closeSpy).not.toBeCalled();
-    resourceMultiSelect.find(MultiSelectComponent).prop('onClose')();
-    expect(closeSpy).toBeCalled();
+    expect(closeSpy).not.toHaveBeenCalled();
+    await user.click(screen.getByRole('button', {name: 'close-multiselect'}));
+    expect(closeSpy).toHaveBeenCalled();
 });

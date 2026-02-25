@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import PermissionMatrix from '../PermissionMatrix';
-import type {MatrixValues} from 'sulu-admin-bundle/components/Matrix/types';
 import type {ContextPermission} from '../types';
 import type {SecurityContexts} from '../../../stores/securityContextStore/types';
 
@@ -10,192 +10,94 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: (key) => key,
 }));
 
+const contextPermissions: Array<ContextPermission> = [
+    {
+        id: 1,
+        context: 'sulu.contact.people',
+        permissions: {
+            view: true,
+            delete: true,
+            add: true,
+            edit: true,
+        },
+    },
+    {
+        id: 2,
+        context: 'sulu.contact.organizations',
+        permissions: {
+            view: true,
+            delete: true,
+            add: true,
+            edit: true,
+        },
+    },
+];
+
+const securityContexts: SecurityContexts = {
+    'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
+    'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
+};
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
 test('Render with minimal', () => {
-    const contextPermissions: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-    ];
-
-    const securityContexts: SecurityContexts = {
-        'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-        'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
-    };
-
-    expect(render(
+    const {asFragment} = render(
         <PermissionMatrix
             contextPermissions={contextPermissions}
             onChange={jest.fn()}
             securityContexts={securityContexts}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render in disabled state', () => {
-    const contextPermissions: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-    ];
-
-    const securityContexts: SecurityContexts = {
-        'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-        'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
-    };
-
-    expect(render(
+    const {asFragment} = render(
         <PermissionMatrix
             contextPermissions={contextPermissions}
             disabled={true}
             onChange={jest.fn()}
             securityContexts={securityContexts}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render with title', () => {
-    const contextPermissions: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-    ];
-
-    const securityContexts: SecurityContexts = {
-        'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-        'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
-    };
-
-    expect(render(
+    const {asFragment} = render(
         <PermissionMatrix
             contextPermissions={contextPermissions}
             onChange={jest.fn()}
             securityContexts={securityContexts}
             title="Contact"
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render with subTitle', () => {
-    const contextPermissions: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-    ];
-
-    const securityContexts: SecurityContexts = {
-        'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-        'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
-    };
-
-    expect(render(
+    const {asFragment} = render(
         <PermissionMatrix
             contextPermissions={contextPermissions}
             onChange={jest.fn()}
             securityContexts={securityContexts}
             subTitle="Contact"
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Should trigger onChange correctly', () => {
+test('Should trigger onChange correctly', async() => {
     const onChange = jest.fn();
-    const contextPermissions: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-    ];
+    const user = userEvent.setup();
 
-    const securityContexts: SecurityContexts = {
-        'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-        'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
-    };
-
-    const permissionMatrix = mount(
+    render(
         <PermissionMatrix
             contextPermissions={contextPermissions}
             onChange={onChange}
@@ -203,35 +105,27 @@ test('Should trigger onChange correctly', () => {
         />
     );
 
-    const matrixValues: MatrixValues = {
-        'sulu.contact.people': {
-            'view': true,
-            'delete': true,
-            'add': true,
-            'edit': false,
-        },
-    };
-    permissionMatrix.find('Matrix').instance().props.onChange(matrixValues);
+    await user.click(screen.getAllByTitle('sulu_security.edit')[0]);
 
     const expectedContextPermissions: Array<ContextPermission> = [
         {
             id: 1,
             context: 'sulu.contact.people',
             permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': false,
+                view: true,
+                delete: true,
+                add: true,
+                edit: false,
             },
         },
         {
             id: 2,
             context: 'sulu.contact.organizations',
             permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
+                view: true,
+                delete: true,
+                add: true,
+                edit: true,
             },
         },
     ];

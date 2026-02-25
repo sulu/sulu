@@ -1,17 +1,19 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Button from '../Button';
 
 test('Should render with icon and disabled', () => {
-    expect(render(<Button disabled={true} icon="su-plus-circle" onClick={jest.fn()} />)).toMatchSnapshot();
+    const {asFragment} = render(<Button disabled={true} icon="su-plus-circle" onClick={jest.fn()} />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Should call the callback on click', () => {
-    const preventDefaultSpy = jest.fn();
+test('Should call the callback on click', async() => {
     const onClick = jest.fn();
-    const button = shallow(<Button icon="su-plus-circle" onClick={onClick} />);
-    button.find('button').simulate('click', {preventDefault: preventDefaultSpy});
-    expect(preventDefaultSpy).toBeCalled();
+    render(<Button icon="su-plus-circle" onClick={onClick} />);
+
+    await userEvent.click(screen.getByRole('button'));
     expect(onClick).toBeCalled();
 });

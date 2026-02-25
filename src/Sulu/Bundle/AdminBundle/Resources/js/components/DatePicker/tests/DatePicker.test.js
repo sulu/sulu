@@ -4,6 +4,7 @@ import {render, screen} from '@testing-library/react';
 import moment from 'moment-timezone';
 import userEvent from '@testing-library/user-event';
 import DatePicker from '../DatePicker';
+import getMockCallArg from '../../../utils/TestHelper/getMockCallArg';
 
 beforeEach(() => {
     const constantDate = new Date(Date.UTC(2017, 3, 15, 6, 32, 20));
@@ -139,7 +140,7 @@ test('DatePicker should try to guess incomplete value using format on blur.', as
     await userEvent.tab(); // tab away from input
 
     expect(onChange).toBeCalledWith(expect.any(Date));
-    const newValue = onChange.mock.calls[0][0];
+    const newValue = getMockCallArg(onChange, 0, 0);
 
     const expectedMoment = moment('09:00', options.timeFormat);
     expect(expectedMoment.isValid()).toBe(true);

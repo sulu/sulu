@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should render Form view 1`] = `
-<div>
-  form view mock
-</div>
+<DocumentFragment>
+  <div>
+    form view mock
+  </div>
+</DocumentFragment>
 `;

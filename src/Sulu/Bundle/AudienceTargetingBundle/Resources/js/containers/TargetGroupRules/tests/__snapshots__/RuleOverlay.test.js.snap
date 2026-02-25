@@ -1,197 +1,35 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render RuleOverlay without value 1`] = `
-Array [
-  <div
-    class="backdrop visible fixed"
-    data-testid="backdrop"
-    role="button"
-  />,
-  <div
-    class="container isDown"
-  >
+<DocumentFragment>
+  <div>
     <div
-      class="overlay small"
+      class="overlay"
     >
-      <section
-        class="content"
-      >
-        <header
-          class="header"
-        >
-          <h2>
-            sulu_audience_targeting.configure_rule
-          </h2>
-          <span
-            aria-label="su-times"
-            class="su-times clickable icon"
-            role="button"
-            tabindex="0"
-          />
-        </header>
-        <article
-          class="article"
-        >
-          <div
-            class="overlay"
-          >
-            <div
-              class="grid grid"
-            >
-              <div
-                class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-              >
-                <div
-                  class="field"
-                >
-                  <label
-                    class="label"
-                  >
-                    sulu_admin.title *
-                  </label>
-                  <div
-                    class="input default left"
-                  >
-                    <input
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                  <div
-                    class="errorLabel"
-                  />
-                </div>
-              </div>
-              <div
-                class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-              >
-                <div
-                  class="field"
-                >
-                  <label
-                    class="label"
-                  >
-                    sulu_audience_targeting.assigned_at *
-                  </label>
-                  <div
-                    class="select"
-                    role="none"
-                  >
-                    <button
-                      class="displayValue default"
-                      type="button"
-                    >
-                      <div
-                        aria-label="sulu_admin.please_choose"
-                        class="croppedText"
-                        title="sulu_admin.please_choose"
-                      >
-                        <div
-                          aria-hidden="true"
-                          class="front"
-                        >
-                          sulu_admin.p
-                        </div>
-                        <div
-                          aria-hidden="true"
-                          class="back"
-                        >
-                          <span>
-                            lease_choose
-                          </span>
-                        </div>
-                        <div
-                          class="whole"
-                        >
-                          sulu_admin.please_choose
-                        </div>
-                      </div>
-                      <span
-                        aria-label="su-angle-down"
-                        class="su-angle-down toggle"
-                      />
-                    </button>
-                  </div>
-                  <div
-                    class="errorLabel"
-                  />
-                </div>
-              </div>
-              <div
-                class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-              >
-                <div
-                  class="field"
-                >
-                  <label
-                    class="label"
-                  >
-                    sulu_audience_targeting.conditions
-                  </label>
-                  <button
-                    class="button secondary hasText"
-                    type="button"
-                  >
-                    <span
-                      aria-label="su-plus"
-                      class="su-plus buttonIcon"
-                    />
-                    <span
-                      class="buttonText"
-                    >
-                      sulu_audience_targeting.add_condition
-                    </span>
-                  </button>
-                  <div
-                    class="descriptionLabel"
-                  >
-                    sulu_audience_targeting.conditions_info_text
-                  </div>
-                  <div
-                    class="errorLabel"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-        <footer
-          class="footer"
-        >
-          <button
-            class="button primary hasText"
-            type="button"
-          >
-            <span
-              class="buttonText"
-            >
-              sulu_admin.ok
-            </span>
-          </button>
-        </footer>
+      <div>
         <div
-          class="snackbar"
+          data-label="sulu_admin.title"
+        />
+        <div
+          data-label="sulu_audience_targeting.assigned_at"
         >
-          <div
-            class="snackbar error"
-            role="button"
-          >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
-            />
-            <div
-              class="text"
-            >
-              <strong>
-                sulu_admin.error
-              </strong>
-               - 
+          <div>
+            <div>
+              sulu_audience_targeting.each_page_visit
+            </div>
+            <div>
+              sulu_audience_targeting.each_session
+            </div>
+            <div>
+              sulu_audience_targeting.first_visit
             </div>
           </div>
         </div>
-      </section>
+        <div
+          data-label="sulu_audience_targeting.conditions"
+        />
+      </div>
     </div>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;

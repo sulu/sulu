@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render the MultiAutoComplete with open suggestions list 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="multiAutoComplete"
   >
@@ -20,16 +20,9 @@ Array [
         class="chip"
       >
         <button
-          class="chip secondary small"
           type="button"
         >
           Test
-          <span
-            aria-label="su-times"
-            class="su-times clickable icon"
-            role="button"
-            tabindex="0"
-          />
         </button>
       </span>
       <input
@@ -37,65 +30,31 @@ Array [
         value=""
       />
     </div>
-  </div>,
+  </div>
   <div
-    class="backdrop fixed"
-    data-testid="backdrop"
-    role="button"
-  />,
-  <div
-    class="container"
+    data-open="true"
+    data-testid="auto-complete-popover"
   >
-    <ul
-      class="menu"
-      style="top: 10px; left: 10px; position: fixed; pointer-events: auto;"
+    <button
+      type="button"
     >
-      <li
-        class="suggestionItem"
-        style="min-width: -10px;"
-      >
-        <button
-          class="suggestion"
-          type="button"
-        >
-          <span
-            class="column"
-          >
-            Suggestion 1
-          </span>
-        </button>
-      </li>
-      <li
-        class="suggestionItem"
-        style="min-width: -10px;"
-      >
-        <button
-          class="suggestion"
-          type="button"
-        >
-          <span
-            class="column"
-          >
-            Suggestion 2
-          </span>
-        </button>
-      </li>
-      <li
-        class="suggestionItem"
-        style="min-width: -10px;"
-      >
-        <button
-          class="suggestion"
-          type="button"
-        >
-          <span
-            class="column"
-          >
-            Suggestion 3
-          </span>
-        </button>
-      </li>
-    </ul>
-  </div>,
-]
+      Close suggestions
+    </button>
+    <button
+      type="button"
+    >
+      Suggestion 1
+    </button>
+    <button
+      type="button"
+    >
+      Suggestion 2
+    </button>
+    <button
+      type="button"
+    >
+      Suggestion 3
+    </button>
+  </div>
+</DocumentFragment>
 `;

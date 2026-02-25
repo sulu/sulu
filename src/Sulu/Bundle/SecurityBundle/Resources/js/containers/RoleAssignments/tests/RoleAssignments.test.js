@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
+import {render} from '@testing-library/react';
 import {localizationStore} from 'sulu-admin-bundle/stores';
-import {ResourceMultiSelect} from 'sulu-admin-bundle/containers';
+import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
+import getMockCallArg from 'sulu-admin-bundle/utils/TestHelper/getMockCallArg';
 import RoleAssignments from '../RoleAssignments';
-import RoleAssignment from '../RoleAssignment';
 
 jest.mock('sulu-admin-bundle/stores/ResourceListStore', () => jest.fn().mockImplementation(
     function() {
@@ -29,6 +29,12 @@ jest.mock('sulu-admin-bundle/stores/ResourceListStore', () => jest.fn().mockImpl
     }
 ));
 
+jest.mock('sulu-admin-bundle/containers', () => ({
+    ResourceMultiSelect: jest.fn(() => null),
+}));
+
+jest.mock('../RoleAssignment', () => jest.fn(() => null));
+
 jest.mock('sulu-admin-bundle/stores', () => ({
     localizationStore: {
         localizations: undefined,
@@ -39,9 +45,19 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: (key) => key,
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
+const containersMock = ((jest.requireMock('sulu-admin-bundle/containers'): any): {
+    ResourceMultiSelect: {mock: {calls: Array<[Object]>}},
+    ...
+});
+
+const roleAssignmentComponent = ((jest.requireMock('../RoleAssignment'): any): {
+    mock: {calls: Array<[Object]>},
+    ...
+});
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test('Render component without data', () => {
     localizationStore.localizations = [
@@ -62,14 +78,14 @@ test('Render component without data', () => {
             shadow: '',
         },
     ];
-    const roleAssignments = mount(
+    const {asFragment} = render(
         <RoleAssignments
             onChange={jest.fn()}
             value={[]}
         />
     );
 
-    expect(roleAssignments.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render component', () => {
@@ -113,14 +129,14 @@ test('Render component', () => {
         },
     ];
 
-    const roleAssignments = mount(
+    const {asFragment} = render(
         <RoleAssignments
             onChange={jest.fn()}
             value={value}
         />
     );
 
-    expect(roleAssignments.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render component in disabled state', () => {
@@ -164,7 +180,7 @@ test('Render component in disabled state', () => {
         },
     ];
 
-    const roleAssignments = mount(
+    const {asFragment} = render(
         <RoleAssignments
             disabled={true}
             onChange={jest.fn()}
@@ -172,7 +188,8 @@ test('Render component in disabled state', () => {
         />
     );
 
-    expect(roleAssignments.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
+    expect(getLatestMockProps(containersMock.ResourceMultiSelect).disabled).toEqual(true);
 });
 
 test('Should trigger onChange correctly when MultiSelect for roles changes', () => {
@@ -217,14 +234,14 @@ test('Should trigger onChange correctly when MultiSelect for roles changes', () 
     ];
 
     const onChangeSpy = jest.fn();
-    const roleAssignments = mount(
+    render(
         <RoleAssignments
             onChange={onChangeSpy}
             value={value}
         />
     );
 
-    roleAssignments.find(ResourceMultiSelect).at(0).instance().props.onChange(
+    getLatestMockProps(containersMock.ResourceMultiSelect).onChange(
         [2, 5, 23],
         [
             {
@@ -319,7 +336,7 @@ test('Should trigger onChange correctly when RoleAssignment changes', () => {
     ];
 
     const onChangeSpy = jest.fn();
-    const roleAssignments = mount(
+    render(
         <RoleAssignments
             onChange={onChangeSpy}
             value={value}
@@ -346,6 +363,7 @@ test('Should trigger onChange correctly when RoleAssignment changes', () => {
             locales: ['de'],
         },
     ];
-    roleAssignments.find(RoleAssignment).at(1).instance().props.onChange(newValue[0]);
+
+    getMockCallArg(roleAssignmentComponent, 1, 0).onChange(newValue[0]);
     expect(onChangeSpy).toBeCalledWith(newValue);
 });

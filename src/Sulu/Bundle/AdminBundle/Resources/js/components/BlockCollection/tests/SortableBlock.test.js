@@ -1,8 +1,9 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import log from 'loglevel';
 import SortableBlock from '../SortableBlock';
+import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
 
 jest.mock('loglevel', () => ({
     warn: jest.fn(),
@@ -18,8 +19,16 @@ jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
+jest.mock('../../Block', () => jest.fn(({children}) => <div>{children}</div>));
+
+const BlockMock: any = jest.requireMock('../../Block');
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
 test('Render collapsed sortable block', () => {
-    expect(render(
+    const {asFragment} = render(
         <SortableBlock
             actions={[]}
             activeType="editor"
@@ -33,7 +42,9 @@ test('Render collapsed sortable block', () => {
             sortIndex={1}
             value={{content: 'Test Content'}}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render expanded sortable, non-collapsable block with types', () => {
@@ -41,7 +52,7 @@ test('Render expanded sortable, non-collapsable block with types', () => {
         (value, type) => 'Test for ' + value.content + (type ? ' and type ' + type : '')
     );
 
-    expect(render(
+    const {asFragment} = render(
         <SortableBlock
             actions={[]}
             activeType="type2"
@@ -54,7 +65,9 @@ test('Render expanded sortable, non-collapsable block with types', () => {
             types={{type1: 'Type 1', type2: 'Type 2'}}
             value={{content: 'Test Content'}}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render block in selection mode unselected', () => {
@@ -62,7 +75,7 @@ test('Render block in selection mode unselected', () => {
         (value, type) => 'Test for ' + value.content + (type ? ' and type ' + type : '')
     );
 
-    expect(render(
+    const {asFragment} = render(
         <SortableBlock
             actions={[]}
             activeType="type2"
@@ -76,7 +89,9 @@ test('Render block in selection mode unselected', () => {
             types={{type1: 'Type 1', type2: 'Type 2'}}
             value={{content: 'Test Content'}}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render block in selection mode selected', () => {
@@ -84,7 +99,7 @@ test('Render block in selection mode selected', () => {
         (value, type) => 'Test for ' + value.content + (type ? ' and type ' + type : '')
     );
 
-    expect(render(
+    const {asFragment} = render(
         <SortableBlock
             actions={[]}
             activeType="type2"
@@ -98,11 +113,13 @@ test('Render block in selection mode selected', () => {
             types={{type1: 'Type 1', type2: 'Type 2'}}
             value={{content: 'Test Content'}}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should not show block types if only a single block is passed', () => {
-    const sortableBlock = mount(
+    render(
         <SortableBlock
             actions={[]}
             activeType="editor"
@@ -117,7 +134,7 @@ test('Should not show block types if only a single block is passed', () => {
         />
     );
 
-    expect(sortableBlock.find('SingleSelect')).toHaveLength(0);
+    expect(getLatestMockProps(BlockMock).types).toEqual(undefined);
 });
 
 test('Should apply sortIndex to given actions and pass wrapped actions to Block component', () => {
@@ -140,7 +157,7 @@ test('Should apply sortIndex to given actions and pass wrapped actions to Block 
         },
     ];
 
-    const sortableBlock = mount(
+    render(
         <SortableBlock
             actions={actions}
             activeType="editor"
@@ -154,7 +171,7 @@ test('Should apply sortIndex to given actions and pass wrapped actions to Block 
         />
     );
 
-    const blockActions = sortableBlock.find('Block').prop('actions');
+    const blockActions = getLatestMockProps(BlockMock).actions;
     expect(blockActions).toEqual([
         expect.objectContaining({
             type: 'button',
@@ -187,7 +204,7 @@ test('Should pass remove action to Block component if depracted onRemove prop is
         },
     ];
 
-    const sortableBlock = mount(
+    render(
         <SortableBlock
             actions={actions}
             activeType="editor"
@@ -201,11 +218,12 @@ test('Should pass remove action to Block component if depracted onRemove prop is
             value={{content: 'Test Content'}}
         />
     );
+
     expect(log.warn).toBeCalledWith(
         expect.stringContaining('The "onRemove" prop of the "SortableBlock" component is deprecated')
     );
 
-    const blockActions = sortableBlock.find('Block').prop('actions');
+    const blockActions = getLatestMockProps(BlockMock).actions;
     expect(blockActions).toEqual([
         expect.objectContaining({
             type: 'button',
@@ -224,8 +242,8 @@ test('Should pass remove action to Block component if depracted onRemove prop is
     expect(removeSpy).toBeCalledWith(101);
 });
 
-test('Should not show the settings icon if no onSettingsClick callback is passed', () => {
-    const sortableBlock = mount(
+test('Should not show settings icon if no onSettingsClick callback is passed', () => {
+    render(
         <SortableBlock
             actions={[]}
             activeType="editor"
@@ -239,15 +257,15 @@ test('Should not show the settings icon if no onSettingsClick callback is passed
         />
     );
 
-    expect(sortableBlock.find('Icon[name="su-cog"]')).toHaveLength(0);
+    expect(getLatestMockProps(BlockMock).onSettingsClick).toEqual(undefined);
 });
 
-test('Should call onCollapse when the block is being collapsed', () => {
+test('Should call onCollapse when block is being collapsed', () => {
     const collapseSpy = jest.fn();
     const expandSpy = jest.fn();
     const removeSpy = jest.fn();
 
-    const sortableBlock = shallow(
+    render(
         <SortableBlock
             actions={[]}
             activeType="editor"
@@ -262,19 +280,19 @@ test('Should call onCollapse when the block is being collapsed', () => {
         />
     );
 
-    sortableBlock.find('Block').prop('onCollapse')();
+    getLatestMockProps(BlockMock).onCollapse();
 
     expect(collapseSpy).toBeCalledWith(1);
     expect(expandSpy).not.toBeCalled();
     expect(removeSpy).not.toBeCalled();
 });
 
-test('Should call onExpand when the block is being expanded', () => {
+test('Should call onExpand when block is being expanded', () => {
     const collapseSpy = jest.fn();
     const expandSpy = jest.fn();
     const removeSpy = jest.fn();
 
-    const sortableBlock = shallow(
+    render(
         <SortableBlock
             actions={[]}
             activeType="editor"
@@ -289,19 +307,19 @@ test('Should call onExpand when the block is being expanded', () => {
         />
     );
 
-    sortableBlock.find('Block').prop('onExpand')();
+    getLatestMockProps(BlockMock).onExpand();
 
     expect(collapseSpy).not.toBeCalled();
     expect(expandSpy).toBeCalledWith(1);
     expect(removeSpy).not.toBeCalled();
 });
 
-test('Should call onSettingClick when the block setting icon is clicked', () => {
+test('Should call onSettingClick when block setting icon is clicked', () => {
     const collapseSpy = jest.fn();
     const expandSpy = jest.fn();
     const settingsClickSpy = jest.fn();
 
-    const sortableBlock = shallow(
+    render(
         <SortableBlock
             actions={[]}
             activeType="editor"
@@ -316,17 +334,17 @@ test('Should call onSettingClick when the block setting icon is clicked', () => 
         />
     );
 
-    sortableBlock.find('Block').prop('onSettingsClick')();
+    getLatestMockProps(BlockMock).onSettingsClick();
 
     expect(collapseSpy).not.toBeCalled();
     expect(expandSpy).not.toBeCalled();
     expect(settingsClickSpy).toBeCalledWith(1);
 });
 
-test('Should call onTypeChange when the block has changed its type', () => {
+test('Should call onTypeChange when block has changed its type', () => {
     const typeChangeSpy = jest.fn();
 
-    const sortableBlock = shallow(
+    render(
         <SortableBlock
             actions={[]}
             activeType="editor"
@@ -342,16 +360,16 @@ test('Should call onTypeChange when the block has changed its type', () => {
         />
     );
 
-    sortableBlock.find('Block').prop('onTypeChange')('type1');
+    getLatestMockProps(BlockMock).onTypeChange('type1');
 
     expect(typeChangeSpy).toBeCalledWith('type1', 1);
 });
 
-test('Should call renderBlockContent with the correct arguments', () => {
+test('Should call renderBlockContent with correct arguments', () => {
     const renderBlockContentSpy = jest.fn();
     const value = {content: 'Test 1'};
 
-    shallow(
+    render(
         <SortableBlock
             actions={[]}
             activeType="editor"
@@ -369,11 +387,11 @@ test('Should call renderBlockContent with the correct arguments', () => {
     expect(renderBlockContentSpy).toBeCalledWith(value, 'editor', 7, true);
 });
 
-test('Should call renderBlockContent with the correct arguments when block is collapsed', () => {
+test('Should call renderBlockContent with correct arguments when block is collapsed', () => {
     const renderBlockContentSpy = jest.fn();
     const value = {content: 'Test 1'};
 
-    shallow(
+    render(
         <SortableBlock
             actions={[]}
             activeType="editor"
@@ -391,11 +409,11 @@ test('Should call renderBlockContent with the correct arguments when block is co
     expect(renderBlockContentSpy).toBeCalledWith(value, 'editor', 7, false);
 });
 
-test('Should call renderBlockContent with the correct arguments when types are involved', () => {
+test('Should call renderBlockContent with correct arguments when types are involved', () => {
     const renderBlockContentSpy = jest.fn();
     const value = {content: 'Test 2'};
 
-    shallow(
+    render(
         <SortableBlock
             actions={[]}
             activeType="test"

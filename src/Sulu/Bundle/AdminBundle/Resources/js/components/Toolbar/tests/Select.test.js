@@ -3,6 +3,7 @@ import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Select from '../Select';
+import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
 
 const selectPropsMock = {
     label: 'Choose an option',
@@ -137,7 +138,7 @@ test('Click on option fires onChange with the selected value as the first argume
     await userEvent.click(screen.queryByText('Click to open'));
     await userEvent.click(screen.queryByText('An option'));
 
-    expect(clickSpy.mock.calls[0][0]).toBe(1);
+    expect(getLatestMockProps(clickSpy)).toBe(1);
 });
 
 test('The label of the option is written in the toggle-button if you set the options value', () => {

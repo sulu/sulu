@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observable} from 'mobx';
-import {shallow, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
 import ResourceStore from '../../../stores/ResourceStore';
 import Field from '../Field';
 import Section from '../Section';
@@ -34,7 +34,7 @@ test('Render section with children', () => {
         return <input type="text" />;
     });
 
-    expect(render(
+    const {asFragment} = render(
         <Section data={{}} formInspector={formInspector} name="section" schema={{label: 'Section', type: 'section'}}>
             <Field
                 data={{}}
@@ -49,10 +49,12 @@ test('Render section with children', () => {
                 schemaPath=""
             />
         </Section>
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Do not render anything if visibleCondition evaluates to false', () => {
+test('Do not render anything if visibleCondition evaluates to false', async() => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
     fieldRegistry.get.mockReturnValue(function Text() {
@@ -64,10 +66,9 @@ test('Do not render anything if visibleCondition evaluates to false', () => {
         type: 'text_line',
         visibleCondition: 'title != "Test"',
     };
-
     const data = observable({title: 'Test'});
 
-    const section = shallow(
+    render(
         <Section data={data} formInspector={formInspector} name="section" schema={schema}>
             <Field
                 data={data}
@@ -84,10 +85,10 @@ test('Do not render anything if visibleCondition evaluates to false', () => {
         </Section>
     );
 
-    expect(section.find('Section')).toHaveLength(0);
+    expect(screen.queryByText('Text')).not.toBeInTheDocument();
 
     data.title = 'Changed title!';
-    expect(section.find('Section')).toHaveLength(1);
+    expect(await screen.findByText('Text')).toBeInTheDocument();
 });
 
 test('Render the section if visibleCondition with conditionDataProvider evaluates to true', () => {
@@ -104,10 +105,9 @@ test('Render the section if visibleCondition with conditionDataProvider evaluate
         type: 'text_line',
         visibleCondition: '__test == "Test"',
     };
-
     const data = {test: 'Test'};
 
-    const section = shallow(
+    render(
         <Section data={data} formInspector={formInspector} name="section" schema={schema}>
             <Field
                 data={data}
@@ -124,5 +124,5 @@ test('Render the section if visibleCondition with conditionDataProvider evaluate
         </Section>
     );
 
-    expect(section.find('Section')).toHaveLength(1);
+    expect(screen.getByText('Text')).toBeInTheDocument();
 });

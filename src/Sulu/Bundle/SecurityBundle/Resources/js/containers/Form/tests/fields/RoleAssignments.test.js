@@ -1,10 +1,12 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import fieldTypeDefaultProps from 'sulu-admin-bundle/utils/TestHelper/fieldTypeDefaultProps';
+import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import RoleAssignments from '../../fields/RoleAssignments';
+import RoleAssignmentsContainer from '../../../RoleAssignments';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     FormInspector: jest.fn(function(formStore) {
@@ -22,17 +24,20 @@ jest.mock('sulu-admin-bundle/stores', () => ({
     }),
 }));
 
+jest.mock('../../../RoleAssignments', () => jest.fn(() => null));
+
 test('Pass props correctly to RoleAssignments', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
-    const roleAssignments = shallow(
+    render(
         <RoleAssignments
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
         />
     );
 
-    expect(roleAssignments.prop('value')).toEqual([]);
+    const roleAssignmentsProps: any = getLatestMockProps((RoleAssignmentsContainer: any));
+    expect(roleAssignmentsProps.value).toEqual([]);
 });
 
 test('Pass props with value correctly to RoleAssignments', () => {
@@ -59,7 +64,7 @@ test('Pass props with value correctly to RoleAssignments', () => {
         },
     ];
 
-    const roleAssignments = shallow(
+    render(
         <RoleAssignments
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -68,6 +73,7 @@ test('Pass props with value correctly to RoleAssignments', () => {
         />
     );
 
-    expect(roleAssignments.prop('disabled')).toEqual(true);
-    expect(roleAssignments.prop('value')).toEqual(value);
+    const roleAssignmentsProps: any = getLatestMockProps((RoleAssignmentsContainer: any));
+    expect(roleAssignmentsProps.disabled).toEqual(true);
+    expect(roleAssignmentsProps.value).toEqual(value);
 });

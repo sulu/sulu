@@ -1,8 +1,10 @@
-//@flow
+// @flow
 import React from 'react';
-import {render, mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Router, {Route} from '../../../services/Router';
 import Application from '../Application';
+import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
@@ -10,85 +12,186 @@ jest.mock('../../../utils/Translator', () => ({
 
 jest.mock('../../../services/Router/Router', () => jest.fn(function() {
     this.attributes = {};
+    this.reload = jest.fn();
 }));
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/MemoryFormStore', () => jest.fn((memoryStore) =>({memoryStore})));
+jest.mock('sulu-admin-bundle/containers/Form/stores/MemoryFormStore', () => jest.fn((memoryStore) => ({memoryStore})));
 
 const mockInitializerInitialized = jest.fn();
 const mockInitializerLoading = jest.fn();
 const mockInitializedTranslationsLocale = jest.fn();
 
-jest.mock('../../../services/initializer', () => {
-    return new class {
-        get loading() {
-            return mockInitializerLoading();
-        }
+jest.mock('../../../services/initializer', () => new class {
+    get loading() {
+        return mockInitializerLoading();
+    }
 
-        get initialized() {
-            return mockInitializerInitialized();
-        }
+    get initialized() {
+        return mockInitializerInitialized();
+    }
 
-        get initializedTranslationsLocale() {
-            return mockInitializedTranslationsLocale();
-        }
-    };
+    get initializedTranslationsLocale() {
+        return mockInitializedTranslationsLocale();
+    }
 });
 
 const mockUserStoreLoggedIn = jest.fn();
 const mockUserStoreContact = jest.fn();
 const mockUserStoreUser = jest.fn();
-const mockUserStoreGetPersistentSetting = jest.fn().mockReturnValue(0);
+const mockUserStoreGetPersistentSetting = jest.fn().mockReturnValue(false);
 const mockUserStoreSetPersistentSetting = jest.fn();
 const mockUserStoreHasSingleSignOn = jest.fn().mockReturnValue(false);
 
-jest.mock('../../../stores/userStore', () => {
-    return new class {
-        get loggedIn() {
-            return mockUserStoreLoggedIn();
-        }
+jest.mock('../../../stores/userStore', () => new class {
+    get loggedIn() {
+        return mockUserStoreLoggedIn();
+    }
 
-        get user() {
-            return mockUserStoreUser();
-        }
+    get user() {
+        return mockUserStoreUser();
+    }
 
-        get contact() {
-            return mockUserStoreContact();
-        }
+    get contact() {
+        return mockUserStoreContact();
+    }
 
-        hasSingleSignOn() {
-            return mockUserStoreHasSingleSignOn();
-        }
+    hasSingleSignOn() {
+        return mockUserStoreHasSingleSignOn();
+    }
 
-        getPersistentSetting(value) {
-            return mockUserStoreGetPersistentSetting(value);
-        }
+    getPersistentSetting(value) {
+        return mockUserStoreGetPersistentSetting(value);
+    }
 
-        setPersistentSetting(name, value) {
-            return mockUserStoreSetPersistentSetting(name, value);
-        }
+    setPersistentSetting(name, value) {
+        return mockUserStoreSetPersistentSetting(name, value);
+    }
+
+    logout() {
+        return Promise.resolve();
+    }
+});
+
+jest.mock('../../Navigation', () => {
+    const React = require('react');
+
+    return jest.fn(function NavigationMock(props) {
+        const handlePinToggle = () => props.onPinToggle();
+        const handleNavigate = () => props.onNavigate();
+        const handleLogout = () => props.onLogout();
+        const handleProfileClick = () => props.onProfileClick();
+
+        return React.createElement(
+            'div',
+            {'data-pinned': props.pinned ? 'true' : 'false', 'data-testid': 'navigation'},
+            React.createElement('button', {onClick: handlePinToggle, type: 'button'}, 'pin-toggle'),
+            React.createElement('button', {onClick: handleNavigate, type: 'button'}, 'navigate'),
+            React.createElement('button', {onClick: handleLogout, type: 'button'}, 'logout'),
+            React.createElement('button', {onClick: handleProfileClick, type: 'button'}, 'profile')
+        );
+    });
+});
+
+jest.mock('../../Toolbar', () => {
+    const React = require('react');
+
+    return jest.fn(function ToolbarMock({navigationOpen, onNavigationButtonClick}) {
+        return React.createElement(
+            'div',
+            {'data-open': navigationOpen ? 'true' : 'false', 'data-testid': 'toolbar'},
+            onNavigationButtonClick
+                ? React.createElement('button', {onClick: onNavigationButtonClick, type: 'button'}, 'toggle-nav')
+                : null
+        );
+    });
+});
+
+jest.mock('../../ViewRenderer', () => {
+    const React = require('react');
+
+    return jest.fn(function ViewRendererMock({router}) {
+        return React.createElement('div', {'data-testid': 'view-renderer'}, router.route.type);
+    });
+});
+
+jest.mock('../../Login', () => {
+    const React = require('react');
+
+    return jest.fn(function LoginMock({initialized, router}) {
+        return React.createElement(
+            'div',
+            {'data-testid': 'login'},
+            initialized ? 'initialized' : 'not-initialized',
+            router.attributes.forgotPasswordToken ? '-reset' : ''
+        );
+    });
+});
+
+jest.mock('../../Sidebar', () => {
+    const React = require('react');
+    const sidebarStore = {size: undefined, view: undefined};
+
+    return {
+        __esModule: true,
+        default: jest.fn(function SidebarMock() {
+            return React.createElement('div', {'data-testid': 'sidebar'});
+        }),
+        sidebarStore,
     };
 });
 
-jest.mock('../../ViewRenderer', () => function Test(props) {
-    return (
-        <div>
-            <h1>Test</h1>
-            <h2>{props.router.route.type}</h2>
-        </div>
-    );
+jest.mock('../../ProfileFormOverlay', () => {
+    const React = require('react');
+
+    return jest.fn(function ProfileFormOverlayMock({open}) {
+        return React.createElement('div', {'data-open': open ? 'true' : 'false', 'data-testid': 'profile-overlay'});
+    });
 });
 
-jest.mock('../../ProfileFormOverlay', () => function Test() {
-    return (
-        <div>ProfileFormOverlay Mock</div>
-    );
+jest.mock('../../../components/Loader', () => {
+    const React = require('react');
+
+    return jest.fn(function LoaderMock() {
+        return React.createElement('div', {'data-testid': 'loader'}, 'Loader');
+    });
 });
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('../../../components/Backdrop', () => {
+    const React = require('react');
+
+    return jest.fn(function BackdropMock({onClick}) {
+        return React.createElement('button', {'data-testid': 'backdrop', onClick, type: 'button'}, 'backdrop');
+    });
+});
+
+const navigationMock = (jest.requireMock('../../Navigation'): any);
+const toolbarMock = (jest.requireMock('../../Toolbar'): any);
+
+function getLatestNavigationProps(): any {
+    return getLatestMockProps(navigationMock);
+}
+
+function getLatestToolbarProps(): any {
+    return getLatestMockProps(toolbarMock);
+}
+
+function createRouter(routeType?: string): Router {
+    const router = new Router({});
+
+    if (routeType) {
+        router.route = new Route({
+            name: 'test',
+            path: '/webspaces',
+            type: routeType,
+        });
+    }
+
+    return router;
+}
 
 beforeEach(() => {
+    jest.clearAllMocks();
+
     mockInitializerInitialized.mockReturnValue(true);
     mockInitializerLoading.mockReturnValue(false);
     mockInitializedTranslationsLocale.mockReturnValue('en');
@@ -101,6 +204,7 @@ beforeEach(() => {
         id: 99,
         username: 'test',
     });
+    mockUserStoreGetPersistentSetting.mockReturnValue(false);
 });
 
 test('Render login with loader', () => {
@@ -109,9 +213,10 @@ test('Render login with loader', () => {
     mockInitializedTranslationsLocale.mockReturnValue(null);
     mockUserStoreLoggedIn.mockReturnValue(false);
 
-    const router = new Router({});
-    const application = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-    expect(application.render()).toMatchSnapshot();
+    const {asFragment} = render(<Application appVersion={null} router={createRouter()} suluVersion="2.0.0-RC1" />);
+    expect(screen.getByTestId('loader')).toBeInTheDocument();
+    expect(screen.getByTestId('login')).toHaveTextContent('not-initialized');
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render login screen to reset password', () => {
@@ -120,10 +225,12 @@ test('Render login screen to reset password', () => {
     mockInitializedTranslationsLocale.mockReturnValue('en');
     mockUserStoreLoggedIn.mockReturnValue(false);
 
-    const router = new Router({});
+    const router = createRouter();
     router.attributes.forgotPasswordToken = 'some-uuid';
-    const application = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-    expect(application.render()).toMatchSnapshot();
+    const {asFragment} = render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
+
+    expect(screen.getByTestId('login')).toHaveTextContent('initialized-reset');
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render login when user is not logged in', () => {
@@ -132,111 +239,70 @@ test('Render login when user is not logged in', () => {
     mockInitializedTranslationsLocale.mockReturnValue('en');
     mockUserStoreLoggedIn.mockReturnValue(false);
 
-    const router = new Router({});
-    const application = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-
-    expect(application.render()).toMatchSnapshot();
+    const {asFragment} = render(<Application appVersion={null} router={createRouter()} suluVersion="2.0.0-RC1" />);
+    expect(screen.getByTestId('login')).toBeInTheDocument();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should not fail if current route does not exist', () => {
-    const router = new Router({});
-    const view = render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-
-    expect(view).toMatchSnapshot();
+    const {asFragment} = render(<Application appVersion={null} router={createRouter()} suluVersion="2.0.0-RC1" />);
+    expect(screen.queryByTestId('view-renderer')).not.toBeInTheDocument();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render based on current route', () => {
-    const router = new Router({});
-    router.route = new Route({
-        name: 'test',
-        path: '/webspaces',
-        type: 'test',
-    });
-
-    const view = render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-
-    expect(view).toMatchSnapshot();
+    const {asFragment} = render(
+        <Application appVersion={null} router={createRouter('test')} suluVersion="2.0.0-RC1" />
+    );
+    expect(screen.getByTestId('view-renderer')).toHaveTextContent('test');
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render based on current route with app version', () => {
-    const router = new Router({});
-    router.route = new Route({
-        name: 'test',
-        path: '/webspaces',
-        type: 'test',
-    });
+    const {asFragment} = render(<Application appVersion="666" router={createRouter('test')} suluVersion="2.0.0-RC1" />);
 
-    const view = render(<Application appVersion="666" router={router} suluVersion="2.0.0-RC1" />);
-
-    expect(view).toMatchSnapshot();
+    expect(getLatestNavigationProps().appVersion).toEqual('666');
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Render opened navigation', () => {
-    const router = new Router({});
-    router.route = new Route({
-        name: 'test',
-        path: '/webspaces',
-        type: 'test',
-    });
+test('Render opened navigation', async() => {
+    const user = userEvent.setup();
+    const {asFragment} = render(
+        <Application appVersion={null} router={createRouter('test')} suluVersion="2.0.0-RC1" />
+    );
 
-    const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-    view.find('Button[icon="su-bars"]').simulate('click');
+    await user.click(screen.getByRole('button', {name: 'toggle-nav'}));
 
-    expect(view.render()).toMatchSnapshot();
+    expect(screen.getByTestId('backdrop')).toBeInTheDocument();
+    expect(getLatestToolbarProps().navigationOpen).toEqual(true);
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Pin navigation', () => {
-    const router = new Router({});
-    router.route = new Route({
-        name: 'test',
-        path: '/webspaces',
-        type: 'test',
-    });
+test('Pin navigation', async() => {
+    const user = userEvent.setup();
+    render(<Application appVersion={null} router={createRouter('test')} suluVersion="2.0.0-RC1" />);
 
-    const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-    view.find('Button[icon="su-bars"]').simulate('click');
-    view.find('.pin').simulate('click');
+    await user.click(screen.getByRole('button', {name: 'toggle-nav'}));
+    await user.click(screen.getByRole('button', {name: 'pin-toggle'}));
 
-    expect(view.find('Navigation').at(0).prop('pinned')).toEqual(true);
-    expect(mockUserStoreSetPersistentSetting).toBeCalledWith('sulu_admin.application.navigation_pinned', true);
+    expect(getLatestNavigationProps().pinned).toEqual(true);
+    expect(mockUserStoreSetPersistentSetting).toHaveBeenCalledWith('sulu_admin.application.navigation_pinned', true);
 });
 
 test('Pin navigation from beginning', () => {
-    const router = new Router({});
-    router.route = new Route({
-        name: 'test',
-        path: '/webspaces',
-        type: 'test',
-    });
-
     mockUserStoreGetPersistentSetting.mockReturnValueOnce(true);
+    render(<Application appVersion={null} router={createRouter('test')} suluVersion="2.0.0-RC1" />);
 
-    const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-    expect(view.find('Button[icon="su-bars"]')).toHaveLength(0);
-    expect(view.find('Button[icon="su-sulu-logo"]')).toHaveLength(0);
-    expect(view.find('.pin')).toHaveLength(1);
-
-    expect(mockUserStoreGetPersistentSetting).toBeCalledWith('sulu_admin.application.navigation_pinned');
-
-    expect(view.find('Navigation').at(0).prop('pinned')).toEqual(true);
+    expect(getLatestToolbarProps().onNavigationButtonClick).toBeUndefined();
+    expect(getLatestNavigationProps().pinned).toEqual(true);
+    expect(mockUserStoreGetPersistentSetting).toHaveBeenCalledWith('sulu_admin.application.navigation_pinned');
 });
 
 test('Do not pin navigation from beginning', () => {
-    const router = new Router({});
-    router.route = new Route({
-        name: 'test',
-        path: '/webspaces',
-        type: 'test',
-    });
-
     mockUserStoreGetPersistentSetting.mockReturnValueOnce(false);
+    render(<Application appVersion={null} router={createRouter('test')} suluVersion="2.0.0-RC1" />);
 
-    const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-    expect(view.find('Button[icon="su-bars"]')).toHaveLength(1);
-    expect(view.find('Button[icon="su-sulu-logo"]')).toHaveLength(0);
-    expect(view.find('.pin')).toHaveLength(1);
-
-    expect(mockUserStoreGetPersistentSetting).toBeCalledWith('sulu_admin.application.navigation_pinned');
-
-    expect(view.find('Navigation').at(0).prop('pinned')).toEqual(false);
+    expect(typeof getLatestToolbarProps().onNavigationButtonClick).toEqual('function');
+    expect(getLatestNavigationProps().pinned).toEqual(false);
+    expect(mockUserStoreGetPersistentSetting).toHaveBeenCalledWith('sulu_admin.application.navigation_pinned');
 });

@@ -1,6 +1,7 @@
 // @flow
-import {mount} from 'enzyme';
 import React from 'react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import AdapterSwitch from '../AdapterSwitch';
 import AbstractAdapter from '../adapters/AbstractAdapter';
 import listAdapterRegistry from '../registries/listAdapterRegistry';
@@ -45,57 +46,60 @@ class TestAdapter extends AbstractAdapter {
 }
 
 beforeEach(() => {
+    jest.clearAllMocks();
     listAdapterRegistry.has.mockReturnValue(true);
     listAdapterRegistry.get.mockReturnValue(TestAdapter);
 });
 
 test('The component should render with current adapter "folder"', () => {
-    const adapters = ['table', 'folder'];
-    const currentAdapterKey = 'folder';
-    const handleAdapterChange = jest.fn();
-    const view = mount(
+    render(
         <AdapterSwitch
-            adapters={adapters}
-            currentAdapter={currentAdapterKey}
-            onAdapterChange={handleAdapterChange}
+            adapters={['table', 'folder']}
+            currentAdapter="folder"
+            onAdapterChange={jest.fn()}
         />
-    ).render();
+    );
 
-    expect(view).toMatchSnapshot();
+    const buttons = screen.getAllByRole('button');
+
+    expect(buttons).toHaveLength(2);
+    expect(buttons[0]).not.toHaveClass('active');
+    expect(buttons[1]).toHaveClass('active');
+    expect(screen.getAllByLabelText('su-th-large')).toHaveLength(2);
 });
 
 test('The component should render with current adapter "table"', () => {
-    const adapters = ['table', 'folder'];
-    const currentAdapterKey = 'table';
-    const handleAdapterChange = jest.fn();
-    const view = mount(
+    render(
         <AdapterSwitch
-            adapters={adapters}
-            currentAdapter={currentAdapterKey}
-            onAdapterChange={handleAdapterChange}
+            adapters={['table', 'folder']}
+            currentAdapter="table"
+            onAdapterChange={jest.fn()}
         />
-    ).render();
+    );
 
-    expect(view).toMatchSnapshot();
+    const buttons = screen.getAllByRole('button');
+
+    expect(buttons).toHaveLength(2);
+    expect(buttons[0]).toHaveClass('active');
+    expect(buttons[1]).not.toHaveClass('active');
 });
 
-test('The component should handle adapter change correctly', () => {
-    const adapters = ['table', 'folder'];
-    const currentAdapterKey = 'table';
+test('The component should handle adapter change correctly', async() => {
+    const user = userEvent.setup();
     const handleAdapterChange = jest.fn();
-    const view = mount(
+    render(
         <AdapterSwitch
-            adapters={adapters}
-            currentAdapter={currentAdapterKey}
+            adapters={['table', 'folder']}
+            currentAdapter="table"
             onAdapterChange={handleAdapterChange}
         />
     );
 
-    // click on the active adapter shouldn't trigger the event
-    view.find('Button').at(0).simulate('click');
-    expect(handleAdapterChange).not.toBeCalled();
+    const [tableButton, folderButton] = screen.getAllByRole('button');
 
-    // click on not active should trigger the event correctly
-    view.find('Button').at(1).simulate('click');
-    expect(handleAdapterChange).toBeCalledWith('folder');
+    await user.click(tableButton);
+    expect(handleAdapterChange).not.toHaveBeenCalled();
+
+    await user.click(folderButton);
+    expect(handleAdapterChange).toHaveBeenCalledWith('folder');
 });

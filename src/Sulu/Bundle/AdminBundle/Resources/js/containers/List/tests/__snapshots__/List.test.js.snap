@@ -1,259 +1,51 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Do not render Loader instead of Adapter if no page count is given 1`] = `
-<div
-  class="listContainer"
->
+exports[`renders list adapter and toolbar 1`] = `
+<DocumentFragment>
   <div
-    class="toolbar"
+    class="listContainer"
   >
     <div
-      class="toolbarLeft"
-    >
-      <label
-        aria-label="sulu_admin.list_search_placeholder"
-      >
-        <div
-          class="input dark left collapsed hasAppendIcon"
-        >
-          <div
-            class="prependedContainer dark collapsed"
-          >
-            <span
-              aria-label="su-search"
-              class="su-search clickable icon dark iconClickable collapsed"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <input
-            placeholder="sulu_admin.list_search_placeholder"
-            type="text"
-            value=""
-          />
-        </div>
-      </label>
-    </div>
-    <div
-      class="toolbarRight"
-    />
-  </div>
-  <div
-    class="list"
-  >
-    <div>
-      Test Adapter
-    </div>
-  </div>
-</div>
-`;
-
-exports[`Render Loader instead of Adapter if nothing was loaded yet 1`] = `
-<div
-  class="listContainer"
->
-  <div
-    class="toolbar"
-  >
-    <div
-      class="toolbarLeft"
-    >
-      <label
-        aria-label="sulu_admin.list_search_placeholder"
-      >
-        <div
-          class="input dark left collapsed hasAppendIcon"
-        >
-          <div
-            class="prependedContainer dark collapsed"
-          >
-            <span
-              aria-label="su-search"
-              class="su-search clickable icon dark iconClickable collapsed"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <input
-            placeholder="sulu_admin.list_search_placeholder"
-            type="text"
-            value=""
-          />
-        </div>
-      </label>
-    </div>
-    <div
-      class="toolbarRight"
-    />
-  </div>
-  <div
-    class="list"
-  >
-    <div
-      class="spinner loader"
-      style="width:40px;height:40px"
+      class="toolbar"
     >
       <div
-        class="doubleBounce1"
-      />
-      <div
-        class="doubleBounce2"
-      />
-    </div>
-  </div>
-</div>
-`;
-
-exports[`Render permission hint if permissions are missing 1`] = `
-<div
-  class="hint"
->
-  <div
-    class="hintIcon"
-  >
-    <span
-      aria-label="su-lock"
-      class="su-lock"
-    />
-  </div>
-  sulu_admin.no_permissions
-</div>
-`;
-
-exports[`Render the adapter in disabled state 1`] = `
-<div
-  class="listContainer"
->
-  <h1>
-    Title
-  </h1>
-  <div
-    class="toolbar"
-  >
-    <div
-      class="toolbarLeft"
-    >
-      <label
-        aria-label="sulu_admin.list_search_placeholder"
+        class="toolbarLeft"
       >
-        <div
-          class="input dark left collapsed hasAppendIcon"
+        <label
+          aria-label="sulu_admin.list_search_placeholder"
         >
           <div
-            class="prependedContainer dark collapsed"
+            class="input dark left collapsed hasAppendIcon"
           >
-            <span
-              aria-label="su-search"
-              class="su-search clickable icon dark iconClickable collapsed"
-              role="button"
-              tabindex="0"
+            <div
+              class="prependedContainer dark collapsed"
+            >
+              <span
+                aria-label="su-search"
+                class="su-search clickable icon dark iconClickable collapsed"
+                role="button"
+                tabindex="0"
+              />
+            </div>
+            <input
+              placeholder="sulu_admin.list_search_placeholder"
+              type="text"
+              value=""
             />
           </div>
-          <input
-            placeholder="sulu_admin.list_search_placeholder"
-            type="text"
-            value=""
-          />
-        </div>
-      </label>
-    </div>
-    <div
-      class="toolbarRight"
-    />
-  </div>
-  <div
-    class="list disabled"
-  >
-    <div>
-      Test Adapter
-    </div>
-  </div>
-</div>
-`;
-
-exports[`Render the adapter in non-searchable mode 1`] = `
-<div
-  class="listContainer"
->
-  <h1>
-    Title
-  </h1>
-  <div
-    class="list"
-  >
-    <div>
-      Test Adapter
-    </div>
-  </div>
-</div>
-`;
-
-exports[`Render the adapter in non-searchable mode if searchable is set to true but adapter does not support it 1`] = `
-<div
-  class="listContainer"
->
-  <h1>
-    Title
-  </h1>
-  <div
-    class="list"
-  >
-    <div>
-      Test Adapter
-    </div>
-  </div>
-</div>
-`;
-
-exports[`Render the adapter with filters 1`] = `
-<div
-  class="listContainer"
->
-  <h1>
-    Title
-  </h1>
-  <div
-    class="toolbar"
-  >
-    <div
-      class="toolbarLeft"
-    >
-      <label
-        aria-label="sulu_admin.list_search_placeholder"
-      >
-        <div
-          class="input dark left collapsed hasAppendIcon"
-        >
-          <div
-            class="prependedContainer dark collapsed"
-          >
-            <span
-              aria-label="su-search"
-              class="su-search clickable icon dark iconClickable collapsed"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <input
-            placeholder="sulu_admin.list_search_placeholder"
-            type="text"
-            value=""
-          />
-        </div>
-      </label>
+        </label>
+      </div>
       <div
-        class="fieldFilter"
+        class="toolbarRight"
       >
-        <div
-          class="filterButton"
-        >
+        <div>
           <button
             class="button icon"
             type="button"
           >
             <span
-              aria-label="su-filter"
-              class="su-filter buttonIcon"
+              aria-label="su-sort"
+              class="su-sort buttonIcon"
             />
             <span
               aria-label="su-angle-down"
@@ -261,179 +53,22 @@ exports[`Render the adapter with filters 1`] = `
             />
           </button>
         </div>
-        <span
-          class="fieldFilterItem"
-        >
-          <button
-            class="chip primary medium clickable"
-            type="button"
-          >
-            Title: 
-            <span
-              aria-label="su-times"
-              class="su-times clickable icon"
-              role="button"
-              tabindex="0"
-            />
-          </button>
-        </span>
-        <span
-          class="fieldFilterItem"
-        >
-          <button
-            class="chip primary medium clickable"
-            type="button"
-          >
-            Created at: 
-            <span
-              aria-label="su-times"
-              class="su-times clickable icon"
-              role="button"
-              tabindex="0"
-            />
-          </button>
-        </span>
       </div>
     </div>
     <div
-      class="toolbarRight"
+      class="list"
+    >
+      <div
+        data-disabled-ids="[]"
+        data-testid="table-adapter"
+      />
+    </div>
+    <div
+      data-testid="single-list-overlay"
+    />
+    <div
+      data-testid="single-list-overlay"
     />
   </div>
-  <div
-    class="list disabled"
-  >
-    <div>
-      Test Adapter
-    </div>
-  </div>
-</div>
-`;
-
-exports[`Render the adapter with filters but filterable disabled 1`] = `
-<div
-  class="listContainer"
->
-  <h1>
-    Title
-  </h1>
-  <div
-    class="toolbar"
-  >
-    <div
-      class="toolbarLeft"
-    >
-      <label
-        aria-label="sulu_admin.list_search_placeholder"
-      >
-        <div
-          class="input dark left collapsed hasAppendIcon"
-        >
-          <div
-            class="prependedContainer dark collapsed"
-          >
-            <span
-              aria-label="su-search"
-              class="su-search clickable icon dark iconClickable collapsed"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <input
-            placeholder="sulu_admin.list_search_placeholder"
-            type="text"
-            value=""
-          />
-        </div>
-      </label>
-    </div>
-    <div
-      class="toolbarRight"
-    />
-  </div>
-  <div
-    class="list disabled"
-  >
-    <div>
-      Test Adapter
-    </div>
-  </div>
-</div>
-`;
-
-exports[`Render toolbar with with search field and actions 1`] = `
-<div
-  class="listContainer"
->
-  <div
-    class="toolbar"
-  >
-    <div
-      class="toolbarLeft"
-    >
-      <label
-        aria-label="sulu_admin.list_search_placeholder"
-      >
-        <div
-          class="input dark left collapsed hasAppendIcon"
-        >
-          <div
-            class="prependedContainer dark collapsed"
-          >
-            <span
-              aria-label="su-search"
-              class="su-search clickable icon dark iconClickable collapsed"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <input
-            placeholder="sulu_admin.list_search_placeholder"
-            type="text"
-            value=""
-          />
-        </div>
-      </label>
-    </div>
-    <div
-      class="toolbarRight"
-    >
-      <button
-        class="button icon hasText"
-        disabled=""
-        type="button"
-      >
-        <span
-          aria-label="su-upload"
-          class="su-upload buttonIcon"
-        />
-        <span
-          class="buttonText"
-        >
-          sulu_admin.upload
-        </span>
-      </button>
-      <button
-        class="button icon hasText"
-        type="button"
-      >
-        <span
-          aria-label="su-refresh"
-          class="su-refresh buttonIcon"
-        />
-        <span
-          class="buttonText"
-        >
-          sulu_admin.refresh
-        </span>
-      </button>
-    </div>
-  </div>
-  <div
-    class="list"
-  >
-    <div>
-      Test Adapter
-    </div>
-  </div>
-</div>
+</DocumentFragment>
 `;

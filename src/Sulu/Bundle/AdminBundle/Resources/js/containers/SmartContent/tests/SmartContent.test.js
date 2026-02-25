@@ -1,10 +1,13 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {translate} from '../../../utils/Translator';
 import SmartContentStore from '../stores/SmartContentStore';
 import smartContentConfigStore from '../stores/smartContentConfigStore';
 import SmartContent from '../SmartContent';
+import getMockCallArg from '../../../utils/TestHelper/getMockCallArg';
+import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
 
 jest.mock('../stores/SmartContentStore', () => jest.fn(function() {
     this.items = [];
@@ -14,11 +17,75 @@ jest.mock('../stores/smartContentConfigStore', () => ({
     getConfig: jest.fn().mockReturnValue({}),
 }));
 
-jest.mock('../../MultiListOverlay', () => jest.fn(() => null));
-
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
+
+jest.mock('../FilterOverlay', () => {
+    const React = require('react');
+
+    return jest.fn(function FilterOverlayMock({onClose, open}) {
+        return React.createElement(
+            'div',
+            {'data-open': open ? 'true' : 'false', 'data-testid': 'filter-overlay'},
+            React.createElement('button', {onClick: onClose, type: 'button'}, 'close-filter')
+        );
+    });
+});
+
+jest.mock('../../../components/MultiItemSelection', () => {
+    const React = require('react');
+
+    const MultiItemSelection: any = jest.fn(function MultiItemSelectionMock({children, leftButton, onItemClick}) {
+        function handleFilterClick() {
+            leftButton.onClick();
+        }
+
+        const itemButtons = React.Children.map(children, (child, index) => {
+            function handleItemClick() {
+                if (onItemClick) {
+                    onItemClick(child.props.id, child.props.value);
+                }
+            }
+
+            return React.createElement(
+                'button',
+                {
+                    'data-testid': 'multi-item-content',
+                    key: index,
+                    onClick: handleItemClick,
+                    type: 'button',
+                },
+                child.props.children
+            );
+        });
+
+        return React.createElement(
+            'div',
+            {'data-testid': 'multi-item-selection'},
+            React.createElement('button', {onClick: handleFilterClick, type: 'button'}, 'filter-button'),
+            itemButtons
+        );
+    });
+
+    MultiItemSelection.Item = jest.fn(function MultiItemSelectionItemMock({children}) {
+        return React.createElement(React.Fragment, undefined, children);
+    });
+
+    return MultiItemSelection;
+});
+
+jest.mock('../SmartContentItem', () => {
+    const React = require('react');
+
+    return jest.fn(function SmartContentItemMock() {
+        return React.createElement('div', {'data-testid': 'smart-content-item'});
+    });
+});
+
+const multiItemSelection = (jest.requireMock('../../../components/MultiItemSelection'): any);
+const filterOverlay = (jest.requireMock('../FilterOverlay'): any);
+const smartContentItem = (jest.requireMock('../SmartContentItem'): any);
 
 const defaultValue = {
     dataSource: undefined,
@@ -35,6 +102,18 @@ const defaultValue = {
     types: undefined,
 };
 
+function getLatestFilterOverlayProps(): any {
+    return getLatestMockProps(filterOverlay);
+}
+
+function getLatestMultiItemSelectionProps(): any {
+    return getLatestMockProps(multiItemSelection);
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
 test('Pass correct sections prop', () => {
     smartContentConfigStore.getConfig.mockReturnValue({
         tags: true,
@@ -50,7 +129,7 @@ test('Pass correct sections prop', () => {
     });
 
     const smartContentStore = new SmartContentStore('content');
-    const smartContent = shallow(
+    render(
         <SmartContent
             defaultValue={defaultValue}
             fieldLabel="Test"
@@ -58,8 +137,7 @@ test('Pass correct sections prop', () => {
         />
     );
 
-    expect(smartContent.find('FilterOverlay').prop('sections'))
-        .toEqual(['tags', 'audienceTargeting', 'types', 'limit']);
+    expect(getLatestFilterOverlayProps().sections).toEqual(['tags', 'audienceTargeting', 'types', 'limit']);
 });
 
 test('Disable sorting on MultiItemSelection', () => {
@@ -74,7 +152,7 @@ test('Disable sorting on MultiItemSelection', () => {
     });
 
     const smartContentStore = new SmartContentStore('content');
-    const smartContent = shallow(
+    render(
         <SmartContent
             defaultValue={defaultValue}
             fieldLabel="Test"
@@ -82,7 +160,7 @@ test('Disable sorting on MultiItemSelection', () => {
         />
     );
 
-    expect(smartContent.find('MultiItemSelection').prop('sortable')).toEqual(false);
+    expect(getLatestMultiItemSelectionProps().sortable).toEqual(false);
 });
 
 test('Pass correct props to MultiItemSelection component', () => {
@@ -97,7 +175,7 @@ test('Pass correct props to MultiItemSelection component', () => {
     });
 
     const smartContentStore = new SmartContentStore('content');
-    const smartContent = shallow(
+    render(
         <SmartContent
             defaultValue={defaultValue}
             disabled={true}
@@ -106,7 +184,7 @@ test('Pass correct props to MultiItemSelection component', () => {
         />
     );
 
-    expect(smartContent.find('MultiItemSelection').prop('disabled')).toEqual(true);
+    expect(getLatestMultiItemSelectionProps().disabled).toEqual(true);
 });
 
 test('Pass correct sections prop with other values', () => {
@@ -131,7 +209,7 @@ test('Pass correct sections prop with other values', () => {
     ];
 
     const smartContentStore = new SmartContentStore('content');
-    const smartContent = shallow(
+    render(
         <SmartContent
             categoryRootKey="test1"
             defaultValue={defaultValue}
@@ -141,18 +219,21 @@ test('Pass correct sections prop with other values', () => {
         />
     );
 
-    expect(smartContent.find('FilterOverlay').prop('categoryRootKey')).toEqual('test1');
-    expect(smartContent.find('FilterOverlay').prop('dataSourceListKey')).toEqual('pages_list');
-    expect(smartContent.find('FilterOverlay').prop('dataSourceResourceKey')).toEqual('pages');
-    expect(smartContent.find('FilterOverlay').prop('sections'))
-        .toEqual(['datasource', 'categories', 'sorting', 'types', 'presentation']);
-    expect(smartContent.find('FilterOverlay').prop('presentations'))
-        .toEqual({
-            one: 'One column',
-        });
+    expect(getLatestFilterOverlayProps().categoryRootKey).toEqual('test1');
+    expect(getLatestFilterOverlayProps().dataSourceListKey).toEqual('pages_list');
+    expect(getLatestFilterOverlayProps().dataSourceResourceKey).toEqual('pages');
+    expect(getLatestFilterOverlayProps().sections).toEqual([
+        'datasource',
+        'categories',
+        'sorting',
+        'types',
+        'presentation',
+    ]);
+    expect(getLatestFilterOverlayProps().presentations).toEqual({one: 'One column'});
 });
 
-test('Open and closes the FilterOverlay when the icon is clicked', () => {
+test('Open and closes the FilterOverlay when the icon is clicked', async() => {
+    const user = userEvent.setup();
     const smartContentStore = new SmartContentStore('content');
     smartContentConfigStore.getConfig.mockReturnValue({
         datasourceResourceKey: 'pages',
@@ -167,7 +248,8 @@ test('Open and closes the FilterOverlay when the icon is clicked', () => {
         limit: false,
         types: [],
     });
-    const smartContent = shallow(
+
+    render(
         <SmartContent
             defaultValue={defaultValue}
             fieldLabel="Test"
@@ -175,16 +257,15 @@ test('Open and closes the FilterOverlay when the icon is clicked', () => {
         />
     );
 
-    expect(smartContent.find('FilterOverlay').prop('open')).toEqual(false);
+    expect(getLatestFilterOverlayProps().open).toEqual(false);
+    await user.click(screen.getByRole('button', {name: 'filter-button'}));
+    expect(getLatestFilterOverlayProps().open).toEqual(true);
 
-    smartContent.find('MultiItemSelection').prop('leftButton').onClick();
-    expect(smartContent.find('FilterOverlay').prop('open')).toEqual(true);
-
-    smartContent.find('FilterOverlay').prop('onClose')();
-    expect(smartContent.find('FilterOverlay').prop('open')).toEqual(false);
-    expect(smartContent.find('FilterOverlay').prop('title')).toEqual('sulu_admin.filter_overlay_title');
-    expect(smartContent.find('FilterOverlay').prop('sortings')).toEqual([{name: 'title', value: 'Title'}]);
-    expect(translate).toBeCalledWith('sulu_admin.filter_overlay_title', {fieldLabel: 'Test'});
+    getLatestFilterOverlayProps().onClose();
+    expect(getLatestFilterOverlayProps().open).toEqual(false);
+    expect(getLatestFilterOverlayProps().title).toEqual('sulu_admin.filter_overlay_title');
+    expect(getLatestFilterOverlayProps().sortings).toEqual([{name: 'title', value: 'Title'}]);
+    expect(translate).toHaveBeenCalledWith('sulu_admin.filter_overlay_title', {fieldLabel: 'Test'});
 });
 
 test('Show items in a SmartContentItem', () => {
@@ -194,7 +275,7 @@ test('Show items in a SmartContentItem', () => {
         {title: 'About us'},
     ];
 
-    const smartContent = shallow(
+    render(
         <SmartContent
             defaultValue={defaultValue}
             fieldLabel="Test"
@@ -202,20 +283,21 @@ test('Show items in a SmartContentItem', () => {
         />
     );
 
-    expect(smartContent.find('SmartContentItem')).toHaveLength(2);
-    expect(smartContent.find('SmartContentItem').at(0).prop('item')).toEqual({title: 'Homepage'});
-    expect(smartContent.find('SmartContentItem').at(1).prop('item')).toEqual({title: 'About us'});
+    expect(screen.getAllByTestId('smart-content-item')).toHaveLength(2);
+    expect(getMockCallArg(smartContentItem, 0, 0).item).toEqual({title: 'Homepage'});
+    expect(getMockCallArg(smartContentItem, 1, 0).item).toEqual({title: 'About us'});
 });
 
-test('Call onItemClick when an item in the SmartContent is clicked', () => {
+test('Call onItemClick when an item in the SmartContent is clicked', async() => {
     const itemClickSpy = jest.fn();
+    const user = userEvent.setup();
     const smartContentStore = new SmartContentStore('content');
     smartContentStore.items = [
         {id: 1, title: 'Homepage'},
         {id: 2, title: 'About us'},
     ];
 
-    const smartContent = mount(
+    render(
         <SmartContent
             defaultValue={defaultValue}
             fieldLabel="Test"
@@ -224,10 +306,11 @@ test('Call onItemClick when an item in the SmartContent is clicked', () => {
         />
     );
 
-    smartContent.find('MultiItemSelection .content').at(0).simulate('click');
+    const items = screen.getAllByTestId('multi-item-content');
+    await user.click(items[0]);
     expect(itemClickSpy).toHaveBeenLastCalledWith(1, {id: 1, title: 'Homepage'});
 
-    smartContent.find('MultiItemSelection .content').at(1).simulate('click');
+    await user.click(items[1]);
     expect(itemClickSpy).toHaveBeenLastCalledWith(2, {id: 2, title: 'About us'});
 });
 
@@ -235,7 +318,7 @@ test('Pass the loading prop to the MultiItemSelection if items are still loading
     const smartContentStore = new SmartContentStore('content');
     smartContentStore.itemsLoading = true;
 
-    const smartContent = shallow(
+    render(
         <SmartContent
             defaultValue={defaultValue}
             fieldLabel="Test"
@@ -243,7 +326,7 @@ test('Pass the loading prop to the MultiItemSelection if items are still loading
         />
     );
 
-    expect(smartContent.find('MultiItemSelection').prop('loading')).toEqual(true);
+    expect(getLatestMultiItemSelectionProps().loading).toEqual(true);
 });
 
 test('Pass the loading prop to the MultiItemSelection if list or categories are still loading', () => {
@@ -251,7 +334,7 @@ test('Pass the loading prop to the MultiItemSelection if list or categories are 
     // $FlowFixMe
     smartContentStore.loading = true;
 
-    const smartContent = shallow(
+    render(
         <SmartContent
             defaultValue={defaultValue}
             fieldLabel="Test"
@@ -259,5 +342,5 @@ test('Pass the loading prop to the MultiItemSelection if list or categories are 
         />
     );
 
-    expect(smartContent.find('MultiItemSelection').prop('loading')).toEqual(true);
+    expect(getLatestMultiItemSelectionProps().loading).toEqual(true);
 });

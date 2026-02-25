@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
+import {render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {Router} from 'sulu-admin-bundle/services';
 import Search from '../Search';
 import searchResourcesStore from '../stores/searchResourceStore';
@@ -21,129 +22,77 @@ jest.mock('../stores/searchResourceStore', () => ({
 jest.mock('../stores/searchStore', () => ({
     resourceKey: undefined,
     query: undefined,
-    results: [],
+    result: [],
+    loading: false,
+    limit: 10,
+    page: 1,
+    pages: 1,
     search: jest.fn(),
     setPage: jest.fn(),
     setLimit: jest.fn(),
 }));
+
+const defaultSearchResources = {
+    page: {
+        resourceKey: 'page',
+        name: 'Page',
+        route: {
+            name: 'sulu_page.edit_form',
+            resultToRoute: {},
+        },
+    },
+};
+
+const renderSearchAndWaitForResources = async(searchResources = defaultSearchResources) => {
+    const router = new Router({});
+    const searchResourcesPromise = Promise.resolve(searchResources);
+    searchResourcesStore.loadSearchResources.mockReturnValue(searchResourcesPromise);
+
+    const view = render(<Search router={router} />);
+    await searchResourcesPromise;
+    await waitFor(() => expect(searchResourcesStore.loadSearchResources).toHaveBeenCalledTimes(1));
+
+    return {router, ...view};
+};
 
 beforeEach(() => {
     searchStore.resourceKey = undefined;
     searchStore.query = undefined;
     searchStore.loading = false;
     searchStore.result = [];
+    searchStore.limit = 10;
+    searchStore.page = 1;
+    searchStore.pages = 1;
+    searchStore.search.mockClear();
+    searchStore.setPage.mockClear();
+    searchStore.setLimit.mockClear();
+    searchResourcesStore.loadSearchResources.mockClear();
 });
 
-test('Render loader while loading searchResources and show SearchField afterwards', () => {
-    const router = new Router({});
+test('Render loader while loading searchResources and show SearchField afterwards', async() => {
+    const {asFragment} = await renderSearchAndWaitForResources();
 
-    const searchResources = {
-        page: {
-            resourceKey: 'page',
-            name: 'Page',
-            route: {
-                name: 'sulu_page.edit_form',
-                resultToRoute: {},
-            },
-        },
-    };
-
-    const searchResourcesPromise = Promise.resolve(searchResources);
-    searchResourcesStore.loadSearchResources.mockReturnValue(searchResourcesPromise);
-
-    const search = mount(<Search router={router} />);
-
-    expect(search.render()).toMatchSnapshot();
-
-    return searchResourcesPromise.then(() => {
-        search.update();
-        expect(search.render()).toMatchSnapshot();
-    });
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Render loader while loading search results', () => {
-    const router = new Router({});
-
-    const searchResources = {
-        page: {
-            resourceKey: 'page',
-            name: 'Page',
-            route: {
-                name: 'sulu_page.edit_form',
-                resultToRoute: {},
-            },
-        },
-    };
-
-    const searchResourcesPromise = Promise.resolve(searchResources);
-    searchResourcesStore.loadSearchResources.mockReturnValue(searchResourcesPromise);
-
+test('Render loader while loading search results', async() => {
     searchStore.loading = true;
+    const {asFragment} = await renderSearchAndWaitForResources();
 
-    const search = mount(<Search router={router} />);
-
-    return searchResourcesPromise.then(() => {
-        search.update();
-        expect(search.render()).toMatchSnapshot();
-    });
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Render hint that nothing was found', () => {
-    const router = new Router({});
-
-    const searchResources = {
-        page: {
-            resourceKey: 'page',
-            name: 'Page',
-            route: {
-                name: 'sulu_page.edit_form',
-                resultToRoute: {},
-            },
-        },
-    };
-
-    const searchResourcesPromise = Promise.resolve(searchResources);
-    searchResourcesStore.loadSearchResources.mockReturnValue(searchResourcesPromise);
-
+test('Render hint that nothing was found', async() => {
     searchStore.loading = false;
     searchStore.result = [];
     searchStore.query = 'something';
 
-    const search = mount(<Search router={router} />);
+    const {asFragment} = await renderSearchAndWaitForResources();
 
-    return searchResourcesPromise.then(() => {
-        search.update();
-        expect(search.render()).toMatchSnapshot();
-    });
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Render search results', () => {
-    const router = new Router({});
-
-    const searchResources = {
-        page: {
-            icon: 'su-page',
-            resourceKey: 'page',
-            name: 'Page',
-            route: {
-                name: 'sulu_page.edit_form',
-                resultToRoute: {},
-            },
-        },
-        contact: {
-            icon: 'su-contact',
-            resourceKey: 'contact',
-            name: 'Contact',
-            route: {
-                name: 'sulu_contact.edit_form',
-                resultToRoute: {},
-            },
-        },
-    };
-
-    const searchResourcesPromise = Promise.resolve(searchResources);
-    searchResourcesStore.loadSearchResources.mockReturnValue(searchResourcesPromise);
-
+test('Render search results', async() => {
     searchStore.loading = false;
     searchStore.result = [
         {
@@ -171,23 +120,9 @@ test('Render search results', () => {
     ];
     searchStore.query = 'something';
 
-    const search = mount(<Search router={router} />);
-
-    return searchResourcesPromise.then(() => {
-        search.update();
-        expect(search.render()).toMatchSnapshot();
-    });
-});
-
-test('Set the query and searchResource from the SearchStore as start value', () => {
-    const router = new Router({});
-
-    searchStore.resourceKey = undefined;
-    searchStore.query = 'Test';
-    searchStore.resourceKey = 'page';
-
     const searchResources = {
         page: {
+            icon: 'su-page',
             resourceKey: 'page',
             name: 'Page',
             route: {
@@ -195,24 +130,34 @@ test('Set the query and searchResource from the SearchStore as start value', () 
                 resultToRoute: {},
             },
         },
+        contact: {
+            icon: 'su-contact',
+            resourceKey: 'contact',
+            name: 'Contact',
+            route: {
+                name: 'sulu_contact.edit_form',
+                resultToRoute: {},
+            },
+        },
     };
 
-    const searchResourcesPromise = Promise.resolve(searchResources);
-    searchResourcesStore.loadSearchResources.mockReturnValue(searchResourcesPromise);
+    const {asFragment} = await renderSearchAndWaitForResources(searchResources);
 
-    const search = mount(<Search router={router} />);
-
-    return searchResourcesPromise.then(() => {
-        search.update();
-        expect(search.find('SearchField input').prop('value')).toEqual('Test');
-        expect(search.find('SearchField .searchResourceButton .searchResource').prop('children')).toEqual('Page');
-    });
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Search when the search button is clicked', () => {
-    const router = new Router({});
+test('Set the query and searchResource from the SearchStore as start value', async() => {
+    searchStore.query = 'Test';
+    searchStore.resourceKey = 'page';
 
-    const searchResources = {
+    await renderSearchAndWaitForResources();
+
+    expect(screen.getByRole('textbox')).toHaveValue('Test');
+    expect(screen.getByText('Page')).toBeInTheDocument();
+});
+
+test('Search when the search button is clicked', async() => {
+    await renderSearchAndWaitForResources({
         page: {
             resourceKey: 'page',
             name: 'Page',
@@ -229,24 +174,17 @@ test('Search when the search button is clicked', () => {
                 resultToRoute: {},
             },
         },
-    };
-
-    const searchResourcesPromise = Promise.resolve(searchResources);
-    searchResourcesStore.loadSearchResources.mockReturnValue(searchResourcesPromise);
-
-    const search = mount(<Search router={router} />);
-
-    return searchResourcesPromise.then(() => {
-        search.update();
-        search.find('SearchField input').prop('onChange')({currentTarget: {value: 'Test'}});
-        search.find('Icon[name="su-search"]').prop('onClick')();
-        expect(searchStore.search).toBeCalledWith('Test', undefined);
     });
+
+    const input = screen.getByRole('textbox');
+    await userEvent.click(input);
+    await userEvent.paste('Test');
+    await userEvent.click(screen.getByLabelText('su-search'));
+
+    expect(searchStore.search).toBeCalledWith('Test', undefined);
 });
 
-test('Navigate to route for search result item', () => {
-    const router = new Router({});
-
+test('Navigate to route for search result item', async() => {
     const searchResources = {
         page: {
             resourceKey: 'page',
@@ -281,14 +219,10 @@ test('Navigate to route for search result item', () => {
                 resultToRoute: {
                     resourceId: 'id',
                     locale: 'locale',
-                    'metadata.webspaceKey': 'webspace',
                 },
             },
         },
     };
-
-    const searchResourcesPromise = Promise.resolve(searchResources);
-    searchResourcesStore.loadSearchResources.mockReturnValue(searchResourcesPromise);
 
     searchStore.loading = false;
     searchStore.result = [
@@ -330,21 +264,28 @@ test('Navigate to route for search result item', () => {
     ];
     searchStore.query = 'something';
 
-    const search = mount(<Search router={router} />);
+    const {router} = await renderSearchAndWaitForResources(searchResources);
 
-    return searchResourcesPromise.then(() => {
-        search.update();
-        search.find('SearchResult').at(2).find('div').at(0).simulate('click');
-        expect(router.navigate).toHaveBeenLastCalledWith(
-            'sulu_article.article.edit_tabs_blog',
-            {id: '019a5d6f-191e-766b-834b-6d1bc4fe4765', locale: 'en'}
-        );
-        search.find('SearchResult').at(1).find('div').at(0).simulate('click');
-        expect(router.navigate).toHaveBeenLastCalledWith('sulu_contact.edit_form', {id: '5'});
-        search.find('SearchResult').at(0).find('div').at(0).simulate('click');
-        expect(router.navigate).toHaveBeenLastCalledWith(
-            'sulu_page.edit_form',
-            {id: 'f0a1f99e-3c28-4db9-bc5d-94ed43d8a50f', locale: 'de', webspace: 'example'}
-        );
-    });
+    const articleResult = screen.getByText('Test Article').closest('[role="button"]');
+    const contactResult = screen.getByText('Max Mustermann').closest('[role="button"]');
+    const pageResult = screen.getByText('Test1').closest('[role="button"]');
+
+    if (!articleResult || !contactResult || !pageResult) {
+        throw new Error('Search result item was not found');
+    }
+
+    await userEvent.click(articleResult);
+    expect(router.navigate).toHaveBeenLastCalledWith(
+        'sulu_article.article.edit_tabs_blog',
+        {id: '019a5d6f-191e-766b-834b-6d1bc4fe4765', locale: 'en'}
+    );
+
+    await userEvent.click(contactResult);
+    expect(router.navigate).toHaveBeenLastCalledWith('sulu_contact.edit_form', {id: '5'});
+
+    await userEvent.click(pageResult);
+    expect(router.navigate).toHaveBeenLastCalledWith(
+        'sulu_page.edit_form',
+        {id: 'f0a1f99e-3c28-4db9-bc5d-94ed43d8a50f', locale: 'de', webspace: 'example'}
+    );
 });

@@ -1,130 +1,68 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render in disabled state 1`] = `
-<div
-  class="multiAutoComplete disabled"
->
+<DocumentFragment>
   <div
-    class="icon"
+    data-testid="multi-autocomplete-component"
   >
-    <span
-      aria-label="su-search"
-      class="su-search"
-    />
-  </div>
-  <div
-    class="items"
-  >
-    <span
-      class="chip"
-    >
-      <button
-        class="chip secondary small disabled"
-        type="button"
-      >
-        James Bond
-      </button>
-    </span>
-    <span
-      class="chip"
-    >
-      <button
-        class="chip secondary small disabled"
-        type="button"
-      >
-        John Doe
-      </button>
-    </span>
     <input
-      class="input mousetrap"
+      data-testid="multi-autocomplete-input"
       disabled=""
-      value=""
     />
+    <button
+      type="button"
+    >
+      trigger-search
+    </button>
+    <button
+      type="button"
+    >
+      trigger-change
+    </button>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render in loading state 1`] = `
-<div
-  class="multiAutoComplete"
->
+<DocumentFragment>
   <div
-    class="icon"
-  >
-    <div
-      class="spinner"
-      style="width:16px;height:16px"
-    >
-      <div
-        class="doubleBounce1"
-      />
-      <div
-        class="doubleBounce2"
-      />
-    </div>
-  </div>
-  <div
-    class="items"
+    data-testid="multi-autocomplete-component"
   >
     <input
-      class="input mousetrap"
-      value=""
+      data-testid="multi-autocomplete-input"
     />
+    <button
+      type="button"
+    >
+      trigger-search
+    </button>
+    <button
+      type="button"
+    >
+      trigger-change
+    </button>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render with given value 1`] = `
-<div
-  class="multiAutoComplete"
->
+<DocumentFragment>
   <div
-    class="icon"
+    data-testid="multi-autocomplete-component"
   >
-    <span
-      aria-label="su-search"
-      class="su-search"
-    />
-  </div>
-  <div
-    class="items"
-  >
-    <span
-      class="chip"
-    >
-      <button
-        class="chip secondary small"
-        type="button"
-      >
-        James Bond
-        <span
-          aria-label="su-times"
-          class="su-times clickable icon"
-          role="button"
-          tabindex="0"
-        />
-      </button>
-    </span>
-    <span
-      class="chip"
-    >
-      <button
-        class="chip secondary small"
-        type="button"
-      >
-        John Doe
-        <span
-          aria-label="su-times"
-          class="su-times clickable icon"
-          role="button"
-          tabindex="0"
-        />
-      </button>
-    </span>
     <input
-      class="input mousetrap"
-      value=""
+      data-testid="multi-autocomplete-input"
     />
+    <button
+      type="button"
+    >
+      trigger-search
+    </button>
+    <button
+      type="button"
+    >
+      trigger-change
+    </button>
   </div>
-</div>
+</DocumentFragment>
 `;

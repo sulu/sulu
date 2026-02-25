@@ -1,15 +1,15 @@
 // @flow
 import React from 'react';
 import log from 'loglevel';
-import {extendObservable as mockExtendObservable, observable} from 'mobx';
-import {mount, shallow} from 'enzyme';
+import {observable} from 'mobx';
+import {render} from '@testing-library/react';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import FormInspector from 'sulu-admin-bundle/containers/Form/FormInspector';
 import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/ResourceFormStore';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import Router from 'sulu-admin-bundle/services/Router';
+import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import MediaSelection from '../../fields/MediaSelection';
-import MultiMediaSelection from '../../../MultiMediaSelection';
 
 jest.mock('loglevel', () => ({
     warn: jest.fn(),
@@ -22,20 +22,6 @@ jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resou
 
 jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.locale = resourceStore.locale;
-}));
-
-jest.mock('sulu-admin-bundle/stores/MultiSelectionStore', () => jest.fn(function() {
-    this.loadItems = jest.fn();
-
-    mockExtendObservable(this, {
-        items: [],
-    });
-}));
-
-jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(function() {
-    this.selections = [];
-    this.destroy = jest.fn();
-    this.clear = jest.fn();
 }));
 
 jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
@@ -54,47 +40,57 @@ jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     contentLocale: 'userContentLocale',
 }));
 
+jest.mock('../../../MultiMediaSelection', () => jest.fn(() => null));
+
+const MultiMediaSelectionMock: any = jest.requireMock('../../../MultiMediaSelection');
+
+const createFormInspector = (locale: ?string = 'en') => new FormInspector(
+    new ResourceFormStore(
+        new ResourceStore('test', undefined, {locale: locale ? observable.box(locale) : undefined}),
+        'test'
+    )
+);
+
+const createProps = (overrides = {}) => ({
+    ...fieldTypeDefaultProps,
+    formInspector: createFormInspector(),
+    ...overrides,
+});
+
+const renderMediaSelection = (overrides = {}) => (
+    render(<MediaSelection {...(createProps(overrides): any)} />)
+);
+
+const expectThrowSilently = (renderCallback, errorPattern) => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    expect(renderCallback).toThrow(errorPattern);
+    consoleErrorSpy.mockRestore();
+};
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
 test('Pass correct props to MultiMediaSelection component', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
+    renderMediaSelection({
+        disabled: true,
+        value: {displayOption: undefined, ids: [55, 66, 77]},
+    });
 
-    const mediaSelection = shallow(
-        <MediaSelection
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            formInspector={formInspector}
-            value={{displayOption: undefined, ids: [55, 66, 77]}}
-        />
-    );
-
-    expect(mediaSelection.find(MultiMediaSelection).props().displayOptions).toEqual([]);
-    expect(mediaSelection.find(MultiMediaSelection).props().disabled).toEqual(true);
-    expect(mediaSelection.find(MultiMediaSelection).props().sortable).toEqual(true);
-    expect(mediaSelection.find(MultiMediaSelection).props().locale.get()).toEqual('en');
-    expect(mediaSelection.find(MultiMediaSelection).props().value).toEqual({ids: [55, 66, 77]});
+    expect(getLatestMockProps(MultiMediaSelectionMock).displayOptions).toEqual([]);
+    expect(getLatestMockProps(MultiMediaSelectionMock).disabled).toEqual(true);
+    expect(getLatestMockProps(MultiMediaSelectionMock).sortable).toEqual(true);
+    expect(getLatestMockProps(MultiMediaSelectionMock).locale.get()).toEqual('en');
+    expect(getLatestMockProps(MultiMediaSelectionMock).value).toEqual({ids: [55, 66, 77]});
 });
 
 test('Pass content-locale of user to MultiMediaSelection if locale is not present in form-inspector', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {}),
-            'test'
-        )
-    );
+    renderMediaSelection({
+        formInspector: createFormInspector(null),
+        value: {displayOption: undefined, ids: [55, 66, 77]},
+    });
 
-    const mediaSelection = shallow(
-        <MediaSelection
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            value={{displayOption: undefined, ids: [55, 66, 77]}}
-        />
-    );
-
-    expect(mediaSelection.find(MultiMediaSelection).props().locale.get()).toEqual('userContentLocale');
+    expect(getLatestMockProps(MultiMediaSelectionMock).locale.get()).toEqual('userContentLocale');
 });
 
 test('Set default display option if no value is passed', () => {
@@ -110,27 +106,15 @@ test('Set default display option if no value is passed', () => {
         },
     };
 
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {}),
-            'test'
-        )
-    );
-
-    shallow(
-        <MediaSelection
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
+    renderMediaSelection({
+        onChange: changeSpy,
+        schemaOptions,
+    });
 
     expect(changeSpy).toBeCalledWith({displayOption: 'left', ids: []}, {'isDefaultValue': true});
 });
 
 test('Pass correct props for given schema-options to MultiMediaSelection component', () => {
-    const changeSpy = jest.fn();
     const schemaOptions = {
         types: {
             name: 'types',
@@ -142,24 +126,10 @@ test('Pass correct props for given schema-options to MultiMediaSelection compone
         },
     };
 
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {}),
-            'test'
-        )
-    );
+    renderMediaSelection({schemaOptions});
 
-    const mediaSelection = shallow(
-        <MediaSelection
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
-
-    expect(mediaSelection.find(MultiMediaSelection).props().types).toEqual(['image', 'video']);
-    expect(mediaSelection.find(MultiMediaSelection).props().sortable).toEqual(false);
+    expect(getLatestMockProps(MultiMediaSelectionMock).types).toEqual(['image', 'video']);
+    expect(getLatestMockProps(MultiMediaSelectionMock).sortable).toEqual(false);
 });
 
 test('Do not set default display option if value is passed', () => {
@@ -175,22 +145,11 @@ test('Do not set default display option if value is passed', () => {
         },
     };
 
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {}),
-            'test'
-        )
-    );
-
-    shallow(
-        <MediaSelection
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            schemaOptions={schemaOptions}
-            value={{displayOption: undefined, ids: []}}
-        />
-    );
+    renderMediaSelection({
+        onChange: changeSpy,
+        schemaOptions,
+        value: {displayOption: undefined, ids: []},
+    });
 
     expect(changeSpy).not.toBeCalled();
 });
@@ -199,204 +158,78 @@ test('Should call onChange and onFinish if the selection changes', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
+    renderMediaSelection({
+        disabled: true,
+        onChange: changeSpy,
+        onFinish: finishSpy,
+        value: {displayOption: undefined, ids: [55, 66, 77]},
+    });
 
-    const mediaSelection = shallow(
-        <MediaSelection
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            value={{displayOption: undefined, ids: [55, 66, 77]}}
-        />
-    );
-
-    mediaSelection.find(MultiMediaSelection).props().onChange({ids: [33, 44]});
+    getLatestMockProps(MultiMediaSelectionMock).onChange({ids: [33, 44]});
 
     expect(changeSpy).toBeCalledWith({ids: [33, 44]});
     expect(finishSpy).toBeCalled();
 });
 
 test('Should navigate to media if a media is clicked', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
-
     const router = new Router();
 
-    const mediaSelection = mount(
-        <MediaSelection
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            router={router}
-            value={{displayOption: undefined, ids: [55, 66]}}
-        />
-    );
+    renderMediaSelection({
+        disabled: true,
+        router,
+        value: {displayOption: undefined, ids: [55, 66]},
+    });
 
-    mediaSelection.find('MultiMediaSelection').instance().mediaSelectionStore.items = [
-        {id: 55, locale: 'en', mimeType: 'application/pdf'},
-        {id: 66, locale: 'en', mimeType: 'application/pdf'},
-    ];
-
-    mediaSelection.update();
-
-    mediaSelection.find('MultiItemSelection .content').at(0).simulate('click');
+    getLatestMockProps(MultiMediaSelectionMock).onItemClick(55, {id: 55, locale: 'en', mimeType: 'application/pdf'});
     expect(router.navigate).toHaveBeenLastCalledWith('sulu_media.form', {id: 55, locale: 'en'});
-    mediaSelection.find('MultiItemSelection .content').at(1).simulate('click');
+
+    getLatestMockProps(MultiMediaSelectionMock).onItemClick(66, {id: 66, locale: 'en', mimeType: 'application/pdf'});
     expect(router.navigate).toHaveBeenLastCalledWith('sulu_media.form', {id: 66, locale: 'en'});
 });
 
 test('Should throw an error if given value does not have an ids property', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
+    expectThrowSilently(
+        () => renderMediaSelection({value: ({unrelatedProperty: 123}: any)}),
+        /"ids" property/
     );
-
-    expect(() => shallow(
-        <MediaSelection
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            value={({unrelatedProperty: 123}: any)}
-        />
-    )).toThrow(/"ids" property/);
 });
 
 test('Should log warning and use ids of objects if given value is an array of objects', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
+    renderMediaSelection({
+        disabled: true,
+        value: ([{id: 55}, {id: 66}, {id: 77}]: any),
+    });
 
-    const mediaSelection = shallow(
-        <MediaSelection
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            formInspector={formInspector}
-            value={([{id: 55}, {id: 66}, {id: 77}]: any)}
-        />
-    );
-
-    expect(mediaSelection.find(MultiMediaSelection).props().value).toEqual({ids: [55, 66, 77]});
+    expect(getLatestMockProps(MultiMediaSelectionMock).value).toEqual({ids: [55, 66, 77]});
     expect(log.warn).toBeCalledWith(expect.stringContaining('expects an object with an "ids" property as value'));
 });
 
-test('Should throw an error if displayOptions schemaOption is given but not an array', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
-
-    expect(() => shallow(
-        <MediaSelection
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={{displayOptions: {name: 'displayOptions', value: true}}}
-        />
-    )).toThrow(/"displayOptions"/);
-});
-
 test('Should throw an error if given value is not an object', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
+    expectThrowSilently(
+        () => renderMediaSelection({value: (true: any)}),
+        /expects an object/
     );
-
-    expect(() => shallow(
-        <MediaSelection
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            value={(true: any)}
-        />
-    )).toThrow(/expects an object/);
 });
 
 test('Should throw an error if displayOptions schemaOption is given but not an array', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
+    expectThrowSilently(
+        () => renderMediaSelection({schemaOptions: {displayOptions: {name: 'displayOptions', value: true}}}),
+        /"displayOptions"/
     );
-
-    expect(() => shallow(
-        <MediaSelection
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={{displayOptions: {name: 'displayOptions', value: true}}}
-        />
-    )).toThrow(/"displayOptions"/);
 });
 
-test('Should throw an error if displayOptions schemaOption is given but contains an invalid value', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
+test('Should throw an error if displayOptions schemaOption contains an invalid value', () => {
+    expectThrowSilently(
+        () => renderMediaSelection({
+            schemaOptions: {displayOptions: {name: 'displayOptions', value: [{name: 'test', value: true}]}},
+        }),
+        /"test"/
     );
-
-    expect(() => shallow(
-        <MediaSelection
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={{displayOptions: {name: 'displayOptions', value: [{name: 'test', value: true}]}}}
-        />
-    )).toThrow(/"test"/);
 });
 
-test('Should throw an error if types schemaOption is given but not an array', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
+test('Should throw an error if types schemaOption is given but not a string', () => {
+    expectThrowSilently(
+        () => renderMediaSelection({schemaOptions: {types: {name: 'types', value: true}}}),
+        /"types"/
     );
-
-    expect(() => shallow(
-        <MediaSelection
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={{types: {name: 'types', value: true}}}
-        />
-    )).toThrow(/"types"/);
-});
-
-test('Should throw an error if types schemaOption is given but not an array', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
-
-    expect(() => shallow(
-        <MediaSelection
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={{types: {name: 'types', value: true}}}
-        />
-    )).toThrow(/"types"/);
 });

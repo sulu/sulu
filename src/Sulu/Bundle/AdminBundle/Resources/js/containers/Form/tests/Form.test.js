@@ -1,67 +1,16 @@
 // @flow
 import React from 'react';
+import {act, render} from '@testing-library/react';
 import {observable} from 'mobx';
-import {mount, render, shallow} from 'enzyme';
 import log from 'loglevel';
 import Form from '../Form';
+import Renderer from '../Renderer';
+import GhostDialog from '../GhostDialog';
+import MissingTypeDialog from '../MissingTypeDialog';
 import Router from '../../../services/Router';
 import ResourceStore from '../../../stores/ResourceStore';
 import ResourceFormStore from '../stores/ResourceFormStore';
-import metadataStore from '../stores/metadataStore';
-
-const FORM = {
-    locale: {
-        label: 'Sprache wählen',
-        disabledCondition: null,
-        visibleCondition: null,
-        description: '',
-        type: 'single_select',
-        colSpan: 6,
-        options: {
-            default_value: {
-                name: 'default_value',
-                type: null,
-                value: 'de',
-                title: null,
-                placeholder: null,
-                infoText: null,
-            },
-            values: {
-                name: 'values',
-                type: 'collection',
-                value: [
-                    {
-                        name: 'de',
-                        type: null,
-                        value: 'de',
-                        title: 'de',
-                        placeholder: null,
-                        infoText: null,
-                    },
-                    {
-                        name: 'en',
-                        type: null,
-                        value: 'en',
-                        title: 'en',
-                        placeholder: null,
-                        infoText: null,
-                    },
-                ],
-                title: null,
-                placeholder: null,
-                infoText: null,
-            },
-        },
-        types: [],
-        defaultType: null,
-        required: true,
-        spaceAfter: null,
-        minOccurs: null,
-        maxOccurs: null,
-        onInvalid: null,
-        tags: [],
-    },
-};
+import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
 
 jest.mock('loglevel', () => ({
     warn: jest.fn(),
@@ -74,19 +23,29 @@ jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
-jest.mock('../registries/fieldRegistry', () => ({
-    get: jest.fn((type) => {
-        switch (type) {
-            case 'block':
-                return require('../../../containers/FieldBlocks').default;
-            case 'text_line':
-                return require('../../../components/Input').default;
-            case 'single_select':
-                return require('../fields/SingleSelect').default;
-        }
-    }),
-    getOptions: jest.fn().mockReturnValue({}),
-}));
+jest.mock('../Renderer', () => {
+    const RendererMock: any = jest.fn(function RendererMock() {
+        return <div data-testid="renderer" />;
+    });
+
+    return RendererMock;
+});
+
+jest.mock('../GhostDialog', () => {
+    const GhostDialogMock: any = jest.fn(function GhostDialogMock() {
+        return <div data-testid="ghost-dialog" />;
+    });
+
+    return GhostDialogMock;
+});
+
+jest.mock('../MissingTypeDialog', () => {
+    const MissingTypeDialogMock: any = jest.fn(function MissingTypeDialogMock() {
+        return <div data-testid="missing-type-dialog" />;
+    });
+
+    return MissingTypeDialogMock;
+});
 
 jest.mock('../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.id = resourceStore.id;
@@ -94,6 +53,13 @@ jest.mock('../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.data = resourceStore.data;
     this.locale = resourceStore.observableOptions.locale;
     this.loading = resourceStore.loading;
+    this.options = {};
+    this.metadataOptions = {};
+    this.errors = {};
+    this.forbidden = false;
+    this.notFound = false;
+    this.unexpectedError = false;
+    this.hasInvalidType = false;
     this.validate = jest.fn().mockReturnValue(true);
     this.schema = {};
     this.set = jest.fn();
@@ -103,6 +69,8 @@ jest.mock('../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.copyFromLocale = jest.fn();
     this.getValueByPath = jest.fn();
     this.getSchemaEntryByPath = jest.fn().mockReturnValue({types: {default: {form: {}}}});
+    this.getValuesByTag = jest.fn().mockReturnValue([]);
+    this.getPathsByTag = jest.fn().mockReturnValue([]);
     this.types = {};
     this.changeType = jest.fn();
 }));
@@ -113,40 +81,77 @@ jest.mock('../../../stores/ResourceStore', () => jest.fn(function(resourceKey, i
     this.data = {};
     this.observableOptions = observableOptions;
     this.loading = false;
+    this.forbidden = false;
+    this.notFound = false;
+    this.unexpectedError = false;
 }));
 
-jest.mock('../stores/metadataStore', () => ({
-    getSchema: jest.fn(),
-    getJsonSchema: jest.fn(),
-}));
+const logMock: any = log;
+const RendererMock: any = Renderer;
+const GhostDialogMock: any = GhostDialog;
+const MissingTypeDialogMock: any = MissingTypeDialog;
+
+function getRendererProps() {
+    return getLatestMockProps(RendererMock);
+}
+
+function getGhostDialogProps() {
+    return getLatestMockProps(GhostDialogMock);
+}
+
+function getMissingTypeDialogProps() {
+    return getLatestMockProps(MissingTypeDialogMock);
+}
+
+function renderForm(store: any, props: Object = {}) {
+    const formRef: any = React.createRef();
+    const view = render(
+        <Form
+            onSubmit={jest.fn()}
+            ref={formRef}
+            store={store}
+            {...props}
+        />
+    );
+
+    if (!formRef.current) {
+        throw new Error('Form ref was not set');
+    }
+
+    return {formRef, ...view};
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test('Should render form using renderer', () => {
     const submitSpy = jest.fn();
     const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
 
-    const form = render(<Form onSubmit={submitSpy} store={store} />);
-    expect(form).toMatchSnapshot();
+    const {asFragment} = renderForm(store, {onSubmit: submitSpy});
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render permission hint if permissions are missing', () => {
     const submitSpy = jest.fn();
-    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
-    // $FlowFixMe
+    const store: any = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
     store.forbidden = true;
 
-    const form = render(<Form onSubmit={submitSpy} store={store} />);
-    expect(form).toMatchSnapshot();
+    const {asFragment} = renderForm(store, {onSubmit: submitSpy});
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should call onSubmit callback', () => {
     const errorSpy = jest.fn();
     const submitSpy = jest.fn();
     const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
-    metadataStore.getSchema.mockReturnValue({});
 
-    const form = mount(<Form onError={errorSpy} onSubmit={submitSpy} store={store} />);
+    const {formRef} = renderForm(store, {onError: errorSpy, onSubmit: submitSpy});
 
-    form.instance().submit();
+    act(() => {
+        formRef.current.submit();
+    });
 
     expect(errorSpy).not.toBeCalled();
     expect(submitSpy).toBeCalled();
@@ -155,7 +160,7 @@ test('Should call onSubmit callback', () => {
 test.each([
     ['draft'],
     ['publish'],
-])('Call saveHandlers with the action "%s" as argument when form is submitted', (action) => {
+])('Call saveHandlers with the action "%s" as argument when form is submitted', async(action) => {
     const handler1 = jest.fn();
     const handler2 = jest.fn();
     const submitPromise = Promise.resolve();
@@ -173,25 +178,23 @@ test.each([
 
     const store = new ResourceFormStore(resourceStore, 'snippet');
 
-    const form = shallow(<Form onSubmit={submitSpy} store={store} />);
+    const {formRef} = renderForm(store, {onSubmit: submitSpy});
 
-    form.instance().formInspector.addSaveHandler(handler1);
-    form.instance().formInspector.addSaveHandler(handler2);
+    formRef.current.formInspector.addSaveHandler(handler1);
+    formRef.current.formInspector.addSaveHandler(handler2);
 
-    form.instance().submit(action);
+    await formRef.current.submit(action);
 
-    return submitPromise.then(() => {
-        expect(handler1).toBeCalledWith(action);
-        expect(handler2).toBeCalledWith(action);
-        expect(log.warn).toBeCalled();
-    });
+    expect(handler1).toBeCalledWith(action);
+    expect(handler2).toBeCalledWith(action);
+    expect(logMock.warn).toBeCalled();
 });
 
 test.each([
     [undefined],
     [{action: 'draft'}],
     [{inherit: true}],
-])('Call saveHandlers with the action "%s" as argument when form is submitted', (action) => {
+])('Call saveHandlers with options "%s" as argument when form is submitted', async(options) => {
     const handler1 = jest.fn();
     const handler2 = jest.fn();
     const submitPromise = Promise.resolve();
@@ -209,18 +212,16 @@ test.each([
 
     const store = new ResourceFormStore(resourceStore, 'snippet');
 
-    const form = shallow(<Form onSubmit={submitSpy} store={store} />);
+    const {formRef} = renderForm(store, {onSubmit: submitSpy});
 
-    form.instance().formInspector.addSaveHandler(handler1);
-    form.instance().formInspector.addSaveHandler(handler2);
+    formRef.current.formInspector.addSaveHandler(handler1);
+    formRef.current.formInspector.addSaveHandler(handler2);
 
-    form.instance().submit(action);
+    await formRef.current.submit(options);
 
-    return submitPromise.then(() => {
-        expect(handler1).toBeCalledWith(action);
-        expect(handler2).toBeCalledWith(action);
-        expect(log.warn).not.toBeCalled();
-    });
+    expect(handler1).toBeCalledWith(options);
+    expect(handler2).toBeCalledWith(options);
+    expect(logMock.warn).not.toBeCalled();
 });
 
 test('Should call onError callback', () => {
@@ -229,11 +230,12 @@ test('Should call onError callback', () => {
     const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
     store.validate.mockReturnValue(false);
     store.errors = {error1: {}};
-    metadataStore.getSchema.mockReturnValue({});
 
-    const form = mount(<Form onError={errorSpy} onSubmit={submitSpy} store={store} />);
+    const {formRef} = renderForm(store, {onError: errorSpy, onSubmit: submitSpy});
 
-    form.instance().submit();
+    act(() => {
+        formRef.current.submit();
+    });
 
     expect(errorSpy).toBeCalledWith(store.errors);
     expect(submitSpy).not.toBeCalled();
@@ -244,129 +246,69 @@ test('Should work when errors occurs but no onError callback is given', () => {
     const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
     store.validate.mockReturnValue(false);
     store.errors = {error1: {}};
-    metadataStore.getSchema.mockReturnValue({});
 
-    const form = mount(<Form onSubmit={submitSpy} store={store} />);
+    const {formRef} = renderForm(store, {onSubmit: submitSpy});
 
-    form.instance().submit();
+    act(() => {
+        formRef.current.submit();
+    });
 
     expect(submitSpy).not.toBeCalled();
 });
 
 test('Should validate form when a field has finished being edited', () => {
     const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
-    metadataStore.getSchema.mockReturnValue({});
 
-    const form = mount(<Form onSubmit={jest.fn()} store={store} />);
+    renderForm(store, {onSubmit: jest.fn()});
 
-    form.find('Renderer').prop('onFieldFinish')();
+    act(() => {
+        getRendererProps().onFieldFinish('/article', '/article');
+    });
 
     expect(store.validate).toBeCalledWith();
+    expect(store.finishField).toBeCalledWith('/article');
 });
 
 test('Should validate form before calling finish handlers when a field has finished being edited', () => {
+    let validateCalled = false;
+    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
+    const {formRef} = renderForm(store, {onSubmit: jest.fn()});
+
     const handler1 = jest.fn(() => {
         expect(validateCalled).toEqual(true);
     });
-    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
-    metadataStore.getSchema.mockReturnValue({});
 
-    const form = mount(<Form onSubmit={jest.fn()} store={store} />);
-    form.instance().formInspector.addFinishFieldHandler(handler1);
+    formRef.current.formInspector.addFinishFieldHandler(handler1);
 
-    let validateCalled = false;
     store.validate.mockImplementation(() => validateCalled = true);
-    form.find('Renderer').prop('onFieldFinish')();
+
+    act(() => {
+        getRendererProps().onFieldFinish('/title', '/highlight/items/title');
+    });
+
+    expect(handler1).toBeCalledWith('/title', '/highlight/items/title');
 });
 
-test('Call finish handlers with dataPath and schemaPath when a section field has finished being edited', () => {
+test.each([
+    ['/title', '/highlight/items/title'],
+    ['/article', '/article'],
+    ['/block/0/text', '/block/types/default/form/text'],
+])('Call finish handlers with dataPath "%s" and schemaPath "%s"', (dataPath, schemaPath) => {
     const handler1 = jest.fn();
     const handler2 = jest.fn();
 
     const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
-    // $FlowFixMe
-    store.schema = {
-        highlight: {
-            items: {
-                title: {
-                    type: 'text_line',
-                },
-            },
-            type: 'section',
-        },
-    };
-    const form = mount(<Form onSubmit={jest.fn()} store={store} />);
-    form.instance().formInspector.addFinishFieldHandler(handler1);
-    form.instance().formInspector.addFinishFieldHandler(handler2);
+    const {formRef} = renderForm(store, {onSubmit: jest.fn()});
 
-    form.find('Field[name="title"] Input').prop('onFinish')();
-    expect(handler1).toHaveBeenLastCalledWith('/title', '/highlight/items/title');
-    expect(handler2).toHaveBeenLastCalledWith('/title', '/highlight/items/title');
-});
+    formRef.current.formInspector.addFinishFieldHandler(handler1);
+    formRef.current.formInspector.addFinishFieldHandler(handler2);
 
-test('Call finish handlers with dataPath and schemaPath when a field has finished being edited', () => {
-    const handler1 = jest.fn();
-    const handler2 = jest.fn();
+    act(() => {
+        getRendererProps().onFieldFinish(dataPath, schemaPath);
+    });
 
-    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
-    // $FlowFixMe
-    store.schema = {
-        article: {
-            type: 'text_line',
-        },
-    };
-    const form = mount(<Form onSubmit={jest.fn()} store={store} />);
-    form.instance().formInspector.addFinishFieldHandler(handler1);
-    form.instance().formInspector.addFinishFieldHandler(handler2);
-
-    form.find('Field[name="article"] Input').prop('onFinish')();
-    expect(handler1).toHaveBeenLastCalledWith('/article', '/article');
-    expect(handler2).toHaveBeenLastCalledWith('/article', '/article');
-});
-
-test('Call finish handlers with dataPath and schemaPath when a block field has finished being edited', () => {
-    const handler1 = jest.fn();
-    const handler2 = jest.fn();
-
-    const resourceStore = new ResourceStore('snippet', '1');
-    resourceStore.data = {
-        block: [
-            {
-                text: 'Test',
-                type: 'default',
-            },
-        ],
-    };
-
-    const store = new ResourceFormStore(resourceStore, 'snippet');
-    // $FlowFixMe
-    store.schema = {
-        block: {
-            defaultType: 'default',
-            type: 'block',
-            types: {
-                default: {
-                    form: {
-                        text: {
-                            type: 'text_line',
-                        },
-                    },
-                    title: 'Default',
-                },
-            },
-        },
-    };
-
-    const form = mount(<Form onSubmit={jest.fn()} store={store} />);
-    form.instance().formInspector.addFinishFieldHandler(handler1);
-    form.instance().formInspector.addFinishFieldHandler(handler2);
-    form.find('SortableBlockList').prop('onExpand')(0);
-    form.update();
-    form.find('SortableBlock Field').at(0).instance().handleFinish();
-    expect(handler1).toHaveBeenCalledWith('/block/0/text', '/block/types/default/form/text');
-    expect(handler1).toHaveBeenCalledWith('/block', '/block');
-    expect(handler2).toHaveBeenCalledWith('/block/0/text', '/block/types/default/form/text');
-    expect(handler2).toHaveBeenCalledWith('/block', '/block');
+    expect(handler1).toHaveBeenLastCalledWith(dataPath, schemaPath);
+    expect(handler2).toHaveBeenLastCalledWith(dataPath, schemaPath);
 });
 
 test('Should pass data, onSuccess, router and schema to Renderer', () => {
@@ -374,13 +316,13 @@ test('Should pass data, onSuccess, router and schema to Renderer', () => {
     const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
     const successSpy = jest.fn();
 
-    // $FlowFixMe
     store.schema = {};
     store.data.title = 'Title';
     store.data.description = 'Description';
-    const form = shallow(<Form onSubmit={jest.fn()} onSuccess={successSpy} router={router} store={store} />);
 
-    expect(form.find('Renderer').props()).toEqual(expect.objectContaining({
+    renderForm(store, {onSubmit: jest.fn(), onSuccess: successSpy, router});
+
+    expect(getRendererProps()).toEqual(expect.objectContaining({
         data: store.data,
         onSuccess: successSpy,
         router,
@@ -388,185 +330,127 @@ test('Should pass data, onSuccess, router and schema to Renderer', () => {
         value: store.data,
     }));
 
-    const formInspector = form.find('Renderer').prop('formInspector');
+    const formInspector = getRendererProps().formInspector;
     expect(formInspector.resourceKey).toEqual('snippet');
     expect(formInspector.id).toEqual('1');
 });
 
 test('Should pass showAllErrors flag to Renderer when form has been submitted', () => {
     const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
-    const form = mount(<Form onSubmit={jest.fn()} store={store} />);
+    const {formRef} = renderForm(store, {onSubmit: jest.fn()});
 
-    expect(form.find('Renderer').prop('showAllErrors')).toEqual(false);
-    form.find(Form).instance().submit();
-    form.update();
-    expect(form.find('Renderer').prop('showAllErrors')).toEqual(true);
+    expect(getRendererProps().showAllErrors).toEqual(false);
+
+    act(() => {
+        formRef.current.submit();
+    });
+
+    expect(getRendererProps().showAllErrors).toEqual(true);
 });
 
 test('Should change data on store when changed', () => {
     const submitSpy = jest.fn();
     const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
-    const form = shallow(<Form onSubmit={submitSpy} store={store} />);
 
-    form.find('Renderer').props().onChange('field', 'value', {isDefaultValue: true});
+    renderForm(store, {onSubmit: submitSpy});
+
+    act(() => {
+        getRendererProps().onChange('field', 'value', {isDefaultValue: true});
+    });
+
     expect(store.change).toBeCalledWith('field', 'value', {isDefaultValue: true});
-});
-
-test('Should change data on store without sections', () => {
-    const submitSpy = jest.fn();
-    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
-    // $FlowFixMe
-    store.schema = {
-        section1: {
-            label: 'Section 1',
-            type: 'section',
-            items: {
-                item11: {
-                    label: 'Item 1.1',
-                    type: 'text_line',
-                },
-                section11: {
-                    label: 'Section 1.1',
-                    type: 'section',
-                },
-            },
-        },
-        section2: {
-            label: 'Section 2',
-            type: 'section',
-            items: {
-                item21: {
-                    label: 'Item 2.1',
-                    type: 'text_line',
-                },
-            },
-        },
-    };
-
-    const form = mount(<Form onSubmit={submitSpy} store={store} />);
-    form.find('Input').at(0).props().onChange('value!');
-
-    expect(store.change).toBeCalledWith('item11', 'value!', undefined);
 });
 
 test('Should show a GhostDialog if the current locale is not translated', () => {
     const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('de')});
     resourceStore.data.availableLocales = ['en'];
     const formStore = new ResourceFormStore(resourceStore, 'snippet');
-    const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
-    expect(form.find('GhostDialog').prop('open')).toEqual(true);
+    renderForm(formStore, {onSubmit: jest.fn()});
+
+    expect(getGhostDialogProps().open).toEqual(true);
 });
 
 test('Should not show a GhostDialog if the current locale is translated', () => {
     const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('en')});
     resourceStore.data.availableLocales = ['en'];
     const formStore = new ResourceFormStore(resourceStore, 'snippet');
-    const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
-    expect(form.find('GhostDialog').prop('open')).toEqual(false);
+    renderForm(formStore, {onSubmit: jest.fn()});
+
+    expect(getGhostDialogProps().open).toEqual(false);
 });
 
 test('Should show a GhostDialog after the locale has been switched to a non-translated one', () => {
     const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('en')});
     resourceStore.data.availableLocales = ['en'];
     const formStore = new ResourceFormStore(resourceStore, 'snippet');
-    const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
-    expect(form.find('GhostDialog').prop('open')).toEqual(false);
+    renderForm(formStore, {onSubmit: jest.fn()});
+
+    expect(getGhostDialogProps().open).toEqual(false);
 
     const {locale} = resourceStore.observableOptions;
     if (!locale) {
         throw new Error('The "locale" must be set!');
     }
-    locale.set('de');
 
-    form.update();
-    expect(form.find('GhostDialog').prop('open')).toEqual(true);
+    act(() => {
+        locale.set('de');
+    });
+
+    expect(getGhostDialogProps().open).toEqual(true);
 });
 
 test('Should not show a GhostDialog if the entity does not exist yet', () => {
     const resourceStore = new ResourceStore('snippet', undefined, {locale: observable.box('en')});
     resourceStore.data.availableLocales = ['en'];
     const formStore = new ResourceFormStore(resourceStore, 'snippet');
-    const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
-    expect(form.find('GhostDialog')).toHaveLength(0);
+    renderForm(formStore, {onSubmit: jest.fn()});
+
+    expect(GhostDialogMock).not.toBeCalled();
 });
 
 test('Should not show a GhostDialog if the entity is not translatable', () => {
     const resourceStore = new ResourceStore('snippet', '1');
     const formStore = new ResourceFormStore(resourceStore, 'snippet');
-    const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
-    expect(form.find('GhostDialog')).toHaveLength(0);
+    renderForm(formStore, {onSubmit: jest.fn()});
+
+    expect(GhostDialogMock).not.toBeCalled();
 });
 
-test('Should show a GhostDialog and copy the content if the confirm button is clicked', (resolve) => {
-    metadataStore.getSchema.mockReturnValue(Promise.resolve(FORM));
-    metadataStore.getJsonSchema.mockReturnValue(Promise.resolve({}));
-
+test('Should show a GhostDialog and copy the content if the confirm button is clicked', () => {
     const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('de')});
     resourceStore.data.availableLocales = ['en'];
     resourceStore.loading = false;
     const formStore = new ResourceFormStore(resourceStore, 'snippet');
-    const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
-    // $FlowFixMe
-    metadataStore.getSchema().then(() => {
-        setTimeout(() => {
-            form.find('GhostDialog').update();
+    renderForm(formStore, {onSubmit: jest.fn()});
 
-            form.find('GhostDialog SingleSelect').at(0).prop('onChange')('en');
-            expect(form.find('GhostDialog').prop('open')).toEqual(true);
-            form.find('GhostDialog Button[skin="primary"]').simulate('click');
-            expect(form.find('GhostDialog').prop('open')).toEqual(false);
-
-            expect(formStore.copyFromLocale).toBeCalledWith('en', {});
-
-            resolve();
-        }, 1);
+    act(() => {
+        getGhostDialogProps().onConfirm('en', {});
     });
+
+    expect(getGhostDialogProps().open).toEqual(false);
+    expect(formStore.copyFromLocale).toBeCalledWith('en', {});
 });
 
-test('Should show a GhostDialog and copy the content if the confirm button is clicked (with additional fields)', (resolve) => { // eslint-disable-line max-len
-    const formMetadata = {
-        ...FORM,
-        title: {
-            label: 'Test',
-            disabledCondition: null,
-            visibleCondition: null,
-            description: '',
-            type: 'text_line',
-            colSpan: 6,
-        },
-    };
-    metadataStore.getSchema.mockReturnValue(Promise.resolve(formMetadata));
-    metadataStore.getJsonSchema.mockReturnValue(Promise.resolve({}));
-
+test('Should show a GhostDialog and copy additional fields on confirm', () => {
     const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('de')});
     resourceStore.data.availableLocales = ['en'];
-    resourceStore.loading = false;
     const formStore = new ResourceFormStore(resourceStore, 'snippet');
-    const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
-    // $FlowFixMe
-    metadataStore.getSchema().then(() => {
-        setTimeout(() => {
-            form.find('GhostDialog').update();
+    renderForm(formStore, {onSubmit: jest.fn()});
 
-            form.find('GhostDialog Input').at(0).prop('onChange')('Test 123');
-            form.find('GhostDialog SingleSelect').at(0).prop('onChange')('en');
-            expect(form.find('GhostDialog').prop('open')).toEqual(true);
-            form.find('GhostDialog Button[skin="primary"]').simulate('click');
-            expect(form.find('GhostDialog').prop('open')).toEqual(false);
+    act(() => {
+        getGhostDialogProps().onConfirm('en', {title: 'Test 123'});
+    });
 
-            expect(formStore.copyFromLocale).toBeCalledWith('en', {
-                title: 'Test 123',
-            });
-
-            resolve();
-        }, 1);
+    expect(getGhostDialogProps().open).toEqual(false);
+    expect(formStore.copyFromLocale).toBeCalledWith('en', {
+        title: 'Test 123',
     });
 });
 
@@ -574,12 +458,16 @@ test('Should show a GhostDialog and do nothing if the cancel button is clicked',
     const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('de')});
     resourceStore.data.availableLocales = ['en'];
     const formStore = new ResourceFormStore(resourceStore, 'snippet');
-    const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
-    expect(form.find('GhostDialog').prop('open')).toEqual(true);
-    form.find('GhostDialog Button[skin="secondary"]').simulate('click');
-    expect(form.find('GhostDialog').prop('open')).toEqual(false);
+    renderForm(formStore, {onSubmit: jest.fn()});
 
+    expect(getGhostDialogProps().open).toEqual(true);
+
+    act(() => {
+        getGhostDialogProps().onCancel();
+    });
+
+    expect(getGhostDialogProps().open).toEqual(false);
     expect(formStore.copyFromLocale).not.toBeCalled();
 });
 
@@ -588,28 +476,29 @@ test('Should not show a GhostDialog if the resourceStore is currently loading', 
     resourceStore.data.availableLocales = ['en'];
     resourceStore.loading = true;
     const formStore = new ResourceFormStore(resourceStore, 'snippet');
-    const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
-    expect(form.instance().displayGhostDialog).toEqual(false);
+    renderForm(formStore, {onSubmit: jest.fn()});
+
+    expect(GhostDialogMock).not.toBeCalled();
 });
 
 test('Should set the type of the formStore to selected value in MissingTypeDialog', () => {
     const onMissingTypeCancelSpy = jest.fn();
 
     const resourceStore = new ResourceStore('snippet', '1');
-    const formStore = new ResourceFormStore(resourceStore, 'snippet');
-    // $FlowFixMe
+    const formStore: any = new ResourceFormStore(resourceStore, 'snippet');
     formStore.hasInvalidType = true;
     formStore.types = {
         default: {key: 'default', title: 'Default'},
     };
 
-    const form = mount(<Form onMissingTypeCancel={onMissingTypeCancelSpy} onSubmit={jest.fn()} store={formStore} />);
+    renderForm(formStore, {onMissingTypeCancel: onMissingTypeCancelSpy, onSubmit: jest.fn()});
 
-    expect(form.find('MissingTypeDialog').prop('open')).toEqual(true);
-    form.find('MissingTypeDialog SingleSelect DisplayValue').simulate('click');
-    form.find('MissingTypeDialog SingleSelect Option button').simulate('click');
-    form.find('MissingTypeDialog Button[skin="primary"]').simulate('click');
+    expect(getMissingTypeDialogProps().open).toEqual(true);
+
+    act(() => {
+        getMissingTypeDialogProps().onConfirm('default');
+    });
 
     expect(onMissingTypeCancelSpy).not.toBeCalledWith();
     expect(formStore.changeType).toBeCalledWith('default');
@@ -619,13 +508,16 @@ test('Should call the onMissingTypeCancel callback if MissingTypeDialog is cance
     const onMissingTypeCancelSpy = jest.fn();
 
     const resourceStore = new ResourceStore('snippet', '1');
-    const formStore = new ResourceFormStore(resourceStore, 'snippet');
-    // $FlowFixMe
+    const formStore: any = new ResourceFormStore(resourceStore, 'snippet');
     formStore.hasInvalidType = true;
-    const form = mount(<Form onMissingTypeCancel={onMissingTypeCancelSpy} onSubmit={jest.fn()} store={formStore} />);
 
-    expect(form.find('MissingTypeDialog').prop('open')).toEqual(true);
-    form.find('MissingTypeDialog Button[skin="secondary"]').simulate('click');
+    renderForm(formStore, {onMissingTypeCancel: onMissingTypeCancelSpy, onSubmit: jest.fn()});
+
+    expect(getMissingTypeDialogProps().open).toEqual(true);
+
+    act(() => {
+        getMissingTypeDialogProps().onCancel();
+    });
 
     expect(onMissingTypeCancelSpy).toBeCalledWith();
 });

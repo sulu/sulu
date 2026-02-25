@@ -1,5 +1,5 @@
 // @flow
-import {createEvent, fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import DisplayValue from '../DisplayValue';
@@ -38,25 +38,25 @@ test('A click on the component should fire the callback and prevent the default'
     const clickSpy = jest.fn();
 
     render(<DisplayValue onClick={clickSpy}>My value</DisplayValue>);
-    const display = screen.queryByRole('button');
-    const event = createEvent.click(display);
+    const display = screen.getByRole('button');
 
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent(display, event);
+    const event = new MouseEvent('click', {bubbles: true, cancelable: true});
+    display.dispatchEvent(event);
 
     expect(clickSpy).toBeCalled();
     expect(event.defaultPrevented).toBe(true);
 });
 
-test('A click on the component should not fire the callback when disabled', () => {
+test('A click on the component should not fire the callback when disabled', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
 
     render(<DisplayValue disabled={true} onClick={clickSpy}>My value</DisplayValue>);
     const display = screen.queryByRole('button');
 
-    return userEvent.click(display).then(() => {
-        expect(clickSpy).not.toBeCalled();
-    });
+    await user.click(display);
+
+    expect(clickSpy).not.toBeCalled();
 });
 
 test('The component should use the CroppedText component to cut long texts', () => {

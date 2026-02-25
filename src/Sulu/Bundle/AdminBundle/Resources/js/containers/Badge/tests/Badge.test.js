@@ -1,6 +1,6 @@
 // @flow
-import {mount} from 'enzyme';
 import React from 'react';
+import {render, screen} from '@testing-library/react';
 import Router from '../../../services/Router';
 import Requester from '../../../services/Requester';
 import Badge from '../Badge';
@@ -25,31 +25,39 @@ jest.mock('../../../services/Router', () => jest.fn(function() {
     };
 }));
 
-test('Should create new BadgeStore', () => {
+const createBadgeProps = (props: Object = {}) => {
     const router = new Router({});
 
+    return {
+        dataPath: '/data',
+        requestParameters: {
+            limit: 0,
+        },
+        routeName: 'foo',
+        router,
+        routerAttributesToRequest: {
+            id: 'entityId',
+            locale: 'locale',
+        },
+        tabViewRoute,
+        visibleCondition: 'value != 0',
+        ...props,
+    };
+};
+
+test('Should create new BadgeStore', () => {
     const promise = Promise.resolve({data: 'foo'});
     Requester.get.mockReturnValue(promise);
     Requester.handleResponseHooks = [];
 
-    const badge = mount(
-        <Badge
-            dataPath="/data"
-            requestParameters={{
-                limit: 0,
-            }}
-            routeName="foo"
-            router={router}
-            routerAttributesToRequest={{
-                id: 'entityId',
-                locale: 'locale',
-            }}
-            tabViewRoute={tabViewRoute}
-            visibleCondition="value != 0"
-        />
-    );
+    const ref: any = React.createRef();
+    render(<Badge {...createBadgeProps()} ref={ref} />);
 
-    const store = badge.instance().store;
+    if (!ref.current) {
+        throw new Error('Expected Badge ref to be set');
+    }
+
+    const store = ref.current.store;
 
     expect(store).toBeInstanceOf(BadgeStore);
     expect(store.routeName).toBe('foo');
@@ -69,62 +77,27 @@ test('Should create new BadgeStore', () => {
 });
 
 test('Should pass correct props to badge component', () => {
-    const router = new Router({});
-
     const promise = Promise.resolve('hello');
     Requester.get.mockReturnValue(promise);
     Requester.handleResponseHooks = [];
 
-    const badge = mount(
-        <Badge
-            dataPath={null}
-            requestParameters={{
-                limit: 0,
-            }}
-            routeName="foo"
-            router={router}
-            routerAttributesToRequest={{
-                id: 'entityId',
-                locale: 'locale',
-            }}
-            tabViewRoute={tabViewRoute}
-            visibleCondition="value != 0"
-        />
-    );
+    const badgeProps = createBadgeProps({dataPath: null});
+    render(<Badge {...badgeProps} />);
 
-    return promise.then(() => {
-        badge.update();
-        expect(badge.children().find('Badge').length).toBe(1);
-        expect(badge.children().find('Badge').text()).toBe('hello');
+    return promise.then(async() => {
+        expect(await screen.findByText('hello')).toBeInTheDocument();
     });
 });
 
 test('Should not render Badge component if visibleCondition fails', () => {
-    const router = new Router({});
-
     const promise = Promise.resolve({data: 0});
     Requester.get.mockReturnValue(promise);
     Requester.handleResponseHooks = [];
 
-    const badge = mount(
-        <Badge
-            dataPath="/data"
-            requestParameters={{
-                limit: 0,
-            }}
-            routeName="foo"
-            router={router}
-            routerAttributesToRequest={{
-                id: 'entityId',
-                locale: 'locale',
-            }}
-            tabViewRoute={tabViewRoute}
-            visibleCondition="value != 0"
-        />
-    );
+    const badgeProps = createBadgeProps();
+    render(<Badge {...badgeProps} />);
 
     return promise.then(() => {
-        badge.update();
-        expect(badge.children().find('Badge').length).toBe(0);
+        expect(screen.queryByText('0')).not.toBeInTheDocument();
     });
 });

@@ -1,28 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The popover should render in body when open 1`] = `
-Array [
-  <div
-    class="backdrop fixed"
-    data-testid="backdrop"
-    role="button"
-  />,
-  <div
-    class="container"
-  >
+<body>
+  <div />
+  <div>
     <div
-      style="top: 1px; left: 2px; max-height: 30px; position: fixed; pointer-events: auto;"
+      class="backdrop fixed"
+      data-testid="backdrop"
+      role="button"
+    />
+    <div
+      class="container"
     >
-      <div>
-        My item 1
-      </div>
-      <div>
-        My item 2
-      </div>
-      <div>
-        My item 3
+      <div
+        data-testid="popover-content"
+        style="top: 1px; left: 2px; max-height: 30px; position: fixed; pointer-events: auto;"
+      >
+        <div>
+          My item 1
+        </div>
+        <div>
+          My item 2
+        </div>
+        <div>
+          My item 3
+        </div>
       </div>
     </div>
-  </div>,
-]
+  </div>
+</body>
 `;

@@ -1,15 +1,27 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
+import getLatestMockProps from '../../../../utils/TestHelper/getLatestMockProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import Select from '../../fields/Select';
+import MultiSelectComponent from '../../../../components/MultiSelect';
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
+jest.mock('../../../../components/MultiSelect', () => {
+    const MultiSelect: any = jest.fn(() => null);
+    MultiSelect.Option = jest.fn(() => null);
+
+    return MultiSelect;
+});
+
+beforeEach(() => {
+    ((MultiSelectComponent: any): {mockClear: () => void}).mockClear();
+});
 
 test('Pass props correctly to Select', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
@@ -28,7 +40,7 @@ test('Pass props correctly to Select', () => {
             ],
         },
     };
-    const select = shallow(
+    render(
         <Select
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -38,13 +50,15 @@ test('Pass props correctly to Select', () => {
         />
     );
 
-    expect(select.prop('values')).toEqual(['test']);
-    expect(select.prop('disabled')).toBe(true);
-    expect(select.find('Option').at(0).props()).toEqual(expect.objectContaining({
+    const selectProps: any = getLatestMockProps((MultiSelectComponent: any));
+    const options = selectProps.children;
+    expect(selectProps.values).toEqual(['test']);
+    expect(selectProps.disabled).toBe(true);
+    expect(options[0].props).toEqual(expect.objectContaining({
         value: 'mr',
         children: 'Mister',
     }));
-    expect(select.find('Option').at(1).props()).toEqual(expect.objectContaining({
+    expect(options[1].props).toEqual(expect.objectContaining({
         value: 'ms',
         children: 'Miss',
     }));
@@ -72,7 +86,7 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
         },
     };
 
-    expect(() => shallow(
+    expect(() => render(
         <Select
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -99,7 +113,7 @@ test('Should throw an exception if value is of wrong type', () => {
         },
     };
 
-    expect(() => shallow(
+    expect(() => render(
         <Select
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -128,7 +142,7 @@ test('Should call onChange with undefined if value is changed to an empty array'
         },
     };
 
-    const select = shallow(
+    render(
         <Select
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -138,7 +152,8 @@ test('Should call onChange with undefined if value is changed to an empty array'
         />
     );
 
-    select.simulate('change', []);
+    const selectProps: any = getLatestMockProps((MultiSelectComponent: any));
+    selectProps.onChange([]);
 
     expect(changeSpy).toBeCalledWith(undefined);
     expect(finishSpy).toBeCalledWith();
@@ -164,7 +179,7 @@ test('Should call onChange with allowed values only if value contains old values
         },
     };
 
-    const select = shallow(
+    render(
         <Select
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -174,7 +189,8 @@ test('Should call onChange with allowed values only if value contains old values
         />
     );
 
-    select.simulate('change', ['mr', 'removed-value']);
+    const selectProps: any = getLatestMockProps((MultiSelectComponent: any));
+    selectProps.onChange(['mr', 'removed-value']);
 
     expect(changeSpy).toBeCalledWith(['mr']);
     expect(finishSpy).toBeCalledWith();
@@ -199,7 +215,7 @@ test('Should call onFinish callback on every onChange', () => {
         },
     };
 
-    const select = shallow(
+    render(
         <Select
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -208,7 +224,8 @@ test('Should call onFinish callback on every onChange', () => {
         />
     );
 
-    select.simulate('change', []);
+    const selectProps: any = getLatestMockProps((MultiSelectComponent: any));
+    selectProps.onChange([]);
 
     expect(finishSpy).toBeCalledWith();
 });
@@ -234,7 +251,7 @@ test('Set default value of null should not call onChange', () => {
             ],
         },
     };
-    shallow(
+    render(
         <Select
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -268,7 +285,7 @@ test('Set default value if no value is passed', () => {
             ],
         },
     };
-    shallow(
+    render(
         <Select
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -302,7 +319,7 @@ test('Set default value to a number of 0 should work', () => {
             ],
         },
     };
-    shallow(
+    render(
         <Select
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -316,7 +333,7 @@ test('Set default value to a number of 0 should work', () => {
 
 test('Throw error if no value option is passed', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    expect(() => shallow(
+    expect(() => render(
         <Select
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -326,7 +343,7 @@ test('Throw error if no value option is passed', () => {
 
 test('Throw error if value option with wrong is passed', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    expect(() => shallow(
+    expect(() => render(
         <Select
             {...fieldTypeDefaultProps}
             formInspector={formInspector}

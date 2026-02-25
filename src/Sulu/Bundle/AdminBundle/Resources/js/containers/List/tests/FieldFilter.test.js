@@ -1,239 +1,148 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {render, screen, within} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import bindValueToOnChange from '../../../utils/TestHelper/bindValueToOnChange';
 import FieldFilter from '../FieldFilter';
-import listFieldFilterTypeRegistry from '../registries/listFieldFilterTypeRegistry';
 
-jest.mock('../registries/listFieldFilterTypeRegistry', () => ({
-    get: jest.fn(),
-    getOptions: jest.fn().mockReturnValue({}),
-}));
+jest.mock('../registries/listFieldFilterTypeRegistry', () => {
+    const TextFieldFilterType = jest.requireActual('../fieldFilterTypes/TextFieldFilterType').default;
+
+    return {
+        get: jest.fn(() => TextFieldFilterType),
+        getOptions: jest.fn(() => ({})),
+    };
+});
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-test('Render empty FieldFilter', () => {
-    const schema = {};
-    const value = {};
-
-    expect(render(<FieldFilter fields={schema} onChange={jest.fn()} value={value} />)).toMatchSnapshot();
-});
-
-test('Render FieldFilter with schema and value', () => {
-    const schema = {
-        firstName: {
-            filterType: 'text',
-            filterTypeParameters: {test: 'value'},
-            transformerTypeParameters: {},
-            label: 'First name',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-        lastName: {
-            filterType: 'text',
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Last name',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
-
-    const value = {
-        firstName: undefined,
-        lastName: undefined,
-    };
-
-    const fieldFilter = shallow(<FieldFilter fields={schema} onChange={jest.fn()} value={value} />);
-    expect(fieldFilter.find('FieldFilterItem')).toHaveLength(2);
-    expect(fieldFilter.find('FieldFilterItem').at(0).props()).toEqual(expect.objectContaining({
-        column: 'firstName',
-        filterType: 'text',
-        filterTypeParameters: {test: 'value'},
-        label: 'First name',
-        value: undefined,
-    }));
-    expect(fieldFilter.find('FieldFilterItem').at(1).props()).toEqual(expect.objectContaining({
-        column: 'lastName',
+const schema = {
+    firstName: {
         filterType: 'text',
         filterTypeParameters: null,
+        transformerTypeParameters: {},
+        label: 'First name',
+        sortable: true,
+        type: 'string',
+        visibility: 'yes',
+    },
+    lastName: {
+        filterType: 'text',
+        filterTypeParameters: null,
+        transformerTypeParameters: {},
         label: 'Last name',
-        value: undefined,
-    }));
+        sortable: true,
+        type: 'string',
+        visibility: 'yes',
+    },
+};
+
+beforeEach(() => {
+    jest.clearAllMocks();
 });
 
-test('Show filter options in disabled state if a filter for them was already added', () => {
-    listFieldFilterTypeRegistry.get.mockReturnValue(class {
-        getFormNode = jest.fn();
-        getValueNode = jest.fn();
-        setValue = jest.fn();
-    });
+const getFilterMenuButton = () => {
+    const button = document.querySelector('.filterButton button');
 
-    const changeSpy = jest.fn();
+    if (!(button instanceof HTMLButtonElement)) {
+        throw new Error('Expected filter menu button to be rendered');
+    }
 
-    const schema = {
-        firstName: {
-            filterType: 'text',
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'First name',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-        lastName: {
-            filterType: 'text',
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Last name',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
+    return button;
+};
 
-    const value = {
-        firstName: undefined,
-    };
+test('Render empty FieldFilter', () => {
+    render(<FieldFilter fields={{}} onChange={jest.fn()} value={{}} />);
 
-    const fieldFilter = mount(<FieldFilter fields={schema} onChange={changeSpy} value={value} />);
-
-    fieldFilter.find('Button[icon="su-filter"]').simulate('click');
-
-    expect(fieldFilter.find('ArrowMenu Action[value="firstName"]').prop('disabled')).toEqual(true);
-    expect(fieldFilter.find('ArrowMenu Action[value="lastName"]').prop('disabled')).toEqual(false);
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
 });
 
-test('Call onChange with new filter chip when Action in ArrowMenu was clicked', () => {
-    listFieldFilterTypeRegistry.get.mockReturnValue(class {
-        getFormNode = jest.fn();
-        getValueNode = jest.fn();
-        setValue = jest.fn();
-    });
+test('Render FieldFilter with schema and value', async() => {
+    render(
+        <FieldFilter
+            fields={{
+                ...schema,
+                firstName: {
+                    ...schema.firstName,
+                    filterTypeParameters: {test: 'value'},
+                },
+            }}
+            onChange={jest.fn()}
+            value={{
+                firstName: undefined,
+                lastName: undefined,
+            }}
+        />
+    );
 
+    expect(await screen.findByRole('button', {name: /First name:/})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: /Last name:/})).toBeInTheDocument();
+});
+
+test('Show filter options in disabled state if a filter for them was already added', async() => {
+    const user = userEvent.setup();
+    render(
+        <FieldFilter
+            fields={schema}
+            onChange={jest.fn()}
+            value={{firstName: undefined}}
+        />
+    );
+
+    await user.click(getFilterMenuButton());
+    expect(screen.getByRole('button', {name: 'First name'})).toBeDisabled();
+    expect(screen.getByRole('button', {name: 'Last name'})).toBeEnabled();
+});
+
+test('Call onChange with new filter chip when Action in ArrowMenu was clicked', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
+    render(
+        <FieldFilter
+            fields={schema}
+            onChange={changeSpy}
+            value={{firstName: undefined}}
+        />
+    );
 
-    const schema = {
-        firstName: {
-            filterType: 'text',
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'First name',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-        lastName: {
-            filterType: 'text',
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Last name',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
-
-    const value = {
-        firstName: undefined,
-    };
-
-    const fieldFilter = mount(<FieldFilter fields={schema} onChange={changeSpy} value={value} />);
-    fieldFilter.find('Button[icon="su-filter"]').simulate('click');
-    fieldFilter.find('ArrowMenu Action[value="lastName"]').simulate('click');
+    await user.click(getFilterMenuButton());
+    await user.click(screen.getByRole('button', {name: 'Last name'}));
 
     expect(changeSpy).toBeCalledWith({firstName: undefined, lastName: undefined});
 });
 
-test('Call onChange with new filter value when onChange from FieldFilterItem is called', () => {
-    listFieldFilterTypeRegistry.get.mockReturnValue(class {
-        getFormNode = jest.fn();
-        getValueNode = jest.fn();
-        setValue = jest.fn();
-    });
-
+test('Call onChange with new filter value when onChange from FieldFilterItem is called', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
+    render(bindValueToOnChange(
+        <FieldFilter fields={schema} onChange={changeSpy} value={{firstName: undefined}} />
+    ));
 
-    const schema = {
-        firstName: {
-            filterType: 'text',
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'First name',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-        lastName: {
-            filterType: 'text',
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Last name',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
+    await user.click(await screen.findByRole('button', {name: /First name:/}));
+    await user.type(screen.getByRole('textbox'), 'Max');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
 
-    const value = {
-        firstName: undefined,
-    };
-
-    const fieldFilter = mount(<FieldFilter fields={schema} onChange={changeSpy} value={value} />);
-
-    expect(fieldFilter.find('FieldFilterItem[column="firstName"]').prop('open')).toEqual(false);
-    fieldFilter.find('FieldFilterItem[column="firstName"]').prop('onClick')('firstName');
-    fieldFilter.update();
-    expect(fieldFilter.find('FieldFilterItem[column="firstName"]').prop('open')).toEqual(true);
-
-    fieldFilter.find('FieldFilterItem[column="firstName"]').prop('onChange')('firstName', 'Max');
-
-    fieldFilter.update();
-    expect(changeSpy).toBeCalledWith({firstName: 'Max'});
-    expect(fieldFilter.find('FieldFilterItem[column="firstName"]').prop('open')).toEqual(false);
+    expect(changeSpy).toHaveBeenLastCalledWith({firstName: {eq: 'Max'}});
 });
 
-test('Call onChange without filter chip for which delete icon was clicked', () => {
-    listFieldFilterTypeRegistry.get.mockReturnValue(class {
-        getFormNode = jest.fn();
-        getValueNode = jest.fn();
-        setValue = jest.fn();
-    });
-
+test('Call onChange without filter chip for which delete icon was clicked', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
+    render(
+        <FieldFilter
+            fields={schema}
+            onChange={changeSpy}
+            value={{
+                firstName: {eq: 'First Name'},
+                lastName: {eq: 'Last Name'},
+            }}
+        />
+    );
 
-    const schema = {
-        firstName: {
-            filterType: 'text',
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'First name',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-        lastName: {
-            filterType: 'text',
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Last name',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
+    const lastNameChip = await screen.findByRole('button', {name: /Last name: Last Name/});
+    await user.click(within(lastNameChip).getByRole('button', {name: 'su-times'}));
 
-    const value = {
-        firstName: 'First Name',
-        lastName: 'Last Name',
-    };
-
-    const fieldFilter = mount(<FieldFilter fields={schema} onChange={changeSpy} value={value} />);
-
-    fieldFilter.find('Chip[value="lastName"] Icon[name="su-times"]').simulate('click');
-
-    expect(changeSpy).toBeCalledWith({firstName: 'First Name'});
+    expect(changeSpy).toBeCalledWith({firstName: {eq: 'First Name'}});
 });

@@ -1,6 +1,7 @@
 // @flow
-import {render, shallow} from 'enzyme';
 import React from 'react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import BlockToolbar from '../BlockToolbar';
 import {setTranslations} from '../../../utils/Translator/Translator';
 
@@ -11,31 +12,37 @@ setTranslations({
     'sulu_admin.cancel': 'Cancel',
 }, 'en');
 
-test('Render a Breadcrumb', () => {
-    const blockToolbar = render(
+const createActions = (overrides: any = {}) => ([
+    {
+        label: 'Copy',
+        icon: 'su-copy',
+        handleClick: jest.fn(),
+        ...overrides.copy,
+    },
+    {
+        label: 'Duplicate',
+        icon: 'su-duplicate',
+        handleClick: jest.fn(),
+        ...overrides.duplicate,
+    },
+    {
+        label: 'Cut',
+        icon: 'su-cut',
+        handleClick: jest.fn(),
+        ...overrides.cut,
+    },
+    {
+        label: 'Delete',
+        icon: 'su-trash-alt',
+        handleClick: jest.fn(),
+        ...overrides.delete,
+    },
+]);
+
+test('Render a BlockToolbar', () => {
+    const {container} = render(
         <BlockToolbar
-            actions={[
-                {
-                    label: 'Copy',
-                    icon: 'su-copy',
-                    handleClick: jest.fn(),
-                },
-                {
-                    label: 'Duplicate',
-                    icon: 'su-duplicate',
-                    handleClick: jest.fn(),
-                },
-                {
-                    label: 'Cut',
-                    icon: 'su-cut',
-                    handleClick: jest.fn(),
-                },
-                {
-                    label: 'Delete',
-                    icon: 'su-trash-alt',
-                    handleClick: jest.fn(),
-                },
-            ]}
+            actions={createActions()}
             allSelected={true}
             onCancel={jest.fn()}
             onSelectAll={jest.fn()}
@@ -43,35 +50,16 @@ test('Render a Breadcrumb', () => {
             selectedCount={2}
         />
     );
-    expect(blockToolbar).toMatchSnapshot();
+
+    expect(container).toMatchSnapshot();
 });
 
-test('Click cancel button', () => {
+test('Click cancel button', async() => {
     const clickSpy = jest.fn();
-    const blockToolbar = shallow(
+
+    render(
         <BlockToolbar
-            actions={[
-                {
-                    label: 'Copy',
-                    icon: 'su-copy',
-                    handleClick: jest.fn(),
-                },
-                {
-                    label: 'Duplicate',
-                    icon: 'su-duplicate',
-                    handleClick: jest.fn(),
-                },
-                {
-                    label: 'Cut',
-                    icon: 'su-cut',
-                    handleClick: jest.fn(),
-                },
-                {
-                    label: 'Delete',
-                    icon: 'su-trash-alt',
-                    handleClick: jest.fn(),
-                },
-            ]}
+            actions={createActions()}
             allSelected={true}
             onCancel={clickSpy}
             onSelectAll={jest.fn()}
@@ -80,38 +68,17 @@ test('Click cancel button', () => {
         />
     );
 
-    expect(blockToolbar.find('button').last().text()).toBe('<Icon />Cancel');
-    blockToolbar.find('button').last().simulate('click');
+    await userEvent.click(screen.getByRole('button', {name: /Cancel/}));
 
     expect(clickSpy).toHaveBeenCalled();
 });
 
-test('Click action button', () => {
+test('Click action button', async() => {
     const clickSpy = jest.fn();
-    const blockToolbar = shallow(
+
+    render(
         <BlockToolbar
-            actions={[
-                {
-                    label: 'Copy',
-                    icon: 'su-copy',
-                    handleClick: clickSpy,
-                },
-                {
-                    label: 'Duplicate',
-                    icon: 'su-duplicate',
-                    handleClick: jest.fn(),
-                },
-                {
-                    label: 'Cut',
-                    icon: 'su-cut',
-                    handleClick: jest.fn(),
-                },
-                {
-                    label: 'Delete',
-                    icon: 'su-trash-alt',
-                    handleClick: jest.fn(),
-                },
-            ]}
+            actions={createActions({copy: {handleClick: clickSpy}})}
             allSelected={true}
             onCancel={jest.fn()}
             onSelectAll={jest.fn()}
@@ -120,37 +87,17 @@ test('Click action button', () => {
         />
     );
 
-    blockToolbar.find('button').at(0).simulate('click');
+    await userEvent.click(screen.getByRole('button', {name: 'Copy'}));
 
     expect(clickSpy).toHaveBeenCalled();
 });
 
-test('Click select all button', () => {
+test('Click select all button', async() => {
     const clickSpy = jest.fn();
-    const blockToolbar = shallow(
+
+    render(
         <BlockToolbar
-            actions={[
-                {
-                    label: 'Copy',
-                    icon: 'su-copy',
-                    handleClick: jest.fn(),
-                },
-                {
-                    label: 'Duplicate',
-                    icon: 'su-duplicate',
-                    handleClick: jest.fn(),
-                },
-                {
-                    label: 'Cut',
-                    icon: 'su-cut',
-                    handleClick: jest.fn(),
-                },
-                {
-                    label: 'Delete',
-                    icon: 'su-trash-alt',
-                    handleClick: jest.fn(),
-                },
-            ]}
+            actions={createActions()}
             allSelected={false}
             onCancel={jest.fn()}
             onSelectAll={clickSpy}
@@ -159,37 +106,17 @@ test('Click select all button', () => {
         />
     );
 
-    blockToolbar.find('Checkbox').at(0).simulate('change');
+    await userEvent.click(screen.getByRole('checkbox'));
 
     expect(clickSpy).toHaveBeenCalled();
 });
 
-test('Click un select all button', () => {
+test('Click un select all button', async() => {
     const clickSpy = jest.fn();
-    const blockToolbar = shallow(
+
+    render(
         <BlockToolbar
-            actions={[
-                {
-                    label: 'Copy',
-                    icon: 'su-copy',
-                    handleClick: jest.fn(),
-                },
-                {
-                    label: 'Duplicate',
-                    icon: 'su-duplicate',
-                    handleClick: jest.fn(),
-                },
-                {
-                    label: 'Cut',
-                    icon: 'su-cut',
-                    handleClick: jest.fn(),
-                },
-                {
-                    label: 'Delete',
-                    icon: 'su-trash-alt',
-                    handleClick: jest.fn(),
-                },
-            ]}
+            actions={createActions()}
             allSelected={true}
             onCancel={jest.fn()}
             onSelectAll={jest.fn()}
@@ -198,7 +125,7 @@ test('Click un select all button', () => {
         />
     );
 
-    blockToolbar.find('Checkbox').at(0).simulate('change');
+    await userEvent.click(screen.getByRole('checkbox'));
 
     expect(clickSpy).toHaveBeenCalled();
 });

@@ -1,6 +1,6 @@
 // @flow
-import {render, shallow} from 'enzyme';
 import React from 'react';
+import {act, render} from '@testing-library/react';
 import {observable} from 'mobx';
 import ResourceStore from '../../../stores/ResourceStore';
 import Router from '../../../services/Router';
@@ -9,9 +9,11 @@ import Field from '../Field';
 import fieldRegistry from '../registries/fieldRegistry';
 import FormInspector from '../FormInspector';
 import ResourceFormStore from '../stores/ResourceFormStore';
+import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
 
 beforeEach(() => {
     conditionDataProviderRegistry.clear();
+    jest.clearAllMocks();
 });
 
 jest.mock('../../../services/Router/Router', () => jest.fn());
@@ -37,222 +39,120 @@ jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
-test('Render correct label with correct field type', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-    const successSpy = jest.fn();
+const createFormInspector = () => new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
+const renderField = (props = {}) => {
+    const defaultProps = {
+        data: {},
+        dataPath: '',
+        formInspector: createFormInspector(),
+        name: 'test',
+        onChange: jest.fn(),
+        onFinish: jest.fn(),
+        onSuccess: undefined,
+        router: undefined,
+        schema: {label: 'label1', type: 'text'},
+        schemaPath: '',
+    };
+
+    return render(<Field {...(defaultProps: any)} {...(props: any)} />);
+};
+
+test('Render correct label with correct field type', () => {
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
     });
-    expect(render(
-        <Field
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            name="test"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSuccess={successSpy}
-            router={undefined}
-            schema={{label: 'label1', type: 'text'}}
-            schemaPath=""
-        />
-    )).toMatchSnapshot();
+    const {asFragment: textFragment} = renderField();
+    expect(textFragment()).toMatchSnapshot();
 
     fieldRegistry.get.mockReturnValue(function DateTime() {
         return <input type="date" />;
     });
-    expect(render(
-        <Field
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            name="test"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSuccess={successSpy}
-            router={undefined}
-            schema={{label: 'label2', type: 'datetime'}}
-            schemaPath=""
-        />
-    )).toMatchSnapshot();
+    const {asFragment: dateFragment} = renderField({schema: {label: 'label2', type: 'datetime'}});
+    expect(dateFragment()).toMatchSnapshot();
 });
 
 test('Render field with correct values for grid', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
     });
-    expect(render(
-        <Field
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            name="test"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={{label: 'label1', type: 'text', colSpan: 8, spaceAfter: 3}}
-            schemaPath=""
-        />
-    )).toMatchSnapshot();
+
+    const {asFragment} = renderField({
+        schema: {label: 'label1', type: 'text', colSpan: 8, spaceAfter: 3},
+    });
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Render a required field with correct field type', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-
+test('Render required field with correct field type', () => {
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
     });
-    expect(render(
-        <Field
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            name="test"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={{label: 'label1', required: true, type: 'text'}}
-            schemaPath=""
-        />
-    )).toMatchSnapshot();
-});
 
-test('Render a field without a label', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-
-    expect(render(
-        <Field
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            name="test"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={{type: 'text'}}
-            schemaPath=""
-        />
-    )).toMatchSnapshot();
-});
-
-test('Render a field with a description', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-
-    expect(render(
-        <Field
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            name="test"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={{
-                description: 'Small description describing the field',
-                label: 'label1',
-                type: 'text',
-            }}
-            schemaPath=""
-        />
-    )).toMatchSnapshot();
-});
-
-test('Render a field with an error', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="text" />;
+    const {asFragment} = renderField({
+        schema: {label: 'label1', required: true, type: 'text'},
     });
-    expect(
-        render(
-            <Field
-                data={{}}
-                dataPath=""
-                error={{keyword: 'minLength', parameters: {}}}
-                formInspector={formInspector}
-                name="test"
-                onChange={jest.fn()}
-                onFinish={jest.fn()}
-                onSuccess={undefined}
-                router={undefined}
-                schema={{label: 'label1', type: 'text'}}
-                schemaPath=""
-            />
-        )
-    ).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Render a field without a const error', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="text" />;
-    });
-    expect(
-        render(
-            <Field
-                data={{}}
-                dataPath=""
-                error={{keyword: 'const', parameters: {}}}
-                formInspector={formInspector}
-                name="test"
-                onChange={jest.fn()}
-                onFinish={jest.fn()}
-                onSuccess={undefined}
-                router={undefined}
-                schema={{label: 'label1', type: 'text'}}
-                schemaPath=""
-            />
-        )
-    ).toMatchSnapshot();
+test('Render field without label', () => {
+    const {asFragment} = renderField({schema: {type: 'text'}});
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Render a field with a error collection', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="text" />;
-    });
-    const error = {
-        ids: {
-            keyword: 'minItems',
-            parameters: {},
+test('Render field with description', () => {
+    const {asFragment} = renderField({
+        schema: {
+            description: 'Small description describing the field',
+            label: 'label1',
+            type: 'text',
         },
-    };
-    expect(
-        render(
-            <Field
-                data={{}}
-                dataPath=""
-                error={error}
-                formInspector={formInspector}
-                name="test"
-                onChange={jest.fn()}
-                onFinish={jest.fn()}
-                onSuccess={undefined}
-                router={undefined}
-                schema={{label: 'label1', type: 'text'}}
-                schemaPath=""
-            />
-        )
-    ).toMatchSnapshot();
+    });
+    expect(asFragment()).toMatchSnapshot();
+});
+
+test('Render field with error', () => {
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="text" />;
+    });
+
+    const {asFragment} = renderField({
+        error: {keyword: 'minLength', parameters: {}},
+    });
+    expect(asFragment()).toMatchSnapshot();
+});
+
+test('Render field without const error', () => {
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="text" />;
+    });
+
+    const {asFragment} = renderField({
+        error: {keyword: 'const', parameters: {}},
+    });
+    expect(asFragment()).toMatchSnapshot();
+});
+
+test('Render field with error collection', () => {
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="text" />;
+    });
+
+    const {asFragment} = renderField({
+        error: {
+            ids: {
+                keyword: 'minItems',
+                parameters: {},
+            },
+        },
+    });
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Pass correct props to FieldType', () => {
     const router = new Router();
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
     const successSpy = jest.fn();
-
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="date" />;
-    });
+    const TextMock = jest.fn(() => null);
+    fieldRegistry.get.mockReturnValue(TextMock);
 
     const schema = {
         label: 'Text',
@@ -261,29 +161,23 @@ test('Pass correct props to FieldType', () => {
         type: 'text_line',
         types: {},
     };
+    const data = {title: 'Test'};
+    const formInspector = createFormInspector();
 
-    const data = {
-        title: 'Test',
-    };
+    renderField({
+        data,
+        dataPath: '/block/0/text',
+        formInspector,
+        name: 'text',
+        onSuccess: successSpy,
+        router,
+        schema,
+        schemaPath: '/text',
+        showAllErrors: true,
+        value: 'test',
+    });
 
-    const field = shallow(
-        <Field
-            data={data}
-            dataPath="/block/0/text"
-            formInspector={formInspector}
-            name="text"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSuccess={successSpy}
-            router={router}
-            schema={schema}
-            schemaPath="/text"
-            showAllErrors={true}
-            value="test"
-        />
-    );
-
-    expect(field.find('Text').props()).toEqual(expect.objectContaining({
+    expect(getLatestMockProps(TextMock)).toEqual(expect.objectContaining({
         data,
         dataPath: '/block/0/text',
         disabled: false,
@@ -300,190 +194,125 @@ test('Pass correct props to FieldType', () => {
     }));
 });
 
-test('Do not render anything if visibleCondition evaluates to false', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="date" />;
-    });
-
-    const schema = {
-        label: 'Text',
-        type: 'text_line',
-        visibleCondition: 'title != "Test"',
-    };
-
+test('Do not render if visibleCondition evaluates false, and render after data change', () => {
+    const TextMock = jest.fn(() => null);
+    fieldRegistry.get.mockReturnValue(TextMock);
     const data = observable({title: 'Test'});
 
-    const field = shallow(
-        <Field
-            data={data}
-            dataPath="/block/0/text"
-            formInspector={formInspector}
-            name="text"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={schema}
-            schemaPath="/text"
-            showAllErrors={true}
-            value="test"
-        />
-    );
-
-    expect(field.find('Field')).toHaveLength(0);
-
-    data.title = 'Changed title!';
-    expect(field.find('Field')).toHaveLength(1);
-});
-
-test('Render the field if visibleCondition with conditionDataProvider evaluates to true', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-
-    conditionDataProviderRegistry.add((data) => ({__test: data.test}));
-
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="date" />;
-    });
-
-    const schema = {
-        label: 'Text',
-        type: 'text_line',
-        visibleCondition: '__test == "Test"',
-    };
-
-    const field = shallow(
-        <Field
-            data={{test: 'Test'}}
-            dataPath="/block/0/text"
-            formInspector={formInspector}
-            name="text"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={schema}
-            schemaPath="/text"
-            showAllErrors={true}
-            value="test"
-        />
-    );
-
-    expect(field.find('Field')).toHaveLength(1);
-});
-
-test('Pass disabled flag to FieldType if disabledCondition evaluates to true', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="date" />;
-    });
-
-    const schema = {
-        disabledCondition: 'title == "Test"',
-        label: 'Text',
-        type: 'text_line',
-    };
-
-    const data = observable({title: 'Test'});
-
-    const field = shallow(
-        <Field
-            data={data}
-            dataPath="/block/0/text"
-            formInspector={formInspector}
-            name="text"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={schema}
-            schemaPath="/text"
-            showAllErrors={true}
-            value="test"
-        />
-    );
-
-    expect(field.find('Text').prop('disabled')).toEqual(true);
-
-    data.title = 'Change title!';
-    expect(field.find('Text').prop('disabled')).toEqual(false);
-});
-
-test('Pass disabled flag to FieldType if disabledCondition with conditionDataProvider evaluates to true', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-
-    conditionDataProviderRegistry.add((data) => ({__test: data.test}));
-
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="date" />;
-    });
-
-    const schema = {
-        disabledCondition: '__test == "Test"',
-        label: 'Text',
-        type: 'text_line',
-    };
-
-    const field = shallow(
-        <Field
-            data={{test: 'Test'}}
-            dataPath="/block/0/text"
-            formInspector={formInspector}
-            name="text"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={schema}
-            schemaPath="/text"
-            showAllErrors={true}
-            value="test"
-        />
-    );
-
-    expect(field.find('Text').prop('disabled')).toEqual(true);
-});
-
-test('Merge with options from fieldRegistry before passing props to FieldType', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="text" />;
-    });
-    fieldRegistry.getOptions.mockReturnValue({
-        option: 'value',
-    });
-
-    const schema = {
-        label: 'Text',
-        maxOccurs: 4,
-        minOccurs: 2,
-        options: {
-            anotherOption: {name: 'anotherOption', value: 'anotherValue'},
+    renderField({
+        data,
+        dataPath: '/block/0/text',
+        name: 'text',
+        schema: {
+            label: 'Text',
+            type: 'text_line',
+            visibleCondition: 'title != "Test"',
         },
-        type: 'text_line',
-        types: {},
-    };
-    const field = shallow(
-        <Field
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            name="text"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={schema}
-            schemaPath=""
-            showAllErrors={true}
-            value="test"
-        />
-    );
+        schemaPath: '/text',
+        showAllErrors: true,
+        value: 'test',
+    });
 
-    expect(field.find('Text').props()).toEqual(expect.objectContaining({
+    expect(TextMock).toHaveBeenCalledTimes(0);
+    act(() => {
+        data.title = 'Changed title!';
+    });
+    expect(TextMock).toHaveBeenCalledTimes(1);
+});
+
+test('Render field if visibleCondition with conditionDataProvider evaluates true', () => {
+    conditionDataProviderRegistry.add((data) => ({__test: data.test}));
+    const TextMock = jest.fn(() => null);
+    fieldRegistry.get.mockReturnValue(TextMock);
+
+    renderField({
+        data: {test: 'Test'},
+        dataPath: '/block/0/text',
+        name: 'text',
+        schema: {
+            label: 'Text',
+            type: 'text_line',
+            visibleCondition: '__test == "Test"',
+        },
+        schemaPath: '/text',
+        showAllErrors: true,
+        value: 'test',
+    });
+
+    expect(TextMock).toHaveBeenCalledTimes(1);
+});
+
+test('Pass disabled flag to FieldType when disabledCondition evaluates true', () => {
+    const TextMock = jest.fn(() => null);
+    fieldRegistry.get.mockReturnValue(TextMock);
+    const data = observable({title: 'Test'});
+
+    renderField({
+        data,
+        dataPath: '/block/0/text',
+        name: 'text',
+        schema: {
+            disabledCondition: 'title == "Test"',
+            label: 'Text',
+            type: 'text_line',
+        },
+        schemaPath: '/text',
+        showAllErrors: true,
+        value: 'test',
+    });
+
+    expect(getLatestMockProps(TextMock).disabled).toEqual(true);
+
+    act(() => {
+        data.title = 'Change title!';
+    });
+    expect(getLatestMockProps(TextMock).disabled).toEqual(false);
+});
+
+test('Pass disabled flag to FieldType when disabledCondition with conditionDataProvider evaluates true', () => {
+    conditionDataProviderRegistry.add((data) => ({__test: data.test}));
+    const TextMock = jest.fn(() => null);
+    fieldRegistry.get.mockReturnValue(TextMock);
+
+    renderField({
+        data: {test: 'Test'},
+        dataPath: '/block/0/text',
+        name: 'text',
+        schema: {
+            disabledCondition: '__test == "Test"',
+            label: 'Text',
+            type: 'text_line',
+        },
+        schemaPath: '/text',
+        showAllErrors: true,
+        value: 'test',
+    });
+
+    expect(getLatestMockProps(TextMock).disabled).toEqual(true);
+});
+
+test('Merge options from fieldRegistry before passing props to FieldType', () => {
+    const TextMock = jest.fn(() => null);
+    fieldRegistry.get.mockReturnValue(TextMock);
+    fieldRegistry.getOptions.mockReturnValue({option: 'value'});
+
+    renderField({
+        name: 'text',
+        schema: {
+            label: 'Text',
+            maxOccurs: 4,
+            minOccurs: 2,
+            options: {
+                anotherOption: {name: 'anotherOption', value: 'anotherValue'},
+            },
+            type: 'text_line',
+            types: {},
+        },
+        showAllErrors: true,
+        value: 'test',
+    });
+
+    expect(getLatestMockProps(TextMock)).toEqual(expect.objectContaining({
         fieldTypeOptions: {
             option: 'value',
         },
@@ -498,174 +327,105 @@ test('Merge with options from fieldRegistry before passing props to FieldType', 
     }));
 });
 
-test('Call onChange callback when value of Field changes', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+test('Call onChange callback when value changes', () => {
+    const TextMock = jest.fn(() => null);
+    fieldRegistry.get.mockReturnValue(TextMock);
+    const changeSpy = jest.fn();
 
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="text" />;
+    renderField({
+        name: 'test',
+        onChange: changeSpy,
+        schema: {label: 'label', type: 'text'},
     });
 
-    const changeSpy = jest.fn();
-    const field = shallow(
-        <Field
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            name="test"
-            onChange={changeSpy}
-            onFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={{label: 'label', type: 'text'}}
-            schemaPath=""
-        />
-    );
-
-    field.find('Text').props().onChange('test value', {isDefaultValue: true});
-
+    getLatestMockProps(TextMock).onChange('test value', {isDefaultValue: true});
     expect(changeSpy).toBeCalledWith('test', 'test value', {isDefaultValue: true});
 });
 
-test('Do not call onChange callback when value of disabled Field changes', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+test('Do not call onChange callback when disabled field changes', () => {
+    const TextMock = jest.fn(() => null);
+    fieldRegistry.get.mockReturnValue(TextMock);
+    const changeSpy = jest.fn();
 
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="text" />;
+    renderField({
+        data: {title: 'Test'},
+        name: 'test',
+        onChange: changeSpy,
+        schema: {label: 'label', type: 'text', disabledCondition: 'title == "Test"'},
     });
 
-    const changeSpy = jest.fn();
-    const field = shallow(
-        <Field
-            data={{title: 'Test'}}
-            dataPath=""
-            formInspector={formInspector}
-            name="test"
-            onChange={changeSpy}
-            onFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={{label: 'label', type: 'text', disabledCondition: 'title == "Test"'}}
-            schemaPath=""
-        />
-    );
-
-    field.find('Text').props().onChange('test value');
-
+    getLatestMockProps(TextMock).onChange('test value');
     expect(changeSpy).not.toBeCalled();
 });
 
-test('Call onFinish callback after editing the field has finished', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+test('Call onFinish callback after editing has finished', () => {
+    const TextMock = jest.fn(() => null);
+    fieldRegistry.get.mockReturnValue(TextMock);
+    const finishSpy = jest.fn();
 
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="text" />;
+    renderField({
+        dataPath: '/block/0/test',
+        name: 'test',
+        onFinish: finishSpy,
+        schemaPath: '/test',
+        schema: {label: 'label', type: 'text'},
     });
 
-    const finishSpy = jest.fn();
-    const field = shallow(
-        <Field
-            data={{}}
-            dataPath="/block/0/test"
-            formInspector={formInspector}
-            name="test"
-            onChange={jest.fn()}
-            onFinish={finishSpy}
-            onSuccess={undefined}
-            router={undefined}
-            schema={{label: 'label', type: 'text'}}
-            schemaPath="/test"
-        />
-    );
-
-    field.find('Text').simulate('finish');
-
+    getLatestMockProps(TextMock).onFinish('/block/0/test', '/test');
+    expect(finishSpy).toBeCalledWith('/block/0/test', '/test');
     expect(finishSpy).toBeCalledWith('/block/0/test', '/test');
 });
 
 test('Call onSuccess callback when field calls onSuccess', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    const TextMock = jest.fn(() => null);
+    fieldRegistry.get.mockReturnValue(TextMock);
     const successSpy = jest.fn();
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="text" />;
+
+    renderField({
+        onSuccess: successSpy,
+        schema: {label: 'label', type: 'text'},
     });
 
-    const finishSpy = jest.fn();
-    const field = shallow(
-        <Field
-            data={{}}
-            dataPath="/block/0/test"
-            formInspector={formInspector}
-            name="test"
-            onChange={jest.fn()}
-            onFinish={finishSpy}
-            onSuccess={successSpy}
-            router={undefined}
-            schema={{label: 'label', type: 'text'}}
-            schemaPath="/test"
-        />
-    );
-
-    field.find('Text').simulate('success');
-
+    getLatestMockProps(TextMock).onSuccess();
     expect(successSpy).toBeCalled();
 });
 
-test('Do not render anything if field does not exist and onInvalid is set to ignore', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-
+test('Do not render anything if field does not exist and onInvalid is ignore', () => {
     fieldRegistry.get.mockImplementation(() => {
         throw new Error();
     });
 
-    const field = shallow(
-        <Field
-            data={{}}
-            dataPath="/test"
-            formInspector={formInspector}
-            name="test"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={{label: 'label', type: 'not-existing', onInvalid: 'ignore'}}
-            schemaPath="/test"
-        />
-    );
-
-    expect(field.isEmptyRender()).toEqual(true);
-});
-
-test('Call onFocus callback when Field gets focus', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="text" />;
+    const {container} = renderField({
+        dataPath: '/test',
+        name: 'test',
+        schema: {label: 'label', type: 'not-existing', onInvalid: 'ignore'},
+        schemaPath: '/test',
     });
 
-    const field = shallow(
-        <Field
-            data={{}}
-            dataPath="/title"
-            formInspector={formInspector}
-            name="test"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={{label: 'label', type: 'text'}}
-            schemaPath="/schema/title"
-            value="test value"
-        />
-    );
+    expect(container).toBeEmptyDOMElement();
+});
+
+test('Call onFocus callback when field gets focus', () => {
+    const TextMock = jest.fn(() => null);
+    fieldRegistry.get.mockReturnValue(TextMock);
+    const onChangeMock = jest.fn();
+
+    renderField({
+        dataPath: '/title',
+        name: 'test',
+        onChange: onChangeMock,
+        schema: {label: 'label', type: 'text'},
+        schemaPath: '/schema/title',
+        value: 'test value',
+    });
 
     const target = new EventTarget();
     const dispatchEventSpy = jest.spyOn(target, 'dispatchEvent');
 
-    field.find('Text').props().onFocus(target);
+    getLatestMockProps(TextMock).onFocus(target);
 
     expect(dispatchEventSpy).toHaveBeenCalled();
-
-    const dispatchedEvent = dispatchEventSpy.mock.calls[0][0];
+    const dispatchedEvent = getLatestMockProps(dispatchEventSpy);
 
     expect(dispatchedEvent.type).toBe('sulu.focus');
     expect(dispatchedEvent.bubbles).toBe(true);
@@ -675,15 +435,10 @@ test('Call onFocus callback when Field gets focus', () => {
         getValue: expect.any(Function),
         schemaPath: '/schema/title',
         dataPath: '/title',
-        formInspector,
+        formInspector: expect.any(FormInspector),
     });
-
-    // Test the getValue function
     expect(dispatchedEvent.detail.getValue()).toBe('test value');
 
-    // Test the setValue function
-    const onChangeMock = jest.fn();
-    field.setProps({onChange: onChangeMock});
     dispatchedEvent.detail.setValue('new value');
     expect(onChangeMock).toHaveBeenCalledWith('test', 'new value', undefined);
 });

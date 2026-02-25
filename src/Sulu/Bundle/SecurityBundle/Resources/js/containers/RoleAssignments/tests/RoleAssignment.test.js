@@ -1,133 +1,115 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import {MultiSelect} from 'sulu-admin-bundle/components';
+import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import RoleAssignment from '../RoleAssignment';
 import type {Localization} from 'sulu-admin-bundle/stores';
+
+jest.mock('mobx-react', () => ({
+    observer: (Component) => Component,
+}));
+
+jest.mock('sulu-admin-bundle/components', () => {
+    const React = require('react');
+    const MultiSelect: any = jest.fn(({children}) => <div data-testid="multi-select">{children}</div>);
+
+    MultiSelect.Option = jest.fn(({children}) => <div data-testid="multi-select-option">{children}</div>);
+
+    return {
+        MultiSelect,
+    };
+});
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: (key) => key,
 }));
 
+const MultiSelectMock: any = MultiSelect;
+
+const value = {
+    id: 1,
+    role: {
+        id: 5,
+        name: 'Role Name 5',
+        system: 'Sulu',
+    },
+    locales: ['de'],
+};
+
+const localizations: Array<Localization> = [
+    {
+        country: '',
+        default: '1',
+        language: 'en',
+        locale: 'en',
+        localization: 'en',
+        shadow: '',
+    },
+    {
+        country: '',
+        default: '0',
+        language: 'de',
+        locale: 'de',
+        localization: 'de',
+        shadow: '',
+    },
+];
+
+beforeEach(() => {
+    MultiSelectMock.mockClear();
+});
+
 test('Render component', () => {
-    const value = {
-        id: 1,
-        role: {
-            id: 5,
-            name: 'Role Name 5',
-            system: 'Sulu',
-        },
-        locales: ['de'],
-    };
+    const {container} = render(
+        <table>
+            <tbody>
+                <RoleAssignment
+                    localizations={localizations}
+                    onChange={jest.fn()}
+                    value={value}
+                />
+            </tbody>
+        </table>
+    );
 
-    const localizations: Array<Localization> = [
-        {
-            country: '',
-            default: '1',
-            language: 'en',
-            locale: 'en',
-            localization: 'en',
-            shadow: '',
-        },
-        {
-            country: '',
-            default: '0',
-            language: 'de',
-            locale: 'de',
-            localization: 'de',
-            shadow: '',
-        },
-    ];
-
-    expect(render(
-        <RoleAssignment
-            localizations={localizations}
-            onChange={jest.fn()}
-            value={value}
-        />
-    )).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('Render component in disabled state', () => {
-    const value = {
-        id: 1,
-        role: {
-            id: 5,
-            name: 'Role Name 5',
-            system: 'Sulu',
-        },
-        locales: ['de'],
-    };
+    const {container} = render(
+        <table>
+            <tbody>
+                <RoleAssignment
+                    disabled={true}
+                    localizations={localizations}
+                    onChange={jest.fn()}
+                    value={value}
+                />
+            </tbody>
+        </table>
+    );
 
-    const localizations: Array<Localization> = [
-        {
-            country: '',
-            default: '1',
-            language: 'en',
-            locale: 'en',
-            localization: 'en',
-            shadow: '',
-        },
-        {
-            country: '',
-            default: '0',
-            language: 'de',
-            locale: 'de',
-            localization: 'de',
-            shadow: '',
-        },
-    ];
-
-    expect(render(
-        <RoleAssignment
-            disabled={true}
-            localizations={localizations}
-            onChange={jest.fn()}
-            value={value}
-        />
-    )).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('The component should trigger the change callback', () => {
-    const value = {
-        id: 1,
-        role: {
-            id: 5,
-            name: 'Role Name 5',
-            system: 'Sulu',
-        },
-        locales: ['de'],
-    };
-
-    const localizations: Array<Localization> = [
-        {
-            country: '',
-            default: '1',
-            language: 'en',
-            locale: 'en',
-            localization: 'en',
-            shadow: '',
-        },
-        {
-            country: '',
-            default: '0',
-            language: 'de',
-            locale: 'de',
-            localization: 'de',
-            shadow: '',
-        },
-    ];
-
     const onChangeSpy = jest.fn();
-    const roleAssignment = shallow(
-        <RoleAssignment
-            localizations={localizations}
-            onChange={onChangeSpy}
-            value={value}
-        />
+
+    render(
+        <table>
+            <tbody>
+                <RoleAssignment
+                    localizations={localizations}
+                    onChange={onChangeSpy}
+                    value={value}
+                />
+            </tbody>
+        </table>
     );
 
-    roleAssignment.find(MultiSelect).props().onChange(['de', 'en']);
+    const multiSelectProps = getLatestMockProps(MultiSelectMock);
+    multiSelectProps.onChange(['de', 'en']);
 
     const expectedValue = {
         id: 1,

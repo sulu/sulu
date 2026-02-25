@@ -1,14 +1,21 @@
 // @flow
-import {mount} from 'enzyme';
 import React from 'react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Select from '../Select';
 import Option from '../Option';
 
 const Divider = Select.Divider;
 
-test('The component should render with a dark skin', () => {
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+test('The component should render with a dark skin', async() => {
+    const user = userEvent.setup();
     const isOptionSelected = jest.fn().mockReturnValue(false);
-    const select = mount(
+
+    const {asFragment} = render(
         <Select
             displayValue="My text"
             icon="su-plus"
@@ -23,153 +30,97 @@ test('The component should render with a dark skin', () => {
         </Select>
     );
 
-    select.instance().displayValueRef = {
-        getBoundingClientRect: jest.fn().mockReturnValue({
-            width: 200,
-        }),
-    };
-    select.find('.displayValue').simulate('click');
-
-    expect(select.render()).toMatchSnapshot();
-    expect(select.find('Menu').render()).toMatchSnapshot();
+    await user.click(screen.getByRole('button', {name: /My text/i}));
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('The component should show a disabled select when disabled', () => {
-    const isOptionSelected = jest.fn().mockReturnValue(false);
-    const onSelect = jest.fn();
-    const select = mount(
+    render(
         <Select
             disabled={true}
             displayValue="My text"
             icon="su-plus"
-            isOptionSelected={isOptionSelected}
-            onSelect={onSelect}
+            isOptionSelected={jest.fn().mockReturnValue(false)}
+            onSelect={jest.fn()}
         >
             <Option value="option-1">Option 1</Option>
-            <Option value="option-2">Option 2</Option>
-            <Divider />
-            <Option value="option-3">Option 3</Option>
         </Select>
     );
 
-    expect(select.find('DisplayValue button').prop('disabled')).toEqual(true);
+    expect(screen.getByRole('button', {name: /My text/i})).toBeDisabled();
 });
 
-test('The component should not open the popover on display-value-click when disabled', () => {
-    const isOptionSelected = jest.fn().mockReturnValue(false);
-    const onSelect = jest.fn();
-
-    const select = mount(
+test('The component should not open the popover on display-value-click when disabled', async() => {
+    const user = userEvent.setup();
+    render(
         <Select
             disabled={true}
             displayValue="My text"
-            isOptionSelected={isOptionSelected}
-            onSelect={onSelect}
+            isOptionSelected={jest.fn().mockReturnValue(false)}
+            onSelect={jest.fn()}
         >
             <Option value="option-1">Option 1</Option>
-            <Option value="option-2">Option 2</Option>
-            <Divider />
-            <Option value="option-3">Option 3</Option>
         </Select>
     );
-    select.find('.displayValue').simulate('click');
 
-    expect(select.find('Menu')).toHaveLength(0);
+    await user.click(screen.getByRole('button', {name: /My text/i}));
+    expect(screen.queryByRole('button', {name: 'Option 1'})).not.toBeInTheDocument();
 });
 
-test('The component should open the popover when pressing enter', () => {
-    const isOptionSelected = jest.fn().mockReturnValue(false);
-    const onSelect = jest.fn();
-
-    const select = mount(
+test('The component should open the popover on Enter/ArrowDown/ArrowUp', async() => {
+    const user = userEvent.setup();
+    render(
         <Select
-            disabled={true}
             displayValue="My text"
-            isOptionSelected={isOptionSelected}
-            onSelect={onSelect}
+            isOptionSelected={jest.fn().mockReturnValue(false)}
+            onSelect={jest.fn()}
         >
             <Option value="option-1">Option 1</Option>
-            <Option value="option-2">Option 2</Option>
-            <Divider />
-            <Option value="option-3">Option 3</Option>
         </Select>
     );
-    select.simulate('keydown', {key: 'Enter', preventDefault: jest.fn()});
-    expect(select.find('Menu')).toHaveLength(1);
+    await user.click(screen.getByRole('button', {name: /My text/i}));
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('button', {name: 'Option 1'})).not.toBeInTheDocument();
+    await user.keyboard('{Enter}');
+    expect(screen.getByRole('button', {name: 'Option 1'})).toBeInTheDocument();
+
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('button', {name: 'Option 1'})).not.toBeInTheDocument();
+    await user.keyboard('{ArrowDown}');
+    expect(screen.getByRole('button', {name: 'Option 1'})).toBeInTheDocument();
+
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('button', {name: 'Option 1'})).not.toBeInTheDocument();
+    await user.keyboard('{ArrowUp}');
+    expect(screen.getByRole('button', {name: 'Option 1'})).toBeInTheDocument();
 });
 
-test('The component should open the popover when pressing arrow down', () => {
-    const isOptionSelected = jest.fn().mockReturnValue(false);
+test('The component should trigger select callback and close popover when option is clicked', async() => {
+    const user = userEvent.setup();
     const onSelect = jest.fn();
-
-    const select = mount(
-        <Select
-            disabled={true}
-            displayValue="My text"
-            isOptionSelected={isOptionSelected}
-            onSelect={onSelect}
-        >
+    render(
+        <Select displayValue="My text" isOptionSelected={jest.fn().mockReturnValue(false)} onSelect={onSelect}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
             <Option value="option-3">Option 3</Option>
         </Select>
     );
-    select.simulate('keydown', {key: 'ArrowDown', preventDefault: jest.fn()});
-    expect(select.find('Menu')).toHaveLength(1);
-});
 
-test('The component should open the popover when pressing arrow up', () => {
-    const isOptionSelected = jest.fn().mockReturnValue(false);
-    const onSelect = jest.fn();
+    await user.click(screen.getByRole('button', {name: /My text/i}));
+    await user.click(screen.getByRole('button', {name: 'Option 3'}));
 
-    const select = mount(
-        <Select
-            disabled={true}
-            displayValue="My text"
-            isOptionSelected={isOptionSelected}
-            onSelect={onSelect}
-        >
-            <Option value="option-1">Option 1</Option>
-            <Option value="option-2">Option 2</Option>
-            <Divider />
-            <Option value="option-3">Option 3</Option>
-        </Select>
-    );
-    select.simulate('keydown', {key: 'ArrowUp', preventDefault: jest.fn()});
-    expect(select.find('Menu')).toHaveLength(1);
-});
-
-test('The component should trigger the select callback and close the popover when an option is clicked', () => {
-    const onSelect = jest.fn();
-    const isOptionSelected = jest.fn().mockReturnValue(false);
-    const select = mount(
-        <Select
-            displayValue="My text"
-            isOptionSelected={isOptionSelected}
-            onSelect={onSelect}
-        >
-            <Option value="option-1">Option 1</Option>
-            <Option value="option-2">Option 2</Option>
-            <Divider />
-            <Option value="option-3">Option 3</Option>
-        </Select>
-    );
-    select.instance().handleDisplayValueClick();
-    select.update();
-    select.find('Option[value="option-3"] button').prop('onClick')();
     expect(onSelect).toHaveBeenCalledWith('option-3');
-    select.update();
-    expect(select.find('Menu')).toHaveLength(0);
+    expect(screen.queryByRole('button', {name: 'Option 3'})).not.toBeInTheDocument();
 });
 
-test('The component should call the onClose callback when it is closing', () => {
+test('The component should call onClose callback when closing', async() => {
+    const user = userEvent.setup();
     const closeSpy = jest.fn();
-    const isOptionSelected = jest.fn().mockReturnValue(false);
-    const select = mount(
+    render(
         <Select
             displayValue="My text"
-            isOptionSelected={isOptionSelected}
+            isOptionSelected={jest.fn().mockReturnValue(false)}
             onClose={closeSpy}
             onSelect={jest.fn()}
         >
@@ -177,41 +128,84 @@ test('The component should call the onClose callback when it is closing', () => 
             <Option value="option-2">Option 2</Option>
         </Select>
     );
-    select.instance().handleDisplayValueClick();
+
+    await user.click(screen.getByRole('button', {name: /My text/i}));
     expect(closeSpy).not.toBeCalled();
-    select.find('Popover').simulate('click');
+    await user.keyboard('{Escape}');
     expect(closeSpy).toBeCalled();
 });
 
-test('The component should pass the centered child node to the popover', () => {
-    const onSelect = jest.fn();
+test('The component should focus selected option when opening', async() => {
+    const user = userEvent.setup();
     const isOptionSelected = jest.fn((child) => child.props.value === 'option-3');
-    const selectedOption = (<Option value="option-3">Option 3</Option>);
-    const select = mount(
-        <Select
-            displayValue="My text"
-            isOptionSelected={isOptionSelected}
-            onSelect={onSelect}
-        >
+    render(
+        <Select displayValue="My text" isOptionSelected={isOptionSelected} onSelect={jest.fn()}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
-            {selectedOption}
+            <Option value="option-3">Option 3</Option>
         </Select>
     );
 
-    const popover = select.find('Popover');
-    expect(popover.props().centerChildNode).toBe(mount(selectedOption).get(0).innerHTML);
+    await user.click(screen.getByRole('button', {name: /My text/i}));
+    expect(screen.getByRole('button', {name: /Option 3/})).toHaveFocus();
 });
 
-test('The component should pass the selected property to the options', () => {
-    const isOptionSelected = jest.fn().mockReturnValue(true);
-    const onSelect = jest.fn();
-    const select = mount(
+test('The component should pass selected property to options', async() => {
+    const user = userEvent.setup();
+    render(
+        <Select displayValue="My text" isOptionSelected={jest.fn().mockReturnValue(true)} onSelect={jest.fn()}>
+            <Option value="option-1">Option 1</Option>
+            <Option value="option-2">Option 2</Option>
+            <Divider />
+            <Option value="option-3">Option 3</Option>
+        </Select>
+    );
+
+    await user.click(screen.getByRole('button', {name: /My text/i}));
+    expect(screen.getAllByLabelText('su-check')).toHaveLength(3);
+});
+
+test('The component should react on arrow down/up to focus children', async() => {
+    const user = userEvent.setup();
+    render(
+        <Select displayValue="My text" isOptionSelected={jest.fn().mockReturnValue(false)} onSelect={jest.fn()}>
+            <Option value="option-1">Option 1</Option>
+            <Option value="option-2">Option 2</Option>
+            <Divider />
+            <Option value="option-3">Option 3</Option>
+        </Select>
+    );
+
+    await user.click(screen.getByRole('button', {name: /My text/i}));
+
+    await user.keyboard('{ArrowDown}');
+    expect(screen.getByRole('button', {name: 'Option 1'})).toHaveFocus();
+    await user.keyboard('{ArrowDown}');
+    expect(screen.getByRole('button', {name: 'Option 2'})).toHaveFocus();
+    await user.keyboard('{ArrowDown}');
+    expect(screen.getByRole('button', {name: 'Option 3'})).toHaveFocus();
+    await user.keyboard('{ArrowDown}');
+    expect(screen.getByRole('button', {name: 'Option 3'})).toHaveFocus();
+
+    await user.keyboard('{ArrowUp}');
+    expect(screen.getByRole('button', {name: 'Option 2'})).toHaveFocus();
+    await user.keyboard('{ArrowUp}');
+    expect(screen.getByRole('button', {name: 'Option 1'})).toHaveFocus();
+    await user.keyboard('{ArrowUp}');
+    expect(screen.getByRole('button', {name: 'Option 1'})).toHaveFocus();
+
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('button', {name: 'Option 1'})).not.toBeInTheDocument();
+});
+
+test('The component should set current selected element as first focused element', async() => {
+    const user = userEvent.setup();
+    render(
         <Select
             displayValue="My text"
-            isOptionSelected={isOptionSelected}
-            onSelect={onSelect}
+            isOptionSelected={jest.fn((child) => child.props.value === 'option-2')}
+            onSelect={jest.fn()}
         >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -219,147 +213,62 @@ test('The component should pass the selected property to the options', () => {
             <Option value="option-3">Option 3</Option>
         </Select>
     );
-    select.instance().handleDisplayValueClick();
-    select.update();
-    expect(select.find('Option[selected=true]')).toHaveLength(3);
+    await user.click(screen.getByRole('button', {name: /My text/i}));
+    await user.keyboard('{ArrowDown}');
+    expect(screen.getByRole('button', {name: 'Option 3'})).toHaveFocus();
 });
 
-test('The component should react on arrow down/up to focus children', () => {
-    const onSelect = jest.fn();
-    const isOptionSelected = jest.fn().mockReturnValue(false);
-    const select = mount(
-        <Select
-            displayValue="My text"
-            isOptionSelected={isOptionSelected}
-            onSelect={onSelect}
-        >
-            <Option value="option-1">Option 1</Option>
-            <Option value="option-2">Option 2</Option>
-            <Divider />
-            <Option value="option-3">Option 3</Option>
-        </Select>
-    );
-    select.instance().handleDisplayValueClick();
-    select.update();
-    select.simulate('keydown', {key: 'ArrowDown', preventDefault: jest.fn()});
-    expect(select.find('Option[value="option-1"] button').is(':focus')).toBe(true);
-    select.simulate('keydown', {key: 'ArrowDown', preventDefault: jest.fn()});
-    expect(select.find('Option[value="option-2"] button').is(':focus')).toBe(true);
-    select.simulate('keydown', {key: 'ArrowDown', preventDefault: jest.fn()});
-    expect(select.find('Option[value="option-3"] button').is(':focus')).toBe(true);
-    select.simulate('keydown', {key: 'ArrowDown', preventDefault: jest.fn()});
-    expect(select.find('Option[value="option-3"] button').is(':focus')).toBe(true);
-    select.simulate('keydown', {key: 'ArrowUp', preventDefault: jest.fn()});
-    expect(select.find('Option[value="option-2"] button').is(':focus')).toBe(true);
-    select.simulate('keydown', {key: 'ArrowUp', preventDefault: jest.fn()});
-    expect(select.find('Option[value="option-1"] button').is(':focus')).toBe(true);
-    select.simulate('keydown', {key: 'ArrowUp', preventDefault: jest.fn()});
-    expect(select.find('Option[value="option-1"] button').is(':focus')).toBe(true);
-    select.simulate('keydown', {key: 'Escape', preventDefault: jest.fn()});
-    expect(select.find('Menu')).toHaveLength(0);
-});
-
-test('The component should set the current selected element as first focused element', () => {
-    const onSelect = jest.fn();
-    const isOptionSelected = jest.fn((child) => child.props.value === 'option-2');
-    const option2 = (<Option value="option-2">Option 2</Option>);
-    const select = mount(
-        <Select
-            displayValue="My text"
-            isOptionSelected={isOptionSelected}
-            onSelect={onSelect}
-        >
-            <Option value="option-1">Option 1</Option>
-            {option2}
-            <Divider />
-            <Option value="option-3">Option 3</Option>
-        </Select>
-    );
-    select.instance().handleDisplayValueClick();
-    select.update();
-    select.simulate('keydown', {key: 'ArrowDown', preventDefault: jest.fn()});
-    expect(select.find('Option[value="option-3"] button').is(':focus')).toBe(true);
-});
-
-test('The component should focus children matching keyboard input', () => {
-    const onSelect = jest.fn();
-    const isOptionSelected = jest.fn().mockReturnValue(false);
-    const select = mount(
-        <Select
-            displayValue="My text"
-            isOptionSelected={isOptionSelected}
-            onSelect={onSelect}
-        >
-            <Option value="option-abc">ABC</Option>
-            <Option value="option-def">DEF</Option>
-            <Option value="option-ghi">GHI</Option>
-        </Select>
-    );
-    select.instance().handleDisplayValueClick();
-    select.update();
-    select.simulate('keypress', {key: 'd', preventDefault: jest.fn()});
-    expect(select.find('Option[value="option-def"] button').is(':focus')).toBe(true);
-    select.simulate('keypress', {key: 'e', preventDefault: jest.fn()});
-    expect(select.find('Option[value="option-def"] button').is(':focus')).toBe(true);
-    select.simulate('keypress', {key: 'a', preventDefault: jest.fn()});
-    expect(select.find('Option[value="option-def"] button').is(':focus')).toBe(true);
-    select.instance().clearSearchText();
-    select.update();
-    select.simulate('keypress', {key: 'a', preventDefault: jest.fn()});
-    expect(select.find('Option[value="option-abc"] button').is(':focus')).toBe(true);
-});
-
-test('The component should focus itself after closing option list', () => {
-    const onSelect = jest.fn();
-    const isOptionSelected = jest.fn().mockReturnValue(false);
-    const select = mount(
-        <Select
-            displayValue="My text"
-            isOptionSelected={isOptionSelected}
-            onSelect={onSelect}
-        >
+test('The component should focus children matching keyboard input', async() => {
+    const user = userEvent.setup();
+    render(
+        <Select displayValue="My text" isOptionSelected={jest.fn().mockReturnValue(false)} onSelect={jest.fn()}>
             <Option value="option-abc">ABC</Option>
             <Option value="option-def">DEF</Option>
             <Option value="option-ghi">GHI</Option>
         </Select>
     );
 
-    const focusSpy = jest.fn();
-    select.instance().displayValueRef = {
-        getBoundingClientRect: jest.fn().mockReturnValue({
-            width: 200,
-        }),
-        focus: focusSpy,
-    };
+    await user.click(screen.getByRole('button', {name: /My text/i}));
+    await user.keyboard('d');
+    expect(screen.getByRole('button', {name: 'DEF'})).toHaveFocus();
+    await user.keyboard('e');
+    expect(screen.getByRole('button', {name: 'DEF'})).toHaveFocus();
+    await user.keyboard('a');
+    expect(screen.getByRole('button', {name: 'DEF'})).toHaveFocus();
+});
 
-    select.instance().handleDisplayValueClick();
-    select.simulate('keydown', {key: 'Escape', preventDefault: jest.fn()});
+test('The component should focus itself after closing option list with Escape', async() => {
+    const user = userEvent.setup();
+    render(
+        <Select displayValue="My text" isOptionSelected={jest.fn().mockReturnValue(false)} onSelect={jest.fn()}>
+            <Option value="option-abc">ABC</Option>
+            <Option value="option-def">DEF</Option>
+            <Option value="option-ghi">GHI</Option>
+        </Select>
+    );
+
+    const displayButton = screen.getByRole('button', {name: /My text/i});
+    const focusSpy = jest.spyOn(displayButton, 'focus');
+
+    await user.click(displayButton);
+    focusSpy.mockClear();
+    await user.keyboard('{Escape}');
     expect(focusSpy).toBeCalledTimes(1);
 });
 
-test('The component should not focus itself after closing already closed option list', () => {
-    const onSelect = jest.fn();
-    const isOptionSelected = jest.fn().mockReturnValue(false);
-    const select = mount(
-        <Select
-            displayValue="My text"
-            isOptionSelected={isOptionSelected}
-            onSelect={onSelect}
-        >
+test('The component should not focus itself after closing an already closed list', async() => {
+    const user = userEvent.setup();
+    render(
+        <Select displayValue="My text" isOptionSelected={jest.fn().mockReturnValue(false)} onSelect={jest.fn()}>
             <Option value="option-abc">ABC</Option>
             <Option value="option-def">DEF</Option>
             <Option value="option-ghi">GHI</Option>
         </Select>
     );
 
-    const focusSpy = jest.fn();
-    select.instance().displayValueRef = {
-        getBoundingClientRect: jest.fn().mockReturnValue({
-            width: 200,
-        }),
-        focus: focusSpy,
-    };
+    const displayButton = screen.getByRole('button', {name: /My text/i});
+    const focusSpy = jest.spyOn(displayButton, 'focus');
 
-    select.simulate('keydown', {key: 'Escape', preventDefault: jest.fn()});
+    await user.keyboard('{Escape}');
     expect(focusSpy).toBeCalledTimes(0);
 });

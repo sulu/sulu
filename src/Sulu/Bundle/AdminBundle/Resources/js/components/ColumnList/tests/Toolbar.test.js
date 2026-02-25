@@ -1,10 +1,16 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Toolbar from '../Toolbar';
 import ToolbarDropdown from '../ToolbarDropdown';
 
-test('Should render with active', () => {
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+test('Should render with active', async() => {
+    const user = userEvent.setup();
     const toolbarItems = [
         {
             icon: 'fa-plus',
@@ -21,28 +27,30 @@ test('Should render with active', () => {
                 },
                 {
                     disabled: true,
-                    label: 'Option1',
+                    label: 'Option2',
                     onClick: jest.fn(),
                 },
             ],
         },
     ];
+    const {asFragment} = render(<Toolbar toolbarItems={toolbarItems} />);
+    const toolbarButtons = screen.getAllByRole('button');
 
-    const toolbar = mount(<Toolbar toolbarItems={toolbarItems} />);
+    expect(toolbarButtons).toHaveLength(2);
+    expect(asFragment()).toMatchSnapshot();
 
-    expect(toolbar.find(ToolbarDropdown).length).toBe(1);
-
-    toolbar.find('.fa-plus').simulate('click');
+    await user.click(toolbarButtons[0]);
     expect(toolbarItems[0].onClick).toBeCalledWith();
 
-    // check for opened dropdown in body
-    toolbar.find(ToolbarDropdown).find('button').simulate('click');
-    toolbar.update();
-    expect(toolbar.render()).toMatchSnapshot();
-    expect(toolbar.find('ArrowMenu').render()).toMatchSnapshot();
+    expect(screen.queryByRole('button', {name: 'Option1'})).not.toBeInTheDocument();
+    await user.click(toolbarButtons[1]);
+
+    expect(screen.getByRole('button', {name: 'Option1'})).toBeEnabled();
+    expect(screen.getByRole('button', {name: 'Option2'})).toBeDisabled();
 });
 
-test('Should close dropdown when item is clicked', () => {
+test('Should close dropdown when item is clicked', async() => {
+    const user = userEvent.setup();
     const toolbarItems = [
         {
             icon: 'fa-gear',
@@ -60,12 +68,14 @@ test('Should close dropdown when item is clicked', () => {
         },
     ];
 
-    const toolbar = mount(<Toolbar toolbarItems={toolbarItems} />);
+    render(<ToolbarDropdown {...toolbarItems[0]} />);
 
-    expect(toolbar.find('ToolbarDropdown').find('Action')).toHaveLength(0);
-    toolbar.find(ToolbarDropdown).find('button').simulate('click');
-    expect(toolbar.find('ToolbarDropdown').find('Action')).toHaveLength(2);
+    expect(screen.queryByRole('button', {name: 'Option1'})).not.toBeInTheDocument();
 
-    toolbar.find('ToolbarDropdown Action[children="Option1"]').simulate('click');
-    expect(toolbar.find('ToolbarDropdown').find('Action')).toHaveLength(0);
+    await user.click(screen.getByRole('button'));
+    expect(screen.getByRole('button', {name: 'Option1'})).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', {name: 'Option1'}));
+    expect(toolbarItems[0].options[0].onClick).toBeCalledTimes(1);
+    expect(screen.queryByRole('button', {name: 'Option1'})).not.toBeInTheDocument();
 });

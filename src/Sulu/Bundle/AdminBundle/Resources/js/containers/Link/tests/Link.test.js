@@ -1,12 +1,15 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
 import {observable} from 'mobx';
+import {render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {ResourceRequester} from '../../../services';
 import Link from '../Link';
 import linkTypeRegistry from '../registries/linkTypeRegistry';
 import LinkTypeOverlay from '../overlays/LinkTypeOverlay';
 import ExternalLinkTypeOverlay from '../overlays/ExternalLinkTypeOverlay';
+import findMockCallArg from '../../../utils/TestHelper/findMockCallArg';
+import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
 import type {LinkValue} from '../types';
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
@@ -17,6 +20,27 @@ jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
+jest.mock('../../../components/SingleSelect/SingleSelect', () => {
+    const React = require('react');
+
+    const SingleSelect: any = jest.fn((props) => (
+        <div data-testid="single-select">{props.children}</div>
+    ));
+
+    SingleSelect.Option = function Option(props) {
+        return (
+            <div data-testid="single-select-option" data-value={props.value}>
+                {props.children}
+            </div>
+        );
+    };
+
+    return SingleSelect;
+});
+
+jest.mock('../overlays/LinkTypeOverlay', () => jest.fn(() => null));
+jest.mock('../overlays/ExternalLinkTypeOverlay', () => jest.fn(() => null));
+
 jest.mock('../registries/linkTypeRegistry', () => ({
     getKeys: jest.fn(),
     getOverlay: jest.fn(),
@@ -24,21 +48,40 @@ jest.mock('../registries/linkTypeRegistry', () => ({
     getTitle: jest.fn((key) => key.charAt(0).toUpperCase() + (key.slice(1))),
 }));
 
-test('Render Link container incl. loading a selected value', async(resolve) => {
+const SingleSelect = jest.requireMock('../../../components/SingleSelect/SingleSelect');
+const LinkTypeOverlayMock: any = jest.requireMock('../overlays/LinkTypeOverlay');
+const ExternalLinkTypeOverlayMock: any = jest.requireMock('../overlays/ExternalLinkTypeOverlay');
+
+const createOverlayOptions = (provider) => ({
+    displayProperties: ['title'],
+    overlayTitle: 'Test Overlay',
+    provider,
+    resourceKey: 'pages',
+    title: 'Pages',
+});
+
+const configureLinkTypeRegistry = (keys) => {
+    linkTypeRegistry.getKeys.mockReturnValue(keys);
+    linkTypeRegistry.getOverlay.mockImplementation(
+        (key) => key === 'external' ? ExternalLinkTypeOverlay : LinkTypeOverlay
+    );
+    linkTypeRegistry.getOptions.mockImplementation((key) => key === 'external' ? undefined : createOverlayOptions(key));
+};
+
+const getLatestOverlayProps = (OverlayComponent: any, matcher: (props: Object) => boolean = () => true) => {
+    return findMockCallArg(OverlayComponent, ([props]) => matcher(props));
+};
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+test('Render Link container incl. loading a selected value', async() => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
-    linkTypeRegistry.getOptions.mockReturnValue({
-        title: 'Pages',
-        overlayTitle: 'Test Overlay',
-        resourceKey: 'pages',
-        displayProperties: ['title'],
-    });
-    linkTypeRegistry.getKeys.mockReturnValue(['page']);
-
-    const getPromise = Promise.resolve({title: 'Page 1'});
-    ResourceRequester.get.mockReturnValue(getPromise);
+    configureLinkTypeRegistry(['page']);
+    ResourceRequester.get.mockResolvedValue({title: 'Page 1'});
 
     const value: LinkValue = {
         title: 'TestLink',
@@ -47,31 +90,20 @@ test('Render Link container incl. loading a selected value', async(resolve) => {
         locale: 'en',
     };
 
-    const link = shallow(
+    const {asFragment} = render(
         <Link locale={observable.box('en')} onChange={changeSpy} onFinish={finishSpy} value={value} />
     );
 
-    getPromise.finally(() => {
-        setTimeout(() => {
-            expect(link).toMatchSnapshot();
+    await waitFor(() => expect(ResourceRequester.get).toBeCalled());
 
-            resolve();
-        }, 0);
-    });
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Open overlay on input click', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
+test('Open overlay on input click', async() => {
+    const user = userEvent.setup();
 
-    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
-    linkTypeRegistry.getOptions.mockReturnValue({
-        title: 'Pages',
-        overlayTitle: 'Test Overlay',
-        resourceKey: 'pages',
-        displayProperties: ['title'],
-    });
-    linkTypeRegistry.getKeys.mockReturnValue(['page']);
+    configureLinkTypeRegistry(['page']);
+    ResourceRequester.get.mockResolvedValue({title: 'Page 1'});
 
     const value: LinkValue = {
         title: 'TestLink',
@@ -83,37 +115,35 @@ test('Open overlay on input click', () => {
         rel: 'TestRel',
     };
 
-    const link = shallow(
+    render(
         <Link
             enableAnchor={true}
             enableRel={true}
             enableTarget={true}
             enableTitle={true}
             locale={observable.box('en')}
-            onChange={changeSpy}
-            onFinish={finishSpy}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
             value={value}
-        />);
+        />
+    );
 
-    const button = link.find('.item.clickable');
+    expect(getLatestOverlayProps(LinkTypeOverlayMock).open).toEqual(false);
 
-    expect(link.find('LinkTypeOverlay').props().open).toEqual(false);
-    button.simulate('click');
-    expect(link.find('LinkTypeOverlay').props().open).toEqual(true);
+    const titleButton = screen
+        .getAllByRole('button')
+        .find((button) => button.tagName.toLowerCase() !== 'button');
+    if (!titleButton) {
+        throw new Error('Expected title button to exist');
+    }
+
+    await user.click(titleButton);
+
+    expect(getLatestOverlayProps(LinkTypeOverlayMock).open).toEqual(true);
 });
 
 test('Open overlay on provider change', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
-
-    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
-    linkTypeRegistry.getOptions.mockReturnValue({
-        title: 'Pages',
-        overlayTitle: 'Test Overlay',
-        resourceKey: 'pages',
-        displayProperties: ['title'],
-    });
-    linkTypeRegistry.getKeys.mockReturnValue(['page', 'media']);
+    configureLinkTypeRegistry(['page', 'media']);
 
     const value: LinkValue = {
         title: 'TestLink',
@@ -125,35 +155,35 @@ test('Open overlay on provider change', () => {
         rel: 'TestRel',
     };
 
-    const link = shallow(
+    render(
         <Link
             enableAnchor={true}
             enableRel={true}
             enableTarget={true}
             enableTitle={true}
             locale={observable.box('en')}
-            onChange={changeSpy}
-            onFinish={finishSpy}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
             value={value}
-        />);
+        />
+    );
 
-    expect(link.find('LinkTypeOverlay').at(1).props().open).toEqual(false);
-    link.find('SingleSelect').props().onChange('media');
-    expect(link.find('LinkTypeOverlay').at(1).props().open).toEqual(true);
+    expect(
+        getLatestOverlayProps(LinkTypeOverlayMock, (props) => props.options?.provider === 'media').open
+    ).toEqual(false);
+
+    getLatestMockProps(SingleSelect).onChange('media');
+
+    expect(
+        getLatestOverlayProps(LinkTypeOverlayMock, (props) => props.options?.provider === 'media').open
+    ).toEqual(true);
 });
 
 test('Update values on overlay confirm', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
-    linkTypeRegistry.getOptions.mockReturnValue({
-        title: 'Pages',
-        overlayTitle: 'Test Overlay',
-        resourceKey: 'pages',
-        displayProperties: ['title'],
-    });
-    linkTypeRegistry.getKeys.mockReturnValue(['page', 'media']);
+    configureLinkTypeRegistry(['page', 'media']);
 
     const value: LinkValue = {
         title: 'TestLink',
@@ -165,7 +195,7 @@ test('Update values on overlay confirm', () => {
         target: 'TestTarget',
     };
 
-    const link = shallow(
+    render(
         <Link
             enableAnchor={true}
             enableQuery={true}
@@ -176,17 +206,17 @@ test('Update values on overlay confirm', () => {
             onChange={changeSpy}
             onFinish={finishSpy}
             value={value}
-        />);
+        />
+    );
 
-    link.find('SingleSelect').props().onChange('media');
+    getLatestMockProps(SingleSelect).onChange('media');
 
-    const overlayProps = link.find('LinkTypeOverlay').at(1).props();
+    const overlayProps = getLatestOverlayProps(LinkTypeOverlayMock, (props) => props.options?.provider === 'media');
     overlayProps.onHrefChange('10');
     overlayProps.onQueryChange('newQuery');
     overlayProps.onAnchorChange('newAnchor');
     overlayProps.onTargetChange('newTarget');
     overlayProps.onTitleChange('newTitle');
-
     overlayProps.onConfirm();
 
     expect(changeSpy).toBeCalledWith(
@@ -198,17 +228,17 @@ test('Update values on overlay confirm', () => {
             query: 'newQuery',
             anchor: 'newAnchor',
             target: 'newTarget',
+            rel: undefined,
         }
     );
+    expect(finishSpy).toBeCalled();
 });
 
 test('Update values on overlay confirm with ExternalLinkTypeOverlay', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    linkTypeRegistry.getOverlay.mockReturnValue(ExternalLinkTypeOverlay);
-    linkTypeRegistry.getOptions.mockReturnValue(undefined);
-    linkTypeRegistry.getKeys.mockReturnValue(['media', 'external']);
+    configureLinkTypeRegistry(['media', 'external']);
 
     const value: LinkValue = {
         title: 'TestLink',
@@ -218,7 +248,7 @@ test('Update values on overlay confirm with ExternalLinkTypeOverlay', () => {
         target: 'TestTarget',
     };
 
-    const link = shallow(
+    render(
         <Link
             enableRel={true}
             enableTarget={true}
@@ -227,16 +257,16 @@ test('Update values on overlay confirm with ExternalLinkTypeOverlay', () => {
             onChange={changeSpy}
             onFinish={finishSpy}
             value={value}
-        />);
+        />
+    );
 
-    link.find('SingleSelect').props().onChange('external');
+    getLatestMockProps(SingleSelect).onChange('external');
 
-    const overlayProps = link.find('ExternalLinkTypeOverlay').at(1).props();
+    const overlayProps = getLatestOverlayProps(ExternalLinkTypeOverlayMock);
     overlayProps.onHrefChange('https://example.org');
     overlayProps.onTargetChange('newTarget');
     overlayProps.onTitleChange('newTitle');
     overlayProps.onRelChange('newRel');
-
     overlayProps.onConfirm();
 
     expect(changeSpy).toBeCalledWith(
@@ -247,25 +277,20 @@ test('Update values on overlay confirm with ExternalLinkTypeOverlay', () => {
             locale: 'en',
             target: 'newTarget',
             rel: 'newRel',
+            anchor: undefined,
+            query: undefined,
         }
     );
+    expect(finishSpy).toBeCalled();
 });
 
-test('Invalidate values on RemoveButton click', async(resolve) => {
+test('Invalidate values on RemoveButton click', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
-    linkTypeRegistry.getOptions.mockReturnValue({
-        title: 'Pages',
-        overlayTitle: 'Test Overlay',
-        resourceKey: 'pages',
-        displayProperties: ['title'],
-    });
-    linkTypeRegistry.getKeys.mockReturnValue(['page', 'media']);
-
-    const getPromise = Promise.resolve({title: 'Page 1'});
-    ResourceRequester.get.mockReturnValue(getPromise);
+    configureLinkTypeRegistry(['page', 'media']);
+    ResourceRequester.get.mockResolvedValue({title: 'Page 1'});
 
     const value: LinkValue = {
         title: 'TestLink',
@@ -277,85 +302,69 @@ test('Invalidate values on RemoveButton click', async(resolve) => {
         rel: 'TestRel',
     };
 
-    const link = shallow(<Link
-        enableAnchor={true}
-        enableRel={true}
-        enableTarget={true}
-        enableTitle={true}
-        locale={observable.box('en')}
-        onChange={changeSpy}
-        onFinish={finishSpy}
-        value={value}
-    />);
+    render(
+        <Link
+            enableAnchor={true}
+            enableRel={true}
+            enableTarget={true}
+            enableTitle={true}
+            locale={observable.box('en')}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            value={value}
+        />
+    );
 
-    getPromise.finally(() => {
-        setTimeout(() => {
-            const removeButton = link.find('.removeButton');
-            removeButton.simulate('click');
+    await waitFor(() => expect(ResourceRequester.get).toBeCalled());
 
-            expect(changeSpy).toBeCalledWith(
-                {
-                    title: undefined,
-                    href: undefined,
-                    provider: undefined,
-                    locale: 'en',
-                    query: undefined,
-                    anchor: undefined,
-                    target: undefined,
-                    rel: undefined,
-                }
-            );
+    const removeButton = screen
+        .getAllByRole('button')
+        .find((button) => button.tagName.toLowerCase() === 'button');
+    if (!removeButton) {
+        throw new Error('Expected remove button to exist');
+    }
 
-            resolve();
-        }, 0);
-    });
+    await user.click(removeButton);
+
+    expect(changeSpy).toBeCalledWith(
+        {
+            title: undefined,
+            href: undefined,
+            provider: undefined,
+            locale: 'en',
+            query: undefined,
+            anchor: undefined,
+            target: undefined,
+            rel: undefined,
+        }
+    );
+    expect(finishSpy).toBeCalled();
 });
 
 test('Display providers with "types" property', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
+    configureLinkTypeRegistry(['page', 'media', 'article']);
 
-    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
-    linkTypeRegistry.getOptions.mockReturnValue({
-        title: 'Pages',
-        overlayTitle: 'Test Overlay',
-        resourceKey: 'pages',
-        displayProperties: ['title'],
-    });
-    linkTypeRegistry.getKeys.mockReturnValue(['page', 'media', 'article']);
-
-    const link = shallow(
+    render(
         <Link
             enableAnchor={true}
             enableRel={true}
             enableTarget={true}
             enableTitle={true}
             locale={observable.box('en')}
-            onChange={changeSpy}
-            onFinish={finishSpy}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
             types={['page', 'article']}
             value={undefined}
-        />);
+        />
+    );
 
-    const removeButton = link.find('.removeButton');
-    removeButton.simulate('click');
-    expect(link.find('Option').length).toEqual(2);
+    expect(screen.getAllByTestId('single-select-option')).toHaveLength(2);
 });
 
 test('Display providers with "excluded_types" property', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
+    configureLinkTypeRegistry(['page', 'media', 'article']);
 
-    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
-    linkTypeRegistry.getOptions.mockReturnValue({
-        title: 'Pages',
-        overlayTitle: 'Test Overlay',
-        resourceKey: 'pages',
-        displayProperties: ['title'],
-    });
-    linkTypeRegistry.getKeys.mockReturnValue(['page', 'media', 'article']);
-
-    const link = shallow(
+    render(
         <Link
             enableAnchor={true}
             enableRel={true}
@@ -363,28 +372,19 @@ test('Display providers with "excluded_types" property', () => {
             enableTitle={true}
             excludedTypes={['page', 'article']}
             locale={observable.box('en')}
-            onChange={changeSpy}
-            onFinish={finishSpy}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
             value={undefined}
-        />);
+        />
+    );
 
-    expect(link.find('Option').length).toEqual(1);
+    expect(screen.getAllByTestId('single-select-option')).toHaveLength(1);
 });
 
 test('Display providers with "excluded_types" and "types" property', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
+    configureLinkTypeRegistry(['page', 'media', 'article', 'account']);
 
-    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
-    linkTypeRegistry.getOptions.mockReturnValue({
-        title: 'Pages',
-        overlayTitle: 'Test Overlay',
-        resourceKey: 'pages',
-        displayProperties: ['title'],
-    });
-    linkTypeRegistry.getKeys.mockReturnValue(['page', 'media', 'article', 'account']);
-
-    const link = shallow(
+    render(
         <Link
             enableAnchor={true}
             enableRel={true}
@@ -392,11 +392,12 @@ test('Display providers with "excluded_types" and "types" property', () => {
             enableTitle={true}
             excludedTypes={['page', 'article']}
             locale={observable.box('en')}
-            onChange={changeSpy}
-            onFinish={finishSpy}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
             types={['media', 'account']}
             value={undefined}
-        />);
+        />
+    );
 
-    expect(link.find('Option').length).toEqual(2);
+    expect(screen.getAllByTestId('single-select-option')).toHaveLength(2);
 });

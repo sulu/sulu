@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Show only the publish icon 1`] = `
+<DocumentFragment>
+  <div
+    class="publishIndicator"
+  >
+    <span
+      class="published"
+    />
+  </div>
+</DocumentFragment>
+`;

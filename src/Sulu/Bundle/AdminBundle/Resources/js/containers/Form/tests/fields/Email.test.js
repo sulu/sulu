@@ -1,42 +1,40 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
-import ResourceStore from '../../../../stores/ResourceStore';
-import FormInspector from '../../FormInspector';
-import ResourceFormStore from '../../stores/ResourceFormStore';
 import Email from '../../fields/Email';
-import EmailComponent from '../../../../components/Email';
 
-jest.mock('../../../../stores/ResourceStore', () => jest.fn());
-jest.mock('../../stores/ResourceFormStore', () => jest.fn());
-jest.mock('../../FormInspector', () => jest.fn());
+const createProps = (props: Object = {}) => ({
+    ...fieldTypeDefaultProps,
+    formInspector: ({}: any),
+    ...props,
+});
 
 test('Pass error correctly to component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const error = {keyword: 'minLength', parameters: {}};
 
-    const field = shallow(
+    render(
         <Email
-            {...fieldTypeDefaultProps}
+            {...createProps()}
             error={error}
-            formInspector={formInspector}
         />
     );
+    const input = screen.getByRole('textbox');
 
-    expect(field.find(EmailComponent).prop('valid')).toBe(false);
+    expect(input).toHaveAttribute('type', 'email');
+    expect(input.parentElement).toHaveClass('error');
 });
 
 test('Pass props correctly to component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const field = shallow(
+    render(
         <Email
-            {...fieldTypeDefaultProps}
+            {...createProps()}
             disabled={true}
-            formInspector={formInspector}
         />
     );
+    const input = screen.getByRole('textbox');
 
-    expect(field.find(EmailComponent).prop('valid')).toBe(true);
-    expect(field.find(EmailComponent).prop('disabled')).toBe(true);
+    expect(input).toHaveAttribute('type', 'email');
+    expect(input).toBeDisabled();
+    expect(input.parentElement).not.toHaveClass('error');
 });

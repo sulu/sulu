@@ -4,7 +4,9 @@ import {render} from '@testing-library/react';
 import PublishIndicator from '../PublishIndicator';
 
 test('Show only the publish icon', () => {
-    const {container} = render(<PublishIndicator published={true} />);
+    const {asFragment, container} = render(<PublishIndicator published={true} />);
+
+    expect(asFragment()).toMatchSnapshot();
 
     // eslint-disable-next-line testing-library/no-container
     expect(container.querySelector('.published')).toBeInTheDocument();

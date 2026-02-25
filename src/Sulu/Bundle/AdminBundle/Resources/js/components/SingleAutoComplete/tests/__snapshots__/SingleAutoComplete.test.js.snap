@@ -1,96 +1,73 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SingleAutoComplete should render with suggestions 1`] = `
-<div
-  class="singleAutoComplete"
->
+<DocumentFragment>
   <div
-    class="input default left"
+    class="singleAutoComplete"
   >
-    <div
-      class="prependedContainer default"
-    >
-      <span
-        aria-label="su-search"
-        class="su-search icon default"
-      />
-    </div>
     <input
-      autocomplete="off"
-      class="mousetrap"
-      type="text"
+      data-testid="single-auto-complete-input"
       value="Test"
     />
+    <div
+      data-open="true"
+      data-testid="single-auto-complete-popover"
+    >
+      <button
+        type="button"
+      >
+        close
+      </button>
+      <button
+        data-index="0"
+        type="button"
+      >
+        Suggestion 1
+      </button>
+      <button
+        data-index="1"
+        type="button"
+      >
+        Suggestion 2
+      </button>
+      <button
+        data-index="2"
+        type="button"
+      >
+        Suggestion 3
+      </button>
+    </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`SingleAutoComplete should render with suggestions 2`] = `
-Array [
-  <div
-    class="backdrop fixed"
-    data-testid="backdrop"
-    role="button"
-  />,
-  <div
-    class="container"
+<div
+  data-open="true"
+  data-testid="single-auto-complete-popover"
+>
+  <button
+    type="button"
   >
-    <ul
-      class="menu"
-      style="top: 10px; left: 10px; position: fixed; pointer-events: auto;"
-    >
-      <li
-        class="suggestionItem"
-        style="min-width: -10px;"
-      >
-        <button
-          class="suggestion"
-          type="button"
-        >
-          <span
-            class="column"
-          >
-            <span>
-              Suggestion 1
-            </span>
-          </span>
-        </button>
-      </li>
-      <li
-        class="suggestionItem"
-        style="min-width: -10px;"
-      >
-        <button
-          class="suggestion"
-          type="button"
-        >
-          <span
-            class="column"
-          >
-            <span>
-              Suggestion 2
-            </span>
-          </span>
-        </button>
-      </li>
-      <li
-        class="suggestionItem"
-        style="min-width: -10px;"
-      >
-        <button
-          class="suggestion"
-          type="button"
-        >
-          <span
-            class="column"
-          >
-            <span>
-              Suggestion 3
-            </span>
-          </span>
-        </button>
-      </li>
-    </ul>
-  </div>,
-]
+    close
+  </button>
+  <button
+    data-index="0"
+    type="button"
+  >
+    Suggestion 1
+  </button>
+  <button
+    data-index="1"
+    type="button"
+  >
+    Suggestion 2
+  </button>
+  <button
+    data-index="2"
+    type="button"
+  >
+    Suggestion 3
+  </button>
+</div>
 `;

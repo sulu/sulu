@@ -1,20 +1,27 @@
 // @flow
-import {shallow, mount} from 'enzyme/build';
-import mockReact from 'react';
+import React from 'react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {extendObservable as mockExtendObservable} from 'mobx';
 import userStore from '../../../stores/userStore';
-import FormOverlay from '../../FormOverlay';
 import ProfileFormOverlay from '../ProfileFormOverlay';
 import ResourceStore from '../../../stores/ResourceStore';
 import ResourceFormStore from '../../Form/stores/ResourceFormStore';
 
-const React = mockReact;
+jest.mock('../../../containers/Form', () => {
+    const React = require('react');
 
-jest.mock('../../../containers/Form', () => class FormMock extends mockReact.Component<*> {
-    render() {
-        return <div>form container mock</div>;
-    }
+    return class FormMock extends React.Component<*> {
+        submit() {
+            this.props.onSubmit();
+        }
+
+        render() {
+            return React.createElement('div', undefined, 'form container mock');
+        }
+    };
 });
+
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
@@ -22,6 +29,7 @@ jest.mock('../../../utils/Translator', () => ({
 jest.mock('../../../stores/userStore', () => ({
     setFullName: jest.fn(),
 }));
+
 jest.mock('../../../stores/ResourceStore', () => jest.fn(
     (resourceKey, itemId) => {
         return {
@@ -29,14 +37,17 @@ jest.mock('../../../stores/ResourceStore', () => jest.fn(
         };
     }
 ));
-jest.mock('../../Form/stores/ResourceFormStore',
+
+jest.mock(
+    '../../Form/stores/ResourceFormStore',
     () => jest.fn(function(resourceStore, formKey, options, metadataOptions) {
         this.id = resourceStore.id;
         this.formKey = formKey;
         this.options = options;
         this.metadataOptions = metadataOptions;
+        this.data = {};
 
-        this.save = jest.fn();
+        this.save = jest.fn().mockReturnValue(Promise.resolve());
         this.destroy = jest.fn();
 
         mockExtendObservable(this, {
@@ -46,39 +57,42 @@ jest.mock('../../Form/stores/ResourceFormStore',
     })
 );
 
+const resourceFormStoreMock = ((ResourceFormStore: any): {
+    mock: {instances: Array<Object>},
+    ...
+});
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
 test('Component should render', () => {
-    const profileFormOverlay = mount(
+    const {baseElement} = render(
         <ProfileFormOverlay
             onClose={jest.fn()}
             open={true}
         />
     );
 
-    expect(profileFormOverlay.render()).toMatchSnapshot();
+    expect(baseElement).toMatchSnapshot();
 });
 
 test('Should pass correct props to FormOverlay', () => {
     const closeSpy = jest.fn();
 
-    const profileFormOverlay = shallow(
+    render(
         <ProfileFormOverlay
             onClose={closeSpy}
             open={true}
         />
     );
 
-    expect(profileFormOverlay.find(FormOverlay).props()).toEqual(expect.objectContaining({
-        confirmText: 'sulu_admin.save',
-        formStore: profileFormOverlay.instance().formStore,
-        onClose: closeSpy,
-        open: true,
-        size: 'large',
-        title: 'sulu_admin.edit_profile',
-    }));
+    expect(screen.getByText('sulu_admin.edit_profile')).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'sulu_admin.save'})).toBeDisabled();
 });
 
 test('Should construct ResourceStore and ResourceFormStore with correct parameters when mounted', () => {
-    shallow(
+    render(
         <ProfileFormOverlay
             onClose={jest.fn()}
             open={true}
@@ -90,18 +104,28 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
 });
 
 test('Should construct new ResourceStore and ResourceFormStore when closed and opened again', () => {
-    const profileFormOverlay = shallow(
+    const {rerender} = render(
         <ProfileFormOverlay
             onClose={jest.fn()}
             open={true}
         />
     );
 
-    const initialFormStore = profileFormOverlay.instance().formStore;
+    const initialFormStore = resourceFormStoreMock.mock.instances[0];
     expect(initialFormStore.destroy).not.toHaveBeenCalled();
 
-    profileFormOverlay.setProps({open: false});
-    profileFormOverlay.setProps({open: true});
+    rerender(
+        <ProfileFormOverlay
+            onClose={jest.fn()}
+            open={false}
+        />
+    );
+    rerender(
+        <ProfileFormOverlay
+            onClose={jest.fn()}
+            open={true}
+        />
+    );
 
     expect(ResourceStore).toHaveBeenCalledTimes(2);
     expect(ResourceStore).lastCalledWith('profile', '-');
@@ -109,44 +133,47 @@ test('Should construct new ResourceStore and ResourceFormStore when closed and o
     expect(ResourceFormStore).lastCalledWith(expect.anything(), 'profile_details');
 
     expect(initialFormStore.destroy).toHaveBeenCalled();
-    expect(initialFormStore).not.toEqual(profileFormOverlay.instance().formStore);
+    expect(initialFormStore).not.toEqual(resourceFormStoreMock.mock.instances[1]);
 });
 
 test('Should destroy ResourceFormStore when component is unmounted', () => {
-    const profileFormOverlay = shallow(
+    const {unmount} = render(
         <ProfileFormOverlay
             onClose={jest.fn()}
             open={true}
         />
     );
 
-    const formStore = profileFormOverlay.instance().formStore;
+    const formStore = resourceFormStoreMock.mock.instances[0];
     expect(formStore.destroy).not.toHaveBeenCalled();
 
-    profileFormOverlay.unmount();
+    unmount();
 
     expect(formStore.destroy).toHaveBeenCalled();
 });
 
-test('Should update full name in UserStore and call onClose callback when FormOverlay is confirmed', () => {
+test('Should update full name in UserStore and call onClose callback when FormOverlay is confirmed', async() => {
+    const user = userEvent.setup();
     const closeSpy = jest.fn();
 
-    const profileFormOverlay = shallow(
+    render(
         <ProfileFormOverlay
             onClose={closeSpy}
             open={true}
         />
     );
 
-    profileFormOverlay.instance().formStore.data = {
+    const formStore = resourceFormStoreMock.mock.instances[0];
+    formStore.data = {
         firstName: 'Donald',
         lastName: 'Duck',
     };
+    formStore.dirty = true;
 
     expect(userStore.setFullName).not.toHaveBeenCalled();
     expect(closeSpy).not.toHaveBeenCalled();
 
-    profileFormOverlay.find(FormOverlay).props().onConfirm();
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.save'}));
 
     expect(userStore.setFullName).toHaveBeenCalledWith('Donald Duck');
     expect(closeSpy).toHaveBeenCalled();

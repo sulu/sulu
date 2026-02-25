@@ -1,98 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Iban should render 1`] = `
-<div
-  class="input default left"
->
+exports[`Iban should pass default props 1`] = `
+<DocumentFragment>
   <div
-    class="prependedContainer default"
+    class="input default left"
   >
-    <span
-      aria-label="su-credit-card"
-      class="su-credit-card icon default"
+    <div
+      class="prependedContainer default"
+    >
+      <span
+        aria-label="su-credit-card"
+        class="su-credit-card icon default"
+      />
+    </div>
+    <input
+      type="text"
+      value=""
     />
   </div>
-  <input
-    type="text"
-    value=""
-  />
-</div>
-`;
-
-exports[`Iban should render error 1`] = `
-<div
-  class="input default left error"
->
-  <div
-    class="prependedContainer default"
-  >
-    <span
-      aria-label="su-credit-card"
-      class="su-credit-card icon default"
-    />
-  </div>
-  <input
-    type="text"
-    value=""
-  />
-</div>
-`;
-
-exports[`Iban should render when disabled 1`] = `
-<div
-  class="input default left disabled"
->
-  <div
-    class="prependedContainer default"
-  >
-    <span
-      aria-label="su-credit-card"
-      class="su-credit-card icon default"
-    />
-  </div>
-  <input
-    disabled=""
-    type="text"
-    value="AT61 1904 3002 3457 3201"
-  />
-</div>
-`;
-
-exports[`Iban should render with placeholder 1`] = `
-<div
-  class="input default left"
->
-  <div
-    class="prependedContainer default"
-  >
-    <span
-      aria-label="su-credit-card"
-      class="su-credit-card icon default"
-    />
-  </div>
-  <input
-    placeholder="My placeholder"
-    type="text"
-    value=""
-  />
-</div>
-`;
-
-exports[`Iban should render with value 1`] = `
-<div
-  class="input default left"
->
-  <div
-    class="prependedContainer default"
-  >
-    <span
-      aria-label="su-credit-card"
-      class="su-credit-card icon default"
-    />
-  </div>
-  <input
-    type="text"
-    value="AT61 1904 3002 3457 3201"
-  />
-</div>
+</DocumentFragment>
 `;

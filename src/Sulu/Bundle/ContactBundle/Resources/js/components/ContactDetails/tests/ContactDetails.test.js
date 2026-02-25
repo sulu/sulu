@@ -1,6 +1,8 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {act, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import getMockCallArg from 'sulu-admin-bundle/utils/TestHelper/getMockCallArg';
 import ContactDetails from '../ContactDetails';
 import Email from '../../ContactDetails/Email';
 import Fax from '../../ContactDetails/Fax';
@@ -8,11 +10,67 @@ import Phone from '../../ContactDetails/Phone';
 import SocialMedia from '../../ContactDetails/SocialMedia';
 import Website from '../../ContactDetails/Website';
 
+jest.mock('sulu-admin-bundle/components', () => {
+    const React = require('react');
+
+    const FormMock = function FormMock({children}) {
+        return React.createElement('div', {'data-testid': 'form'}, children);
+    };
+
+    FormMock.Field = function FormFieldMock({children}) {
+        return React.createElement('div', {'data-testid': 'form-field'}, children);
+    };
+
+    const DropdownButtonMock = function DropdownButtonMock({children, label}) {
+        return React.createElement(
+            'div',
+            {'data-testid': 'dropdown-button'},
+            React.createElement('button', {type: 'button'}, label),
+            children
+        );
+    };
+
+    DropdownButtonMock.Item = function DropdownButtonItemMock({children, onClick}) {
+        return React.createElement('button', {onClick, type: 'button'}, children);
+    };
+
+    return {
+        DropdownButton: DropdownButtonMock,
+        Form: FormMock,
+    };
+});
+
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
+jest.mock('../../ContactDetails/Email', () => jest.fn(function EmailMock() {
+    return <div data-testid="email" />;
+}));
+
+jest.mock('../../ContactDetails/Fax', () => jest.fn(function FaxMock() {
+    return <div data-testid="fax" />;
+}));
+
+jest.mock('../../ContactDetails/Phone', () => jest.fn(function PhoneMock() {
+    return <div data-testid="phone" />;
+}));
+
+jest.mock('../../ContactDetails/SocialMedia', () => jest.fn(function SocialMediaMock() {
+    return <div data-testid="social-media" />;
+}));
+
+jest.mock('../../ContactDetails/Website', () => jest.fn(function WebsiteMock() {
+    return <div data-testid="website" />;
+}));
+
+function getProps(component: any, callIndex: number = 0) {
+    return getMockCallArg(component, callIndex, 0);
+}
+
 beforeEach(() => {
+    jest.clearAllMocks();
+
     Email.types = [
         {label: 'Work', value: 1},
         {label: 'Private', value: 2},
@@ -40,7 +98,9 @@ beforeEach(() => {
 });
 
 test('Render empty ContactDetails', () => {
-    expect(render(<ContactDetails onBlur={jest.fn()} onChange={jest.fn()} />)).toMatchSnapshot();
+    const {asFragment} = render(<ContactDetails onBlur={jest.fn()} onChange={jest.fn()} />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render empty phone and email fields even if other values are set', () => {
@@ -52,7 +112,9 @@ test('Render empty phone and email fields even if other values are set', () => {
         websites: [{website: 'http://www.sulu.io', websiteType: 1}],
     };
 
-    expect(render(<ContactDetails onBlur={jest.fn()} onChange={jest.fn()} value={value} />)).toMatchSnapshot();
+    const {asFragment} = render(<ContactDetails onBlur={jest.fn()} onChange={jest.fn()} value={value} />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render ContactDetails with data', () => {
@@ -64,16 +126,19 @@ test('Render ContactDetails with data', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     };
 
-    expect(render(<ContactDetails onBlur={jest.fn()} onChange={jest.fn()} value={value} />)).toMatchSnapshot();
+    const {asFragment} = render(<ContactDetails onBlur={jest.fn()} onChange={jest.fn()} value={value} />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Add data should call onChange and onBlur callbacks', () => {
+test('Add data should call onChange and onBlur callbacks', async() => {
     const blurSpy = jest.fn();
     const changeSpy = jest.fn();
+    const user = userEvent.setup();
 
-    const contactDetails = shallow(<ContactDetails onBlur={blurSpy} onChange={changeSpy} />);
+    render(<ContactDetails onBlur={blurSpy} onChange={changeSpy} />);
 
-    contactDetails.find('DropdownButton Action').at(0).simulate('click');
+    await user.click(screen.getByRole('button', {name: 'sulu_contact.email'}));
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: undefined, emailType: 1}],
         faxes: [],
@@ -82,7 +147,7 @@ test('Add data should call onChange and onBlur callbacks', () => {
         websites: [],
     });
 
-    contactDetails.find('DropdownButton Action').at(1).simulate('click');
+    await user.click(screen.getByRole('button', {name: 'sulu_contact.phone'}));
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [],
         faxes: [],
@@ -91,7 +156,7 @@ test('Add data should call onChange and onBlur callbacks', () => {
         websites: [],
     });
 
-    contactDetails.find('DropdownButton Action').at(2).simulate('click');
+    await user.click(screen.getByRole('button', {name: 'sulu_contact.fax'}));
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [],
         faxes: [{fax: undefined, faxType: 1}],
@@ -100,7 +165,7 @@ test('Add data should call onChange and onBlur callbacks', () => {
         websites: [],
     });
 
-    contactDetails.find('DropdownButton Action').at(3).simulate('click');
+    await user.click(screen.getByRole('button', {name: 'sulu_contact.website'}));
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [],
         faxes: [],
@@ -109,7 +174,7 @@ test('Add data should call onChange and onBlur callbacks', () => {
         websites: [{website: undefined, websiteType: 1}],
     });
 
-    contactDetails.find('DropdownButton Action').at(4).simulate('click');
+    await user.click(screen.getByRole('button', {name: 'sulu_contact.social_media'}));
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [],
         faxes: [],
@@ -122,12 +187,14 @@ test('Add data should call onChange and onBlur callbacks', () => {
 });
 
 test('Add data should also work with predefined email and phone fields', () => {
-    const blurSpy = jest.fn();
     const changeSpy = jest.fn();
 
-    const contactDetails = mount(<ContactDetails onBlur={blurSpy} onChange={changeSpy} />);
+    render(<ContactDetails onBlur={jest.fn()} onChange={changeSpy} />);
 
-    contactDetails.find('Email Email').prop('onChange')('test@example.org');
+    act(() => {
+        getProps(Email).onEmailChange(0, 'test@example.org');
+    });
+
     expect(changeSpy).toBeCalledWith({
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [],
@@ -136,7 +203,10 @@ test('Add data should also work with predefined email and phone fields', () => {
         websites: [],
     });
 
-    contactDetails.find('Phone Phone').prop('onChange')('1098509');
+    act(() => {
+        getProps(Phone).onPhoneChange(0, '1098509');
+    });
+
     expect(changeSpy).toBeCalledWith({
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [],
@@ -158,9 +228,11 @@ test('Remove data should call the onChange and onBlur callbacks', () => {
     const blurSpy = jest.fn();
     const changeSpy = jest.fn();
 
-    const contactDetails = mount(<ContactDetails onBlur={blurSpy} onChange={changeSpy} value={value} />);
+    render(<ContactDetails onBlur={blurSpy} onChange={changeSpy} value={value} />);
 
-    contactDetails.find('Email Icon.removeIcon').prop('onClick')();
+    act(() => {
+        getProps(Email).onRemove(0);
+    });
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [],
         faxes: [{fax: '20937439', faxType: 1}],
@@ -169,7 +241,9 @@ test('Remove data should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    contactDetails.find('Fax Icon.removeIcon').prop('onClick')();
+    act(() => {
+        getProps(Fax).onRemove(0);
+    });
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [],
@@ -178,7 +252,9 @@ test('Remove data should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    contactDetails.find('Phone Icon.removeIcon').prop('onClick')();
+    act(() => {
+        getProps(Phone).onRemove(0);
+    });
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [{fax: '20937439', faxType: 1}],
@@ -187,7 +263,9 @@ test('Remove data should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    contactDetails.find('SocialMedia Icon.removeIcon').prop('onClick')();
+    act(() => {
+        getProps(SocialMedia).onRemove(0);
+    });
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [{fax: '20937439', faxType: 1}],
@@ -196,7 +274,9 @@ test('Remove data should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    contactDetails.find('Website Icon.removeIcon').prop('onClick')();
+    act(() => {
+        getProps(Website).onRemove(0);
+    });
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [{fax: '20937439', faxType: 1}],
@@ -220,10 +300,12 @@ test('Edit data should call the onChange and onBlur callbacks', () => {
     const blurSpy = jest.fn();
     const changeSpy = jest.fn();
 
-    const contactDetails = mount(<ContactDetails onBlur={blurSpy} onChange={changeSpy} value={value} />);
+    render(<ContactDetails onBlur={blurSpy} onChange={changeSpy} value={value} />);
 
-    contactDetails.find('Email Email').prop('onChange')('bla@example.org');
-    contactDetails.find('Email Email').prop('onBlur')();
+    act(() => {
+        getProps(Email).onEmailChange(0, 'bla@example.org');
+        getProps(Email).onBlur();
+    });
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'bla@example.org', emailType: 1}],
         faxes: [{fax: '20937439', faxType: 1}],
@@ -232,8 +314,10 @@ test('Edit data should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    contactDetails.find('Fax Phone').prop('onChange')('0923850');
-    contactDetails.find('Fax Phone').prop('onBlur')();
+    act(() => {
+        getProps(Fax).onFaxChange(0, '0923850');
+        getProps(Fax).onBlur();
+    });
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'bla@example.org', emailType: 1}],
         faxes: [{fax: '0923850', faxType: 1}],
@@ -242,8 +326,10 @@ test('Edit data should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    contactDetails.find('Phone Phone').prop('onChange')('123590');
-    contactDetails.find('Phone Phone').prop('onBlur')();
+    act(() => {
+        getProps(Phone).onPhoneChange(0, '123590');
+        getProps(Phone).onBlur();
+    });
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'bla@example.org', emailType: 1}],
         faxes: [{fax: '0923850', faxType: 1}],
@@ -252,8 +338,10 @@ test('Edit data should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    contactDetails.find('SocialMedia').prop('onUsernameChange')(0, 'bla');
-    contactDetails.find('SocialMedia').prop('onBlur')();
+    act(() => {
+        getProps(SocialMedia).onUsernameChange(0, 'bla');
+        getProps(SocialMedia).onBlur();
+    });
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'bla@example.org', emailType: 1}],
         faxes: [{fax: '0923850', faxType: 1}],
@@ -262,8 +350,10 @@ test('Edit data should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    contactDetails.find('Website Url').prop('onChange')('http://example.org');
-    contactDetails.find('Website Url').prop('onBlur')();
+    act(() => {
+        getProps(Website).onWebsiteChange(0, 'http://example.org');
+        getProps(Website).onBlur();
+    });
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'bla@example.org', emailType: 1}],
         faxes: [{fax: '0923850', faxType: 1}],
@@ -287,10 +377,11 @@ test('Changing the types should call the onChange and onBlur callbacks', () => {
     const blurSpy = jest.fn();
     const changeSpy = jest.fn();
 
-    const contactDetails = mount(<ContactDetails onBlur={blurSpy} onChange={changeSpy} value={value} />);
+    render(<ContactDetails onBlur={blurSpy} onChange={changeSpy} value={value} />);
 
-    contactDetails.find('Email ArrowMenu button').simulate('click');
-    contactDetails.find('Email ArrowMenu Item[value=2]').simulate('click');
+    act(() => {
+        getProps(Email).onTypeChange(0, 2);
+    });
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'test@example.org', emailType: 2}],
         faxes: [{fax: '20937439', faxType: 1}],
@@ -299,8 +390,9 @@ test('Changing the types should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    contactDetails.find('Fax ArrowMenu button').simulate('click');
-    contactDetails.find('Fax ArrowMenu Item[value=2]').simulate('click');
+    act(() => {
+        getProps(Fax).onTypeChange(0, 2);
+    });
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'test@example.org', emailType: 2}],
         faxes: [{fax: '20937439', faxType: 2}],
@@ -309,8 +401,9 @@ test('Changing the types should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    contactDetails.find('Phone ArrowMenu button').simulate('click');
-    contactDetails.find('Phone ArrowMenu Item[value=2]').simulate('click');
+    act(() => {
+        getProps(Phone).onTypeChange(0, 2);
+    });
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'test@example.org', emailType: 2}],
         faxes: [{fax: '20937439', faxType: 2}],
@@ -319,8 +412,9 @@ test('Changing the types should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    contactDetails.find('SocialMedia ArrowMenu button').simulate('click');
-    contactDetails.find('SocialMedia ArrowMenu Item[value=2]').simulate('click');
+    act(() => {
+        getProps(SocialMedia).onTypeChange(0, 2);
+    });
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'test@example.org', emailType: 2}],
         faxes: [{fax: '20937439', faxType: 2}],
@@ -329,8 +423,9 @@ test('Changing the types should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    contactDetails.find('Website ArrowMenu button').simulate('click');
-    contactDetails.find('Website ArrowMenu Item[value=2]').simulate('click');
+    act(() => {
+        getProps(Website).onTypeChange(0, 2);
+    });
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'test@example.org', emailType: 2}],
         faxes: [{fax: '20937439', faxType: 2}],

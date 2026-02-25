@@ -4,7 +4,6 @@
     "license": "MIT",
     "repository": "https://github.com/sulu/sulu.git",
     "devDependencies": {
-        "enzyme": "^3.3.0",
         "sulu-admin-bundle": "file:../../../src/Sulu/Bundle/AdminBundle/Resources/js",
         "sulu-route-bundle": "file:../../route/assets/js",
         "sulu-page-bundle": "file:../../page/assets/js",

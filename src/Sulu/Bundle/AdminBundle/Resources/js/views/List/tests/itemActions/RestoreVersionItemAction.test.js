@@ -1,10 +1,8 @@
 // @flow
-import {mount} from 'enzyme';
 import {observable} from 'mobx';
 import ListStore from '../../../../containers/List/stores/ListStore';
 import Router from '../../../../services/Router';
 import List from '../../../../views/List';
-import Dialog from '../../../../components/Dialog';
 import {ResourceRequester} from '../../../../services';
 import RestoreVersionItemAction from '../../itemActions/RestoreVersionItemAction';
 
@@ -43,6 +41,10 @@ function createItemAction(options = {}) {
     return new RestoreVersionItemAction(listStore, list, router, undefined, undefined, options);
 }
 
+function getDialogProps(itemAction: RestoreVersionItemAction): any {
+    return ((itemAction.getNode(): any).props: any);
+}
+
 test('Return disabled item action config without callback if no item is given', () => {
     const itemAction = createItemAction({success_view: 'sulu_page.page_edit_form'});
 
@@ -60,8 +62,8 @@ test('Return disabled item action config without callback if no item is given', 
 test('Display dialog if onClick callback is fired', () => {
     const itemAction = createItemAction({success_view: 'sulu_page.page_edit_form'});
 
-    let dialog = mount(itemAction.getNode()).find(Dialog);
-    expect(dialog.props()).toEqual(expect.objectContaining({
+    let dialog = getDialogProps(itemAction);
+    expect(dialog).toEqual(expect.objectContaining({
         open: false,
         cancelText: 'sulu_admin.cancel',
         confirmText: 'sulu_admin.ok',
@@ -74,8 +76,8 @@ test('Display dialog if onClick callback is fired', () => {
     }
     onClick(1234567, 1);
 
-    dialog = mount(itemAction.getNode()).find(Dialog);
-    expect(dialog.props()).toEqual(expect.objectContaining({
+    dialog = getDialogProps(itemAction);
+    expect(dialog).toEqual(expect.objectContaining({
         open: true,
     }));
 });
@@ -89,13 +91,13 @@ test('Close dialog if it is canceled', () => {
     }
     onClick(1234567, 1);
 
-    let dialog = mount(itemAction.getNode()).find(Dialog);
-    expect(dialog.props().open).toBeTruthy();
+    let dialog = getDialogProps(itemAction);
+    expect(dialog.open).toBeTruthy();
 
-    dialog.props().onCancel();
+    dialog.onCancel();
 
-    dialog = mount(itemAction.getNode()).find(Dialog);
-    expect(dialog.props().open).toBeFalsy();
+    dialog = getDialogProps(itemAction);
+    expect(dialog.open).toBeFalsy();
 });
 
 test('Send request and navigate to "success_view" if dialog is confirmed', () => {
@@ -110,20 +112,20 @@ test('Send request and navigate to "success_view" if dialog is confirmed', () =>
         throw new Error('The onClick callback should not be undefined in this case');
     }
     onClick(1234567, 1);
-    mount(itemAction.getNode()).find(Dialog).props().onConfirm();
+    getDialogProps(itemAction).onConfirm();
 
     expect(ResourceRequester.post).toBeCalledWith(
         'list-resource-key',
         {},
         {action: 'restore', version: 1234567, id: 'page-id', locale: 'de', webspace: 'sulu'}
     );
-    expect(mount(itemAction.getNode()).find(Dialog).props()).toEqual(expect.objectContaining({
+    expect(getDialogProps(itemAction)).toEqual(expect.objectContaining({
         confirmLoading: true,
         open: true,
     }));
 
     return postPromise.then(() => {
-        expect(mount(itemAction.getNode()).find(Dialog).props()).toEqual(expect.objectContaining({
+        expect(getDialogProps(itemAction)).toEqual(expect.objectContaining({
             confirmLoading: false,
             open: false,
         }));
@@ -142,7 +144,5 @@ test('Throw error when dialog is confirmed if given "success_view" option is not
     }
     onClick(1234567, 1);
 
-    const dialog = mount(itemAction.getNode()).find(Dialog);
-
-    expect(() => dialog.props().onConfirm()).toThrow(/success_view/);
+    expect(() => getDialogProps(itemAction).onConfirm()).toThrow(/success_view/);
 });

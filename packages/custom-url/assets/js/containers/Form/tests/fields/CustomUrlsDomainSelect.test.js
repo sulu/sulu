@@ -1,24 +1,10 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
-import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
+import {render, screen, within} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import {webspaceStore} from 'sulu-page-bundle/stores';
 import CustomUrlsDomainSelect from '../../fields/CustomUrlsDomainSelect';
-
-jest.mock('sulu-admin-bundle/containers', () => ({
-    FormInspector: jest.fn(function(formStore) {
-        this.options = formStore.options;
-    }),
-    ResourceFormStore: jest.fn(function(resourceStore, formKey, options) {
-        this.options = options;
-    }),
-}));
-
-jest.mock('sulu-admin-bundle/stores', () => ({
-    ResourceStore: jest.fn(),
-}));
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -30,15 +16,22 @@ jest.mock('sulu-page-bundle/stores', () => ({
     },
 }));
 
-test('Pass correct props to MultiSelect', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test'),
-            'test',
-            {webspace: 'sulu_io'}
-        )
-    );
+const createProps = (props: Object = {}) => ({
+    ...fieldTypeDefaultProps,
+    formInspector: {
+        options: {
+            webspace: 'sulu_io',
+        },
+    },
+    ...props,
+});
 
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+test('Pass correct props to MultiSelect', async() => {
+    const user = userEvent.setup();
     const webspace = {
         customUrls: [
             {url: 'www.sulu.io/*'},
@@ -47,37 +40,26 @@ test('Pass correct props to MultiSelect', () => {
     };
     webspaceStore.getWebspace.mockReturnValue(webspace);
 
-    const customUrlsDomainSelect = shallow(
+    render(
         <CustomUrlsDomainSelect
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            formInspector={formInspector}
-            value="www.sulu.io/*"
+            {...createProps({
+                disabled: true,
+                value: 'www.sulu.io/*',
+            })}
         />
     );
 
     expect(webspaceStore.getWebspace).toBeCalledWith('sulu_io');
 
-    expect(customUrlsDomainSelect.find('SingleSelect').prop('disabled')).toEqual(true);
-    expect(customUrlsDomainSelect.find('SingleSelect').prop('value')).toEqual('www.sulu.io/*');
-    expect(customUrlsDomainSelect.find('Option').at(0).prop('children')).toEqual('www.sulu.io/*');
-    expect(customUrlsDomainSelect.find('Option').at(0).prop('value')).toEqual('www.sulu.io/*');
-    expect(customUrlsDomainSelect.find('Option').at(1).prop('children')).toEqual('*.sulu.io');
-    expect(customUrlsDomainSelect.find('Option').at(1).prop('value')).toEqual('*.sulu.io');
+    const triggerButton = screen.getByRole('button', {name: /www\.sulu\.io\/\*/});
+    expect(triggerButton).toBeDisabled();
+
+    await user.click(triggerButton);
+    expect(screen.queryByRole('button', {name: '*.sulu.io'})).not.toBeInTheDocument();
 });
 
-test('Call onChange and onBlur if the value is changed', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test'),
-            'test',
-            {webspace: 'sulu_io'}
-        )
-    );
-
+test('Render all domain options', async() => {
+    const user = userEvent.setup();
     const webspace = {
         customUrls: [
             {url: 'www.sulu.io/*'},
@@ -86,17 +68,46 @@ test('Call onChange and onBlur if the value is changed', () => {
     };
     webspaceStore.getWebspace.mockReturnValue(webspace);
 
-    const customUrlsDomainSelect = shallow(
+    render(
         <CustomUrlsDomainSelect
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            value="www.sulu.io/*"
+            {...createProps({
+                value: 'www.sulu.io/*',
+            })}
         />
     );
 
-    customUrlsDomainSelect.find('SingleSelect').prop('onChange')('*.sulu.io');
+    await user.click(screen.getByRole('button', {name: /www\.sulu\.io\/\*/}));
+
+    const optionsList = screen.getByRole('list');
+    expect(within(optionsList).getByRole('button', {name: /www\.sulu\.io\/\*/})).toBeInTheDocument();
+    expect(within(optionsList).getByRole('button', {name: '*.sulu.io'})).toBeInTheDocument();
+});
+
+test('Call onChange and onBlur if the value is changed', async() => {
+    const user = userEvent.setup();
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+    const webspace = {
+        customUrls: [
+            {url: 'www.sulu.io/*'},
+            {url: '*.sulu.io'},
+        ],
+    };
+    webspaceStore.getWebspace.mockReturnValue(webspace);
+
+    render(
+        <CustomUrlsDomainSelect
+            {...createProps({
+                onChange: changeSpy,
+                onFinish: finishSpy,
+                value: 'www.sulu.io/*',
+            })}
+        />
+    );
+
+    await user.click(screen.getByRole('button', {name: /www\.sulu\.io\/\*/}));
+    await user.click(screen.getByRole('button', {name: '*.sulu.io'}));
+
     expect(changeSpy).toBeCalledWith('*.sulu.io');
     expect(finishSpy).toBeCalledWith();
 });

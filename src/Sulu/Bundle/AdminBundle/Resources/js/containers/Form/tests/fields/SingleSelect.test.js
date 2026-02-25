@@ -1,16 +1,24 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import {observable} from 'mobx';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import SingleSelect from '../../fields/SingleSelect';
+import SingleSelectComponent from '../../../../components/SingleSelect';
+import getLatestMockProps from '../../../../utils/TestHelper/getLatestMockProps';
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
+jest.mock('../../../../components/SingleSelect', () => {
+    const MockSingleSelect: any = jest.fn(() => null);
+    MockSingleSelect.Option = jest.fn(() => null);
+
+    return MockSingleSelect;
+});
 
 test('Pass props correctly to SingleSelect', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
@@ -29,7 +37,7 @@ test('Pass props correctly to SingleSelect', () => {
             ],
         },
     });
-    const singleSelect = shallow(
+    render(
         <SingleSelect
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -39,13 +47,15 @@ test('Pass props correctly to SingleSelect', () => {
         />
     );
 
-    expect(singleSelect.prop('value')).toBe('test');
-    expect(singleSelect.prop('disabled')).toBe(true);
-    expect(singleSelect.find('Option').at(0).props()).toEqual(expect.objectContaining({
+    const singleSelectProps: any = getLatestMockProps((SingleSelectComponent: any));
+    const options = singleSelectProps.children;
+    expect(singleSelectProps.value).toBe('test');
+    expect(singleSelectProps.disabled).toBe(true);
+    expect(options[0].props).toEqual(expect.objectContaining({
         value: 'mr',
         children: 'Mister',
     }));
-    expect(singleSelect.find('Option').at(1).props()).toEqual(expect.objectContaining({
+    expect(options[1].props).toEqual(expect.objectContaining({
         value: 'ms',
         children: 'Miss',
     }));
@@ -66,7 +76,7 @@ test('Pass value if no title is given to SingleSelect', () => {
             ],
         },
     });
-    const singleSelect = shallow(
+    render(
         <SingleSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -74,11 +84,13 @@ test('Pass value if no title is given to SingleSelect', () => {
         />
     );
 
-    expect(singleSelect.find('Option').at(0).props()).toEqual(expect.objectContaining({
+    const singleSelectProps: any = getLatestMockProps((SingleSelectComponent: any));
+    const options = singleSelectProps.children;
+    expect(options[0].props).toEqual(expect.objectContaining({
         value: 'mr',
         children: 'mr',
     }));
-    expect(singleSelect.find('Option').at(1).props()).toEqual(expect.objectContaining({
+    expect(options[1].props).toEqual(expect.objectContaining({
         value: 'ms',
         children: 'ms',
     }));
@@ -101,7 +113,7 @@ test('Pass undefined as option-value if value with empty name is given to Single
             ],
         },
     });
-    const singleSelect = shallow(
+    render(
         <SingleSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -109,11 +121,13 @@ test('Pass undefined as option-value if value with empty name is given to Single
         />
     );
 
-    expect(singleSelect.find('Option').at(0).props()).toEqual(expect.objectContaining({
+    const singleSelectProps: any = getLatestMockProps((SingleSelectComponent: any));
+    const options = singleSelectProps.children;
+    expect(options[0].props).toEqual(expect.objectContaining({
         value: undefined,
         children: 'No Selection',
     }));
-    expect(singleSelect.find('Option').at(1).props()).toEqual(expect.objectContaining({
+    expect(options[1].props).toEqual(expect.objectContaining({
         value: 'ms',
         children: 'Miss',
     }));
@@ -141,7 +155,7 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
         },
     };
 
-    expect(() => shallow(
+    expect(() => render(
         <SingleSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -168,7 +182,7 @@ test('Should throw an exception if value is of wrong type', () => {
         },
     };
 
-    expect(() => shallow(
+    expect(() => render(
         <SingleSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -196,7 +210,7 @@ test('Should call onFinish callback on every onChange', () => {
         },
     };
 
-    const singleSelect = shallow(
+    render(
         <SingleSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -205,7 +219,8 @@ test('Should call onFinish callback on every onChange', () => {
         />
     );
 
-    singleSelect.simulate('change');
+    const singleSelectProps: any = getLatestMockProps((SingleSelectComponent: any));
+    singleSelectProps.onChange();
 
     expect(finishSpy).toBeCalledWith();
 });
@@ -228,7 +243,7 @@ test('Default value of null should not call onChange', () => {
             ],
         },
     };
-    shallow(
+    render(
         <SingleSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -258,7 +273,7 @@ test('Default value of empty string should not call onChange', () => {
             ],
         },
     };
-    shallow(
+    render(
         <SingleSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -292,7 +307,7 @@ test('Set default value if no value is passed', () => {
             ],
         },
     };
-    shallow(
+    render(
         <SingleSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -327,17 +342,17 @@ test('Allow to pass one value for undefined', () => {
         },
     };
 
-    const singleSelect = shallow(
+    render(
         <SingleSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
             onChange={changeSpy}
-            // $FlowFixMe
-            schemaOptions={schemaOptions}
+            schemaOptions={(schemaOptions: any)}
         />
     );
 
-    expect(singleSelect.find('Option').at(0).prop('value')).toBeUndefined();
+    const singleSelectProps: any = getLatestMockProps((SingleSelectComponent: any));
+    expect(singleSelectProps.children[0].props.value).toBeUndefined();
 });
 
 test('Set default value to a number of 0 should work', () => {
@@ -362,7 +377,7 @@ test('Set default value to a number of 0 should work', () => {
             ],
         },
     };
-    shallow(
+    render(
         <SingleSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -376,7 +391,7 @@ test('Set default value to a number of 0 should work', () => {
 
 test('Throw error if no values option is passed', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    expect(() => shallow(
+    expect(() => render(
         <SingleSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -386,7 +401,7 @@ test('Throw error if no values option is passed', () => {
 
 test('Throw error if values option with wrong type is passed', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    expect(() => shallow(
+    expect(() => render(
         <SingleSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}

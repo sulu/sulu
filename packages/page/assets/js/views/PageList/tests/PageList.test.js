@@ -1,9 +1,19 @@
 // @flow
 import React from 'react';
+import {act, render, screen} from '@testing-library/react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
-import {mount} from 'enzyme';
 import {Router} from 'sulu-admin-bundle/services';
 import {findWithHighOrderFunction, defaultWebspace} from 'sulu-admin-bundle/utils/TestHelper';
+
+jest.mock('sulu-admin-bundle/components', () => {
+    const React = require('react');
+    const actual = jest.requireActual('sulu-admin-bundle/components');
+
+    return {
+        ...actual,
+        Loader: jest.fn(() => <div data-testid="loader" />),
+    };
+});
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     FlatStructureStrategy: require(
@@ -87,6 +97,7 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(function() {
     this.selections = [];
 }));
+
 jest.mock('sulu-admin-bundle/containers/ListOverlay', () => jest.fn().mockReturnValue(null));
 
 jest.mock('sulu-website-bundle/containers/CacheClearToolbarAction', () => jest.fn(function() {
@@ -98,7 +109,7 @@ beforeEach(() => {
     jest.resetModules();
 });
 
-test('Render PageList', () => {
+test('Render PageList', async() => {
     const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
     const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
     formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
@@ -115,8 +126,10 @@ test('Render PageList', () => {
         webspace: 'sulu',
     };
 
-    const webspaceOverview = mount(
+    const pageListRef = React.createRef();
+    const {asFragment} = render(
         <PageList
+            ref={pageListRef}
             route={router.route}
             router={router}
             // $FlowFixMe
@@ -125,25 +138,28 @@ test('Render PageList', () => {
         />
     );
 
-    webspaceOverview.instance().listStore.data.push(
+    const pageListInstance = (pageListRef.current: any);
+
+    pageListInstance.listStore.data.push(
         [
             {id: 1, title: 'Homepage', template: 'homepage'},
         ]
     );
-    webspaceOverview.instance().listStore.data.push(
+    pageListInstance.listStore.data.push(
         [
             {id: 2, title: 'Page 1', template: 'example'},
             {id: 3, title: 'Page 2', template: 'not-existing'},
         ]
     );
 
-    return metadataPromise.then(() => {
-        webspaceOverview.update();
-        expect(webspaceOverview.render()).toMatchSnapshot();
+    await act(async() => {
+        await metadataPromise;
     });
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Should show loader if available page types have not been loaded yet', () => {
+test('Should show loader if available page types have not been loaded yet', async() => {
     const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
     const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
     formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
@@ -160,7 +176,7 @@ test('Should show loader if available page types have not been loaded yet', () =
         webspace: 'sulu',
     };
 
-    const webspaceOverview = mount(
+    render(
         <PageList
             route={router.route}
             router={router}
@@ -170,12 +186,13 @@ test('Should show loader if available page types have not been loaded yet', () =
         />
     );
 
-    expect(webspaceOverview.find('Loader')).toHaveLength(1);
+    expect(screen.getByTestId('loader')).toBeInTheDocument();
 
-    return metadataPromise.then(() => {
-        webspaceOverview.update();
-        expect(webspaceOverview.find('Loader')).toHaveLength(0);
+    await act(async() => {
+        await metadataPromise;
     });
+
+    expect(screen.queryByTestId('loader')).not.toBeInTheDocument();
 });
 
 test('Should show the locales from the webspace configuration for the toolbar', () => {
@@ -197,8 +214,11 @@ test('Should show the locales from the webspace configuration for the toolbar', 
         webspace: 'sulu',
     };
 
-    const webspaceOverview = mount(
+    const pageListRef = React.createRef();
+
+    render(
         <PageList
+            ref={pageListRef}
             route={router.route}
             router={router}
             // $FlowFixMe
@@ -207,10 +227,12 @@ test('Should show the locales from the webspace configuration for the toolbar', 
         />
     );
 
-    webspaceOverview.instance().locale.set('en');
-    expect(webspaceOverview.instance().locale.get()).toBe('en');
+    const pageListInstance = (pageListRef.current: any);
 
-    const toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
+    pageListInstance.locale.set('en');
+    expect(pageListInstance.locale.get()).toBe('en');
+
+    const toolbarConfig = toolbarFunction.call(pageListInstance);
     expect(toolbarConfig.locale.value).toBe('en');
     expect(toolbarConfig.locale.options).toEqual(
         expect.arrayContaining(
@@ -241,8 +263,11 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
         webspace: 'sulu',
     };
 
-    const webspaceOverview = mount(
+    const pageListRef = React.createRef();
+
+    render(
         <PageList
+            ref={pageListRef}
             route={router.route}
             router={router}
             // $FlowFixMe
@@ -251,31 +276,31 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
         />
     );
 
-    webspaceOverview.update();
+    const pageListInstance = (pageListRef.current: any);
 
-    const excludeGhostsAndShadows = webspaceOverview.instance().excludeGhostsAndShadows;
+    const excludeGhostsAndShadows = pageListInstance.excludeGhostsAndShadows;
     expect(excludeGhostsAndShadows.get()).toEqual(false);
-    expect(webspaceOverview.instance().listStore.observableOptions).toEqual(expect.objectContaining({
+    expect(pageListInstance.listStore.observableOptions).toEqual(expect.objectContaining({
         'exclude-ghosts': excludeGhostsAndShadows,
         'exclude-shadows': excludeGhostsAndShadows,
     }));
 
-    let toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
+    let toolbarConfig = toolbarFunction.call(pageListInstance);
     expect(toolbarConfig.items[0].value).toEqual(true);
 
     toolbarConfig.items[0].onClick();
-    toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
+    toolbarConfig = toolbarFunction.call(pageListInstance);
     expect(toolbarConfig.items[0].value).toEqual(false);
-    expect(webspaceOverview.instance().listStore.clear).toBeCalledWith();
-    expect(webspaceOverview.instance().excludeGhostsAndShadows.get()).toEqual(true);
+    expect(pageListInstance.listStore.clear).toHaveBeenCalledWith();
+    expect(pageListInstance.excludeGhostsAndShadows.get()).toEqual(true);
 
     toolbarConfig.items[0].onClick();
-    toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
+    toolbarConfig = toolbarFunction.call(pageListInstance);
     expect(toolbarConfig.items[0].value).toEqual(true);
-    expect(webspaceOverview.instance().excludeGhostsAndShadows.get()).toEqual(false);
+    expect(pageListInstance.excludeGhostsAndShadows.get()).toEqual(false);
 });
 
-test('Should set webspace if copied page is in different webspace than the source', () => {
+test('Should set webspace if copied page is in different webspace than the source', async() => {
     const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
     const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
     formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
@@ -296,8 +321,11 @@ test('Should set webspace if copied page is in different webspace than the sourc
         webspace: 'sulu',
     };
 
-    const webspaceOverview = mount(
+    const pageListRef = React.createRef();
+
+    render(
         <PageList
+            ref={pageListRef}
             route={router.route}
             router={router}
             // $FlowFixMe
@@ -306,11 +334,14 @@ test('Should set webspace if copied page is in different webspace than the sourc
         />
     );
 
-    return metadataPromise.then(() => {
-        webspaceOverview.update();
-        webspaceOverview.find('List').prop('onCopyFinished')({webspace: 'test'});
-        expect(webspaceKey.get()).toEqual('test');
+    await act(async() => {
+        await metadataPromise;
     });
+
+    const pageListInstance = (pageListRef.current: any);
+    pageListInstance.handleCopyFinished({webspace: 'test'});
+
+    expect(webspaceKey.get()).toEqual('test');
 });
 
 test('Should use CacheClearToolbarAction for cache clearing', () => {
@@ -333,8 +364,11 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
         webspace: 'sulu',
     };
 
-    const pageList = mount(
+    const pageListRef = React.createRef();
+
+    render(
         <PageList
+            ref={pageListRef}
             route={router.route}
             router={router}
             // $FlowFixMe
@@ -343,14 +377,15 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
         />
     );
 
-    const cacheClearToolbarAction: CacheClearToolbarAction = (CacheClearToolbarAction: any).mock.instances[0];
+    const pageListInstance = (pageListRef.current: any);
+    const cacheClearToolbarAction = (CacheClearToolbarAction: any).mock.instances[0];
 
-    expect(CacheClearToolbarAction).toBeCalledWith('sulu');
-    expect(cacheClearToolbarAction.getNode).toBeCalledWith();
+    expect(CacheClearToolbarAction).toHaveBeenCalledWith('sulu');
+    expect(cacheClearToolbarAction.getNode).toHaveBeenCalledWith();
 
-    expect(cacheClearToolbarAction.getToolbarItemConfig).not.toBeCalled();
-    toolbarFunction.call(pageList.instance());
-    expect(cacheClearToolbarAction.getToolbarItemConfig).toBeCalled();
+    expect(cacheClearToolbarAction.getToolbarItemConfig).not.toHaveBeenCalled();
+    toolbarFunction.call(pageListInstance);
+    expect(cacheClearToolbarAction.getToolbarItemConfig).toHaveBeenCalled();
 });
 
 test('Should load webspace and active route attribute from listStore and userStore', () => {
@@ -370,7 +405,7 @@ test('Should load webspace and active route attribute from listStore and userSto
     expect(PageList.getDerivedRouteAttributes(undefined, {webspace: 'abc'})).toEqual({
         active: 'some-uuid',
     });
-    expect(ListStore.getActiveSetting).toBeCalledWith('pages', 'page_list_abc');
+    expect(ListStore.getActiveSetting).toHaveBeenCalledWith('pages', 'page_list_abc');
 });
 
 test('Destroy ListStore to avoid many requests and reset active to be set on webspace change', () => {
@@ -390,8 +425,11 @@ test('Destroy ListStore to avoid many requests and reset active to be set on web
         webspace: 'sulu',
     };
 
-    const webspaceOverview = mount(
+    const pageListRef = React.createRef();
+
+    render(
         <PageList
+            ref={pageListRef}
             route={router.route}
             router={router}
             // $FlowFixMe
@@ -400,10 +438,12 @@ test('Destroy ListStore to avoid many requests and reset active to be set on web
         />
     );
 
+    const pageListInstance = (pageListRef.current: any);
+
     webspaceKey.set('sulu_blog');
 
-    expect(webspaceOverview.instance().listStore.destroy).toBeCalledWith();
-    expect(webspaceOverview.instance().listStore.active.set).toBeCalledWith(undefined);
+    expect(pageListInstance.listStore.destroy).toHaveBeenCalledWith();
+    expect(pageListInstance.listStore.active.set).toHaveBeenCalledWith(undefined);
 });
 
 test('Should bind router', () => {
@@ -420,8 +460,11 @@ test('Should bind router', () => {
         webspace: 'sulu',
     };
 
-    const webspaceOverview = mount(
+    const pageListRef = React.createRef();
+
+    render(
         <PageList
+            ref={pageListRef}
             route={router.route}
             router={router}
             // $FlowFixMe
@@ -429,14 +472,16 @@ test('Should bind router', () => {
             webspaceKey={webspaceKey}
         />
     );
-    const page = webspaceOverview.instance().page;
-    const locale = webspaceOverview.instance().locale;
-    const excludeGhostsAndShadows = webspaceOverview.instance().excludeGhostsAndShadows;
 
-    expect(router.bind).toBeCalledWith('page', page, 1);
-    expect(router.bind).toBeCalledWith('excludeGhostsAndShadows', excludeGhostsAndShadows, false);
-    expect(router.bind).toBeCalledWith('locale', locale);
-    expect(router.bind).toBeCalledWith('active', webspaceOverview.instance().listStore.active);
+    const pageListInstance = (pageListRef.current: any);
+    const page = pageListInstance.page;
+    const locale = pageListInstance.locale;
+    const excludeGhostsAndShadows = pageListInstance.excludeGhostsAndShadows;
+
+    expect(router.bind).toHaveBeenCalledWith('page', page, 1);
+    expect(router.bind).toHaveBeenCalledWith('excludeGhostsAndShadows', excludeGhostsAndShadows, false);
+    expect(router.bind).toHaveBeenCalledWith('locale', locale);
+    expect(router.bind).toHaveBeenCalledWith('active', pageListInstance.listStore.active);
 });
 
 test('Should call disposers on unmount', () => {
@@ -453,8 +498,11 @@ test('Should call disposers on unmount', () => {
         webspace: 'sulu',
     };
 
-    const webspaceOverview = mount(
+    const pageListRef = React.createRef();
+
+    const {unmount} = render(
         <PageList
+            ref={pageListRef}
             route={router.route}
             router={router}
             // $FlowFixMe
@@ -463,12 +511,14 @@ test('Should call disposers on unmount', () => {
         />
     );
 
-    const listStore = webspaceOverview.instance().listStore;
+    const pageListInstance = (pageListRef.current: any);
+    const listStore = pageListInstance.listStore;
 
     const excludeGhostsAndShadowsDisposerSpy = jest.fn();
-    webspaceOverview.instance().excludeGhostsAndShadowsDisposer = excludeGhostsAndShadowsDisposerSpy;
-    webspaceOverview.unmount();
+    pageListInstance.excludeGhostsAndShadowsDisposer = excludeGhostsAndShadowsDisposerSpy;
 
-    expect(listStore.destroy).toBeCalledWith();
-    expect(excludeGhostsAndShadowsDisposerSpy).toBeCalledWith();
+    unmount();
+
+    expect(listStore.destroy).toHaveBeenCalledWith();
+    expect(excludeGhostsAndShadowsDisposerSpy).toHaveBeenCalledWith();
 });

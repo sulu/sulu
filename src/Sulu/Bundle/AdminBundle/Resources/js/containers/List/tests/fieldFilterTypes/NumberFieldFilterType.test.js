@@ -1,5 +1,5 @@
 // @flow
-import {mount, render} from 'enzyme';
+import React from 'react';
 import NumberFieldFilterType from '../../fieldFilterTypes/NumberFieldFilterType';
 
 jest.mock('../../../../utils/Translator', () => ({
@@ -13,7 +13,11 @@ test.each([
     [{gt: 7}],
 ])('Render with value of "%s"', (value) => {
     const numberFieldFilterType = new NumberFieldFilterType(jest.fn(), {}, value);
-    expect(render(numberFieldFilterType.getFormNode())).toMatchSnapshot();
+    const formNode = numberFieldFilterType.getFormNode();
+    const children = React.Children.toArray(formNode.props.children);
+
+    expect(children[0].props.value).toEqual(value ? Object.keys(value)[0] : undefined);
+    expect(children[1].props.value).toEqual(value ? Object.values(value)[0] : undefined);
 });
 
 test('Call onChange handler with a default operator when undefined is passed', () => {
@@ -30,9 +34,10 @@ test.each([
 ])('Call onChange handler when the value was "%s" and the "%s" operator is chosen', (value, operator, newValue) => {
     const changeSpy = jest.fn();
     const numberFieldFilterType = new NumberFieldFilterType(changeSpy, {}, value);
-    const numberFieldFilterTypeForm = mount(numberFieldFilterType.getFormNode());
+    const formNode = numberFieldFilterType.getFormNode();
+    const children = React.Children.toArray(formNode.props.children);
 
-    numberFieldFilterTypeForm.find('SingleSelect').prop('onChange')(operator);
+    children[0].props.onChange(operator);
 
     expect(changeSpy).toBeCalledWith(newValue);
 });
@@ -44,9 +49,10 @@ test.each([
 ])('Call onChange handler when the value was "%s" and the number was changed to "%s"', (value, number, newValue) => {
     const changeSpy = jest.fn();
     const numberFieldFilterType = new NumberFieldFilterType(changeSpy, {}, value);
-    const numberFieldFilterTypeForm = mount(numberFieldFilterType.getFormNode());
+    const formNode = numberFieldFilterType.getFormNode();
+    const children = React.Children.toArray(formNode.props.children);
 
-    numberFieldFilterTypeForm.find('Input').prop('onChange')(number);
+    children[1].props.onChange(number);
 
     expect(changeSpy).toBeCalledWith(newValue);
 });

@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {shallow, mount, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import ResourceListStore from '../../../stores/ResourceListStore';
 import ResourceSingleSelect from '../ResourceSingleSelect';
 
@@ -10,62 +11,35 @@ jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
+function mockResourceListStoreData(data: ?Array<Object>, loading: boolean = false) {
+    // $FlowFixMe
+    ResourceListStore.mockImplementation(function() {
+        this.loading = loading;
+        this.data = data === undefined ? [] : data;
+        this.deleteList = jest.fn();
+        this.patchList = jest.fn();
+    });
+}
+
+function getLastResourceListStoreInstance() {
+    // $FlowFixMe
+    return ResourceListStore.mock.instances[ResourceListStore.mock.instances.length - 1];
+}
+
+async function setLineValue(lineIndex: number, value: string, user: any) {
+    const input = screen.getAllByRole('textbox')[lineIndex];
+
+    await user.clear(input);
+
+    if (value) {
+        await user.type(input, value);
+    }
+}
+
 test('Render in loading state', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = true;
-        this.data = undefined;
-    });
+    mockResourceListStoreData(undefined, true);
 
-    expect(render(
-        <ResourceSingleSelect
-            displayProperty="name"
-            idProperty="id"
-            onChange={jest.fn()}
-            resourceKey="test"
-            value={undefined}
-        />
-    )).toMatchSnapshot();
-
-    expect(ResourceListStore).toBeCalledWith('test', {limit: ''}, 'id');
-});
-
-test('Render in disabled state', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [];
-    });
-
-    expect(render(
-        <ResourceSingleSelect
-            disabled={true}
-            displayProperty="name"
-            idProperty="id"
-            onChange={jest.fn()}
-            resourceKey="test"
-            value={undefined}
-        />
-    )).toMatchSnapshot();
-});
-
-test('Render with data', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                id: 1,
-                name: 'Test 1',
-            },
-            {
-                id: 2,
-                name: 'Test 2',
-            },
-        ];
-    });
-
-    const resourceSingleSelect = mount(
+    const {asFragment} = render(
         <ResourceSingleSelect
             displayProperty="name"
             idProperty="id"
@@ -75,30 +49,75 @@ test('Render with data', () => {
         />
     );
 
-    resourceSingleSelect.find('DisplayValue').simulate('click');
-    resourceSingleSelect.update();
-
-    expect(resourceSingleSelect.render()).toMatchSnapshot();
-    expect(resourceSingleSelect.find('Menu').render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
+    expect(ResourceListStore).toHaveBeenCalledWith('test', {limit: ''}, 'id');
 });
 
-test('Render with data with editable option', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                id: 1,
-                name: 'Test 1',
-            },
-            {
-                id: 2,
-                name: 'Test 2',
-            },
-        ];
-    });
+test('Render in disabled state', () => {
+    mockResourceListStoreData([]);
 
-    const resourceSingleSelect = mount(
+    const {asFragment} = render(
+        <ResourceSingleSelect
+            disabled={true}
+            displayProperty="name"
+            idProperty="id"
+            onChange={jest.fn()}
+            resourceKey="test"
+            value={undefined}
+        />
+    );
+
+    expect(asFragment()).toMatchSnapshot();
+});
+
+test('Render with data', async() => {
+    mockResourceListStoreData([
+        {
+            id: 1,
+            name: 'Test 1',
+        },
+        {
+            id: 2,
+            name: 'Test 2',
+        },
+    ]);
+
+    const user = userEvent.setup();
+
+    const {asFragment} = render(
+        <ResourceSingleSelect
+            displayProperty="name"
+            idProperty="id"
+            onChange={jest.fn()}
+            resourceKey="test"
+            value={undefined}
+        />
+    );
+
+    expect(asFragment()).toMatchSnapshot();
+
+    await user.click(screen.getAllByRole('button', {name: /sulu_admin\.please_choose/})[0]);
+
+    expect(screen.getByRole('button', {name: 'Test 1'})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'Test 2'})).toBeInTheDocument();
+    expect(document.body).toMatchSnapshot();
+});
+
+test('Render with data with editable option', async() => {
+    mockResourceListStoreData([
+        {
+            id: 1,
+            name: 'Test 1',
+        },
+        {
+            id: 2,
+            name: 'Test 2',
+        },
+    ]);
+
+    const user = userEvent.setup();
+
+    const {asFragment} = render(
         <ResourceSingleSelect
             displayProperty="name"
             editable={true}
@@ -109,26 +128,23 @@ test('Render with data with editable option', () => {
         />
     );
 
-    resourceSingleSelect.find('DisplayValue').simulate('click');
-    resourceSingleSelect.update();
+    expect(asFragment()).toMatchSnapshot();
 
-    expect(resourceSingleSelect.find('SingleSelect').render()).toMatchSnapshot();
-    expect(resourceSingleSelect.find('Menu').render()).toMatchSnapshot();
+    await user.click(screen.getAllByRole('button', {name: /sulu_admin\.please_choose/})[0]);
+
+    expect(screen.getByRole('button', {name: 'sulu_admin.edit'})).toBeInTheDocument();
+    expect(document.body).toMatchSnapshot();
 });
 
 test('Render in value', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                id: 1,
-                name: 'Test 1',
-            },
-        ];
-    });
+    mockResourceListStoreData([
+        {
+            id: 1,
+            name: 'Test 1',
+        },
+    ]);
 
-    expect(render(
+    const {asFragment} = render(
         <ResourceSingleSelect
             disabled={true}
             displayProperty="name"
@@ -137,26 +153,24 @@ test('Render in value', () => {
             resourceKey="test"
             value={1}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Pass requestParameters to ResourceListStore', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                id: 1,
-                name: 'Test 1',
-            },
-        ];
-    });
+    mockResourceListStoreData([
+        {
+            id: 1,
+            name: 'Test 1',
+        },
+    ]);
 
     const requestParameters = {
         flat: true,
     };
 
-    mount(
+    render(
         <ResourceSingleSelect
             disabled={true}
             displayProperty="name"
@@ -168,28 +182,25 @@ test('Pass requestParameters to ResourceListStore', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', {limit: '', flat: true}, 'id');
+    expect(ResourceListStore).toHaveBeenCalledWith('test', {limit: '', flat: true}, 'id');
 });
 
-test('Trigger the change callback when the selection changes', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                id: 1,
-                name: 'Test 1',
-            },
-            {
-                id: 2,
-                name: 'Test 2',
-            },
-        ];
-    });
+test('Trigger the change callback when the selection changes', async() => {
+    mockResourceListStoreData([
+        {
+            id: 1,
+            name: 'Test 1',
+        },
+        {
+            id: 2,
+            name: 'Test 2',
+        },
+    ]);
 
     const changeSpy = jest.fn();
+    const user = userEvent.setup();
 
-    const resourceSingleSelect = shallow(
+    render(
         <ResourceSingleSelect
             displayProperty="name"
             idProperty="id"
@@ -199,14 +210,28 @@ test('Trigger the change callback when the selection changes', () => {
         />
     );
 
-    resourceSingleSelect.find('SingleSelect').prop('onChange')(2);
+    await user.click(screen.getByRole('button', {name: /Test 1/}));
+    await user.click(screen.getByRole('button', {name: /Test 2/}));
+
     expect(changeSpy).toHaveBeenCalledWith(2);
 });
 
-test('Trigger the change callback with undefined when the reset action is clicked', () => {
-    const changeSpy = jest.fn();
+test('Trigger the change callback with undefined when the reset action is clicked', async() => {
+    mockResourceListStoreData([
+        {
+            id: 1,
+            name: 'Test 1',
+        },
+        {
+            id: 2,
+            name: 'Test 2',
+        },
+    ]);
 
-    const resourceSingleSelect = shallow(
+    const changeSpy = jest.fn();
+    const user = userEvent.setup();
+
+    render(
         <ResourceSingleSelect
             displayProperty="name"
             idProperty="id"
@@ -216,23 +241,21 @@ test('Trigger the change callback with undefined when the reset action is clicke
         />
     );
 
-    resourceSingleSelect.find('Action[children="sulu_admin.please_choose"]').prop('onClick')();
+    await user.click(screen.getByRole('button', {name: /Test 1/}));
+    await user.click(screen.getByRole('button', {name: /sulu_admin\.please_choose/}));
+
     expect(changeSpy).toHaveBeenCalledWith(undefined);
 });
 
-test('Updated data in EditOverlay should disappear when overlay is closed', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {id: 1, name: 'Test1'},
-            {id: 2, name: 'Test2'},
-        ];
-        this.deleteList = jest.fn();
-        this.patchList = jest.fn();
-    });
+test('Updated data in EditOverlay should disappear when overlay is closed', async() => {
+    mockResourceListStoreData([
+        {id: 1, name: 'Test1'},
+        {id: 2, name: 'Test2'},
+    ]);
 
-    const resourceSingleSelect = mount(
+    const user = userEvent.setup();
+
+    render(
         <ResourceSingleSelect
             displayProperty="name"
             editable={true}
@@ -243,33 +266,30 @@ test('Updated data in EditOverlay should disappear when overlay is closed', () =
         />
     );
 
-    resourceSingleSelect.find('DisplayValue').simulate('click');
-    resourceSingleSelect.find('Action[children="sulu_admin.edit"]').prop('onClick')();
+    const resourceListStore = getLastResourceListStoreInstance();
 
-    resourceSingleSelect.update();
-    resourceSingleSelect.find('EditLine Input').at(0).prop('onChange')('Test1 Update');
-    resourceSingleSelect.find('EditLine Button').at(1).prop('onClick')();
-    resourceSingleSelect.find('EditOverlay Button[icon="su-plus"]').prop('onClick')();
-    resourceSingleSelect.find('EditLine Input').at(1).prop('onChange')('Test3 Update');
-    resourceSingleSelect.find('Icon[name="su-times"]').prop('onClick')();
+    await user.click(screen.getByRole('button', {name: /Test1/}));
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.edit'}));
 
-    expect(resourceSingleSelect.instance().resourceListStore.deleteList).not.toBeCalled();
-    expect(resourceSingleSelect.instance().resourceListStore.patchList).not.toBeCalled();
+    await setLineValue(0, 'Test1 Update', user);
+    await user.click(screen.getAllByRole('button', {name: 'su-trash-alt'})[1]);
+    await user.click(screen.getByRole('button', {name: /sulu_admin\.add/}));
+    await setLineValue(1, 'Test3 Update', user);
+    await user.click(screen.getByRole('button', {name: 'su-times'}));
+
+    expect(resourceListStore.deleteList).not.toHaveBeenCalled();
+    expect(resourceListStore.patchList).not.toHaveBeenCalled();
 });
 
-test('Updated data in EditOverlay should be displayed in Select when overlay is confirmed', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {id: 1, name: 'Test1'},
-            {id: 2, name: 'Test2'},
-        ];
-        this.deleteList = jest.fn();
-        this.patchList = jest.fn();
-    });
+test('Updated data in EditOverlay should be displayed in Select when overlay is confirmed', async() => {
+    mockResourceListStoreData([
+        {id: 1, name: 'Test1'},
+        {id: 2, name: 'Test2'},
+    ]);
 
-    const resourceSingleSelect = mount(
+    const user = userEvent.setup();
+
+    render(
         <ResourceSingleSelect
             displayProperty="name"
             editable={true}
@@ -280,19 +300,20 @@ test('Updated data in EditOverlay should be displayed in Select when overlay is 
         />
     );
 
-    resourceSingleSelect.find('DisplayValue').simulate('click');
-    resourceSingleSelect.find('Action[children="sulu_admin.edit"]').prop('onClick')();
+    const resourceListStore = getLastResourceListStoreInstance();
 
-    resourceSingleSelect.update();
-    resourceSingleSelect.find('EditLine Input').at(0).prop('onChange')('Test1 Update');
-    resourceSingleSelect.find('EditLine Button').at(1).prop('onClick')();
-    resourceSingleSelect.find('EditOverlay Button[icon="su-plus"]').prop('onClick')();
-    resourceSingleSelect.find('EditLine Input').at(1).prop('onChange')('Test3 Update');
-    resourceSingleSelect.find('Button[skin="primary"]').prop('onClick')();
+    await user.click(screen.getByRole('button', {name: /Test1/}));
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.edit'}));
 
-    expect(resourceSingleSelect.instance().resourceListStore.deleteList).toBeCalledWith([2]);
-    expect(resourceSingleSelect.instance().resourceListStore.patchList).toBeCalledWith([
+    await setLineValue(0, 'Test1 Update', user);
+    await user.click(screen.getAllByRole('button', {name: 'su-trash-alt'})[1]);
+    await user.click(screen.getByRole('button', {name: /sulu_admin\.add/}));
+    await setLineValue(1, 'Test3 Update', user);
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
+
+    expect(resourceListStore.deleteList).toHaveBeenCalledWith([2]);
+    expect(resourceListStore.patchList).toHaveBeenCalledWith([
         {name: 'Test3 Update'},
-        {id: 1, 'name': 'Test1 Update'},
+        {id: 1, name: 'Test1 Update'},
     ]);
 });

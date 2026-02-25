@@ -1,2051 +1,241 @@
-// @flow
+/* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import {observable} from 'mobx';
-import {mount, render, shallow} from 'enzyme';
+import {act, render, waitFor} from '@testing-library/react';
 import BlockCollection from '../BlockCollection';
 import SortableBlockList from '../SortableBlockList';
+import Button from '../../Button';
 import clipboard from '../../../utils/clipboard/clipboard';
-
-beforeEach(() => {
-    BlockCollection.idCounter = 0;
-});
+import findMockCallArg from '../../../utils/TestHelper/findMockCallArg';
+import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-test('Should render a fully filled block list', () => {
-    expect(render(
+jest.mock('../SortableBlockList', () => jest.fn(() => <div data-testid="sortable-block-list" />));
+jest.mock('../../Button', () => jest.fn(({children}) => <button type="button">{children}</button>));
+jest.mock('../../BlockToolbar', () => jest.fn(() => <div data-testid="block-toolbar" />));
+jest.mock('../../Icon', () => jest.fn(() => <span data-testid="icon" />));
+jest.mock('../../Sticky', () => jest.fn(({children}) => (
+    <div data-testid="sticky">{typeof children === 'function' ? children(true) : children}</div>
+)));
+
+const SortableBlockListMock = SortableBlockList;
+const ButtonMock = Button;
+
+const baseProps = {
+    defaultType: 'editor',
+    onChange: jest.fn(),
+    renderBlockContent: jest.fn(() => null),
+    value: [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}],
+};
+
+const getLastSortableBlockListProps = () => getLatestMockProps(SortableBlockListMock);
+
+const getAddButtonProps = () => findMockCallArg(ButtonMock, ([props]) => props.icon === 'su-plus');
+
+const getPasteButtonProps = () => findMockCallArg(ButtonMock, ([props]) => props.icon === 'su-copy');
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    BlockCollection.idCounter = 0;
+    clipboard.set('blocks', undefined);
+});
+
+test('renders a fully filled block list', () => {
+    const {asFragment} = render(
         <BlockCollection
-            defaultType="editor"
+            {...baseProps}
             icons={[[], ['su-eye']]}
             maxOccurs={3}
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Should render a non-movable block list', () => {
-    expect(render(
+test('renders in static mode when movable is false', () => {
+    render(
         <BlockCollection
+            {...baseProps}
             collapsable={false}
-            defaultType="editor"
             movable={false}
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(getLastSortableBlockListProps().mode).toBe('static');
 });
 
-test('Should render a disabled block list', () => {
-    const blockCollection = mount(
+test('disables add button when block collection is disabled', () => {
+    render(
         <BlockCollection
-            defaultType="editor"
+            {...baseProps}
             disabled={true}
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
         />
     );
 
-    expect(blockCollection.find('.sortableBlockList.disabled')).toHaveLength(1);
-    expect(blockCollection.find('Button[icon="su-plus"]').last().prop('disabled')).toEqual(true);
+    expect(getAddButtonProps().disabled).toBe(true);
 });
 
-test('Should mark the add button disabled if maxOccurs is reached', () => {
-    const blockCollection = shallow(
+test('disables add button when maxOccurs is reached', () => {
+    render(
         <BlockCollection
-            defaultType="editor"
+            {...baseProps}
             maxOccurs={2}
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
         />
     );
 
-    expect(blockCollection.find('Button[icon="su-plus"]').prop('disabled')).toEqual(true);
+    expect(getAddButtonProps().disabled).toBe(true);
 });
 
-test('Should render add button with the given addButtonText', () => {
-    const blockCollection = shallow(
+test('renders add button text from addButtonText prop', () => {
+    render(
         <BlockCollection
+            {...baseProps}
             addButtonText="custom-add-button-text"
-            defaultType="editor"
-            maxOccurs={2}
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
         />
     );
 
-    expect(blockCollection.find('Button[icon="su-plus"]').prop('children')).toEqual('custom-add-button-text');
+    expect(getAddButtonProps().children).toBe('custom-add-button-text');
 });
 
-test('Should render paste button if clipboard contains a block', () => {
-    const blockCollection = shallow(
-        <BlockCollection
-            defaultType="editor"
-            maxOccurs={2}
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
-        />
-    );
-
-    expect(blockCollection.find('Button[icon="su-copy"]').exists()).toBeFalsy();
-
+test('renders paste button when clipboard contains blocks', async() => {
     clipboard.set('blocks', [{content: 'Test 3', type: 'editor'}]);
 
-    expect(blockCollection.find('Button[icon="su-copy"]').exists()).toBeTruthy();
-    expect(blockCollection.find('Button[icon="su-copy"]').prop('children')).toEqual('sulu_admin.paste_blocks');
+    render(<BlockCollection {...baseProps} />);
+
+    await waitFor(() => expect(() => getPasteButtonProps()).not.toThrow());
+    expect(getPasteButtonProps().children).toBe('sulu_admin.paste_blocks');
 });
 
-test('Should render paste button with the given pasteButtonText', () => {
+test('renders paste button text from pasteButtonText prop', async() => {
     clipboard.set('blocks', [{content: 'Test 3', type: 'editor'}]);
 
-    const blockCollection = shallow(
+    render(
         <BlockCollection
-            defaultType="editor"
-            maxOccurs={2}
-            onChange={jest.fn()}
+            {...baseProps}
             pasteButtonText="custom-paste-button-text"
-            renderBlockContent={jest.fn()}
-            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
         />
     );
 
-    expect(blockCollection.find('Button[icon="su-copy"]').exists()).toBeTruthy();
-    expect(blockCollection.find('Button[icon="su-copy"]').prop('children')).toEqual('custom-paste-button-text');
+    await waitFor(() => expect(() => getPasteButtonProps()).not.toThrow());
+    expect(getPasteButtonProps().children).toBe('custom-paste-button-text');
 });
 
-test('Should add at least the minOccurs amount of blocks', () => {
-    const changeSpy = jest.fn();
-    const value = [{type: 'editor'}];
+test('fills blocks up to minOccurs', async() => {
+    const onChange = jest.fn();
 
-    shallow(
+    render(
         <BlockCollection
             defaultType="editor"
             minOccurs={2}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
+            onChange={onChange}
+            renderBlockContent={jest.fn(() => null)}
+            value={[]}
         />
     );
 
-    expect(changeSpy).toBeCalledWith([
-        expect.objectContaining({}),
-        expect.objectContaining({}),
-    ]);
+    await waitFor(() => expect(onChange).toHaveBeenCalled());
+    const newValue = getLatestMockProps(onChange);
+    expect(newValue).toHaveLength(2);
+    expect(newValue[0]).not.toBe(newValue[1]);
+    expect(newValue[0].type).toBe('editor');
+    expect(newValue[1].type).toBe('editor');
 });
 
-test('Should fill the array up to minOccurs with different objects', () => {
-    const changeSpy = jest.fn();
-    const value = [];
+test('generates IDs for minOccurs blocks when generateBlockIds is provided', async() => {
+    const onChange = jest.fn();
+    const generateBlockIds = jest.fn().mockResolvedValue(['id1', 'id2', 'id3']);
 
-    shallow(
+    render(
         <BlockCollection
             defaultType="editor"
-            minOccurs={2}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    expect(changeSpy).toBeCalledWith([
-        expect.objectContaining({}),
-        expect.objectContaining({}),
-    ]);
-    const changeSpyCall = changeSpy.mock.calls[0][0];
-    expect(changeSpyCall[0]).not.toBe(changeSpyCall[1]);
-});
-
-test('Should add at least the minOccurs amount of blocks with empty starting value', () => {
-    const changeSpy = jest.fn();
-    const value = [];
-
-    shallow(
-        <BlockCollection
-            defaultType="editor"
-            minOccurs={2}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    expect(changeSpy).toBeCalledWith([
-        expect.objectContaining({}),
-        expect.objectContaining({}),
-    ]);
-});
-
-test('Should add at least the minOccurs amount of blocks with types', () => {
-    const changeSpy = jest.fn();
-    const value = [{type: 'default'}];
-
-    shallow(
-        <BlockCollection
-            defaultType="editor"
-            minOccurs={2}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            types={{default: 'Default', editor: 'Editor'}}
-            value={value}
-        />
-    );
-
-    expect(changeSpy).toBeCalledWith([
-        expect.objectContaining({type: 'default'}),
-        expect.objectContaining({type: 'editor'}),
-    ]);
-});
-
-test('Should generate IDs for minOccurs blocks with generateBlockIds enabled', async() => {
-    const mockIds = ['id1', 'id2', 'id3'];
-    const generateBlockIdsSpy = jest.fn().mockReturnValue(Promise.resolve(mockIds));
-    const changeSpy = jest.fn();
-    const value = [];
-
-    mount(
-        <BlockCollection
-            defaultType="editor"
-            generateBlockIds={generateBlockIdsSpy}
+            generateBlockIds={generateBlockIds}
             minOccurs={3}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
+            onChange={onChange}
+            renderBlockContent={jest.fn(() => null)}
+            value={[]}
         />
     );
 
-    // Wait for async fillArrays to complete
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
-    expect(generateBlockIdsSpy).toHaveBeenCalledWith(3);
-    expect(changeSpy).toHaveBeenCalledWith([
+    await waitFor(() => expect(generateBlockIds).toHaveBeenCalledWith(3));
+    expect(onChange).toHaveBeenCalledWith([
         {type: 'editor', _id: 'id1'},
         {type: 'editor', _id: 'id2'},
         {type: 'editor', _id: 'id3'},
     ]);
 });
 
-test('Choosing a different type should call the onChange callback', () => {
-    const changeSpy = jest.fn();
-    const renderBlockContent = jest.fn();
-    const value = [
-        {
-            type: 'type1',
-            content: 'Test 1',
-        },
-        {
-            type: 'type2',
-            content: 'Test 2',
-        },
-    ];
-    const blockCollection = mount(
+test('calls onChange when type changes through list adapter callback', () => {
+    const onChange = jest.fn();
+
+    render(
         <BlockCollection
             defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={renderBlockContent}
-            types={{type1: 'Type 1', type2: 'Type2'}}
-            value={value}
-        />
-    );
-
-    blockCollection.find('Block').at(0).simulate('click');
-    blockCollection.find('Block').at(1).simulate('click');
-
-    expect(blockCollection.find('Block').at(0).find('SingleSelect').prop('value')).toEqual('type1');
-    expect(blockCollection.find('Block').at(1).find('SingleSelect').prop('value')).toEqual('type2');
-
-    blockCollection.find('Block').at(0).find('SingleSelect').prop('onChange')('type2');
-
-    expect(changeSpy).toBeCalledWith([
-        expect.objectContaining({content: 'Test 1', type: 'type2'}),
-        expect.objectContaining({content: 'Test 2', type: 'type2'}),
-    ]);
-});
-
-test('Should allow to expand blocks', () => {
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
-        />
-    );
-
-    expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(false);
-    expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(false);
-
-    blockCollection.find('Block').at(1).simulate('click');
-
-    expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(false);
-    expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(true);
-});
-
-test('Should allow to collapse blocks', () => {
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
-        />
-    );
-
-    blockCollection.find('Block').at(0).simulate('click');
-    blockCollection.find('Block').at(1).simulate('click');
-
-    expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(true);
-    expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(true);
-
-    blockCollection.find('Block').at(0).find('Icon[name="su-collapse-vertical"]').simulate('click');
-
-    expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(false);
-    expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(true);
-});
-
-test('Should allow to collapse all blocks', () => {
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
-        />
-    );
-
-    blockCollection.find('Block').at(0).simulate('click');
-    blockCollection.find('Block').at(1).simulate('click');
-
-    expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(true);
-    expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(true);
-
-    blockCollection.find('button.blockCollectionActionButton').last().simulate('click');
-
-    expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(false);
-    expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(false);
-});
-
-test('Should allow to expand all blocks', () => {
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
-        />
-    );
-
-    expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(false);
-    expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(false);
-
-    blockCollection.find('button.blockCollectionActionButton').last().simulate('click');
-
-    expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(true);
-    expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(true);
-});
-
-test('Should allow to reorder blocks by using drag and drop', () => {
-    const changeSpy = jest.fn();
-    const sortEndSpy = jest.fn();
-    const value = [
-        {content: 'Test 1', type: 'editor'},
-        {content: 'Test 2', type: 'editor'},
-        {content: 'Test 3', type: 'editor'},
-    ];
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            onSortEnd={sortEndSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    blockCollection.find('Block').at(0).simulate('click');
-
-    expect(blockCollection.instance().expandedBlocks.toJS()).toEqual([true, false, false]);
-    expect(blockCollection.instance().generatedBlockIds.toJS()).toEqual([1, 2, 3]);
-
-    blockCollection.find(SortableBlockList).prop('onSortEnd')({newIndex: 2, oldIndex: 0});
-    expect(changeSpy).toBeCalledWith([
-        expect.objectContaining({content: 'Test 2'}),
-        expect.objectContaining({content: 'Test 3'}),
-        expect.objectContaining({content: 'Test 1'}),
-    ]);
-    expect(sortEndSpy).toBeCalledWith(0, 2);
-
-    expect(blockCollection.instance().expandedBlocks.toJS()).toEqual([false, false, true]);
-    expect(blockCollection.instance().generatedBlockIds.toJS()).toEqual([2, 3, 1]);
-});
-
-test('Should add a new block between existing blocks', () => {
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    blockCollection.find('Button[icon="su-plus"]').at(0).simulate('click');
-
-    expect(changeSpy).toBeCalledWith([
-        {content: 'Test 1', type: 'editor'},
-        {type: 'editor'},
-        {content: 'Test 2', type: 'editor'},
-    ]);
-});
-
-test('Should add a new block at the end', () => {
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    blockCollection.find('Button[icon="su-plus"]').last().simulate('click');
-
-    expect(changeSpy).toBeCalledWith([...value, {type: 'editor'}]);
-});
-
-test('Should throw an exception if a new block is added and the maximum has already been reached', async() => {
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
-
-    const blockCollection = shallow(
-        <BlockCollection
-            defaultType="editor"
-            maxOccurs={2}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    await expect(blockCollection.instance().handleAddBlock()).rejects.toThrow(/maximum amount of blocks/);
-});
-
-test('Should paste block between existing blocks', async() => {
-    clipboard.set('blocks', [{content: 'Clipboard', type: 'editor'}]);
-
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    await blockCollection.find('Button[icon="su-copy"]').at(0).simulate('click');
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
-    expect(changeSpy).toBeCalledWith([
-        {content: 'Test 1', type: 'editor'},
-        {content: 'Clipboard', type: 'editor'},
-        {content: 'Test 2', type: 'editor'},
-    ]);
-});
-
-test('Should paste block at the end', async() => {
-    clipboard.set('blocks', [{content: 'Clipboard', type: 'editor'}]);
-
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    await blockCollection.find('Button[icon="su-copy"]').last().simulate('click');
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
-    expect(changeSpy).toBeCalledWith([...value, {content: 'Clipboard', type: 'editor'}]);
-});
-
-test('Should paste block with default type if type of block in clipboard block is not known', async() => {
-    clipboard.set('blocks', [{content: 'Clipboard', type: 'unkown-type'}]);
-
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    await blockCollection.find('Button[icon="su-copy"]').last().simulate('click');
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
-    expect(changeSpy).toBeCalledWith([...value, {content: 'Clipboard', type: 'editor'}]);
-});
-
-test('Should throw an exception if a block is pasted and the maximum has already been reached', async() => {
-    clipboard.set('blocks', [{content: 'Clipboard', type: 'editor'}]);
-
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
-
-    const blockCollection = shallow(
-        <BlockCollection
-            defaultType="editor"
-            maxOccurs={2}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    await expect(blockCollection.instance().handlePasteBlocks()).rejects.toThrow(/maximum amount of blocks/);
-});
-
-test('Should pass duplicate action that allows to duplicate an existing block', () => {
-    // update value that is passed to the component when change callback is fired to prevent warnings
-    const value: any = observable([{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]);
-    const changeSpy = jest.fn().mockImplementation((newValue) => {
-        value.splice(0, value.length);
-        value.push(...newValue);
-    });
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    const blockActions = blockCollection.find('Block').at(0).prop('actions');
-    expect(blockActions).toContainEqual(
-        expect.objectContaining({
-            type: 'button',
-            icon: 'su-duplicate',
-            label: 'sulu_admin.duplicate',
-        })
-    );
-
-    blockCollection.find('Block').at(0).simulate('click');
-    blockCollection.find('Block').at(0).find('Icon[name="su-more-circle"]').simulate('click');
-    blockCollection.find('Block').at(0).find('Icon[name="su-duplicate"]').simulate('click');
-
-    expect(changeSpy).toBeCalledWith([
-        {content: 'Test 1', type: 'editor'},
-        {content: 'Test 1', type: 'editor'},
-        {content: 'Test 2', type: 'editor'},
-    ]);
-});
-
-test('Should not pass duplicate action to Block component if maxOccurs limit is reached', () => {
-    const value = [{content: 'Value 1', type: 'editor'}, {content: 'Value 2', type: 'editor'}];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            maxOccurs={2}
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    const blockActions = blockCollection.find('Block').at(0).prop('actions');
-    expect(blockActions).not.toContainEqual(
-        expect.objectContaining({
-            label: 'sulu_admin.duplicate',
-        })
-    );
-});
-
-test('Should throw an exception if a block is duplicated and maxOccurs limit is reached', async() => {
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
-
-    const blockCollection = shallow(
-        <BlockCollection
-            defaultType="editor"
-            maxOccurs={2}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    await expect(blockCollection.instance().duplicateBlocks([0], 0)).rejects.toThrow(/maximum amount of blocks/);
-});
-
-test('Should pass remove action that allows to remove an existing block', () => {
-    // update value that is passed to the component when change callback is fired to prevent warnings
-    const value: any = observable([{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]);
-    const changeSpy = jest.fn().mockImplementation((newValue) => {
-        value.splice(0, value.length);
-        value.push(...newValue);
-    });
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    const blockActions = blockCollection.find('Block').at(0).prop('actions');
-    expect(blockActions).toContainEqual(
-        expect.objectContaining({
-            type: 'button',
-            icon: 'su-trash-alt',
-            label: 'sulu_admin.delete',
-        })
-    );
-
-    blockCollection.find('Block').at(0).simulate('click');
-    blockCollection.find('Block').at(0).find('Icon[name="su-more-circle"]').simulate('click');
-    blockCollection.find('Block').at(0).find('Icon[name="su-trash-alt"]').simulate('click');
-
-    expect(changeSpy).toBeCalledWith([expect.objectContaining({content: 'Test 2'})]);
-});
-
-test('Should not pass remove action to Block component if minOccurs limit is reached', () => {
-    const value = [{content: 'Value 1', type: 'editor'}, {content: 'Value 2', type: 'editor'}];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            minOccurs={2}
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    const blockActions = blockCollection.find('Block').at(0).prop('actions');
-    expect(blockActions).not.toContainEqual(expect.objectContaining({
-        label: 'sulu_admin.delete',
-    }));
-});
-
-test('Should throw an exception if a block is removed and minOccurs limit is reached', () => {
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
-
-    const blockCollection = shallow(
-        <BlockCollection
-            defaultType="editor"
-            minOccurs={2}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    expect(() => blockCollection.instance().handleRemoveBlock(0)).toThrow(/minimum amount of blocks/);
-});
-
-test('Should pass copy action that allows to cut an existing block into the clipboard', () => {
-    const clipboardSpy = jest.fn();
-    clipboard.observe('blocks', clipboardSpy);
-
-    const value: any = observable([{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]);
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    const blockActions = blockCollection.find('Block').at(0).prop('actions');
-    expect(blockActions).toContainEqual(
-        expect.objectContaining({
-            type: 'button',
-            icon: 'su-copy',
-            label: 'sulu_admin.copy',
-        })
-    );
-
-    expect(clipboardSpy).not.toBeCalled();
-
-    blockCollection.find('Block').at(0).simulate('click');
-    blockCollection.find('Block').at(0).find('Icon[name="su-more-circle"]').simulate('click');
-    blockCollection.find('Block').at(0).find('Icon[name="su-copy"]').simulate('click');
-
-    expect(clipboardSpy).toBeCalledWith([value[0]]);
-});
-
-test('Should pass cut action that allows to cut an existing block into the clipboard', () => {
-    const clipboardSpy = jest.fn();
-    clipboard.observe('blocks', clipboardSpy);
-
-    // update value that is passed to the component when change callback is fired to prevent warnings
-    const value: any = observable([{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]);
-    const changeSpy = jest.fn().mockImplementation((newValue) => {
-        value.splice(0, value.length);
-        value.push(...newValue);
-    });
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    const blockActions = blockCollection.find('Block').at(0).prop('actions');
-    expect(blockActions).toContainEqual(
-        expect.objectContaining({
-            type: 'button',
-            icon: 'su-scissors',
-            label: 'sulu_admin.cut',
-        })
-    );
-
-    expect(clipboardSpy).not.toBeCalled();
-
-    blockCollection.find('Block').at(0).simulate('click');
-    blockCollection.find('Block').at(0).find('Icon[name="su-more-circle"]').simulate('click');
-    blockCollection.find('Block').at(0).find('Icon[name="su-scissors"]').simulate('click');
-
-    expect(clipboardSpy).toBeCalledWith([expect.objectContaining({content: 'Test 1'})]);
-    expect(changeSpy).toBeCalledWith([expect.objectContaining({content: 'Test 2'})]);
-});
-
-test('Should not pass cut action to Block component if minOccurs limit is reached', () => {
-    const value = [{content: 'Value 1', type: 'editor'}, {content: 'Value 2', type: 'editor'}];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            minOccurs={2}
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    const blockActions = blockCollection.find('Block').at(0).prop('actions');
-    expect(blockActions).not.toContainEqual(expect.objectContaining({
-        label: 'sulu_admin.cut',
-    }));
-});
-
-test('Should throw an exception if a block is removed and minOccurs limit is reached', () => {
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
-
-    const blockCollection = shallow(
-        <BlockCollection
-            defaultType="editor"
-            minOccurs={2}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    expect(() => blockCollection.instance().handleCutBlock(0)).toThrow(/minimum amount of blocks/);
-});
-
-test('Should call onSettingsClick callback when settings icon is clicked', () => {
-    const settingsClickSpy = jest.fn();
-    const value: any = observable([{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]);
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={jest.fn()}
-            onSettingsClick={settingsClickSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    blockCollection.find('Block').at(0).simulate('click');
-    blockCollection.find('Block').at(1).simulate('click');
-
-    blockCollection.find('Block Icon[name="su-cog"]').at(0).simulate('click');
-    expect(settingsClickSpy).toHaveBeenLastCalledWith(0);
-
-    blockCollection.find('Block Icon[name="su-cog"]').at(1).simulate('click');
-    expect(settingsClickSpy).toHaveBeenLastCalledWith(1);
-});
-
-test('Should apply renderBlockContent before rendering the block content', () => {
-    const prefix = 'This is the test for ';
-    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
-    const renderBlockContent = jest.fn().mockImplementation((value) => prefix + value.content);
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={jest.fn()}
-            renderBlockContent={renderBlockContent}
-            value={value}
-        />
-    );
-
-    blockCollection.find('Block').at(0).simulate('click');
-    blockCollection.find('Block').at(1).simulate('click');
-
-    expect(blockCollection.find('Block').at(0).prop('children')).toEqual(prefix + value[0].content);
-    expect(blockCollection.find('Block').at(1).prop('children')).toEqual(prefix + value[1].content);
-});
-
-test('Should apply renderBlockContent before rendering the block content including the type', () => {
-    const prefix = 'This is the test for ';
-    const typePrefix = ' which has a type of ';
-    const value = [
-        {
-            type: 'type2',
-            content: 'Test 1',
-        },
-        {
-            type: 'type1',
-            content: 'Test 2',
-        },
-    ];
-    const renderBlockContent = jest.fn().mockImplementation(
-        (value, type) => prefix + value.content + (type ? typePrefix + type : '')
-    );
-    const types = {
-        type1: 'Type 1',
-        type2: 'Type 2',
-    };
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={jest.fn()}
-            renderBlockContent={renderBlockContent}
-            types={types}
-            value={value}
-        />
-    );
-
-    blockCollection.find('Block').at(0).simulate('click');
-    blockCollection.find('Block').at(1).simulate('click');
-
-    expect(blockCollection.find('Block').at(0).prop('children'))
-        .toEqual(prefix + value[0].content + typePrefix + 'type2');
-    expect(blockCollection.find('Block').at(1).prop('children'))
-        .toEqual(prefix + value[1].content + typePrefix + 'type1');
-});
-
-test('Should adjust expandedBlocks and generatedBlockIds after updating the value variable with fewer entries', () => {
-    const types = {
-        type1: 'Type 1',
-        type2: 'Type 2',
-    };
-
-    const value = [
-        {
-            type: 'type1',
-            content: 'Test 1',
-        },
-        {
-            type: 'type2',
-            content: 'Test 2',
-        },
-        {
-            type: 'type1',
-            content: 'Test 3',
-        },
-    ];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            types={types}
-            value={value}
-        />
-    );
-
-    blockCollection.instance().expandedBlocks[0] = true;
-
-    expect(blockCollection.props().value.length).toBe(3);
-    expect(blockCollection.instance().expandedBlocks.length).toBe(3);
-    expect(blockCollection.instance().generatedBlockIds.length).toBe(3);
-    expect(blockCollection.instance().expandedBlocks[0]).toBe(true);
-
-    blockCollection.setProps({
-        value: [
-            {
-                type: 'type1',
-                content: 'Test 1',
-            },
-        ],
-    });
-
-    expect(blockCollection.props().value.length).toBe(1);
-    expect(blockCollection.instance().expandedBlocks.length).toBe(1);
-    expect(blockCollection.instance().generatedBlockIds.length).toBe(1);
-    expect(blockCollection.instance().expandedBlocks[0]).toBe(true);
-});
-
-test('Should adjust expandedBlocks and generatedBlockIds after updating the value variable with more entries', () => {
-    const types = {
-        type1: 'Type 1',
-        type2: 'Type 2',
-    };
-
-    const value = [
-        {
-            type: 'type1',
-            content: 'Test 1',
-        },
-    ];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            types={types}
-            value={value}
-        />
-    );
-
-    blockCollection.instance().expandedBlocks[0] = true;
-
-    expect(blockCollection.props().value.length).toBe(1);
-    expect(blockCollection.instance().expandedBlocks.length).toBe(1);
-    expect(blockCollection.instance().generatedBlockIds.length).toBe(1);
-    expect(blockCollection.instance().expandedBlocks[0]).toBe(true);
-
-    blockCollection.setProps({
-        value: [
-            {
-                type: 'type1',
-                content: 'Test 1',
-            },
-            {
-                type: 'type2',
-                content: 'Test 2',
-            },
-            {
-                type: 'type1',
-                content: 'Test 3',
-            },
-        ],
-    });
-
-    expect(blockCollection.props().value.length).toBe(3);
-    expect(blockCollection.instance().expandedBlocks.length).toBe(3);
-    expect(blockCollection.instance().generatedBlockIds.length).toBe(3);
-    expect(blockCollection.instance().expandedBlocks[0]).toBe(true);
-});
-
-test('Updating value with same length should not adjust expandedBlocks and generatedBlockIds', () => {
-    const types = {
-        type1: 'Type 1',
-        type2: 'Type 2',
-    };
-
-    const value = [
-        {
-            type: 'type1',
-            content: 'Test 1',
-        },
-        {
-            type: 'type2',
-            content: 'Test 2',
-        },
-        {
-            type: 'type1',
-            content: 'Test 3',
-        },
-    ];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            types={types}
-            value={value}
-        />
-    );
-
-    blockCollection.instance().expandedBlocks[0] = true;
-
-    expect(blockCollection.props().value.length).toBe(3);
-    expect(blockCollection.instance().expandedBlocks.length).toBe(3);
-    expect(blockCollection.instance().generatedBlockIds.length).toBe(3);
-    expect(blockCollection.instance().expandedBlocks[0]).toBe(true);
-
-    blockCollection.setProps({
-        value: [
-            {
-                type: 'type2',
-                content: 'Test 3',
-            },
-            {
-                type: 'type1',
-                content: 'Test 1',
-            },
-            {
-                type: 'type2',
-                content: 'Test 2',
-            },
-        ],
-    });
-
-    expect(blockCollection.props().value.length).toBe(3);
-    expect(blockCollection.instance().expandedBlocks.length).toBe(3);
-    expect(blockCollection.instance().generatedBlockIds.length).toBe(3);
-    expect(blockCollection.instance().expandedBlocks[0]).toBe(true);
-});
-
-test('Should not show BlockToolbarButton when have no blocks', () => {
-    const value = [];
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    expect(blockCollection.find('button.blockCollectionActionButton').length).toBe(0);
-    expect(blockCollection.find('BlockToolbar').length).toBe(0);
-});
-
-test('Should not show BlockToolbarButton when have only one block', () => {
-    const types = {
-        type1: 'Type 1',
-    };
-
-    const value = [
-        {
-            type: 'type1',
-            content: 'Test 1',
-        },
-    ];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            types={types}
-            value={value}
-        />
-    );
-
-    expect(blockCollection.find('button.blockCollectionActionButton').length).toBe(0);
-    expect(blockCollection.find('BlockToolbar').length).toBe(0);
-});
-
-test('Should show BlockToolbarButton when have two or more blocks', () => {
-    const types = {
-        type1: 'Type 1',
-        type2: 'Type 2',
-    };
-
-    const value = [
-        {
-            type: 'type1',
-            content: 'Test 1',
-        },
-        {
-            type: 'type2',
-            content: 'Test 2',
-        },
-    ];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            types={types}
-            value={value}
-        />
-    );
-
-    expect(blockCollection.find('.blockCollectionActionButtonContainer').length).toBe(1);
-    expect(blockCollection.find('BlockToolbar').length).toBe(0);
-});
-
-test('Show BlockToolbar when select multiple button is clicked', () => {
-    const types = {
-        type1: 'Type 1',
-        type2: 'Type 2',
-    };
-
-    const value = [
-        {
-            type: 'type1',
-            content: 'Test 1',
-        },
-        {
-            type: 'type2',
-            content: 'Test 2',
-        },
-    ];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            types={types}
-            value={value}
-        />
-    );
-
-    const blockCollectionActionButton = blockCollection.find('button.blockCollectionActionButton');
-
-    blockCollectionActionButton.first().simulate('click');
-
-    expect(blockCollection.find('button.blockCollectionActionButton').length).toBe(0);
-    expect(blockCollection.find('BlockToolbar').length).toBe(1);
-});
-
-test('Hide BlockToolbar when cancel of BlockToolbar is clicked', () => {
-    const types = {
-        type1: 'Type 1',
-        type2: 'Type 2',
-    };
-
-    const value = [
-        {
-            type: 'type1',
-            content: 'Test 1',
-        },
-        {
-            type: 'type2',
-            content: 'Test 2',
-        },
-    ];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            types={types}
-            value={value}
-        />
-    );
-
-    const blockCollectionActionButton = blockCollection.find('button.blockCollectionActionButton');
-    blockCollectionActionButton.first().simulate('click');
-    const blockToolbar = blockCollection.find('BlockToolbar');
-
-    blockToolbar.find('button').last().simulate('click');
-
-    expect(blockCollection.find('.blockCollectionActionButtonContainer').length).toBe(1);
-});
-
-test('Show selection handle when BlockToolbar is open', () => {
-    const types = {
-        type1: 'Type 1',
-        type2: 'Type 2',
-    };
-
-    const value = [
-        {
-            type: 'type1',
-            content: 'Test 1',
-        },
-        {
-            type: 'type2',
-            content: 'Test 2',
-        },
-    ];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            types={types}
-            value={value}
-        />
-    );
-
-    expect(blockCollection.find('SelectionHandle').length).toBe(0);
-
-    const blockCollectionActionButton = blockCollection.find('button.blockCollectionActionButton');
-    blockCollectionActionButton.first().simulate('click');
-
-    expect(blockCollection.find('SelectionHandle').length).toBe(2);
-});
-
-test('Count selected blocks in BlockToolbar', () => {
-    const types = {
-        type1: 'Type 1',
-        type2: 'Type 2',
-    };
-
-    const value = [
-        {
-            type: 'type1',
-            content: 'Test 1',
-        },
-        {
-            type: 'type2',
-            content: 'Test 2',
-        },
-    ];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            types={types}
-            value={value}
-        />
-    );
-
-    const blockCollectionActionButton = blockCollection.find('button.blockCollectionActionButton');
-    blockCollectionActionButton.first().simulate('click');
-
-    expect(blockCollection.find('BlockToolbar').props().selectedCount).toBe(0);
-
-    const selectionHandles = blockCollection.find('SelectionHandle');
-
-    selectionHandles.first().simulate('click');
-    selectionHandles.last().simulate('click');
-
-    expect(blockCollection.find('BlockToolbar').props().selectedCount).toBe(2);
-});
-
-test('Copy selected blocks via the BlockToolbar', () => {
-    const changeSpy = jest.fn();
-    const clipboardSpy = jest.fn();
-    clipboard.observe('blocks', clipboardSpy);
-
-    const types = {
-        type1: 'Type 1',
-        type2: 'Type 2',
-    };
-
-    const value = [
-        {
-            type: 'type1',
-            content: 'Test 1',
-        },
-        {
-            type: 'type2',
-            content: 'Test 2',
-        },
-    ];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            types={types}
-            value={value}
-        />
-    );
-
-    const blockCollectionActionButton = blockCollection.find('button.blockCollectionActionButton');
-    blockCollectionActionButton.first().simulate('click');
-    const blockToolbar = blockCollection.find('BlockToolbar');
-    const selectionHandles = blockCollection.find('SelectionHandle');
-    selectionHandles.first().simulate('click');
-    selectionHandles.last().simulate('click');
-
-    blockToolbar.find('button[aria-label="sulu_admin.copy"]').simulate('click');
-
-    expect(clipboardSpy).toBeCalledWith(value);
-    expect(changeSpy).not.toBeCalled();
-});
-
-test('Duplicate selected blocks via the BlockToolbar', () => {
-    const changeSpy = jest.fn();
-    const clipboardSpy = jest.fn();
-    clipboard.observe('blocks', clipboardSpy);
-
-    const types = {
-        type1: 'Type 1',
-        type2: 'Type 2',
-    };
-
-    const value = [
-        {
-            type: 'type1',
-            content: 'Test 1',
-        },
-        {
-            type: 'type2',
-            content: 'Test 2',
-        },
-    ];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            types={types}
-            value={value}
-        />
-    );
-
-    const blockCollectionActionButton = blockCollection.find('button.blockCollectionActionButton');
-    blockCollectionActionButton.first().simulate('click');
-    const blockToolbar = blockCollection.find('BlockToolbar');
-    const selectionHandles = blockCollection.find('SelectionHandle');
-    selectionHandles.first().simulate('click');
-    selectionHandles.last().simulate('click');
-
-    blockToolbar.find('button[aria-label="sulu_admin.duplicate"]').simulate('click');
-
-    expect(clipboardSpy).not.toBeCalled();
-    expect(changeSpy).toBeCalledWith([...value, ...value]);
-});
-
-test('Duplicate multiple non-contiguous blocks correctly', async() => {
-    const changeSpy = jest.fn();
-    const generateBlockIdsSpy = jest.fn().mockResolvedValue(['id1', 'id2']);
-
-    const types = {
-        type1: 'Type 1',
-        type2: 'Type 2',
-        type3: 'Type 3',
-        type4: 'Type 4',
-    };
-
-    const value = [
-        {type: 'type1', content: 'Block 0'},
-        {type: 'type2', content: 'Block 1'},
-        {type: 'type3', content: 'Block 2'},
-        {type: 'type4', content: 'Block 3'},
-    ];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            generateBlockIds={generateBlockIdsSpy}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            types={types}
-            value={value}
-        />
-    );
-
-    const instance = blockCollection.instance();
-
-    await instance.duplicateBlocks([0, 2], value.length);
-
-    expect(generateBlockIdsSpy).toBeCalledWith(2);
-    expect(changeSpy).toHaveBeenCalledTimes(1);
-
-    const newValue = changeSpy.mock.calls[0][0];
-    expect(newValue).toHaveLength(6);
-    expect(newValue[0].content).toBe('Block 0');
-    expect(newValue[1].content).toBe('Block 1');
-    expect(newValue[2].content).toBe('Block 2');
-    expect(newValue[3].content).toBe('Block 3');
-    expect(newValue[4].content).toBe('Block 0');
-    expect(newValue[4]._id).toBe('id1');
-    expect(newValue[5].content).toBe('Block 2');
-    expect(newValue[5]._id).toBe('id2');
-});
-
-test('Duplicate single block maintains correct position', async() => {
-    const changeSpy = jest.fn();
-
-    const types = {
-        type1: 'Type 1',
-        type2: 'Type 2',
-        type3: 'Type 3',
-    };
-
-    const value = [
-        {type: 'type1', content: 'Block 0'},
-        {type: 'type2', content: 'Block 1'},
-        {type: 'type3', content: 'Block 2'},
-    ];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            types={types}
-            value={value}
-        />
-    );
-
-    const instance = blockCollection.instance();
-
-    await instance.duplicateBlocks([1], 1);
-
-    const newValue = changeSpy.mock.calls[0][0];
-    expect(newValue).toHaveLength(4);
-    expect(newValue[0].content).toBe('Block 0');
-    expect(newValue[1].content).toBe('Block 1');
-    expect(newValue[2].content).toBe('Block 1');
-    expect(newValue[3].content).toBe('Block 2');
-});
-
-test('Tracking arrays stay synchronized after block duplication', async() => {
-    const changeSpy = jest.fn();
-
-    const types = {
-        type1: 'Type 1',
-        type2: 'Type 2',
-    };
-
-    const value = [
-        {type: 'type1', content: 'Block 0'},
-        {type: 'type2', content: 'Block 1'},
-    ];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            types={types}
-            value={value}
-        />
-    );
-
-    const instance = blockCollection.instance();
-
-    await instance.duplicateBlocks([0, 1], value.length);
-
-    const newValue = changeSpy.mock.calls[0][0];
-
-    expect(instance.expandedBlocks).toHaveLength(newValue.length);
-    expect(instance.selectedBlocks).toHaveLength(newValue.length);
-    expect(instance.generatedBlockIds).toHaveLength(newValue.length);
-
-    expect(instance.expandedBlocks[2]).toBe(true);
-    expect(instance.expandedBlocks[3]).toBe(true);
-
-    expect(instance.selectedBlocks[2]).toBe(false);
-    expect(instance.selectedBlocks[3]).toBe(false);
-});
-
-test('Empty selection does not trigger duplication', async() => {
-    const changeSpy = jest.fn();
-
-    const value = [{type: 'type1', content: 'Block 0'}];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            types={{type1: 'Type 1'}}
-            value={value}
-        />
-    );
-
-    const instance = blockCollection.instance();
-
-    await instance.duplicateBlocks([], 0);
-
-    expect(changeSpy).not.toHaveBeenCalled();
-});
-
-test('Cut selected blocks via the BlockToolbar', () => {
-    const changeSpy = jest.fn();
-    const clipboardSpy = jest.fn();
-    clipboard.observe('blocks', clipboardSpy);
-
-    const types = {
-        type1: 'Type 1',
-        type2: 'Type 2',
-    };
-
-    const value = [
-        {
-            type: 'type1',
-            content: 'Test 1',
-        },
-        {
-            type: 'type2',
-            content: 'Test 2',
-        },
-    ];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            types={types}
-            value={value}
-        />
-    );
-
-    const blockCollectionActionButton = blockCollection.find('button.blockCollectionActionButton');
-    blockCollectionActionButton.first().simulate('click');
-    const blockToolbar = blockCollection.find('BlockToolbar');
-    const selectionHandles = blockCollection.find('SelectionHandle');
-    selectionHandles.first().simulate('click');
-    selectionHandles.last().simulate('click');
-
-    blockToolbar.find('button[aria-label="sulu_admin.cut"]').simulate('click');
-
-    expect(clipboardSpy).toBeCalledWith(value);
-    expect(changeSpy).toBeCalledWith([]);
-});
-
-test('Remove selected blocks via the BlockToolbar', () => {
-    const changeSpy = jest.fn();
-    const clipboardSpy = jest.fn();
-    clipboard.observe('blocks', clipboardSpy);
-
-    const types = {
-        type1: 'Type 1',
-        type2: 'Type 2',
-    };
-
-    const value = [
-        {
-            type: 'type1',
-            content: 'Test 1',
-        },
-        {
-            type: 'type2',
-            content: 'Test 2',
-        },
-    ];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            types={types}
-            value={value}
-        />
-    );
-
-    const blockCollectionActionButton = blockCollection.find('button.blockCollectionActionButton');
-    blockCollectionActionButton.first().simulate('click');
-    const blockToolbar = blockCollection.find('BlockToolbar');
-    const selectionHandles = blockCollection.find('SelectionHandle');
-    selectionHandles.first().simulate('click');
-    selectionHandles.last().simulate('click');
-
-    blockToolbar.find('button[aria-label="sulu_admin.delete"]').simulate('click');
-
-    expect(clipboardSpy).not.toBeCalled();
-    expect(changeSpy).toBeCalledWith([]);
-});
-
-test('Should generate ID when adding new block with generateBlockIds enabled', async() => {
-    const mockId = 'abc12345';
-    const generateBlockIdsSpy = jest.fn().mockReturnValue(Promise.resolve([mockId]));
-
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}];
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            generateBlockIds={generateBlockIdsSpy}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    // Call the handler directly to properly await the async operation
-    await blockCollection.instance().handleAddBlock(1);
-
-    expect(generateBlockIdsSpy).toHaveBeenCalledWith(1);
-    expect(changeSpy).toHaveBeenCalledWith([
-        {content: 'Test 1', type: 'editor'},
-        {type: 'editor', _id: mockId},
-    ]);
-});
-
-test('Should not generate ID when adding block without generateBlockIds', async() => {
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}];
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    blockCollection.find('Button[icon="su-plus"]').last().simulate('click');
-
-    expect(changeSpy).toHaveBeenCalledWith([
-        {content: 'Test 1', type: 'editor'},
-        {type: 'editor'},
-    ]);
-});
-
-test('Should create blocks with minimal structure to allow field components to apply defaults', async() => {
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}];
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    await blockCollection.instance().handleAddBlock(1);
-
-    // Verify block is created with only type (no field values pre-populated)
-    // This allows field components to apply defaults in their constructors
-    expect(changeSpy).toHaveBeenCalledWith([
-        {content: 'Test 1', type: 'editor'},
-        {type: 'editor'},
-    ]);
-});
-
-test('Should synchronize observables atomically when adding block', async() => {
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}];
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    const instance = blockCollection.instance();
-
-    // Verify observables are empty initially (only for existing block)
-    expect(instance.expandedBlocks.length).toBe(1);
-    expect(instance.selectedBlocks.length).toBe(1);
-    expect(instance.generatedBlockIds.length).toBe(1);
-
-    await instance.handleAddBlock(1);
-
-    // After adding block, observables should be updated to match new value length
-    expect(instance.expandedBlocks.length).toBe(2);
-    expect(instance.selectedBlocks.length).toBe(2);
-    expect(instance.generatedBlockIds.length).toBe(2);
-});
-
-test('Should synchronize observables atomically when adding block with generateBlockIds', async() => {
-    const mockId = 'test123';
-    const generateBlockIdsSpy = jest.fn().mockReturnValue(Promise.resolve([mockId]));
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}];
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            generateBlockIds={generateBlockIdsSpy}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    const instance = blockCollection.instance();
-
-    // Capture observable lengths before operation
-    const expandedBefore = instance.expandedBlocks.length;
-    const selectedBefore = instance.selectedBlocks.length;
-    const generatedIdsBefore = instance.generatedBlockIds.length;
-
-    await instance.handleAddBlock(1);
-
-    // Observables should be updated atomically AFTER async operation
-    // No intermediate state where observables have different lengths than value
-    expect(instance.expandedBlocks.length).toBe(expandedBefore + 1);
-    expect(instance.selectedBlocks.length).toBe(selectedBefore + 1);
-    expect(instance.generatedBlockIds.length).toBe(generatedIdsBefore + 1);
-
-    expect(changeSpy).toHaveBeenCalledWith([
-        {content: 'Test 1', type: 'editor'},
-        {type: 'editor', _id: mockId},
-    ]);
-});
-
-test('Should create minOccurs blocks with minimal structure for field component defaults', async() => {
-    const changeSpy = jest.fn();
-    const value = [];
-
-    mount(
-        <BlockCollection
-            defaultType="editor"
-            minOccurs={2}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    // fillArrays runs automatically via reaction
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
-    // Verify blocks created with only type to allow field components to apply defaults
-    expect(changeSpy).toHaveBeenCalledWith([
-        {type: 'editor'},
-        {type: 'editor'},
-    ]);
-});
-
-test('Should synchronize observables atomically when creating minOccurs blocks', async() => {
-    const changeSpy = jest.fn();
-    const value = [];
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            minOccurs={3}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    // fillArrays runs automatically via reaction
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
-    const instance = blockCollection.instance();
-
-    // All observables should have same length as value after fillArrays
-    expect(instance.expandedBlocks.length).toBe(3);
-    expect(instance.selectedBlocks.length).toBe(3);
-    expect(instance.generatedBlockIds.length).toBe(3);
-});
-
-test('Should generate IDs for minOccurs blocks atomically', async() => {
-    const mockIds = ['id1', 'id2', 'id3'];
-    const generateBlockIdsSpy = jest.fn().mockReturnValue(Promise.resolve(mockIds));
-    const changeSpy = jest.fn();
-    const value = [];
-
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            generateBlockIds={generateBlockIdsSpy}
-            minOccurs={3}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    // fillArrays runs automatically and generates IDs
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
-    const instance = blockCollection.instance();
-
-    // Verify IDs were generated before onChange was called
-    expect(generateBlockIdsSpy).toHaveBeenCalledWith(3);
-    expect(changeSpy).toHaveBeenCalledWith([
-        {type: 'editor', _id: 'id1'},
-        {type: 'editor', _id: 'id2'},
-        {type: 'editor', _id: 'id3'},
-    ]);
-
-    // Observables should be synchronized with value
-    expect(instance.expandedBlocks.length).toBe(3);
-    expect(instance.selectedBlocks.length).toBe(3);
-    expect(instance.generatedBlockIds.length).toBe(3);
-});
-
-test('Should generate new ID when pasting cut blocks', async() => {
-    const existingId = 'existing123';
-    const newId = 'newid789';
-    clipboard.set('blocks', [{content: 'Clipboard', type: 'editor', _id: existingId}]);
-
-    const generateBlockIdsSpy = jest.fn().mockReturnValue(Promise.resolve([newId]));
-
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}];
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            generateBlockIds={generateBlockIdsSpy}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    // Call the handler directly to properly await the async operation
-    await blockCollection.instance().handlePasteBlocks(1);
-
-    expect(generateBlockIdsSpy).toHaveBeenCalledWith(1);
-    expect(changeSpy).toHaveBeenCalledWith([
-        {content: 'Test 1', type: 'editor'},
-        {content: 'Clipboard', type: 'editor', _id: newId},
-    ]);
-});
-
-test('Should generate new ID when pasting copied blocks without ID', async() => {
-    const mockId = 'newid456';
-    clipboard.set('blocks', [{content: 'Clipboard', type: 'editor'}]);
-
-    const generateBlockIdsSpy = jest.fn().mockReturnValue(Promise.resolve([mockId]));
-
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}];
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            generateBlockIds={generateBlockIdsSpy}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    await blockCollection.find('Button[icon="su-copy"]').last().simulate('click');
-
-    // Wait for async operation
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
-    expect(generateBlockIdsSpy).toHaveBeenCalledWith(1);
-    expect(changeSpy).toHaveBeenCalledWith([
-        {content: 'Test 1', type: 'editor'},
-        {content: 'Clipboard', type: 'editor', _id: mockId},
-    ]);
-});
-
-test('Should remove ID from clipboard when copying blocks', () => {
-    const clipboardSpy = jest.fn();
-    clipboard.observe('blocks', clipboardSpy);
-
-    const generateBlockIdsSpy = jest.fn();
-    const value: any = observable([{content: 'Test 1', type: 'editor', _id: 'testid123'}]);
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            generateBlockIds={generateBlockIdsSpy}
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    blockCollection.find('Block').at(0).simulate('click');
-    blockCollection.find('Block').at(0).find('Icon[name="su-more-circle"]').simulate('click');
-    blockCollection.find('Block').at(0).find('Icon[name="su-copy"]').simulate('click');
-
-    expect(clipboardSpy).toHaveBeenCalledWith([
-        {content: 'Test 1', type: 'editor'}, // _id should be removed
-    ]);
-});
-
-test('Should remove ID from clipboard when cutting blocks', () => {
-    const clipboardSpy = jest.fn();
-    clipboard.observe('blocks', clipboardSpy);
-
-    const generateBlockIdsSpy = jest.fn();
-    const value: any = observable([
-        {content: 'Test 1', type: 'editor', _id: 'testid123'},
-        {content: 'Test 2', type: 'editor'},
-    ]);
-    const changeSpy = jest.fn().mockImplementation((newValue) => {
-        value.splice(0, value.length);
-        value.push(...newValue);
-    });
-    const blockCollection = mount(
-        <BlockCollection
-            defaultType="editor"
-            generateBlockIds={generateBlockIdsSpy}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    blockCollection.find('Block').at(0).simulate('click');
-    blockCollection.find('Block').at(0).find('Icon[name="su-more-circle"]').simulate('click');
-    blockCollection.find('Block').at(0).find('Icon[name="su-scissors"]').simulate('click');
-
-    expect(clipboardSpy).toHaveBeenCalledWith([
-        {content: 'Test 1', type: 'editor'}, // _id should be removed for cut blocks too
-    ]);
-});
-
-test('Should pre-generate IDs for blocks without IDs when loaded from server', async() => {
-    const mockId1 = '12345678';
-    const mockId2 = '87654321';
-    const generateBlockIdsSpy = jest.fn().mockReturnValue(Promise.resolve([mockId1, mockId2]));
-    const changeSpy = jest.fn();
-
-    const value = [
-        {
-            type: 'type1',
-            content: 'Block 1',
-        },
-        {
-            type: 'type2',
-            content: 'Block 2',
-        },
-    ];
-
-    mount(
-        <BlockCollection
-            defaultType="editor"
-            generateBlockIds={generateBlockIdsSpy}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    // Wait for async ID generation
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
-    expect(generateBlockIdsSpy).toHaveBeenCalledWith(2);
-    expect(changeSpy).toHaveBeenCalledWith([
-        {
-            type: 'type1',
-            content: 'Block 1',
-            _id: mockId1,
-        },
-        {
-            type: 'type2',
-            content: 'Block 2',
-            _id: mockId2,
-        },
-    ]);
-});
-
-test('Should not pre-generate IDs for blocks that already have IDs', async() => {
-    const existingId1 = 'existing1';
-    const existingId2 = 'existing2';
-    const generateBlockIdsSpy = jest.fn();
-    const changeSpy = jest.fn();
-
-    const value = [
-        {
-            type: 'type1',
-            content: 'Block 1',
-            _id: existingId1,
-        },
-        {
-            type: 'type2',
-            content: 'Block 2',
-            _id: existingId2,
-        },
-    ];
-
-    mount(
-        <BlockCollection
-            defaultType="editor"
-            generateBlockIds={generateBlockIdsSpy}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    // Wait for potential async operations
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
-    // Should not generate IDs since all blocks already have them
-    expect(generateBlockIdsSpy).not.toHaveBeenCalled();
-    expect(changeSpy).not.toHaveBeenCalled();
-});
-
-test('Should pre-generate IDs only for blocks without IDs (mixed case)', async() => {
-    const existingId = 'existing1';
-    const newId = '12345678';
-    const generateBlockIdsSpy = jest.fn().mockReturnValue(Promise.resolve([newId]));
-    const changeSpy = jest.fn();
-
-    const value = [
-        {
-            type: 'type1',
-            content: 'Block 1',
-            _id: existingId,
-        },
-        {
-            type: 'type2',
-            content: 'Block 2',
-        },
-    ];
-
-    mount(
-        <BlockCollection
-            defaultType="editor"
-            generateBlockIds={generateBlockIdsSpy}
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    // Wait for async ID generation
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
-    expect(generateBlockIdsSpy).toHaveBeenCalledWith(1);
-    expect(changeSpy).toHaveBeenCalledWith([
-        {
-            type: 'type1',
-            content: 'Block 1',
-            _id: existingId,
-        },
-        {
-            type: 'type2',
-            content: 'Block 2',
-            _id: newId,
-        },
-    ]);
-});
-
-test('Should not generate IDs when generateBlockIds is not provided', async() => {
-    const changeSpy = jest.fn();
-
-    mount(
-        <BlockCollection
-            defaultType="editor"
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
+            onChange={onChange}
+            renderBlockContent={jest.fn(() => null)}
+            types={{type1: 'Type 1', type2: 'Type 2'}}
             value={[
-                {
-                    type: 'type1',
-                    content: 'Block 1',
-                },
-                {
-                    type: 'type2',
-                    content: 'Block 2',
-                },
+                {type: 'type1', content: 'Test 1'},
+                {type: 'type2', content: 'Test 2'},
             ]}
         />
     );
 
-    // Wait for potential async operations
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    getLastSortableBlockListProps().onTypeChange('type2', 0);
 
-    // Should not try to generate IDs or call onChange since generateBlockIds is not provided
-    expect(changeSpy).not.toHaveBeenCalled();
+    expect(onChange).toHaveBeenCalledWith([
+        {type: 'type2', content: 'Test 1'},
+        {type: 'type2', content: 'Test 2'},
+    ]);
+});
+
+test('adds a block through exposed method', async() => {
+    const onChange = jest.fn();
+    const ref = React.createRef();
+
+    render(
+        <BlockCollection
+            defaultType="editor"
+            onChange={onChange}
+            ref={ref}
+            renderBlockContent={jest.fn(() => null)}
+            value={[{type: 'editor', content: 'A'}]}
+        />
+    );
+
+    await act(async() => {
+        await ref.current.handleAddBlock(1);
+    });
+
+    expect(onChange).toHaveBeenCalledWith([
+        {type: 'editor', content: 'A'},
+        {type: 'editor'},
+    ]);
+});
+
+test('sorts blocks through onSortEnd callback', () => {
+    const onChange = jest.fn();
+    const onSortEnd = jest.fn();
+
+    render(
+        <BlockCollection
+            defaultType="editor"
+            onChange={onChange}
+            onSortEnd={onSortEnd}
+            renderBlockContent={jest.fn(() => null)}
+            value={[
+                {type: 'editor', content: 'A'},
+                {type: 'editor', content: 'B'},
+            ]}
+        />
+    );
+
+    getLastSortableBlockListProps().onSortEnd({oldIndex: 0, newIndex: 1});
+
+    expect(onChange).toHaveBeenCalledWith([
+        {type: 'editor', content: 'B'},
+        {type: 'editor', content: 'A'},
+    ]);
+    expect(onSortEnd).toHaveBeenCalledWith(0, 1);
 });

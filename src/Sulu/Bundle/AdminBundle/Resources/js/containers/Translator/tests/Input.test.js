@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import {observable} from 'mobx';
 import Input from '../Input';
 import {TextEditor} from '../../../containers';
+import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
 
 jest.mock('../../../containers', () => ({
     TextEditor: jest.fn(() => <div data-testid="text-editor" />),
@@ -45,7 +46,7 @@ describe('Input', () => {
         render(<Input onChange={onChange} text="Initial" type="text_editor" />);
 
         // $FlowFixMe
-        const textEditor = TextEditor.mock.calls[0][0];
+        const textEditor = getLatestMockProps(TextEditor);
         textEditor.onChange('New Text');
 
         expect(onChange).toHaveBeenCalledWith('New Text');
@@ -67,7 +68,7 @@ describe('Input', () => {
         render(<Input text="Test" type="text_editor" />);
 
         // $FlowFixMe
-        const textEditor = TextEditor.mock.calls[0][0];
+        const textEditor = getLatestMockProps(TextEditor);
         expect(textEditor.disabled).toBe(true);
     });
 });

@@ -1,39 +1,120 @@
 // @flow
+/* eslint-disable react/jsx-no-bind */
 import React from 'react';
-import {mount} from 'enzyme';
+import {act, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Mousetrap from 'mousetrap';
+import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
 import MultiAutoComplete from '../MultiAutoComplete';
+import AutoCompletePopover from '../../AutoCompletePopover';
 
-jest.mock('debounce', () => jest.fn((callback) => callback));
+jest.mock('debounce', () => jest.fn((callback) => {
+    const debouncedFunction = (...parameters) => callback(...parameters);
+    debouncedFunction.clear = jest.fn();
+
+    return debouncedFunction;
+}));
+
+jest.mock('../../AutoCompletePopover', () => jest.fn((props) => {
+    const {
+        onClose,
+        onSelect,
+        open,
+        suggestions,
+    } = props;
+
+    const handleClose = () => {
+        if (onClose) {
+            onClose();
+        }
+    };
+
+    const SuggestionButton = ({suggestion}) => {
+        const handleClick = () => {
+            onSelect(suggestion);
+        };
+
+        return (
+            <button onClick={handleClick} type="button">
+                {suggestion.name}
+            </button>
+        );
+    };
+
+    return (
+        <div data-open={open ? 'true' : 'false'} data-testid="auto-complete-popover">
+            <button onClick={handleClose} type="button">Close suggestions</button>
+            {open && suggestions.map((suggestion) => (
+                <SuggestionButton key={suggestion.id || suggestion.name} suggestion={suggestion} />
+            ))}
+        </div>
+    );
+}));
+
+jest.mock('../../Chip', () => jest.fn((props) => {
+    const {
+        children,
+        disabled,
+        onDelete,
+        value,
+    } = props;
+
+    const handleClick = () => {
+        onDelete(value);
+    };
+
+    return (
+        <button disabled={disabled} onClick={handleClick} type="button">
+            {children}
+        </button>
+    );
+}));
+
+const getLatestAutoCompletePopoverProps = () => getLatestMockProps((AutoCompletePopover: any));
+
+const createProps = (overrides = {}): any => ({
+    allowAdd: false,
+    displayProperty: 'name',
+    idProperty: 'id',
+    onChange: jest.fn(),
+    onFinish: jest.fn(),
+    onSearch: jest.fn(),
+    searchProperties: ['name'],
+    suggestions: [],
+    value: [],
+    ...overrides,
+});
+
+const renderMultiAutoComplete = (overrides = {}) => {
+    const ref = React.createRef();
+    const view = render(<MultiAutoComplete {...createProps(overrides)} ref={ref} />);
+
+    return {
+        ...view,
+        instance: (ref.current: any),
+    };
+};
 
 beforeEach(() => {
     Mousetrap.reset();
+    jest.clearAllMocks();
 });
 
-test('Render the MultiAutoComplete with open suggestions list', () => {
+test('Render the MultiAutoComplete with open suggestions list', async() => {
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
         {id: 2, name: 'Suggestion 2'},
         {id: 3, name: 'Suggestion 3'},
     ];
 
-    const multiAutoComplete = mount(
-        <MultiAutoComplete
-            displayProperty="name"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={[{id: 4, name: 'Test'}]}
-        />
-    );
+    const {asFragment} = renderMultiAutoComplete({
+        suggestions,
+        value: [{id: 4, name: 'Test'}],
+    });
 
-    // suggestions are displayed when input field is focused
-    multiAutoComplete.find('input').prop('onFocus')();
-    multiAutoComplete.update();
+    await userEvent.click(screen.getByRole('textbox'));
 
-    expect(multiAutoComplete.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('MultiAutoComplete should be disabled in disabled state', () => {
@@ -48,41 +129,26 @@ test('MultiAutoComplete should be disabled in disabled state', () => {
         {id: 2, name: 'Test 2'},
     ];
 
-    const multiAutoComplete = mount(
-        <MultiAutoComplete
-            disabled={true}
-            displayProperty="name"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={value}
-        />
-    );
+    renderMultiAutoComplete({
+        disabled: true,
+        suggestions,
+        value,
+    });
 
-    expect(multiAutoComplete.find('input').prop('disabled')).toEqual(true);
+    expect(screen.getByRole('textbox')).toBeDisabled();
 });
 
 test('Should assign input as ref to inputRef', () => {
     const inputRefSpy = jest.fn();
 
-    const multiAutoComplete = mount(
-        <MultiAutoComplete
-            displayProperty="name"
-            inputRef={inputRefSpy}
-            onChange={jest.fn()}
-            onSearch={jest.fn()}
-            searchProperties={[]}
-            suggestions={[]}
-            value={[]}
-        />
-    );
+    renderMultiAutoComplete({
+        inputRef: inputRefSpy,
+    });
 
-    expect(inputRefSpy).toBeCalledWith(multiAutoComplete.find('input').instance());
+    expect(inputRefSpy).toBeCalledWith(screen.getByRole('textbox'));
 });
 
-test('Clicking a suggestion should call onChange with value of the Suggestion and focus input afterwards', () => {
+test('Clicking a suggestion should call onChange with value and focus input afterwards', async() => {
     const changeSpy = jest.fn();
 
     const suggestions = [
@@ -95,79 +161,50 @@ test('Clicking a suggestion should call onChange with value of the Suggestion an
         {id: 5, name: 'Test'},
     ];
 
-    const multiAutoComplete = mount(
-        <MultiAutoComplete
-            displayProperty="name"
-            onChange={changeSpy}
-            onFinish={jest.fn()}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={value}
-        />
-    );
+    renderMultiAutoComplete({
+        onChange: changeSpy,
+        suggestions,
+        value,
+    });
 
-    // suggestions are displayed when input field is focused
-    multiAutoComplete.find('input').prop('onFocus')();
-    multiAutoComplete.update();
-
-    multiAutoComplete.instance().inputRef = {focus: jest.fn()};
-    multiAutoComplete.find('Suggestion button').at(0).simulate('click');
+    await userEvent.click(screen.getByRole('textbox'));
+    await userEvent.click(screen.getByRole('button', {name: 'Suggestion 1'}));
 
     expect(changeSpy).toHaveBeenCalledWith([...value, suggestions[0]]);
-    expect(multiAutoComplete.instance().inputRef.focus).toBeCalledWith();
+    expect(screen.getByRole('textbox')).toHaveFocus();
 });
 
-test('Clicking on delete icon of a suggestion should call the onChange callback without the deleted Suggestion', () => {
+test('Clicking on delete icon of a suggestion should call onChange without deleted suggestion', async() => {
     const changeSpy = jest.fn();
-
-    const suggestions = [];
 
     const value = [
         {id: 5, name: 'Test'},
         {id: 6, name: 'Test'},
     ];
 
-    const multiAutoComplete = mount(
-        <MultiAutoComplete
-            displayProperty="name"
-            onChange={changeSpy}
-            onFinish={jest.fn()}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={value}
-        />
-    );
+    renderMultiAutoComplete({
+        onChange: changeSpy,
+        value,
+    });
 
-    multiAutoComplete.find('Chip').at(1).find('Icon').simulate('click');
+    await userEvent.click(screen.getAllByRole('button', {name: 'Test'})[1]);
 
     expect(changeSpy).toHaveBeenCalledWith([value[0]]);
 });
 
-test('Should call the onFinish callback when an item is added', () => {
+test('Should call the onFinish callback when an item is added', async() => {
     const finishSpy = jest.fn();
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
     ];
 
-    const multiAutoComplete = mount(
-        <MultiAutoComplete
-            displayProperty="name"
-            onChange={jest.fn()}
-            onFinish={finishSpy}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={[]}
-        />
-    );
+    renderMultiAutoComplete({
+        onFinish: finishSpy,
+        suggestions,
+    });
 
-    // suggestions are displayed when input field is focused
-    multiAutoComplete.find('input').prop('onFocus')();
-    multiAutoComplete.update();
-
-    multiAutoComplete.find('Suggestion button').at(0).simulate('click');
+    await userEvent.click(screen.getByRole('textbox'));
+    await userEvent.click(screen.getByRole('button', {name: 'Suggestion 1'}));
 
     expect(finishSpy).toBeCalledWith();
 });
@@ -179,20 +216,15 @@ test('Should not trigger any callbacks when input is not focused', () => {
         {id: 1, name: 'Suggestion 1'},
     ];
 
-    const multiAutoComplete = mount(
-        <MultiAutoComplete
-            displayProperty="name"
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={[]}
-        />
-    );
+    const {instance} = renderMultiAutoComplete({
+        onChange: changeSpy,
+        onFinish: finishSpy,
+        suggestions,
+    });
 
-    multiAutoComplete.instance().inputValue = 'test';
-    multiAutoComplete.update();
+    act(() => {
+        instance.inputValue = 'test';
+    });
 
     Mousetrap.trigger('enter');
     Mousetrap.trigger(',');
@@ -201,28 +233,24 @@ test('Should not trigger any callbacks when input is not focused', () => {
     expect(finishSpy).not.toBeCalled();
 });
 
-test('Should trigger callbacks when input matches a suggestion and input is focused', () => {
+test('Should trigger callbacks when input matches a suggestion and input is focused', async() => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
     ];
 
-    const multiAutoComplete = mount(
-        <MultiAutoComplete
-            displayProperty="name"
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={[]}
-        />
-    );
+    const {instance} = renderMultiAutoComplete({
+        onChange: changeSpy,
+        onFinish: finishSpy,
+        suggestions,
+    });
 
-    multiAutoComplete.instance().inputValue = 'Suggestion 1';
-    multiAutoComplete.update();
-    multiAutoComplete.find('input').prop('onFocus')();
+    act(() => {
+        instance.inputValue = 'Suggestion 1';
+    });
+
+    await userEvent.click(screen.getByRole('textbox'));
 
     Mousetrap.trigger('enter');
     Mousetrap.trigger(',');
@@ -231,28 +259,24 @@ test('Should trigger callbacks when input matches a suggestion and input is focu
     expect(finishSpy).toBeCalledWith();
 });
 
-test('Should not trigger callbacks when input does not match a suggestion and input is focused', () => {
+test('Should not trigger callbacks when input does not match a suggestion and input is focused', async() => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
     ];
 
-    const multiAutoComplete = mount(
-        <MultiAutoComplete
-            displayProperty="name"
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={[]}
-        />
-    );
+    const {instance} = renderMultiAutoComplete({
+        onChange: changeSpy,
+        onFinish: finishSpy,
+        suggestions,
+    });
 
-    multiAutoComplete.instance().inputValue = 'Suggestion';
-    multiAutoComplete.update();
-    multiAutoComplete.find('input').prop('onFocus')();
+    act(() => {
+        instance.inputValue = 'Suggestion';
+    });
+
+    await userEvent.click(screen.getByRole('textbox'));
 
     Mousetrap.trigger('enter');
     Mousetrap.trigger(',');
@@ -261,29 +285,25 @@ test('Should not trigger callbacks when input does not match a suggestion and in
     expect(finishSpy).not.toBeCalled();
 });
 
-test('Should not trigger callbacks when input matches a suggestion and input has lost focus', () => {
+test('Should not trigger callbacks when input matches a suggestion and input has lost focus', async() => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
     ];
 
-    const multiAutoComplete = mount(
-        <MultiAutoComplete
-            displayProperty="name"
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={[]}
-        />
-    );
+    const {instance} = renderMultiAutoComplete({
+        onChange: changeSpy,
+        onFinish: finishSpy,
+        suggestions,
+    });
 
-    multiAutoComplete.instance().inputValue = 'Suggestion 1';
-    multiAutoComplete.update();
-    multiAutoComplete.find('input').prop('onFocus')();
-    multiAutoComplete.find('input').prop('onBlur')();
+    act(() => {
+        instance.inputValue = 'Suggestion 1';
+    });
+
+    await userEvent.click(screen.getByRole('textbox'));
+    await userEvent.tab();
 
     Mousetrap.trigger('enter');
     Mousetrap.trigger(',');
@@ -292,30 +312,26 @@ test('Should not trigger callbacks when input matches a suggestion and input has
     expect(finishSpy).not.toBeCalled();
 });
 
-test('Should trigger callbacks when input does not match a suggestion and allowAdd is set', () => {
+test('Should trigger callbacks when input does not match a suggestion and allowAdd is set', async() => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
     ];
 
-    const multiAutoComplete = mount(
-        <MultiAutoComplete
-            allowAdd={true}
-            displayProperty="name"
-            idProperty="name"
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={[]}
-        />
-    );
+    const {instance} = renderMultiAutoComplete({
+        allowAdd: true,
+        idProperty: 'name',
+        onChange: changeSpy,
+        onFinish: finishSpy,
+        suggestions,
+    });
 
-    multiAutoComplete.instance().inputValue = 'Suggestion';
-    multiAutoComplete.update();
-    multiAutoComplete.find('input').prop('onFocus')();
+    act(() => {
+        instance.inputValue = 'Suggestion';
+    });
+
+    await userEvent.click(screen.getByRole('textbox'));
 
     Mousetrap.trigger('enter');
     Mousetrap.trigger(',');
@@ -324,94 +340,81 @@ test('Should trigger callbacks when input does not match a suggestion and allowA
     expect(finishSpy).toBeCalledWith();
 });
 
-test('Should not trigger callbacks when input does not match a suggestion but an already added value', () => {
+test('Should not trigger callbacks when input does not match a suggestion but an already added value', async() => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
     ];
 
-    const multiAutoComplete = mount(
-        <MultiAutoComplete
-            allowAdd={true}
-            displayProperty="name"
-            idProperty="name"
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={[{name: 'Suggestion'}]}
-        />
-    );
+    const {instance} = renderMultiAutoComplete({
+        allowAdd: true,
+        idProperty: 'name',
+        onChange: changeSpy,
+        onFinish: finishSpy,
+        suggestions,
+        value: [{name: 'Suggestion'}],
+    });
 
-    multiAutoComplete.instance().inputValue = 'Suggestion';
-    multiAutoComplete.update();
-    multiAutoComplete.find('input').prop('onFocus')();
+    act(() => {
+        instance.inputValue = 'Suggestion';
+    });
+
+    await userEvent.click(screen.getByRole('textbox'));
 
     Mousetrap.trigger('enter');
     Mousetrap.trigger(',');
 
-    expect(multiAutoComplete.instance().inputValue).toEqual('Suggestion');
-
+    expect(instance.inputValue).toEqual('Suggestion');
     expect(changeSpy).not.toBeCalled();
     expect(finishSpy).not.toBeCalled();
 });
 
-test('Should not trigger callbacks when input does not match case-insensitive an already added value', () => {
+test('Should not trigger callbacks when input does not match case-insensitive an already added value', async() => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
     ];
 
-    const multiAutoComplete = mount(
-        <MultiAutoComplete
-            allowAdd={true}
-            displayProperty="name"
-            idProperty="name"
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={[{name: 'Suggestion'}]}
-        />
-    );
+    const {instance} = renderMultiAutoComplete({
+        allowAdd: true,
+        idProperty: 'name',
+        onChange: changeSpy,
+        onFinish: finishSpy,
+        suggestions,
+        value: [{name: 'Suggestion'}],
+    });
 
-    multiAutoComplete.instance().inputValue = 'suggestion';
-    multiAutoComplete.update();
-    multiAutoComplete.find('input').prop('onFocus')();
+    act(() => {
+        instance.inputValue = 'suggestion';
+    });
+
+    await userEvent.click(screen.getByRole('textbox'));
 
     Mousetrap.trigger('enter');
     Mousetrap.trigger(',');
 
-    expect(multiAutoComplete.instance().inputValue).toEqual('suggestion');
-
+    expect(instance.inputValue).toEqual('suggestion');
     expect(changeSpy).not.toBeCalled();
     expect(finishSpy).not.toBeCalled();
 });
 
-test('Should delete last value item if backspace is pressed in empty focused input field', () => {
+test('Should delete last value item if backspace is pressed in empty focused input field', async() => {
     const changeSpy = jest.fn();
     const searchSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    const multiAutoComplete = mount(
-        <MultiAutoComplete
-            allowAdd={true}
-            displayProperty="name"
-            idProperty="name"
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            onSearch={searchSpy}
-            searchProperties={['name']}
-            suggestions={[]}
-            value={[{name: 'Tag1'}, {name: 'Tag2'}]}
-        />
-    );
+    renderMultiAutoComplete({
+        allowAdd: true,
+        idProperty: 'name',
+        onChange: changeSpy,
+        onFinish: finishSpy,
+        onSearch: searchSpy,
+        value: [{name: 'Tag1'}, {name: 'Tag2'}],
+    });
 
-    multiAutoComplete.find('input').prop('onFocus')();
+    await userEvent.click(screen.getByRole('textbox'));
     expect(searchSpy).toBeCalledTimes(1);
     expect(searchSpy).nthCalledWith(1, '');
 
@@ -423,27 +426,23 @@ test('Should delete last value item if backspace is pressed in empty focused inp
     expect(finishSpy).toBeCalledWith();
 });
 
-test('Should not delete last value item if backspace is pressed in filled focused input field', () => {
+test('Should not delete last value item if backspace is pressed in filled focused input field', async() => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    const multiAutoComplete = mount(
-        <MultiAutoComplete
-            allowAdd={true}
-            displayProperty="name"
-            idProperty="name"
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={[]}
-            value={[{name: 'Tag1'}, {name: 'Tag2'}]}
-        />
-    );
+    const {instance} = renderMultiAutoComplete({
+        allowAdd: true,
+        idProperty: 'name',
+        onChange: changeSpy,
+        onFinish: finishSpy,
+        value: [{name: 'Tag1'}, {name: 'Tag2'}],
+    });
 
-    multiAutoComplete.instance().inputValue = 'Suggestion';
-    multiAutoComplete.update();
-    multiAutoComplete.find('input').prop('onFocus')();
+    act(() => {
+        instance.inputValue = 'Suggestion';
+    });
+
+    await userEvent.click(screen.getByRole('textbox'));
 
     Mousetrap.trigger('backspace');
 
@@ -455,19 +454,13 @@ test('Should not delete last value item if backspace is pressed in empty non-foc
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    mount(
-        <MultiAutoComplete
-            allowAdd={true}
-            displayProperty="name"
-            idProperty="name"
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={[]}
-            value={[{name: 'Tag1'}, {name: 'Tag2'}]}
-        />
-    );
+    renderMultiAutoComplete({
+        allowAdd: true,
+        idProperty: 'name',
+        onChange: changeSpy,
+        onFinish: finishSpy,
+        value: [{name: 'Tag1'}, {name: 'Tag2'}],
+    });
 
     Mousetrap.trigger('backspace');
 
@@ -475,64 +468,54 @@ test('Should not delete last value item if backspace is pressed in empty non-foc
     expect(finishSpy).not.toBeCalled();
 });
 
-test('Should fire onSearch callback and open popover when input field is focused', () => {
+test('Should fire onSearch callback and open popover when input field is focused', async() => {
     const searchSpy = jest.fn();
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
     ];
 
-    const multiAutoComplete = mount(
-        <MultiAutoComplete
-            displayProperty="name"
-            idProperty="name"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSearch={searchSpy}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={[{name: 'Tag1'}, {name: 'Tag2'}]}
-        />
-    );
+    renderMultiAutoComplete({
+        idProperty: 'name',
+        onSearch: searchSpy,
+        suggestions,
+        value: [{name: 'Tag1'}, {name: 'Tag2'}],
+    });
 
     expect(searchSpy).not.toBeCalled();
-    expect(multiAutoComplete.find('AutoCompletePopover').prop('open')).toEqual(false);
+    expect(getLatestAutoCompletePopoverProps().open).toEqual(false);
 
-    multiAutoComplete.find('input').prop('onFocus')();
-    multiAutoComplete.update();
+    await userEvent.click(screen.getByRole('textbox'));
+
     expect(searchSpy).toBeCalledWith('');
-    expect(multiAutoComplete.find('AutoCompletePopover').prop('open')).toEqual(true);
+    expect(getLatestAutoCompletePopoverProps().open).toEqual(true);
 });
 
-test('Should close popover when requested and reopen popover when input field is changed', () => {
+test('Should close popover when requested and reopen popover when input field is changed', async() => {
     const searchSpy = jest.fn();
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
     ];
 
-    const multiAutoComplete = mount(
-        <MultiAutoComplete
-            displayProperty="name"
-            idProperty="name"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSearch={searchSpy}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={[{name: 'Tag1'}, {name: 'Tag2'}]}
-        />
-    );
+    renderMultiAutoComplete({
+        idProperty: 'name',
+        onSearch: searchSpy,
+        suggestions,
+        value: [{name: 'Tag1'}, {name: 'Tag2'}],
+    });
 
-    multiAutoComplete.find('input').prop('onFocus')();
-    multiAutoComplete.update();
+    await userEvent.click(screen.getByRole('textbox'));
+
     expect(searchSpy).nthCalledWith(1, '');
-    expect(multiAutoComplete.find('AutoCompletePopover').prop('open')).toEqual(true);
+    expect(getLatestAutoCompletePopoverProps().open).toEqual(true);
 
-    multiAutoComplete.find('AutoCompletePopover').prop('onClose')();
-    multiAutoComplete.update();
-    expect(multiAutoComplete.find('AutoCompletePopover').prop('open')).toEqual(false);
+    act(() => {
+        getLatestAutoCompletePopoverProps().onClose();
+    });
 
-    multiAutoComplete.find('input').prop('onChange')({currentTarget: {value: 'search term'}});
-    multiAutoComplete.update();
-    expect(searchSpy).nthCalledWith(2, 'search term');
-    expect(multiAutoComplete.find('AutoCompletePopover').prop('open')).toEqual(true);
+    expect(getLatestAutoCompletePopoverProps().open).toEqual(false);
+
+    await userEvent.type(screen.getByRole('textbox'), 'search term');
+
+    expect(searchSpy).toHaveBeenLastCalledWith('search term');
+    expect(getLatestAutoCompletePopoverProps().open).toEqual(true);
 });

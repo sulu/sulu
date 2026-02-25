@@ -1,23 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render correct sidebar view 1`] = `
-<aside
-  class="sidebar"
->
-  <h1 />
-</aside>
+<DocumentFragment>
+  <aside
+    class="sidebar"
+  >
+    <h1 />
+  </aside>
+</DocumentFragment>
 `;
 
 exports[`Render correct sidebar view with props 1`] = `
-<aside
-  class="sidebar"
->
-  <h1>
-    Hello world
-  </h1>
-</aside>
+<DocumentFragment>
+  <aside
+    class="sidebar"
+  >
+    <h1>
+      Hello world
+    </h1>
+  </aside>
+</DocumentFragment>
 `;
 
-exports[`Return null if view is disabled 1`] = `null`;
+exports[`Return null if view is disabled 1`] = `<DocumentFragment />`;
 
-exports[`Return null if view is not set 1`] = `null`;
+exports[`Return null if view is not set 1`] = `<DocumentFragment />`;

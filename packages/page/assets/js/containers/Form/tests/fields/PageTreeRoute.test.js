@@ -1,11 +1,9 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
-import {FormInspector, ResourceFormStore, SingleSelection} from 'sulu-admin-bundle/containers';
-import {ResourceLocator} from 'sulu-route-bundle/containers';
-import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
-import {ResourceStore, SingleSelectionStore} from 'sulu-admin-bundle/stores';
-import {extendObservable as mockExtendObservable, observable} from 'mobx';
+import {observable} from 'mobx';
+import {render} from '@testing-library/react';
+import {fieldTypeDefaultProps, getLatestMockProps} from 'sulu-admin-bundle/utils/TestHelper';
+import {userStore} from 'sulu-admin-bundle/stores';
 import PageTreeRoute from '../../fields/PageTreeRoute';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
@@ -16,119 +14,104 @@ jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     contentLocale: 'de',
 }));
 
-jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(function() {
-    this.selections = [];
-    this.clearSelection = jest.fn();
-    this.select = jest.fn();
-    this.destroy = jest.fn();
+jest.mock('sulu-admin-bundle/components', () => {
+    const Grid: any = jest.fn(({children}) => <div>{children}</div>);
+    Grid.Item = jest.fn(({children}) => <div>{children}</div>);
+
+    return {Grid};
+});
+
+jest.mock('sulu-admin-bundle/containers', () => ({
+    SingleSelection: jest.fn(() => null),
 }));
 
-jest.mock(
-    'sulu-admin-bundle/stores/ResourceStore',
-    () => jest.fn(function(resourceKey, id, options) {
-        this.resourceKey = resourceKey;
-        this.id = id;
-
-        if (options) {
-            this.locale = options.locale;
-        }
-    })
-);
-
-jest.mock('sulu-admin-bundle/containers/Form/stores/MemoryFormStore', () => jest.fn(function(data, schema) {
-    this.data = data;
-    this.schema = schema;
-    this.change = jest.fn().mockImplementation((name, value) => {
-        this.data[name] = value;
-    });
-    this.validate = jest.fn().mockReturnValue(true);
-    this.destroy = jest.fn();
+jest.mock('sulu-route-bundle/containers', () => ({
+    ResourceLocator: jest.fn(() => null),
 }));
 
-jest.mock(
-    'sulu-admin-bundle/containers/Form/stores/ResourceFormStore',
-    () => jest.fn(function(resourceStore, formKey) {
-        this.resourceKey = resourceStore.resourceKey;
-        this.id = resourceStore.id;
-        this.locale = resourceStore.locale;
+const singleSelectionComponent = ((jest.requireMock('sulu-admin-bundle/containers'): any).SingleSelection: {
+    mock: {calls: Array<[Object]>},
+    ...
+});
+const resourceLocatorComponent = ((jest.requireMock('sulu-route-bundle/containers'): any).ResourceLocator: {
+    mock: {calls: Array<[Object]>},
+    ...
+});
 
-        if (formKey) {
-            this.formKey = formKey;
-        }
-    })
-);
-
-jest.mock(
-    'sulu-admin-bundle/containers/Form/FormInspector',
-    () => jest.fn(function(resourceFormStore) {
-        this.id = resourceFormStore.id;
-        this.locale = resourceFormStore.locale;
-        this.isFieldModified = jest.fn();
-        this.options = {
-            webspace: 'webspace',
-        };
-        this.getPathsByTag = jest.fn().mockReturnValue([]);
-    })
-);
-
-jest.mock('sulu-admin-bundle/stores/SingleSelectionStore', () => jest.fn(function() {
-    this.set = jest.fn((item) => {
-        this.item = item;
-    });
-    this.loadItem = jest.fn((id) => {
-        this.item = {id, url: '/test/' + id};
-    });
-    this.clear = jest.fn();
-
-    mockExtendObservable(this, {
-        item: undefined,
-        loading: false,
-    });
-}));
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test('Render a PageTreeRoute', () => {
     const fieldTypeOptions = {
         defaultMode: 'tree_leaf_edit',
     };
-
     const value = {
         page: {
             uuid: 'uuid-uuid-uuid-uuid',
         },
         suffix: '/hello',
     };
-
     const locale = observable.box('de');
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 'diuu-diuu-diuu-diuu', {locale}),
-            'test'
-        )
-    );
+    const formInspector: any = {locale};
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
 
-    const pageTreeRoute = mount(
+    const {asFragment} = render(
         <PageTreeRoute
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
             value={value}
         />
     );
 
-    pageTreeRoute.update();
-    expect(pageTreeRoute.render()).toMatchSnapshot();
-    expect(pageTreeRoute.find(SingleSelection).prop('value')).toBe(value.page.uuid);
-    expect(SingleSelectionStore).toHaveBeenCalledWith('pages', 'uuid-uuid-uuid-uuid', locale, undefined);
+    expect(asFragment()).toMatchSnapshot();
 
-    const singleSelection = pageTreeRoute.find(SingleSelection);
+    expect(singleSelectionComponent).toHaveBeenCalledWith(expect.objectContaining({
+        adapter: 'column_list',
+        disabled: false,
+        listKey: 'pages',
+        locale,
+        value: value.page.uuid,
+    }), {});
+    expect(resourceLocatorComponent).toHaveBeenCalledWith(expect.objectContaining({
+        disabled: false,
+        value: value.suffix,
+        fieldTypeOptions: expect.objectContaining({
+            defaultMode: 'tree_leaf_edit',
+            historyResourceKey: 'route_histories',
+            options: {
+                history: true,
+            },
+            requestParameters: {
+                parentId: value.page.uuid,
+                parentKey: 'pages',
+                relative: true,
+            },
+        }),
+    }), {});
 
-    singleSelection.instance().singleSelectionStore.item = {};
-    singleSelection.update();
+    getLatestMockProps(singleSelectionComponent).onChange('new-uuid', {url: '/test/new'});
+    expect(changeSpy).toHaveBeenCalledWith({
+        page: {
+            path: '/test/new',
+            uuid: 'new-uuid',
+        },
+        suffix: '/hello',
+    });
+    expect(finishSpy).toHaveBeenCalledTimes(1);
 
-    expect(singleSelection.find('.item').text()).toBe('/test/uuid-uuid-uuid-uuid');
-    expect(singleSelection.render()).toMatchSnapshot();
-
-    expect(pageTreeRoute.find(ResourceLocator).prop('value')).toBe(value.suffix);
+    getLatestMockProps(resourceLocatorComponent).onChange('/changed');
+    expect(changeSpy).toHaveBeenCalledWith({
+        page: {
+            uuid: 'uuid-uuid-uuid-uuid',
+        },
+        suffix: '/changed',
+    });
+    expect(finishSpy).toHaveBeenCalledTimes(2);
 });
 
 test('Render a PageTreeRoute without value', () => {
@@ -136,9 +119,9 @@ test('Render a PageTreeRoute without value', () => {
         defaultMode: 'tree_leaf_edit',
     };
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('pages'), 'test'));
+    const formInspector: any = {};
 
-    const pageTreeRoute = mount(
+    const {asFragment} = render(
         <PageTreeRoute
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -147,8 +130,14 @@ test('Render a PageTreeRoute without value', () => {
         />
     );
 
-    pageTreeRoute.update();
-    expect(pageTreeRoute.render()).toMatchSnapshot();
-    expect(pageTreeRoute.find(SingleSelection).prop('value')).toBe(null);
-    expect(pageTreeRoute.find(ResourceLocator).prop('value')).toBe(null);
+    expect(asFragment()).toMatchSnapshot();
+
+    const singleSelectionProps = getLatestMockProps(singleSelectionComponent);
+    expect(singleSelectionProps.value).toEqual(null);
+    expect(singleSelectionProps.locale.get()).toEqual(userStore.contentLocale);
+
+    expect(resourceLocatorComponent).toHaveBeenCalledWith(expect.objectContaining({
+        disabled: true,
+        value: null,
+    }), {});
 });

@@ -1,14 +1,62 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {act, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import {Table} from 'sulu-admin-bundle/components';
+import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import TargetGroupRules from '../TargetGroupRules';
 import ruleRegistry from '../registries/ruleRegistry';
-import ruleTypeRegistry from '../registries/ruleTypeRegistry';
-import KeyValue from '../ruleTypes/KeyValue';
-import SingleSelect from '../ruleTypes/SingleSelect';
+import RuleOverlay from '../RuleOverlay';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
+}));
+
+jest.mock('sulu-admin-bundle/components', () => {
+    const React = require('react');
+
+    const Button = jest.fn(function ButtonMock({disabled, icon, onClick}) {
+        return React.createElement(
+            'button',
+            {disabled, onClick, type: 'button'},
+            icon
+        );
+    });
+
+    const ButtonGroupMock = function ButtonGroupMock({children}) {
+        return React.createElement('div', {'data-testid': 'button-group'}, children);
+    };
+
+    const TableBase = jest.fn(function TableMock({children}) {
+        return React.createElement('div', {'data-testid': 'table'}, children);
+    });
+    const Table: any = TableBase;
+
+    Table.Header = function TableHeaderMock({children}) {
+        return React.createElement('div', {'data-testid': 'table-header'}, children);
+    };
+    Table.HeaderCell = function TableHeaderCellMock({children}) {
+        return React.createElement('div', {'data-testid': 'table-header-cell'}, children);
+    };
+    Table.Body = function TableBodyMock({children}) {
+        return React.createElement('div', {'data-testid': 'table-body'}, children);
+    };
+    Table.Row = function TableRowMock({children, selected}) {
+        return React.createElement('div', {'data-selected': selected}, children);
+    };
+    Table.Cell = function TableCellMock({children}) {
+        return React.createElement('div', {'data-testid': 'table-cell'}, children);
+    };
+
+    return {
+        Button,
+        ButtonGroup: ButtonGroupMock,
+        Table,
+    };
+});
+
+jest.mock('../RuleOverlay', () => jest.fn(function RuleOverlayMock({open}) {
+    return <div data-testid={open ? 'rule-overlay-open' : 'rule-overlay-closed'} />;
 }));
 
 jest.mock('../registries/ruleTypeRegistry', () => ({
@@ -20,8 +68,27 @@ jest.mock('../registries/ruleRegistry', () => ({
     get: jest.fn(),
 }));
 
+function getLatestTableProps() {
+    const tableMock: any = Table;
+    return getLatestMockProps(tableMock);
+}
+
+function getLatestOverlayProps() {
+    return getLatestMockProps((RuleOverlay: any));
+}
+
+function getButtonByIcon(icon: string) {
+    return screen.getByRole('button', {name: icon});
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
 test('Render an empty list of rules', () => {
-    expect(render(<TargetGroupRules onChange={jest.fn()} value={[]} />)).toMatchSnapshot();
+    const {asFragment} = render(<TargetGroupRules onChange={jest.fn()} value={[]} />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a list of rules', () => {
@@ -87,11 +154,14 @@ test('Render a list of rules', () => {
         },
     ];
 
-    expect(render(<TargetGroupRules onChange={jest.fn()} value={value} />)).toMatchSnapshot();
+    const {asFragment} = render(<TargetGroupRules onChange={jest.fn()} value={value} />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Add a new rule', () => {
+test('Add a new rule', async() => {
     const changeSpy = jest.fn();
+    const user = userEvent.setup();
 
     const value = [
         {
@@ -101,16 +171,19 @@ test('Add a new rule', () => {
         },
     ];
 
-    const targetGroupRules = mount(<TargetGroupRules onChange={changeSpy} value={value} />);
+    render(<TargetGroupRules onChange={changeSpy} value={value} />);
 
-    targetGroupRules.find('Button[icon="su-plus"]').prop('onClick')();
+    await user.click(getButtonByIcon('su-plus'));
 
-    targetGroupRules.update();
+    expect(getLatestOverlayProps().open).toEqual(true);
 
-    targetGroupRules.find('RuleOverlay Input').prop('onChange')('Rule 2');
-    targetGroupRules.find('RuleOverlay SingleSelect').prop('onChange')(2);
-
-    targetGroupRules.find('RuleOverlay Button[skin="primary"]').prop('onClick')();
+    act(() => {
+        getLatestOverlayProps().onConfirm({
+            conditions: [],
+            frequency: 2,
+            title: 'Rule 2',
+        });
+    });
 
     expect(changeSpy).toBeCalledWith([
         {
@@ -127,43 +200,6 @@ test('Add a new rule', () => {
 });
 
 test('Edit an existing rule', () => {
-    ruleRegistry.getAll.mockReturnValue({
-        browser: {
-            name: 'Browser',
-            type: {
-                name: 'select',
-                options: {
-                    name: 'browser',
-                    options: [
-                        {id: 'firefox', name: 'Firefox'},
-                        {id: 'chrome', name: 'Chrome'},
-                    ],
-                },
-            },
-        },
-        query_string: {
-            name: 'Query String',
-            type: {
-                name: 'key_value',
-                options: {
-                    keyName: 'parameter',
-                    valueName: 'value',
-                },
-            },
-        },
-    });
-
-    ruleRegistry.get.mockImplementation((key) => ruleRegistry.getAll()[key]);
-
-    ruleTypeRegistry.get.mockImplementation((type) => {
-        switch (type) {
-            case 'select':
-                return SingleSelect;
-            case 'key_value':
-                return KeyValue;
-        }
-    });
-
     const changeSpy = jest.fn();
 
     const value = [
@@ -179,37 +215,35 @@ test('Edit an existing rule', () => {
         },
     ];
 
-    const targetGroupRules = mount(<TargetGroupRules onChange={changeSpy} value={value} />);
+    render(<TargetGroupRules onChange={changeSpy} value={value} />);
 
-    targetGroupRules.find('ButtonCell[rowIndex=0] button').prop('onClick')();
-    targetGroupRules.update();
+    act(() => {
+        getLatestTableProps().buttons[0].onClick('0', 0);
+    });
 
-    expect((targetGroupRules.find('RuleOverlay Input').prop('value'))).toEqual('Rule 1');
-    expect((targetGroupRules.find('RuleOverlay SingleSelect').prop('value'))).toEqual(1);
+    expect(getLatestOverlayProps().value).toEqual(value[0]);
 
-    targetGroupRules.find('RuleOverlay Input').prop('onChange')('Rule 1 edited');
-    targetGroupRules.find('RuleOverlay SingleSelect').prop('onChange')(3);
-
-    targetGroupRules.find('ConditionList Button[icon="su-plus"]').prop('onClick')();
-    targetGroupRules.find('ConditionList Button[icon="su-plus"]').prop('onClick')();
-    targetGroupRules.update();
-
-    targetGroupRules.find('ConditionList Condition').at(0).find('SingleSelect DisplayValue').prop('onClick')();
-    targetGroupRules.update();
-    targetGroupRules.find('ConditionList Condition').at(0).find('SingleSelect Option button').at(0).prop('onClick')();
-    targetGroupRules.update();
-    targetGroupRules.find('ConditionList Condition').at(0).find('SingleSelect DisplayValue').at(1).prop('onClick')();
-    targetGroupRules.update();
-    targetGroupRules.find('ConditionList Condition').at(0).find('SingleSelect Option button').at(0).prop('onClick')();
-
-    targetGroupRules.find('ConditionList Condition').at(1).find('SingleSelect DisplayValue').prop('onClick')();
-    targetGroupRules.update();
-    targetGroupRules.find('ConditionList Condition').at(1).find('SingleSelect Option button').at(1).prop('onClick')();
-    targetGroupRules.update();
-    targetGroupRules.find('ConditionList Condition').at(1).find('KeyValue Input').at(0).prop('onChange')('parameter');
-    targetGroupRules.find('ConditionList Condition').at(1).find('KeyValue Input').at(1).prop('onChange')('value');
-
-    targetGroupRules.find('RuleOverlay Button[skin="primary"]').prop('onClick')();
+    act(() => {
+        getLatestOverlayProps().onConfirm({
+            conditions: [
+                {
+                    condition: {
+                        browser: 'firefox',
+                    },
+                    type: 'browser',
+                },
+                {
+                    condition: {
+                        parameter: 'parameter',
+                        value: 'value',
+                    },
+                    type: 'query_string',
+                },
+            ],
+            frequency: 3,
+            title: 'Rule 1 edited',
+        });
+    });
 
     expect(changeSpy).toBeCalledWith([
         {
@@ -239,8 +273,9 @@ test('Edit an existing rule', () => {
     ]);
 });
 
-test('Close without adding a new rule', () => {
+test('Close without adding a new rule', async() => {
     const changeSpy = jest.fn();
+    const user = userEvent.setup();
 
     const value = [
         {
@@ -250,22 +285,24 @@ test('Close without adding a new rule', () => {
         },
     ];
 
-    const targetGroupRules = mount(<TargetGroupRules onChange={changeSpy} value={value} />);
+    render(<TargetGroupRules onChange={changeSpy} value={value} />);
 
-    expect(targetGroupRules.find('RuleOverlay').prop('open')).toEqual(false);
-    targetGroupRules.find('Button[icon="su-plus"]').prop('onClick')();
+    expect(getLatestOverlayProps().open).toEqual(false);
 
-    targetGroupRules.update();
-    expect(targetGroupRules.find('RuleOverlay').prop('open')).toEqual(true);
+    await user.click(getButtonByIcon('su-plus'));
+    expect(getLatestOverlayProps().open).toEqual(true);
 
-    targetGroupRules.find('RuleOverlay span.su-times').simulate('click');
+    act(() => {
+        getLatestOverlayProps().onClose();
+    });
 
-    expect(targetGroupRules.find('RuleOverlay').prop('open')).toEqual(false);
+    expect(getLatestOverlayProps().open).toEqual(false);
     expect(changeSpy).not.toBeCalled();
 });
 
-test('Remove rules', () => {
+test('Remove rules', async() => {
     const changeSpy = jest.fn();
+    const user = userEvent.setup();
 
     const value = [
         {
@@ -285,21 +322,18 @@ test('Remove rules', () => {
         },
     ];
 
-    const targetGroupRules = mount(<TargetGroupRules onChange={changeSpy} value={value} />);
+    render(<TargetGroupRules onChange={changeSpy} value={value} />);
 
-    expect(targetGroupRules.find('Button[icon="su-trash-alt"]').prop('disabled')).toEqual(true);
+    expect(getButtonByIcon('su-trash-alt')).toBeDisabled();
 
-    targetGroupRules.find('Row[rowIndex=1] input[type="checkbox"]').getDOMNode().checked = true;
-    targetGroupRules.find('Row[rowIndex=2] input[type="checkbox"]').getDOMNode().checked = true;
-    targetGroupRules.find('Row[rowIndex=1] input[type="checkbox"]')
-        .simulate('change', {currentTarget: {checked: true}});
-    targetGroupRules.find('Row[rowIndex=2] input[type="checkbox"]')
-        .simulate('change', {currentTarget: {checked: true}});
+    act(() => {
+        getLatestTableProps().onRowSelectionChange(1, true);
+        getLatestTableProps().onRowSelectionChange(2, true);
+    });
 
-    targetGroupRules.update();
-    expect(targetGroupRules.find('Button[icon="su-trash-alt"]').prop('disabled')).toEqual(false);
+    expect(getButtonByIcon('su-trash-alt')).toBeEnabled();
 
-    targetGroupRules.find('Button[icon="su-trash-alt"]').prop('onClick')();
+    await user.click(getButtonByIcon('su-trash-alt'));
 
     expect(changeSpy).toBeCalledWith([
         {

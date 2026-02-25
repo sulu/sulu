@@ -1,10 +1,10 @@
 // @flow
 import {observable} from 'mobx';
-import {shallow} from 'enzyme';
 import {ListStore} from 'sulu-admin-bundle/containers';
 import {ResourceRequester, Router} from 'sulu-admin-bundle/services';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {List} from 'sulu-admin-bundle/views';
+import {MultiMediaSelectionOverlay} from 'sulu-media-bundle/containers';
 import AddMediaToolbarAction from '../../toolbarActions/AddMediaToolbarAction';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
@@ -57,9 +57,9 @@ test('Open dialog if button is clicked', () => {
     const addMediaToolbarAction = createAddMediaToolbarAction();
     const clickHandler = addMediaToolbarAction.getToolbarItemConfig().onClick;
 
-    expect(shallow(addMediaToolbarAction.getNode()).instance().props.open).toEqual(false);
+    expect(addMediaToolbarAction.getNode().props.open).toEqual(false);
     clickHandler();
-    expect(shallow(addMediaToolbarAction.getNode()).instance().props.open).toEqual(true);
+    expect(addMediaToolbarAction.getNode().props.open).toEqual(true);
 });
 
 test('Do nothing if overlay is just closed', () => {
@@ -67,9 +67,9 @@ test('Do nothing if overlay is just closed', () => {
     const clickHandler = addMediaToolbarAction.getToolbarItemConfig().onClick;
 
     clickHandler();
-    expect(shallow(addMediaToolbarAction.getNode()).instance().props.open).toEqual(true);
-    shallow(addMediaToolbarAction.getNode()).instance().props.onClose();
-    expect(shallow(addMediaToolbarAction.getNode()).instance().props.open).toEqual(false);
+    expect(addMediaToolbarAction.getNode().props.open).toEqual(true);
+    addMediaToolbarAction.getNode().props.onClose();
+    expect(addMediaToolbarAction.getNode().props.open).toEqual(false);
 
     expect(ResourceRequester.patch).not.toBeCalled();
 });
@@ -85,18 +85,18 @@ test('Delete selected items if confirm button is clicked', () => {
     addMediaToolbarAction.resourceStore.resourceKey = 'contacts';
 
     const clickHandler = addMediaToolbarAction.getToolbarItemConfig().onClick;
-
     const patchResponse = {};
     const patchPromise = Promise.resolve(patchResponse);
     ResourceRequester.patch.mockReturnValue(patchPromise);
 
     clickHandler();
-    let mediaOverlay = shallow(addMediaToolbarAction.getNode()).instance();
-    expect(mediaOverlay.props.open).toEqual(true);
-    mediaOverlay.props.onConfirm([{id: 3}, {id: 4}]);
+    let mediaOverlayNode = addMediaToolbarAction.getNode();
+    expect(mediaOverlayNode.type).toEqual(MultiMediaSelectionOverlay);
+    expect(mediaOverlayNode.props.open).toEqual(true);
+    mediaOverlayNode.props.onConfirm([{id: 3}, {id: 4}]);
 
-    mediaOverlay = shallow(addMediaToolbarAction.getNode()).instance();
-    expect(mediaOverlay.props).toEqual(expect.objectContaining({
+    mediaOverlayNode = addMediaToolbarAction.getNode();
+    expect(mediaOverlayNode.props).toEqual(expect.objectContaining({
         confirmLoading: true,
         open: true,
     }));
@@ -104,8 +104,8 @@ test('Delete selected items if confirm button is clicked', () => {
     expect(ResourceRequester.patch).toBeCalledWith('contacts', {medias: [1, 2, 3, 4]}, {id: 4});
 
     return patchPromise.then(() => {
-        mediaOverlay = shallow(addMediaToolbarAction.getNode()).instance();
-        expect(mediaOverlay.props).toEqual(expect.objectContaining({
+        mediaOverlayNode = addMediaToolbarAction.getNode();
+        expect(mediaOverlayNode.props).toEqual(expect.objectContaining({
             confirmLoading: false,
             open: false,
         }));

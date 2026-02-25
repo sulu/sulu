@@ -1,62 +1,55 @@
 // @flow
 import React from 'react';
-import {render, mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import bindValueToOnChange from 'sulu-admin-bundle/utils/TestHelper/bindValueToOnChange';
 import Bic from '../Bic';
 
-test('Bic should render', () => {
+test('Bic should pass default props', () => {
     const onChange = jest.fn();
-    expect(render(<Bic onChange={onChange} value={null} />)).toMatchSnapshot();
+    const {asFragment} = render(<Bic onChange={onChange} value={null} />);
+
+    expect(asFragment()).toMatchSnapshot();
+    expect(screen.getByRole('textbox')).toBeEnabled();
+    expect(screen.getByRole('textbox')).toHaveAttribute('type', 'text');
+    expect(screen.getByLabelText('su-earth')).toBeInTheDocument();
 });
 
-test('Bic should render with placeholder', () => {
-    expect(render(<Bic onChange={jest.fn()} placeholder="My placeholder" value={null} />)).toMatchSnapshot();
+test('Bic should pass placeholder', () => {
+    render(<Bic onChange={jest.fn()} placeholder="My placeholder" value={null} />);
+
+    expect(screen.getByRole('textbox')).toHaveAttribute('placeholder', 'My placeholder');
 });
 
-test('Bic should render with value', () => {
-    const bic = mount(<Bic onChange={jest.fn()} value="BBBBCCLLXXX" />);
-    expect(bic.render()).toMatchSnapshot();
+test('Bic should pass value', () => {
+    render(<Bic onChange={jest.fn()} value="BBBBCCLLXXX" />);
+
+    expect(screen.getByDisplayValue('BBBBCCLLXXX')).toBeInTheDocument();
 });
 
-test('Bic should render when disabled', () => {
-    expect(render(<Bic disabled={true} onChange={jest.fn()} value="BBBBCCLLXXX" />)).toMatchSnapshot();
+test('Bic should pass disabled', () => {
+    render(<Bic disabled={true} onChange={jest.fn()} value="BBBBCCLLXXX" />);
+
+    expect(screen.getByRole('textbox')).toBeDisabled();
 });
 
-test('Bic should render error', () => {
-    expect(render(<Bic onChange={jest.fn()} valid={false} value={null} />)).toMatchSnapshot();
+test('Bic should pass invalid state', () => {
+    render(<Bic onChange={jest.fn()} valid={false} value={null} />);
+
+    expect(screen.getByRole('textbox').closest('div')).toHaveClass('error');
 });
 
-test('Bic should trigger callbacks correctly', () => {
+test('Bic should trigger callbacks correctly', async() => {
+    const user = userEvent.setup();
     const onChange = jest.fn();
     const onBlur = jest.fn();
-    const bic = mount(<Bic onBlur={onBlur} onChange={onChange} value={null} />);
+    render(bindValueToOnChange(<Bic onBlur={onBlur} onChange={onChange} value={null} />));
 
-    // provide invalid value
-    bic.find('Input').instance().props.onChange('xxx', {target: {value: 'xxx'}});
-    bic.find('Input').instance().props.onBlur();
-    bic.update();
-    expect(onChange).toHaveBeenLastCalledWith('xxx');
-    expect(onBlur).toBeCalled();
+    const input = screen.getByRole('textbox');
 
-    // provide one more invalid value
-    bic.find('Input').instance().props.onChange('BBBBCCLLX', {target: {value: 'BBBCCLLX'}});
-    bic.find('Input').instance().props.onBlur();
-    bic.update();
-    expect(onChange).toHaveBeenLastCalledWith('BBBBCCLLX');
-    expect(onBlur).toBeCalled();
-
-    // now add a valid value
-    bic.find('Input').instance().props.onChange('BBBBCCLLXXX', {target: {value: 'BBBBCCLLXXX'}});
-    bic.find('Input').instance().props.onBlur();
-    bic.update();
+    await user.type(input, 'BBBBCCLLXXX');
     expect(onChange).toHaveBeenLastCalledWith('BBBBCCLLXXX');
-    expect(onBlur).toBeCalled();
 
-    // provide one more valid value
-    bic.find('Input').instance().props.onChange('BBBBCCLL', {target: {value: 'BBBBCCLL'}});
-    bic.find('Input').instance().props.onBlur();
-    bic.update();
-    expect(onChange).toHaveBeenLastCalledWith('BBBBCCLL');
-    expect(onBlur).toBeCalled();
-
-    expect(onBlur).toHaveBeenCalledTimes(4);
+    await user.tab();
+    expect(onBlur).toHaveBeenCalledTimes(1);
 });

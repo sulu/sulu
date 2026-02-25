@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render based on current route 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="root visible"
   >
@@ -9,96 +9,29 @@ Array [
       class="navigation"
     >
       <div
-        class="navigation"
+        data-pinned="false"
+        data-testid="navigation"
       >
-        <div
-          class="header"
+        <button
+          type="button"
         >
-          <span
-            class="logo"
-            title="2.0.0-RC1"
-          >
-            <span
-              aria-label="su-sulu-logo"
-              class="su-sulu-logo"
-            />
-          </span>
-          <button
-            class="pin"
-            type="button"
-          >
-            <span
-              aria-label="su-stick-right"
-              class="su-stick-right pinIcon"
-            />
-          </button>
-        </div>
-        <div
-          class="items"
-        />
-        <div
-          class="footer"
+          pin-toggle
+        </button>
+        <button
+          type="button"
         >
-          <div
-            class="userSection"
-          >
-            <button
-              class="button"
-              type="button"
-            >
-              <div
-                class="userImage"
-              >
-                <span
-                  aria-label="su-user"
-                  class="su-user placeholder"
-                />
-              </div>
-              <span
-                class="username"
-              >
-                Hikaru Sulu
-              </span>
-              <span
-                aria-label="su-angle-up"
-                class="su-angle-up"
-              />
-            </button>
-            <div
-              class="menu"
-              hidden=""
-            >
-              <button
-                class="button text hasText menuButton"
-                type="button"
-              >
-                <span
-                  aria-label="su-user"
-                  class="su-user buttonIcon"
-                />
-                <span
-                  class="buttonText"
-                >
-                  sulu_admin.edit_profile
-                </span>
-              </button>
-              <button
-                class="button text hasText menuButton"
-                type="button"
-              >
-                <span
-                  aria-label="su-sign-out-alt"
-                  class="su-sign-out-alt buttonIcon"
-                />
-                <span
-                  class="buttonText"
-                >
-                  sulu_admin.logout
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
+          navigate
+        </button>
+        <button
+          type="button"
+        >
+          logout
+        </button>
+        <button
+          type="button"
+        >
+          profile
+        </button>
       </div>
     </nav>
     <div
@@ -110,88 +43,39 @@ Array [
         <div
           class="viewContainer"
         >
-          <div>
-            <h1>
-              Test
-            </h1>
-            <h2>
-              test
-            </h2>
+          <div
+            data-testid="view-renderer"
+          >
+            test
           </div>
         </div>
         <header>
           <div
-            class="snackbar error"
-            role="button"
+            data-open="false"
+            data-testid="toolbar"
           >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
-            />
-            <div
-              class="text"
+            <button
+              type="button"
             >
-              <strong>
-                sulu_admin.error
-              </strong>
-               - 
-            </div>
-            <span
-              aria-label="su-times"
-              class="su-times clickable closeIcon"
-              role="button"
-              tabindex="0"
-            />
+              toggle-nav
+            </button>
           </div>
-          <div
-            class="snackbar error"
-            role="button"
-          >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
-            />
-            <div
-              class="text"
-            >
-              <strong>
-                sulu_admin.error
-              </strong>
-               - 
-            </div>
-          </div>
-          <nav
-            class="toolbar light"
-          >
-            <div
-              class="controls light grow"
-            >
-              <button
-                class="button light primary"
-                type="button"
-              >
-                <span
-                  aria-label="su-bars"
-                  class="su-bars icon"
-                />
-              </button>
-            </div>
-            <div
-              class="controls light"
-            />
-          </nav>
         </header>
       </main>
+      <div
+        data-testid="sidebar"
+      />
     </div>
-  </div>,
-  <div>
-    ProfileFormOverlay Mock
-  </div>,
-]
+  </div>
+  <div
+    data-open="false"
+    data-testid="profile-overlay"
+  />
+</DocumentFragment>
 `;
 
 exports[`Render based on current route with app version 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="root visible"
   >
@@ -199,96 +83,29 @@ Array [
       class="navigation"
     >
       <div
-        class="navigation"
+        data-pinned="false"
+        data-testid="navigation"
       >
-        <div
-          class="header"
+        <button
+          type="button"
         >
-          <span
-            class="logo"
-            title="2.0.0-RC1"
-          >
-            <span
-              aria-label="su-sulu-logo"
-              class="su-sulu-logo"
-            />
-          </span>
-          <button
-            class="pin"
-            type="button"
-          >
-            <span
-              aria-label="su-stick-right"
-              class="su-stick-right pinIcon"
-            />
-          </button>
-        </div>
-        <div
-          class="items"
-        />
-        <div
-          class="footer"
+          pin-toggle
+        </button>
+        <button
+          type="button"
         >
-          <div
-            class="userSection"
-          >
-            <button
-              class="button"
-              type="button"
-            >
-              <div
-                class="userImage"
-              >
-                <span
-                  aria-label="su-user"
-                  class="su-user placeholder"
-                />
-              </div>
-              <span
-                class="username"
-              >
-                Hikaru Sulu
-              </span>
-              <span
-                aria-label="su-angle-up"
-                class="su-angle-up"
-              />
-            </button>
-            <div
-              class="menu"
-              hidden=""
-            >
-              <button
-                class="button text hasText menuButton"
-                type="button"
-              >
-                <span
-                  aria-label="su-user"
-                  class="su-user buttonIcon"
-                />
-                <span
-                  class="buttonText"
-                >
-                  sulu_admin.edit_profile
-                </span>
-              </button>
-              <button
-                class="button text hasText menuButton"
-                type="button"
-              >
-                <span
-                  aria-label="su-sign-out-alt"
-                  class="su-sign-out-alt buttonIcon"
-                />
-                <span
-                  class="buttonText"
-                >
-                  sulu_admin.logout
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
+          navigate
+        </button>
+        <button
+          type="button"
+        >
+          logout
+        </button>
+        <button
+          type="button"
+        >
+          profile
+        </button>
       </div>
     </nav>
     <div
@@ -300,430 +117,96 @@ Array [
         <div
           class="viewContainer"
         >
-          <div>
-            <h1>
-              Test
-            </h1>
-            <h2>
-              test
-            </h2>
+          <div
+            data-testid="view-renderer"
+          >
+            test
           </div>
         </div>
         <header>
           <div
-            class="snackbar error"
-            role="button"
+            data-open="false"
+            data-testid="toolbar"
           >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
-            />
-            <div
-              class="text"
+            <button
+              type="button"
             >
-              <strong>
-                sulu_admin.error
-              </strong>
-               - 
-            </div>
-            <span
-              aria-label="su-times"
-              class="su-times clickable closeIcon"
-              role="button"
-              tabindex="0"
-            />
+              toggle-nav
+            </button>
           </div>
-          <div
-            class="snackbar error"
-            role="button"
-          >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
-            />
-            <div
-              class="text"
-            >
-              <strong>
-                sulu_admin.error
-              </strong>
-               - 
-            </div>
-          </div>
-          <nav
-            class="toolbar light"
-          >
-            <div
-              class="controls light grow"
-            >
-              <button
-                class="button light primary"
-                type="button"
-              >
-                <span
-                  aria-label="su-bars"
-                  class="su-bars icon"
-                />
-              </button>
-            </div>
-            <div
-              class="controls light"
-            />
-          </nav>
         </header>
       </main>
+      <div
+        data-testid="sidebar"
+      />
     </div>
-  </div>,
-  <div>
-    ProfileFormOverlay Mock
-  </div>,
-]
+  </div>
+  <div
+    data-open="false"
+    data-testid="profile-overlay"
+  />
+</DocumentFragment>
 `;
 
 exports[`Render login screen to reset password 1`] = `
-Array [
+<DocumentFragment>
   <div
-    class="login"
+    data-testid="login"
   >
-    <div
-      class="loginContainer"
-    >
-      <div
-        class="formContainer"
-      >
-        <div
-          class="logoContainer"
-        >
-          <span
-            aria-label="su-sulu"
-            class="su-sulu"
-          />
-        </div>
-        <div
-          class="header"
-        >
-          sulu_admin.reset_password
-        </div>
-        <form
-          class="form"
-        >
-          <fieldset>
-            <label
-              class="inputField"
-            >
-              <div
-                class="labelText"
-              >
-                sulu_admin.password
-              </div>
-              <div
-                class="input default left"
-              >
-                <div
-                  class="prependedContainer default"
-                >
-                  <span
-                    aria-label="su-lock"
-                    class="su-lock icon default"
-                  />
-                </div>
-                <input
-                  autocomplete="new-password"
-                  type="password"
-                  value=""
-                />
-              </div>
-            </label>
-            <label
-              class="inputField"
-            >
-              <div
-                class="labelText"
-              >
-                sulu_admin.repeat_password
-              </div>
-              <div
-                class="input default left"
-              >
-                <div
-                  class="prependedContainer default"
-                >
-                  <span
-                    aria-label="su-lock"
-                    class="su-lock icon default"
-                  />
-                </div>
-                <input
-                  autocomplete="new-password"
-                  type="password"
-                  value=""
-                />
-              </div>
-            </label>
-            <div
-              class="buttons"
-            >
-              <button
-                class="button link hasText"
-                type="button"
-              >
-                <span
-                  class="buttonText"
-                >
-                  sulu_admin.back_to_login
-                </span>
-              </button>
-              <button
-                class="button primary hasText"
-                disabled=""
-                type="submit"
-              >
-                <span
-                  class="buttonText"
-                >
-                  sulu_admin.reset_password
-                </span>
-              </button>
-            </div>
-          </fieldset>
-        </form>
-      </div>
-      <div
-        class="backLinkContainer"
-      >
-        <a
-          class="backLink"
-          href="/"
-        >
-          <span
-            aria-label="su-angle-left"
-            class="su-angle-left backLinkIcon"
-          />
-          sulu_admin.back_to_website
-        </a>
-      </div>
-    </div>
-  </div>,
+    initialized-reset
+  </div>
   <div
     class="loader"
   >
     <div
-      class="spinner"
-      style="width: 40px; height: 40px;"
+      data-testid="loader"
     >
-      <div
-        class="doubleBounce1"
-      />
-      <div
-        class="doubleBounce2"
-      />
+      Loader
     </div>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Render login when user is not logged in 1`] = `
-Array [
+<DocumentFragment>
   <div
-    class="login"
+    data-testid="login"
   >
-    <div
-      class="loginContainer"
-    >
-      <div
-        class="formContainer"
-      >
-        <div
-          class="logoContainer"
-        >
-          <span
-            aria-label="su-sulu"
-            class="su-sulu"
-          />
-        </div>
-        <div
-          class="header"
-        >
-          sulu_admin.welcome
-        </div>
-        <form
-          class="form"
-        >
-          <fieldset>
-            <label
-              class="inputField"
-            >
-              <div
-                class="labelText"
-              >
-                sulu_admin.username_or_email
-              </div>
-              <div
-                class="input default left"
-              >
-                <div
-                  class="prependedContainer default"
-                >
-                  <span
-                    aria-label="su-user"
-                    class="su-user icon default"
-                  />
-                </div>
-                <input
-                  autocomplete="username"
-                  type="text"
-                  value=""
-                />
-              </div>
-            </label>
-            <label
-              class="inputField"
-            >
-              <div
-                class="labelText"
-              >
-                sulu_admin.password
-              </div>
-              <div
-                class="input default left"
-              >
-                <div
-                  class="prependedContainer default"
-                >
-                  <span
-                    aria-label="su-lock"
-                    class="su-lock icon default"
-                  />
-                </div>
-                <input
-                  autocomplete="current-password"
-                  type="password"
-                  value=""
-                />
-              </div>
-            </label>
-            <div
-              class="buttons"
-            >
-              <button
-                class="button link hasText"
-                type="button"
-              >
-                <span
-                  class="buttonText"
-                >
-                  sulu_admin.forgot_password
-                </span>
-              </button>
-              <button
-                class="button primary hasText"
-                disabled=""
-                type="submit"
-              >
-                <span
-                  class="buttonText"
-                >
-                  sulu_admin.login
-                </span>
-              </button>
-            </div>
-          </fieldset>
-        </form>
-      </div>
-      <div
-        class="backLinkContainer"
-      >
-        <a
-          class="backLink"
-          href="/"
-        >
-          <span
-            aria-label="su-angle-left"
-            class="su-angle-left backLinkIcon"
-          />
-          sulu_admin.back_to_website
-        </a>
-      </div>
-    </div>
-  </div>,
+    initialized
+  </div>
   <div
     class="loader"
   >
     <div
-      class="spinner"
-      style="width: 40px; height: 40px;"
+      data-testid="loader"
     >
-      <div
-        class="doubleBounce1"
-      />
-      <div
-        class="doubleBounce2"
-      />
+      Loader
     </div>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Render login with loader 1`] = `
-Array [
+<DocumentFragment>
   <div
-    class="login"
+    data-testid="login"
   >
-    <div
-      class="loginContainer"
-    >
-      <div
-        class="formContainer"
-      >
-        <div
-          class="logoContainer"
-        >
-          <span
-            aria-label="su-sulu"
-            class="su-sulu"
-          />
-        </div>
-        <div
-          class="loaderContainer"
-        >
-          <div
-            class="spinner"
-            style="width: 20px; height: 20px;"
-          >
-            <div
-              class="doubleBounce1"
-            />
-            <div
-              class="doubleBounce2"
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        class="backLinkContainer"
-      />
-    </div>
-  </div>,
+    not-initialized
+  </div>
   <div
     class="loader"
   >
     <div
-      class="spinner"
-      style="width: 40px; height: 40px;"
+      data-testid="loader"
     >
-      <div
-        class="doubleBounce1"
-      />
-      <div
-        class="doubleBounce2"
-      />
+      Loader
     </div>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Render opened navigation 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="root visible navigationVisible"
   >
@@ -731,96 +214,29 @@ Array [
       class="navigation"
     >
       <div
-        class="navigation"
+        data-pinned="false"
+        data-testid="navigation"
       >
-        <div
-          class="header"
+        <button
+          type="button"
         >
-          <span
-            class="logo"
-            title="2.0.0-RC1"
-          >
-            <span
-              aria-label="su-sulu-logo"
-              class="su-sulu-logo"
-            />
-          </span>
-          <button
-            class="pin"
-            type="button"
-          >
-            <span
-              aria-label="su-stick-right"
-              class="su-stick-right pinIcon"
-            />
-          </button>
-        </div>
-        <div
-          class="items"
-        />
-        <div
-          class="footer"
+          pin-toggle
+        </button>
+        <button
+          type="button"
         >
-          <div
-            class="userSection"
-          >
-            <button
-              class="button"
-              type="button"
-            >
-              <div
-                class="userImage"
-              >
-                <span
-                  aria-label="su-user"
-                  class="su-user placeholder"
-                />
-              </div>
-              <span
-                class="username"
-              >
-                Hikaru Sulu
-              </span>
-              <span
-                aria-label="su-angle-up"
-                class="su-angle-up"
-              />
-            </button>
-            <div
-              class="menu"
-              hidden=""
-            >
-              <button
-                class="button text hasText menuButton"
-                type="button"
-              >
-                <span
-                  aria-label="su-user"
-                  class="su-user buttonIcon"
-                />
-                <span
-                  class="buttonText"
-                >
-                  sulu_admin.edit_profile
-                </span>
-              </button>
-              <button
-                class="button text hasText menuButton"
-                type="button"
-              >
-                <span
-                  aria-label="su-sign-out-alt"
-                  class="su-sign-out-alt buttonIcon"
-                />
-                <span
-                  class="buttonText"
-                >
-                  sulu_admin.logout
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
+          navigate
+        </button>
+        <button
+          type="button"
+        >
+          logout
+        </button>
+        <button
+          type="button"
+        >
+          profile
+        </button>
       </div>
     </nav>
     <div
@@ -832,93 +248,45 @@ Array [
         <div
           class="viewContainer"
         >
-          <div>
-            <h1>
-              Test
-            </h1>
-            <h2>
-              test
-            </h2>
+          <div
+            data-testid="view-renderer"
+          >
+            test
           </div>
         </div>
         <header>
           <div
-            class="snackbar error"
-            role="button"
+            data-open="true"
+            data-testid="toolbar"
           >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
-            />
-            <div
-              class="text"
+            <button
+              type="button"
             >
-              <strong>
-                sulu_admin.error
-              </strong>
-               - 
-            </div>
-            <span
-              aria-label="su-times"
-              class="su-times clickable closeIcon"
-              role="button"
-              tabindex="0"
-            />
+              toggle-nav
+            </button>
           </div>
-          <div
-            class="snackbar warning"
-            role="button"
-          >
-            <span
-              aria-label="su-bell"
-              class="su-bell icon"
-            />
-            <div
-              class="text"
-            >
-              <strong>
-                sulu_admin.warning
-              </strong>
-               - 
-            </div>
-          </div>
-          <nav
-            class="toolbar light"
-          >
-            <div
-              class="controls light grow"
-            >
-              <button
-                class="button light primary"
-                type="button"
-              >
-                <span
-                  aria-label="su-times"
-                  class="su-times icon"
-                />
-              </button>
-            </div>
-            <div
-              class="controls light"
-            />
-          </nav>
         </header>
       </main>
       <div
-        class="backdrop"
-        data-testid="backdrop"
-        role="button"
+        data-testid="sidebar"
       />
+      <button
+        data-testid="backdrop"
+        type="button"
+      >
+        backdrop
+      </button>
     </div>
-  </div>,
-  <div>
-    ProfileFormOverlay Mock
-  </div>,
-]
+  </div>
+  <div
+    data-open="false"
+    data-testid="profile-overlay"
+  />
+</DocumentFragment>
 `;
 
 exports[`Should not fail if current route does not exist 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="root visible"
   >
@@ -926,96 +294,29 @@ Array [
       class="navigation"
     >
       <div
-        class="navigation"
+        data-pinned="false"
+        data-testid="navigation"
       >
-        <div
-          class="header"
+        <button
+          type="button"
         >
-          <span
-            class="logo"
-            title="2.0.0-RC1"
-          >
-            <span
-              aria-label="su-sulu-logo"
-              class="su-sulu-logo"
-            />
-          </span>
-          <button
-            class="pin"
-            type="button"
-          >
-            <span
-              aria-label="su-stick-right"
-              class="su-stick-right pinIcon"
-            />
-          </button>
-        </div>
-        <div
-          class="items"
-        />
-        <div
-          class="footer"
+          pin-toggle
+        </button>
+        <button
+          type="button"
         >
-          <div
-            class="userSection"
-          >
-            <button
-              class="button"
-              type="button"
-            >
-              <div
-                class="userImage"
-              >
-                <span
-                  aria-label="su-user"
-                  class="su-user placeholder"
-                />
-              </div>
-              <span
-                class="username"
-              >
-                Hikaru Sulu
-              </span>
-              <span
-                aria-label="su-angle-up"
-                class="su-angle-up"
-              />
-            </button>
-            <div
-              class="menu"
-              hidden=""
-            >
-              <button
-                class="button text hasText menuButton"
-                type="button"
-              >
-                <span
-                  aria-label="su-user"
-                  class="su-user buttonIcon"
-                />
-                <span
-                  class="buttonText"
-                >
-                  sulu_admin.edit_profile
-                </span>
-              </button>
-              <button
-                class="button text hasText menuButton"
-                type="button"
-              >
-                <span
-                  aria-label="su-sign-out-alt"
-                  class="su-sign-out-alt buttonIcon"
-                />
-                <span
-                  class="buttonText"
-                >
-                  sulu_admin.logout
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
+          navigate
+        </button>
+        <button
+          type="button"
+        >
+          logout
+        </button>
+        <button
+          type="button"
+        >
+          profile
+        </button>
       </div>
     </nav>
     <div
@@ -1029,71 +330,25 @@ Array [
         />
         <header>
           <div
-            class="snackbar error"
-            role="button"
+            data-open="false"
+            data-testid="toolbar"
           >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
-            />
-            <div
-              class="text"
+            <button
+              type="button"
             >
-              <strong>
-                sulu_admin.error
-              </strong>
-               - 
-            </div>
-            <span
-              aria-label="su-times"
-              class="su-times clickable closeIcon"
-              role="button"
-              tabindex="0"
-            />
+              toggle-nav
+            </button>
           </div>
-          <div
-            class="snackbar error"
-            role="button"
-          >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
-            />
-            <div
-              class="text"
-            >
-              <strong>
-                sulu_admin.error
-              </strong>
-               - 
-            </div>
-          </div>
-          <nav
-            class="toolbar light"
-          >
-            <div
-              class="controls light grow"
-            >
-              <button
-                class="button light primary"
-                type="button"
-              >
-                <span
-                  aria-label="su-bars"
-                  class="su-bars icon"
-                />
-              </button>
-            </div>
-            <div
-              class="controls light"
-            />
-          </nav>
         </header>
       </main>
+      <div
+        data-testid="sidebar"
+      />
     </div>
-  </div>,
-  <div>
-    ProfileFormOverlay Mock
-  </div>,
-]
+  </div>
+  <div
+    data-open="false"
+    data-testid="profile-overlay"
+  />
+</DocumentFragment>
 `;

@@ -1,20 +1,21 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
-import ResourceStore from '../../../../stores/ResourceStore';
-import FormInspector from '../../FormInspector';
-import ResourceFormStore from '../../stores/ResourceFormStore';
 import Checkbox from '../../fields/Checkbox';
-import CheckboxComponent from '../../../../components/Checkbox';
-import Toggler from '../../../../components/Toggler';
 
-jest.mock('../../../../stores/ResourceStore', () => jest.fn());
-jest.mock('../../stores/ResourceFormStore', () => jest.fn());
-jest.mock('../../FormInspector', () => jest.fn());
+jest.mock('mobx-react', () => ({
+    observer: (Component) => Component,
+}));
 
-test('Render Toggler component as heading', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+const createProps = (props: Object = {}) => ({
+    ...fieldTypeDefaultProps,
+    formInspector: ({}: any),
+    ...props,
+});
+
+test('Render heading skin with icon and description', () => {
     const schemaOptions = {
         description: {
             name: 'description',
@@ -34,44 +35,43 @@ test('Render Toggler component as heading', () => {
         },
     };
 
-    expect(render(
-        <Checkbox
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-        />
-    )).toMatchSnapshot();
+    render(
+        <Checkbox {...createProps({schemaOptions})} />
+    );
+
+    expect(screen.getByText('Hide block')).toBeInTheDocument();
+    expect(screen.getByText('Hides a block')).toBeInTheDocument();
+    expect(screen.getByLabelText('su-eye')).toBeInTheDocument();
 });
 
 test('Pass the label correctly to Checkbox component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const checkbox = shallow(
+    render(
         <Checkbox
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            label="Test"
-            schemaOptions={{label: {name: 'label', title: 'Checkbox Title'}}}
+            {...createProps({
+                label: 'Test',
+                schemaOptions: {label: {name: 'label', title: 'Checkbox Title'}},
+            })}
         />
     );
-    expect(checkbox.find(CheckboxComponent).prop('children')).toEqual('Checkbox Title');
+
+    expect(screen.getByText('Checkbox Title')).toBeInTheDocument();
 });
 
 test('Pass disabled correctly to Checkbox component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const checkbox = shallow(
+    render(
         <Checkbox
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            formInspector={formInspector}
-            label="Test"
-            schemaOptions={{label: {name: 'label', title: 'Checkbox Title'}}}
+            {...createProps({
+                disabled: true,
+                label: 'Test',
+                schemaOptions: {label: {name: 'label', title: 'Checkbox Title'}},
+            })}
         />
     );
-    expect(checkbox.find(CheckboxComponent).props().disabled).toEqual(true);
+
+    expect(screen.getByRole('checkbox')).toBeDisabled();
 });
 
 test('Should throw an exception if defaultValue is of wrong type', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = {
         default_value: {
             name: 'default_value',
@@ -79,19 +79,11 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
         },
     };
 
-    expect(() => shallow(
-        <Checkbox
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-        />
-    )).toThrow(/"default_value"/);
+    expect(() => render(<Checkbox {...createProps({schemaOptions})} />)).toThrow(/"default_value"/);
 });
 
 test('Set default value of null should not call onChange', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
-
     const schemaOptions = {
         default_value: {
             name: 'default_value',
@@ -99,12 +91,12 @@ test('Set default value of null should not call onChange', () => {
         },
     };
 
-    shallow(
+    render(
         <Checkbox
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            schemaOptions={schemaOptions}
+            {...createProps({
+                onChange: changeSpy,
+                schemaOptions,
+            })}
         />
     );
 
@@ -112,9 +104,7 @@ test('Set default value of null should not call onChange', () => {
 });
 
 test('Set default value if no value is passed', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
-
     const schemaOptions = {
         default_value: {
             name: 'default_value',
@@ -122,22 +112,20 @@ test('Set default value if no value is passed', () => {
         },
     };
 
-    shallow(
+    render(
         <Checkbox
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            schemaOptions={schemaOptions}
+            {...createProps({
+                onChange: changeSpy,
+                schemaOptions,
+            })}
         />
     );
 
-    expect(changeSpy).toBeCalledWith(false, {'isDefaultValue': true});
+    expect(changeSpy).toBeCalledWith(false, {isDefaultValue: true});
 });
 
 test('Do not set default value if a value is passed', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
-
     const schemaOptions = {
         default_value: {
             name: 'default_value',
@@ -145,13 +133,13 @@ test('Do not set default value if a value is passed', () => {
         },
     };
 
-    shallow(
+    render(
         <Checkbox
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            schemaOptions={schemaOptions}
-            value={false}
+            {...createProps({
+                onChange: changeSpy,
+                schemaOptions,
+                value: false,
+            })}
         />
     );
 
@@ -159,147 +147,133 @@ test('Do not set default value if a value is passed', () => {
 });
 
 test('Pass the value of true correctly to Checkbox component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const checkbox = shallow(
-        <Checkbox
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            value={true}
-        />
-    );
-    expect(checkbox.find(CheckboxComponent).prop('checked')).toEqual(true);
+    render(<Checkbox {...createProps({value: true})} />);
+
+    expect(screen.getByRole('checkbox')).toBeChecked();
 });
 
 test('Pass the value of false correctly to Checkbox component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const checkbox = shallow(
-        <Checkbox
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            value={false}
-        />
-    );
-    expect(checkbox.find(CheckboxComponent).prop('checked')).toEqual(false);
+    render(<Checkbox {...createProps({value: false})} />);
+
+    expect(screen.getByRole('checkbox')).not.toBeChecked();
 });
 
-test('Call onChange and onFinish on the changed callback of the Checkbox', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+test('Call onChange and onFinish on the changed callback of the Checkbox', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-
-    const checkbox = shallow(
+    render(
         <Checkbox
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
+            {...createProps({
+                onChange: changeSpy,
+                onFinish: finishSpy,
+            })}
         />
     );
-    checkbox.find(CheckboxComponent).simulate('change', true);
+
+    await user.click(screen.getByRole('checkbox'));
 
     expect(changeSpy).toBeCalledWith(true);
     expect(finishSpy).toBeCalledWith();
 });
 
 test('Pass the label correctly to Toggler component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const schemaOptions = {
         label: {name: 'label', title: 'Toggler Title'},
         type: {name: 'type', value: 'toggler'},
     };
-
-    const checkbox = shallow(
+    render(
         <Checkbox
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            label="Test"
-            schemaOptions={schemaOptions}
+            {...createProps({
+                label: 'Test',
+                schemaOptions,
+            })}
         />
     );
-    expect(checkbox.find(Toggler).prop('children')).toEqual('Toggler Title');
+
+    expect(screen.getByText('Toggler Title')).toBeInTheDocument();
 });
 
 test('Pass disabled correctly to Toggler component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const schemaOptions = {
         label: {name: 'label', title: 'Toggler Title'},
         type: {name: 'type', value: 'toggler'},
     };
-
-    const checkbox = shallow(
+    render(
         <Checkbox
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            formInspector={formInspector}
-            label="Test"
-            schemaOptions={schemaOptions}
+            {...createProps({
+                disabled: true,
+                label: 'Test',
+                schemaOptions,
+            })}
         />
     );
-    expect(checkbox.find(Toggler).props().disabled).toEqual(true);
+
+    expect(screen.getByRole('checkbox')).toBeDisabled();
 });
 
 test('Pass the value of true correctly to Toggler component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const checkbox = shallow(
+    render(
         <Checkbox
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            label="Test"
-            schemaOptions={{type: {name: 'type', value: 'toggler'}}}
-            value={true}
+            {...createProps({
+                label: 'Test',
+                schemaOptions: {type: {name: 'type', value: 'toggler'}},
+                value: true,
+            })}
         />
     );
-    expect(checkbox.find(Toggler).prop('checked')).toEqual(true);
+
+    expect(screen.getByRole('checkbox')).toBeChecked();
 });
 
 test('Pass the value of false correctly to Toggler component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const checkbox = shallow(
+    render(
         <Checkbox
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={{type: {name: 'type', value: 'toggler'}}}
-            value={false}
+            {...createProps({
+                schemaOptions: {type: {name: 'type', value: 'toggler'}},
+                value: false,
+            })}
         />
     );
-    expect(checkbox.find(Toggler).prop('checked')).toEqual(false);
+
+    expect(screen.getByRole('checkbox')).not.toBeChecked();
 });
 
-test('Call onChange and onFinish on the changed callback of the Toggler', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+test('Call onChange and onFinish on the changed callback of the Toggler', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-
-    const checkbox = shallow(
+    render(
         <Checkbox
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            schemaOptions={{type: {name: 'type', value: 'toggler'}}}
+            {...createProps({
+                onChange: changeSpy,
+                onFinish: finishSpy,
+                schemaOptions: {type: {name: 'type', value: 'toggler'}},
+            })}
         />
     );
-    checkbox.find(Toggler).simulate('change', true);
+
+    await user.click(screen.getByRole('checkbox'));
 
     expect(changeSpy).toBeCalledWith(true);
     expect(finishSpy).toBeCalledWith();
 });
 
-test('Call onChange and onFinish on the changed callback of the Toggler with the header skin', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+test('Call onChange and onFinish on the changed callback of the Toggler with the header skin', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-
-    const checkbox = shallow(
+    render(
         <Checkbox
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            schemaOptions={{skin: {name: 'skin', value: 'heading'}, type: {name: 'type', value: 'toggler'}}}
+            {...createProps({
+                onChange: changeSpy,
+                onFinish: finishSpy,
+                schemaOptions: {skin: {name: 'skin', value: 'heading'}, type: {name: 'type', value: 'toggler'}},
+            })}
         />
     );
-    checkbox.find(Toggler).simulate('change', true);
+
+    await user.click(screen.getByRole('checkbox'));
 
     expect(changeSpy).toBeCalledWith(true);
     expect(finishSpy).toBeCalledWith();

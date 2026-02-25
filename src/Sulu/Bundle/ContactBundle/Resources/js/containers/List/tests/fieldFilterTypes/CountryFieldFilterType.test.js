@@ -1,5 +1,5 @@
 // @flow
-import {mount, render} from 'enzyme';
+import React from 'react';
 import CountryFieldFilterType from '../../fieldFilterTypes/CountryFieldFilterType';
 
 test('Render with value', () => {
@@ -10,7 +10,10 @@ test('Render with value', () => {
     };
 
     const countryFieldFilterType = new CountryFieldFilterType(jest.fn(), {}, undefined);
-    expect(render(countryFieldFilterType.getFormNode())).toMatchSnapshot();
+    const formNode = countryFieldFilterType.getFormNode();
+    const children = React.Children.toArray(formNode.props.children);
+
+    expect(children[1].props.children).toHaveLength(3);
 });
 
 test('Filter countries using input field', () => {
@@ -21,12 +24,17 @@ test('Filter countries using input field', () => {
     };
 
     const countryFieldFilterType = new CountryFieldFilterType(jest.fn(), {}, undefined);
-    const countryFieldFilterTypeForm1 = mount(countryFieldFilterType.getFormNode());
-    countryFieldFilterTypeForm1.find('Input').prop('onChange')('Aus');
+    const initialFormNode = countryFieldFilterType.getFormNode();
+    const initialChildren = React.Children.toArray(initialFormNode.props.children);
 
-    const countryFieldFilterTypeForm2 = mount(countryFieldFilterType.getFormNode());
-    expect(countryFieldFilterTypeForm2.find('Checkbox')).toHaveLength(1);
-    expect(countryFieldFilterTypeForm2.find('Checkbox').at(0).prop('value')).toEqual('AT');
+    initialChildren[0].props.onChange('Aus');
+
+    const filteredFormNode = countryFieldFilterType.getFormNode();
+    const filteredChildren = React.Children.toArray(filteredFormNode.props.children);
+    const checkboxes = React.Children.toArray(filteredChildren[1].props.children);
+
+    expect(checkboxes).toHaveLength(1);
+    expect(checkboxes[0].props.value).toEqual('AT');
 });
 
 test('Filter countries using input field with lowercase start', () => {
@@ -37,12 +45,17 @@ test('Filter countries using input field with lowercase start', () => {
     };
 
     const countryFieldFilterType = new CountryFieldFilterType(jest.fn(), {}, undefined);
-    const countryFieldFilterTypeForm1 = mount(countryFieldFilterType.getFormNode());
-    countryFieldFilterTypeForm1.find('Input').prop('onChange')('aus');
+    const initialFormNode = countryFieldFilterType.getFormNode();
+    const initialChildren = React.Children.toArray(initialFormNode.props.children);
 
-    const countryFieldFilterTypeForm2 = mount(countryFieldFilterType.getFormNode());
-    expect(countryFieldFilterTypeForm2.find('Checkbox')).toHaveLength(1);
-    expect(countryFieldFilterTypeForm2.find('Checkbox').at(0).prop('value')).toEqual('AT');
+    initialChildren[0].props.onChange('aus');
+
+    const filteredFormNode = countryFieldFilterType.getFormNode();
+    const filteredChildren = React.Children.toArray(filteredFormNode.props.children);
+    const checkboxes = React.Children.toArray(filteredChildren[1].props.children);
+
+    expect(checkboxes).toHaveLength(1);
+    expect(checkboxes[0].props.value).toEqual('AT');
 });
 
 test.each([

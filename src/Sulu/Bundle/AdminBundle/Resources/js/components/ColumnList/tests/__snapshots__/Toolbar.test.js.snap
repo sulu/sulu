@@ -1,90 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should render with active 1`] = `
-<div
-  class="toolbar"
->
-  <button
-    class="item primary"
-    type="button"
-  >
-    <span
-      aria-label="fa-plus"
-      class="fa fa-plus"
-    />
-  </button>
-  <button
-    class="item primary"
-    type="button"
-  >
-    <span
-      aria-label="fa-gear"
-      class="fa fa-gear"
-    />
-    <span
-      aria-label="su-angle-down"
-      class="su-angle-down buttonArrowIcon"
-    />
-  </button>
-</div>
-`;
-
-exports[`Should render with active 2`] = `
-Array [
-  <button
-    class="item primary"
-    type="button"
-  >
-    <span
-      aria-label="fa-gear"
-      class="fa fa-gear"
-    />
-    <span
-      aria-label="su-angle-down"
-      class="su-angle-down buttonArrowIcon"
-    />
-  </button>,
+<DocumentFragment>
   <div
-    class="backdrop fixed"
-    data-testid="backdrop"
-    role="button"
-  />,
-  <div
-    class="container"
+    class="toolbar"
   >
-    <div
-      class="arrowMenuContainer"
-      style="top: 20px; left: 10px; position: fixed; pointer-events: auto;"
+    <button
+      class="item primary"
+      type="button"
     >
-      <div
-        class="arrow top right"
+      <span
+        aria-label="fa-plus"
+        class="fa fa-plus"
       />
-      <div
-        class="arrowMenu"
-      >
-        <div
-          class="section"
-        >
-          <div
-            class="children"
-          >
-            <button
-              class="action"
-              type="button"
-            >
-              Option1
-            </button>
-            <button
-              class="action"
-              disabled=""
-              type="button"
-            >
-              Option1
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>,
-]
+    </button>
+    <button
+      class="item primary"
+      type="button"
+    >
+      <span
+        aria-label="fa-gear"
+        class="fa fa-gear"
+      />
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down buttonArrowIcon"
+      />
+    </button>
+  </div>
+</DocumentFragment>
 `;

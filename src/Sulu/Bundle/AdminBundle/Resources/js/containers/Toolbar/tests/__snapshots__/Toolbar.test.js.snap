@@ -1,440 +1,150 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render the error from the ToolbarStore 1`] = `
-Array [
+<DocumentFragment>
+  <button
+    data-testid="snackbar-error"
+    type="button"
+  >
+    error
+  </button>
   <div
-    class="snackbar error visible"
-    role="button"
-  >
-    <span
-      aria-label="su-exclamation-triangle"
-      class="su-exclamation-triangle icon"
-    />
-    <div
-      class="text"
-    >
-      <strong>
-        sulu_admin.error
-      </strong>
-       - Something went wrong
-    </div>
-    <span
-      aria-label="su-times"
-      class="su-times clickable closeIcon"
-      role="button"
-      tabindex="0"
-    />
-  </div>,
-  <div
-    class="snackbar warning"
-    role="button"
-  >
-    <span
-      aria-label="su-bell"
-      class="su-bell icon"
-    />
-    <div
-      class="text"
-    >
-      <strong>
-        sulu_admin.warning
-      </strong>
-       - 
-    </div>
-  </div>,
-  <nav
-    class="toolbar light"
+    data-testid="toolbar-root"
   >
     <div
-      class="controls light grow"
+      data-testid="toolbar-controls"
     />
     <div
-      class="controls light"
+      data-testid="toolbar-controls"
     >
       <div
-        class="icons light"
+        data-testid="toolbar-icons"
       >
-        <div
-          class="icon"
-        >
-          <p>
-            Test1
-          </p>
-        </div>
-        <div
-          class="icon"
-        >
-          <p>
-            Test2
-          </p>
-        </div>
+        <p>
+          Test1
+        </p>
+        <p>
+          Test2
+        </p>
       </div>
     </div>
-  </nav>,
-]
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Render the items and icons from the ToolbarStore 1`] = `
-Array [
+<DocumentFragment>
   <div
-    class="snackbar error"
-    role="button"
-  >
-    <span
-      aria-label="su-exclamation-triangle"
-      class="su-exclamation-triangle icon"
-    />
-    <div
-      class="text"
-    >
-      <strong>
-        sulu_admin.error
-      </strong>
-       - 
-    </div>
-    <span
-      aria-label="su-times"
-      class="su-times clickable closeIcon"
-      role="button"
-      tabindex="0"
-    />
-  </div>,
-  <div
-    class="snackbar error"
-    role="button"
-  >
-    <span
-      aria-label="su-exclamation-triangle"
-      class="su-exclamation-triangle icon"
-    />
-    <div
-      class="text"
-    >
-      <strong>
-        sulu_admin.error
-      </strong>
-       - 
-    </div>
-  </div>,
-  <nav
-    class="toolbar light"
+    data-testid="toolbar-root"
   >
     <div
-      class="controls light grow"
+      data-testid="toolbar-controls"
     >
       <div
-        class="itemsContainer"
+        data-testid="toolbar-items"
       >
-        <ul
-          class="items light"
-        >
-          <li>
-            <button
-              class="button light"
-              disabled=""
-              type="button"
-            >
-              <span
-                aria-label="fa-trash-o"
-                class="fa fa-trash-o icon"
-              />
-              <span
-                class="label"
-              >
-                Delete
-              </span>
-            </button>
-          </li>
-          <li>
-            <div
-              class="popover"
-            >
-              <button
-                class="button light"
-                type="button"
-              >
-                <span
-                  aria-label="fa-floppy-more"
-                  class="fa fa-floppy-more icon"
-                />
-                <span
-                  class="label"
-                >
-                  Save
-                </span>
-                <span
-                  aria-label="su-angle-down"
-                  class="su-angle-down dropdownIcon"
-                />
-              </button>
-            </div>
-          </li>
-          <li>
-            <button
-              class="button light"
-              type="button"
-            >
-              <span
-                class="label"
-              >
-                <label
-                  class="label"
-                  tabindex="-1"
-                >
-                  <span
-                    class="switch toggler"
-                  >
-                    <input
-                      checked=""
-                      type="checkbox"
-                    />
-                    <span />
-                  </span>
-                  <div>
-                    Toggler
-                  </div>
-                </label>
-              </span>
-            </button>
-          </li>
-        </ul>
+        <button
+          data-testid="toolbar-button"
+          type="button"
+        />
+        <div
+          data-testid="toolbar-dropdown"
+        />
+        <div
+          data-testid="toolbar-toggler"
+        />
       </div>
     </div>
     <div
-      class="controls light"
+      data-testid="toolbar-controls"
     >
       <div
-        class="icons light"
+        data-testid="toolbar-icons"
       >
-        <div
-          class="icon"
-        >
-          <p>
-            Test1
-          </p>
-        </div>
-        <div
-          class="icon"
-        >
-          <p>
-            Test2
-          </p>
-        </div>
+        <p>
+          Test1
+        </p>
+        <p>
+          Test2
+        </p>
       </div>
     </div>
-  </nav>,
-]
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Render the warning from the ToolbarStore 1`] = `
-Array [
+<DocumentFragment>
+  <button
+    data-testid="snackbar-warning"
+    type="button"
+  >
+    warning
+  </button>
   <div
-    class="snackbar error"
-    role="button"
-  >
-    <span
-      aria-label="su-exclamation-triangle"
-      class="su-exclamation-triangle icon"
-    />
-    <div
-      class="text"
-    >
-      <strong>
-        sulu_admin.error
-      </strong>
-       - 
-    </div>
-    <span
-      aria-label="su-times"
-      class="su-times clickable closeIcon"
-      role="button"
-      tabindex="0"
-    />
-  </div>,
-  <div
-    class="snackbar warning visible"
-    role="button"
-  >
-    <span
-      aria-label="su-bell"
-      class="su-bell icon"
-    />
-    <div
-      class="text"
-    >
-      <strong>
-        sulu_admin.warning
-      </strong>
-       - Something unimportant went wrong
-    </div>
-  </div>,
-  <nav
-    class="toolbar light"
+    data-testid="toolbar-root"
   >
     <div
-      class="controls light grow"
+      data-testid="toolbar-controls"
     />
     <div
-      class="controls light"
+      data-testid="toolbar-controls"
     >
       <div
-        class="icons light"
+        data-testid="toolbar-icons"
       >
-        <div
-          class="icon"
-        >
-          <p>
-            Test1
-          </p>
-        </div>
-        <div
-          class="icon"
-        >
-          <p>
-            Test2
-          </p>
-        </div>
+        <p>
+          Test1
+        </p>
+        <p>
+          Test2
+        </p>
       </div>
     </div>
-  </nav>,
-]
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Show success message on back button for some time 1`] = `
-Array [
+<DocumentFragment>
   <div
-    class="snackbar error"
-    role="button"
-  >
-    <span
-      aria-label="su-exclamation-triangle"
-      class="su-exclamation-triangle icon"
-    />
-    <div
-      class="text"
-    >
-      <strong>
-        sulu_admin.error
-      </strong>
-       - 
-    </div>
-    <span
-      aria-label="su-times"
-      class="su-times clickable closeIcon"
-      role="button"
-      tabindex="0"
-    />
-  </div>,
-  <div
-    class="snackbar error"
-    role="button"
-  >
-    <span
-      aria-label="su-exclamation-triangle"
-      class="su-exclamation-triangle icon"
-    />
-    <div
-      class="text"
-    >
-      <strong>
-        sulu_admin.error
-      </strong>
-       - 
-    </div>
-  </div>,
-  <nav
-    class="toolbar light"
+    data-testid="toolbar-root"
   >
     <div
-      class="controls light grow"
+      data-testid="toolbar-controls"
     >
       <button
-        class="button light success"
+        data-testid="toolbar-success-button"
         type="button"
-      >
-        <span
-          aria-label="su-check"
-          class="su-check icon"
-        />
-      </button>
+      />
     </div>
     <div
-      class="controls light"
+      data-testid="toolbar-controls"
     />
-  </nav>,
-]
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Show success message on navigation button for some time 1`] = `
-Array [
+<DocumentFragment>
   <div
-    class="snackbar error"
-    role="button"
-  >
-    <span
-      aria-label="su-exclamation-triangle"
-      class="su-exclamation-triangle icon"
-    />
-    <div
-      class="text"
-    >
-      <strong>
-        sulu_admin.error
-      </strong>
-       - 
-    </div>
-    <span
-      aria-label="su-times"
-      class="su-times clickable closeIcon"
-      role="button"
-      tabindex="0"
-    />
-  </div>,
-  <div
-    class="snackbar error"
-    role="button"
-  >
-    <span
-      aria-label="su-exclamation-triangle"
-      class="su-exclamation-triangle icon"
-    />
-    <div
-      class="text"
-    >
-      <strong>
-        sulu_admin.error
-      </strong>
-       - 
-    </div>
-  </div>,
-  <nav
-    class="toolbar light"
+    data-testid="toolbar-root"
   >
     <div
-      class="controls light grow"
+      data-testid="toolbar-controls"
     >
       <button
-        class="button light primary success"
+        data-testid="toolbar-success-button"
         type="button"
-      >
-        <span
-          aria-label="su-check"
-          class="su-check icon"
-        />
-      </button>
+      />
       <button
-        class="button light"
+        data-testid="toolbar-button"
         type="button"
-      >
-        <span
-          aria-label="su-angle-left"
-          class="su-angle-left icon"
-        />
-      </button>
+      />
     </div>
     <div
-      class="controls light"
+      data-testid="toolbar-controls"
     />
-  </nav>,
-]
+  </div>
+</DocumentFragment>
 `;

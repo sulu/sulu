@@ -1,8 +1,29 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {render} from '@testing-library/react';
+import FolderList from '../../../../components/FolderList';
+import Pagination from '../../../../components/Pagination';
 import listAdapterDefaultProps from '../../../../utils/TestHelper/listAdapterDefaultProps';
+import getLatestMockProps from '../../../../utils/TestHelper/getLatestMockProps';
+import getMockCallArg from '../../../../utils/TestHelper/getMockCallArg';
 import FolderAdapter from '../../adapters/FolderAdapter';
+
+jest.mock('mobx-react', () => ({
+    observer: (Component) => Component,
+}));
+
+jest.mock('../../../../components/FolderList', () => {
+    const React = require('react');
+    const FolderList: any = jest.fn(({children}) => React.createElement('div', null, children));
+    FolderList.Folder = jest.fn(() => null);
+
+    return FolderList;
+});
+
+jest.mock('../../../../components/Pagination', () => {
+    const React = require('react');
+    return jest.fn(({children}) => React.createElement('div', null, children));
+});
 
 jest.mock('../../../../utils/Translator', () => ({
     translate(key) {
@@ -14,6 +35,13 @@ jest.mock('../../../../utils/Translator', () => ({
         }
     },
 }));
+
+const renderFolderAdapter = (props: Object = {}) => render(
+    <FolderAdapter
+        {...listAdapterDefaultProps}
+        {...props}
+    />
+);
 
 test('Render a basic Folder list with data', () => {
     const data = [
@@ -30,17 +58,23 @@ test('Render a basic Folder list with data', () => {
             description: 'Description 2',
         },
     ];
+    renderFolderAdapter({
+        data,
+        page: 1,
+        pageCount: 2,
+    });
 
-    const folderAdapter = render(
-        <FolderAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            page={1}
-            pageCount={2}
-        />
-    );
+    const paginationProps: any = getLatestMockProps((Pagination: any));
+    expect(paginationProps.currentPage).toEqual(1);
+    expect(paginationProps.totalPages).toEqual(2);
 
-    expect(folderAdapter).toMatchSnapshot();
+    expect((FolderList.Folder: any)).toBeCalledTimes(2);
+    const firstFolderProps: any = getMockCallArg((FolderList.Folder: any), 0, 0);
+    const secondFolderProps: any = getMockCallArg((FolderList.Folder: any), 1, 0);
+    expect(firstFolderProps.title).toEqual('Title 1');
+    expect(firstFolderProps.info).toEqual('1 Object');
+    expect(secondFolderProps.title).toEqual('Title 2');
+    expect(secondFolderProps.info).toEqual('0 Objects');
 });
 
 test('Click on a Folder should call the onItemEdit callback', () => {
@@ -65,31 +99,26 @@ test('Click on a Folder should call the onItemEdit callback', () => {
             description: 'Description 3',
         },
     ];
-    const folderAdapter = shallow(
-        <FolderAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            onItemClick={itemClickSpy}
-        />
-    );
-    expect(folderAdapter.find('FolderList').get(0).props.onFolderClick).toBe(itemClickSpy);
+    renderFolderAdapter({
+        data,
+        onItemClick: itemClickSpy,
+    });
+
+    const folderListProps: any = getLatestMockProps((FolderList: any));
+    expect(folderListProps.onFolderClick).toBe(itemClickSpy);
 });
 
 test('Pagination should not be rendered if no data is available', () => {
-    const folderAdapter = shallow(
-        <FolderAdapter
-            {...listAdapterDefaultProps}
-            page={1}
-        />
-    );
+    renderFolderAdapter({
+        page: 1,
+    });
 
-    expect(folderAdapter.find('Pagination')).toHaveLength(0);
+    expect((Pagination: any)).not.toBeCalled();
 });
 
 test('Pagination should be passed correct props', () => {
     const pageChangeSpy = jest.fn();
     const limitChangeSpy = jest.fn();
-
     const data = [
         {
             id: 1,
@@ -110,38 +139,33 @@ test('Pagination should be passed correct props', () => {
             description: 'Description 3',
         },
     ];
+    renderFolderAdapter({
+        data,
+        limit: 10,
+        onLimitChange: limitChangeSpy,
+        onPageChange: pageChangeSpy,
+        page: 2,
+        pageCount: 7,
+    });
 
-    const folderAdapter = shallow(
-        <FolderAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            limit={10}
-            onLimitChange={limitChangeSpy}
-            onPageChange={pageChangeSpy}
-            page={2}
-            pageCount={7}
-        />
-    );
-    expect(folderAdapter.find('Pagination').get(0).props).toEqual({
-        totalPages: 7,
-        currentPage: 2,
+    const paginationProps: any = getLatestMockProps((Pagination: any));
+    expect(paginationProps).toEqual(expect.objectContaining({
         currentLimit: 10,
+        currentPage: 2,
         loading: false,
         onLimitChange: limitChangeSpy,
         onPageChange: pageChangeSpy,
-        children: expect.anything(),
-    });
+        totalPages: 7,
+    }));
 });
 
 test('Pagination should not be rendered if pagination is false', () => {
-    const folderAdapter = shallow(
-        <FolderAdapter
-            {...listAdapterDefaultProps}
-            limit={10}
-            page={2}
-            pageCount={7}
-            paginated={false}
-        />
-    );
-    expect(folderAdapter.find('Pagination')).toHaveLength(0);
+    renderFolderAdapter({
+        limit: 10,
+        page: 2,
+        pageCount: 7,
+        paginated: false,
+    });
+
+    expect((Pagination: any)).not.toBeCalled();
 });

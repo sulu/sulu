@@ -1,828 +1,702 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should render the Login component when initialized is true 1`] = `
-<div
-  class="login"
->
+<DocumentFragment>
   <div
-    class="loginContainer"
+    class="login"
   >
     <div
-      class="formContainer"
+      class="loginContainer"
     >
       <div
-        class="logoContainer"
+        class="formContainer"
       >
-        <span
-          aria-label="su-sulu"
-          class="su-sulu"
-        />
+        <div
+          class="logoContainer"
+        >
+          <span
+            aria-label="su-sulu"
+            class="su-sulu"
+          />
+        </div>
+        <div
+          class="header"
+        >
+          sulu_admin.welcome
+        </div>
+        <form
+          class="form"
+        >
+          <fieldset>
+            <label
+              class="inputField"
+            >
+              <div
+                class="labelText"
+              >
+                sulu_admin.username_or_email
+              </div>
+              <div
+                class="input default left"
+              >
+                <div
+                  class="prependedContainer default"
+                >
+                  <span
+                    aria-label="su-user"
+                    class="su-user icon default"
+                  />
+                </div>
+                <input
+                  autocomplete="username"
+                  type="text"
+                  value=""
+                />
+              </div>
+            </label>
+            <label
+              class="inputField"
+            >
+              <div
+                class="labelText"
+              >
+                sulu_admin.password
+              </div>
+              <div
+                class="input default left"
+              >
+                <div
+                  class="prependedContainer default"
+                >
+                  <span
+                    aria-label="su-lock"
+                    class="su-lock icon default"
+                  />
+                </div>
+                <input
+                  autocomplete="current-password"
+                  type="password"
+                  value=""
+                />
+              </div>
+            </label>
+            <div
+              class="buttons"
+            >
+              <button
+                class="button link hasText"
+                type="button"
+              >
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.forgot_password
+                </span>
+              </button>
+              <button
+                class="button primary hasText"
+                disabled=""
+                type="submit"
+              >
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.login
+                </span>
+              </button>
+            </div>
+          </fieldset>
+        </form>
       </div>
       <div
-        class="header"
+        class="backLinkContainer"
       >
-        sulu_admin.welcome
+        <a
+          class="backLink"
+          href="/"
+        >
+          <span
+            aria-label="su-angle-left"
+            class="su-angle-left backLinkIcon"
+          />
+          sulu_admin.back_to_website
+        </a>
       </div>
-      <form
-        class="form"
-      >
-        <fieldset>
-          <label
-            class="inputField"
-          >
-            <div
-              class="labelText"
-            >
-              sulu_admin.username_or_email
-            </div>
-            <div
-              class="input default left"
-            >
-              <div
-                class="prependedContainer default"
-              >
-                <span
-                  aria-label="su-user"
-                  class="su-user icon default"
-                />
-              </div>
-              <input
-                autocomplete="username"
-                type="text"
-                value=""
-              />
-            </div>
-          </label>
-          <label
-            class="inputField"
-          >
-            <div
-              class="labelText"
-            >
-              sulu_admin.password
-            </div>
-            <div
-              class="input default left"
-            >
-              <div
-                class="prependedContainer default"
-              >
-                <span
-                  aria-label="su-lock"
-                  class="su-lock icon default"
-                />
-              </div>
-              <input
-                autocomplete="current-password"
-                type="password"
-                value=""
-              />
-            </div>
-          </label>
-          <div
-            class="buttons"
-          >
-            <button
-              class="button link hasText"
-              type="button"
-            >
-              <span
-                class="buttonText"
-              >
-                sulu_admin.forgot_password
-              </span>
-            </button>
-            <button
-              class="button primary hasText"
-              disabled=""
-              type="submit"
-            >
-              <span
-                class="buttonText"
-              >
-                sulu_admin.login
-              </span>
-            </button>
-          </div>
-        </fieldset>
-      </form>
-    </div>
-    <div
-      class="backLinkContainer"
-    >
-      <a
-        class="backLink"
-        href="/"
-      >
-        <span
-          aria-label="su-angle-left"
-          class="su-angle-left backLinkIcon"
-        />
-        sulu_admin.back_to_website
-      </a>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Should render the Login with forgot password view 1`] = `
-<div
-  class="login"
->
+<DocumentFragment>
   <div
-    class="loginContainer"
+    class="login"
   >
     <div
-      class="formContainer"
+      class="loginContainer"
     >
       <div
-        class="logoContainer"
+        class="formContainer"
       >
-        <span
-          aria-label="su-sulu"
-          class="su-sulu"
-        />
-      </div>
-      <div
-        class="header"
-      >
-        sulu_admin.forgot_password
-      </div>
-      <form
-        class="form"
-      >
-        <fieldset>
-          <label
-            class="inputField"
-          >
-            <div
-              class="labelText"
-            >
-              sulu_admin.username_or_email
-            </div>
-            <div
-              class="input default left"
+        <div
+          class="logoContainer"
+        >
+          <span
+            aria-label="su-sulu"
+            class="su-sulu"
+          />
+        </div>
+        <div
+          class="header"
+        >
+          sulu_admin.forgot_password
+        </div>
+        <form
+          class="form"
+        >
+          <fieldset>
+            <label
+              class="inputField"
             >
               <div
-                class="prependedContainer default"
+                class="labelText"
               >
-                <span
-                  aria-label="su-user"
-                  class="su-user icon default"
+                sulu_admin.username_or_email
+              </div>
+              <div
+                class="input default left"
+              >
+                <div
+                  class="prependedContainer default"
+                >
+                  <span
+                    aria-label="su-user"
+                    class="su-user icon default"
+                  />
+                </div>
+                <input
+                  autocomplete="username"
+                  type="text"
+                  value=""
                 />
               </div>
-              <input
-                autocomplete="username"
-                type="text"
-                value=""
-              />
+            </label>
+            <div
+              class="buttons"
+            >
+              <button
+                class="button link hasText"
+                type="button"
+              >
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.back_to_login
+                </span>
+              </button>
+              <button
+                class="button primary hasText"
+                disabled=""
+                type="submit"
+              >
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.reset
+                </span>
+              </button>
             </div>
-          </label>
-          <div
-            class="buttons"
-          >
-            <button
-              class="button link hasText"
-              type="button"
-            >
-              <span
-                class="buttonText"
-              >
-                sulu_admin.back_to_login
-              </span>
-            </button>
-            <button
-              class="button primary hasText"
-              disabled=""
-              type="submit"
-            >
-              <span
-                class="buttonText"
-              >
-                sulu_admin.reset
-              </span>
-            </button>
-          </div>
-        </fieldset>
-      </form>
-    </div>
-    <div
-      class="backLinkContainer"
-    >
-      <a
-        class="backLink"
-        href="/"
+          </fieldset>
+        </form>
+      </div>
+      <div
+        class="backLinkContainer"
       >
-        <span
-          aria-label="su-angle-left"
-          class="su-angle-left backLinkIcon"
-        />
-        sulu_admin.back_to_website
-      </a>
+        <a
+          class="backLink"
+          href="/"
+        >
+          <span
+            aria-label="su-angle-left"
+            class="su-angle-left backLinkIcon"
+          />
+          sulu_admin.back_to_website
+        </a>
+      </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Should render the Login with forgot password with success 1`] = `
-<div
-  class="login"
->
+<DocumentFragment>
   <div
-    class="loginContainer"
+    class="login"
   >
     <div
-      class="formContainer"
+      class="loginContainer"
     >
       <div
-        class="logoContainer"
+        class="formContainer"
       >
-        <span
-          aria-label="su-sulu"
-          class="su-sulu"
-        />
-      </div>
-      <div
-        class="header small"
-      >
-        sulu_admin.forgot_password_success
-      </div>
-      <form
-        class="form"
-      >
-        <fieldset>
-          <label
-            class="inputField"
-          >
-            <div
-              class="labelText"
-            >
-              sulu_admin.username_or_email
-            </div>
-            <div
-              class="input default left"
+        <div
+          class="logoContainer"
+        >
+          <span
+            aria-label="su-sulu"
+            class="su-sulu"
+          />
+        </div>
+        <div
+          class="header small"
+        >
+          sulu_admin.forgot_password_success
+        </div>
+        <form
+          class="form"
+        >
+          <fieldset>
+            <label
+              class="inputField"
             >
               <div
-                class="prependedContainer default"
+                class="labelText"
               >
-                <span
-                  aria-label="su-user"
-                  class="su-user icon default"
+                sulu_admin.username_or_email
+              </div>
+              <div
+                class="input default left"
+              >
+                <div
+                  class="prependedContainer default"
+                >
+                  <span
+                    aria-label="su-user"
+                    class="su-user icon default"
+                  />
+                </div>
+                <input
+                  autocomplete="username"
+                  type="text"
+                  value=""
                 />
               </div>
-              <input
-                autocomplete="username"
-                type="text"
-                value=""
-              />
+            </label>
+            <div
+              class="buttons"
+            >
+              <button
+                class="button link hasText"
+                type="button"
+              >
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.back_to_login
+                </span>
+              </button>
+              <button
+                class="button primary hasText"
+                disabled=""
+                type="submit"
+              >
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.reset_resend
+                </span>
+              </button>
             </div>
-          </label>
-          <div
-            class="buttons"
-          >
-            <button
-              class="button link hasText"
-              type="button"
-            >
-              <span
-                class="buttonText"
-              >
-                sulu_admin.back_to_login
-              </span>
-            </button>
-            <button
-              class="button primary hasText"
-              disabled=""
-              type="submit"
-            >
-              <span
-                class="buttonText"
-              >
-                sulu_admin.reset_resend
-              </span>
-            </button>
-          </div>
-        </fieldset>
-      </form>
-    </div>
-    <div
-      class="backLinkContainer"
-    >
-      <a
-        class="backLink"
-        href="/"
+          </fieldset>
+        </form>
+      </div>
+      <div
+        class="backLinkContainer"
       >
-        <span
-          aria-label="su-angle-left"
-          class="su-angle-left backLinkIcon"
-        />
-        sulu_admin.back_to_website
-      </a>
+        <a
+          class="backLink"
+          href="/"
+        >
+          <span
+            aria-label="su-angle-left"
+            class="su-angle-left backLinkIcon"
+          />
+          sulu_admin.back_to_website
+        </a>
+      </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Should render the Login with only password 1`] = `
-<div
-  class="login"
->
+<DocumentFragment>
   <div
-    class="loginContainer"
+    class="login"
   >
     <div
-      class="formContainer"
+      class="loginContainer"
     >
       <div
-        class="logoContainer"
+        class="formContainer"
       >
-        <span
-          aria-label="su-sulu"
-          class="su-sulu"
-        />
-      </div>
-      <div
-        class="header"
-      >
-        sulu_admin.welcome
-      </div>
-      <form
-        class="form"
-      >
-        <fieldset>
-          <label
-            class="inputField"
-          >
-            <div
-              class="labelText"
-            >
-              sulu_admin.password
-            </div>
-            <div
-              class="input default left"
+        <div
+          class="logoContainer"
+        >
+          <span
+            aria-label="su-sulu"
+            class="su-sulu"
+          />
+        </div>
+        <div
+          class="header"
+        >
+          sulu_admin.welcome
+        </div>
+        <form
+          class="form"
+        >
+          <fieldset>
+            <label
+              class="inputField"
             >
               <div
-                class="prependedContainer default"
+                class="labelText"
               >
-                <span
-                  aria-label="su-lock"
-                  class="su-lock icon default"
+                sulu_admin.password
+              </div>
+              <div
+                class="input default left"
+              >
+                <div
+                  class="prependedContainer default"
+                >
+                  <span
+                    aria-label="su-lock"
+                    class="su-lock icon default"
+                  />
+                </div>
+                <input
+                  autocomplete="current-password"
+                  type="password"
+                  value=""
                 />
               </div>
-              <input
-                autocomplete="current-password"
-                type="password"
-                value=""
-              />
+            </label>
+            <div
+              class="buttons"
+            >
+              <button
+                class="button link hasText"
+                type="button"
+              >
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.forgot_password
+                </span>
+              </button>
+              <button
+                class="button primary hasText"
+                disabled=""
+                type="submit"
+              >
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.login
+                </span>
+              </button>
             </div>
-          </label>
-          <div
-            class="buttons"
-          >
-            <button
-              class="button link hasText"
-              type="button"
-            >
-              <span
-                class="buttonText"
-              >
-                sulu_admin.forgot_password
-              </span>
-            </button>
-            <button
-              class="button primary hasText"
-              disabled=""
-              type="submit"
-            >
-              <span
-                class="buttonText"
-              >
-                sulu_admin.login
-              </span>
-            </button>
-          </div>
-        </fieldset>
-      </form>
-    </div>
-    <div
-      class="backLinkContainer"
-    >
-      <a
-        class="backLink"
-        href="/"
+          </fieldset>
+        </form>
+      </div>
+      <div
+        class="backLinkContainer"
       >
-        <span
-          aria-label="su-angle-left"
-          class="su-angle-left backLinkIcon"
-        />
-        sulu_admin.back_to_website
-      </a>
+        <a
+          class="backLink"
+          href="/"
+        >
+          <span
+            aria-label="su-angle-left"
+            class="su-angle-left backLinkIcon"
+          />
+          sulu_admin.back_to_website
+        </a>
+      </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Should render the Login with only username/email 1`] = `
-<div
-  class="login"
->
+<DocumentFragment>
   <div
-    class="loginContainer"
+    class="login"
   >
     <div
-      class="formContainer"
+      class="loginContainer"
     >
       <div
-        class="logoContainer"
+        class="formContainer"
       >
-        <span
-          aria-label="su-sulu"
-          class="su-sulu"
-        />
-      </div>
-      <div
-        class="header"
-      >
-        sulu_admin.welcome
-      </div>
-      <form
-        class="form"
-      >
-        <fieldset>
-          <label
-            class="inputField"
-          >
-            <div
-              class="labelText"
-            >
-              sulu_admin.username_or_email
-            </div>
-            <div
-              class="input default left"
+        <div
+          class="logoContainer"
+        >
+          <span
+            aria-label="su-sulu"
+            class="su-sulu"
+          />
+        </div>
+        <div
+          class="header"
+        >
+          sulu_admin.welcome
+        </div>
+        <form
+          class="form"
+        >
+          <fieldset>
+            <label
+              class="inputField"
             >
               <div
-                class="prependedContainer default"
+                class="labelText"
               >
-                <span
-                  aria-label="su-user"
-                  class="su-user icon default"
+                sulu_admin.username_or_email
+              </div>
+              <div
+                class="input default left"
+              >
+                <div
+                  class="prependedContainer default"
+                >
+                  <span
+                    aria-label="su-user"
+                    class="su-user icon default"
+                  />
+                </div>
+                <input
+                  autocomplete="username"
+                  type="text"
+                  value=""
                 />
               </div>
-              <input
-                autocomplete="username"
-                type="text"
-                value=""
-              />
+            </label>
+            <div
+              class="buttons"
+            >
+              <button
+                class="button link hasText"
+                type="button"
+              >
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.forgot_password
+                </span>
+              </button>
+              <button
+                class="button primary hasText"
+                disabled=""
+                type="submit"
+              >
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.login
+                </span>
+              </button>
             </div>
-          </label>
-          <div
-            class="buttons"
-          >
-            <button
-              class="button link hasText"
-              type="button"
-            >
-              <span
-                class="buttonText"
-              >
-                sulu_admin.forgot_password
-              </span>
-            </button>
-            <button
-              class="button primary hasText"
-              disabled=""
-              type="submit"
-            >
-              <span
-                class="buttonText"
-              >
-                sulu_admin.login
-              </span>
-            </button>
-          </div>
-        </fieldset>
-      </form>
-    </div>
-    <div
-      class="backLinkContainer"
-    >
-      <a
-        class="backLink"
-        href="/"
+          </fieldset>
+        </form>
+      </div>
+      <div
+        class="backLinkContainer"
       >
-        <span
-          aria-label="su-angle-left"
-          class="su-angle-left backLinkIcon"
-        />
-        sulu_admin.back_to_website
-      </a>
+        <a
+          class="backLink"
+          href="/"
+        >
+          <span
+            aria-label="su-angle-left"
+            class="su-angle-left backLinkIcon"
+          />
+          sulu_admin.back_to_website
+        </a>
+      </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Should render the Login with reset password view 1`] = `
-<div
-  class="login"
->
+<DocumentFragment>
   <div
-    class="loginContainer"
+    class="login"
   >
     <div
-      class="formContainer"
+      class="loginContainer"
     >
       <div
-        class="logoContainer"
+        class="formContainer"
       >
-        <span
-          aria-label="su-sulu"
-          class="su-sulu"
-        />
-      </div>
-      <div
-        class="header"
-      >
-        sulu_admin.reset_password
-      </div>
-      <form
-        class="form"
-      >
-        <fieldset>
-          <label
-            class="inputField"
-          >
-            <div
-              class="labelText"
-            >
-              sulu_admin.password
-            </div>
-            <div
-              class="input default left"
+        <div
+          class="logoContainer"
+        >
+          <span
+            aria-label="su-sulu"
+            class="su-sulu"
+          />
+        </div>
+        <div
+          class="header"
+        >
+          sulu_admin.reset_password
+        </div>
+        <form
+          class="form"
+        >
+          <fieldset>
+            <label
+              class="inputField"
             >
               <div
-                class="prependedContainer default"
+                class="labelText"
               >
-                <span
-                  aria-label="su-lock"
-                  class="su-lock icon default"
-                />
+                sulu_admin.password
               </div>
-              <input
-                autocomplete="new-password"
-                type="password"
-                value=""
-              />
-            </div>
-          </label>
-          <label
-            class="inputField"
-          >
-            <div
-              class="labelText"
-            >
-              sulu_admin.repeat_password
-            </div>
-            <div
-              class="input default left"
-            >
               <div
-                class="prependedContainer default"
-              >
-                <span
-                  aria-label="su-lock"
-                  class="su-lock icon default"
-                />
-              </div>
-              <input
-                autocomplete="new-password"
-                type="password"
-                value=""
-              />
-            </div>
-          </label>
-          <div
-            class="buttons"
-          >
-            <button
-              class="button link hasText"
-              type="button"
-            >
-              <span
-                class="buttonText"
-              >
-                sulu_admin.back_to_login
-              </span>
-            </button>
-            <button
-              class="button primary hasText"
-              disabled=""
-              type="submit"
-            >
-              <span
-                class="buttonText"
-              >
-                sulu_admin.reset_password
-              </span>
-            </button>
-          </div>
-        </fieldset>
-      </form>
-    </div>
-    <div
-      class="backLinkContainer"
-    >
-      <a
-        class="backLink"
-        href="/"
-      >
-        <span
-          aria-label="su-angle-left"
-          class="su-angle-left backLinkIcon"
-        />
-        sulu_admin.back_to_website
-      </a>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`Should render the LoginForm component with error 1`] = `
-<div
-  class="login"
->
-  <div
-    class="loginContainer"
-  >
-    <div
-      class="formContainer"
-    >
-      <div
-        class="logoContainer"
-      >
-        <span
-          aria-label="su-sulu"
-          class="su-sulu"
-        />
-      </div>
-      <div
-        class="header"
-      >
-        sulu_admin.welcome
-      </div>
-      <form
-        class="form"
-      >
-        <fieldset>
-          <label
-            class="inputField"
-          >
-            <div
-              class="labelText"
-            >
-              sulu_admin.username_or_email
-            </div>
-            <div
-              class="input default left"
-            >
-              <div
-                class="prependedContainer default"
-              >
-                <span
-                  aria-label="su-user"
-                  class="su-user icon default"
-                />
-              </div>
-              <input
-                autocomplete="username"
-                type="text"
-                value=""
-              />
-            </div>
-          </label>
-          <label
-            class="inputField"
-          >
-            <div
-              class="labelText"
-            >
-              sulu_admin.password
-            </div>
-            <div
-              class="input default left"
-            >
-              <div
-                class="prependedContainer default"
-              >
-                <span
-                  aria-label="su-lock"
-                  class="su-lock icon default"
-                />
-              </div>
-              <input
-                autocomplete="current-password"
-                type="password"
-                value=""
-              />
-            </div>
-          </label>
-          <div
-            class="buttons"
-          >
-            <button
-              class="button link hasText"
-              type="button"
-            >
-              <span
-                class="buttonText"
-              >
-                sulu_admin.forgot_password
-              </span>
-            </button>
-            <button
-              class="button primary loading hasText"
-              disabled=""
-              type="submit"
-            >
-              <span
-                class="buttonText"
-              >
-                sulu_admin.login
-              </span>
-              <div
-                class="loader"
+                class="input default left"
               >
                 <div
-                  class="spinner"
-                  style="width:25px;height:25px"
+                  class="prependedContainer default"
                 >
-                  <div
-                    class="doubleBounce1"
-                  />
-                  <div
-                    class="doubleBounce2"
+                  <span
+                    aria-label="su-lock"
+                    class="su-lock icon default"
                   />
                 </div>
+                <input
+                  autocomplete="new-password"
+                  type="password"
+                  value=""
+                />
               </div>
-            </button>
-          </div>
-        </fieldset>
-      </form>
-    </div>
-    <div
-      class="backLinkContainer"
-    >
-      <a
-        class="backLink"
-        href="/"
+            </label>
+            <label
+              class="inputField"
+            >
+              <div
+                class="labelText"
+              >
+                sulu_admin.repeat_password
+              </div>
+              <div
+                class="input default left"
+              >
+                <div
+                  class="prependedContainer default"
+                >
+                  <span
+                    aria-label="su-lock"
+                    class="su-lock icon default"
+                  />
+                </div>
+                <input
+                  autocomplete="new-password"
+                  type="password"
+                  value=""
+                />
+              </div>
+            </label>
+            <div
+              class="buttons"
+            >
+              <button
+                class="button link hasText"
+                type="button"
+              >
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.back_to_login
+                </span>
+              </button>
+              <button
+                class="button primary hasText"
+                disabled=""
+                type="submit"
+              >
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.reset_password
+                </span>
+              </button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+      <div
+        class="backLinkContainer"
       >
-        <span
-          aria-label="su-angle-left"
-          class="su-angle-left backLinkIcon"
-        />
-        sulu_admin.back_to_website
-      </a>
+        <a
+          class="backLink"
+          href="/"
+        >
+          <span
+            aria-label="su-angle-left"
+            class="su-angle-left backLinkIcon"
+          />
+          sulu_admin.back_to_website
+        </a>
+      </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Should render the component with loader 1`] = `
-<div
-  class="login"
->
+<DocumentFragment>
   <div
-    class="loginContainer"
+    class="login"
   >
     <div
-      class="formContainer"
+      class="loginContainer"
     >
       <div
-        class="logoContainer"
-      >
-        <span
-          aria-label="su-sulu"
-          class="su-sulu"
-        />
-      </div>
-      <div
-        class="loaderContainer"
+        class="formContainer"
       >
         <div
-          class="spinner"
-          style="width:20px;height:20px"
+          class="logoContainer"
         >
-          <div
-            class="doubleBounce1"
-          />
-          <div
-            class="doubleBounce2"
+          <span
+            aria-label="su-sulu"
+            class="su-sulu"
           />
         </div>
+        <div
+          class="loaderContainer"
+        >
+          <div
+            class="spinner"
+            style="width: 20px; height: 20px;"
+          >
+            <div
+              class="doubleBounce1"
+            />
+            <div
+              class="doubleBounce2"
+            />
+          </div>
+        </div>
       </div>
+      <div
+        class="backLinkContainer"
+      />
     </div>
-    <div
-      class="backLinkContainer"
-    />
   </div>
-</div>
+</DocumentFragment>
 `;

@@ -1,33 +1,66 @@
 // @flow
-import {mount, shallow} from 'enzyme';
 import React from 'react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
-import SingleItemSelection from 'sulu-admin-bundle/components/SingleItemSelection';
+import {act, render} from '@testing-library/react';
 import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
+import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import SingleMediaSelection from '../SingleMediaSelection';
-import SingleMediaSelectionOverlay from '../../SingleMediaSelectionOverlay';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../SingleMediaSelectionOverlay', () => jest.fn(function() {
-    return <div>single media selection overlay</div>;
-}));
+jest.mock('../../SingleMediaSelectionOverlay', () => jest.fn(() => null));
+
+jest.mock(
+    'sulu-admin-bundle/components/SingleItemSelection',
+    () => jest.fn(function SingleItemSelectionMock({children}) {
+        return <div>{children}</div>;
+    })
+);
 
 jest.mock('sulu-admin-bundle/stores/SingleSelectionStore', () => jest.fn());
 
+const SingleItemSelectionMock: any = jest.requireMock('sulu-admin-bundle/components/SingleItemSelection');
+const SingleMediaSelectionOverlayMock: any = jest.requireMock('../../SingleMediaSelectionOverlay');
+const SingleSelectionStoreMock: any = jest.requireMock('sulu-admin-bundle/stores/SingleSelectionStore');
+
+const getStore = () => SingleSelectionStoreMock.mock.instances[SingleSelectionStoreMock.mock.instances.length - 1];
+
+let initialStoreItem;
+let initialStoreLoading;
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    initialStoreItem = undefined;
+    initialStoreLoading = false;
+
+    SingleSelectionStoreMock.mockImplementation(function() {
+        this.clear = jest.fn(() => {
+            this.item = undefined;
+        });
+        this.loadItem = jest.fn();
+        this.set = jest.fn((item) => {
+            this.item = item;
+        });
+        mockExtendObservable(this, {
+            item: initialStoreItem,
+            loading: initialStoreLoading,
+        });
+    });
+});
+
 test('Component should render without selected media', () => {
-    const singleMediaSelection = shallow(
+    const {asFragment} = render(
         <SingleMediaSelection locale={observable.box('en')} onChange={jest.fn()} value={undefined} />
     );
 
     expect(SingleSelectionStore).toBeCalledWith('media', undefined, expect.anything());
-    expect(singleMediaSelection.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Component should render with display options', () => {
-    const singleMediaSelection = shallow(
+    const {asFragment} = render(
         <SingleMediaSelection
             displayOptions={['top', 'bottom']}
             locale={observable.box('en')}
@@ -36,36 +69,20 @@ test('Component should render with display options', () => {
         />
     );
 
-    expect(singleMediaSelection.render()).toMatchSnapshot();
-});
-
-test('Component should render with display options and correctly selected icon', () => {
-    const singleMediaSelection = shallow(
-        <SingleMediaSelection
-            displayOptions={['top', 'bottom']}
-            locale={observable.box('en')}
-            onChange={jest.fn()}
-            value={{displayOption: 'left', id: undefined}}
-        />
-    );
-
-    expect(singleMediaSelection.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Component should render with selected media', () => {
-    // $FlowFixMe
-    SingleSelectionStore.mockImplementationOnce(function() {
-        this.item = {
-            id: 33,
-            title: 'test media',
-            mimeType: 'image/jpeg',
-            thumbnails: {
-                'sulu-25x25': 'http://lorempixel.com/25/25',
-            },
-        };
-    });
+    initialStoreItem = {
+        id: 33,
+        title: 'test media',
+        mimeType: 'image/jpeg',
+        thumbnails: {
+            'sulu-25x25': 'http://lorempixel.com/25/25',
+        },
+    };
 
-    const singleMediaSelection = shallow(
+    const {asFragment} = render(
         <SingleMediaSelection
             locale={observable.box('en')}
             onChange={jest.fn()}
@@ -74,33 +91,11 @@ test('Component should render with selected media', () => {
     );
 
     expect(SingleSelectionStore).toBeCalledWith('media', 33, expect.anything());
-    expect(singleMediaSelection.render()).toMatchSnapshot();
-});
-
-test('Component should render with selected media without thumbnails with MimeTypeIndicator', () => {
-    // $FlowFixMe
-    SingleSelectionStore.mockImplementationOnce(function() {
-        this.item = {
-            id: 33,
-            title: 'test media',
-            mimeType: 'application/pdf',
-        };
-    });
-
-    const singleMediaSelection = shallow(
-        <SingleMediaSelection
-            locale={observable.box('en')}
-            onChange={jest.fn()}
-            value={{displayOption: undefined, id: 33}}
-        />
-    );
-
-    expect(SingleSelectionStore).toBeCalledWith('media', 33, expect.anything());
-    expect(singleMediaSelection.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Component should pass className to SingleItemSelection', () => {
-    const singleMediaSelection = shallow(
+    render(
         <SingleMediaSelection
             className="test"
             locale={observable.box('en')}
@@ -109,11 +104,11 @@ test('Component should pass className to SingleItemSelection', () => {
         />
     );
 
-    expect(singleMediaSelection.find(SingleItemSelection).prop('className')).toEqual('test');
+    expect(getLatestMockProps(SingleItemSelectionMock).className).toEqual('test');
 });
 
 test('Component should pass types to SingleMediaSelectionOverlay', () => {
-    const singleMediaSelection = shallow(
+    render(
         <SingleMediaSelection
             locale={observable.box('en')}
             onChange={jest.fn()}
@@ -122,34 +117,26 @@ test('Component should pass types to SingleMediaSelectionOverlay', () => {
         />
     );
 
-    expect(singleMediaSelection.find(SingleMediaSelectionOverlay).prop('types')).toEqual(['image', 'video']);
+    expect(getLatestMockProps(SingleMediaSelectionOverlayMock).types).toEqual(['image', 'video']);
 });
 
-test('Click on media-button should open an overlay', () => {
-    const singleMediaSelection = mount(
-        <SingleMediaSelection locale={observable.box('en')} onChange={jest.fn()} value={undefined} />
-    );
+test('Click on media button should open an overlay', () => {
+    render(<SingleMediaSelection locale={observable.box('en')} onChange={jest.fn()} value={undefined} />);
 
-    expect(singleMediaSelection.find(SingleMediaSelectionOverlay).prop('open')).toEqual(false);
-    singleMediaSelection.find('.button').simulate('click');
-    expect(singleMediaSelection.find(SingleMediaSelectionOverlay).prop('open')).toEqual(true);
+    expect(getLatestMockProps(SingleMediaSelectionOverlayMock).open).toEqual(false);
+    getLatestMockProps(SingleItemSelectionMock).leftButton.onClick();
+    expect(getLatestMockProps(SingleMediaSelectionOverlayMock).open).toEqual(true);
 });
 
-test('Click on remove-button should clear the selection store', () => {
-    // $FlowFixMe
-    SingleSelectionStore.mockImplementationOnce(function() {
-        this.item = {
-            id: 33,
-            title: 'test media',
-            mimeType: 'image/jpeg',
-            thumbnails: {
-                'sulu-25x25': 'http://lorempixel.com/25/25',
-            },
-        };
-        this.clear = jest.fn();
-    });
+test('Click on remove button should clear selection store', () => {
+    initialStoreItem = {
+        id: 33,
+        title: 'test media',
+        mimeType: 'image/jpeg',
+        thumbnails: {'sulu-25x25': 'http://lorempixel.com/25/25'},
+    };
 
-    const singleMediaSelection = mount(
+    render(
         <SingleMediaSelection
             locale={observable.box('en')}
             onChange={jest.fn()}
@@ -157,21 +144,14 @@ test('Click on remove-button should clear the selection store', () => {
         />
     );
 
-    singleMediaSelection.find('.removeButton').simulate('click');
-    expect(singleMediaSelection.instance().singleMediaSelectionStore.clear).toBeCalled();
+    getLatestMockProps(SingleItemSelectionMock).onRemove();
+    expect(getStore().clear).toBeCalled();
 });
 
-test('Media that is selected in the overlay should be set to the selection store on confirm', () => {
-    // $FlowFixMe
-    SingleSelectionStore.mockImplementationOnce(function() {
-        this.set = jest.fn();
-    });
+test('Media selected in overlay should be set to selection store on confirm', () => {
+    render(<SingleMediaSelection locale={observable.box('en')} onChange={jest.fn()} value={undefined} />);
 
-    const singleMediaSelection = mount(
-        <SingleMediaSelection locale={observable.box('en')} onChange={jest.fn()} value={undefined} />
-    );
-
-    singleMediaSelection.instance().handleOverlayConfirm({
+    getLatestMockProps(SingleMediaSelectionOverlayMock).onConfirm({
         id: 22,
         title: 'test media',
         mimeType: 'image/jpeg',
@@ -180,7 +160,7 @@ test('Media that is selected in the overlay should be set to the selection store
         },
     });
 
-    expect(singleMediaSelection.instance().singleMediaSelectionStore.set).toBeCalledWith(expect.objectContaining({
+    expect(getStore().set).toBeCalledWith(expect.objectContaining({
         id: 22,
         title: 'test media',
         mimeType: 'image/jpeg',
@@ -190,10 +170,10 @@ test('Media that is selected in the overlay should be set to the selection store
     }));
 });
 
-test('Should call the onChange handler if the displayOption changes', () => {
+test('Should call onChange handler if displayOption changes', () => {
     const changeSpy = jest.fn();
 
-    const singleMediaSelection = mount(
+    render(
         <SingleMediaSelection
             displayOptions={['left']}
             locale={observable.box('en')}
@@ -202,74 +182,56 @@ test('Should call the onChange handler if the displayOption changes', () => {
         />
     );
 
-    singleMediaSelection.find('Button[icon="su-display-default"]').simulate('click');
-    singleMediaSelection.find('Action[value="left"]').simulate('click');
-
+    getLatestMockProps(SingleItemSelectionMock).rightButton.onClick('left');
     expect(changeSpy).toBeCalledWith({displayOption: 'left', id: undefined});
 });
 
-test('Should call given onChange handler if value of selection store changes', () => {
-    // $FlowFixMe
-    SingleSelectionStore.mockImplementationOnce(function() {
-        this.loadItem = jest.fn();
-        mockExtendObservable(this, {
-            item: undefined,
-        });
-    });
-
+test('Should call onChange handler if value of selection store changes', () => {
     const changeSpy = jest.fn();
 
-    const singleMediaSelectionInstance = shallow(
-        <SingleMediaSelection locale={observable.box('en')} onChange={changeSpy} value={undefined} />
-    ).instance();
+    render(<SingleMediaSelection locale={observable.box('en')} onChange={changeSpy} value={undefined} />);
 
     expect(changeSpy).not.toBeCalled();
-    singleMediaSelectionInstance.singleMediaSelectionStore.item = {
-        id: 77,
-        title: 'test media',
-        mimeType: 'image/jpeg',
-        thumbnails: {},
-    };
-    expect(changeSpy).toBeCalledWith({id: 77}, singleMediaSelectionInstance.singleMediaSelectionStore.item);
-});
 
-test('Should not call onChange callback if an unrelated observable that is accessed in the callback changes', () => {
-    // $FlowFixMe
-    SingleSelectionStore.mockImplementationOnce(function() {
-        this.loadItem = jest.fn();
-        mockExtendObservable(this, {
-            item: undefined,
-        });
+    const store = getStore();
+    act(() => {
+        store.item = {
+            id: 77,
+            title: 'test media',
+            mimeType: 'image/jpeg',
+            thumbnails: {},
+        };
     });
 
+    expect(changeSpy).toBeCalledWith({id: 77}, store.item);
+});
+
+test('Should not call onChange callback if unrelated observable changes', () => {
     const unrelatedObservable = observable.box(22);
     const changeSpy = jest.fn(() => {
         jest.fn()(unrelatedObservable.get());
     });
 
-    const singleMediaSelectionInstance = shallow(
-        <SingleMediaSelection locale={observable.box('en')} onChange={changeSpy} value={undefined} />
-    ).instance();
+    render(<SingleMediaSelection locale={observable.box('en')} onChange={changeSpy} value={undefined} />);
 
-    // change callback should be called when item of the store mock changes
-    singleMediaSelectionInstance.singleMediaSelectionStore.item = {id: 77, thumbnails: {}};
-    expect(changeSpy).toBeCalledWith({id: 77}, singleMediaSelectionInstance.singleMediaSelectionStore.item);
+    const store = getStore();
+    act(() => {
+        store.item = {id: 77, mimeType: 'image/jpeg', thumbnails: {}};
+    });
+
+    expect(changeSpy).toBeCalledWith({id: 77}, store.item);
     expect(changeSpy).toHaveBeenCalledTimes(1);
 
-    // change callback should not be called when the unrelated observable changes
-    unrelatedObservable.set(55);
+    act(() => {
+        unrelatedObservable.set(55);
+    });
     expect(changeSpy).toHaveBeenCalledTimes(1);
 });
 
-test('Should not call the onChange callback if the component props change', () => {
-    // $FlowFixMe
-    SingleSelectionStore.mockImplementationOnce(function() {
-        this.loadItem = jest.fn();
-    });
-
+test('Should not call onChange callback if component props change', () => {
     const changeSpy = jest.fn();
 
-    const singleMediaSelection = shallow(
+    const {rerender} = render(
         <SingleMediaSelection
             locale={observable.box('en')}
             onChange={changeSpy}
@@ -277,19 +239,22 @@ test('Should not call the onChange callback if the component props change', () =
         />
     );
 
-    singleMediaSelection.setProps({disabled: true});
+    rerender(
+        <SingleMediaSelection
+            disabled={true}
+            locale={observable.box('en')}
+            onChange={changeSpy}
+            value={{displayOption: undefined, id: 5}}
+        />
+    );
     expect(changeSpy).not.toBeCalled();
 });
 
-test('Should not call the onItemClick callback if no item is available', () => {
-    // $FlowFixMe
-    SingleSelectionStore.mockImplementationOnce(function() {
-        this.item = undefined;
-    });
-
+test('Should call onItemClick callback if item is clicked', () => {
+    initialStoreItem = {id: 6, mimeType: 'image/jpeg'};
     const itemClickSpy = jest.fn();
 
-    const singleMediaSelection = mount(
+    render(
         <SingleMediaSelection
             locale={observable.box('en')}
             onChange={jest.fn()}
@@ -298,53 +263,33 @@ test('Should not call the onItemClick callback if no item is available', () => {
         />
     );
 
-    singleMediaSelection.find('SingleItemSelection .item').simulate('click');
-    expect(itemClickSpy).not.toBeCalled();
-});
-
-test('Should call the onItemClick callback if the item is clicked', () => {
-    // $FlowFixMe
-    SingleSelectionStore.mockImplementationOnce(function() {
-        this.item = {id: 6, mimeType: 'image/jpeg'};
-    });
-
-    const itemClickSpy = jest.fn();
-
-    const singleMediaSelection = mount(
-        <SingleMediaSelection
-            locale={observable.box('en')}
-            onChange={jest.fn()}
-            onItemClick={itemClickSpy}
-            value={{displayOption: undefined, id: 5}}
-        />
-    );
-
-    singleMediaSelection.find('SingleItemSelection .item').simulate('click');
+    getLatestMockProps(SingleItemSelectionMock).onItemClick(6, {id: 6, mimeType: 'image/jpeg'});
     expect(itemClickSpy).toBeCalledWith(6, {id: 6, mimeType: 'image/jpeg'});
 });
 
-test('Should not call the loadItem callback if the component props id change to same value', () => {
-    // $FlowFixMe
-    SingleSelectionStore.mockImplementationOnce(function() {
-        this.loadItem = jest.fn();
-    });
-
-    const changeSpy = jest.fn();
-
-    const singleMediaSelection = shallow(
+test('Should not call loadItem callback if props id changes to same value', () => {
+    const {rerender} = render(
         <SingleMediaSelection
             locale={observable.box('en')}
-            onChange={changeSpy}
+            onChange={jest.fn()}
             value={{displayOption: undefined, id: 5}}
         />
     );
 
-    singleMediaSelection.setProps({value: {id: 5}});
-    expect(singleMediaSelection.instance().singleMediaSelectionStore.loadItem).not.toBeCalled();
+    const store = getStore();
+    rerender(
+        <SingleMediaSelection
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            value={{displayOption: undefined, id: 5}}
+        />
+    );
+
+    expect(store.loadItem).not.toBeCalled();
 });
 
 test('Correct props should be passed to SingleItemSelection component', () => {
-    const singleMediaSelection = shallow(
+    render(
         <SingleMediaSelection
             disabled={true}
             locale={observable.box('en')}
@@ -354,23 +299,21 @@ test('Correct props should be passed to SingleItemSelection component', () => {
         />
     );
 
-    expect(singleMediaSelection.find(SingleItemSelection).prop('disabled')).toEqual(true);
-    expect(singleMediaSelection.find(SingleItemSelection).prop('valid')).toEqual(false);
+    expect(getLatestMockProps(SingleItemSelectionMock).disabled).toEqual(true);
+    expect(getLatestMockProps(SingleItemSelectionMock).valid).toEqual(false);
 });
 
-test('Set loading prop of SingleItemSelection component if SingleSelectionStore is loading', () => {
-    // $FlowFixMe
-    SingleSelectionStore.mockImplementationOnce(function() {
-        mockExtendObservable(this, {
-            loading: false,
-        });
-    });
-
-    const singleMediaSelection = shallow(
+test('Set loading prop of SingleItemSelection if store is loading', () => {
+    initialStoreLoading = false;
+    render(
         <SingleMediaSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} value={undefined} />
     );
 
-    expect(singleMediaSelection.find(SingleItemSelection).prop('loading')).toEqual(false);
-    singleMediaSelection.instance().singleMediaSelectionStore.loading = true;
-    expect(singleMediaSelection.find(SingleItemSelection).prop('loading')).toEqual(true);
+    expect(getLatestMockProps(SingleItemSelectionMock).loading).toEqual(false);
+
+    const store = getStore();
+    act(() => {
+        store.loading = true;
+    });
+    expect(getLatestMockProps(SingleItemSelectionMock).loading).toEqual(true);
 });

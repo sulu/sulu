@@ -1,18 +1,38 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import itemStyles from '../item.scss';
 import Item from '../Item';
 
+const createProps = (props: Object = {}) => ({
+    children: 'Test',
+    id: 1,
+    order: 1,
+    ...props,
+});
+
 test('Should render item as not selected by default', () => {
-    expect(render(<Item id={1} order={1}>Test</Item>)).toMatchSnapshot();
+    const {asFragment} = render(<Item {...createProps()} />);
+    const itemRootNode = screen.getByRole('button');
+
+    expect(itemRootNode).not.toHaveClass(itemStyles.selected);
+    expect(itemRootNode).not.toHaveClass(itemStyles.disabled);
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should render item as selected', () => {
-    expect(render(<Item id={1} order={2} selected={true}>Test</Item>)).toMatchSnapshot();
+    render(<Item {...createProps({selected: true})} />);
+    const itemRootNode = screen.getByRole('button');
+
+    expect(itemRootNode).toHaveClass(itemStyles.selected);
 });
 
 test('Should render item as disabled', () => {
-    expect(render(<Item disabled={true} id={1} order={3}>Test</Item>)).toMatchSnapshot();
+    render(<Item {...createProps({disabled: true})} />);
+    const itemRootNode = screen.getByRole('button');
+
+    expect(itemRootNode).toHaveClass(itemStyles.disabled);
 });
 
 test('Should render item with indicators', () => {
@@ -20,8 +40,11 @@ test('Should render item with indicators', () => {
         <span key={1}>ghost</span>,
         <span key={2}>shadow</span>,
     ];
-
-    expect(render(<Item id={2} indicators={indicators} order={4}>Test with indicators</Item>)).toMatchSnapshot();
+    render(
+        <Item {...createProps({id: 2, indicators, order: 4, children: 'Test with indicators'})} />
+    );
+    expect(screen.getByText('ghost')).toBeInTheDocument();
+    expect(screen.getByText('shadow')).toBeInTheDocument();
 });
 
 test('Should render item with order input', () => {
@@ -29,92 +52,129 @@ test('Should render item with order input', () => {
         <span key={1}>ghost</span>,
         <span key={2}>shadow</span>,
     ];
+    render(
+        <Item {...createProps({
+            id: 2,
+            indicators,
+            order: 4,
+            showOrderField: true,
+            children: 'Test with indicators',
+        })}
+        />
+    );
 
-    expect(render(<Item id={2} indicators={indicators} order={4} showOrderField={true}>Test with indicators</Item>))
-        .toMatchSnapshot();
+    expect(screen.getByRole('textbox')).toHaveValue('4');
 });
 
-test('Should call onDoubleClick', () => {
+test('Should call onDoubleClick', async() => {
+    const user = userEvent.setup();
     const doubleClickSpy = jest.fn();
+    render(<Item {...createProps({id: 2, onDoubleClick: doubleClickSpy, children: 'Test with indicators'})} />);
 
-    const item = shallow(<Item id={2} onDoubleClick={doubleClickSpy}>Test with indicators</Item>);
+    await user.dblClick(screen.getByRole('button'));
 
-    item.find('div.item').simulate('doubleclick');
-
-    expect(doubleClickSpy).toBeCalled();
+    expect(doubleClickSpy).toBeCalledWith(2);
 });
 
-test('Should not call onDoubleClick if order field is shown', () => {
+test('Should not call onDoubleClick if order field is shown', async() => {
+    const user = userEvent.setup();
     const doubleClickSpy = jest.fn();
+    render(
+        <Item {...createProps({
+            id: 2,
+            onDoubleClick: doubleClickSpy,
+            showOrderField: true,
+            children: 'Test with indicators',
+        })}
+        />
+    );
 
-    const item = shallow(<Item id={2} onDoubleClick={doubleClickSpy} showOrderField={true}>Test with indicators</Item>);
-
-    item.find('div.item').simulate('doubleclick');
+    await user.dblClick(screen.getByRole('button'));
 
     expect(doubleClickSpy).not.toBeCalled();
 });
 
-test('Should call onOrderChange callback when order has changed', () => {
+test('Should call onOrderChange callback when order has changed', async() => {
+    const user = userEvent.setup();
     const orderChangePromise = Promise.resolve(true);
     const orderChangeSpy = jest.fn().mockReturnValue(orderChangePromise);
-    const item = shallow(
-        <Item id={2} onOrderChange={orderChangeSpy} order={4} showOrderField={true}>Test with indicators</Item>
+    render(
+        <Item {...createProps({
+            id: 2,
+            onOrderChange: orderChangeSpy,
+            order: 4,
+            showOrderField: true,
+            children: 'Test with indicators',
+        })}
+        />
     );
+    const inputNode = screen.getByRole('textbox');
 
-    item.find('Input').simulate('change', 5);
-    item.find('Input').simulate('blur');
+    await user.type(inputNode, '{backspace}5');
+    await user.tab();
+
     expect(orderChangeSpy).toBeCalledWith(2, 5);
+    expect(inputNode).toHaveValue('5');
 
-    expect(item.instance().order).toEqual(5);
-    return orderChangePromise.then(() => {
-        expect(item.instance().order).toEqual(5);
-    });
+    await orderChangePromise;
+    expect(inputNode).toHaveValue('5');
 });
 
-test('Should call onOrderChange callback when order has changed and reset order if cancelled', () => {
+test('Should call onOrderChange callback when order has changed and reset order if cancelled', async() => {
+    const user = userEvent.setup();
     const orderChangePromise = Promise.resolve(false);
     const orderChangeSpy = jest.fn().mockReturnValue(orderChangePromise);
-    const item = shallow(
-        <Item id={2} onOrderChange={orderChangeSpy} order={4} showOrderField={true}>Test with indicators</Item>
+    render(
+        <Item {...createProps({
+            id: 2,
+            onOrderChange: orderChangeSpy,
+            order: 4,
+            showOrderField: true,
+            children: 'Test with indicators',
+        })}
+        />
     );
+    const inputNode = screen.getByRole('textbox');
 
-    item.find('Input').simulate('change', 5);
-    item.find('Input').simulate('blur');
+    await user.type(inputNode, '{backspace}5');
+    await user.tab();
+
     expect(orderChangeSpy).toBeCalledWith(2, 5);
 
-    expect(item.instance().order).toEqual(5);
-    return orderChangePromise.then(() => {
-        expect(item.instance().order).toEqual(4);
-    });
+    await orderChangePromise;
+    await waitFor(() => expect(inputNode).toHaveValue('4'));
 });
 
-test('Should call onOrderChange callback when order has changed after pressing enter', () => {
-    const inputSpy = {
-        currentTarget: {
-            blur: jest.fn(),
-        },
-    };
-
-    const orderChangeSpy = jest.fn();
-    const item = shallow(
-        <Item id={2} onOrderChange={orderChangeSpy} order={4} showOrderField={true}>Test with indicators</Item>
+test('Should call onOrderChange callback when order has changed after pressing enter', async() => {
+    const user = userEvent.setup();
+    const orderChangeSpy = jest.fn().mockReturnValue(Promise.resolve(true));
+    render(
+        <Item {...createProps({
+            id: 2,
+            onOrderChange: orderChangeSpy,
+            order: 4,
+            showOrderField: true,
+            children: 'Test with indicators',
+        })}
+        />
     );
+    const inputNode = screen.getByRole('textbox');
 
-    item.find('Input').prop('onKeyPress')('Enter', inputSpy);
+    await user.type(inputNode, '{backspace}5{enter}');
 
-    expect(inputSpy.currentTarget.blur).toBeCalledWith();
+    await waitFor(() => expect(orderChangeSpy).toBeCalledWith(2, 5));
 });
 
-test('Should change order when item receives new props', () => {
-    const item = shallow(
-        <Item id={2} order={4} showOrderField={true}>Test with indicators</Item>
-    );
+test('Should change order when item receives new props', async() => {
+    const user = userEvent.setup();
+    const {rerender} = render(<Item {...createProps({id: 2, order: 4, showOrderField: true})} />);
+    const inputNode = screen.getByRole('textbox');
 
-    expect(item.find('Input').prop('value')).toEqual(4);
+    expect(inputNode).toHaveValue('4');
+    await user.type(inputNode, '{backspace}5');
+    expect(inputNode).toHaveValue('5');
 
-    item.find('Input').simulate('change', 5);
-    expect(item.find('Input').prop('value')).toEqual(5);
+    rerender(<Item {...createProps({id: 2, order: 1, showOrderField: true})} />);
 
-    item.setProps({order: 1});
-    expect(item.find('Input').prop('value')).toEqual(1);
+    expect(screen.getByRole('textbox')).toHaveValue('1');
 });

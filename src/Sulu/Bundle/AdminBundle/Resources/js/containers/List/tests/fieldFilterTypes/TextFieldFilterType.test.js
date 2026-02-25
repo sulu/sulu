@@ -1,29 +1,33 @@
 // @flow
-import {mount, render} from 'enzyme';
 import TextFieldFilterType from '../../fieldFilterTypes/TextFieldFilterType';
 
-test('Render with value of undefined', () => {
+test('Return form node with value of undefined', () => {
     const textFieldFilterType = new TextFieldFilterType(jest.fn(), {}, undefined);
-    expect(render(textFieldFilterType.getFormNode())).toMatchSnapshot();
+
+    expect(textFieldFilterType.getFormNode().props.value).toEqual(undefined);
+    expect(textFieldFilterType.getFormNode().props.onChange).toEqual(expect.any(Function));
+    expect(textFieldFilterType.getFormNode().props.inputRef).toEqual(expect.any(Function));
 });
 
-test('Render with value', () => {
+test('Return form node with value', () => {
     const textFieldFilterType = new TextFieldFilterType(jest.fn(), {}, {eq: 'Filter'});
-    expect(render(textFieldFilterType.getFormNode())).toMatchSnapshot();
+
+    expect(textFieldFilterType.getFormNode().props.value).toEqual('Filter');
 });
 
-test('Render with value set by setValue', () => {
+test('Return form node with value set by setValue', () => {
     const textFieldFilterType = new TextFieldFilterType(jest.fn(), {}, undefined);
     textFieldFilterType.setValue({eq: 'New value'});
-    expect(render(textFieldFilterType.getFormNode())).toMatchSnapshot();
+
+    expect(textFieldFilterType.getFormNode().props.value).toEqual('New value');
 });
 
 test('Call onChange handler with new value', () => {
     const changeSpy = jest.fn();
     const textFieldFilterType = new TextFieldFilterType(changeSpy, {}, undefined);
-    const textFieldFilterTypeForm = mount(textFieldFilterType.getFormNode());
+    const formNode: any = textFieldFilterType.getFormNode();
 
-    textFieldFilterTypeForm.find('Input').prop('onChange')('value');
+    formNode.props.onChange('value', ({}: any));
 
     expect(changeSpy).toBeCalledWith({eq: 'value'});
 });

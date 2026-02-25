@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {act, render} from '@testing-library/react';
+import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import securityContextStore from '../../../stores/securityContextStore';
 import SystemRolePermissions from '../SystemRolePermissions';
 
@@ -8,10 +9,56 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
+jest.mock('sulu-admin-bundle/components', () => {
+    const React = require('react');
+
+    const Matrix: any = jest.fn(function MatrixMock({children}) {
+        return React.createElement('div', undefined, children);
+    });
+    Matrix.Row = function MatrixRowMock({children}) {
+        return React.createElement('div', undefined, children);
+    };
+    Matrix.Item = function MatrixItemMock() {
+        return null;
+    };
+
+    const Heading = function HeadingMock({children}) {
+        return React.createElement('div', undefined, children);
+    };
+
+    const Toggler = jest.fn(function TogglerMock() {
+        return null;
+    });
+
+    return {
+        Heading,
+        Matrix,
+        Toggler,
+    };
+});
+
 jest.mock('../../../stores/securityContextStore', () => ({
     getAvailableActions: jest.fn(),
     getSecurityContextByResourceKey: jest.fn(),
 }));
+
+const componentsMock = ((jest.requireMock('sulu-admin-bundle/components'): any): {
+    Matrix: {mock: {calls: Array<[Object]>}},
+    Toggler: {mock: {calls: Array<[Object]>}},
+    ...
+});
+
+function getLatestMatrixProps(): any {
+    return getLatestMockProps(componentsMock.Matrix);
+}
+
+function getLatestTogglerProps(): any {
+    return getLatestMockProps(componentsMock.Toggler);
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test('Render permissions for a single system', () => {
     const roles = [
@@ -19,7 +66,7 @@ test('Render permissions for a single system', () => {
         {id: 3, identifier: '', name: 'Contact Manager', permissions: [], system: 'Sulu'},
     ];
 
-    const systemRolePermissions = mount(
+    const {asFragment} = render(
         <SystemRolePermissions
             actions={['view', 'add', 'edit']}
             disabled={false}
@@ -31,7 +78,7 @@ test('Render permissions for a single system', () => {
         />
     );
 
-    expect(systemRolePermissions.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Do not show Matrix if no values are given', () => {
@@ -40,7 +87,7 @@ test('Do not show Matrix if no values are given', () => {
         {id: 3, identifier: '', name: 'Contact Manager', permissions: [], system: 'Sulu'},
     ];
 
-    const systemRolePermissions = mount(
+    render(
         <SystemRolePermissions
             actions={['view', 'add', 'edit']}
             disabled={false}
@@ -52,12 +99,12 @@ test('Do not show Matrix if no values are given', () => {
         />
     );
 
-    expect(systemRolePermissions.find('Matrix')).toHaveLength(0);
-    expect(systemRolePermissions.find('Toggler').prop('checked')).toEqual(false);
+    expect(componentsMock.Matrix).toHaveBeenCalledTimes(0);
+    expect(getLatestTogglerProps().checked).toEqual(false);
 });
 
 test('Render permissions for a single system in disabled state', () => {
-    const systemRolePermissions = shallow(
+    render(
         <SystemRolePermissions
             actions={[]}
             disabled={true}
@@ -69,13 +116,13 @@ test('Render permissions for a single system in disabled state', () => {
         />
     );
 
-    expect(systemRolePermissions.find('Matrix').prop('disabled')).toEqual(true);
+    expect(getLatestMatrixProps().disabled).toEqual(true);
 });
 
 test('Call onChange callback when matrix changes', () => {
     const changeSpy = jest.fn();
 
-    const systemRolePermissions = shallow(
+    render(
         <SystemRolePermissions
             actions={['view']}
             disabled={false}
@@ -87,10 +134,14 @@ test('Call onChange callback when matrix changes', () => {
         />
     );
 
-    systemRolePermissions.find('Toggler').simulate('change', true);
+    act(() => {
+        getLatestTogglerProps().onChange(true);
+    });
 
     const newValue = {'1': {view: true}};
-    systemRolePermissions.find('Matrix').simulate('change', newValue);
+    act(() => {
+        getLatestMatrixProps().onChange(newValue);
+    });
 
     expect(changeSpy).toBeCalledWith(newValue, 'Sulu');
 });
@@ -98,7 +149,7 @@ test('Call onChange callback when matrix changes', () => {
 test('Call onChange callback with empty values if toggler is deactivated', () => {
     const changeSpy = jest.fn();
 
-    const systemRolePermissions = shallow(
+    render(
         <SystemRolePermissions
             actions={['view']}
             disabled={false}
@@ -110,7 +161,9 @@ test('Call onChange callback with empty values if toggler is deactivated', () =>
         />
     );
 
-    systemRolePermissions.find('Toggler').simulate('change', false);
+    act(() => {
+        getLatestTogglerProps().onChange(false);
+    });
 
     expect(changeSpy).toBeCalledWith({}, 'Sulu');
 });
@@ -147,7 +200,7 @@ test('Show default values after activating toggler', () => {
     });
     securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit']);
 
-    const systemRolePermissions = shallow(
+    render(
         <SystemRolePermissions
             actions={['view']}
             disabled={false}
@@ -159,11 +212,14 @@ test('Show default values after activating toggler', () => {
         />
     );
 
-    expect(systemRolePermissions.find('Matrix')).toHaveLength(0);
-    systemRolePermissions.find('Toggler').simulate('change', true);
-    expect(systemRolePermissions.find('Matrix')).toHaveLength(1);
+    expect(componentsMock.Matrix).toHaveBeenCalledTimes(0);
 
-    expect(systemRolePermissions.find('Matrix').prop('values')).toEqual({
+    act(() => {
+        getLatestTogglerProps().onChange(true);
+    });
+
+    expect(componentsMock.Matrix).toHaveBeenCalledTimes(1);
+    expect(getLatestMatrixProps().values).toEqual({
         '2': {view: true, add: true, edit: true},
         '3': {view: true, add: false, edit: true},
     });

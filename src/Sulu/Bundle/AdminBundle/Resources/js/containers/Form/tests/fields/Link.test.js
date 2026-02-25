@@ -1,13 +1,15 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import {observable} from 'mobx';
 import log from 'loglevel';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
+import LinkContainer from '../../../Link/Link';
 import Link from '../../fields/Link';
+import getLatestMockProps from '../../../../utils/TestHelper/getLatestMockProps';
 import type {LinkValue} from '../../../Link/types';
 
 jest.mock('loglevel', () => ({
@@ -18,14 +20,45 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
 
-test('Pass props correctly to Link component', () => {
+jest.mock('../../../Link/Link', () => {
+    const LinkContainerMock: any = jest.fn(function LinkContainerMock() {
+        return <div data-testid="link-container" />;
+    });
+
+    LinkContainerMock.defaultProps = {
+        enableAnchor: false,
+        enableQuery: false,
+        enableRel: false,
+        enableTarget: false,
+        enableTitle: false,
+        excludedTypes: [],
+        types: [],
+    };
+
+    return LinkContainerMock;
+});
+
+function getLastLinkContainerProps() {
+    return getLatestMockProps((LinkContainer: any));
+}
+
+function createFormInspectorWithLocale(localeValue: string = 'en') {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const locale = observable.box(localeValue);
+
+    (formInspector: any).locale = locale;
+
+    return {formInspector, locale};
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+test('Pass props correctly to Link component', () => {
+    const {formInspector, locale} = createFormInspectorWithLocale();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-
-    const locale = observable.box('en');
-    // $FlowFixMe
-    formInspector.locale = locale;
 
     const value = {
         anchor: 'anchorTest',
@@ -53,7 +86,7 @@ test('Pass props correctly to Link component', () => {
         },
     };
 
-    const link = shallow(
+    const {asFragment} = render(
         <Link
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -65,7 +98,9 @@ test('Pass props correctly to Link component', () => {
         />
     );
 
-    expect(link.find('Link').props()).toEqual({
+    expect(asFragment()).toMatchSnapshot();
+
+    expect(getLastLinkContainerProps()).toEqual({
         'disabled': true,
         'enableAnchor': true,
         'enableQuery': true,
@@ -91,13 +126,9 @@ test('Pass props correctly to Link component', () => {
 });
 
 test('Pass props correctly to Link component with deprecated options', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const {formInspector, locale} = createFormInspectorWithLocale();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-
-    const locale = observable.box('en');
-    // $FlowFixMe
-    formInspector.locale = locale;
 
     const value = {
         anchor: 'anchorTest',
@@ -124,7 +155,7 @@ test('Pass props correctly to Link component with deprecated options', () => {
         },
     };
 
-    const link = shallow(
+    render(
         <Link
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -139,7 +170,7 @@ test('Pass props correctly to Link component with deprecated options', () => {
     expect(log.warn).toBeCalledWith(expect.stringContaining('The "enable_target" schema option is deprecated'));
     expect(log.warn).toBeCalledWith(expect.stringContaining('The "enable_title" schema option is deprecated'));
 
-    expect(link.find('Link').props()).toEqual({
+    expect(getLastLinkContainerProps()).toEqual({
         'disabled': true,
         'enableAnchor': true,
         'enableQuery': false,
@@ -164,13 +195,9 @@ test('Pass props correctly to Link component with deprecated options', () => {
 });
 
 test('Pass props correctly to Link component filtered types', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const {formInspector, locale} = createFormInspectorWithLocale();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-
-    const locale = observable.box('en');
-    // $FlowFixMe
-    formInspector.locale = locale;
 
     const value: LinkValue = {
         anchor: 'anchorTest',
@@ -200,7 +227,7 @@ test('Pass props correctly to Link component filtered types', () => {
         },
     };
 
-    const link = shallow(
+    render(
         <Link
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -212,7 +239,7 @@ test('Pass props correctly to Link component filtered types', () => {
         />
     );
 
-    expect(link.find('Link').props()).toEqual({
+    expect(getLastLinkContainerProps()).toEqual({
         'disabled': true,
         'enableAnchor': true,
         'enableQuery': false,
@@ -237,13 +264,9 @@ test('Pass props correctly to Link component filtered types', () => {
 });
 
 test('Pass props correctly to Link component filtered excluded_types', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const {formInspector, locale} = createFormInspectorWithLocale();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-
-    const locale = observable.box('en');
-    // $FlowFixMe
-    formInspector.locale = locale;
 
     const value: LinkValue = {
         anchor: 'anchorTest',
@@ -273,7 +296,7 @@ test('Pass props correctly to Link component filtered excluded_types', () => {
         },
     };
 
-    const link = shallow(
+    render(
         <Link
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -285,7 +308,7 @@ test('Pass props correctly to Link component filtered excluded_types', () => {
         />
     );
 
-    expect(link.find('Link').props()).toEqual({
+    expect(getLastLinkContainerProps()).toEqual({
         'disabled': true,
         'enableAnchor': true,
         'enableQuery': false,
@@ -310,13 +333,9 @@ test('Pass props correctly to Link component filtered excluded_types', () => {
 });
 
 test('Pass props correctly to Link component disabled anchor, query, target and rel', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const {formInspector, locale} = createFormInspectorWithLocale();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-
-    const locale = observable.box('en');
-    // $FlowFixMe
-    formInspector.locale = locale;
 
     const value: LinkValue = {
         anchor: 'anchorTest',
@@ -339,7 +358,7 @@ test('Pass props correctly to Link component disabled anchor, query, target and 
         },
     };
 
-    const link = shallow(
+    render(
         <Link
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -351,7 +370,7 @@ test('Pass props correctly to Link component disabled anchor, query, target and 
         />
     );
 
-    expect(link.find('Link').props()).toEqual({
+    expect(getLastLinkContainerProps()).toEqual({
         'disabled': true,
         'enableAnchor': false,
         'enableQuery': false,

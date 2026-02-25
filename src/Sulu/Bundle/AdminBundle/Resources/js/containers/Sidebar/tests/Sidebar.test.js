@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render} from 'enzyme';
+import {render} from '@testing-library/react';
 import Sidebar from '../Sidebar';
 import sidebarStore from '../stores/sidebarStore';
 import sidebarRegistry from '../registries/sidebarRegistry';
@@ -19,7 +19,9 @@ test('Render correct sidebar view', () => {
     sidebarRegistry.get.mockReturnValue(component);
     sidebarRegistry.isDisabled.mockReturnValue(false);
 
-    expect(render(<Sidebar />)).toMatchSnapshot();
+    const {asFragment} = render(<Sidebar />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render correct sidebar view with props', () => {
@@ -28,16 +30,18 @@ test('Render correct sidebar view with props', () => {
     sidebarRegistry.get.mockReturnValue(component);
     sidebarRegistry.isDisabled.mockReturnValue(false);
 
-    const view = render(<Sidebar />);
-    expect(view).toMatchSnapshot();
+    const {asFragment} = render(<Sidebar />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Return null if view is not set', () => {
     sidebarStore.view = null;
     sidebarStore.props = {};
 
-    const view = render(<Sidebar />);
-    expect(view).toMatchSnapshot();
+    const {asFragment} = render(<Sidebar />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Return null if view is disabled', () => {
@@ -45,5 +49,7 @@ test('Return null if view is disabled', () => {
     sidebarStore.props = {};
     sidebarRegistry.isDisabled.mockReturnValue(true);
 
-    expect(render(<Sidebar />)).toMatchSnapshot();
+    const {asFragment} = render(<Sidebar />);
+
+    expect(asFragment()).toMatchSnapshot();
 });

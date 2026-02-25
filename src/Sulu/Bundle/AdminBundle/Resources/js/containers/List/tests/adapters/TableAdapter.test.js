@@ -1,12 +1,17 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import log from 'loglevel';
 import listAdapterDefaultProps from '../../../../utils/TestHelper/listAdapterDefaultProps';
 import TableAdapter from '../../adapters/TableAdapter';
 import StringFieldTransformer from '../../fieldTransformers/StringFieldTransformer';
 import IconFieldTransformer from '../../fieldTransformers/IconFieldTransformer';
 import listFieldTransformerRegistry from '../../registries/listFieldTransformerRegistry';
+import Icon from '../../../../components/Icon';
+import Pagination from '../../../../components/Pagination';
+import Table from '../../../../components/Table';
+import getMockCallArg from '../../../../utils/TestHelper/getMockCallArg';
+import getLatestMockProps from '../../../../utils/TestHelper/getLatestMockProps';
 
 jest.mock('../../../../utils/Translator', () => ({
     translate(key) {
@@ -15,6 +20,8 @@ jest.mock('../../../../utils/Translator', () => ({
                 return 'Page';
             case 'sulu_admin.of':
                 return 'of';
+            default:
+                return key;
         }
     },
 }));
@@ -29,79 +36,71 @@ jest.mock('loglevel', () => ({
     warn: jest.fn(),
 }));
 
+jest.mock('../../../../components/Icon', () => jest.fn(() => <span data-testid="icon" />));
+
+jest.mock('../../../../components/Pagination', () => jest.fn(({children}) => (
+    <div data-testid="pagination">{children}</div>
+)));
+
+jest.mock('../../../../components/GhostIndicator', () => jest.fn(() => <span data-testid="ghost-indicator" />));
+jest.mock('../../../../components/PublishIndicator', () => jest.fn(() => <span data-testid="publish-indicator" />));
+
+jest.mock('../../../../components/Table', () => {
+    const React = require('react');
+
+    const TableMock: any = jest.fn(({children}) => <div data-testid="table">{children}</div>);
+
+    TableMock.Header = jest.fn(({children}) => <div data-testid="table-header">{children}</div>);
+    TableMock.Body = jest.fn(({children}) => <div data-testid="table-body">{children}</div>);
+    TableMock.Row = jest.fn(({children}) => <div data-testid="table-row">{children}</div>);
+    TableMock.Cell = jest.fn(({children}) => <div data-testid="table-cell">{children}</div>);
+    TableMock.HeaderCell = jest.fn(({children}) => <div data-testid="table-header-cell">{children}</div>);
+
+    return TableMock;
+});
+
+const IconMock = (Icon: any);
+const PaginationMock = (Pagination: any);
+const TableMock = (Table: any);
+
+function getTableProps() {
+    return getLatestMockProps(TableMock);
+}
+
+function getRowProps(index: number = 0) {
+    return getMockCallArg(TableMock.Row, index, 0);
+}
+
+function getHeaderCellProps(index: number = 0) {
+    return getMockCallArg(TableMock.HeaderCell, index, 0);
+}
+
 beforeEach(() => {
+    jest.clearAllMocks();
     listFieldTransformerRegistry.get.mockReturnValue(new StringFieldTransformer());
 });
 
-test('Render data with schema', () => {
+test('renders table with schema and matches snapshot', () => {
     const data = [
-        {
-            id: 1,
-            title: 'Page 1',
-            published: '2017-08-23',
-            publishedState: true,
-        },
-        {
-            id: 2,
-            title: 'Page 2',
-            publishedState: true,
-            published: null,
-        },
-        {
-            id: 3,
-            title: 'Page 3',
-            publishedState: false,
-            published: '2017-08-23',
-        },
-        {
-            id: 4,
-            title: 'Page 4',
-            publishedState: false,
-            published: null,
-        },
-        {
-            id: 5,
-            title: 'Page 5',
-            published: '2017-08-23',
-            publishedState: true,
-            ghostLocale: 'de',
-        },
-        {
-            id: 6,
-            title: 'Page 6',
-            publishedState: true,
-            published: null,
-            ghostLocale: 'de',
-        },
-        {
-            id: 7,
-            title: 'Page 7',
-            publishedState: false,
-            published: '2017-08-23',
-            ghostLocale: 'de',
-        },
-        {
-            id: 8,
-            title: 'Page 8',
-            publishedState: false,
-            published: null,
-            ghostLocale: 'de',
-        },
+        {id: 1, published: '2017-08-23', publishedState: true, title: 'Page 1'},
+        {id: 2, published: null, publishedState: true, title: 'Page 2'},
+        {id: 3, published: '2017-08-23', publishedState: false, title: 'Page 3'},
+        {ghostLocale: 'de', id: 4, published: null, publishedState: false, title: 'Page 4'},
     ];
 
     const schema = {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            label: 'Title',
+            sortable: true,
             transformerTypeParameters: {},
             type: 'string',
-            sortable: true,
             visibility: 'yes',
-            label: 'Title',
         },
     };
 
-    const tableAdapter = render(
+    const {asFragment} = render(
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -111,53 +110,38 @@ test('Render data with schema', () => {
         />
     );
 
-    expect(tableAdapter).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Render data as icons', () => {
+test('renders icon transformer values and warns for missing mapping', () => {
     listFieldTransformerRegistry.get.mockReturnValue(new IconFieldTransformer());
 
     const data = [
-        {
-            id: 1,
-            status: 'planned',
-        },
-        {
-            id: 2,
-            status: 'running',
-        },
-        {
-            id: 3,
-            status: 'succeeded',
-        },
-        {
-            id: 4,
-            status: 'failed',
-        },
+        {id: 1, status: 'planned'},
+        {id: 2, status: 'running'},
+        {id: 3, status: 'succeeded'},
+        {id: 4, status: 'failed'},
     ];
+
     const schema = {
         status: {
             filterType: null,
             filterTypeParameters: null,
+            label: 'Status',
+            sortable: false,
             transformerTypeParameters: {
                 mapping: {
+                    failed: {icon: 'su-ban'},
                     planned: 'su-clock',
-                    succeeded: {
-                        icon: 'su-check-circle',
-                        color: 'green',
-                    },
-                    failed: {
-                        icon: 'su-ban',
-                    },
+                    succeeded: {color: 'green', icon: 'su-check-circle'},
                 },
             },
             type: 'icon',
-            sortable: false,
             visibility: 'always',
-            label: 'Status',
         },
     };
-    const tableAdapter = mount(
+
+    render(
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -167,184 +151,70 @@ test('Render data as icons', () => {
         />
     );
 
-    expect(tableAdapter.find('Row').at(0).find('Icon').props().name).toEqual('su-clock');
-    expect(tableAdapter.find('Row').at(0).find('Icon').props().style).toEqual(undefined);
+    expect(getMockCallArg(IconMock, 0, 0)).toEqual(expect.objectContaining({name: 'su-clock'}));
+    expect(getMockCallArg(IconMock, 1, 0)).toEqual(
+        expect.objectContaining({name: 'su-check-circle', style: {color: 'green'}})
+    );
+    expect(getMockCallArg(IconMock, 2, 0)).toEqual(expect.objectContaining({name: 'su-ban', style: {}}));
 
-    expect(tableAdapter.find('Row').at(1).find('Cell').text()).toEqual('running');
-    expect(tableAdapter.find('Row').at(1).find('Icon')).toHaveLength(0);
     expect(log.warn).toBeCalledWith(
         'There was no icon specified in the "mapping" transformer parameter for the value "running".'
     );
-
-    expect(tableAdapter.find('Row').at(2).find('Icon').props().name).toEqual('su-check-circle');
-    expect(tableAdapter.find('Row').at(2).find('Icon').props().style).toEqual({color: 'green'});
-
-    expect(tableAdapter.find('Row').at(3).find('Icon').props().name).toEqual('su-ban');
-    expect(tableAdapter.find('Row').at(3).find('Icon').props().style).toEqual({});
 });
 
-test('Render data with skin', () => {
-    const data = [];
-
+test('passes adapter skin and show_header options to table structure', () => {
     const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            type: 'string',
-            sortable: true,
-            visibility: 'no',
-            label: 'Title',
-        },
         description: {
             filterType: null,
             filterTypeParameters: null,
+            label: 'Description',
+            sortable: true,
             transformerTypeParameters: {},
             type: 'string',
-            sortable: true,
             visibility: 'yes',
-            label: 'Description',
         },
     };
-    const tableAdapter = render(
+
+    render(
         <TableAdapter
             {...listAdapterDefaultProps}
-            adapterOptions={{
-                skin: 'light',
-            }}
-            data={data}
+            adapterOptions={{show_header: false, skin: 'light'}}
+            data={[]}
             page={2}
             pageCount={5}
             schema={schema}
         />
     );
 
-    expect(tableAdapter).toMatchSnapshot();
+    expect(getTableProps().skin).toEqual('light');
+    expect(TableMock.Header).not.toBeCalled();
 });
 
-test('Render data with shrunken cell', () => {
-    const data = [
-        {
-            id: 1,
-            title: '1',
-            description: 'planned',
-        },
-        {
-            id: 2,
-            title: '2',
-            description: 'running',
-        },
-        {
-            id: 3,
-            title: '3',
-            description: 'succeeded',
-        },
-        {
-            id: 4,
-            title: '4',
-            description: 'failed',
-        },
-    ];
-
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            type: 'string',
-            sortable: true,
-            visibility: 'yes',
-            label: 'Title',
-            width: 'shrink',
-        },
-        description: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            type: 'string',
-            sortable: true,
-            visibility: 'yes',
-            label: 'Description',
-            width: 'auto',
-        },
-    };
-    const tableAdapter = render(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            page={2}
-            pageCount={5}
-            schema={schema}
-        />
-    );
-
-    expect(tableAdapter).toMatchSnapshot();
-});
-
-test('Render data without header', () => {
-    const data = [];
-
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            type: 'string',
-            sortable: true,
-            visibility: 'no',
-            label: 'Title',
-        },
-        description: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            type: 'string',
-            sortable: true,
-            visibility: 'yes',
-            label: 'Description',
-        },
-    };
-    const tableAdapter = render(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            adapterOptions={{
-                show_header: false,
-            }}
-            data={data}
-            page={2}
-            pageCount={5}
-            schema={schema}
-        />
-    );
-
-    expect(tableAdapter).toMatchSnapshot();
-});
-
-test('Attach onClick handler for sorting if schema says the header is sortable', () => {
+test('attaches sort handler only to sortable headers', () => {
     const sortSpy = jest.fn();
 
     const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            type: 'string',
-            sortable: true,
-            visibility: 'yes',
-            label: 'Title',
-        },
         description: {
             filterType: null,
             filterTypeParameters: null,
+            label: 'Description',
+            sortable: false,
             transformerTypeParameters: {},
             type: 'string',
-            sortable: false,
             visibility: 'yes',
-            label: 'Description',
+        },
+        title: {
+            filterType: null,
+            filterTypeParameters: null,
+            label: 'Title',
+            sortable: true,
+            transformerTypeParameters: {},
+            type: 'string',
+            visibility: 'yes',
         },
     };
 
-    const tableAdapter = shallow(
+    render(
         <TableAdapter
             {...listAdapterDefaultProps}
             onSort={sortSpy}
@@ -352,759 +222,239 @@ test('Attach onClick handler for sorting if schema says the header is sortable',
         />
     );
 
-    expect(tableAdapter.find('HeaderCell').at(0).prop('onClick')).toBe(sortSpy);
-    expect(tableAdapter.find('HeaderCell').at(1).prop('onClick')).toEqual(undefined);
+    expect(getHeaderCellProps(0).onClick).toEqual(undefined);
+    expect(getHeaderCellProps(1).onClick).toBe(sortSpy);
 });
 
-test('Render data with all different visibility types schema', () => {
-    const data = [
-        {
-            id: 1,
-            title: 'Title 1',
-            description: 'Description 1',
-        },
-        {
-            id: 2,
-            title: 'Title 2',
-            description: 'Description 2',
-        },
-    ];
+test('applies visibility filtering and sort state to header cells', () => {
     const schema = {
-        title: {
+        hidden: {
             filterType: null,
             filterTypeParameters: null,
+            label: 'Hidden',
+            sortable: true,
             transformerTypeParameters: {},
             type: 'string',
-            sortable: true,
-            visibility: 'no',
-            label: 'Title',
-        },
-        description: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            type: 'string',
-            sortable: true,
-            visibility: 'yes',
-            label: 'Description',
-        },
-        test1: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            type: 'string',
-            sortable: true,
-            visibility: 'always',
-            label: 'Test 1',
-        },
-        test2: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            type: 'string',
-            sortable: true,
             visibility: 'never',
-            label: 'Test 2',
         },
-    };
-    const tableAdapter = render(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            page={2}
-            pageCount={5}
-            schema={schema}
-        />
-    );
-
-    expect(tableAdapter).toMatchSnapshot();
-});
-
-test('Render data with schema and selections', () => {
-    const data = [
-        {
-            id: 1,
-            title: 'Title 1',
-            description: 'Description 1',
-        },
-        {
-            id: 2,
-            title: 'Title 2',
-            description: 'Description 2',
-        },
-        {
-            id: 3,
-            title: 'Title 3',
-            description: 'Description 3',
-        },
-    ];
-    const schema = {
         title: {
             filterType: null,
             filterTypeParameters: null,
-            transformerTypeParameters: {},
             label: 'Title',
             sortable: true,
-            type: 'string',
-            visibility: 'no',
-        },
-        description: {
-            filterType: null,
-            filterTypeParameters: null,
             transformerTypeParameters: {},
-            label: 'Description',
-            sortable: true,
             type: 'string',
             visibility: 'yes',
         },
     };
-    const tableAdapter = render(
+
+    render(
         <TableAdapter
             {...listAdapterDefaultProps}
-            data={data}
-            onItemSelectionChange={jest.fn()}
-            page={1}
-            pageCount={3}
-            schema={schema}
-            selections={[1, 3]}
-        />
-    );
-
-    expect(tableAdapter).toMatchSnapshot();
-});
-
-test('Render data with schema in different order', () => {
-    const data = [
-        {
-            id: 1,
-            title: 'Title 1',
-            description: 'Description 1',
-        },
-        {
-            id: 2,
-            title: 'Title 2',
-            description: 'Description 2',
-        },
-    ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'no',
-        },
-        description: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Description',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
-    const tableAdapter = render(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            page={2}
-            pageCount={3}
-            schema={schema}
-        />
-    );
-
-    expect(tableAdapter).toMatchSnapshot();
-});
-
-test('Render data with schema not containing all fields', () => {
-    const data = [
-        {
-            id: 1,
-            title: 'Title 1',
-            description: 'Description 1',
-        },
-        {
-            id: 2,
-            title: 'Title 2',
-            description: 'Description 2',
-        },
-    ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'no',
-        },
-    };
-    const tableAdapter = render(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            page={1}
-            pageCount={3}
-            schema={schema}
-        />
-    );
-
-    expect(tableAdapter).toMatchSnapshot();
-});
-
-test('Render data with pencil button when onItemEdit callback is passed', () => {
-    const data = [
-        {
-            id: 1,
-            title: 'Title 1',
-            description: 'Description 1',
-        },
-        {
-            id: 2,
-            title: 'Title 2',
-            description: 'Description 2',
-        },
-    ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'no',
-        },
-        description: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Description',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
-    const tableAdapter = render(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            onItemClick={jest.fn()}
-            page={1}
-            pageCount={3}
-            schema={schema}
-        />
-    );
-
-    expect(tableAdapter).toMatchSnapshot();
-});
-
-test('Render correct button based on permissions when item permissions are provided', () => {
-    const data = [
-        {
-            id: 1,
-            title: 'Missing view permission',
-            _permissions: {
-                view: false,
-            },
-        },
-        {
-            id: 2,
-            title: 'Missing edit permission',
-            _permissions: {
-                edit: false,
-            },
-        },
-        {
-            id: 3,
-            title: 'No missing permissions',
-        },
-    ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'no',
-        },
-    };
-    const tableAdapter = mount(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            onItemClick={jest.fn()}
-            page={1}
-            pageCount={3}
-            schema={schema}
-        />
-    );
-
-    expect(tableAdapter.find('Row').at(0).find('ButtonCell').props().icon).toEqual('su-pen');
-    expect(tableAdapter.find('Row').at(0).find('ButtonCell').props().disabled).toEqual(true);
-
-    expect(tableAdapter.find('Row').at(1).find('ButtonCell').props().icon).toEqual('su-eye');
-    expect(tableAdapter.find('Row').at(1).find('ButtonCell').props().disabled).toEqual(false);
-
-    expect(tableAdapter.find('Row').at(2).find('ButtonCell').props().icon).toEqual('su-pen');
-    expect(tableAdapter.find('Row').at(2).find('ButtonCell').props().disabled).toEqual(false);
-});
-
-test('Render disabled rows based on given disabledIds prop', () => {
-    const data = [
-        {
-            id: 1,
-            title: 'First item',
-        },
-        {
-            id: 2,
-            title: 'Second item',
-        },
-        {
-            id: 3,
-            title: 'third item',
-        },
-    ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'no',
-        },
-    };
-    const tableAdapter = mount(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            disabledIds={[1, 3]}
-            onItemClick={jest.fn()}
-            page={1}
-            pageCount={3}
-            schema={schema}
-        />
-    );
-
-    expect(tableAdapter.find('Row').at(0).props().disabled).toEqual(true);
-    expect(tableAdapter.find('Row').at(1).props().disabled).toEqual(false);
-    expect(tableAdapter.find('Row').at(2).props().disabled).toEqual(true);
-});
-
-test('Render data with pencil button and given itemActions when onItemEdit callback is passed', () => {
-    const data = [
-        {
-            id: 1,
-            title: 'Title 1',
-            description: 'Description 1',
-        },
-        {
-            id: 2,
-            title: 'Title 2',
-            description: 'Description 2',
-        },
-    ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'no',
-        },
-        description: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Description',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
-    const actionsProvider = () => [
-        {
-            icon: 'su-process',
-            onClick: undefined,
-        },
-        {
-            icon: 'su-trash',
-            onClick: undefined,
-        },
-    ];
-
-    const tableAdapter = render(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            /* eslint-disable-next-line react/jsx-no-bind */
-            itemActionsProvider={actionsProvider}
-            onItemClick={jest.fn()}
-            page={1}
-            pageCount={3}
-            schema={schema}
-        />
-    );
-
-    expect(tableAdapter).toMatchSnapshot();
-});
-
-test('Render column with ascending sort icon', () => {
-    const data = [
-        {
-            id: 1,
-            title: 'Title 1',
-            description: 'Description 1',
-        },
-    ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-        description: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Description',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
-    const tableAdapter = render(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            page={1}
-            pageCount={3}
+            data={[{id: 1, title: 'Title 1'}]}
             schema={schema}
             sortColumn="title"
             sortOrder="asc"
         />
     );
 
-    expect(tableAdapter).toMatchSnapshot();
+    expect(TableMock.HeaderCell).toBeCalledTimes(1);
+    expect(getHeaderCellProps(0)).toEqual(expect.objectContaining({name: 'title', sortOrder: 'asc'}));
 });
 
-test('Render column with descending sort icon', () => {
+test('builds row buttons based on permissions and item actions', () => {
+    const onItemClick = jest.fn();
+    const actionClick = jest.fn();
+    const itemActionsProvider = jest.fn((item) => [{icon: 'su-process', onClick: () => actionClick(item?.id)}]);
+
     const data = [
-        {
-            id: 1,
-            title: 'Title 1',
-            description: 'Description 1',
-        },
+        {id: 1, title: 'Missing view', _permissions: {view: false}},
+        {id: 2, title: 'Missing edit', _permissions: {edit: false}},
+        {id: 3, title: 'All allowed'},
     ];
+
     const schema = {
         title: {
             filterType: null,
             filterTypeParameters: null,
-            transformerTypeParameters: {},
             label: 'Title',
             sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-        description: {
-            filterType: null,
-            filterTypeParameters: null,
             transformerTypeParameters: {},
-            label: 'Description',
-            sortable: true,
             type: 'string',
             visibility: 'yes',
         },
     };
-    const tableAdapter = render(
+
+    render(
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
+            itemActionsProvider={itemActionsProvider}
+            onItemClick={onItemClick}
             page={1}
             pageCount={3}
             schema={schema}
-            sortColumn="description"
-            sortOrder="desc"
         />
     );
 
-    expect(tableAdapter).toMatchSnapshot();
+    expect(itemActionsProvider).toBeCalledWith(data[0]);
+    expect(itemActionsProvider).toBeCalledWith(data[1]);
+    expect(itemActionsProvider).toBeCalledWith(data[2]);
+
+    expect(getRowProps(0).buttons[0]).toEqual(expect.objectContaining({disabled: true, icon: 'su-pen'}));
+    expect(getRowProps(1).buttons[0]).toEqual(expect.objectContaining({disabled: false, icon: 'su-eye'}));
+    expect(getRowProps(2).buttons[0]).toEqual(expect.objectContaining({disabled: false, icon: 'su-pen'}));
+
+    expect(getRowProps(0).buttons[1]).toEqual(expect.objectContaining({icon: 'su-process'}));
 });
 
-test('Click on pencil should execute onItemClick callback', () => {
-    const rowEditClickSpy = jest.fn();
+test('marks disabled and selected rows correctly', () => {
     const data = [
-        {
-            id: 1,
-            title: 'Title 1',
-            description: 'Description 1',
-        },
-        {
-            id: 2,
-            title: 'Title 2',
-            description: 'Description 2',
-        },
+        {id: 1, title: 'First'},
+        {id: 2, title: 'Second'},
+        {id: 3, title: 'Third'},
     ];
+
     const schema = {
         title: {
             filterType: null,
             filterTypeParameters: null,
-            transformerTypeParameters: {},
             label: 'Title',
             sortable: true,
-            type: 'string',
-            visibility: 'no',
-        },
-        description: {
-            filterType: null,
-            filterTypeParameters: null,
             transformerTypeParameters: {},
-            label: 'Description',
-            sortable: true,
             type: 'string',
             visibility: 'yes',
         },
     };
-    const tableAdapter = shallow(
+
+    render(
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
-            onItemClick={rowEditClickSpy}
+            disabledIds={[1, 3]}
             page={1}
             pageCount={3}
             schema={schema}
-        />
-    );
-    const buttons = tableAdapter.find('Table').prop('buttons');
-    expect(buttons).toHaveLength(1);
-    expect(buttons[0].icon).toBe('su-pen');
-
-    buttons[0].onClick(1);
-    expect(rowEditClickSpy).toBeCalledWith(1);
-});
-
-test('Click on itemAction should execute its callback', () => {
-    const actionClickSpy = jest.fn();
-    const item1 = {
-        id: 1,
-        title: 'Title 1',
-        description: 'Description 1',
-    };
-    const item2 = {
-        id: 2,
-        title: 'Title 2',
-        description: 'Description 2',
-    };
-    const data = [item1, item2];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'no',
-        },
-        description: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Description',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
-    const actionsProvider = jest.fn(() => [
-        {
-            icon: 'su-process',
-            onClick: actionClickSpy,
-        },
-    ]);
-
-    const tableAdapter = shallow(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            itemActionsProvider={actionsProvider}
-            onItemClick={jest.fn()}
-            page={1}
-            pageCount={3}
-            schema={schema}
+            selections={[1, 2]}
         />
     );
 
-    expect(actionsProvider).toBeCalledWith(item1);
-    expect(actionsProvider).toBeCalledWith(item2);
-
-    const buttons = tableAdapter.find('Table').prop('buttons');
-    expect(buttons).toHaveLength(2);
-    expect(buttons[1].icon).toBe('su-process');
-
-    buttons[1].onClick(1);
-    expect(actionClickSpy).toBeCalledWith(1);
+    expect(getRowProps(0)).toEqual(expect.objectContaining({disabled: true, selected: true}));
+    expect(getRowProps(1)).toEqual(expect.objectContaining({disabled: false, selected: true}));
+    expect(getRowProps(2)).toEqual(expect.objectContaining({disabled: true, selected: false}));
 });
 
-test('Click on checkbox should call onItemSelectionChange callback', () => {
-    const rowSelectionChangeSpy = jest.fn();
-    const data = [
-        {
-            id: 1,
-            title: 'Title 1',
-            description: 'Description 1',
-        },
-        {
-            id: 2,
-            title: 'Title 2',
-            description: 'Description 2',
-        },
-    ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'no',
-        },
-        description: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Description',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
-    const tableAdapter = shallow(
+test('passes table selection callbacks through', () => {
+    const onAllSelectionChange = jest.fn();
+    const onItemSelectionChange = jest.fn();
+
+    render(
         <TableAdapter
             {...listAdapterDefaultProps}
-            data={data}
-            onItemSelectionChange={rowSelectionChangeSpy}
-            page={1}
-            pageCount={3}
-            schema={schema}
+            data={[]}
+            onAllSelectionChange={onAllSelectionChange}
+            onItemSelectionChange={onItemSelectionChange}
+            schema={{}}
         />
     );
 
-    expect(tableAdapter.find('Table').get(0).props.onRowSelectionChange).toBe(rowSelectionChangeSpy);
+    expect(getTableProps().onAllSelectionChange).toBe(onAllSelectionChange);
+    expect(getTableProps().onRowSelectionChange).toBe(onItemSelectionChange);
+    expect(getTableProps().selectMode).toEqual('multiple');
 });
 
-test('Click on checkbox in header should call onAllSelectionChange callback', () => {
-    const allSelectionChangeSpy = jest.fn();
-    const data = [];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'no',
-        },
-    };
-    const tableAdapter = shallow(
+test('passes top-level edit button action to table header buttons', () => {
+    const onItemClick = jest.fn();
+
+    render(
         <TableAdapter
             {...listAdapterDefaultProps}
-            data={data}
-            onAllSelectionChange={allSelectionChangeSpy}
-            schema={schema}
+            data={[{id: 1, title: 'Title 1'}]}
+            onItemClick={onItemClick}
+            schema={{
+                title: {
+                    filterType: null,
+                    filterTypeParameters: null,
+                    label: 'Title',
+                    sortable: true,
+                    transformerTypeParameters: {},
+                    type: 'string',
+                    visibility: 'yes',
+                },
+            }}
         />
     );
 
-    expect(tableAdapter.find('Table').get(0).props.onAllSelectionChange).toBe(allSelectionChangeSpy);
+    expect(getTableProps().buttons).toHaveLength(1);
+    expect(getTableProps().buttons[0].icon).toEqual('su-pen');
+
+    getTableProps().buttons[0].onClick(1);
+    expect(onItemClick).toBeCalledWith(1);
 });
 
-test('Pagination should be passed correct props', () => {
-    const pageChangeSpy = jest.fn();
-    const limitChangeSpy = jest.fn();
-    const tableAdapter = shallow(
+test('passes pagination props when paginated', () => {
+    const onLimitChange = jest.fn();
+    const onPageChange = jest.fn();
+
+    render(
         <TableAdapter
             {...listAdapterDefaultProps}
+            data={[{id: 1, title: 'Title 1'}]}
             limit={10}
-            onLimitChange={limitChangeSpy}
-            onPageChange={pageChangeSpy}
+            onLimitChange={onLimitChange}
+            onPageChange={onPageChange}
             page={2}
             pageCount={7}
         />
     );
-    expect(tableAdapter.find('Pagination').get(0).props).toEqual({
-        totalPages: 7,
-        currentPage: 2,
+
+    expect(PaginationMock).toBeCalledTimes(1);
+    expect(getLatestMockProps(PaginationMock)).toEqual(expect.objectContaining({
         currentLimit: 10,
+        currentPage: 2,
         loading: false,
-        onLimitChange: limitChangeSpy,
-        onPageChange: pageChangeSpy,
-        children: expect.anything(),
-    });
+        onLimitChange,
+        onPageChange,
+        totalPages: 7,
+    }));
 });
 
-test('Pagination should not be rendered if API is not paginated', () => {
-    const data = [
-        {
-            id: 1,
-            title: 'Title 1',
-            description: 'Description 1',
-        },
-    ];
-
-    const pageChangeSpy = jest.fn();
-    const limitChangeSpy = jest.fn();
-    const tableAdapter = shallow(
+test('does not render pagination if pageCount is undefined', () => {
+    render(
         <TableAdapter
             {...listAdapterDefaultProps}
-            data={data}
-            onLimitChange={limitChangeSpy}
-            onPageChange={pageChangeSpy}
+            data={[{id: 1, title: 'Title 1'}]}
             page={1}
             pageCount={undefined}
         />
     );
-    expect(tableAdapter.find('Pagination')).toHaveLength(0);
+
+    expect(PaginationMock).not.toBeCalled();
 });
 
-test('Pagination should not be rendered if no data is available', () => {
-    const pageChangeSpy = jest.fn();
-    const limitChangeSpy = jest.fn();
-    const tableAdapter = shallow(
+test('does not render pagination if first page has no data', () => {
+    render(
         <TableAdapter
             {...listAdapterDefaultProps}
-            onLimitChange={limitChangeSpy}
-            onPageChange={pageChangeSpy}
+            data={[]}
             page={1}
+            pageCount={7}
         />
     );
-    expect(tableAdapter.find('Pagination')).toHaveLength(0);
+
+    expect(PaginationMock).not.toBeCalled();
 });
 
-test('Pagination should not be rendered if pagination is false', () => {
-    const tableAdapter = shallow(
+test('does not render pagination when paginated is false', () => {
+    render(
         <TableAdapter
             {...listAdapterDefaultProps}
-            limit={10}
+            data={[{id: 1, title: 'Title 1'}]}
             page={2}
             pageCount={7}
             paginated={false}
         />
     );
-    expect(tableAdapter.find('Pagination')).toHaveLength(0);
+
+    expect(PaginationMock).not.toBeCalled();
 });

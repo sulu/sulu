@@ -1,332 +1,285 @@
 // @flow
 import React from 'react';
-import {render, mount, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {observable} from 'mobx';
+import bindValueToOnChange from 'sulu-admin-bundle/utils/TestHelper/bindValueToOnChange';
 import ResourceLocator from '../ResourceLocator';
 
-test('ResourceLocator should render with type full', () => {
-    const onChange = jest.fn();
-    const value = '/parent';
-    const locale = observable.box('en');
+const createProps = (overrides = {}): any => ({
+    locale: observable.box('en'),
+    mode: 'tree_full_edit',
+    onBlur: jest.fn(),
+    onChange: jest.fn(),
+    value: '/parent',
+    ...overrides,
+});
 
-    expect(
-        render(<ResourceLocator
-            locale={locale}
-            mode="tree_full_edit"
-            onBlur={jest.fn()}
-            onChange={onChange}
-            value={value}
-        />)
-    ).toMatchSnapshot();
+const getInput = () => screen.getByRole('textbox');
+
+const typeValue = async(input, value) => {
+    await userEvent.clear(input);
+
+    if (value) {
+        await userEvent.type(input, value);
+    }
+};
+
+const renderBoundResourceLocator = (overrides = {}) => render(
+    bindValueToOnChange(<ResourceLocator {...createProps(overrides)} />)
+);
+
+test('ResourceLocator should render with type full', () => {
+    const {asFragment} = render(<ResourceLocator {...createProps({mode: 'tree_full_edit', value: '/parent'})} />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('ResourceLocator should render with type full and a value of undefined', () => {
-    const onChange = jest.fn();
-    const locale = observable.box('en');
+    const {asFragment} = render(<ResourceLocator {...createProps({mode: 'tree_full_edit', value: undefined})} />);
 
-    expect(
-        render(<ResourceLocator
-            locale={locale}
-            mode="tree_full_edit"
-            onBlur={jest.fn()}
-            onChange={onChange}
-            value={undefined}
-        />)
-    ).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('ResourceLocator should render with type leaf', () => {
-    const onChange = jest.fn();
-    const value = '/parent/child';
-    const locale = observable.box('en');
+    const {asFragment} = render(<ResourceLocator {...createProps({mode: 'tree_leaf_edit', value: '/parent/child'})} />);
 
-    expect(
-        render(<ResourceLocator
-            locale={locale}
-            mode="tree_leaf_edit"
-            onBlur={jest.fn()}
-            onChange={onChange}
-            value={value}
-        />)
-    ).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('ResourceLocator should render with type leaf and a value of undefined', () => {
-    const onChange = jest.fn();
-    const locale = observable.box('en');
+    const {asFragment} = render(<ResourceLocator {...createProps({mode: 'tree_leaf_edit', value: undefined})} />);
 
-    expect(
-        render(<ResourceLocator
-            locale={locale}
-            mode="tree_leaf_edit"
-            onBlur={jest.fn()}
-            onChange={onChange}
-            value={undefined}
-        />)
-    ).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('ResourceLocator should render when disabled', () => {
-    const onChange = jest.fn();
-    const value = '/parent';
-    const locale = observable.box('en');
+    const {asFragment} = render(<ResourceLocator
+        {...createProps({
+            disabled: true,
+            mode: 'tree_full_edit',
+            value: '/parent',
+        })}
+    />);
 
-    expect(
-        render(
-            <ResourceLocator
-                disabled={true}
-                locale={locale}
-                mode="tree_full_edit"
-                onBlur={jest.fn()}
-                onChange={onChange}
-                value={value}
-            />
-        )
-    ).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('ResourceLocator should update the split leaf representation when value changes', () => {
-    const locale = observable.box('en');
-    const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="tree_leaf_edit" onBlur={jest.fn()} onChange={jest.fn()} value="/child" />
+    const {rerender} = render(
+        <ResourceLocator {...createProps({mode: 'tree_leaf_edit', value: '/child'})} />
     );
 
-    expect(resourceLocator.find('.fixed').prop('children')).toEqual('/');
-    expect(resourceLocator.find('Input').prop('value')).toEqual('child');
+    expect(screen.getByText('/')).toBeInTheDocument();
+    expect(getInput()).toHaveValue('child');
 
-    resourceLocator.setProps({value: '/child/test'});
-    resourceLocator.update();
-    expect(resourceLocator.find('.fixed').prop('children')).toEqual('/child/');
-    expect(resourceLocator.find('Input').prop('value')).toEqual('test');
+    rerender(<ResourceLocator {...createProps({mode: 'tree_leaf_edit', value: '/child/test'})} />);
+    expect(screen.getByText('/child/')).toBeInTheDocument();
+    expect(getInput()).toHaveValue('test');
 });
 
-test('ResourceLocator should call the onChange callback when the input changes with type full', () => {
-    const onChange = jest.fn();
-    const value = '/parent';
-    const locale = observable.box('en');
-    const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
-    );
-    resourceLocator.find('Input').props().onChange('parent-new');
-    expect(onChange).toHaveBeenCalledWith('/parent-new');
-});
-
-test('ResourceLocator should call the onChange callback when the input changes with type leaf', () => {
-    const onChange = jest.fn();
-    const value = '/parent/child';
-    const locale = observable.box('en');
-    const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="tree_leaf_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
-    );
-    resourceLocator.find('Input').props().onChange('child-new');
-    expect(onChange).toHaveBeenCalledWith('/parent/child-new');
-});
-
-test('ResourceLocator should call the onChange callback and replace a typed slash with a dash in leaf mode', () => {
-    const onChange = jest.fn();
-    const value = '/parent/child';
-    const locale = observable.box('en');
-    const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="tree_leaf_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
-    );
-    resourceLocator.find('Input').props().onChange('child/');
-    expect(onChange).toBeCalledWith('/parent/child-');
-});
-
-test('ResourceLocator should call the onChange callback and replace a typed space with a dash in leaf mode', () => {
-    const onChange = jest.fn();
-    const value = '/parent/child';
-    const locale = observable.box('en');
-    const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="tree_leaf_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
-    );
-    resourceLocator.find('Input').props().onChange('child test child');
-    expect(onChange).toBeCalledWith('/parent/child-test-child');
-});
-
-test('ResourceLocator should call the onChange callback and replace a typed space with a dash in full mode', () => {
-    const onChange = jest.fn();
-    const value = '/parent/child';
-    const locale = observable.box('en');
-    const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
-    );
-    resourceLocator.find('Input').props().onChange('parent/child test child');
-    expect(onChange).toBeCalledWith('/parent/child-test-child');
-});
-
-test('ResourceLocator should call the onChange callback and replace multiple slashes with one in full mode', () => {
-    const onChange = jest.fn();
-    const value = '/parent/child';
-    const locale = observable.box('en');
-    const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
-    );
-    resourceLocator.find('Input').props().onChange('parent///child//test/child');
-    expect(onChange).toBeCalledWith('/parent/child/test/child');
-});
-
-test('ResourceLocator should call the onChange callback and replace multiple dashes with one in leaf mode', () => {
-    const onChange = jest.fn();
-    const value = '/parent/child';
-    const locale = observable.box('en');
-    const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="tree_leaf_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
-    );
-    resourceLocator.find('Input').props().onChange('child--- a /// test');
-    expect(onChange).toBeCalledWith('/parent/child-a-test');
-});
-
-test('ResourceLocator should call the onChange callback and replace multiple dashes with one in full mode', () => {
-    const onChange = jest.fn();
-    const value = '/parent/child';
-    const locale = observable.box('en');
-    const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
-    );
-    resourceLocator.find('Input').props().onChange('parent/child---child--test-child');
-    expect(onChange).toBeCalledWith('/parent/child-child-test-child');
-});
-
-test('ResourceLocator should call the onChange callback and replace dash before and after slash in full mode', () => {
-    const onChange = jest.fn();
-    const value = '/parent/child';
-    const locale = observable.box('en');
-    const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
-    );
-    resourceLocator.find('Input').props().onChange('parent/-child-/-test-/-child');
-    expect(onChange).toBeCalledWith('/parent/child/test/child');
-});
-
-test('ResourceLocator should call the onChange callback and remove dash at the beginning in leaf mode', () => {
-    const onChange = jest.fn();
-    const value = '/parent/child';
-    const locale = observable.box('en');
-    const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="tree_leaf_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
-    );
-    resourceLocator.find('Input').props().onChange('-child');
-    expect(onChange).toBeCalledWith('/parent/child');
-});
-
-test('ResourceLocator should call the onChange callback and remove dash at the beginning in full mode', () => {
-    const onChange = jest.fn();
-    const value = '/parent/child';
-    const locale = observable.box('en');
-    const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
-    );
-    resourceLocator.find('Input').props().onChange('-parent/child');
-    expect(onChange).toBeCalledWith('/parent/child');
-});
-
-test('ResourceLocator should call the onChange callback and remove special characters in leaf mode', () => {
-    const onChange = jest.fn();
-    const value = '/parent/child';
-    const locale = observable.box('en');
-    const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="tree_leaf_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
-    );
-    resourceLocator.find('Input').props().onChange('c!h"i$&()=$%`l`#+.,d%');
-    expect(onChange).toBeCalledWith('/parent/child');
-});
-
-test('ResourceLocator should call the onChange callback and remove special characters in full mode', () => {
-    const onChange = jest.fn();
-    const value = '/parent/child';
-    const locale = observable.box('en');
-    const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
-    );
-    resourceLocator.find('Input').props().onChange('parent/chi!ld/te"§st/ch;:il%§d%');
-    expect(onChange).toBeCalledWith('/parent/child/test/child');
-});
-
-test('ResourceLocator should replace capital letters with lower case in leaf mode before calling onChange', () => {
-    const onChange = jest.fn();
-    const value = '/parent/child';
-    const locale = observable.box('en');
-    const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="tree_leaf_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
-    );
-    resourceLocator.find('Input').props().onChange('CHILD');
-    expect(onChange).toBeCalledWith('/parent/child');
-});
-
-test('ResourceLocator should replace capital letters with lower case in full mode before calling onChange', () => {
-    const onChange = jest.fn();
-    const value = '/parent/child';
-    const locale = observable.box('en');
-    const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
-    );
-    resourceLocator.find('Input').props().onChange('parent/CHILD');
-    expect(onChange).toBeCalledWith('/parent/child');
-});
-
-test('ResourceLocator should replace capital letters even when given locale is not a valid BCP 47 code', () => {
-    const onChange = jest.fn();
-    const value = '/parent/child';
-    const locale = observable.box('de_CH');
-    const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="tree_leaf_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
-    );
-    resourceLocator.find('Input').props().onChange('CHILD');
-    expect(onChange).toBeCalledWith('/parent/child');
-});
-
-test('ResourceLocator should call the onChange callback when a slash is typed in full mode', () => {
-    const onChange = jest.fn();
-    const value = '/parent/child';
-    const locale = observable.box('en');
-    const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
-    );
-    resourceLocator.find('Input').props().onChange('parent/child/');
-    expect(onChange).toBeCalledWith('/parent/child/');
-});
-
-test('ResourceLocator should call the onChange callback with undefined if no input is given', () => {
-    const onChange = jest.fn();
-    const locale = observable.box('en');
-    const resourceLocator = mount(<ResourceLocator
-        locale={locale}
-        mode="tree_leaf_edit"
-        onChange={onChange}
-        value="/url"
-    />);
-    resourceLocator.find('Input').prop('onChange')(undefined);
-    expect(onChange).toHaveBeenCalledWith(undefined);
-});
-
-test('ResourceLocator should call the onChange callback and replace "/" with "-"', () => {
+test('ResourceLocator should call the onChange callback when the input changes with type full', async() => {
     const onChange = jest.fn();
 
-    const value = '/parent';
-    const locale = observable.box('en');
-    const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
-    );
-    resourceLocator.find('Input').props().onChange('parent/child/');
-    expect(onChange).toBeCalledWith('/parent/child/');
+    renderBoundResourceLocator({mode: 'tree_full_edit', onChange, value: '/parent'});
+
+    await typeValue(getInput(), 'parent-new');
+
+    expect(onChange).toHaveBeenLastCalledWith('/parent-new');
 });
 
-test('ResourceLocator should call the onBlur callback when the Input finishes editing', () => {
-    const finishSpy = jest.fn();
-    const locale = observable.box('en');
+test('ResourceLocator should call the onChange callback when the input changes with type leaf', async() => {
+    const onChange = jest.fn();
 
-    const resourceLocator = shallow(
-        <ResourceLocator
-            locale={locale}
-            mode="tree_leaf_edit"
-            onBlur={finishSpy}
-            onChange={jest.fn()}
-            value="/some/url"
-        />
-    );
+    renderBoundResourceLocator({mode: 'tree_leaf_edit', onChange, value: '/parent/child'});
 
-    resourceLocator.find('Input').simulate('blur');
+    await typeValue(getInput(), 'child-new');
 
-    expect(finishSpy).toBeCalledWith();
+    expect(onChange).toHaveBeenLastCalledWith('/parent/child-new');
+});
+
+test('ResourceLocator should replace typed slash with dash in leaf mode', async() => {
+    const onChange = jest.fn();
+
+    renderBoundResourceLocator({mode: 'tree_leaf_edit', onChange, value: '/parent/child'});
+
+    await typeValue(getInput(), 'child/');
+
+    expect(onChange).toHaveBeenLastCalledWith('/parent/child-');
+});
+
+test('ResourceLocator should replace typed space with dash in leaf mode', async() => {
+    const onChange = jest.fn();
+
+    renderBoundResourceLocator({mode: 'tree_leaf_edit', onChange, value: '/parent/child'});
+
+    await typeValue(getInput(), 'child test child');
+
+    expect(onChange).toHaveBeenLastCalledWith('/parent/child-test-child');
+});
+
+test('ResourceLocator should replace typed space with dash in full mode', async() => {
+    const onChange = jest.fn();
+
+    renderBoundResourceLocator({mode: 'tree_full_edit', onChange, value: '/parent/child'});
+
+    await typeValue(getInput(), 'parent/child test child');
+
+    expect(onChange).toHaveBeenLastCalledWith('/parent/child-test-child');
+});
+
+test('ResourceLocator should replace multiple slashes with one in full mode', async() => {
+    const onChange = jest.fn();
+
+    renderBoundResourceLocator({mode: 'tree_full_edit', onChange, value: '/parent/child'});
+
+    await typeValue(getInput(), 'parent///child//test/child');
+
+    expect(onChange).toHaveBeenLastCalledWith('/parent/child/test/child');
+});
+
+test('ResourceLocator should call the onChange callback and replace multiple dashes with one in leaf mode', async() => {
+    const onChange = jest.fn();
+
+    renderBoundResourceLocator({mode: 'tree_leaf_edit', onChange, value: '/parent/child'});
+
+    await typeValue(getInput(), 'child--- a /// test');
+
+    expect(onChange).toHaveBeenLastCalledWith('/parent/child-a-test');
+});
+
+test('ResourceLocator should call the onChange callback and replace multiple dashes with one in full mode', async() => {
+    const onChange = jest.fn();
+
+    renderBoundResourceLocator({mode: 'tree_full_edit', onChange, value: '/parent/child'});
+
+    await typeValue(getInput(), 'parent/child---child--test-child');
+
+    expect(onChange).toHaveBeenLastCalledWith('/parent/child-child-test-child');
+});
+
+test('ResourceLocator should replace dash before and after slash in full mode', async() => {
+    const onChange = jest.fn();
+
+    renderBoundResourceLocator({mode: 'tree_full_edit', onChange, value: '/parent/child'});
+
+    await typeValue(getInput(), 'parent/-child-/-test-/-child');
+
+    expect(onChange).toHaveBeenLastCalledWith('/parent/child/test/child');
+});
+
+test('ResourceLocator should call the onChange callback and remove dash at the beginning in leaf mode', async() => {
+    const onChange = jest.fn();
+
+    renderBoundResourceLocator({mode: 'tree_leaf_edit', onChange, value: '/parent/child'});
+
+    await typeValue(getInput(), '-child');
+
+    expect(onChange).toHaveBeenLastCalledWith('/parent/child');
+});
+
+test('ResourceLocator should call the onChange callback and remove dash at the beginning in full mode', async() => {
+    const onChange = jest.fn();
+
+    renderBoundResourceLocator({mode: 'tree_full_edit', onChange, value: '/parent/child'});
+
+    await typeValue(getInput(), '-parent/child');
+
+    expect(onChange).toHaveBeenLastCalledWith('/parent/child');
+});
+
+test('ResourceLocator should call the onChange callback and remove special characters in leaf mode', async() => {
+    const onChange = jest.fn();
+
+    renderBoundResourceLocator({mode: 'tree_leaf_edit', onChange, value: '/parent/child'});
+
+    await typeValue(getInput(), 'c!h"i$&()=$%`l`#+.,d%');
+
+    expect(onChange).toHaveBeenLastCalledWith('/parent/child');
+});
+
+test('ResourceLocator should call the onChange callback and remove special characters in full mode', async() => {
+    const onChange = jest.fn();
+
+    renderBoundResourceLocator({mode: 'tree_full_edit', onChange, value: '/parent/child'});
+
+    await typeValue(getInput(), 'parent/chi!ld/te"§st/ch;:il%§d%');
+
+    expect(onChange).toHaveBeenLastCalledWith('/parent/child/test/child');
+});
+
+test('ResourceLocator should replace capital letters with lower case in leaf mode before calling onChange', async() => {
+    const onChange = jest.fn();
+
+    renderBoundResourceLocator({mode: 'tree_leaf_edit', onChange, value: '/parent/child'});
+
+    await typeValue(getInput(), 'CHILD');
+
+    expect(onChange).toHaveBeenLastCalledWith('/parent/child');
+});
+
+test('ResourceLocator should replace capital letters with lower case in full mode before calling onChange', async() => {
+    const onChange = jest.fn();
+
+    renderBoundResourceLocator({mode: 'tree_full_edit', onChange, value: '/parent/child'});
+
+    await typeValue(getInput(), 'parent/CHILD');
+
+    expect(onChange).toHaveBeenLastCalledWith('/parent/child');
+});
+
+test('ResourceLocator should replace capitals with invalid locale code', async() => {
+    const onChange = jest.fn();
+
+    renderBoundResourceLocator({
+        locale: observable.box('de_CH'),
+        mode: 'tree_leaf_edit',
+        onChange,
+        value: '/parent/child',
+    });
+
+    await typeValue(getInput(), 'CHILD');
+
+    expect(onChange).toHaveBeenLastCalledWith('/parent/child');
+});
+
+test('ResourceLocator should call the onChange callback when a slash is typed in full mode', async() => {
+    const onChange = jest.fn();
+
+    renderBoundResourceLocator({mode: 'tree_full_edit', onChange, value: '/parent/child'});
+
+    await typeValue(getInput(), 'parent/child/');
+
+    expect(onChange).toHaveBeenLastCalledWith('/parent/child/');
+});
+
+test('ResourceLocator should call the onChange callback with undefined if no input is given', async() => {
+    const onChange = jest.fn();
+
+    renderBoundResourceLocator({mode: 'tree_leaf_edit', onChange, value: '/url'});
+
+    await typeValue(getInput(), '');
+
+    expect(onChange).toHaveBeenLastCalledWith(undefined);
+});
+
+test('ResourceLocator should call the onChange callback and replace "/" with "-"', async() => {
+    const onChange = jest.fn();
+
+    renderBoundResourceLocator({mode: 'tree_full_edit', onChange, value: '/parent'});
+
+    await typeValue(getInput(), 'parent/child/');
+
+    expect(onChange).toHaveBeenLastCalledWith('/parent/child/');
+});
+
+test('ResourceLocator should call the onBlur callback when the Input finishes editing', async() => {
+    const onBlur = jest.fn();
+
+    render(<ResourceLocator {...createProps({mode: 'tree_leaf_edit', onBlur, value: '/some/url'})} />);
+
+    await userEvent.click(getInput());
+    await userEvent.tab();
+
+    expect(onBlur).toHaveBeenCalled();
 });

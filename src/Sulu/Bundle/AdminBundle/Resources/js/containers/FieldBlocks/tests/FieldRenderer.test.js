@@ -1,20 +1,30 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import Router from '../../../services/Router';
 import FieldRenderer from '../FieldRenderer';
-import {FormInspector, ResourceFormStore, Renderer} from '../../Form';
+import {FormInspector, ResourceFormStore} from '../../Form';
 import ResourceStore from '../../../stores/ResourceStore';
+import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
 
 jest.mock('../../../services/Router/Router', () => jest.fn());
 
 jest.mock('../../Form', () => ({
     FormInspector: jest.fn(),
     ResourceFormStore: jest.fn(),
-    Renderer: jest.fn(),
+    Renderer: jest.fn(() => null),
 }));
 
 jest.mock('../../../stores/ResourceStore', () => jest.fn());
+
+const rendererMock = ((jest.requireMock('../../Form'): any).Renderer: {
+    mock: {calls: Array<[Object]>},
+    ...
+});
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test('Should pass props correctly to Renderer', () => {
     const fieldFinishSpy = jest.fn();
@@ -41,7 +51,7 @@ test('Should pass props correctly to Renderer', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
     const router = new Router();
 
-    const formRenderer = shallow(
+    render(
         <FieldRenderer
             data={data}
             dataPath="/block/0/test"
@@ -58,7 +68,7 @@ test('Should pass props correctly to Renderer', () => {
         />
     );
 
-    expect(formRenderer.find(Renderer).props()).toEqual(expect.objectContaining({
+    expect(getLatestMockProps(rendererMock)).toEqual(expect.objectContaining({
         data,
         dataPath: '/block/0/test',
         errors,
@@ -76,7 +86,7 @@ test('Should pass props correctly to Renderer', () => {
 test('Should pass showAllErrors prop to Renderer', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
-    const formRenderer = shallow(
+    render(
         <FieldRenderer
             data={{}}
             dataPath=""
@@ -93,14 +103,14 @@ test('Should pass showAllErrors prop to Renderer', () => {
         />
     );
 
-    expect(formRenderer.find(Renderer).prop('showAllErrors')).toEqual(true);
+    expect(getLatestMockProps(rendererMock).showAllErrors).toEqual(true);
 });
 
 test('Should call onChange callback with correct index', () => {
     const changeSpy = jest.fn();
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
-    const formRenderer = shallow(
+    render(
         <FieldRenderer
             data={{}}
             dataPath=""
@@ -116,7 +126,7 @@ test('Should call onChange callback with correct index', () => {
         />
     );
 
-    formRenderer.find(Renderer).prop('onChange')('test', 'value');
+    getLatestMockProps(rendererMock).onChange('test', 'value');
 
     expect(changeSpy).toBeCalledWith(2, 'test', 'value');
 });
@@ -125,7 +135,7 @@ test('Should call onFieldFinish when some subfield finishes editing', () => {
     const fieldFinishSpy = jest.fn();
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
-    const formRenderer = shallow(
+    render(
         <FieldRenderer
             data={{}}
             dataPath=""
@@ -141,7 +151,7 @@ test('Should call onFieldFinish when some subfield finishes editing', () => {
         />
     );
 
-    formRenderer.find(Renderer).prop('onFieldFinish')();
+    getLatestMockProps(rendererMock).onFieldFinish();
 
     expect(fieldFinishSpy).toBeCalledWith();
 });

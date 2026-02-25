@@ -1,51 +1,53 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
-import ResourceStore from '../../../../stores/ResourceStore';
-import FormInspector from '../../FormInspector';
-import ResourceFormStore from '../../stores/ResourceFormStore';
 import PasswordConfirmation from '../../fields/PasswordConfirmation';
-import PasswordConfirmationComponent from '../../../../components/PasswordConfirmation';
 
-jest.mock('../../../../stores/ResourceStore', () => jest.fn());
-jest.mock('../../stores/ResourceFormStore', () => jest.fn());
-jest.mock('../../FormInspector', () => jest.fn());
+const createProps = (props: Object = {}) => ({
+    ...fieldTypeDefaultProps,
+    formInspector: ({}: any),
+    ...props,
+});
 
-test('Pass error correctly to PasswordConfirmation component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+test('Pass error correctly to PasswordConfirmation component', async() => {
     const error = {keyword: 'required', parameters: {}};
 
-    const passwordConfirmation = shallow(
+    render(
         <PasswordConfirmation
-            {...fieldTypeDefaultProps}
+            {...createProps()}
             error={error}
-            formInspector={formInspector}
         />
     );
 
-    expect(passwordConfirmation.find(PasswordConfirmationComponent).prop('valid')).toBe(false);
+    await waitFor(() => {
+        const [firstInput] = screen.getAllByDisplayValue('');
+        expect(firstInput.parentElement).toHaveClass('error');
+    });
 });
 
-test('Pass props correctly to PasswordConfirmation component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+test('Pass props correctly to PasswordConfirmation component', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-    const passwordConfirmation = shallow(
+    render(
         <PasswordConfirmation
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            formInspector={formInspector}
+            {...createProps()}
             onChange={changeSpy}
             onFinish={finishSpy}
         />
     );
 
-    expect(passwordConfirmation.find(PasswordConfirmationComponent).prop('valid')).toBe(true);
-    expect(passwordConfirmation.find(PasswordConfirmationComponent).prop('disabled')).toBe(true);
+    const [firstInput, secondInput] = screen.getAllByDisplayValue('');
 
-    passwordConfirmation.find(PasswordConfirmationComponent).simulate('change', 'value');
+    await user.clear(firstInput);
+    await user.type(firstInput, 'value');
+    await user.clear(secondInput);
+    await user.type(secondInput, 'value');
 
-    expect(changeSpy).toBeCalledWith('value');
+    await waitFor(() => {
+        expect(changeSpy).toBeCalledWith('value');
+    });
     expect(finishSpy).toBeCalledWith();
 });

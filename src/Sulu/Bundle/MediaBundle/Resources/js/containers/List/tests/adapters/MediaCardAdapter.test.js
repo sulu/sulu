@@ -1,8 +1,15 @@
 // @flow
-import {shallow, render} from 'enzyme';
 import React from 'react';
-import {listAdapterDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
+import {render} from '@testing-library/react';
+import {getLatestMockProps, getMockCallArg, listAdapterDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import MediaCardAdapter from '../../adapters/MediaCardAdapter';
+
+jest.mock('sulu-admin-bundle/components', () => ({
+    Masonry: jest.fn(({children}) => <div>{children}</div>),
+    InfiniteScroller: jest.fn(({children}) => <div>{children}</div>),
+}));
+
+jest.mock('../../../../components/MediaCard', () => jest.fn(() => null));
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate(key) {
@@ -11,9 +18,28 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
                 return 'Copy URL';
             case 'sulu_media.download_masterfile':
                 return 'Download master file';
+            default:
+                return key;
         }
     },
 }));
+
+const componentsModule = ((jest.requireMock('sulu-admin-bundle/components'): any): {
+    InfiniteScroller: {
+        mock: {calls: Array<[Object]>},
+        ...
+    },
+    ...
+});
+const mediaCardComponent = ((jest.requireMock('../../../../components/MediaCard'): any): {
+    mock: {calls: Array<[Object]>},
+    ...
+});
+const infiniteScrollerComponent = componentsModule.InfiniteScroller;
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test('Render a basic Masonry view with MediaCards', () => {
     const thumbnails = {
@@ -39,7 +65,7 @@ test('Render a basic Masonry view with MediaCards', () => {
             thumbnails,
         },
     ];
-    const mediaCardAdapter = render(
+    const {asFragment} = render(
         <MediaCardAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -50,7 +76,8 @@ test('Render a basic Masonry view with MediaCards', () => {
         />
     );
 
-    expect(mediaCardAdapter).toMatchSnapshot();
+    expect(mediaCardComponent).toHaveBeenCalledTimes(2);
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('AdminUrl should fallback to url on undefined', () => {
@@ -73,7 +100,7 @@ test('AdminUrl should fallback to url on undefined', () => {
         },
     ];
 
-    const mediaCardAdapter = shallow(
+    render(
         <MediaCardAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -84,9 +111,9 @@ test('AdminUrl should fallback to url on undefined', () => {
         />
     );
 
-    expect(mediaCardAdapter.find('MediaCard').get(0).props.downloadUrl)
+    expect(getMockCallArg(mediaCardComponent, 0, 0).downloadUrl)
         .toBe('http://localhost/admin/media/1/download/test1.svg');
-    expect(mediaCardAdapter.find('MediaCard').get(1).props.downloadUrl)
+    expect(getMockCallArg(mediaCardComponent, 1, 0).downloadUrl)
         .toBe('http://localhost/media/2/download/test2.svg');
 });
 
@@ -114,7 +141,7 @@ test('MediaCard should call the the appropriate handler', () => {
             thumbnails,
         },
     ];
-    const mediaCardAdapter = shallow(
+    render(
         <MediaCardAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -126,13 +153,13 @@ test('MediaCard should call the the appropriate handler', () => {
         />
     );
 
-    expect(mediaCardAdapter.find('MediaCard').get(0).props.onClick).toBe(mediaCardSelectionChangeSpy);
-    expect(mediaCardAdapter.find('MediaCard').get(0).props.onSelectionChange).toBe(mediaCardSelectionChangeSpy);
+    expect(getLatestMockProps(mediaCardComponent).onClick).toBe(mediaCardSelectionChangeSpy);
+    expect(getLatestMockProps(mediaCardComponent).onSelectionChange).toBe(mediaCardSelectionChangeSpy);
 });
 
 test('InfiniteScroller should be passed correct props', () => {
     const pageChangeSpy = jest.fn();
-    const tableAdapter = shallow(
+    render(
         <MediaCardAdapter
             {...listAdapterDefaultProps}
             icon="su-pen"
@@ -142,7 +169,8 @@ test('InfiniteScroller should be passed correct props', () => {
             pageCount={7}
         />
     );
-    expect(tableAdapter.find('InfiniteScroller').get(0).props).toEqual({
+
+    expect(getLatestMockProps(infiniteScrollerComponent)).toEqual({
         totalPages: 7,
         currentPage: 2,
         loading: false,

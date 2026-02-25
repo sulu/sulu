@@ -1,8 +1,9 @@
 // @flow
 import React from 'react';
-import {render, mount} from 'enzyme';
+import {render} from '@testing-library/react';
 import Navigation from '../Navigation';
 import Router, {Route} from '../../../services/Router';
+import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
 import type {NavigationItem} from '../types';
 
 jest.mock('../../../utils/Translator', () => ({
@@ -12,6 +13,20 @@ jest.mock('../../../utils/Translator', () => ({
 jest.mock('../../../services/Router/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
 }));
+
+jest.mock('../../../components/Navigation', () => {
+    const React = require('react');
+
+    const Navigation: any = jest.fn(function NavigationMock({children}) {
+        return React.createElement('div', undefined, children);
+    });
+
+    Navigation.Item = jest.fn(function NavigationItemMock({children}) {
+        return React.createElement('div', undefined, children);
+    });
+
+    return Navigation;
+});
 
 jest.mock('../registries/navigationRegistry', () => ({
     get: jest.fn().mockReturnValue(
@@ -87,7 +102,13 @@ jest.mock('../registries/navigationRegistry', () => ({
     ]: Array<NavigationItem>)),
 }));
 
-test('Should render navigation', () => {
+const navigationComponent = ((jest.requireMock('../../../components/Navigation'): any): {
+    Item: {mock: {calls: Array<[Object]>}, ...},
+    mock: {calls: Array<[Object]>},
+    ...
+});
+
+function createRouter() {
     const router = new Router({});
     router.route = new Route({
         name: 'sulu_admin.form_tab',
@@ -95,7 +116,15 @@ test('Should render navigation', () => {
         type: 'form_tab',
     });
 
-    const navigation = render(
+    return router;
+}
+
+function getLatestNavigationProps(): any {
+    return getLatestMockProps(navigationComponent);
+}
+
+test('Should render navigation', () => {
+    const {asFragment} = render(
         <Navigation
             appVersion="666"
             onLogout={jest.fn()}
@@ -103,23 +132,16 @@ test('Should render navigation', () => {
             onPinToggle={jest.fn()}
             onProfileClick={jest.fn()}
             pinned={false}
-            router={router}
+            router={createRouter()}
             suluVersion="2.0.0-RC1"
         />
     );
 
-    expect(navigation).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should render navigation without appVersion', () => {
-    const router = new Router({});
-    router.route = new Route({
-        name: 'sulu_admin.form_tab',
-        path: '/form',
-        type: 'form_tab',
-    });
-
-    const navigation = render(
+    const {asFragment} = render(
         <Navigation
             appVersion={null}
             onLogout={jest.fn()}
@@ -127,25 +149,20 @@ test('Should render navigation without appVersion', () => {
             onPinToggle={jest.fn()}
             onProfileClick={jest.fn()}
             pinned={false}
-            router={router}
+            router={createRouter()}
             suluVersion="2.0.0-RC1"
         />
     );
 
-    expect(navigation).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should call the navigation callback, pin callback and router navigate', () => {
-    const router = new Router({});
-    router.route = new Route({
-        name: 'sulu_admin.form_tab',
-        path: '/form',
-        type: 'form_tab',
-    });
+    const router = createRouter();
     const handleNavigate = jest.fn();
     const handlePin = jest.fn();
 
-    const navigation = mount(
+    render(
         <Navigation
             appVersion={null}
             onLogout={jest.fn()}
@@ -158,10 +175,10 @@ test('Should call the navigation callback, pin callback and router navigate', ()
         />
     );
 
-    navigation.find('Item').at(4).find('.title').simulate('click');
+    getLatestNavigationProps().onItemClick('111-111');
     expect(router.navigate).toHaveBeenCalledWith('returned_main_route');
     expect(handleNavigate).toHaveBeenCalledWith('returned_main_route');
 
-    navigation.find('.pin').simulate('click');
+    getLatestNavigationProps().onPinToggle();
     expect(handlePin).toBeCalled();
 });

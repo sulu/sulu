@@ -1,427 +1,641 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render a SingleMediaDropzone 1`] = `
-<div
-  class="mediaContainer default"
-  role="presentation"
-  tabindex="0"
->
-  <img
-    class="thumbnail"
-    src="http://lorempixel.com/400/400"
-  />
+exports[`Dragging a file outside of the area will hide the upload indicator 1`] = `
+<DocumentFragment>
   <div
-    class="uploadIndicatorContainer"
+    data-testid="dropzone"
   >
     <div
-      class="uploadIndicator"
+      class="mediaContainer default"
+      data-testid="dropzone-root"
     >
-      <div>
-        <span
-          aria-label="su-upload"
-          class="su-upload uploadIcon"
+      <img
+        class="thumbnail"
+        src="http://lorempixel.com/400/400"
+      />
+      <div
+        class="spinner"
+        style="width: 40px; height: 40px;"
+      >
+        <div
+          class="doubleBounce1"
+        />
+        <div
+          class="doubleBounce2"
         />
       </div>
+      <div
+        class="uploadIndicatorContainer"
+      >
+        <div
+          class="uploadIndicator"
+        >
+          <div>
+            <span
+              aria-label="su-upload"
+              class="su-upload uploadIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <input
+        data-testid="dropzone-input"
+      />
     </div>
   </div>
-  <input
-    style="border:0;clip:rect(0, 0, 0, 0);clip-path:inset(50%);height:1px;margin:0 -1px -1px 0;overflow:hidden;padding:0;position:absolute;width:1px;white-space:nowrap"
-    tabindex="-1"
-    type="file"
-  />
-</div>
+</DocumentFragment>
+`;
+
+exports[`Dragging a file over the area will show the upload indicator 1`] = `
+<DocumentFragment>
+  <div
+    data-testid="dropzone"
+  >
+    <div
+      class="mediaContainer default showUploadIndicator"
+      data-testid="dropzone-root"
+    >
+      <img
+        class="thumbnail"
+        src="http://lorempixel.com/400/400"
+      />
+      <div
+        class="spinner"
+        style="width: 40px; height: 40px;"
+      >
+        <div
+          class="doubleBounce1"
+        />
+        <div
+          class="doubleBounce2"
+        />
+      </div>
+      <div
+        class="uploadIndicatorContainer"
+      >
+        <div
+          class="uploadIndicator"
+        >
+          <div>
+            <span
+              aria-label="su-upload"
+              class="su-upload uploadIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <input
+        data-testid="dropzone-input"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Dropping a file on the area will hide the upload indicator and call the "onDrop" handler 1`] = `
+<DocumentFragment>
+  <div
+    data-testid="dropzone"
+  >
+    <div
+      class="mediaContainer default"
+      data-testid="dropzone-root"
+    >
+      <img
+        class="thumbnail"
+        src="http://lorempixel.com/400/400"
+      />
+      <div
+        class="spinner"
+        style="width: 40px; height: 40px;"
+      >
+        <div
+          class="doubleBounce1"
+        />
+        <div
+          class="doubleBounce2"
+        />
+      </div>
+      <div
+        class="uploadIndicatorContainer"
+      >
+        <div
+          class="uploadIndicator"
+        >
+          <div>
+            <span
+              aria-label="su-upload"
+              class="su-upload uploadIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <input
+        data-testid="dropzone-input"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Render a SingleMediaDropzone 1`] = `
+<DocumentFragment>
+  <div
+    data-testid="dropzone"
+  >
+    <div
+      class="mediaContainer default"
+      data-testid="dropzone-root"
+    >
+      <img
+        class="thumbnail"
+        src="http://lorempixel.com/400/400"
+      />
+      <div
+        class="spinner"
+        style="width: 40px; height: 40px;"
+      >
+        <div
+          class="doubleBounce1"
+        />
+        <div
+          class="doubleBounce2"
+        />
+      </div>
+      <div
+        class="uploadIndicatorContainer"
+      >
+        <div
+          class="uploadIndicator"
+        >
+          <div>
+            <span
+              aria-label="su-upload"
+              class="su-upload uploadIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <input
+        data-testid="dropzone-input"
+      />
+    </div>
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Render a SingleMediaDropzone in disabled state 1`] = `
-<div
-  class="mediaContainer default disabled"
-  role="presentation"
->
-  <img
-    class="thumbnail"
-    src="http://lorempixel.com/400/400"
-  />
+<DocumentFragment>
   <div
-    class="uploadIndicatorContainer"
+    data-testid="dropzone"
   >
     <div
-      class="uploadIndicator"
+      class="mediaContainer default disabled"
+      data-testid="dropzone-root"
     >
-      <div>
-        <span
-          aria-label="su-upload"
-          class="su-upload uploadIcon"
+      <img
+        class="thumbnail"
+        src="http://lorempixel.com/400/400"
+      />
+      <div
+        class="spinner"
+        style="width: 40px; height: 40px;"
+      >
+        <div
+          class="doubleBounce1"
+        />
+        <div
+          class="doubleBounce2"
         />
       </div>
+      <div
+        class="uploadIndicatorContainer"
+      >
+        <div
+          class="uploadIndicator"
+        >
+          <div>
+            <span
+              aria-label="su-upload"
+              class="su-upload uploadIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <input
+        data-testid="dropzone-input"
+      />
     </div>
   </div>
-  <input
-    style="border:0;clip:rect(0, 0, 0, 0);clip-path:inset(50%);height:1px;margin:0 -1px -1px 0;overflow:hidden;padding:0;position:absolute;width:1px;white-space:nowrap"
-    tabindex="-1"
-    type="file"
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render a SingleMediaDropzone while uploading 1`] = `
-<div
-  class="mediaContainer default"
-  role="presentation"
-  tabindex="0"
->
-  <img
-    class="thumbnail"
-    src="http://lorempixel.com/400/400"
-  />
+<DocumentFragment>
   <div
-    class="progressbar"
+    data-testid="dropzone"
   >
     <div
-      style="width:200px;height:200px"
+      class="mediaContainer default"
+      data-testid="dropzone-root"
     >
-      <svg
-        class="root "
-        data-test-id="CircularProgressbar"
-        viewBox="0 0 100 100"
+      <img
+        class="thumbnail"
+        src="http://lorempixel.com/400/400"
+      />
+      <div
+        class="spinner"
+        style="width: 40px; height: 40px;"
       >
-        <circle
-          class="background"
-          cx="50"
-          cy="50"
-          r="50"
+        <div
+          class="doubleBounce1"
         />
-        <path
-          d="
-      M 50,50
-      m 0,-46
-      a 46,46 0 1 1 0,92
-      a 46,46 0 1 1 0,-92
-    "
-          fill-opacity="0"
-          stroke-width="8"
-          style="stroke-dasharray:289.02652413026095px 289.02652413026095px;stroke-dashoffset:0px"
+        <div
+          class="doubleBounce2"
         />
-        <path
-          class="path"
-          d="
-      M 50,50
-      m 0,-46
-      a 46,46 0 1 1 0,92
-      a 46,46 0 1 1 0,-92
-    "
-          fill-opacity="0"
-          stroke-width="8"
-          style="stroke-dasharray:289.02652413026095px 289.02652413026095px;stroke-dashoffset:144.51326206513048px"
-        />
-        <text
-          class="text"
-          x="50"
-          y="50"
+      </div>
+      <div
+        class="progressbar"
+      >
+        <div
+          style="width: 200px; height: 200px;"
         >
-          50%
-        </text>
-      </svg>
+          <svg
+            class="root "
+            data-test-id="CircularProgressbar"
+            viewBox="0 0 100 100"
+          >
+            <circle
+              class="background"
+              cx="50"
+              cy="50"
+              r="50"
+            />
+            <path
+              d="
+      M 50,50
+      m 0,-46
+      a 46,46 0 1 1 0,92
+      a 46,46 0 1 1 0,-92
+    "
+              fill-opacity="0"
+              stroke-width="8"
+              style="stroke-dasharray: 289.02652413026095px 289.02652413026095px; stroke-dashoffset: 0px;"
+            />
+            <path
+              class="path"
+              d="
+      M 50,50
+      m 0,-46
+      a 46,46 0 1 1 0,92
+      a 46,46 0 1 1 0,-92
+    "
+              fill-opacity="0"
+              stroke-width="8"
+              style="stroke-dasharray: 289.02652413026095px 289.02652413026095px; stroke-dashoffset: 144.51326206513048px;"
+            />
+            <text
+              class="text"
+              x="50"
+              y="50"
+            >
+              50%
+            </text>
+          </svg>
+        </div>
+      </div>
+      <input
+        data-testid="dropzone-input"
+      />
     </div>
   </div>
-  <input
-    style="border:0;clip:rect(0, 0, 0, 0);clip-path:inset(50%);height:1px;margin:0 -1px -1px 0;overflow:hidden;padding:0;position:absolute;width:1px;white-space:nowrap"
-    tabindex="-1"
-    type="file"
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render a SingleMediaDropzone with a MimeTypeIndicator if an error appeared during image loading 1`] = `
-<div
-  class="mediaContainer default"
-  role="presentation"
-  tabindex="0"
->
+<DocumentFragment>
   <div
-    class="mimeTypeIndicator"
+    data-testid="dropzone"
   >
     <div
-      class="mimeTypeIndicator"
-      style="color: rgb(255, 255, 255); font-size: 100px; background-color: rgb(246, 126, 0);"
-    >
-      <span
-        aria-label="fa-file-video-o"
-        class="fa fa-file-video-o"
-      />
-    </div>
-  </div>
-  <div
-    class="uploadIndicatorContainer"
-  >
-    <div
-      class="uploadIndicator"
-    >
-      <div>
-        <span
-          aria-label="su-upload"
-          class="su-upload uploadIcon"
-        />
-      </div>
-    </div>
-  </div>
-  <input
-    style="border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;"
-    tabindex="-1"
-    type="file"
-  />
-</div>
-`;
-
-exports[`Render a SingleMediaDropzone with a loader if image has not been loaded yet 1`] = `
-<div
-  class="mediaContainer default"
-  role="presentation"
-  tabindex="0"
->
-  <img
-    class="thumbnail"
-    src="test.jpg"
-  />
-  <div
-    class="spinner"
-    style="width: 40px; height: 40px;"
-  >
-    <div
-      class="doubleBounce1"
-    />
-    <div
-      class="doubleBounce2"
-    />
-  </div>
-  <div
-    class="uploadIndicatorContainer"
-  >
-    <div
-      class="uploadIndicator"
-    >
-      <div>
-        <span
-          aria-label="su-upload"
-          class="su-upload uploadIcon"
-        />
-      </div>
-    </div>
-  </div>
-  <input
-    style="border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;"
-    tabindex="-1"
-    type="file"
-  />
-</div>
-`;
-
-exports[`Render a SingleMediaDropzone with an error text 1`] = `
-Array [
-  <div
-    class="mediaContainer default"
-    role="presentation"
-    tabindex="0"
-  >
-    <div
-      class="emptyIndicator"
-    >
-      <span
-        aria-label="su-user"
-        class="su-user"
-      />
-    </div>
-    <div
-      class="uploadIndicatorContainer"
+      class="mediaContainer default"
+      data-testid="dropzone-root"
     >
       <div
-        class="uploadIndicator"
+        class="mimeTypeIndicator"
       >
-        <div>
+        <div
+          class="mimeTypeIndicator"
+          style="color: rgb(255, 255, 255); font-size: 100px; background-color: rgb(246, 126, 0);"
+        >
           <span
-            aria-label="su-upload"
-            class="su-upload uploadIcon"
+            aria-label="fa-file-video-o"
+            class="fa fa-file-video-o"
           />
         </div>
       </div>
+      <div
+        class="uploadIndicatorContainer"
+      >
+        <div
+          class="uploadIndicator"
+        >
+          <div>
+            <span
+              aria-label="su-upload"
+              class="su-upload uploadIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <input
+        data-testid="dropzone-input"
+      />
     </div>
-    <input
-      style="border:0;clip:rect(0, 0, 0, 0);clip-path:inset(50%);height:1px;margin:0 -1px -1px 0;overflow:hidden;padding:0;position:absolute;width:1px;white-space:nowrap"
-      tabindex="-1"
-      type="file"
-    />
-  </div>,
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Render a SingleMediaDropzone with a loader if image has not been loaded yet 1`] = `
+<DocumentFragment>
+  <div
+    data-testid="dropzone"
+  >
+    <div
+      class="mediaContainer default"
+      data-testid="dropzone-root"
+    >
+      <img
+        class="thumbnail"
+        src="test.jpg"
+      />
+      <div
+        class="spinner"
+        style="width: 40px; height: 40px;"
+      >
+        <div
+          class="doubleBounce1"
+        />
+        <div
+          class="doubleBounce2"
+        />
+      </div>
+      <div
+        class="uploadIndicatorContainer"
+      >
+        <div
+          class="uploadIndicator"
+        >
+          <div>
+            <span
+              aria-label="su-upload"
+              class="su-upload uploadIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <input
+        data-testid="dropzone-input"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Render a SingleMediaDropzone with an error text 1`] = `
+<DocumentFragment>
+  <div
+    data-testid="dropzone"
+  >
+    <div
+      class="mediaContainer default"
+      data-testid="dropzone-root"
+    >
+      <div
+        class="emptyIndicator"
+      >
+        <span
+          aria-label="su-user"
+          class="su-user"
+        />
+      </div>
+      <div
+        class="uploadIndicatorContainer"
+      >
+        <div
+          class="uploadIndicator"
+        >
+          <div>
+            <span
+              aria-label="su-upload"
+              class="su-upload uploadIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <input
+        data-testid="dropzone-input"
+      />
+    </div>
+  </div>
   <div
     class="errorText"
   >
     some-custom-error-message
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Render a SingleMediaDropzone with the default empty icon 1`] = `
-<div
-  class="mediaContainer default"
-  role="presentation"
-  tabindex="0"
->
+<DocumentFragment>
   <div
-    class="emptyIndicator"
-  >
-    <span
-      aria-label="su-image"
-      class="su-image"
-    />
-  </div>
-  <div
-    class="uploadIndicatorContainer"
+    data-testid="dropzone"
   >
     <div
-      class="uploadIndicator"
+      class="mediaContainer default"
+      data-testid="dropzone-root"
     >
-      <div>
+      <div
+        class="emptyIndicator"
+      >
         <span
-          aria-label="su-upload"
-          class="su-upload uploadIcon"
+          aria-label="su-image"
+          class="su-image"
         />
       </div>
+      <div
+        class="uploadIndicatorContainer"
+      >
+        <div
+          class="uploadIndicator"
+        >
+          <div>
+            <span
+              aria-label="su-upload"
+              class="su-upload uploadIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <input
+        data-testid="dropzone-input"
+      />
     </div>
   </div>
-  <input
-    style="border:0;clip:rect(0, 0, 0, 0);clip-path:inset(50%);height:1px;margin:0 -1px -1px 0;overflow:hidden;padding:0;position:absolute;width:1px;white-space:nowrap"
-    tabindex="-1"
-    type="file"
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render a SingleMediaDropzone with the passed empty icon 1`] = `
-<div
-  class="mediaContainer default"
-  role="presentation"
-  tabindex="0"
->
+<DocumentFragment>
   <div
-    class="emptyIndicator"
-  >
-    <span
-      aria-label="su-user"
-      class="su-user"
-    />
-  </div>
-  <div
-    class="uploadIndicatorContainer"
+    data-testid="dropzone"
   >
     <div
-      class="uploadIndicator"
+      class="mediaContainer default"
+      data-testid="dropzone-root"
     >
-      <div>
+      <div
+        class="emptyIndicator"
+      >
         <span
-          aria-label="su-upload"
-          class="su-upload uploadIcon"
+          aria-label="su-user"
+          class="su-user"
         />
       </div>
+      <div
+        class="uploadIndicatorContainer"
+      >
+        <div
+          class="uploadIndicator"
+        >
+          <div>
+            <span
+              aria-label="su-upload"
+              class="su-upload uploadIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <input
+        data-testid="dropzone-input"
+      />
     </div>
   </div>
-  <input
-    style="border:0;clip:rect(0, 0, 0, 0);clip-path:inset(50%);height:1px;margin:0 -1px -1px 0;overflow:hidden;padding:0;position:absolute;width:1px;white-space:nowrap"
-    tabindex="-1"
-    type="file"
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render a SingleMediaDropzone with the round skin 1`] = `
-<div
-  class="mediaContainer round"
-  role="presentation"
-  tabindex="0"
->
-  <img
-    class="thumbnail"
-    src="http://lorempixel.com/400/400"
-  />
+<DocumentFragment>
   <div
-    class="uploadIndicatorContainer"
+    data-testid="dropzone"
   >
     <div
-      class="uploadIndicator"
+      class="mediaContainer round"
+      data-testid="dropzone-root"
     >
-      <div>
-        <span
-          aria-label="su-upload"
-          class="su-upload uploadIcon"
+      <img
+        class="thumbnail"
+        src="http://lorempixel.com/400/400"
+      />
+      <div
+        class="spinner"
+        style="width: 40px; height: 40px;"
+      >
+        <div
+          class="doubleBounce1"
+        />
+        <div
+          class="doubleBounce2"
         />
       </div>
+      <div
+        class="uploadIndicatorContainer"
+      >
+        <div
+          class="uploadIndicator"
+        >
+          <div>
+            <span
+              aria-label="su-upload"
+              class="su-upload uploadIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <input
+        data-testid="dropzone-input"
+      />
     </div>
   </div>
-  <input
-    style="border:0;clip:rect(0, 0, 0, 0);clip-path:inset(50%);height:1px;margin:0 -1px -1px 0;overflow:hidden;padding:0;position:absolute;width:1px;white-space:nowrap"
-    tabindex="-1"
-    type="file"
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render a SingleMediaDropzone without a loader if image has been loaded after an error occured before 1`] = `
-<div
-  class="mediaContainer default"
-  role="presentation"
-  tabindex="0"
->
-  <img
-    class="thumbnail"
-    src="test.jpg"
-  />
+<DocumentFragment>
   <div
-    class="uploadIndicatorContainer"
+    data-testid="dropzone"
   >
     <div
-      class="uploadIndicator"
+      class="mediaContainer default"
+      data-testid="dropzone-root"
     >
-      <div>
-        <span
-          aria-label="su-upload"
-          class="su-upload uploadIcon"
-        />
+      <img
+        class="thumbnail"
+        src="test.jpg"
+      />
+      <div
+        class="uploadIndicatorContainer"
+      >
+        <div
+          class="uploadIndicator"
+        >
+          <div>
+            <span
+              aria-label="su-upload"
+              class="su-upload uploadIcon"
+            />
+          </div>
+        </div>
       </div>
+      <input
+        data-testid="dropzone-input"
+      />
     </div>
   </div>
-  <input
-    style="border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;"
-    tabindex="-1"
-    type="file"
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render a SingleMediaDropzone without a loader if image has been loaded yet 1`] = `
-<div
-  class="mediaContainer default"
-  role="presentation"
-  tabindex="0"
->
-  <img
-    class="thumbnail"
-    src="test.jpg"
-  />
+<DocumentFragment>
   <div
-    class="uploadIndicatorContainer"
+    data-testid="dropzone"
   >
     <div
-      class="uploadIndicator"
+      class="mediaContainer default"
+      data-testid="dropzone-root"
     >
-      <div>
-        <span
-          aria-label="su-upload"
-          class="su-upload uploadIcon"
-        />
+      <img
+        class="thumbnail"
+        src="test.jpg"
+      />
+      <div
+        class="uploadIndicatorContainer"
+      >
+        <div
+          class="uploadIndicator"
+        >
+          <div>
+            <span
+              aria-label="su-upload"
+              class="su-upload uploadIcon"
+            />
+          </div>
+        </div>
       </div>
+      <input
+        data-testid="dropzone-input"
+      />
     </div>
   </div>
-  <input
-    style="border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;"
-    tabindex="-1"
-    type="file"
-  />
-</div>
+</DocumentFragment>
 `;

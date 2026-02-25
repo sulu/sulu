@@ -1,11 +1,12 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Tooltip from '../Tooltip';
 import Icon from '../../Icon';
 
 test('The component should render in unfocused state', () => {
-    const component = render(
+    const {asFragment} = render(
         <Tooltip label="Copy">
             <button aria-label="Copy" type="button">
                 <Icon name="su-copy" />
@@ -13,13 +14,14 @@ test('The component should render in unfocused state', () => {
         </Tooltip>
     );
 
-    expect(component.find('Popover span').length).toBe(0);
-
-    expect(component).toMatchSnapshot();
+    expect(screen.queryByText('Copy')).not.toBeInTheDocument();
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('The component should render in focused state', () => {
-    const component = mount(
+test('The component should render in focused state', async() => {
+    const user = userEvent.setup();
+
+    render(
         <Tooltip label="Copy">
             <button aria-label="Copy" type="button">
                 <Icon name="su-copy" />
@@ -27,14 +29,15 @@ test('The component should render in focused state', () => {
         </Tooltip>
     );
 
-    component.find('button').simulate('focus');
+    await user.tab();
 
-    expect(component.find('Popover span').text()).toBe('Copy');
-    expect(component).toMatchSnapshot();
+    expect(screen.getByText('Copy')).toBeInTheDocument();
 });
 
-test('The component should render in hovered state', () => {
-    const component = mount(
+test('The component should render in hovered state', async() => {
+    const user = userEvent.setup();
+
+    render(
         <Tooltip label="Copy">
             <button aria-label="Copy" type="button">
                 <Icon name="su-copy" />
@@ -42,11 +45,16 @@ test('The component should render in hovered state', () => {
         </Tooltip>
     );
 
-    component.find('Tooltip').simulate('mouseenter');
+    const button = screen.getByRole('button', {name: 'Copy'});
+    const tooltipContainer = button.parentElement;
 
-    expect(component.find('Popover span').text()).toBe('Copy');
-    expect(component).toMatchSnapshot();
+    if (!tooltipContainer) {
+        throw new Error('Expected tooltip container to be set');
+    }
 
-    component.find('Tooltip').simulate('mouseleave');
-    expect(component.find('Popover span').length).toBe(0);
+    await user.hover(tooltipContainer);
+    expect(screen.getByText('Copy')).toBeInTheDocument();
+
+    await user.unhover(tooltipContainer);
+    expect(screen.queryByText('Copy')).not.toBeInTheDocument();
 });

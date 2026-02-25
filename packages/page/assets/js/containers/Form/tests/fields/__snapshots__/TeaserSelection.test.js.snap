@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pass props correctly to component 1`] = `
+<DocumentFragment>
+  <div />
+</DocumentFragment>
+`;

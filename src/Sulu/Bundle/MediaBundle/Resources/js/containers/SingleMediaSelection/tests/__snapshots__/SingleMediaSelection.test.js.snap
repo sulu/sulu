@@ -1,242 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Component should render with display options 1`] = `
-Array [
-  <div
-    class="singleItemSelection"
-  >
-    <button
-      class="button left"
-      type="button"
-    >
-      <span
-        aria-label="su-image"
-        class="su-image icon"
-      />
-    </button>
-    <div
-      class="itemContainer"
-    >
-      <div
-        class="item clickable"
-        role="button"
-      >
-        <div
-          class="empty"
-        >
-          sulu_media.select_media_singular
-        </div>
-      </div>
-    </div>
-    <button
-      class="button right hasOptions"
-      type="button"
-    >
-      <span
-        aria-label="su-display-default"
-        class="su-display-default icon"
-      />
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
-      />
-    </button>
-  </div>,
-  <div>
-    single media selection overlay
-  </div>,
-]
-`;
-
-exports[`Component should render with display options and correctly selected icon 1`] = `
-Array [
-  <div
-    class="singleItemSelection"
-  >
-    <button
-      class="button left"
-      type="button"
-    >
-      <span
-        aria-label="su-image"
-        class="su-image icon"
-      />
-    </button>
-    <div
-      class="itemContainer"
-    >
-      <div
-        class="item clickable"
-        role="button"
-      >
-        <div
-          class="empty"
-        >
-          sulu_media.select_media_singular
-        </div>
-      </div>
-    </div>
-    <button
-      class="button right hasOptions"
-      type="button"
-    >
-      <span
-        aria-label="su-display-center-left"
-        class="su-display-center-left icon"
-      />
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
-      />
-    </button>
-  </div>,
-  <div>
-    single media selection overlay
-  </div>,
-]
+<DocumentFragment>
+  <div />
+</DocumentFragment>
 `;
 
 exports[`Component should render with selected media 1`] = `
-Array [
-  <div
-    class="singleItemSelection"
-  >
-    <button
-      class="button left"
-      type="button"
-    >
-      <span
-        aria-label="su-image"
-        class="su-image icon"
-      />
-    </button>
-    <div
-      class="itemContainer"
-    >
-      <div
-        class="item clickable"
-        role="button"
-      >
-        <div
-          class="mediaItem"
-        >
-          <img
-            alt="test media"
-            class="thumbnailImage"
-            src="http://lorempixel.com/25/25"
-          />
-          <div
-            class="mediaTitle"
-          >
-            test media
-          </div>
-        </div>
-      </div>
-      <button
-        class="removeButton"
-        type="button"
-      >
-        <span
-          aria-label="su-trash-alt"
-          class="su-trash-alt"
-        />
-      </button>
-    </div>
-  </div>,
+<DocumentFragment>
   <div>
-    single media selection overlay
-  </div>,
-]
-`;
-
-exports[`Component should render with selected media without thumbnails with MimeTypeIndicator 1`] = `
-Array [
-  <div
-    class="singleItemSelection"
-  >
-    <button
-      class="button left"
-      type="button"
-    >
-      <span
-        aria-label="su-image"
-        class="su-image icon"
-      />
-    </button>
     <div
-      class="itemContainer"
+      class="mediaItem"
     >
+      <img
+        alt="test media"
+        class="thumbnailImage"
+        src="http://lorempixel.com/25/25"
+      />
       <div
-        class="item clickable"
-        role="button"
+        class="mediaTitle"
       >
-        <div
-          class="mediaItem"
-        >
-          <div
-            class="mimeTypeIndicator"
-            style="color:#fff;font-size:14px;background-color:#bb0806;width:19px;height:19px"
-          >
-            <span
-              aria-label="fa-file-pdf-o"
-              class="fa fa-file-pdf-o"
-            />
-          </div>
-          <div
-            class="mediaTitle"
-          >
-            test media
-          </div>
-        </div>
+        test media
       </div>
-      <button
-        class="removeButton"
-        type="button"
-      >
-        <span
-          aria-label="su-trash-alt"
-          class="su-trash-alt"
-        />
-      </button>
     </div>
-  </div>,
-  <div>
-    single media selection overlay
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Component should render without selected media 1`] = `
-Array [
-  <div
-    class="singleItemSelection"
-  >
-    <button
-      class="button left"
-      type="button"
-    >
-      <span
-        aria-label="su-image"
-        class="su-image icon"
-      />
-    </button>
-    <div
-      class="itemContainer"
-    >
-      <div
-        class="item clickable"
-        role="button"
-      >
-        <div
-          class="empty"
-        >
-          sulu_media.select_media_singular
-        </div>
-      </div>
-    </div>
-  </div>,
-  <div>
-    single media selection overlay
-  </div>,
-]
+<DocumentFragment>
+  <div />
+</DocumentFragment>
 `;

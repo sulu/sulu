@@ -1,10 +1,65 @@
 // @flow
-import {mount} from 'enzyme';
 import React from 'react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import MediaCard from '../MediaCard';
 
+jest.mock('sulu-admin-bundle/components', () => ({
+    Checkbox: jest.fn(({children}) => <div>{children}</div>),
+    CroppedText: jest.fn(({children}) => <div>{children}</div>),
+    GhostIndicator: jest.fn(({locale}) => <span>{locale}</span>),
+    Icon: jest.fn(({name}) => <span>{name}</span>),
+    Loader: jest.fn(() => <div>loader</div>),
+}));
+
+jest.mock('../../MimeTypeIndicator', () => jest.fn(() => <div>mime-type-indicator</div>));
+jest.mock('../DownloadList', () => jest.fn(() => null));
+
+const downloadListComponent = ((jest.requireMock('../DownloadList'): any): {
+    mock: {calls: Array<[Object]>},
+    ...
+});
+
+let originalImage: any;
+let mockImageInstances: Array<any> = [];
+
+beforeAll(() => {
+    originalImage = window.Image;
+});
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    mockImageInstances = [];
+
+    window.Image = class {
+        onload: Function;
+        onerror: Function;
+        _src: string;
+
+        constructor() {
+            this.onload = () => undefined;
+            this.onerror = () => undefined;
+            this._src = '';
+            mockImageInstances.push((this: any));
+        }
+
+        set src(value: string) {
+            this._src = value;
+        }
+
+        get src() {
+            return this._src;
+        }
+    };
+});
+
+afterAll(() => {
+    window.Image = originalImage;
+});
+
 test('Render a MediaCard component', () => {
-    const mediaCard = mount(
+    const {asFragment} = render(
         <MediaCard
             downloadText=""
             downloadUrl=""
@@ -16,13 +71,13 @@ test('Render a MediaCard component', () => {
         />
     );
 
-    mediaCard.instance().image.onload();
+    mockImageInstances[0].onload();
 
-    expect(mediaCard.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a MediaCard component with ghostLocale', () => {
-    const mediaCard = mount(
+    const {asFragment} = render(
         <MediaCard
             downloadText=""
             downloadUrl=""
@@ -35,13 +90,13 @@ test('Render a MediaCard component with ghostLocale', () => {
         />
     );
 
-    mediaCard.instance().image.onload();
+    mockImageInstances[0].onload();
 
-    expect(mediaCard.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a MediaCard component with loader if image has not been loaded yet', () => {
-    const mediaCard = mount(
+    const {asFragment} = render(
         <MediaCard
             downloadText=""
             downloadUrl=""
@@ -53,11 +108,11 @@ test('Render a MediaCard component with loader if image has not been loaded yet'
         />
     );
 
-    expect(mediaCard.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a MediaCard component with MimeTypeIndicator if an error appeared while loading the image', () => {
-    const mediaCard = mount(
+    const {asFragment} = render(
         <MediaCard
             downloadText=""
             downloadUrl=""
@@ -69,13 +124,13 @@ test('Render a MediaCard component with MimeTypeIndicator if an error appeared w
         />
     );
 
-    mediaCard.instance().image.onerror();
+    mockImageInstances[0].onerror();
 
-    expect(mediaCard.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a MediaCard component with a checkbox for selection', () => {
-    const mediaCard = mount(
+    const {asFragment} = render(
         <MediaCard
             downloadText=""
             downloadUrl=""
@@ -88,12 +143,12 @@ test('Render a MediaCard component with a checkbox for selection', () => {
         />
     );
 
-    mediaCard.instance().image.onload();
+    mockImageInstances[0].onload();
 
-    expect(mediaCard.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Render a MediaCard with download list', () => {
+test('Render a MediaCard with download list', async() => {
     const imageSizes = [
         {
             url: 'http://lorempixel.com/300/200',
@@ -109,7 +164,7 @@ test('Render a MediaCard with download list', () => {
         },
     ];
 
-    const mediaCard = mount(
+    render(
         <MediaCard
             downloadCopyText="Copy URL"
             downloadText="Direct download"
@@ -123,17 +178,17 @@ test('Render a MediaCard with download list', () => {
         />
     );
 
-    mediaCard.instance().openDownloadList();
-    mediaCard.update();
-    expect(mediaCard.find('DownloadList Popover').render()).toMatchSnapshot();
+    await userEvent.click(screen.getByRole('button', {name: 'su-download'}));
+
+    expect(getLatestMockProps(downloadListComponent).open).toEqual(true);
 });
 
-test('Clicking on an item should call the responsible handler on the MediaCard component', () => {
+test('Clicking on an item should call the responsible handler on the MediaCard component', async() => {
     const clickSpy = jest.fn();
     const selectionSpy = jest.fn();
     const itemId = 'test';
 
-    const mediaCard = mount(
+    render(
         <MediaCard
             downloadText=""
             downloadUrl=""
@@ -147,9 +202,19 @@ test('Clicking on an item should call the responsible handler on the MediaCard c
         />
     );
 
-    mediaCard.find('MediaCard .media').simulate('click');
+    const actionButtons = screen.getAllByRole('button').filter(
+        (button) => button.getAttribute('tabindex') === '0'
+    );
+    const mediaButton = actionButtons.find((button) => button.className.includes('media'));
+    const descriptionButton = actionButtons.find((button) => button.className.includes('description'));
+
+    if (!mediaButton || !descriptionButton) {
+        throw new Error('Could not find expected media and description buttons');
+    }
+
+    await userEvent.click(mediaButton);
     expect(clickSpy).toHaveBeenCalledWith(itemId, true);
 
-    mediaCard.find('MediaCard .description').simulate('click');
+    await userEvent.click(descriptionButton);
     expect(selectionSpy).toHaveBeenCalledWith(itemId, true);
 });

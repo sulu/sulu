@@ -1,26 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render a KeyValue RuleType 1`] = `
-<div
-  class="inputs"
->
+<DocumentFragment>
   <div
-    class="input default left"
+    class="inputs"
   >
-    <input
-      placeholder="key"
-      type="text"
-      value=""
-    />
+    <div
+      class="input default left"
+    >
+      <input
+        placeholder="key"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="input default left"
+    >
+      <input
+        placeholder="value"
+        type="text"
+        value=""
+      />
+    </div>
   </div>
-  <div
-    class="input default left"
-  >
-    <input
-      placeholder="value"
-      type="text"
-      value=""
-    />
-  </div>
-</div>
+</DocumentFragment>
 `;

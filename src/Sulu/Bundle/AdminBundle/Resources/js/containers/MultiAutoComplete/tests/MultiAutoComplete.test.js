@@ -1,16 +1,47 @@
 // @flow
 import React from 'react';
-import {mount, shallow, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import MultiAutoComplete from '../MultiAutoComplete';
 import MultiAutoCompleteComponent from '../../../components/MultiAutoComplete';
 import SearchStore from '../../../stores/SearchStore';
 import MultiSelectionStore from '../../../stores/MultiSelectionStore';
+import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
+
+jest.mock('../../../components/MultiAutoComplete', () => {
+    const React = require('react');
+
+    return jest.fn(function MultiAutoCompleteMock(props) {
+        const selectedData = {
+            id: 7,
+            name: 'James Bond',
+            number: '007',
+        };
+
+        return React.createElement(
+            'div',
+            {'data-testid': 'multi-autocomplete-component'},
+            React.createElement(
+                'input',
+                {'data-testid': 'multi-autocomplete-input', disabled: props.disabled, ref: props.inputRef}
+            ),
+            React.createElement('button', {onClick: () => props.onSearch('James'), type: 'button'}, 'trigger-search'),
+            React.createElement(
+                'button',
+                {onClick: () => props.onChange(selectedData), type: 'button'},
+                'trigger-change'
+            )
+        );
+    });
+});
 
 jest.mock('../../../stores/SearchStore', () => jest.fn());
+
 jest.mock('../../../stores/MultiSelectionStore', () => jest.fn(function(resourceKey, selectedItemIds, locale) {
     this.resourceKey = resourceKey;
     this.locale = locale;
+    this.requestParameters = undefined;
     this.set = jest.fn();
     this.loading = false;
 
@@ -20,29 +51,46 @@ jest.mock('../../../stores/MultiSelectionStore', () => jest.fn(function(resource
     });
 }));
 
-test('Render in loading state', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = true;
+const multiAutoCompleteComponentMock = (MultiAutoCompleteComponent: any);
+const searchStoreMock = (SearchStore: any);
+
+function mockSearchStore(
+    {loading = false, searchResults = []}: {|loading?: boolean, searchResults?: Array<Object>|} = {}
+) {
+    searchStoreMock.mockImplementation(function() {
+        this.searchResults = searchResults;
+        this.loading = loading;
+        this.search = jest.fn();
+        this.clearSearchResults = jest.fn();
     });
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    mockSearchStore();
+});
+
+test('Render in loading state', () => {
+    mockSearchStore({loading: true});
 
     const selectionStore = new MultiSelectionStore('contact', []);
 
-    expect(render(
+    const {asFragment} = render(
         <MultiAutoComplete
             displayProperty="name"
             searchProperties={[]}
             selectionStore={selectionStore}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should assign input as ref to inputRef', () => {
     const inputRefSpy = jest.fn();
     const selectionStore = new MultiSelectionStore('contact', []);
 
-    const multiAutoComplete = mount(
+    render(
         <MultiAutoComplete
             displayProperty="name"
             inputRef={inputRefSpy}
@@ -51,20 +99,16 @@ test('Should assign input as ref to inputRef', () => {
         />
     );
 
-    expect(inputRefSpy).toBeCalledWith(multiAutoComplete.find('input').instance());
+    expect(inputRefSpy).toBeCalledWith(screen.getByTestId('multi-autocomplete-input'));
 });
 
 test('Pass loading flag if MultiSelectionStore and SearchStore is loading', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = true;
-    });
+    mockSearchStore({loading: true});
 
     const selectionStore = new MultiSelectionStore('contact', []);
     selectionStore.loading = true;
 
-    const multiAutoComplete = shallow(
+    render(
         <MultiAutoComplete
             displayProperty="name"
             searchProperties={[]}
@@ -72,19 +116,15 @@ test('Pass loading flag if MultiSelectionStore and SearchStore is loading', () =
         />
     );
 
-    expect(multiAutoComplete.find('MultiAutoComplete').prop('loading')).toEqual(true);
+    expect(getLatestMockProps(multiAutoCompleteComponentMock).loading).toEqual(true);
 });
 
 test('Pass loading flag if only SearchStore is loading', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = true;
-    });
+    mockSearchStore({loading: true});
 
     const selectionStore = new MultiSelectionStore('contact', []);
 
-    const multiAutoComplete = shallow(
+    render(
         <MultiAutoComplete
             displayProperty="name"
             searchProperties={[]}
@@ -92,20 +132,16 @@ test('Pass loading flag if only SearchStore is loading', () => {
         />
     );
 
-    expect(multiAutoComplete.find('MultiAutoComplete').prop('loading')).toEqual(true);
+    expect(getLatestMockProps(multiAutoCompleteComponentMock).loading).toEqual(true);
 });
 
 test('Pass loading flag if only MultiSelectionStore is loading', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = false;
-    });
+    mockSearchStore({loading: false});
 
     const selectionStore = new MultiSelectionStore('contact', []);
     selectionStore.loading = true;
 
-    const multiAutoComplete = shallow(
+    render(
         <MultiAutoComplete
             displayProperty="name"
             searchProperties={[]}
@@ -113,16 +149,13 @@ test('Pass loading flag if only MultiSelectionStore is loading', () => {
         />
     );
 
-    expect(multiAutoComplete.find('MultiAutoComplete').prop('loading')).toEqual(true);
+    expect(getLatestMockProps(multiAutoCompleteComponentMock).loading).toEqual(true);
 });
 
 test('Pass allowAdd and idProperty prop to component', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {});
-
     const selectionStore = new MultiSelectionStore('contact', []);
 
-    const multiAutoComplete = shallow(
+    render(
         <MultiAutoComplete
             allowAdd={true}
             displayProperty="name"
@@ -132,7 +165,7 @@ test('Pass allowAdd and idProperty prop to component', () => {
         />
     );
 
-    expect(multiAutoComplete.find('MultiAutoComplete').props()).toEqual(expect.objectContaining({
+    expect(getLatestMockProps(multiAutoCompleteComponentMock)).toEqual(expect.objectContaining({
         allowAdd: true,
         idProperty: 'name',
     }));
@@ -144,15 +177,11 @@ test('Render with loaded suggestions', () => {
         {id: 6, number: '006', name: 'John Doe'},
     ];
 
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = suggestions;
-        this.loading = false;
-    });
+    mockSearchStore({searchResults: suggestions});
 
     const selectionStore = new MultiSelectionStore('contact', []);
 
-    const multiAutoComplete = mount(
+    render(
         <MultiAutoComplete
             displayProperty="name"
             searchProperties={['name', 'number']}
@@ -160,25 +189,17 @@ test('Render with loaded suggestions', () => {
         />
     );
 
-    multiAutoComplete.find(MultiAutoCompleteComponent).instance().displaySuggestions = true;
-    multiAutoComplete.update();
-
-    expect(multiAutoComplete.find('MultiAutoComplete').find('Suggestion').at(0).prop('value'))
-        .toEqual(suggestions[0]);
-    expect(multiAutoComplete.find('MultiAutoComplete').find('Suggestion').at(1).prop('value'))
-        .toEqual(suggestions[1]);
+    expect(getLatestMockProps(multiAutoCompleteComponentMock).suggestions).toEqual(suggestions);
 });
 
 test('Render with given value', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = false;
-    });
-
     const selectionStore = new MultiSelectionStore('contact', []);
+    selectionStore.items = [
+        {id: 1, name: 'James Bond', number: '007'},
+        {id: 2, name: 'John Doe', number: '005'},
+    ];
 
-    const multiAutoComplete = mount(
+    const {asFragment} = render(
         <MultiAutoComplete
             displayProperty="name"
             searchProperties={[]}
@@ -186,24 +207,18 @@ test('Render with given value', () => {
         />
     );
 
+    expect(getLatestMockProps(multiAutoCompleteComponentMock).value).toEqual(selectionStore.items);
+    expect(asFragment()).toMatchSnapshot();
+});
+
+test('Render in disabled state', () => {
+    const selectionStore = new MultiSelectionStore('contact', []);
     selectionStore.items = [
         {id: 1, name: 'James Bond', number: '007'},
         {id: 2, name: 'John Doe', number: '005'},
     ];
 
-    expect(multiAutoComplete.render()).toMatchSnapshot();
-});
-
-test('Render in disabled state', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = false;
-    });
-
-    const selectionStore = new MultiSelectionStore('contact', []);
-
-    const multiAutoComplete = mount(
+    const {asFragment} = render(
         <MultiAutoComplete
             disabled={true}
             displayProperty="name"
@@ -212,25 +227,15 @@ test('Render in disabled state', () => {
         />
     );
 
-    selectionStore.items = [
-        {id: 1, name: 'James Bond', number: '007'},
-        {id: 2, name: 'John Doe', number: '005'},
-    ];
-
-    expect(multiAutoComplete.render()).toMatchSnapshot();
+    expect(getLatestMockProps(multiAutoCompleteComponentMock).disabled).toEqual(true);
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Search using store when new search value is retrieved from MultiAutoComplete component', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = false;
-        this.search = jest.fn();
-    });
-
+test('Search using store when new search value is retrieved from MultiAutoComplete component', async() => {
     const selectionStore = new MultiSelectionStore('contact', []);
+    const user = userEvent.setup();
 
-    const multiAutoComplete = shallow(
+    render(
         <MultiAutoComplete
             displayProperty="name"
             searchProperties={[]}
@@ -238,53 +243,41 @@ test('Search using store when new search value is retrieved from MultiAutoComple
         />
     );
 
-    multiAutoComplete.find('MultiAutoComplete').simulate('search', 'James');
+    const searchStore = searchStoreMock.mock.instances[0];
 
-    expect(multiAutoComplete.instance().searchStore.search).toBeCalledWith('James', []);
+    await user.click(screen.getByRole('button', {name: 'trigger-search'}));
+
+    expect(searchStore.search).toBeCalledWith('James', []);
 });
 
-test('Search using store with excluded-ids when new search value is retrieved from MultiAutoComplete component', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = false;
-        this.search = jest.fn();
-    });
+test(
+    'Search using store with excluded-ids when new search value is retrieved from MultiAutoComplete component',
+    async() => {
+        const selectionStore = new MultiSelectionStore('contact', []);
+        (selectionStore: any).ids = [1, 3];
+        const user = userEvent.setup();
 
+        render(
+            <MultiAutoComplete
+                displayProperty="name"
+                searchProperties={[]}
+                selectionStore={selectionStore}
+            />
+        );
+
+        const searchStore = searchStoreMock.mock.instances[0];
+
+        await user.click(screen.getByRole('button', {name: 'trigger-search'}));
+
+        expect(searchStore.search).toBeCalledWith('James', [1, 3]);
+    }
+);
+
+test('Clear search result when chosen option has been selected with idProperty', async() => {
     const selectionStore = new MultiSelectionStore('contact', []);
+    const user = userEvent.setup();
 
-    const multiAutoComplete = shallow(
-        <MultiAutoComplete
-            displayProperty="name"
-            searchProperties={[]}
-            selectionStore={selectionStore}
-        />
-    );
-
-    // $FlowFixMe
-    selectionStore.ids = [1, 3];
-    multiAutoComplete.find('MultiAutoComplete').simulate('search', 'James');
-
-    expect(multiAutoComplete.instance().searchStore.search).toBeCalledWith('James', [1, 3]);
-});
-
-test('Clear search result when chosen option has been selected with idProperty', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [data];
-        this.loading = false;
-        this.clearSearchResults = jest.fn();
-    });
-
-    const selectionStore = new MultiSelectionStore('contact', []);
-
-    const data = {
-        id: 7,
-        name: 'James Bond',
-        number: '007',
-    };
-
-    const multiAutoComplete = mount(
+    render(
         <MultiAutoComplete
             displayProperty="name"
             idProperty="number"
@@ -293,20 +286,24 @@ test('Clear search result when chosen option has been selected with idProperty',
         />
     );
 
-    multiAutoComplete.find('MultiAutoComplete > MultiAutoComplete').prop('onChange')(data);
-    expect(selectionStore.set).toBeCalledWith(data);
+    const searchStore = searchStoreMock.mock.instances[0];
 
-    expect(multiAutoComplete.instance().searchStore.clearSearchResults).toBeCalledWith();
+    await user.click(screen.getByRole('button', {name: 'trigger-change'}));
+
+    expect(selectionStore.set).toBeCalledWith({
+        id: 7,
+        name: 'James Bond',
+        number: '007',
+    });
+    expect(searchStore.clearSearchResults).toBeCalledWith();
 });
 
 test('Construct SearchStore with correct parameters on mount', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {});
-
     const locale = observable.box('de');
     const selectionStore = new MultiSelectionStore('contact', [], locale);
+    selectionStore.requestParameters = {city: 'Vienna'};
 
-    shallow(
+    render(
         <MultiAutoComplete
             allowAdd={true}
             displayProperty="name"
@@ -317,5 +314,10 @@ test('Construct SearchStore with correct parameters on mount', () => {
         />
     );
 
-    expect(SearchStore).toBeCalledWith('contact', ['firstName', 'lastName'], {country: 'US'}, locale);
+    expect(SearchStore).toBeCalledWith(
+        'contact',
+        ['firstName', 'lastName'],
+        {city: 'Vienna', country: 'US'},
+        locale
+    );
 });

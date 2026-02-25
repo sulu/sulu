@@ -1,43 +1,41 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import LinkTypeOverlay from '../../overlays/LinkTypeOverlay';
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../../SingleListOverlay', () => jest.fn(function() {
-    return <div>single list overlay</div>;
-}));
+jest.mock('../../../SingleSelection', () => jest.fn(() => null));
+
+const options = {
+    displayProperties: ['title'],
+    emptyText: 'No page selected',
+    icon: 'su-document',
+    listAdapter: 'column_list',
+    overlayTitle: 'Choose page',
+    resourceKey: 'pages',
+    targets: ['_blank', '_self', '_parent', '_top'],
+};
 
 test('Render overlay with minimal config', () => {
-    const linkOverlay = mount(
+    const {baseElement} = render(
         <LinkTypeOverlay
             href={undefined}
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
             onHrefChange={jest.fn()}
             open={true}
-            options={
-                {
-                    displayProperties: ['title'],
-                    emptyText: 'No page selected',
-                    icon: 'su-document',
-                    listAdapter: 'column_list',
-                    overlayTitle: 'Choose page',
-                    resourceKey: 'pages',
-                    targets: ['_blank', '_self', '_parent', '_top'],
-                }
-            }
+            options={options}
         />
     );
 
-    expect(linkOverlay.find('Form').render()).toMatchSnapshot();
+    expect(baseElement).toMatchSnapshot();
 });
 
 test('Render overlay without options', () => {
-    expect(() => shallow(
+    expect(() => render(
         <LinkTypeOverlay
             href={undefined}
             onCancel={jest.fn()}
@@ -50,7 +48,7 @@ test('Render overlay without options', () => {
 });
 
 test('Render overlay with query enabled', () => {
-    const linkOverlay = mount(
+    const {baseElement} = render(
         <LinkTypeOverlay
             href={undefined}
             onCancel={jest.fn()}
@@ -58,25 +56,15 @@ test('Render overlay with query enabled', () => {
             onHrefChange={jest.fn()}
             onQueryChange={jest.fn()}
             open={true}
-            options={
-                {
-                    displayProperties: ['title'],
-                    emptyText: 'No page selected',
-                    icon: 'su-document',
-                    listAdapter: 'column_list',
-                    overlayTitle: 'Choose page',
-                    resourceKey: 'pages',
-                    targets: ['_blank', '_self', '_parent', '_top'],
-                }
-            }
+            options={options}
         />
     );
 
-    expect(linkOverlay.find('Form').render()).toMatchSnapshot();
+    expect(baseElement).toMatchSnapshot();
 });
 
 test('Render overlay with anchor enabled', () => {
-    const linkOverlay = mount(
+    const {baseElement} = render(
         <LinkTypeOverlay
             href={undefined}
             onAnchorChange={jest.fn()}
@@ -84,25 +72,15 @@ test('Render overlay with anchor enabled', () => {
             onConfirm={jest.fn()}
             onHrefChange={jest.fn()}
             open={true}
-            options={
-                {
-                    displayProperties: ['title'],
-                    emptyText: 'No page selected',
-                    icon: 'su-document',
-                    listAdapter: 'column_list',
-                    overlayTitle: 'Choose page',
-                    resourceKey: 'pages',
-                    targets: ['_blank', '_self', '_parent', '_top'],
-                }
-            }
+            options={options}
         />
     );
 
-    expect(linkOverlay.find('Form').render()).toMatchSnapshot();
+    expect(baseElement).toMatchSnapshot();
 });
 
 test('Render overlay with target enabled', () => {
-    const linkOverlay = mount(
+    const {baseElement} = render(
         <LinkTypeOverlay
             href={undefined}
             onCancel={jest.fn()}
@@ -110,25 +88,15 @@ test('Render overlay with target enabled', () => {
             onHrefChange={jest.fn()}
             onTargetChange={jest.fn()}
             open={true}
-            options={
-                {
-                    displayProperties: ['title'],
-                    emptyText: 'No page selected',
-                    icon: 'su-document',
-                    listAdapter: 'column_list',
-                    overlayTitle: 'Choose page',
-                    resourceKey: 'pages',
-                    targets: ['_blank', '_self', '_parent', '_top'],
-                }
-            }
+            options={options}
         />
     );
 
-    expect(linkOverlay.find('Form').render()).toMatchSnapshot();
+    expect(baseElement).toMatchSnapshot();
 });
 
 test('Render overlay with title enabled', () => {
-    const linkOverlay = mount(
+    const {baseElement} = render(
         <LinkTypeOverlay
             href={undefined}
             onCancel={jest.fn()}
@@ -136,19 +104,9 @@ test('Render overlay with title enabled', () => {
             onHrefChange={jest.fn()}
             onTitleChange={jest.fn()}
             open={true}
-            options={
-                {
-                    displayProperties: ['title'],
-                    emptyText: 'No page selected',
-                    icon: 'su-document',
-                    listAdapter: 'column_list',
-                    overlayTitle: 'Choose page',
-                    resourceKey: 'pages',
-                    targets: ['_blank', '_self', '_parent', '_top'],
-                }
-            }
+            options={options}
         />
     );
 
-    expect(linkOverlay.find('Form').render()).toMatchSnapshot();
+    expect(baseElement).toMatchSnapshot();
 });

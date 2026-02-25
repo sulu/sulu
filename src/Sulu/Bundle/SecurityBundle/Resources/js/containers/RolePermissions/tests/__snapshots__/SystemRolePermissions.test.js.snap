@@ -1,135 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render permissions for a single system 1`] = `
-<div
-  class="systemRolePermissions"
->
+<DocumentFragment>
   <div
-    class="line"
+    class="systemRolePermissions"
   >
-    <div
-      class="label"
-    >
-      sulu_security.system_permission_heading
+    <div />
+    <div>
+      <div />
+      <div />
     </div>
-    <label
-      class="label"
-      tabindex="-1"
-    >
-      <span
-        class="switch toggler"
-      >
-        <input
-          type="checkbox"
-          value=""
-        />
-        <span />
-      </span>
-    </label>
   </div>
-  <table
-    class="matrix matrix"
-  >
-    <tbody>
-      <tr
-        class="row"
-      >
-        <td
-          class="name"
-        >
-          User
-        </td>
-        <td
-          class="items"
-        >
-          <button
-            class="item selected"
-            title="View"
-            type="button"
-          >
-            <span
-              aria-label="su-eye"
-              class="su-eye"
-            />
-          </button>
-          <button
-            class="item"
-            title="Add"
-            type="button"
-          >
-            <span
-              aria-label="su-plus-circle"
-              class="su-plus-circle"
-            />
-          </button>
-          <button
-            class="item selected"
-            title="Edit"
-            type="button"
-          >
-            <span
-              aria-label="su-pen"
-              class="su-pen"
-            />
-          </button>
-          <button
-            class="rowButton"
-            type="button"
-          >
-            sulu_admin.deactivate_all
-          </button>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="name"
-        >
-          Contact Manager
-        </td>
-        <td
-          class="items"
-        >
-          <button
-            class="item"
-            title="View"
-            type="button"
-          >
-            <span
-              aria-label="su-eye"
-              class="su-eye"
-            />
-          </button>
-          <button
-            class="item selected"
-            title="Add"
-            type="button"
-          >
-            <span
-              aria-label="su-plus-circle"
-              class="su-plus-circle"
-            />
-          </button>
-          <button
-            class="item"
-            title="Edit"
-            type="button"
-          >
-            <span
-              aria-label="su-pen"
-              class="su-pen"
-            />
-          </button>
-          <button
-            class="rowButton"
-            type="button"
-          >
-            sulu_admin.deactivate_all
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+</DocumentFragment>
 `;

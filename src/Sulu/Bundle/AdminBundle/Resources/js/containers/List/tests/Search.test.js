@@ -1,6 +1,7 @@
 // @flow
-import {render, shallow} from 'enzyme';
 import React from 'react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Search from '../Search';
 
 jest.mock('../../../utils/Translator', () => ({
@@ -10,93 +11,78 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 test('The component should render collapsed', () => {
-    const search = render(
-        <Search onSearch={jest.fn()} value={null} />
-    );
+    render(<Search onSearch={jest.fn()} value={null} />);
 
-    expect(search).toMatchSnapshot();
+    const input = screen.getByRole('textbox', {name: 'sulu_admin.list_search_placeholder'});
+
+    expect(input).toHaveValue('');
+    expect(input.closest('div')).toHaveClass('collapsed');
 });
 
 test('The component should render not collapsed when value is given', () => {
-    const search = shallow(
-        <Search onSearch={jest.fn()} value="search-string" />
-    );
+    render(<Search onSearch={jest.fn()} value="search-string" />);
 
-    expect(search.render()).toMatchSnapshot();
+    const input = screen.getByRole('textbox', {name: 'sulu_admin.list_search_placeholder'});
+
+    expect(input).toHaveValue('search-string');
+    expect(input.closest('div')).not.toHaveClass('collapsed');
 });
 
 test('The component should update the value if a new one is provided', () => {
-    const search = shallow(
-        <Search onSearch={jest.fn()} value="search-string" />
-    );
-
-    expect(search.find('Input').prop('value')).toBe('search-string');
-
-    search.setProps({value: 'new-search-string'});
-
-    expect(search.find('Input').prop('value')).toBe('new-search-string');
-});
-
-test('The component should expand the input when clicking on icon', () => {
-    const search = shallow(
-        <Search onSearch={jest.fn()} value={null} />
-    );
-
-    search.find('Input').simulate('iconClick');
-
-    expect(search.render()).toMatchSnapshot();
-});
-
-test('The component should trigger the onSearch callback correctly if Input calls onBlur', () => {
     const onSearch = jest.fn();
-    const search = shallow(
-        <Search onSearch={onSearch} value={null} />
-    );
+    const {rerender} = render(<Search onSearch={onSearch} value="search-string" />);
+    expect(screen.getByRole('textbox', {name: 'sulu_admin.list_search_placeholder'})).toHaveValue('search-string');
 
-    const input = search.find('Input');
-    input.simulate('iconClick');
-    input.simulate('change', 'test-search-value');
+    rerender(<Search onSearch={onSearch} value="new-search-string" />);
+    expect(screen.getByRole('textbox', {name: 'sulu_admin.list_search_placeholder'})).toHaveValue('new-search-string');
+});
 
-    expect(search.instance().value).toBe('test-search-value');
+test('The component should expand the input when clicking on icon', async() => {
+    const user = userEvent.setup();
+    render(<Search onSearch={jest.fn()} value={null} />);
+    const input = screen.getByRole('textbox', {name: 'sulu_admin.list_search_placeholder'});
 
-    input.simulate('blur');
+    expect(input.closest('div')).toHaveClass('collapsed');
+    await user.click(screen.getByRole('button', {name: 'su-search'}));
+    expect(input.closest('div')).not.toHaveClass('collapsed');
+});
+
+test('The component should trigger the onSearch callback correctly if Input calls onBlur', async() => {
+    const user = userEvent.setup();
+    const onSearch = jest.fn();
+    render(<Search onSearch={onSearch} value={null} />);
+    const input = screen.getByRole('textbox', {name: 'sulu_admin.list_search_placeholder'});
+
+    await user.click(screen.getByRole('button', {name: 'su-search'}));
+    await user.type(input, 'test-search-value');
+    await user.tab();
 
     expect(onSearch).toBeCalledWith('test-search-value');
 });
 
-test('The component should trigger the onSearch callback correctly if Input calls onKeyPress with enter', () => {
+test('The component should trigger the onSearch callback correctly if Input calls onKeyPress with enter', async() => {
+    const user = userEvent.setup();
     const onSearch = jest.fn();
-    const search = shallow(
-        <Search onSearch={onSearch} value={null} />
-    );
+    render(<Search onSearch={onSearch} value={null} />);
+    const input = screen.getByRole('textbox', {name: 'sulu_admin.list_search_placeholder'});
 
-    const input = search.find('Input');
-    input.simulate('iconClick');
-    input.simulate('change', 'test-search-value');
-
-    expect(search.instance().value).toBe('test-search-value');
-
-    input.simulate('keyPress', 'Enter');
+    await user.click(screen.getByRole('button', {name: 'su-search'}));
+    await user.type(input, 'test-search-value{enter}');
 
     expect(onSearch).toBeCalledWith('test-search-value');
 });
 
-test('The component should clear the current value if Input calls onClearClick', () => {
+test('The component should clear the current value if Input calls onClearClick', async() => {
+    const user = userEvent.setup();
     const onSearch = jest.fn();
-    const search = shallow(
-        <Search onSearch={onSearch} value={null} />
-    );
+    render(<Search onSearch={onSearch} value={null} />);
+    const input = screen.getByRole('textbox', {name: 'sulu_admin.list_search_placeholder'});
 
-    const input = search.find('Input');
-    input.simulate('iconClick');
-    input.simulate('change', 'test-search-value');
+    await user.click(screen.getByRole('button', {name: 'su-search'}));
+    await user.type(input, 'test-search-value');
+    await user.click(screen.getByRole('button', {name: 'su-times'}));
 
-    expect(search.instance().value).toBe('test-search-value');
-
-    input.simulate('clearClick');
-
-    expect(search.instance().value).toBe(undefined);
-    expect(search.instance().collapsed).toBe(true);
-
+    expect(input).toHaveValue('');
+    expect(input.closest('div')).toHaveClass('collapsed');
     expect(onSearch).toHaveBeenCalledWith(undefined);
 });

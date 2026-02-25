@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {act, render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import fieldTypeDefaultProps from 'sulu-admin-bundle/utils/TestHelper/fieldTypeDefaultProps';
 import FormInspector from 'sulu-admin-bundle/containers/Form/FormInspector';
@@ -8,27 +9,28 @@ import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/Resource
 import Requester from 'sulu-admin-bundle/services/Requester';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import userStore from 'sulu-admin-bundle/stores/userStore';
+import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import ResourceLocator from '../../fields/ResourceLocator';
 import ResourceLocatorComponent from '../../../../components/ResourceLocator';
+import ResourceLocatorHistory from '../../../../containers/ResourceLocatorHistory';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('sulu-admin-bundle/stores/userStore', () => ({}));
+jest.mock('sulu-admin-bundle/stores/userStore', () => ({
+}));
 
-jest.mock(
-    'sulu-admin-bundle/containers/Form/stores/ResourceFormStore',
-    () => jest.fn(function(resourceKey, id, observableOptions = {}) {
-        this.resourceKey = resourceKey;
-        this.id = id;
-        this.locale = observableOptions.locale;
+jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions = {}) {
+    this.resourceKey = resourceKey;
+    this.id = id;
+    this.locale = observableOptions.locale;
 
-        mockExtendObservable(this, {
-            data: {},
-        });
-    })
-);
+    mockExtendObservable(this, {
+        data: {},
+        dirty: false,
+    });
+}));
 
 jest.mock(
     'sulu-admin-bundle/containers/Form/stores/ResourceFormStore',
@@ -38,6 +40,7 @@ jest.mock(
         this.locale = resourceStore.locale;
         this.options = options || {};
         this.resourceStore = resourceStore;
+        this.dirty = resourceStore.dirty;
     })
 );
 
@@ -46,8 +49,9 @@ jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(funct
     this.locale = formStore.locale;
     this.options = formStore.options;
     this.resourceKey = formStore.resourceKey;
+    this.formStore = formStore;
     this.errors = {};
-    this.addFinishFieldHandler = jest.fn();
+    this.addFinishFieldHandler = jest.fn(() => jest.fn());
     this.getPathsByTag = jest.fn().mockReturnValue([]);
     this.getValueByPath = jest.fn((path) => formStore.resourceStore.data[path]);
     this.getSchemaEntryByPath = jest.fn().mockReturnValue({});
@@ -57,6 +61,36 @@ jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(funct
 jest.mock('sulu-admin-bundle/services/Requester', () => ({
     post: jest.fn(),
 }));
+
+jest.mock('../../../../components/ResourceLocator', () => {
+    const ResourceLocatorComponentMock: any = jest.fn(function ResourceLocatorComponentMock({value}: any) {
+        return <div data-testid="resource-locator-component">{value}</div>;
+    });
+
+    return ResourceLocatorComponentMock;
+});
+
+jest.mock('../../../../containers/ResourceLocatorHistory', () => {
+    const ResourceLocatorHistoryMock: any = jest.fn(function ResourceLocatorHistoryMock() {
+        return <div data-testid="resource-locator-history" />;
+    });
+
+    return ResourceLocatorHistoryMock;
+});
+
+const ResourceLocatorComponentMock: any = ResourceLocatorComponent;
+const ResourceLocatorHistoryMock: any = ResourceLocatorHistory;
+const RequesterMock: any = Requester;
+const userStoreMock: any = userStore;
+
+function getRefreshButton() {
+    return screen.getByRole('button', {name: /sulu_admin\.refresh_url/});
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    userStoreMock.contentLocale = undefined;
+});
 
 test('Pass props correctly to ResourceLocator', () => {
     const formInspector = new FormInspector(
@@ -70,7 +104,7 @@ test('Pass props correctly to ResourceLocator', () => {
         )
     );
 
-    const resourceLocator = shallow(
+    const {unmount} = render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -83,19 +117,19 @@ test('Pass props correctly to ResourceLocator', () => {
         />
     );
 
-    expect(resourceLocator.find(ResourceLocatorComponent).prop('value')).toBe('/url');
-    expect(resourceLocator.find(ResourceLocatorComponent).prop('mode')).toBe('tree_full_edit');
-    expect(resourceLocator.find(ResourceLocatorComponent).prop('disabled')).toBe(true);
-    expect(resourceLocator.find(ResourceLocatorComponent).prop('locale').get()).toBe('en');
+    expect(getLatestMockProps(ResourceLocatorComponentMock).value).toBe('/url');
+    expect(getLatestMockProps(ResourceLocatorComponentMock).mode).toBe('tree_full_edit');
+    expect(getLatestMockProps(ResourceLocatorComponentMock).disabled).toBe(true);
+    expect(getLatestMockProps(ResourceLocatorComponentMock).locale.get()).toBe('en');
 
     // should not throw any error on unmount
-    resourceLocator.unmount();
+    unmount();
 });
 
 test('Render just slash instead of ResourceLocatorComponent if used on the homepage', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
-    const resourceLocator = shallow(
+    const {container, unmount} = render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -108,12 +142,11 @@ test('Render just slash instead of ResourceLocatorComponent if used on the homep
         />
     );
 
-    resourceLocator.update();
-    expect(resourceLocator.find(ResourceLocatorComponent)).toHaveLength(0);
-    expect(resourceLocator.text()).toEqual('/');
+    expect(ResourceLocatorComponentMock).not.toBeCalled();
+    expect(container).toHaveTextContent('/');
 
     // should not throw any error on unmount
-    resourceLocator.unmount();
+    unmount();
 });
 
 test('Pass correct options to ResourceLocatorHistory if resource already existed', () => {
@@ -121,7 +154,7 @@ test('Pass correct options to ResourceLocatorHistory if resource already existed
         new ResourceFormStore(new ResourceStore('test', 1), 'test', {webspace: 'sulu'})
     );
 
-    const resourceLocator = mount(
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             fieldTypeOptions={{
@@ -135,12 +168,11 @@ test('Pass correct options to ResourceLocatorHistory if resource already existed
         />
     );
 
-    resourceLocator.update();
-    expect(resourceLocator.find('ResourceLocatorHistory')).toHaveLength(1);
-    expect(resourceLocator.find('ResourceLocatorHistory').prop('options'))
+    expect(ResourceLocatorHistoryMock).toHaveBeenCalledTimes(1);
+    expect(getLatestMockProps(ResourceLocatorHistoryMock).options)
         .toEqual({history: true, webspace: 'sulu', resourceId: 1, resourceKey: 'test'});
-    expect(resourceLocator.find('ResourceLocatorHistory').prop('resourceKey')).toEqual('route-histories');
-    expect(resourceLocator.find('ResourceLocatorHistory').prop('disabled')).toEqual(false);
+    expect(getLatestMockProps(ResourceLocatorHistoryMock).resourceKey).toEqual('route-histories');
+    expect(getLatestMockProps(ResourceLocatorHistoryMock).disabled).toEqual(false);
 });
 
 test('Pass locale from userStore to ResourceLocator and ResourceLocatorHistory if form has no locale', () => {
@@ -152,10 +184,9 @@ test('Pass locale from userStore to ResourceLocator and ResourceLocatorHistory i
         )
     );
 
-    // $FlowFixMe
-    userStore.contentLocale = 'cz';
+    userStoreMock.contentLocale = 'cz';
 
-    const resourceLocator = shallow(
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -169,14 +200,14 @@ test('Pass locale from userStore to ResourceLocator and ResourceLocatorHistory i
         />
     );
 
-    expect(resourceLocator.find(ResourceLocatorComponent).prop('locale').get()).toBe('cz');
-    expect(resourceLocator.find('ResourceLocatorHistory').prop('options').locale).toBe('cz');
+    expect(getLatestMockProps(ResourceLocatorComponentMock).locale.get()).toBe('cz');
+    expect(getLatestMockProps(ResourceLocatorHistoryMock).options.locale).toBe('cz');
 });
 
 test('Do not add an addFinishFieldHandler for URL generation if used on the homepage', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
-    shallow(
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             fieldTypeOptions={{
@@ -194,7 +225,7 @@ test('Do not add an addFinishFieldHandler for URL generation if used on the home
 test('Do not add an addFinishFieldHandler for URL generation if no generationUrl was passed', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
-    shallow(
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             fieldTypeOptions={{
@@ -210,7 +241,7 @@ test('Do not add an addFinishFieldHandler for URL generation if no generationUrl
 test.each(['tree_leaf_edit', 'tree_full_edit'])('Set mode correctly from fieldTypeOptions', (mode) => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
-    const resourceLocator = mount(
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             fieldTypeOptions={{
@@ -222,14 +253,13 @@ test.each(['tree_leaf_edit', 'tree_full_edit'])('Set mode correctly from fieldTy
         />
     );
 
-    resourceLocator.update();
-    expect(resourceLocator.find(ResourceLocatorComponent).prop('mode')).toBe(mode);
+    expect(getLatestMockProps(ResourceLocatorComponentMock).mode).toBe(mode);
 });
 
 test.each(['tree_leaf_edit', 'tree_full_edit'])('Set mode correctly from schemaOptions', (mode) => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
-    const resourceLocator = mount(
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             fieldTypeOptions={{
@@ -248,15 +278,14 @@ test.each(['tree_leaf_edit', 'tree_full_edit'])('Set mode correctly from schemaO
         />
     );
 
-    resourceLocator.update();
-    expect(resourceLocator.find(ResourceLocatorComponent).prop('mode')).toBe(mode);
+    expect(getLatestMockProps(ResourceLocatorComponentMock).mode).toBe(mode);
 });
 
 test('Should fire onFinish callback without argument when ResourceLocatorComponent is blurred', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const finishSpy = jest.fn();
 
-    const resourceLocator = mount(
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             fieldTypeOptions={{
@@ -268,13 +297,12 @@ test('Should fire onFinish callback without argument when ResourceLocatorCompone
         />
     );
 
-    resourceLocator.update();
-    resourceLocator.find(ResourceLocatorComponent).prop('onBlur')('Test');
+    getLatestMockProps(ResourceLocatorComponentMock).onBlur('Test');
 
     expect(finishSpy).toBeCalledWith();
 });
 
-test('Should automatically request new URL when part field is finished on add form', () => {
+test('Should automatically request new URL when part field is finished on add form', async() => {
     const resourceStore = new ResourceStore('tests', undefined, {locale: observable.box('en')});
     const formInspector = new FormInspector(
         new ResourceFormStore(
@@ -290,7 +318,7 @@ test('Should automatically request new URL when part field is finished on add fo
         '/subtitle': 'subtitle-value',
     };
 
-    shallow(
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
@@ -304,7 +332,7 @@ test('Should automatically request new URL when part field is finished on add fo
         />
     );
 
-    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
+    const finishFieldHandler = getLatestMockProps(formInspector.addFinishFieldHandler);
 
     formInspector.getSchemaEntryByPath.mockReturnValue({
         tags: [
@@ -315,13 +343,15 @@ test('Should automatically request new URL when part field is finished on add fo
     const resourceLocatorPromise = Promise.resolve({
         resourceLocator: '/test',
     });
-    Requester.post.mockReturnValue(resourceLocatorPromise);
+    RequesterMock.post.mockReturnValue(resourceLocatorPromise);
 
-    finishFieldHandler('/block/0/title', '/title');
+    act(() => {
+        finishFieldHandler('/block/0/title', '/title');
+    });
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/title');
     expect(formInspector.getPathsByTag).toBeCalledWith('sulu.rlp.part');
-    expect(Requester.post).toBeCalledWith(
+    expect(RequesterMock.post).toBeCalledWith(
         '/admin/api/resource-locators',
         {
             locale: 'en',
@@ -330,12 +360,11 @@ test('Should automatically request new URL when part field is finished on add fo
         }
     );
 
-    return resourceLocatorPromise.then(() => {
-        expect(changeSpy).toBeCalledWith('/test');
-    });
+    await resourceLocatorPromise;
+    expect(changeSpy).toBeCalledWith('/test');
 });
 
-test('Should request URL with parameters from FormInspector options, fieldTypeOptions and schemaOptions', () => {
+test('Should request URL with parameters from FormInspector options, fieldTypeOptions and schemaOptions', async() => {
     const resourceStore = new ResourceStore('test', undefined, {locale: observable.box('en')});
     const formInspector = new FormInspector(
         new ResourceFormStore(
@@ -353,7 +382,7 @@ test('Should request URL with parameters from FormInspector options, fieldTypeOp
         '/propertyName': 'property-value',
     };
 
-    shallow(
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
@@ -373,7 +402,7 @@ test('Should request URL with parameters from FormInspector options, fieldTypeOp
         />
     );
 
-    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
+    const finishFieldHandler = getLatestMockProps(formInspector.addFinishFieldHandler);
 
     formInspector.getSchemaEntryByPath.mockReturnValue({
         tags: [
@@ -384,13 +413,15 @@ test('Should request URL with parameters from FormInspector options, fieldTypeOp
     const resourceLocatorPromise = Promise.resolve({
         resourceLocator: '/test',
     });
-    Requester.post.mockReturnValue(resourceLocatorPromise);
+    RequesterMock.post.mockReturnValue(resourceLocatorPromise);
 
-    finishFieldHandler('/block/0/title', '/title');
+    act(() => {
+        finishFieldHandler('/block/0/title', '/title');
+    });
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/title');
     expect(formInspector.getPathsByTag).toBeCalledWith('sulu.rlp.part');
-    expect(Requester.post).toBeCalledWith(
+    expect(RequesterMock.post).toBeCalledWith(
         '/admin/api/resource-locators',
         {
             locale: 'en',
@@ -402,9 +433,8 @@ test('Should request URL with parameters from FormInspector options, fieldTypeOp
         }
     );
 
-    return resourceLocatorPromise.then(() => {
-        expect(changeSpy).toBeCalledWith('/test');
-    });
+    await resourceLocatorPromise;
+    expect(changeSpy).toBeCalledWith('/test');
 });
 
 test('Should not request new URL when part field is finished on edit form', () => {
@@ -422,7 +452,7 @@ test('Should not request new URL when part field is finished on edit form', () =
         '/subtitle': 'subtitle-value',
     };
 
-    shallow(
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
@@ -436,7 +466,7 @@ test('Should not request new URL when part field is finished on edit form', () =
         />
     );
 
-    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
+    const finishFieldHandler = getLatestMockProps(formInspector.addFinishFieldHandler);
 
     formInspector.getSchemaEntryByPath.mockReturnValue({
         tags: [
@@ -445,7 +475,7 @@ test('Should not request new URL when part field is finished on edit form', () =
     });
 
     finishFieldHandler('/block/0/title', '/title');
-    expect(Requester.post).not.toBeCalled();
+    expect(RequesterMock.post).not.toBeCalled();
 });
 
 test('Should not request new URL when part field is finished if all parts are empty', () => {
@@ -463,7 +493,7 @@ test('Should not request new URL when part field is finished if all parts are em
         '/subtitle': 'subtitle-value',
     };
 
-    shallow(
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
@@ -476,7 +506,7 @@ test('Should not request new URL when part field is finished if all parts are em
         />
     );
 
-    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
+    const finishFieldHandler = getLatestMockProps(formInspector.addFinishFieldHandler);
 
     formInspector.getSchemaEntryByPath.mockReturnValue({
         tags: [
@@ -493,7 +523,7 @@ test('Should not request new URL when part field is finished if all parts are em
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/title');
     expect(formInspector.getPathsByTag).toBeCalledWith('sulu.rlp.part');
-    expect(Requester.post).not.toBeCalled();
+    expect(RequesterMock.post).not.toBeCalled();
 });
 
 test('Should not request new URL when part field is finished if input was already changed manually', () => {
@@ -511,7 +541,7 @@ test('Should not request new URL when part field is finished if input was alread
         '/subtitle': 'subtitle-value',
     };
 
-    const resourceLocator = shallow(
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
@@ -524,7 +554,7 @@ test('Should not request new URL when part field is finished if input was alread
         />
     );
 
-    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
+    const finishFieldHandler = getLatestMockProps(formInspector.addFinishFieldHandler);
 
     formInspector.getSchemaEntryByPath.mockReturnValue({
         tags: [
@@ -532,13 +562,15 @@ test('Should not request new URL when part field is finished if input was alread
         ],
     });
 
-    resourceLocator.find(ResourceLocatorComponent).props().onChange('manual-change');
+    act(() => {
+        getLatestMockProps(ResourceLocatorComponentMock).onChange('manual-change');
+    });
 
     finishFieldHandler('/block/0/title', '/title');
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/title');
     expect(formInspector.getPathsByTag).toBeCalledWith('sulu.rlp.part');
-    expect(Requester.post).not.toBeCalled();
+    expect(RequesterMock.post).not.toBeCalled();
 });
 
 test('Should not request new URL when field without the "sulu.rlp.part" tag is finished', () => {
@@ -556,7 +588,7 @@ test('Should not request new URL when field without the "sulu.rlp.part" tag is f
         '/subtitle': 'subtitle-value',
     };
 
-    shallow(
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
@@ -569,7 +601,7 @@ test('Should not request new URL when field without the "sulu.rlp.part" tag is f
         />
     );
 
-    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
+    const finishFieldHandler = getLatestMockProps(formInspector.addFinishFieldHandler);
 
     formInspector.getSchemaEntryByPath.mockReturnValue({
         tags: [
@@ -580,7 +612,7 @@ test('Should not request new URL when field without the "sulu.rlp.part" tag is f
     finishFieldHandler('/block/0/title', '/title');
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/title');
-    expect(Requester.post).not.toBeCalled();
+    expect(RequesterMock.post).not.toBeCalled();
 });
 
 test('Should not request new URL when field without any tags has finished editing', () => {
@@ -598,7 +630,7 @@ test('Should not request new URL when field without any tags has finished editin
         '/subtitle': 'subtitle-value',
     };
 
-    shallow(
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
@@ -611,17 +643,17 @@ test('Should not request new URL when field without any tags has finished editin
         />
     );
 
-    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
+    const finishFieldHandler = getLatestMockProps(formInspector.addFinishFieldHandler);
 
     formInspector.getSchemaEntryByPath.mockReturnValue({});
 
     finishFieldHandler('/block/0/title', '/title');
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/title');
-    expect(Requester.post).not.toBeCalled();
+    expect(RequesterMock.post).not.toBeCalled();
 });
 
-test('Should enable refresh button when value of part field changes on edit form', () => {
+test('Should enable refresh button when value of part field changes on edit form', async() => {
     const resourceStore = new ResourceStore('tests', 5);
     const formInspector = new FormInspector(
         new ResourceFormStore(
@@ -636,7 +668,7 @@ test('Should enable refresh button when value of part field changes on edit form
         '/subtitle': 'subtitle-value',
     };
 
-    const resourceLocator = shallow(
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
@@ -649,12 +681,15 @@ test('Should enable refresh button when value of part field changes on edit form
         />
     );
 
-    resourceLocator.update();
-    expect(resourceLocator.find('Button').props().disabled).toBeTruthy();
+    expect(getRefreshButton()).toBeDisabled();
 
-    resourceStore.data['/title'] = 'new-title-value';
+    act(() => {
+        resourceStore.data['/title'] = 'new-title-value';
+    });
 
-    expect(resourceLocator.find('Button').props().disabled).toBeFalsy();
+    await waitFor(() => {
+        expect(getRefreshButton()).toBeEnabled();
+    });
 });
 
 test('Should enable refresh button when input is changed manually on edit form', () => {
@@ -672,7 +707,7 @@ test('Should enable refresh button when input is changed manually on edit form',
         '/subtitle': 'subtitle-value',
     };
 
-    const resourceLocator = shallow(
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
@@ -685,12 +720,13 @@ test('Should enable refresh button when input is changed manually on edit form',
         />
     );
 
-    resourceLocator.update();
-    expect(resourceLocator.find('Button').props().disabled).toBeTruthy();
+    expect(getRefreshButton()).toBeDisabled();
 
-    resourceLocator.find(ResourceLocatorComponent).props().onChange('manual-change');
+    act(() => {
+        getLatestMockProps(ResourceLocatorComponentMock).onChange('manual-change');
+    });
 
-    expect(resourceLocator.find('Button').props().disabled).toBeFalsy();
+    expect(getRefreshButton()).toBeEnabled();
 });
 
 test('Should not enable refresh button when value of part field changes on add form', () => {
@@ -708,7 +744,7 @@ test('Should not enable refresh button when value of part field changes on add f
         '/subtitle': 'subtitle-value',
     };
 
-    const resourceLocator = shallow(
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
@@ -721,12 +757,11 @@ test('Should not enable refresh button when value of part field changes on add f
         />
     );
 
-    resourceLocator.update();
-    expect(resourceLocator.find('Button').props().disabled).toBeTruthy();
+    expect(getRefreshButton()).toBeDisabled();
 
     resourceStore.data['/title'] = 'new-title-value';
 
-    expect(resourceLocator.find('Button').props().disabled).toBeTruthy();
+    expect(getRefreshButton()).toBeDisabled();
 });
 
 test('Should enable refresh button when input is changed manually on add form', () => {
@@ -744,7 +779,7 @@ test('Should enable refresh button when input is changed manually on add form', 
         '/subtitle': 'subtitle-value',
     };
 
-    const resourceLocator = shallow(
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
@@ -757,12 +792,13 @@ test('Should enable refresh button when input is changed manually on add form', 
         />
     );
 
-    resourceLocator.update();
-    expect(resourceLocator.find('Button').props().disabled).toBeTruthy();
+    expect(getRefreshButton()).toBeDisabled();
 
-    resourceLocator.find(ResourceLocatorComponent).props().onChange('manual-change');
+    act(() => {
+        getLatestMockProps(ResourceLocatorComponentMock).onChange('manual-change');
+    });
 
-    expect(resourceLocator.find('Button').props().disabled).toBeFalsy();
+    expect(getRefreshButton()).toBeEnabled();
 });
 
 test('Should not enable refresh button when value of part field changes if all parts are empty', () => {
@@ -780,7 +816,7 @@ test('Should not enable refresh button when value of part field changes if all p
         '/subtitle': 'subtitle-value',
     };
 
-    const resourceLocator = shallow(
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
@@ -793,20 +829,21 @@ test('Should not enable refresh button when value of part field changes if all p
         />
     );
 
-    resourceLocator.update();
-    expect(resourceLocator.find('Button').props().disabled).toBeTruthy();
+    expect(getRefreshButton()).toBeDisabled();
 
     resourceStore.data['/title'] = '';
     resourceStore.data['/subtitle'] = undefined;
 
-    expect(resourceLocator.find('Button').props().disabled).toBeTruthy();
+    expect(getRefreshButton()).toBeDisabled();
 
-    resourceLocator.find(ResourceLocatorComponent).props().onChange('manual-change');
+    act(() => {
+        getLatestMockProps(ResourceLocatorComponentMock).onChange('manual-change');
+    });
 
-    expect(resourceLocator.find('Button').props().disabled).toBeTruthy();
+    expect(getRefreshButton()).toBeDisabled();
 });
 
-test('Should request new URL with correct options and disable button when refresh button is clicked', () => {
+test('Should request new URL with correct options and disable button when refresh button is clicked', async() => {
     const resourceStore = new ResourceStore('test', 5, {locale: observable.box('en')});
     const formInspector = new FormInspector(
         new ResourceFormStore(
@@ -824,7 +861,9 @@ test('Should request new URL with correct options and disable button when refres
         '/propertyName': 'property-value',
     };
 
-    const resourceLocator = shallow(
+    const user = userEvent.setup();
+
+    render(
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
@@ -843,18 +882,18 @@ test('Should request new URL with correct options and disable button when refres
     const resourceLocatorPromise = Promise.resolve({
         resourceLocator: '/test',
     });
-    Requester.post.mockReturnValue(resourceLocatorPromise);
+    RequesterMock.post.mockReturnValue(resourceLocatorPromise);
 
-    resourceLocator.update();
+    act(() => {
+        getLatestMockProps(ResourceLocatorComponentMock).onChange('manual-change');
+    });
+    expect(getRefreshButton()).toBeEnabled();
 
-    resourceLocator.find(ResourceLocatorComponent).props().onChange('manual-change');
-    expect(resourceLocator.find('Button').props().disabled).toBeFalsy();
+    await user.click(getRefreshButton());
 
-    resourceLocator.find('Button').props().onClick();
-
-    expect(resourceLocator.find('Button').props().disabled).toBeTruthy();
+    expect(getRefreshButton()).toBeDisabled();
     expect(formInspector.getPathsByTag).toBeCalledWith('sulu.rlp.part');
-    expect(Requester.post).toBeCalledWith(
+    expect(RequesterMock.post).toBeCalledWith(
         '/admin/api/resource-locators',
         {
             resourceId: 5,
@@ -866,7 +905,6 @@ test('Should request new URL with correct options and disable button when refres
         }
     );
 
-    return resourceLocatorPromise.then(() => {
-        expect(changeSpy).toBeCalledWith('/test');
-    });
+    await resourceLocatorPromise;
+    expect(changeSpy).toBeCalledWith('/test');
 });

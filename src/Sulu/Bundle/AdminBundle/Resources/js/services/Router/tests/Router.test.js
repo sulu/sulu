@@ -2,6 +2,7 @@
 import 'url-search-params-polyfill';
 import {createMemoryHistory} from 'history';
 import {observable, isObservable} from 'mobx';
+import getMockCallArg from '../../../utils/TestHelper/getMockCallArg';
 import Router from '../Router';
 import Route from '../Route';
 import routeRegistry from '../registries/routeRegistry';
@@ -1829,7 +1830,7 @@ test('Ask for confirmation to close window if a updateRouteHooks prevents it', (
         returnValue: undefined,
     };
 
-    window.addEventListener.mock.calls[0][1](event);
+    getMockCallArg(window.addEventListener, 0, 1)(event);
 
     expect(event.preventDefault).toBeCalledWith();
     expect(event.returnValue).toEqual(true);
@@ -1852,7 +1853,7 @@ test('Do not ask for confirmation to close window if no updateRouteHooks prevent
         returnValue: undefined,
     };
 
-    window.addEventListener.mock.calls[0][1](event);
+    getMockCallArg(window.addEventListener, 0, 1)(event);
 
     expect(event.preventDefault).not.toBeCalled();
     expect(event.returnValue).toEqual(undefined);

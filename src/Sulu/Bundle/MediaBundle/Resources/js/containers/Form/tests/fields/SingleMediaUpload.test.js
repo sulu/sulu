@@ -1,12 +1,12 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import {observable} from 'mobx';
+import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import SingleMediaUpload from '../../fields/SingleMediaUpload';
-import SingleMediaUploadComponent from '../../../SingleMediaUpload';
 import MediaUploadStore from '../../../../stores/MediaUploadStore';
 
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions) {
@@ -21,17 +21,45 @@ jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(funct
     this.locale = formStore.locale;
 }));
 
+jest.mock('../../../SingleMediaUpload', () => jest.fn(() => null));
+
 jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     contentLocale: 'userContentLocale',
 }));
 
+const SingleMediaUploadComponentMock: any = jest.requireMock('../../../SingleMediaUpload');
+
+const createFormInspector = (locale: ?string = 'en') => new FormInspector(
+    new ResourceFormStore(
+        new ResourceStore('test', undefined, {locale: locale ? observable.box(locale) : undefined}),
+        'test'
+    )
+);
+
+const createProps = (overrides = {}) => ({
+    ...fieldTypeDefaultProps,
+    formInspector: createFormInspector(),
+    schemaOptions: {
+        collection_id: {
+            name: 'collection_id',
+            value: 2,
+        },
+    },
+    ...overrides,
+});
+
+const renderSingleMediaUpload = (overrides = {}) => render(<SingleMediaUpload {...(createProps(overrides): any)} />);
+const expectThrowSilently = (renderCallback, errorText) => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    expect(renderCallback).toThrow(errorText);
+    consoleErrorSpy.mockRestore();
+};
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
 test('Pass correct props', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
     const schemaOptions = {
         collection_id: {
             name: 'collection_id',
@@ -51,29 +79,19 @@ test('Pass correct props', () => {
         },
     };
 
-    const singleMediaUpload = shallow(
-        <SingleMediaUpload
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-        />
-    );
+    renderSingleMediaUpload({
+        disabled: true,
+        schemaOptions,
+    });
 
-    expect(singleMediaUpload.prop('collectionId')).toEqual(3);
-    expect(singleMediaUpload.prop('emptyIcon')).toEqual('su-icon');
-    expect(singleMediaUpload.prop('imageSize')).toEqual('sulu-400x400-inset');
-    expect(singleMediaUpload.prop('uploadText')).toEqual('Drag and drop');
-    expect(singleMediaUpload.prop('disabled')).toEqual(true);
+    expect(getLatestMockProps(SingleMediaUploadComponentMock).collectionId).toEqual(3);
+    expect(getLatestMockProps(SingleMediaUploadComponentMock).emptyIcon).toEqual('su-icon');
+    expect(getLatestMockProps(SingleMediaUploadComponentMock).imageSize).toEqual('sulu-400x400-inset');
+    expect(getLatestMockProps(SingleMediaUploadComponentMock).uploadText).toEqual('Drag and drop');
+    expect(getLatestMockProps(SingleMediaUploadComponentMock).disabled).toEqual(true);
 });
 
 test('Pass correct skin to props', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
     const schemaOptions = {
         collection_id: {
             name: 'collection_id',
@@ -85,24 +103,12 @@ test('Pass correct skin to props', () => {
         },
     };
 
-    const singleMediaUpload = shallow(
-        <SingleMediaUpload
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-        />
-    );
+    renderSingleMediaUpload({schemaOptions});
 
-    expect(singleMediaUpload.prop('skin')).toEqual('round');
+    expect(getLatestMockProps(SingleMediaUploadComponentMock).skin).toEqual('round');
 });
 
 test('Throw if emptyIcon is set but not a valid value', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
     const schemaOptions = {
         collection_id: {
             name: 'collection_id',
@@ -114,24 +120,10 @@ test('Throw if emptyIcon is set but not a valid value', () => {
         },
     };
 
-    expect(
-        () => shallow(
-            <SingleMediaUpload
-                {...fieldTypeDefaultProps}
-                formInspector={formInspector}
-                schemaOptions={schemaOptions}
-            />
-        )
-    ).toThrow('"empty_icon"');
+    expectThrowSilently(() => renderSingleMediaUpload({schemaOptions}), '"empty_icon"');
 });
 
 test('Throw if skin is set but not a valid value', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
     const schemaOptions = {
         collection_id: {
             name: 'collection_id',
@@ -143,24 +135,10 @@ test('Throw if skin is set but not a valid value', () => {
         },
     };
 
-    expect(
-        () => shallow(
-            <SingleMediaUpload
-                {...fieldTypeDefaultProps}
-                formInspector={formInspector}
-                schemaOptions={schemaOptions}
-            />
-        )
-    ).toThrow('"default" or "round"');
+    expectThrowSilently(() => renderSingleMediaUpload({schemaOptions}), '"default" or "round"');
 });
 
 test('Throw if image_size is set but not a valid value', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
     const schemaOptions = {
         collection_id: {
             name: 'collection_id',
@@ -172,128 +150,49 @@ test('Throw if image_size is set but not a valid value', () => {
         },
     };
 
-    expect(
-        () => shallow(
-            <SingleMediaUpload
-                {...fieldTypeDefaultProps}
-                formInspector={formInspector}
-                schemaOptions={schemaOptions}
-            />
-        )
-    ).toThrow('"image_size"');
+    expectThrowSilently(() => renderSingleMediaUpload({schemaOptions}), '"image_size"');
 });
 
 test('Throw if collectionId is not set', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
-    const schemaOptions = {};
-
-    expect(
-        () => shallow(
-            <SingleMediaUpload
-                {...fieldTypeDefaultProps}
-                formInspector={formInspector}
-                schemaOptions={schemaOptions}
-            />
-        )
-    ).toThrow('"collection_id"');
+    expectThrowSilently(() => renderSingleMediaUpload({schemaOptions: {}}), '"collection_id"');
 });
 
 test('Call onChange and onFinish when upload has completed', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
     const media = {name: 'test.jpg'};
-    const schemaOptions = {
-        collection_id: {
-            name: 'collection_id',
-            value: 2,
-        },
-    };
 
-    const singleMediaUpload = shallow(
-        <SingleMediaUpload
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
+    renderSingleMediaUpload({
+        onChange: changeSpy,
+        onFinish: finishSpy,
+    });
 
-    singleMediaUpload.find(SingleMediaUploadComponent).simulate('uploadComplete', media);
+    getLatestMockProps(SingleMediaUploadComponentMock).onUploadComplete(media);
 
     expect(changeSpy).toBeCalledWith(media);
     expect(finishSpy).toBeCalledWith();
 });
 
 test('Create a MediaUploadStore when constructed', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
-    const schemaOptions = {
-        collection_id: {
-            name: 'collection_id',
-            value: 2,
-        },
-    };
-    const singleMediaUpload = shallow(
-        <SingleMediaUpload
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-        />
-    );
+    renderSingleMediaUpload();
 
-    expect(singleMediaUpload.instance().mediaUploadStore).toBeInstanceOf(MediaUploadStore);
-    expect(singleMediaUpload.instance().mediaUploadStore.locale.get()).toEqual('en');
-    expect(singleMediaUpload.instance().mediaUploadStore.media).toEqual(undefined);
+    const mediaUploadStore = getLatestMockProps(SingleMediaUploadComponentMock).mediaUploadStore;
+    expect(mediaUploadStore).toBeInstanceOf(MediaUploadStore);
+    expect(mediaUploadStore.locale.get()).toEqual('en');
+    expect(mediaUploadStore.media).toEqual(undefined);
 });
 
 test('Create MediaUploadStore with content-locale of user if locale is not present in form-inspector', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {}),
-            'test'
-        )
-    );
-    const schemaOptions = {
-        collection_id: {
-            name: 'collection_id',
-            value: 2,
-        },
-    };
-    const singleMediaUpload = shallow(
-        <SingleMediaUpload
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-        />
-    );
+    renderSingleMediaUpload({
+        formInspector: createFormInspector(null),
+    });
 
-    expect(singleMediaUpload.instance().mediaUploadStore).toBeInstanceOf(MediaUploadStore);
-    expect(singleMediaUpload.instance().mediaUploadStore.locale.get()).toEqual('userContentLocale');
+    const mediaUploadStore = getLatestMockProps(SingleMediaUploadComponentMock).mediaUploadStore;
+    expect(mediaUploadStore).toBeInstanceOf(MediaUploadStore);
+    expect(mediaUploadStore.locale.get()).toEqual('userContentLocale');
 });
 
 test('Create a MediaUploadStore when constructed with data', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
     const data = {
         adminUrl: '',
         id: 1,
@@ -303,21 +202,10 @@ test('Create a MediaUploadStore when constructed with data', () => {
         thumbnails: {},
         url: '',
     };
-    const schemaOptions = {
-        collection_id: {
-            name: 'collection_id',
-            value: 2,
-        },
-    };
-    const singleMediaUpload = shallow(
-        <SingleMediaUpload
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-            value={data}
-        />
-    );
 
-    expect(singleMediaUpload.instance().mediaUploadStore).toBeInstanceOf(MediaUploadStore);
-    expect(singleMediaUpload.instance().mediaUploadStore.media).toEqual(data);
+    renderSingleMediaUpload({value: data});
+
+    const mediaUploadStore = getLatestMockProps(SingleMediaUploadComponentMock).mediaUploadStore;
+    expect(mediaUploadStore).toBeInstanceOf(MediaUploadStore);
+    expect(mediaUploadStore.media).toEqual(data);
 });

@@ -1,7 +1,8 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import {mount} from 'enzyme';
+import {render} from '@testing-library/react';
 import {ResourceTabs} from 'sulu-admin-bundle/views';
+import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import PageTabs from '../PageTabs';
 import webspaceStore from '../../../stores/webspaceStore';
 
@@ -34,9 +35,14 @@ test('Pass locales from webspace and titleProperty to ResourceTabs component', (
         route,
     };
 
-    const pageTabs = mount(<PageTabs route={route} router={router}>{() => null}</PageTabs>);
+    render(
+        <PageTabs route={route} router={router}>
+            {() => null}
+        </PageTabs>
+    );
 
     expect(webspaceStore.getWebspace).toBeCalledWith('sulu');
-    expect(pageTabs.find(ResourceTabs).prop('locales')).toEqual(['en', 'de']);
-    expect(pageTabs.find(ResourceTabs).prop('titleProperty')).toEqual('title');
+    const resourceTabsProps = getLatestMockProps(ResourceTabs);
+    expect(resourceTabsProps.locales).toEqual(['en', 'de']);
+    expect(resourceTabsProps.titleProperty).toEqual('title');
 });

@@ -1,17 +1,12 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
 import {observable} from 'mobx';
+import {render} from '@testing-library/react';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
-import fieldRegistry from 'sulu-admin-bundle/containers/Form/registries/fieldRegistry';
-import SingleSelect from 'sulu-admin-bundle/containers/Form/fields/SingleSelect';
-import {Renderer} from 'sulu-admin-bundle/containers/Form';
-import Field from 'sulu-admin-bundle/containers/Form/Field';
-import jsonpointer from 'json-pointer';
+import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import ImageMap from '../../fields/ImageMap';
-import ImageMapContainer from '../../../ImageMap';
 
 jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
@@ -43,145 +38,84 @@ jest.mock('sulu-admin-bundle/stores/userStore', () => ({
 }));
 
 jest.mock('../../../SingleMediaSelectionOverlay', () => jest.fn(() => null));
+jest.mock('../../../ImageMap', () => jest.fn(() => null));
 
-jest.mock('sulu-admin-bundle/containers/Form/registries/fieldRegistry', () => ({
-    get: jest.fn().mockReturnValue(() => <div>field type mock</div>),
-    getOptions: jest.fn().mockReturnValue({}),
-}));
+const ImageMapContainerMock: any = jest.requireMock('../../../ImageMap');
 
-window.ResizeObserver = jest.fn(function() {
-    this.observe = jest.fn();
-    this.disconnect = jest.fn();
-});
+const createFormInspector = (locale: ?string) => new FormInspector(
+    new ResourceFormStore(
+        new ResourceStore('test', undefined, locale ? {locale: observable.box(locale)} : {}),
+        'test'
+    )
+);
 
-test('Pass correct props to SingleMediaSelection component', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
-
-    const types = {
-        default: {
-            title: 'Default',
-            form: {
-                text: {
-                    label: 'Text',
-                    type: 'text_line',
-                },
+const createTypes = () => ({
+    default: {
+        title: 'Default',
+        form: {
+            text: {
+                label: 'Text',
+                type: 'text_line',
             },
         },
-    };
+    },
+});
 
-    const imageMap = shallow(
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+test('Pass correct props to ImageMap container', () => {
+    render(
         <ImageMap
             {...fieldTypeDefaultProps}
             defaultType="default"
             disabled={true}
             error={{keyword: 'mandatory', parameters: {}}}
-            formInspector={formInspector}
-            types={types}
+            formInspector={createFormInspector('en')}
+            types={createTypes()}
             value={{imageId: 33, hotspots: []}}
         />
     );
 
-    expect(imageMap.find(ImageMapContainer).props().disabled).toEqual(true);
-    expect(imageMap.find(ImageMapContainer).props().valid).toEqual(false);
-    expect(imageMap.find(ImageMapContainer).props().locale.get()).toEqual('en');
-    expect(imageMap.find(ImageMapContainer).props().types).toEqual({'default': 'Default'});
-    expect(imageMap.find(ImageMapContainer).props().value).toEqual({imageId: 33, hotspots: []});
+    expect(getLatestMockProps(ImageMapContainerMock).disabled).toEqual(true);
+    expect(getLatestMockProps(ImageMapContainerMock).valid).toEqual(false);
+    expect(getLatestMockProps(ImageMapContainerMock).locale.get()).toEqual('en');
+    expect(getLatestMockProps(ImageMapContainerMock).types).toEqual({'default': 'Default'});
+    expect(getLatestMockProps(ImageMapContainerMock).value).toEqual({imageId: 33, hotspots: []});
 });
 
-test('Pass correct default value to ImageMapContainer', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {}),
-            'test'
-        )
-    );
-
-    const types = {
-        default: {
-            title: 'Default',
-            form: {
-                text: {
-                    label: 'Text',
-                    type: 'text_line',
-                },
-            },
-        },
-    };
-
-    const imageMap = shallow(
+test('Pass correct default value to ImageMap container', () => {
+    render(
         <ImageMap
             {...fieldTypeDefaultProps}
             defaultType="default"
-            formInspector={formInspector}
-            types={types}
+            formInspector={createFormInspector(undefined)}
+            types={createTypes()}
             value={undefined}
         />
     );
 
-    expect(imageMap.find(ImageMapContainer).props().value).toEqual({imageId: undefined, hotspots: []});
+    expect(getLatestMockProps(ImageMapContainerMock).value).toEqual(undefined);
 });
 
-test('Pass content-locale of user to SingleMediaSelection if locale is not present in form-inspector', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {}),
-            'test'
-        )
-    );
-
-    const types = {
-        default: {
-            title: 'Default',
-            form: {
-                text: {
-                    label: 'Text',
-                    type: 'text_line',
-                },
-            },
-        },
-    };
-
-    const imageMap = shallow(
+test('Pass content-locale of user to ImageMap container if locale is not present in form-inspector', () => {
+    render(
         <ImageMap
             {...fieldTypeDefaultProps}
             defaultType="default"
-            formInspector={formInspector}
-            types={types}
+            formInspector={createFormInspector(undefined)}
+            types={createTypes()}
             value={{imageId: 44, hotspots: []}}
         />
     );
 
-    expect(imageMap.find(ImageMapContainer).props().locale.get()).toEqual('en');
+    expect(getLatestMockProps(ImageMapContainerMock).locale.get()).toEqual('en');
 });
 
 test('Should call onChange and onFinish if the value changes', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
-
-    const types = {
-        default: {
-            title: 'Default',
-            form: {
-                text: {
-                    label: 'Text',
-                    type: 'text_line',
-                },
-            },
-        },
-    };
-
     const value = {
         imageId: 55,
         hotspots: [
@@ -189,115 +123,72 @@ test('Should call onChange and onFinish if the value changes', () => {
         ],
     };
 
-    const data = {
-        imageMapProperty: value,
-        otherProperty: 'other-value',
-    };
-
-    const imageMap = mount(
+    render(
         <ImageMap
             {...fieldTypeDefaultProps}
-            data={data}
+            data={{imageMapProperty: value, otherProperty: 'other-value'}}
             dataPath="imageMapProperty"
             defaultType="default"
-            formInspector={formInspector}
+            formInspector={createFormInspector('en')}
             onChange={changeSpy}
             onFinish={finishSpy}
-            types={types}
+            types={createTypes()}
             value={value}
         />
     );
 
-    expect(imageMap.find(Field).props().data).toEqual(data);
-    expect(imageMap.find(Field).props().value).toEqual('text-value-123');
-
-    // check if data path that is passed to field leads to correct value for field
-    const fieldData = imageMap.find(Renderer).props().data;
-    const fieldDataPath = imageMap.find(Renderer).props().dataPath;
-    const fieldValue = imageMap.find(Renderer).props().value;
-    expect(jsonpointer.get(fieldData, '/' + fieldDataPath)).toEqual(fieldValue);
-});
-
-test('Should pass correct data to Renderer component', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
-
-    const types = {
-        default: {
-            title: 'Default',
-            form: {
-                text: {
-                    label: 'Text',
-                    type: 'text_line',
-                },
-            },
-        },
-    };
-
-    const imageMap = shallow(
-        <ImageMap
-            {...fieldTypeDefaultProps}
-            defaultType="default"
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            types={types}
-            value={{imageId: 55, hotspots: []}}
-        />
-    );
-
-    imageMap.find(ImageMapContainer).props().onChange({imageId: 44, hotspots: []});
-    imageMap.find(ImageMapContainer).props().onFinish();
+    getLatestMockProps(ImageMapContainerMock).onChange({imageId: 44, hotspots: []});
+    getLatestMockProps(ImageMapContainerMock).onFinish();
 
     expect(changeSpy).toBeCalledWith({imageId: 44, hotspots: []});
     expect(finishSpy).toBeCalled();
 });
 
-test('Should set correct default values for multiple single_select in form', () => {
+test('Should pass correct data to rendered hotspot form', () => {
     const changeSpy = jest.fn();
+    const value = {
+        imageId: 55,
+        hotspots: [
+            {'hotspot': {'type': 'point'}, 'type': 'default', 'text': 'text-value-123'},
+        ],
+    };
+    const data = {
+        imageMapProperty: value,
+        otherProperty: 'other-value',
+    };
 
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
+    render(
+        <ImageMap
+            {...fieldTypeDefaultProps}
+            data={data}
+            dataPath="imageMapProperty"
+            defaultType="default"
+            formInspector={createFormInspector('en')}
+            onChange={changeSpy}
+            types={createTypes()}
+            value={value}
+        />
     );
 
+    const hotspotForm = getLatestMockProps(ImageMapContainerMock).renderHotspotForm(value.hotspots[0], 'default', 0);
+    expect(hotspotForm.props.data).toEqual(data);
+    expect(hotspotForm.props.dataPath).toEqual('imageMapProperty/hotspots/0');
+    expect(hotspotForm.props.value).toEqual(value.hotspots[0]);
+
+    hotspotForm.props.onChange(0, 'text', 'changed');
+    expect(changeSpy).toBeCalledWith({
+        imageId: 55,
+        hotspots: [
+            {'hotspot': {'type': 'point'}, 'type': 'default', 'text': 'changed'},
+        ],
+    });
+});
+
+test('Should pass single_select schema defaults through hotspot form renderer', () => {
     const types = {
         default: {
             title: 'Default',
             form: {
-                position_center: {
-                    label: 'Position Center',
-                    type: 'single_select',
-                    options: {
-                        values: {
-                            name: 'values',
-                            type: 'collection',
-                            value: [
-                                {
-                                    name: 'left',
-                                    title: 'Left',
-                                },
-                                {
-                                    name: 'center',
-                                    title: 'Center',
-                                },
-                                {
-                                    name: 'right',
-                                    title: 'Right',
-                                },
-                            ],
-                        },
-                    },
-                },
                 position_left: {
                     label: 'Position Left',
                     type: 'single_select',
@@ -311,18 +202,9 @@ test('Should set correct default values for multiple single_select in form', () 
                             name: 'values',
                             type: 'collection',
                             value: [
-                                {
-                                    name: 'left',
-                                    title: 'Left',
-                                },
-                                {
-                                    name: 'center',
-                                    title: 'Center',
-                                },
-                                {
-                                    name: 'right',
-                                    title: 'Right',
-                                },
+                                {name: 'left', title: 'Left'},
+                                {name: 'center', title: 'Center'},
+                                {name: 'right', title: 'Right'},
                             ],
                         },
                     },
@@ -340,18 +222,9 @@ test('Should set correct default values for multiple single_select in form', () 
                             name: 'values',
                             type: 'collection',
                             value: [
-                                {
-                                    name: 'left',
-                                    title: 'Left',
-                                },
-                                {
-                                    name: 'center',
-                                    title: 'Center',
-                                },
-                                {
-                                    name: 'right',
-                                    title: 'Right',
-                                },
+                                {name: 'left', title: 'Left'},
+                                {name: 'center', title: 'Center'},
+                                {name: 'right', title: 'Right'},
                             ],
                         },
                     },
@@ -360,29 +233,18 @@ test('Should set correct default values for multiple single_select in form', () 
         },
     };
 
-    fieldRegistry.get.mockReturnValue(SingleSelect);
-
-    const imageMap = mount(
+    const hotspot = {'hotspot': {'type': 'point'}, 'type': 'default'};
+    render(
         <ImageMap
             {...fieldTypeDefaultProps}
             defaultType="default"
-            formInspector={formInspector}
-            onChange={changeSpy}
+            formInspector={createFormInspector('en')}
+            onChange={jest.fn()}
             types={types}
-            value={{imageId: 55, hotspots: []}}
+            value={{imageId: 55, hotspots: [hotspot]}}
         />
     );
 
-    imageMap.find('Button').at(1).simulate('click');
-
-    expect(changeSpy).toBeCalledWith(
-        {
-            'hotspots': [{
-                'hotspot': {'type': 'point'},
-                'position_left': 'left',
-                'position_right': 'right',
-                'type': 'default',
-            }], 'imageId': 55,
-        }
-    );
+    const hotspotForm = getLatestMockProps(ImageMapContainerMock).renderHotspotForm(hotspot, 'default', 0);
+    expect(hotspotForm.props.schema).toEqual(types.default.form);
 });

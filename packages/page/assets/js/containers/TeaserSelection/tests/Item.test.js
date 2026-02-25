@@ -1,18 +1,36 @@
 // @flow
 import React from 'react';
 import {observable} from 'mobx';
-import {mount, shallow} from 'enzyme';
-import {SingleMediaSelectionOverlay} from 'sulu-media-bundle/containers';
-import {TextEditor} from 'sulu-admin-bundle/containers';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import Item from '../Item';
 
-jest.mock('sulu-media-bundle/containers/SingleMediaSelectionOverlay', () => jest.fn(() => null));
+jest.mock('sulu-media-bundle/components', () => ({
+    MimeTypeIndicator: jest.fn(() => null),
+}));
+
+jest.mock('sulu-media-bundle/containers', () => ({
+    SingleMediaSelectionOverlay: jest.fn(() => null),
+}));
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('sulu-admin-bundle/containers/TextEditor', () => jest.fn(({value}) => (<textarea value={value} />)));
+jest.mock('sulu-admin-bundle/containers', () => ({
+    TextEditor: jest.fn(({value}) => (<textarea readOnly={true} value={value || ''} />)),
+}));
+
+jest.mock('sulu-admin-bundle/components', () => ({
+    Button: jest.fn(({children, onClick}) => (
+        <button onClick={onClick} type="button">{children}</button>
+    )),
+    Icon: jest.fn(({name}) => <span>{name}</span>),
+    Input: jest.fn(({onChange, value}) => (
+        <input onChange={onChange} type="text" value={value || ''} />
+    )),
+}));
 
 jest.mock('../registries/teaserProviderRegistry', () => ({
     keys: ['pages', 'articles'],
@@ -20,213 +38,208 @@ jest.mock('../registries/teaserProviderRegistry', () => ({
         switch (key) {
             case 'page':
                 return {title: 'Page'};
+            default:
+                return undefined;
         }
     }),
 }));
 
+const singleMediaSelectionOverlayComponent = ((jest.requireMock('sulu-media-bundle/containers'): any)
+    .SingleMediaSelectionOverlay: {
+        mock: {calls: Array<[Object]>},
+        ...
+    });
+const textEditorComponent = ((jest.requireMock('sulu-admin-bundle/containers'): any).TextEditor: {
+    mock: {calls: Array<[Object]>},
+    ...
+});
+const inputComponent = ((jest.requireMock('sulu-admin-bundle/components'): any).Input: {
+    mock: {calls: Array<[Object]>},
+    ...
+});
+
+const createItemProps = (overrides: Object = {}) => ({
+    description: 'Description',
+    edited: false,
+    editing: false,
+    id: 5,
+    locale: observable.box('en'),
+    mediaId: undefined,
+    onApply: jest.fn(),
+    onCancel: jest.fn(),
+    title: 'Title',
+    type: 'page',
+    ...overrides,
+});
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    Item.mediaUrl = '/admin/image/:id';
+});
+
 test('Render Item with data but without image', () => {
     Item.mediaUrl = '/admin/media/:id';
 
-    const item = mount(
+    const {asFragment} = render(
         <Item
-            description="<p>Description</p>"
-            edited={false}
-            editing={false}
-            id={5}
-            locale={observable.box('en')}
-            mediaId={undefined}
-            onApply={jest.fn()}
-            onCancel={jest.fn()}
-            title="Title"
-            type="page"
+            {...createItemProps({
+                description: '<p>Description</p>',
+                mediaId: undefined,
+            })}
         />
     );
 
-    expect(item.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render Item with data and image', () => {
     Item.mediaUrl = '/admin/image/:id';
 
-    const item = mount(
+    const {asFragment} = render(
         <Item
-            description="<p>Description</p>"
-            edited={true}
-            editing={false}
-            id={5}
-            locale={observable.box('en')}
-            mediaId={2}
-            onApply={jest.fn()}
-            onCancel={jest.fn()}
-            title="Title"
-            type="page"
+            {...createItemProps({
+                description: '<p>Description</p>',
+                edited: true,
+                mediaId: 2,
+            })}
         />
     );
 
-    expect(item.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render Item without data', () => {
-    const item = mount(
+    const {asFragment} = render(
         <Item
-            description={undefined}
-            edited={false}
-            editing={false}
-            id={5}
-            locale={observable.box('en')}
-            mediaId={undefined}
-            onApply={jest.fn()}
-            onCancel={jest.fn()}
-            title={undefined}
-            type="page"
+            {...createItemProps({
+                description: undefined,
+                mediaId: undefined,
+                title: undefined,
+            })}
         />
     );
 
-    expect(item.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render Item with data as form', () => {
-    const item = mount(
-        <Item
-            description="Description"
-            edited={false}
-            editing={true}
-            id={5}
-            locale={observable.box('en')}
-            mediaId={undefined}
-            onApply={jest.fn()}
-            onCancel={jest.fn()}
-            title="Title"
-            type="page"
-        />
-    );
+    const {asFragment} = render(<Item {...createItemProps({editing: true})} />);
 
-    expect(item.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Pass correct props to text editor', () => {
-    const item = mount(
-        <Item
-            description="Description"
-            edited={false}
-            editing={true}
-            id={5}
-            locale={observable.box('en')}
-            mediaId={undefined}
-            onApply={jest.fn()}
-            onCancel={jest.fn()}
-            title="Title"
-            type="page"
-        />
-    );
+    render(<Item {...createItemProps({editing: true})} />);
 
-    expect(item.find(TextEditor).prop('adapter')).toEqual('ckeditor5');
-    expect(item.find(TextEditor).prop('locale').get()).toEqual('en');
+    expect(getLatestMockProps(textEditorComponent).adapter).toEqual('ckeditor5');
+    expect(getLatestMockProps(textEditorComponent).locale.get()).toEqual('en');
 });
 
-test('Cancelling the item while editing should call the onClose callback', () => {
+test('Cancelling the item while editing should call the onClose callback', async() => {
     const cancelSpy = jest.fn();
-
-    const item = shallow(
-        <Item
-            description="Description"
-            edited={false}
-            editing={true}
-            id={5}
-            locale={observable.box('en')}
-            mediaId={undefined}
-            onApply={jest.fn()}
-            onCancel={cancelSpy}
-            title="Title"
-            type="page"
-        />
-    );
+    render(<Item {...createItemProps({editing: true, onCancel: cancelSpy})} />);
 
     expect(cancelSpy).not.toBeCalled();
-    item.find('Button[children="sulu_admin.cancel"]').simulate('click');
+    await userEvent.click(screen.getByRole('button', {name: 'sulu_admin.cancel'}));
     expect(cancelSpy).toBeCalledWith('page', 5);
 });
 
 test('Reset the current field when the edit form is closed', () => {
-    const item = shallow(
+    const locale = observable.box('en');
+    const {rerender} = render(
         <Item
-            description="Edited description"
-            edited={false}
-            editing={true}
-            id={5}
-            locale={observable.box('en')}
-            mediaId={undefined}
-            onApply={jest.fn()}
-            onCancel={jest.fn()}
-            title="Edited title"
-            type="page"
+            {...createItemProps({
+                description: 'Edited description',
+                editing: true,
+                locale,
+                title: 'Edited title',
+            })}
         />
     );
 
-    item.find(TextEditor).prop('onChange')('Edited description');
-    item.find('Input').prop('onChange')('Edited title');
+    getLatestMockProps(textEditorComponent).onChange('Other description');
+    getLatestMockProps(inputComponent).onChange('Other title');
 
-    item.setProps({description: 'Description', editing: false, title: 'Title'});
-    item.setProps({editing: true});
+    rerender(
+        <Item
+            {...createItemProps({
+                description: 'Description',
+                editing: false,
+                locale,
+                title: 'Title',
+            })}
+        />
+    );
+    rerender(
+        <Item
+            {...createItemProps({
+                description: 'Description',
+                editing: true,
+                locale,
+                title: 'Title',
+            })}
+        />
+    );
 
-    expect(item.find(TextEditor).prop('value')).toEqual('Description');
-    expect(item.find('Input').prop('value')).toEqual('Title');
+    expect(getLatestMockProps(textEditorComponent).value).toEqual('Description');
+    expect(getLatestMockProps(inputComponent).value).toEqual('Title');
 });
 
 test('Reset the current field when the title or description props change', () => {
-    const item = shallow(
+    const locale = observable.box('en');
+    const {rerender} = render(
         <Item
-            description="Edited description"
-            edited={false}
-            editing={true}
-            id={5}
-            locale={observable.box('en')}
-            mediaId={undefined}
-            onApply={jest.fn()}
-            onCancel={jest.fn()}
-            title="Edited title"
-            type="page"
+            {...createItemProps({
+                description: 'Edited description',
+                editing: true,
+                locale,
+                title: 'Edited title',
+            })}
         />
     );
 
-    item.find(TextEditor).prop('onChange')('Edited description');
-    item.find('Input').prop('onChange')('Edited title');
+    getLatestMockProps(textEditorComponent).onChange('Other description');
+    getLatestMockProps(inputComponent).onChange('Other title');
 
-    item.setProps({description: 'Description', title: 'Title'});
+    rerender(
+        <Item
+            {...createItemProps({
+                description: 'Description',
+                editing: true,
+                locale,
+                title: 'Title',
+            })}
+        />
+    );
 
-    expect(item.find(TextEditor).prop('value')).toEqual('Description');
-    expect(item.find('Input').prop('value')).toEqual('Title');
+    expect(getLatestMockProps(textEditorComponent).value).toEqual('Description');
+    expect(getLatestMockProps(inputComponent).value).toEqual('Title');
 });
 
-test('Applying the item while editing should call the onApply callback with the current data', () => {
+test('Applying the item while editing should call the onApply callback with the current data', async() => {
     const applySpy = jest.fn();
-
-    const item = shallow(
+    render(
         <Item
-            description="Description"
-            edited={false}
-            editing={true}
-            id={5}
-            locale={observable.box('en')}
-            mediaId={5}
-            onApply={applySpy}
-            onCancel={jest.fn()}
-            title="Title"
-            type="page"
+            {...createItemProps({
+                editing: true,
+                mediaId: 5,
+                onApply: applySpy,
+            })}
         />
     );
 
-    item.find(TextEditor).prop('onChange')('Edited description');
-    item.find('Input').prop('onChange')('Edited title');
+    getLatestMockProps(textEditorComponent).onChange('Edited description');
+    getLatestMockProps(inputComponent).onChange('Edited title');
 
-    expect(item.find(SingleMediaSelectionOverlay).prop('open')).toEqual(false);
-    item.find('button[className="mediaButton"]').simulate('click');
-    expect(item.find(SingleMediaSelectionOverlay).prop('open')).toEqual(true);
-    item.find(SingleMediaSelectionOverlay).prop('onConfirm')({id: 8});
-    expect(item.find(SingleMediaSelectionOverlay).prop('open')).toEqual(false);
+    expect(getLatestMockProps(singleMediaSelectionOverlayComponent).open).toEqual(false);
+    await userEvent.click(screen.getByRole('button', {name: 'su-pen'}));
+    expect(getLatestMockProps(singleMediaSelectionOverlayComponent).open).toEqual(true);
+
+    getLatestMockProps(singleMediaSelectionOverlayComponent).onConfirm({id: 8});
+    expect(getLatestMockProps(singleMediaSelectionOverlayComponent).open).toEqual(false);
 
     expect(applySpy).not.toBeCalled();
-    item.find('Button[children="sulu_admin.apply"]').simulate('click');
+    await userEvent.click(screen.getByRole('button', {name: 'sulu_admin.apply'}));
     expect(applySpy).toBeCalledWith({
         description: 'Edited description',
         id: 5,
@@ -236,25 +249,19 @@ test('Applying the item while editing should call the onApply callback with the 
     });
 });
 
-test('Applying the item while editing should call the onApply callback with the current data', () => {
+test('Resetting the item while editing should call the onApply callback with id and type', async() => {
     const applySpy = jest.fn();
-
-    const item = shallow(
+    render(
         <Item
-            description="Description"
-            edited={false}
-            editing={true}
-            id={5}
-            locale={observable.box('en')}
-            mediaId={5}
-            onApply={applySpy}
-            onCancel={jest.fn()}
-            title="Title"
-            type="page"
+            {...createItemProps({
+                editing: true,
+                mediaId: 5,
+                onApply: applySpy,
+            })}
         />
     );
 
-    item.find('Button[children="sulu_admin.reset"]').simulate('click');
+    await userEvent.click(screen.getByRole('button', {name: 'sulu_admin.reset'}));
     expect(applySpy).toBeCalledWith({
         id: 5,
         type: 'page',
