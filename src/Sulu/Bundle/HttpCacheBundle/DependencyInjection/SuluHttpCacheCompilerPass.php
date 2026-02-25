@@ -14,6 +14,9 @@ namespace Sulu\Bundle\HttpCacheBundle\DependencyInjection;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ * @internal no backwards compatibility promise is given for this class it can be removed at any time
+ */
 class SuluHttpCacheCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
