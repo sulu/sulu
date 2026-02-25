@@ -13,13 +13,13 @@ jest.mock('react-leaflet', () => {
     const React = require('react');
 
     const MapContainer = jest.fn(function MapContainerMock({children}) {
-        return React.createElement('div', {'data-testid': 'map-container'}, children);
+        return <div data-testid="map-container">{children}</div>;
     });
     const Marker = jest.fn(function MarkerMock({children}) {
-        return React.createElement('div', {'data-testid': 'marker'}, children);
+        return <div data-testid="marker">{children}</div>;
     });
     const Tooltip = jest.fn(function TooltipMock({children}) {
-        return React.createElement('div', {'data-testid': 'tooltip'}, children);
+        return <div data-testid="tooltip">{children}</div>;
     });
     const TileLayer = jest.fn(() => null);
 
@@ -30,7 +30,7 @@ jest.mock('../LocationOverlay', () => {
     const React = require('react');
 
     return jest.fn(function LocationOverlayMock({open}) {
-        return React.createElement('div', {'data-open': open ? 'true' : 'false', 'data-testid': 'location-overlay'});
+        return <div data-open={open ? 'true' : 'false'} data-testid="location-overlay" />;
     });
 });
 

@@ -1,18 +1,10 @@
 // @flow
 import React from 'react';
-import {render} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {observable} from 'mobx';
-import {SingleSelect} from 'sulu-admin-bundle/components';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
-import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import PageSettingsShadowLocaleSelect from '../../fields/PageSettingsShadowLocaleSelect';
-
-jest.mock('sulu-admin-bundle/components', () => {
-    const SingleSelect: any = jest.fn(() => null);
-    SingleSelect.Option = jest.fn(() => null);
-
-    return {SingleSelect};
-});
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -32,15 +24,28 @@ test('Pass correct props to SingleSelect', () => {
         />
     );
 
-    const singleSelectProps: any = getLatestMockProps((SingleSelect: any));
-    const optionNodes = React.Children.toArray(singleSelectProps.children).filter(Boolean);
+    expect(screen.getByRole('button')).toBeDisabled();
+    expect(screen.getByText('de')).toBeInTheDocument();
+});
 
-    expect(singleSelectProps.disabled).toEqual(true);
-    expect(singleSelectProps.value).toEqual('de');
-    expect(optionNodes[0].props.children).toEqual('de');
-    expect(optionNodes[0].props.value).toEqual('de');
-    expect(optionNodes[1].props.children).toEqual('nl');
-    expect(optionNodes[1].props.value).toEqual('nl');
+test('Render available shadow-locales as options', async() => {
+    const user = userEvent.setup();
+    const formInspector: any = {
+        getValueByPath: jest.fn((path) => path === '/contentLocales' && ['en', 'de', 'nl']),
+        locale: observable.box('en'),
+    };
+
+    render(
+        <PageSettingsShadowLocaleSelect
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            value="de"
+        />
+    );
+
+    await user.click(screen.getByRole('button'));
+
+    expect(await screen.findByRole('button', {name: 'nl'})).toBeInTheDocument();
 });
 
 test('Pass correct props to SingleSelect when no shadow-locale exists', () => {
@@ -56,15 +61,12 @@ test('Pass correct props to SingleSelect when no shadow-locale exists', () => {
         />
     );
 
-    const singleSelectProps: any = getLatestMockProps((SingleSelect: any));
-    const optionNodes = React.Children.toArray(singleSelectProps.children).filter(Boolean);
-
-    expect(singleSelectProps.disabled).toEqual(true);
-    expect(singleSelectProps.value).toEqual(undefined);
-    expect(optionNodes).toHaveLength(0);
+    expect(screen.getByRole('button')).toBeDisabled();
+    expect(screen.getByText('sulu_admin.please_choose')).toBeInTheDocument();
 });
 
-test('Call onChange and onFinish if the value is changed', () => {
+test('Call onChange and onFinish if the value is changed', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
     const formInspector: any = {
@@ -81,8 +83,9 @@ test('Call onChange and onFinish if the value is changed', () => {
         />
     );
 
-    const singleSelectProps: any = getLatestMockProps((SingleSelect: any));
-    singleSelectProps.onChange('en');
+    await user.click(screen.getByLabelText('su-angle-down'));
+    await user.click(screen.getByText('en'));
+
     expect(changeSpy).toBeCalledWith('en');
     expect(finishSpy).toBeCalledWith();
 });

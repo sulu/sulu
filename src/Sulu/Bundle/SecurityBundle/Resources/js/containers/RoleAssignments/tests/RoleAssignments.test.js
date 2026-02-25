@@ -1,39 +1,14 @@
 // @flow
 import React from 'react';
-import {render} from '@testing-library/react';
+import {render, screen, within} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {localizationStore} from 'sulu-admin-bundle/stores';
 import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
-import getMockCallArg from 'sulu-admin-bundle/utils/TestHelper/getMockCallArg';
 import RoleAssignments from '../RoleAssignments';
-
-jest.mock('sulu-admin-bundle/stores/ResourceListStore', () => jest.fn().mockImplementation(
-    function() {
-        this.loading = false;
-        this.data = [
-            {
-                id: 2,
-                name: 'Role Name 2',
-                system: 'Sulu',
-            },
-            {
-                id: 5,
-                name: 'Role Name 5',
-                system: 'Sulu',
-            },
-            {
-                id: 23,
-                name: 'Role Name 23',
-                system: 'Sulu',
-            },
-        ];
-    }
-));
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     ResourceMultiSelect: jest.fn(() => null),
 }));
-
-jest.mock('../RoleAssignment', () => jest.fn(() => null));
 
 jest.mock('sulu-admin-bundle/stores', () => ({
     localizationStore: {
@@ -47,11 +22,6 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 
 const containersMock = ((jest.requireMock('sulu-admin-bundle/containers'): any): {
     ResourceMultiSelect: {mock: {calls: Array<[Object]>}},
-    ...
-});
-
-const roleAssignmentComponent = ((jest.requireMock('../RoleAssignment'): any): {
-    mock: {calls: Array<[Object]>},
     ...
 });
 
@@ -294,7 +264,8 @@ test('Should trigger onChange correctly when MultiSelect for roles changes', () 
     expect(onChangeSpy).toBeCalledWith(newValue);
 });
 
-test('Should trigger onChange correctly when RoleAssignment changes', () => {
+test('Should trigger onChange correctly when RoleAssignment changes', async() => {
+    const user = userEvent.setup();
     const value: Array<Object> = [
         {
             id: 1,
@@ -364,6 +335,13 @@ test('Should trigger onChange correctly when RoleAssignment changes', () => {
         },
     ];
 
-    getMockCallArg(roleAssignmentComponent, 1, 0).onChange(newValue[0]);
+    const firstRoleRow = screen.getByText('Role Name 5').closest('tr');
+    if (!firstRoleRow) {
+        throw new Error('Expected role row to exist');
+    }
+
+    await user.click(within(firstRoleRow).getByRole('button'));
+    await user.click(screen.getByRole('button', {name: /en$/}));
+
     expect(onChangeSpy).toBeCalledWith(newValue);
 });

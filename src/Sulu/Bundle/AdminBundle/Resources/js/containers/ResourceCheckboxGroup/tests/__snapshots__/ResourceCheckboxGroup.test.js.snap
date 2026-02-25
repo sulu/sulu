@@ -2,29 +2,58 @@
 
 exports[`Render with data 1`] = `
 <DocumentFragment>
-  <div
-    data-testid="checkbox-group"
-  >
-    <button
-      type="button"
+  <div>
+    <label
+      class="label"
+      tabindex="-1"
     >
-      change-values
-    </button>
-    <div
-      data-testid="checkbox"
+      <span
+        class="switch checkbox dark"
+      >
+        <input
+          type="checkbox"
+          value="2"
+        />
+        <span />
+      </span>
+      <div>
+        Test ABC
+      </div>
+    </label>
+    <label
+      class="label"
+      tabindex="-1"
     >
-      Test ABC
-    </div>
-    <div
-      data-testid="checkbox"
+      <span
+        class="switch checkbox dark"
+      >
+        <input
+          type="checkbox"
+          value="5"
+        />
+        <span />
+      </span>
+      <div>
+        Test DEF
+      </div>
+    </label>
+    <label
+      class="label"
+      tabindex="-1"
     >
-      Test DEF
-    </div>
-    <div
-      data-testid="checkbox"
-    >
-      Test XYZ
-    </div>
+      <span
+        class="switch checkbox dark"
+      >
+        <input
+          type="checkbox"
+          value="99"
+        />
+        <span />
+      </span>
+      <div>
+        Test XYZ
+      </div>
+    </label>
   </div>
 </DocumentFragment>
 `;

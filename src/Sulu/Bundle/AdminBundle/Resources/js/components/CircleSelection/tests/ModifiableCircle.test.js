@@ -4,10 +4,6 @@ import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ModifiableCircle from '../ModifiableCircle';
 
-jest.mock('mobx-react', () => ({
-    observer: (Component) => Component,
-}));
-
 const createProps = (props = {}) => ({
     disabled: false,
     label: undefined,

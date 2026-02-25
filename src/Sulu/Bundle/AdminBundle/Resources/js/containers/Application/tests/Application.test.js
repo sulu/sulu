@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import Router, {Route} from '../../../services/Router';
 import Application from '../Application';
 import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
+import loaderStyles from '../../../components/Loader/loader.scss';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
@@ -148,22 +149,6 @@ jest.mock('../../ProfileFormOverlay', () => {
     });
 });
 
-jest.mock('../../../components/Loader', () => {
-    const React = require('react');
-
-    return jest.fn(function LoaderMock() {
-        return React.createElement('div', {'data-testid': 'loader'}, 'Loader');
-    });
-});
-
-jest.mock('../../../components/Backdrop', () => {
-    const React = require('react');
-
-    return jest.fn(function BackdropMock({onClick}) {
-        return React.createElement('button', {'data-testid': 'backdrop', onClick, type: 'button'}, 'backdrop');
-    });
-});
-
 const navigationMock = (jest.requireMock('../../Navigation'): any);
 const toolbarMock = (jest.requireMock('../../Toolbar'): any);
 
@@ -214,7 +199,7 @@ test('Render login with loader', () => {
     mockUserStoreLoggedIn.mockReturnValue(false);
 
     const {asFragment} = render(<Application appVersion={null} router={createRouter()} suluVersion="2.0.0-RC1" />);
-    expect(screen.getByTestId('loader')).toBeInTheDocument();
+    expect(document.querySelector(`.${loaderStyles.spinner}`)).not.toBeNull();
     expect(screen.getByTestId('login')).toHaveTextContent('not-initialized');
     expect(asFragment()).toMatchSnapshot();
 });

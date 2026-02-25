@@ -1,13 +1,14 @@
 // @flow
 import mockReact from 'react';
-import {act, render} from '@testing-library/react';
+import {act, fireEvent, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {extendObservable as mockExtendObservable} from 'mobx';
 import FormOverlay from '../FormOverlay';
-import Overlay from '../../../components/Overlay';
 import ResourceStore from '../../../stores/ResourceStore';
 import MemoryFormStore from '../../../containers/Form/stores/MemoryFormStore';
 import ResourceFormStore from '../../../containers/Form/stores/ResourceFormStore';
-import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
+import overlayStyles from '../../../components/Overlay/overlay.scss';
+import snackbarStyles from '../../../components/Snackbar/snackbar.scss';
 
 const React = mockReact;
 const mockFormPropsCalls = [];
@@ -26,10 +27,6 @@ jest.mock('../../../containers/Form', () => {
         return <div>form container mock</div>;
     });
 });
-
-jest.mock('../../../components/Overlay', () => jest.fn(function OverlayMock({children}) {
-    return <div>{children}</div>;
-}));
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -72,16 +69,32 @@ jest.mock('../../../containers/Form/stores/MemoryFormStore',
     })
 );
 
-function getLatestOverlayProps() {
-    return getLatestMockProps((Overlay: any));
-}
-
 function getLatestFormProps() {
     return mockFormPropsCalls[mockFormPropsCalls.length - 1];
 }
 
 function getLatestFormSubmit() {
     return mockFormSubmitFunctions[mockFormSubmitFunctions.length - 1];
+}
+
+function getConfirmButton() {
+    return screen.getByRole('button', {name: 'confirm-text'});
+}
+
+function getOverlayElement() {
+    return document.querySelector(`.${overlayStyles.overlay}`);
+}
+
+function getEscapedRegExp(value: string) {
+    return new RegExp(value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+}
+
+function getSnackbarCloseIcon() {
+    return document.querySelector(`.${snackbarStyles.closeIcon}`);
+}
+
+function getSnackbar() {
+    return document.querySelector(`.${snackbarStyles.snackbar}[role="button"]`);
 }
 
 beforeEach(() => {
@@ -93,7 +106,7 @@ beforeEach(() => {
 test('Component should render', () => {
     const formStore = new MemoryFormStore({}, {}, undefined, undefined);
 
-    const {asFragment} = render(<FormOverlay
+    render(<FormOverlay
         confirmDisabled={false}
         confirmLoading={false}
         confirmText="confirm-text"
@@ -105,7 +118,7 @@ test('Component should render', () => {
         title="overlay-title"
     />);
 
-    expect(asFragment()).toMatchSnapshot();
+    expect(document.body).toMatchSnapshot();
 });
 
 test('Should pass correct props to Overlay component', () => {
@@ -126,17 +139,13 @@ test('Should pass correct props to Overlay component', () => {
         title="overlay-title"
     />);
 
-    const overlayProps = getLatestOverlayProps();
-
-    expect(overlayProps).toEqual(expect.objectContaining({
-        confirmDisabled: true,
-        confirmLoading: true,
-        confirmText: 'confirm-text',
-        onClose: closeSpy,
-        open: true,
-        size: 'small',
-        title: 'overlay-title',
-    }));
+    expect(screen.getByText('overlay-title')).toBeInTheDocument();
+    expect(getConfirmButton()).toBeDisabled();
+    const overlayElement = getOverlayElement();
+    if (!(overlayElement instanceof HTMLElement)) {
+        throw new Error('Expected overlay element to exist');
+    }
+    expect(overlayElement).toHaveClass(overlayStyles.small);
 });
 
 test('Should pass correct props to Overlay component when using default values', () => {
@@ -154,17 +163,15 @@ test('Should pass correct props to Overlay component when using default values',
         title="overlay-title"
     />);
 
-    const overlayProps = getLatestOverlayProps();
-
-    expect(overlayProps).toEqual(expect.objectContaining({
-        confirmDisabled: false,
-        confirmLoading: false,
-        confirmText: 'confirm-text',
-        onClose: closeSpy,
-        open: true,
-        size: undefined,
-        title: 'overlay-title',
-    }));
+    expect(screen.getByText('overlay-title')).toBeInTheDocument();
+    expect(getConfirmButton()).toBeEnabled();
+    expect(getConfirmButton()).not.toHaveClass('loading');
+    const overlayElement = getOverlayElement();
+    if (!(overlayElement instanceof HTMLElement)) {
+        throw new Error('Expected overlay element to exist');
+    }
+    expect(overlayElement).not.toHaveClass(overlayStyles.small);
+    expect(overlayElement).not.toHaveClass(overlayStyles.large);
 });
 
 test('Should pass correct props to Form component', () => {
@@ -204,15 +211,16 @@ test('Should display confirm button as loading if FormStore is saving', () => {
 
     const resourceFormStore: any = formStore;
     resourceFormStore.saving = false;
-    expect(getLatestOverlayProps().confirmLoading).toEqual(false);
+    expect(getConfirmButton()).not.toHaveClass('loading');
 
     act(() => {
         resourceFormStore.saving = true;
     });
-    expect(getLatestOverlayProps().confirmLoading).toEqual(true);
+    expect(getConfirmButton()).toHaveClass('loading');
 });
 
-test('Should submit Form container when Overlay is confirmed', () => {
+test('Should submit Form container when Overlay is confirmed', async() => {
+    const user = userEvent.setup();
     const formStore = new MemoryFormStore({}, {}, undefined, undefined);
 
     render(<FormOverlay
@@ -229,9 +237,7 @@ test('Should submit Form container when Overlay is confirmed', () => {
 
     const submitSpy = getLatestFormSubmit();
 
-    act(() => {
-        getLatestOverlayProps().onConfirm();
-    });
+    await user.click(getConfirmButton());
 
     expect(submitSpy).toBeCalled();
 });
@@ -313,7 +319,7 @@ test('Should display generic error message if an error happens while saving Reso
 
     expect(formStore.save).toBeCalled();
     expect(confirmSpy).not.toBeCalled();
-    expect(getLatestOverlayProps().snackbarMessage).toEqual('sulu_admin.form_save_server_error');
+    expect(screen.getByText(getEscapedRegExp('sulu_admin.form_save_server_error'))).toBeInTheDocument();
 });
 
 test('Should display error detail if an error happens while saving ResourceFormStore', async() => {
@@ -342,7 +348,7 @@ test('Should display error detail if an error happens while saving ResourceFormS
 
     expect(formStore.save).toBeCalled();
     expect(confirmSpy).not.toBeCalled();
-    expect(getLatestOverlayProps().snackbarMessage).toEqual('URL is already assigned to another page.');
+    expect(screen.getByText(getEscapedRegExp('URL is already assigned to another page.'))).toBeInTheDocument();
 });
 
 test('Should display error if a form is not valid', () => {
@@ -364,10 +370,11 @@ test('Should display error if a form is not valid', () => {
         getLatestFormProps().onError();
     });
 
-    expect(getLatestOverlayProps().snackbarMessage).toEqual('sulu_admin.form_contains_invalid_values');
+    expect(screen.getByText(getEscapedRegExp('sulu_admin.form_contains_invalid_values'))).toBeInTheDocument();
 });
 
-test('Should hide error when closeClick callback of Overlay snackbar is fired', () => {
+test('Should hide error when closeClick callback of Overlay snackbar is fired', async() => {
+    const user = userEvent.setup();
     const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
 
     render(<FormOverlay
@@ -385,12 +392,20 @@ test('Should hide error when closeClick callback of Overlay snackbar is fired', 
     act(() => {
         getLatestFormProps().onError();
     });
-    expect(getLatestOverlayProps().snackbarMessage).toEqual('sulu_admin.form_contains_invalid_values');
+    expect(screen.getByText(getEscapedRegExp('sulu_admin.form_contains_invalid_values'))).toBeInTheDocument();
 
-    act(() => {
-        getLatestOverlayProps().onSnackbarCloseClick();
-    });
-    expect(getLatestOverlayProps().snackbarMessage).toBeUndefined();
+    const snackbarCloseIcon = getSnackbarCloseIcon();
+    if (!(snackbarCloseIcon instanceof HTMLElement)) {
+        throw new Error('Expected snackbar close icon to be rendered');
+    }
+    await user.click(snackbarCloseIcon);
+    const snackbar = getSnackbar();
+    if (!(snackbar instanceof HTMLElement)) {
+        throw new Error('Expected snackbar to be rendered');
+    }
+    fireEvent.transitionEnd(snackbar);
+
+    expect(screen.queryByText(getEscapedRegExp('sulu_admin.form_contains_invalid_values'))).not.toBeInTheDocument();
 });
 
 test('Should clear old errors if Overlay is opened a second time', () => {
@@ -411,7 +426,7 @@ test('Should clear old errors if Overlay is opened a second time', () => {
     act(() => {
         getLatestFormProps().onError();
     });
-    expect(getLatestOverlayProps().snackbarMessage).toEqual('sulu_admin.form_contains_invalid_values');
+    expect(screen.getByText(getEscapedRegExp('sulu_admin.form_contains_invalid_values'))).toBeInTheDocument();
 
     rerender(<FormOverlay
         confirmDisabled={false}
@@ -424,6 +439,11 @@ test('Should clear old errors if Overlay is opened a second time', () => {
         size="small"
         title="overlay-title"
     />);
+    const snackbar = getSnackbar();
+    if (!(snackbar instanceof HTMLElement)) {
+        throw new Error('Expected snackbar to be rendered');
+    }
+    fireEvent.transitionEnd(snackbar);
 
     rerender(<FormOverlay
         confirmDisabled={false}
@@ -437,5 +457,5 @@ test('Should clear old errors if Overlay is opened a second time', () => {
         title="overlay-title"
     />);
 
-    expect(getLatestOverlayProps().snackbarMessage).toBeUndefined();
+    expect(screen.queryByText(getEscapedRegExp('sulu_admin.form_contains_invalid_values'))).not.toBeInTheDocument();
 });

@@ -2,24 +2,7 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import MediaCard from '../MediaCard';
-
-jest.mock('sulu-admin-bundle/components', () => ({
-    Checkbox: jest.fn(({children}) => <div>{children}</div>),
-    CroppedText: jest.fn(({children}) => <div>{children}</div>),
-    GhostIndicator: jest.fn(({locale}) => <span>{locale}</span>),
-    Icon: jest.fn(({name}) => <span>{name}</span>),
-    Loader: jest.fn(() => <div>loader</div>),
-}));
-
-jest.mock('../../MimeTypeIndicator', () => jest.fn(() => <div>mime-type-indicator</div>));
-jest.mock('../DownloadList', () => jest.fn(() => null));
-
-const downloadListComponent = ((jest.requireMock('../DownloadList'): any): {
-    mock: {calls: Array<[Object]>},
-    ...
-});
 
 let originalImage: any;
 let mockImageInstances: Array<any> = [];
@@ -180,7 +163,11 @@ test('Render a MediaCard with download list', async() => {
 
     await userEvent.click(screen.getByRole('button', {name: 'su-download'}));
 
-    expect(getLatestMockProps(downloadListComponent).open).toEqual(true);
+    expect(screen.getByRole('list')).toBeInTheDocument();
+    expect(screen.getByText('Direct download')).toBeInTheDocument();
+    expect(screen.getByText('300/200')).toBeInTheDocument();
+    expect(screen.getByText('600/300')).toBeInTheDocument();
+    expect(screen.getByText('150/200')).toBeInTheDocument();
 });
 
 test('Clicking on an item should call the responsible handler on the MediaCard component', async() => {

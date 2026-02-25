@@ -5,10 +5,6 @@ import {observable} from 'mobx';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import SearchResult from '../../fields/SearchResult';
 
-jest.mock('mobx-react', () => ({
-    observer: (Component) => Component,
-}));
-
 test('Pass correct fields to SearchResult component', () => {
     const formInspector: any = {
         getValueByPath: jest.fn((path) => {

@@ -1,15 +1,92 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Component should render 1`] = `
-<DocumentFragment>
+<body>
+  <div />
   <div>
     <div
-      class="form"
+      class="backdrop visible fixed"
+      data-testid="backdrop"
+      role="button"
+    />
+    <div
+      class="container isDown"
     >
-      <div>
-        form container mock
+      <div
+        class="overlay small"
+      >
+        <section
+          class="content"
+        >
+          <header
+            class="header"
+          >
+            <h2>
+              overlay-title
+            </h2>
+            <span
+              aria-label="su-times"
+              class="su-times clickable icon"
+              role="button"
+              tabindex="0"
+            />
+          </header>
+          <article
+            class="article"
+          >
+            <div
+              class="form"
+            >
+              <div>
+                form container mock
+              </div>
+            </div>
+          </article>
+          <footer
+            class="footer"
+          >
+            <button
+              class="button primary hasText"
+              type="button"
+            >
+              <span
+                class="buttonText"
+              >
+                confirm-text
+              </span>
+            </button>
+          </footer>
+          <div
+            class="snackbar"
+          >
+            <div
+              class="snackbar error"
+              role="button"
+            >
+              <span
+                aria-label="su-exclamation-triangle"
+                class="su-exclamation-triangle icon"
+              />
+              <div
+                class="text"
+              >
+                <strong>
+                  sulu_admin.error
+                </strong>
+                 - 
+                
+              </div>
+              <span
+                aria-label="su-times"
+                class="su-times clickable closeIcon"
+                role="button"
+                tabindex="0"
+              />
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   </div>
-</DocumentFragment>
+</body>
 `;

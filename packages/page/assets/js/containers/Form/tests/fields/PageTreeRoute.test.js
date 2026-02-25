@@ -14,13 +14,6 @@ jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     contentLocale: 'de',
 }));
 
-jest.mock('sulu-admin-bundle/components', () => {
-    const Grid: any = jest.fn(({children}) => <div>{children}</div>);
-    Grid.Item = jest.fn(({children}) => <div>{children}</div>);
-
-    return {Grid};
-});
-
 jest.mock('sulu-admin-bundle/containers', () => ({
     SingleSelection: jest.fn(() => null),
 }));

@@ -1,31 +1,13 @@
 // @flow
 import React from 'react';
-import {render} from '@testing-library/react';
-import {MultiSelect} from 'sulu-admin-bundle/components';
-import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import RoleAssignment from '../RoleAssignment';
 import type {Localization} from 'sulu-admin-bundle/stores';
-
-jest.mock('mobx-react', () => ({
-    observer: (Component) => Component,
-}));
-
-jest.mock('sulu-admin-bundle/components', () => {
-    const React = require('react');
-    const MultiSelect: any = jest.fn(({children}) => <div data-testid="multi-select">{children}</div>);
-
-    MultiSelect.Option = jest.fn(({children}) => <div data-testid="multi-select-option">{children}</div>);
-
-    return {
-        MultiSelect,
-    };
-});
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: (key) => key,
 }));
-
-const MultiSelectMock: any = MultiSelect;
 
 const value = {
     id: 1,
@@ -55,10 +37,6 @@ const localizations: Array<Localization> = [
         shadow: '',
     },
 ];
-
-beforeEach(() => {
-    MultiSelectMock.mockClear();
-});
 
 test('Render component', () => {
     const {container} = render(
@@ -93,7 +71,8 @@ test('Render component in disabled state', () => {
     expect(container).toMatchSnapshot();
 });
 
-test('The component should trigger the change callback', () => {
+test('The component should trigger the change callback', async() => {
+    const user = userEvent.setup();
     const onChangeSpy = jest.fn();
 
     render(
@@ -108,8 +87,8 @@ test('The component should trigger the change callback', () => {
         </table>
     );
 
-    const multiSelectProps = getLatestMockProps(MultiSelectMock);
-    multiSelectProps.onChange(['de', 'en']);
+    await user.click(screen.getByLabelText('su-angle-down'));
+    await user.click(screen.getByRole('button', {name: /en$/}));
 
     const expectedValue = {
         id: 1,

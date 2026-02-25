@@ -1,18 +1,29 @@
 // @flow
 import React from 'react';
+import {observable} from 'mobx';
 import {render} from '@testing-library/react';
 import fieldTypeDefaultProps from 'sulu-admin-bundle/utils/TestHelper/fieldTypeDefaultProps';
 import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
-import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/ResourceFormStore';
-import {FormInspector} from 'sulu-admin-bundle/containers/Form';
+import {MapContainer} from 'react-leaflet';
 import {Location} from '../../../../containers/Form';
-import LocationComponent from '../../../../containers/Location';
 
-jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn());
-jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn());
-jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn());
-jest.mock('../../../../containers/Location', () => jest.fn(() => null));
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
+
+jest.mock('react-leaflet', () => ({
+    MapContainer: jest.fn(({children}) => <div>{children}</div>),
+    Marker: jest.fn(() => null),
+    TileLayer: jest.fn(() => null),
+    Tooltip: jest.fn(() => null),
+}));
+
+jest.mock('../../../../containers/Location/LocationOverlay', () => jest.fn(() => null));
+
+const locationOverlayComponent = ((jest.requireMock('../../../../containers/Location/LocationOverlay'): any): {
+    mock: {calls: Array<[Object]>},
+    ...
+});
 
 test('Pass props correctly to Location component', () => {
     const locationData = {
@@ -27,19 +38,18 @@ test('Pass props correctly to Location component', () => {
         zoom: 5,
     };
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     render(
         <Location
             {...fieldTypeDefaultProps}
             disabled={true}
-            formInspector={formInspector}
+            formInspector={({locale: observable.box('de')}: any)}
             value={locationData}
         />
     );
 
-    const locationProps: any = getLatestMockProps((LocationComponent: any));
-    expect(locationProps.disabled).toBe(true);
-    expect(locationProps.value).toBe(locationData);
+    expect(getLatestMockProps((MapContainer: any)).center).toEqual([22, 33]);
+    expect(getLatestMockProps(locationOverlayComponent).value).toBe(locationData);
+    expect(getLatestMockProps(locationOverlayComponent).locale).toBe('de');
 });
 
 test('Call onChange and onFinish when onChange callback of Location component is fired', () => {
@@ -55,7 +65,6 @@ test('Call onChange and onFinish when onChange callback of Location component is
         zoom: 5,
     };
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
@@ -63,14 +72,14 @@ test('Call onChange and onFinish when onChange callback of Location component is
         <Location
             {...fieldTypeDefaultProps}
             disabled={true}
-            formInspector={formInspector}
+            formInspector={({locale: observable.box('en')}: any)}
             onChange={changeSpy}
             onFinish={finishSpy}
         />
     );
 
-    const locationProps: any = getLatestMockProps((LocationComponent: any));
-    locationProps.onChange(newLocation);
+    getLatestMockProps(locationOverlayComponent).onConfirm(newLocation);
+
     expect(changeSpy).toBeCalledWith(newLocation);
     expect(finishSpy).toBeCalledWith();
 });

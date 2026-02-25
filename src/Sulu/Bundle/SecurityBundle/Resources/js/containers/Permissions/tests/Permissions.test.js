@@ -24,7 +24,7 @@ jest.mock('../PermissionMatrix', () => jest.fn(() => <div data-testid="permissio
 
 jest.mock('sulu-admin-bundle/components', () => {
     const React = require('react');
-    const Loader = jest.fn(() => <div data-testid="loader" />);
+    const actual = jest.requireActual('sulu-admin-bundle/components');
     const MultiSelect = jest.fn(({children}) => <div data-testid="multi-select">{children}</div>);
     function Option({children}) {
         return <>{children}</>;
@@ -32,7 +32,7 @@ jest.mock('sulu-admin-bundle/components', () => {
     MultiSelect.Option = Option;
 
     return {
-        Loader,
+        ...actual,
         MultiSelect,
     };
 });

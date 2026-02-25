@@ -11,28 +11,15 @@ import TeaserSelection from '../TeaserSelection';
 import TeaserStore from '../stores/TeaserStore';
 import Item from '../Item';
 
-jest.mock('sulu-media-bundle/containers/SingleMediaSelectionOverlay', () => jest.fn(() => null));
-
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
 jest.mock('sulu-admin-bundle/containers/MultiListOverlay', () => jest.fn(() => null));
 
-jest.mock('sulu-admin-bundle/containers/TextEditor', () => jest.fn(({value}) => (
-    <textarea onChange={jest.fn()} value={value} />
-)));
-
 jest.mock('sulu-admin-bundle/components/MultiItemSelection', () => {
-    const React = require('react');
-
-    const MultiItemSelectionMock: any = jest.fn(function MultiItemSelectionMock({children}) {
-        return React.createElement('div', undefined, children);
-    });
-
-    MultiItemSelectionMock.Item = jest.fn(function MultiItemSelectionItemMock({children}) {
-        return React.createElement('div', undefined, children);
-    });
+    const MultiItemSelectionMock: any = jest.fn(({children}) => <div>{children}</div>);
+    MultiItemSelectionMock.Item = jest.fn(({children}) => <div>{children}</div>);
 
     return MultiItemSelectionMock;
 });

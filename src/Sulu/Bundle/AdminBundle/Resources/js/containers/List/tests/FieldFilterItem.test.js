@@ -5,10 +5,6 @@ import Mousetrap from 'mousetrap';
 import FieldFilterItem from '../FieldFilterItem';
 import listFieldFilterTypeRegistry from '../registries/listFieldFilterTypeRegistry';
 
-jest.mock('mobx-react', () => ({
-    observer: (Component) => Component,
-}));
-
 jest.mock('../registries/listFieldFilterTypeRegistry', () => ({
     get: jest.fn(),
     getOptions: jest.fn().mockReturnValue({}),

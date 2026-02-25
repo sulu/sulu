@@ -12,10 +12,6 @@ import PreviewLinkPopover from '../PreviewLinkPopover';
 
 jest.mock('copy-to-clipboard', () => jest.fn());
 
-jest.mock('sulu-admin-bundle/components/Button', () => jest.fn(({children, onClick}) => (
-    <button onClick={onClick} type="button">{children}</button>
-)));
-
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
     get: jest.fn(),
     post: jest.fn(),

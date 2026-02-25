@@ -2,12 +2,32 @@
 
 exports[`Show with passed emptyText and icon 1`] = `
 <DocumentFragment>
-  <div>
+  <div
+    class="singleItemSelection"
+  >
     <button
+      class="button left"
       type="button"
     >
-      open-overlay
+      <span
+        aria-label="su-document"
+        class="su-document icon"
+      />
     </button>
+    <div
+      class="itemContainer"
+    >
+      <div
+        class="item"
+        role="button"
+      >
+        <div
+          class="empty"
+        >
+          Test
+        </div>
+      </div>
+    </div>
   </div>
 </DocumentFragment>
 `;

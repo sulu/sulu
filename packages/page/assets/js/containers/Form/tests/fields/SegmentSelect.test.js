@@ -1,12 +1,27 @@
 // @flow
 import React from 'react';
-import {render} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
-import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
-import SegmentSelectContainer from '../../../SegmentSelect';
 import SegmentSelect from '../../fields/SegmentSelect';
 
-jest.mock('../../../SegmentSelect', () => jest.fn(() => null));
+jest.mock('sulu-admin-bundle/utils', () => ({
+    translate: jest.fn((key) => key),
+}));
+
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
+
+jest.mock('../../../../stores/webspaceStore', () => ({
+    __esModule: true,
+    default: {
+        getWebspace: jest.fn(),
+        grantedWebspaces: [],
+    },
+}));
+
+const webspaceStore = jest.requireMock('../../../../stores/webspaceStore').default;
 
 test('Pass correct props to SegmentSelect', () => {
     const formInspector: any = {
@@ -14,6 +29,13 @@ test('Pass correct props to SegmentSelect', () => {
             webspace: 'sulu_io',
         },
     };
+    webspaceStore.getWebspace.mockReturnValue({
+        key: 'sulu_io',
+        name: 'Sulu.io',
+        segments: [
+            {key: 's', title: 'Segment S'},
+        ],
+    });
 
     render(
         <SegmentSelect
@@ -24,23 +46,32 @@ test('Pass correct props to SegmentSelect', () => {
         />
     );
 
-    const segmentSelectContainerProps: any = getLatestMockProps((SegmentSelectContainer: any));
-    expect(segmentSelectContainerProps.disabled).toEqual(true);
-    expect(segmentSelectContainerProps.value).toEqual({});
-    expect(segmentSelectContainerProps.webspace).toEqual('sulu_io');
+    expect(webspaceStore.getWebspace).toBeCalledWith('sulu_io');
+    expect(screen.getByRole('button')).toBeDisabled();
+    expect(screen.getByText('sulu_admin.segment')).toBeInTheDocument();
 });
 
-test('Call onChange and onBlur if the value is changed', () => {
+test('Call onChange and onBlur if the value is changed', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
     const formInspector: any = {
         metadataOptions: {},
     };
+    webspaceStore.grantedWebspaces = [
+        {
+            key: 'webspace-3',
+            name: 'Webspace 3',
+            segments: [
+                {key: 'a', title: 'Segment A'},
+            ],
+        },
+    ];
 
     render(
         <SegmentSelect
             {...fieldTypeDefaultProps}
-            disabled={true}
+            disabled={false}
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}
@@ -50,11 +81,9 @@ test('Call onChange and onBlur if the value is changed', () => {
         />
     );
 
-    const segmentSelectContainerProps: any = getLatestMockProps((SegmentSelectContainer: any));
-    segmentSelectContainerProps.onChange({
-        'webspace-1': 's',
-        'webspace-3': 'a',
-    });
+    await user.click(screen.getByLabelText('su-angle-down'));
+    await user.click(screen.getByRole('button', {name: 'Segment A'}));
+
     expect(changeSpy).toBeCalledWith({
         'webspace-1': 's',
         'webspace-3': 'a',

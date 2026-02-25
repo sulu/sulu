@@ -1,28 +1,14 @@
 // @flow
 import React from 'react';
-import {render} from '@testing-library/react';
-import FolderList from '../../../../components/FolderList';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Pagination from '../../../../components/Pagination';
 import listAdapterDefaultProps from '../../../../utils/TestHelper/listAdapterDefaultProps';
 import getLatestMockProps from '../../../../utils/TestHelper/getLatestMockProps';
-import getMockCallArg from '../../../../utils/TestHelper/getMockCallArg';
 import FolderAdapter from '../../adapters/FolderAdapter';
 
-jest.mock('mobx-react', () => ({
-    observer: (Component) => Component,
-}));
-
-jest.mock('../../../../components/FolderList', () => {
-    const React = require('react');
-    const FolderList: any = jest.fn(({children}) => React.createElement('div', null, children));
-    FolderList.Folder = jest.fn(() => null);
-
-    return FolderList;
-});
-
 jest.mock('../../../../components/Pagination', () => {
-    const React = require('react');
-    return jest.fn(({children}) => React.createElement('div', null, children));
+    return jest.fn(({children}) => <div>{children}</div>);
 });
 
 jest.mock('../../../../utils/Translator', () => ({
@@ -68,16 +54,14 @@ test('Render a basic Folder list with data', () => {
     expect(paginationProps.currentPage).toEqual(1);
     expect(paginationProps.totalPages).toEqual(2);
 
-    expect((FolderList.Folder: any)).toBeCalledTimes(2);
-    const firstFolderProps: any = getMockCallArg((FolderList.Folder: any), 0, 0);
-    const secondFolderProps: any = getMockCallArg((FolderList.Folder: any), 1, 0);
-    expect(firstFolderProps.title).toEqual('Title 1');
-    expect(firstFolderProps.info).toEqual('1 Object');
-    expect(secondFolderProps.title).toEqual('Title 2');
-    expect(secondFolderProps.info).toEqual('0 Objects');
+    expect(screen.getByText('Title 1')).toBeInTheDocument();
+    expect(screen.getByText('1 Object')).toBeInTheDocument();
+    expect(screen.getByText('Title 2')).toBeInTheDocument();
+    expect(screen.getByText('0 Objects')).toBeInTheDocument();
 });
 
-test('Click on a Folder should call the onItemEdit callback', () => {
+test('Click on a Folder should call the onItemEdit callback', async() => {
+    const user = userEvent.setup();
     const itemClickSpy = jest.fn();
     const data = [
         {
@@ -104,8 +88,9 @@ test('Click on a Folder should call the onItemEdit callback', () => {
         onItemClick: itemClickSpy,
     });
 
-    const folderListProps: any = getLatestMockProps((FolderList: any));
-    expect(folderListProps.onFolderClick).toBe(itemClickSpy);
+    await user.click(screen.getByRole('button', {name: /Title 3/}));
+
+    expect(itemClickSpy).toBeCalledWith(3);
 });
 
 test('Pagination should not be rendered if no data is available', () => {

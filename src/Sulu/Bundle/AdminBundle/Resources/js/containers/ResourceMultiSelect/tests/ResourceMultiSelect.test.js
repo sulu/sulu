@@ -3,55 +3,14 @@ import React from 'react';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ResourceMultiSelect from '../ResourceMultiSelect';
-import MultiSelectComponent from '../../../components/MultiSelect';
 import ResourceListStore from '../../../stores/ResourceListStore';
-import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
+import loaderStyles from '../../../components/Loader/loader.scss';
 
 jest.mock('../../../stores/ResourceListStore', () => jest.fn());
 
 jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
-
-jest.mock('../../../components/Loader', () => {
-    const React = require('react');
-
-    return jest.fn(function LoaderMock() {
-        return React.createElement('div', {'data-testid': 'loader'});
-    });
-});
-
-jest.mock('../../../components/MultiSelect', () => {
-    const React = require('react');
-
-    const MultiSelect: any = jest.fn(function MultiSelectMock({children, onChange, onClose}) {
-        function handleChange() {
-            onChange([5, 99]);
-        }
-
-        function handleClose() {
-            if (onClose) {
-                onClose();
-            }
-        }
-
-        return React.createElement(
-            'div',
-            {'data-testid': 'multiselect'},
-            React.createElement('button', {onClick: handleChange, type: 'button'}, 'change-values'),
-            React.createElement('button', {onClick: handleClose, type: 'button'}, 'close-multiselect'),
-            children
-        );
-    });
-
-    MultiSelect.Option = jest.fn(function OptionMock({children}) {
-        return React.createElement('div', {'data-testid': 'multiselect-option'}, children);
-    });
-
-    return MultiSelect;
-});
-
-const multiSelectMock = (MultiSelectComponent: any);
 
 function mockResourceListStoreData(data: ?Array<Object>, loading: boolean = false) {
     // $FlowFixMe
@@ -98,7 +57,7 @@ test('Render in disabled state', () => {
     );
 
     expect(ResourceListStore).toHaveBeenCalledWith('test', {limit: ''}, 'id');
-    expect(getLatestMockProps(multiSelectMock).disabled).toEqual(true);
+    expect(screen.getByRole('button', {name: /sulu_admin\.none_selected/})).toBeDisabled();
 });
 
 test('Render in loading state', () => {
@@ -113,7 +72,7 @@ test('Render in loading state', () => {
         />
     );
 
-    expect(screen.getByTestId('loader')).toBeInTheDocument();
+    expect(document.querySelector(`.${loaderStyles.spinner}`)).not.toBeNull();
 });
 
 test('Pass requestParameters', () => {
@@ -227,8 +186,9 @@ test('The component should trigger the change callback', async() => {
         {'id': 99, 'name': 'Test XYZ', 'someOtherProperty': 'maybe maybe'},
     ];
 
-    await user.click(screen.getByRole('button', {name: 'change-values'}));
-    expect(onChangeSpy).toHaveBeenCalledWith([5, 99], expectedValues);
+    await user.click(screen.getByRole('button', {name: /Test XYZ/}));
+    await user.click(screen.getByRole('button', {name: 'Test DEF'}));
+    expect(onChangeSpy).toHaveBeenCalledWith([99, 5], expectedValues);
 });
 
 test('The component should trigger the close callback', async() => {
@@ -250,6 +210,7 @@ test('The component should trigger the close callback', async() => {
     );
 
     expect(closeSpy).not.toHaveBeenCalled();
-    await user.click(screen.getByRole('button', {name: 'close-multiselect'}));
+    await user.click(screen.getByRole('button', {name: /sulu_admin\.none_selected/}));
+    await user.keyboard('{Escape}');
     expect(closeSpy).toHaveBeenCalled();
 });

@@ -1,22 +1,10 @@
 // @flow
 import React from 'react';
-import {render} from '@testing-library/react';
-import {MultiSelect} from 'sulu-admin-bundle/components';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
-import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import webspaceStore from '../../../../stores/webspaceStore';
 import PageSettingsNavigationSelect from '../../fields/PageSettingsNavigationSelect';
-
-jest.mock('mobx-react', () => ({
-    observer: (Component) => Component,
-}));
-
-jest.mock('sulu-admin-bundle/components', () => {
-    const MultiSelect: any = jest.fn(() => null);
-    MultiSelect.Option = jest.fn(() => null);
-
-    return {MultiSelect};
-});
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -50,19 +38,43 @@ test('Pass correct props to MultiSelect', () => {
         />
     );
 
-    const multiSelectProps: any = getLatestMockProps((MultiSelect: any));
-    const optionNodes = React.Children.toArray(multiSelectProps.children);
-
     expect(webspaceStore.getWebspace).toBeCalledWith('sulu_io');
-    expect(multiSelectProps.disabled).toEqual(true);
-    expect(multiSelectProps.values).toEqual(['footer']);
-    expect(optionNodes[0].props.children).toEqual('Main Navigation');
-    expect(optionNodes[0].props.value).toEqual('main');
-    expect(optionNodes[1].props.children).toEqual('Footer Navigation');
-    expect(optionNodes[1].props.value).toEqual('footer');
+    expect(screen.getByRole('button')).toBeDisabled();
+    expect(screen.getByText('Footer Navigation')).toBeInTheDocument();
 });
 
-test('Call onChange and onBlur if the value is changed', () => {
+test('Render available navigations as options', async() => {
+    const user = userEvent.setup();
+    const webspace = {
+        navigations: [
+            {key: 'main', title: 'Main Navigation'},
+            {key: 'footer', title: 'Footer Navigation'},
+        ],
+    };
+    webspaceStore.getWebspace.mockReturnValue(webspace);
+
+    const formInspector: any = {
+        options: {
+            webspace: 'sulu_io',
+        },
+    };
+
+    render(
+        <PageSettingsNavigationSelect
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            value={['footer']}
+        />
+    );
+
+    await user.click(screen.getByRole('button'));
+
+    expect(await screen.findByRole('button', {name: /Main Navigation/})).toBeInTheDocument();
+    expect(screen.getAllByRole('button', {name: /Footer Navigation/})).toHaveLength(2);
+});
+
+test('Call onChange and onBlur if the value is changed', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
     const webspace = {
@@ -89,8 +101,9 @@ test('Call onChange and onBlur if the value is changed', () => {
         />
     );
 
-    const multiSelectProps: any = getLatestMockProps((MultiSelect: any));
-    multiSelectProps.onChange(['footer', 'main']);
+    await user.click(screen.getByRole('button'));
+    await user.click(await screen.findByRole('button', {name: /Main Navigation/}));
+
     expect(changeSpy).toBeCalledWith(['footer', 'main']);
     expect(finishSpy).toBeCalledWith();
 });

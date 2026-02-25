@@ -4,10 +4,6 @@ import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ModifiableRectangle from '../ModifiableRectangle';
 
-jest.mock('mobx-react', () => ({
-    observer: (Component) => Component,
-}));
-
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));

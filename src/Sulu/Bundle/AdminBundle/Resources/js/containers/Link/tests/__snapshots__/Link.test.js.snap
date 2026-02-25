@@ -9,14 +9,43 @@ exports[`Render Link container incl. loading a selected value 1`] = `
       class="provider"
     >
       <div
-        data-testid="single-select"
+        class="select"
+        role="none"
       >
-        <div
-          data-testid="single-select-option"
-          data-value="page"
+        <button
+          class="displayValue flat"
+          type="button"
         >
-          Page
-        </div>
+          <div
+            aria-label="Page"
+            class="croppedText"
+            title="Page"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              Pa
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                ge
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              Page
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down toggle"
+          />
+        </button>
       </div>
     </div>
     <div

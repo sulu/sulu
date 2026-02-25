@@ -2,18 +2,30 @@
 
 exports[`Render a PageTreeRoute 1`] = `
 <DocumentFragment>
-  <div>
-    <div />
-    <div />
+  <div
+    class="grid"
+  >
+    <div
+      class="item colSpan colSpan-5 space-before-0 space-after-0"
+    />
+    <div
+      class="item colSpan colSpan-7 space-before-0 space-after-0"
+    />
   </div>
 </DocumentFragment>
 `;
 
 exports[`Render a PageTreeRoute without value 1`] = `
 <DocumentFragment>
-  <div>
-    <div />
-    <div />
+  <div
+    class="grid"
+  >
+    <div
+      class="item colSpan colSpan-5 space-before-0 space-after-0"
+    />
+    <div
+      class="item colSpan colSpan-7 space-before-0 space-after-0"
+    />
   </div>
 </DocumentFragment>
 `;

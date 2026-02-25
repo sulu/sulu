@@ -1,13 +1,12 @@
 // @flow
 import React from 'react';
-import {render} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import log from 'loglevel';
 import listAdapterDefaultProps from '../../../../utils/TestHelper/listAdapterDefaultProps';
 import TableAdapter from '../../adapters/TableAdapter';
 import StringFieldTransformer from '../../fieldTransformers/StringFieldTransformer';
 import IconFieldTransformer from '../../fieldTransformers/IconFieldTransformer';
 import listFieldTransformerRegistry from '../../registries/listFieldTransformerRegistry';
-import Icon from '../../../../components/Icon';
 import Pagination from '../../../../components/Pagination';
 import Table from '../../../../components/Table';
 import getMockCallArg from '../../../../utils/TestHelper/getMockCallArg';
@@ -36,14 +35,9 @@ jest.mock('loglevel', () => ({
     warn: jest.fn(),
 }));
 
-jest.mock('../../../../components/Icon', () => jest.fn(() => <span data-testid="icon" />));
-
 jest.mock('../../../../components/Pagination', () => jest.fn(({children}) => (
     <div data-testid="pagination">{children}</div>
 )));
-
-jest.mock('../../../../components/GhostIndicator', () => jest.fn(() => <span data-testid="ghost-indicator" />));
-jest.mock('../../../../components/PublishIndicator', () => jest.fn(() => <span data-testid="publish-indicator" />));
 
 jest.mock('../../../../components/Table', () => {
     const React = require('react');
@@ -59,7 +53,6 @@ jest.mock('../../../../components/Table', () => {
     return TableMock;
 });
 
-const IconMock = (Icon: any);
 const PaginationMock = (Pagination: any);
 const TableMock = (Table: any);
 
@@ -151,11 +144,9 @@ test('renders icon transformer values and warns for missing mapping', () => {
         />
     );
 
-    expect(getMockCallArg(IconMock, 0, 0)).toEqual(expect.objectContaining({name: 'su-clock'}));
-    expect(getMockCallArg(IconMock, 1, 0)).toEqual(
-        expect.objectContaining({name: 'su-check-circle', style: {color: 'green'}})
-    );
-    expect(getMockCallArg(IconMock, 2, 0)).toEqual(expect.objectContaining({name: 'su-ban', style: {}}));
+    expect(screen.getByLabelText('su-clock')).toBeInTheDocument();
+    expect(screen.getByLabelText('su-check-circle')).toHaveStyle({color: 'green'});
+    expect(screen.getByLabelText('su-ban')).toBeInTheDocument();
 
     expect(log.warn).toBeCalledWith(
         'There was no icon specified in the "mapping" transformer parameter for the value "running".'

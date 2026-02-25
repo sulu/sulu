@@ -5,9 +5,9 @@ import listAdapterDefaultProps from '../../../../utils/TestHelper/listAdapterDef
 import TreeTableAdapter from '../../adapters/TreeTableAdapter';
 import Pagination from '../../../../components/Pagination';
 import Table from '../../../../components/Table';
-import Loader from '../../../../components/Loader';
 import getMockCallArg from '../../../../utils/TestHelper/getMockCallArg';
 import getLatestMockProps from '../../../../utils/TestHelper/getLatestMockProps';
+import loaderStyles from '../../../../components/Loader/loader.scss';
 
 jest.mock('../../../../utils/Translator', () => ({
     translate(key) {
@@ -32,8 +32,6 @@ jest.mock('../../registries/listFieldTransformerRegistry', () => ({
     has: jest.fn(),
 }));
 
-jest.mock('../../../../components/Loader', () => jest.fn(() => <div data-testid="loader" />));
-
 jest.mock('../../../../components/Pagination', () => jest.fn(({children}) => (
     <div data-testid="pagination">{children}</div>
 )));
@@ -52,7 +50,6 @@ jest.mock('../../../../components/Table', () => {
     return TableMock;
 });
 
-const LoaderMock = (Loader: any);
 const PaginationMock = (Pagination: any);
 const TableMock = (Table: any);
 
@@ -125,7 +122,7 @@ test('renders loader while loading root level', () => {
         />
     );
 
-    expect(LoaderMock).toBeCalledTimes(1);
+    expect(document.querySelector(`.${loaderStyles.spinner}`)).not.toBeNull();
     expect(TableMock).not.toBeCalled();
 });
 

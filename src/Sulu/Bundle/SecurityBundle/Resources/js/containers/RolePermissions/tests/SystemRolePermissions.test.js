@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {act, render} from '@testing-library/react';
+import {act, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import securityContextStore from '../../../stores/securityContextStore';
 import SystemRolePermissions from '../SystemRolePermissions';
@@ -11,29 +12,21 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 
 jest.mock('sulu-admin-bundle/components', () => {
     const React = require('react');
+    const actual = jest.requireActual('sulu-admin-bundle/components');
 
     const Matrix: any = jest.fn(function MatrixMock({children}) {
-        return React.createElement('div', undefined, children);
+        return <div>{children}</div>;
     });
     Matrix.Row = function MatrixRowMock({children}) {
-        return React.createElement('div', undefined, children);
+        return <div>{children}</div>;
     };
     Matrix.Item = function MatrixItemMock() {
         return null;
     };
 
-    const Heading = function HeadingMock({children}) {
-        return React.createElement('div', undefined, children);
-    };
-
-    const Toggler = jest.fn(function TogglerMock() {
-        return null;
-    });
-
     return {
-        Heading,
+        ...actual,
         Matrix,
-        Toggler,
     };
 });
 
@@ -44,16 +37,11 @@ jest.mock('../../../stores/securityContextStore', () => ({
 
 const componentsMock = ((jest.requireMock('sulu-admin-bundle/components'): any): {
     Matrix: {mock: {calls: Array<[Object]>}},
-    Toggler: {mock: {calls: Array<[Object]>}},
     ...
 });
 
 function getLatestMatrixProps(): any {
     return getLatestMockProps(componentsMock.Matrix);
-}
-
-function getLatestTogglerProps(): any {
-    return getLatestMockProps(componentsMock.Toggler);
 }
 
 beforeEach(() => {
@@ -100,7 +88,7 @@ test('Do not show Matrix if no values are given', () => {
     );
 
     expect(componentsMock.Matrix).toHaveBeenCalledTimes(0);
-    expect(getLatestTogglerProps().checked).toEqual(false);
+    expect(screen.getByRole('checkbox')).not.toBeChecked();
 });
 
 test('Render permissions for a single system in disabled state', () => {
@@ -119,8 +107,9 @@ test('Render permissions for a single system in disabled state', () => {
     expect(getLatestMatrixProps().disabled).toEqual(true);
 });
 
-test('Call onChange callback when matrix changes', () => {
+test('Call onChange callback when matrix changes', async() => {
     const changeSpy = jest.fn();
+    const user = userEvent.setup();
 
     render(
         <SystemRolePermissions
@@ -134,9 +123,7 @@ test('Call onChange callback when matrix changes', () => {
         />
     );
 
-    act(() => {
-        getLatestTogglerProps().onChange(true);
-    });
+    await user.click(screen.getByRole('checkbox'));
 
     const newValue = {'1': {view: true}};
     act(() => {
@@ -146,8 +133,9 @@ test('Call onChange callback when matrix changes', () => {
     expect(changeSpy).toBeCalledWith(newValue, 'Sulu');
 });
 
-test('Call onChange callback with empty values if toggler is deactivated', () => {
+test('Call onChange callback with empty values if toggler is deactivated', async() => {
     const changeSpy = jest.fn();
+    const user = userEvent.setup();
 
     render(
         <SystemRolePermissions
@@ -161,15 +149,14 @@ test('Call onChange callback with empty values if toggler is deactivated', () =>
         />
     );
 
-    act(() => {
-        getLatestTogglerProps().onChange(false);
-    });
+    await user.click(screen.getByRole('checkbox'));
 
     expect(changeSpy).toBeCalledWith({}, 'Sulu');
 });
 
-test('Show default values after activating toggler', () => {
+test('Show default values after activating toggler', async() => {
     const changeSpy = jest.fn();
+    const user = userEvent.setup();
 
     const roles = [
         {
@@ -214,9 +201,7 @@ test('Show default values after activating toggler', () => {
 
     expect(componentsMock.Matrix).toHaveBeenCalledTimes(0);
 
-    act(() => {
-        getLatestTogglerProps().onChange(true);
-    });
+    await user.click(screen.getByRole('checkbox'));
 
     expect(componentsMock.Matrix).toHaveBeenCalledTimes(1);
     expect(getLatestMatrixProps().values).toEqual({

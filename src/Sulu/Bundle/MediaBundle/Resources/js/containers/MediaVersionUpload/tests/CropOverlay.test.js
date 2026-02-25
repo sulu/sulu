@@ -11,8 +11,8 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 
 jest.mock('sulu-admin-bundle/components', () => {
     const React = require('react');
+    const actual = jest.requireActual('sulu-admin-bundle/components');
     const Overlay = jest.fn((props) => <div>{props.children}</div>);
-    const Loader = jest.fn(() => null);
     const ImageRectangleSelection = jest.fn(() => null);
     const SingleSelect: any = jest.fn((props) => <div>{props.children}</div>);
     const SingleSelectOption = jest.fn(() => null);
@@ -20,8 +20,8 @@ jest.mock('sulu-admin-bundle/components', () => {
     SingleSelect.Option = SingleSelectOption;
 
     return {
+        ...actual,
         ImageRectangleSelection,
-        Loader,
         Overlay,
         SingleSelect,
     };

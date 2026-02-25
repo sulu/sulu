@@ -9,16 +9,21 @@ import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import TextEditor from '../../fields/TextEditor';
 import userStore from '../../../../stores/userStore';
-import TextEditorContainer from '../../../../containers/TextEditor';
+import textEditorRegistry from '../../../../containers/TextEditor/registries/textEditorRegistry';
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
 jest.mock('../../../../stores/userStore', () => ({}));
-jest.mock('../../../../containers/TextEditor', () => jest.fn(() => null));
+jest.mock('../../../../containers/TextEditor/registries/textEditorRegistry', () => ({
+    get: jest.fn(),
+}));
+
+const AdapterMock = jest.fn(() => null);
 
 beforeEach(() => {
-    ((TextEditorContainer: any): {mockClear: () => void}).mockClear();
+    AdapterMock.mockClear();
+    textEditorRegistry.get.mockReturnValue(AdapterMock);
 });
 
 test('Pass props correctly to TextEditor', () => {
@@ -42,9 +47,8 @@ test('Pass props correctly to TextEditor', () => {
         />
     );
 
-    const textEditorProps: any = getLatestMockProps((TextEditorContainer: any));
+    const textEditorProps: any = getLatestMockProps((AdapterMock: any));
     expect(textEditorProps).toEqual(expect.objectContaining({
-        adapter: 'ckeditor5',
         locale,
         onBlur: finishSpy,
         onChange: changeSpy,
@@ -74,7 +78,7 @@ test('Pass content locale from user to TextEditor if form has no locale', () => 
         />
     );
 
-    const textEditorProps: any = getLatestMockProps((TextEditorContainer: any));
+    const textEditorProps: any = getLatestMockProps((AdapterMock: any));
     expect(textEditorProps.locale).toBeDefined();
     expect(textEditorProps.locale.get()).toEqual('de');
 });
@@ -93,7 +97,7 @@ test('Call onFocus when editor get focus', () => {
 
     const target = new EventTarget();
 
-    const textEditorProps: any = getLatestMockProps((TextEditorContainer: any));
+    const textEditorProps: any = getLatestMockProps((AdapterMock: any));
     textEditorProps.onFocus({target});
 
     expect(focusSpy).toBeCalledWith(target);

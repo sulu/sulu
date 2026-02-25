@@ -2,54 +2,69 @@
 
 exports[`Render in disabled state 1`] = `
 <DocumentFragment>
-  <div>
-    <button
-      type="button"
+  <div
+    class="singleAutoComplete"
+  >
+    <div
+      class="input default left disabled"
     >
-      search
-    </button>
-    <button
-      type="button"
-    >
-      change
-    </button>
-    <span
-      data-testid="loading"
-    >
-      true
-    </span>
-    <span
-      data-testid="value"
-    >
-      James Bond
-    </span>
+      <div
+        class="prependedContainer default"
+      >
+        <div
+          class="spinner"
+          style="width: 20px; height: 20px;"
+        >
+          <div
+            class="doubleBounce1"
+          />
+          <div
+            class="doubleBounce2"
+          />
+        </div>
+      </div>
+      <input
+        autocomplete="off"
+        class="mousetrap"
+        disabled=""
+        type="text"
+        value="James Bond"
+      />
+    </div>
   </div>
 </DocumentFragment>
 `;
 
 exports[`Render with value of given SingleSelectionStore 1`] = `
 <DocumentFragment>
-  <div>
-    <button
-      type="button"
+  <div
+    class="singleAutoComplete"
+  >
+    <div
+      class="input default left"
     >
-      search
-    </button>
-    <button
-      type="button"
-    >
-      change
-    </button>
-    <span
-      data-testid="loading"
-    >
-      true
-    </span>
-    <span
-      data-testid="value"
-    >
-      James Bond
-    </span>
+      <div
+        class="prependedContainer default"
+      >
+        <div
+          class="spinner"
+          style="width: 20px; height: 20px;"
+        >
+          <div
+            class="doubleBounce1"
+          />
+          <div
+            class="doubleBounce2"
+          />
+        </div>
+      </div>
+      <input
+        autocomplete="off"
+        class="mousetrap"
+        type="text"
+        value="James Bond"
+      />
+    </div>
   </div>
 </DocumentFragment>
 `;

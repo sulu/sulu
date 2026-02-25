@@ -1,24 +1,72 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Pass allowAdd and idProperty prop to component 1`] = `
+<DocumentFragment>
+  <div
+    class="multiAutoComplete"
+  >
+    <div
+      class="icon"
+    >
+      <span
+        aria-label="su-search"
+        class="su-search"
+      />
+    </div>
+    <div
+      class="items"
+    >
+      <input
+        class="input mousetrap"
+        value=""
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
 exports[`Render in disabled state 1`] = `
 <DocumentFragment>
   <div
-    data-testid="multi-autocomplete-component"
+    class="multiAutoComplete disabled"
   >
-    <input
-      data-testid="multi-autocomplete-input"
-      disabled=""
-    />
-    <button
-      type="button"
+    <div
+      class="icon"
     >
-      trigger-search
-    </button>
-    <button
-      type="button"
+      <span
+        aria-label="su-search"
+        class="su-search"
+      />
+    </div>
+    <div
+      class="items"
     >
-      trigger-change
-    </button>
+      <span
+        class="chip"
+      >
+        <button
+          class="chip secondary small disabled"
+          type="button"
+        >
+          James Bond
+        </button>
+      </span>
+      <span
+        class="chip"
+      >
+        <button
+          class="chip secondary small disabled"
+          type="button"
+        >
+          John Doe
+        </button>
+      </span>
+      <input
+        class="input mousetrap"
+        disabled=""
+        value=""
+      />
+    </div>
   </div>
 </DocumentFragment>
 `;
@@ -26,21 +74,31 @@ exports[`Render in disabled state 1`] = `
 exports[`Render in loading state 1`] = `
 <DocumentFragment>
   <div
-    data-testid="multi-autocomplete-component"
+    class="multiAutoComplete"
   >
-    <input
-      data-testid="multi-autocomplete-input"
-    />
-    <button
-      type="button"
+    <div
+      class="icon"
     >
-      trigger-search
-    </button>
-    <button
-      type="button"
+      <div
+        class="spinner"
+        style="width: 16px; height: 16px;"
+      >
+        <div
+          class="doubleBounce1"
+        />
+        <div
+          class="doubleBounce2"
+        />
+      </div>
+    </div>
+    <div
+      class="items"
     >
-      trigger-change
-    </button>
+      <input
+        class="input mousetrap"
+        value=""
+      />
+    </div>
   </div>
 </DocumentFragment>
 `;
@@ -48,21 +106,56 @@ exports[`Render in loading state 1`] = `
 exports[`Render with given value 1`] = `
 <DocumentFragment>
   <div
-    data-testid="multi-autocomplete-component"
+    class="multiAutoComplete"
   >
-    <input
-      data-testid="multi-autocomplete-input"
-    />
-    <button
-      type="button"
+    <div
+      class="icon"
     >
-      trigger-search
-    </button>
-    <button
-      type="button"
+      <span
+        aria-label="su-search"
+        class="su-search"
+      />
+    </div>
+    <div
+      class="items"
     >
-      trigger-change
-    </button>
+      <span
+        class="chip"
+      >
+        <button
+          class="chip secondary small"
+          type="button"
+        >
+          James Bond
+          <span
+            aria-label="su-times"
+            class="su-times clickable icon"
+            role="button"
+            tabindex="0"
+          />
+        </button>
+      </span>
+      <span
+        class="chip"
+      >
+        <button
+          class="chip secondary small"
+          type="button"
+        >
+          John Doe
+          <span
+            aria-label="su-times"
+            class="su-times clickable icon"
+            role="button"
+            tabindex="0"
+          />
+        </button>
+      </span>
+      <input
+        class="input mousetrap"
+        value=""
+      />
+    </div>
   </div>
 </DocumentFragment>
 `;

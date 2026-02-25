@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+/* eslint-disable flowtype/require-valid-file-annotation, react/jsx-no-bind */
 import copyToClipboard from 'copy-to-clipboard';
 import React from 'react';
 import {act, render, screen, waitFor, within} from '@testing-library/react';
@@ -14,53 +14,55 @@ jest.mock('copy-to-clipboard', () => jest.fn());
 
 jest.mock('sulu-admin-bundle/components', () => {
     const React = require('react');
-
-    const Loader = jest.fn(function LoaderMock() {
-        return React.createElement('div', {'data-testid': 'loader'});
-    });
+    const actual = jest.requireActual('sulu-admin-bundle/components');
 
     const Table = jest.fn(function TableMock({children}) {
-        return React.createElement('table', {'data-testid': 'media-formats-table'}, children);
+        return <table data-testid="media-formats-table">{children}</table>;
     });
 
     Table.Header = jest.fn(function HeaderMock({children}) {
-        return React.createElement('thead', null, children);
+        return (
+            <thead>
+                <tr>{children}</tr>
+            </thead>
+        );
     });
 
     Table.HeaderCell = jest.fn(function HeaderCellMock({children}) {
-        return React.createElement('th', null, children);
+        return <th>{children}</th>;
     });
 
     Table.Body = jest.fn(function BodyMock({children}) {
-        return React.createElement('tbody', null, children);
+        return <tbody>{children}</tbody>;
     });
 
     Table.Row = jest.fn(function RowMock({buttons = [], children, id}) {
-        return React.createElement(
-            'tr',
-            {'data-testid': 'row-' + id},
-            ...buttons.map((button, index) => React.createElement(
-                'td',
-                {key: index},
-                React.createElement(
-                    'button',
-                    {
-                        onClick: () => button.onClick && button.onClick(id),
-                        type: 'button',
-                    },
-                    button.icon
-                )
-            )),
-            children
+        return (
+            <tr data-testid={'row-' + id}>
+                {buttons.map((button, index) => {
+                    function handleClick() {
+                        if (button.onClick) {
+                            button.onClick(id);
+                        }
+                    }
+
+                    return (
+                        <td key={index}>
+                            <button onClick={handleClick} type="button">{button.icon}</button>
+                        </td>
+                    );
+                })}
+                {children}
+            </tr>
         );
     });
 
     Table.Cell = jest.fn(function CellMock({children}) {
-        return React.createElement('td', null, children);
+        return <td>{children}</td>;
     });
 
     return {
-        Loader,
+        ...actual,
         Table,
     };
 });

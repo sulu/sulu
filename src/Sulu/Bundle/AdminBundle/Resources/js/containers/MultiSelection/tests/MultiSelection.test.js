@@ -1,41 +1,18 @@
 // @flow
 import React from 'react';
-import {act, render, screen} from '@testing-library/react';
+import {act, render} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {comparer, extendObservable as mockExtendObservable, observable} from 'mobx';
 import MultiSelection from '../MultiSelection';
 import MultiSelectionStore from '../../../stores/MultiSelectionStore';
-import getMockCallArg from '../../../utils/TestHelper/getMockCallArg';
 import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
+import multiItemSelectionButtonStyles from '../../../components/MultiItemSelection/button.scss';
+import multiItemSelectionItemStyles from '../../../components/MultiItemSelection/item.scss';
 import publishIndicatorStyles from '../../../components/PublishIndicator/publishIndicator.scss';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
-
-jest.mock('../../../components/CroppedText', () => jest.fn(({children}) => <span>{children}</span>));
-
-jest.mock('../../../components/MultiItemSelection', () => {
-    const React = require('react');
-
-    const MultiItemSelection: any = jest.fn(function MultiItemSelectionMock(props) {
-        const {children, disabled, leftButton} = props;
-        const handleOpenOverlayClick = leftButton.onClick;
-
-        return React.createElement(
-            'div',
-            undefined,
-            React.createElement('button', {disabled, onClick: handleOpenOverlayClick, type: 'button'}, 'open-overlay'),
-            children
-        );
-    });
-
-    MultiItemSelection.Item = jest.fn(function MultiItemSelectionItemMock({children}) {
-        return React.createElement('div', undefined, children);
-    });
-
-    return MultiItemSelection;
-});
 
 jest.mock('../../../containers/MultiListOverlay', () => jest.fn(() => null));
 
@@ -56,12 +33,28 @@ jest.mock('../../../stores/MultiSelectionStore', () => jest.fn(function() {
     });
 }));
 
-const MultiItemSelectionMock: any = jest.requireMock('../../../components/MultiItemSelection');
 const MultiListOverlayMock: any = jest.requireMock('../../../containers/MultiListOverlay');
 const MultiSelectionStoreMock: any = jest.requireMock('../../../stores/MultiSelectionStore');
 
 const getStore = () => (
     MultiSelectionStoreMock.mock.instances[MultiSelectionStoreMock.mock.instances.length - 1]
+);
+const getOverlayToggleButton = (): HTMLButtonElement => {
+    const button = document.querySelector(`button.${multiItemSelectionButtonStyles.left}`);
+    if (!(button instanceof HTMLButtonElement)) {
+        throw new Error('Expected MultiItemSelection left button to be rendered');
+    }
+
+    return button;
+};
+const getRenderedItems = (): Array<HTMLElement> => Array.from(
+    document.querySelectorAll(`.${multiItemSelectionItemStyles.item}`)
+);
+const getClickableItems = (): Array<HTMLElement> => Array.from(
+    document.querySelectorAll(`.${multiItemSelectionItemStyles.content}[role="button"]`)
+);
+const getItemRemoveButtons = (): Array<HTMLElement> => Array.from(
+    document.querySelectorAll(`.${multiItemSelectionItemStyles.buttons} > button`)
 );
 const getPublishIndicators = () => Array.from(document.querySelectorAll(`.${publishIndicatorStyles.publishIndicator}`))
     .filter((element) => !element.querySelector(`.${publishIndicatorStyles.publishIndicator}`));
@@ -90,6 +83,7 @@ test('Show with passed icon and label', () => {
 });
 
 test('Pass correct props to MultiItemSelection component', () => {
+    mockInitialStoreItems = [{id: 1}];
     render(
         <MultiSelection
             adapter="table"
@@ -102,8 +96,15 @@ test('Pass correct props to MultiItemSelection component', () => {
         />
     );
 
-    expect(getLatestMockProps(MultiItemSelectionMock).disabled).toEqual(true);
-    expect(getLatestMockProps(MultiItemSelectionMock).sortable).toEqual(false);
+    expect(getOverlayToggleButton()).toBeDisabled();
+
+    const firstItem = getRenderedItems()[0];
+    if (!firstItem) {
+        throw new Error('Expected first rendered item');
+    }
+    const dragHandle = firstItem.querySelector(`.${multiItemSelectionItemStyles.dragHandle}`);
+    expect(dragHandle).not.toBeNull();
+    expect(dragHandle).not.toHaveClass(multiItemSelectionItemStyles.sortable);
 });
 
 test('Render selected item in disabled state when disabledIds contain its id', () => {
@@ -120,8 +121,9 @@ test('Render selected item in disabled state when disabledIds contain its id', (
         />
     );
 
-    expect(getMockCallArg(MultiItemSelectionMock.Item, 0, 0).disabled).toEqual(false);
-    expect(getMockCallArg(MultiItemSelectionMock.Item, 1, 0).disabled).toEqual(true);
+    const renderedItems = getRenderedItems();
+    expect(renderedItems[0]).not.toHaveClass(multiItemSelectionItemStyles.disabled);
+    expect(renderedItems[1]).toHaveClass(multiItemSelectionItemStyles.disabled);
 });
 
 test('Pass locale/options/disabledIds/itemDisabledCondition to MultiListOverlay', () => {
@@ -250,7 +252,7 @@ test('Should open and close overlay', async() => {
     );
 
     expect(getLatestMockProps(MultiListOverlayMock).open).toEqual(false);
-    await user.click(screen.getByRole('button', {name: 'open-overlay'}));
+    await user.click(getOverlayToggleButton());
     expect(getLatestMockProps(MultiListOverlayMock).open).toEqual(true);
 
     act(() => {
@@ -272,11 +274,13 @@ test('Should not open overlay on click when disabled', async() => {
         />
     );
 
-    await user.click(screen.getByRole('button', {name: 'open-overlay'}));
+    await user.click(getOverlayToggleButton());
     expect(getLatestMockProps(MultiListOverlayMock).open).toEqual(false);
 });
 
 test('Should call store.set when confirm is triggered', () => {
+    const selectedItems = [{id: 3}, {id: 7}, {id: 2}];
+
     render(
         <MultiSelection
             adapter="table"
@@ -288,9 +292,9 @@ test('Should call store.set when confirm is triggered', () => {
     );
 
     act(() => {
-        getLatestMockProps(MultiListOverlayMock).onConfirm([3, 7, 2]);
+        getLatestMockProps(MultiListOverlayMock).onConfirm(selectedItems);
     });
-    expect(getStore().set).toBeCalledWith([3, 7, 2]);
+    expect(getStore().set).toBeCalledWith(selectedItems);
     expect(getLatestMockProps(MultiListOverlayMock).open).toEqual(false);
 });
 
@@ -314,9 +318,10 @@ test('Should call onItemClick callback when item is clicked', () => {
         />
     );
 
-    getLatestMockProps(MultiItemSelectionMock).onItemClick(1, item1);
+    const clickableItems = getClickableItems();
+    clickableItems[0].click();
     expect(itemClickSpy).toHaveBeenLastCalledWith(1, item1);
-    getLatestMockProps(MultiItemSelectionMock).onItemClick(2, item2);
+    clickableItems[1].click();
     expect(itemClickSpy).toHaveBeenLastCalledWith(2, item2);
 });
 
@@ -346,21 +351,28 @@ test('Should load items if value prop changes', () => {
 });
 
 test('Should remove and reorder items via MultiItemSelection callbacks', () => {
+    mockInitialStoreItems = [{id: 3}, {id: 7}, {id: 9}];
+    const multiSelectionRef = React.createRef();
+
     render(
         <MultiSelection
             adapter="table"
             listKey="snippets"
             onChange={jest.fn()}
             overlayTitle="Selection"
+            ref={multiSelectionRef}
             resourceKey="snippets"
             value={[3, 7, 9]}
         />
     );
 
-    getLatestMockProps(MultiItemSelectionMock).onItemRemove(7);
+    const removeButtons = getItemRemoveButtons();
+    removeButtons[1].click();
     expect(getStore().removeById).toBeCalledWith(7);
 
-    getLatestMockProps(MultiItemSelectionMock).onItemsSorted(1, 2);
+    act(() => {
+        (multiSelectionRef.current: any).handleSorted(1, 2);
+    });
     expect(getStore().move).toBeCalledWith(1, 2);
 });
 
@@ -423,8 +435,9 @@ test('Should render selected item disabled if it fulfills itemDisabledCondition'
         />
     );
 
-    expect(getMockCallArg(MultiItemSelectionMock.Item, 0, 0).disabled).toEqual(false);
-    expect(getMockCallArg(MultiItemSelectionMock.Item, 1, 0).disabled).toEqual(true);
+    const renderedItems = getRenderedItems();
+    expect(renderedItems[0]).not.toHaveClass(multiItemSelectionItemStyles.disabled);
+    expect(renderedItems[1]).toHaveClass(multiItemSelectionItemStyles.disabled);
 });
 
 test('Pass correct allowRemoveWhileDisabled prop to MultiItemSelection.Item', () => {
@@ -433,6 +446,7 @@ test('Pass correct allowRemoveWhileDisabled prop to MultiItemSelection.Item', ()
         <MultiSelection
             adapter="table"
             allowDeselectForDisabledItems={true}
+            disabledIds={[1]}
             listKey="snippets"
             onChange={jest.fn()}
             overlayTitle="Selection"
@@ -441,7 +455,7 @@ test('Pass correct allowRemoveWhileDisabled prop to MultiItemSelection.Item', ()
         />
     );
 
-    expect(getLatestMockProps(MultiItemSelectionMock.Item).allowRemoveWhileDisabled).toEqual(true);
+    expect(getItemRemoveButtons()).toHaveLength(1);
 });
 
 test('PublishIndicator should be rendered when necessary', () => {

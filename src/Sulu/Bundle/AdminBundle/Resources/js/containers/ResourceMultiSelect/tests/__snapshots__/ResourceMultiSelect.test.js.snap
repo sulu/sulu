@@ -3,33 +3,43 @@
 exports[`Render with data 1`] = `
 <DocumentFragment>
   <div
-    data-testid="multiselect"
+    class="select"
+    role="none"
   >
     <button
+      class="displayValue default"
       type="button"
     >
-      change-values
+      <div
+        aria-label="Test DEF, Test XYZ"
+        class="croppedText"
+        title="Test DEF, Test XYZ"
+      >
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          Test DEF,
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+             Test XYZ
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          Test DEF, Test XYZ
+        </div>
+      </div>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down toggle"
+      />
     </button>
-    <button
-      type="button"
-    >
-      close-multiselect
-    </button>
-    <div
-      data-testid="multiselect-option"
-    >
-      Test ABC
-    </div>
-    <div
-      data-testid="multiselect-option"
-    >
-      Test DEF
-    </div>
-    <div
-      data-testid="multiselect-option"
-    >
-      Test XYZ
-    </div>
   </div>
 </DocumentFragment>
 `;

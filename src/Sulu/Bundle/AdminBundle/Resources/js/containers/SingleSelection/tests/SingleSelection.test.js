@@ -6,6 +6,8 @@ import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import SingleSelectionStore from '../../../stores/SingleSelectionStore';
 import SingleSelection from '../SingleSelection';
 import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
+import singleItemSelectionButtonStyles from '../../../components/SingleItemSelection/button.scss';
+import singleItemSelectionStyles from '../../../components/SingleItemSelection/singleItemSelection.scss';
 import publishIndicatorStyles from '../../../components/PublishIndicator/publishIndicator.scss';
 
 jest.mock('../../../utils/Translator', () => ({
@@ -13,20 +15,6 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 jest.mock('../../../containers/SingleListOverlay', () => jest.fn(() => null));
-
-jest.mock('../../../components/SingleItemSelection', () => jest.fn(function SingleItemSelectionMock(props) {
-    const {children, disabled, leftButton, onRemove} = props;
-    const handleOpenOverlayClick = leftButton.onClick;
-    const handleRemoveItemClick = onRemove;
-
-    return (
-        <div>
-            <button disabled={disabled} onClick={handleOpenOverlayClick} type="button">open-overlay</button>
-            {onRemove && <button onClick={handleRemoveItemClick} type="button">remove-item</button>}
-            {children}
-        </div>
-    );
-}));
 
 jest.mock('../../../containers/List/stores/ListStore', () => jest.fn());
 
@@ -50,11 +38,31 @@ jest.mock('../../../stores/SingleSelectionStore', () => jest.fn(function() {
     });
 }));
 
-const SingleItemSelectionMock: any = jest.requireMock('../../../components/SingleItemSelection');
 const SingleListOverlayMock: any = jest.requireMock('../../../containers/SingleListOverlay');
 const SingleSelectionStoreMock: any = jest.requireMock('../../../stores/SingleSelectionStore');
 
 const getStore = () => SingleSelectionStoreMock.mock.instances[SingleSelectionStoreMock.mock.instances.length - 1];
+const getOverlayToggleButton = (): HTMLButtonElement => {
+    const button = document.querySelector(`button.${singleItemSelectionButtonStyles.left}`);
+    if (!(button instanceof HTMLButtonElement)) {
+        throw new Error('Expected SingleItemSelection left button to be rendered');
+    }
+
+    return button;
+};
+const getRemoveButton = (): ?HTMLButtonElement => {
+    const button = document.querySelector(`button.${singleItemSelectionStyles.removeButton}`);
+
+    return button instanceof HTMLButtonElement ? button : null;
+};
+const getItemButton = (): HTMLDivElement => {
+    const item = document.querySelector(`.${singleItemSelectionStyles.item}[role="button"]`);
+    if (!(item instanceof HTMLDivElement)) {
+        throw new Error('Expected SingleItemSelection item to be rendered');
+    }
+
+    return item;
+};
 const getPublishIndicators = () => Array.from(document.querySelectorAll(`.${publishIndicatorStyles.publishIndicator}`))
     .filter((element) => !element.querySelector(`.${publishIndicatorStyles.publishIndicator}`));
 
@@ -113,10 +121,8 @@ test('Render with selected item', () => {
     });
 
     expect(getLatestMockProps(SingleListOverlayMock).open).toEqual(false);
-    expect(getLatestMockProps(SingleItemSelectionMock)).toEqual(expect.objectContaining({
-        id: 3,
-        value: {id: 3, name: 'Name', value: 'Value'},
-    }));
+    expect(screen.getByText('Name')).toBeInTheDocument();
+    expect(screen.getByText('Value')).toBeInTheDocument();
 });
 
 test('Render with selected item in disabled state', () => {
@@ -148,7 +154,7 @@ test('Render with selected item in disabled state', () => {
     });
 
     expect(getLatestMockProps(SingleListOverlayMock).open).toEqual(false);
-    expect(getLatestMockProps(SingleItemSelectionMock).disabled).toEqual(true);
+    expect(getOverlayToggleButton()).toBeDisabled();
 });
 
 test('Pass resourceKey and locale to SingleListOverlay', () => {
@@ -235,7 +241,7 @@ test('Should open and close an overlay', async() => {
         />
     );
 
-    await user.click(screen.getByRole('button', {name: 'open-overlay'}));
+    await user.click(getOverlayToggleButton());
     expect(getLatestMockProps(SingleListOverlayMock).open).toEqual(true);
 
     act(() => {
@@ -263,7 +269,7 @@ test('Should not open an overlay on button click when disabled', async() => {
     );
 
     expect(getLatestMockProps(SingleListOverlayMock).open).toEqual(false);
-    await user.click(screen.getByRole('button', {name: 'open-overlay'}));
+    await user.click(getOverlayToggleButton());
     expect(getLatestMockProps(SingleListOverlayMock).open).toEqual(false);
 });
 
@@ -309,7 +315,7 @@ test('Should call onChange callback if a new item was selected', () => {
     );
 
     act(() => {
-        getLatestMockProps(SingleItemSelectionMock).leftButton.onClick();
+        getOverlayToggleButton().click();
     });
     expect(getLatestMockProps(SingleListOverlayMock).open).toEqual(true);
 
@@ -391,7 +397,7 @@ test('Should call onItemClick callback when item is clicked', () => {
         />
     );
 
-    getLatestMockProps(SingleItemSelectionMock).onItemClick(1, {id: 1});
+    getItemButton().click();
     expect(itemClickSpy).toBeCalledWith(1, {id: 1});
 });
 
@@ -411,7 +417,12 @@ test('Should remove item when remove button is clicked', async() => {
         />
     );
 
-    await user.click(screen.getByRole('button', {name: 'remove-item'}));
+    const removeButton = getRemoveButton();
+    if (!(removeButton instanceof HTMLButtonElement)) {
+        throw new Error('Expected remove button to be rendered');
+    }
+
+    await user.click(removeButton);
     expect(getStore().clear).toBeCalledWith();
 });
 
@@ -464,8 +475,8 @@ test('Correct props should be passed to SingleItemSelection component', () => {
         />
     );
 
-    expect(getLatestMockProps(SingleItemSelectionMock).disabled).toEqual(true);
-    expect(getLatestMockProps(SingleItemSelectionMock).emptyText).toEqual('nothing');
+    expect(getOverlayToggleButton()).toBeDisabled();
+    expect(screen.getByText('nothing')).toBeInTheDocument();
 });
 
 test('Pass correct itemDisabled prop to SingleItemSelection component', () => {
@@ -482,12 +493,12 @@ test('Pass correct itemDisabled prop to SingleItemSelection component', () => {
             value={1}
         />
     );
-    expect(getLatestMockProps(SingleItemSelectionMock).itemDisabled).toEqual(false);
+    expect(getOverlayToggleButton()).toBeEnabled();
 
     act(() => {
         getStore().item = {id: 1, status: 'inactive'};
     });
-    expect(getLatestMockProps(SingleItemSelectionMock).itemDisabled).toEqual(true);
+    expect(getOverlayToggleButton()).toBeDisabled();
 
     rerender(
         <SingleSelection
@@ -502,7 +513,7 @@ test('Pass correct itemDisabled prop to SingleItemSelection component', () => {
             value={1}
         />
     );
-    expect(getLatestMockProps(SingleItemSelectionMock).itemDisabled).toEqual(true);
+    expect(getOverlayToggleButton()).toBeDisabled();
 });
 
 test('Set loading prop of SingleItemSelection component if store is loading', () => {
@@ -521,7 +532,7 @@ test('Set loading prop of SingleItemSelection component if store is loading', ()
         />
     );
 
-    expect(getLatestMockProps(SingleItemSelectionMock).loading).toEqual(true);
+    expect(screen.getByText('…')).toBeInTheDocument();
     expect(SingleListOverlayMock).toHaveBeenCalledTimes(0);
 });
 
@@ -541,7 +552,11 @@ test('Pass correct allowRemoveWhileItemDisabled prop to SingleItemSelection comp
         />
     );
 
-    expect(getLatestMockProps(SingleItemSelectionMock).allowRemoveWhileItemDisabled).toEqual(true);
+    act(() => {
+        getStore().item = {id: 1};
+    });
+
+    expect(getRemoveButton()).not.toBeNull();
 });
 
 test('PublishIndicator should not be rendered if not necessary', () => {

@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import {render, waitFor} from '@testing-library/react';
+import {render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {Router, Route} from 'sulu-admin-bundle/services';
 import {userStore} from 'sulu-admin-bundle/stores';
-import getMockCallArg from 'sulu-admin-bundle/utils/TestHelper/getMockCallArg';
 import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import WebspaceTabs from '../WebspaceTabs';
 import webspaceStore from '../../../stores/webspaceStore';
@@ -30,12 +30,9 @@ jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     getPersistentSetting: jest.fn(),
 }));
 
-jest.mock('../../../components/WebspaceSelect', () => {
-    const WebspaceSelectMock: any = jest.fn(({children}) => <div>{children}</div>);
-    WebspaceSelectMock.Item = jest.fn(({children}) => <div>{children}</div>);
-
-    return WebspaceSelectMock;
-});
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
 
 jest.mock('sulu-admin-bundle/views', () => ({
     Tabs: jest.fn(({children, childrenProps, header}) => (
@@ -46,12 +43,6 @@ jest.mock('sulu-admin-bundle/views', () => ({
     )),
 }));
 
-const webspaceSelectModule = ((jest.requireMock('../../../components/WebspaceSelect'): any): {
-    mock: {calls: Array<[Object]>},
-    ...
-});
-
-const webspaceSelectMock: any = webspaceSelectModule;
 const tabsMock = ((jest.requireMock('sulu-admin-bundle/views'): any).Tabs: {
     mock: {calls: Array<[Object]>},
     ...
@@ -93,7 +84,7 @@ test('Render webspace select with children when webspaces are not loaded yet', (
         </WebspaceTabs>
     );
 
-    expect(webspaceSelectMock).toHaveBeenCalled();
+    expect(screen.getByRole('button')).toBeInTheDocument();
     expect(tabsMock).toHaveBeenCalled();
     expect(asFragment()).toMatchSnapshot();
 });
@@ -137,6 +128,7 @@ test('Should bind and unbind router attributes and updateRouteHook', () => {
 });
 
 test('Save and update webspace when select value is changed', async() => {
+    const user = userEvent.setup();
     const router = new Router({});
     const route = createRoute();
 
@@ -157,22 +149,24 @@ test('Save and update webspace when select value is changed', async() => {
         }
     });
 
-    render(<WebspaceTabs route={route} router={router}>{() => null}</WebspaceTabs>);
-
-    expect(webspaceSelectMock).toHaveBeenCalled();
-    const {onChange} = getMockCallArg(webspaceSelectMock, 0, 0);
-    onChange('sulu_blog');
-
-    await waitFor(() => {
-        const latestWebspaceSelectProps = getLatestMockProps(webspaceSelectMock);
-        expect(latestWebspaceSelectProps.value).toEqual('sulu_blog');
+    router.bind.mockImplementation((key, webspaceKey) => {
+        if (key === 'webspace') {
+            webspaceKey.set('sulu');
+        }
     });
 
-    const latestTabsPropsWithBlog = getLatestMockProps(tabsMock);
-    expect(latestTabsPropsWithBlog.childrenProps).toEqual(expect.objectContaining({webspace: webspace2}));
+    render(<WebspaceTabs route={route} router={router}>{() => null}</WebspaceTabs>);
 
-    const latestWebspaceSelectProps = getLatestMockProps(webspaceSelectMock);
-    latestWebspaceSelectProps.onChange('sulu');
+    await user.click(screen.getByRole('button', {name: /Sulu/}));
+    await user.click(screen.getByRole('button', {name: 'Sulu Blog'}));
+
+    await waitFor(() => {
+        const latestTabsProps = getLatestMockProps(tabsMock);
+        expect(latestTabsProps.childrenProps).toEqual(expect.objectContaining({webspace: webspace2}));
+    });
+
+    await user.click(screen.getByRole('button', {name: /Sulu Blog/}));
+    await user.click(screen.getByRole('button', {name: 'Sulu'}));
 
     await waitFor(() => {
         const latestTabsProps = getLatestMockProps(tabsMock);
@@ -180,6 +174,5 @@ test('Save and update webspace when select value is changed', async() => {
     });
 
     expect(userStore.setPersistentSetting).toBeCalledWith('sulu_page.webspace_tabs.webspace', 'sulu');
-    const finalWebspaceSelectProps = getLatestMockProps(webspaceSelectMock);
-    expect(finalWebspaceSelectProps.value).toEqual('sulu');
+    expect(screen.getByRole('button', {name: /Sulu/})).toBeInTheDocument();
 });

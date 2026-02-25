@@ -1,48 +1,35 @@
 // @flow
 import React from 'react';
-import {render} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import fieldTypeDefaultProps from 'sulu-admin-bundle/utils/TestHelper/fieldTypeDefaultProps';
-import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
-import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
 import RoleAssignments from '../../fields/RoleAssignments';
-import RoleAssignmentsContainer from '../../../RoleAssignments';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
-    FormInspector: jest.fn(function(formStore) {
-        this.getValueByPath = jest.fn();
-        this.locale = formStore.locale;
-    }),
-    ResourceFormStore: jest.fn(function(resourceStore) {
-        this.locale = resourceStore.locale;
-    }),
+    ResourceMultiSelect: jest.fn(() => null),
 }));
 
 jest.mock('sulu-admin-bundle/stores', () => ({
-    ResourceStore: jest.fn(function(resourceKey, id, observableOptions = {}) {
-        this.locale = observableOptions.locale;
-    }),
+    localizationStore: {
+        localizations: [],
+    },
 }));
 
-jest.mock('../../../RoleAssignments', () => jest.fn(() => null));
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
 
 test('Pass props correctly to RoleAssignments', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-
     render(
         <RoleAssignments
             {...fieldTypeDefaultProps}
-            formInspector={formInspector}
+            formInspector={({}: any)}
         />
     );
 
-    const roleAssignmentsProps: any = getLatestMockProps((RoleAssignmentsContainer: any));
-    expect(roleAssignmentsProps.value).toEqual([]);
+    expect(screen.queryByRole('table')).not.toBeInTheDocument();
 });
 
 test('Pass props with value correctly to RoleAssignments', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-
     const value: Array<Object> = [
         {
             id: 1,
@@ -68,12 +55,13 @@ test('Pass props with value correctly to RoleAssignments', () => {
         <RoleAssignments
             {...fieldTypeDefaultProps}
             disabled={true}
-            formInspector={formInspector}
+            formInspector={({}: any)}
             value={value}
         />
     );
 
-    const roleAssignmentsProps: any = getLatestMockProps((RoleAssignmentsContainer: any));
-    expect(roleAssignmentsProps.disabled).toEqual(true);
-    expect(roleAssignmentsProps.value).toEqual(value);
+    expect(screen.getByText('Test 1')).toBeInTheDocument();
+    expect(screen.getByText('Sulu 1')).toBeInTheDocument();
+    expect(screen.getByText('Test 2')).toBeInTheDocument();
+    expect(screen.getByText('Sulu 2')).toBeInTheDocument();
 });

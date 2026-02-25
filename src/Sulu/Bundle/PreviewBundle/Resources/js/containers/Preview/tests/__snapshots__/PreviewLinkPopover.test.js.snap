@@ -20,9 +20,14 @@ exports[`Generate link 1`] = `
           value="/admin/p/123-123-123"
         />
         <button
+          class="button primary hasText copyButton"
           type="button"
         >
-          sulu_preview.copy
+          <span
+            class="buttonText"
+          >
+            sulu_preview.copy
+          </span>
         </button>
       </div>
     </div>
@@ -46,9 +51,14 @@ exports[`Render popover when no link is available 1`] = `
     class="container"
   >
     <button
+      class="button primary hasText"
       type="button"
     >
-      sulu_preview.generate_link
+      <span
+        class="buttonText"
+      >
+        sulu_preview.generate_link
+      </span>
     </button>
   </div>
 </DocumentFragment>
@@ -74,9 +84,14 @@ exports[`Render popover when preview link is available and copy link to clipboar
           value="/admin/p/123-123-123"
         />
         <button
+          class="button primary hasText copyButton"
           type="button"
         >
-          sulu_preview.copy
+          <span
+            class="buttonText"
+          >
+            sulu_preview.copy
+          </span>
         </button>
       </div>
     </div>

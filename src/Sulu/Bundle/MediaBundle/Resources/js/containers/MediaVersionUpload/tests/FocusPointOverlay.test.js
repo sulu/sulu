@@ -6,11 +6,15 @@ import {ResourceStore} from 'sulu-admin-bundle/stores';
 import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
 import FocusPointOverlay from '../FocusPointOverlay';
 
-jest.mock('sulu-admin-bundle/components', () => ({
-    Overlay: jest.fn(({children}) => <div>{children}</div>),
-    Loader: jest.fn(() => <div />),
-    Icon: jest.fn(() => <span />),
-}));
+jest.mock('sulu-admin-bundle/components', () => {
+    const React = require('react');
+    const actual = jest.requireActual('sulu-admin-bundle/components');
+
+    return {
+        ...actual,
+        Overlay: jest.fn(({children}) => <div>{children}</div>),
+    };
+});
 
 jest.mock('sulu-admin-bundle/stores', () => ({
     ResourceStore: jest.fn(function() {

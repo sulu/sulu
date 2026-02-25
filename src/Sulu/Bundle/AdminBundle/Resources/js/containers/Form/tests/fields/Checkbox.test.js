@@ -5,10 +5,6 @@ import userEvent from '@testing-library/user-event';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import Checkbox from '../../fields/Checkbox';
 
-jest.mock('mobx-react', () => ({
-    observer: (Component) => Component,
-}));
-
 const createProps = (props: Object = {}) => ({
     ...fieldTypeDefaultProps,
     formInspector: ({}: any),
@@ -79,7 +75,13 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
         },
     };
 
-    expect(() => render(<Checkbox {...createProps({schemaOptions})} />)).toThrow(/"default_value"/);
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    try {
+        expect(() => render(<Checkbox {...createProps({schemaOptions})} />)).toThrow(/"default_value"/);
+    } finally {
+        consoleErrorSpy.mockRestore();
+    }
 });
 
 test('Set default value of null should not call onChange', () => {

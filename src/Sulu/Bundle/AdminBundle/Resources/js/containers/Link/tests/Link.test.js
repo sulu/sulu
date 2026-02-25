@@ -9,7 +9,6 @@ import linkTypeRegistry from '../registries/linkTypeRegistry';
 import LinkTypeOverlay from '../overlays/LinkTypeOverlay';
 import ExternalLinkTypeOverlay from '../overlays/ExternalLinkTypeOverlay';
 import findMockCallArg from '../../../utils/TestHelper/findMockCallArg';
-import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
 import type {LinkValue} from '../types';
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
@@ -19,24 +18,6 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
-
-jest.mock('../../../components/SingleSelect/SingleSelect', () => {
-    const React = require('react');
-
-    const SingleSelect: any = jest.fn((props) => (
-        <div data-testid="single-select">{props.children}</div>
-    ));
-
-    SingleSelect.Option = function Option(props) {
-        return (
-            <div data-testid="single-select-option" data-value={props.value}>
-                {props.children}
-            </div>
-        );
-    };
-
-    return SingleSelect;
-});
 
 jest.mock('../overlays/LinkTypeOverlay', () => jest.fn(() => null));
 jest.mock('../overlays/ExternalLinkTypeOverlay', () => jest.fn(() => null));
@@ -48,7 +29,6 @@ jest.mock('../registries/linkTypeRegistry', () => ({
     getTitle: jest.fn((key) => key.charAt(0).toUpperCase() + (key.slice(1))),
 }));
 
-const SingleSelect = jest.requireMock('../../../components/SingleSelect/SingleSelect');
 const LinkTypeOverlayMock: any = jest.requireMock('../overlays/LinkTypeOverlay');
 const ExternalLinkTypeOverlayMock: any = jest.requireMock('../overlays/ExternalLinkTypeOverlay');
 
@@ -71,6 +51,24 @@ const configureLinkTypeRegistry = (keys) => {
 const getLatestOverlayProps = (OverlayComponent: any, matcher: (props: Object) => boolean = () => true) => {
     return findMockCallArg(OverlayComponent, ([props]) => matcher(props));
 };
+
+function getProviderSelectButton() {
+    const providerButton = screen.getAllByRole('button')
+        .find((button) => (
+            /(Page|Media|Article|Account|External|sulu_admin\.please_choose)/.test(button.textContent || '')
+        ));
+
+    if (!providerButton) {
+        throw new Error('Expected provider select button to exist');
+    }
+
+    return providerButton;
+}
+
+async function selectProvider(label: string, user: any) {
+    await user.click(getProviderSelectButton());
+    await user.click(screen.getByRole('button', {name: new RegExp(`^${label}$`)}));
+}
 
 beforeEach(() => {
     jest.clearAllMocks();
@@ -142,8 +140,9 @@ test('Open overlay on input click', async() => {
     expect(getLatestOverlayProps(LinkTypeOverlayMock).open).toEqual(true);
 });
 
-test('Open overlay on provider change', () => {
+test('Open overlay on provider change', async() => {
     configureLinkTypeRegistry(['page', 'media']);
+    const user = userEvent.setup();
 
     const value: LinkValue = {
         title: 'TestLink',
@@ -172,16 +171,17 @@ test('Open overlay on provider change', () => {
         getLatestOverlayProps(LinkTypeOverlayMock, (props) => props.options?.provider === 'media').open
     ).toEqual(false);
 
-    getLatestMockProps(SingleSelect).onChange('media');
+    await selectProvider('Media', user);
 
     expect(
         getLatestOverlayProps(LinkTypeOverlayMock, (props) => props.options?.provider === 'media').open
     ).toEqual(true);
 });
 
-test('Update values on overlay confirm', () => {
+test('Update values on overlay confirm', async() => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
+    const user = userEvent.setup();
 
     configureLinkTypeRegistry(['page', 'media']);
 
@@ -209,7 +209,7 @@ test('Update values on overlay confirm', () => {
         />
     );
 
-    getLatestMockProps(SingleSelect).onChange('media');
+    await selectProvider('Media', user);
 
     const overlayProps = getLatestOverlayProps(LinkTypeOverlayMock, (props) => props.options?.provider === 'media');
     overlayProps.onHrefChange('10');
@@ -234,9 +234,10 @@ test('Update values on overlay confirm', () => {
     expect(finishSpy).toBeCalled();
 });
 
-test('Update values on overlay confirm with ExternalLinkTypeOverlay', () => {
+test('Update values on overlay confirm with ExternalLinkTypeOverlay', async() => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
+    const user = userEvent.setup();
 
     configureLinkTypeRegistry(['media', 'external']);
 
@@ -260,7 +261,7 @@ test('Update values on overlay confirm with ExternalLinkTypeOverlay', () => {
         />
     );
 
-    getLatestMockProps(SingleSelect).onChange('external');
+    await selectProvider('External', user);
 
     const overlayProps = getLatestOverlayProps(ExternalLinkTypeOverlayMock);
     overlayProps.onHrefChange('https://example.org');
@@ -317,12 +318,7 @@ test('Invalidate values on RemoveButton click', async() => {
 
     await waitFor(() => expect(ResourceRequester.get).toBeCalled());
 
-    const removeButton = screen
-        .getAllByRole('button')
-        .find((button) => button.tagName.toLowerCase() === 'button');
-    if (!removeButton) {
-        throw new Error('Expected remove button to exist');
-    }
+    const removeButton = screen.getByRole('button', {name: /su-trash-alt/});
 
     await user.click(removeButton);
 
@@ -341,8 +337,9 @@ test('Invalidate values on RemoveButton click', async() => {
     expect(finishSpy).toBeCalled();
 });
 
-test('Display providers with "types" property', () => {
+test('Display providers with "types" property', async() => {
     configureLinkTypeRegistry(['page', 'media', 'article']);
+    const user = userEvent.setup();
 
     render(
         <Link
@@ -358,11 +355,16 @@ test('Display providers with "types" property', () => {
         />
     );
 
-    expect(screen.getAllByTestId('single-select-option')).toHaveLength(2);
+    await user.click(getProviderSelectButton());
+
+    expect(screen.getByRole('button', {name: 'Page'})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'Article'})).toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: 'Media'})).not.toBeInTheDocument();
 });
 
-test('Display providers with "excluded_types" property', () => {
+test('Display providers with "excluded_types" property', async() => {
     configureLinkTypeRegistry(['page', 'media', 'article']);
+    const user = userEvent.setup();
 
     render(
         <Link
@@ -378,11 +380,16 @@ test('Display providers with "excluded_types" property', () => {
         />
     );
 
-    expect(screen.getAllByTestId('single-select-option')).toHaveLength(1);
+    await user.click(getProviderSelectButton());
+
+    expect(screen.getByRole('button', {name: 'Media'})).toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: 'Page'})).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: 'Article'})).not.toBeInTheDocument();
 });
 
-test('Display providers with "excluded_types" and "types" property', () => {
+test('Display providers with "excluded_types" and "types" property', async() => {
     configureLinkTypeRegistry(['page', 'media', 'article', 'account']);
+    const user = userEvent.setup();
 
     render(
         <Link
@@ -399,5 +406,10 @@ test('Display providers with "excluded_types" and "types" property', () => {
         />
     );
 
-    expect(screen.getAllByTestId('single-select-option')).toHaveLength(2);
+    await user.click(getProviderSelectButton());
+
+    expect(screen.getByRole('button', {name: 'Media'})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'Account'})).toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: 'Page'})).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: 'Article'})).not.toBeInTheDocument();
 });

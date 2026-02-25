@@ -4,65 +4,13 @@ import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ResourceCheckboxGroup from '../ResourceCheckboxGroup';
 import ResourceListStore from '../../../stores/ResourceListStore';
-import getMockCallArg from '../../../utils/TestHelper/getMockCallArg';
-import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
+import loaderStyles from '../../../components/Loader/loader.scss';
 
 jest.mock('../../../stores/ResourceListStore', () => jest.fn());
 
 jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
-
-jest.mock('../../../components/Loader', () => {
-    const React = require('react');
-
-    return jest.fn(function LoaderMock() {
-        return React.createElement('div', {'data-testid': 'loader'});
-    });
-});
-
-jest.mock('../../../components/Checkbox', () => {
-    const React = require('react');
-
-    const Checkbox = jest.fn(function CheckboxMock({children}) {
-        return React.createElement('div', {'data-testid': 'checkbox'}, children);
-    });
-
-    const CheckboxGroup = jest.fn(function CheckboxGroupMock({children, onChange, values}) {
-        const clonedChildren = React.Children.map(children, (child, index) => React.cloneElement(
-            child,
-            {
-                ...child.props,
-                checked: values.includes(child.props.value),
-                key: index,
-            }
-        ));
-
-        function handleChangeClick() {
-            onChange([5, 99]);
-        }
-
-        return React.createElement(
-            'div',
-            {'data-testid': 'checkbox-group'},
-            React.createElement('button', {onClick: handleChangeClick, type: 'button'}, 'change-values'),
-            clonedChildren
-        );
-    });
-
-    return {
-        __esModule: true,
-        default: Checkbox,
-        CheckboxGroup,
-    };
-});
-
-const checkboxModule = ((jest.requireMock('../../../components/Checkbox'): any): {
-    CheckboxGroup: {mock: {calls: Array<[Object]>}, ...},
-    default: {mock: {calls: Array<[Object]>}, ...},
-    ...
-});
-const checkboxMock = checkboxModule.default;
 
 function mockResourceListStoreData(data: ?Array<Object>, loading: boolean = false) {
     // $FlowFixMe
@@ -109,7 +57,8 @@ test('Render in disabled state', () => {
     );
 
     expect(ResourceListStore).toHaveBeenCalledWith('test', {});
-    expect(getLatestMockProps(checkboxModule.CheckboxGroup).disabled).toEqual(true);
+    expect(screen.getByDisplayValue('2')).toBeDisabled();
+    expect(screen.getByDisplayValue('5')).toBeDisabled();
 });
 
 test('Render in loading state', () => {
@@ -124,7 +73,7 @@ test('Render in loading state', () => {
         />
     );
 
-    expect(screen.getByTestId('loader')).toBeInTheDocument();
+    expect(document.querySelector(`.${loaderStyles.spinner}`)).not.toBeNull();
 });
 
 test('Pass requestParameters', () => {
@@ -234,9 +183,9 @@ test('Render with values', () => {
         />
     );
 
-    expect(getMockCallArg(checkboxMock, 0, 0).checked).toEqual(false);
-    expect(getMockCallArg(checkboxMock, 1, 0).checked).toEqual(true);
-    expect(getMockCallArg(checkboxMock, 2, 0).checked).toEqual(true);
+    expect(screen.getByDisplayValue('2')).not.toBeChecked();
+    expect(screen.getByDisplayValue('5')).toBeChecked();
+    expect(screen.getByDisplayValue('99')).toBeChecked();
 });
 
 test('The component should trigger the change callback', async() => {
@@ -263,6 +212,6 @@ test('The component should trigger the change callback', async() => {
         {'id': 99, 'name': 'Test XYZ', 'someOtherProperty': 'maybe maybe'},
     ];
 
-    await user.click(screen.getByRole('button', {name: 'change-values'}));
-    expect(onChangeSpy).toHaveBeenCalledWith([5, 99], expectedValues);
+    await user.click(screen.getByDisplayValue('5'));
+    expect(onChangeSpy).toHaveBeenCalledWith([99, 5], expectedValues);
 });

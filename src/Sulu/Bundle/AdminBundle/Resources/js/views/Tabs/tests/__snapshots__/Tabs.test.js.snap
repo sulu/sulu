@@ -6,17 +6,35 @@ exports[`Should render the children after the tabs 1`] = `
     class="tabsContainer root"
   >
     <div
-      data-testid="tabs-component"
+      class="tabs root"
     >
       <div
-        data-testid="tabs-component-tab"
+        class="tabsContainerWrapper"
       >
-        tabTitle1
-      </div>
-      <div
-        data-testid="tabs-component-tab"
-      >
-        tabTitle2
+        <ul
+          class="tabsContainer"
+        >
+          <li
+            class="tab root"
+          >
+            <button
+              title="tabTitle1"
+              type="button"
+            >
+              tabTitle1
+            </button>
+          </li>
+          <li
+            class="tab root"
+          >
+            <button
+              title="tabTitle2"
+              type="button"
+            >
+              tabTitle2
+            </button>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
@@ -36,12 +54,25 @@ exports[`Should render the children with the passed props 1`] = `
     class="tabsContainer root"
   >
     <div
-      data-testid="tabs-component"
+      class="tabs root"
     >
       <div
-        data-testid="tabs-component-tab"
+        class="tabsContainerWrapper"
       >
-        tabTitle1
+        <ul
+          class="tabsContainer"
+        >
+          <li
+            class="tab root"
+          >
+            <button
+              title="tabTitle1"
+              type="button"
+            >
+              tabTitle1
+            </button>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
@@ -61,12 +92,25 @@ exports[`Should render the header between children and tabs 1`] = `
     class="tabsContainer root"
   >
     <div
-      data-testid="tabs-component"
+      class="tabs root"
     >
       <div
-        data-testid="tabs-component-tab"
+        class="tabsContainerWrapper"
       >
-        tabTitle1
+        <ul
+          class="tabsContainer"
+        >
+          <li
+            class="tab root"
+          >
+            <button
+              title="tabTitle1"
+              type="button"
+            >
+              tabTitle1
+            </button>
+          </li>
+        </ul>
       </div>
     </div>
   </div>

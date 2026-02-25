@@ -6,30 +6,14 @@ import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import SingleAutoComplete from '../SingleAutoComplete';
 import SearchStore from '../../../stores/SearchStore';
 import SingleSelectionStore from '../../../stores/SingleSelectionStore';
-import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
+import loaderStyles from '../../../components/Loader/loader.scss';
 
-jest.mock('../../../components/SingleAutoComplete', () => {
-    const React = require('react');
+jest.mock('debounce', () => jest.fn((callback) => {
+    const debounced = (...args) => callback(...args);
+    debounced.clear = jest.fn();
 
-    return jest.fn(function SingleAutoCompleteMock({loading, onChange, onSearch, value}) {
-        function handleSearchClick() {
-            onSearch('James');
-        }
-
-        function handleChangeClick() {
-            onChange({id: 7, name: 'James Bond', number: '007'});
-        }
-
-        return React.createElement(
-            'div',
-            undefined,
-            React.createElement('button', {onClick: handleSearchClick, type: 'button'}, 'search'),
-            React.createElement('button', {onClick: handleChangeClick, type: 'button'}, 'change'),
-            React.createElement('span', {'data-testid': 'loading'}, loading ? 'true' : 'false'),
-            React.createElement('span', {'data-testid': 'value'}, value ? value.name : '')
-        );
-    });
-});
+    return debounced;
+}));
 
 jest.mock('../../../stores/SearchStore', () => jest.fn());
 jest.mock('../../../stores/SingleSelectionStore', () => jest.fn(function(resourceKey, selectedItemId, locale) {
@@ -41,14 +25,16 @@ jest.mock('../../../stores/SingleSelectionStore', () => jest.fn(function(resourc
     mockExtendObservable(this, {item: selectedItemId ? {id: selectedItemId} : undefined});
 }));
 
-const singleAutoCompleteComponent = ((jest.requireMock('../../../components/SingleAutoComplete'): any): {
-    mock: {calls: Array<[Object]>},
-    ...
-});
 const searchStoreMock = (SearchStore: any);
 
-function getLastSingleAutoCompleteProps(): any {
-    return getLatestMockProps(singleAutoCompleteComponent);
+function mockSearchStore(searchResults: Array<Object> = [], loading: boolean = false) {
+    // $FlowFixMe
+    SearchStore.mockImplementation(function() {
+        this.searchResults = searchResults;
+        this.loading = loading;
+        this.search = jest.fn();
+        this.clearSearchResults = jest.fn();
+    });
 }
 
 beforeEach(() => {
@@ -56,11 +42,7 @@ beforeEach(() => {
 });
 
 test('Render in loading state when SearchStore is loading', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = true;
-    });
+    mockSearchStore([], true);
 
     const selectionStore = new SingleSelectionStore('tags');
 
@@ -72,15 +54,11 @@ test('Render in loading state when SearchStore is loading', () => {
         />
     );
 
-    expect(getLastSingleAutoCompleteProps().loading).toBeTruthy();
+    expect(document.querySelector(`.${loaderStyles.spinner}`)).not.toBeNull();
 });
 
 test('Render in loading state when SingleSelectionStore is loading', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = false;
-    });
+    mockSearchStore();
 
     const selectionStore = new SingleSelectionStore('tags');
     selectionStore.loading = true;
@@ -93,20 +71,17 @@ test('Render in loading state when SingleSelectionStore is loading', () => {
         />
     );
 
-    expect(getLastSingleAutoCompleteProps().loading).toBeTruthy();
+    expect(document.querySelector(`.${loaderStyles.spinner}`)).not.toBeNull();
 });
 
-test('Render with loaded suggestions', () => {
+test('Render with loaded suggestions', async() => {
     const suggestions = [
         {id: 7, number: '007', name: 'James Bond'},
         {id: 6, number: '006', name: 'John Doe'},
     ];
+    const user = userEvent.setup();
 
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = suggestions;
-        this.loading = false;
-    });
+    mockSearchStore(suggestions, false);
 
     const selectionStore = new SingleSelectionStore('tags');
 
@@ -118,15 +93,13 @@ test('Render with loaded suggestions', () => {
         />
     );
 
-    expect(getLastSingleAutoCompleteProps().suggestions).toEqual(suggestions);
+    await user.click(screen.getByRole('textbox'));
+    expect(screen.getByRole('button', {name: /James Bond/})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: /John Doe/})).toBeInTheDocument();
 });
 
 test('Render with value of given SingleSelectionStore', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = true;
-    });
+    mockSearchStore([], true);
 
     const selectionStore = new SingleSelectionStore('tags');
     selectionStore.item = {id: 7, name: 'James Bond', number: '007'};
@@ -143,11 +116,7 @@ test('Render with value of given SingleSelectionStore', () => {
 });
 
 test('Render in disabled state', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = true;
-    });
+    mockSearchStore([], true);
 
     const selectionStore = new SingleSelectionStore('tags');
     selectionStore.item = {id: 7, name: 'James Bond', number: '007'};
@@ -165,12 +134,7 @@ test('Render in disabled state', () => {
 });
 
 test('Search using store when new search value is retrieved from SingleAutoComplete component', async() => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = false;
-        this.search = jest.fn();
-    });
+    mockSearchStore([], false);
     const user = userEvent.setup();
     const selectionStore = new SingleSelectionStore('tags');
 
@@ -182,32 +146,29 @@ test('Search using store when new search value is retrieved from SingleAutoCompl
         />
     );
 
-    await user.click(screen.getByRole('button', {name: 'search'}));
+    await user.click(screen.getByRole('textbox'));
+    await user.type(screen.getByRole('textbox'), 'James');
 
-    expect(getLastSingleAutoCompleteProps().onSearch).toBeDefined();
-    expect(getLastSingleAutoCompleteProps().suggestions).toEqual([]);
-    expect(((searchStoreMock.mock.instances[0]: any): {search: Function}).search).toHaveBeenCalledWith('James');
+    expect(((searchStoreMock.mock.instances[0]: any): {search: Function}).search).toHaveBeenLastCalledWith('James');
 });
 
 test('Call set item to SingleSelectionStore and clear search result when chosen option has changed', async() => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = false;
-        this.clearSearchResults = jest.fn();
-    });
+    mockSearchStore([
+        {id: 7, name: 'James Bond', number: '007'},
+    ], false);
     const user = userEvent.setup();
     const selectionStore = new SingleSelectionStore('tags');
 
     render(
         <SingleAutoComplete
             displayProperty="name"
-            searchProperties={[]}
+            searchProperties={['name']}
             selectionStore={selectionStore}
         />
     );
 
-    await user.click(screen.getByRole('button', {name: 'change'}));
+    await user.click(screen.getByRole('textbox'));
+    await user.click(screen.getByRole('button', {name: /James Bond/}));
 
     expect(selectionStore.set).toHaveBeenCalledWith({id: 7, name: 'James Bond', number: '007'});
     expect(
@@ -216,12 +177,7 @@ test('Call set item to SingleSelectionStore and clear search result when chosen 
 });
 
 test('Construct SearchStore with correct parameters on mount', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = false;
-        this.search = jest.fn();
-    });
+    mockSearchStore([], false);
 
     const locale = observable.box('cz');
     const selectionStore = new SingleSelectionStore('tags', undefined, locale);

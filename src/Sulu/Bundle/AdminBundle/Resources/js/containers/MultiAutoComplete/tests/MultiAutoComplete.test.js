@@ -4,37 +4,16 @@ import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import MultiAutoComplete from '../MultiAutoComplete';
-import MultiAutoCompleteComponent from '../../../components/MultiAutoComplete';
 import SearchStore from '../../../stores/SearchStore';
 import MultiSelectionStore from '../../../stores/MultiSelectionStore';
-import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
+import loaderStyles from '../../../components/Loader/loader.scss';
 
-jest.mock('../../../components/MultiAutoComplete', () => {
-    const React = require('react');
+jest.mock('debounce', () => jest.fn((callback) => {
+    const debounced = (...args) => callback(...args);
+    debounced.clear = jest.fn();
 
-    return jest.fn(function MultiAutoCompleteMock(props) {
-        const selectedData = {
-            id: 7,
-            name: 'James Bond',
-            number: '007',
-        };
-
-        return React.createElement(
-            'div',
-            {'data-testid': 'multi-autocomplete-component'},
-            React.createElement(
-                'input',
-                {'data-testid': 'multi-autocomplete-input', disabled: props.disabled, ref: props.inputRef}
-            ),
-            React.createElement('button', {onClick: () => props.onSearch('James'), type: 'button'}, 'trigger-search'),
-            React.createElement(
-                'button',
-                {onClick: () => props.onChange(selectedData), type: 'button'},
-                'trigger-change'
-            )
-        );
-    });
-});
+    return debounced;
+}));
 
 jest.mock('../../../stores/SearchStore', () => jest.fn());
 
@@ -51,7 +30,6 @@ jest.mock('../../../stores/MultiSelectionStore', () => jest.fn(function(resource
     });
 }));
 
-const multiAutoCompleteComponentMock = (MultiAutoCompleteComponent: any);
 const searchStoreMock = (SearchStore: any);
 
 function mockSearchStore(
@@ -99,7 +77,7 @@ test('Should assign input as ref to inputRef', () => {
         />
     );
 
-    expect(inputRefSpy).toBeCalledWith(screen.getByTestId('multi-autocomplete-input'));
+    expect(inputRefSpy).toBeCalledWith(screen.getByRole('textbox'));
 });
 
 test('Pass loading flag if MultiSelectionStore and SearchStore is loading', () => {
@@ -116,7 +94,7 @@ test('Pass loading flag if MultiSelectionStore and SearchStore is loading', () =
         />
     );
 
-    expect(getLatestMockProps(multiAutoCompleteComponentMock).loading).toEqual(true);
+    expect(document.querySelector(`.${loaderStyles.spinner}`)).not.toBeNull();
 });
 
 test('Pass loading flag if only SearchStore is loading', () => {
@@ -132,7 +110,7 @@ test('Pass loading flag if only SearchStore is loading', () => {
         />
     );
 
-    expect(getLatestMockProps(multiAutoCompleteComponentMock).loading).toEqual(true);
+    expect(document.querySelector(`.${loaderStyles.spinner}`)).not.toBeNull();
 });
 
 test('Pass loading flag if only MultiSelectionStore is loading', () => {
@@ -149,13 +127,13 @@ test('Pass loading flag if only MultiSelectionStore is loading', () => {
         />
     );
 
-    expect(getLatestMockProps(multiAutoCompleteComponentMock).loading).toEqual(true);
+    expect(document.querySelector(`.${loaderStyles.spinner}`)).not.toBeNull();
 });
 
 test('Pass allowAdd and idProperty prop to component', () => {
     const selectionStore = new MultiSelectionStore('contact', []);
 
-    render(
+    const {asFragment} = render(
         <MultiAutoComplete
             allowAdd={true}
             displayProperty="name"
@@ -165,17 +143,15 @@ test('Pass allowAdd and idProperty prop to component', () => {
         />
     );
 
-    expect(getLatestMockProps(multiAutoCompleteComponentMock)).toEqual(expect.objectContaining({
-        allowAdd: true,
-        idProperty: 'name',
-    }));
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Render with loaded suggestions', () => {
+test('Render with loaded suggestions', async() => {
     const suggestions = [
         {id: 7, number: '007', name: 'James Bond'},
         {id: 6, number: '006', name: 'John Doe'},
     ];
+    const user = userEvent.setup();
 
     mockSearchStore({searchResults: suggestions});
 
@@ -189,7 +165,9 @@ test('Render with loaded suggestions', () => {
         />
     );
 
-    expect(getLatestMockProps(multiAutoCompleteComponentMock).suggestions).toEqual(suggestions);
+    await user.click(screen.getByRole('textbox'));
+    expect(screen.getByRole('button', {name: /James Bond/})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: /John Doe/})).toBeInTheDocument();
 });
 
 test('Render with given value', () => {
@@ -207,7 +185,6 @@ test('Render with given value', () => {
         />
     );
 
-    expect(getLatestMockProps(multiAutoCompleteComponentMock).value).toEqual(selectionStore.items);
     expect(asFragment()).toMatchSnapshot();
 });
 
@@ -227,7 +204,7 @@ test('Render in disabled state', () => {
         />
     );
 
-    expect(getLatestMockProps(multiAutoCompleteComponentMock).disabled).toEqual(true);
+    expect(screen.getByRole('textbox')).toBeDisabled();
     expect(asFragment()).toMatchSnapshot();
 });
 
@@ -245,9 +222,10 @@ test('Search using store when new search value is retrieved from MultiAutoComple
 
     const searchStore = searchStoreMock.mock.instances[0];
 
-    await user.click(screen.getByRole('button', {name: 'trigger-search'}));
+    await user.click(screen.getByRole('textbox'));
+    await user.type(screen.getByRole('textbox'), 'James');
 
-    expect(searchStore.search).toBeCalledWith('James', []);
+    expect(searchStore.search).toHaveBeenLastCalledWith('James', []);
 });
 
 test(
@@ -267,35 +245,34 @@ test(
 
         const searchStore = searchStoreMock.mock.instances[0];
 
-        await user.click(screen.getByRole('button', {name: 'trigger-search'}));
+        await user.click(screen.getByRole('textbox'));
+        await user.type(screen.getByRole('textbox'), 'James');
 
-        expect(searchStore.search).toBeCalledWith('James', [1, 3]);
+        expect(searchStore.search).toHaveBeenLastCalledWith('James', [1, 3]);
     }
 );
 
 test('Clear search result when chosen option has been selected with idProperty', async() => {
     const selectionStore = new MultiSelectionStore('contact', []);
     const user = userEvent.setup();
+    mockSearchStore({searchResults: [{id: 7, name: 'James Bond', number: '007'}]});
 
     render(
         <MultiAutoComplete
             displayProperty="name"
             idProperty="number"
-            searchProperties={[]}
+            searchProperties={['name']}
             selectionStore={selectionStore}
         />
     );
 
     const searchStore = searchStoreMock.mock.instances[0];
 
-    await user.click(screen.getByRole('button', {name: 'trigger-change'}));
+    await user.click(screen.getByRole('textbox'));
+    await user.click(screen.getByRole('button', {name: /James Bond/}));
 
-    expect(selectionStore.set).toBeCalledWith({
-        id: 7,
-        name: 'James Bond',
-        number: '007',
-    });
-    expect(searchStore.clearSearchResults).toBeCalledWith();
+    expect(selectionStore.set).toHaveBeenCalledWith([{id: 7, name: 'James Bond', number: '007'}]);
+    expect(searchStore.clearSearchResults).toHaveBeenCalledWith();
 });
 
 test('Construct SearchStore with correct parameters on mount', () => {

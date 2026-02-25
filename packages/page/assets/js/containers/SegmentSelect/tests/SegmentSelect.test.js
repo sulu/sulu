@@ -1,8 +1,7 @@
 // @flow
 import React from 'react';
-import {render} from '@testing-library/react';
-import getMockCallArg from 'sulu-admin-bundle/utils/TestHelper/getMockCallArg';
-import getLatestMockProps from 'sulu-admin-bundle/utils/TestHelper/getLatestMockProps';
+import {render, screen, within} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import webspaceStore from '../../../stores/webspaceStore';
 import SegmentSelect from '../../SegmentSelect';
 
@@ -14,18 +13,6 @@ jest.mock('../../../stores/webspaceStore', () => ({
     grantedWebspaces: [],
     getWebspace: jest.fn(),
 }));
-
-jest.mock('../WebspaceSegmentSelect', () => jest.fn(({value, webspace, webspaceNameVisible}) => (
-    <div data-testid={'webspace-segment-select-' + webspace.key}>
-        {webspaceNameVisible ? 'visible' : 'hidden'}-{value || 'none'}
-    </div>
-)));
-
-const webspaceSegmentSelectModule = ((jest.requireMock('../WebspaceSegmentSelect'): any): {
-    mock: {calls: Array<[Object]>},
-    ...
-});
-const webspaceSegmentSelectMock = webspaceSegmentSelectModule;
 const mockedWebspaceStore: any = webspaceStore;
 
 const grantedWebspaces = [
@@ -71,19 +58,10 @@ test('Render a label and a SingleSelect for each granted webspace that has segme
         />
     );
 
-    expect(webspaceSegmentSelectMock).toHaveBeenCalledTimes(2);
-    expect(getMockCallArg(webspaceSegmentSelectMock, 0, 0)).toEqual(expect.objectContaining({
-        disabled: false,
-        value: 's',
-        webspace: grantedWebspaces[0],
-        webspaceNameVisible: true,
-    }));
-    expect(getMockCallArg(webspaceSegmentSelectMock, 1, 0)).toEqual(expect.objectContaining({
-        disabled: false,
-        value: undefined,
-        webspace: grantedWebspaces[2],
-        webspaceNameVisible: true,
-    }));
+    expect(screen.getByText('Webspace One - sulu_admin.segment')).toBeInTheDocument();
+    expect(screen.getByText('Webspace Three - sulu_admin.segment')).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: /Summer/})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: /sulu_admin.none_selected/})).toBeInTheDocument();
     expect(asFragment()).toMatchSnapshot();
 });
 
@@ -101,10 +79,9 @@ test('Render a label without webspace name if only one webspace has segments', (
         />
     );
 
-    expect(webspaceSegmentSelectMock).toHaveBeenCalledTimes(1);
-    expect(getLatestMockProps(webspaceSegmentSelectMock)).toEqual(expect.objectContaining({
-        webspaceNameVisible: false,
-    }));
+    expect(screen.getByText('sulu_admin.segment')).toBeInTheDocument();
+    expect(screen.queryByText('Webspace One - sulu_admin.segment')).not.toBeInTheDocument();
+    expect(screen.getAllByRole('button')).toHaveLength(1);
 });
 
 test('Render only one label and SingleSelect if options contain a webspace', () => {
@@ -120,11 +97,8 @@ test('Render only one label and SingleSelect if options contain a webspace', () 
     );
 
     expect(webspaceStore.getWebspace).toBeCalledWith('webspace-1');
-    expect(webspaceSegmentSelectMock).toHaveBeenCalledTimes(1);
-    expect(getLatestMockProps(webspaceSegmentSelectMock)).toEqual(expect.objectContaining({
-        webspace: grantedWebspaces[0],
-        webspaceNameVisible: false,
-    }));
+    expect(screen.getByText('sulu_admin.segment')).toBeInTheDocument();
+    expect(screen.getAllByRole('button')).toHaveLength(1);
 });
 
 test('Pass correct props to SingleSelect', () => {
@@ -141,26 +115,19 @@ test('Pass correct props to SingleSelect', () => {
         />
     );
 
-    expect(webspaceSegmentSelectMock).toHaveBeenCalledTimes(2);
-    expect(getMockCallArg(webspaceSegmentSelectMock, 0, 0)).toEqual(expect.objectContaining({
-        disabled: true,
-        value: 's',
-        webspace: grantedWebspaces[0],
-    }));
-    expect(getMockCallArg(webspaceSegmentSelectMock, 1, 0)).toEqual(expect.objectContaining({
-        disabled: true,
-        value: undefined,
-        webspace: grantedWebspaces[2],
-    }));
+    expect(screen.getAllByRole('button')).toHaveLength(2);
+    expect(screen.getAllByRole('button')[0]).toBeDisabled();
+    expect(screen.getAllByRole('button')[1]).toBeDisabled();
 });
 
-test('Call onChange if the value is changed', () => {
+test('Call onChange if the value is changed', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     mockedWebspaceStore.grantedWebspaces = grantedWebspaces;
 
     render(
         <SegmentSelect
-            disabled={true}
+            disabled={false}
             onChange={changeSpy}
             value={{
                 'webspace-1': 's',
@@ -169,7 +136,14 @@ test('Call onChange if the value is changed', () => {
         />
     );
 
-    getMockCallArg(webspaceSegmentSelectMock, 1, 0).onChange('webspace-3', 'a');
+    const secondWebspaceSectionLabel = screen.getByText('Webspace Three - sulu_admin.segment');
+    const secondWebspaceSection = secondWebspaceSectionLabel.closest('div');
+    if (!secondWebspaceSection) {
+        throw new Error('Expected second webspace section to exist');
+    }
+
+    await user.click(within(secondWebspaceSection).getByRole('button'));
+    await user.click(screen.getByRole('button', {name: 'Autumn'}));
 
     expect(changeSpy).toBeCalledWith({
         'webspace-1': 's',

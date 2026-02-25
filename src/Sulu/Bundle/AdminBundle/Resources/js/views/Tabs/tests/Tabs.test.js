@@ -1,12 +1,11 @@
 // @flow
 import React from 'react';
-import {render} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {extendObservable as mockExtendObservable} from 'mobx';
 import Router from '../../../services/Router';
 import Tabs from '../Tabs';
-import TabsComponent from '../../../components/Tabs';
 import Badge from '../../../containers/Badge';
-import getMockCallArg from '../../../utils/TestHelper/getMockCallArg';
 import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
 
 jest.mock('debounce', () => jest.fn((callback) => callback));
@@ -14,20 +13,6 @@ jest.mock('debounce', () => jest.fn((callback) => callback));
 window.ResizeObserver = jest.fn(function() {
     this.observe = jest.fn();
     this.disconnect = jest.fn();
-});
-
-jest.mock('../../../components/Tabs', () => {
-    const React = require('react');
-
-    const TabsComponentMock: any = jest.fn(function TabsComponentMock({children}: any) {
-        return React.createElement('div', {'data-testid': 'tabs-component'}, children);
-    });
-
-    TabsComponentMock.Tab = jest.fn(function TabsComponentTabMock({children, badges}: any) {
-        return React.createElement('div', {'data-testid': 'tabs-component-tab'}, children, badges);
-    });
-
-    return TabsComponentMock;
 });
 
 jest.mock('../../../containers/Badge', () => jest.fn(function BadgeMock() {
@@ -51,7 +36,6 @@ jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-const TabsComponentMock: any = TabsComponent;
 const BadgeMock: any = Badge;
 
 function createRoute(name: string, options: Object = {}): any {
@@ -101,12 +85,11 @@ function renderTabs(props: Object = {}) {
     };
 }
 
-function getTabsComponentProps() {
-    return getLatestMockProps(TabsComponentMock);
-}
-
-function getRenderedTabProps() {
-    return TabsComponentMock.Tab.mock.calls.map((_, callIndex) => getMockCallArg(TabsComponentMock.Tab, callIndex));
+function getRenderedTabTitles() {
+    return screen
+        .getAllByRole('button')
+        .filter((button) => /^tabTitle/.test(button.textContent || ''))
+        .map((button) => button.textContent);
 }
 
 beforeEach(() => {
@@ -211,10 +194,7 @@ test('Should consider the tabOrder when rendering the tabs', () => {
         router,
     });
 
-    expect(getRenderedTabProps()).toHaveLength(3);
-    expect(getRenderedTabProps()[0].children).toEqual('tabTitle2');
-    expect(getRenderedTabProps()[1].children).toEqual('tabTitle1');
-    expect(getRenderedTabProps()[2].children).toEqual('tabTitle3');
+    expect(getRenderedTabTitles()).toEqual(['tabTitle2', 'tabTitle1', 'tabTitle3']);
 });
 
 test('Should mark currently active tab as selected according to selectedIndex prop', () => {
@@ -231,7 +211,8 @@ test('Should mark currently active tab as selected according to selectedIndex pr
     });
 
     expect(router.redirect).not.toBeCalled();
-    expect(getTabsComponentProps().selectedIndex).toEqual(0);
+    expect(screen.getByRole('button', {name: 'tabTitle1'})).toBeDisabled();
+    expect(screen.getByRole('button', {name: 'tabTitle2'})).toBeEnabled();
 });
 
 test('Should mark currently active tab as selected from child route', () => {
@@ -249,7 +230,8 @@ test('Should mark currently active tab as selected from child route', () => {
     });
 
     expect(router.redirect).not.toBeCalled();
-    expect(getTabsComponentProps().selectedIndex).toEqual(1);
+    expect(screen.getByRole('button', {name: 'tabTitle2'})).toBeDisabled();
+    expect(screen.getByRole('button', {name: 'tabTitle1'})).toBeEnabled();
 });
 
 test('Should redirect to child route with highest priority if no tab is active by default', () => {
@@ -301,12 +283,13 @@ test('Should not redirect if a tab is already active', () => {
     expect(router.redirect).not.toBeCalled();
 });
 
-test('Navigate to tab if it was clicked', () => {
+test('Navigate to tab if it was clicked', async() => {
     const childRoute1 = createRoute('route1', {tabTitle: 'tabTitle1'});
     const childRoute2 = createRoute('route2', {tabTitle: 'tabTitle2'});
     const route = createParentRoute([childRoute1, childRoute2]);
     const attributes = {id: 1};
     const router = createRouter(route, attributes);
+    const user = userEvent.setup();
     router.navigate = jest.fn();
 
     renderTabs({
@@ -315,12 +298,12 @@ test('Navigate to tab if it was clicked', () => {
         router,
     });
 
-    getTabsComponentProps().onSelect(1);
+    await user.click(screen.getByRole('button', {name: 'tabTitle2'}));
 
     expect(router.navigate).toBeCalledWith('route2', attributes);
 });
 
-test('Should not pass blacklisted router attributes when tab is clicked', () => {
+test('Should not pass blacklisted router attributes when tab is clicked', async() => {
     const childRoute1 = createRoute('route1', {tabTitle: 'tabTitle1'});
     const childRoute2 = createRoute('route2', {tabTitle: 'tabTitle2'});
     const route = createParentRoute([childRoute1, childRoute2], {
@@ -328,6 +311,7 @@ test('Should not pass blacklisted router attributes when tab is clicked', () => 
     });
     const attributes = {id: 1, sortColumn: 'size', sortOrder: 'asc'};
     const router = createRouter(route, attributes);
+    const user = userEvent.setup();
     router.navigate = jest.fn();
 
     renderTabs({
@@ -336,7 +320,7 @@ test('Should not pass blacklisted router attributes when tab is clicked', () => 
         router,
     });
 
-    getTabsComponentProps().onSelect(1);
+    await user.click(screen.getByRole('button', {name: 'tabTitle2'}));
 
     expect(router.navigate).toBeCalledWith('route2', {id: 1});
 });

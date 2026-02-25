@@ -6,7 +6,26 @@ exports[`Render webspace select with children when webspaces are not loaded yet 
     <div
       class="webspaceSelect"
     >
-      <div />
+      <div
+        class="webspaceSelect"
+      >
+        <button
+          class="button"
+          type="button"
+        >
+          <span
+            aria-label="su-webspace"
+            class="su-webspace buttonIcon"
+          />
+          <span
+            class="buttonValue"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down buttonIcon"
+          />
+        </button>
+      </div>
     </div>
     <h1>
       sulu_blog

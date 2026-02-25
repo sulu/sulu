@@ -5,7 +5,29 @@ exports[`Render permissions for a single system 1`] = `
   <div
     class="systemRolePermissions"
   >
-    <div />
+    <div
+      class="line"
+    >
+      <div
+        class="label"
+      >
+        sulu_security.system_permission_heading
+      </div>
+      <label
+        class="label"
+        tabindex="-1"
+      >
+        <span
+          class="switch toggler"
+        >
+          <input
+            type="checkbox"
+            value=""
+          />
+          <span />
+        </span>
+      </label>
+    </div>
     <div>
       <div />
       <div />

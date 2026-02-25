@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 // @flow
 import React from 'react';
 import {render, screen} from '@testing-library/react';
@@ -12,15 +13,15 @@ jest.mock('sulu-admin-bundle/containers/MultiListOverlay', () => {
     const React = require('react');
 
     return jest.fn(function MultiListOverlayMock({listKey, onClose, onConfirm}) {
-        return React.createElement(
-            'div',
-            {'data-testid': 'overlay-' + listKey},
-            React.createElement('button', {onClick: onClose, type: 'button'}, 'close-' + listKey),
-            React.createElement(
-                'button',
-                {onClick: () => onConfirm([{id: 1}, {id: 4}]), type: 'button'},
-                'confirm-' + listKey
-            )
+        function handleConfirm() {
+            onConfirm([{id: 1}, {id: 4}]);
+        }
+
+        return (
+            <div data-testid={'overlay-' + listKey}>
+                <button onClick={onClose} type="button">close-{listKey}</button>
+                <button onClick={handleConfirm} type="button">confirm-{listKey}</button>
+            </div>
         );
     });
 });
@@ -44,36 +45,50 @@ jest.mock('sulu-admin-bundle/components', () => {
             return React.cloneElement(child, {onItemClick});
         });
 
-        return React.createElement(
-            'div',
-            {'data-testid': 'multi-item-selection'},
-            React.createElement(
-                'button',
-                {disabled, onClick: () => leftButton.onClick('contacts'), type: 'button'},
-                'open-contacts'
-            ),
-            React.createElement(
-                'button',
-                {disabled, onClick: () => leftButton.onClick('accounts'), type: 'button'},
-                'open-accounts'
-            ),
-            React.createElement('button', {onClick: () => onItemsSorted(2, 1), type: 'button'}, 'sort-items'),
-            loading ? React.createElement('div', {'data-testid': 'contact-account-selection-loading'}) : null,
-            childrenWithOnItemClick
+        function handleOpenContacts() {
+            leftButton.onClick('contacts');
+        }
+
+        function handleOpenAccounts() {
+            leftButton.onClick('accounts');
+        }
+
+        function handleSortItems() {
+            onItemsSorted(2, 1);
+        }
+
+        return (
+            <div data-testid="multi-item-selection">
+                <button disabled={disabled} onClick={handleOpenContacts} type="button">
+                    open-contacts
+                </button>
+                <button disabled={disabled} onClick={handleOpenAccounts} type="button">
+                    open-accounts
+                </button>
+                <button onClick={handleSortItems} type="button">sort-items</button>
+                {loading ? <div data-testid="contact-account-selection-loading" /> : null}
+                {childrenWithOnItemClick}
+            </div>
         );
     });
 
     MultiItemSelection.Item = jest.fn(function ItemMock({children, id, onItemClick, onRemove, value}) {
-        return React.createElement(
-            'div',
-            {'data-testid': 'item-' + id},
-            React.createElement('button', {onClick: () => onRemove(id), type: 'button'}, 'remove-' + id),
-            React.createElement(
-                'button',
-                {onClick: () => onItemClick && onItemClick(id, value), type: 'button'},
-                'click-' + id
-            ),
-            children
+        function handleRemove() {
+            onRemove(id);
+        }
+
+        function handleClick() {
+            if (onItemClick) {
+                onItemClick(id, value);
+            }
+        }
+
+        return (
+            <div data-testid={'item-' + id}>
+                <button onClick={handleRemove} type="button">remove-{id}</button>
+                <button onClick={handleClick} type="button">click-{id}</button>
+                {children}
+            </div>
         );
     });
 

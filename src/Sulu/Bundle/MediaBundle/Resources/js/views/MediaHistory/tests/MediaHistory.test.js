@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+/* eslint-disable flowtype/require-valid-file-annotation, react/jsx-no-bind */
 import React from 'react';
 import {render, screen, waitFor, within} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -11,79 +11,76 @@ import MediaHistory from '../MediaHistory';
 
 jest.mock('sulu-admin-bundle/components', () => {
     const React = require('react');
-
-    const Loader = jest.fn(function LoaderMock() {
-        return React.createElement('div', {'data-testid': 'loader'});
-    });
+    const actual = jest.requireActual('sulu-admin-bundle/components');
 
     const Dialog = jest.fn(function DialogMock({cancelText, children, confirmText, onCancel, onConfirm, open, title}) {
         if (!open) {
             return null;
         }
 
-        return React.createElement(
-            'div',
-            {'data-testid': 'dialog'},
-            React.createElement('h2', null, title),
-            children,
-            React.createElement('button', {onClick: onConfirm, type: 'button'}, confirmText),
-            React.createElement('button', {onClick: onCancel, type: 'button'}, cancelText)
+        return (
+            <div data-testid="dialog">
+                <h2>{title}</h2>
+                {children}
+                <button onClick={onConfirm} type="button">{confirmText}</button>
+                <button onClick={onCancel} type="button">{cancelText}</button>
+            </div>
         );
     });
 
     const Table = jest.fn(function TableMock({children}) {
-        return React.createElement('table', {'data-testid': 'media-history-table'}, children);
+        return <table data-testid="media-history-table">{children}</table>;
     });
 
     Table.Header = jest.fn(function HeaderMock({buttons = [], children}) {
-        return React.createElement(
-            'thead',
-            null,
-            React.createElement(
-                'tr',
-                null,
-                ...buttons.map((button, index) => React.createElement('th', {key: index}, button.icon)),
-                children
-            )
+        return (
+            <thead>
+                <tr>
+                    {buttons.map((button, index) => <th key={index}>{button.icon}</th>)}
+                    {children}
+                </tr>
+            </thead>
         );
     });
 
     Table.HeaderCell = jest.fn(function HeaderCellMock({children}) {
-        return React.createElement('th', null, children);
+        return <th>{children}</th>;
     });
 
     Table.Body = jest.fn(function BodyMock({children}) {
-        return React.createElement('tbody', null, children);
+        return <tbody>{children}</tbody>;
     });
 
     Table.Row = jest.fn(function RowMock({buttons = [], children, id}) {
-        return React.createElement(
-            'tr',
-            {'data-testid': 'row-' + id},
-            ...buttons.map((button, index) => React.createElement(
-                'td',
-                {key: index},
-                React.createElement(
-                    'button',
-                    {
-                        disabled: button.disabled,
-                        onClick: () => button.onClick && button.onClick(id),
-                        type: 'button',
-                    },
-                    button.icon
-                )
-            )),
-            children
+        return (
+            <tr data-testid={'row-' + id}>
+                {buttons.map((button, index) => {
+                    function handleClick() {
+                        if (button.onClick) {
+                            button.onClick(id);
+                        }
+                    }
+
+                    return (
+                        <td key={index}>
+                            <button disabled={button.disabled} onClick={handleClick} type="button">
+                                {button.icon}
+                            </button>
+                        </td>
+                    );
+                })}
+                {children}
+            </tr>
         );
     });
 
     Table.Cell = jest.fn(function CellMock({children}) {
-        return React.createElement('td', null, children);
+        return <td>{children}</td>;
     });
 
     return {
+        ...actual,
         Dialog,
-        Loader,
         Table,
     };
 });
@@ -220,11 +217,11 @@ test('Deleting version should not happen when cancelled', async() => {
 
     await user.click(within(screen.getByTestId('row-1')).getByRole('button', {name: 'su-trash-alt'}));
 
-    expect(screen.getByTestId('dialog')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.delete_warning_title')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', {name: 'sulu_admin.cancel'}));
 
-    expect(screen.queryByTestId('dialog')).not.toBeInTheDocument();
+    expect(screen.queryByText('sulu_admin.delete_warning_title')).not.toBeInTheDocument();
 });
 
 test('Deleting version should happen when confirmed', async() => {
@@ -255,14 +252,14 @@ test('Deleting version should happen when confirmed', async() => {
 
     await user.click(within(screen.getByTestId('row-1')).getByRole('button', {name: 'su-trash-alt'}));
 
-    expect(screen.getByTestId('dialog')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.delete_warning_title')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
 
     expect(ResourceRequester.delete).toBeCalledWith('media_versions', {id: 1, locale, version: 1});
 
     await waitFor(() => expect(resourceStore.reload).toBeCalledWith());
-    expect(screen.queryByTestId('dialog')).not.toBeInTheDocument();
+    expect(screen.queryByText('sulu_admin.delete_warning_title')).not.toBeInTheDocument();
 });
 
 test('Deleting version should be disabled on latest version', () => {

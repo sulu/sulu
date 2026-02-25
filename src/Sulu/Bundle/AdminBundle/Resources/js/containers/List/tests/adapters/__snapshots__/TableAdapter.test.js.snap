@@ -41,9 +41,6 @@ exports[`renders table with schema and matches snapshot 1`] = `
             data-testid="table-cell"
           >
             <span
-              data-testid="publish-indicator"
-            />
-            <span
               class="textBox"
               title="Page 2"
             >
@@ -57,9 +54,16 @@ exports[`renders table with schema and matches snapshot 1`] = `
           <div
             data-testid="table-cell"
           >
-            <span
-              data-testid="publish-indicator"
-            />
+            <div
+              class="publishIndicator publishIndicator"
+            >
+              <span
+                class="published"
+              />
+              <span
+                class="draft"
+              />
+            </div>
             <span
               class="textBox"
               title="Page 3"
@@ -75,8 +79,10 @@ exports[`renders table with schema and matches snapshot 1`] = `
             data-testid="table-cell"
           >
             <span
-              data-testid="ghost-indicator"
-            />
+              class="ghostIndicator ghostIndicator"
+            >
+              de
+            </span>
             <span
               class="textBox"
               title="Page 4"

@@ -11,10 +11,6 @@ jest.mock('../../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
-jest.mock('../../../../components/GhostIndicator', () => jest.fn(() => <span data-testid="ghost-indicator" />));
-jest.mock('../../../../components/Icon', () => jest.fn(() => <span data-testid="icon" />));
-jest.mock('../../../../components/PublishIndicator', () => jest.fn(() => <span data-testid="publish-indicator" />));
-
 jest.mock('../../../../components/ColumnList', () => {
     const React = require('react');
 
