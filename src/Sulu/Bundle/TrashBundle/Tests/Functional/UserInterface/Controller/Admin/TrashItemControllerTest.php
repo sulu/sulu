@@ -221,10 +221,14 @@ class TrashItemControllerTest extends SuluTestCase
         $trashItem = static::createTrashItem();
         $id = $trashItem->getId();
 
-        $this->client->jsonRequest('POST', '/api/trash-items/' . $id, ['action' => 'restore'], [
-            'PHP_AUTH_USER' => self::ALT_USER_USERNAME,
-            'PHP_AUTH_PW' => 'test',
-        ]);
+        $this->client->jsonRequest(
+            'POST',
+            '/api/trash-items/' . $id . '?action=restore',
+            [
+                'PHP_AUTH_USER' => self::ALT_USER_USERNAME,
+                'PHP_AUTH_PW' => 'test',
+            ]
+        );
         static::assertHttpStatusCode(200, $this->client->getResponse());
     }
 
