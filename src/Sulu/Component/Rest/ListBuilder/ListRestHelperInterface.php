@@ -20,14 +20,14 @@ interface ListRestHelperInterface
      * Returns an array of ids to which the response should be restricted.
      * If null is returned, entities in the response should not be restricted by their id.
      *
-     * @return array
+     * @return array<string>|null
      */
     public function getIds();
 
     /**
      * Returns an array of ids which should be excluded from the response.
      *
-     * @return array
+     * @return array<string>
      */
     public function getExcludedIds();
 
@@ -48,7 +48,7 @@ interface ListRestHelperInterface
     /**
      * Returns the maximum number of elements in a single response.
      *
-     * @return int
+     * @return int|null
      */
     public function getLimit();
 
@@ -62,6 +62,8 @@ interface ListRestHelperInterface
 
     /**
      * returns the current page.
+     *
+     * @return int
      */
     public function getPage();
 
@@ -75,6 +77,8 @@ interface ListRestHelperInterface
 
     /**
      * Returns the pattern of the search.
+     *
+     * @return string|null
      */
     public function getSearchPattern();
 
