@@ -18,6 +18,7 @@ use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Component\Rest\AbstractRestController;
+use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
@@ -110,7 +111,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
 
     public function postTriggerAction($id, Request $request)
     {
-        $action = $this->getRequestParameter($request, 'action', true);
+        $action = $request->query->get('action') ?? throw new MissingParameterException(self::class, 'action');
 
         try {
             return match ($action) {

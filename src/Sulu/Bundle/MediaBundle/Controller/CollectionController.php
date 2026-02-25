@@ -20,6 +20,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
@@ -274,7 +275,7 @@ class CollectionController extends AbstractRestController implements SecuredCont
      */
     public function postTriggerAction($id, Request $request)
     {
-        $action = $this->getRequestParameter($request, 'action', true);
+        $action = $request->query->get('action') ?? throw new MissingParameterException(self::class, 'action');
 
         try {
             return match ($action) {
