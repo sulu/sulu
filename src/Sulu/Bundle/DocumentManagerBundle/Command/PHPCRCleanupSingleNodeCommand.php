@@ -288,8 +288,15 @@ class PHPCRCleanupSingleNodeCommand extends Command
 
                 if (!$dryRun) {
                     $this->liveSession->save();
+                    $liveSessionModified = false;
                 }
             }
+        }
+
+        // Ensure pre-loop live session changes (stale locale/shadow cleanup) are persisted
+        // even when no locale was published during the loop
+        if (!$dryRun && $liveSessionModified) {
+            $this->liveSession->save();
         }
 
         return $stats;

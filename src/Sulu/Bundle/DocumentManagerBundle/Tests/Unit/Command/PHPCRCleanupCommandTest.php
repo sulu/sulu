@@ -55,6 +55,7 @@ class PHPCRCleanupCommandTest extends TestCase
         $collection->setWebspaces(['sulu_io' => $webspace]);
         $this->webspaceManager->getWebspaceCollection()->willReturn($collection);
 
+        $this->session->nodeExists('/cmf')->willReturn(true);
         $cmfNode = $this->prophesize(NodeInterface::class);
         $this->session->getNode('/cmf')->willReturn($cmfNode->reveal());
 
@@ -63,6 +64,7 @@ class PHPCRCleanupCommandTest extends TestCase
 
         $removedNode = $this->prophesize(NodeInterface::class);
         $removedNode->getName()->willReturn('old_webspace');
+        $removedNode->hasNode('contents')->willReturn(true);
 
         $snippetsNode = $this->prophesize(NodeInterface::class);
         $snippetsNode->getName()->willReturn('snippets');
@@ -91,6 +93,7 @@ class PHPCRCleanupCommandTest extends TestCase
         $collection->setWebspaces(['sulu_io' => $webspace]);
         $this->webspaceManager->getWebspaceCollection()->willReturn($collection);
 
+        $this->session->nodeExists('/cmf')->willReturn(true);
         $cmfNode = $this->prophesize(NodeInterface::class);
         $this->session->getNode('/cmf')->willReturn($cmfNode->reveal());
 
@@ -104,6 +107,46 @@ class PHPCRCleanupCommandTest extends TestCase
             $suluIoNode->reveal(),
             $snippetsNode->reveal(),
         ]);
+
+        $result = $this->command->getOrphanedWebspaceKeys();
+
+        $this->assertSame([], $result);
+    }
+
+    public function testGetOrphanedWebspaceKeysSkipsNonWebspaceNodes(): void
+    {
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+
+        $collection = new WebspaceCollection();
+        $collection->setWebspaces(['sulu_io' => $webspace]);
+        $this->webspaceManager->getWebspaceCollection()->willReturn($collection);
+
+        $this->session->nodeExists('/cmf')->willReturn(true);
+        $cmfNode = $this->prophesize(NodeInterface::class);
+        $this->session->getNode('/cmf')->willReturn($cmfNode->reveal());
+
+        $suluIoNode = $this->prophesize(NodeInterface::class);
+        $suluIoNode->getName()->willReturn('sulu_io');
+
+        // Unknown node without 'contents' child should NOT be treated as orphaned webspace
+        $customNode = $this->prophesize(NodeInterface::class);
+        $customNode->getName()->willReturn('custom_data');
+        $customNode->hasNode('contents')->willReturn(false);
+
+        $cmfNode->getNodes()->willReturn([
+            $suluIoNode->reveal(),
+            $customNode->reveal(),
+        ]);
+
+        $result = $this->command->getOrphanedWebspaceKeys();
+
+        $this->assertSame([], $result);
+    }
+
+    public function testGetOrphanedWebspaceKeysNoCmfNode(): void
+    {
+        $this->session->nodeExists('/cmf')->willReturn(false);
 
         $result = $this->command->getOrphanedWebspaceKeys();
 

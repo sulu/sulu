@@ -205,12 +205,38 @@ class PHPCRCleanupCommand extends Command
                 }
 
                 if (0 !== $status) {
-                    $stats['nodes'] += $batchNodeCount;
-                    $stats['erroredNodes'] += $batchNodeCount;
-
                     $stderr = $process->getErrorOutput();
                     if ('' !== $stderr) {
                         $errorMessages[] = $stderr;
+                    }
+
+                    // Try to parse output for detailed per-node counts before falling back
+                    $subCommandOutput = $process->getOutput();
+                    \preg_match('/Nodes processed: (\d+)/', $subCommandOutput, $matches);
+                    $batchProcessed = (int) ($matches[1] ?? 0);
+                    \preg_match('/Nodes ignored: (\d+)/', $subCommandOutput, $matches);
+                    $batchIgnored = (int) ($matches[1] ?? 0);
+                    \preg_match('/Nodes errored: (\d+)/', $subCommandOutput, $matches);
+                    $batchErrored = (int) ($matches[1] ?? 0);
+
+                    $parsedTotal = $batchProcessed + $batchIgnored + $batchErrored;
+
+                    if ($parsedTotal > 0) {
+                        $stats['nodes'] += $parsedTotal;
+                        $stats['ignoredNodes'] += $batchIgnored;
+                        $stats['erroredNodes'] += $batchErrored;
+
+                        \preg_match('/Documents: (\d+)/', $subCommandOutput, $matches);
+                        $stats['documents'] += (int) ($matches[1] ?? 0);
+                        \preg_match('/Removed properties: (\d+)/', $subCommandOutput, $matches);
+                        $stats['removedProperties'] += (int) ($matches[1] ?? 0);
+                        \preg_match('/Total properties: (\d+)/', $subCommandOutput, $matches);
+                        $stats['properties'] += (int) ($matches[1] ?? 0);
+                        \preg_match('/Removed stale locale properties: (\d+)/', $subCommandOutput, $matches);
+                        $stats['removedStaleProperties'] += (int) ($matches[1] ?? 0);
+                    } else {
+                        $stats['nodes'] += $batchNodeCount;
+                        $stats['erroredNodes'] += $batchNodeCount;
                     }
 
                     $this->logger->writeln(\sprintf(
@@ -219,7 +245,7 @@ class PHPCRCleanupCommand extends Command
                         $stderr,
                     ));
 
-                    $this->updateProgressBar($progressBar, $stats, $batchNodeCount);
+                    $this->updateProgressBar($progressBar, $stats, $parsedTotal > 0 ? $parsedTotal : $batchNodeCount);
 
                     continue;
                 }
@@ -322,6 +348,10 @@ class PHPCRCleanupCommand extends Command
         $executableFinder = new PhpExecutableFinder();
         $php = $executableFinder->find(false);
 
+        if (false === $php) {
+            throw new \RuntimeException('Could not find PHP executable.');
+        }
+
         $args = [$php, $_SERVER['argv'][0], PHPCRCleanupSingleNodeCommand::getDefaultName()];
         $args = \array_merge($args, $uuids);
 
@@ -345,6 +375,10 @@ class PHPCRCleanupCommand extends Command
      */
     public function getOrphanedWebspaceKeys(): array
     {
+        if (!$this->session->nodeExists('/cmf')) {
+            return [];
+        }
+
         $configuredKeys = [];
         foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
             $configuredKeys[] = $webspace->getKey();
@@ -356,9 +390,16 @@ class PHPCRCleanupCommand extends Command
         $cmfNode = $this->session->getNode('/cmf');
         foreach ($cmfNode->getNodes() as $childNode) {
             $name = $childNode->getName();
-            if (!\in_array($name, $configuredKeys, true) && !\in_array($name, $reservedKeys, true)) {
-                $orphanedKeys[] = $name;
+            if (\in_array($name, $configuredKeys, true) || \in_array($name, $reservedKeys, true)) {
+                continue;
             }
+
+            // Only treat as orphaned webspace if it has a 'contents' child node (webspace structure)
+            if (!$childNode->hasNode('contents')) {
+                continue;
+            }
+
+            $orphanedKeys[] = $name;
         }
 
         return $orphanedKeys;
