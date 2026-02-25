@@ -455,13 +455,13 @@ initializer.addUpdateConfigHook('sulu_ai', (config: Object, initialized: boolean
         return;
     }
 
-    const div = document.createElement('div');
-    div.id = 'su-ai-application';
-    document.body?.appendChild(div);
-
     if (!config['writing_assistant']?.enabled && !config['translation']?.enabled && !config['feedback']?.enabled) {
         return;
     }
+
+    const div = document.createElement('div');
+    div.id = 'su-ai-application';
+    document.body?.appendChild(div);
 
     render(<AiApplication
         feedback={config['feedback']}
