@@ -199,7 +199,7 @@ class TrashItemControllerTest extends SuluTestCase
         $trashItem = static::createTrashItem();
         $id = $trashItem->getId();
 
-        $this->client->jsonRequest('POST', '/api/trash-items/' . $id, ['action' => 'restore']);
+        $this->client->jsonRequest('POST', '/api/trash-items/' . $id . '?action=restore');
         static::assertHttpStatusCode(200, $this->client->getResponse());
 
         $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
@@ -222,10 +222,14 @@ class TrashItemControllerTest extends SuluTestCase
         $trashItem = static::createTrashItem();
         $id = $trashItem->getId();
 
-        $this->client->jsonRequest('POST', '/api/trash-items/' . $id, ['action' => 'restore'], [
-            'PHP_AUTH_USER' => self::ALT_USER_USERNAME,
-            'PHP_AUTH_PW' => 'test',
-        ]);
+        $this->client->jsonRequest(
+            'POST',
+            '/api/trash-items/' . $id . '?action=restore',
+            [
+                'PHP_AUTH_USER' => self::ALT_USER_USERNAME,
+                'PHP_AUTH_PW' => 'test',
+            ]
+        );
         static::assertHttpStatusCode(200, $this->client->getResponse());
     }
 
