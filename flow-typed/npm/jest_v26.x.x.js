@@ -823,6 +823,8 @@ declare var expect: {
     SnapshotDiffType,
   /** Add additional Jasmine matchers to Jest's roster */
   extend(matchers: { [name: string]: JestMatcher, ... }): void,
+  /** Add custom equality testers (Jest Circus / Jasmine compatibility API). */
+  addEqualityTesters(testers: Array<Function>): void,
   /** Add a module that formats application-specific data structures. */
   addSnapshotSerializer(pluginModule: JestPrettyFormatPlugin): void,
   assertions(expectedAssertions: number): void,
