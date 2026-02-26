@@ -1055,7 +1055,7 @@ test('Set loading flag to true before request', () => {
     listStore.destroy();
 });
 
-test('Set loading flag to false after request', (done) => {
+test('Set loading flag to false after request', () => {
     const page = observable.box();
     const listStore = new ListStore('tests', 'tests', 'list_test', {page});
     listStore.schema = {};
@@ -1071,7 +1071,6 @@ test('Set loading flag to false after request', (done) => {
     return promise.then(() => {
         expect(listStore.loading).toEqual(false);
         listStore.destroy();
-        done();
     });
 });
 

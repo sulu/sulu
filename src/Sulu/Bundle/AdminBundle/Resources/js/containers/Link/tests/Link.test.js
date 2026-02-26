@@ -24,7 +24,7 @@ jest.mock('../registries/linkTypeRegistry', () => ({
     getTitle: jest.fn((key) => key.charAt(0).toUpperCase() + (key.slice(1))),
 }));
 
-test('Render Link container incl. loading a selected value', async(resolve) => {
+test('Render Link container incl. loading a selected value', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
@@ -51,13 +51,11 @@ test('Render Link container incl. loading a selected value', async(resolve) => {
         <Link locale={observable.box('en')} onChange={changeSpy} onFinish={finishSpy} value={value} />
     );
 
-    getPromise.finally(() => {
-        setTimeout(() => {
+    return getPromise
+        .then(() => new Promise((resolve) => setTimeout(resolve, 0)))
+        .then(() => {
             expect(link).toMatchSnapshot();
-
-            resolve();
-        }, 0);
-    });
+        });
 });
 
 test('Open overlay on input click', () => {
@@ -251,7 +249,7 @@ test('Update values on overlay confirm with ExternalLinkTypeOverlay', () => {
     );
 });
 
-test('Invalidate values on RemoveButton click', async(resolve) => {
+test('Invalidate values on RemoveButton click', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
@@ -288,8 +286,9 @@ test('Invalidate values on RemoveButton click', async(resolve) => {
         value={value}
     />);
 
-    getPromise.finally(() => {
-        setTimeout(() => {
+    return getPromise
+        .then(() => new Promise((resolve) => setTimeout(resolve, 0)))
+        .then(() => {
             const removeButton = link.find('.removeButton');
             removeButton.simulate('click');
 
@@ -305,10 +304,7 @@ test('Invalidate values on RemoveButton click', async(resolve) => {
                     rel: undefined,
                 }
             );
-
-            resolve();
-        }, 0);
-    });
+        });
 });
 
 test('Display providers with "types" property', () => {
