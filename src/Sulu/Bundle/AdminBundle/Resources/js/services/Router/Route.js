@@ -14,7 +14,9 @@ export default class Route {
     type: string;
 
     constructor(config: RouteConfig) {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.path = config.path;
         this.name = config.name;
         this.type = config.type;

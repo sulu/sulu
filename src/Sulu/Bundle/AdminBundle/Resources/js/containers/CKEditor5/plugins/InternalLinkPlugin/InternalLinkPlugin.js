@@ -39,7 +39,9 @@ const LINK_TAG = 'sulu-link';
 export default class InternalLinkPlugin extends Plugin {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable openOverlay: ?string = undefined;

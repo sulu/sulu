@@ -40,7 +40,9 @@ class FieldFilterItem extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {filterType, filterTypeParameters, onClose, open, value} = this.props;
 

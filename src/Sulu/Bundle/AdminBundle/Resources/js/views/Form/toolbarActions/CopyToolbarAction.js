@@ -10,7 +10,9 @@ import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 export default class CopyToolbarAction extends AbstractFormToolbarAction {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable showCopyDialog = false;

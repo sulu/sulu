@@ -6,7 +6,9 @@ import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 export default class TogglerToolbarAction extends AbstractFormToolbarAction {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable loading: boolean = false;

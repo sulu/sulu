@@ -9,7 +9,9 @@ import type {RolePermissions as RolePermissionsType} from '../../RolePermissions
 class RolePermissions extends React.Component<FieldTypeProps<RolePermissionsType>> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @computed get webspace() {

@@ -54,7 +54,9 @@ class MultiSelection extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {locale, options, resourceKey, value} = this.props;
 

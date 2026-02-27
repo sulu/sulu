@@ -33,7 +33,9 @@ export default class ResourceStore {
         idQueryParameter: ?string,
         preventLoadingOnce: boolean = false
     ) {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.resourceKey = resourceKey;
         this.id = id;
         this.observableOptions = observableOptions;

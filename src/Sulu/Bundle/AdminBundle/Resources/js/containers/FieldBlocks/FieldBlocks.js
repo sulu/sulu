@@ -34,7 +34,9 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
     constructor(props: FieldTypeProps<Array<BlockEntry>>) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.setValue(this.props.value);
     }

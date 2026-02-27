@@ -132,7 +132,9 @@ export default class Router {
     redirectFlag: boolean = false;
 
     constructor(history: Object) {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.history = history;
 
         this.history.listen(({location}) => {

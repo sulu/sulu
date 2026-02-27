@@ -25,7 +25,9 @@ export default class BadgeStore {
         routerAttributesToRequest: Object,
         tabViewRoute: Route
     ) {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.router = router;
         this.routeName = routeName;
         this.dataPath = dataPath;

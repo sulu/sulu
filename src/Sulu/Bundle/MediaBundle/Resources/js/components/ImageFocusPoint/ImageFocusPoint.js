@@ -20,7 +20,9 @@ type Props = {|
 class ImageFocusPoint extends React.Component<Props> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     imageRef: ?ElementRef<'img'>;

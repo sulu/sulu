@@ -12,7 +12,9 @@ import type {IObservableValue} from 'mobx';
 export default class Location extends React.Component<FieldTypeProps<?LocationValue>> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     handleChange = (value: ?LocationValue) => {

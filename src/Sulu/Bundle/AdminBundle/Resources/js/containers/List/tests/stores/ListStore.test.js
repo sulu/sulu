@@ -51,7 +51,9 @@ class OtherLoadingStrategy {
 
 class StructureStrategy {
     constructor() {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable data = [];

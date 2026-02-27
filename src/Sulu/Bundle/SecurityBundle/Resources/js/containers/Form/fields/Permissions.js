@@ -12,7 +12,9 @@ type Props = FieldTypeProps<?Array<ContextPermission>>;
 class Permissions extends React.Component<Props> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @computed get system(): ?string {

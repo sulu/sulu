@@ -16,7 +16,9 @@ export default class ResourceListStore {
     }
 
     constructor(resourceKey: string, requestParameters: Object = {}, idProperty: string = 'id') {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.resourceKey = resourceKey;
         this.requestParameters = requestParameters;
         this.idProperty = idProperty;

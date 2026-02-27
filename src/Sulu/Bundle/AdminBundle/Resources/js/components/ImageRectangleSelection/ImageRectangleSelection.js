@@ -56,7 +56,9 @@ class ImageRectangleSelection extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.image = new Image();
         this.image.onload = action(() => this.imageLoaded = true);

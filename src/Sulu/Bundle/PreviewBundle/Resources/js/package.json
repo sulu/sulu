@@ -17,8 +17,8 @@
         "@testing-library/user-event": "^14.5.2"
     },
     "peerDependencies": {
-        "mobx": "^6.15.0",
-        "mobx-react": "^7.6.0",
+        "mobx": "^4.15.7 || ^6.15.0",
+        "mobx-react": "^6.3.1 || ^7.6.0",
         "react": "^16.2.0 || ^17.0.0",
         "sulu-admin-bundle": "*",
         "sulu-page-bundle": "*"

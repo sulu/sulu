@@ -57,7 +57,9 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
         }
 
         super(resourceFormStore, form, router, locales, options, parentResourceStore);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     handleDeleteReferencedResourcesDialogCancel = () => {

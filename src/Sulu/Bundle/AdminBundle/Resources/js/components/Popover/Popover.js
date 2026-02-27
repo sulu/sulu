@@ -50,7 +50,9 @@ class Popover extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         window.addEventListener('blur', this.close);
         window.addEventListener('resize', this.close);

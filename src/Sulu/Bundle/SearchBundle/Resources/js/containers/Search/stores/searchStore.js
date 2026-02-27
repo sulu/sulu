@@ -13,7 +13,9 @@ class SearchStore {
     total: ?number = undefined;
 
     constructor() {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         autorun(() => {
             if (!this.query) {
                 this.resetResults();

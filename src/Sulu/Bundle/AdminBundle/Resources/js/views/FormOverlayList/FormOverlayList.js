@@ -19,7 +19,9 @@ type Props = ViewProps & {
 class FormOverlayList extends React.Component<Props> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     static getDerivedRouteAttributes = List.getDerivedRouteAttributes;

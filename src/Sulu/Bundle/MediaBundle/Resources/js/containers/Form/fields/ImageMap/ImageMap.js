@@ -18,7 +18,9 @@ class ImageMap extends React.Component<FieldTypeProps<Value>> {
 
     constructor(props: FieldTypeProps<Value>) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.setValue(this.props.value);
     }

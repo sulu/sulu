@@ -41,7 +41,9 @@ type Props = {|
 export default class Translator extends React.Component<Props> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable snackbarMessage: ?{ message: string, type: 'error' } = undefined;

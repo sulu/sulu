@@ -11,7 +11,9 @@ export default class FlatStructureStrategy implements StructureStrategyInterface
     }
 
     constructor() {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.data = [];
     }
 

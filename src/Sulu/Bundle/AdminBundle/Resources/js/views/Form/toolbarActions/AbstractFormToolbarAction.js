@@ -36,7 +36,9 @@ export default class AbstractFormToolbarAction {
         options: {[key: string]: mixed},
         parentResourceStore: ResourceStore
     ) {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.resourceFormStore = resourceFormStore;
         this.formInspector = new FormInspector(this.resourceFormStore);
         this.form = form;

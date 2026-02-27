@@ -113,7 +113,9 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
         }
 
         super(listStore, list, router, locales, resourceStore, options);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @action setDropzoneRef = (ref: ?ElementRef<typeof Dropzone>) => {

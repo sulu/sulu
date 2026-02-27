@@ -29,7 +29,9 @@ class SingleSelection extends React.Component<Props>
 
     constructor(props: Props) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         if (this.type !== 'list_overlay' && this.type !== 'single_select' && this.type !== 'auto_complete') {
             throw new Error(

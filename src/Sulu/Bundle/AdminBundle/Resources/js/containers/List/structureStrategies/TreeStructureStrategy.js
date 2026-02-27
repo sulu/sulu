@@ -81,7 +81,9 @@ function findChildrenForParentId(tree: Array<TreeItem>, parentId: ?string | numb
 
 export default class TreeStructureStrategy implements StructureStrategyInterface {
     constructor() {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable data: Array<TreeItem> = [];

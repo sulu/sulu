@@ -32,7 +32,9 @@ const AVAILABLE_HOTSPOT_TYPES = {
 class HotspotsFormRenderer extends React.Component<Props> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @computed get selectedHotspot() {

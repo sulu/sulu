@@ -32,7 +32,9 @@ function getValue(value: ?string, format: string): ?Date {
 class DatePicker extends React.Component<FieldTypeProps<?string>> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @computed get format() {

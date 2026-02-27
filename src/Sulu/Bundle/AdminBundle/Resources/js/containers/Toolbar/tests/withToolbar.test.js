@@ -140,7 +140,9 @@ test('Recall toolbar-function when changing observable', () => {
     const Component = class Component extends React.Component<*> {
         constructor(...args: Array<any>) {
             super(...args);
-            makeObservable(this);
+            if (typeof makeObservable === 'function') {
+                makeObservable(this);
+            }
         }
 
         @observable test = true;

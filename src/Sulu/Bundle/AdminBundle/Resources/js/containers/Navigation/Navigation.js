@@ -25,7 +25,9 @@ const SULU_CHANGELOG_URL = 'https://github.com/sulu/sulu/releases';
 class Navigation extends React.Component<Props> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @computed get username(): string {

@@ -16,7 +16,9 @@ import columnListAdapterStyles from './columnListAdapter.scss';
 class ColumnListAdapter extends AbstractAdapter {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     static LoadingStrategy = DefaultLoadingStrategy;

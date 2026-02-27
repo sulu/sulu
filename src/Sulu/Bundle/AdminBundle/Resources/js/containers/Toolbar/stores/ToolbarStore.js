@@ -11,7 +11,9 @@ export default class ToolbarStore {
     showSuccessDisposer: () => void;
 
     constructor() {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.showSuccessDisposer = autorun(() => {
             const {showSuccess} = this.config;
             if (showSuccess && showSuccess.get()) {

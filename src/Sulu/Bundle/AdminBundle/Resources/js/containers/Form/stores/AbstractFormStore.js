@@ -7,6 +7,13 @@ import type {Schema, SchemaEntry} from '../types';
 
 export const SECTION_TYPE = 'section';
 
+function isArrayLike(value: mixed): boolean {
+    return !!value
+        && typeof value === 'object'
+        && typeof value.length === 'number'
+        && typeof value.forEach === 'function';
+}
+
 function addSchemaProperties(data: Object, key: string, schema: Schema) {
     const type = schema[key].type;
 
@@ -54,7 +61,7 @@ function collectTagPathsWithPriority(
         if (types
             && Object.keys(types).length > 0
             && data[key]
-            && (Array.isArray(data[key]))
+            && (Array.isArray(data[key]) || isArrayLike(data[key]))
         ) {
             for (const childKey of data[key].keys()) {
                 const childData = data[key][childKey];
@@ -103,7 +110,9 @@ function collectTagPaths(
 export default class AbstractFormStore
 {
     constructor() {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     +data: {[string]: any};

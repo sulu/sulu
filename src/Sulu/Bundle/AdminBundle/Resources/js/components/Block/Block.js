@@ -32,7 +32,9 @@ type Props<T: string> = {
 class Block<T: string> extends React.Component<Props<T>> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     static defaultProps = {

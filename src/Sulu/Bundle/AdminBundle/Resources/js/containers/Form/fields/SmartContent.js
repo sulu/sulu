@@ -92,7 +92,9 @@ class SmartContent extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {
             formInspector,

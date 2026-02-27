@@ -18,7 +18,9 @@ type Props = {|
 class FieldFilter extends React.Component<Props> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable filterMenuOpen: boolean = false;

@@ -34,7 +34,9 @@ const LINK_TAG = 'a';
 export default class ExternalLinkPlugin extends Plugin {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable open: boolean = false;

@@ -10,7 +10,9 @@ export default class FormInspector {
     finishFieldHandlers: Array<FinishFieldHandler> = [];
 
     constructor(formStore: FormStoreInterface) {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.formStore = formStore;
     }
 

@@ -42,7 +42,9 @@ export default class SetUnpublishedToolbarAction extends AbstractFormToolbarActi
         }
 
         super(resourceFormStore, form, router, locales, options, parentResourceStore);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     getNode() {

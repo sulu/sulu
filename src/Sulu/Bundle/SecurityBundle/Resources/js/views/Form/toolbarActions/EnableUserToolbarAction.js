@@ -7,7 +7,9 @@ import {translate} from 'sulu-admin-bundle/utils';
 export default class EnableUserToolbarAction extends AbstractFormToolbarAction {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable loading: boolean = false;

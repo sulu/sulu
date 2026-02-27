@@ -34,7 +34,9 @@ export default class ReloadFormStoreToolbarAction extends AbstractFormToolbarAct
             options,
             parentResourceStore
         );
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         // Required options validation
         const requiredOptions = [

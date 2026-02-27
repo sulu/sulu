@@ -18,7 +18,9 @@ class PageTreeRoute extends Component<Props> {
 
     constructor(props: Props): void {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {
             fieldTypeOptions: {

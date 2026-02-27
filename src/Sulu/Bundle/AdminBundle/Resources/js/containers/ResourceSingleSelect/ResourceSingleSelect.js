@@ -40,7 +40,9 @@ class ResourceSingleSelect<T: string | number> extends React.Component<Props<T>>
 
     constructor(props: Props<T>) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {
             idProperty,

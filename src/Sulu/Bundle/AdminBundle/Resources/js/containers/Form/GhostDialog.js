@@ -22,7 +22,9 @@ class GhostDialog extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.selectedLocale = this.props.locales[0];
         this.formStore = memoryFormStoreFactory.createFromFormKey(

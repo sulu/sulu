@@ -13,7 +13,9 @@ export default class CacheClearToolbarAction {
     @observable showDialog = false;
 
     constructor(webspaceKey: ?string) {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.webspaceKey = webspaceKey;
     }
 

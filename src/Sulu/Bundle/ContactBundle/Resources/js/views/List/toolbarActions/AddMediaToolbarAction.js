@@ -10,7 +10,9 @@ import {MultiMediaSelectionOverlay} from 'sulu-media-bundle/containers';
 class AddMediaToolbarAction extends AbstractListToolbarAction {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable showOverlay: boolean = false;

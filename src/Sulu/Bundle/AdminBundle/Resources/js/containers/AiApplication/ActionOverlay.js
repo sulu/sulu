@@ -28,7 +28,9 @@ class ActionOverlay extends Component<Props> {
 
     constructor(props: Props) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.formStore = MemoryFormStoreFactory.createFromFormKey(props.formKey);
     }

@@ -19,7 +19,9 @@ export default class MultiSelectionStore<T = string | number, U: {id: T} = Objec
         idFilterParameter: string = 'ids',
         requestParameters: {[string]: mixed} = {}
     ) {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.resourceKey = resourceKey;
         this.locale = locale;
         this.idFilterParameter = idFilterParameter;

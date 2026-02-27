@@ -30,7 +30,9 @@ type Props<T> = {|
 class Select<T> extends React.Component<Props<T>> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     static defaultProps = {

@@ -142,7 +142,9 @@ export default class ListStore {
         metadataOptions: ?Object,
         selectionIds: ?Array<string | number>
     ) {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.resourceKey = resourceKey;
         this.listKey = listKey;
         this.userSettingsKey = userSettingsKey;

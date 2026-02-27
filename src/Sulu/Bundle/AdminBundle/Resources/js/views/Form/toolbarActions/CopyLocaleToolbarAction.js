@@ -46,7 +46,9 @@ export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
         }
 
         super(resourceFormStore, form, router, locales, options, parentResourceStore);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         if (locales) {
             this.formStore = memoryFormStoreFactory.createFromFormKey('copy_locale', undefined, undefined, undefined, {

@@ -12,7 +12,9 @@ export default class TeaserStore {
     teaserDisposer: () => void;
 
     constructor(locale: IObservableValue<string>) {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.locale = locale;
         this.teaserDisposer = autorun(this.loadTeasers);
     }

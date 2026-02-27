@@ -46,7 +46,9 @@ type Props = {|
 export default class AiApplication extends Component<Props> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable.ref selectedComponent: {

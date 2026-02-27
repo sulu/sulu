@@ -32,7 +32,9 @@ function setMomentLocale() {
 
 class Initializer {
     constructor() {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable config: ?{[string]: Object};

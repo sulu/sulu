@@ -13,7 +13,9 @@ class SidebarStore {
     @observable size: ?Size;
 
     constructor() {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.clearConfig();
     }
 

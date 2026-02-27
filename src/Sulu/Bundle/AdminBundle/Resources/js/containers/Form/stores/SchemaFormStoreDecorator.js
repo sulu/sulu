@@ -13,7 +13,9 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         type: ?string,
         metadataOptions: ?{[string]: any}
     ) {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         Promise.all([
             metadataStore.getSchema(formKey, type, metadataOptions),
             metadataStore.getJsonSchema(formKey, type, metadataOptions),

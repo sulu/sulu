@@ -26,7 +26,9 @@ export default class SaveWithFormDialogToolbarAction extends AbstractFormToolbar
         parentResourceStore: ResourceStore
     ) {
         super(resourceFormStore, form, router, locales, options, parentResourceStore);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {formKey} = options;
 

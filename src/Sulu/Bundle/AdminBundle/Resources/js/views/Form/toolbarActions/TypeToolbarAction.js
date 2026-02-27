@@ -10,7 +10,9 @@ import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
 export default class TypeToolbarAction extends AbstractFormToolbarAction {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable selectedTypeForUnsavedChangesDialog: ?string = undefined;

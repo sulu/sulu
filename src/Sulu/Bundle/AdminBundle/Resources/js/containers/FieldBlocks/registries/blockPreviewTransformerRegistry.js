@@ -7,7 +7,9 @@ class BlockPreviewTransformerRegistry {
     @observable priority: {[string]: number};
 
     constructor() {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.clear();
     }
 

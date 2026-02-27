@@ -5,7 +5,9 @@ import type {Webspace} from './types';
 
 class WebspaceStore {
     constructor() {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable allWebspaces: Array<Webspace>;

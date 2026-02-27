@@ -13,7 +13,9 @@ import type {ElementRef} from 'react';
 class Popover extends React.Component<PopoverProps> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable open: boolean = false;

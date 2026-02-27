@@ -23,7 +23,9 @@ export default class ColumnStructureStrategy implements StructureStrategyInterfa
     }
 
     constructor() {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.rawData.set(undefined, []);
     }
 

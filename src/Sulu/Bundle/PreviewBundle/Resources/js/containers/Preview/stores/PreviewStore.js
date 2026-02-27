@@ -29,7 +29,9 @@ export default class PreviewStore {
         webspace: string,
         segment: ?string
     ) {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         // keep backwards compatibility to previous versions where locale was passed as string
         if (typeof locale !== 'string') {
             locale = toJS(locale);

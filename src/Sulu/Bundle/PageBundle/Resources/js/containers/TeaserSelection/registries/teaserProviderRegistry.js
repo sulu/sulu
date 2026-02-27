@@ -6,7 +6,9 @@ class TeaserProviderRegistry {
     teaserProviders: {[string]: TeaserProviderOptions};
 
     constructor() {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.clear();
     }
 

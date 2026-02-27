@@ -18,7 +18,9 @@ const UPDATE_ROUTE_HOOK_PRIORITY = 1024;
 class ViewRenderer extends React.Component<Props> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable loginCount: number = 0;

@@ -44,7 +44,9 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
 
     constructor(props: Props<T, U>) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         if (props.movable === false) {
             log.warn(

@@ -42,7 +42,9 @@ export default class DeleteDraftToolbarAction extends AbstractFormToolbarAction 
         }
 
         super(resourceFormStore, form, router, locales, options, parentResourceStore);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     getNode() {

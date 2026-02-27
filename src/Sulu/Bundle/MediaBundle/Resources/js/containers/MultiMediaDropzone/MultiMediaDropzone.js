@@ -33,7 +33,9 @@ type Props = {
 class MultiMediaDropzone extends React.Component<Props> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     static defaultProps = {

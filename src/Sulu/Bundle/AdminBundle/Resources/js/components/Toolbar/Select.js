@@ -10,7 +10,9 @@ import type {SelectOption, Select as SelectProps} from './types';
 class Select<T: ?string | number> extends React.Component<SelectProps<T>> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     static defaultProps = {

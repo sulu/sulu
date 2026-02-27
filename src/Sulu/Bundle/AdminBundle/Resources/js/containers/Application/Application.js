@@ -74,7 +74,9 @@ class Application extends React.Component<Props>{
 
     constructor(props: Props) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.navigationPinnedDisposer = autorun(
             () => this.navigationPinned = userStore.getPersistentSetting(NAVIGATION_PINNED_SETTING_KEY)

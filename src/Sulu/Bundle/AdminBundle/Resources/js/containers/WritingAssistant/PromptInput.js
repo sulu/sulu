@@ -41,7 +41,9 @@ type Props = {|
 class PromptInput extends Component<Props> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable messageInput: string = '';

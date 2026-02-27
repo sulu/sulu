@@ -5,7 +5,9 @@ import {arrayMove} from 'sulu-admin-bundle/utils';
 
 export default class ContactAccountSelectionStore {
     constructor() {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     static contactPrefix = 'c';

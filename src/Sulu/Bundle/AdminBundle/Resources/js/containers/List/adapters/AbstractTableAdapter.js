@@ -12,7 +12,9 @@ import type {Schema} from '../types';
 export default class AbstractTableAdapter extends AbstractAdapter {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     static hasColumnOptions: boolean = true;

@@ -55,7 +55,9 @@ class FilterOverlay extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.updateFilterCriteriaDisposer = autorun(() => this.updateFilterCriteria(this.props.smartContentStore));
         this.tagSelectionStore = new MultiSelectionStore('tags', this.tags || [], undefined, 'names');

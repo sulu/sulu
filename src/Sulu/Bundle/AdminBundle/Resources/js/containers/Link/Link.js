@@ -55,7 +55,9 @@ class Link extends Component<Props> {
 
     constructor(props: Props) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.load(this.props.value);
     }

@@ -32,7 +32,9 @@ class Tabs<T> extends React.Component<Props<T>> {
 
     constructor(props: Props<T>) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.redirectToRouteWithHighestPriorityDisposer = autorun(this.redirectToRouteWithHighestPriority);
     }

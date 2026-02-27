@@ -8,7 +8,9 @@ import AbstractListToolbarAction from './AbstractListToolbarAction';
 export default class MoveToolbarAction extends AbstractListToolbarAction {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable showOverlay = false;

@@ -22,7 +22,9 @@ type Props = {
 class RestoreFormOverlay extends React.Component<Props> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     static defaultProps = {

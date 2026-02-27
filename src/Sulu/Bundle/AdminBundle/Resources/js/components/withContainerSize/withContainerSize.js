@@ -13,7 +13,9 @@ export default function withContainerSize(Component: ComponentType<*>, container
     class WithContainerSizeComponent extends React.Component<*> {
         constructor(...args: Array<any>) {
             super(...args);
-            makeObservable(this);
+            if (typeof makeObservable === 'function') {
+                makeObservable(this);
+            }
         }
 
         component: WithContainerSizeElement;

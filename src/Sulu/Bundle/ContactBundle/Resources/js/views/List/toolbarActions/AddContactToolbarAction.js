@@ -29,7 +29,9 @@ class AddContactToolbarAction extends AbstractListToolbarAction {
         options: {[key: string]: mixed}
     ) {
         super(listStore, list, router, locales, resourceStore, options);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.contactSelectionStore = new SingleSelectionStore('contacts');
     }

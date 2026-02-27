@@ -13,7 +13,9 @@ import type {TeaserItem, TeaserSelectionValue} from '../../TeaserSelection/types
 class TeaserSelection extends React.Component<FieldTypeProps<TeaserSelectionValue>> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @computed get locale(): IObservableValue<string> {

@@ -9,7 +9,9 @@ import type {FieldTypeProps} from '../types';
 class Number extends React.Component<FieldTypeProps<?number>> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @computed get min(): ?number {

@@ -25,7 +25,9 @@ const DEBOUNCE_TIME = 200;
 class ImageRenderer extends React.Component<Props> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable imageWrapperSize: {height: number, width: number} = {width: 0, height: 0};

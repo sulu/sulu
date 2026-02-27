@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, set, observable, toJS, when, makeObservable} from 'mobx';
+import {action, autorun, computed, observable, toJS, makeObservable} from 'mobx';
 import jsonpointer from 'json-pointer';
 import log from 'loglevel';
 import {createAjv} from '../../../utils/Ajv';
@@ -13,6 +13,13 @@ import type {IObservableValue} from 'mobx';
 const TYPE_PROPERTY = 'template';
 
 const ajv = createAjv();
+
+function isArrayLike(value: mixed): boolean {
+    return !!value
+        && typeof value === 'object'
+        && typeof value.length === 'number'
+        && typeof value.forEach === 'function';
+}
 
 function mergeData(
     localSchema: Schema,
@@ -61,7 +68,8 @@ function mergeData(
         if (remoteTypes && localTypes
             && Object.keys(remoteTypes).length > 0 && Object.keys(localTypes).length > 0
             && localData[name] && remoteData[name]
-            && Array.isArray(localData[name]) && Array.isArray(remoteData[name])
+            && (Array.isArray(localData[name]) || isArrayLike(localData[name]))
+            && (Array.isArray(remoteData[name]) || isArrayLike(remoteData[name]))
         ) {
             for (let key = 0; key < Math.max(remoteData[name].length, localData[name].length); ++key) {
                 const remoteChildData = toJS(remoteData[name].length > key ? remoteData[name][key] || {} : {});
@@ -115,6 +123,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     formKey: string;
     options: { [string]: any };
     @observable types: { [key: string]: SchemaType } = {};
+    @observable defaultType: ?string;
     @observable schemaLoading: boolean = true;
     @observable typesLoading: boolean = true;
     schemaDisposer: ?() => void;
@@ -122,7 +131,9 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
 
     constructor(resourceStore: ResourceStore, formKey: string, options: Object = {}, metadataOptions: ?Object) {
         super();
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.resourceStore = resourceStore;
         this.formKey = formKey;
@@ -146,18 +157,8 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         } = schemaTypes || {};
 
         this.types = types;
+        this.defaultType = defaultType;
         this.typesLoading = false;
-
-        if (this.hasTypes) {
-            // set default type to the resource store if the loaded data does not contain a type
-            when(
-                () => !this.resourceStore.loading,
-                (): void => {
-                    const type = this.resourceStore.data[TYPE_PROPERTY] || defaultType || Object.keys(this.types)[0];
-                    set(this.data, {[TYPE_PROPERTY]: type});
-                }
-            );
-        }
 
         this.schemaDisposer = autorun(() => {
             if (this.hasTypes && !this.type) {
@@ -218,7 +219,19 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     }
 
     @computed get type(): ?string {
-        return this.hasTypes && this.data ? this.data[TYPE_PROPERTY] : undefined;
+        if (!this.hasTypes || !this.data) {
+            return undefined;
+        }
+
+        if (this.data[TYPE_PROPERTY]) {
+            return this.data[TYPE_PROPERTY];
+        }
+
+        if (this.resourceStore.loading) {
+            return undefined;
+        }
+
+        return this.defaultType || Object.keys(this.types)[0];
     }
 
     @action save(options: Object = {}): Promise<Object> {

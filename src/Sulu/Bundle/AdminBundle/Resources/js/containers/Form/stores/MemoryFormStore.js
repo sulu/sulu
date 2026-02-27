@@ -26,7 +26,9 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
         metadataOptions: ?{[string]: any}
     ) {
         super();
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.data = data;
         this.schema = schema;

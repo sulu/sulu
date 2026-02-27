@@ -47,7 +47,9 @@ class Toolbar extends React.Component<ToolbarProps> {
 
     constructor(props: *) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.setStore(this.props.storeKey);
     }

@@ -14,7 +14,9 @@ export default class AbstractFieldFilterType<T> {
         value: T,
         options: Object = {}
     ) {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.onChange = onChange;
         this.parameters = parameters;
         this.value = value;

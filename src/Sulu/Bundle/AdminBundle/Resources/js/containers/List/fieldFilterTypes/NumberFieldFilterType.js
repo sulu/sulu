@@ -38,7 +38,9 @@ class NumberFieldFilterType extends AbstractFieldFilterType<?{[string]: ?number}
         value: ?{[string]: ?number}
     ) {
         super(onChange, parameters, value);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         if (value === undefined) {
             onChange({eq: undefined});

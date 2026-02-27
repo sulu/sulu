@@ -50,7 +50,9 @@ export default class WritingAssistant extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.selectedExpert = this.experts[0].uuid;
         // push initial message

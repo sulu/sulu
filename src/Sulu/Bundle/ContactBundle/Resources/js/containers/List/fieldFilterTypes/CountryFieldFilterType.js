@@ -8,7 +8,9 @@ import countryFieldFilterTypeStyles from './countryFieldFilterType.scss';
 class CountryFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     static countries: {[key: string]: string} = {};

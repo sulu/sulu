@@ -18,7 +18,9 @@ import type {Value} from '../../MultiMediaSelection';
 class MediaSelection extends React.Component<FieldTypeProps<Value>> {
     constructor(props: FieldTypeProps<Value>) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {onChange, schemaOptions} = this.props;
 

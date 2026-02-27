@@ -11,7 +11,9 @@ const CONTENT_LOCALE_SETTING_KEY = 'sulu_admin.content_locale';
 
 class UserStore {
     constructor() {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable persistentSettings: Map<string, string> = new Map();

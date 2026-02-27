@@ -19,7 +19,9 @@ class CardCollection extends React.Component<FieldTypeProps<Array<Object>>> {
 
     constructor(props: FieldTypeProps<Array<Object>>) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {
             fieldTypeOptions: {

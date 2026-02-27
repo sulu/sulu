@@ -17,7 +17,9 @@ type Props<T> = {|
 class Button<T: string | number> extends React.Component<Props<T>> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable open: boolean = false;

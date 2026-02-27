@@ -26,7 +26,9 @@ const AVAILABLE_LIMITS = [10, 20, 50, 100];
 class Pagination extends React.Component<Props> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable currentInputValue = 1;

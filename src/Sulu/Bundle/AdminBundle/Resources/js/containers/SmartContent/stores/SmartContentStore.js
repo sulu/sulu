@@ -43,7 +43,9 @@ export default class SmartContentStore {
         params: Object,
         webspaceKey: ?string
     ) {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.provider = provider;
         this.locale = locale;
         this.dataSourceResourceKey = dataSourceResourceKey;

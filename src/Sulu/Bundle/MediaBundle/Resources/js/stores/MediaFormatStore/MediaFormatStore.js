@@ -14,7 +14,9 @@ export default class MediaFormatStore
     @observable saving: boolean;
 
     constructor(id: number | string, locale: string) {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.id = id;
         this.locale = locale;
         this.loading = true;

@@ -11,7 +11,9 @@ import type {FieldTypeProps} from '../../../types';
 class ChangelogLine extends React.Component<FieldTypeProps<typeof undefined>> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable changer: ?Object;

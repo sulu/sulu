@@ -13,7 +13,9 @@ export default class SnippetAreaStore {
     webspaceKey: string;
 
     constructor(webspaceKey: string) {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.webspaceKey = webspaceKey;
 
         ResourceRequester.getList('snippet_areas', {webspace: webspaceKey}).then(action((response) => {

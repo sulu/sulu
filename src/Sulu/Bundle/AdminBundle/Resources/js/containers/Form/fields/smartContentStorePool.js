@@ -10,7 +10,9 @@ class SmartContentStorePool {
     }
 
     constructor() {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.clear();
     }
 

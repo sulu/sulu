@@ -31,7 +31,9 @@ type Props<T: string | number> = {|
 class Field<T: string | number> extends React.Component<Props<T>> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     static defaultProps = {

@@ -8,7 +8,9 @@ import {AbstractListToolbarAction} from 'sulu-admin-bundle/views';
 class DeleteMediaToolbarAction extends AbstractListToolbarAction {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable showDialog: boolean = false;

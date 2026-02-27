@@ -27,7 +27,9 @@ class Checkbox extends React.Component<FieldTypeProps<boolean>> {
 
     constructor(props: FieldTypeProps<boolean>) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {onChange, schemaOptions, value} = this.props;
 

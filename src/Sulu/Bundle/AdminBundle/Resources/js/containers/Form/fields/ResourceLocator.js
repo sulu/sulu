@@ -64,7 +64,9 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
 
     constructor(props: FieldTypeProps<?string>) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {
             fieldTypeOptions: {

@@ -20,7 +20,9 @@ class SnippetAreas extends React.Component<ViewProps> {
 
     constructor(props: ViewProps) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {router} = this.props;
         const {

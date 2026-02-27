@@ -20,7 +20,9 @@ const RESOURCE_KEY = 'profile';
 class ProfileFormOverlay extends React.Component<Props> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable formStore: ResourceFormStore;

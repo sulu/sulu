@@ -7,10 +7,19 @@ import type {IObservableArray} from 'mobx';
 
 type Props = FieldTypeProps<?Array<string | number>>;
 
+function isArrayLike(value: mixed): boolean {
+    return !!value
+        && typeof value === 'object'
+        && typeof value.length === 'number'
+        && typeof value.forEach === 'function';
+}
+
 export default class Select extends React.Component<Props> {
     constructor(props: FieldTypeProps<?Array<string | number>>) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {onChange, schemaOptions, value} = this.props;
 
@@ -24,11 +33,14 @@ export default class Select extends React.Component<Props> {
             return;
         }
 
-        if (!Array.isArray(defaultOptions)) {
+        if (!Array.isArray(defaultOptions) && !isArrayLike(defaultOptions)) {
             throw new Error('The "default_values" schema option must be an array!');
         }
 
-        const defaultValues = defaultOptions.map(({name: defaultValue}) => {
+        const normalizedDefaultOptions = Array.isArray(defaultOptions)
+            ? defaultOptions
+            : Array.from((defaultOptions: any));
+        const defaultValues = normalizedDefaultOptions.map(({name: defaultValue}) => {
             if (typeof defaultValue !== 'number' && typeof defaultValue !== 'string') {
                 throw new Error('A single schema option of "default_values" must be a string or number');
             }
@@ -44,11 +56,16 @@ export default class Select extends React.Component<Props> {
     @computed get values(): Array<any> | IObservableArray<any> {
         const {values} = this.props.schemaOptions;
 
-        if (!values || !Array.isArray(values.value)) {
+        if (!values) {
             throw new Error('The "values" option has to be set for the Select FieldType');
         }
 
-        return values.value;
+        const schemaValues = values.value;
+        if (!Array.isArray(schemaValues) && !isArrayLike(schemaValues)) {
+            throw new Error('The "values" option has to be set for the Select FieldType');
+        }
+
+        return Array.isArray(schemaValues) ? schemaValues : Array.from((schemaValues: any));
     }
 
     handleChange = (value: Array<string | number>) => {

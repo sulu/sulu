@@ -17,7 +17,9 @@ export default class SearchStore {
         options: Object = {},
         locale: ?IObservableValue<string>
     ) {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.resourceKey = resourceKey;
         this.searchProperties = searchProperties;
         this.options = options;

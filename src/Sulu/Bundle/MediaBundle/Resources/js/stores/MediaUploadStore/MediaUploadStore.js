@@ -18,7 +18,9 @@ export default class MediaUploadStore {
     locale: IObservableValue<string>;
 
     constructor(media: ?Media, locale: IObservableValue<string>) {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.media = media;
         this.locale = locale;
     }

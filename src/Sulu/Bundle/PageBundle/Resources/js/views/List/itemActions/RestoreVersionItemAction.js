@@ -10,7 +10,9 @@ import type {Node} from 'react';
 export default class RestoreVersionItemAction extends AbstractListItemAction {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable versionIdToBeRestored: ?string | number = undefined;

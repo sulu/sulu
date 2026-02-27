@@ -78,7 +78,9 @@ class Preview extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         if (Preview.audienceTargeting) {
             this.targetGroupsStore = new ResourceListStore('target_groups');

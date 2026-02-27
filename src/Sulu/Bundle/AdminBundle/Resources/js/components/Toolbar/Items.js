@@ -19,7 +19,9 @@ const DEBOUNCE_TIME = 200;
 class Items extends React.Component<Props> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable expandedWidth: number = 0;

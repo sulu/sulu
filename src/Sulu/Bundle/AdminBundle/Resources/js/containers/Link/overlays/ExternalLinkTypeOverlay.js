@@ -21,7 +21,9 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
 
     constructor(props: LinkTypeOverlayProps) {
         super(props);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.updateUrl();
     }

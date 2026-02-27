@@ -4,7 +4,9 @@ import type {Message} from './types';
 
 class SnackbarStore {
     constructor() {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable.shallow messages: Array<Message> = [];

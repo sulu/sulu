@@ -5,7 +5,9 @@ import type {Localization} from './types';
 
 class LocalizationStore {
     constructor() {
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @observable localizations: Array<Localization> = [];

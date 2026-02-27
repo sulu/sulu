@@ -10,7 +10,9 @@ import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 class AnalyticsDomainSelect extends React.Component<FieldTypeProps<Array<string>>> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @computed get webspace() {

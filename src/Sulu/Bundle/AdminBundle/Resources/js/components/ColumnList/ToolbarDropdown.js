@@ -13,7 +13,9 @@ import type {ToolbarDropdown as ToolbarDropdownProps} from './types';
 class ToolbarDropdown extends React.Component<ToolbarDropdownProps> {
     constructor(...args: Array<any>) {
         super(...args);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     static defaultProps = {

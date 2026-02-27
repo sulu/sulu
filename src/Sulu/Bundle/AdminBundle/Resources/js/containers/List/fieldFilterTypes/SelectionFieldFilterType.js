@@ -30,7 +30,9 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
         value: ?Array<string | number>
     ) {
         super(onChange, parameters, value);
-        makeObservable(this);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.selectionStore = new MultiSelectionStore(
             this.resourceKey,
