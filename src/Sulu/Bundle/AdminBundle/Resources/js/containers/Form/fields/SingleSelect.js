@@ -5,9 +5,7 @@ import SingleSelectComponent from '../../../components/SingleSelect';
 import type {FieldTypeProps} from '../../../types';
 
 export default class SingleSelect extends React.Component<FieldTypeProps<string | number>> {
-    constructor(props: FieldTypeProps<string | number>) {
-        super(props);
-
+    componentDidMount() {
         const {onChange, schemaOptions, value} = this.props;
 
         const {

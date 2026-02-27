@@ -267,7 +267,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         this.value = value;
     };
 
-    handleBlockChange = (index: number, name: string, value: Object) => {
+    handleBlockChange = (index: number, name: string, value: Object, context?: Object) => {
         const {onChange} = this.props;
         const oldValues = this.value;
 
@@ -280,7 +280,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
         this.setValue(newValues);
 
-        onChange(newValues);
+        onChange(newValues, context);
     };
 
     handleBlocksChange = (value: Object) => {

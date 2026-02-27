@@ -11,7 +11,7 @@ type Props = {|
     errors?: ErrorCollection,
     formInspector: FormInspector,
     index: number,
-    onChange: (index: number, name: string, value: *) => void,
+    onChange: (index: number, name: string, value: *, context?: Object) => void,
     onFieldFinish: ?() => void,
     onSuccess: ?() => void,
     router: ?Router,
@@ -26,9 +26,9 @@ export default class FieldRenderer extends React.Component<Props> {
         showAllErrors: false,
     };
 
-    handleChange = (name: string, value: *) => {
+    handleChange = (name: string, value: *, context?: Object) => {
         const {index, onChange} = this.props;
-        onChange(index, name, value);
+        onChange(index, name, value, context);
     };
 
     render() {
