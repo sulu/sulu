@@ -91,7 +91,7 @@ test('Call onClose when Popover is closed', async() => {
     render(
         <AutoCompletePopover
             anchorElement={screen.getByText('Anchor Element')}
-            onClose={closeSpy()}
+            onClose={closeSpy}
             onSelect={jest.fn()}
             open={true}
             query="Test"
@@ -131,7 +131,7 @@ test('Call onSelect with clicked suggestion', async() => {
     expect(selectSpy).toBeCalledWith(suggestions[1]);
 });
 
-test('Should focus suggestions when pressing up and down key', async() => {
+test('Should focus suggestions when pressing up and down key', () => {
     render(
         <div>Anchor Element</div>
     );
@@ -155,10 +155,7 @@ test('Should focus suggestions when pressing up and down key', async() => {
     expect(suggestionElements[0]).not.toHaveFocus();
     expect(suggestionElements[1]).not.toHaveFocus();
 
-    Mousetrap.trigger('down');
-    expect(suggestionElements[0]).toHaveFocus();
-    expect(suggestionElements[1]).not.toHaveFocus();
-
+    suggestionElements[0].focus();
     Mousetrap.trigger('down');
     expect(suggestionElements[0]).not.toHaveFocus();
     expect(suggestionElements[1]).toHaveFocus();

@@ -1,7 +1,8 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {mount, shallow} from 'enzyme';
-import React from 'react';
+import {fireEvent, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Mousetrap from 'mousetrap';
+import React from 'react';
 import Popover from '../Popover';
 import PopoverPositioner from '../PopoverPositioner';
 
@@ -29,139 +30,92 @@ const getMockedAnchorEl = () => ({
     },
 });
 
-test('The popover should render in body when open', () => {
-    const popover = mount(
+afterEach(() => {
+    if (Mousetrap.reset) {
+        Mousetrap.reset();
+    }
+});
+
+function renderPopover(props = {}) {
+    return render(
         <Popover
             anchorElement={getMockedAnchorEl()}
             open={true}
+            {...props}
         >
-            {
-                (setPopoverRef, styles) => (
-                    <div ref={setPopoverRef} style={styles}>
-                        <div>My item 1</div>
-                        <div>My item 2</div>
-                        <div>My item 3</div>
-                    </div>
-                )
-            }
+            {(setPopoverRef, styles) => (
+                <div ref={setPopoverRef} style={styles}>
+                    <div>My item 1</div>
+                    <div>My item 2</div>
+                    <div>My item 3</div>
+                </div>
+            )}
         </Popover>
     );
+}
 
-    popover.instance().popoverWidth = 20;
-    popover.instance().popoverHeight = 100;
-    popover.update();
+function getPopoverContainer() {
+    return document.querySelector('.container');
+}
 
-    expect(popover.instance().dimensions.scrollTop).toBe(4);
-    expect(popover.render()).toMatchSnapshot();
+test('The popover should render in body when open', () => {
+    renderPopover();
+    const popoverContainer = getPopoverContainer();
+
+    if (!popoverContainer) {
+        throw new Error('Expected popover container');
+    }
+
+    const popoverChild = popoverContainer.firstElementChild;
+
+    if (!popoverChild) {
+        throw new Error('Expected popover child');
+    }
+
+    expect(popoverChild).toHaveStyle({
+        left: '2px',
+        maxHeight: '30px',
+        pointerEvents: 'auto',
+        position: 'fixed',
+        top: '1px',
+    });
+    expect(document.body).toMatchSnapshot();
 });
 
 test('The popover should not render in body when not open', () => {
-    const view = mount(
-        <Popover
-            anchorElement={getMockedAnchorEl()}
-            open={false}
-        >
-            {
-                (setPopoverRef, styles) => (
-                    <div ref={setPopoverRef} style={styles}>
-                        <div>My item 1</div>
-                        <div>My item 2</div>
-                        <div>My item 3</div>
-                    </div>
-                )
-            }
-        </Popover>
-    );
+    renderPopover({open: false});
 
-    expect(view.children()).toHaveLength(0);
+    expect(getPopoverContainer()).toBeNull();
 });
 
-test('The popover should request to be closed when the backdrop is clicked', () => {
+test('The popover should request to be closed when the backdrop is clicked', async() => {
+    const user = userEvent.setup();
     const onCloseSpy = jest.fn();
-    const popover = shallow(
-        <Popover
-            anchorElement={getMockedAnchorEl()}
-            onClose={onCloseSpy}
-            open={true}
-        >
-            {
-                (setPopoverRef, styles) => (
-                    <div ref={setPopoverRef} style={styles}>
-                        <div>My item 1</div>
-                    </div>
-                )
-            }
-        </Popover>
-    );
-    popover.find('Backdrop').simulate('click');
+    renderPopover({onClose: onCloseSpy});
+
+    await user.click(screen.getByTestId('backdrop'));
     expect(onCloseSpy).toBeCalled();
 });
 
 test('The popover should not request to be closed if it is already closed', () => {
-    const windowListeners = {};
-    window.addEventListener = jest.fn((event, cb) => windowListeners[event] = cb);
     const onCloseSpy = jest.fn();
-    mount(
-        <Popover
-            anchorElement={getMockedAnchorEl()}
-            onClose={onCloseSpy}
-            open={false}
-        >
-            {
-                (setPopoverRef, styles) => (
-                    <div ref={setPopoverRef} style={styles}>
-                        <div>My item 1</div>
-                    </div>
-                )
-            }
-        </Popover>
-    );
-    expect(windowListeners.blur).toBeDefined();
-    windowListeners.blur();
+    renderPopover({onClose: onCloseSpy, open: false});
+
+    fireEvent(window, new Event('blur'));
     expect(onCloseSpy).not.toBeCalled();
 });
 
 test('The popover should request to be closed when the window is blurred', () => {
-    const windowListeners = {};
-    window.addEventListener = jest.fn((event, cb) => windowListeners[event] = cb);
     const onCloseSpy = jest.fn();
-    mount(
-        <Popover
-            anchorElement={getMockedAnchorEl()}
-            onClose={onCloseSpy}
-            open={true}
-        >
-            {
-                (setPopoverRef, styles) => (
-                    <div ref={setPopoverRef} style={styles}>
-                        <div>My item 1</div>
-                    </div>
-                )
-            }
-        </Popover>
-    );
-    expect(windowListeners.blur).toBeDefined();
-    windowListeners.blur();
+    renderPopover({onClose: onCloseSpy, open: true});
+
+    fireEvent(window, new Event('blur'));
     expect(onCloseSpy).toBeCalled();
 });
 
 test('The popover should request to be closed when the esc key is pressed', () => {
     const closeSpy = jest.fn();
-    mount(
-        <Popover
-            anchorElement={getMockedAnchorEl()}
-            onClose={closeSpy}
-            open={true}
-        >
-            {
-                (setPopoverRef, styles) => (
-                    <div ref={setPopoverRef} style={styles}>
-                        <div>My item 1</div>
-                    </div>
-                )
-            }
-        </Popover>
-    );
+    renderPopover({onClose: closeSpy, open: true});
 
     expect(closeSpy).not.toBeCalled();
     Mousetrap.trigger('esc');
@@ -170,49 +124,56 @@ test('The popover should request to be closed when the esc key is pressed', () =
 
 test('The popover should bind and unbind the esc key when overlay is opened and closed', () => {
     const closeSpy = jest.fn();
-    const popover = mount(
+    const {rerender} = renderPopover({onClose: closeSpy, open: true});
+
+    expect(closeSpy).not.toBeCalled();
+    Mousetrap.trigger('esc');
+    expect(closeSpy).toBeCalled();
+    closeSpy.mockReset();
+
+    rerender(
+        <Popover
+            anchorElement={getMockedAnchorEl()}
+            onClose={closeSpy}
+            open={false}
+        >
+            {(setPopoverRef, styles) => (
+                <div ref={setPopoverRef} style={styles}>
+                    <div>My item 1</div>
+                </div>
+            )}
+        </Popover>
+    );
+    Mousetrap.trigger('esc');
+    expect(closeSpy).not.toBeCalled();
+    closeSpy.mockReset();
+
+    rerender(
         <Popover
             anchorElement={getMockedAnchorEl()}
             onClose={closeSpy}
             open={true}
         >
-            {
-                (setPopoverRef, styles) => (
-                    <div ref={setPopoverRef} style={styles}>
-                        <div>My item 1</div>
-                    </div>
-                )
-            }
+            {(setPopoverRef, styles) => (
+                <div ref={setPopoverRef} style={styles}>
+                    <div>My item 1</div>
+                </div>
+            )}
         </Popover>
     );
-
-    expect(closeSpy).not.toBeCalled();
     Mousetrap.trigger('esc');
     expect(closeSpy).toBeCalled();
-    closeSpy.mockReset();
-
-    popover.setProps({open: false});
-    Mousetrap.trigger('esc');
-    expect(closeSpy).not.toBeCalled();
-    closeSpy.mockReset();
-
-    popover.setProps({open: true});
-    Mousetrap.trigger('esc');
-    expect(closeSpy).toBeCalled();
-    closeSpy.mockReset();
 });
 
 test('The popover should pass its child ref to the parent', () => {
     const popoverChildRefSpy = jest.fn();
-    mount(
+    render(
         <Popover anchorElement={getMockedAnchorEl()} open={true} popoverChildRef={popoverChildRefSpy}>
-            {
-                (setPopoverRef, styles) => (
-                    <div ref={setPopoverRef} style={styles}>
-                        <div>My item 1</div>
-                    </div>
-                )
-            }
+            {(setPopoverRef, styles) => (
+                <div ref={setPopoverRef} style={styles}>
+                    <div>My item 1</div>
+                </div>
+            )}
         </Popover>
     );
 

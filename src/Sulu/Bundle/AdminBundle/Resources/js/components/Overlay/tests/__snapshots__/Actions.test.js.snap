@@ -1,28 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should render 1`] = `
-<div
-  class="actions"
->
-  <button
-    class="button link hasText"
-    type="button"
+<DocumentFragment>
+  <div
+    class="actions"
   >
-    <span
-      class="buttonText"
+    <button
+      class="button link hasText"
+      type="button"
     >
-      Action 1
-    </span>
-  </button>
-  <button
-    class="button link hasText"
-    type="button"
-  >
-    <span
-      class="buttonText"
+      <span
+        class="buttonText"
+      >
+        Action 1
+      </span>
+    </button>
+    <button
+      class="button link hasText"
+      type="button"
     >
-      Action 2
-    </span>
-  </button>
-</div>
+      <span
+        class="buttonText"
+      >
+        Action 2
+      </span>
+    </button>
+  </div>
+</DocumentFragment>
 `;

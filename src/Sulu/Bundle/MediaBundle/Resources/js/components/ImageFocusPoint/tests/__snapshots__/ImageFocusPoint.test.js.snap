@@ -1,941 +1,961 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`] = `
-<div
-  class="imageFocusPoint"
->
+<DocumentFragment>
   <div
-    class="focusPoints"
-    style="height: 0px; width: 0px;"
+    class="imageFocusPoint"
   >
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
+    <div
+      class="focusPoints"
+      style="height: 300px; width: 300px;"
+    >
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      >
+        <div
+          style="transform: rotate(-45deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      >
+        <div
+          style="transform: rotate(0deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      >
+        <div
+          style="transform: rotate(45deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      >
+        <div
+          style="transform: rotate(-90deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell active"
+        disabled=""
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      >
+        <div
+          style="transform: rotate(90deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+    </div>
+    <img
+      class="image"
+      src="http://lorempixel.com/300/300"
     />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(-45deg);"
-      >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(0deg);"
-      >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(45deg);"
-      >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(-90deg);"
-      >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell active"
-      disabled=""
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(90deg);"
-      >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
   </div>
-  <img
-    class="image"
-    src="http://lorempixel.com/300/300"
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] = `
-<div
-  class="imageFocusPoint"
->
+<DocumentFragment>
   <div
-    class="focusPoints"
-    style="height: 0px; width: 0px;"
+    class="imageFocusPoint"
   >
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
+    <div
+      class="focusPoints"
+      style="height: 300px; width: 300px;"
     >
-      <div
-        style="transform: rotate(0deg);"
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(45deg);"
+        <div
+          style="transform: rotate(0deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell active"
-      disabled=""
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(90deg);"
+        <div
+          style="transform: rotate(45deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell active"
+        disabled=""
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
+        <div
+          style="transform: rotate(90deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+    </div>
+    <img
+      class="image"
+      src="http://lorempixel.com/300/300"
     />
   </div>
-  <img
-    class="image"
-    src="http://lorempixel.com/300/300"
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] = `
-<div
-  class="imageFocusPoint"
->
+<DocumentFragment>
   <div
-    class="focusPoints"
-    style="height: 0px; width: 0px;"
+    class="imageFocusPoint"
   >
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
+    <div
+      class="focusPoints"
+      style="height: 300px; width: 300px;"
     >
-      <div
-        style="transform: rotate(-45deg);"
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(0deg);"
+        <div
+          style="transform: rotate(-45deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(-90deg);"
+        <div
+          style="transform: rotate(0deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell active"
-      disabled=""
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
+        <div
+          style="transform: rotate(-90deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell active"
+        disabled=""
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+    </div>
+    <img
+      class="image"
+      src="http://lorempixel.com/300/300"
     />
   </div>
-  <img
-    class="image"
-    src="http://lorempixel.com/300/300"
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Should render ImageFocusPoint with focusing the center-center point 1`] = `
-<div
-  class="imageFocusPoint"
->
+<DocumentFragment>
   <div
-    class="focusPoints"
-    style="height: 0px; width: 0px;"
+    class="imageFocusPoint"
   >
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
+    <div
+      class="focusPoints"
+      style="height: 300px; width: 300px;"
     >
-      <div
-        style="transform: rotate(-45deg);"
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(0deg);"
+        <div
+          style="transform: rotate(-45deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(45deg);"
+        <div
+          style="transform: rotate(0deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(-90deg);"
+        <div
+          style="transform: rotate(45deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell active"
-      disabled=""
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
+        <div
+          style="transform: rotate(-90deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell active"
+        disabled=""
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      >
+        <div
+          style="transform: rotate(90deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      >
+        <div
+          style="transform: rotate(225deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      >
+        <div
+          style="transform: rotate(180deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      >
+        <div
+          style="transform: rotate(125deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+    </div>
+    <img
+      class="image"
+      src="http://lorempixel.com/300/300"
     />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(90deg);"
-      >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(225deg);"
-      >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(180deg);"
-      >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(125deg);"
-      >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
   </div>
-  <img
-    class="image"
-    src="http://lorempixel.com/300/300"
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Should render ImageFocusPoint with focusing the center-left point 1`] = `
-<div
-  class="imageFocusPoint"
->
+<DocumentFragment>
   <div
-    class="focusPoints"
-    style="height: 0px; width: 0px;"
+    class="imageFocusPoint"
   >
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
+    <div
+      class="focusPoints"
+      style="height: 300px; width: 300px;"
     >
-      <div
-        style="transform: rotate(0deg);"
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(45deg);"
+        <div
+          style="transform: rotate(0deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell active"
-      disabled=""
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(90deg);"
+        <div
+          style="transform: rotate(45deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell active"
+        disabled=""
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(180deg);"
+        <div
+          style="transform: rotate(90deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(125deg);"
+        <div
+          style="transform: rotate(180deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
+        <div
+          style="transform: rotate(125deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+    </div>
+    <img
+      class="image"
+      src="http://lorempixel.com/300/300"
     />
   </div>
-  <img
-    class="image"
-    src="http://lorempixel.com/300/300"
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Should render ImageFocusPoint with focusing the center-right point 1`] = `
-<div
-  class="imageFocusPoint"
->
+<DocumentFragment>
   <div
-    class="focusPoints"
-    style="height: 0px; width: 0px;"
+    class="imageFocusPoint"
   >
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
+    <div
+      class="focusPoints"
+      style="height: 300px; width: 300px;"
+    >
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      >
+        <div
+          style="transform: rotate(-45deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      >
+        <div
+          style="transform: rotate(0deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      >
+        <div
+          style="transform: rotate(-90deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell active"
+        disabled=""
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      >
+        <div
+          style="transform: rotate(225deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      >
+        <div
+          style="transform: rotate(180deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+    </div>
+    <img
+      class="image"
+      src="http://lorempixel.com/300/300"
     />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(-45deg);"
-      >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(0deg);"
-      >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(-90deg);"
-      >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell active"
-      disabled=""
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(225deg);"
-      >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(180deg);"
-      >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
   </div>
-  <img
-    class="image"
-    src="http://lorempixel.com/300/300"
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = `
-<div
-  class="imageFocusPoint"
->
+<DocumentFragment>
   <div
-    class="focusPoints"
-    style="height: 0px; width: 0px;"
+    class="imageFocusPoint"
   >
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
+    <div
+      class="focusPoints"
+      style="height: 300px; width: 300px;"
     >
-      <div
-        style="transform: rotate(-90deg);"
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell active"
-      disabled=""
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(90deg);"
+        <div
+          style="transform: rotate(-90deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell active"
+        disabled=""
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(225deg);"
+        <div
+          style="transform: rotate(90deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(180deg);"
+        <div
+          style="transform: rotate(225deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(125deg);"
+        <div
+          style="transform: rotate(180deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
+        <div
+          style="transform: rotate(125deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+    </div>
+    <img
+      class="image"
+      src="http://lorempixel.com/300/300"
     />
   </div>
-  <img
-    class="image"
-    src="http://lorempixel.com/300/300"
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
-<div
-  class="imageFocusPoint"
->
+<DocumentFragment>
   <div
-    class="focusPoints"
-    style="height: 0px; width: 0px;"
+    class="imageFocusPoint"
   >
-    <button
-      class="imageFocusPointCell active"
-      disabled=""
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
+    <div
+      class="focusPoints"
+      style="height: 300px; width: 300px;"
     >
-      <div
-        style="transform: rotate(90deg);"
+      <button
+        class="imageFocusPointCell active"
+        disabled=""
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(180deg);"
+        <div
+          style="transform: rotate(90deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(125deg);"
+        <div
+          style="transform: rotate(180deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
+        <div
+          style="transform: rotate(125deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+    </div>
+    <img
+      class="image"
+      src="http://lorempixel.com/300/300"
     />
   </div>
-  <img
-    class="image"
-    src="http://lorempixel.com/300/300"
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
-<div
-  class="imageFocusPoint"
->
+<DocumentFragment>
   <div
-    class="focusPoints"
-    style="height: 0px; width: 0px;"
+    class="imageFocusPoint"
   >
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
+    <div
+      class="focusPoints"
+      style="height: 300px; width: 300px;"
     >
-      <div
-        style="transform: rotate(-90deg);"
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell active"
-      disabled=""
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(225deg);"
+        <div
+          style="transform: rotate(-90deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell active"
+        disabled=""
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    >
-      <div
-        style="transform: rotate(180deg);"
+        <div
+          style="transform: rotate(225deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
       >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </div>
-    </button>
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
-    />
-    <button
-      class="imageFocusPointCell"
-      style="width: 33.333333333333336%; height: 33.333333333333336%;"
-      type="button"
+        <div
+          style="transform: rotate(180deg);"
+        >
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </div>
+      </button>
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+      <button
+        class="imageFocusPointCell"
+        style="width: 33.333333333333336%; height: 33.333333333333336%;"
+        type="button"
+      />
+    </div>
+    <img
+      class="image"
+      src="http://lorempixel.com/300/300"
     />
   </div>
-  <img
-    class="image"
-    src="http://lorempixel.com/300/300"
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Should render Loader at the beginning 1`] = `
-<div
-  class="imageFocusPoint"
->
+<DocumentFragment>
   <div
-    class="spinner"
-    style="width: 40px; height: 40px;"
+    class="imageFocusPoint"
   >
     <div
-      class="doubleBounce1"
-    />
-    <div
-      class="doubleBounce2"
+      class="spinner"
+      style="width: 40px; height: 40px;"
+    >
+      <div
+        class="doubleBounce1"
+      />
+      <div
+        class="doubleBounce2"
+      />
+    </div>
+    <img
+      class="image"
+      src="http://lorempixel.com/300/300"
     />
   </div>
-  <img
-    class="image"
-    src="http://lorempixel.com/300/300"
-  />
-</div>
+</DocumentFragment>
 `;

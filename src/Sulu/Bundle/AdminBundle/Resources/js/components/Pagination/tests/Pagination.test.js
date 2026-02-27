@@ -194,7 +194,7 @@ test('Click previous link should call callback', async() => {
         </Pagination>
     );
 
-    await userEvent.click(screen.queryByLabelText('su-angle-left'));
+    await userEvent.click(screen.getByLabelText('su-angle-left'));
     expect(clickSpy).toBeCalledWith(4);
 });
 
@@ -212,7 +212,7 @@ test('Click next link should call callback', async() => {
         </Pagination>
     );
 
-    await userEvent.click(screen.queryByLabelText('su-angle-right'));
+    await userEvent.click(screen.getByLabelText('su-angle-right'));
     expect(clickSpy).toBeCalledWith(7);
 });
 
@@ -230,7 +230,7 @@ test('Click previous link on first page should not call callback', async() => {
         </Pagination>
     );
 
-    await userEvent.click(screen.queryByLabelText('su-angle-left'));
+    await userEvent.click(screen.getByLabelText('su-angle-left'));
     expect(clickSpy).not.toBeCalled();
 });
 
@@ -248,7 +248,7 @@ test('Click next link on last page should not call callback', async() => {
         </Pagination>
     );
 
-    await userEvent.click(screen.queryByLabelText('su-angle-right'));
+    await userEvent.click(screen.getByLabelText('su-angle-right'));
     expect(clickSpy).not.toBeCalled();
 });
 
@@ -266,8 +266,8 @@ test('Change limit should call callback', async() => {
         </Pagination>
     );
 
-    await userEvent.click(screen.queryByLabelText('su-angle-down'));
-    await userEvent.click(screen.queryByText('20'));
+    await userEvent.click(screen.getByLabelText('su-angle-down'));
+    await userEvent.click(screen.getByText('20'));
     expect(changeSpy).toBeCalledWith(20);
 });
 
@@ -285,8 +285,8 @@ test('Change limit to current limit should not call callback', async() => {
         </Pagination>
     );
 
-    await userEvent.click(screen.queryByLabelText('su-angle-down'));
-    await userEvent.click(screen.queryAllByText('10')[1]);
+    await userEvent.click(screen.getByLabelText('su-angle-down'));
+    await userEvent.click(screen.getAllByText('10')[1]);
     expect(changeSpy).not.toBeCalled();
 });
 
@@ -304,7 +304,7 @@ test('Change callback should be called on blur when input was changed', async() 
         </Pagination>
     );
 
-    const input = screen.queryByDisplayValue('2');
+    const input = screen.getByDisplayValue('2');
     await userEvent.type(input, '5');
     expect(changeSpy).not.toBeCalled();
 
@@ -326,7 +326,7 @@ test('Change callback should be called on enter when input was changed', async()
         </Pagination>
     );
 
-    const input = screen.queryByDisplayValue('2');
+    const input = screen.getByDisplayValue('2');
     await userEvent.type(input, '[Enter]');
     expect(changeSpy).not.toBeCalled();
 
@@ -351,7 +351,7 @@ test('Change callback should be called with 1 if input value is lower than 1', a
         </Pagination>
     );
 
-    const input = screen.queryByDisplayValue('6');
+    const input = screen.getByDisplayValue('6');
     await userEvent.clear(input);
     await userEvent.type(input, '0');
     expect(changeSpy).not.toBeCalled();
@@ -374,7 +374,7 @@ test('Change callback should be called with value of totalPages if input value i
         </Pagination>
     );
 
-    const input = screen.queryByDisplayValue('6');
+    const input = screen.getByDisplayValue('6');
     await userEvent.clear(input);
     await userEvent.type(input, '12');
     expect(changeSpy).not.toBeCalled();
@@ -397,7 +397,7 @@ test('Change callback should not be called if input value is equal to currentPag
         </Pagination>
     );
 
-    const input = screen.queryByDisplayValue('6');
+    const input = screen.getByDisplayValue('6');
     await userEvent.clear(input);
     await userEvent.type(input, '6');
     expect(changeSpy).not.toBeCalled();

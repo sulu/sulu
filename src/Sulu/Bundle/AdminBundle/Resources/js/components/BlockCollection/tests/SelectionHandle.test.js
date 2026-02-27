@@ -1,42 +1,51 @@
 // @flow
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
 import SelectionHandle from '../SelectionHandle';
 
 test('Render selection handle unchecked', () => {
-    expect(render(
+    const {asFragment} = render(
         <SelectionHandle checked={false} onChange={jest.fn()} />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render selection handle checked', () => {
-    expect(render(
+    const {asFragment} = render(
         <SelectionHandle checked={true} onChange={jest.fn()} />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Change checkbox should trigger onChange', () => {
+test('Change checkbox should trigger onChange', async() => {
     const changeSpy = jest.fn();
+    const user = userEvent.setup();
 
-    const component = shallow(
+    render(
         <SelectionHandle checked={true} onChange={changeSpy} />
     );
 
-    expect(component.find('Checkbox').length).toBe(1);
-
-    component.find('Checkbox').simulate('change');
+    await user.click(screen.getByRole('checkbox'));
 
     expect(changeSpy).toBeCalled();
 });
 
-test('Click on container should trigger onChange', () => {
+test('Click on container should trigger onChange', async() => {
     const changeSpy = jest.fn();
-
-    const component = mount(
+    const user = userEvent.setup();
+    const {container} = render(
         <SelectionHandle checked={true} onChange={changeSpy} />
     );
 
-    component.simulate('click', {stopPropagation: jest.fn()});
+    const handle = container.firstElementChild;
+    if (!handle) {
+        throw new Error('Expected selection handle element');
+    }
+
+    await user.click(handle);
 
     expect(changeSpy).toBeCalled();
 });

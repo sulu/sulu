@@ -1,80 +1,136 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should render a fully filled block list 1`] = `
-<section
-  class="blocks"
->
-  <div
-    class="blockCollectionActionButtonContainer"
+<DocumentFragment>
+  <section
+    class="blocks"
   >
-    <button
-      class="blockCollectionActionButton"
-      type="button"
+    <div
+      class="blockCollectionActionButtonContainer"
     >
-      <span
-        aria-label="su-check"
-        class="su-check blockCollectionActionButtonIcon"
-      />
-      <span
-        class="blockCollectionActionButtonText"
-      >
-        sulu_admin.select_multiple_blocks
-      </span>
-    </button>
-    <button
-      class="blockCollectionActionButton"
-      type="button"
-    >
-      <span
-        aria-label="su-expand-vertical"
-        class="su-expand-vertical blockCollectionActionButtonIcon"
-      />
-      <span
-        class="blockCollectionActionButtonText"
-      >
-        sulu_admin.expand_all_blocks
-      </span>
-    </button>
-  </div>
-  <div
-    class="spacer"
-  />
-  <div
-    class="sortableBlockList"
-  >
-    <section
-      class="block"
-      role="switch"
-    >
-      <div
-        class="handle"
+      <button
+        class="blockCollectionActionButton"
+        type="button"
       >
         <span
-          aria-label="su-more"
-          class="su-more sortableHandle"
+          aria-label="su-check"
+          class="su-check blockCollectionActionButtonIcon"
         />
-      </div>
-      <div
-        class="content"
-      >
-        <header
-          class="header"
+        <span
+          class="blockCollectionActionButtonText"
         >
-          <div
-            class="icons"
+          sulu_admin.select_multiple_blocks
+        </span>
+      </button>
+      <button
+        class="blockCollectionActionButton"
+        type="button"
+      >
+        <span
+          aria-label="su-expand-vertical"
+          class="su-expand-vertical blockCollectionActionButtonIcon"
+        />
+        <span
+          class="blockCollectionActionButtonText"
+        >
+          sulu_admin.expand_all_blocks
+        </span>
+      </button>
+    </div>
+    <div
+      class="spacer"
+    />
+    <div
+      class="sortableBlockList"
+    >
+      <section
+        class="block"
+        role="switch"
+      >
+        <div
+          class="handle"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more sortableHandle"
+          />
+        </div>
+        <div
+          class="content"
+        >
+          <header
+            class="header"
+          >
+            <div
+              class="icons"
+            />
+            <span
+              aria-label="su-expand-vertical"
+              class="su-expand-vertical"
+            />
+          </header>
+          <article
+            class="children"
+          />
+        </div>
+      </section>
+      <div
+        class="addButtonContainer addButtonDivider"
+      >
+        <button
+          class="button secondary hasText addButton"
+          type="button"
+        >
+          <span
+            aria-label="su-plus"
+            class="su-plus buttonIcon"
           />
           <span
-            aria-label="su-expand-vertical"
-            class="su-expand-vertical"
-          />
-        </header>
-        <article
-          class="children"
-        />
+            class="buttonText"
+          >
+            sulu_admin.add_block
+          </span>
+        </button>
       </div>
-    </section>
+      <section
+        class="block"
+        role="switch"
+      >
+        <div
+          class="handle"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more sortableHandle"
+          />
+        </div>
+        <div
+          class="content"
+        >
+          <header
+            class="header"
+          >
+            <div
+              class="icons"
+            >
+              <span
+                aria-label="su-eye"
+                class="su-eye"
+              />
+            </div>
+            <span
+              aria-label="su-expand-vertical"
+              class="su-expand-vertical"
+            />
+          </header>
+          <article
+            class="children"
+          />
+        </div>
+      </section>
+    </div>
     <div
-      class="addButtonContainer addButtonDivider"
+      class="addButtonContainer"
     >
       <button
         class="button secondary hasText addButton"
@@ -91,136 +147,130 @@ exports[`Should render a fully filled block list 1`] = `
         </span>
       </button>
     </div>
-    <section
-      class="block"
-      role="switch"
-    >
-      <div
-        class="handle"
-      >
-        <span
-          aria-label="su-more"
-          class="su-more sortableHandle"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <header
-          class="header"
-        >
-          <div
-            class="icons"
-          >
-            <span
-              aria-label="su-eye"
-              class="su-eye"
-            />
-          </div>
-          <span
-            aria-label="su-expand-vertical"
-            class="su-expand-vertical"
-          />
-        </header>
-        <article
-          class="children"
-        />
-      </div>
-    </section>
-  </div>
-  <div
-    class="addButtonContainer"
-  >
-    <button
-      class="button secondary hasText addButton"
-      type="button"
-    >
-      <span
-        aria-label="su-plus"
-        class="su-plus buttonIcon"
-      />
-      <span
-        class="buttonText"
-      >
-        sulu_admin.add_block
-      </span>
-    </button>
-  </div>
-</section>
+  </section>
+</DocumentFragment>
 `;
 
 exports[`Should render a non-movable block list 1`] = `
-<section
-  class="blocks"
->
-  <div
-    class="blockCollectionActionButtonContainer"
+<DocumentFragment>
+  <section
+    class="blocks"
   >
-    <button
-      class="blockCollectionActionButton"
-      type="button"
-    >
-      <span
-        aria-label="su-check"
-        class="su-check blockCollectionActionButtonIcon"
-      />
-      <span
-        class="blockCollectionActionButtonText"
-      >
-        sulu_admin.select_multiple_blocks
-      </span>
-    </button>
-    <button
-      class="blockCollectionActionButton"
-      type="button"
-    >
-      <span
-        aria-label="su-collapse-vertical"
-        class="su-collapse-vertical blockCollectionActionButtonIcon"
-      />
-      <span
-        class="blockCollectionActionButtonText"
-      >
-        sulu_admin.collapse_all_blocks
-      </span>
-    </button>
-  </div>
-  <div
-    class="spacer"
-  />
-  <div
-    class="sortableBlockList"
-  >
-    <section
-      class="block expanded"
-      role="switch"
-    >
-      <div
-        class="content"
-      >
-        <header
-          class="header"
-        >
-          <div
-            class="iconButtons"
-          >
-            <button
-              type="button"
-            >
-              <span
-                aria-label="su-more-circle"
-                class="su-more-circle"
-              />
-            </button>
-          </div>
-        </header>
-        <article
-          class="children"
-        />
-      </div>
-    </section>
     <div
-      class="addButtonContainer addButtonDivider"
+      class="blockCollectionActionButtonContainer"
+    >
+      <button
+        class="blockCollectionActionButton"
+        type="button"
+      >
+        <span
+          aria-label="su-check"
+          class="su-check blockCollectionActionButtonIcon"
+        />
+        <span
+          class="blockCollectionActionButtonText"
+        >
+          sulu_admin.select_multiple_blocks
+        </span>
+      </button>
+      <button
+        class="blockCollectionActionButton"
+        type="button"
+      >
+        <span
+          aria-label="su-collapse-vertical"
+          class="su-collapse-vertical blockCollectionActionButtonIcon"
+        />
+        <span
+          class="blockCollectionActionButtonText"
+        >
+          sulu_admin.collapse_all_blocks
+        </span>
+      </button>
+    </div>
+    <div
+      class="spacer"
+    />
+    <div
+      class="sortableBlockList"
+    >
+      <section
+        class="block expanded"
+        role="switch"
+      >
+        <div
+          class="content"
+        >
+          <header
+            class="header"
+          >
+            <div
+              class="iconButtons"
+            >
+              <button
+                type="button"
+              >
+                <span
+                  aria-label="su-more-circle"
+                  class="su-more-circle"
+                />
+              </button>
+            </div>
+          </header>
+          <article
+            class="children"
+          />
+        </div>
+      </section>
+      <div
+        class="addButtonContainer addButtonDivider"
+      >
+        <button
+          class="button secondary hasText addButton"
+          type="button"
+        >
+          <span
+            aria-label="su-plus"
+            class="su-plus buttonIcon"
+          />
+          <span
+            class="buttonText"
+          >
+            sulu_admin.add_block
+          </span>
+        </button>
+      </div>
+      <section
+        class="block expanded"
+        role="switch"
+      >
+        <div
+          class="content"
+        >
+          <header
+            class="header"
+          >
+            <div
+              class="iconButtons"
+            >
+              <button
+                type="button"
+              >
+                <span
+                  aria-label="su-more-circle"
+                  class="su-more-circle"
+                />
+              </button>
+            </div>
+          </header>
+          <article
+            class="children"
+          />
+        </div>
+      </section>
+    </div>
+    <div
+      class="addButtonContainer"
     >
       <button
         class="button secondary hasText addButton"
@@ -237,52 +287,6 @@ exports[`Should render a non-movable block list 1`] = `
         </span>
       </button>
     </div>
-    <section
-      class="block expanded"
-      role="switch"
-    >
-      <div
-        class="content"
-      >
-        <header
-          class="header"
-        >
-          <div
-            class="iconButtons"
-          >
-            <button
-              type="button"
-            >
-              <span
-                aria-label="su-more-circle"
-                class="su-more-circle"
-              />
-            </button>
-          </div>
-        </header>
-        <article
-          class="children"
-        />
-      </div>
-    </section>
-  </div>
-  <div
-    class="addButtonContainer"
-  >
-    <button
-      class="button secondary hasText addButton"
-      type="button"
-    >
-      <span
-        aria-label="su-plus"
-        class="su-plus buttonIcon"
-      />
-      <span
-        class="buttonText"
-      >
-        sulu_admin.add_block
-      </span>
-    </button>
-  </div>
-</section>
+  </section>
+</DocumentFragment>
 `;

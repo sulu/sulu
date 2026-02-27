@@ -1,253 +1,263 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should render item as disabled 1`] = `
-<div
-  class="item disabled"
-  role="button"
->
-  <span
-    class="buttons"
-  />
-  <span
-    class="text"
+<DocumentFragment>
+  <div
+    class="item disabled"
+    role="button"
   >
-    <div
-      aria-label="Test"
-      class="croppedText"
-      title="Test"
+    <span
+      class="buttons"
+    />
+    <span
+      class="text"
     >
       <div
-        aria-hidden="true"
-        class="front"
+        aria-label="Test"
+        class="croppedText"
+        title="Test"
       >
-        Te
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          Te
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+            st
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          Test
+        </div>
       </div>
-      <div
-        aria-hidden="true"
-        class="back"
-      >
-        <span>
-          st
-        </span>
-      </div>
-      <div
-        class="whole"
-      >
-        Test
-      </div>
-    </div>
-  </span>
-  <span
-    class="children"
-  />
-</div>
+    </span>
+    <span
+      class="children"
+    />
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Should render item as not selected by default 1`] = `
-<div
-  class="item"
-  role="button"
->
-  <span
-    class="buttons"
-  />
-  <span
-    class="text"
+<DocumentFragment>
+  <div
+    class="item"
+    role="button"
   >
-    <div
-      aria-label="Test"
-      class="croppedText"
-      title="Test"
+    <span
+      class="buttons"
+    />
+    <span
+      class="text"
     >
       <div
-        aria-hidden="true"
-        class="front"
+        aria-label="Test"
+        class="croppedText"
+        title="Test"
       >
-        Te
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          Te
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+            st
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          Test
+        </div>
       </div>
-      <div
-        aria-hidden="true"
-        class="back"
-      >
-        <span>
-          st
-        </span>
-      </div>
-      <div
-        class="whole"
-      >
-        Test
-      </div>
-    </div>
-  </span>
-  <span
-    class="children"
-  />
-</div>
+    </span>
+    <span
+      class="children"
+    />
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Should render item as selected 1`] = `
-<div
-  class="item selected"
-  role="button"
->
-  <span
-    class="buttons"
-  />
-  <span
-    class="text"
+<DocumentFragment>
+  <div
+    class="item selected"
+    role="button"
   >
-    <div
-      aria-label="Test"
-      class="croppedText"
-      title="Test"
+    <span
+      class="buttons"
+    />
+    <span
+      class="text"
     >
       <div
-        aria-hidden="true"
-        class="front"
+        aria-label="Test"
+        class="croppedText"
+        title="Test"
       >
-        Te
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          Te
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+            st
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          Test
+        </div>
       </div>
-      <div
-        aria-hidden="true"
-        class="back"
-      >
-        <span>
-          st
-        </span>
-      </div>
-      <div
-        class="whole"
-      >
-        Test
-      </div>
-    </div>
-  </span>
-  <span
-    class="children"
-  />
-</div>
+    </span>
+    <span
+      class="children"
+    />
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Should render item with indicators 1`] = `
-<div
-  class="item"
-  role="button"
->
-  <span
-    class="buttons"
-  />
-  <span
-    class="text"
+<DocumentFragment>
+  <div
+    class="item"
+    role="button"
   >
-    <div
-      aria-label="Test with indicators"
-      class="croppedText"
-      title="Test with indicators"
+    <span
+      class="buttons"
+    />
+    <span
+      class="text"
     >
       <div
-        aria-hidden="true"
-        class="front"
+        aria-label="Test with indicators"
+        class="croppedText"
+        title="Test with indicators"
       >
-        Test with 
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          Test with 
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+            indicators
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          Test with indicators
+        </div>
       </div>
-      <div
-        aria-hidden="true"
-        class="back"
-      >
-        <span>
-          indicators
-        </span>
-      </div>
-      <div
-        class="whole"
-      >
-        Test with indicators
-      </div>
-    </div>
-  </span>
-  <span
-    class="indicator"
-  >
-    <span>
-      ghost
     </span>
-  </span>
-  <span
-    class="indicator"
-  >
-    <span>
-      shadow
+    <span
+      class="indicator"
+    >
+      <span>
+        ghost
+      </span>
     </span>
-  </span>
-  <span
-    class="children"
-  />
-</div>
+    <span
+      class="indicator"
+    >
+      <span>
+        shadow
+      </span>
+    </span>
+    <span
+      class="children"
+    />
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Should render item with order input 1`] = `
-<div
-  class="item orderFieldShown"
-  role="button"
->
+<DocumentFragment>
   <div
-    class="orderInput"
+    class="item orderFieldShown"
+    role="button"
   >
     <div
-      class="input default center"
+      class="orderInput"
     >
-      <input
-        type="text"
-        value="4"
-      />
+      <div
+        class="input default center"
+      >
+        <input
+          type="text"
+          value="4"
+        />
+      </div>
     </div>
+    <span
+      class="text"
+    >
+      <div
+        aria-label="Test with indicators"
+        class="croppedText"
+        title="Test with indicators"
+      >
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          Test with 
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+            indicators
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          Test with indicators
+        </div>
+      </div>
+    </span>
+    <span
+      class="indicator"
+    >
+      <span>
+        ghost
+      </span>
+    </span>
+    <span
+      class="indicator"
+    >
+      <span>
+        shadow
+      </span>
+    </span>
+    <span
+      class="children"
+    />
   </div>
-  <span
-    class="text"
-  >
-    <div
-      aria-label="Test with indicators"
-      class="croppedText"
-      title="Test with indicators"
-    >
-      <div
-        aria-hidden="true"
-        class="front"
-      >
-        Test with 
-      </div>
-      <div
-        aria-hidden="true"
-        class="back"
-      >
-        <span>
-          indicators
-        </span>
-      </div>
-      <div
-        class="whole"
-      >
-        Test with indicators
-      </div>
-    </div>
-  </span>
-  <span
-    class="indicator"
-  >
-    <span>
-      ghost
-    </span>
-  </span>
-  <span
-    class="indicator"
-  >
-    <span>
-      shadow
-    </span>
-  </span>
-  <span
-    class="children"
-  />
-</div>
+</DocumentFragment>
 `;
