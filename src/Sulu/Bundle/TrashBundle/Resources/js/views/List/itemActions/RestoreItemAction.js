@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {AbstractListItemAction} from 'sulu-admin-bundle/views';
 import {Dialog} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -11,6 +11,13 @@ import type {RestoreConfiguration} from '../../../types';
 import type {Node} from 'react';
 
 export default class RestoreItemAction extends AbstractListItemAction {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static restoreConfigurationMapping: {[resourceKey: string]: RestoreConfiguration} = {};
 
     @observable idToBeRestored: ?string | number = undefined;

@@ -1,5 +1,5 @@
 // @flow
-import {observable, action, toJS} from 'mobx';
+import {observable, action, toJS, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import FormOverlay from 'sulu-admin-bundle/containers/FormOverlay';
@@ -20,6 +20,13 @@ type Props = {
 
 @observer
 class RestoreFormOverlay extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static defaultProps = {
         confirmLoading: false,
     };

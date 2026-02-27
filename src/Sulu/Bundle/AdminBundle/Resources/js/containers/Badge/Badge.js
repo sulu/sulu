@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import jexl from 'jexl';
 import Router, {Route} from '../../services/Router';
@@ -30,6 +30,9 @@ class Badge extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {
             router,

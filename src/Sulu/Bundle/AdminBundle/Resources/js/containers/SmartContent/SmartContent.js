@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import MultiItemSelection from '../../components/MultiItemSelection';
 import {translate} from '../../utils/Translator';
@@ -34,6 +34,9 @@ class SmartContent extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.initialize();
     }
 

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import Input from '../../../components/Input';
 import SingleSelect from '../../../components/SingleSelect';
 import AbstractFieldFilterType from './AbstractFieldFilterType';
@@ -38,6 +38,9 @@ class NumberFieldFilterType extends AbstractFieldFilterType<?{[string]: ?number}
         value: ?{[string]: ?number}
     ) {
         super(onChange, parameters, value);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         if (value === undefined) {
             onChange({eq: undefined});

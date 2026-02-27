@@ -14,6 +14,13 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
     const nodeModulesPath = env && env.node_modules_path
         ? env.node_modules_path
         : path.resolve(projectRootPath, 'node_modules');
+    let mobxMajorVersion = undefined;
+    try {
+        const mobxPackage = require(path.resolve(nodeModulesPath, 'mobx/package.json'));
+        mobxMajorVersion = Number.parseInt(mobxPackage.version.split('.')[0], 10);
+    } catch (error) {
+        mobxMajorVersion = undefined;
+    }
 
     let publicDir = 'public';
     const composerConfig = require(path.resolve(projectRootPath, 'composer.json'));
@@ -50,6 +57,9 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
             // detect changes in "node_modules/@sulu": https://github.com/webpack/webpack/issues/11612
             managedPaths: [],
         },
+        ignoreWarnings: mobxMajorVersion === 4 ? [
+            /export 'makeObservable' \(imported as 'makeObservable'\) was not found in 'mobx'/,
+        ] : [],
         devtool: argv.mode === 'development' ? 'eval-source-map' : 'source-map',
         plugins: [
             new MiniCssExtractPlugin({

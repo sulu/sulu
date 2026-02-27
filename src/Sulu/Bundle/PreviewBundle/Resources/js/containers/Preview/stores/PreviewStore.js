@@ -1,8 +1,8 @@
 // @flow
-import {action, computed, observable, toJS} from 'mobx';
+import {action, computed, observable, toJS, makeObservable} from 'mobx';
 import {Requester} from 'sulu-admin-bundle/services';
 import {buildQueryString, transformDateForUrl} from 'sulu-admin-bundle/utils';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 import type {PreviewRouteName} from './../types';
 
 const generateRoute = (name: PreviewRouteName, options: Object): string => {
@@ -29,6 +29,9 @@ export default class PreviewStore {
         webspace: string,
         segment: ?string
     ) {
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         // keep backwards compatibility to previous versions where locale was passed as string
         if (typeof locale !== 'string') {
             locale = toJS(locale);

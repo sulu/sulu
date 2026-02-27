@@ -1,6 +1,6 @@
 // @flow
 import React, {type Node} from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import Button from '../Button';
 import ButtonGroup from '../ButtonGroup';
@@ -24,20 +24,27 @@ const AVAILABLE_LIMITS = [10, 20, 50, 100];
 
 @observer
 class Pagination extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @observable currentInputValue = 1;
 
     static defaultProps = {
         loading: false,
     };
 
-    @action componentDidMount() {
+    componentDidMount = action(() => {
         const {currentPage} = this.props;
 
         this.currentInputValue = currentPage;
         this.validateAndSubmitInputValue();
-    }
+    });
 
-    @action componentDidUpdate(prevProps: Props) {
+    componentDidUpdate = action((prevProps: Props) => {
         const {currentPage, totalPages} = this.props;
 
         if (prevProps.currentPage !== currentPage) {
@@ -48,7 +55,7 @@ class Pagination extends React.Component<Props> {
         if (prevProps.totalPages !== totalPages) {
             this.validateAndSubmitInputValue();
         }
-    }
+    });
 
     hasNextPage = () => {
         const {currentPage, totalPages} = this.props;

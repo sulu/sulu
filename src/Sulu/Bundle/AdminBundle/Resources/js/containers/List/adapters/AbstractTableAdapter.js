@@ -1,5 +1,5 @@
 // @flow
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import React from 'react';
 import GhostIndicator from '../../../components/GhostIndicator';
 import PublishIndicator from '../../../components/PublishIndicator';
@@ -10,6 +10,13 @@ import abstractTableAdapterStyles from './abstractTableAdapter.scss';
 import type {Schema} from '../types';
 
 export default class AbstractTableAdapter extends AbstractAdapter {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static hasColumnOptions: boolean = true;
 
     static defaultProps = {

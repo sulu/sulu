@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {action, observable, computed} from 'mobx';
+import {action, observable, computed, makeObservable} from 'mobx';
 import classNames from 'classnames';
 import debounce from 'debounce';
 import itemsStyles from './items.scss';
@@ -17,6 +17,13 @@ const DEBOUNCE_TIME = 200;
 
 @observer
 class Items extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @observable expandedWidth: number = 0;
     @observable parentWidth: number = 0;
 
@@ -58,7 +65,7 @@ class Items extends React.Component<Props> {
         }
     }
 
-    @action componentDidUpdate() {
+    componentDidUpdate = action(() => {
         if (this.parentRef && this.parentWidth !== this.parentRef.offsetWidth) {
             this.parentWidth = this.parentRef.offsetWidth;
         }
@@ -66,7 +73,7 @@ class Items extends React.Component<Props> {
         if (this.childRef && this.showText && this.expandedWidth !== this.childRef.offsetWidth) {
             this.expandedWidth = this.childRef.offsetWidth;
         }
-    }
+    });
 
     @action setDimensions = () => {
         const {parentRef, childRef} = this;

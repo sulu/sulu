@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Button, Dialog, Loader, Table} from 'sulu-admin-bundle/components';
 import {SingleListOverlay, withToolbar} from 'sulu-admin-bundle/containers';
@@ -20,6 +20,9 @@ class SnippetAreas extends React.Component<ViewProps> {
 
     constructor(props: ViewProps) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {router} = this.props;
         const {

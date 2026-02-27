@@ -1,5 +1,5 @@
 // @flow
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 export type ObservableOptions = {
     locale?: ?IObservableValue<string>,

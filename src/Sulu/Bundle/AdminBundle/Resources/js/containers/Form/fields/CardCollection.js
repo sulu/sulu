@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, observable, toJS} from 'mobx';
+import {action, observable, toJS, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import CardCollectionComponent from '../../../components/CardCollection';
 import Overlay from '../../../components/Overlay';
@@ -19,6 +19,9 @@ class CardCollection extends React.Component<FieldTypeProps<Array<Object>>> {
 
     constructor(props: FieldTypeProps<Array<Object>>) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {
             fieldTypeOptions: {

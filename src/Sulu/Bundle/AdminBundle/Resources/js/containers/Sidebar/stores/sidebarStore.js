@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import type {SidebarConfig, Size} from '../types';
 
 const DEFAULT_SIZE: Size = 'medium';
@@ -13,6 +13,9 @@ class SidebarStore {
     @observable size: ?Size;
 
     constructor() {
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.clearConfig();
     }
 

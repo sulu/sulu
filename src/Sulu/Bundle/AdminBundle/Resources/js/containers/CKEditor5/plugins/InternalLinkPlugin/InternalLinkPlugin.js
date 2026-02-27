@@ -1,7 +1,7 @@
 // @flow
 import React, {Fragment} from 'react';
 import {render, unmountComponentAtNode} from 'react-dom';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {Observer} from 'mobx-react';
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
@@ -37,6 +37,13 @@ const LINK_VALIDATION_STATE_ATTRIBUTE = 'validationState';
 const LINK_TAG = 'sulu-link';
 
 export default class InternalLinkPlugin extends Plugin {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @observable openOverlay: ?string = undefined;
     @observable target: ?string = DEFAULT_TARGET;
     @observable id: ?string | number = undefined;

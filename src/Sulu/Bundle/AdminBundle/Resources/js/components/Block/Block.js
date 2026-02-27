@@ -2,7 +2,7 @@
 import React, {Fragment} from 'react';
 import classNames from 'classnames';
 import {observer} from 'mobx-react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import log from 'loglevel';
 import Icon from '../Icon';
 import SingleSelect from '../SingleSelect';
@@ -30,6 +30,13 @@ type Props<T: string> = {
 
 @observer
 class Block<T: string> extends React.Component<Props<T>> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static defaultProps = {
         actions: [],
         expanded: false,

@@ -1,5 +1,5 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import type {SnippetArea} from '../types';
 
@@ -13,6 +13,9 @@ export default class SnippetAreaStore {
     webspaceKey: string;
 
     constructor(webspaceKey: string) {
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.webspaceKey = webspaceKey;
 
         ResourceRequester.getList('snippet_areas', {webspace: webspaceKey}).then(action((response) => {

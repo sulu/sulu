@@ -1,5 +1,5 @@
 // @flow
-import {observable, action} from 'mobx';
+import {observable, action, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import FormOverlay from '../../containers/FormOverlay';
@@ -18,6 +18,13 @@ const RESOURCE_KEY = 'profile';
 
 @observer
 class ProfileFormOverlay extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @observable formStore: ResourceFormStore;
 
     componentDidMount() {

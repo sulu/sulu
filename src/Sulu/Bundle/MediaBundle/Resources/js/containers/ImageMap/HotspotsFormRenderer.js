@@ -3,7 +3,7 @@ import React from 'react';
 import {translate} from 'sulu-admin-bundle/utils';
 import {Form, Icon, SingleSelect, Tabs} from 'sulu-admin-bundle/components';
 import {observer} from 'mobx-react';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import Button from './Button';
 import hotspotsFormRendererStyles from './hotspotsFormRenderer.scss';
 import type {Hotspot} from './types';
@@ -30,6 +30,13 @@ const AVAILABLE_HOTSPOT_TYPES = {
 
 @observer
 class HotspotsFormRenderer extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @computed get selectedHotspot() {
         const {value, selectedIndex} = this.props;
 

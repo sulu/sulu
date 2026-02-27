@@ -1,9 +1,15 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import log from 'loglevel';
 import type {Localization} from './types';
 
 class LocalizationStore {
+    constructor() {
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @observable localizations: Array<Localization> = [];
 
     @action setLocalizations(localizations: Array<Localization>) {

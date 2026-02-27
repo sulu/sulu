@@ -1,7 +1,7 @@
 // @flow
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
-import {action, computed, observable, toJS} from 'mobx';
+import {action, computed, observable, toJS, makeObservable} from 'mobx';
 import classNames from 'classnames';
 import SingleMediaSelection from '../SingleMediaSelection';
 import ImageRenderer from './ImageRenderer';
@@ -9,7 +9,7 @@ import HotspotsFormRenderer from './HotspotsFormRenderer';
 import imageMapStyles from './imageMap.scss';
 import type {Hotspot, Value, RenderHotspotFormCallback} from './types';
 import type {Value as ImageValue} from '../SingleMediaSelection/types';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 type Props = {
     defaultFormType: string,
@@ -27,6 +27,13 @@ const MEDIA_TYPES = ['image'];
 
 @observer
 class ImageMap extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static defaultProps = {
         disabled: false,
         valid: true,
@@ -42,7 +49,7 @@ class ImageMap extends React.Component<Props> {
         id: undefined,
     };
 
-    @action componentDidMount() {
+    componentDidMount = action(() => {
         const {value: {imageId}, types} = this.props;
 
         this.imageValue = {
@@ -53,9 +60,9 @@ class ImageMap extends React.Component<Props> {
         if (Object.keys(types).length === 0) {
             throw new Error('There needs to be at least one form type specified!');
         }
-    }
+    });
 
-    @action componentDidUpdate() {
+    componentDidUpdate = action(() => {
         const {value: {imageId}} = this.props;
 
         if (this.imageValue.id !== imageId) {
@@ -64,7 +71,7 @@ class ImageMap extends React.Component<Props> {
                 id: imageId,
             };
         }
-    }
+    });
 
     handleFinish = () => {
         const {onFinish} = this.props;

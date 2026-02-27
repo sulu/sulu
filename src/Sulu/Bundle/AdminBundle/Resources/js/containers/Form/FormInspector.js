@@ -1,7 +1,7 @@
 // @flow
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import log from 'loglevel';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 import type {FinishFieldHandler, FormStoreInterface, SaveHandler} from './types';
 
 export default class FormInspector {
@@ -10,6 +10,9 @@ export default class FormInspector {
     finishFieldHandlers: Array<FinishFieldHandler> = [];
 
     constructor(formStore: FormStoreInterface) {
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.formStore = formStore;
     }
 

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Loader} from 'sulu-admin-bundle/components';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
@@ -21,6 +21,13 @@ type Props = {|
 
 @observer
 class RolePermissions extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static suluSecuritySystem: string;
 
     static defaultProps = {
@@ -29,11 +36,11 @@ class RolePermissions extends React.Component<Props> {
 
     @observable roles: ?Array<Role>;
 
-    @action componentDidMount() {
+    componentDidMount = action(() => {
         ResourceRequester.get('roles', {'include-anonymous': true}).then(action((response) => {
             this.roles = response._embedded.roles;
         }));
-    }
+    });
 
     handleChange = (newSystemValue: RolePermissionsType, system: string) => {
         const {roles} = this;

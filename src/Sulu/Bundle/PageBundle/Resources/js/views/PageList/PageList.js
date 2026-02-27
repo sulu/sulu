@@ -1,5 +1,5 @@
 // @flow
-import {action, intercept, observable} from 'mobx';
+import {action, intercept, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import {Loader, Icon} from 'sulu-admin-bundle/components';
@@ -13,7 +13,7 @@ import type {Localization} from 'sulu-admin-bundle/stores';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import type {AttributeMap} from 'sulu-admin-bundle/services';
 import type {Webspace} from '../../stores/webspaceStore/types';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 const USER_SETTINGS_KEY = 'page_list';
 const PAGES_RESOURCE_KEY = 'pages';
@@ -97,6 +97,9 @@ class PageList extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {router, webspaceKey} = this.props;
 

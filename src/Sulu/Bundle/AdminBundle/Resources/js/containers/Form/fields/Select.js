@@ -1,15 +1,25 @@
 // @flow
 import React from 'react';
-import {computed, isArrayLike} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import MultiSelectComponent from '../../../components/MultiSelect';
 import type {FieldTypeProps} from '../../../types';
-import type {IObservableArray} from 'mobx/lib/mobx';
+import type {IObservableArray} from 'mobx';
 
 type Props = FieldTypeProps<?Array<string | number>>;
+
+function isArrayLike(value: mixed): boolean {
+    return !!value
+        && typeof value === 'object'
+        && typeof value.length === 'number'
+        && typeof value.forEach === 'function';
+}
 
 export default class Select extends React.Component<Props> {
     constructor(props: FieldTypeProps<?Array<string | number>>) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {onChange, schemaOptions, value} = this.props;
 
@@ -23,12 +33,14 @@ export default class Select extends React.Component<Props> {
             return;
         }
 
-        if (!isArrayLike(defaultOptions)) {
+        if (!Array.isArray(defaultOptions) && !isArrayLike(defaultOptions)) {
             throw new Error('The "default_values" schema option must be an array!');
         }
 
-        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
-        const defaultValues = defaultOptions.map(({name: defaultValue}) => {
+        const normalizedDefaultOptions = Array.isArray(defaultOptions)
+            ? defaultOptions
+            : Array.from((defaultOptions: any));
+        const defaultValues = normalizedDefaultOptions.map(({name: defaultValue}) => {
             if (typeof defaultValue !== 'number' && typeof defaultValue !== 'string') {
                 throw new Error('A single schema option of "default_values" must be a string or number');
             }
@@ -44,12 +56,16 @@ export default class Select extends React.Component<Props> {
     @computed get values(): Array<any> | IObservableArray<any> {
         const {values} = this.props.schemaOptions;
 
-        if (!values || !isArrayLike(values.value)) {
+        if (!values) {
             throw new Error('The "values" option has to be set for the Select FieldType');
         }
 
-        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
-        return values.value;
+        const schemaValues = values.value;
+        if (!Array.isArray(schemaValues) && !isArrayLike(schemaValues)) {
+            throw new Error('The "values" option has to be set for the Select FieldType');
+        }
+
+        return Array.isArray(schemaValues) ? schemaValues : Array.from((schemaValues: any));
     }
 
     handleChange = (value: Array<string | number>) => {

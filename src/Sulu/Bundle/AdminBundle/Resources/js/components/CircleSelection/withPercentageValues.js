@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import {buildHocDisplayName} from '../../utils/react';
 import type {ComponentType} from 'react';
 import type {SelectionData} from './types';
@@ -19,6 +19,13 @@ type Props = {
 export default function withPercentageValues(Component: ComponentType<*>) {
     @observer
     class WithPercentageValuesComponent extends React.Component<Props> {
+        constructor(...args: Array<any>) {
+            super(...args);
+            if (typeof makeObservable === 'function') {
+                makeObservable(this);
+            }
+        }
+
         wrappedComponent = Component;
 
         static defaultProps = {

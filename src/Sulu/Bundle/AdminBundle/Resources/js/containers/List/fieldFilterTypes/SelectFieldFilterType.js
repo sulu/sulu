@@ -1,11 +1,25 @@
 // @flow
 import React from 'react';
-import {computed, isArrayLike} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import Checkbox, {CheckboxGroup} from '../../../components/Checkbox';
 import {translate} from '../../../utils/Translator';
 import AbstractFieldFilterType from './AbstractFieldFilterType';
 
+function isArrayLike(value: mixed): boolean {
+    return !!value
+        && typeof value === 'object'
+        && typeof value.length === 'number'
+        && typeof value.forEach === 'function';
+}
+
 class SelectFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @computed get parameterOptions(): Object {
         const {parameters} = this;
 
@@ -18,10 +32,10 @@ class SelectFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
         // Handle both array and object formats from backend
         // Backend may send array for numeric keys: ["value0", "value1", "value2"]
         // Convert to object: {"0": "value0", "1": "value1", "2": "value2"}
-        if (isArrayLike(options)) {
+        if (Array.isArray(options) || isArrayLike(options)) {
+            const normalizedOptions = Array.isArray(options) ? options : Array.from((options: any));
             const optionsObject = {};
-            // $FlowFixMe: isArrayLike ensures options is array-like and has forEach
-            options.forEach((value, index) => {
+            normalizedOptions.forEach((value, index) => {
                 optionsObject[String(index)] = value;
             });
             options = optionsObject;

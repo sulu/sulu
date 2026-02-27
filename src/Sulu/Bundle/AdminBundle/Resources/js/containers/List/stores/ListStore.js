@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, intercept, observable, untracked} from 'mobx';
+import {action, autorun, computed, intercept, observable, untracked, makeObservable} from 'mobx';
 import equals from 'fast-deep-equal';
 import log from 'loglevel';
 import ResourceRequester, {RequestPromise} from '../../../services/ResourceRequester';
@@ -12,7 +12,7 @@ import type {
     SortOrder,
     StructureStrategyInterface,
 } from '../types';
-import type {IObservableValue, IValueWillChange} from 'mobx/lib/mobx';
+import type {IObservableValue, IValueWillChange} from 'mobx';
 
 const USER_SETTING_PREFIX = 'sulu_admin.list_store';
 
@@ -142,6 +142,9 @@ export default class ListStore {
         metadataOptions: ?Object,
         selectionIds: ?Array<string | number>
     ) {
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.resourceKey = resourceKey;
         this.listKey = listKey;
         this.userSettingsKey = userSettingsKey;

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import classNames from 'classnames';
 import log from 'loglevel';
 import SingleSelect from '../SingleSelect';
@@ -36,6 +36,9 @@ class Url extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.selectedProtocol = props.defaultProtocol || props.protocols[0];
     }

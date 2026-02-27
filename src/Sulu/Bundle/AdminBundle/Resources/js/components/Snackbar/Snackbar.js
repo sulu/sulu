@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import {translate} from '../../utils/Translator';
@@ -30,6 +30,13 @@ const DEFAULT_SNACKBAR_TYPE: SnackbarType = 'error';
 
 @observer
 class Snackbar extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static defaultProps = {
         skin: 'static',
         visible: true,

@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, autorun, computed, observable} from 'mobx';
+import {action, autorun, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import Loader from '../../../components/Loader';
 import ResourceRequester from '../../../services/ResourceRequester';
@@ -9,6 +9,13 @@ import type {FieldTypeProps} from '../../../types';
 
 @observer
 class ChangelogLine extends React.Component<FieldTypeProps<typeof undefined>> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @observable changer: ?Object;
     @observable creator: ?Object;
     @observable changerLoaded: boolean = false;

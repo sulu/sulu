@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import ArrowMenu from '../ArrowMenu';
 import Icon from '../Icon';
@@ -15,6 +15,13 @@ type Props<T> = {|
 
 @observer
 class Button<T: string | number> extends React.Component<Props<T>> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @observable open: boolean = false;
 
     static defaultProps = {

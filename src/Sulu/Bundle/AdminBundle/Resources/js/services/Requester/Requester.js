@@ -1,5 +1,4 @@
 // @flow
-import {isArrayLike} from 'mobx';
 import RequestPromise from './RequestPromise';
 import type {HandleResponseHook} from './types';
 
@@ -11,6 +10,16 @@ const defaultOptions = {
     },
 };
 
+function isArrayValue(value: mixed): boolean {
+    return Array.isArray(value)
+        || (
+            !!value
+            && typeof value === 'object'
+            && typeof value.length === 'number'
+            && typeof value.forEach === 'function'
+        );
+}
+
 function transformResponseObject(data: Object) {
     return Object.keys(data).reduce((transformedData: Object, key) => {
         const value = data[key];
@@ -21,7 +30,7 @@ function transformResponseObject(data: Object) {
             return transformedData;
         }
 
-        if (isArrayLike(value)) {
+        if (isArrayValue(value)) {
             transformedData[key] = transformResponseArray(value);
 
             return transformedData;
@@ -59,7 +68,7 @@ function transformRequestObject(data: Object): Object {
             return transformedData;
         }
 
-        if (isArrayLike(value)) {
+        if (isArrayValue(value)) {
             transformedData[key] = transformRequestArray(value);
 
             return transformedData;
@@ -79,7 +88,7 @@ function transformRequestObject(data: Object): Object {
 
 function transformRequestArray(data) {
     return data.map((value) => {
-        if (isArrayLike(value)) {
+        if (isArrayValue(value)) {
             return transformRequestArray(value);
         }
 
@@ -92,7 +101,7 @@ function transformRequestArray(data) {
 }
 
 function transformRequestData(data: Object | Array<Object>) {
-    if (isArrayLike(data)) {
+    if (isArrayValue(data)) {
         return transformRequestArray(data);
     }
 
@@ -120,7 +129,7 @@ function handleJsonResponse(response: Response, options: ?Object): Promise<Objec
     }
 
     return response.json().then((data) => {
-        if (isArrayLike(data)) {
+        if (isArrayValue(data)) {
             return transformResponseArray(data);
         }
 
@@ -130,7 +139,7 @@ function handleJsonResponse(response: Response, options: ?Object): Promise<Objec
 
 function handleObjectResponse(response: Response, options: ?Object): Promise<Object> {
     return handleJsonResponse(response, options).then((response) => {
-        if (isArrayLike(response)) {
+        if (isArrayValue(response)) {
             throw Error('Response was expected to be an object, but an array was given');
         }
 

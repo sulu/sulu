@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import PopoverComponent from '../Popover';
@@ -11,6 +11,13 @@ import type {ElementRef} from 'react';
 
 @observer
 class Popover extends React.Component<PopoverProps> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @observable open: boolean = false;
 
     static defaultProps = {

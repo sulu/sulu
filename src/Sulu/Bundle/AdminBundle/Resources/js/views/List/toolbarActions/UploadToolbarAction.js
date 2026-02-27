@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import log from 'loglevel';
-import {action, computed, isArrayLike, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import Dropzone from 'react-dropzone';
 import symfonyRouting from 'fos-jsrouting/router';
 import {translate, transformBytesToReadableString} from '../../../utils';
@@ -113,6 +113,9 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
         }
 
         super(listStore, list, router, locales, resourceStore, options);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
     }
 
     @action setDropzoneRef = (ref: ?ElementRef<typeof Dropzone>) => {
@@ -305,7 +308,7 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
             return undefined;
         }
 
-        if (!isArrayLike(accept)) {
+        if (!Array.isArray(accept)) {
             throw new Error('The "accept" option must be an array!');
         }
 
@@ -313,9 +316,12 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
             return undefined;
         }
 
-        const dropzoneObjectOption = {};
-        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+        const dropzoneObjectOption: {[key: string]: string[]} = {};
         accept.forEach((type) => {
+            if (typeof type !== 'string') {
+                throw new Error('The "accept" option must only contain strings!');
+            }
+
             dropzoneObjectOption[type] = [];
         });
 

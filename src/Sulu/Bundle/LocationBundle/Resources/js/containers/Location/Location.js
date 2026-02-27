@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {action, observable, computed, toJS} from 'mobx';
+import {action, observable, computed, toJS, makeObservable} from 'mobx';
 import {CroppedText, Icon} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import {MapContainer, Marker, TileLayer, Tooltip} from 'react-leaflet';
@@ -21,6 +21,13 @@ type Props = {|
 
 @observer
 class Location extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @observable overlayOpen: boolean = false;
 
     map: ?(typeof Map);

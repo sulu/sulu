@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, autorun, isArrayLike, observable} from 'mobx';
+import {action, autorun, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {ListStore} from 'sulu-admin-bundle/containers';
 import {Overlay} from 'sulu-admin-bundle/components';
@@ -8,7 +8,7 @@ import {translate} from 'sulu-admin-bundle/utils';
 import MediaCollection from '../MediaCollection';
 import CollectionStore from '../../stores/CollectionStore';
 import mediaSelectionOverlayStyles from './mediaSelectionOverlay.scss';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 const MEDIA_RESOURCE_KEY = 'media';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
@@ -71,9 +71,7 @@ class MediaSelectionOverlay extends React.Component<Props> {
             'thumbnails',
         ];
 
-        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
-        if (isArrayLike(types) && types.length > 0) {
-            // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+        if (Array.isArray(types) && types.length > 0) {
             options.types = types.join(',');
         }
 
@@ -93,6 +91,9 @@ class MediaSelectionOverlay extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.updateCollectionStoreDisposer = autorun(() => this.updateCollectionStore(this.props.collectionId.get()));
     }

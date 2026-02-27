@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, autorun, observable} from 'mobx';
+import {action, autorun, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import Button from '../../components/Button';
 import Toggler from '../../components/Toggler';
@@ -55,6 +55,9 @@ class FilterOverlay extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.updateFilterCriteriaDisposer = autorun(() => this.updateFilterCriteria(this.props.smartContentStore));
         this.tagSelectionStore = new MultiSelectionStore('tags', this.tags || [], undefined, 'names');

@@ -1,6 +1,6 @@
 // @flow
 import React, {Component} from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import FormOverlay from '../FormOverlay';
 import MemoryFormStoreFactory from '../Form/stores/memoryFormStoreFactory';
@@ -28,6 +28,9 @@ class ActionOverlay extends Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.formStore = MemoryFormStoreFactory.createFromFormKey(props.formKey);
     }

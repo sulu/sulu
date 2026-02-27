@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, autorun, computed, observable} from 'mobx';
+import {action, autorun, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import Icon from '../../components/Icon/index';
 import {translate} from '../../utils/index';
@@ -34,6 +34,9 @@ class Login extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.redirectDisposer = autorun(() => {
             if (userStore.redirectUrl !== '') {

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import PermissionsContainer from '../../Permissions';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
@@ -10,6 +10,13 @@ type Props = FieldTypeProps<?Array<ContextPermission>>;
 
 @observer
 class Permissions extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @computed get system(): ?string {
         const {formInspector} = this.props;
         const system = formInspector.getValueByPath('/system');

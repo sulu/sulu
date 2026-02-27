@@ -121,6 +121,80 @@ jobs:
             - name: Depcruise
               run: npm run depcruise
 
+    js-mobx-compat:
+        name: "Node 20 (MobX ${{ matrix.mobx-version }} / mobx-react ${{ matrix.mobx-react-version }})"
+        runs-on: ubuntu-22.04
+        timeout-minutes: 30
+
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    - mobx-version: '^6.15.0'
+                      mobx-react-version: '^7.6.0'
+                      flow: true
+                    - mobx-version: '^4.15.7'
+                      mobx-react-version: '^6.3.1'
+                      flow: false
+
+        env:
+            COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        steps:
+            - name: Checkout project
+              uses: actions/checkout@v4
+
+            - name: Install and configure Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+
+            - name: Assert error when using yarn
+              run: tests/js/check-yarn-warning.sh
+
+            - name: Install npm dependencies
+              uses: bahmutov/npm-install@v1
+              with:
+                  useLockFile: false
+
+            - name: Switch MobX stack
+              run: npm install --no-save mobx@${{ matrix.mobx-version }} mobx-react@${{ matrix.mobx-react-version }}
+
+            - name: Output versions and installed dependencies
+              run: |
+                  node --version
+                  npm --version
+                  npm list mobx mobx-react || true
+
+            - name: Lint JavaScript
+              if: ${{ matrix.flow }}
+              run: npm run lint:js
+
+            - name: Lint JavaScript (MobX 4 compatibility)
+              if: ${{ !matrix.flow }}
+              run: 'npm run lint:js -- --rule "import/named: off"'
+
+            - name: Flow
+              if: ${{ matrix.flow }}
+              run: npm run flow -- check
+
+            - name: Test JavaScript code
+              run: env LANG=en_US.UTF-8 npm test -- --maxWorkers=4
+
+            - name: Install and configure PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+                  tools: 'composer:v2'
+                  ini-values: memory_limit=-1
+                  coverage: none
+
+            - name: Install php dependencies
+              run: rm composer.json && composer require friendsofsymfony/jsrouting-bundle:^2.3 --no-interaction
+
+            - name: Test application build
+              run: npm run build
+
     php:
         name: "PHP ${{ matrix.php-version }} (${{ matrix.database }}, ${{ matrix.phpcr-transport }}, ${{ matrix.dependency-versions }})"
         runs-on: ubuntu-22.04

@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, observable} from 'mobx';
+import {action, autorun, observable, makeObservable} from 'mobx';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 
 class SearchStore {
@@ -13,6 +13,9 @@ class SearchStore {
     total: ?number = undefined;
 
     constructor() {
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         autorun(() => {
             if (!this.query) {
                 this.resetResults();

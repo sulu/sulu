@@ -2,7 +2,7 @@
 import React from 'react';
 import equals from 'fast-deep-equal';
 import {observer} from 'mobx-react';
-import {action, computed, observable, toJS} from 'mobx';
+import {action, computed, observable, toJS, makeObservable} from 'mobx';
 import debounce from 'debounce';
 import Input from '../Input';
 import AutoCompletePopover from '../AutoCompletePopover';
@@ -29,6 +29,13 @@ type Props = {|
 
 @observer
 class SingleAutoComplete extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static defaultProps = {
         disabled: false,
     };

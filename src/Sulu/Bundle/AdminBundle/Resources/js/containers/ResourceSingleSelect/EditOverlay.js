@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, autorun, observable, toJS} from 'mobx';
+import {action, autorun, observable, toJS, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import Button from '../../components/Button';
 import Overlay from '../../components/Overlay';
@@ -26,6 +26,9 @@ class EditOverlay extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.updateDataDisposer = autorun(() => this.updateData(this.props.resourceListStore.data));
     }

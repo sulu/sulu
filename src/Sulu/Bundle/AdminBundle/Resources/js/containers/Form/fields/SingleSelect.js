@@ -1,8 +1,15 @@
 // @flow
 import React from 'react';
-import {isArrayLike, toJS} from 'mobx';
+import {toJS} from 'mobx';
 import SingleSelectComponent from '../../../components/SingleSelect';
 import type {FieldTypeProps} from '../../../types';
+
+function isArrayLike(value: mixed): boolean {
+    return !!value
+        && typeof value === 'object'
+        && typeof value.length === 'number'
+        && typeof value.forEach === 'function';
+}
 
 export default class SingleSelect extends React.Component<FieldTypeProps<string | number>> {
     constructor(props: FieldTypeProps<string | number>) {
@@ -40,14 +47,15 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
         const {schemaOptions, disabled, value} = this.props;
         const values = toJS(schemaOptions.values);
 
-        if (!values || !isArrayLike(values.value)) {
+        if (!values || (!Array.isArray(values.value) && !isArrayLike(values.value))) {
             throw new Error('The "values" schema option of the SingleSelect field-type must be an array!');
         }
 
+        const normalizedValues = Array.isArray(values.value) ? values.value : Array.from((values.value: any));
+
         return (
             <SingleSelectComponent disabled={!!disabled} onChange={this.handleChange} value={value}>
-                {/*$FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array*/}
-                {values.value.map(({name: value, title}, index) => {
+                {normalizedValues.map(({name: value, title}, index) => {
                     if (typeof value !== 'string' && typeof value !== 'number' && value !== undefined) {
                         throw new Error(
                             'The children of "values" must only contain values of type string, number or undefined!'

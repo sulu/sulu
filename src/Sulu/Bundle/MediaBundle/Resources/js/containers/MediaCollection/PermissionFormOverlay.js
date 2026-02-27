@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Form, memoryFormStoreFactory, resourceFormStoreFactory} from 'sulu-admin-bundle/containers';
 import {Dialog, Overlay} from 'sulu-admin-bundle/components';
@@ -31,11 +31,14 @@ class PermissionFormOverlay extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.createFormStores();
     }
 
-    @action componentDidUpdate(prevProps: Props) {
+    componentDidUpdate = action((prevProps: Props) => {
         const {collectionId} = this.props;
 
         if (collectionId !== prevProps.collectionId) {
@@ -43,7 +46,7 @@ class PermissionFormOverlay extends React.Component<Props> {
             this.destroyFormStores();
             this.createFormStores();
         }
-    }
+    });
 
     componentWillUnmount() {
         this.destroyFormStores();

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {Dialog} from 'sulu-admin-bundle/components';
 import {Requester} from 'sulu-admin-bundle/services';
 import {buildQueryString, translate} from 'sulu-admin-bundle/utils';
@@ -13,6 +13,9 @@ export default class CacheClearToolbarAction {
     @observable showDialog = false;
 
     constructor(webspaceKey: ?string) {
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.webspaceKey = webspaceKey;
     }
 

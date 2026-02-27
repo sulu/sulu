@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import React from 'react';
 import symfonyRouting from 'fos-jsrouting/router';
 import Dialog from '../../../components/Dialog';
@@ -34,6 +34,9 @@ export default class ReloadFormStoreToolbarAction extends AbstractFormToolbarAct
             options,
             parentResourceStore
         );
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         // Required options validation
         const requiredOptions = [

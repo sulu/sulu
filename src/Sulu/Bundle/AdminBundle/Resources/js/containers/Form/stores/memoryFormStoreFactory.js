@@ -1,7 +1,7 @@
 // @flow
 import MemoryFormStore from './MemoryFormStore';
 import SchemaFormStoreDecorator from './SchemaFormStoreDecorator';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 import type {Schema} from '../types';
 
 class MemoryFormStoreFactory {

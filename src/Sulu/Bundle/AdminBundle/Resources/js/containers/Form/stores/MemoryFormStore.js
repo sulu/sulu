@@ -1,11 +1,11 @@
 // @flow
-import {action, observable, set} from 'mobx';
+import {action, observable, set, makeObservable} from 'mobx';
 import log from 'loglevel';
 import jsonpointer from 'json-pointer';
 import {createAjv} from '../../../utils/Ajv';
 import AbstractFormStore from './AbstractFormStore';
 import type {ChangeContext, FormStoreInterface, Schema, SchemaType} from '../types';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 const ajv = createAjv();
 
@@ -26,6 +26,9 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
         metadataOptions: ?{[string]: any}
     ) {
         super();
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.data = data;
         this.schema = schema;

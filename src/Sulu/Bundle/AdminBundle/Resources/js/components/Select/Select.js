@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable, computed} from 'mobx';
+import {action, observable, computed, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import {translate} from '../../utils/Translator';
@@ -28,6 +28,13 @@ type Props<T> = {|
 
 @observer
 class Select<T> extends React.Component<Props<T>> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static defaultProps = {
         closeOnSelect: true,
         disabled: false,

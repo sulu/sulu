@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, isArrayLike} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import log from 'loglevel';
 import jexl from 'jexl';
@@ -31,6 +31,13 @@ type Props = {|
 
 @observer
 class Field extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static defaultProps = {
         showAllErrors: false,
     };
@@ -113,7 +120,7 @@ class Field extends React.Component<Props> {
             return;
         }
 
-        if (isArrayLike(error)) {
+        if (Array.isArray(error)) {
             // this happens when the error is in a block field type
             // since the error is shown on the child elements of the block we do not have to mark the block separately
             return;
@@ -130,11 +137,9 @@ class Field extends React.Component<Props> {
             return error.keyword;
         }
 
-        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
         for (const childKey in error) {
             // this happens when it is an error collection and not a single error
             // we will find the first child error with a keyword recursively
-            // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
             return this.findErrorKeyword(error[childKey]);
         }
     }

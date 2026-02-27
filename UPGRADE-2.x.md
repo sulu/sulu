@@ -7,6 +7,65 @@ As announced with `2.5.0` (2022-07-13) Sulu recommends replace `Swiftmailer`
 with the `symfony/mailer` package. Check the upgrade guide [of 2.5.0 below](#replace-swiftmailer-with-symfony-mailer)
 to remove `Swiftmailer` from your project if still installed.
 
+### MobX 4 and MobX 6 compatibility for custom admin components
+
+Sulu bundles now allow both dependency stacks:
+
+- `mobx@4` with `mobx-react@6`
+- `mobx@6` with `mobx-react@7`
+
+Any other combination is not supported. During installation, Sulu validates the installed versions and fails fast for
+invalid pairs.
+
+`mobx@6` remains the default and primary tested stack for Sulu development. Support for `mobx@4` exists to keep custom
+project components working while migrating.
+
+If your custom components still use MobX 4 style decorators without `makeObservable`, run the codemod:
+
+```bash
+node_modules/.bin/jscodeshift -t vendor/sulu/sulu/scripts/codemods/mobx4-to-dual-compat.js path/to/your/admin/js
+```
+
+You can also run:
+
+```bash
+npm run codemod:mobx-dual-compat -- path/to/your/admin/js
+```
+
+Example migration:
+
+```js
+import {computed, observable} from 'mobx';
+
+class ExampleStore {
+    @observable value = 'foo';
+
+    @computed get uppercasedValue() {
+        return this.value.toUpperCase();
+    }
+}
+```
+
+becomes:
+
+```js
+import {computed, makeObservable, observable} from 'mobx';
+
+class ExampleStore {
+    constructor() {
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
+    @observable value = 'foo';
+
+    @computed get uppercasedValue() {
+        return this.value.toUpperCase();
+    }
+}
+```
+
 ## 2.6.21
 
 The type of the `apiKey` in the `se_users` table has been changed to `string`.

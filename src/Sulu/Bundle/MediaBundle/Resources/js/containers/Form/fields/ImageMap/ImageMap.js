@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable, toJS} from 'mobx';
+import {action, observable, toJS, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import jsonpointer from 'json-pointer';
@@ -18,6 +18,9 @@ class ImageMap extends React.Component<FieldTypeProps<Value>> {
 
     constructor(props: FieldTypeProps<Value>) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.setValue(this.props.value);
     }

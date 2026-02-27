@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import copyToClipboard from 'copy-to-clipboard';
 import Button from 'sulu-admin-bundle/components/Button';
@@ -17,6 +17,13 @@ type Props = {|
 
 @observer
 class PreviewLinkPopover extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @observable previewLink: ?PreviewLink;
     @observable loading: boolean = false;
     @observable generating: boolean = false;

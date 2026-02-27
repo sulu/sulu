@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import webspaceStore from '../../stores/webspaceStore';
 import WebspaceSegmentSelect from './WebspaceSegmentSelect';
 import type {Webspace} from '../../stores/webspaceStore/types';
@@ -14,6 +14,13 @@ type Props = {|
 |};
 
 export default class SegmentSelect extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @computed get visibleWebspaces(): Array<Webspace> {
         const {webspace} = this.props;
 

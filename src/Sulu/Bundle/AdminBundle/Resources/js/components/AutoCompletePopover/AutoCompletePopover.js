@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Mousetrap from 'mousetrap';
-import {computed, observable} from 'mobx';
+import {computed, observable, makeObservable} from 'mobx';
 import Menu from '../Menu';
 import Popover from '../Popover';
 import Suggestion from './Suggestion';
@@ -21,6 +21,13 @@ type Props = {
 };
 
 export default class AutoCompletePopover extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static defaultProps = {
         idProperty: 'id',
         minWidth: 0,

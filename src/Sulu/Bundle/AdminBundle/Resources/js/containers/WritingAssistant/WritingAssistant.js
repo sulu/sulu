@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {action, observable, computed, toJS} from 'mobx';
+import {action, observable, computed, toJS, makeObservable} from 'mobx';
 import {Requester} from '../../services';
 import {Overlay} from '../../components';
 import writingAssistantStyles from './writingAssistant.scss';
@@ -50,6 +50,9 @@ export default class WritingAssistant extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.selectedExpert = this.experts[0].uuid;
         // push initial message

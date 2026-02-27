@@ -1,13 +1,13 @@
 // @flow
 import React from 'react';
-import {action, observable, toJS, computed} from 'mobx';
+import {action, observable, toJS, computed, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import {CircleSelection, RectangleSelection} from 'sulu-admin-bundle/components';
 import symfonyRouting from 'fos-jsrouting/router';
 import imageRendererStyles from './imageRenderer.scss';
 import type {Hotspot, Value} from './types';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 import type {ElementRef} from 'react';
 
 type Props = {
@@ -23,6 +23,13 @@ const DEBOUNCE_TIME = 200;
 
 @observer
 class ImageRenderer extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @observable imageWrapperSize: {height: number, width: number} = {width: 0, height: 0};
 
     imageWrapperRef: ?ElementRef<'div'>;

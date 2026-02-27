@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, autorun, computed, observable} from 'mobx';
+import {action, autorun, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import Mousetrap from 'mousetrap';
 import ArrowMenu from '../../components/ArrowMenu';
@@ -40,6 +40,9 @@ class FieldFilterItem extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {filterType, filterTypeParameters, onClose, open, value} = this.props;
 
@@ -84,7 +87,7 @@ class FieldFilterItem extends React.Component<Props> {
         return this.props.value;
     }
 
-    @action componentDidUpdate(prevProps: Props) {
+    componentDidUpdate = action((prevProps: Props) => {
         const {onClose, open, value} = this.props;
         if (prevProps.open === false && open === true) {
             this.value = value;
@@ -99,7 +102,7 @@ class FieldFilterItem extends React.Component<Props> {
                 Mousetrap.unbind(CONFIRM_KEY);
             }
         }
-    }
+    });
 
     componentWillUnmount() {
         this.valueDisposer();

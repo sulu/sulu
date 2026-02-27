@@ -4,7 +4,7 @@ import {observer} from 'mobx-react';
 import {SortableContainer} from 'react-sortable-hoc';
 import classNames from 'classnames';
 import log from 'loglevel';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import {translate} from '../../utils';
 import SortableBlock from './SortableBlock';
 import sortableBlockListStyles from './sortableBlockList.scss';
@@ -44,6 +44,9 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
 
     constructor(props: Props<T, U>) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         if (props.movable === false) {
             log.warn(

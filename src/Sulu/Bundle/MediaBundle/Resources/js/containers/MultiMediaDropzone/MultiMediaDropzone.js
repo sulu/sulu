@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer, Observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import Dropzone from 'react-dropzone';
 import {SingleListOverlay} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
@@ -10,7 +10,7 @@ import MediaUploadStore from '../../stores/MediaUploadStore';
 import MediaItem from './MediaItem';
 import DropzoneOverlay from './DropzoneOverlay';
 import dropzoneStyles from './dropzone.scss';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 import type {ElementRef, Node} from 'react';
 
 const COLLECTIONS_RESOURCE_KEY = 'collections';
@@ -31,6 +31,13 @@ type Props = {
 
 @observer
 class MultiMediaDropzone extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static defaultProps = {
         accept: undefined,
         disabled: false,

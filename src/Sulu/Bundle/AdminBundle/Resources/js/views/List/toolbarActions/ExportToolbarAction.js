@@ -1,5 +1,5 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import React from 'react';
 import {translate} from '../../../utils/Translator';
 import Overlay from '../../../components/Overlay';
@@ -10,6 +10,13 @@ import exportToolbarActionStyles from './exportToolbarAction.scss';
 import AbstractListToolbarAction from './AbstractListToolbarAction';
 
 export default class ExportToolbarAction extends AbstractListToolbarAction {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @observable showOverlay = false;
     @observable delimiter: string = ';';
     @observable enclosure: string = '"';

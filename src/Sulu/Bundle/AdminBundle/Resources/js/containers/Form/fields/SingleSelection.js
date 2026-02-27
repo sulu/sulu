@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, isArrayLike, observable, reaction, toJS} from 'mobx';
+import {computed, observable, reaction, toJS, makeObservable} from 'mobx';
 import log from 'loglevel';
 import jsonpointer from 'json-pointer';
 import equals from 'fast-deep-equal';
@@ -14,7 +14,7 @@ import FormInspector from '../FormInspector';
 import SingleSelectionStore from '../../../stores/SingleSelectionStore';
 import type {SchemaOption} from '../types';
 import type {FieldTypeProps} from '../../../types';
-import type {IObservableArray, IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableArray, IObservableValue} from 'mobx';
 
 type Value = ?(string | number);
 type Props = FieldTypeProps<Value>;
@@ -29,6 +29,9 @@ class SingleSelection extends React.Component<Props>
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         if (this.type !== 'list_overlay' && this.type !== 'single_select' && this.type !== 'auto_complete') {
             throw new Error(
@@ -56,16 +59,15 @@ class SingleSelection extends React.Component<Props>
             throw new Error('The selection field needs a "resource_key" option to work properly');
         }
 
-        if (!isArrayLike(unvalidatedRequestParameters)) {
+        if (!Array.isArray(unvalidatedRequestParameters)) {
             throw new Error('The "request_parameters" schemaOption must be an array!');
         }
-        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
         const requestParameters: Array<any> | IObservableArray<any> = unvalidatedRequestParameters;
 
-        if (!isArrayLike(unvalidatedResourceStorePropertiesToRequest)) {
+        if (!Array.isArray(unvalidatedResourceStorePropertiesToRequest)) {
             throw new Error('The "resource_store_properties_to_request" schemaOption must be an array!');
         }
-        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+        // $FlowFixMe: flow does not recognize that Array.isArray(value) means that value is an array
         const resourceStorePropertiesToRequest: Array | IObservableArray = unvalidatedResourceStorePropertiesToRequest;
 
         this.requestOptions = this.buildRequestOptions(
@@ -334,10 +336,9 @@ class SingleSelection extends React.Component<Props>
             throw new Error('The "allow_deselect_for_disabled_items" schema option must be a boolean if given!');
         }
 
-        if (!isArrayLike(unvalidatedFormOptionsToListOptions)) {
+        if (!Array.isArray(unvalidatedFormOptionsToListOptions)) {
             throw new Error('The "form_options_to_list_options" option has to be an array if defined!');
         }
-        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
         const formOptionsToListOptions: Array<any> | IObservableArray<any> = unvalidatedFormOptionsToListOptions;
 
         if (typeDetailOptions && typeof typeDetailOptions !== 'object') {
@@ -459,10 +460,9 @@ class SingleSelection extends React.Component<Props>
             },
         } = fieldTypeOptions;
 
-        if (!isArrayLike(unvalidatedDataPathToAutoComplete)) {
+        if (!Array.isArray(unvalidatedDataPathToAutoComplete)) {
             throw new Error('The "data_path_to_auto_complete" schemaOption must be an array!');
         }
-        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
         const dataPathToAutoComplete: Array<any> | IObservableArray<any> = unvalidatedDataPathToAutoComplete;
 
         if (dataPathToAutoComplete.length > 0 ){

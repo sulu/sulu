@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, autorun, computed, observable} from 'mobx';
+import {action, autorun, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Loader, MultiSelect} from 'sulu-admin-bundle/components';
 import {webspaceStore} from 'sulu-page-bundle/stores';
@@ -19,6 +19,13 @@ type Props = {|
 
 @observer
 class Permissions extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static defaultProps = {
         disabled: false,
     };
@@ -31,11 +38,11 @@ class Permissions extends React.Component<Props> {
 
     removedWebspacePermissions: Map<string, ContextPermission> = new Map();
 
-    @action componentDidMount() {
+    componentDidMount = action(() => {
         this.systemDisposer = autorun(
             () => this.setSecurityContextGroups(securityContextStore.getSecurityContextGroups(this.system))
         );
-    }
+    });
 
     @action setSecurityContextGroups(securityContextGroups: SecurityContextGroups) {
         this.securityContextGroups = securityContextGroups;

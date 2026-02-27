@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import Input from '../Input';
 import resourceLocatorStyles from './resourceLocator.scss';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 type Props = {|
     disabled: boolean,
@@ -43,15 +43,18 @@ class ResourceLocator extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.splitLeafValue();
     }
 
-    @action componentDidUpdate(prevProps: Props) {
+    componentDidUpdate = action((prevProps: Props) => {
         if (this.props.value !== prevProps.value) {
             this.splitLeafValue();
         }
-    }
+    });
 
     splitLeafValue() {
         const {value, mode} = this.props;

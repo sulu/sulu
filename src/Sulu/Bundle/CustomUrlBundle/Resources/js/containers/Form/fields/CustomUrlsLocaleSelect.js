@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {SingleSelect} from 'sulu-admin-bundle/components';
 import {webspaceStore} from 'sulu-page-bundle/stores';
@@ -8,6 +8,13 @@ import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 
 @observer
 class CustomUrlsLocaleSelect extends React.Component<FieldTypeProps<string>> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @computed get webspace() {
         const {formInspector} = this.props;
 

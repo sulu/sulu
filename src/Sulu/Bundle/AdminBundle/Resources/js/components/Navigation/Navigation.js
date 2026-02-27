@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import classNames from 'classnames';
 import Icon from '../Icon';
 import Item from './Item';
@@ -43,6 +43,9 @@ class Navigation extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.findDefaultExpandedChild(this.props.children);
     }

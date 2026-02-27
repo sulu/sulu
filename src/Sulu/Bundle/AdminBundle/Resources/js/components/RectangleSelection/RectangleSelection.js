@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import withContainerSize from '../withContainerSize';
 import ModifiableRectangle from './ModifiableRectangle';
 import PositionNormalizer from './normalizers/PositionNormalizer';
@@ -32,6 +32,13 @@ type Props = {
 
 @observer
 class RawRectangleSelectionComponent extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static defaultProps = {
         backdrop: true,
         disabled: false,

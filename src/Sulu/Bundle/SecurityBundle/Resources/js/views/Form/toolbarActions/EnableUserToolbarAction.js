@@ -1,10 +1,17 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {AbstractFormToolbarAction} from 'sulu-admin-bundle/views';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 
 export default class EnableUserToolbarAction extends AbstractFormToolbarAction {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @observable loading: boolean = false;
 
     getToolbarItemConfig() {

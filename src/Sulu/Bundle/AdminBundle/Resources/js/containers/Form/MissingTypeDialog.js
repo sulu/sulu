@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import Dialog from '../../components/Dialog';
 import Form from '../../components/Form';
@@ -17,6 +17,13 @@ type Props = {|
 
 @observer
 class MissingTypeDialog extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @observable selectedType: string;
 
     handleCancel = () => {

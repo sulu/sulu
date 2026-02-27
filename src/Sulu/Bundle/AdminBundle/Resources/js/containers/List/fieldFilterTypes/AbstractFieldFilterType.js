@@ -1,5 +1,5 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import type {Node} from 'react';
 
 export default class AbstractFieldFilterType<T> {
@@ -14,6 +14,9 @@ export default class AbstractFieldFilterType<T> {
         value: T,
         options: Object = {}
     ) {
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.onChange = onChange;
         this.parameters = parameters;
         this.value = value;

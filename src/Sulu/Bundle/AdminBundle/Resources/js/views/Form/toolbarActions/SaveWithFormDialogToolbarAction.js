@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import jexl from 'jexl';
 import Dialog from '../../../components/Dialog';
 import {default as FormContainer, memoryFormStoreFactory, ResourceFormStore} from '../../../containers/Form';
@@ -26,6 +26,9 @@ export default class SaveWithFormDialogToolbarAction extends AbstractFormToolbar
         parentResourceStore: ResourceStore
     ) {
         super(resourceFormStore, form, router, locales, options, parentResourceStore);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {formKey} = options;
 

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, autorun, computed, observable, toJS, untracked, when} from 'mobx';
+import {action, autorun, computed, observable, toJS, untracked, when, makeObservable} from 'mobx';
 import equals from 'fast-deep-equal';
 import userStore from '../../../stores/userStore';
 import MultiSelectionStore from '../../../stores/MultiSelectionStore';
@@ -30,6 +30,9 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
         value: ?Array<string | number>
     ) {
         super(onChange, parameters, value);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.selectionStore = new MultiSelectionStore(
             this.resourceKey,

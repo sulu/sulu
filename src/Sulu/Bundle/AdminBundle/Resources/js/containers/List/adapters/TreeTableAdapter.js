@@ -1,5 +1,5 @@
 // @flow
-import {action} from 'mobx';
+import {action, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import Table from '../../../components/Table';
@@ -12,6 +12,13 @@ import type {ListAdapterProps} from '../types';
 
 @observer
 class TreeTableAdapter extends AbstractTableAdapter {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static LoadingStrategy = DefaultLoadingStrategy;
 
     static StructureStrategy = TreeStructureStrategy;

@@ -1,11 +1,18 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {Checkbox, CheckboxGroup, Input} from 'sulu-admin-bundle/components';
 import {AbstractFieldFilterType} from 'sulu-admin-bundle/containers';
 import countryFieldFilterTypeStyles from './countryFieldFilterType.scss';
 
 class CountryFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static countries: {[key: string]: string} = {};
 
     @observable searchValue: ?string;

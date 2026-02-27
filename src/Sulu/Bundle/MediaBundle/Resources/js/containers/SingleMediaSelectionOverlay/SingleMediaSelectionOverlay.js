@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import {autorun, comparer, computed, observable} from 'mobx';
+import {autorun, comparer, computed, observable, observe} from 'mobx';
 import {observer} from 'mobx-react';
 import {ListStore} from 'sulu-admin-bundle/containers';
 import MediaSelectionOverlay from '../MediaSelectionOverlay';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 type Props = {|
     excludedIds: Array<number>,
@@ -35,7 +35,7 @@ class SingleMediaSelectionOverlay extends React.Component<Props> {
             () => this.props.excludedIds.length ? this.props.excludedIds : undefined,
             {equals: comparer.structural}
         );
-        this.excludedIdsDisposer = excludedIds.observe(() => this.mediaListStore.clear());
+        this.excludedIdsDisposer = observe(excludedIds, () => this.mediaListStore.clear());
 
         this.mediaListStore = MediaSelectionOverlay.createMediaListStore(
             this.collectionId,

@@ -1,11 +1,18 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {Dialog} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import {AbstractListToolbarAction} from 'sulu-admin-bundle/views';
 
 class DeleteMediaToolbarAction extends AbstractListToolbarAction {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @observable showDialog: boolean = false;
 
     getNode() {

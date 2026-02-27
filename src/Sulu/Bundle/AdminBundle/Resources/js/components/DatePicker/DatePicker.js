@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactDatetime from 'react-datetime';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import 'react-datetime/css/react-datetime.css';
 import moment from 'moment';
 import Input from '../Input';
@@ -63,6 +63,9 @@ class DatePicker extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.setValue(this.props.value);
     }

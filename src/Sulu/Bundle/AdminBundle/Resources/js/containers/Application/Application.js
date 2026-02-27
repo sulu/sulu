@@ -1,6 +1,6 @@
 // @flow
 import {observer} from 'mobx-react';
-import {action, observable, autorun, computed} from 'mobx';
+import {action, observable, autorun, computed, makeObservable} from 'mobx';
 import classNames from 'classnames';
 import React, {Fragment} from 'react';
 import log from 'loglevel';
@@ -74,6 +74,9 @@ class Application extends React.Component<Props>{
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.navigationPinnedDisposer = autorun(
             () => this.navigationPinned = userStore.getPersistentSetting(NAVIGATION_PINNED_SETTING_KEY)

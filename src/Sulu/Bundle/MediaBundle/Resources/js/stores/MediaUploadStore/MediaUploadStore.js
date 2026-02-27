@@ -1,7 +1,7 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {ResourceRequester, resourceRouteRegistry} from 'sulu-admin-bundle/services';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 import type {Media} from '../../types';
 
 const RESOURCE_KEY = 'media';
@@ -18,6 +18,9 @@ export default class MediaUploadStore {
     locale: IObservableValue<string>;
 
     constructor(media: ?Media, locale: IObservableValue<string>) {
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.media = media;
         this.locale = locale;
     }

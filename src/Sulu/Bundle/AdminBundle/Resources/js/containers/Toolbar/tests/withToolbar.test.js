@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {extendObservable, observable} from 'mobx';
+import {extendObservable, observable, makeObservable, toJS} from 'mobx';
 import {mount, render} from 'enzyme';
 import toolbarStorePool, {DEFAULT_STORE_KEY} from '../stores/toolbarStorePool';
 import withToolbar from '../withToolbar';
@@ -116,7 +116,7 @@ test('Dispose toolbar when a new view is rendered', () => {
 
     const config = {};
     extendObservable(config, {items: []});
-    const ComponentWithToolbar = withToolbar(Component, () => ({items: config.items.toJS()}), 'default');
+    const ComponentWithToolbar = withToolbar(Component, () => ({items: toJS(config.items)}), 'default');
 
     const router = {
         addUpdateRouteHook: jest.fn(),
@@ -138,6 +138,13 @@ test('Dispose toolbar when a new view is rendered', () => {
 
 test('Recall toolbar-function when changing observable', () => {
     const Component = class Component extends React.Component<*> {
+        constructor(...args: Array<any>) {
+            super(...args);
+            if (typeof makeObservable === 'function') {
+                makeObservable(this);
+            }
+        }
+
         @observable test = true;
 
         render() {

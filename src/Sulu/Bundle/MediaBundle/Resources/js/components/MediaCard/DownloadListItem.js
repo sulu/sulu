@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import classNames from 'classnames';
 import ClipboardButton from 'react-clipboard.js';
 import downloadListItemStyles from './downloadListItem.scss';
@@ -16,6 +16,13 @@ type Props = {
 
 @observer
 class DownloadListItem extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static defaultProps = {
         copyUrlOnClick: false,
     };

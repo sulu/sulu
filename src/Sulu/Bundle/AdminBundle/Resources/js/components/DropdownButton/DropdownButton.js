@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import ArrowMenu from '../ArrowMenu';
 import Button from '../Button';
 import type {ChildrenArray, Element} from 'react';
@@ -16,6 +16,13 @@ type Props = {|
 
 @observer
 class DropdownButton extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static defaultProps = {
         skin: 'secondary',
     };

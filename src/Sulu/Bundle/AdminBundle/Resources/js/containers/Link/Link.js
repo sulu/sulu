@@ -2,7 +2,7 @@
 import React, {Component, Fragment} from 'react';
 import classNames from 'classnames';
 import {observer} from 'mobx-react';
-import {action, observable, toJS} from 'mobx';
+import {action, observable, toJS, makeObservable} from 'mobx';
 import equals from 'fast-deep-equal';
 import SingleSelect from '../../components/SingleSelect/SingleSelect';
 import Icon from '../../components/Icon';
@@ -11,7 +11,7 @@ import linkStyles from '../Form/fields/link.scss';
 import {ResourceRequester} from '../../services';
 import linkTypeRegistry from './registries/linkTypeRegistry';
 import type {LinkValue} from './types';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 type Props = {
     disabled?: boolean,
@@ -55,6 +55,9 @@ class Link extends Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.load(this.props.value);
     }

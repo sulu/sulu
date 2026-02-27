@@ -1,7 +1,7 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {ResourceRequester} from '../../services';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 export default class SingleSelectionStore<T, U: {id: T} = Object> {
     @observable item: ?U;
@@ -16,6 +16,9 @@ export default class SingleSelectionStore<T, U: {id: T} = Object> {
         locale: ?IObservableValue<string>,
         options: Object = {}
     ) {
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.resourceKey = resourceKey;
         this.locale = locale;
         this.options = options;

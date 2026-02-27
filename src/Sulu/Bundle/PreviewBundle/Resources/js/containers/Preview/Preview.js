@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, computed, observable, reaction, toJS, when} from 'mobx';
+import {action, computed, observable, reaction, toJS, when, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import classNames from 'classnames';
@@ -78,6 +78,9 @@ class Preview extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         if (Preview.audienceTargeting) {
             this.targetGroupsStore = new ResourceListStore('target_groups');
@@ -101,11 +104,19 @@ class Preview extends React.Component<Props> {
 
         if (this.props.formStore !== prevProps.formStore) {
             this.disposeFormStoreReactions();
-            this.updatePreview(toJS(formStore.data));
+            this.updatePreview(this.normalizeFormStoreData(toJS(formStore.data)));
 
             this.initializeFormStoreReactions();
         }
     }
+
+    normalizeFormStoreData = (data: mixed): Object => {
+        if (data instanceof Map) {
+            return Object.fromEntries(data);
+        }
+
+        return (data: any);
+    };
 
     @action createPreviewStore = () => {
         const {
@@ -181,7 +192,7 @@ class Preview extends React.Component<Props> {
                     return;
                 }
 
-                this.updatePreview(data);
+                this.updatePreview(this.normalizeFormStoreData(data));
             }
         );
 
@@ -189,7 +200,10 @@ class Preview extends React.Component<Props> {
             () => toJS(formStore.schema),
             () => {
                 if (formStore.type) {
-                    previewStore.updateContext(toJS(formStore.type), toJS(formStore.data)).then(this.setContent);
+                    previewStore.updateContext(
+                        toJS(formStore.type),
+                        this.normalizeFormStoreData(toJS(formStore.data))
+                    ).then(this.setContent);
                 }
             }
         );

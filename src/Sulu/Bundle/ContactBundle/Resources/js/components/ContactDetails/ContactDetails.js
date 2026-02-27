@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, toJS} from 'mobx';
+import {computed, toJS, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {DropdownButton, Form} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -19,6 +19,13 @@ type Props = {|
 
 @observer
 class ContactDetails extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static defaultProps = {
         value: {
             emails: [],

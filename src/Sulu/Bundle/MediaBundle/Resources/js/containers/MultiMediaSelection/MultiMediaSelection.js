@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, toJS, observable, reaction} from 'mobx';
+import {action, toJS, observable, reaction, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import {CroppedText, MultiItemSelection} from 'sulu-admin-bundle/components';
@@ -11,7 +11,7 @@ import MultiMediaSelectionOverlay from '../MultiMediaSelectionOverlay';
 import MimeTypeIndicator from '../../components/MimeTypeIndicator';
 import multiMediaSelectionStyle from './multiMediaSelection.scss';
 import type {DisplayOption, Media} from '../../types';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 import type {Value} from './types';
 
 type Props = {|
@@ -45,6 +45,9 @@ class MultiMediaSelection extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {locale, value} = this.props;
 

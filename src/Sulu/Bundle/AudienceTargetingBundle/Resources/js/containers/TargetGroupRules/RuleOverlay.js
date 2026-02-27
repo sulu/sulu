@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Form, Input, Overlay, SingleSelect} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -18,13 +18,20 @@ type Props = {|
 
 @observer
 class RuleOverlay extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @observable title: ?string = undefined;
     @observable frequency: ?number = undefined;
     @observable conditions: ?Array<Condition> = undefined;
     @observable showTitleError: boolean = false;
     @observable showFrequencyError: boolean = false;
 
-    @action componentDidUpdate(prevProps: Props) {
+    componentDidUpdate = action((prevProps: Props) => {
         if (prevProps.open === false && this.props.open === true) {
             const {value} = this.props;
 
@@ -41,7 +48,7 @@ class RuleOverlay extends React.Component<Props> {
                 this.conditions = undefined;
             }
         }
-    }
+    });
 
     @action handleTitleChange = (title: ?string) => {
         this.title = title;

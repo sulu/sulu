@@ -1,11 +1,18 @@
 // @flow
-import {action, computed, isArrayLike, observable, set, toJS} from 'mobx';
+import {action, computed, observable, set, toJS, makeObservable} from 'mobx';
 import jsonpointer from 'json-pointer';
 import log from 'loglevel';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 import type {Schema, SchemaEntry} from '../types';
 
 export const SECTION_TYPE = 'section';
+
+function isArrayLike(value: mixed): boolean {
+    return !!value
+        && typeof value === 'object'
+        && typeof value.length === 'number'
+        && typeof value.forEach === 'function';
+}
 
 function addSchemaProperties(data: Object, key: string, schema: Schema) {
     const type = schema[key].type;
@@ -54,7 +61,7 @@ function collectTagPathsWithPriority(
         if (types
             && Object.keys(types).length > 0
             && data[key]
-            && (isArrayLike(data[key]))
+            && (Array.isArray(data[key]) || isArrayLike(data[key]))
         ) {
             for (const childKey of data[key].keys()) {
                 const childData = data[key][childKey];
@@ -102,6 +109,12 @@ function collectTagPaths(
 
 export default class AbstractFormStore
 {
+    constructor() {
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     +data: {[string]: any};
     +options: {[string]: any};
     +metadataOptions: ?{[string]: any};

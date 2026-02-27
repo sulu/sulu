@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {autorun, computed, observable, toJS} from 'mobx';
+import {autorun, computed, observable, toJS, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import jexl from 'jexl';
 import Loader from '../../components/Loader';
@@ -66,6 +66,9 @@ class ResourceTabs extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         this.createResourceStoreDisposer = autorun(this.createResourceStore);
 

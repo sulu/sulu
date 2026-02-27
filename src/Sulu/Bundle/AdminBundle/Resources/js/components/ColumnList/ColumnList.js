@@ -1,6 +1,6 @@
 // @flow
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import React from 'react';
 import classNames from 'classnames';
 import Column from './Column';
@@ -19,6 +19,13 @@ type Props = {|
 
 @observer
 class ColumnList extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     static Column = Column;
 
     static Item = Item;
@@ -53,7 +60,7 @@ class ColumnList extends React.Component<Props> {
         this.container.removeEventListener('scroll', this.handleScroll);
     }
 
-    @action componentDidUpdate(prevProps: Props) {
+    componentDidUpdate = action((prevProps: Props) => {
         const {children} = this.props;
         if (this.activeColumnIndex >= React.Children.count(children)) {
             this.activeColumnIndex = 0;
@@ -62,7 +69,7 @@ class ColumnList extends React.Component<Props> {
         if (this.container && this.props.children !== prevProps.children) {
             this.container.scrollLeft = this.columnWidth * (React.Children.count(children) - 1);
         }
-    }
+    });
 
     get columnWidth(): number {
         const columnWidth = parseInt(columnListStyles.columnWidth);

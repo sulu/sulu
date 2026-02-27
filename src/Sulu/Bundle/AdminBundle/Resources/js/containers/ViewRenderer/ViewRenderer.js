@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {observable, reaction} from 'mobx';
+import {observable, reaction, makeObservable} from 'mobx';
 import Router, {getViewKeyFromRoute, Route} from '../../services/Router';
 import userStore from '../../stores/userStore';
 import View from '../../components/View';
@@ -16,6 +16,13 @@ const UPDATE_ROUTE_HOOK_PRIORITY = 1024;
 
 @observer
 class ViewRenderer extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @observable loginCount: number = 0;
 
     updateLoginCountDisposer: ?() => *;

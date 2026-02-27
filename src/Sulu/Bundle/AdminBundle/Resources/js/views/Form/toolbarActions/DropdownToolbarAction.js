@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {isArrayLike} from 'mobx';
+
 import {ResourceFormStore} from '../../../containers/Form';
 import Router from '../../../services/Router';
 import ResourceStore from '../../../stores/ResourceStore';
@@ -32,11 +32,10 @@ export default class DropdownToolbarAction extends AbstractFormToolbarAction {
 
         const {toolbarActions} = this.options;
 
-        if (!isArrayLike(toolbarActions)) {
+        if (!Array.isArray(toolbarActions)) {
             throw new Error('The passed "toolbarActions" option must be of type object or array');
         }
 
-        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
         this.toolbarActions = toolbarActions.map(
             (action) => {
                 if (action === null || typeof action !== 'object') {

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, computed, intercept, observable} from 'mobx';
+import {action, computed, intercept, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {userStore} from 'sulu-admin-bundle/stores';
 import {Tabs} from 'sulu-admin-bundle/views';
@@ -11,7 +11,7 @@ import webspaceTabsStyles from './webspaceTabs.scss';
 import type {Webspace} from '../../stores/webspaceStore/types';
 import type {AttributeMap} from 'sulu-admin-bundle/services';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 const USER_SETTING_PREFIX = 'sulu_page.webspace_tabs';
 const USER_SETTING_WEBSPACE = [USER_SETTING_PREFIX, 'webspace'].join('.');
@@ -36,6 +36,9 @@ class WebspaceTabs extends React.Component<ViewProps> {
 
     constructor(props: ViewProps) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {router} = this.props;
 

@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, reaction, observable, toJS} from 'mobx';
+import {action, reaction, observable, toJS, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import jexl from 'jexl';
 import SingleItemSelection from '../../components/SingleItemSelection';
@@ -8,7 +8,7 @@ import PublishIndicator from '../../components/PublishIndicator';
 import SingleSelectionStore from '../../stores/SingleSelectionStore';
 import SingleListOverlay from '../SingleListOverlay';
 import singleSelectionStyles from './singleSelection.scss';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 type Props = {|
     adapter: string,
@@ -46,6 +46,9 @@ class SingleSelection extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
 
         const {detailOptions, locale, resourceKey, value} = this.props;
 

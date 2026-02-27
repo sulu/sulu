@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {translate} from '../../utils/Translator';
 import Button from '../../components/Button';
@@ -19,6 +19,13 @@ type Props = {|
 
 @observer
 class ResourceLocatorHistory extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     resourceListStore: ?ResourceListStore;
     @observable open = false;
     @observable showDeleteWarning = false;

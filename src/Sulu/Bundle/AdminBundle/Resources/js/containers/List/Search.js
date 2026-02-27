@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import Input from '../../components/Input/Input';
 import {translate} from '../../utils/Translator';
 
@@ -12,6 +12,13 @@ type Props = {
 
 @observer
 class Search extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @observable collapsed: boolean = true;
     @observable value: ?string;
 

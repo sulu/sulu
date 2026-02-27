@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import moment from 'moment';
 import DatePickerComponent from '../../../components/DatePicker';
@@ -30,6 +30,13 @@ function getValue(value: ?string, format: string): ?Date {
 
 @observer
 class DatePicker extends React.Component<FieldTypeProps<?string>> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @computed get format() {
         const {fieldTypeOptions} = this.props;
         const {dateFormat, timeFormat} = fieldTypeOptions;

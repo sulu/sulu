@@ -1,13 +1,20 @@
 // @flow
 import jexl from 'jexl';
 import React from 'react';
-import {observable, action} from 'mobx';
+import {observable, action, makeObservable} from 'mobx';
 import Dialog from '../../../components/Dialog';
 import {translate} from '../../../utils';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
 
 export default class TypeToolbarAction extends AbstractFormToolbarAction {
+    constructor(...args: Array<any>) {
+        super(...args);
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
+    }
+
     @observable selectedTypeForUnsavedChangesDialog: ?string = undefined;
 
     getToolbarItemConfig(): ?ToolbarItemConfig<?string> {

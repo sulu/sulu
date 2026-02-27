@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, observable} from 'mobx';
+import {action, autorun, computed, observable, makeObservable} from 'mobx';
 import log from 'loglevel';
 import type {Node} from 'react';
 import type {Button, Select, ToolbarConfig, ToolbarItemConfig} from '../types';
@@ -11,6 +11,9 @@ export default class ToolbarStore {
     showSuccessDisposer: () => void;
 
     constructor() {
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.showSuccessDisposer = autorun(() => {
             const {showSuccess} = this.config;
             if (showSuccess && showSuccess.get()) {

@@ -1,5 +1,5 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import ResourceRequester from '../../services/ResourceRequester';
 import type {Collaboration} from './types';
 
@@ -14,6 +14,9 @@ export default class CollaborationStore {
     @observable collaborations: Array<Collaboration> = [];
 
     constructor(resourceKey: string, id: string | number) {
+        if (typeof makeObservable === 'function') {
+            makeObservable(this);
+        }
         this.resourceKey = resourceKey;
         this.id = id;
 
