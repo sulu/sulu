@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import jexl from 'jexl';
 import Form from '../../components/Form';
@@ -20,6 +20,11 @@ type Props = {|
 
 @observer
 class Section extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @computed get conditionData() {
         const {data, formInspector} = this.props;
 

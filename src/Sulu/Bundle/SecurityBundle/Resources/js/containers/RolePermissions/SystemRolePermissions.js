@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Heading, Matrix, Toggler} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -23,13 +23,18 @@ type Props = {|
 
 @observer
 class SystemRolePermissions extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     static webspacePlaceholder = '#webspace#';
 
     @observable active: boolean = false;
 
-    @action componentDidMount() {
+    componentDidMount = action(() => {
         this.active = this.hasValues;
-    }
+    });
 
     handleChange = (values: RolePermissions) => {
         const {onChange, system} = this.props;

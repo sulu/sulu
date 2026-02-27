@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {toJS, action, computed, observable} from 'mobx';
+import {toJS, action, computed, observable, makeObservable} from 'mobx';
 import equals from 'fast-deep-equal';
 import Dialog from '../../components/Dialog';
 import {type SnackbarType} from '../../components/Snackbar';
@@ -22,6 +22,11 @@ type Props = {
 
 @observer
 class DeleteDependantResourcesDialog extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @observable inProgress: boolean = false;
     @observable finished: boolean = false;
     @observable showSnackbar: boolean = true;
@@ -47,7 +52,7 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
         return this.props.dependantResourcesData.dependantResourcesCount;
     }
 
-    @action componentDidUpdate(prevProps: $ReadOnly<Props>) {
+    componentDidUpdate = action((prevProps: $ReadOnly<Props>) => {
         if (!equals(toJS(prevProps.dependantResourcesData), toJS(this.props.dependantResourcesData))
             || !equals(toJS(prevProps.requestOptions), toJS(this.props.requestOptions))) {
             this.inProgress = false;
@@ -58,7 +63,7 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
             this.totalDeletedResources = 0;
             this.promises = [];
         }
-    }
+    });
 
     @computed get errored() {
         return !!this.error;

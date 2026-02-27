@@ -1,9 +1,14 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import ResourceRequester from '../../../services/ResourceRequester';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
 export default class TogglerToolbarAction extends AbstractFormToolbarAction {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @observable loading: boolean = false;
 
     @computed get property() {

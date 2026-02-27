@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Button, Dialog} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -46,6 +46,7 @@ class SingleMediaUpload extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         const {
             collectionId,

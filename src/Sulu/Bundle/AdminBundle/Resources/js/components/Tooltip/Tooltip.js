@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import Popover from '../Popover';
 import tooltipStyles from './tooltip.scss';
@@ -16,6 +16,7 @@ type Props = {|
 class Tooltip extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
     }
 
     @observable tooltipOpen: boolean = false;

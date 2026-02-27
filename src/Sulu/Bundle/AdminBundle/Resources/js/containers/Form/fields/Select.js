@@ -1,15 +1,16 @@
 // @flow
 import React from 'react';
-import {computed, isArrayLike} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import MultiSelectComponent from '../../../components/MultiSelect';
 import type {FieldTypeProps} from '../../../types';
-import type {IObservableArray} from 'mobx/lib/mobx';
+import type {IObservableArray} from 'mobx';
 
 type Props = FieldTypeProps<?Array<string | number>>;
 
 export default class Select extends React.Component<Props> {
     constructor(props: FieldTypeProps<?Array<string | number>>) {
         super(props);
+        makeObservable(this);
 
         const {onChange, schemaOptions, value} = this.props;
 
@@ -23,11 +24,10 @@ export default class Select extends React.Component<Props> {
             return;
         }
 
-        if (!isArrayLike(defaultOptions)) {
+        if (!Array.isArray(defaultOptions)) {
             throw new Error('The "default_values" schema option must be an array!');
         }
 
-        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
         const defaultValues = defaultOptions.map(({name: defaultValue}) => {
             if (typeof defaultValue !== 'number' && typeof defaultValue !== 'string') {
                 throw new Error('A single schema option of "default_values" must be a string or number');
@@ -44,11 +44,10 @@ export default class Select extends React.Component<Props> {
     @computed get values(): Array<any> | IObservableArray<any> {
         const {values} = this.props.schemaOptions;
 
-        if (!values || !isArrayLike(values.value)) {
+        if (!values || !Array.isArray(values.value)) {
             throw new Error('The "values" option has to be set for the Select FieldType');
         }
 
-        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
         return values.value;
     }
 

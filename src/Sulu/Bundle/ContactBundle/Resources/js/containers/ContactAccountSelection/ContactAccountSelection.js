@@ -1,7 +1,7 @@
 // @flow
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
-import {action, computed, observable, toJS} from 'mobx';
+import {action, computed, observable, toJS, makeObservable} from 'mobx';
 import equals from 'fast-deep-equal';
 import {MultiItemSelection} from 'sulu-admin-bundle/components';
 import {MultiListOverlay} from 'sulu-admin-bundle/containers';
@@ -28,6 +28,7 @@ class ContactAccountSelection extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         const {value} = this.props;
 

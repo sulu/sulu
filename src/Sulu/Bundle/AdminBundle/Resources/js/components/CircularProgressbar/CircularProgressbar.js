@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import {CircularProgressbar as ReactCircularProgressbar} from 'react-circular-progressbar';
 import circularProgressbarStyles from './circularProgressbar.scss';
 
@@ -11,6 +11,11 @@ type Props = {
 };
 
 export default class CircularProgressbar extends React.PureComponent<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     static defaultProps = {
         hidePercentageText: false,
         percentage: 0,

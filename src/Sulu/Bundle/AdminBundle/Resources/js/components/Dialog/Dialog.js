@@ -1,6 +1,6 @@
 // @flow
 import classNames from 'classnames';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import React, {Fragment} from 'react';
 import {Portal} from 'react-portal';
@@ -43,6 +43,7 @@ class Dialog extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         const {open} = this.props;
 
@@ -50,7 +51,7 @@ class Dialog extends React.Component<Props> {
         this.visible = open;
     }
 
-    @action componentDidUpdate(prevProps: Props) {
+    componentDidUpdate = action((prevProps: Props) => {
         const {open} = this.props;
 
         if (prevProps.open === false && open === true) {
@@ -62,7 +63,7 @@ class Dialog extends React.Component<Props> {
                 this.open = open;
             }));
         }
-    }
+    });
 
     @action handleTransitionEnd = () => {
         const {open} = this.props;

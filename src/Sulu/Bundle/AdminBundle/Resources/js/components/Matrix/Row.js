@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import {translate} from '../../utils/index';
 import Item from './Item';
 import rowStyles from './row.scss';
@@ -19,6 +19,11 @@ type Props = {|
 
 @observer
 class Row extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     static defaultProps = {
         disabled: false,
         values: {},

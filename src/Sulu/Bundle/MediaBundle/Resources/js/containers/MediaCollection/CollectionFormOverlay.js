@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {Form, resourceFormStoreFactory} from 'sulu-admin-bundle/containers';
@@ -28,12 +28,13 @@ class CollectionFormOverlay extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         const {resourceStore} = this.props;
         this.formStore = resourceFormStoreFactory.createFromResourceStore(resourceStore, FORM_KEY);
     }
 
-    @action componentDidUpdate(prevProps: Props) {
+    componentDidUpdate = action((prevProps: Props) => {
         const {operationType} = this.props;
 
         if (operationType) {
@@ -46,7 +47,7 @@ class CollectionFormOverlay extends React.Component<Props> {
             this.formStore.destroy();
             this.formStore = resourceFormStoreFactory.createFromResourceStore(this.props.resourceStore, FORM_KEY);
         }
-    }
+    });
 
     componentWillUnmount() {
         this.formStore.destroy();

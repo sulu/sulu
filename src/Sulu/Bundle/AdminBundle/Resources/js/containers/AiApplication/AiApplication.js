@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import symfonyRouting from 'fos-jsrouting/router';
 import {translate} from '../../utils';
@@ -44,7 +44,12 @@ type Props = {|
  */
 @observer
 export default class AiApplication extends Component<Props> {
-    @observable selectedComponent: {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
+    @observable.ref selectedComponent: {
         formInspector: FormInspector,
         getValue: () => string,
         isInsideBlock: boolean,
@@ -53,8 +58,8 @@ export default class AiApplication extends Component<Props> {
         setValue: (value: string) => void,
     };
     @observable selectedText: string;
-    @observable selectedRect: ClientRect;
-    @observable selectedElement: HTMLElement;
+    @observable.ref selectedRect: ClientRect;
+    @observable.ref selectedElement: HTMLElement;
     @observable writingAssistantOpen: boolean = false;
     @observable translateOpen: boolean = false;
     @observable hasFocus: boolean = false;

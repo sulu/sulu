@@ -1,11 +1,12 @@
 // @flow
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import type {TeaserProviderOptions} from '../types';
 
 class TeaserProviderRegistry {
     teaserProviders: {[string]: TeaserProviderOptions};
 
     constructor() {
+        makeObservable(this);
         this.clear();
     }
 

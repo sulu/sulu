@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Loader} from 'sulu-admin-bundle/components';
 import ImageFocusPointCell from './ImageFocusPointCell';
@@ -18,6 +18,11 @@ type Props = {|
 
 @observer
 class ImageFocusPoint extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     imageRef: ?ElementRef<'img'>;
     @observable imageDimension: ClientRect;
 

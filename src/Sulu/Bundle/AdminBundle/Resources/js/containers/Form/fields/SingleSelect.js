@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {isArrayLike, toJS} from 'mobx';
+import {toJS} from 'mobx';
 import SingleSelectComponent from '../../../components/SingleSelect';
 import type {FieldTypeProps} from '../../../types';
 
@@ -40,13 +40,12 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
         const {schemaOptions, disabled, value} = this.props;
         const values = toJS(schemaOptions.values);
 
-        if (!values || !isArrayLike(values.value)) {
+        if (!values || !Array.isArray(values.value)) {
             throw new Error('The "values" schema option of the SingleSelect field-type must be an array!');
         }
 
         return (
             <SingleSelectComponent disabled={!!disabled} onChange={this.handleChange} value={value}>
-                {/*$FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array*/}
                 {values.value.map(({name: value, title}, index) => {
                     if (typeof value !== 'string' && typeof value !== 'number' && value !== undefined) {
                         throw new Error(

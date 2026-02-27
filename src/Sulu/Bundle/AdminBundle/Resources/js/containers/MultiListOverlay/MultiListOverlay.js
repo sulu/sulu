@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import {comparer, computed, observable, reaction} from 'mobx';
+import {comparer, computed, observable, observe, reaction} from 'mobx';
 import {observer} from 'mobx-react';
 import ListStore from '../../containers/List/stores/ListStore';
 import ListOverlay from '../ListOverlay';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 import type {OverlayType} from '../ListOverlay';
 
 const USER_SETTINGS_KEY = 'multi_list_overlay';
@@ -54,7 +54,7 @@ class MultiListOverlay extends React.Component<Props> {
             () => this.props.excludedIds.length ? this.props.excludedIds : undefined,
             {equals: comparer.structural}
         );
-        this.excludedIdsDisposer = excludedIds.observe(() => this.listStore.clear());
+        this.excludedIdsDisposer = observe(excludedIds, () => this.listStore.clear());
 
         const {listKey, locale, options, preloadSelectedItems, preSelectedItems, resourceKey} = this.props;
         const observableOptions = {};

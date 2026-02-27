@@ -1,6 +1,6 @@
 //@flow
 import React from 'react';
-import {action, computed, observable, get} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {List, ListStore, SingleListOverlay} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
@@ -13,7 +13,7 @@ import CollectionBreadcrumb from './CollectionBreadcrumb';
 import PermissionFormOverlay from './PermissionFormOverlay';
 import collectionSectionStyles from './collectionSection.scss';
 import type {OperationType, OverlayType} from './types';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 import type {DependantResourcesData} from 'sulu-admin-bundle/types';
 
 const COLLECTIONS_RESOURCE_KEY = 'collections';
@@ -33,6 +33,11 @@ type Props = {
 
 @observer
 class CollectionSection extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @observable openedCollectionOperationOverlayType: OperationType;
     @observable movingRestrictedTargetCollection: ?Object = undefined;
     @observable dependantResourcesData: ?DependantResourcesData = undefined;
@@ -52,7 +57,7 @@ class CollectionSection extends React.Component<Props> {
 
     @computed get hasChildren(): ?boolean {
         const {resourceStore} = this.props;
-        return get(resourceStore.data, 'hasChildren');
+        return resourceStore.data ? resourceStore.data.hasChildren : undefined;
     }
 
     @computed get resourceStoreByOperationType(): ResourceStore {

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable, toJS} from 'mobx';
+import {action, observable, toJS, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import ColumnList from '../../../components/ColumnList';
 import GhostIndicator from '../../../components/GhostIndicator';
@@ -14,6 +14,11 @@ import columnListAdapterStyles from './columnListAdapter.scss';
 
 @observer
 class ColumnListAdapter extends AbstractAdapter {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     static LoadingStrategy = DefaultLoadingStrategy;
 
     static StructureStrategy = ColumnStructureStrategy;

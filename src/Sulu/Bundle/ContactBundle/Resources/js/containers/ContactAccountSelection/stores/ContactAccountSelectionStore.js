@@ -1,9 +1,13 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import {arrayMove} from 'sulu-admin-bundle/utils';
 
 export default class ContactAccountSelectionStore {
+    constructor() {
+        makeObservable(this);
+    }
+
     static contactPrefix = 'c';
     static accountPrefix = 'a';
 

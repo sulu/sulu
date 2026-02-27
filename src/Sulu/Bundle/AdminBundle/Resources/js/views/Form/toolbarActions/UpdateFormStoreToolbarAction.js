@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import React from 'react';
 import symfonyRouting from 'fos-jsrouting/router';
 import jexl from 'jexl';
@@ -37,6 +37,7 @@ export default class UpdateFormStoreToolbarAction extends AbstractFormToolbarAct
             options,
             parentResourceStore
         );
+        makeObservable(this);
 
         // Required options validation
         const requiredOptions = [

@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import moment from 'moment';
 import Config from '../Config';
 import {setTranslations} from '../../utils/Translator';
@@ -31,6 +31,10 @@ function setMomentLocale() {
 }
 
 class Initializer {
+    constructor() {
+        makeObservable(this);
+    }
+
     @observable config: ?{[string]: Object};
     @observable initialized: boolean = false;
     @observable initializedTranslationsLocale: ?string;

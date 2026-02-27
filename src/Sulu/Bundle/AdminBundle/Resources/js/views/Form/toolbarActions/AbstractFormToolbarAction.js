@@ -1,5 +1,5 @@
 // @flow
-import {computed, toJS} from 'mobx';
+import {computed, toJS, makeObservable} from 'mobx';
 import ResourceStore from '../../../stores/ResourceStore';
 import {ResourceFormStore, FormInspector, conditionDataProviderRegistry} from '../../../containers/Form';
 import Router from '../../../services/Router';
@@ -36,6 +36,7 @@ export default class AbstractFormToolbarAction {
         options: {[key: string]: mixed},
         parentResourceStore: ResourceStore
     ) {
+        makeObservable(this);
         this.resourceFormStore = resourceFormStore;
         this.formInspector = new FormInspector(this.resourceFormStore);
         this.form = form;

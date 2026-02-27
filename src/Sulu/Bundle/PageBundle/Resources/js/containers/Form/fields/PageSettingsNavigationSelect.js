@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {MultiSelect} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -9,6 +9,11 @@ import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 
 @observer
 class PageSettingsNavigationSelect extends React.Component<FieldTypeProps<Array<string | number>>> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @computed get webspace() {
         const {formInspector} = this.props;
 

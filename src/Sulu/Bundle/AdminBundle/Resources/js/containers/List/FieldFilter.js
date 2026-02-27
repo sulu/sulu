@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import ArrowMenu from '../../components/ArrowMenu';
 import Button from '../../components/Button';
@@ -16,6 +16,11 @@ type Props = {|
 
 @observer
 class FieldFilter extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @observable filterMenuOpen: boolean = false;
     @observable filterChipOpen: ?string = undefined;
 

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import stickyStyles from './sticky.scss';
 import type {ElementRef, Node} from 'react';
 
@@ -22,6 +22,7 @@ class Sticky extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         if (typeof IntersectionObserver !== 'undefined') {
             this.intersectionObserver = new IntersectionObserver((records) => {

@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {autorun, computed} from 'mobx';
+import {autorun, computed, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import TabsComponent from '../../components/Tabs';
@@ -32,6 +32,7 @@ class Tabs<T> extends React.Component<Props<T>> {
 
     constructor(props: Props<T>) {
         super(props);
+        makeObservable(this);
 
         this.redirectToRouteWithHighestPriorityDisposer = autorun(this.redirectToRouteWithHighestPriority);
     }

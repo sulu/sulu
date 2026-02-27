@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Dialog} from 'sulu-admin-bundle/components';
 import {List, ListStore} from 'sulu-admin-bundle/containers';
@@ -8,7 +8,7 @@ import {ResourceRequester} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import log from 'loglevel';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 type Props = FieldTypeProps<void>;
 
@@ -21,6 +21,7 @@ class SettingsVersions extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         // @deprecated
         log.warn(

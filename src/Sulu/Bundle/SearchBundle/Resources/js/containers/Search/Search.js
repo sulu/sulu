@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Icon, Loader} from 'sulu-admin-bundle/components';
 import Pagination from 'sulu-admin-bundle/components/Pagination';
@@ -21,11 +21,16 @@ type Props = {|
 
 @observer
 class Search extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @observable query: ?string = undefined;
     @observable indexes: ?{[indexName: string]: Index} = undefined;
     @observable indexName: ?string = undefined;
 
-    @action componentDidMount() {
+    componentDidMount = action(() => {
         this.query = searchStore.query;
         this.indexName = searchStore.indexName;
         indexStore.loadIndexes().then(action((indexes: Array<Index>) => {
@@ -34,7 +39,7 @@ class Search extends React.Component<Props> {
                 return indexesObject;
             }, {});
         }));
-    }
+    });
 
     @action handleIndexChange = (indexName: ?string) => {
         this.indexName = indexName;

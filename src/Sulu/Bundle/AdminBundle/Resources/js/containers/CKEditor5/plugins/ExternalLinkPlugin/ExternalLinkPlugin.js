@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {Observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import ContextualBalloon from '@ckeditor/ckeditor5-ui/src/panel/balloon/contextualballoon';
@@ -32,6 +32,11 @@ const LINK_REL_ATTRIBUTE = 'externalLinkRel';
 const LINK_TAG = 'a';
 
 export default class ExternalLinkPlugin extends Plugin {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @observable open: boolean = false;
     @observable target: ?string = DEFAULT_TARGET;
     @observable title: ?string;

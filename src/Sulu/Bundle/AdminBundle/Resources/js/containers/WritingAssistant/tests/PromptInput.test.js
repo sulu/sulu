@@ -34,6 +34,10 @@ describe('PromptInput Component', () => {
         },
     };
 
+    beforeEach(() => {
+        jest.useRealTimers();
+    });
+
     test('renders the expert text when type is text', () => {
         render(<PromptInput {...defaultProps} />);
 
@@ -41,6 +45,8 @@ describe('PromptInput Component', () => {
     });
 
     test('renders the SingleSelect when type is select', async() => {
+        const user = userEvent.setup();
+
         const selectExperts = {
             name: 'Expert Name',
             options: [
@@ -54,13 +60,15 @@ describe('PromptInput Component', () => {
 
         render(<PromptInput {...defaultProps} experts={selectExperts} />);
 
-        await userEvent.click(screen.getAllByText('Option 1')[0]);
+        await user.click(screen.getAllByText('Option 1')[0]);
 
         expect(screen.getAllByText('Option 1')[0]).toBeInTheDocument();
         expect(screen.getAllByText('Option 2')[0]).toBeInTheDocument();
     });
 
     test('renders the predefined prompts dropdown when predefinedPrompts is provided', async() => {
+        const user = userEvent.setup();
+
         const predefinedPrompts = {
             handleClick: jest.fn(),
             label: 'Predefined Prompts',
@@ -73,34 +81,40 @@ describe('PromptInput Component', () => {
         render(<PromptInput {...defaultProps} predefinedPrompts={predefinedPrompts} />);
 
         expect(screen.getByText(predefinedPrompts.label)).toBeInTheDocument();
-        await userEvent.click(screen.getByText(predefinedPrompts.label));
+        await user.click(screen.getByText(predefinedPrompts.label));
         expect(screen.getByText('Prompt 1')).toBeInTheDocument();
         expect(screen.getByText('Prompt 2')).toBeInTheDocument();
     });
 
     test('calls onAddMessage when the send button is clicked', async() => {
+        const user = userEvent.setup();
+
         render(<PromptInput {...defaultProps} />);
 
         const input = screen.getByPlaceholderText('Add Message');
-        await userEvent.type(input, 'Test message');
-        await userEvent.click(screen.getByText('Send'));
+        await user.type(input, 'Test message');
+        await user.click(screen.getByText('Send'));
 
         expect(defaultProps.onAddMessage).toHaveBeenCalledWith('Test message');
     });
 
     test('calls onAddMessage when Enter key is pressed', async() => {
+        const user = userEvent.setup();
+
         render(<PromptInput {...defaultProps} />);
 
         const input = screen.getByPlaceholderText('Add Message');
-        await userEvent.type(input, 'Test message{enter}');
+        await user.type(input, 'Test message{enter}');
 
         expect(defaultProps.onAddMessage).toHaveBeenCalledWith('Test message');
     });
 
     test('does not call onAddMessage when input is empty', async() => {
+        const user = userEvent.setup();
+
         render(<PromptInput {...defaultProps} />);
 
-        await userEvent.click(screen.getByRole('button', 'Send'));
+        await user.click(screen.getByRole('button', 'Send'));
 
         expect(defaultProps.onAddMessage).not.toHaveBeenCalled();
     });
@@ -113,10 +127,12 @@ describe('PromptInput Component', () => {
     });
 
     test('enables the send button when input is not empty', async() => {
+        const user = userEvent.setup();
+
         render(<PromptInput {...defaultProps} />);
 
         const input = screen.getByPlaceholderText('Add Message');
-        await userEvent.type(input, 'Test message');
+        await user.type(input, 'Test message');
 
         const button = screen.getByText('Send');
         expect(button).toBeEnabled();

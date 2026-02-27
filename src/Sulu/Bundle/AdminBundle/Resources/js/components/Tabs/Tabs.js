@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import debounce from 'debounce';
@@ -25,6 +25,11 @@ const DEBOUNCE_TIME = 200;
 
 @observer
 class Tabs extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @observable tabsWidth: number = 0;
     @observable tabsContainerWrapperWidth: number = 0;
     @observable tabsContainerWidth: number = 0;

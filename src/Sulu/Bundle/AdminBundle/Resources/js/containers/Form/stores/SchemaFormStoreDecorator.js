@@ -1,11 +1,11 @@
 // @flow
-import {action, computed, observable, when} from 'mobx';
+import {action, computed, observable, when, makeObservable} from 'mobx';
 import log from 'loglevel';
 import metadataStore from './metadataStore';
 import type {ChangeContext, FormStoreInterface, Schema, SchemaEntry} from '../types';
 
 export default class SchemaFormStoreDecorator implements FormStoreInterface {
-    @observable innerFormStore: ?FormStoreInterface;
+    @observable.ref innerFormStore: ?FormStoreInterface;
 
     constructor(
         initializer: (schema: Schema, jsonSchema: Object) => FormStoreInterface,
@@ -13,6 +13,7 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         type: ?string,
         metadataOptions: ?{[string]: any}
     ) {
+        makeObservable(this);
         Promise.all([
             metadataStore.getSchema(formKey, type, metadataOptions),
             metadataStore.getJsonSchema(formKey, type, metadataOptions),

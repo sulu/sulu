@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {Form, Overlay} from 'sulu-admin-bundle/components';
 import {ResourceSingleSelect, SingleAutoComplete} from 'sulu-admin-bundle/containers';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
@@ -29,6 +29,7 @@ class AddContactToolbarAction extends AbstractListToolbarAction {
         options: {[key: string]: mixed}
     ) {
         super(listStore, list, router, locales, resourceStore, options);
+        makeObservable(this);
 
         this.contactSelectionStore = new SingleSelectionStore('contacts');
     }

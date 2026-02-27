@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable, when} from 'mobx';
+import {action, computed, observable, when, makeObservable} from 'mobx';
 import {SmartContentStore} from '../../SmartContent';
 
 class SmartContentStorePool {
@@ -10,6 +10,7 @@ class SmartContentStorePool {
     }
 
     constructor() {
+        makeObservable(this);
         this.clear();
     }
 

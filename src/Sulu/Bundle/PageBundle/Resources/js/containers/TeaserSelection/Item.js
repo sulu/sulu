@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import textVersion from 'textversionjs';
 import {MimeTypeIndicator} from 'sulu-media-bundle/components';
@@ -11,7 +11,7 @@ import {translate} from 'sulu-admin-bundle/utils';
 import teaserProviderRegistry from './registries/teaserProviderRegistry';
 import itemStyles from './item.scss';
 import type {Media} from 'sulu-media-bundle/types';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 import type {TeaserItem} from './types';
 
 type Props = {|
@@ -29,6 +29,11 @@ type Props = {|
 
 @observer
 class Item extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     static mediaUrl: ?string = undefined;
 
     @observable title: ?string = undefined;

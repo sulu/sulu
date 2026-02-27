@@ -2,7 +2,7 @@
 import React, {Fragment} from 'react';
 import {Portal} from 'react-portal';
 import {observer} from 'mobx-react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import Mousetrap from 'mousetrap';
 import {afterElementsRendered} from '../../utils/DOM';
 import Backdrop from '../Backdrop';
@@ -50,6 +50,7 @@ class Popover extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         window.addEventListener('blur', this.close);
         window.addEventListener('resize', this.close);

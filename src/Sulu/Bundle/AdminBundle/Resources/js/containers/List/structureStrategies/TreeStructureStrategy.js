@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {arrayMove} from '../../../utils';
 import type {StructureStrategyInterface, TreeItem} from '../types';
 
@@ -80,6 +80,10 @@ function findChildrenForParentId(tree: Array<TreeItem>, parentId: ?string | numb
 }
 
 export default class TreeStructureStrategy implements StructureStrategyInterface {
+    constructor() {
+        makeObservable(this);
+    }
+
     @observable data: Array<TreeItem> = [];
 
     @computed get visibleItems(): Array<Object> {

@@ -1,7 +1,7 @@
 // @flow
 import 'url-search-params-polyfill';
 import {createMemoryHistory} from 'history';
-import {observable, isObservable} from 'mobx';
+import {intercept, observable, isObservable} from 'mobx';
 import Router from '../Router';
 import Route from '../Route';
 import routeRegistry from '../registries/routeRegistry';
@@ -912,7 +912,7 @@ test('Binding should not touch observable value when default attribute is alread
     const locale = observable.box('en');
     let observableChanged = false;
 
-    locale.intercept((change) => {
+    intercept(locale, (change) => {
         observableChanged = true;
         return change;
     });

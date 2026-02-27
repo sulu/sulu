@@ -1,5 +1,5 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import React from 'react';
 import {observer} from 'mobx-react';
 import {buildHocDisplayName} from '../../utils/react';
@@ -11,6 +11,11 @@ import type {WithContainerSizeElement} from './types';
 export default function withContainerSize(Component: ComponentType<*>, containerClass: string = styles.container) {
     @observer
     class WithContainerSizeComponent extends React.Component<*> {
+        constructor(...args: Array<any>) {
+            super(...args);
+            makeObservable(this);
+        }
+
         component: WithContainerSizeElement;
 
         container: ElementRef<'div'>;

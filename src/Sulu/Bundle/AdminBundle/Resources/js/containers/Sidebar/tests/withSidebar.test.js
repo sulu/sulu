@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {extendObservable, observable} from 'mobx';
+import {extendObservable, observable, makeObservable} from 'mobx';
 import {mount, render} from 'enzyme';
 import sidebarStore from '../stores/sidebarStore';
 import withSidebar from '../withSidebar';
@@ -120,6 +120,11 @@ test('Dispose toolbar when a new view is rendered', () => {
 
 test('Recall sidebar-function when changing observable', () => {
     const Component = class Component extends React.Component<*> {
+        constructor(...args: Array<any>) {
+            super(...args);
+            makeObservable(this);
+        }
+
         @observable sidebarView = 'preview';
 
         render() {

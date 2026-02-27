@@ -1,11 +1,11 @@
 // @flow
-import {action, autorun, computed, observable, toJS} from 'mobx';
+import {action, autorun, computed, observable, toJS, makeObservable} from 'mobx';
 import equals from 'fast-deep-equal';
 import Requester from '../../../services/Requester';
 import Config from '../../../services/Config';
 import ResourceRequester from '../../../services/ResourceRequester';
 import {buildQueryString} from '../../../utils/Request';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 import type {Conjunction, FilterCriteria, SortOrder} from '../types';
 
 export default class SmartContentStore {
@@ -43,6 +43,7 @@ export default class SmartContentStore {
         params: Object,
         webspaceKey: ?string
     ) {
+        makeObservable(this);
         this.provider = provider;
         this.locale = locale;
         this.dataSourceResourceKey = dataSourceResourceKey;

@@ -1,7 +1,7 @@
 // @flow
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
-import {action, observable, when} from 'mobx';
+import {action, observable, when, makeObservable} from 'mobx';
 import {Button, Dialog, FileUploadButton} from 'sulu-admin-bundle/components';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -26,6 +26,7 @@ class MediaVersionUpload extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         const {resourceStore} = this.props;
         const locale = resourceStore.locale;

@@ -1,5 +1,5 @@
 // @flow
-import {computed, observable} from 'mobx';
+import {computed, observable, makeObservable} from 'mobx';
 import type {BlockPreviewTransformer, BlockPreviewTransformerMap} from '../types';
 
 class BlockPreviewTransformerRegistry {
@@ -7,6 +7,7 @@ class BlockPreviewTransformerRegistry {
     @observable priority: {[string]: number};
 
     constructor() {
+        makeObservable(this);
         this.clear();
     }
 

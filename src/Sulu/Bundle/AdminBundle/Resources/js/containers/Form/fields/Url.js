@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import {isArrayLike} from 'mobx';
+
 import UrlComponent from '../../../components/Url';
 import type {FieldTypeProps} from '../../../types';
-import type {IObservableArray} from 'mobx/lib/mobx';
+import type {IObservableArray} from 'mobx';
 
 export default class Url extends React.Component<FieldTypeProps<?string>> {
     constructor(props: FieldTypeProps<?string>) {
@@ -19,10 +19,10 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
             value,
         } = this.props;
 
-        if (unvalidatedDefaults !== undefined && !isArrayLike(unvalidatedDefaults)) {
+        if (unvalidatedDefaults !== undefined && !Array.isArray(unvalidatedDefaults)) {
             throw new Error('The "defaults" schema option must be an array!');
         }
-        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+        // $FlowFixMe: flow does not recognize that Array.isArray(value) means that value is an array
         const defaults: Array<any> | IObservableArray<any> = unvalidatedDefaults;
 
         const defaultSchemeOption = defaults && defaults.find((defaultOption) => defaultOption.name === 'scheme');
@@ -73,10 +73,9 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
         let protocols = undefined;
 
         if (unvalidatedSchemes) {
-            if (!isArrayLike(unvalidatedSchemes)) {
+            if (!Array.isArray(unvalidatedSchemes)) {
                 throw new Error('The "schemes" schema option must be an array!');
             }
-            // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
             const schemes: Array<any> | IObservableArray<any> = unvalidatedSchemes;
 
             if (schemes.length === 0) {
@@ -93,12 +92,11 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
             });
         }
 
-        if (!isArrayLike(defaults)) {
+        if (!Array.isArray(defaults)) {
             throw new Error('The "defaults" schema option must be an array!');
         }
 
         let defaultProtocol = protocols ? protocols[0] : undefined;
-        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
         const defaultScheme = defaults.find((defaultOption) => defaultOption.name === 'scheme');
 
         if (defaultScheme && defaultScheme.value) {

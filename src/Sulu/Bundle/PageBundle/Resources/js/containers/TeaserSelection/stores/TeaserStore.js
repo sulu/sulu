@@ -1,7 +1,7 @@
 // @flow
-import {action, autorun, observable} from 'mobx';
+import {action, autorun, observable, makeObservable} from 'mobx';
 import ResourceRequester from 'sulu-admin-bundle/services/ResourceRequester';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 import type {TeaserItem} from '../types';
 
 export default class TeaserStore {
@@ -12,6 +12,7 @@ export default class TeaserStore {
     teaserDisposer: () => void;
 
     constructor(locale: IObservableValue<string>) {
+        makeObservable(this);
         this.locale = locale;
         this.teaserDisposer = autorun(this.loadTeasers);
     }

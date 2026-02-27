@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, observable, toJS} from 'mobx';
+import {action, autorun, computed, observable, toJS, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import React, {Fragment} from 'react';
 import log from 'loglevel';
@@ -31,6 +31,7 @@ class Form extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         this.displayGhostDialogDisposer = autorun(() => {
             const {store} = this.props;

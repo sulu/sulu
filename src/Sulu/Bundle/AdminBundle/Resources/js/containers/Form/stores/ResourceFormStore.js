@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, get, set, isArrayLike, observable, toJS, when} from 'mobx';
+import {action, autorun, computed, set, observable, toJS, when, makeObservable} from 'mobx';
 import jsonpointer from 'json-pointer';
 import log from 'loglevel';
 import {createAjv} from '../../../utils/Ajv';
@@ -7,7 +7,7 @@ import ResourceStore from '../../../stores/ResourceStore';
 import AbstractFormStore, {SECTION_TYPE} from './AbstractFormStore';
 import metadataStore from './metadataStore';
 import type {ChangeContext, FormStoreInterface, Schema, SchemaEntry, SchemaType, SchemaTypes} from '../types';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 // TODO do not hardcode "template", use some kind of metadata instead
 const TYPE_PROPERTY = 'template';
@@ -61,7 +61,7 @@ function mergeData(
         if (remoteTypes && localTypes
             && Object.keys(remoteTypes).length > 0 && Object.keys(localTypes).length > 0
             && localData[name] && remoteData[name]
-            && isArrayLike(localData[name]) && isArrayLike(remoteData[name])
+            && Array.isArray(localData[name]) && Array.isArray(remoteData[name])
         ) {
             for (let key = 0; key < Math.max(remoteData[name].length, localData[name].length); ++key) {
                 const remoteChildData = toJS(remoteData[name].length > key ? remoteData[name][key] || {} : {});
@@ -122,6 +122,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
 
     constructor(resourceStore: ResourceStore, formKey: string, options: Object = {}, metadataOptions: ?Object) {
         super();
+        makeObservable(this);
 
         this.resourceStore = resourceStore;
         this.formKey = formKey;
@@ -205,7 +206,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     }
 
     @computed get hasInvalidType(): boolean {
-        return !!this.types && !!this.type && !get(this.types, this.type);
+        return !!this.types && !!this.type && !this.types[this.type];
     }
 
     @computed get loading(): boolean {
@@ -217,7 +218,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     }
 
     @computed get type(): ?string {
-        return this.hasTypes ? get(this.data, TYPE_PROPERTY) : undefined;
+        return this.hasTypes && this.data ? this.data[TYPE_PROPERTY] : undefined;
     }
 
     @action save(options: Object = {}): Promise<Object> {

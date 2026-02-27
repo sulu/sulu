@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, comparer, observable, reaction, toJS} from 'mobx';
+import {action, comparer, observable, reaction, toJS, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import jexl from 'jexl';
@@ -11,7 +11,7 @@ import PublishIndicator from '../../components/PublishIndicator';
 import MultiSelectionStore from '../../stores/MultiSelectionStore';
 import MultiListOverlay from '../MultiListOverlay';
 import multiSelectionStyles from './multiSelection.scss';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 type Props = {|
     adapter: string,
@@ -54,6 +54,7 @@ class MultiSelection extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         const {locale, options, resourceKey, value} = this.props;
 

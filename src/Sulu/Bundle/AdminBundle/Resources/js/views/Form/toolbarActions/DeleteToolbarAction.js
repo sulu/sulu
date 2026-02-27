@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import jexl from 'jexl';
 import log from 'loglevel';
 import Dialog from '../../../components/Dialog';
@@ -57,6 +57,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
         }
 
         super(resourceFormStore, form, router, locales, options, parentResourceStore);
+        makeObservable(this);
     }
 
     handleDeleteReferencedResourcesDialogCancel = () => {

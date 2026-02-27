@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import Mousetrap from 'mousetrap';
@@ -32,6 +32,11 @@ const DEBOUNCE_TIME = 300;
 
 @observer
 class MultiAutoComplete extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     static defaultProps = {
         allowAdd: false,
         disabled: false,
@@ -39,8 +44,8 @@ class MultiAutoComplete extends React.Component<Props> {
         loading: false,
     };
 
-    @observable inputContainerRef: ElementRef<*>;
-    @observable inputRef: ElementRef<'input'>;
+    @observable.ref inputContainerRef: ElementRef<*>;
+    @observable.ref inputRef: ElementRef<'input'>;
 
     @observable displaySuggestions = false;
     @observable inputValue: string = '';

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import Input from '../Input';
@@ -41,15 +41,16 @@ class Item extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
         this.order = this.props.order;
     }
 
-    @action componentDidUpdate(prevProps: Props) {
+    componentDidUpdate = action((prevProps: Props) => {
         const {order} = this.props;
         if (prevProps.order !== order) {
             this.order = order;
         }
-    }
+    });
 
     handleClick = () => {
         const {onClick, id} = this.props;

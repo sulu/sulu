@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {computed, isArrayLike} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import {default as NavigationComponent} from '../../components/Navigation';
 import Router from '../../services/Router';
 import userStore from '../../stores/userStore';
@@ -23,6 +23,11 @@ const SULU_CHANGELOG_URL = 'https://github.com/sulu/sulu/releases';
 
 @observer
 class Navigation extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @computed get username(): string {
         if (!userStore.loggedIn || !userStore.contact) {
             return '';
@@ -96,8 +101,7 @@ class Navigation extends React.Component<Props> {
                         title={item.label}
                         value={item.id}
                     >
-                        {isArrayLike(item.items) &&
-                            // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+                        {Array.isArray(item.items) &&
                             item.items.filter((subItem: NavigationItem) => subItem.visible).map((subItem) => (
                                 <NavigationComponent.Item
                                     active={this.isItemActive(subItem)}

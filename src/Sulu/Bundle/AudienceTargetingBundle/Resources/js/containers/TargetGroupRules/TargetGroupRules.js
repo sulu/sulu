@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Button, ButtonGroup, Table} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -17,6 +17,11 @@ type Props = {|
 
 @observer
 class TargetGroupRules extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @observable showOverlay: boolean = false;
     @observable ruleIndex: number | typeof undefined = undefined;
     @observable selectedIndices: Array<number> = [];

@@ -1,7 +1,7 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import ResourceRequester from '../../services/ResourceRequester';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 export default class SearchStore {
     resourceKey: string;
@@ -17,6 +17,7 @@ export default class SearchStore {
         options: Object = {},
         locale: ?IObservableValue<string>
     ) {
+        makeObservable(this);
         this.resourceKey = resourceKey;
         this.searchProperties = searchProperties;
         this.options = options;

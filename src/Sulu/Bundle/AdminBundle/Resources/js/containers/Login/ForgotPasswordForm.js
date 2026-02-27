@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {translate} from '../../utils/index';
 import Button from '../../components/Button/index';
@@ -19,6 +19,11 @@ type Props = {|
 
 @observer
 class ForgotPasswordForm extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     static defaultProps = {
         loading: false,
         success: false,

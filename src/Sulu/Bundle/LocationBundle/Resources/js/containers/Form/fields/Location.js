@@ -1,15 +1,20 @@
 // @flow
 import React from 'react';
-import {computed, observable} from 'mobx';
+import {computed, observable, makeObservable} from 'mobx';
 import userStore from 'sulu-admin-bundle/stores/userStore';
 import {observer} from 'mobx-react';
 import LocationComponent from '../../../containers/Location';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import type {Location as LocationValue} from '../../../types';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 @observer
 export default class Location extends React.Component<FieldTypeProps<?LocationValue>> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     handleChange = (value: ?LocationValue) => {
         const {onChange, onFinish} = this.props;
 

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, autorun, computed, observable} from 'mobx';
+import {action, autorun, computed, observable, makeObservable} from 'mobx';
 import debounce from 'debounce';
 import {observer} from 'mobx-react';
 import Input from '../Input';
@@ -18,6 +18,11 @@ const INPUT_TYPE = 'password';
 
 @observer
 class PasswordConfirmation extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     static defaultProps = {
         disabled: false,
         valid: true,

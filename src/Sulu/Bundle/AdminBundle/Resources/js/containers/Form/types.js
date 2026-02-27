@@ -1,7 +1,7 @@
 // @flow
 import Router from '../../services/Router';
 import FormInspector from './FormInspector';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 import type {ColSpan} from '../../components/Grid';
 
 export type SchemaType = {

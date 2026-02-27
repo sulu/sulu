@@ -1,6 +1,6 @@
 // @flow
 import {pathToRegexp} from 'path-to-regexp';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import type {AttributeMap, RouteConfig} from './types';
 
 export default class Route {
@@ -14,6 +14,7 @@ export default class Route {
     type: string;
 
     constructor(config: RouteConfig) {
+        makeObservable(this);
         this.path = config.path;
         this.name = config.name;
         this.type = config.type;

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import classNames from 'classnames';
 import Icon from '../Icon';
 import Button from '../Button';
@@ -17,6 +17,11 @@ type Props = {
 
 @observer
 class UserSection extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @observable open: boolean = false;
 
     @action handleButtonClick = () => {

@@ -1,9 +1,9 @@
 // @flow
-import {action, autorun, observable, set, toJS, when} from 'mobx';
+import {action, autorun, observable, set, toJS, when, makeObservable} from 'mobx';
 import log from 'loglevel';
 import jsonpointer from 'json-pointer';
 import ResourceRequester from '../../services/ResourceRequester';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 import type {ObservableOptions} from './types';
 
 export default class ResourceStore {
@@ -33,6 +33,7 @@ export default class ResourceStore {
         idQueryParameter: ?string,
         preventLoadingOnce: boolean = false
     ) {
+        makeObservable(this);
         this.resourceKey = resourceKey;
         this.id = id;
         this.observableOptions = observableOptions;

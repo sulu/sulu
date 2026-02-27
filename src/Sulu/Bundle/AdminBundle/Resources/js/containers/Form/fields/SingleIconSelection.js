@@ -1,13 +1,13 @@
 // @flow
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
-import {action, observable, computed} from 'mobx';
+import {action, observable, computed, makeObservable} from 'mobx';
 import SingleItemSelection from '../../../components/SingleItemSelection';
 import {translate} from '../../../utils/Translator';
 import SingleListOverlay from '../../SingleListOverlay';
 import userStore from '../../../stores/userStore';
 import type {FieldTypeProps} from '../../../types';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 type Props = FieldTypeProps<?string>
 
@@ -23,6 +23,7 @@ export default class SingleIconSelection extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
     }
 
     @action openOverlay() {

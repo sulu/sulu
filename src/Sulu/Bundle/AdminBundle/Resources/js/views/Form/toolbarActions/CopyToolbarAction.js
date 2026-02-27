@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import jexl from 'jexl';
 import Dialog from '../../../components/Dialog';
 import ResourceRequester from '../../../services/ResourceRequester';
@@ -8,6 +8,11 @@ import {translate} from '../../../utils/Translator';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
 export default class CopyToolbarAction extends AbstractFormToolbarAction {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @observable showCopyDialog = false;
     @observable copying = false;
 

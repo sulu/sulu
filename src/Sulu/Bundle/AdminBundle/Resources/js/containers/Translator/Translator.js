@@ -3,7 +3,7 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
-import {action, observable, toJS} from 'mobx';
+import {action, observable, toJS, makeObservable} from 'mobx';
 import {Overlay, SingleSelect} from '../../components';
 import {Requester} from '../../services';
 import translatorStyles from './translator.scss';
@@ -39,6 +39,11 @@ type Props = {|
  */
 @observer
 export default class Translator extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @observable snackbarMessage: ?{ message: string, type: 'error' } = undefined;
     @observable loading = false;
     @observable sourceText = '';
@@ -70,12 +75,12 @@ export default class Translator extends React.Component<Props> {
         this.snackbarMessage = undefined;
     };
 
-    @action componentDidMount() {
+    componentDidMount = action(() => {
         this.targetLanguage = this.props.locale;
         this.sourceText = this.props.value;
 
         this.translateText(this.sourceText);
-    }
+    });
 
     @action handleSourceTextChanged = (text: string) => {
         this.sourceText = text;
