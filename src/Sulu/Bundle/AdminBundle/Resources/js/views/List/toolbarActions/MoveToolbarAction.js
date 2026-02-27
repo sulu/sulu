@@ -1,11 +1,16 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import React from 'react';
 import {translate} from '../../../utils/Translator';
 import SingleListOverlay from '../../../containers/SingleListOverlay';
 import AbstractListToolbarAction from './AbstractListToolbarAction';
 
 export default class MoveToolbarAction extends AbstractListToolbarAction {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @observable showOverlay = false;
 
     getNode() {

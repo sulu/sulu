@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, autorun, computed, toJS} from 'mobx';
+import {action, autorun, computed, toJS, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import equals from 'fast-deep-equal';
@@ -52,11 +52,12 @@ class ListOverlay extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         this.updateSelectionDisposer = autorun(this.updateSelection);
     }
 
-    @action componentDidUpdate(prevProps: Props) {
+    componentDidUpdate = action((prevProps: Props) => {
         const {clearSelectionOnClose, open, reloadOnOpen} = this.props;
 
         if (!this.listStore.loading && reloadOnOpen && prevProps.open === false && open === true) {
@@ -67,7 +68,7 @@ class ListOverlay extends React.Component<Props> {
         if (clearSelectionOnClose && prevProps.open === true && open === false) {
             this.listStore.clearSelection();
         }
-    }
+    });
 
     componentWillUnmount() {
         this.updateSelectionDisposer();

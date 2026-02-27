@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import Popover from './Popover';
 import OptionList from './OptionList';
@@ -8,6 +8,11 @@ import type {SelectOption, Select as SelectProps} from './types';
 
 @observer
 class Select<T: ?string | number> extends React.Component<SelectProps<T>> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     static defaultProps = {
         showText: true,
     };

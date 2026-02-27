@@ -1,6 +1,6 @@
 // @flow
 import {observer} from 'mobx-react';
-import {action, computed, intercept, observable} from 'mobx';
+import {action, computed, intercept, observable, makeObservable} from 'mobx';
 import React, {Fragment} from 'react';
 import equal from 'fast-deep-equal';
 import classNames from 'classnames';
@@ -36,7 +36,7 @@ import type {
     SortOrder,
 } from './types';
 import type {Node} from 'react';
-import type {IValueWillChange} from 'mobx/lib/mobx';
+import type {IValueWillChange} from 'mobx';
 import type {ReferencingResourcesData, DependantResourcesData} from '../../types';
 
 type Props = {|
@@ -147,6 +147,7 @@ class List extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         this.validateAdapters();
 

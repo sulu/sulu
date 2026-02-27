@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, comparer, computed, observable, reaction, toJS} from 'mobx';
+import {action, comparer, computed, observable, reaction, toJS, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import ResourceLocatorComponent from '../../../components/ResourceLocator';
 import ResourceLocatorHistory from '../../../containers/ResourceLocatorHistory';
@@ -64,6 +64,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
 
     constructor(props: FieldTypeProps<?string>) {
         super(props);
+        makeObservable(this);
 
         const {
             fieldTypeOptions: {

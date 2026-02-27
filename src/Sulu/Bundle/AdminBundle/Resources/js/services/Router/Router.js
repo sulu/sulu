@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, isArrayLike, observable, toJS} from 'mobx';
+import {action, autorun, computed, observable, toJS, makeObservable} from 'mobx';
 import equal from 'fast-deep-equal';
 import log from 'loglevel';
 import {compile} from 'path-to-regexp';
@@ -9,7 +9,7 @@ import routeRegistry from './registries/routeRegistry';
 import resourceViewRegistry from './registries/resourceViewRegistry';
 import Route from './Route';
 import type {AttributeMap, UpdateAttributesHook, UpdateRouteHook, UpdateRouteMethod} from './types';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 const OBJECT_DELIMITER = '.';
 
@@ -71,7 +71,7 @@ function equalBindings(value1, value2) {
 }
 
 function addValueToSearchParameters(searchParameters: URLSearchParams, value: Object, path: string) {
-    if (isArrayLike(value)) {
+    if (Array.isArray(value)) {
         addArrayToSearchParameters(searchParameters, value, path);
     } else if (value instanceof Date) {
         addDateToSearchParameters(searchParameters, value, path);
@@ -132,6 +132,7 @@ export default class Router {
     redirectFlag: boolean = false;
 
     constructor(history: Object) {
+        makeObservable(this);
         this.history = history;
 
         this.history.listen(({location}) => {

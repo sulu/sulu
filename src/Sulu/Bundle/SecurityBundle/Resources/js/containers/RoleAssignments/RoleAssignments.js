@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {ResourceMultiSelect} from 'sulu-admin-bundle/containers';
 import {Grid} from 'sulu-admin-bundle/components';
@@ -16,6 +16,11 @@ type Props = {|
 
 @observer
 class RoleAssignments extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     static defaultProps = {
         disabled: false,
     };

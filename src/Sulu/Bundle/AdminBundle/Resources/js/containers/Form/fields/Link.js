@@ -1,12 +1,12 @@
 // @flow
 import React from 'react';
-import {isArrayLike, observable} from 'mobx';
+import {observable} from 'mobx';
 import log from 'loglevel';
 import userStore from '../../../stores/userStore';
 import LinkContainer from '../../Link/Link';
 import type {FieldTypeProps} from '../types';
 import type {LinkValue} from '../../Link/types';
-import type {IObservableArray} from 'mobx/lib/mobx';
+import type {IObservableArray} from 'mobx';
 
 export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
     render() {
@@ -94,10 +94,9 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
         let providerTypes;
 
         if (unvalidatedTypes) {
-            if (!isArrayLike(unvalidatedTypes)) {
+            if (!Array.isArray(unvalidatedTypes)) {
                 throw new Error('The "types" schema option must be an array!');
             }
-            // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
             const types: Array<any> | IObservableArray<any> = unvalidatedTypes;
 
             if (types.length === 0) {
@@ -118,10 +117,9 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
         let excludedProviderTypes = [];
 
         if (unvalidatedExcludedTypes) {
-            if (!isArrayLike(unvalidatedExcludedTypes)) {
+            if (!Array.isArray(unvalidatedExcludedTypes)) {
                 throw new Error('The "excluded_types" schema option must be an array!');
             }
-            // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
             const excludedTypes: Array<any> | IObservableArray<any> = unvalidatedExcludedTypes;
 
             if (excludedTypes.length === 0) {

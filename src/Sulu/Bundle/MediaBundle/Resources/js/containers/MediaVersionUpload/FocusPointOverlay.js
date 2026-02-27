@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Overlay} from 'sulu-admin-bundle/components';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
@@ -37,11 +37,12 @@ class FocusPointOverlay extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         this.updateFocusPoint();
     }
 
-    @action componentDidUpdate(prevProps: Props) {
+    componentDidUpdate = action((prevProps: Props) => {
         if (!prevProps.open && this.props.open) {
             this.resourceStore = this.props.resourceStore.clone();
             this.updateFocusPoint();
@@ -51,7 +52,7 @@ class FocusPointOverlay extends React.Component<Props> {
             this.resourceStore.destroy();
             this.resourceStore = undefined;
         }
-    }
+    });
 
     @action updateFocusPoint = () => {
         const {resourceStore} = this.props;

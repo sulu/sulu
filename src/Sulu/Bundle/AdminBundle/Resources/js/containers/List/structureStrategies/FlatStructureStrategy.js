@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {arrayMove} from '../../../utils';
 import type {StructureStrategyInterface} from '../types';
 
@@ -11,6 +11,7 @@ export default class FlatStructureStrategy implements StructureStrategyInterface
     }
 
     constructor() {
+        makeObservable(this);
         this.data = [];
     }
 

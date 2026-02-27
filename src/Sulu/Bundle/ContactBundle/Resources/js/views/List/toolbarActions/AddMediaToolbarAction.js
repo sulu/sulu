@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import userStore from 'sulu-admin-bundle/stores/userStore';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -8,6 +8,11 @@ import {AbstractListToolbarAction} from 'sulu-admin-bundle/views';
 import {MultiMediaSelectionOverlay} from 'sulu-media-bundle/containers';
 
 class AddMediaToolbarAction extends AbstractListToolbarAction {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @observable showOverlay: boolean = false;
     @observable patching: boolean = false;
 

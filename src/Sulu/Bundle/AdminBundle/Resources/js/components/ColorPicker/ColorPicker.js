@@ -2,7 +2,7 @@
 import React, {Fragment} from 'react';
 import {SketchPicker} from 'react-color';
 import {observer} from 'mobx-react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import Input from '../Input';
 import Popover from '../Popover';
 import colorPickerStyles from './colorPicker.scss';
@@ -22,6 +22,11 @@ type Props = {|
 
 @observer
 class ColorPicker extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     static defaultProps = {
         disabled: false,
         valid: true,

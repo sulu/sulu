@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import Popover from '../Popover';
@@ -23,6 +23,11 @@ const VERTICAL_OFFSET = 20;
 
 @observer
 class ArrowMenu extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     static defaultProps = {
         refProp: 'ref',
     };

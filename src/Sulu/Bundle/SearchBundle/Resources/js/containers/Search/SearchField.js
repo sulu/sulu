@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {ArrowMenu, Icon} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -18,6 +18,11 @@ type Props = {|
 
 @observer
 class SearchField extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     static defaultProps = {
         query: '',
     };

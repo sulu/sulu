@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import log from 'loglevel';
 import {observer} from 'mobx-react';
 import React from 'react';
@@ -56,6 +56,7 @@ class ImageRectangleSelection extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         this.image = new Image();
         this.image.onload = action(() => this.imageLoaded = true);

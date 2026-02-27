@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {observable, action} from 'mobx';
+import {observable, action, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import Checkbox, {CheckboxGroup} from '../../components/Checkbox';
@@ -30,6 +30,7 @@ class ResourceCheckboxGroup<T: string | number> extends React.Component<Props<T>
 
     constructor(props: Props<T>) {
         super(props);
+        makeObservable(this);
 
         this.createResourceListStore();
     }

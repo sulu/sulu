@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Dialog, Loader, Table} from 'sulu-admin-bundle/components';
 import {withToolbar} from 'sulu-admin-bundle/containers';
@@ -9,7 +9,7 @@ import {ResourceRequester} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import mediaHistoryStyles from './mediaHistory.scss';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
 
@@ -26,6 +26,7 @@ class MediaHistory extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         const {
             router,

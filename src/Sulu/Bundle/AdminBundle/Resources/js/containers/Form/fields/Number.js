@@ -1,12 +1,17 @@
 // @flow
 import React from 'react';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import NumberComponent from '../../../components/Number';
 import type {FieldTypeProps} from '../types';
 
 @observer
 class Number extends React.Component<FieldTypeProps<?number>> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @computed get min(): ?number {
         const {schemaOptions} = this.props;
         return schemaOptions.min ? parseFloat(schemaOptions.min.value) : undefined;

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, computed, toJS, observable, isArrayLike} from 'mobx';
+import {action, computed, toJS, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import log from 'loglevel';
@@ -17,7 +17,7 @@ import AbstractFormToolbarAction from './toolbarActions/AbstractFormToolbarActio
 import formStyles from './form.scss';
 import type {AttributeMap, UpdateRouteMethod} from '../../services/Router/types';
 import type {ViewProps} from '../../containers/ViewRenderer';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 import type {ElementRef} from 'react';
 
 type Props = {
@@ -158,6 +158,7 @@ class Form extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         const {router} = this.props;
 
@@ -267,7 +268,7 @@ class Form extends React.Component<Props> {
         return false;
     };
 
-    @action componentDidMount() {
+    componentDidMount = action(() => {
         const {resourceStore: parentResourceStore, router} = this.props;
         const {
             route: {
@@ -277,7 +278,7 @@ class Form extends React.Component<Props> {
             },
         } = router;
 
-        if (!isArrayLike(rawToolbarActions)) {
+        if (!Array.isArray(rawToolbarActions)) {
             throw new Error('The view "Form" needs some defined toolbarActions to work properly!');
         }
 
@@ -300,7 +301,7 @@ class Form extends React.Component<Props> {
                 toolbarAction.options,
                 parentResourceStore
             ));
-    }
+    });
 
     componentDidUpdate(prevProps: Props) {
         if (!equals(this.props.locales, prevProps.locales)) {

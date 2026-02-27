@@ -1,6 +1,6 @@
 // @flow
 import {observer} from 'mobx-react';
-import {action, computed, toJS} from 'mobx';
+import {action, computed, toJS, makeObservable} from 'mobx';
 import React, {Fragment} from 'react';
 import ToolbarComponent from '../../components/Toolbar';
 import Snackbar from '../../components/Snackbar';
@@ -47,6 +47,7 @@ class Toolbar extends React.Component<ToolbarProps> {
 
     constructor(props: *) {
         super(props);
+        makeObservable(this);
 
         this.setStore(this.props.storeKey);
     }

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import HeadingComponent from '../../../components/Heading';
 import type {Node} from 'react';
@@ -13,6 +13,11 @@ type Props<T> = {
 
 @observer
 class Heading extends React.Component<Props<typeof undefined>> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @computed get schemaOptions() {
         return this.props.schemaOptions;
     }

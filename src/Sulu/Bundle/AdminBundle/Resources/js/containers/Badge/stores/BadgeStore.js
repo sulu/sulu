@@ -1,5 +1,5 @@
 // @flow
-import {action, reaction, observable, computed} from 'mobx';
+import {action, reaction, observable, computed, makeObservable} from 'mobx';
 import jsonPointer from 'json-pointer';
 import debounce from 'debounce';
 import symfonyRouting from 'fos-jsrouting/router';
@@ -25,6 +25,7 @@ export default class BadgeStore {
         routerAttributesToRequest: Object,
         tabViewRoute: Route
     ) {
+        makeObservable(this);
         this.router = router;
         this.routeName = routeName;
         this.dataPath = dataPath;

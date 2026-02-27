@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import copyToClipboard from 'copy-to-clipboard';
 import {Loader, Table} from 'sulu-admin-bundle/components';
@@ -25,6 +25,7 @@ class MediaFormats extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         const {
             router,

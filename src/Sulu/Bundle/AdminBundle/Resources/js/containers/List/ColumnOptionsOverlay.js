@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import classNames from 'classnames';
 import {arrayMove, SortableContainer, SortableElement} from 'react-sortable-hoc';
 import Overlay from '../../components/Overlay';
@@ -34,6 +34,11 @@ const SortableList = SortableContainer(({children, className}) => {
 
 @observer
 class ColumnOptionsOverlay extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @observable columnOptions: Array<ColumnOption> = [];
     @observable sorting: boolean = false;
 
@@ -69,16 +74,16 @@ class ColumnOptionsOverlay extends React.Component<Props> {
         this.columnOptions = columnOptions;
     };
 
-    @action componentDidMount() {
+    componentDidMount = action(() => {
         this.setColumnOptions(this.props.schema);
-    }
+    });
 
-    @action componentDidUpdate(prevProps: Props) {
+    componentDidUpdate = action((prevProps: Props) => {
         const schema = this.props.schema;
         if (prevProps.schema !== schema) {
             this.setColumnOptions(schema);
         }
-    }
+    });
 
     @action handleItemsSortStart = () => {
         this.sorting = true;

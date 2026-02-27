@@ -3,7 +3,7 @@ import equals from 'fast-deep-equal';
 import jsonpointer from 'json-pointer';
 import jexl from 'jexl';
 import React, {Fragment} from 'react';
-import {action, computed, observable, toJS} from 'mobx';
+import {action, computed, observable, toJS, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import BlockCollection from '../../components/BlockCollection';
 import {translate} from '../../utils/Translator';
@@ -34,11 +34,12 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
     constructor(props: FieldTypeProps<Array<BlockEntry>>) {
         super(props);
+        makeObservable(this);
 
         this.setValue(this.props.value);
     }
 
-    @action componentDidMount() {
+    componentDidMount = action(() => {
         if (this.settingsFormKey) {
             // initialize empty blockSettingsFormStore because schema of the store is used for determining iconsMapping
             this.blockSettingsFormStore = memoryFormStoreFactory.createFromFormKey(
@@ -49,7 +50,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
                 this.props.formInspector.options
             );
         }
-    }
+    });
 
     componentDidUpdate(prevProps: FieldTypeProps<Array<BlockEntry>>) {
         const {defaultType, onChange, types, value} = this.props;

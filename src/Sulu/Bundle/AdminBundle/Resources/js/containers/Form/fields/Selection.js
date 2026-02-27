@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, observable, intercept, toJS, reaction, isArrayLike} from 'mobx';
+import {computed, observable, intercept, toJS, reaction, makeObservable} from 'mobx';
 import equals from 'fast-deep-equal';
 import {observer} from 'mobx-react';
 import jsonpointer from 'json-pointer';
@@ -16,7 +16,7 @@ import userStore from '../../../stores/userStore';
 import selectionStyles from './selection.scss';
 import type {FieldTypeProps} from '../../../types';
 import type {SchemaOption} from '../types';
-import type {IObservableArray, IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableArray, IObservableValue} from 'mobx';
 
 type Value = Array<string | number>;
 type Props = FieldTypeProps<Value>;
@@ -36,6 +36,7 @@ class Selection extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         if (this.type !== 'list_overlay' && this.type !== 'list' && this.type !== 'auto_complete') {
             throw new Error(
@@ -63,16 +64,15 @@ class Selection extends React.Component<Props> {
             throw new Error('The selection field needs a "resource_key" option to work properly');
         }
 
-        if (!isArrayLike(unvalidatedRequestParameters)) {
+        if (!Array.isArray(unvalidatedRequestParameters)) {
             throw new Error('The "request_parameters" schemaOption must be an array!');
         }
-        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
         const requestParameters: Array<any> | IObservableArray<any> = unvalidatedRequestParameters;
 
-        if (!isArrayLike(unvalidatedResourceStorePropertiesToRequest)) {
+        if (!Array.isArray(unvalidatedResourceStorePropertiesToRequest)) {
             throw new Error('The "resource_store_properties_to_request" schemaOption must be an array!');
         }
-        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+        // $FlowFixMe: flow does not recognize that Array.isArray(value) means that value is an array
         const resourceStorePropertiesToRequest: Array | IObservableArray = unvalidatedResourceStorePropertiesToRequest;
 
         this.requestOptions = this.buildRequestOptions(
@@ -204,7 +204,7 @@ class Selection extends React.Component<Props> {
     @computed get value(): ?Value {
         const {value, dataPath} = this.props;
 
-        if (value && isArrayLike(value) && value.length > 0 && typeof value[0] === 'object') {
+        if (value && Array.isArray(value) && value.length > 0 && typeof value[0] === 'object') {
             log.warn(
                 'The "Selection" field with the path "' + dataPath + '" expects an array of ids as value but '
                 + 'received an array of objects instead. Is it possible that your API returns an array serialized '

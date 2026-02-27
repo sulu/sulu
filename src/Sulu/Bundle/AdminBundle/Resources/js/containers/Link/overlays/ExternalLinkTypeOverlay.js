@@ -1,7 +1,7 @@
 // @flow
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
-import {action, observable, computed} from 'mobx';
+import {action, observable, computed, makeObservable} from 'mobx';
 import Dialog from '../../../components/Dialog';
 import Form from '../../../components/Form';
 import Input from '../../../components/Input';
@@ -21,15 +21,16 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
 
     constructor(props: LinkTypeOverlayProps) {
         super(props);
+        makeObservable(this);
 
         this.updateUrl();
     }
 
-    @action componentDidUpdate(prevProps: LinkTypeOverlayProps) {
+    componentDidUpdate = action((prevProps: LinkTypeOverlayProps) => {
         if (prevProps.open === false && this.props.open === true) {
             this.updateUrl();
         }
-    }
+    });
 
     updateUrl() {
         const {

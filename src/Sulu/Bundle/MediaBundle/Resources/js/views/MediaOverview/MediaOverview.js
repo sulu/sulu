@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, autorun, observable} from 'mobx';
+import {action, autorun, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {List, ListStore, SingleListOverlay, withToolbar} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -8,7 +8,7 @@ import MediaCollection from '../../containers/MediaCollection';
 import CollectionStore from '../../stores/CollectionStore';
 import mediaOverviewStyles from './mediaOverview.scss';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 import type {ElementRef} from 'react';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
@@ -49,6 +49,7 @@ class MediaOverview extends React.Component<ViewProps> {
 
     constructor(props: ViewProps) {
         super(props);
+        makeObservable(this);
 
         const {router} = this.props;
 

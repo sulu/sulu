@@ -1,5 +1,5 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import type {MediaFormat, MediaFormats} from './types';
 
@@ -14,6 +14,7 @@ export default class MediaFormatStore
     @observable saving: boolean;
 
     constructor(id: number | string, locale: string) {
+        makeObservable(this);
         this.id = id;
         this.locale = locale;
         this.loading = true;

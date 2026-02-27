@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Button, Input, SingleSelect, DropdownButton} from '../../components';
 import promptInputStyles from './prompt-input.scss';
@@ -39,6 +39,11 @@ type Props = {|
  */
 @observer
 class PromptInput extends Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @observable messageInput: string = '';
 
     @action handleInputChange = (message: ?string) => {

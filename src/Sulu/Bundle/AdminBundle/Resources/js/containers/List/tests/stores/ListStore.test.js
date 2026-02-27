@@ -1,6 +1,6 @@
 // @flow
 import 'url-search-params-polyfill';
-import {autorun, observable, toJS, when} from 'mobx';
+import {autorun, observable, toJS, when, makeObservable} from 'mobx';
 import log from 'loglevel';
 import ResourceRequester, {RequestPromise} from '../../../../services/ResourceRequester';
 import ListStore from '../../stores/ListStore';
@@ -50,6 +50,10 @@ class OtherLoadingStrategy {
 }
 
 class StructureStrategy {
+    constructor() {
+        makeObservable(this);
+    }
+
     @observable data = [];
     visibleItems = [];
     addItem = jest.fn();

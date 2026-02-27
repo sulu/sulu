@@ -1,7 +1,7 @@
 // @flow
 import React, {Fragment} from 'react';
 import classNames from 'classnames';
-import {observable, action} from 'mobx';
+import {observable, action, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import Icon from '../Icon';
 import ArrowMenu from '../ArrowMenu';
@@ -11,6 +11,11 @@ import type {ToolbarDropdown as ToolbarDropdownProps} from './types';
 
 @observer
 class ToolbarDropdown extends React.Component<ToolbarDropdownProps> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     static defaultProps = {
         skin: 'primary',
     };

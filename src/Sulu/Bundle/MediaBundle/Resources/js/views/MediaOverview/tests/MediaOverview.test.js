@@ -5,6 +5,15 @@ import {mount, render} from 'enzyme';
 import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
 import MediaCardOverviewAdapter from '../../../containers/List/adapters/MediaCardOverviewAdapter';
 
+jest.mock('mobx-react', () => {
+    const actual = jest.requireActual('mobx-react');
+
+    return {
+        ...actual,
+        Observer: ({children}) => children(),
+    };
+});
+
 jest.mock(
     'react-dropzone',
     () => mockReact.forwardRef(({children}, ref) => children({getInputProps: jest.fn(), getRootProps: jest.fn(), ref}))

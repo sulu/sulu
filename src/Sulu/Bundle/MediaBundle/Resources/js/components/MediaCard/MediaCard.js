@@ -2,7 +2,7 @@
 import React, {Fragment} from 'react';
 import classNames from 'classnames';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {Checkbox, CroppedText, GhostIndicator, Icon, Loader} from 'sulu-admin-bundle/components';
 import MimeTypeIndicator from '../MimeTypeIndicator';
 import DownloadList from './DownloadList';
@@ -48,6 +48,7 @@ class MediaCard extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         const {image: src} = this.props;
 

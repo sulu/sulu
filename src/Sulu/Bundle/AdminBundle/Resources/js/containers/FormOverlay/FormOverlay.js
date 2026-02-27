@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import Overlay from '../../components/Overlay';
 import {translate} from '../../utils';
@@ -26,6 +26,11 @@ type Props = {|
 
 @observer
 class FormOverlay extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     static defaultProps = {
         confirmDisabled: false,
         confirmLoading: false,
@@ -44,13 +49,13 @@ class FormOverlay extends React.Component<Props> {
         return confirmLoading || formStoreSaving;
     }
 
-    @action componentDidUpdate(prevProps: Props) {
+    componentDidUpdate = action((prevProps: Props) => {
         const {open} = this.props;
 
         if (prevProps.open === false && open === true) {
             this.formErrors = [];
         }
-    }
+    });
 
     handleOverlayConfirm = () => {
         if (!this.formRef) {

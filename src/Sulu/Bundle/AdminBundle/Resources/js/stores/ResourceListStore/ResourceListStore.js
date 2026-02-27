@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import ResourceRequester from '../../services/ResourceRequester';
 
 export default class ResourceListStore {
@@ -16,6 +16,7 @@ export default class ResourceListStore {
     }
 
     constructor(resourceKey: string, requestParameters: Object = {}, idProperty: string = 'id') {
+        makeObservable(this);
         this.resourceKey = resourceKey;
         this.requestParameters = requestParameters;
         this.idProperty = idProperty;

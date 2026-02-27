@@ -1,8 +1,8 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {arrayMove} from '../../utils';
 import {ResourceRequester} from '../../services';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 export default class MultiSelectionStore<T = string | number, U: {id: T} = Object> {
     @observable items: Array<U> = [];
@@ -19,6 +19,7 @@ export default class MultiSelectionStore<T = string | number, U: {id: T} = Objec
         idFilterParameter: string = 'ids',
         requestParameters: {[string]: mixed} = {}
     ) {
+        makeObservable(this);
         this.resourceKey = resourceKey;
         this.locale = locale;
         this.idFilterParameter = idFilterParameter;

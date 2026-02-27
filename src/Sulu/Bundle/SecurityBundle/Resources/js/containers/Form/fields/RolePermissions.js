@@ -1,12 +1,17 @@
 // @flow
 import React from 'react';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import {webspaceStore} from 'sulu-page-bundle/stores';
 import RolePermissionsContainer from '../../RolePermissions';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import type {RolePermissions as RolePermissionsType} from '../../RolePermissions/types';
 
 class RolePermissions extends React.Component<FieldTypeProps<RolePermissionsType>> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @computed get webspace() {
         const {
             formInspector: {

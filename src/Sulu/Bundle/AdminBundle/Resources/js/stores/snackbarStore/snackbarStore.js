@@ -1,8 +1,12 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import type {Message} from './types';
 
 class SnackbarStore {
+    constructor() {
+        makeObservable(this);
+    }
+
     @observable.shallow messages: Array<Message> = [];
 
     timeouts: Array<TimeoutID | null> = [];

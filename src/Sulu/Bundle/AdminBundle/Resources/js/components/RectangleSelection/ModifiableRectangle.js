@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import {translate} from '../../utils/Translator';
@@ -23,6 +23,11 @@ type Props = {
 
 @observer
 class ModifiableRectangle extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     static defaultProps = {
         backdropSize: 0,
         left: 0,

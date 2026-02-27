@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {observable} from 'mobx';
+import {observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import Dialog from '../../components/Dialog';
 import {translate} from '../../utils';
@@ -22,6 +22,7 @@ class GhostDialog extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         this.selectedLocale = this.props.locales[0];
         this.formStore = memoryFormStoreFactory.createFromFormKey(

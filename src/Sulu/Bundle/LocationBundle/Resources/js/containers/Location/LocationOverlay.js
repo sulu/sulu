@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable, reaction} from 'mobx';
+import {action, observable, reaction, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Form, Input, Number, Overlay} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -39,6 +39,7 @@ class LocationOverlay extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         this.geolocatorSelectionStore = new SingleSelectionStore(
             'geolocator_locations',

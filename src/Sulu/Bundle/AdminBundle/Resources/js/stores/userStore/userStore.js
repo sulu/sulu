@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import debounce from 'debounce';
 import {Config, Requester} from '../../services';
 import initializer from '../../services/initializer';
@@ -10,6 +10,10 @@ const UPDATE_PERSISTENT_SETTINGS_DELAY = 2500;
 const CONTENT_LOCALE_SETTING_KEY = 'sulu_admin.content_locale';
 
 class UserStore {
+    constructor() {
+        makeObservable(this);
+    }
+
     @observable persistentSettings: Map<string, string> = new Map();
     dirtyPersistentSettings: Array<string> = [];
 

@@ -1,16 +1,21 @@
 // @flow
 import React from 'react';
-import {computed, isArrayLike, observable} from 'mobx';
+import {computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import jsonpointer from 'json-pointer';
 import {userStore} from 'sulu-admin-bundle/stores';
 import TeaserSelectionComponent, {teaserProviderRegistry} from '../../TeaserSelection';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 import type {TeaserItem, TeaserSelectionValue} from '../../TeaserSelection/types';
 
 @observer
 class TeaserSelection extends React.Component<FieldTypeProps<TeaserSelectionValue>> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @computed get locale(): IObservableValue<string> {
         const {formInspector} = this.props;
 
@@ -55,13 +60,12 @@ class TeaserSelection extends React.Component<FieldTypeProps<TeaserSelectionValu
             } = {},
         } = schemaOptions;
 
-        if (!isArrayLike(presentAs)) {
+        if (!Array.isArray(presentAs)) {
             throw new Error(
                 'The "present_as" schemaOption must be an array, but received ' + typeof presentAs + '!'
             );
         }
 
-        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
         const presentations = presentAs.map((presentation) => {
             const {name, title} = presentation;
 

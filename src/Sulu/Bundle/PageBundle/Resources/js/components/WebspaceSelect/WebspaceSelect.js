@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import {translate} from 'sulu-admin-bundle/utils';
 import {Icon, ArrowMenu} from 'sulu-admin-bundle/components';
@@ -15,6 +15,11 @@ type Props = {
 
 @observer
 class WebspaceSelect extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     static Item = ArrowMenu.Item;
 
     @observable open: boolean = false;

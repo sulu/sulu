@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import modifiableCircleStyles from './modifiableCircle.scss';
@@ -22,6 +22,11 @@ type Props = {
 
 @observer
 class ModifiableCircle extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     @observable moveMode = false;
     @observable resizeMode = false;
     @observable resizeAngle = 0;

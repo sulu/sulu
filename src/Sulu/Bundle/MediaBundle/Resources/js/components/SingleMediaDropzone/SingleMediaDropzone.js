@@ -1,7 +1,7 @@
 // @flow
 import React, {Fragment} from 'react';
 import {observer, Observer} from 'mobx-react';
-import {observable, action} from 'mobx';
+import {observable, action, makeObservable} from 'mobx';
 import classNames from 'classnames';
 import Dropzone from 'react-dropzone';
 import {CircularProgressbar, Icon, Loader} from 'sulu-admin-bundle/components';
@@ -26,6 +26,11 @@ type Props = {|
 
 @observer
 class SingleMediaDropzone extends React.Component<Props> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     static defaultProps = {
         accept: undefined,
         disabled: false,

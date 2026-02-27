@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import ResourceListStore from '../../stores/ResourceListStore';
 import Loader from '../../components/Loader';
@@ -40,6 +40,7 @@ class ResourceSingleSelect<T: string | number> extends React.Component<Props<T>>
 
     constructor(props: Props<T>) {
         super(props);
+        makeObservable(this);
 
         const {
             idProperty,

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, makeObservable} from 'mobx';
 import classNames from 'classnames';
 import ArrowMenu from '../ArrowMenu';
 import Grid from '../Grid';
@@ -29,6 +29,11 @@ type Props<T: string | number> = {|
 
 @observer
 class Field<T: string | number> extends React.Component<Props<T>> {
+    constructor(...args: Array<any>) {
+        super(...args);
+        makeObservable(this);
+    }
+
     static defaultProps = {
         colSpan: 12,
         required: false,

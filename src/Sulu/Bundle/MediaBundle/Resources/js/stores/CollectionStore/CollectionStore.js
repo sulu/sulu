@@ -1,7 +1,7 @@
 // @flow
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 
@@ -11,6 +11,7 @@ export default class CollectionStore {
     resourceStore: ResourceStore;
 
     constructor(collectionId: ?string | number, locale: IObservableValue<string>) {
+        makeObservable(this);
         this.collectionId = collectionId;
         this.locale = locale;
         this.resourceStore = new ResourceStore(

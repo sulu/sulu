@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed} from 'mobx';
+import {computed, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import CheckboxComponent from '../../../components/Checkbox';
 import Toggler from '../../../components/Toggler';
@@ -27,6 +27,7 @@ class Checkbox extends React.Component<FieldTypeProps<boolean>> {
 
     constructor(props: FieldTypeProps<boolean>) {
         super(props);
+        makeObservable(this);
 
         const {onChange, schemaOptions, value} = this.props;
 

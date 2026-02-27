@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable, toJS} from 'mobx';
+import {action, computed, observable, toJS, makeObservable} from 'mobx';
 import {observer} from 'mobx-react';
 import React, {Fragment} from 'react';
 import equals from 'fast-deep-equal';
@@ -16,7 +16,7 @@ import listStyles from './list.scss';
 import type {ItemActionConfig} from '../../containers/List/types';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import type {ElementRef} from 'react';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableValue} from 'mobx';
 
 const DEFAULT_USER_SETTINGS_KEY = 'list';
 const DEFAULT_LIMIT = 10;
@@ -79,6 +79,7 @@ class List extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+        makeObservable(this);
 
         const {locale, router} = this.props;
         const {
@@ -219,7 +220,7 @@ class List extends React.Component<Props> {
         return listStoreOptions;
     }
 
-    @action componentDidMount() {
+    componentDidMount = action(() => {
         const {resourceStore, router} = this.props;
         const {
             route: {
@@ -264,7 +265,7 @@ class List extends React.Component<Props> {
                 itemAction.options
             ));
         });
-    }
+    });
 
     componentDidUpdate(prevProps: Props) {
         const {
