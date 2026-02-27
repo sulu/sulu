@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Rest;
 
+use Sulu\Component\Rest\Exception\MediaNotFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\ReferencingResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\RemoveDependantResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
@@ -89,6 +90,10 @@ class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
         if ($contextException instanceof ReferencingResourcesFoundExceptionInterface) {
             $data['referencingResourcesCount'] = $contextException->getReferencingResourcesCount();
             $data['referencingResources'] = $contextException->getReferencingResources();
+            $data['resource'] = $contextException->getResource();
+        }
+
+        if ($contextException instanceof MediaNotFoundExceptionInterface) {
             $data['resource'] = $contextException->getResource();
         }
 

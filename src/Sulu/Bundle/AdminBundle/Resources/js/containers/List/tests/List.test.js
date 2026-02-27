@@ -1559,6 +1559,125 @@ test('ListStore should not delete item with dependants when onCancel callback ca
     });
 });
 
+test('ListStore should show informational dialog on 410 media not found and close on confirm click', (done) => {
+    const jsonDeletePromise = Promise.resolve({
+        code: 1107,
+        resource: {
+            id: 5,
+            resourceKey: 'media',
+        },
+    });
+
+    const deletePromise = Promise.reject({
+        json: jest.fn().mockReturnValue(jsonDeletePromise),
+        status: 410,
+    });
+
+    listAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    // $FlowFixMe
+    listStore.delete.mockReturnValueOnce(deletePromise);
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const list = mount(<List adapters={['table']} store={listStore} />);
+
+    const requestDeletePromise = list.find('TableAdapter').prop('onRequestItemDelete')(5);
+    list.update();
+    expect(list.find('Dialog').at(1).prop('open')).toEqual(true);
+
+    list.find('Dialog').at(1).prop('onConfirm')();
+    requestDeletePromise.then(() => {
+        expect(listStore.delete).toBeCalledWith(5);
+
+        setTimeout(() => {
+            list.update();
+            expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
+
+            // The media not found informational dialog should be rendered
+            const mediaNotFoundDialog = list.find('Dialog[title="sulu_admin.force_delete_media_not_found_title"]');
+            expect(mediaNotFoundDialog.exists()).toBe(true);
+            expect(mediaNotFoundDialog.prop('open')).toEqual(true);
+            expect(mediaNotFoundDialog.prop('onCancel')).toBeDefined();
+            expect(mediaNotFoundDialog.prop('onConfirm')).toBeDefined();
+
+            // $FlowFixMe
+            listStore.delete.mockReset();
+
+            // Clicking OK closes the informational dialog without force-deleting
+            mediaNotFoundDialog.prop('onConfirm')();
+
+            setTimeout(() => {
+                // No additional delete call should be made (dialog is informational only)
+                expect(listStore.delete).not.toBeCalled();
+                list.update();
+                expect(
+                    list.find('Dialog[title="sulu_admin.force_delete_media_not_found_title"]').exists()
+                ).toBe(false);
+                done();
+            });
+        });
+    });
+});
+
+test('ListStore should close dialog when 410 media not found and cancel is clicked', (done) => {
+    const jsonDeletePromise = Promise.resolve({
+        code: 1107,
+        resource: {
+            id: 5,
+            resourceKey: 'media',
+        },
+    });
+
+    const deletePromise = Promise.reject({
+        json: jest.fn().mockReturnValue(jsonDeletePromise),
+        status: 410,
+    });
+
+    listAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    // $FlowFixMe
+    listStore.delete.mockReturnValueOnce(deletePromise);
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const list = mount(<List adapters={['table']} store={listStore} />);
+
+    const requestDeletePromise = list.find('TableAdapter').prop('onRequestItemDelete')(5);
+    list.update();
+    expect(list.find('Dialog').at(1).prop('open')).toEqual(true);
+
+    list.find('Dialog').at(1).prop('onConfirm')();
+    requestDeletePromise.then(() => {
+        expect(listStore.delete).toBeCalledWith(5);
+
+        setTimeout(() => {
+            list.update();
+
+            // The media not found dialog should be rendered
+            const mediaNotFoundDialog = list.find('Dialog[title="sulu_admin.force_delete_media_not_found_title"]');
+            expect(mediaNotFoundDialog.exists()).toBe(true);
+
+            // $FlowFixMe
+            listStore.delete.mockReset();
+            mediaNotFoundDialog.prop('onCancel')();
+
+            setTimeout(() => {
+                expect(listStore.delete).not.toBeCalled();
+                list.update();
+                expect(
+                    list.find('Dialog[title="sulu_admin.force_delete_media_not_found_title"]').exists()
+                ).toBe(false);
+                done();
+            });
+        });
+    });
+});
+
 test('Order warning should just disappear when onRequestItemOrder callback is called and overlay is cancelled', () => {
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});

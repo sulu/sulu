@@ -58,4 +58,11 @@ interface RestExceptionInterface extends \Throwable
      * @var int
      */
     public const EXCEPTION_CODE_REFERENCING_RESOURCES_FOUND = 1106;
+
+    /**
+     * @see MediaNotFoundExceptionInterface
+     *
+     * @var int
+     */
+    public const EXCEPTION_CODE_MEDIA_NOT_FOUND = 1107;
 }

@@ -30,6 +30,7 @@ use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Media\Exception\FileNotFoundException as SuluFileNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TrashBundle\Application\DoctrineRestoreHelper\DoctrineRestoreHelperInterface;
@@ -94,7 +95,12 @@ final class MediaTrashItemHandler implements
             foreach ($file->getFileVersions() as $fileVersion) {
                 // move original file into trash directory
                 $trashStorageOptions = \array_merge($fileVersion->getStorageOptions(), ['directory' => 'trash']);
-                $trashStorageOptions = $this->storage->move($fileVersion->getStorageOptions(), $trashStorageOptions);
+
+                try {
+                    $trashStorageOptions = $this->storage->move($fileVersion->getStorageOptions(), $trashStorageOptions);
+                } catch (\League\Flysystem\FileNotFoundException $e) {
+                    throw new SuluFileNotFoundException($media->getId());
+                }
 
                 $creator = $fileVersion->getCreator();
 

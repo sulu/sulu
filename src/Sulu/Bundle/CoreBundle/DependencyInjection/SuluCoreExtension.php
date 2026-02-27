@@ -19,6 +19,7 @@ use Sulu\Component\Content\Types\Block\BlockVisitorInterface;
 use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
 use Sulu\Component\Rest\Exception\InsufficientDescendantPermissionsException;
 use Sulu\Component\Rest\Exception\InvalidHashException;
+use Sulu\Component\Rest\Exception\MediaNotFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\ReferencingResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\RemoveDependantResourcesFoundExceptionInterface;
@@ -99,6 +100,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                             RemoveDependantResourcesFoundExceptionInterface::class => 409,
                             InsufficientDescendantPermissionsException::class => 403,
                             ReferencingResourcesFoundExceptionInterface::class => 409,
+                            MediaNotFoundExceptionInterface::class => 410,
                         ],
                         'exception_listener' => false,
                         'serialize_exceptions' => false,

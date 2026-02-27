@@ -11,14 +11,19 @@ import {ResourceFormStore} from '../../../containers/Form';
 import Router from '../../../services/Router';
 import ResourceStore from '../../../stores/ResourceStore';
 import Form from '../Form';
-import {ERROR_CODE_DEPENDANT_RESOURCES_FOUND, ERROR_CODE_REFERENCING_RESOURCES_FOUND} from '../../../constants';
+import {
+    ERROR_CODE_DEPENDANT_RESOURCES_FOUND,
+    ERROR_CODE_REFERENCING_RESOURCES_FOUND,
+    EXCEPTION_CODE_MEDIA_NOT_FOUND,
+} from '../../../constants';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
-import type {DependantResourcesData, ReferencingResourcesData} from '../../../types';
+import type {DependantResourcesData, MediaNotFoundData, ReferencingResourcesData} from '../../../types';
 
 export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     @observable showDialog: boolean = false;
     @observable referencingResourcesData: ?ReferencingResourcesData = undefined;
     @observable dependantResourcesData: ?DependantResourcesData = undefined;
+    @observable mediaNotFoundData: ?MediaNotFoundData = undefined;
 
     @computed get allowConflictDeletion(): boolean {
         const {allow_conflict_deletion: allowConflictDeletion = true} = this.options;
@@ -126,6 +131,38 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
         );
     }
 
+    handleMediaNotFoundDialogCancel = () => {
+        this.closeMediaNotFoundDialog();
+    };
+
+    @action handleMediaNotFoundDialogConfirm = () => {
+        this.delete(true);
+    };
+
+    @action closeMediaNotFoundDialog = () => {
+        this.mediaNotFoundData = undefined;
+    };
+
+    renderMediaNotFoundDialog() {
+        if (!this.mediaNotFoundData) {
+            return null;
+        }
+
+        return (
+            <Dialog
+                cancelText={translate('sulu_admin.cancel')}
+                confirmLoading={this.resourceFormStore.deleting}
+                confirmText={translate('sulu_admin.ok')}
+                onCancel={this.handleMediaNotFoundDialogCancel}
+                onConfirm={this.handleMediaNotFoundDialogConfirm}
+                open={true}
+                title={translate('sulu_admin.force_delete_media_not_found_title')}
+            >
+                {translate('sulu_admin.force_delete_media_not_found_text')}
+            </Dialog>
+        );
+    }
+
     handleDialogCancel = () => {
         this.closeDialog();
     };
@@ -163,6 +200,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
                 {this.renderDialog(postfix)}
                 {this.renderDeleteReferencedResourceDialog()}
                 {this.renderDeleteDependantResourcesDialog()}
+                {this.renderMediaNotFoundDialog()}
             </Fragment>
         );
     }
@@ -238,6 +276,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
                 this.closeDialog();
                 this.closeDeleteDependantResourcesDialog();
                 this.closeDeleteReferencedResourceDialog();
+                this.closeMediaNotFoundDialog();
 
                 this.navigateBack();
             })
@@ -246,6 +285,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
                     this.closeDialog();
                     this.closeDeleteDependantResourcesDialog();
                     this.closeDeleteReferencedResourceDialog();
+                    this.closeMediaNotFoundDialog();
 
                     if (response.status === 409 && data.code === ERROR_CODE_DEPENDANT_RESOURCES_FOUND) {
                         this.dependantResourcesData = {
@@ -263,6 +303,14 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
                             resource: data.resource,
                             referencingResources: data.referencingResources,
                             referencingResourcesCount: data.referencingResourcesCount,
+                        };
+
+                        return;
+                    }
+
+                    if (response.status === 410 && data.code === EXCEPTION_CODE_MEDIA_NOT_FOUND) {
+                        this.mediaNotFoundData = {
+                            resource: data.resource,
                         };
 
                         return;

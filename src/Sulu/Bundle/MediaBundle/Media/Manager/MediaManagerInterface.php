@@ -86,7 +86,7 @@ interface MediaManagerInterface
      *
      * @param int $id the id of the category to delete
      */
-    public function delete($id, $checkSecurity = false);
+    public function delete($id, $checkSecurity = false, bool $force = false);
 
     /**
      * Moves a media to a given collection.
