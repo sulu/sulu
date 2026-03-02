@@ -51,7 +51,9 @@ Intl.DisplayNames = Intl.DisplayNames ? withDefaultLocale(Intl.DisplayNames) : I
 Intl.ListFormat = Intl.ListFormat ? withDefaultLocale(Intl.ListFormat) : Intl.ListFormat;
 Intl.NumberFormat = withDefaultLocale(Intl.NumberFormat);
 Intl.PluralRules = withDefaultLocale(Intl.PluralRules);
-Intl.RelativeTimeFormat = Intl.RelativeTimeFormat ? withDefaultLocale(Intl.RelativeTimeFormat) : Intl.RelativeTimeFormat;
+Intl.RelativeTimeFormat = Intl.RelativeTimeFormat
+    ? withDefaultLocale(Intl.RelativeTimeFormat)
+    : Intl.RelativeTimeFormat;
 
 Date.prototype.toLocaleString = withDefaultLocaleArgument(Date.prototype.toLocaleString);
 Date.prototype.toLocaleDateString = withDefaultLocaleArgument(Date.prototype.toLocaleDateString);
@@ -61,9 +63,13 @@ String.prototype.localeCompare = withDefaultLocaleSecondArgument(String.prototyp
 String.prototype.toLocaleLowerCase = withDefaultLocaleSingleArgument(String.prototype.toLocaleLowerCase);
 String.prototype.toLocaleUpperCase = withDefaultLocaleSingleArgument(String.prototype.toLocaleUpperCase);
 Array.prototype.toLocaleString = withDefaultLocaleArgument(Array.prototype.toLocaleString);
-BigInt.prototype.toLocaleString = BigInt.prototype.toLocaleString
-    ? withDefaultLocaleArgument(BigInt.prototype.toLocaleString)
-    : BigInt.prototype.toLocaleString;
+const BigIntConstructor = window.BigInt;
+
+if (BigIntConstructor && BigIntConstructor.prototype.toLocaleString) {
+    BigIntConstructor.prototype.toLocaleString = withDefaultLocaleArgument(
+        BigIntConstructor.prototype.toLocaleString
+    );
+}
 
 Object.defineProperty(window.navigator, 'language', {
     configurable: true,
