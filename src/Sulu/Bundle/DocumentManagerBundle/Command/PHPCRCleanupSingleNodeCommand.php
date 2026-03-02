@@ -159,12 +159,14 @@ class PHPCRCleanupSingleNodeCommand extends Command
             'Total properties: ' . $totalStats['properties'],
         ]);
 
-        if ($totalStats['nodesProcessed'] > 0) {
-            return self::SUCCESS;
-        }
+        $output->writeln('PHPCR_CLEANUP_STATS:' . \json_encode($totalStats, \JSON_THROW_ON_ERROR));
 
         if ($totalStats['nodesErrored'] > 0) {
             return self::FAILURE;
+        }
+
+        if ($totalStats['nodesProcessed'] > 0) {
+            return self::SUCCESS;
         }
 
         return self::IGNORED;
@@ -268,6 +270,7 @@ class PHPCRCleanupSingleNodeCommand extends Command
 
             $this->documentManager->clear();
 
+            /** @var string[] $writtenProperties */
             $writtenProperties = $defaultCleanupNode->getWrittenPropertyKeys();
             foreach ($this->cleanupNode($node, $locale, $writtenProperties, $dryRun) as $result) {
                 ++$stats['properties'];
@@ -280,6 +283,7 @@ class PHPCRCleanupSingleNodeCommand extends Command
 
             if ($wasPublished) {
                 $liveNode = $this->liveSession->getNode($node->getPath());
+                /** @var string[] $writtenProperties */
                 $writtenProperties = $liveCleanupNode->getWrittenPropertyKeys();
                 foreach ($this->cleanupNode($liveNode, $locale, $writtenProperties, $dryRun) as $result) {
                     ++$stats['properties'];
@@ -319,6 +323,9 @@ class PHPCRCleanupSingleNodeCommand extends Command
         $this->documentManagerEventDispatcher->dispatch($event, Events::PUBLISH);
     }
 
+    /**
+     * @param string[] $writtenProperties
+     */
     private function cleanupNode(NodeInterface $node, string $locale, array $writtenProperties, bool $dryRun): \Generator
     {
         $this->logger->writeln(\sprintf("# Cleaning up node \"%s\" for locale \"%s\" in workspace \"%s\"\n", $node->getPath(), $locale, $node->getSession()->getWorkspace()->getName()));
@@ -460,6 +467,10 @@ class PHPCRCleanupSingleNodeCommand extends Command
             }
 
             $shadowBase = $node->getProperty($shadowBaseKey)->getValue();
+            if (!\is_string($shadowBase)) {
+                continue;
+            }
+
             if (\in_array($shadowBase, $validLocales, true)) {
                 continue;
             }
@@ -481,6 +492,9 @@ class PHPCRCleanupSingleNodeCommand extends Command
         return $cleaned;
     }
 
+    /**
+     * @return string[]
+     */
     private function getLocales(NodeInterface $node): array
     {
         $locales = [];

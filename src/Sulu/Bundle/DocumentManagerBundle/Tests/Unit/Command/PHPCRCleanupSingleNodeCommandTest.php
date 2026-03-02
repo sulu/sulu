@@ -18,6 +18,7 @@ use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Command\PHPCRCleanupSingleNodeCommand;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -30,13 +31,20 @@ class PHPCRCleanupSingleNodeCommandTest extends TestCase
 {
     use ProphecyTrait;
 
-    private $liveSession;
-    private $session;
-    private $structureMetadataFactory;
-    private $namespaceRegistry;
-    private $eventDispatcher;
-    private $documentManager;
-    private $webspaceManager;
+    /** @var ObjectProphecy<SessionInterface> */
+    private ObjectProphecy $liveSession;
+    /** @var ObjectProphecy<SessionInterface> */
+    private ObjectProphecy $session;
+    /** @var ObjectProphecy<StructureMetadataFactoryInterface> */
+    private ObjectProphecy $structureMetadataFactory;
+    /** @var ObjectProphecy<NamespaceRegistry> */
+    private ObjectProphecy $namespaceRegistry;
+    /** @var ObjectProphecy<EventDispatcherInterface> */
+    private ObjectProphecy $eventDispatcher;
+    /** @var ObjectProphecy<DocumentManagerInterface> */
+    private ObjectProphecy $documentManager;
+    /** @var ObjectProphecy<WebspaceManagerInterface> */
+    private ObjectProphecy $webspaceManager;
     private PHPCRCleanupSingleNodeCommand $command;
 
     protected function setUp(): void

@@ -17,6 +17,7 @@ use PHPCR\SessionInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\NullOutput;
@@ -38,6 +39,7 @@ class PHPCRCleanupCommand extends Command
     private OutputInterface $logger;
 
     public function __construct(
+        private SessionInterface $liveSession,
         private SessionInterface $session,
         private WebspaceManagerInterface $webspaceManager,
         private ServicesResetter $servicesResetter,
@@ -140,6 +142,7 @@ class PHPCRCleanupCommand extends Command
         $queryManager = $this->session->getWorkspace()->getQueryManager();
         $rows = $queryManager->createQuery($sql2, 'JCR-SQL2')->execute();
 
+        /** @var string[] $uuids */
         $uuids = \array_map(static fn ($row) => $row->getValue('jcr:uuid'), \iterator_to_array($rows->getRows()));
         unset($rows);
 
@@ -204,82 +207,39 @@ class PHPCRCleanupCommand extends Command
                     continue;
                 }
 
-                if (0 !== $status) {
-                    $stderr = $process->getErrorOutput();
-                    if ('' !== $stderr) {
-                        $errorMessages[] = $stderr;
-                    }
-
-                    // Try to parse output for detailed per-node counts before falling back
-                    $subCommandOutput = $process->getOutput();
-                    \preg_match('/Nodes processed: (\d+)/', $subCommandOutput, $matches);
-                    $batchProcessed = (int) ($matches[1] ?? 0);
-                    \preg_match('/Nodes ignored: (\d+)/', $subCommandOutput, $matches);
-                    $batchIgnored = (int) ($matches[1] ?? 0);
-                    \preg_match('/Nodes errored: (\d+)/', $subCommandOutput, $matches);
-                    $batchErrored = (int) ($matches[1] ?? 0);
-
-                    $parsedTotal = $batchProcessed + $batchIgnored + $batchErrored;
-
-                    if ($parsedTotal > 0) {
-                        $stats['nodes'] += $parsedTotal;
-                        $stats['ignoredNodes'] += $batchIgnored;
-                        $stats['erroredNodes'] += $batchErrored;
-
-                        \preg_match('/Documents: (\d+)/', $subCommandOutput, $matches);
-                        $stats['documents'] += (int) ($matches[1] ?? 0);
-                        \preg_match('/Removed properties: (\d+)/', $subCommandOutput, $matches);
-                        $stats['removedProperties'] += (int) ($matches[1] ?? 0);
-                        \preg_match('/Total properties: (\d+)/', $subCommandOutput, $matches);
-                        $stats['properties'] += (int) ($matches[1] ?? 0);
-                        \preg_match('/Removed stale locale properties: (\d+)/', $subCommandOutput, $matches);
-                        $stats['removedStaleProperties'] += (int) ($matches[1] ?? 0);
-                    } else {
-                        $stats['nodes'] += $batchNodeCount;
-                        $stats['erroredNodes'] += $batchNodeCount;
-                    }
-
-                    $this->logger->writeln(\sprintf(
-                        "# Error processing batch of %d nodes\n\n%s\n",
-                        $batchNodeCount,
-                        $stderr,
-                    ));
-
-                    $this->updateProgressBar($progressBar, $stats, $parsedTotal > 0 ? $parsedTotal : $batchNodeCount);
-
-                    continue;
-                }
-
                 $subCommandOutput = $process->getOutput();
+                $batchStats = $this->parseSubprocessOutput($subCommandOutput);
+                $parsedTotal = $batchStats['nodesProcessed'] + $batchStats['nodesIgnored'] + $batchStats['nodesErrored'];
 
-                \preg_match('/Nodes processed: (\d+)/', $subCommandOutput, $matches);
-                $batchProcessed = (int) ($matches[1] ?? 0);
-                \preg_match('/Nodes ignored: (\d+)/', $subCommandOutput, $matches);
-                $batchIgnored = (int) ($matches[1] ?? 0);
-                \preg_match('/Nodes errored: (\d+)/', $subCommandOutput, $matches);
-                $batchErrored = (int) ($matches[1] ?? 0);
-
-                $stats['nodes'] += $batchProcessed + $batchIgnored + $batchErrored;
-                $stats['ignoredNodes'] += $batchIgnored;
-                $stats['erroredNodes'] += $batchErrored;
-
-                \preg_match('/Documents: (\d+)/', $subCommandOutput, $matches);
-                $stats['documents'] += (int) ($matches[1] ?? 0);
-                \preg_match('/Removed properties: (\d+)/', $subCommandOutput, $matches);
-                $stats['removedProperties'] += (int) ($matches[1] ?? 0);
-                \preg_match('/Total properties: (\d+)/', $subCommandOutput, $matches);
-                $stats['properties'] += (int) ($matches[1] ?? 0);
-                \preg_match('/Removed stale locale properties: (\d+)/', $subCommandOutput, $matches);
-                $stats['removedStaleProperties'] += (int) ($matches[1] ?? 0);
+                if ($parsedTotal > 0) {
+                    $stats['nodes'] += $parsedTotal;
+                    $stats['ignoredNodes'] += $batchStats['nodesIgnored'];
+                    $stats['erroredNodes'] += $batchStats['nodesErrored'];
+                    $stats['documents'] += $batchStats['documents'];
+                    $stats['removedProperties'] += $batchStats['removedProperties'];
+                    $stats['properties'] += $batchStats['properties'];
+                    $stats['removedStaleProperties'] += $batchStats['removedStaleProperties'];
+                } else {
+                    $stats['nodes'] += $batchNodeCount;
+                    $stats['erroredNodes'] += $batchNodeCount;
+                }
 
                 $stderr = $process->getErrorOutput();
                 if ('' !== $stderr) {
                     $errorMessages[] = $stderr;
                 }
 
-                $this->logger->writeln($subCommandOutput);
+                if (0 !== $status) {
+                    $this->logger->writeln(\sprintf(
+                        "# Error processing batch of %d nodes\n\n%s\n",
+                        $batchNodeCount,
+                        $stderr,
+                    ));
+                } else {
+                    $this->logger->writeln($subCommandOutput);
+                }
 
-                $this->updateProgressBar($progressBar, $stats, $batchProcessed + $batchIgnored + $batchErrored);
+                $this->updateProgressBar($progressBar, $stats, $parsedTotal > 0 ? $parsedTotal : $batchNodeCount);
             }
 
             $this->servicesResetter->reset();
@@ -288,44 +248,52 @@ class PHPCRCleanupCommand extends Command
         $progressBar->finish();
 
         $staleRoutes = $this->getStaleRouteLocales();
-        $routesModified = false;
         if ([] !== $staleRoutes) {
             $io->section('Stale route locales detected');
 
+            $routesModified = false;
             foreach ($staleRoutes as $webspaceKey => $staleLocales) {
                 foreach ($staleLocales as $staleLocale) {
                     $routePath = \sprintf('/cmf/%s/routes/%s', $webspaceKey, $staleLocale);
                     $io->writeln(\sprintf('  Stale route tree: %s', $routePath));
 
                     if (!$dryRun) {
-                        if ($this->session->nodeExists($routePath)) {
-                            $this->session->getNode($routePath)->remove();
-                            $routesModified = true;
+                        foreach ([$this->session, $this->liveSession] as $phpcrSession) {
+                            if ($phpcrSession->nodeExists($routePath)) {
+                                $phpcrSession->getNode($routePath)->remove();
+                                $routesModified = true;
+                            }
                         }
                     }
                 }
             }
-        }
 
-        if (!$dryRun && $routesModified) {
-            $this->session->save();
+            if (!$dryRun && $routesModified) {
+                $this->session->save();
+                $this->liveSession->save();
+            }
         }
 
         if ([] !== $orphanedKeys) {
             $io->section('Removing orphaned webspace trees');
 
+            $orphanedModified = false;
             foreach ($orphanedKeys as $orphanedKey) {
                 $webspacePath = \sprintf('/cmf/%s', $orphanedKey);
-                if ($this->session->nodeExists($webspacePath)) {
-                    $io->writeln(\sprintf('  Removing orphaned webspace tree: %s', $webspacePath));
-                    if (!$dryRun) {
-                        $this->session->getNode($webspacePath)->remove();
+                foreach ([$this->session, $this->liveSession] as $phpcrSession) {
+                    if ($phpcrSession->nodeExists($webspacePath)) {
+                        $io->writeln(\sprintf('  Removing orphaned webspace tree: %s', $webspacePath));
+                        if (!$dryRun) {
+                            $phpcrSession->getNode($webspacePath)->remove();
+                            $orphanedModified = true;
+                        }
                     }
                 }
             }
 
-            if (!$dryRun) {
+            if (!$dryRun && $orphanedModified) {
                 $this->session->save();
+                $this->liveSession->save();
             }
         }
 
@@ -366,6 +334,31 @@ class PHPCRCleanupCommand extends Command
         $process->setTimeout(\max(120, \count($uuids) * 10));
 
         return $process;
+    }
+
+    /**
+     * @return array{nodesProcessed: int, nodesIgnored: int, nodesErrored: int, documents: int, properties: int, removedProperties: int, removedStaleProperties: int}
+     */
+    private function parseSubprocessOutput(string $output): array
+    {
+        if (\preg_match('/PHPCR_CLEANUP_STATS:(.+)$/m', $output, $matches)) {
+            $data = \json_decode($matches[1], true);
+            if (\is_array($data)) {
+                /** @var array{nodesProcessed: int, nodesIgnored: int, nodesErrored: int, documents: int, properties: int, removedProperties: int, removedStaleProperties: int} $data */
+
+                return $data;
+            }
+        }
+
+        return [
+            'nodesProcessed' => 0,
+            'nodesIgnored' => 0,
+            'nodesErrored' => 0,
+            'documents' => 0,
+            'properties' => 0,
+            'removedProperties' => 0,
+            'removedStaleProperties' => 0,
+        ];
     }
 
     /**
@@ -436,9 +429,9 @@ class PHPCRCleanupCommand extends Command
     }
 
     /**
-     * @param array<int, mixed> $stats
+     * @param array<string, int> $stats
      */
-    private function updateProgressBar(\Symfony\Component\Console\Helper\ProgressBar $progressBar, array $stats, int $advance): void
+    private function updateProgressBar(ProgressBar $progressBar, array $stats, int $advance): void
     {
         $progressBar->setMessage((string) $stats['nodes'], 'nodes');
         $progressBar->setMessage((string) $stats['ignoredNodes'], 'ignoredNodes');

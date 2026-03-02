@@ -17,6 +17,7 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Command\PHPCRCleanupCommand;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
@@ -28,17 +29,23 @@ class PHPCRCleanupCommandTest extends TestCase
 {
     use ProphecyTrait;
 
-    private $session;
-    private $webspaceManager;
+    /** @var ObjectProphecy<SessionInterface> */
+    private ObjectProphecy $liveSession;
+    /** @var ObjectProphecy<SessionInterface> */
+    private ObjectProphecy $session;
+    /** @var ObjectProphecy<WebspaceManagerInterface> */
+    private ObjectProphecy $webspaceManager;
     private PHPCRCleanupCommand $command;
 
     protected function setUp(): void
     {
+        $this->liveSession = $this->prophesize(SessionInterface::class);
         $this->session = $this->prophesize(SessionInterface::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $servicesResetter = $this->prophesize(ServicesResetter::class);
 
         $this->command = new PHPCRCleanupCommand(
+            $this->liveSession->reveal(),
             $this->session->reveal(),
             $this->webspaceManager->reveal(),
             $servicesResetter->reveal(),
@@ -162,7 +169,7 @@ class PHPCRCleanupCommandTest extends TestCase
         $webspace->setLocalizations([$deLocalization, $enLocalization]);
 
         $collection = new WebspaceCollection();
-        $collection->setWebspaces([$webspace]);
+        $collection->setWebspaces(['sulu_io' => $webspace]);
         $this->webspaceManager->getWebspaceCollection()->willReturn($collection);
         $this->webspaceManager->getAllLocalesByWebspaces()->willReturn([
             'sulu_io' => ['de' => $deLocalization, 'en' => $enLocalization],
