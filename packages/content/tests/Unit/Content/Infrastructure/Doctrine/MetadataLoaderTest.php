@@ -105,6 +105,10 @@ class MetadataLoaderTest extends TestCase
             }))->shouldBeCalledTimes($exist ? 0 : 1);
         }
 
+        if (\in_array(DimensionContentInterface::class, $interfaces, true)) {
+            $classMetadata->getAssociationMappings()->willReturn([]);
+        }
+
         $configuration = $this->prophesize(Configuration::class);
         $configuration->getNamingStrategy()->willReturn(new UnderscoreNamingStrategy());
         $entityManager = $this->prophesize(EntityManager::class);

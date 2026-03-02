@@ -52,7 +52,7 @@ final class MetadataLoader
         /** @var ClassMetadata<object> $metadata */
         $metadata = $event->getClassMetadata();
         $reflection = $metadata->getReflectionClass();
-        $tableName = $metadata->getTableName();
+        $resourceForeignKeyColumn = null;
 
         if ($reflection->implementsInterface(DimensionContentInterface::class)) {
             $this->addField($metadata, 'stage', 'string', ['length' => 15, 'nullable' => false]);
@@ -65,6 +65,14 @@ final class MetadataLoader
             $this->addIndex($metadata, 'locale', ['locale']);
             $this->addIndex($metadata, 'stage', ['stage']);
             $this->addIndex($metadata, 'version', ['version']);
+            $this->addIndex($metadata, 'stage_version_locale', ['stage', 'version', 'locale']);
+
+            $resourceForeignKeyColumn = $this->getResourceForeignKeyColumn($metadata);
+            if (null !== $resourceForeignKeyColumn) {
+                $this->addIndex($metadata, 'resource_lookup', [
+                    $resourceForeignKeyColumn, 'stage', 'version', 'locale', 'ghostLocale',
+                ]);
+            }
         }
 
         if ($reflection->implementsInterface(ShadowInterface::class)) {
@@ -77,6 +85,12 @@ final class MetadataLoader
             $this->addField($metadata, 'templateData', 'json', ['nullable' => false, 'options' => ['jsonb' => true]]);
 
             $this->addIndex($metadata, 'template_key', ['templateKey']);
+
+            if (null !== $resourceForeignKeyColumn) {
+                $this->addIndex($metadata, 'resource_template_lookup', [
+                    $resourceForeignKeyColumn, 'stage', 'version', 'locale', 'templateKey',
+                ]);
+            }
         }
 
         if ($reflection->implementsInterface(SeoInterface::class)) {
@@ -243,6 +257,23 @@ final class MetadataLoader
         $tableName = $metadata->getTableName();
 
         $builder->addIndex($fields, 'idx_' . $tableName . '_' . $name);
+    }
+
+    /**
+     * @param ClassMetadata<object> $metadata
+     */
+    private function getResourceForeignKeyColumn(ClassMetadata $metadata): ?string
+    {
+        foreach ($metadata->getAssociationMappings() as $mapping) {
+            if (isset($mapping['inversedBy']) && 'dimensionContents' === $mapping['inversedBy']) {
+                $joinColumns = $mapping['joinColumns'] ?? []; // @phpstan-ignore-line
+                $columnName = $joinColumns[0]['name'] ?? null; // @phpstan-ignore-line
+
+                return \is_string($columnName) ? $columnName : null;
+            }
+        }
+
+        return null;
     }
 
     /**
