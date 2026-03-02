@@ -33,5 +33,7 @@
     "sulu_activity.description.articles.translation_removed": "{userFullName} hat die Sprachvariante für \"{resourceLocale}\" des Artikels \"{resourceTitle}\" gelöscht",
     "sulu_activity.description.articles.translation_restored": "{userFullName} hat die Sprachvariante für \"{resourceLocale}\" des Artikels \"{resourceTitle}\" wiederhergestellt",
     "sulu_activity.description.articles.version_restored": "{userFullName} hat die Version \"{context_version}\" des Artikels \"{resourceTitle}\" wiederhergestellt",
-    "sulu_activity.description.articles.route_removed": "{userFullName} hat die Route \"{resourceTitle}\" gelöscht."
+    "sulu_activity.description.articles.route_removed": "{userFullName} hat die Route \"{resourceTitle}\" gelöscht.",
+    "sulu_activity.description.articles.preview_link_generated": "{userFullName} hat den öffentlichen Vorschaulink \"{resourceTitle}\" erstellt",
+    "sulu_activity.description.articles.preview_link_revoked": "{userFullName} hat den öffentlichen Vorschaulink \"{resourceTitle}\" widerrufen"
 }
