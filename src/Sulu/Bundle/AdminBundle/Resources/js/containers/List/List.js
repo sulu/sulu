@@ -325,16 +325,8 @@ class List extends React.Component<Props> {
                     (resolve) => this.resolveDelete = resolve
                 );
 
-                promise.then(action((response) => {
-                    if (!response.deleted) {
-                        this.closeAllDialogs();
-
-                        return response;
-                    }
-
-                    this.props.store.delete(data.resource.id, {force: true})
-                        .then(this.closeAllDialogs)
-                        .catch(this.handleDeleteResponseError);
+                promise.then(action(() => {
+                    this.closeAllDialogs();
                 }));
 
                 return;

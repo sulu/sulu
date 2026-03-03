@@ -23,7 +23,7 @@ class MediaNotFoundException extends \Exception implements MediaNotFoundExceptio
     ) {
         parent::__construct(
             \sprintf(
-                'Media with the id "%s" not found.',
+                'Media file for media with the id "%s" is missing from storage.',
                 $resource['id'],
             ),
             static::EXCEPTION_CODE_MEDIA_NOT_FOUND

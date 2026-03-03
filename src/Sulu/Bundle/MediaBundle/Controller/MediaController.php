@@ -364,7 +364,7 @@ class MediaController extends AbstractMediaController implements
      */
     public function deleteAction(int $id, Request $request)
     {
-        $force = (bool) $request->query->get('force', false);
+        $force = $request->query->getBoolean('force', false);
 
         $delete = function(int $id) use ($force) {
             try {

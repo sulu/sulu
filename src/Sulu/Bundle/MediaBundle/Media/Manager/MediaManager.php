@@ -660,11 +660,7 @@ class MediaManager implements MediaManagerInterface
         $mediaEvent = !$force ? new MediaRemovedEvent($mediaEntity->getId(), $mediaEntity->getCollection()->getId(), $mediaTitle, $locale) : new MediaRemovedNoTrashEvent($mediaEntity->getId(), $mediaEntity->getCollection()->getId(), $mediaTitle, $locale);
 
         if (null !== $this->trashManager && !$force) {
-            try {
-                $this->trashManager->store(MediaInterface::RESOURCE_KEY, $mediaEntity);
-            } catch (SuluFileNotFoundException $e) {
-                throw new SuluFileNotFoundException($id);
-            }
+            $this->trashManager->store(MediaInterface::RESOURCE_KEY, $mediaEntity);
         }
 
         /** @var File $file */

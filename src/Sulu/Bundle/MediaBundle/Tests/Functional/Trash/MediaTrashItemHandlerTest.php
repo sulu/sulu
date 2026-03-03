@@ -29,6 +29,7 @@ use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Media\Exception\FileNotFoundException as SuluFileNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Tests\Functional\Traits\CreateUploadedFileTrait;
 use Sulu\Bundle\MediaBundle\Trash\MediaTrashItemHandler;
@@ -427,6 +428,54 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         static::assertFalse($this->filesystem->exists($this->storage->getPath($file2StorageOptions)));
         static::assertFalse($this->filesystem->exists($this->storage->getPath($file1TrashStorageOptions)));
         static::assertFalse($this->filesystem->exists($this->storage->getPath($file2TrashStorageOptions)));
+    }
+
+    public function testStoreThrowsSuluFileNotFoundExceptionWhenFileMissing(): void
+    {
+        $collection = $this->createCollection();
+
+        $mediaType = new MediaType();
+        $mediaType->setId(2);
+        $mediaType->setName('image');
+
+        $uploadedFile = $this->createUploadedFileImage();
+        $fileStorageOptions = $this->storage->save($uploadedFile->getPathname(), 'testStoreMissingFile-1');
+
+        $media = new Media();
+        $media->setCollection($collection);
+        $media->setType($mediaType);
+
+        $file = new File();
+        $media->addFile($file);
+        $file->setMedia($media);
+        $file->setVersion(1);
+
+        $fileVersion = new FileVersion();
+        $file->addFileVersion($fileVersion);
+        $fileVersion->setFile($file);
+        $fileVersion->setName('file-version-1');
+        $fileVersion->setVersion(1);
+        $fileVersion->setSize(100);
+        $fileVersion->setStorageOptions($fileStorageOptions);
+
+        $fileVersionMeta = new FileVersionMeta();
+        $fileVersion->addMeta($fileVersionMeta);
+        $fileVersion->setDefaultMeta($fileVersionMeta);
+        $fileVersionMeta->setFileVersion($fileVersion);
+        $fileVersionMeta->setTitle('test-title');
+        $fileVersionMeta->setLocale('en');
+
+        $this->entityManager->persist($mediaType);
+        $this->entityManager->persist($media);
+        $this->entityManager->flush();
+
+        // Delete the physical file to simulate a missing file scenario
+        $filePath = $this->storage->getPath($fileStorageOptions);
+        $this->filesystem->remove($filePath);
+        static::assertFalse($this->filesystem->exists($filePath));
+
+        $this->expectException(SuluFileNotFoundException::class);
+        $this->mediaTrashItemHandler->store($media);
     }
 
     protected function createCollection(): CollectionInterface
