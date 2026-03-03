@@ -181,7 +181,7 @@ test('Should remove media from the selection store', () => {
     ).instance();
 
     mediaSelectionInstance.handleRemove(1);
-    expect(mediaSelectionInstance.mediaSelectionStore.removeById).toBeCalledWith(1);
+    expect(mediaSelectionInstance.mediaSelectionStore.removeById).toHaveBeenCalledWith(1);
 });
 
 test('Should move media inside the selection store', () => {
@@ -196,7 +196,7 @@ test('Should move media inside the selection store', () => {
     ).instance();
 
     mediaSelectionInstance.handleSorted(1, 3);
-    expect(mediaSelectionInstance.mediaSelectionStore.move).toBeCalledWith(1, 3);
+    expect(mediaSelectionInstance.mediaSelectionStore.move).toHaveBeenCalledWith(1, 3);
 });
 
 test('Should add the selected medias to the selection store on confirm', () => {
@@ -235,7 +235,7 @@ test('Should add the selected medias to the selection store on confirm', () => {
 
     mediaSelectionInstance.openMediaOverlay();
     mediaSelectionInstance.handleOverlayConfirm(medias);
-    expect(mediaSelectionInstance.mediaSelectionStore.set).toBeCalledWith(medias);
+    expect(mediaSelectionInstance.mediaSelectionStore.set).toHaveBeenCalledWith(medias);
     expect(mediaSelectionInstance.overlayOpen).toBe(false);
 });
 
@@ -260,10 +260,10 @@ test('Should call the onChange handler if selection store changes', () => {
     ).instance();
 
     mediaSelectionInstance.mediaSelectionStore.items.push({id: 99, thumbnails: {}});
-    expect(changeSpy).toBeCalledWith({ids: [55, 99]});
+    expect(changeSpy).toHaveBeenCalledWith({ids: [55, 99]});
 
     mediaSelectionInstance.mediaSelectionStore.items.splice(0, 1);
-    expect(changeSpy).toBeCalledWith({ids: [99]});
+    expect(changeSpy).toHaveBeenCalledWith({ids: [99]});
 });
 
 test('Should call the onChange handler if the displayOption changes', () => {
@@ -281,7 +281,7 @@ test('Should call the onChange handler if the displayOption changes', () => {
     mediaSelection.find('Button[icon="su-display-default"]').simulate('click');
     mediaSelection.find('Action[value="left"]').simulate('click');
 
-    expect(changeSpy).toBeCalledWith({displayOption: 'left', ids: [55]});
+    expect(changeSpy).toHaveBeenCalledWith({displayOption: 'left', ids: [55]});
 });
 
 test('Should not call the onChange callback if the component props change', () => {
@@ -296,7 +296,7 @@ test('Should not call the onChange callback if the component props change', () =
     );
 
     mediaSelection.setProps({disabled: true});
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Should not call onChange callback if an unrelated observable that is accessed in the callback changes', () => {
@@ -324,7 +324,7 @@ test('Should not call onChange callback if an unrelated observable that is acces
 
     // change callback should be called when item of the store mock changes
     mediaSelectionInstance.mediaSelectionStore.items.push({id: 99, thumbnails: {}});
-    expect(changeSpy).toBeCalledWith({ids: [55, 99]});
+    expect(changeSpy).toHaveBeenCalledWith({ids: [55, 99]});
     expect(changeSpy).toHaveBeenCalledTimes(1);
 
     // change callback should not be called when the unrelated observable changes

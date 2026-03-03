@@ -21,8 +21,8 @@ test('Should send a get request and return the promise', () => {
     const promise = {};
     Requester.get.mockReturnValue(promise);
     const result = ResourceRequester.get('snippets', {id: 5});
-    expect(resourceRouteRegistry.getUrl).toBeCalledWith('detail', 'snippets', {id: 5});
-    expect(Requester.get).toBeCalledWith('/snippets/5');
+    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('detail', 'snippets', {id: 5});
+    expect(Requester.get).toHaveBeenCalledWith('/snippets/5');
     expect(result).toBe(promise);
 });
 
@@ -31,8 +31,8 @@ test('Should send a get request without an ID and return the promise', () => {
     const promise = {};
     Requester.get.mockReturnValue(promise);
     const result = ResourceRequester.get('snippets');
-    expect(resourceRouteRegistry.getUrl).toBeCalledWith('detail', 'snippets', {});
-    expect(Requester.get).toBeCalledWith('/snippets');
+    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('detail', 'snippets', {});
+    expect(Requester.get).toHaveBeenCalledWith('/snippets');
     expect(result).toBe(promise);
 });
 
@@ -40,8 +40,8 @@ test('Should send a get request with passed options as query parameters', () => 
     resourceRouteRegistry.getUrl.mockReturnValue('/snippets/5?locale=en&action=publish');
     const options = {id: 5, locale: 'en', action: 'publish'};
     ResourceRequester.get('snippets', options);
-    expect(resourceRouteRegistry.getUrl).toBeCalledWith('detail', 'snippets', options);
-    expect(Requester.get).toBeCalledWith('/snippets/5?locale=en&action=publish');
+    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('detail', 'snippets', options);
+    expect(Requester.get).toHaveBeenCalledWith('/snippets/5?locale=en&action=publish');
 });
 
 test('Should send a list get request and return the promise', () => {
@@ -88,8 +88,8 @@ test('Should send a put request and return the promise', () => {
     const data = {title: 'Title'};
     Requester.put.mockReturnValue(promise);
     const result = ResourceRequester.put('snippets', data, {id: 5});
-    expect(resourceRouteRegistry.getUrl).toBeCalledWith('detail', 'snippets', {id: 5});
-    expect(Requester.put).toBeCalledWith('/snippets/5', data);
+    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('detail', 'snippets', {id: 5});
+    expect(Requester.put).toHaveBeenCalledWith('/snippets/5', data);
     expect(result).toBe(promise);
 });
 
@@ -99,8 +99,8 @@ test('Should send a put request with passed options as query parameters', () => 
     const options = {action: 'publish', id: 5, locale: 'en'};
     Requester.put.mockReturnValue({});
     ResourceRequester.put('snippets', data, options);
-    expect(resourceRouteRegistry.getUrl).toBeCalledWith('detail', 'snippets', {action: 'publish', id: 5, locale: 'en'});
-    expect(Requester.put).toBeCalledWith('/snippets/5?locale=en&action=publish', data);
+    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('detail', 'snippets', {action: 'publish', id: 5, locale: 'en'});
+    expect(Requester.put).toHaveBeenCalledWith('/snippets/5?locale=en&action=publish', data);
 });
 
 test('Should send a patch request and return the promise', () => {
@@ -109,8 +109,8 @@ test('Should send a patch request and return the promise', () => {
     const data = {title: 'Title'};
     Requester.patch.mockReturnValue(promise);
     const result = ResourceRequester.patch('snippets', data, {id: 5});
-    expect(resourceRouteRegistry.getUrl).toBeCalledWith('detail', 'snippets', {id: 5});
-    expect(Requester.patch).toBeCalledWith('/snippets/5', data);
+    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('detail', 'snippets', {id: 5});
+    expect(Requester.patch).toHaveBeenCalledWith('/snippets/5', data);
     expect(result).toBe(promise);
 });
 
@@ -120,8 +120,8 @@ test('Should send a patch request with passed options as query parameters', () =
     const options = {action: 'publish', id: 5, locale: 'en'};
     Requester.patch.mockReturnValue({});
     ResourceRequester.patch('snippets', data, options);
-    expect(resourceRouteRegistry.getUrl).toBeCalledWith('detail', 'snippets', {action: 'publish', id: 5, locale: 'en'});
-    expect(Requester.patch).toBeCalledWith('/snippets/5?locale=en&action=publish', data);
+    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('detail', 'snippets', {action: 'publish', id: 5, locale: 'en'});
+    expect(Requester.patch).toHaveBeenCalledWith('/snippets/5?locale=en&action=publish', data);
 });
 
 test('Should send a delete request and return the promise', () => {
@@ -136,10 +136,10 @@ test('Should send a delete request to the correct URL', () => {
         .mockImplementation((type, resourceKey, {id}) => '/' + resourceKey + '/' + id);
 
     ResourceRequester.delete('snippets', {id: 5});
-    expect(Requester.delete).toBeCalledWith('/snippets/5');
+    expect(Requester.delete).toHaveBeenCalledWith('/snippets/5');
 
     ResourceRequester.delete('contacts', {id: 9});
-    expect(Requester.delete).toBeCalledWith('/contacts/9');
+    expect(Requester.delete).toHaveBeenCalledWith('/contacts/9');
 });
 
 test('Should send a delete request with passed options as query parameters', () => {
@@ -147,8 +147,8 @@ test('Should send a delete request with passed options as query parameters', () 
     const options = {id: 5, locale: 'en', webspace: 'sulu'};
     Requester.delete.mockReturnValue({});
     ResourceRequester.delete('snippets', options);
-    expect(resourceRouteRegistry.getUrl).toBeCalledWith('detail', 'snippets', {id: 5, locale: 'en', webspace: 'sulu'});
-    expect(Requester.delete).toBeCalledWith('/snippets/5?locale=en&webspace=sulu');
+    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('detail', 'snippets', {id: 5, locale: 'en', webspace: 'sulu'});
+    expect(Requester.delete).toHaveBeenCalledWith('/snippets/5?locale=en&webspace=sulu');
 });
 
 test('Should send a delete request and return the promise', () => {
@@ -163,10 +163,10 @@ test('Should send a collection delete request to the correct URL', () => {
         .mockImplementation((type, resourceKey, {ids}) => '/' + resourceKey + '?ids=' + ids.join(','));
 
     ResourceRequester.deleteList('snippets', {ids: [1, 2, 3]});
-    expect(Requester.delete).toBeCalledWith('/snippets?ids=1,2,3');
+    expect(Requester.delete).toHaveBeenCalledWith('/snippets?ids=1,2,3');
 
     ResourceRequester.deleteList('contacts', {ids: [4, 5, 6]});
-    expect(Requester.delete).toBeCalledWith('/contacts?ids=4,5,6');
+    expect(Requester.delete).toHaveBeenCalledWith('/contacts?ids=4,5,6');
 });
 
 test('Should send a post request and return the promise', () => {
@@ -174,7 +174,7 @@ test('Should send a post request and return the promise', () => {
     const promise = {};
     Requester.post.mockReturnValue(promise);
     const result = ResourceRequester.post('snippets', {});
-    expect(resourceRouteRegistry.getUrl).toBeCalledWith('detail', 'snippets', {});
-    expect(Requester.post).toBeCalledWith('/snippets', {});
+    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('detail', 'snippets', {});
+    expect(Requester.post).toHaveBeenCalledWith('/snippets', {});
     expect(result).toBe(promise);
 });

@@ -106,8 +106,8 @@ test('The component should handle clicks correctly', async() => {
     );
 
     await userEvent.click(screen.queryByText('Settings'));
-    expect(handleItemClick).toBeCalledWith('settings');
+    expect(handleItemClick).toHaveBeenCalledWith('settings');
 
     await userEvent.click(screen.queryByText(/Settings 2/));
-    expect(handleSubItemClick).toBeCalledWith('settings_2');
+    expect(handleSubItemClick).toHaveBeenCalledWith('settings_2');
 });

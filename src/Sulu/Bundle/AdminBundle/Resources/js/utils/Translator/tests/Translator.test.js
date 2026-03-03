@@ -36,5 +36,5 @@ test('Translator should use the english language for translating dates', () => {
 
 test('Translator should return key when translating non-existing keys and log a warning', () => {
     expect(translate('not-existing')).toBe('not-existing');
-    expect(log.warn).toBeCalled();
+    expect(log.warn).toHaveBeenCalled();
 });

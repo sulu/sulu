@@ -61,9 +61,9 @@ test('Create new ResourceFormStore when collectionId has changed', () => {
     permissionFormOverlay.setProps({collectionId: 3});
 
     // $FlowFixMe
-    expect(ResourceStore.mock.instances[0].destroy).toBeCalledWith();
+    expect(ResourceStore.mock.instances[0].destroy).toHaveBeenCalledWith();
     // $FlowFixMe
-    expect(ResourceFormStore.mock.instances[0].destroy).toBeCalledWith();
+    expect(ResourceFormStore.mock.instances[0].destroy).toHaveBeenCalledWith();
 
     expect(ResourceStore).toHaveBeenLastCalledWith('permissions', 3, {}, {resourceKey: 'media'});
     expect(ResourceFormStore).toHaveBeenLastCalledWith(
@@ -95,9 +95,9 @@ test('Call destroy of created stores', () => {
     inheritDialogFormStore.destroy = jest.fn();
 
     permissionFormOverlay.unmount();
-    expect(formStore.destroy).toBeCalledWith();
-    expect(resourceStore.destroy).toBeCalledWith();
-    expect(inheritDialogFormStore.destroy).toBeCalledWith();
+    expect(formStore.destroy).toHaveBeenCalledWith();
+    expect(resourceStore.destroy).toHaveBeenCalledWith();
+    expect(inheritDialogFormStore.destroy).toHaveBeenCalledWith();
 });
 
 test('Confirming dialog should save the current value and inherit it', () => {
@@ -124,12 +124,12 @@ test('Confirming dialog should save the current value and inherit it', () => {
     permissionFormOverlay.instance().inheritDialogFormStore.data.inherit = true;
     permissionFormOverlay.find('Dialog').prop('onConfirm')();
 
-    expect(permissionFormOverlay.instance().resourceStore.save).toBeCalledWith({inherit: true, resourceKey: 'media'});
+    expect(permissionFormOverlay.instance().resourceStore.save).toHaveBeenCalledWith({inherit: true, resourceKey: 'media'});
 
-    expect(confirmSpy).not.toBeCalled();
+    expect(confirmSpy).not.toHaveBeenCalled();
     return savePromise.then(() => {
         permissionFormOverlay.update();
-        expect(confirmSpy).toBeCalledWith();
+        expect(confirmSpy).toHaveBeenCalledWith();
     });
 });
 
@@ -154,10 +154,10 @@ test('Cancel inherit dialog should not save anything', () => {
 
     permissionFormOverlay.find('Dialog').prop('onCancel')();
 
-    expect(permissionFormOverlay.instance().resourceStore.save).not.toBeCalled();
+    expect(permissionFormOverlay.instance().resourceStore.save).not.toHaveBeenCalled();
 
-    expect(confirmSpy).not.toBeCalled();
-    expect(closeSpy).not.toBeCalled();
+    expect(confirmSpy).not.toHaveBeenCalled();
+    expect(closeSpy).not.toHaveBeenCalled();
 });
 
 test.each([

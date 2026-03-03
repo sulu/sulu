@@ -38,7 +38,7 @@ test('Should trigger onChangeForm correctly', () => {
 
     resetForm.find('Button').at(0).simulate('click');
 
-    expect(onChangeForm).toBeCalled();
+    expect(onChangeForm).toHaveBeenCalled();
 });
 
 test('Should not trigger onSubmit if passwords are missing', () => {
@@ -56,8 +56,8 @@ test('Should not trigger onSubmit if passwords are missing', () => {
 
     resetForm.find('form').prop('onSubmit')(event);
 
-    expect(event.preventDefault).toBeCalledWith();
-    expect(onSubmit).not.toBeCalled();
+    expect(event.preventDefault).toHaveBeenCalledWith();
+    expect(onSubmit).not.toHaveBeenCalled();
 });
 
 test('Should trigger onSubmit correctly', () => {
@@ -77,8 +77,8 @@ test('Should trigger onSubmit correctly', () => {
     resetForm.find('Input[icon="su-lock"]').at(1).prop('onChange')('testpassword');
     resetForm.find('form').prop('onSubmit')(event);
 
-    expect(event.preventDefault).toBeCalledWith();
-    expect(onSubmit).toBeCalledWith({password: 'testpassword'});
+    expect(event.preventDefault).toHaveBeenCalledWith();
+    expect(onSubmit).toHaveBeenCalledWith({password: 'testpassword'});
 });
 
 test('Should not trigger onSubmit if one password is missing', () => {
@@ -97,7 +97,7 @@ test('Should not trigger onSubmit if one password is missing', () => {
     resetForm.find('Input[icon="su-lock"]').at(0).prop('onChange')('testpassword');
     resetForm.find('form').prop('onSubmit')(event);
 
-    expect(event.preventDefault).toBeCalledWith();
+    expect(event.preventDefault).toHaveBeenCalledWith();
 
     resetForm.update();
     expect(resetForm.find('Input[valid=false]')).toHaveLength(2);

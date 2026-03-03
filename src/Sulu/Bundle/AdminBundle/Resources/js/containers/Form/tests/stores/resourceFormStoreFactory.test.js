@@ -23,7 +23,7 @@ test('Create a ResourceFormStore with a given ResourceStore', () => {
         metadataOptions
     );
 
-    expect(ResourceFormStore).toBeCalledWith(resourceStore, 'test', options, metadataOptions);
+    expect(ResourceFormStore).toHaveBeenCalledWith(resourceStore, 'test', options, metadataOptions);
     // $FlowFixMe
     expect(resourceFormStore).toBe(ResourceFormStore.mock.instances[0]);
 });

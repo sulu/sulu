@@ -60,7 +60,7 @@ test('Email should not set onIconClick when value is invalid', async() => {
     const icon = screen.queryByLabelText('su-envelope');
     await userEvent.click(icon);
 
-    expect(window.location.assign).not.toBeCalled();
+    expect(window.location.assign).not.toHaveBeenCalled();
 });
 
 test('Email should set onIconClick when value is valid and window should be opened', async() => {
@@ -75,5 +75,5 @@ test('Email should set onIconClick when value is valid and window should be open
     const icon = screen.queryByLabelText('su-envelope');
     await userEvent.click(icon);
 
-    expect(window.location.assign).toBeCalledWith('mailto:abc@abc.abc');
+    expect(window.location.assign).toHaveBeenCalledWith('mailto:abc@abc.abc');
 });

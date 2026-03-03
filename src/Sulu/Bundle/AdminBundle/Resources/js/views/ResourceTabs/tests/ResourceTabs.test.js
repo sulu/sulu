@@ -85,7 +85,7 @@ test('Should pass the tab title from the ResourceStore as configured in the rout
     resourceTabs.instance().resourceStore.data = {test1: 'value1'};
     resourceTabs.update();
 
-    expect(children).toBeCalledWith(
+    expect(children).toHaveBeenCalledWith(
         {locales: undefined, resourceStore: expect.anything(ResourceStore), title: 'value1'}
     );
 });
@@ -129,7 +129,7 @@ test('Should not pass the tab title from the ResourceStore if no titleProperty i
     resourceTabs.instance().resourceStore.data = {test1: 'value1'};
     resourceTabs.update();
 
-    expect(children).toBeCalledWith(
+    expect(children).toHaveBeenCalledWith(
         {locales: undefined, resourceStore: expect.anything(ResourceStore), title: undefined}
     );
 });
@@ -175,7 +175,7 @@ test('Should pass the tab title from the resourceStore as configured in the prop
         </ResourceTabs>
     );
 
-    expect(children).toBeCalledWith({locales: undefined, resourceStore: expect.any(ResourceStore), title: 'value2'});
+    expect(children).toHaveBeenCalledWith({locales: undefined, resourceStore: expect.any(ResourceStore), title: 'value2'});
 });
 
 test('Should not render the tab title on the first tab when tabOrder is defined', (done) => {
@@ -529,7 +529,7 @@ test('Should redirect to first child route if no tab is active by default', (don
     mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
     setTimeout(() => {
-        expect(router.redirect).toBeCalledWith('route1', attributes);
+        expect(router.redirect).toHaveBeenCalledWith('route1', attributes);
         done();
     });
 });
@@ -579,7 +579,7 @@ test('Should redirect to first visible child route if no tab is active', (done) 
     resourceTabs.instance().resourceStore.data = {test: 2};
 
     setTimeout(() => {
-        expect(router.redirect).toBeCalledWith('route2', attributes);
+        expect(router.redirect).toHaveBeenCalledWith('route2', attributes);
         done();
     });
 });
@@ -629,7 +629,7 @@ test('Should redirect to first visible child route if invisible tab is active', 
     resourceTabs.instance().resourceStore.data = {test: 2};
 
     setTimeout(() => {
-        expect(router.redirect).toBeCalledWith('route2', attributes);
+        expect(router.redirect).toHaveBeenCalledWith('route2', attributes);
         done();
     });
 });
@@ -684,7 +684,7 @@ test('Should redirect to highest prioritized tab if no tab is active', (done) =>
     mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
     setTimeout(() => {
-        expect(router.redirect).toBeCalledWith('route2', attributes);
+        expect(router.redirect).toHaveBeenCalledWith('route2', attributes);
         done();
     });
 });
@@ -730,7 +730,7 @@ test('Should not redirect to first child route if resourceStore is not initializ
     resourceTabs.instance().resourceStore.initialized = false;
 
     setTimeout(() => {
-        expect(router.redirect).not.toBeCalledWith('route1', attributes);
+        expect(router.redirect).not.toHaveBeenCalledWith('route1', attributes);
         done();
     });
 });
@@ -776,7 +776,7 @@ test('Should not redirect to first child route if resourceStore is currently loa
     resourceTabs.instance().resourceStore.loading = true;
 
     setTimeout(() => {
-        expect(router.redirect).not.toBeCalledWith('route1', attributes);
+        expect(router.redirect).not.toHaveBeenCalledWith('route1', attributes);
         done();
     });
 });
@@ -820,7 +820,7 @@ test('Should not redirect if a tab is already active', () => {
     const Child = () => (<h1>Child</h1>);
     mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
-    expect(router.redirect).not.toBeCalled();
+    expect(router.redirect).not.toHaveBeenCalled();
 });
 
 test('Should reload ResourceStore if route is about to change to another child route', () => {
@@ -862,7 +862,7 @@ test('Should reload ResourceStore if route is about to change to another child r
 
     router.addUpdateRouteHook.mock.calls[1][0](childRoute1, attributes);
 
-    expect(resourceTabs.instance().resourceStore.reload).toBeCalledWith();
+    expect(resourceTabs.instance().resourceStore.reload).toHaveBeenCalledWith();
 });
 
 test('Should not reload ResourceStore if route is about to change to same route', () => {
@@ -899,7 +899,7 @@ test('Should not reload ResourceStore if route is about to change to same route'
 
     router.addUpdateRouteHook.mock.calls[0][0](childRoute1);
 
-    expect(resourceTabs.instance().resourceStore.reload).not.toBeCalled();
+    expect(resourceTabs.instance().resourceStore.reload).not.toHaveBeenCalled();
 });
 
 test('Should reload ResourceStore if route is about to change to parent route', () => {
@@ -936,7 +936,7 @@ test('Should reload ResourceStore if route is about to change to parent route', 
 
     router.addUpdateRouteHook.mock.calls[1][0](route);
 
-    expect(resourceTabs.instance().resourceStore.reload).toBeCalledWith();
+    expect(resourceTabs.instance().resourceStore.reload).toHaveBeenCalledWith();
 });
 
 test('Should not reload ResourceStore if route is about to change to route outside of tabs', () => {
@@ -974,7 +974,7 @@ test('Should not reload ResourceStore if route is about to change to route outsi
 
     router.addUpdateRouteHook.mock.calls[0][0](route2);
 
-    expect(resourceTabs.instance().resourceStore.reload).not.toBeCalledWith();
+    expect(resourceTabs.instance().resourceStore.reload).not.toHaveBeenCalledWith();
 });
 
 test('Should navigate to child route if tab is clicked', (done) => {
@@ -1016,7 +1016,7 @@ test('Should navigate to child route if tab is clicked', (done) => {
     setTimeout(() => {
         resourceTabs.update();
         resourceTabs.find('Tab button').at(1).simulate('click');
-        expect(router.navigate).toBeCalledWith('route2', attributes);
+        expect(router.navigate).toHaveBeenCalledWith('route2', attributes);
         done();
     });
 });
@@ -1068,7 +1068,7 @@ test('Should navigate to child route if tab is clicked with hidden tabs', (done)
     setTimeout(() => {
         resourceTabs.update();
         resourceTabs.find('Tab button').at(0).simulate('click');
-        expect(router.navigate).toBeCalledWith('route2', attributes);
+        expect(router.navigate).toHaveBeenCalledWith('route2', attributes);
         done();
     });
 });
@@ -1099,7 +1099,7 @@ test('Should create a ResourceStore on mount and destroy it on unmount', () => {
     expect(resourceStoreConstructorCall[0][2].locale).not.toBeDefined();
 
     resourceTabs.unmount();
-    expect(ResourceStore.mock.instances[0].destroy).toBeCalled();
+    expect(ResourceStore.mock.instances[0].destroy).toHaveBeenCalled();
 });
 
 test('Should create a new ResourceStore if the resourceKey changes', () => {
@@ -1137,7 +1137,7 @@ test('Should create a new ResourceStore if the resourceKey changes', () => {
 
     resourceTabs.update();
 
-    expect(ResourceStore.mock.instances[0].destroy).toBeCalled();
+    expect(ResourceStore.mock.instances[0].destroy).toHaveBeenCalled();
     expect(ResourceStore).toHaveBeenLastCalledWith('contacts', 5, {});
 
     resourceTabs.unmount();
@@ -1185,7 +1185,7 @@ test('Should not create a new ResourceStore if the resourceKey changes but the r
 
     resourceTabs.update();
 
-    expect(ResourceStore).not.toBeCalledWith('contacts', 5, {});
+    expect(ResourceStore).not.toHaveBeenCalledWith('contacts', 5, {});
 
     resourceTabs.unmount();
 });
@@ -1219,7 +1219,7 @@ test('Should create a new ResourceStore if the ID changes', () => {
 
     resourceTabs.update();
 
-    expect(ResourceStore.mock.instances[0].destroy).toBeCalled();
+    expect(ResourceStore.mock.instances[0].destroy).toHaveBeenCalled();
     expect(ResourceStore).toHaveBeenLastCalledWith('snippets', 6, {});
 
     resourceTabs.unmount();
@@ -1251,7 +1251,7 @@ test('Should create a ResourceStore with locale on mount if locales have been pa
     expect(resourceStoreConstructorCall[0][2].locale).toBeDefined();
 
     resourceTabs.unmount();
-    expect(ResourceStore.mock.instances[0].destroy).toBeCalled();
+    expect(ResourceStore.mock.instances[0].destroy).toHaveBeenCalled();
 });
 
 test('Should create a ResourceStore with locale on mount if locales have been passed as observable array', () => {
@@ -1275,13 +1275,13 @@ test('Should create a ResourceStore with locale on mount if locales have been pa
 
     const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
     const resourceStoreConstructorCall = ResourceStore.mock.calls;
-    expect(router.bind).toBeCalled();
+    expect(router.bind).toHaveBeenCalled();
     expect(resourceStoreConstructorCall[0][0]).toEqual('snippets');
     expect(resourceStoreConstructorCall[0][1]).toEqual(5);
     expect(resourceStoreConstructorCall[0][2].locale).toBeDefined();
 
     resourceTabs.unmount();
-    expect(ResourceStore.mock.instances[0].destroy).toBeCalled();
+    expect(ResourceStore.mock.instances[0].destroy).toHaveBeenCalled();
 });
 
 test('Should pass the ResourceStore and locales to child components', () => {

@@ -46,6 +46,6 @@ test('Pass props correctly to PasswordConfirmation component', () => {
 
     passwordConfirmation.find(PasswordConfirmationComponent).simulate('change', 'value');
 
-    expect(changeSpy).toBeCalledWith('value');
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith('value');
+    expect(finishSpy).toHaveBeenCalledWith();
 });

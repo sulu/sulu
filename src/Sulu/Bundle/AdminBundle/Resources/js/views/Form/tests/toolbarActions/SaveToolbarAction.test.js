@@ -140,7 +140,7 @@ test('Submit form when button is clicked', () => {
 
     toolbarItemConfig.onClick();
 
-    expect(saveToolbarAction.form.submit).toBeCalledWith(undefined);
+    expect(saveToolbarAction.form.submit).toHaveBeenCalledWith(undefined);
 });
 
 test('Submit form with given options when button is clicked', () => {
@@ -153,7 +153,7 @@ test('Submit form with given options when button is clicked', () => {
 
     toolbarItemConfig.onClick();
 
-    expect(saveToolbarAction.form.submit).toBeCalledWith({action: 'publish'});
+    expect(saveToolbarAction.form.submit).toHaveBeenCalledWith({action: 'publish'});
 });
 
 test('Throw error if given options are not an object', () => {

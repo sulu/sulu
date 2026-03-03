@@ -198,7 +198,7 @@ test('Pin navigation', () => {
     view.find('.pin').simulate('click');
 
     expect(view.find('Navigation').at(0).prop('pinned')).toEqual(true);
-    expect(mockUserStoreSetPersistentSetting).toBeCalledWith('sulu_admin.application.navigation_pinned', true);
+    expect(mockUserStoreSetPersistentSetting).toHaveBeenCalledWith('sulu_admin.application.navigation_pinned', true);
 });
 
 test('Pin navigation from beginning', () => {
@@ -216,7 +216,7 @@ test('Pin navigation from beginning', () => {
     expect(view.find('Button[icon="su-sulu-logo"]')).toHaveLength(0);
     expect(view.find('.pin')).toHaveLength(1);
 
-    expect(mockUserStoreGetPersistentSetting).toBeCalledWith('sulu_admin.application.navigation_pinned');
+    expect(mockUserStoreGetPersistentSetting).toHaveBeenCalledWith('sulu_admin.application.navigation_pinned');
 
     expect(view.find('Navigation').at(0).prop('pinned')).toEqual(true);
 });
@@ -236,7 +236,7 @@ test('Do not pin navigation from beginning', () => {
     expect(view.find('Button[icon="su-sulu-logo"]')).toHaveLength(0);
     expect(view.find('.pin')).toHaveLength(1);
 
-    expect(mockUserStoreGetPersistentSetting).toBeCalledWith('sulu_admin.application.navigation_pinned');
+    expect(mockUserStoreGetPersistentSetting).toHaveBeenCalledWith('sulu_admin.application.navigation_pinned');
 
     expect(view.find('Navigation').at(0).prop('pinned')).toEqual(false);
 });

@@ -48,9 +48,9 @@ test('Should load items and add to empty array', () => {
     );
 
     return result.then(() => {
-        expect(structureStrategy.clear).not.toBeCalled();
-        expect(structureStrategy.addItem).toBeCalledWith({id: 1}, undefined);
-        expect(structureStrategy.addItem).toBeCalledWith({id: 2}, undefined);
+        expect(structureStrategy.clear).not.toHaveBeenCalled();
+        expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 1}, undefined);
+        expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 2}, undefined);
     });
 });
 
@@ -79,9 +79,9 @@ test('Should load items and add to existing entries in array', () => {
     );
 
     return result.then(() => {
-        expect(structureStrategy.clear).not.toBeCalled();
-        expect(structureStrategy.addItem).toBeCalledWith({id: 1}, parentId);
-        expect(structureStrategy.addItem).toBeCalledWith({id: 2}, parentId);
+        expect(structureStrategy.clear).not.toHaveBeenCalled();
+        expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 1}, parentId);
+        expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 2}, parentId);
     });
 });
 
@@ -111,16 +111,16 @@ test('Should load items of previous pages and given page if previous pages are n
     );
 
     return result.then(() => {
-        expect(ResourceRequester.getList).toBeCalledWith('snippets', {page: 1, limit: 100});
-        expect(structureStrategy.clear).toBeCalled();
-        expect(structureStrategy.addItem).toBeCalledWith({id: 1}, undefined);
-        expect(structureStrategy.addItem).toBeCalledWith({id: 2}, undefined);
-        expect(structureStrategy.addItem).toBeCalledWith({id: 3}, undefined);
-        expect(structureStrategy.addItem).toBeCalledWith({id: 4}, undefined);
+        expect(ResourceRequester.getList).toHaveBeenCalledWith('snippets', {page: 1, limit: 100});
+        expect(structureStrategy.clear).toHaveBeenCalled();
+        expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 1}, undefined);
+        expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 2}, undefined);
+        expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 3}, undefined);
+        expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 4}, undefined);
 
-        expect(ResourceRequester.getList).toBeCalledWith('snippets', {page: 3, limit: 50});
-        expect(structureStrategy.addItem).toBeCalledWith({id: 5}, undefined);
-        expect(structureStrategy.addItem).toBeCalledWith({id: 6}, undefined);
+        expect(ResourceRequester.getList).toHaveBeenCalledWith('snippets', {page: 3, limit: 50});
+        expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 5}, undefined);
+        expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 6}, undefined);
     });
 });
 
@@ -142,10 +142,10 @@ test('Should not load items of previous pages if given page is the expected next
     );
 
     return firstPageResult.then(() => {
-        expect(ResourceRequester.getList).toBeCalledWith('snippets', {page: 1, limit: 50});
-        expect(structureStrategy.clear).not.toBeCalled();
-        expect(structureStrategy.addItem).toBeCalledWith({id: 1}, undefined);
-        expect(structureStrategy.addItem).toBeCalledWith({id: 2}, undefined);
+        expect(ResourceRequester.getList).toHaveBeenCalledWith('snippets', {page: 1, limit: 50});
+        expect(structureStrategy.clear).not.toHaveBeenCalled();
+        expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 1}, undefined);
+        expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 2}, undefined);
 
         ResourceRequester.getList.mockReturnValueOnce(Promise.resolve({
             _embedded: {
@@ -160,10 +160,10 @@ test('Should not load items of previous pages if given page is the expected next
         );
 
         return secondPageResult.then(() => {
-            expect(ResourceRequester.getList).toBeCalledWith('snippets', {page: 2, limit: 50});
-            expect(structureStrategy.clear).not.toBeCalled();
-            expect(structureStrategy.addItem).toBeCalledWith({id: 3}, undefined);
-            expect(structureStrategy.addItem).toBeCalledWith({id: 4}, undefined);
+            expect(ResourceRequester.getList).toHaveBeenCalledWith('snippets', {page: 2, limit: 50});
+            expect(structureStrategy.clear).not.toHaveBeenCalled();
+            expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 3}, undefined);
+            expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 4}, undefined);
         });
     });
 });
@@ -186,10 +186,10 @@ test('Should clear and reload items if given page is already loaded', () => {
     );
 
     return firstResult.then(() => {
-        expect(ResourceRequester.getList).toBeCalledWith('snippets', {page: 1, limit: 50});
-        expect(structureStrategy.clear).not.toBeCalled();
-        expect(structureStrategy.addItem).toBeCalledWith({id: 1}, undefined);
-        expect(structureStrategy.addItem).toBeCalledWith({id: 2}, undefined);
+        expect(ResourceRequester.getList).toHaveBeenCalledWith('snippets', {page: 1, limit: 50});
+        expect(structureStrategy.clear).not.toHaveBeenCalled();
+        expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 1}, undefined);
+        expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 2}, undefined);
 
         jest.clearAllMocks();
 
@@ -200,10 +200,10 @@ test('Should clear and reload items if given page is already loaded', () => {
         );
 
         return secondResult.then(() => {
-            expect(ResourceRequester.getList).toBeCalledWith('snippets', {page: 1, limit: 50});
-            expect(structureStrategy.clear).toBeCalled();
-            expect(structureStrategy.addItem).toBeCalledWith({id: 1}, undefined);
-            expect(structureStrategy.addItem).toBeCalledWith({id: 2}, undefined);
+            expect(ResourceRequester.getList).toHaveBeenCalledWith('snippets', {page: 1, limit: 50});
+            expect(structureStrategy.clear).toHaveBeenCalled();
+            expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 1}, undefined);
+            expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 2}, undefined);
         });
     });
 });
@@ -223,6 +223,6 @@ test('Should load items with correct options', () => {
     );
 
     return result.then(() => {
-        expect(ResourceRequester.getList).toBeCalledWith('snippets', {limit: 50, page: 1, locale: 'en'});
+        expect(ResourceRequester.getList).toHaveBeenCalledWith('snippets', {limit: 50, page: 1, locale: 'en'});
     });
 });

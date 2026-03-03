@@ -115,9 +115,9 @@ test('Call onChange and onBlur if the value is changed', () => {
         'webspace-1': 's',
         'webspace-3': 'a',
     });
-    expect(changeSpy).toBeCalledWith({
+    expect(changeSpy).toHaveBeenCalledWith({
         'webspace-1': 's',
         'webspace-3': 'a',
     });
-    expect(finishSpy).toBeCalledWith();
+    expect(finishSpy).toHaveBeenCalledWith();
 });

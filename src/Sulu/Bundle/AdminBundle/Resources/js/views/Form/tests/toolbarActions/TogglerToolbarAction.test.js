@@ -153,15 +153,15 @@ test.each([
         }
         toolbarItemConfig.onClick();
 
-        expect(ResourceRequester.post).toBeCalledWith(
+        expect(ResourceRequester.post).toHaveBeenCalledWith(
             resourceKey,
             undefined,
             {action, id: 1234, locale: 'de'}
         );
 
         return promise.then(() => {
-            expect(toolbarAction.resourceFormStore.change).toBeCalledWith(property, true, {isServerValue: true});
-            expect(toolbarAction.form.showSuccessSnackbar).toBeCalled();
+            expect(toolbarAction.resourceFormStore.change).toHaveBeenCalledWith(property, true, {isServerValue: true});
+            expect(toolbarAction.form.showSuccessSnackbar).toHaveBeenCalled();
         });
     }
 );
@@ -188,15 +188,15 @@ test.each([
         }
         toolbarItemConfig.onClick();
 
-        expect(ResourceRequester.post).toBeCalledWith(
+        expect(ResourceRequester.post).toHaveBeenCalledWith(
             resourceKey,
             undefined,
             {action, id: 1234, locale: 'de'}
         );
 
         return promise.then(() => {
-            expect(toolbarAction.resourceFormStore.change).toBeCalledWith(property, false, {isServerValue: true});
-            expect(toolbarAction.form.showSuccessSnackbar).toBeCalled();
+            expect(toolbarAction.resourceFormStore.change).toHaveBeenCalledWith(property, false, {isServerValue: true});
+            expect(toolbarAction.form.showSuccessSnackbar).toHaveBeenCalled();
         });
     }
 );

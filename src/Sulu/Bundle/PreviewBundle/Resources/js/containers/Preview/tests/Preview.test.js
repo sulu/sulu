@@ -209,7 +209,7 @@ test('Render nothing if separate window is opened and rerender if it is closed',
         preview.find('Button[icon="su-link"]').simulate('click');
         expect(preview.html()).toEqual(null);
 
-        expect(previewWindow.addEventListener).toBeCalledWith('beforeunload', expect.anything());
+        expect(previewWindow.addEventListener).toHaveBeenCalledWith('beforeunload', expect.anything());
         previewWindow.addEventListener.mock.calls[0][1]();
         expect(preview.render()).toMatchSnapshot();
     });
@@ -271,10 +271,10 @@ test('Change webspace in PreviewStore when selection of webspace has changed', (
     preview.instance().handleStartClick();
 
     return startPromise.then(() => {
-        expect(PreviewStore).toBeCalledWith('pages', undefined, locale, 'sulu_io', undefined);
+        expect(PreviewStore).toHaveBeenCalledWith('pages', undefined, locale, 'sulu_io', undefined);
 
         preview.find('Select').at(1).prop('onChange')('example');
-        expect(previewStore.setWebspace).toBeCalledWith('example');
+        expect(previewStore.setWebspace).toHaveBeenCalledWith('example');
     });
 });
 
@@ -295,7 +295,7 @@ test('Use router attribute to determine webspace', () => {
     preview.instance().handleStartClick();
 
     return startPromise.then(() => {
-        expect(PreviewStore).toBeCalledWith('pages', undefined, locale, 'example', undefined);
+        expect(PreviewStore).toHaveBeenCalledWith('pages', undefined, locale, 'example', undefined);
     });
 });
 
@@ -321,10 +321,10 @@ test('Change segment in PreviewStore when selection of segment has changed', () 
     preview.instance().handleStartClick();
 
     return startPromise.then(() => {
-        expect(PreviewStore).toBeCalledWith('pages', undefined, undefined, 'sulu_io', 'w');
+        expect(PreviewStore).toHaveBeenCalledWith('pages', undefined, undefined, 'sulu_io', 'w');
 
         preview.find('Select').at(2).prop('onChange')('s');
-        expect(previewStore.setSegment).toBeCalledWith('s');
+        expect(previewStore.setSegment).toHaveBeenCalledWith('s');
     });
 });
 
@@ -358,7 +358,7 @@ test('React and update preview when data is changed', () => {
     return startPromise.then(() => {
         preview.update();
         previewStore.token = '123-123-123';
-        expect(previewStore.update).toBeCalledWith({title: 'New Test'});
+        expect(previewStore.update).toHaveBeenCalledWith({title: 'New Test'});
 
         expect(preview.render()).toMatchSnapshot();
     });
@@ -411,12 +411,12 @@ test('React and update preview in external window when data is changed', () => {
 
     return startPromise.then(() => {
         preview.update();
-        expect(previewStore.update).toBeCalledWith({title: 'New Test'});
+        expect(previewStore.update).toHaveBeenCalledWith({title: 'New Test'});
 
         expect(preview.render()).toMatchSnapshot();
-        expect(previewWindow.document.open).toBeCalledWith();
-        expect(previewWindow.document.write).toBeCalledWith('<h1>Sulu is awesome</h1>');
-        expect(previewWindow.document.close).toBeCalledWith();
+        expect(previewWindow.document.open).toHaveBeenCalledWith();
+        expect(previewWindow.document.write).toHaveBeenCalledWith('<h1>Sulu is awesome</h1>');
+        expect(previewWindow.document.close).toHaveBeenCalledWith();
     });
 });
 
@@ -448,7 +448,7 @@ test('Dont react or update preview when data is changed during formstore is load
 
     return startPromise.then(() => {
         preview.update();
-        expect(previewStore.update).not.toBeCalled();
+        expect(previewStore.update).not.toHaveBeenCalled();
 
         expect(preview.render()).toMatchSnapshot();
     });
@@ -482,7 +482,7 @@ test('Dont react or update preview when data is changed during preview-store is 
 
     return startPromise.then(() => {
         preview.update();
-        expect(previewStore.update).not.toBeCalled();
+        expect(previewStore.update).not.toHaveBeenCalled();
 
         expect(preview.render()).toMatchSnapshot();
     });
@@ -519,7 +519,7 @@ test('React and update-context when schema is changed', () => {
     formStore.schema.set({title: {label: 'Title', colSpan: 12}});
 
     return startPromise.then(() => {
-        expect(previewStore.updateContext).toBeCalledWith('homepage', {title: 'Test'});
+        expect(previewStore.updateContext).toHaveBeenCalledWith('homepage', {title: 'Test'});
     });
 });
 
@@ -556,7 +556,7 @@ test('React and restart when locale is changed', () => {
     formStore.locale.set('de');
 
     return startPromise.then(() => {
-        expect(previewStore.restart).toBeCalled();
+        expect(previewStore.restart).toHaveBeenCalled();
     });
 });
 
@@ -579,11 +579,11 @@ test('Change target group in PreviewStore when selection of target group has cha
     preview.instance().handleStartClick();
 
     return startPromise.then(() => {
-        expect(PreviewStore).toBeCalledWith('pages', undefined, locale, 'sulu_io', undefined);
+        expect(PreviewStore).toHaveBeenCalledWith('pages', undefined, locale, 'sulu_io', undefined);
 
         preview.find('Select').at(2).prop('onChange')(4);
-        expect(previewStore.setTargetGroup).toBeCalledWith(4);
-        expect(previewStore.update).toBeCalledWith(undefined);
+        expect(previewStore.setTargetGroup).toHaveBeenCalledWith(4);
+        expect(previewStore.update).toHaveBeenCalledWith(undefined);
     });
 });
 
@@ -603,11 +603,11 @@ test('Change dateTime in PreviewStore when DatePicker changed', () => {
 
     return startPromise.then(() => {
         preview.update();
-        expect(PreviewStore).toBeCalledWith('pages', undefined, undefined, 'sulu_io', undefined);
+        expect(PreviewStore).toHaveBeenCalledWith('pages', undefined, undefined, 'sulu_io', undefined);
 
         const date = new Date();
         preview.find('Button[icon="su-calendar"]').simulate('click');
         preview.find('DatePicker').prop('onChange')(date);
-        expect(previewStore.setDateTime).toBeCalledWith(date);
+        expect(previewStore.setDateTime).toHaveBeenCalledWith(date);
     });
 });

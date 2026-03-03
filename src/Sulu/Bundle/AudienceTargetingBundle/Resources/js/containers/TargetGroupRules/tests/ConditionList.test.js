@@ -23,7 +23,7 @@ test('Add a new Condition', () => {
 
     conditionList.find('Button[icon="su-plus"]').prop('onClick')();
 
-    expect(changeSpy).toBeCalledWith([{condition: {}, type: 'browser'}, {condition: {}, type: undefined}]);
+    expect(changeSpy).toHaveBeenCalledWith([{condition: {}, type: 'browser'}, {condition: {}, type: undefined}]);
 });
 
 test('Edit an existing Condition', () => {
@@ -37,7 +37,7 @@ test('Edit an existing Condition', () => {
     const conditionList = shallow(<ConditionList onChange={changeSpy} value={value} />);
     conditionList.find('Condition').at(1).prop('onChange')({condition: {test: 'value'}, type: 'test'}, 1);
 
-    expect(changeSpy).toBeCalledWith([{condition: {}, type: 'browser'}, {condition: {test: 'value'}, type: 'test'}]);
+    expect(changeSpy).toHaveBeenCalledWith([{condition: {}, type: 'browser'}, {condition: {test: 'value'}, type: 'test'}]);
 });
 
 test('Remove an existing Condition', () => {
@@ -51,5 +51,5 @@ test('Remove an existing Condition', () => {
     const conditionList = shallow(<ConditionList onChange={changeSpy} value={value} />);
     conditionList.find('Condition').at(1).prop('onRemove')(1);
 
-    expect(changeSpy).toBeCalledWith([{condition: {}, type: 'browser'}]);
+    expect(changeSpy).toHaveBeenCalledWith([{condition: {}, type: 'browser'}]);
 });

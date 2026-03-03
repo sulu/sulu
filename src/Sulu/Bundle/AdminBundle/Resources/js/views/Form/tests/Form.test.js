@@ -304,7 +304,7 @@ test('Should instantiate a CollaborationStore if it is an edit form and show ', 
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
     expect(form.instance().collaborationStore.resourceKey).toEqual('snippets');
     expect(form.instance().collaborationStore.id).toEqual(6);
-    expect(ResourceRequester.put).toBeCalledWith('collaborations', null, {id: 6, resourceKey: 'snippets'});
+    expect(ResourceRequester.put).toHaveBeenCalledWith('collaborations', null, {id: 6, resourceKey: 'snippets'});
 
     return collaborationsPromise.then(() => {
         const toolbarConfig = toolbarFunction.call(form.instance());
@@ -421,7 +421,7 @@ test('Should add items defined in ToolbarActions to Toolbar with options', () =>
     };
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    expect(SaveToolbarAction).toBeCalledWith(
+    expect(SaveToolbarAction).toHaveBeenCalledWith(
         form.instance().resourceFormStore,
         form.instance(),
         router,
@@ -430,7 +430,7 @@ test('Should add items defined in ToolbarActions to Toolbar with options', () =>
         resourceStore
     );
 
-    expect(DeleteToolbarAction).toBeCalledWith(
+    expect(DeleteToolbarAction).toHaveBeenCalledWith(
         form.instance().resourceFormStore,
         form.instance(),
         router,
@@ -439,7 +439,7 @@ test('Should add items defined in ToolbarActions to Toolbar with options', () =>
         resourceStore
     );
 
-    expect(EditToolbarAction).toBeCalledWith(
+    expect(EditToolbarAction).toHaveBeenCalledWith(
         form.instance().resourceFormStore,
         form.instance(),
         router,
@@ -659,7 +659,7 @@ test('Should navigate to defined route on back button click', () => {
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     toolbarConfig.backButton.onClick();
-    expect(router.restore).toBeCalledWith('test_route', {locale: 'de'});
+    expect(router.restore).toHaveBeenCalledWith('test_route', {locale: 'de'});
 });
 
 test('Should navigate to defined route on back button click with routerAttribuesToBackRoute', () => {
@@ -691,7 +691,7 @@ test('Should navigate to defined route on back button click with routerAttribues
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     toolbarConfig.backButton.onClick();
-    expect(router.restore).toBeCalledWith('test_route', {locale: 'de', webspace: 'sulu_io'});
+    expect(router.restore).toHaveBeenCalledWith('test_route', {locale: 'de', webspace: 'sulu_io'});
 });
 
 test('Should navigate to defined route on back button click with mixed routerAttribuesToBackRoute mapping', () => {
@@ -724,7 +724,7 @@ test('Should navigate to defined route on back button click with mixed routerAtt
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     toolbarConfig.backButton.onClick();
-    expect(router.restore).toBeCalledWith('test_route', {active: 4, locale: 'de', webspace: 'sulu_io'});
+    expect(router.restore).toHaveBeenCalledWith('test_route', {active: 4, locale: 'de', webspace: 'sulu_io'});
 });
 
 test('Should navigate to defined route on back button click without locale', () => {
@@ -752,7 +752,7 @@ test('Should navigate to defined route on back button click without locale', () 
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     toolbarConfig.backButton.onClick();
-    expect(router.restore).toBeCalledWith('test_route', {});
+    expect(router.restore).toHaveBeenCalledWith('test_route', {});
 });
 
 test('Should navigate to defined route after dialog has been confirmed', () => {
@@ -793,12 +793,12 @@ test('Should navigate to defined route after dialog has been confirmed', () => {
     form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('onCancel')();
     form.update();
     expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
-    expect(router.navigate).not.toBeCalled();
+    expect(router.navigate).not.toHaveBeenCalled();
 
     expect(checkFormStoreDirtyStateBeforeNavigation(backView, backViewAttributes, router.navigate)).toEqual(false);
     form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('onConfirm')();
     form.update();
-    expect(router.navigate).toBeCalledWith('test_route', backViewAttributes);
+    expect(router.navigate).toHaveBeenCalledWith('test_route', backViewAttributes);
 });
 
 test('Should not show dialog on navigation if another route has already been loaded', () => {
@@ -876,12 +876,12 @@ test('Should navigate to defined route after dialog has been confirmed using res
     form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('onCancel')();
     form.update();
     expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
-    expect(router.restore).not.toBeCalled();
+    expect(router.restore).not.toHaveBeenCalled();
 
     expect(checkFormStoreDirtyStateBeforeNavigation(backView, backViewAttributes, router.restore)).toEqual(false);
     form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('onConfirm')();
     form.update();
-    expect(router.restore).toBeCalledWith('test_route', backViewAttributes);
+    expect(router.restore).toHaveBeenCalledWith('test_route', backViewAttributes);
 });
 
 test('Should not close the window if formStore is still dirty', () => {
@@ -996,7 +996,7 @@ test('Should change locale by route navigation via locale chooser', () => {
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     toolbarConfig.locale.onChange('en');
-    expect(router.navigate).toBeCalledWith('sulu_admin.form', {locale: 'en'});
+    expect(router.navigate).toHaveBeenCalledWith('sulu_admin.form', {locale: 'en'});
 });
 
 test('Should show locales from router options in toolbar', () => {
@@ -1168,8 +1168,8 @@ test('Should save form when submitted', () => {
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         form.find('Form').at(1).instance().submit({action: 'publish'});
-        expect(resourceStore.destroy).not.toBeCalled();
-        expect(ResourceRequester.put).toBeCalledWith(
+        expect(resourceStore.destroy).not.toHaveBeenCalled();
+        expect(ResourceRequester.put).toHaveBeenCalledWith(
             'snippets',
             {value: 'Value'},
             {action: 'publish', id: 8, locale: 'en'}
@@ -1222,9 +1222,9 @@ test('Should save form when submitted with mapped router attributes', () => {
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         form.find('Form').at(1).instance().submit();
-        expect(resourceStore.destroy).not.toBeCalled();
+        expect(resourceStore.destroy).not.toHaveBeenCalled();
         expect(ResourceRequester.put)
-            .toBeCalledWith(
+            .toHaveBeenCalledWith(
                 'snippets',
                 {value: 'Value'},
                 {id: 8, locale: 'en', parentId: 3, webspace: 'sulu_io'}
@@ -1275,9 +1275,9 @@ test('Should save form when submitted with given requestParameters', () => {
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         form.find('Form').at(1).instance().submit();
-        expect(resourceStore.destroy).not.toBeCalled();
+        expect(resourceStore.destroy).not.toHaveBeenCalled();
         expect(ResourceRequester.put)
-            .toBeCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en', apiKey: 'api-option-value'});
+            .toHaveBeenCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en', apiKey: 'api-option-value'});
     });
 });
 
@@ -1328,8 +1328,8 @@ test('Should save form when submitted with mapped router attributes and given re
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         form.find('Form').at(1).instance().submit();
-        expect(resourceStore.destroy).not.toBeCalled();
-        expect(ResourceRequester.put).toBeCalledWith(
+        expect(resourceStore.destroy).not.toHaveBeenCalled();
+        expect(ResourceRequester.put).toHaveBeenCalledWith(
             'snippets',
             {value: 'Value'},
             {id: 8, locale: 'en', apiKey: 'api-option-value', webspace: 'sulu_io', title: 'Sulu is awesome'}
@@ -1381,8 +1381,8 @@ test('Should save form when submitted with mapped named router attributes and gi
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         form.find('Form').at(1).instance().submit();
-        expect(resourceStore.destroy).not.toBeCalled();
-        expect(ResourceRequester.put).toBeCalledWith(
+        expect(resourceStore.destroy).not.toHaveBeenCalled();
+        expect(ResourceRequester.put).toHaveBeenCalledWith(
             'snippets', {value: 'Value'}, {id: 8, locale: 'en', apiKey: 'api-option-value', parentId: 8}
         );
     });
@@ -1431,8 +1431,8 @@ test('Should show warning when form is submitted but already changed on the serv
 
     Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         form.find('Form').at(1).instance().submit({action: 'publish'});
-        expect(resourceStore.destroy).not.toBeCalled();
-        expect(ResourceRequester.put).toBeCalledWith(
+        expect(resourceStore.destroy).not.toHaveBeenCalled();
+        expect(ResourceRequester.put).toHaveBeenCalledWith(
             'snippets',
             {value: 'Value'},
             {action: 'publish', id: 8, locale: 'en'}
@@ -1452,7 +1452,7 @@ test('Should show warning when form is submitted but already changed on the serv
                 form.update();
                 expect(form.find('Dialog[title="sulu_admin.has_changed_warning_dialog_title"]').prop('open'))
                     .toEqual(false);
-                expect(ResourceRequester.put).not.toBeCalled();
+                expect(ResourceRequester.put).not.toHaveBeenCalled();
                 done();
             });
         });
@@ -1502,8 +1502,8 @@ test('Should show warning when form is submitted but already changed on the serv
 
     Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         form.find('Form').at(1).instance().submit({action: 'publish'});
-        expect(resourceStore.destroy).not.toBeCalled();
-        expect(ResourceRequester.put).toBeCalledWith(
+        expect(resourceStore.destroy).not.toHaveBeenCalled();
+        expect(ResourceRequester.put).toHaveBeenCalledWith(
             'snippets',
             {value: 'Value'},
             {action: 'publish', id: 8, locale: 'en'}
@@ -1524,7 +1524,7 @@ test('Should show warning when form is submitted but already changed on the serv
                 expect(form.find('Dialog[title="sulu_admin.has_changed_warning_dialog_title"]').prop('open'))
                     .toEqual(false);
 
-                expect(ResourceRequester.put).toBeCalledWith(
+                expect(ResourceRequester.put).toHaveBeenCalledWith(
                     'snippets',
                     {value: 'Value'},
                     {action: 'publish', force: true, id: 8, locale: 'en'}
@@ -1573,8 +1573,8 @@ test('Should set showSuccess flag after form submission', (done) => {
     resourceStore.destroy = jest.fn();
 
     form.find('Form').at(1).instance().submit().then(() => {
-        expect(resourceStore.destroy).not.toBeCalled();
-        expect(ResourceRequester.put).toBeCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en'});
+        expect(resourceStore.destroy).not.toHaveBeenCalled();
+        expect(ResourceRequester.put).toHaveBeenCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en'});
         expect(form.instance().showSuccess.get()).toEqual(true);
         done();
     });
@@ -1651,8 +1651,8 @@ test('Should show error if form has been tried to save although it is not valid'
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         return jsonSchemaPromise.then(() => {
             form.find('Form').at(1).instance().submit();
-            expect(resourceStore.destroy).not.toBeCalled();
-            expect(ResourceRequester.put).not.toBeCalled();
+            expect(resourceStore.destroy).not.toHaveBeenCalled();
+            expect(ResourceRequester.put).not.toHaveBeenCalled();
             expect(form.instance().errors).toEqual(['sulu_admin.form_contains_invalid_values']);
         });
     });
@@ -1704,7 +1704,7 @@ test('Should clear errors if form has been saved', () => {
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         return jsonSchemaPromise.then(() => {
             form.find('Form').at(1).instance().submit().then(() => {
-                expect(ResourceRequester.put).toBeCalledWith('snippets', {}, {action: undefined, id: 8, locale: 'en'});
+                expect(ResourceRequester.put).toHaveBeenCalledWith('snippets', {}, {action: undefined, id: 8, locale: 'en'});
                 expect(form.instance().errors).toHaveLength(0);
             });
         });
@@ -1753,8 +1753,8 @@ test('Should display generic error message if form submission fails', (done) => 
     resourceStore.destroy = jest.fn();
 
     form.find('Form').at(1).instance().submit().then(() => {
-        expect(resourceStore.destroy).not.toBeCalled();
-        expect(ResourceRequester.put).toBeCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en'});
+        expect(resourceStore.destroy).not.toHaveBeenCalled();
+        expect(ResourceRequester.put).toHaveBeenCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en'});
         expect(form.instance().errors).toEqual(['sulu_admin.form_save_server_error']);
         done();
     });
@@ -1802,8 +1802,8 @@ test('Should display error message from server if server returns error message w
     resourceStore.destroy = jest.fn();
 
     form.find('Form').at(1).instance().submit().then(() => {
-        expect(resourceStore.destroy).not.toBeCalled();
-        expect(ResourceRequester.put).toBeCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en'});
+        expect(resourceStore.destroy).not.toHaveBeenCalled();
+        expect(ResourceRequester.put).toHaveBeenCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en'});
         expect(form.instance().errors).toEqual(['URL is already assigned to another page.']);
         done();
     });
@@ -1854,10 +1854,10 @@ test('Should save form when submitted and redirect to editView', () => {
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         return form.find('Form').at(1).instance().submit().then(() => {
-            expect(resourceStore.destroy).toBeCalled();
-            expect(ResourceRequester.post).toBeCalledWith('snippets', {value: 'Value'}, {});
+            expect(resourceStore.destroy).toHaveBeenCalled();
+            expect(ResourceRequester.post).toHaveBeenCalledWith('snippets', {value: 'Value'}, {});
             expect(router.navigate)
-                .toBeCalledWith('editView', {id: undefined, locale: undefined, webspace: 'sulu_io'});
+                .toHaveBeenCalledWith('editView', {id: undefined, locale: undefined, webspace: 'sulu_io'});
         });
     });
 });
@@ -1907,10 +1907,10 @@ test('Should save form when submitted and redirect to editView', () => {
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         return form.find('Form').at(1).instance().submit().then(() => {
-            expect(resourceStore.destroy).toBeCalled();
-            expect(ResourceRequester.post).toBeCalledWith('snippets', {value: 'Value'}, {});
+            expect(resourceStore.destroy).toHaveBeenCalled();
+            expect(ResourceRequester.post).toHaveBeenCalledWith('snippets', {value: 'Value'}, {});
             expect(router.navigate)
-                .toBeCalledWith('editView', {active: 8, id: undefined, locale: undefined, webspace: 'sulu_io'});
+                .toHaveBeenCalledWith('editView', {active: 8, id: undefined, locale: undefined, webspace: 'sulu_io'});
         });
     });
 });
@@ -1961,8 +1961,8 @@ test('Should restore previous view to backView after MissingTypeOverlay has been
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         form.find('Form').at(1).prop('onMissingTypeCancel')();
-        expect(resourceStore.destroy).not.toBeCalled();
-        expect(router.restore).toBeCalledWith('sulu_snippet.snippet_list', {locale: 'en'});
+        expect(resourceStore.destroy).not.toHaveBeenCalled();
+        expect(router.restore).toHaveBeenCalledWith('sulu_snippet.snippet_list', {locale: 'en'});
     });
 });
 
@@ -2011,8 +2011,8 @@ test('Should not restore previous view if no backView is given after MissingType
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         form.find('Form').at(1).prop('onMissingTypeCancel')();
-        expect(resourceStore.destroy).not.toBeCalled();
-        expect(router.restore).not.toBeCalledWith();
+        expect(resourceStore.destroy).not.toHaveBeenCalled();
+        expect(router.restore).not.toHaveBeenCalledWith();
     });
 });
 
@@ -2101,7 +2101,7 @@ test('Should pass option to form metadata with routerAttribuesToFormMetadata', (
     };
     mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    expect(metadataStore.getSchemaTypes).toBeCalledWith('snippets', {webspace: 'sulu_io'});
+    expect(metadataStore.getSchemaTypes).toHaveBeenCalledWith('snippets', {webspace: 'sulu_io'});
 });
 
 test('Should pass options to Form metadata with mixed routerAttribuesToFormMetadata', () => {
@@ -2131,7 +2131,7 @@ test('Should pass options to Form metadata with mixed routerAttribuesToFormMetad
     };
     mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    expect(metadataStore.getSchemaTypes).toBeCalledWith('snippets', {active: 4, webspace: 'sulu_io'});
+    expect(metadataStore.getSchemaTypes).toHaveBeenCalledWith('snippets', {active: 4, webspace: 'sulu_io'});
 });
 
 test('Should destroy the store on unmount', () => {
@@ -2186,7 +2186,7 @@ test('Should destroy the store on unmount', () => {
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
     const locale = form.find('Form').at(1).prop('store').locale;
 
-    expect(router.bind).toBeCalledWith('locale', locale);
+    expect(router.bind).toHaveBeenCalledWith('locale', locale);
 
     const resourceFormStore = form.instance().resourceFormStore;
     resourceFormStore.destroy = jest.fn();
@@ -2194,10 +2194,10 @@ test('Should destroy the store on unmount', () => {
     const toolbarActions = form.instance().toolbarActions;
 
     form.unmount();
-    expect(resourceFormStore.destroy).toBeCalled();
-    expect(resourceStore.destroy).not.toBeCalled();
-    expect(toolbarActions[0].destroy).toBeCalled();
-    expect(toolbarActions[1].destroy).toBeCalled();
+    expect(resourceFormStore.destroy).toHaveBeenCalled();
+    expect(resourceStore.destroy).not.toHaveBeenCalled();
+    expect(toolbarActions[0].destroy).toHaveBeenCalled();
+    expect(toolbarActions[1].destroy).toHaveBeenCalled();
 });
 
 test('Should destroy the own resourceStore if existing on unmount', () => {
@@ -2232,9 +2232,9 @@ test('Should destroy the own resourceStore if existing on unmount', () => {
     collaborationStore.destroy = jest.fn();
 
     form.unmount();
-    expect(resourceStore.destroy).not.toBeCalled();
-    expect(formResourceStore.destroy).toBeCalled();
-    expect(collaborationStore.destroy).toBeCalled();
+    expect(resourceStore.destroy).not.toHaveBeenCalled();
+    expect(formResourceStore.destroy).toHaveBeenCalled();
+    expect(collaborationStore.destroy).toHaveBeenCalled();
 });
 
 test('Should not bind the locale if no locales have been passed via options', () => {
@@ -2257,7 +2257,7 @@ test('Should not bind the locale if no locales have been passed via options', ()
 
     mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    expect(router.bind).not.toBeCalled();
+    expect(router.bind).not.toHaveBeenCalled();
 });
 
 test('Should add and remove the UpdateRouteHook on mounting and unmounting', () => {
@@ -2285,11 +2285,11 @@ test('Should add and remove the UpdateRouteHook on mounting and unmounting', () 
 
     const checkFormStoreDirtyStateBeforeNavigation = form.instance().checkFormStoreDirtyStateBeforeNavigation;
 
-    expect(router.addUpdateRouteHook).toBeCalledWith(checkFormStoreDirtyStateBeforeNavigation, 2048);
-    expect(checkFormStoreDirtyStateBeforeNavigationDisposerSpy).not.toBeCalledWith();
+    expect(router.addUpdateRouteHook).toHaveBeenCalledWith(checkFormStoreDirtyStateBeforeNavigation, 2048);
+    expect(checkFormStoreDirtyStateBeforeNavigationDisposerSpy).not.toHaveBeenCalledWith();
 
     form.unmount();
-    expect(checkFormStoreDirtyStateBeforeNavigationDisposerSpy).toBeCalledWith();
+    expect(checkFormStoreDirtyStateBeforeNavigationDisposerSpy).toHaveBeenCalledWith();
 });
 
 test('Should throw an error if the resourceStore is not passed', () => {

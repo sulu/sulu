@@ -61,7 +61,7 @@ test('Render with minimal', () => {
         />
     );
 
-    expect(securityContextStore.getSecurityContextGroups).toBeCalledWith('Sulu');
+    expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Sulu');
     permissions.update();
     expect(permissions.render()).toMatchSnapshot();
 });
@@ -107,7 +107,7 @@ test('Render in disabled state', () => {
         />
     );
 
-    expect(securityContextStore.getSecurityContextGroups).toBeCalledWith('Sulu');
+    expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Sulu');
     permissions.update();
     expect(permissions.render()).toMatchSnapshot();
 });
@@ -176,7 +176,7 @@ test('Should trigger onChange correctly', () => {
         },
     ];
     permissions.find(PermissionMatrix).at(0).instance().props.onChange(newContextPermissions);
-    expect(onChange).toBeCalledWith(newContextPermissions);
+    expect(onChange).toHaveBeenCalledWith(newContextPermissions);
 });
 
 test('Render with empty webspace section', () => {
@@ -242,7 +242,7 @@ test('Render with empty webspace section', () => {
         />
     );
 
-    expect(securityContextStore.getSecurityContextGroups).toBeCalledWith('Sulu');
+    expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Sulu');
 
     // Currently we have to load each child separately, because of a bug in enzyme.
     // TODO: https://github.com/airbnb/enzyme/issues/1213
@@ -328,7 +328,7 @@ test('Render with webspace section', () => {
         />
     );
 
-    expect(securityContextStore.getSecurityContextGroups).toBeCalledWith('Sulu');
+    expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Sulu');
     permissions.update();
 
     // Currently we have to load each child separately, because of a bug in enzyme.
@@ -451,7 +451,7 @@ test('Should trigger onChange correctly when changing something in the webspace 
         },
     ];
     permissions.find(PermissionMatrix).at(0).instance().props.onChange(newContextPermissions);
-    expect(onChange).toBeCalledWith(newContextPermissions);
+    expect(onChange).toHaveBeenCalledWith(newContextPermissions);
 });
 
 test('Should trigger onChange correctly when a webspace is added', () => {
@@ -599,7 +599,7 @@ test('Should trigger onChange correctly when a webspace is added', () => {
         },
     ];
 
-    expect(onChange).toBeCalledWith(expectedNewValue);
+    expect(onChange).toHaveBeenCalledWith(expectedNewValue);
 });
 
 test('Should trigger onChange correctly when a webspace is removed', () => {
@@ -727,7 +727,7 @@ test('Should trigger onChange correctly when a webspace is removed', () => {
         },
     ];
 
-    expect(onChange).toBeCalledWith(expectedNewValue);
+    expect(onChange).toHaveBeenCalledWith(expectedNewValue);
 });
 
 test('Should trigger a mobx autorun if the prop system changes', () => {
@@ -846,7 +846,7 @@ test('Dispose autorun on unmount', () => {
     permissions.instance().systemDisposer = systemDisposerSpy;
     permissions.unmount();
 
-    expect(systemDisposerSpy).toBeCalledWith();
+    expect(systemDisposerSpy).toHaveBeenCalledWith();
 });
 
 test('Should restore original permission when webspace is removed and re-added without saving', () => {

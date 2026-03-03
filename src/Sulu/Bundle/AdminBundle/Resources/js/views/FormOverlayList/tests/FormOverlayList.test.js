@@ -135,13 +135,13 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
     const formOverlayList = mount(<FormOverlayList resourceStore={testResourceStore} route={route} router={router} />);
     formOverlayList.find(List).props().onItemAdd();
 
-    expect(ResourceStore).toBeCalledWith('test-resource-key', undefined, {}, {
+    expect(ResourceStore).toHaveBeenCalledWith('test-resource-key', undefined, {}, {
         category: 'category-id',
         parentId: 'test-id',
         webspace: 'test-webspace',
         dimensionId: 'test-dimension',
     });
-    expect(ResourceFormStore).toBeCalledWith(expect.anything(), 'test-form-key', {
+    expect(ResourceFormStore).toHaveBeenCalledWith(expect.anything(), 'test-form-key', {
         category: 'category-id',
         parentId: 'test-id',
         webspace: 'test-webspace',
@@ -179,13 +179,13 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
 
     formOverlayList.find(List).props().onItemClick('item-id');
 
-    expect(ResourceStore).toBeCalledWith('test-resource-key', 'item-id', {locale}, {
+    expect(ResourceStore).toHaveBeenCalledWith('test-resource-key', 'item-id', {locale}, {
         category: 'category-id',
         parentId: 'test-id',
         webspace: 'test-webspace',
         dimensionId: 'test-dimension',
     });
-    expect(ResourceFormStore).toBeCalledWith(expect.anything(), 'test-form-key', {
+    expect(ResourceFormStore).toHaveBeenCalledWith(expect.anything(), 'test-form-key', {
         category: 'category-id',
         parentId: 'test-id',
         webspace: 'test-webspace',
@@ -216,7 +216,7 @@ test('Should construct ResourceFormStore with correct metadataOptions on item-ad
     formOverlayList.instance().locale = observable.box('en');
     formOverlayList.find(List).props().onItemAdd();
 
-    expect(ResourceFormStore).toBeCalledWith(expect.anything(), 'test-form-key', {}, {
+    expect(ResourceFormStore).toHaveBeenCalledWith(expect.anything(), 'test-form-key', {}, {
         staticParam: 'staticValue',
         webspace: 'webspace-attribute-value',
         pageTemplate: 'template-attribute-value',
@@ -299,8 +299,8 @@ test('Should destroy ResourceFormStore without reloading List when FormOverlay i
     formOverlayList.find(List).instance().reload = reloadSpy;
 
     formOverlayList.find(FormOverlay).props().onClose();
-    expect(destroySpy).toBeCalled();
-    expect(reloadSpy).not.toBeCalled();
+    expect(destroySpy).toHaveBeenCalled();
+    expect(reloadSpy).not.toHaveBeenCalled();
 });
 
 test('Should destroy ResourceFormStore and reload List view when FormOverlay is confirmed', () => {
@@ -326,8 +326,8 @@ test('Should destroy ResourceFormStore and reload List view when FormOverlay is 
     formOverlayList.find(List).instance().reload = reloadSpy;
 
     formOverlayList.find(FormOverlay).props().onConfirm();
-    expect(destroySpy).toBeCalled();
-    expect(reloadSpy).toBeCalled();
+    expect(destroySpy).toHaveBeenCalled();
+    expect(reloadSpy).toHaveBeenCalled();
 });
 
 test('Should destroy ResourceFormStore when component is unmounted', () => {
@@ -350,5 +350,5 @@ test('Should destroy ResourceFormStore when component is unmounted', () => {
     formOverlayList.instance().formStore.destroy = destroySpy;
 
     formOverlayList.unmount();
-    expect(destroySpy).toBeCalled();
+    expect(destroySpy).toHaveBeenCalled();
 });

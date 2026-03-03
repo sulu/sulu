@@ -52,7 +52,7 @@ test('Should call onDoubleClick', () => {
     render(<Item id={2} onDoubleClick={doubleClickSpy}>Test with indicators</Item>);
     fireEvent.doubleClick(screen.getByRole('button'));
 
-    expect(doubleClickSpy).toBeCalled();
+    expect(doubleClickSpy).toHaveBeenCalled();
 });
 
 test('Should not call onDoubleClick if order field is shown', () => {
@@ -61,7 +61,7 @@ test('Should not call onDoubleClick if order field is shown', () => {
     render(<Item id={2} onDoubleClick={doubleClickSpy} showOrderField={true}>Test with indicators</Item>);
     fireEvent.doubleClick(screen.getByRole('button'));
 
-    expect(doubleClickSpy).not.toBeCalled();
+    expect(doubleClickSpy).not.toHaveBeenCalled();
 });
 
 test('Should call onOrderChange callback when order has changed', async() => {
@@ -77,7 +77,7 @@ test('Should call onOrderChange callback when order has changed', async() => {
     await user.clear(input);
     await user.type(input, '5');
     fireEvent.blur(input);
-    expect(orderChangeSpy).toBeCalledWith(2, 5);
+    expect(orderChangeSpy).toHaveBeenCalledWith(2, 5);
 
     expect(input).toHaveValue('5');
 
@@ -98,7 +98,7 @@ test('Should call onOrderChange callback when order has changed and reset order 
     await user.clear(input);
     await user.type(input, '5');
     fireEvent.blur(input);
-    expect(orderChangeSpy).toBeCalledWith(2, 5);
+    expect(orderChangeSpy).toHaveBeenCalledWith(2, 5);
 
     expect(input).toHaveValue('5');
 
@@ -118,7 +118,7 @@ test('Should call onOrderChange callback when order has changed after pressing e
 
     await user.type(input, '{enter}');
 
-    expect(blurSpy).toBeCalledWith();
+    expect(blurSpy).toHaveBeenCalledWith();
     blurSpy.mockRestore();
 });
 

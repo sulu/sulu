@@ -142,9 +142,9 @@ test('Cancelling the item while editing should call the onClose callback', () =>
         />
     );
 
-    expect(cancelSpy).not.toBeCalled();
+    expect(cancelSpy).not.toHaveBeenCalled();
     item.find('Button[children="sulu_admin.cancel"]').simulate('click');
-    expect(cancelSpy).toBeCalledWith('page', 5);
+    expect(cancelSpy).toHaveBeenCalledWith('page', 5);
 });
 
 test('Reset the current field when the edit form is closed', () => {
@@ -225,9 +225,9 @@ test('Applying the item while editing should call the onApply callback with the 
     item.find(SingleMediaSelectionOverlay).prop('onConfirm')({id: 8});
     expect(item.find(SingleMediaSelectionOverlay).prop('open')).toEqual(false);
 
-    expect(applySpy).not.toBeCalled();
+    expect(applySpy).not.toHaveBeenCalled();
     item.find('Button[children="sulu_admin.apply"]').simulate('click');
-    expect(applySpy).toBeCalledWith({
+    expect(applySpy).toHaveBeenCalledWith({
         description: 'Edited description',
         id: 5,
         mediaId: 8,
@@ -255,7 +255,7 @@ test('Applying the item while editing should call the onApply callback with the 
     );
 
     item.find('Button[children="sulu_admin.reset"]').simulate('click');
-    expect(applySpy).toBeCalledWith({
+    expect(applySpy).toHaveBeenCalledWith({
         id: 5,
         type: 'page',
     });

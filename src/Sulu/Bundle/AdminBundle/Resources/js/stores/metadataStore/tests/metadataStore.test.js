@@ -141,7 +141,7 @@ test('Load metadata should not cache metadata if no-store is set in response', (
         expect(metadata1).toBe(metadata);
 
         const metadataPromise2 = metadataStore.loadMetadata('form', 'no_cache');
-        expect(Requester.fetch).toBeCalledTimes(2);
+        expect(Requester.fetch).toHaveBeenCalledTimes(2);
 
         return metadataPromise2.then((metadata2) => {
             expect(metadata2).toBe(metadata);
@@ -172,7 +172,7 @@ test('Load metadata should cache metadata if no-store is not set in response', (
         expect(metadata1).toBe(metadata);
 
         const metadataPromise2 = metadataStore.loadMetadata('form', 'no_cache');
-        expect(Requester.fetch).toBeCalledTimes(1);
+        expect(Requester.fetch).toHaveBeenCalledTimes(1);
 
         return metadataPromise2.then((metadata2) => {
             expect(metadata2).toBe(metadata);

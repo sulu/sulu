@@ -112,7 +112,7 @@ test('Not call changed when only protocol is given', () => {
         ['http://', 'https://', 'ftp://', 'ftps://', 'mailto:', 'tel:']
     );
     expect(url.find(UrlComponent).prop('defaultProtocol')).toEqual('http://');
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Pass correct default props to Url component', () => {
@@ -140,7 +140,7 @@ test('Pass correct default props to Url component', () => {
     expect(url.find(UrlComponent).prop('protocols')).toEqual(
         ['http://', 'https://', 'ftp://', 'ftps://', 'mailto:', 'tel:']
     );
-    expect(changeSpy).toBeCalledWith('http://github.com', {'isDefaultValue': true});
+    expect(changeSpy).toHaveBeenCalledWith('http://github.com', {'isDefaultValue': true});
 });
 
 test('Throw error if only specific_part default is set', () => {
@@ -201,7 +201,7 @@ test('Do not build URL from defaults if value is already given', () => {
         />
     );
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Build URL from defaults to pass as value to URL component', () => {
@@ -234,7 +234,7 @@ test('Build URL from defaults to pass as value to URL component', () => {
         />
     );
 
-    expect(changeSpy).toBeCalledWith('https://sulu.io', {'isDefaultValue': true});
+    expect(changeSpy).toHaveBeenCalledWith('https://sulu.io', {'isDefaultValue': true});
 });
 
 test('Should not pass any arguments to onFinish callback', () => {
@@ -262,5 +262,5 @@ test('Should not pass any arguments to onFinish callback', () => {
 
     url.find('Url').prop('onBlur')('Test');
 
-    expect(finishSpy).toBeCalledWith();
+    expect(finishSpy).toHaveBeenCalledWith();
 });

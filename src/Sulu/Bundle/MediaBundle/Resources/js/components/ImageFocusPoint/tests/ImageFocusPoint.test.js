@@ -145,13 +145,13 @@ test('Should call the onClick handler when a focus point was clicked', async() =
     const buttons = screen.getAllByRole('button');
 
     await user.click(buttons[0]);
-    expect(changeSpy).toBeCalledWith({x: 0, y: 0});
+    expect(changeSpy).toHaveBeenCalledWith({x: 0, y: 0});
 
     await user.click(buttons[1]);
-    expect(changeSpy).toBeCalledWith({x: 1, y: 0});
+    expect(changeSpy).toHaveBeenCalledWith({x: 1, y: 0});
 
     await user.click(buttons[3]);
-    expect(changeSpy).toBeCalledWith({x: 0, y: 1});
+    expect(changeSpy).toHaveBeenCalledWith({x: 0, y: 1});
 });
 
 test('Should disable the selected focus point button', () => {

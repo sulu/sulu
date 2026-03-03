@@ -207,7 +207,7 @@ test('Should add at least the minOccurs amount of blocks', () => {
         value,
     });
 
-    expect(changeSpy).toBeCalledWith([
+    expect(changeSpy).toHaveBeenCalledWith([
         expect.objectContaining({}),
         expect.objectContaining({}),
     ]);
@@ -223,7 +223,7 @@ test('Should fill the array up to minOccurs with different objects', () => {
         value,
     });
 
-    expect(changeSpy).toBeCalledWith([
+    expect(changeSpy).toHaveBeenCalledWith([
         expect.objectContaining({}),
         expect.objectContaining({}),
     ]);
@@ -241,7 +241,7 @@ test('Should add at least the minOccurs amount of blocks with empty starting val
         value,
     });
 
-    expect(changeSpy).toBeCalledWith([
+    expect(changeSpy).toHaveBeenCalledWith([
         expect.objectContaining({}),
         expect.objectContaining({}),
     ]);
@@ -258,7 +258,7 @@ test('Should add at least the minOccurs amount of blocks with types', () => {
         value,
     });
 
-    expect(changeSpy).toBeCalledWith([
+    expect(changeSpy).toHaveBeenCalledWith([
         expect.objectContaining({type: 'default'}),
         expect.objectContaining({type: 'editor'}),
     ]);
@@ -293,7 +293,7 @@ test('Choosing a different type should call the onChange callback', async() => {
     await user.click(within(getBlock(0)).getByRole('button', {name: /Type 1/}));
     await user.click(screen.getByRole('button', {name: 'Type2'}));
 
-    expect(changeSpy).toBeCalledWith([
+    expect(changeSpy).toHaveBeenCalledWith([
         expect.objectContaining({content: 'Test 1', type: 'type2'}),
         expect.objectContaining({content: 'Test 2', type: 'type2'}),
     ]);
@@ -383,12 +383,12 @@ test('Should allow to reorder blocks by using drag and drop', async() => {
     act(() => {
         ref.current.handleSortEnd({newIndex: 2, oldIndex: 0});
     });
-    expect(changeSpy).toBeCalledWith([
+    expect(changeSpy).toHaveBeenCalledWith([
         expect.objectContaining({content: 'Test 2'}),
         expect.objectContaining({content: 'Test 3'}),
         expect.objectContaining({content: 'Test 1'}),
     ]);
-    expect(sortEndSpy).toBeCalledWith(0, 2);
+    expect(sortEndSpy).toHaveBeenCalledWith(0, 2);
 
     expect(Array.from(ref.current.expandedBlocks)).toEqual([false, false, true]);
     expect(Array.from(ref.current.generatedBlockIds)).toEqual([2, 3, 1]);
@@ -404,7 +404,7 @@ test('Should add a new block between existing blocks', async() => {
 
     await user.click(getButtonsByName('sulu_admin.add_block')[0]);
 
-    expect(changeSpy).toBeCalledWith([
+    expect(changeSpy).toHaveBeenCalledWith([
         {content: 'Test 1', type: 'editor'},
         {type: 'editor'},
         {content: 'Test 2', type: 'editor'},
@@ -422,7 +422,7 @@ test('Should add a new block at the end', async() => {
     const addButtons = getButtonsByName('sulu_admin.add_block');
     await user.click(addButtons[addButtons.length - 1]);
 
-    expect(changeSpy).toBeCalledWith([...value, {type: 'editor'}]);
+    expect(changeSpy).toHaveBeenCalledWith([...value, {type: 'editor'}]);
 });
 
 test('Should throw an exception if a new block is added and the maximum has already been reached', () => {
@@ -450,7 +450,7 @@ test('Should paste block between existing blocks', async() => {
 
     await user.click(getButtonsByName('sulu_admin.paste_blocks')[0]);
 
-    expect(changeSpy).toBeCalledWith([
+    expect(changeSpy).toHaveBeenCalledWith([
         {content: 'Test 1', type: 'editor'},
         {content: 'Clipboard', type: 'editor'},
         {content: 'Test 2', type: 'editor'},
@@ -470,7 +470,7 @@ test('Should paste block at the end', async() => {
     const pasteButtons = getButtonsByName('sulu_admin.paste_blocks');
     await user.click(pasteButtons[pasteButtons.length - 1]);
 
-    expect(changeSpy).toBeCalledWith([...value, {content: 'Clipboard', type: 'editor'}]);
+    expect(changeSpy).toHaveBeenCalledWith([...value, {content: 'Clipboard', type: 'editor'}]);
 });
 
 test('Should paste block with default type if type of block in clipboard block is not known', async() => {
@@ -486,7 +486,7 @@ test('Should paste block with default type if type of block in clipboard block i
     const pasteButtons = getButtonsByName('sulu_admin.paste_blocks');
     await user.click(pasteButtons[pasteButtons.length - 1]);
 
-    expect(changeSpy).toBeCalledWith([...value, {content: 'Clipboard', type: 'editor'}]);
+    expect(changeSpy).toHaveBeenCalledWith([...value, {content: 'Clipboard', type: 'editor'}]);
 });
 
 test('Should throw an exception if a block is pasted and the maximum has already been reached', () => {
@@ -521,7 +521,7 @@ test('Should pass duplicate action that allows to duplicate an existing block', 
 
     await user.click(getButtonByName('sulu_admin.duplicate'));
 
-    expect(changeSpy).toBeCalledWith([
+    expect(changeSpy).toHaveBeenCalledWith([
         {content: 'Test 1', type: 'editor'},
         {content: 'Test 1', type: 'editor'},
         {content: 'Test 2', type: 'editor'},
@@ -571,7 +571,7 @@ test('Should pass remove action that allows to remove an existing block', async(
 
     await user.click(getButtonByName('sulu_admin.delete'));
 
-    expect(changeSpy).toBeCalledWith([expect.objectContaining({content: 'Test 2'})]);
+    expect(changeSpy).toHaveBeenCalledWith([expect.objectContaining({content: 'Test 2'})]);
 });
 
 test('Should not pass remove action to Block component if minOccurs limit is reached', async() => {
@@ -612,11 +612,11 @@ test('Should pass copy action that allows to cut an existing block into the clip
     await openBlockActions(user, 0);
     expect(getButtonByName('sulu_admin.copy')).toBeInTheDocument();
 
-    expect(clipboardSpy).not.toBeCalled();
+    expect(clipboardSpy).not.toHaveBeenCalled();
 
     await user.click(getButtonByName('sulu_admin.copy'));
 
-    expect(clipboardSpy).toBeCalledWith([value[0]]);
+    expect(clipboardSpy).toHaveBeenCalledWith([value[0]]);
 
     removeObserver();
 });
@@ -639,12 +639,12 @@ test('Should pass cut action that allows to cut an existing block into the clipb
     await openBlockActions(user, 0);
     expect(getButtonByName('sulu_admin.cut')).toBeInTheDocument();
 
-    expect(clipboardSpy).not.toBeCalled();
+    expect(clipboardSpy).not.toHaveBeenCalled();
 
     await user.click(getButtonByName('sulu_admin.cut'));
 
-    expect(clipboardSpy).toBeCalledWith([expect.objectContaining({content: 'Test 1'})]);
-    expect(changeSpy).toBeCalledWith([expect.objectContaining({content: 'Test 2'})]);
+    expect(clipboardSpy).toHaveBeenCalledWith([expect.objectContaining({content: 'Test 1'})]);
+    expect(changeSpy).toHaveBeenCalledWith([expect.objectContaining({content: 'Test 2'})]);
 
     removeObserver();
 });
@@ -1107,8 +1107,8 @@ test('Copy selected blocks via the BlockToolbar', async() => {
 
     await user.click(getButtonByName('sulu_admin.copy'));
 
-    expect(clipboardSpy).toBeCalledWith(value);
-    expect(changeSpy).not.toBeCalled();
+    expect(clipboardSpy).toHaveBeenCalledWith(value);
+    expect(changeSpy).not.toHaveBeenCalled();
 
     removeObserver();
 });
@@ -1147,8 +1147,8 @@ test('Duplicate selected blocks via the BlockToolbar', async() => {
 
     await user.click(getButtonByName('sulu_admin.duplicate'));
 
-    expect(clipboardSpy).not.toBeCalled();
-    expect(changeSpy).toBeCalledWith([...value, ...value]);
+    expect(clipboardSpy).not.toHaveBeenCalled();
+    expect(changeSpy).toHaveBeenCalledWith([...value, ...value]);
 
     removeObserver();
 });
@@ -1187,8 +1187,8 @@ test('Cut selected blocks via the BlockToolbar', async() => {
 
     await user.click(getButtonByName('sulu_admin.cut'));
 
-    expect(clipboardSpy).toBeCalledWith(value);
-    expect(changeSpy).toBeCalledWith([]);
+    expect(clipboardSpy).toHaveBeenCalledWith(value);
+    expect(changeSpy).toHaveBeenCalledWith([]);
 
     removeObserver();
 });
@@ -1227,8 +1227,8 @@ test('Remove selected blocks via the BlockToolbar', async() => {
 
     await user.click(getButtonByName('sulu_admin.delete'));
 
-    expect(clipboardSpy).not.toBeCalled();
-    expect(changeSpy).toBeCalledWith([]);
+    expect(clipboardSpy).not.toHaveBeenCalled();
+    expect(changeSpy).toHaveBeenCalledWith([]);
 
     removeObserver();
 });

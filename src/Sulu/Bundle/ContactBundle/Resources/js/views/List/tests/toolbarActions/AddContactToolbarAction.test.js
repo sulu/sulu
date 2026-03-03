@@ -97,7 +97,7 @@ test('Reset fields if overlay is just closed', () => {
     expect(addContactOverlay.find('SingleAutoComplete').prop('selectionStore').item).toEqual(undefined);
     expect(addContactOverlay.find('ResourceSingleSelect').prop('value')).toEqual(undefined);
 
-    expect(ResourceRequester.put).not.toBeCalled();
+    expect(ResourceRequester.put).not.toHaveBeenCalled();
 });
 
 test('Add selected contact to current account', () => {
@@ -126,7 +126,7 @@ test('Add selected contact to current account', () => {
         open: true,
     }));
 
-    expect(ResourceRequester.put).toBeCalledWith('account_contacts', {position: undefined}, {accountId: 4, id: 3});
+    expect(ResourceRequester.put).toHaveBeenCalledWith('account_contacts', {position: undefined}, {accountId: 4, id: 3});
 
     return putPromise.then(() => {
         addContactOverlay = shallow(addContactToolbarAction.getNode()).instance();
@@ -140,7 +140,7 @@ test('Add selected contact to current account', () => {
             throw new Error('The resourceStore must be set on the ToolbarAction!');
         }
 
-        expect(addContactToolbarAction.listStore.reload).toBeCalledWith();
+        expect(addContactToolbarAction.listStore.reload).toHaveBeenCalledWith();
     });
 });
 
@@ -167,7 +167,7 @@ test('Add selected contact to current account with position', () => {
         open: true,
     }));
 
-    expect(ResourceRequester.put).toBeCalledWith('account_contacts', {position: 5}, {accountId: 4, id: 3});
+    expect(ResourceRequester.put).toHaveBeenCalledWith('account_contacts', {position: 5}, {accountId: 4, id: 3});
 
     return putPromise.then(() => {
         addContactOverlay = shallow(addContactToolbarAction.getNode()).instance();
@@ -181,6 +181,6 @@ test('Add selected contact to current account with position', () => {
             throw new Error('The resourceStore must be set on the ToolbarAction!');
         }
 
-        expect(addContactToolbarAction.listStore.reload).toBeCalledWith();
+        expect(addContactToolbarAction.listStore.reload).toHaveBeenCalledWith();
     });
 });

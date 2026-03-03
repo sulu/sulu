@@ -133,7 +133,7 @@ test('ResourceLocator should call the onChange callback and replace a typed slas
     render(<ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />);
 
     replaceInputValue('child/');
-    expect(onChange).toBeCalledWith('/parent/child-');
+    expect(onChange).toHaveBeenCalledWith('/parent/child-');
 });
 
 test('ResourceLocator should call the onChange callback and replace a typed space with a dash in leaf mode', () => {
@@ -143,7 +143,7 @@ test('ResourceLocator should call the onChange callback and replace a typed spac
     render(<ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />);
 
     replaceInputValue('child test child');
-    expect(onChange).toBeCalledWith('/parent/child-test-child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child-test-child');
 });
 
 test('ResourceLocator should call the onChange callback and replace a typed space with a dash in full mode', () => {
@@ -153,7 +153,7 @@ test('ResourceLocator should call the onChange callback and replace a typed spac
     render(<ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />);
 
     replaceInputValue('parent/child test child');
-    expect(onChange).toBeCalledWith('/parent/child-test-child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child-test-child');
 });
 
 test('ResourceLocator should call the onChange callback and replace multiple slashes with one in full mode', () => {
@@ -163,7 +163,7 @@ test('ResourceLocator should call the onChange callback and replace multiple sla
     render(<ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />);
 
     replaceInputValue('parent///child//test/child');
-    expect(onChange).toBeCalledWith('/parent/child/test/child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child/test/child');
 });
 
 test('ResourceLocator should call the onChange callback and replace multiple dashes with one in leaf mode', () => {
@@ -173,7 +173,7 @@ test('ResourceLocator should call the onChange callback and replace multiple das
     render(<ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />);
 
     replaceInputValue('child--- a /// test');
-    expect(onChange).toBeCalledWith('/parent/child-a-test');
+    expect(onChange).toHaveBeenCalledWith('/parent/child-a-test');
 });
 
 test('ResourceLocator should call the onChange callback and replace multiple dashes with one in full mode', () => {
@@ -183,7 +183,7 @@ test('ResourceLocator should call the onChange callback and replace multiple das
     render(<ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />);
 
     replaceInputValue('parent/child---child--test-child');
-    expect(onChange).toBeCalledWith('/parent/child-child-test-child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child-child-test-child');
 });
 
 test('ResourceLocator should call the onChange callback and replace dash before and after slash in full mode', () => {
@@ -193,7 +193,7 @@ test('ResourceLocator should call the onChange callback and replace dash before 
     render(<ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />);
 
     replaceInputValue('parent/-child-/-test-/-child');
-    expect(onChange).toBeCalledWith('/parent/child/test/child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child/test/child');
 });
 
 test('ResourceLocator should call the onChange callback and remove dash at the beginning in leaf mode', () => {
@@ -203,7 +203,7 @@ test('ResourceLocator should call the onChange callback and remove dash at the b
     render(<ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />);
 
     replaceInputValue('-child');
-    expect(onChange).toBeCalledWith('/parent/child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child');
 });
 
 test('ResourceLocator should call the onChange callback and remove dash at the beginning in full mode', () => {
@@ -213,7 +213,7 @@ test('ResourceLocator should call the onChange callback and remove dash at the b
     render(<ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />);
 
     replaceInputValue('-parent/child');
-    expect(onChange).toBeCalledWith('/parent/child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child');
 });
 
 test('ResourceLocator should call the onChange callback and remove special characters in leaf mode', () => {
@@ -223,7 +223,7 @@ test('ResourceLocator should call the onChange callback and remove special chara
     render(<ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />);
 
     replaceInputValue('c!h"i$&()=$%`l`#+.,d%');
-    expect(onChange).toBeCalledWith('/parent/child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child');
 });
 
 test('ResourceLocator should call the onChange callback and remove special characters in full mode', () => {
@@ -233,7 +233,7 @@ test('ResourceLocator should call the onChange callback and remove special chara
     render(<ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />);
 
     replaceInputValue('parent/chi!ld/te"§st/ch;:il%§d%');
-    expect(onChange).toBeCalledWith('/parent/child/test/child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child/test/child');
 });
 
 test('ResourceLocator should replace capital letters with lower case in leaf mode before calling onChange', () => {
@@ -243,7 +243,7 @@ test('ResourceLocator should replace capital letters with lower case in leaf mod
     render(<ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />);
 
     replaceInputValue('CHILD');
-    expect(onChange).toBeCalledWith('/parent/child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child');
 });
 
 test('ResourceLocator should replace capital letters with lower case in full mode before calling onChange', () => {
@@ -253,7 +253,7 @@ test('ResourceLocator should replace capital letters with lower case in full mod
     render(<ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />);
 
     replaceInputValue('parent/CHILD');
-    expect(onChange).toBeCalledWith('/parent/child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child');
 });
 
 test('ResourceLocator should replace capital letters even when given locale is not a valid BCP 47 code', () => {
@@ -263,7 +263,7 @@ test('ResourceLocator should replace capital letters even when given locale is n
     render(<ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />);
 
     replaceInputValue('CHILD');
-    expect(onChange).toBeCalledWith('/parent/child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child');
 });
 
 test('ResourceLocator should call the onChange callback when a slash is typed in full mode', () => {
@@ -273,7 +273,7 @@ test('ResourceLocator should call the onChange callback when a slash is typed in
     render(<ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />);
 
     replaceInputValue('parent/child/');
-    expect(onChange).toBeCalledWith('/parent/child/');
+    expect(onChange).toHaveBeenCalledWith('/parent/child/');
 });
 
 test('ResourceLocator should call the onChange callback with undefined if no input is given', () => {
@@ -292,7 +292,7 @@ test('ResourceLocator should call the onChange callback and replace "/" with "-"
     render(<ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />);
 
     replaceInputValue('parent/child/');
-    expect(onChange).toBeCalledWith('/parent/child/');
+    expect(onChange).toHaveBeenCalledWith('/parent/child/');
 });
 
 test('ResourceLocator should call the onBlur callback when the Input finishes editing', () => {
@@ -301,5 +301,5 @@ test('ResourceLocator should call the onBlur callback when the Input finishes ed
     render(<ResourceLocator locale={locale} mode="leaf" onBlur={finishSpy} onChange={jest.fn()} value="/some/url" />);
 
     fireEvent.blur(getInput());
-    expect(finishSpy).toBeCalledWith();
+    expect(finishSpy).toHaveBeenCalledWith();
 });

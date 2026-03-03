@@ -118,7 +118,7 @@ test('Should call onChange callback with correct index', () => {
 
     formRenderer.find(Renderer).prop('onChange')('test', 'value');
 
-    expect(changeSpy).toBeCalledWith(2, 'test', 'value', undefined);
+    expect(changeSpy).toHaveBeenCalledWith(2, 'test', 'value', undefined);
 });
 
 test('Should pass context through onChange callback', () => {
@@ -143,7 +143,7 @@ test('Should pass context through onChange callback', () => {
 
     formRenderer.find(Renderer).prop('onChange')('alignment', 'left', {isDefaultValue: true});
 
-    expect(changeSpy).toBeCalledWith(0, 'alignment', 'left', {isDefaultValue: true});
+    expect(changeSpy).toHaveBeenCalledWith(0, 'alignment', 'left', {isDefaultValue: true});
 });
 
 test('Should call onFieldFinish when some subfield finishes editing', () => {
@@ -168,5 +168,5 @@ test('Should call onFieldFinish when some subfield finishes editing', () => {
 
     formRenderer.find(Renderer).prop('onFieldFinish')();
 
-    expect(fieldFinishSpy).toBeCalledWith();
+    expect(fieldFinishSpy).toHaveBeenCalledWith();
 });

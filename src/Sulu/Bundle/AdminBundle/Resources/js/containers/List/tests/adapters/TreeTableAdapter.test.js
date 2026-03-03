@@ -568,11 +568,11 @@ test('Execute onItemActivate respectively onItemDeactivate callback when an item
 
     // expand the row
     treeListAdapter.find('Row[id=6]').find('span.toggleIcon Icon').simulate('click');
-    expect(onItemActivateSpy).toBeCalledWith(6);
+    expect(onItemActivateSpy).toHaveBeenCalledWith(6);
 
     // close the row
     treeListAdapter.find('Row[id=3]').find('span.toggleIcon Icon').simulate('click');
-    expect(onItemDeactivateSpy).toBeCalledWith(3);
+    expect(onItemDeactivateSpy).toHaveBeenCalledWith(3);
 });
 
 test('Render data with pencil button and given itemActions when onItemEdit callback is passed', () => {
@@ -863,7 +863,7 @@ test('Click on pencil should execute onItemClick callback', () => {
     expect(buttons[0].icon).toBe('su-pen');
 
     buttons[0].onClick(1);
-    expect(rowEditClickSpy).toBeCalledWith(1);
+    expect(rowEditClickSpy).toHaveBeenCalledWith(1);
 });
 
 test('Click on add should execute onItemAdd callback', () => {
@@ -912,7 +912,7 @@ test('Click on add should execute onItemAdd callback', () => {
     expect(buttons[0].icon).toBe('su-plus-circle');
 
     buttons[0].onClick(1);
-    expect(rowAddClickSpy).toBeCalledWith(1);
+    expect(rowAddClickSpy).toHaveBeenCalledWith(1);
 });
 
 test('Click on itemAction should execute its callback', () => {
@@ -964,14 +964,14 @@ test('Click on itemAction should execute its callback', () => {
         />
     );
 
-    expect(actionsProvider).toBeCalledWith(item1Data);
+    expect(actionsProvider).toHaveBeenCalledWith(item1Data);
 
     const buttons = treeListAdapter.find('Table').prop('buttons');
     expect(buttons).toHaveLength(2);
     expect(buttons[1].icon).toBe('su-process');
 
     buttons[1].onClick(1);
-    expect(actionClickSpy).toBeCalledWith(1);
+    expect(actionClickSpy).toHaveBeenCalledWith(1);
 });
 
 test('Pagination should be passed correct props', () => {
@@ -1151,6 +1151,6 @@ test('Next page should call onItemActiveate with undefined', () => {
 
     // Click next page
     treeListAdapter.find('Pagination').find('ButtonGroup Button').at(1).simulate('click');
-    expect(onPageChangeSpy).toBeCalledWith(2);
-    expect(onItemActivateSpy).toBeCalledWith(undefined);
+    expect(onPageChangeSpy).toHaveBeenCalledWith(2);
+    expect(onItemActivateSpy).toHaveBeenCalledWith(undefined);
 });

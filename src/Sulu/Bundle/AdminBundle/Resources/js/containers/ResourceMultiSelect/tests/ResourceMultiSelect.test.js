@@ -43,7 +43,7 @@ test('Render with data', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', {limit: ''}, 'id');
+    expect(ResourceListStore).toHaveBeenCalledWith('test', {limit: ''}, 'id');
     expect(resourceMultiSelect.render()).toMatchSnapshot();
 });
 
@@ -75,7 +75,7 @@ test('Render in disabled state', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', {limit: ''}, 'id');
+    expect(ResourceListStore).toHaveBeenCalledWith('test', {limit: ''}, 'id');
     expect(resourceMultiSelect.find('MultiSelect').prop('disabled')).toEqual(true);
 });
 
@@ -133,7 +133,7 @@ test('Pass requestParameters', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', {limit: '', testOption: 'testValue'}, 'id');
+    expect(ResourceListStore).toHaveBeenCalledWith('test', {limit: '', testOption: 'testValue'}, 'id');
 });
 
 test('Pass requestParameters when requestParameters props changed', () => {
@@ -288,7 +288,7 @@ test('The component should trigger the close callback', () => {
         />
     );
 
-    expect(closeSpy).not.toBeCalled();
+    expect(closeSpy).not.toHaveBeenCalled();
     resourceMultiSelect.find(MultiSelectComponent).prop('onClose')();
-    expect(closeSpy).toBeCalled();
+    expect(closeSpy).toHaveBeenCalled();
 });

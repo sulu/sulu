@@ -29,7 +29,7 @@ test('Clicking the left and right button inside the header should call the right
     const user = userEvent.setup();
     await user.click(screen.getByText('My House'));
 
-    expect(clickHandler).toBeCalledWith('house');
+    expect(clickHandler).toHaveBeenCalledWith('house');
 });
 
 test('Clicking the disabled Item should not call a handler', async() => {
@@ -39,5 +39,5 @@ test('Clicking the disabled Item should not call a handler', async() => {
     const user = userEvent.setup();
     await user.click(screen.getByText('My House'));
 
-    expect(clickHandler).not.toBeCalled();
+    expect(clickHandler).not.toHaveBeenCalled();
 });

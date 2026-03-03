@@ -92,7 +92,7 @@ test('Render the items and icons from the ToolbarStore', () => {
     );
 
     expect(render(<Toolbar storeKey={storeKey} />)).toMatchSnapshot();
-    expect(toolbarStorePool.createStore).toBeCalledWith(storeKey);
+    expect(toolbarStorePool.createStore).toHaveBeenCalledWith(storeKey);
 });
 
 test('Render the error from the ToolbarStore', () => {
@@ -114,7 +114,7 @@ test('Render the error from the ToolbarStore', () => {
 
     const toolbar = mount(<Toolbar storeKey={storeKey} />);
     expect(toolbar.render()).toMatchSnapshot();
-    expect(toolbarStorePool.createStore).toBeCalledWith(storeKey);
+    expect(toolbarStorePool.createStore).toHaveBeenCalledWith(storeKey);
 });
 
 test('Render the warning from the ToolbarStore', () => {
@@ -137,7 +137,7 @@ test('Render the warning from the ToolbarStore', () => {
     const toolbar = mount(<Toolbar storeKey={storeKey} />);
 
     expect(toolbar.render()).toMatchSnapshot();
-    expect(toolbarStorePool.createStore).toBeCalledWith(storeKey);
+    expect(toolbarStorePool.createStore).toHaveBeenCalledWith(storeKey);
 });
 
 test('Render the items as disabled if one is loading', () => {
@@ -167,7 +167,7 @@ test('Render the items as disabled if one is loading', () => {
     );
 
     const view = shallow(<Toolbar storeKey={storeKey} />);
-    expect(toolbarStorePool.createStore).toBeCalledWith(storeKey);
+    expect(toolbarStorePool.createStore).toHaveBeenCalledWith(storeKey);
 
     const buttons = view.find('Button');
     expect(buttons.at(0).prop('disabled')).toBe(true);
@@ -216,7 +216,7 @@ test('Click on the success message should open the navigation', () => {
 
     view.find('Button[success=true]').simulate('click');
 
-    expect(navigationButtonClickSpy).toBeCalledWith();
+    expect(navigationButtonClickSpy).toHaveBeenCalledWith();
 });
 
 test('Click on the success message should navigate back', () => {
@@ -236,7 +236,7 @@ test('Click on the success message should navigate back', () => {
 
     view.find('Button[success=true]').simulate('click');
 
-    expect(backSpy).toBeCalledWith();
+    expect(backSpy).toHaveBeenCalledWith();
 });
 
 test('Remove last error if close button on snackbar is clicked', () => {

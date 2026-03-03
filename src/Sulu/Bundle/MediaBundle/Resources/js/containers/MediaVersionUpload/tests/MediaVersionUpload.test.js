@@ -90,7 +90,7 @@ test('Should update resourceStore and call onSuccess after SingleMediaUpload has
     mediaVersionUpload.update();
     mediaVersionUpload.find('SingleMediaUpload').prop('onUploadComplete')(testFile);
     expect(resourceStore.data).toEqual(testFile);
-    expect(successSpy).toBeCalled();
+    expect(successSpy).toHaveBeenCalled();
 });
 
 test('Should open and close crop overlay', () => {
@@ -165,7 +165,7 @@ test('Should save focus point overlay and call onSuccess', (done) => {
     mediaVersionUpload.find('ImageFocusPoint').prop('onChange')({x: 0, y: 2});
     mediaVersionUpload.find('FocusPointOverlay Overlay').prop('onConfirm')();
 
-    expect(ResourceRequester.put).toBeCalledWith(
+    expect(ResourceRequester.put).toHaveBeenCalledWith(
         'media',
         {adminUrl: 'image.jpg', focusPointX: 0, focusPointY: 2, isImage: true, url: 'image.jpg'},
         {id: 4, locale: 'de'}
@@ -175,7 +175,7 @@ test('Should save focus point overlay and call onSuccess', (done) => {
         mediaVersionUpload.update();
         expect(mediaVersionUpload.find('FocusPointOverlay').find('Overlay').prop('confirmDisabled')).toEqual(true);
         expect(mediaVersionUpload.find('FocusPointOverlay').prop('open')).toEqual(false);
-        expect(successSpy).toBeCalled();
+        expect(successSpy).toHaveBeenCalled();
         done();
     });
 });
@@ -221,7 +221,7 @@ test('Should save crop overlay and call onSuccess', () => {
             .mockReturnValue(putPromise);
         mediaVersionUpload.find('CropOverlay').find('Overlay').prop('onConfirm')();
 
-        expect(mediaVersionUpload.find('CropOverlay').instance().mediaFormatStore.updateFormatOptions).toBeCalledWith(
+        expect(mediaVersionUpload.find('CropOverlay').instance().mediaFormatStore.updateFormatOptions).toHaveBeenCalledWith(
             {
                 test: {cropHeight: 60, cropWidth: 20, cropX: 200, cropY: 20},
             }
@@ -231,7 +231,7 @@ test('Should save crop overlay and call onSuccess', () => {
             mediaVersionUpload.find('CropOverlay').update();
             expect(mediaVersionUpload.find('CropOverlay').find('Overlay').prop('confirmDisabled')).toEqual(true);
             expect(mediaVersionUpload.find('CropOverlay').prop('open')).toEqual(false);
-            expect(successSpy).toBeCalled();
+            expect(successSpy).toHaveBeenCalled();
         });
     });
 });
@@ -278,7 +278,7 @@ test('Should call updatePreviewImage method of MediaUploadStore if a new preview
     expect(mediaVersionUpload.instance().mediaUploadStore.updatePreviewImage).toHaveBeenCalledWith(testFile);
 
     return updatePreviewPromise.then(() => {
-        expect(successSpy).toBeCalledWith();
+        expect(successSpy).toHaveBeenCalledWith();
     });
 });
 
@@ -309,7 +309,7 @@ test('Should call deletePreviewImage method of MediaUploadStore if the button to
     expect(mediaVersionUpload.instance().mediaUploadStore.deletePreviewImage).toHaveBeenCalledWith();
 
     return deletePreviewPromise.then(() => {
-        expect(successSpy).toBeCalledWith();
+        expect(successSpy).toHaveBeenCalledWith();
     });
 });
 
@@ -335,5 +335,5 @@ test('Should not call deletePreviewImage method of MediaUploadStore if the delet
         .find('Dialog[children="sulu_media.delete_preview_image_warning_text"] Button[skin="secondary"]')
         .prop('onClick')();
 
-    expect(mediaVersionUpload.instance().mediaUploadStore.deletePreviewImage).not.toBeCalled();
+    expect(mediaVersionUpload.instance().mediaUploadStore.deletePreviewImage).not.toHaveBeenCalled();
 });

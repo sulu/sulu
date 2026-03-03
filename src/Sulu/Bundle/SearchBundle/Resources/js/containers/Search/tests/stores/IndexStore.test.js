@@ -33,7 +33,7 @@ test('Load indexes', () => {
     ResourceRequester.getList.mockReturnValue(promise);
     const indexPromise = indexStore.loadIndexes();
 
-    expect(ResourceRequester.getList).toBeCalledWith('search_indexes');
+    expect(ResourceRequester.getList).toHaveBeenCalledWith('search_indexes');
 
     return indexPromise.then((webspaces) => {
         // check if promise have been cached

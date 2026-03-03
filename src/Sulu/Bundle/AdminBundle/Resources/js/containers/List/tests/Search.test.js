@@ -61,7 +61,7 @@ test('The component should trigger the onSearch callback correctly if Input call
 
     input.simulate('blur');
 
-    expect(onSearch).toBeCalledWith('test-search-value');
+    expect(onSearch).toHaveBeenCalledWith('test-search-value');
 });
 
 test('The component should trigger the onSearch callback correctly if Input calls onKeyPress with enter', () => {
@@ -78,7 +78,7 @@ test('The component should trigger the onSearch callback correctly if Input call
 
     input.simulate('keyPress', 'Enter');
 
-    expect(onSearch).toBeCalledWith('test-search-value');
+    expect(onSearch).toHaveBeenCalledWith('test-search-value');
 });
 
 test('The component should clear the current value if Input calls onClearClick', () => {

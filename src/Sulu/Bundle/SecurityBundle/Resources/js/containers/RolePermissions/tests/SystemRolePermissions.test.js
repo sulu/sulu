@@ -92,7 +92,7 @@ test('Call onChange callback when matrix changes', () => {
     const newValue = {'1': {view: true}};
     systemRolePermissions.find('Matrix').simulate('change', newValue);
 
-    expect(changeSpy).toBeCalledWith(newValue, 'Sulu');
+    expect(changeSpy).toHaveBeenCalledWith(newValue, 'Sulu');
 });
 
 test('Call onChange callback with empty values if toggler is deactivated', () => {
@@ -112,7 +112,7 @@ test('Call onChange callback with empty values if toggler is deactivated', () =>
 
     systemRolePermissions.find('Toggler').simulate('change', false);
 
-    expect(changeSpy).toBeCalledWith({}, 'Sulu');
+    expect(changeSpy).toHaveBeenCalledWith({}, 'Sulu');
 });
 
 test('Show default values after activating toggler', () => {

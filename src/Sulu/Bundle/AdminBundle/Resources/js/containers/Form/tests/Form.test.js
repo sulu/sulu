@@ -148,8 +148,8 @@ test('Should call onSubmit callback', () => {
 
     form.instance().submit();
 
-    expect(errorSpy).not.toBeCalled();
-    expect(submitSpy).toBeCalled();
+    expect(errorSpy).not.toHaveBeenCalled();
+    expect(submitSpy).toHaveBeenCalled();
 });
 
 test.each([
@@ -181,9 +181,9 @@ test.each([
     form.instance().submit(action);
 
     return submitPromise.then(() => {
-        expect(handler1).toBeCalledWith(action);
-        expect(handler2).toBeCalledWith(action);
-        expect(log.warn).toBeCalled();
+        expect(handler1).toHaveBeenCalledWith(action);
+        expect(handler2).toHaveBeenCalledWith(action);
+        expect(log.warn).toHaveBeenCalled();
     });
 });
 
@@ -217,9 +217,9 @@ test.each([
     form.instance().submit(action);
 
     return submitPromise.then(() => {
-        expect(handler1).toBeCalledWith(action);
-        expect(handler2).toBeCalledWith(action);
-        expect(log.warn).not.toBeCalled();
+        expect(handler1).toHaveBeenCalledWith(action);
+        expect(handler2).toHaveBeenCalledWith(action);
+        expect(log.warn).not.toHaveBeenCalled();
     });
 });
 
@@ -235,8 +235,8 @@ test('Should call onError callback', () => {
 
     form.instance().submit();
 
-    expect(errorSpy).toBeCalledWith(store.errors);
-    expect(submitSpy).not.toBeCalled();
+    expect(errorSpy).toHaveBeenCalledWith(store.errors);
+    expect(submitSpy).not.toHaveBeenCalled();
 });
 
 test('Should work when errors occurs but no onError callback is given', () => {
@@ -250,7 +250,7 @@ test('Should work when errors occurs but no onError callback is given', () => {
 
     form.instance().submit();
 
-    expect(submitSpy).not.toBeCalled();
+    expect(submitSpy).not.toHaveBeenCalled();
 });
 
 test('Should validate form when a field has finished being edited', () => {
@@ -261,7 +261,7 @@ test('Should validate form when a field has finished being edited', () => {
 
     form.find('Renderer').prop('onFieldFinish')();
 
-    expect(store.validate).toBeCalledWith();
+    expect(store.validate).toHaveBeenCalledWith();
 });
 
 test('Should validate form before calling finish handlers when a field has finished being edited', () => {
@@ -409,7 +409,7 @@ test('Should change data on store when changed', () => {
     const form = shallow(<Form onSubmit={submitSpy} store={store} />);
 
     form.find('Renderer').props().onChange('field', 'value', {isDefaultValue: true});
-    expect(store.change).toBeCalledWith('field', 'value', {isDefaultValue: true});
+    expect(store.change).toHaveBeenCalledWith('field', 'value', {isDefaultValue: true});
 });
 
 test('Should change data on store without sections', () => {
@@ -446,7 +446,7 @@ test('Should change data on store without sections', () => {
     const form = mount(<Form onSubmit={submitSpy} store={store} />);
     form.find('Input').at(0).props().onChange('value!');
 
-    expect(store.change).toBeCalledWith('item11', 'value!', undefined);
+    expect(store.change).toHaveBeenCalledWith('item11', 'value!', undefined);
 });
 
 test('Should show a GhostDialog if the current locale is not translated', () => {
@@ -522,7 +522,7 @@ test('Should show a GhostDialog and copy the content if the confirm button is cl
             form.find('GhostDialog Button[skin="primary"]').simulate('click');
             expect(form.find('GhostDialog').prop('open')).toEqual(false);
 
-            expect(formStore.copyFromLocale).toBeCalledWith('en', {});
+            expect(formStore.copyFromLocale).toHaveBeenCalledWith('en', {});
 
             resolve();
         }, 1);
@@ -561,7 +561,7 @@ test('Should show a GhostDialog and copy the content if the confirm button is cl
             form.find('GhostDialog Button[skin="primary"]').simulate('click');
             expect(form.find('GhostDialog').prop('open')).toEqual(false);
 
-            expect(formStore.copyFromLocale).toBeCalledWith('en', {
+            expect(formStore.copyFromLocale).toHaveBeenCalledWith('en', {
                 title: 'Test 123',
             });
 
@@ -580,7 +580,7 @@ test('Should show a GhostDialog and do nothing if the cancel button is clicked',
     form.find('GhostDialog Button[skin="secondary"]').simulate('click');
     expect(form.find('GhostDialog').prop('open')).toEqual(false);
 
-    expect(formStore.copyFromLocale).not.toBeCalled();
+    expect(formStore.copyFromLocale).not.toHaveBeenCalled();
 });
 
 test('Should not show a GhostDialog if the resourceStore is currently loading', () => {
@@ -611,8 +611,8 @@ test('Should set the type of the formStore to selected value in MissingTypeDialo
     form.find('MissingTypeDialog SingleSelect Option button').simulate('click');
     form.find('MissingTypeDialog Button[skin="primary"]').simulate('click');
 
-    expect(onMissingTypeCancelSpy).not.toBeCalledWith();
-    expect(formStore.changeType).toBeCalledWith('default');
+    expect(onMissingTypeCancelSpy).not.toHaveBeenCalledWith();
+    expect(formStore.changeType).toHaveBeenCalledWith('default');
 });
 
 test('Should call the onMissingTypeCancel callback if MissingTypeDialog is cancelled', () => {
@@ -627,5 +627,5 @@ test('Should call the onMissingTypeCancel callback if MissingTypeDialog is cance
     expect(form.find('MissingTypeDialog').prop('open')).toEqual(true);
     form.find('MissingTypeDialog Button[skin="secondary"]').simulate('click');
 
-    expect(onMissingTypeCancelSpy).toBeCalledWith();
+    expect(onMissingTypeCancelSpy).toHaveBeenCalledWith();
 });

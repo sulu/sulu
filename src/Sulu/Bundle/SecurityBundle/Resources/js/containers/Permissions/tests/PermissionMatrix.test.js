@@ -235,5 +235,5 @@ test('Should trigger onChange correctly', () => {
             },
         },
     ];
-    expect(onChange).toBeCalledWith(expectedContextPermissions);
+    expect(onChange).toHaveBeenCalledWith(expectedContextPermissions);
 });

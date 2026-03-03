@@ -27,9 +27,9 @@ test('Pass props correctly to ResourceListStore', () => {
         />
     );
 
-    expect(ResourceListStore).not.toBeCalled();
+    expect(ResourceListStore).not.toHaveBeenCalled();
     resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
-    expect(ResourceListStore).toBeCalledWith('history_routes', {id: 5, webspace: 'sulu'});
+    expect(ResourceListStore).toHaveBeenCalledWith('history_routes', {id: 5, webspace: 'sulu'});
 });
 
 test('Pass correct props to Button', () => {
@@ -104,13 +104,13 @@ test('Reload history routes each time overlay is opened', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledTimes(0);
+    expect(ResourceListStore).toHaveBeenCalledTimes(0);
 
     resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
-    expect(ResourceListStore).toBeCalledTimes(1);
+    expect(ResourceListStore).toHaveBeenCalledTimes(1);
 
     resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
-    expect(ResourceListStore).toBeCalledTimes(2);
+    expect(ResourceListStore).toHaveBeenCalledTimes(2);
 });
 
 test('Close overlay if button is clicked', () => {
@@ -164,7 +164,7 @@ test('Do not delete if confirmation dialog is cancelled', () => {
     resourceLocatorHistory.update();
     expect(resourceLocatorHistory.find('Dialog').prop('open')).toEqual(false);
 
-    expect(resourceListStore.deleteList).not.toBeCalled();
+    expect(resourceListStore.deleteList).not.toHaveBeenCalled();
 });
 
 test('Delete if confirmation dialog is confirmed', () => {
@@ -202,7 +202,7 @@ test('Delete if confirmation dialog is confirmed', () => {
     resourceLocatorHistory.update();
     expect(resourceLocatorHistory.find('Dialog').prop('open')).toEqual(true);
 
-    expect(resourceListStore.deleteList).toBeCalledWith([3]);
+    expect(resourceListStore.deleteList).toHaveBeenCalledWith([3]);
 
     return deleteListPromise.then(() => {
         resourceLocatorHistory.update();

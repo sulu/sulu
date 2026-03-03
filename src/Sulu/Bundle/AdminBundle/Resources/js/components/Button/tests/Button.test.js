@@ -75,7 +75,7 @@ test('Should call the callback on click', async() => {
 
     const button = screen.queryByRole('button');
     await userEvent.click(button);
-    expect(onClick).toBeCalled();
+    expect(onClick).toHaveBeenCalled();
 });
 
 test('Should call the buttonRef callback correctly', () => {
@@ -84,5 +84,5 @@ test('Should call the buttonRef callback correctly', () => {
 
     const button = screen.queryByRole('button');
 
-    expect(buttonRefSpy).toBeCalledWith(button);
+    expect(buttonRefSpy).toHaveBeenCalledWith(button);
 });

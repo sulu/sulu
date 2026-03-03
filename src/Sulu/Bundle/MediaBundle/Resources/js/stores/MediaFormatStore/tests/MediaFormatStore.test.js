@@ -21,7 +21,7 @@ test('Load media formats', () => {
     const promise = Promise.resolve(mediaFormats);
     ResourceRequester.getList.mockReturnValue(promise);
     const mediaFormatStore = new MediaFormatStore(4, 'de');
-    expect(ResourceRequester.getList).toBeCalledWith('media_formats', {id: 4, locale: 'de'});
+    expect(ResourceRequester.getList).toHaveBeenCalledWith('media_formats', {id: 4, locale: 'de'});
     expect(mediaFormatStore.loading).toEqual(true);
 
     return promise.then(() => {

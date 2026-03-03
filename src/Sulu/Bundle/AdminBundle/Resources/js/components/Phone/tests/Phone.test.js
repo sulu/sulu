@@ -53,7 +53,7 @@ test('Phone should trigger callbacks correctly', async() => {
     expect(onChange).toHaveBeenLastCalledWith('+123', expect.anything());
 
     await userEvent.tab();
-    expect(onBlur).toBeCalled();
+    expect(onBlur).toHaveBeenCalled();
     expect(onBlur).toHaveBeenCalledTimes(1);
 });
 

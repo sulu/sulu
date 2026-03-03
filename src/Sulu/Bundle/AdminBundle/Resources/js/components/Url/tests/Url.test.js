@@ -55,7 +55,7 @@ test('Should log a warning if a not available protocol has been given', () => {
     const input = screen.getByRole('textbox');
 
     expect(input).toHaveValue('https://www.sulu.io');
-    expect(log.warn).toBeCalled();
+    expect(log.warn).toHaveBeenCalled();
 });
 
 test('Show error when invalid email was passed via updated prop', () => {
@@ -101,7 +101,7 @@ test('Call onChange callback with the first protocol if none was selected', asyn
     const input = screen.getByRole('textbox');
     await userEvent.type(input, 't');
 
-    expect(changeSpy).toBeCalledWith('http://sulu.at');
+    expect(changeSpy).toHaveBeenCalledWith('http://sulu.at');
 });
 
 test('Call onChange callback when protocol was changed', async() => {
@@ -111,7 +111,7 @@ test('Call onChange callback when protocol was changed', async() => {
     await userEvent.click(screen.getByLabelText('su-angle-down'));
     await userEvent.click(screen.getByText('http://'));
 
-    expect(changeSpy).toBeCalledWith('http://www.sulu.io');
+    expect(changeSpy).toHaveBeenCalledWith('http://www.sulu.io');
 });
 
 test('Call onChange callback when path was changed', async() => {
@@ -121,7 +121,7 @@ test('Call onChange callback when path was changed', async() => {
     const input = screen.getByRole('textbox');
     await userEvent.type(input, 'x');
 
-    expect(changeSpy).toBeCalledWith('https://www.sulu.iox');
+    expect(changeSpy).toHaveBeenCalledWith('https://www.sulu.iox');
 });
 
 test('Call onChange callback when path was changed but not blurred', async() => {
@@ -131,7 +131,7 @@ test('Call onChange callback when path was changed but not blurred', async() => 
     const input = screen.getByRole('textbox');
     await userEvent.type(input, 'x');
 
-    expect(changeSpy).toBeCalledWith('https://www.sulu.iox');
+    expect(changeSpy).toHaveBeenCalledWith('https://www.sulu.iox');
 });
 
 test('Call onChange callback when path was changed to invalid url but not blurred', async() => {
@@ -141,7 +141,7 @@ test('Call onChange callback when path was changed to invalid url but not blurre
     const input = screen.getByRole('textbox');
     await userEvent.type(input, '[Backspace]');
 
-    expect(changeSpy).toBeCalledWith('https://www.sulu.i');
+    expect(changeSpy).toHaveBeenCalledWith('https://www.sulu.i');
 });
 
 test('Call onChange callback if url is not valid but leave the current value', async() => {
@@ -152,7 +152,7 @@ test('Call onChange callback if url is not valid but leave the current value', a
     const protocol = screen.getByTitle('https://').lastChild;
     await userEvent.type(input, '.');
 
-    expect(changeSpy).toBeCalledWith('https://www.sulu.io.');
+    expect(changeSpy).toHaveBeenCalledWith('https://www.sulu.io.');
     expect(protocol).toHaveTextContent('https://');
     expect(input).toHaveValue('www.sulu.io.');
     expect(container.children[0]).not.toHaveClass('error');
@@ -166,7 +166,7 @@ test('Call onChange callback with undefined if email is not valid but leave the 
     const protocol = screen.getByTitle('mailto:').lastChild;
     await userEvent.type(input, '@');
 
-    expect(changeSpy).toBeCalledWith(undefined);
+    expect(changeSpy).toHaveBeenCalledWith(undefined);
     expect(protocol).toHaveTextContent('mailto:');
     expect(input).toHaveValue('hello@sulu.io@');
 
@@ -182,7 +182,7 @@ test('Call onChange callback with correct mail address', async() => {
     const protocol = screen.getByTitle('mailto:').lastChild;
     await userEvent.type(input, 'a');
 
-    expect(changeSpy).toBeCalledWith('mailto:test@example.a');
+    expect(changeSpy).toHaveBeenCalledWith('mailto:test@example.a');
     expect(protocol).toHaveTextContent('mailto:');
     expect(input).toHaveValue('test@example.a');
 
@@ -198,7 +198,7 @@ test('Call onChange callback with correct value with custom protocol', async() =
     const protocol = screen.getByTitle('custom-protocol:').lastChild;
     await userEvent.type(input, 'X');
 
-    expect(changeSpy).toBeCalledWith('custom-protocol:X');
+    expect(changeSpy).toHaveBeenCalledWith('custom-protocol:X');
     expect(protocol).toHaveTextContent('custom-protocol:');
     expect(input).toHaveValue('X');
     expect(container.children[0]).not.toHaveClass('error');
@@ -214,7 +214,7 @@ test('Call onChange callback with undefined if incorrect mail address is entered
 
     expect(protocol).toHaveTextContent('mailto');
     expect(input).toHaveValue('X');
-    expect(changeSpy).toBeCalledWith(undefined);
+    expect(changeSpy).toHaveBeenCalledWith(undefined);
 
     await userEvent.tab();
     expect(container.children[0]).toHaveClass('error');
@@ -253,7 +253,7 @@ test('Call onBlur callback when protocol was changed', async() => {
     await userEvent.click(screen.getByLabelText('su-angle-down'));
     await userEvent.click(screen.getByText('http://'));
 
-    expect(blurSpy).toBeCalledWith();
+    expect(blurSpy).toHaveBeenCalledWith();
 });
 
 test('Call onBlur callback when path was changed', async() => {
@@ -262,10 +262,10 @@ test('Call onBlur callback when path was changed', async() => {
 
     const input = screen.getByRole('textbox');
     await userEvent.click(input);
-    expect(blurSpy).not.toBeCalledWith();
+    expect(blurSpy).not.toHaveBeenCalledWith();
 
     await userEvent.tab();
-    expect(blurSpy).toBeCalledWith();
+    expect(blurSpy).toHaveBeenCalledWith();
 });
 
 test('Should call onProtocolChange with default protocol', () => {
@@ -274,14 +274,14 @@ test('Should call onProtocolChange with default protocol', () => {
         <Url defaultProtocol="http://" onChange={jest.fn()} onProtocolChange={protocolChangeSpy} value={undefined} />
     );
 
-    expect(protocolChangeSpy).toBeCalledWith('http://');
+    expect(protocolChangeSpy).toHaveBeenCalledWith('http://');
 });
 
 test('Should call onProtocolChange with initial value', () => {
     const protocolChangeSpy = jest.fn();
     render(<Url onChange={jest.fn()} onProtocolChange={protocolChangeSpy} value="http://www.google.at" />);
 
-    expect(protocolChangeSpy).toBeCalledWith('http://');
+    expect(protocolChangeSpy).toHaveBeenCalledWith('http://');
 });
 
 test('Should call onProtocolChange when protocol is changed', async() => {

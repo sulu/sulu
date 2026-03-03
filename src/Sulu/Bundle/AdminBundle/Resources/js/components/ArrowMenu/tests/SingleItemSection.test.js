@@ -57,5 +57,5 @@ test('Handle Item click', async() => {
     const user = userEvent.setup();
     await user.click(screen.getByText('White House'));
 
-    expect(handleChange).toBeCalledWith('white_house');
+    expect(handleChange).toHaveBeenCalledWith('white_house');
 });

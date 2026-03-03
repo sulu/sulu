@@ -31,7 +31,7 @@ test('A click on the component should fire the callback', async() => {
     const button = screen.queryByText('My option');
     await userEvent.click(button);
 
-    expect(clickSpy).toBeCalled();
+    expect(clickSpy).toHaveBeenCalled();
 });
 
 test('A hover on the component should fire the callback', async() => {
@@ -41,5 +41,5 @@ test('A hover on the component should fire the callback', async() => {
     const item = screen.queryByRole('listitem');
     await userEvent.hover(item);
 
-    expect(requestFocusSpy).toBeCalled();
+    expect(requestFocusSpy).toHaveBeenCalled();
 });

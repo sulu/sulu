@@ -34,7 +34,7 @@ test('Should not create a ResourceStore before overlay was opened', () => {
         />
     );
 
-    expect(resourceStore.clone).not.toBeCalled();
+    expect(resourceStore.clone).not.toHaveBeenCalled();
 });
 
 test('Should select the middle by default', () => {
@@ -104,7 +104,7 @@ test('Closing the overlay should call the onClose callback', () => {
 
     focusPointOverlay.find('Overlay').prop('onClose')();
 
-    expect(closeSpy).toBeCalledWith();
+    expect(closeSpy).toHaveBeenCalledWith();
 });
 
 test('Should save the focus point when confirm button is clicked', () => {
@@ -138,13 +138,13 @@ test('Should save the focus point when confirm button is clicked', () => {
 
     const clonedResourceStore = focusPointOverlay.instance().resourceStore;
 
-    expect(clonedResourceStore.change).toBeCalledWith('focusPointX', 0);
-    expect(clonedResourceStore.change).toBeCalledWith('focusPointY', 2);
-    expect(clonedResourceStore.save).toBeCalledWith();
+    expect(clonedResourceStore.change).toHaveBeenCalledWith('focusPointX', 0);
+    expect(clonedResourceStore.change).toHaveBeenCalledWith('focusPointY', 2);
+    expect(clonedResourceStore.save).toHaveBeenCalledWith();
 
     return savePromise.then(() => {
-        expect(resourceStore.set).toBeCalledWith('focusPointX', 0);
-        expect(resourceStore.set).toBeCalledWith('focusPointY', 2);
-        expect(confirmSpy).toBeCalled();
+        expect(resourceStore.set).toHaveBeenCalledWith('focusPointX', 0);
+        expect(resourceStore.set).toHaveBeenCalledWith('focusPointY', 2);
+        expect(confirmSpy).toHaveBeenCalled();
     });
 });

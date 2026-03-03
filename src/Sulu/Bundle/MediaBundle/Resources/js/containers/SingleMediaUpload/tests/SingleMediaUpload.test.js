@@ -195,10 +195,10 @@ test('Call update on MediaUploadStore if id is given and drop event occurs', () 
     const file = {name: 'test.jpg'};
     singleMediaUpload.find('SingleMediaDropzone').prop('onDrop')(file);
 
-    expect(mediaUploadStore.update).toBeCalledWith(file);
+    expect(mediaUploadStore.update).toHaveBeenCalledWith(file);
 
     return promise.then(() => {
-        expect(uploadCompleteSpy).toBeCalledWith({});
+        expect(uploadCompleteSpy).toHaveBeenCalledWith({});
     });
 });
 
@@ -224,10 +224,10 @@ test('Call create with passed collectionId if id is not given and drop event occ
     const file = {name: 'test.jpg'};
     singleMediaUpload.find('SingleMediaDropzone').prop('onDrop')(file);
 
-    expect(mediaUploadStore.create).toBeCalledWith(7, file);
+    expect(mediaUploadStore.create).toHaveBeenCalledWith(7, file);
 
     return promise.then(() => {
-        expect(uploadCompleteSpy).toBeCalledWith({});
+        expect(uploadCompleteSpy).toHaveBeenCalledWith({});
     });
 });
 
@@ -256,7 +256,7 @@ test('Download the image when the download button is clicked', () => {
     );
 
     singleMediaUpload.find('Button[icon="su-download"]').simulate('click');
-    expect(window.location.assign).toBeCalledWith('test.jpg');
+    expect(window.location.assign).toHaveBeenCalledWith('test.jpg');
 });
 
 test('Delete the image when the delete button is clicked and the overlay is confirmed', () => {
@@ -291,12 +291,12 @@ test('Delete the image when the delete button is clicked and the overlay is conf
 
     singleMediaUpload.find('Dialog').prop('onConfirm')();
 
-    expect(mediaUploadStore.delete).toBeCalled();
+    expect(mediaUploadStore.delete).toHaveBeenCalled();
     singleMediaUpload.update();
     expect(singleMediaUpload.find('Dialog').prop('confirmLoading')).toEqual(true);
 
     return deletePromise.then(() => {
-        expect(uploadCompleteSpy).toBeCalled();
+        expect(uploadCompleteSpy).toHaveBeenCalled();
         singleMediaUpload.update();
         expect(singleMediaUpload.find('Dialog').prop('open')).toEqual(false);
         expect(singleMediaUpload.find('Dialog').prop('confirmLoading')).toEqual(false);
