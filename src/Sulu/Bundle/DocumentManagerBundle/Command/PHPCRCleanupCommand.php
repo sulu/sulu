@@ -37,6 +37,7 @@ use Webmozart\Assert\Assert;
 class PHPCRCleanupCommand extends Command
 {
     private OutputInterface $logger;
+    private string|false $phpBinary = false;
 
     public function __construct(
         private SessionInterface $liveSession,
@@ -117,14 +118,6 @@ class PHPCRCleanupCommand extends Command
         $io->newLine();
         $io->newLine();
 
-        $wheres = [];
-        foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
-            $wheres[] = \sprintf('(ISDESCENDANTNODE(page, "/cmf/%1$s/contents") OR ISSAMENODE(page, "/cmf/%1$s/contents"))', $webspace->getKey());
-        }
-
-        $wheres[] = 'page.[jcr:path] LIKE "/cmf/snippets/%/%"';
-        $wheres[] = 'page.[jcr:path] LIKE "/cmf/articles/%/%/%"';
-
         $orphanedKeys = $this->getOrphanedWebspaceKeys();
 
         if ([] !== $orphanedKeys) {
@@ -133,6 +126,44 @@ class PHPCRCleanupCommand extends Command
                 \implode(', ', $orphanedKeys),
             ));
         }
+
+        $uuids = $this->collectNodeUuids();
+        $batchSize = (int) $input->getOption('batch-size');
+        $parallelism = (int) $input->getOption('processes');
+        Assert::greaterThan($batchSize, 0, 'Batch size must be greater than 0');
+        Assert::greaterThan($parallelism, 0, 'Number of processes must be greater than 0');
+        /** @var positive-int $batchSize */
+        /** @var positive-int $parallelism */
+        $cleanupResult = $this->runBatchedCleanup($uuids, $dryRun, $debug, $batchSize, $parallelism, $io);
+        $stats = $cleanupResult['stats'];
+        $errorMessages = $cleanupResult['errorMessages'];
+
+        $this->removeStaleRouteTrees($this->getStaleRouteLocales(), $dryRun, $io);
+        $this->removeOrphanedWebspaceTrees($orphanedKeys, $dryRun, $io);
+
+        $io->success('Cleanup process finished');
+
+        $this->printErrors($errorMessages, $io, $output->isVerbose());
+
+        if ($stats['ignoredNodes'] > 0) {
+            $io->note(\sprintf('%d nodes were ignored (no matching structure metadata or locales).', $stats['ignoredNodes']));
+        }
+
+        return self::SUCCESS;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function collectNodeUuids(): array
+    {
+        $wheres = [];
+        foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
+            $wheres[] = \sprintf('(ISDESCENDANTNODE(page, "/cmf/%1$s/contents") OR ISSAMENODE(page, "/cmf/%1$s/contents"))', $webspace->getKey());
+        }
+
+        $wheres[] = 'page.[jcr:path] LIKE "/cmf/snippets/%/%"';
+        $wheres[] = 'page.[jcr:path] LIKE "/cmf/articles/%/%/%"';
 
         $sql2 = \sprintf(
             'SELECT [jcr:uuid] FROM [nt:unstructured] AS page WHERE %s',
@@ -143,65 +174,74 @@ class PHPCRCleanupCommand extends Command
         $rows = $queryManager->createQuery($sql2, 'JCR-SQL2')->execute();
 
         /** @var string[] $uuids */
-        $uuids = \array_map(static fn ($row) => $row->getValue('jcr:uuid'), \iterator_to_array($rows->getRows()));
+        $uuids = [];
+        foreach ($rows->getRows() as $row) {
+            $uuids[] = $row->getValue('jcr:uuid');
+        }
         unset($rows);
 
-        $stats = [
-            'nodes' => 0,
-            'ignoredNodes' => 0,
-            'erroredNodes' => 0,
-            'documents' => 0,
-            'properties' => 0,
-            'removedProperties' => 0,
-            'removedStaleProperties' => 0,
-        ];
+        return $uuids;
+    }
 
-        $errorMessages = [];
-
+    /**
+     * @param string[] $uuids
+     * @param positive-int $batchSize
+     * @param positive-int $parallelism
+     *
+     * @return array{
+     *     stats: array{nodes: int, ignoredNodes: int, erroredNodes: int, documents: int, properties: int, removedProperties: int, removedStaleProperties: int},
+     *     errorMessages: string[]
+     * }
+     */
+    private function runBatchedCleanup(
+        array $uuids,
+        bool $dryRun,
+        bool $debug,
+        int $batchSize,
+        int $parallelism,
+        SymfonyStyle $io,
+    ): array {
         $io->section('Running cleanup process ...');
 
-        $batchSize = (int) $input->getOption('batch-size');
-        $parallelism = (int) $input->getOption('processes');
-        Assert::greaterThan($batchSize, 0, 'Batch size must be greater than 0');
-        Assert::greaterThan($parallelism, 0, 'Number of processes must be greater than 0');
-
+        $stats = $this->createInitialStats();
+        $errorMessages = [];
         $batches = \array_chunk($uuids, $batchSize);
-        $io->writeln(\sprintf('Processing %d nodes in %d batches (%d per batch, %d parallel)', \count($uuids), \count($batches), $batchSize, $parallelism));
+
+        $io->writeln(\sprintf(
+            'Processing %d nodes in %d batches (%d per batch, %d parallel)',
+            \count($uuids),
+            \count($batches),
+            $batchSize,
+            $parallelism,
+        ));
         $io->newLine();
 
-        $progressBar = $io->createProgressBar(\count($uuids));
-        $progressBar->setFormat("Nodes: %nodes%\nIgnored: %ignoredNodes%\nErrored: %erroredNodes%\nDocuments: %documents%\nProperties: %properties%\nRemoved properties: %removedProperties%\nRemoved stale locale properties: %removedStaleProperties%\n\n%current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %memory:6s%\n\n");
-
-        $progressBar->setMessage((string) $stats['nodes'], 'nodes');
-        $progressBar->setMessage((string) $stats['ignoredNodes'], 'ignoredNodes');
-        $progressBar->setMessage((string) $stats['erroredNodes'], 'erroredNodes');
-        $progressBar->setMessage((string) $stats['documents'], 'documents');
-        $progressBar->setMessage((string) $stats['properties'], 'properties');
-        $progressBar->setMessage((string) $stats['removedProperties'], 'removedProperties');
-        $progressBar->setMessage((string) $stats['removedStaleProperties'], 'removedStaleProperties');
-
-        $progressBar->start();
-
+        $progressBar = $this->createCleanupProgressBar($io, \count($uuids), $stats);
         $parallelGroups = \array_chunk($batches, $parallelism);
 
         foreach ($parallelGroups as $group) {
-            $processes = [];
+            /** @var array<int, array{process: Process, batchNodeCount: int}> $batchProcesses */
+            $batchProcesses = [];
 
-            foreach ($group as $index => $batchUuids) {
-                $processes[$index] = $this->createProcess($batchUuids, $dryRun, $debug);
-                $processes[$index]->start();
+            foreach ($group as $batchUuids) {
+                $process = $this->createProcess($batchUuids, $dryRun, $debug);
+                $process->start();
+
+                $batchProcesses[] = [
+                    'process' => $process,
+                    'batchNodeCount' => \count($batchUuids),
+                ];
             }
 
-            foreach ($processes as $index => $process) {
-                $batchUuids = $group[$index];
-                $batchNodeCount = \count($batchUuids);
-
+            foreach ($batchProcesses as $batchProcess) {
+                /** @var Process $process */
+                $process = $batchProcess['process'];
+                $batchNodeCount = $batchProcess['batchNodeCount'];
                 $status = $process->wait();
 
                 if (PHPCRCleanupSingleNodeCommand::IGNORED === $status) {
                     $stats['nodes'] += $batchNodeCount;
                     $stats['ignoredNodes'] += $batchNodeCount;
-
                     $this->updateProgressBar($progressBar, $stats, $batchNodeCount);
 
                     continue;
@@ -209,20 +249,9 @@ class PHPCRCleanupCommand extends Command
 
                 $subCommandOutput = $process->getOutput();
                 $batchStats = $this->parseSubprocessOutput($subCommandOutput);
-                $parsedTotal = $batchStats['nodesProcessed'] + $batchStats['nodesIgnored'] + $batchStats['nodesErrored'];
-
-                if ($parsedTotal > 0) {
-                    $stats['nodes'] += $parsedTotal;
-                    $stats['ignoredNodes'] += $batchStats['nodesIgnored'];
-                    $stats['erroredNodes'] += $batchStats['nodesErrored'];
-                    $stats['documents'] += $batchStats['documents'];
-                    $stats['removedProperties'] += $batchStats['removedProperties'];
-                    $stats['properties'] += $batchStats['properties'];
-                    $stats['removedStaleProperties'] += $batchStats['removedStaleProperties'];
-                } else {
-                    $stats['nodes'] += $batchNodeCount;
-                    $stats['erroredNodes'] += $batchNodeCount;
-                }
+                $batchStatsResult = $this->applyBatchStats($stats, $batchStats, $batchNodeCount);
+                $stats = $batchStatsResult['stats'];
+                $progressAdvance = $batchStatsResult['advance'];
 
                 $stderr = $process->getErrorOutput();
                 if ('' !== $stderr) {
@@ -239,7 +268,7 @@ class PHPCRCleanupCommand extends Command
                     $this->logger->writeln($subCommandOutput);
                 }
 
-                $this->updateProgressBar($progressBar, $stats, $parsedTotal > 0 ? $parsedTotal : $batchNodeCount);
+                $this->updateProgressBar($progressBar, $stats, $progressAdvance);
             }
 
             $this->servicesResetter->reset();
@@ -247,65 +276,149 @@ class PHPCRCleanupCommand extends Command
 
         $progressBar->finish();
 
-        $staleRoutes = $this->getStaleRouteLocales();
-        if ([] !== $staleRoutes) {
-            $io->section('Stale route locales detected');
+        return [
+            'stats' => $stats,
+            'errorMessages' => $errorMessages,
+        ];
+    }
 
-            $routesModified = false;
-            foreach ($staleRoutes as $webspaceKey => $staleLocales) {
-                foreach ($staleLocales as $staleLocale) {
-                    $routePath = \sprintf('/cmf/%s/routes/%s', $webspaceKey, $staleLocale);
-                    $io->writeln(\sprintf('  Stale route tree: %s', $routePath));
+    /**
+     * @param array<string, int> $stats
+     */
+    private function createCleanupProgressBar(SymfonyStyle $io, int $totalNodes, array $stats): ProgressBar
+    {
+        $progressBar = $io->createProgressBar($totalNodes);
+        $progressBar->setFormat("Nodes: %nodes%\nIgnored: %ignoredNodes%\nErrored: %erroredNodes%\nDocuments: %documents%\nProperties: %properties%\nRemoved properties: %removedProperties%\nRemoved stale locale properties: %removedStaleProperties%\n\n%current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %memory:6s%\n\n");
 
-                    if (!$dryRun) {
-                        foreach ([$this->session, $this->liveSession] as $phpcrSession) {
-                            if ($phpcrSession->nodeExists($routePath)) {
-                                $phpcrSession->getNode($routePath)->remove();
-                                $routesModified = true;
-                            }
-                        }
+        $progressBar->setMessage((string) $stats['nodes'], 'nodes');
+        $progressBar->setMessage((string) $stats['ignoredNodes'], 'ignoredNodes');
+        $progressBar->setMessage((string) $stats['erroredNodes'], 'erroredNodes');
+        $progressBar->setMessage((string) $stats['documents'], 'documents');
+        $progressBar->setMessage((string) $stats['properties'], 'properties');
+        $progressBar->setMessage((string) $stats['removedProperties'], 'removedProperties');
+        $progressBar->setMessage((string) $stats['removedStaleProperties'], 'removedStaleProperties');
+        $progressBar->start();
+
+        return $progressBar;
+    }
+
+    /**
+     * @return array{nodes: int, ignoredNodes: int, erroredNodes: int, documents: int, properties: int, removedProperties: int, removedStaleProperties: int}
+     */
+    private function createInitialStats(): array
+    {
+        return [
+            'nodes' => 0,
+            'ignoredNodes' => 0,
+            'erroredNodes' => 0,
+            'documents' => 0,
+            'properties' => 0,
+            'removedProperties' => 0,
+            'removedStaleProperties' => 0,
+        ];
+    }
+
+    /**
+     * @param array{nodes: int, ignoredNodes: int, erroredNodes: int, documents: int, properties: int, removedProperties: int, removedStaleProperties: int} $stats
+     * @param array{nodesProcessed: int, nodesIgnored: int, nodesErrored: int, documents: int, properties: int, removedProperties: int, removedStaleProperties: int} $batchStats
+     *
+     * @return array{
+     *     stats: array{nodes: int, ignoredNodes: int, erroredNodes: int, documents: int, properties: int, removedProperties: int, removedStaleProperties: int},
+     *     advance: int
+     * }
+     */
+    private function applyBatchStats(array $stats, array $batchStats, int $batchNodeCount): array
+    {
+        $parsedTotal = $batchStats['nodesProcessed'] + $batchStats['nodesIgnored'] + $batchStats['nodesErrored'];
+        if ($parsedTotal > 0) {
+            $stats['nodes'] += $parsedTotal;
+            $stats['ignoredNodes'] += $batchStats['nodesIgnored'];
+            $stats['erroredNodes'] += $batchStats['nodesErrored'];
+            $stats['documents'] += $batchStats['documents'];
+            $stats['removedProperties'] += $batchStats['removedProperties'];
+            $stats['properties'] += $batchStats['properties'];
+            $stats['removedStaleProperties'] += $batchStats['removedStaleProperties'];
+
+            return [
+                'stats' => $stats,
+                'advance' => $parsedTotal,
+            ];
+        }
+
+        $stats['nodes'] += $batchNodeCount;
+        $stats['erroredNodes'] += $batchNodeCount;
+
+        return [
+            'stats' => $stats,
+            'advance' => $batchNodeCount,
+        ];
+    }
+
+    /**
+     * @param array<string, string[]> $staleRoutes
+     */
+    private function removeStaleRouteTrees(array $staleRoutes, bool $dryRun, SymfonyStyle $io): void
+    {
+        if ([] === $staleRoutes) {
+            return;
+        }
+
+        $io->section('Stale route locales detected');
+
+        $routesModified = false;
+        foreach ($staleRoutes as $webspaceKey => $staleLocales) {
+            foreach ($staleLocales as $staleLocale) {
+                $routePath = \sprintf('/cmf/%s/routes/%s', $webspaceKey, $staleLocale);
+                $io->writeln(\sprintf('  Stale route tree: %s', $routePath));
+
+                if ($dryRun) {
+                    continue;
+                }
+
+                foreach ($this->getPhpcrSessions() as $phpcrSession) {
+                    if ($phpcrSession->nodeExists($routePath)) {
+                        $phpcrSession->getNode($routePath)->remove();
+                        $routesModified = true;
                     }
                 }
             }
-
-            if (!$dryRun && $routesModified) {
-                $this->session->save();
-                $this->liveSession->save();
-            }
         }
 
-        if ([] !== $orphanedKeys) {
-            $io->section('Removing orphaned webspace trees');
+        if (!$dryRun && $routesModified) {
+            $this->savePhpcrSessions();
+        }
+    }
 
-            $orphanedModified = false;
-            foreach ($orphanedKeys as $orphanedKey) {
-                $webspacePath = \sprintf('/cmf/%s', $orphanedKey);
-                foreach ([$this->session, $this->liveSession] as $phpcrSession) {
-                    if ($phpcrSession->nodeExists($webspacePath)) {
-                        $io->writeln(\sprintf('  Removing orphaned webspace tree: %s', $webspacePath));
-                        if (!$dryRun) {
-                            $phpcrSession->getNode($webspacePath)->remove();
-                            $orphanedModified = true;
-                        }
-                    }
+    /**
+     * @param string[] $orphanedKeys
+     */
+    private function removeOrphanedWebspaceTrees(array $orphanedKeys, bool $dryRun, SymfonyStyle $io): void
+    {
+        if ([] === $orphanedKeys) {
+            return;
+        }
+
+        $io->section('Removing orphaned webspace trees');
+
+        $orphanedModified = false;
+        foreach ($orphanedKeys as $orphanedKey) {
+            $webspacePath = \sprintf('/cmf/%s', $orphanedKey);
+            foreach ($this->getPhpcrSessions() as $phpcrSession) {
+                if (!$phpcrSession->nodeExists($webspacePath)) {
+                    continue;
+                }
+
+                $io->writeln(\sprintf('  Removing orphaned webspace tree: %s', $webspacePath));
+                if (!$dryRun) {
+                    $phpcrSession->getNode($webspacePath)->remove();
+                    $orphanedModified = true;
                 }
             }
-
-            if (!$dryRun && $orphanedModified) {
-                $this->session->save();
-                $this->liveSession->save();
-            }
         }
 
-        $io->success('Cleanup process finished');
-
-        $this->printErrors($errorMessages, $io, $output->isVerbose());
-
-        if ($stats['ignoredNodes'] > 0) {
-            $io->note(\sprintf('%d nodes were ignored (no matching structure metadata or locales).', $stats['ignoredNodes']));
+        if (!$dryRun && $orphanedModified) {
+            $this->savePhpcrSessions();
         }
-
-        return self::SUCCESS;
     }
 
     /**
@@ -313,14 +426,15 @@ class PHPCRCleanupCommand extends Command
      */
     protected function createProcess(array $uuids, bool $dryRun, bool $debug): Process
     {
-        $executableFinder = new PhpExecutableFinder();
-        $php = $executableFinder->find(false);
-
-        if (false === $php) {
-            throw new \RuntimeException('Could not find PHP executable.');
+        if (false === $this->phpBinary) {
+            $php = (new PhpExecutableFinder())->find(false);
+            if (false === $php) {
+                throw new \RuntimeException('Could not find PHP executable.');
+            }
+            $this->phpBinary = $php;
         }
 
-        $args = [$php, $_SERVER['argv'][0], PHPCRCleanupSingleNodeCommand::getDefaultName()];
+        $args = [$this->phpBinary, $_SERVER['argv'][0], PHPCRCleanupSingleNodeCommand::getDefaultName()];
         $args = \array_merge($args, $uuids);
 
         if ($dryRun) {
@@ -350,15 +464,7 @@ class PHPCRCleanupCommand extends Command
             }
         }
 
-        return [
-            'nodesProcessed' => 0,
-            'nodesIgnored' => 0,
-            'nodesErrored' => 0,
-            'documents' => 0,
-            'properties' => 0,
-            'removedProperties' => 0,
-            'removedStaleProperties' => 0,
-        ];
+        return PHPCRCleanupSingleNodeCommand::createEmptyBatchStats();
     }
 
     /**
@@ -368,7 +474,7 @@ class PHPCRCleanupCommand extends Command
      */
     public function getOrphanedWebspaceKeys(): array
     {
-        if (!$this->session->nodeExists('/cmf')) {
+        if (!$this->session->nodeExists('/cmf') && !$this->liveSession->nodeExists('/cmf')) {
             return [];
         }
 
@@ -378,17 +484,41 @@ class PHPCRCleanupCommand extends Command
         }
 
         $reservedKeys = ['snippets', 'articles'];
+        $orphanedKeys = [];
+        foreach ($this->getPhpcrSessions() as $session) {
+            foreach ($this->getOrphanedWebspaceKeysForSession($session, $configuredKeys, $reservedKeys) as $key) {
+                $orphanedKeys[$key] = true;
+            }
+        }
+
+        return \array_keys($orphanedKeys);
+    }
+
+    /**
+     * @param string[] $configuredKeys
+     * @param string[] $reservedKeys
+     *
+     * @return string[]
+     */
+    private function getOrphanedWebspaceKeysForSession(
+        SessionInterface $session,
+        array $configuredKeys,
+        array $reservedKeys,
+    ): array {
+        if (!$session->nodeExists('/cmf')) {
+            return [];
+        }
 
         $orphanedKeys = [];
-        $cmfNode = $this->session->getNode('/cmf');
+        $cmfNode = $session->getNode('/cmf');
         foreach ($cmfNode->getNodes() as $childNode) {
             $name = $childNode->getName();
             if (\in_array($name, $configuredKeys, true) || \in_array($name, $reservedKeys, true)) {
                 continue;
             }
 
-            // Only treat as orphaned webspace if it has a 'contents' child node (webspace structure)
-            if (!$childNode->hasNode('contents')) {
+            // Only treat as orphaned webspace if it has a webspace-like structure.
+            if (!$childNode->hasNode('contents') && !$childNode->hasNode('routes')) {
                 continue;
             }
 
@@ -406,16 +536,54 @@ class PHPCRCleanupCommand extends Command
     public function getStaleRouteLocales(): array
     {
         $localesByWebspace = $this->webspaceManager->getAllLocalesByWebspaces();
+        $staleRoutesByWebspace = [];
+        foreach ($this->getPhpcrSessions() as $session) {
+            foreach ($this->getStaleRouteLocalesForSession($session, $localesByWebspace) as $webspaceKey => $staleLocales) {
+                foreach ($staleLocales as $staleLocale) {
+                    $staleRoutesByWebspace[$webspaceKey][$staleLocale] = true;
+                }
+            }
+        }
+
+        $staleRoutes = [];
+        foreach ($staleRoutesByWebspace as $webspaceKey => $staleLocalesMap) {
+            $staleRoutes[$webspaceKey] = \array_keys($staleLocalesMap);
+        }
+
+        return $staleRoutes;
+    }
+
+    /**
+     * @return SessionInterface[]
+     */
+    private function getPhpcrSessions(): array
+    {
+        return [$this->session, $this->liveSession];
+    }
+
+    private function savePhpcrSessions(): void
+    {
+        $this->session->save();
+        $this->liveSession->save();
+    }
+
+    /**
+     * @param array<string, array<string, mixed>> $localesByWebspace
+     *
+     * @return array<string, string[]>
+     */
+    private function getStaleRouteLocalesForSession(SessionInterface $session, array $localesByWebspace): array
+    {
         $staleRoutes = [];
 
         foreach ($localesByWebspace as $webspaceKey => $locales) {
             $routesPath = \sprintf('/cmf/%s/routes', $webspaceKey);
 
-            if (!$this->session->nodeExists($routesPath)) {
+            if (!$session->nodeExists($routesPath)) {
                 continue;
             }
 
-            $routesNode = $this->session->getNode($routesPath);
+            $routesNode = $session->getNode($routesPath);
             $configuredLocales = \array_keys($locales);
 
             foreach ($routesNode->getNodes() as $localeNode) {

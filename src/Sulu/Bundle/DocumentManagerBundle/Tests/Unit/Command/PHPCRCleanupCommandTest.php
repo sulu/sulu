@@ -55,14 +55,10 @@ class PHPCRCleanupCommandTest extends TestCase
 
     public function testGetOrphanedWebspaceKeys(): void
     {
-        $webspace = new Webspace();
-        $webspace->setKey('sulu_io');
-
-        $collection = new WebspaceCollection();
-        $collection->setWebspaces(['sulu_io' => $webspace]);
-        $this->webspaceManager->getWebspaceCollection()->willReturn($collection);
+        $this->configureSuluIoWebspaceCollection();
 
         $this->session->nodeExists('/cmf')->willReturn(true);
+        $this->liveSession->nodeExists('/cmf')->willReturn(false);
         $cmfNode = $this->prophesize(NodeInterface::class);
         $this->session->getNode('/cmf')->willReturn($cmfNode->reveal());
 
@@ -91,16 +87,65 @@ class PHPCRCleanupCommandTest extends TestCase
         $this->assertSame(['old_webspace'], $result);
     }
 
-    public function testGetOrphanedWebspaceKeysNoneOrphaned(): void
+    public function testGetOrphanedWebspaceKeysIncludesLiveOnlyOrphans(): void
     {
-        $webspace = new Webspace();
-        $webspace->setKey('sulu_io');
+        $this->configureSuluIoWebspaceCollection();
 
-        $collection = new WebspaceCollection();
-        $collection->setWebspaces(['sulu_io' => $webspace]);
-        $this->webspaceManager->getWebspaceCollection()->willReturn($collection);
+        $this->session->nodeExists('/cmf')->willReturn(false);
+        $this->liveSession->nodeExists('/cmf')->willReturn(true);
+        $cmfNode = $this->prophesize(NodeInterface::class);
+        $this->liveSession->getNode('/cmf')->willReturn($cmfNode->reveal());
+
+        $suluIoNode = $this->prophesize(NodeInterface::class);
+        $suluIoNode->getName()->willReturn('sulu_io');
+
+        $removedNode = $this->prophesize(NodeInterface::class);
+        $removedNode->getName()->willReturn('old_webspace');
+        $removedNode->hasNode('contents')->willReturn(true);
+
+        $cmfNode->getNodes()->willReturn([
+            $suluIoNode->reveal(),
+            $removedNode->reveal(),
+        ]);
+
+        $result = $this->command->getOrphanedWebspaceKeys();
+
+        $this->assertSame(['old_webspace'], $result);
+    }
+
+    public function testGetOrphanedWebspaceKeysDetectsRoutesOnlyTree(): void
+    {
+        $this->configureSuluIoWebspaceCollection();
 
         $this->session->nodeExists('/cmf')->willReturn(true);
+        $this->liveSession->nodeExists('/cmf')->willReturn(false);
+        $cmfNode = $this->prophesize(NodeInterface::class);
+        $this->session->getNode('/cmf')->willReturn($cmfNode->reveal());
+
+        $suluIoNode = $this->prophesize(NodeInterface::class);
+        $suluIoNode->getName()->willReturn('sulu_io');
+
+        $removedNode = $this->prophesize(NodeInterface::class);
+        $removedNode->getName()->willReturn('old_webspace');
+        $removedNode->hasNode('contents')->willReturn(false);
+        $removedNode->hasNode('routes')->willReturn(true);
+
+        $cmfNode->getNodes()->willReturn([
+            $suluIoNode->reveal(),
+            $removedNode->reveal(),
+        ]);
+
+        $result = $this->command->getOrphanedWebspaceKeys();
+
+        $this->assertSame(['old_webspace'], $result);
+    }
+
+    public function testGetOrphanedWebspaceKeysNoneOrphaned(): void
+    {
+        $this->configureSuluIoWebspaceCollection();
+
+        $this->session->nodeExists('/cmf')->willReturn(true);
+        $this->liveSession->nodeExists('/cmf')->willReturn(false);
         $cmfNode = $this->prophesize(NodeInterface::class);
         $this->session->getNode('/cmf')->willReturn($cmfNode->reveal());
 
@@ -122,24 +167,21 @@ class PHPCRCleanupCommandTest extends TestCase
 
     public function testGetOrphanedWebspaceKeysSkipsNonWebspaceNodes(): void
     {
-        $webspace = new Webspace();
-        $webspace->setKey('sulu_io');
-
-        $collection = new WebspaceCollection();
-        $collection->setWebspaces(['sulu_io' => $webspace]);
-        $this->webspaceManager->getWebspaceCollection()->willReturn($collection);
+        $this->configureSuluIoWebspaceCollection();
 
         $this->session->nodeExists('/cmf')->willReturn(true);
+        $this->liveSession->nodeExists('/cmf')->willReturn(false);
         $cmfNode = $this->prophesize(NodeInterface::class);
         $this->session->getNode('/cmf')->willReturn($cmfNode->reveal());
 
         $suluIoNode = $this->prophesize(NodeInterface::class);
         $suluIoNode->getName()->willReturn('sulu_io');
 
-        // Unknown node without 'contents' child should NOT be treated as orphaned webspace
+        // Unknown node without 'contents' or 'routes' child should NOT be treated as orphaned webspace
         $customNode = $this->prophesize(NodeInterface::class);
         $customNode->getName()->willReturn('custom_data');
         $customNode->hasNode('contents')->willReturn(false);
+        $customNode->hasNode('routes')->willReturn(false);
 
         $cmfNode->getNodes()->willReturn([
             $suluIoNode->reveal(),
@@ -154,6 +196,7 @@ class PHPCRCleanupCommandTest extends TestCase
     public function testGetOrphanedWebspaceKeysNoCmfNode(): void
     {
         $this->session->nodeExists('/cmf')->willReturn(false);
+        $this->liveSession->nodeExists('/cmf')->willReturn(false);
 
         $result = $this->command->getOrphanedWebspaceKeys();
 
@@ -162,21 +205,16 @@ class PHPCRCleanupCommandTest extends TestCase
 
     public function testGetStaleRouteLocales(): void
     {
-        $webspace = new Webspace();
-        $webspace->setKey('sulu_io');
         $deLocalization = new Localization('de');
         $enLocalization = new Localization('en');
-        $webspace->setLocalizations([$deLocalization, $enLocalization]);
-
-        $collection = new WebspaceCollection();
-        $collection->setWebspaces(['sulu_io' => $webspace]);
-        $this->webspaceManager->getWebspaceCollection()->willReturn($collection);
+        $this->configureSuluIoWebspaceCollection([$deLocalization, $enLocalization]);
         $this->webspaceManager->getAllLocalesByWebspaces()->willReturn([
             'sulu_io' => ['de' => $deLocalization, 'en' => $enLocalization],
         ]);
 
         $routesNode = $this->prophesize(NodeInterface::class);
         $this->session->nodeExists('/cmf/sulu_io/routes')->willReturn(true);
+        $this->liveSession->nodeExists('/cmf/sulu_io/routes')->willReturn(false);
         $this->session->getNode('/cmf/sulu_io/routes')->willReturn($routesNode->reveal());
 
         $deNode = $this->prophesize(NodeInterface::class);
@@ -197,5 +235,52 @@ class PHPCRCleanupCommandTest extends TestCase
         $result = $this->command->getStaleRouteLocales();
 
         $this->assertSame(['sulu_io' => ['fr']], $result);
+    }
+
+    public function testGetStaleRouteLocalesIncludesLiveOnlyRoutes(): void
+    {
+        $deLocalization = new Localization('de');
+        $enLocalization = new Localization('en');
+        $this->configureSuluIoWebspaceCollection([$deLocalization, $enLocalization]);
+        $this->webspaceManager->getAllLocalesByWebspaces()->willReturn([
+            'sulu_io' => ['de' => $deLocalization, 'en' => $enLocalization],
+        ]);
+
+        $this->session->nodeExists('/cmf/sulu_io/routes')->willReturn(false);
+        $this->liveSession->nodeExists('/cmf/sulu_io/routes')->willReturn(true);
+
+        $routesNode = $this->prophesize(NodeInterface::class);
+        $this->liveSession->getNode('/cmf/sulu_io/routes')->willReturn($routesNode->reveal());
+
+        $deNode = $this->prophesize(NodeInterface::class);
+        $deNode->getName()->willReturn('de');
+
+        $frNode = $this->prophesize(NodeInterface::class);
+        $frNode->getName()->willReturn('fr');
+
+        $routesNode->getNodes()->willReturn([
+            $deNode->reveal(),
+            $frNode->reveal(),
+        ]);
+
+        $result = $this->command->getStaleRouteLocales();
+
+        $this->assertSame(['sulu_io' => ['fr']], $result);
+    }
+
+    /**
+     * @param Localization[] $localizations
+     */
+    private function configureSuluIoWebspaceCollection(array $localizations = []): void
+    {
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+        if ([] !== $localizations) {
+            $webspace->setLocalizations($localizations);
+        }
+
+        $collection = new WebspaceCollection();
+        $collection->setWebspaces(['sulu_io' => $webspace]);
+        $this->webspaceManager->getWebspaceCollection()->willReturn($collection);
     }
 }

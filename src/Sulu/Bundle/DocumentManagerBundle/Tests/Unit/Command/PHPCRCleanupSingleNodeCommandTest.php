@@ -14,17 +14,23 @@ declare(strict_types=1);
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Command;
 
 use PHPCR\NodeInterface;
+use PHPCR\NodeType\NodeTypeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
+use PHPCR\WorkspaceInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Command\PHPCRCleanupSingleNodeCommand;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class PHPCRCleanupSingleNodeCommandTest extends TestCase
@@ -55,7 +61,12 @@ class PHPCRCleanupSingleNodeCommandTest extends TestCase
         $this->namespaceRegistry = $this->prophesize(NamespaceRegistry::class);
         $this->namespaceRegistry->getPrefix('system_localized')->willReturn('i18n');
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $this->eventDispatcher->dispatch(Argument::type('object'), Argument::type('string'))
+            ->will(function(array $arguments) {
+                return $arguments[0];
+            });
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $this->documentManager->clear()->willReturn(null);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
 
         $this->command = new PHPCRCleanupSingleNodeCommand(
@@ -181,6 +192,28 @@ class PHPCRCleanupSingleNodeCommandTest extends TestCase
         $this->assertSame(0, $count);
     }
 
+    public function testRemoveStaleLocalePropertiesReadsPropertyNameOncePerProperty(): void
+    {
+        $node = $this->prophesize(NodeInterface::class);
+
+        $nonStaleProperty = $this->prophesize(PropertyInterface::class);
+        $nonStaleProperty->getName()->willReturn('i18n:de-template')->shouldBeCalledOnce();
+        $nonStaleProperty->remove()->shouldNotBeCalled();
+
+        $staleProperty = $this->prophesize(PropertyInterface::class);
+        $staleProperty->getName()->willReturn('i18n:fr-template')->shouldBeCalledOnce();
+        $staleProperty->remove()->shouldBeCalledOnce();
+
+        $node->getProperties()->willReturn([
+            $nonStaleProperty->reveal(),
+            $staleProperty->reveal(),
+        ]);
+
+        $count = $this->command->removeStaleLocaleProperties($node->reveal(), ['fr', 'it'], false);
+
+        $this->assertSame(1, $count);
+    }
+
     public function testCleanInvalidShadowReferences(): void
     {
         $node = $this->prophesize(NodeInterface::class);
@@ -232,5 +265,71 @@ class PHPCRCleanupSingleNodeCommandTest extends TestCase
         $result = $this->command->cleanInvalidShadowReferences($node->reveal(), ['en', 'de'], false);
 
         $this->assertSame(0, $result);
+    }
+
+    public function testExecuteUsesConfiguredLocalesForShadowValidation(): void
+    {
+        $node = $this->prophesize(NodeInterface::class);
+        $node->getPath()->willReturn('/cmf/sulu_io/contents/page-1');
+
+        $nodeType = $this->prophesize(NodeTypeInterface::class);
+        $nodeType->getName()->willReturn('sulu:page');
+        $node->getMixinNodeTypes()->willReturn([$nodeType->reveal()]);
+
+        $templateProperty = $this->prophesize(PropertyInterface::class);
+        $templateProperty->getName()->willReturn('i18n:en-template');
+        $node->getProperties()->willReturn([$templateProperty->reveal()]);
+
+        $this->session->getNodeByIdentifier('uuid-1')->willReturn($node->reveal());
+
+        $workspace = $this->prophesize(WorkspaceInterface::class);
+        $workspace->getName()->willReturn('default');
+        $this->session->getWorkspace()->willReturn($workspace->reveal());
+        $node->getSession()->willReturn($this->session->reveal());
+
+        $this->structureMetadataFactory->hasStructuresFor('page')->willReturn(true);
+        $this->webspaceManager->getAllLocalesByWebspaces()->willReturn([
+            'sulu_io' => ['en' => new Localization('en'), 'de' => new Localization('de')],
+        ]);
+
+        $document = new class() implements UuidBehavior {
+            public function getUuid()
+            {
+                return 'uuid-1';
+            }
+        };
+        $this->documentManager->find('uuid-1', 'en')->willReturn($document);
+
+        $command = new class(
+            $this->liveSession->reveal(),
+            $this->session->reveal(),
+            $this->structureMetadataFactory->reveal(),
+            $this->namespaceRegistry->reveal(),
+            $this->eventDispatcher->reveal(),
+            $this->documentManager->reveal(),
+            [['phpcr_type' => 'sulu:page', 'alias' => 'page']],
+            $this->webspaceManager->reveal(),
+        ) extends PHPCRCleanupSingleNodeCommand {
+            /** @var string[][] */
+            public array $shadowValidationLocales = [];
+
+            /**
+             * @param string[] $validLocales
+             */
+            public function cleanInvalidShadowReferences(NodeInterface $node, array $validLocales, bool $dryRun): int
+            {
+                $this->shadowValidationLocales[] = $validLocales;
+
+                return 0;
+            }
+        };
+
+        $result = $command->run(new ArrayInput([
+            'node' => ['uuid-1'],
+            '--dry-run' => true,
+        ]), new BufferedOutput());
+
+        $this->assertSame(0, $result);
+        $this->assertSame([['en', 'de']], $command->shadowValidationLocales);
     }
 }
