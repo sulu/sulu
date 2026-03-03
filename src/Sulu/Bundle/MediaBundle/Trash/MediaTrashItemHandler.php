@@ -98,7 +98,7 @@ final class MediaTrashItemHandler implements
 
                 try {
                     $trashStorageOptions = $this->storage->move($fileVersion->getStorageOptions(), $trashStorageOptions);
-                } catch (\League\Flysystem\FileNotFoundException $e) {
+                } catch (\Exception $e) {
                     throw new SuluFileNotFoundException($media->getId());
                 }
 
