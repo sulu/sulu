@@ -36,7 +36,6 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
-use Sulu\Bundle\MediaBundle\Media\Exception\FileNotFoundException as SuluFileNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
@@ -55,7 +54,6 @@ use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
-use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -634,16 +632,14 @@ class MediaManager implements MediaManagerInterface
 
     /**
      * @throws MediaNotFoundException
-     * @throws SuluFileNotFoundException
      */
-    public function delete($id, $checkSecurity = false, bool $force = false)
+    public function delete($id, $checkSecurity = false)
     {
         $mediaEntity = $this->getEntityById($id);
 
         $defaultFileVersionMeta = $this->getDefaultFileVersionMeta($mediaEntity);
         $mediaTitle = $defaultFileVersionMeta ? $defaultFileVersionMeta->getTitle() : null;
         $locale = $defaultFileVersionMeta ? $defaultFileVersionMeta->getLocale() : null;
-        $collectionId = $mediaEntity->getCollection()->getId();
 
         if ($checkSecurity) {
             $this->securityChecker->checkPermission(
@@ -657,11 +653,19 @@ class MediaManager implements MediaManagerInterface
             );
         }
 
-        $mediaEvent = !$force ? new MediaRemovedEvent($mediaEntity->getId(), $mediaEntity->getCollection()->getId(), $mediaTitle, $locale) : new MediaRemovedNoTrashEvent($mediaEntity->getId(), $mediaEntity->getCollection()->getId(), $mediaTitle, $locale);
-
-        if (null !== $this->trashManager && !$force) {
-            $this->trashManager->store(MediaInterface::RESOURCE_KEY, $mediaEntity);
+        $trashStored = false;
+        if (null !== $this->trashManager) {
+            try {
+                $this->trashManager->store(MediaInterface::RESOURCE_KEY, $mediaEntity);
+                $trashStored = true;
+            } catch (\Exception $e) {
+                // Trash storage failed (e.g. physical file missing), continue with deletion
+            }
         }
+
+        $mediaEvent = $trashStored
+            ? new MediaRemovedEvent($mediaEntity->getId(), $mediaEntity->getCollection()->getId(), $mediaTitle, $locale)
+            : new MediaRemovedNoTrashEvent($mediaEntity->getId(), $mediaEntity->getCollection()->getId(), $mediaTitle, $locale);
 
         /** @var File $file */
         foreach ($mediaEntity->getFiles() as $file) {

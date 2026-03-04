@@ -16,8 +16,7 @@ import {translate} from '../../utils';
 import DeleteReferencedResourceDialog from '../DeleteReferencedResourceDialog';
 import DeleteDependantResourcesDialog from '../DeleteDependantResourcesDialog';
 import {ERROR_CODE_DEPENDANT_RESOURCES_FOUND,
-    ERROR_CODE_REFERENCING_RESOURCES_FOUND,
-    EXCEPTION_CODE_MEDIA_NOT_FOUND} from '../../constants';
+    ERROR_CODE_REFERENCING_RESOURCES_FOUND} from '../../constants';
 import ListStore from './stores/ListStore';
 import listAdapterRegistry from './registries/listAdapterRegistry';
 import AbstractAdapter from './adapters/AbstractAdapter';
@@ -39,7 +38,7 @@ import type {
 } from './types';
 import type {Node} from 'react';
 import type {IValueWillChange} from 'mobx/lib/mobx';
-import type {ReferencingResourcesData, DependantResourcesData, MediaNotFoundData} from '../../types';
+import type {ReferencingResourcesData, DependantResourcesData} from '../../types';
 
 type Props = {|
     actions: Array<ActionConfig>,
@@ -100,7 +99,6 @@ class List extends React.Component<Props> {
     @observable columnOptionsOpen: boolean = false;
     @observable referencingResourcesData: ?ReferencingResourcesData = undefined;
     @observable dependantResourcesData: ?DependantResourcesData = undefined;
-    @observable mediaNotFoundData: ?MediaNotFoundData = undefined;
     @observable movingRestrictedTarget: ?Object = undefined;
     resolveCopy: ?(ResolveCopyArgument) => void;
     resolveDelete: ?(ResolveDeleteArgument) => void;
@@ -254,7 +252,6 @@ class List extends React.Component<Props> {
         this.showDeleteSelectionDialog = false;
         this.referencingResourcesData = undefined;
         this.dependantResourcesData = undefined;
-        this.mediaNotFoundData = undefined;
     };
 
     @action handleDeleteResponseError = (response: Object) => {
@@ -311,22 +308,6 @@ class List extends React.Component<Props> {
                     this.props.store.delete(data.resource.id)
                         .then(this.closeAllDialogs)
                         .catch(this.handleDeleteResponseError);
-                }));
-
-                return;
-            }
-
-            if (response.status === 410 && data.code === EXCEPTION_CODE_MEDIA_NOT_FOUND) {
-                this.mediaNotFoundData = {
-                    resource: data.resource,
-                };
-
-                const promise: Promise<ResolveDeleteArgument> = new Promise(
-                    (resolve) => this.resolveDelete = resolve
-                );
-
-                promise.then(action(() => {
-                    this.closeAllDialogs();
                 }));
 
                 return;
@@ -618,26 +599,6 @@ class List extends React.Component<Props> {
         );
     }
 
-    renderDeleteMediaNotFoundDialog() {
-        if (!this.mediaNotFoundData) {
-            return null;
-        }
-
-        return (
-            <Dialog
-                cancelText={translate('sulu_admin.cancel')}
-                confirmLoading={false}
-                confirmText={translate('sulu_admin.ok')}
-                onCancel={this.handleDeleteDialogCancelClick}
-                onConfirm={this.handleDeleteDialogCancelClick}
-                open={true}
-                title={translate('sulu_admin.force_delete_media_not_found_title')}
-            >
-                {translate('sulu_admin.multiple_force_delete_media_not_found_text')}
-            </Dialog>
-        );
-    }
-
     render() {
         const {
             actions,
@@ -821,7 +782,6 @@ class List extends React.Component<Props> {
                         </Dialog>
                         {this.renderDeleteReferencedResourceDialog()}
                         {this.renderDeleteDependantResourcesDialog()}
-                        {this.renderDeleteMediaNotFoundDialog()}
                     </Fragment>
                 }
                 {movable &&

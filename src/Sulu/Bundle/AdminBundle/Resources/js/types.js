@@ -23,10 +23,6 @@ export type DependantResourcesData = {
     title: string,
 };
 
-export type MediaNotFoundData = {
-    resource: Resource,
-};
-
 export type ReferencingResourcesData = {
     referencingResources: Resource[],
     referencingResourcesCount: number,
