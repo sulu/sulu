@@ -32,6 +32,9 @@ exports[`Should not render fields when the schema contains a visibleCondition ev
           </div>
         </div>
         <div
+          class="descriptionLabel"
+        />
+        <div
           class="errorLabel"
         />
       </div>
@@ -60,6 +63,9 @@ exports[`Should not render fields when the schema contains a visibleCondition ev
           />
         </div>
       </div>
+      <div
+        class="descriptionLabel"
+      />
       <div
         class="errorLabel"
       />
@@ -96,6 +102,9 @@ exports[`Should render field types based on schema 1`] = `
         </div>
       </div>
       <div
+        class="descriptionLabel"
+      />
+      <div
         class="errorLabel"
       />
     </div>
@@ -123,6 +132,9 @@ exports[`Should render field types based on schema 1`] = `
           />
         </div>
       </div>
+      <div
+        class="descriptionLabel"
+      />
       <div
         class="errorLabel"
       />
@@ -160,6 +172,9 @@ exports[`Should render nested field types with based on schema 1`] = `
         </div>
       </div>
       <div
+        class="descriptionLabel"
+      />
+      <div
         class="errorLabel"
       />
     </div>
@@ -188,6 +203,9 @@ exports[`Should render nested field types with based on schema 1`] = `
           />
         </div>
       </div>
+      <div
+        class="descriptionLabel"
+      />
       <div
         class="errorLabel"
       />
@@ -235,6 +253,9 @@ exports[`Should render nested sections 1`] = `
             />
           </div>
         </div>
+        <div
+          class="descriptionLabel"
+        />
         <div
           class="errorLabel"
         />
@@ -290,6 +311,9 @@ exports[`Should render nested sections 1`] = `
           </div>
         </div>
         <div
+          class="descriptionLabel"
+        />
+        <div
           class="errorLabel"
         />
       </div>
@@ -338,6 +362,9 @@ exports[`Should render sections with colSpan 1`] = `
           </div>
         </div>
         <div
+          class="descriptionLabel"
+        />
+        <div
           class="errorLabel"
         />
       </div>
@@ -378,6 +405,9 @@ exports[`Should render sections with colSpan 1`] = `
             />
           </div>
         </div>
+        <div
+          class="descriptionLabel"
+        />
         <div
           class="errorLabel"
         />
@@ -418,6 +448,9 @@ exports[`Should render sections without label 1`] = `
           </div>
         </div>
         <div
+          class="descriptionLabel"
+        />
+        <div
           class="errorLabel"
         />
       </div>
@@ -458,6 +491,9 @@ exports[`Should render sections without label 1`] = `
             />
           </div>
         </div>
+        <div
+          class="descriptionLabel"
+        />
         <div
           class="errorLabel"
         />

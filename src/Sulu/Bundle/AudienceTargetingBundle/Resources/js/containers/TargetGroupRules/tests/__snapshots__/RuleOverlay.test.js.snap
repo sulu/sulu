@@ -58,6 +58,9 @@ Array [
                     />
                   </div>
                   <div
+                    class="descriptionLabel"
+                  />
+                  <div
                     class="errorLabel"
                   />
                 </div>
@@ -112,6 +115,9 @@ Array [
                       />
                     </button>
                   </div>
+                  <div
+                    class="descriptionLabel"
+                  />
                   <div
                     class="errorLabel"
                   />

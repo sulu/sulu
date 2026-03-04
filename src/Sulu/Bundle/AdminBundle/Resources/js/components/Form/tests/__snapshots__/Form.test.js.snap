@@ -18,6 +18,9 @@ exports[`Render a form 1`] = `
         </label>
         Test 1
         <div
+          class="descriptionLabel"
+        />
+        <div
           class="errorLabel"
         />
       </div>
@@ -34,6 +37,9 @@ exports[`Render a form 1`] = `
           Test1
         </label>
         Test 2
+        <div
+          class="descriptionLabel"
+        />
         <div
           class="errorLabel"
         />

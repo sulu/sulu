@@ -115,6 +115,9 @@ Array [
                   </div>
                 </div>
                 <div
+                  class="descriptionLabel"
+                />
+                <div
                   class="errorLabel"
                 />
               </div>
