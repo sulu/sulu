@@ -2,7 +2,7 @@
 import React from 'react';
 import Router from '../../services/Router';
 import {FormInspector, Renderer} from '../Form';
-import type {ErrorCollection} from '../Form/types';
+import type {ChangeContext, ErrorCollection} from '../Form/types';
 import type {Schema} from '../Form';
 
 type Props = {|
@@ -11,7 +11,7 @@ type Props = {|
     errors?: ErrorCollection,
     formInspector: FormInspector,
     index: number,
-    onChange: (index: number, name: string, value: *, context?: Object) => void,
+    onChange: (index: number, name: string, value: *, context?: ChangeContext) => void,
     onFieldFinish: ?() => void,
     onSuccess: ?() => void,
     router: ?Router,
@@ -26,7 +26,7 @@ export default class FieldRenderer extends React.Component<Props> {
         showAllErrors: false,
     };
 
-    handleChange = (name: string, value: *, context?: Object) => {
+    handleChange = (name: string, value: *, context?: ChangeContext) => {
         const {index, onChange} = this.props;
         onChange(index, name, value, context);
     };

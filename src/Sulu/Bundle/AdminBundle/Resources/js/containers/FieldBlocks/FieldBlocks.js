@@ -14,7 +14,7 @@ import conditionDataProviderRegistry from '../Form/registries/conditionDataProvi
 import {getDifference} from '../../utils/DifferenceCalculator';
 import blockPreviewTransformerRegistry from './registries/blockPreviewTransformerRegistry';
 import FieldRenderer from './FieldRenderer';
-import type {BlockError, FieldTypeProps, FormStoreInterface} from '../Form/types';
+import type {BlockError, ChangeContext, FieldTypeProps, FormStoreInterface} from '../Form/types';
 import type {BlockEntry} from './types';
 import type {Message} from '../../components/BlockCollection/types';
 
@@ -267,7 +267,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         this.value = value;
     };
 
-    handleBlockChange = (index: number, name: string, value: Object, context?: Object) => {
+    handleBlockChange = (index: number, name: string, value: Object, context?: ChangeContext) => {
         const {onChange} = this.props;
         const oldValues = this.value;
 
