@@ -134,7 +134,7 @@ class PHPCRCleanupSingleNodeCommand extends Command
 
                 ++$totalStats['nodesProcessed'];
                 $totalStats = $this->mergeNodeStatsIntoTotal($totalStats, $nodeStats);
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 ++$totalStats['nodesErrored'];
                 \fwrite(\STDERR, (string) $e);
                 $this->session->refresh(false);
@@ -575,6 +575,7 @@ class PHPCRCleanupSingleNodeCommand extends Command
     public function cleanInvalidShadowReferences(NodeInterface $node, array $validLocales, bool $dryRun): int
     {
         $cleaned = 0;
+        $validLocalesMap = \array_flip($validLocales);
 
         foreach ($validLocales as $locale) {
             $shadowOnKey = $this->languagePrefix . ':' . $locale . '-' . ShadowLocaleSubscriber::SHADOW_ENABLED_FIELD;
@@ -596,7 +597,7 @@ class PHPCRCleanupSingleNodeCommand extends Command
                 continue;
             }
 
-            if (\in_array($shadowBase, $validLocales, true)) {
+            if (isset($validLocalesMap[$shadowBase])) {
                 continue;
             }
 

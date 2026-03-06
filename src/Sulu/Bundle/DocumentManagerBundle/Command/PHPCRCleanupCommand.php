@@ -173,10 +173,11 @@ class PHPCRCleanupCommand extends Command
         $queryManager = $this->session->getWorkspace()->getQueryManager();
         $rows = $queryManager->createQuery($sql2, 'JCR-SQL2')->execute();
 
-        /** @var string[] $uuids */
         $uuids = [];
         foreach ($rows->getRows() as $row) {
-            $uuids[] = $row->getValue('jcr:uuid');
+            $uuid = $row->getValue('jcr:uuid');
+            Assert::string($uuid);
+            $uuids[] = $uuid;
         }
         unset($rows);
 
@@ -254,11 +255,11 @@ class PHPCRCleanupCommand extends Command
                 $progressAdvance = $batchStatsResult['advance'];
 
                 $stderr = $process->getErrorOutput();
-                if ('' !== $stderr) {
-                    $errorMessages[] = $stderr;
-                }
 
                 if (0 !== $status) {
+                    if ('' !== $stderr) {
+                        $errorMessages[] = $stderr;
+                    }
                     $this->logger->writeln(\sprintf(
                         "# Error processing batch of %d nodes\n\n%s\n",
                         $batchNodeCount,
@@ -458,9 +459,10 @@ class PHPCRCleanupCommand extends Command
         if (\preg_match('/PHPCR_CLEANUP_STATS:(.+)$/m', $output, $matches)) {
             $data = \json_decode($matches[1], true);
             if (\is_array($data)) {
-                /** @var array{nodesProcessed: int, nodesIgnored: int, nodesErrored: int, documents: int, properties: int, removedProperties: int, removedStaleProperties: int} $data */
+                /** @var array{nodesProcessed: int, nodesIgnored: int, nodesErrored: int, documents: int, properties: int, removedProperties: int, removedStaleProperties: int} $merged */
+                $merged = \array_merge(PHPCRCleanupSingleNodeCommand::createEmptyBatchStats(), $data);
 
-                return $data;
+                return $merged;
             }
         }
 
@@ -584,10 +586,10 @@ class PHPCRCleanupCommand extends Command
             }
 
             $routesNode = $session->getNode($routesPath);
-            $configuredLocales = \array_keys($locales);
+            $configuredLocalesMap = \array_flip(\array_keys($locales));
 
             foreach ($routesNode->getNodes() as $localeNode) {
-                if (!\in_array($localeNode->getName(), $configuredLocales, true)) {
+                if (!isset($configuredLocalesMap[$localeNode->getName()])) {
                     $staleRoutes[$webspaceKey][] = $localeNode->getName();
                 }
             }
