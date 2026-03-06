@@ -818,7 +818,7 @@ sulu_media:
 
 This will only create the service `sulu_media.storage` as the alias to `sulu_media.storage.*` services has been removed.
 
-### PHPCR, Jackalope and DocumentManager related service got removed
+### PHPCR, Jackalope and Document Manager related service got removed
 
 A completely new content storage was written for Sulu 3.0. Instead of `PHPCR` and `Jackalope`,
 the new content storage uses `Doctrine ORM` entities, which most Symfony developers should be more familiar with.
@@ -835,6 +835,7 @@ Here are some quick examples of the most commonly used functions:
     - `PageRepositoryInterface::getOneBy(['uuid' => $uuid])`
     - `ArticleRepository::getOneBy(['uuid' => $uuid])`
     - `SnippetRepository::getOneBy(['uuid' => $uuid])`
+    - To modify something you no longer load it, instead use the `Modify...` messages listed below.
  - `DocumentManager::create`
     - `MessageBusInterface::dispatch(new Envelope(new CreatePageMessage($webspaceKey, $parentId, $data), [new EnableFlushStamp()]));`
     - `MessageBusInterface::dispatch(new Envelope(new CreateArticleMessage($webspaceKey, $parentId, $data), [new EnableFlushStamp()]));`
