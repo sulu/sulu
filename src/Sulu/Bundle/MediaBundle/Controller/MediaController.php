@@ -358,11 +358,13 @@ class MediaController extends AbstractMediaController implements
     /**
      * Delete a media with the given id.
      *
+     * @param int $id
+     *
      * @return Response
      */
-    public function deleteAction(int $id)
+    public function deleteAction($id)
     {
-        $delete = function(int $id) {
+        $delete = function($id) {
             try {
                 $this->mediaManager->delete($id, true);
             } catch (MediaNotFoundException $e) {
