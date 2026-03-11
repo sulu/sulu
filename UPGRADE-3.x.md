@@ -982,6 +982,38 @@ field type, so all routable entities use the same field type.:
 The `ResourceLocator` JS React Component now uses `tree_leaf_edit` and `tree_full_edit` instead of `leaf` and `full`,
 to be consistent with the PHP naming.
 
+### Route mapping configuration moved to templates
+
+Previously for articles or custom entities you could configure the route generation via a config.
+This was removed and you define the schema via `route_schema` param in your articles template:
+
+```diff
+# config/packages/sulu_route.yaml
+-sulu_route:
+-    mappings:
+-        Sulu\Bundle\ArticleBundle\Document\ArticleDocument:
+-            generator: schema
+-            options:
+-                route_schema: '/blog/{implode("-", object)}'
+```
+
+```diff
+        <!-- config/templates/articles/your_template.xml -->
+
+        <property name="url" type="route">
+            <meta>
+                <title lang="en">Resourcelocator</title>
+                <title lang="de">Adresse</title>
+            </meta>
+            
++           <params>
++               <param name="route_schema" value="/blog/{implode('-', object)}"/>
++           </params>
+        </property>
+```
+
+It is also supported by the `page_tree_route` which still uses the selected page as prefixed URL.
+
 ### Upgrade the Controller references
 
 The controller in the page/article templates have to be adjusted use the new controller
