@@ -942,6 +942,83 @@ class PageControllerTest extends SuluTestCase
     }
 
     /* --- The following tests are independent tests and purge the database on their own --- */
+    public function testNestedTemplatePropertyWithSlash(): void
+    {
+        self::purgeDatabase();
+
+        $homepage = $this->createHomepage('homepage-nested-property-uuid', 'sulu-io');
+
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/pages?locale=en&parentId=%s&webspace=sulu-io', $homepage->getId()),
+            [],
+            [],
+            [],
+            \json_encode([
+                'template' => 'landing_page',
+                'title' => 'Nested Property Page',
+                'url' => '/nested-property-page',
+                'nestedProperty' => [
+                    'value_1' => 'Nested Value 1',
+                    'value_2' => 'Nested Value 2',
+                ],
+            ]) ?: null,
+        );
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(201, $response);
+
+        /** @var array{id: string, nestedProperty: array{value_1: string, value_2: string}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $pageId = $content['id'];
+        $this->assertSame(
+            ['value_1' => 'Nested Value 1', 'value_2' => 'Nested Value 2'],
+            $content['nestedProperty'],
+        );
+        $this->assertArrayNotHasKey('nestedProperty/value_1', $content);
+        $this->assertArrayNotHasKey('nestedProperty/value_2', $content);
+
+        $this->client->request(
+            'PUT',
+            '/admin/api/pages/' . $pageId . '?locale=en',
+            [],
+            [],
+            [],
+            \json_encode([
+                'template' => 'landing_page',
+                'title' => 'Nested Property Page',
+                'url' => '/nested-property-page',
+                'nestedProperty' => [
+                    'value_1' => 'Updated Nested Value 1',
+                    'value_2' => 'Updated Nested Value 2',
+                ],
+            ]) ?: null,
+        );
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{nestedProperty: array{value_1: string, value_2: string}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertSame(
+            ['value_1' => 'Updated Nested Value 1', 'value_2' => 'Updated Nested Value 2'],
+            $content['nestedProperty'],
+        );
+        $this->assertArrayNotHasKey('nestedProperty/value_1', $content);
+        $this->assertArrayNotHasKey('nestedProperty/value_2', $content);
+
+        $this->client->request('GET', '/admin/api/pages/' . $pageId . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{nestedProperty: array{value_1: string, value_2: string}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertSame(
+            ['value_1' => 'Updated Nested Value 1', 'value_2' => 'Updated Nested Value 2'],
+            $content['nestedProperty'],
+        );
+        $this->assertArrayNotHasKey('nestedProperty/value_1', $content);
+        $this->assertArrayNotHasKey('nestedProperty/value_2', $content);
+    }
+
     public function testDeletePageWithDescendantsWithoutForceReturnsConflict(): void
     {
         $this->purgeDatabase();

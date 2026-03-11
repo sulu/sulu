@@ -105,6 +105,8 @@ readonly class SeoResolver implements ResolverInterface
             } else {
                 if (\str_starts_with((string) $key, 'seo/')) {
                     $normalizedKey = \substr((string) $key, \strlen('seo/'));
+                } elseif ('seo' === $key) {
+                    $normalizedKey = 'seo';
                 } elseif (\str_starts_with((string) $key, 'seo')) {
                     $normalizedKey = \lcfirst(\substr((string) $key, \strlen('seo')));
                 } else {

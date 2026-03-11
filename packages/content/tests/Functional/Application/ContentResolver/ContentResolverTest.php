@@ -907,10 +907,10 @@ class ContentResolverTest extends SuluTestCase
         self::assertSame((new \DateTimeImmutable('2025-09-17T00:00:00'))->getTimestamp(), $schedule['start']->getTimestamp());
         self::assertSame((new \DateTimeImmutable('2025-09-25T00:00:00'))->getTimestamp(), $schedule['end']->getTimestamp());
 
-        self::assertNull($settings['segment_enabled']);
-        self::assertNull($settings['segments']);
-        self::assertNull($settings['target_groups_enabled']);
-        self::assertNull($settings['target_groups']);
+        self::assertArrayNotHasKey('segment_enabled', $settings);
+        self::assertArrayNotHasKey('segments', $settings);
+        self::assertArrayNotHasKey('target_groups_enabled', $settings);
+        self::assertArrayNotHasKey('target_groups', $settings);
 
         // Second block without settings
         /** @var array<string, mixed> $blockWithoutSettings */

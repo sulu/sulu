@@ -115,6 +115,8 @@ readonly class ExcerptTaxonomyResolver implements ResolverInterface
             } else {
                 if (\str_starts_with((string) $key, 'excerpt/')) {
                     $normalizedKey = \substr((string) $key, \strlen('excerpt/'));
+                } elseif ('excerpt' === $key) {
+                    $normalizedKey = 'excerpt';
                 } elseif (\str_starts_with((string) $key, 'excerpt')) {
                     $normalizedKey = \lcfirst(\substr((string) $key, \strlen('excerpt')));
                 } else {

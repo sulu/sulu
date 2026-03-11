@@ -78,4 +78,38 @@ class SeoResolverTest extends TestCase
         $content = $contentView->getContent();
         self::assertIsArray($content);
     }
+
+    public function testResolveKeepsSeoRootKey(): void
+    {
+        $example = new Example();
+        $dimensionContent = new ExampleDimensionContent($example);
+        $example->addDimensionContent($dimensionContent);
+        $dimensionContent->setLocale('en');
+
+        $formMetadata = $this->prophesize(FormMetadata::class);
+        $formMetadata->getFlatFieldMetadata()
+            ->willReturn([]);
+        $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
+        $formMetadataProvider->getMetadata('content_seo', 'en', ['instanceOf' => ExampleDimensionContent::class])
+            ->willReturn($formMetadata->reveal());
+
+        $metadataResolver = $this->prophesize(MetadataResolver::class);
+        $metadataResolver->resolveItems(Argument::any(), Argument::any(), Argument::any())
+            ->willReturn([
+                'seo' => ContentView::create(['title' => 'Seo Title'], []),
+            ]);
+
+        $resolver = new SeoResolver(
+            $formMetadataProvider->reveal(),
+            $metadataResolver->reveal(),
+        );
+
+        $contentView = $resolver->resolve($dimensionContent);
+        self::assertInstanceOf(ContentView::class, $contentView);
+
+        $content = $contentView->getContent();
+        self::assertIsArray($content);
+        self::assertArrayHasKey('seo', $content);
+        self::assertArrayNotHasKey('', $content);
+    }
 }

@@ -167,6 +167,99 @@ class TemplateDataMapperTest extends TestCase
         $this->assertSame(['title' => 'Test Localized'], $localizedDimensionContent->getTemplateData());
     }
 
+    public function testMapNestedPropertyData(): void
+    {
+        $data = [
+            'template' => 'template-key',
+            'unlocalizedField' => 'Test Unlocalized',
+            'title' => 'Test Localized',
+            'nestedProperty' => ['value' => 'Nested Value'],
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+
+        $nestedPropertyMetadata = new FieldMetadata('nestedProperty/value');
+        $nestedPropertyMetadata->setMultilingual(true);
+
+        $templateMapper = $this->createTemplateDataMapperInstance([$nestedPropertyMetadata]);
+        $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertNull($unlocalizedDimensionContent->getTemplateKey());
+        $this->assertSame('template-key', $localizedDimensionContent->getTemplateKey());
+        $this->assertSame(['unlocalizedField' => 'Test Unlocalized'], $unlocalizedDimensionContent->getTemplateData());
+        $this->assertSame(
+            ['title' => 'Test Localized', 'nestedProperty' => ['value' => 'Nested Value']],
+            $localizedDimensionContent->getTemplateData(),
+        );
+    }
+
+    public function testMapMultipleNestedPropertyData(): void
+    {
+        $data = [
+            'template' => 'template-key',
+            'unlocalizedField' => 'Test Unlocalized',
+            'title' => 'Test Localized',
+            'nestedProperty' => [
+                'value_1' => 'Nested Value 1',
+                'value_2' => 'Nested Value 2',
+            ],
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+
+        $nestedPropertyValue1Metadata = new FieldMetadata('nestedProperty/value_1');
+        $nestedPropertyValue1Metadata->setMultilingual(true);
+
+        $nestedPropertyValue2Metadata = new FieldMetadata('nestedProperty/value_2');
+        $nestedPropertyValue2Metadata->setMultilingual(true);
+
+        $templateMapper = $this->createTemplateDataMapperInstance([
+            $nestedPropertyValue1Metadata,
+            $nestedPropertyValue2Metadata,
+        ]);
+        $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertNull($unlocalizedDimensionContent->getTemplateKey());
+        $this->assertSame('template-key', $localizedDimensionContent->getTemplateKey());
+        $this->assertSame(['unlocalizedField' => 'Test Unlocalized'], $unlocalizedDimensionContent->getTemplateData());
+        $this->assertSame(
+            [
+                'title' => 'Test Localized',
+                'nestedProperty' => [
+                    'value_1' => 'Nested Value 1',
+                    'value_2' => 'Nested Value 2',
+                ],
+            ],
+            $localizedDimensionContent->getTemplateData(),
+        );
+    }
+
+    public function testMapDefaultValuesFromCorrectSource(): void
+    {
+        $data = [
+            'template' => 'template-key',
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $unlocalizedDimensionContent->setTemplateData(['unlocalizedField' => 'Existing Unlocalized']);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+        $localizedDimensionContent->setTemplateData(['title' => 'Existing Localized']);
+
+        $templateMapper = $this->createTemplateDataMapperInstance();
+        $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame(['unlocalizedField' => 'Existing Unlocalized'], $unlocalizedDimensionContent->getTemplateData());
+        $this->assertSame(['title' => 'Existing Localized'], $localizedDimensionContent->getTemplateData());
+    }
+
     public function testMapFloatData(): void
     {
         $data = [

@@ -98,10 +98,11 @@ class TemplateDataMapper implements DataMapperInterface
         $localizedData = [];
         foreach ($metadata->getFlatFieldMetadata() as $property) {
             $name = $property->getName();
+            $name = \explode('/', $name, 2)[0];
 
             $isMultilingual = $property->isMultilingual();
 
-            $value = $isMultilingual ? $defaultLocalizedData[$name] ?? null : $defaultLocalizedData[$name] ?? null;
+            $value = $isMultilingual ? $defaultLocalizedData[$name] ?? null : $unlocalizedData[$name] ?? null;
             if (\array_key_exists($name, $data)) { // values not explicitly given need to stay untouched for e.g. for shadow pages urls
                 $hasAnyValue = true;
                 $value = $data[$name];
