@@ -19,6 +19,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     @observable showDialog: boolean = false;
     @observable referencingResourcesData: ?ReferencingResourcesData = undefined;
     @observable dependantResourcesData: ?DependantResourcesData = undefined;
+
     @computed get allowConflictDeletion(): boolean {
         const {allow_conflict_deletion: allowConflictDeletion = true} = this.options;
 

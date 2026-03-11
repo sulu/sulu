@@ -654,17 +654,17 @@ class MediaManager implements MediaManagerInterface
             );
         }
 
-        $trashStored = false;
+        $trashDisabledOrStored = true;
         if (null !== $this->trashManager) {
             try {
                 $this->trashManager->store(MediaInterface::RESOURCE_KEY, $mediaEntity);
-                $trashStored = true;
             } catch (\Exception $e) {
+                $trashDisabledOrStored = false;
                 // Trash storage failed (e.g. physical file missing), continue with deletion
             }
         }
 
-        $mediaEvent = $trashStored
+        $mediaEvent = $trashDisabledOrStored
             ? new MediaRemovedEvent($mediaEntity->getId(), $mediaEntity->getCollection()->getId(), $mediaTitle, $locale)
             : new MediaRemovedNoTrashEvent($mediaEntity->getId(), $mediaEntity->getCollection()->getId(), $mediaTitle, $locale);
 

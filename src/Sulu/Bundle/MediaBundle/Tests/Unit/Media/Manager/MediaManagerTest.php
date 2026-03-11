@@ -339,8 +339,8 @@ class MediaManagerTest extends TestCase
         $this->em->detach($formatOptions->reveal())->shouldBeCalled();
         $this->em->remove($media->reveal())->shouldBeCalled();
 
-        // No trashManager configured, so MediaRemovedNoTrashEvent is collected
-        $this->domainEventCollector->collect(Argument::type(MediaRemovedNoTrashEvent::class))->shouldBeCalled();
+        // No trashManager configured, trash is considered disabled so MediaRemovedEvent is collected
+        $this->domainEventCollector->collect(Argument::type(MediaRemovedEvent::class))->shouldBeCalled();
 
         $this->em->flush()->shouldBeCalled();
 
