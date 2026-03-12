@@ -187,9 +187,7 @@ export default class UpdateFormStoreToolbarAction extends AbstractFormToolbarAct
     }
 
     async getCurrentContent() {
-        const context = {
-            ...this.resourceFormStore.data,
-        };
+        const context = this.getExpressionContext();
 
         const content = {};
         for (const expr of this.contentExpressions) {
@@ -201,6 +199,46 @@ export default class UpdateFormStoreToolbarAction extends AbstractFormToolbarAct
         return content;
     }
 
+    @computed get formMetadataOptionsExpressions(): ?Array<{ get: string, property: string }> {
+        const {
+            formMetadataOptionsExpressions,
+        } = this.options;
+
+        if (undefined === formMetadataOptionsExpressions) {
+            return undefined;
+        }
+
+        if (!Array.isArray(formMetadataOptionsExpressions)) {
+            throw new Error('The "formMetadataOptionsExpressions" option must be an array value!');
+        }
+
+        return ((formMetadataOptionsExpressions: any): Array<{ get: string, property: string }>);
+    }
+
+    getExpressionContext() {
+        return {
+            ...this.resourceFormStore.data,
+            _locale: this.resourceFormStore.locale?.get(),
+        };
+    }
+
+    async getFormMetadataOptions() {
+        if (!this.formMetadataOptionsExpressions) {
+            return undefined;
+        }
+
+        const context = this.getExpressionContext();
+        const metadataOptions = {};
+
+        for (const expr of this.formMetadataOptionsExpressions) {
+            if (expr.get) {
+                metadataOptions[expr.property] = await this.evaluateJexl(expr.get, context);
+            }
+        }
+
+        return metadataOptions;
+    }
+
     hasExistingContent(content: Object) {
         return Object.values(content).some((value) => value);
     }
@@ -210,7 +248,14 @@ export default class UpdateFormStoreToolbarAction extends AbstractFormToolbarAct
 
         if (this.hasExistingContent(contentData)) {
             if (this.formKey) {
-                this.formStore = memoryFormStoreFactory.createFromFormKey(this.formKey);
+                const formMetadataOptions = await this.getFormMetadataOptions();
+                this.formStore = memoryFormStoreFactory.createFromFormKey(
+                    this.formKey,
+                    undefined,
+                    undefined,
+                    undefined,
+                    formMetadataOptions,
+                );
             }
 
             this.openDialog();
@@ -253,13 +298,33 @@ export default class UpdateFormStoreToolbarAction extends AbstractFormToolbarAct
             this.closeDialog();
             this.loading = false;
 
-            const data = await error.json();
+            const data = await this.getErrorData(error);
             this.setError(data.messageKey);
         }));
     };
 
-    @action setError = (messageKey: string) => {
-        this.form.errors = [...this.form.errors, translate(messageKey)];
+    async getErrorData(error: any): Promise<{messageKey?: string}> {
+        if (error && typeof error.json === 'function') {
+            try {
+                const data = await error.json();
+
+                if (data && typeof data === 'object') {
+                    return data;
+                }
+            } catch (e) {
+                // Fall through to the generic object fallback below.
+            }
+        }
+
+        if (error && typeof error === 'object') {
+            return error;
+        }
+
+        return {};
+    }
+
+    @action setError = (messageKey: ?string) => {
+        this.form.errors = [...this.form.errors, translate(messageKey || 'sulu_admin.error')];
     };
 
     getNode() {
