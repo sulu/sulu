@@ -6559,18 +6559,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\Category\:\:getId\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\Category\:\:getId\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\Category\:\:getKey\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -6694,12 +6682,6 @@ parameters:
 			message: '#^Strict comparison using \=\=\= between null and Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryTranslationInterface will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 6
-			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between null and array will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
 
 		-
