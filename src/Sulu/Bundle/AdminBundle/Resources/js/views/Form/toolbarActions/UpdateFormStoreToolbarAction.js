@@ -223,14 +223,15 @@ export default class UpdateFormStoreToolbarAction extends AbstractFormToolbarAct
     }
 
     async getFormMetadataOptions() {
-        if (!this.formMetadataOptionsExpressions) {
+        const formMetadataOptionsExpressions = this.formMetadataOptionsExpressions;
+        if (!formMetadataOptionsExpressions) {
             return undefined;
         }
 
         const context = this.getExpressionContext();
         const metadataOptions = {};
 
-        for (const expr of this.formMetadataOptionsExpressions) {
+        for (const expr of formMetadataOptionsExpressions) {
             if (expr.get) {
                 metadataOptions[expr.property] = await this.evaluateJexl(expr.get, context);
             }
@@ -245,16 +246,17 @@ export default class UpdateFormStoreToolbarAction extends AbstractFormToolbarAct
 
     @action handleClick = async() => {
         const contentData = await this.getCurrentContent();
+        const formKey = this.formKey;
 
         if (this.hasExistingContent(contentData)) {
-            if (this.formKey) {
+            if (formKey) {
                 const formMetadataOptions = await this.getFormMetadataOptions();
                 this.formStore = memoryFormStoreFactory.createFromFormKey(
-                    this.formKey,
+                    formKey,
                     undefined,
                     undefined,
                     undefined,
-                    formMetadataOptions,
+                    formMetadataOptions
                 );
             }
 

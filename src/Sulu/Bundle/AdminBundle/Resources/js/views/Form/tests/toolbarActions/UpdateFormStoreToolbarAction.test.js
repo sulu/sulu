@@ -247,10 +247,10 @@ test('Handle error on fetch', async() => {
     expect(action.showDialog).toBe(false);
     expect(action.form.errors).toContain('error.message');
 });
+
 test('Handle plain object error on fetch', async() => {
     const action = createUpdateFormStoreToolbarAction();
     action.showDialog = true;
-
     Requester.post.mockRejectedValue({messageKey: 'plain.error'});
 
     const element = mount(action.getNode());
@@ -281,6 +281,7 @@ test('Handle invalid json error on fetch', async() => {
     expect(action.showDialog).toBe(false);
     expect(action.form.errors).toContain('sulu_admin.error');
 });
+
 test('Render dialog with correct props', () => {
     const action = createUpdateFormStoreToolbarAction({
         dialogCancelText: 'Cancel Test',
