@@ -94,7 +94,6 @@ final class MediaTrashItemHandler implements
             foreach ($file->getFileVersions() as $fileVersion) {
                 // move original file into trash directory
                 $trashStorageOptions = \array_merge($fileVersion->getStorageOptions(), ['directory' => 'trash']);
-
                 $trashStorageOptions = $this->storage->move($fileVersion->getStorageOptions(), $trashStorageOptions);
 
                 $creator = $fileVersion->getCreator();
