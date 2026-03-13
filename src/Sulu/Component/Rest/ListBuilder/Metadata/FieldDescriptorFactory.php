@@ -11,15 +11,18 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Metadata;
 
+use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCountFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcatFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineIdentityFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Finder\Finder;
@@ -30,6 +33,8 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
  */
 class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWarmerInterface
 {
+    private const GHOST_EXCLUDED_ENTITY_NAMES = ['ghostDimensionContent', 'unlocalizedDimensionContent'];
+
     /**
      * @param string[] $listDirectories
      */
@@ -37,7 +42,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
         private ListXmlLoader $listXmlLoader,
         private array $listDirectories,
         private string $cachePath,
-        private bool $debug
+        private bool $debug,
+        private ?LocalizationManagerInterface $localizationManager = null,
     ) {
     }
 
@@ -116,7 +122,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
         return false;
     }
 
-    public function getFieldDescriptors(string $listKey): ?array
+    public function getFieldDescriptors(string $listKey, bool $excludeGhosts = false): ?array
     {
         $configCache = $this->getConfigCache($listKey);
 
@@ -128,7 +134,75 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             return null;
         }
 
-        return \unserialize(\file_get_contents($configCache->getPath()));
+        /** @var array<string, FieldDescriptorInterface> $fieldDescriptors */
+        $fieldDescriptors = \unserialize(\file_get_contents($configCache->getPath()));
+
+        if ($excludeGhosts || $this->isSingleLocale()) {
+            return $this->excludeGhostFieldDescriptors($fieldDescriptors);
+        }
+
+        return $fieldDescriptors;
+    }
+
+    private function isSingleLocale(): bool
+    {
+        if (null === $this->localizationManager) {
+            return false;
+        }
+
+        return \count($this->localizationManager->getLocales()) <= 1;
+    }
+
+    /**
+     * Simplify case fields to their primary branch and drop ghost-related fields.
+     *
+     * @param array<string, FieldDescriptorInterface> $fieldDescriptors
+     *
+     * @return array<string, FieldDescriptorInterface>
+     */
+    private function excludeGhostFieldDescriptors(array $fieldDescriptors): array
+    {
+        $result = [];
+
+        foreach ($fieldDescriptors as $name => $fieldDescriptor) {
+            if ($fieldDescriptor instanceof DoctrineCaseFieldDescriptor) {
+                $simplified = $fieldDescriptor->getCase1FieldDescriptor();
+                $simplified->setMetadata($fieldDescriptor->getMetadata());
+                $fieldDescriptor = $simplified;
+            }
+
+            if ($fieldDescriptor instanceof DoctrineFieldDescriptorInterface
+                && $this->usesGhostEntity($fieldDescriptor)
+            ) {
+                continue;
+            }
+
+            $result[$name] = $fieldDescriptor;
+        }
+
+        return $result;
+    }
+
+    private function usesGhostEntity(DoctrineFieldDescriptorInterface $fieldDescriptor): bool
+    {
+        if ($fieldDescriptor instanceof DoctrineFieldDescriptor
+            || $fieldDescriptor instanceof DoctrineIdentityFieldDescriptor
+        ) {
+            $entityName = $fieldDescriptor->getEntityName();
+            if (\in_array($entityName, self::GHOST_EXCLUDED_ENTITY_NAMES, true)) {
+                return true;
+            }
+        }
+
+        foreach ($fieldDescriptor->getJoins() as $joinName => $join) {
+            if (\in_array($joinName, self::GHOST_EXCLUDED_ENTITY_NAMES, true)
+                || \in_array($join->getEntityName(), self::GHOST_EXCLUDED_ENTITY_NAMES, true)
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function getSingleFieldDescriptor(AbstractPropertyMetadata $propertyMetadata, $options)
@@ -304,19 +378,6 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $propertyMetadata->getType(),
             $propertyMetadata->isSortable(),
             $propertyMetadata->getWidth()
-        );
-    }
-
-    private function getGeneralFieldDescriptor(AbstractPropertyMetadata $generalMetadata, $options)
-    {
-        return new FieldDescriptor(
-            $this->resolveOptions($generalMetadata->getName(), $options),
-            $generalMetadata->getTranslation(),
-            $generalMetadata->getVisibility(),
-            $generalMetadata->getSearchability(),
-            $generalMetadata->getType(),
-            $generalMetadata->isSortable(),
-            $generalMetadata->getWidth()
         );
     }
 

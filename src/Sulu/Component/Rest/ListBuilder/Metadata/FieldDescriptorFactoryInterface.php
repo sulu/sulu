@@ -19,7 +19,7 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 interface FieldDescriptorFactoryInterface
 {
     /**
-     * @return FieldDescriptorInterface[]
+     * @return FieldDescriptorInterface[]|null
      */
-    public function getFieldDescriptors(string $listKey): ?array;
+    public function getFieldDescriptors(string $listKey, bool $excludeGhosts = false): ?array;
 }

@@ -86,32 +86,25 @@ final class ArticleController implements SecuredControllerInterface
         // TODO this should be ArticleRepository::findFlatBy / ::countFlatBy methods
         //      but first we would need to avoid that the restHelper requires the request.
         //
+        $excludeGhosts = $request->query->has('search')
+            || !empty($request->query->all('filter'));
+
         /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
-        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(ArticleInterface::RESOURCE_KEY);
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(ArticleInterface::RESOURCE_KEY, $excludeGhosts);
         /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create(ArticleInterface::class);
         $listBuilder->setIdField($fieldDescriptors['id']); // TODO should be uuid field descriptor
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
         $listBuilder->addSelectField($fieldDescriptors['locale']);
-        $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);
         $listBuilder->addSelectField($fieldDescriptors['published']);
         $listBuilder->addSelectField($fieldDescriptors['publishedState']);
+
+        if (isset($fieldDescriptors['ghostLocale'])) {
+            $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);
+        }
         $listBuilder->setParameter('locale', $request->query->get('locale'));
         if (0 !== \count($templates)) {
-            $dimensionContentTemplateKey = $fieldDescriptors['dimensionContentTemplateKey'];
-            $ghostDimensionContentTemplateKey = $fieldDescriptors['ghostDimensionContentTemplateKey'];
-            $expression = $listBuilder->createOrExpression([
-                $listBuilder->createAndExpression([
-                    $listBuilder->createIsNotNullExpression($dimensionContentTemplateKey),
-                    $listBuilder->createInExpression($dimensionContentTemplateKey, $templates),
-                ]),
-                $listBuilder->createAndExpression([
-                    $listBuilder->createIsNullExpression($dimensionContentTemplateKey),
-                    $listBuilder->createInExpression($ghostDimensionContentTemplateKey, $templates),
-                ]),
-            ]);
-
-            $listBuilder->addExpression($expression);
+            $listBuilder->in($fieldDescriptors['templateKey'], $templates);
         }
 
         $listRepresentation = new PaginatedRepresentation(

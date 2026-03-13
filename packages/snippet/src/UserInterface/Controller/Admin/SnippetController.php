@@ -75,23 +75,29 @@ final class SnippetController implements SecuredControllerInterface
         // TODO this should be SnippetRepository::findFlatBy / ::countFlatBy methods
         //      but first we would need to avoid that the restHelper requires the request.
         //
+        $excludeGhosts = $request->query->has('search')
+            || !empty($request->query->all('filter'));
+
         /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
-        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetInterface::RESOURCE_KEY);
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetInterface::RESOURCE_KEY, $excludeGhosts);
         /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create(SnippetInterface::class);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
         $listBuilder->setIdField($fieldDescriptors['id']); // TODO should be uuid field descriptor
         $listBuilder->addSelectField($fieldDescriptors['locale']);
-        $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);
         $listBuilder->addSelectField($fieldDescriptors['published']);
         $listBuilder->addSelectField($fieldDescriptors['publishedState']);
+
+        if (isset($fieldDescriptors['ghostLocale'])) {
+            $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);
+        }
         $listBuilder->setParameter('locale', $request->query->get('locale'));
 
         $typesParam = $request->query->get('types');
         $types = \array_filter(\explode(',', \is_string($typesParam) ? $typesParam : ''));
 
         if (0 !== \count($types)) {
-            $this->addTemplateKeyFilter($listBuilder, $fieldDescriptors, $types);
+            $listBuilder->in($fieldDescriptors['templateKey'], $types);
         }
 
         $areasParam = $request->query->get('areas');
@@ -111,7 +117,7 @@ final class SnippetController implements SecuredControllerInterface
             }
 
             if (!empty($templateKeys)) {
-                $this->addTemplateKeyFilter($listBuilder, $fieldDescriptors, $templateKeys);
+                $listBuilder->in($fieldDescriptors['templateKey'], $templateKeys);
             }
         }
 
@@ -321,32 +327,6 @@ final class SnippetController implements SecuredControllerInterface
             /** @var null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         }
-    }
-
-    /**
-     * @param DoctrineFieldDescriptorInterface[] $fieldDescriptors
-     * @param string[] $templateKeys
-     */
-    private function addTemplateKeyFilter(
-        DoctrineListBuilder $listBuilder,
-        array $fieldDescriptors,
-        array $templateKeys
-    ): void {
-        $dimensionContentTemplateKey = $fieldDescriptors['dimensionContentTemplateKey'];
-        $ghostDimensionContentTemplateKey = $fieldDescriptors['ghostDimensionContentTemplateKey'];
-
-        $expression = $listBuilder->createOrExpression([
-            $listBuilder->createAndExpression([
-                $listBuilder->createIsNotNullExpression($dimensionContentTemplateKey),
-                $listBuilder->createInExpression($dimensionContentTemplateKey, $templateKeys),
-            ]),
-            $listBuilder->createAndExpression([
-                $listBuilder->createIsNullExpression($dimensionContentTemplateKey),
-                $listBuilder->createInExpression($ghostDimensionContentTemplateKey, $templateKeys),
-            ]),
-        ]);
-
-        $listBuilder->addExpression($expression);
     }
 
     public function getSecurityContext()

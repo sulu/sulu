@@ -157,32 +157,28 @@
             </filter>
         </property>
 
-        <property name="templateKey" type="string" visibility="yes" translation="sulu_admin.type">
-            <field-name>templateKey</field-name>
-            <entity-name>dimensionContent</entity-name>
+        <case-property name="templateKey" visibility="yes" translation="sulu_admin.type">
+            <field>
+                <field-name>templateKey</field-name>
+                <entity-name>dimensionContent</entity-name>
 
-            <joins ref="dimensionContent"/>
+                <joins ref="dimensionContent"/>
+            </field>
+            <field>
+                <field-name>templateKey</field-name>
+                <entity-name>ghostDimensionContent</entity-name>
+
+                <joins ref="ghostDimensionContent"/>
+            </field>
+
+            <transformer type="string"/>
 
             <filter type="select">
                 <params>
                     <param name="options" type="expression" value="service('sulu_snippet.template_select_provider').getFilterValues(locale)" />
                 </params>
             </filter>
-        </property>
-
-        <property name="dimensionContentTemplateKey" visibility="never">
-            <field-name>templateKey</field-name>
-            <entity-name>dimensionContent</entity-name>
-
-            <joins ref="dimensionContent"/>
-        </property>
-
-        <property name="ghostDimensionContentTemplateKey" visibility="never">
-            <field-name>templateKey</field-name>
-            <entity-name>ghostDimensionContent</entity-name>
-
-            <joins ref="ghostDimensionContent"/>
-        </property>
+        </case-property>
 
         <property name="categoryId" translation="sulu_category.categories" visibility="never">
             <field-name>id</field-name>

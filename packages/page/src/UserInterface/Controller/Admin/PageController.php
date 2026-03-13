@@ -88,6 +88,8 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         $parentId = $request->query->get('parentId');
         $webspaceKey = $request->query->get('webspace');
         $excludeGhosts = $request->query->getBoolean('exclude-ghosts', false);
+        $hasSearchOrFilter = $request->query->has('search')
+            || !empty($request->query->all('filter'));
         $excludeShadows = $request->query->getBoolean('exclude-shadows', false);
         $expandedIds = \array_filter(\explode(',', (string) $request->query->get('expandedIds')));
         $ids = $request->query->get('ids');
@@ -120,6 +122,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             includedFields: $includedFields,
             listKey: 'pages',
             filterByParentId: empty($ids),
+            excludeGhosts: $hasSearchOrFilter,
         );
 
         return new JsonResponse($this->normalizer->normalize(
@@ -370,11 +373,12 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         array $groupByFields = [],
         ?string $listKey = null,
         bool $filterByParentId = true,
+        bool $excludeGhosts = false,
     ): CollectionRepresentation {
         $listKey = $listKey ?? $resourceKey;
 
         /** @var DoctrineFieldDescriptor[] $fieldDescriptors */
-        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors($listKey);
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors($listKey, $excludeGhosts);
 
         /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create($fieldDescriptors['id']->getEntityName());
@@ -398,11 +402,15 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         $listBuilder->in($fieldDescriptors['webspaceKey'], $webspaces);
 
         foreach ($filters as $key => $value) {
-            $listBuilder->where($fieldDescriptors[$key], $value); // @phpstan-ignore argument.type
+            if (isset($fieldDescriptors[$key])) {
+                $listBuilder->where($fieldDescriptors[$key], $value); // @phpstan-ignore argument.type
+            }
         }
 
         foreach ($includedFields as $field) {
-            $listBuilder->addSelectField($fieldDescriptors[$field]);
+            if (isset($fieldDescriptors[$field])) {
+                $listBuilder->addSelectField($fieldDescriptors[$field]);
+            }
         }
 
         foreach ($groupByFields as $field) {

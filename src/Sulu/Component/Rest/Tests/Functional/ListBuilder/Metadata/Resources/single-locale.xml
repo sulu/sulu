@@ -1,0 +1,43 @@
+<list xmlns="http://schemas.sulu.io/list-builder/list">
+    <key>single-locale</key>
+
+    <properties>
+        <property name="locale" visibility="never">
+            <field-name>locale</field-name>
+            <entity-name>dimensionContent</entity-name>
+        </property>
+
+        <property name="ghostLocale" visibility="never">
+            <field-name>locale</field-name>
+            <entity-name>ghostDimensionContent</entity-name>
+        </property>
+
+        <case-property name="templateKey" visibility="never">
+            <field>
+                <field-name>templateKey</field-name>
+                <entity-name>dimensionContent</entity-name>
+
+                <joins>
+                    <join>
+                        <entity-name>dimensionContent</entity-name>
+                        <field-name>contact.dimensionContent</field-name>
+                    </join>
+                </joins>
+            </field>
+
+            <field>
+                <field-name>templateKey</field-name>
+                <entity-name>ghostDimensionContent</entity-name>
+
+                <joins>
+                    <join>
+                        <entity-name>ghostDimensionContent</entity-name>
+                        <field-name>contact.ghostDimensionContent</field-name>
+                    </join>
+                </joins>
+            </field>
+
+            <filter type="select"/>
+        </case-property>
+    </properties>
+</list>

@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancerInterface;
 use Sulu\Component\Rest\ListBuilder\AbstractListBuilder;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCountFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
@@ -777,7 +778,40 @@ class DoctrineListBuilder extends AbstractListBuilder
             throw new InvalidExpressionArgumentException('in', 'fieldDescriptor');
         }
 
+        if ($fieldDescriptor instanceof DoctrineCaseFieldDescriptor) {
+            return $this->createCaseInExpression($fieldDescriptor, $values); // @phpstan-ignore return.type, argument.type
+        }
+
         return new DoctrineInExpression($fieldDescriptor, $values);
+    }
+
+    /**
+     * Expand an IN expression on a case-property into the optimal OR pattern.
+     *
+     * Instead of: (CASE WHEN a IS NOT NULL THEN a ELSE b END) IN (:values)
+     * Generates:  (a IS NOT NULL AND a IN (:values)) OR (a IS NULL AND b IN (:values))
+     *
+     * This allows the database to use indexes on both branches.
+     *
+     * @param list<mixed> $values
+     */
+    private function createCaseInExpression(
+        DoctrineCaseFieldDescriptor $caseField,
+        array $values,
+    ): AbstractDoctrineExpression {
+        $case1 = $caseField->getCase1FieldDescriptor();
+        $case2 = $caseField->getCase2FieldDescriptor();
+
+        return new DoctrineOrExpression([
+            new DoctrineAndExpression([
+                new DoctrineIsNotNullExpression($case1),
+                new DoctrineInExpression($case1, $values),
+            ]),
+            new DoctrineAndExpression([
+                new DoctrineIsNullExpression($case1),
+                new DoctrineInExpression($case2, $values),
+            ]),
+        ]);
     }
 
     public function createBetweenExpression(FieldDescriptorInterface $fieldDescriptor, array $values)

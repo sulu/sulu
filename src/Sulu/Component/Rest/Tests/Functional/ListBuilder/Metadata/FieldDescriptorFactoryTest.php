@@ -14,6 +14,7 @@ namespace Sulu\Component\Rest\Tests\Functional\ListBuilder\Metadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCountFieldDescriptor;
@@ -53,6 +54,11 @@ class FieldDescriptorFactoryTest extends TestCase
      */
     private $fieldDescriptorFactory;
 
+    /**
+     * @var ListXmlLoader
+     */
+    private $listXmlLoader;
+
     public function setup(): void
     {
         $parameterBag = $this->prophesize(ParameterBagInterface::class);
@@ -72,12 +78,8 @@ class FieldDescriptorFactoryTest extends TestCase
         }
         $filesystem->mkdir($this->configCachePath);
 
-        $this->fieldDescriptorFactory = new FieldDescriptorFactory(
-            new ListXmlLoader($parameterBag->reveal()),
-            [__DIR__ . '/Resources'],
-            $this->configCachePath,
-            $this->debug
-        );
+        $this->listXmlLoader = new ListXmlLoader($parameterBag->reveal());
+        $this->fieldDescriptorFactory = $this->createFieldDescriptorFactory();
     }
 
     public function testGetFieldDescriptors(): void
@@ -183,6 +185,43 @@ class FieldDescriptorFactoryTest extends TestCase
         );
     }
 
+    public function testGetFieldDescriptorsSingleLocaleRemovesGhostFieldsAndConvertsCaseProperties(): void
+    {
+        $localizationManager = $this->prophesize(LocalizationManagerInterface::class);
+        $localizationManager->getLocales()->willReturn(['de']);
+
+        $fieldDescriptorFactory = $this->createFieldDescriptorFactory($localizationManager->reveal());
+
+        $fieldDescriptors = $fieldDescriptorFactory->getFieldDescriptors('single-locale');
+
+        $this->assertNotNull($fieldDescriptors);
+        $this->assertSame(['locale', 'templateKey'], \array_keys($fieldDescriptors));
+        $this->assertArrayNotHasKey('ghostLocale', $fieldDescriptors);
+
+        $templateKeyFieldDescriptor = $fieldDescriptors['templateKey'];
+        $this->assertInstanceOf(DoctrineFieldDescriptor::class, $templateKeyFieldDescriptor);
+        $this->assertSame('dimensionContent.templateKey', $templateKeyFieldDescriptor->getSelect());
+        $this->assertSame(['dimensionContent'], \array_keys($templateKeyFieldDescriptor->getJoins()));
+        $this->assertSame('templateKey', $templateKeyFieldDescriptor->getMetadata()->getName());
+        $this->assertSame('select', $templateKeyFieldDescriptor->getMetadata()->getFilterType());
+    }
+
+    public function testGetFieldDescriptorsExcludeGhostsRemovesGhostFieldsAndSimplifiesCaseProperties(): void
+    {
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('single-locale', excludeGhosts: true);
+
+        $this->assertNotNull($fieldDescriptors);
+        $this->assertSame(['locale', 'templateKey'], \array_keys($fieldDescriptors));
+        $this->assertArrayNotHasKey('ghostLocale', $fieldDescriptors);
+
+        $templateKeyFieldDescriptor = $fieldDescriptors['templateKey'];
+        $this->assertInstanceOf(DoctrineFieldDescriptor::class, $templateKeyFieldDescriptor);
+        $this->assertSame('dimensionContent.templateKey', $templateKeyFieldDescriptor->getSelect());
+        $this->assertSame(['dimensionContent'], \array_keys($templateKeyFieldDescriptor->getJoins()));
+        $this->assertSame('templateKey', $templateKeyFieldDescriptor->getMetadata()->getName());
+        $this->assertSame('select', $templateKeyFieldDescriptor->getMetadata()->getFilterType());
+    }
+
     public function testGetFieldDescriptorsIdentity(): void
     {
         /** @var FieldDescriptorInterface[] $fieldDescriptor */
@@ -274,6 +313,18 @@ class FieldDescriptorFactoryTest extends TestCase
     public function testGetFieldDescriptorsNotExisting(): void
     {
         $this->assertNull($this->fieldDescriptorFactory->getFieldDescriptors('not-existing'));
+    }
+
+    private function createFieldDescriptorFactory(
+        ?LocalizationManagerInterface $localizationManager = null
+    ): FieldDescriptorFactory {
+        return new FieldDescriptorFactory(
+            $this->listXmlLoader,
+            [__DIR__ . '/Resources'],
+            $this->configCachePath,
+            $this->debug,
+            $localizationManager
+        );
     }
 
     private function assertFieldDescriptors(array $expected, ?array $fieldDescriptors)
