@@ -98,4 +98,23 @@ class AdminPoolTest extends TestCase
             $contexts['Sulu']['Portal']
         );
     }
+
+    public function testAdminConfig(): void
+    {
+        $this->admin1->getConfigKey()->willReturn('sulu_media');
+        $this->admin1->getConfig()->willReturn([
+            'config' => true,
+            'number' => 1,
+        ]);
+
+        $this->admin2->getConfigKey()->willReturn(null);
+        $this->admin2->getConfig()->willReturn(null);
+
+        $this->assertSame(
+            [
+                'sulu_media' => ['config' => true, 'number' => 1],
+            ],
+            $this->adminPool->getAdminConfigs()
+        );
+    }
 }
