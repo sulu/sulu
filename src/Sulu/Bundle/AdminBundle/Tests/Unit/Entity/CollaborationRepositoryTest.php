@@ -34,6 +34,7 @@ class CollaborationRepositoryTest extends TestCase
         ClockMock::register(Collaboration::class);
         ClockMock::register(CollaborationRepository::class);
         ClockMock::withClockMock(strtotime('2018-11-05 01:00:00'));
+        dump("setting up clock");
     }
 
     public function setUp(): void
