@@ -157,16 +157,8 @@ class AdminController
                 'collaborationInterval' => $this->collaborationInterval * 1000,
                 'textPartLanguages' => $this->getTextPartLanguages($localizations),
             ],
+            ...$this->adminPool->getAdminConfigs(),
         ];
-
-        foreach ($this->adminPool->getAdmins() as $admin) {
-            $adminConfigKey = $admin->getConfigKey();
-            $adminConfig = $admin->getConfig();
-
-            if ($adminConfigKey && $adminConfig) {
-                $config[$adminConfigKey] = $adminConfig;
-            }
-        }
 
         $view = View::create($config);
 
