@@ -47,7 +47,7 @@ class CollaborationRepository
         $value[$collaboration->getConnectionId()] = $collaboration;
 
         $value = \array_filter($value, function(Collaboration $collaboration) {
-            return $collaboration->getChanged() > \time() - $this->threshold;
+            return $collaboration->getChanged() > 'time'() - $this->threshold;
         });
 
         $cacheItem->set($value);
