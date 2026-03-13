@@ -42,8 +42,8 @@ class Collaboration
         private $resourceKey,
         private $id,
     ) {
-        $this->started = time();
-        $this->changed = time();
+        $this->started = \time();
+        $this->changed = \time();
     }
 
     /**
@@ -91,7 +91,7 @@ class Collaboration
      */
     public function updateTime()
     {
-        $this->changed = time();
-        dump(date('Y-m-d H:i:s', $this->changed));
+        $this->changed = \time();
+        dump(\date('Y-m-d H:i:s', $this->changed));
     }
 }
