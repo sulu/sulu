@@ -37,6 +37,7 @@ class CollaborationRepositoryTest extends TestCase
 
         // Checking that the mock is working
         self::assertTrue(ClockMock::withClockMock());
+        self::assertEquals('2018', \Sulu\Bundle\AdminBundle\Entity\date('Y'));
     }
 
     public function setUp(): void
