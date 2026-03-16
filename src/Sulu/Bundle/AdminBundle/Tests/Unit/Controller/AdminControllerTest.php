@@ -20,7 +20,6 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
-use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\View\View as SuluView;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
@@ -262,12 +261,12 @@ class AdminControllerTest extends TestCase
         $smartContentProviders = [];
         $this->viewHandler->handle(
             Argument::that(
-                function(View $view) use ($views) {
+                function(View $view) {
                     $data = $view->getData();
 
                     return 'json' === $view->getFormat()
-                        && $data['sulu_admin']['test1'] === 'value1'
-                        && $data['admin2']['test2'] === 'value2';
+                        && 'value1' === $data['sulu_admin']['test1']
+                        && 'value2' === $data['admin2']['test2'];
                 }
             )
         )->shouldBeCalled()->willReturn(new Response());
