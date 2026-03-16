@@ -262,6 +262,7 @@ class AdminControllerTest extends TestCase
         $this->viewHandler->handle(
             Argument::that(
                 function(View $view) {
+                    /** @var array<string, array<string, string>> $data */
                     $data = $view->getData();
 
                     return 'json' === $view->getFormat()
