@@ -46,6 +46,9 @@ exports[`Render overlay with anchor enabled 1`] = `
         single list overlay
       </div>
       <div
+        class="descriptionLabel"
+      />
+      <div
         class="errorLabel"
       />
     </div>
@@ -69,6 +72,9 @@ exports[`Render overlay with anchor enabled 1`] = `
           value=""
         />
       </div>
+      <div
+        class="descriptionLabel"
+      />
       <div
         class="errorLabel"
       />
@@ -123,6 +129,9 @@ exports[`Render overlay with minimal config 1`] = `
         single list overlay
       </div>
       <div
+        class="descriptionLabel"
+      />
+      <div
         class="errorLabel"
       />
     </div>
@@ -176,6 +185,9 @@ exports[`Render overlay with query enabled 1`] = `
         single list overlay
       </div>
       <div
+        class="descriptionLabel"
+      />
+      <div
         class="errorLabel"
       />
     </div>
@@ -199,6 +211,9 @@ exports[`Render overlay with query enabled 1`] = `
           value=""
         />
       </div>
+      <div
+        class="descriptionLabel"
+      />
       <div
         class="errorLabel"
       />
@@ -252,6 +267,9 @@ exports[`Render overlay with target enabled 1`] = `
       <div>
         single list overlay
       </div>
+      <div
+        class="descriptionLabel"
+      />
       <div
         class="errorLabel"
       />
@@ -308,6 +326,9 @@ exports[`Render overlay with target enabled 1`] = `
         </button>
       </div>
       <div
+        class="descriptionLabel"
+      />
+      <div
         class="errorLabel"
       />
     </div>
@@ -361,6 +382,9 @@ exports[`Render overlay with title enabled 1`] = `
         single list overlay
       </div>
       <div
+        class="descriptionLabel"
+      />
+      <div
         class="errorLabel"
       />
     </div>
@@ -384,6 +408,9 @@ exports[`Render overlay with title enabled 1`] = `
           value=""
         />
       </div>
+      <div
+        class="descriptionLabel"
+      />
       <div
         class="errorLabel"
       />

@@ -140,11 +140,9 @@ class Field<T: string | number> extends React.Component<Props<T>> {
                         </label>
                     }
                     {children}
-                    {description &&
-                        <div className={fieldStyles.descriptionLabel}>
-                            {description}
-                        </div>
-                    }
+                    <div className={fieldStyles.descriptionLabel}>
+                        {description}
+                    </div>
                     <div className={fieldStyles.errorLabel}>
                         {error}
                     </div>

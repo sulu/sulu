@@ -112,6 +112,9 @@ exports[`Render block with schema 1`] = `
                   </div>
                 </div>
                 <div
+                  class="descriptionLabel"
+                />
+                <div
                   class="errorLabel"
                 />
               </div>
@@ -140,6 +143,9 @@ exports[`Render block with schema 1`] = `
                     />
                   </div>
                 </div>
+                <div
+                  class="descriptionLabel"
+                />
                 <div
                   class="errorLabel"
                 />
@@ -237,6 +243,9 @@ exports[`Render block with schema 1`] = `
                   </div>
                 </div>
                 <div
+                  class="descriptionLabel"
+                />
+                <div
                   class="errorLabel"
                 />
               </div>
@@ -265,6 +274,9 @@ exports[`Render block with schema 1`] = `
                     />
                   </div>
                 </div>
+                <div
+                  class="descriptionLabel"
+                />
                 <div
                   class="errorLabel"
                 />
@@ -408,6 +420,9 @@ exports[`Render block with schema and error on fields already being modified 1`]
                   </div>
                 </div>
                 <div
+                  class="descriptionLabel"
+                />
+                <div
                   class="errorLabel"
                 />
               </div>
@@ -504,6 +519,9 @@ exports[`Render block with schema and error on fields already being modified 1`]
                     />
                   </div>
                 </div>
+                <div
+                  class="descriptionLabel"
+                />
                 <div
                   class="errorLabel"
                 >
@@ -602,6 +620,9 @@ exports[`Render block with schema and error on fields already being modified 1`]
                     />
                   </div>
                 </div>
+                <div
+                  class="descriptionLabel"
+                />
                 <div
                   class="errorLabel"
                 />
@@ -745,6 +766,9 @@ exports[`Render block with schema and error on fields already being modified 2`]
                   </div>
                 </div>
                 <div
+                  class="descriptionLabel"
+                />
+                <div
                   class="errorLabel"
                 />
               </div>
@@ -841,6 +865,9 @@ exports[`Render block with schema and error on fields already being modified 2`]
                     />
                   </div>
                 </div>
+                <div
+                  class="descriptionLabel"
+                />
                 <div
                   class="errorLabel"
                 >
@@ -940,6 +967,9 @@ exports[`Render block with schema and error on fields already being modified 2`]
                     />
                   </div>
                 </div>
+                <div
+                  class="descriptionLabel"
+                />
                 <div
                   class="errorLabel"
                 >

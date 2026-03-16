@@ -59,6 +59,9 @@ exports[`Render ContactDetails with data 1`] = `
         />
       </div>
       <div
+        class="descriptionLabel"
+      />
+      <div
         class="errorLabel"
       />
     </div>
@@ -118,6 +121,9 @@ exports[`Render ContactDetails with data 1`] = `
         />
       </div>
       <div
+        class="descriptionLabel"
+      />
+      <div
         class="errorLabel"
       />
     </div>
@@ -176,6 +182,9 @@ exports[`Render ContactDetails with data 1`] = `
           tabindex="0"
         />
       </div>
+      <div
+        class="descriptionLabel"
+      />
       <div
         class="errorLabel"
       />
@@ -269,6 +278,9 @@ exports[`Render ContactDetails with data 1`] = `
         />
       </div>
       <div
+        class="descriptionLabel"
+      />
+      <div
         class="errorLabel"
       />
     </div>
@@ -326,6 +338,9 @@ exports[`Render ContactDetails with data 1`] = `
         />
       </div>
       <div
+        class="descriptionLabel"
+      />
+      <div
         class="errorLabel"
       />
     </div>
@@ -359,6 +374,9 @@ exports[`Render ContactDetails with data 1`] = `
           class="su-angle-down dropdownIcon"
         />
       </button>
+      <div
+        class="descriptionLabel"
+      />
       <div
         class="errorLabel"
       />
@@ -424,6 +442,9 @@ exports[`Render empty ContactDetails 1`] = `
         />
       </div>
       <div
+        class="descriptionLabel"
+      />
+      <div
         class="errorLabel"
       />
     </div>
@@ -481,6 +502,9 @@ exports[`Render empty ContactDetails 1`] = `
         />
       </div>
       <div
+        class="descriptionLabel"
+      />
+      <div
         class="errorLabel"
       />
     </div>
@@ -514,6 +538,9 @@ exports[`Render empty ContactDetails 1`] = `
           class="su-angle-down dropdownIcon"
         />
       </button>
+      <div
+        class="descriptionLabel"
+      />
       <div
         class="errorLabel"
       />
@@ -579,6 +606,9 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
         />
       </div>
       <div
+        class="descriptionLabel"
+      />
+      <div
         class="errorLabel"
       />
     </div>
@@ -635,6 +665,9 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
           tabindex="0"
         />
       </div>
+      <div
+        class="descriptionLabel"
+      />
       <div
         class="errorLabel"
       />
@@ -694,6 +727,9 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
           tabindex="0"
         />
       </div>
+      <div
+        class="descriptionLabel"
+      />
       <div
         class="errorLabel"
       />
@@ -787,6 +823,9 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
         />
       </div>
       <div
+        class="descriptionLabel"
+      />
+      <div
         class="errorLabel"
       />
     </div>
@@ -844,6 +883,9 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
         />
       </div>
       <div
+        class="descriptionLabel"
+      />
+      <div
         class="errorLabel"
       />
     </div>
@@ -877,6 +919,9 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
           class="su-angle-down dropdownIcon"
         />
       </button>
+      <div
+        class="descriptionLabel"
+      />
       <div
         class="errorLabel"
       />

@@ -61,6 +61,9 @@ exports[`Render a field with a error collection 1`] = `
       </div>
     </div>
     <div
+      class="descriptionLabel"
+    />
+    <div
       class="errorLabel"
     >
       sulu_admin.error_minitems
@@ -93,6 +96,9 @@ exports[`Render a field with an error 1`] = `
         />
       </div>
     </div>
+    <div
+      class="descriptionLabel"
+    />
     <div
       class="errorLabel"
     >
@@ -127,6 +133,9 @@ exports[`Render a field without a const error 1`] = `
       </div>
     </div>
     <div
+      class="descriptionLabel"
+    />
+    <div
       class="errorLabel"
     />
   </div>
@@ -151,6 +160,9 @@ exports[`Render a field without a label 1`] = `
         />
       </div>
     </div>
+    <div
+      class="descriptionLabel"
+    />
     <div
       class="errorLabel"
     />
@@ -183,6 +195,9 @@ exports[`Render a required field with correct field type 1`] = `
       </div>
     </div>
     <div
+      class="descriptionLabel"
+    />
+    <div
       class="errorLabel"
     />
   </div>
@@ -213,6 +228,9 @@ exports[`Render correct label with correct field type 1`] = `
         />
       </div>
     </div>
+    <div
+      class="descriptionLabel"
+    />
     <div
       class="errorLabel"
     />
@@ -245,6 +263,9 @@ exports[`Render correct label with correct field type 2`] = `
       </div>
     </div>
     <div
+      class="descriptionLabel"
+    />
+    <div
       class="errorLabel"
     />
   </div>
@@ -275,6 +296,9 @@ exports[`Render field with correct values for grid 1`] = `
         />
       </div>
     </div>
+    <div
+      class="descriptionLabel"
+    />
     <div
       class="errorLabel"
     />
