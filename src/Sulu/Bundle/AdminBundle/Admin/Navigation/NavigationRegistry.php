@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\Navigation;
 
-use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -60,12 +59,6 @@ class NavigationRegistry
     private function loadNavigationItems(): void
     {
         $navigationItemCollection = new NavigationItemCollection();
-
-        $settingsNavigationItem = new NavigationItem(Admin::SETTINGS_NAVIGATION_ITEM);
-        $settingsNavigationItem->setPosition(1000);
-        $settingsNavigationItem->setIcon('su-cog');
-
-        $navigationItemCollection->add($settingsNavigationItem);
 
         foreach ($this->adminPool->getAdmins() as $admin) {
             if (!$admin instanceof NavigationProviderInterface) {
