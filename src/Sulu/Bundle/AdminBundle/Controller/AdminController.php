@@ -16,7 +16,6 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
-use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
@@ -53,22 +52,22 @@ class AdminController
         private Environment $engine,
         private TranslatorBagInterface $translatorBag,
         private MetadataProviderRegistry $metadataProviderRegistry,
-        private ViewRegistry $viewRegistry,
-        private NavigationRegistry $navigationRegistry,
-        private FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
-        private ContactManagerInterface $contactManager,
-        private iterable $smartContentProviders,
-        private LinkProviderPoolInterface $linkProviderPool,
-        private LocalizationManagerInterface $localizationManager,
+        private ViewRegistry $viewRegistry, // deprecated
+        private NavigationRegistry $navigationRegistry, // deprecated
+        private FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry, // deprecated
+        private ContactManagerInterface $contactManager, // deprecated
+        private iterable $smartContentProviders, // deprecated
+        private LinkProviderPoolInterface $linkProviderPool, // deprecated
+        private LocalizationManagerInterface $localizationManager, // deprecated
         private string $environment,
         private string $suluVersion,
         private ?string $appVersion,
-        private array $resources,
+        private array $resources, //deprecated
         private array $locales,
         private array $translations,
         private string $fallbackLocale,
-        private int $collaborationInterval,
-        private bool $collaborationEnabled,
+        private int $collaborationInterval, //deprecated
+        private bool $collaborationEnabled, //deprecated
         private ?string $passwordPattern = null,
         private ?string $passwordInfoTranslationKey = null,
         private bool $hasSingleSignOnProvider = false,
@@ -121,27 +120,8 @@ class AdminController
     {
         $user = $this->tokenStorage->getToken()->getUser();
         $locale = $user->getLocale();
-        $contact = $this->contactManager->getById($user->getContact()->getId(), $locale);
 
-        $config = [
-            'sulu_admin' => [
-                'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
-                'internalLinkTypes' => $this->linkProviderPool->getConfiguration(),
-                'localizations' => \array_values($this->localizationManager->getLocalizations()),
-                'navigation' => \array_map(function(NavigationItem $navigationItem) {
-                    return $navigationItem->toArray();
-                }, \array_values($this->navigationRegistry->getNavigationItems())),
-                'routes' => $this->viewRegistry->getViews(),
-                'resources' => $this->resources,
-                'smartContent' => \array_map(function(SmartContentProviderInterface $dataProvider) {
-                    return $dataProvider->getConfiguration();
-                }, \iterator_to_array($this->smartContentProviders)),
-                'user' => $user,
-                'contact' => $contact,
-                'collaborationEnabled' => $this->collaborationEnabled,
-                'collaborationInterval' => $this->collaborationInterval * 1000,
-            ],
-        ];
+        $config = [];
 
         foreach ($this->adminPool->getAdmins() as $admin) {
             $adminConfigKey = $admin->getConfigKey();
