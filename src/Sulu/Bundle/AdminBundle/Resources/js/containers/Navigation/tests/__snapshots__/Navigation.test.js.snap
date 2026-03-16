@@ -32,9 +32,10 @@ exports[`Should render navigation 1`] = `
     <div
       class="item active"
     >
-      <button
+      <a
+        aria-current="page"
         class="title"
-        type="button"
+        href="#/sulu_admin.form_tab"
       >
         <span
           aria-label="su-options"
@@ -43,14 +44,14 @@ exports[`Should render navigation 1`] = `
         <span
           class="text"
         />
-      </button>
+      </a>
     </div>
     <div
       class="item"
     >
-      <button
+      <a
         class="title"
-        type="button"
+        href="#/sulu_article.list"
       >
         <span
           aria-label="su-article"
@@ -59,12 +60,13 @@ exports[`Should render navigation 1`] = `
         <span
           class="text"
         />
-      </button>
+      </a>
     </div>
     <div
       class="item active"
     >
       <button
+        aria-current="page"
         class="title"
         type="button"
       >
@@ -84,26 +86,27 @@ exports[`Should render navigation 1`] = `
         <div
           class="item active"
         >
-          <button
+          <a
+            aria-current="page"
             class="title"
-            type="button"
+            href="#/sulu_admin.form_tab"
           >
             <span
               class="text"
             />
-          </button>
+          </a>
         </div>
         <div
           class="item"
         >
-          <button
+          <a
             class="title"
-            type="button"
+            href="#/sulu_article.list"
           >
             <span
               class="text"
             />
-          </button>
+          </a>
         </div>
       </div>
     </div>
@@ -204,9 +207,10 @@ exports[`Should render navigation without appVersion 1`] = `
     <div
       class="item active"
     >
-      <button
+      <a
+        aria-current="page"
         class="title"
-        type="button"
+        href="#/sulu_admin.form_tab"
       >
         <span
           aria-label="su-options"
@@ -215,14 +219,14 @@ exports[`Should render navigation without appVersion 1`] = `
         <span
           class="text"
         />
-      </button>
+      </a>
     </div>
     <div
       class="item"
     >
-      <button
+      <a
         class="title"
-        type="button"
+        href="#/sulu_article.list"
       >
         <span
           aria-label="su-article"
@@ -231,12 +235,13 @@ exports[`Should render navigation without appVersion 1`] = `
         <span
           class="text"
         />
-      </button>
+      </a>
     </div>
     <div
       class="item active"
     >
       <button
+        aria-current="page"
         class="title"
         type="button"
       >
@@ -256,26 +261,27 @@ exports[`Should render navigation without appVersion 1`] = `
         <div
           class="item active"
         >
-          <button
+          <a
+            aria-current="page"
             class="title"
-            type="button"
+            href="#/sulu_admin.form_tab"
           >
             <span
               class="text"
             />
-          </button>
+          </a>
         </div>
         <div
           class="item"
         >
-          <button
+          <a
             class="title"
-            type="button"
+            href="#/sulu_article.list"
           >
             <span
               class="text"
             />
-          </button>
+          </a>
         </div>
       </div>
     </div>

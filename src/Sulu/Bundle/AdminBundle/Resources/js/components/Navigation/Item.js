@@ -9,8 +9,10 @@ type Props = {
     active?: boolean,
     children?: ChildrenArray<Element<typeof Item> | false>,
     expanded?: boolean,
+    href?: string,
     icon?: string,
     onClick?: (value: string) => void,
+    onLinkClick?: (event: SyntheticMouseEvent<HTMLAnchorElement>, value: string) => void,
     title: string,
     value: string,
 };
@@ -26,8 +28,18 @@ export default class Item extends React.PureComponent<Props> {
         onClick(value);
     };
 
+    handleLinkClick = (event: SyntheticMouseEvent<HTMLAnchorElement>) => {
+        const {onLinkClick, value} = this.props;
+
+        if (!onLinkClick) {
+            return;
+        }
+
+        onLinkClick(event, value);
+    };
+
     render() {
-        const {title, children, expanded, icon} = this.props;
+        const {title, children, expanded, icon, href} = this.props;
         let {active} = this.props;
 
         // check for active children
@@ -46,18 +58,46 @@ export default class Item extends React.PureComponent<Props> {
             }
         );
 
+        const ariaCurrent = active ? 'page' : undefined;
+
         return (
             <div className={itemClass}>
-                <button className={itemStyles.title} onClick={this.handleClick} type="button">
-                    {icon && <Icon className={itemStyles.icon} name={icon} />}
-                    <span className={itemStyles.text}>{title}</span>
-                    {children &&
-                        <Icon
-                            className={itemStyles.childrenIndicator}
-                            name={expanded ? 'su-angle-down' : 'su-angle-right'}
-                        />
-                    }
-                </button>
+                {href
+                    ? (
+                        <a
+                            aria-current={ariaCurrent}
+                            className={itemStyles.title}
+                            href={href}
+                            onClick={this.handleLinkClick}
+                        >
+                            {icon && <Icon className={itemStyles.icon} name={icon} />}
+                            <span className={itemStyles.text}>{title}</span>
+                            {children &&
+                                <Icon
+                                    className={itemStyles.childrenIndicator}
+                                    name={expanded ? 'su-angle-down' : 'su-angle-right'}
+                                />
+                            }
+                        </a>
+                    )
+                    : (
+                        <button
+                            aria-current={ariaCurrent}
+                            className={itemStyles.title}
+                            onClick={this.handleClick}
+                            type="button"
+                        >
+                            {icon && <Icon className={itemStyles.icon} name={icon} />}
+                            <span className={itemStyles.text}>{title}</span>
+                            {children &&
+                                <Icon
+                                    className={itemStyles.childrenIndicator}
+                                    name={expanded ? 'su-angle-down' : 'su-angle-right'}
+                                />
+                            }
+                        </button>
+                    )
+                }
 
                 {expanded && children &&
                     <div>{children}</div>
