@@ -487,6 +487,18 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationRegistry.php
 
 		-
+			message: '#^Cannot call method getId\(\) on Sulu\\Bundle\\ContactBundle\\Entity\\ContactInterface\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Admin/SuluAdmin.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\SuluAdmin\:\:__construct\(\) has parameter \$contactManager with generic interface Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface but does not specify its types\: DoctrineEntity, ApiEntity, AddressRelationEntity$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Admin/SuluAdmin.php
+
+		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\Badge\:\:getRouterAttributesToRequest\(\) should return array\<int\|string, string\> but returns array\<string, mixed\>\.$#'
 			identifier: return.type
 			count: 1
@@ -1159,18 +1171,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
 
 		-
-			message: '#^Cannot call method getContact\(\) on Symfony\\Component\\Security\\Core\\User\\UserInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
-
-		-
 			message: '#^Cannot call method getLocale\(\) on Symfony\\Component\\Security\\Core\\User\\UserInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -1195,25 +1195,43 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
 
 		-
-			message: '#^Parameter \#1 \$id of method Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface\<mixed,mixed,mixed\>\:\:getById\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
-
-		-
 			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\AdminBundle\\Metadata\\MetadataProviderInterface\:\:getMetadata\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
 
 		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface\<mixed,mixed,mixed\>\:\:getById\(\) expects string, mixed given\.$#'
-			identifier: argument.type
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Controller\\AdminController\:\:\$collaborationEnabled is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Controller\\AdminController\:\:\$collaborationInterval is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Controller\\AdminController\:\:\$contactManager is never read, only written\.$#'
+			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
 
 		-
 			message: '#^Property Sulu\\Bundle\\AdminBundle\\Controller\\AdminController\:\:\$environment is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Controller\\AdminController\:\:\$fieldTypeOptionRegistry is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Controller\\AdminController\:\:\$linkProviderPool is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
@@ -1225,7 +1243,37 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
 
 		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Controller\\AdminController\:\:\$localizationManager is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Controller\\AdminController\:\:\$navigationRegistry is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Controller\\AdminController\:\:\$resources is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
+
+		-
 			message: '#^Property Sulu\\Bundle\\AdminBundle\\Controller\\AdminController\:\:\$serializer is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Controller\\AdminController\:\:\$smartContentProviders is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Controller\\AdminController\:\:\$viewRegistry is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
