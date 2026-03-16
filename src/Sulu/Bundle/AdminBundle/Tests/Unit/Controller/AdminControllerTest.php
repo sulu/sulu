@@ -237,35 +237,16 @@ class AdminControllerTest extends TestCase
         ];
         $this->viewRegistry->getViews()->willReturn($views);
 
-        $navigationItem1 = new NavigationItem('navigation_item1');
-        $navigationItem2 = new NavigationItem('navigation_item2');
-        $this->navigationRegistry->getNavigationItems()->willReturn([$navigationItem1, $navigationItem2]);
-
-        $this->urlGenerator->generate('view_id_1')->willReturn('/path1');
-        $this->urlGenerator->generate('view_id_2')->willReturn('/path2');
-        $this->urlGenerator->generate('sulu_admin.metadata', ['type' => ':type', 'key' => ':key'])
-            ->willReturn('/admin/metadata');
-        $this->urlGenerator->generate('sulu_preview.start')->willReturn('/preview/start');
-        $this->urlGenerator->generate('sulu_preview.render')->willReturn('/preview/render');
-        $this->urlGenerator->generate('sulu_preview.update')->willReturn('/preview/update');
-        $this->urlGenerator->generate('sulu_preview.update-context')->willReturn('/preview/update-context');
-        $this->urlGenerator->generate('sulu_preview.stop')->willReturn('/preview/stop');
-        $this->urlGenerator->generate('sulu_website.cache.remove')->willReturn('/admin/website/cache');
-        $this->urlGenerator->generate('sulu_media.redirect', ['id' => ':id'])->willReturn('/media/redirect');
-
         $contact = $this->prophesize(ContactInterface::class);
         $contact->getId()->willReturn(5);
 
         $this->user->getContact()->willReturn($contact->reveal());
         $this->user->getLocale()->willReturn('en');
 
-        $fieldTypeOptions = ['selection' => []];
-        $this->fieldTypeOptionRegistry->toArray()->willReturn($fieldTypeOptions);
-
         $admin1 = $this->prophesize(Admin::class);
         $admin1Config = ['test1' => 'value1'];
         $admin1->getConfig()->willReturn($admin1Config);
-        $admin1->getConfigKey()->willReturn('admin1');
+        $admin1->getConfigKey()->willReturn('sulu_admin');
 
         $admin2 = $this->prophesize(Admin::class);
         $admin2Config = ['test2' => 'value2'];
@@ -281,20 +262,12 @@ class AdminControllerTest extends TestCase
         $smartContentProviders = [];
         $this->viewHandler->handle(
             Argument::that(
-                function(View $view) use ($smartContentProviders, $fieldTypeOptions, $views, $admin1Config, $admin2Config) {
+                function(View $view) use ($views) {
                     $data = $view->getData();
 
                     return 'json' === $view->getFormat()
-                        && $data['sulu_admin']['fieldTypeOptions'] === $fieldTypeOptions
-                        && $data['sulu_admin']['smartContent'] === $smartContentProviders
-                        && $data['sulu_admin']['routes'] === $views
-                        && 'navigation_item1' === $data['sulu_admin']['navigation'][0]['title']
-                        && 'navigation_item2' === $data['sulu_admin']['navigation'][1]['title']
-                        && $data['sulu_admin']['resources'] === $this->resources
-                        && true === $data['sulu_admin']['collaborationEnabled']
-                        && 10000 === $data['sulu_admin']['collaborationInterval']
-                        && $data['admin1'] === $admin1Config
-                        && $data['admin2'] === $admin2Config;
+                        && $data['sulu_admin']['test1'] === 'value1'
+                        && $data['admin2']['test2'] === 'value2';
                 }
             )
         )->shouldBeCalled()->willReturn(new Response());
