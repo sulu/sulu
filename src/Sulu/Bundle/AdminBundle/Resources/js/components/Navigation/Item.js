@@ -58,14 +58,11 @@ export default class Item extends React.PureComponent<Props> {
             }
         );
 
-        const ariaCurrent = active ? 'page' : undefined;
-
         return (
             <div className={itemClass}>
                 {href
                     ? (
                         <a
-                            aria-current={ariaCurrent}
                             className={itemStyles.title}
                             href={href}
                             onClick={this.handleLinkClick}
@@ -82,7 +79,6 @@ export default class Item extends React.PureComponent<Props> {
                     )
                     : (
                         <button
-                            aria-current={ariaCurrent}
                             className={itemStyles.title}
                             onClick={this.handleClick}
                             type="button"

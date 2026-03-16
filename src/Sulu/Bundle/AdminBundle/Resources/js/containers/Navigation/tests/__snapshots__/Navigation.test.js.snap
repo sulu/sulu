@@ -33,7 +33,6 @@ exports[`Should render navigation 1`] = `
       class="item active"
     >
       <a
-        aria-current="page"
         class="title"
         href="#/sulu_admin.form_tab"
       >
@@ -66,7 +65,6 @@ exports[`Should render navigation 1`] = `
       class="item active"
     >
       <button
-        aria-current="page"
         class="title"
         type="button"
       >
@@ -87,7 +85,6 @@ exports[`Should render navigation 1`] = `
           class="item active"
         >
           <a
-            aria-current="page"
             class="title"
             href="#/sulu_admin.form_tab"
           >
@@ -208,7 +205,6 @@ exports[`Should render navigation without appVersion 1`] = `
       class="item active"
     >
       <a
-        aria-current="page"
         class="title"
         href="#/sulu_admin.form_tab"
       >
@@ -241,7 +237,6 @@ exports[`Should render navigation without appVersion 1`] = `
       class="item active"
     >
       <button
-        aria-current="page"
         class="title"
         type="button"
       >
@@ -262,7 +257,6 @@ exports[`Should render navigation without appVersion 1`] = `
           class="item active"
         >
           <a
-            aria-current="page"
             class="title"
             href="#/sulu_admin.form_tab"
           >
