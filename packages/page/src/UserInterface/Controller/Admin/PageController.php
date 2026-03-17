@@ -87,8 +87,8 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         $locale = $request->query->get('locale');
         $parentId = $request->query->get('parentId');
         $webspaceKey = $request->query->get('webspace');
-        $excludeGhosts = $request->query->getBoolean('exclude-ghosts', false);
-        $hasSearchOrFilter = $request->query->has('search')
+        $excludeGhostPages = $request->query->getBoolean('exclude-ghosts', false);
+        $excludeGhosts = $request->query->has('search')
             || !empty($request->query->all('filter'));
         $excludeShadows = $request->query->getBoolean('exclude-shadows', false);
         $expandedIds = \array_filter(\explode(',', (string) $request->query->get('expandedIds')));
@@ -100,7 +100,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             $filters['webspaceKey'] = $webspaceKey;
         }
 
-        if ($excludeGhosts) {
+        if ($excludeGhostPages) {
             $filters['ghostLocale'] = null;
         }
 
@@ -122,7 +122,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             includedFields: $includedFields,
             listKey: 'pages',
             filterByParentId: empty($ids),
-            excludeGhosts: $hasSearchOrFilter,
+            excludeGhosts: $excludeGhosts,
         );
 
         return new JsonResponse($this->normalizer->normalize(

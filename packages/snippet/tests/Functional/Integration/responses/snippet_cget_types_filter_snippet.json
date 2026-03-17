@@ -6,6 +6,7 @@
                 "changer": "@string@",
                 "created": "@datetime@",
                 "creator": "@string@",
+                "ghostLocale": null,
                 "id": "@string@",
                 "locale": "en",
                 "published": null,
