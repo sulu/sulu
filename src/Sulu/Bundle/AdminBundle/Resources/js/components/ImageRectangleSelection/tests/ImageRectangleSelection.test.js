@@ -1,149 +1,140 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
-import {mount} from 'enzyme';
+/* global global */
+/* eslint-disable flowtype/require-valid-file-annotation, flowtype/no-types-missing-file-annotation */
+import {act, render} from '@testing-library/react';
 import React from 'react';
+import RectangleSelection from '../../RectangleSelection';
 import {ImageRectangleSelection} from '../ImageRectangleSelection';
-
-jest.mock('../../../utils/DOM/afterElementsRendered');
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../withContainerSize/withContainerSize');
+jest.mock('../../RectangleSelection', () => jest.fn((props) => (
+    <div data-testid="rectangle-selection">
+        {props.children}
+    </div>
+)));
 
-test('The component should render with image source', () => {
-    const view = mount(
+const imageInstances = [];
+const OriginalImage = global.Image;
+
+class MockImage {
+    naturalHeight: number;
+    naturalWidth: number;
+    onerror: () => void;
+    onload: () => void;
+    src: string;
+
+    constructor() {
+        imageInstances.push(this);
+        this.naturalHeight = 0;
+        this.naturalWidth = 0;
+        this.src = '';
+    }
+}
+
+beforeEach(() => {
+    imageInstances.length = 0;
+    jest.clearAllMocks();
+    // $FlowFixMe[prop-missing]
+    global.Image = MockImage;
+});
+
+afterEach(() => {
+    // $FlowFixMe[prop-missing]
+    global.Image = OriginalImage;
+});
+
+function renderImageRectangleSelection(props = {}) {
+    return render(
         <ImageRectangleSelection
             containerHeight={360}
             containerWidth={640}
             image="//:0"
             onChange={jest.fn()}
+            {...props}
         />
     );
+}
 
-    const onImageLoad = view.instance().image.onload;
-    view.instance().image = {
-        naturalWidth: 1920,
-        naturalHeight: 1080,
-    };
-    onImageLoad();
+function loadImage(index = 0, naturalWidth = 1920, naturalHeight = 1080) {
+    imageInstances[index].naturalWidth = naturalWidth;
+    imageInstances[index].naturalHeight = naturalHeight;
+    act(() => {
+        imageInstances[index].onload();
+    });
+}
 
-    view.update();
+function getLatestRectangleSelectionProps() {
+    return RectangleSelection.mock.calls[RectangleSelection.mock.calls.length - 1][0];
+}
 
-    expect(view.render()).toMatchSnapshot();
+test('The component should render with image source', () => {
+    const {asFragment} = renderImageRectangleSelection();
+
+    loadImage();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('The component should calculate the selection with respect to the image', () => {
     const changeSpy = jest.fn();
+    const {asFragment} = renderImageRectangleSelection({
+        onChange: changeSpy,
+        value: {height: 1080, left: 0, top: 0, width: 1920},
+    });
 
-    const view = mount(
-        <ImageRectangleSelection
-            containerHeight={360}
-            containerWidth={640}
-            image="//:0"
-            onChange={changeSpy}
-            value={{height: 1080, left: 0, top: 0, width: 1920}}
-        />
-    );
-
-    const onImageLoad = view.instance().image.onload;
-    view.instance().image = {
-        naturalWidth: 1920,
-        naturalHeight: 1080,
-    };
-    onImageLoad();
-
-    view.update();
-    expect(view.render()).toMatchSnapshot();
+    loadImage();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('The component should render with initial selection', () => {
     const changeSpy = jest.fn();
+    const {asFragment} = renderImageRectangleSelection({
+        onChange: changeSpy,
+        value: {width: 1500, height: 800, top: 200, left: 300},
+    });
 
-    const view = mount(
-        <ImageRectangleSelection
-            containerHeight={360}
-            containerWidth={640}
-            image="//:0"
-            onChange={changeSpy}
-            value={{width: 1500, height: 800, top: 200, left: 300}}
-        />
-    );
-
-    const onImageLoad = view.instance().image.onload;
-    view.instance().image = {
-        naturalWidth: 1920,
-        naturalHeight: 1080,
-    };
-    onImageLoad();
-
-    view.update();
-
-    expect(view.render()).toMatchSnapshot();
+    loadImage();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('The component should pass a value of undefined', () => {
     const changeSpy = jest.fn();
+    renderImageRectangleSelection({
+        minHeight: 300,
+        minWidth: 600,
+        onChange: changeSpy,
+        value: {width: 1500, height: 800, top: 200, left: 300},
+    });
 
-    const view = mount(
-        <ImageRectangleSelection
-            containerHeight={360}
-            containerWidth={640}
-            image="//:0"
-            minHeight={300}
-            minWidth={600}
-            onChange={changeSpy}
-            value={{width: 1500, height: 800, top: 200, left: 300}}
-        />
-    );
-
-    const onImageLoad = view.instance().image.onload;
-    view.instance().image = {
-        naturalWidth: 1920,
-        naturalHeight: 1080,
-    };
-    onImageLoad();
-    view.update();
-
-    view.find('RectangleSelectionComponent').prop('onChange')(undefined);
+    loadImage();
+    act(() => {
+        getLatestRectangleSelectionProps().onChange(undefined);
+    });
 
     expect(changeSpy).toBeCalledWith(undefined);
 });
 
 test('The component should scale the value based on the image height and container height', () => {
     const changeSpy = jest.fn();
+    renderImageRectangleSelection({
+        onChange: changeSpy,
+        value: undefined,
+    });
 
-    const view = mount(
-        <ImageRectangleSelection
-            containerHeight={360}
-            containerWidth={640}
-            image="//:0"
-            onChange={changeSpy}
-            value={undefined}
-        />
-    );
-
-    const onImageLoad = view.instance().image.onload;
-    view.instance().image = {
-        naturalWidth: 1920,
-        naturalHeight: 1080,
-    };
-    onImageLoad();
-    view.update();
-
-    view.find('RectangleSelectionComponent').prop('onChange')({width: 320, height: 180, top: 0, left: 320});
+    loadImage();
+    act(() => {
+        getLatestRectangleSelectionProps().onChange({width: 320, height: 180, top: 0, left: 320});
+    });
 
     expect(changeSpy).toBeCalledWith({width: 960, height: 540, top: 0, left: 960});
 });
 
 test('The component should not scale the value to exceed the natural image width', () => {
     const changeSpy = jest.fn();
-
-    const view = mount(
+    render(
         <ImageRectangleSelection
-            // window.innerHeight = 798
             containerHeight={369}
-            // window.innerWidth = 1440
             containerWidth={1000}
             image="//:0"
             onChange={changeSpy}
@@ -151,15 +142,10 @@ test('The component should not scale the value to exceed the natural image width
         />
     );
 
-    const onImageLoad = view.instance().image.onload;
-    view.instance().image = {
-        naturalWidth: 4896,
-        naturalHeight: 3264,
-    };
-    onImageLoad();
-    view.update();
-
-    view.find('RectangleSelectionComponent').prop('onChange')({width: 554, height: 200, top: 0, left: 0});
+    loadImage(0, 4896, 3264);
+    act(() => {
+        getLatestRectangleSelectionProps().onChange({width: 554, height: 200, top: 0, left: 0});
+    });
 
     expect(changeSpy).toBeCalledWith({width: 4896, height: 1769.1056910569105, top: 0, left: 0});
 });
@@ -174,7 +160,7 @@ test.each([
 ])(
     'The component should render with minHeight %s, minWidth %s, containerHeight %s and containerWidth %s',
     (minHeight, minWidth, containerHeight, containerWidth, expectedMinHeight, expectedMinWidth) => {
-        const view = mount(
+        render(
             <ImageRectangleSelection
                 containerHeight={containerHeight}
                 containerWidth={containerWidth}
@@ -185,18 +171,9 @@ test.each([
             />
         );
 
-        const onImageLoad = view.instance().image.onload;
-        view.instance().image = {
-            naturalWidth: 1920,
-            naturalHeight: 1080,
-        };
-        onImageLoad();
+        loadImage();
 
-        view.update();
-
-        const rectangle = view.find('RectangleSelectionComponent');
-        expect(rectangle.length).toBe(1);
-        expect(rectangle.props().minHeight).toEqual(expectedMinHeight);
-        expect(rectangle.props().minWidth).toEqual(expectedMinWidth);
+        expect(getLatestRectangleSelectionProps().minHeight).toEqual(expectedMinHeight);
+        expect(getLatestRectangleSelectionProps().minWidth).toEqual(expectedMinWidth);
     }
 );

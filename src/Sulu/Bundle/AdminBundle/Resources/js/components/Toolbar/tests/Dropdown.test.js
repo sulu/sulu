@@ -67,7 +67,7 @@ test('Render dropdown with a different size', () => {
 test('Open dropdown on click', async() => {
     render(<Dropdown {...dropdownPropsMock} />);
 
-    const button = screen.queryByText('Click to open');
+    const button = screen.getByText('Click to open');
 
     expect(screen.queryByText('An option')).not.toBeInTheDocument();
     await userEvent.click(button);
@@ -82,7 +82,7 @@ test('Disabled dropdown will not open', async() => {
         />
     );
 
-    const button = screen.queryByText('Click to open');
+    const button = screen.getByText('Click to open');
 
     expect(screen.queryByText('An option')).not.toBeInTheDocument();
     await userEvent.click(button);
@@ -103,8 +103,8 @@ test('Click on option fires onClick', async() => {
 
     render(<Dropdown {...propsMock} />);
 
-    await userEvent.click(screen.queryByText('Click to open'));
-    await userEvent.click(screen.queryByText('An option'));
+    await userEvent.click(screen.getByText('Click to open'));
+    await userEvent.click(screen.getByText('An option'));
 
     expect(clickSpy).toBeCalled();
 });
@@ -129,8 +129,8 @@ test('Click on disabled option will not fire onClick', async() => {
 
     render(<Dropdown {...propsMock} />);
 
-    await userEvent.click(screen.queryByText('Click to open'));
-    await userEvent.click(screen.queryByText('An option'));
+    await userEvent.click(screen.getByText('Click to open'));
+    await userEvent.click(screen.getByText('An option'));
 
     expect(clickSpy).not.toBeCalled();
 });
@@ -153,7 +153,7 @@ test('No active options should disable dropdown', async() => {
     };
 
     render(<Dropdown {...propsMock} />);
-    const button = screen.queryByRole('button');
+    const button = screen.getByRole('button');
 
     expect(button).toBeDisabled();
     expect(screen.queryByText('An option')).not.toBeInTheDocument();

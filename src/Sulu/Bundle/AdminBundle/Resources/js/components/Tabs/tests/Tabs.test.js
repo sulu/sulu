@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {render, screen} from '@testing-library/react';
+import {render, screen, within} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Badge from '../../Badge/Badge';
@@ -7,17 +7,48 @@ import Tabs from '../Tabs.js';
 
 jest.mock('debounce', () => jest.fn((callback) => callback));
 
-window.ResizeObserver = jest.fn(function() {
+window.ResizeObserver = jest.fn(function(callback) {
     this.observe = jest.fn();
     this.disconnect = jest.fn();
+    this.callback = callback;
 });
 
 Object.defineProperty(window, 'getComputedStyle', {
     value: () => ({
         paddingLeft: 20.0,
         paddingRight: 20.0,
+        getPropertyValue: () => '',
     }),
 });
+
+function applyTabMeasurements(container) {
+    const tabsRef = container.querySelector('.tabs');
+    const tabsContainerWrapperRef = container.querySelector('.tabsContainerWrapper');
+    const tabsContainerRef = container.querySelector('.tabsContainer');
+    const tabRefs = container.querySelectorAll('.tab');
+
+    if (!tabsRef || !tabsContainerWrapperRef || !tabsContainerRef) {
+        throw new Error('Expected tabs container refs');
+    }
+
+    Object.defineProperty(tabsRef, 'offsetWidth', {value: 129, configurable: true});
+    Object.defineProperty(tabsContainerWrapperRef, 'offsetWidth', {value: 55, configurable: true});
+    Object.defineProperty(tabsContainerRef, 'offsetWidth', {value: 100, configurable: true});
+    tabRefs.forEach((tabRef) => {
+        Object.defineProperty(tabRef, 'offsetWidth', {value: 10, configurable: true});
+    });
+
+    ResizeObserver.mock.instances[0].callback();
+}
+
+function getCollapsedTabList() {
+    const collapsedTabList = document.querySelector('.collapsedTabList');
+    if (!collapsedTabList) {
+        throw new Error('Expected collapsed tab list');
+    }
+
+    return collapsedTabList;
+}
 
 test('Render a Tabs component with type root', () => {
     const changeSpy = jest.fn();
@@ -111,4 +142,113 @@ test('ResizeObserver.disconnect should be called before component unmount', () =
     unmount();
 
     expect(ResizeObserver.mock.instances[0].disconnect).toBeCalled();
+});
+
+test('Clicking on several non- and collapsed tabs', async() => {
+    const user = userEvent.setup();
+    const changeSpy = jest.fn();
+
+    const {container, rerender} = render(
+        <Tabs onSelect={changeSpy} selectedIndex={0}>
+            <Tabs.Tab>Tab 1</Tabs.Tab>
+            <Tabs.Tab>Tab 2</Tabs.Tab>
+            <Tabs.Tab>Tab 3</Tabs.Tab>
+            <Tabs.Tab>Tab 4</Tabs.Tab>
+            <Tabs.Tab>Tab 5</Tabs.Tab>
+            <Tabs.Tab>Tab 6</Tabs.Tab>
+            <Tabs.Tab>Tab 7</Tabs.Tab>
+            <Tabs.Tab>Tab 8</Tabs.Tab>
+            <Tabs.Tab>Tab 9</Tabs.Tab>
+            <Tabs.Tab>Tab 10</Tabs.Tab>
+        </Tabs>
+    );
+    applyTabMeasurements(container);
+    expect(screen.getByRole('button', {name: 'Tab 6'}).parentElement).toHaveClass('hidden');
+
+    await user.click(screen.getByRole('button', {name: 'Tab 5'}));
+    expect(changeSpy).toBeCalledWith(4);
+
+    rerender(
+        <Tabs onSelect={changeSpy} selectedIndex={4}>
+            <Tabs.Tab>Tab 1</Tabs.Tab>
+            <Tabs.Tab>Tab 2</Tabs.Tab>
+            <Tabs.Tab>Tab 3</Tabs.Tab>
+            <Tabs.Tab>Tab 4</Tabs.Tab>
+            <Tabs.Tab>Tab 5</Tabs.Tab>
+            <Tabs.Tab>Tab 6</Tabs.Tab>
+            <Tabs.Tab>Tab 7</Tabs.Tab>
+            <Tabs.Tab>Tab 8</Tabs.Tab>
+            <Tabs.Tab>Tab 9</Tabs.Tab>
+            <Tabs.Tab>Tab 10</Tabs.Tab>
+        </Tabs>
+    );
+    applyTabMeasurements(container);
+    expect(screen.getByRole('button', {name: 'Tab 6'}).parentElement).toHaveClass('hidden');
+
+    await user.click(screen.getByRole('button', {name: 'su-more-horizontal'}));
+    await user.click(within(getCollapsedTabList()).getByRole('button', {name: 'Tab 7'}));
+    expect(changeSpy).toBeCalledWith(6);
+
+    rerender(
+        <Tabs onSelect={changeSpy} selectedIndex={6}>
+            <Tabs.Tab>Tab 1</Tabs.Tab>
+            <Tabs.Tab>Tab 2</Tabs.Tab>
+            <Tabs.Tab>Tab 3</Tabs.Tab>
+            <Tabs.Tab>Tab 4</Tabs.Tab>
+            <Tabs.Tab>Tab 5</Tabs.Tab>
+            <Tabs.Tab>Tab 6</Tabs.Tab>
+            <Tabs.Tab>Tab 7</Tabs.Tab>
+            <Tabs.Tab>Tab 8</Tabs.Tab>
+            <Tabs.Tab>Tab 9</Tabs.Tab>
+            <Tabs.Tab>Tab 10</Tabs.Tab>
+        </Tabs>
+    );
+    applyTabMeasurements(container);
+    expect(screen.getByRole('button', {name: 'Tab 5'}).parentElement).toHaveClass('hidden');
+    expect(screen.getByRole('button', {name: 'Tab 7'}).parentElement).not.toHaveClass('hidden');
+
+    await user.click(screen.getByRole('button', {name: 'su-more-horizontal'}));
+    await user.click(within(getCollapsedTabList()).getByRole('button', {name: 'Tab 9'}));
+    expect(changeSpy).toBeCalledWith(8);
+
+    rerender(
+        <Tabs onSelect={changeSpy} selectedIndex={8}>
+            <Tabs.Tab>Tab 1</Tabs.Tab>
+            <Tabs.Tab>Tab 2</Tabs.Tab>
+            <Tabs.Tab>Tab 3</Tabs.Tab>
+            <Tabs.Tab>Tab 4</Tabs.Tab>
+            <Tabs.Tab>Tab 5</Tabs.Tab>
+            <Tabs.Tab>Tab 6</Tabs.Tab>
+            <Tabs.Tab>Tab 7</Tabs.Tab>
+            <Tabs.Tab>Tab 8</Tabs.Tab>
+            <Tabs.Tab>Tab 9</Tabs.Tab>
+            <Tabs.Tab>Tab 10</Tabs.Tab>
+        </Tabs>
+    );
+    applyTabMeasurements(container);
+    expect(screen.getByRole('button', {name: 'Tab 5'}).parentElement).toHaveClass('hidden');
+    expect(screen.getByRole('button', {name: 'Tab 9'}).parentElement).not.toHaveClass('hidden');
+
+    await user.click(screen.getByRole('button', {name: 'Tab 3'}));
+    expect(changeSpy).toBeCalledWith(2);
+
+    rerender(
+        <Tabs onSelect={changeSpy} selectedIndex={2}>
+            <Tabs.Tab>Tab 1</Tabs.Tab>
+            <Tabs.Tab>Tab 2</Tabs.Tab>
+            <Tabs.Tab>Tab 3</Tabs.Tab>
+            <Tabs.Tab>Tab 4</Tabs.Tab>
+            <Tabs.Tab>Tab 5</Tabs.Tab>
+            <Tabs.Tab>Tab 6</Tabs.Tab>
+            <Tabs.Tab>Tab 7</Tabs.Tab>
+            <Tabs.Tab>Tab 8</Tabs.Tab>
+            <Tabs.Tab>Tab 9</Tabs.Tab>
+            <Tabs.Tab>Tab 10</Tabs.Tab>
+        </Tabs>
+    );
+    applyTabMeasurements(container);
+    expect(screen.getByRole('button', {name: 'Tab 5'}).parentElement).toHaveClass('hidden');
+
+    await user.click(screen.getByRole('button', {name: 'Tab 4'}));
+    expect(changeSpy).toBeCalledWith(3);
 });

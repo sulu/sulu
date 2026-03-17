@@ -1,131 +1,214 @@
+/* global global */
 // @flow
-import {mount, render, shallow} from 'enzyme';
+import {act, render} from '@testing-library/react';
 import React from 'react';
+import Dropzone from 'react-dropzone';
 import SingleMediaDropzone from '../SingleMediaDropzone';
 
-test('Render a SingleMediaDropzone', () => {
-    expect(render(
+jest.mock('react-dropzone', () => {
+    return jest.fn((props) => props.children({
+        getInputProps: () => ({}),
+        getRootProps: (dropzoneProps = {}) => dropzoneProps,
+    }));
+});
+
+const imageInstances: Array<MockImage> = [];
+const OriginalImage = global.Image;
+
+class MockImage {
+    _src: string;
+    onerror: () => void;
+    onload: () => void;
+
+    constructor() {
+        imageInstances.push(this);
+    }
+
+    set src(src: string) {
+        this._src = src;
+    }
+
+    get src() {
+        return this._src;
+    }
+}
+
+beforeEach(() => {
+    imageInstances.length = 0;
+    jest.clearAllMocks();
+    // $FlowFixMe[prop-missing]
+    global.Image = MockImage;
+});
+
+afterEach(() => {
+    // $FlowFixMe[prop-missing]
+    global.Image = OriginalImage;
+});
+
+function renderSingleMediaDropzone(props: any = {}) {
+    return render(
         <SingleMediaDropzone
-            image="http://lorempixel.com/400/400"
+            image={undefined}
             onDrop={jest.fn()}
-            progress={0}
-            uploading={false}
+            {...props}
         />
-    )).toMatchSnapshot();
+    );
+}
+
+function getDropzoneProps() {
+    return Dropzone.mock.calls[Dropzone.mock.calls.length - 1][0];
+}
+
+function triggerImageLoad(index = 0) {
+    act(() => {
+        imageInstances[index].onload();
+    });
+}
+
+function triggerImageError(index = 0) {
+    act(() => {
+        imageInstances[index].onerror();
+    });
+}
+
+function getMediaContainer(container) {
+    const mediaContainer = container.querySelector('.mediaContainer');
+
+    if (!mediaContainer) {
+        throw new Error('Expected media container');
+    }
+
+    return mediaContainer;
+}
+
+test('Render a SingleMediaDropzone', () => {
+    const {asFragment} = renderSingleMediaDropzone({
+        image: 'http://lorempixel.com/400/400',
+        progress: 0,
+        uploading: false,
+    });
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a SingleMediaDropzone with the default empty icon', () => {
-    expect(render(<SingleMediaDropzone image={undefined} onDrop={jest.fn()} />)).toMatchSnapshot();
+    const {asFragment} = renderSingleMediaDropzone({image: undefined});
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a SingleMediaDropzone with the passed empty icon', () => {
-    expect(render(<SingleMediaDropzone emptyIcon="su-user" image={undefined} onDrop={jest.fn()} />)).toMatchSnapshot();
+    const {asFragment} = renderSingleMediaDropzone({emptyIcon: 'su-user', image: undefined});
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a SingleMediaDropzone with an error text', () => {
-    expect(render(
-        <SingleMediaDropzone
-            emptyIcon="su-user"
-            errorText="some-custom-error-message"
-            image={undefined}
-            onDrop={jest.fn()}
-        />
-    )).toMatchSnapshot();
+    const {asFragment} = renderSingleMediaDropzone({
+        emptyIcon: 'su-user',
+        errorText: 'some-custom-error-message',
+        image: undefined,
+    });
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a SingleMediaDropzone with a loader if image has not been loaded yet', () => {
-    const singleMediaDropzone = mount(<SingleMediaDropzone emptyIcon="su-user" image="test.jpg" onDrop={jest.fn()} />);
-    expect(singleMediaDropzone.render()).toMatchSnapshot();
+    const {asFragment} = renderSingleMediaDropzone({emptyIcon: 'su-user', image: 'test.jpg'});
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a SingleMediaDropzone without a loader if image has been loaded after an error occured before', () => {
-    const singleMediaDropzone = mount(<SingleMediaDropzone emptyIcon="su-user" image="test.jpg" onDrop={jest.fn()} />);
-    singleMediaDropzone.instance().imageError = true;
+    const {asFragment} = renderSingleMediaDropzone({emptyIcon: 'su-user', image: 'test.jpg'});
 
-    singleMediaDropzone.instance().image.onload();
-
-    expect(singleMediaDropzone.render()).toMatchSnapshot();
+    triggerImageError();
+    triggerImageLoad();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a SingleMediaDropzone without a loader if image has been loaded yet', () => {
-    const singleMediaDropzone = mount(<SingleMediaDropzone emptyIcon="su-user" image="test.jpg" onDrop={jest.fn()} />);
+    const {asFragment} = renderSingleMediaDropzone({emptyIcon: 'su-user', image: 'test.jpg'});
 
-    singleMediaDropzone.instance().image.onload();
-
-    expect(singleMediaDropzone.render()).toMatchSnapshot();
+    triggerImageLoad();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a SingleMediaDropzone with a MimeTypeIndicator if an error appeared during image loading', () => {
-    const singleMediaDropzone = mount(
-        <SingleMediaDropzone emptyIcon="su-user" image="test.jpg" mimeType="video/x-m4v" onDrop={jest.fn()} />
-    );
+    const {asFragment} = renderSingleMediaDropzone({
+        emptyIcon: 'su-user',
+        image: 'test.jpg',
+        mimeType: 'video/x-m4v',
+    });
 
-    singleMediaDropzone.instance().image.onerror();
-    singleMediaDropzone.update();
-
-    expect(singleMediaDropzone.render()).toMatchSnapshot();
+    triggerImageError();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a SingleMediaDropzone in disabled state', () => {
-    expect(render(
-        <SingleMediaDropzone
-            disabled={true}
-            image="http://lorempixel.com/400/400"
-            onDrop={jest.fn()}
-            progress={0}
-            uploading={false}
-        />
-    )).toMatchSnapshot();
+    const {asFragment} = renderSingleMediaDropzone({
+        disabled: true,
+        image: 'http://lorempixel.com/400/400',
+        progress: 0,
+        uploading: false,
+    });
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a SingleMediaDropzone with the round skin', () => {
-    expect(render(
-        <SingleMediaDropzone
-            image="http://lorempixel.com/400/400"
-            onDrop={jest.fn()}
-            progress={0}
-            skin="round"
-            uploading={false}
-        />
-    )).toMatchSnapshot();
+    const {asFragment} = renderSingleMediaDropzone({
+        image: 'http://lorempixel.com/400/400',
+        progress: 0,
+        skin: 'round',
+        uploading: false,
+    });
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a SingleMediaDropzone while uploading', () => {
-    expect(render(
-        <SingleMediaDropzone
-            image="http://lorempixel.com/400/400"
-            onDrop={jest.fn()}
-            progress={50}
-            uploading={true}
-        />
-    )).toMatchSnapshot();
+    const {asFragment} = renderSingleMediaDropzone({
+        image: 'http://lorempixel.com/400/400',
+        progress: 50,
+        uploading: true,
+    });
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render img tag with key to avoid keeping old image on new upload', () => {
-    const singleMediaDropzone = mount(
+    const {rerender} = renderSingleMediaDropzone({
+        image: 'http://lorempixel.com/400/400',
+        progress: 0,
+        uploading: false,
+    });
+    const firstImage = document.querySelector('img');
+
+    rerender(
         <SingleMediaDropzone
-            image="http://lorempixel.com/400/400"
+            image="http://lorempixel.com/500/500"
             onDrop={jest.fn()}
             progress={0}
             uploading={false}
         />
     );
+    const secondImage = document.querySelector('img');
 
-    expect(singleMediaDropzone.find('img').key()).not.toBe(null);
+    expect(firstImage).not.toBeNull();
+    expect(secondImage).not.toBeNull();
+    expect(secondImage).not.toBe(firstImage);
 });
 
 test('Component pass correct props to Dropzone component', () => {
-    const singleMediaDropzone = shallow(
-        <SingleMediaDropzone
-            accept="application/json"
-            disabled={true}
-            image="http://lorempixel.com/400/400"
-            onDrop={jest.fn()}
-            uploading={false}
-        />
-    );
+    renderSingleMediaDropzone({
+        accept: 'application/json',
+        disabled: true,
+        image: 'http://lorempixel.com/400/400',
+        uploading: false,
+    });
 
-    expect(singleMediaDropzone.find('Dropzone').props()).toEqual(expect.objectContaining({
+    expect(getDropzoneProps()).toEqual(expect.objectContaining({
         accept: {'application/json': []},
         disabled: true,
         noClick: false,
@@ -134,46 +217,47 @@ test('Component pass correct props to Dropzone component', () => {
 });
 
 test('Dragging a file over the area will show the upload indicator', () => {
-    const singleMediaDropzone = shallow(
-        <SingleMediaDropzone
-            image="http://lorempixel.com/400/400"
-            onDrop={jest.fn()}
-            progress={0}
-            uploading={false}
-        />
-    );
+    const {container} = renderSingleMediaDropzone({
+        image: 'http://lorempixel.com/400/400',
+        progress: 0,
+        uploading: false,
+    });
 
-    singleMediaDropzone.instance().handleDragEnter();
-    expect(singleMediaDropzone.instance().uploadIndicatorVisibility).toBe(true);
+    act(() => {
+        getDropzoneProps().onDragEnter();
+    });
+    expect(getMediaContainer(container).className).toContain('showUploadIndicator');
 });
 
 test('Dragging a file outside of the area will hide the upload indicator', () => {
-    const singleMediaDropzone = shallow(
-        <SingleMediaDropzone
-            image="http://lorempixel.com/400/400"
-            onDrop={jest.fn()}
-            progress={0}
-            uploading={false}
-        />
-    );
+    const {container} = renderSingleMediaDropzone({
+        image: 'http://lorempixel.com/400/400',
+        progress: 0,
+        uploading: false,
+    });
 
-    singleMediaDropzone.instance().handleDragLeave();
-    expect(singleMediaDropzone.instance().uploadIndicatorVisibility).toBe(false);
+    act(() => {
+        getDropzoneProps().onDragEnter();
+        getDropzoneProps().onDragLeave();
+    });
+    expect(getMediaContainer(container).className).not.toContain('showUploadIndicator');
 });
 
 test('Dropping a file on the area will hide the upload indicator and call the "onDrop" handler', () => {
     const dropSpy = jest.fn();
     const testFileData = {name: 'test-file'};
-    const singleMediaDropzone = shallow(
-        <SingleMediaDropzone
-            image="http://lorempixel.com/400/400"
-            onDrop={dropSpy}
-            progress={0}
-            uploading={false}
-        />
-    );
+    const {container} = renderSingleMediaDropzone({
+        image: 'http://lorempixel.com/400/400',
+        onDrop: dropSpy,
+        progress: 0,
+        uploading: false,
+    });
 
-    singleMediaDropzone.instance().handleDrop([testFileData]);
-    expect(singleMediaDropzone.instance().uploadIndicatorVisibility).toBe(false);
+    act(() => {
+        getDropzoneProps().onDragEnter();
+        getDropzoneProps().onDrop([testFileData]);
+    });
+
+    expect(getMediaContainer(container).className).not.toContain('showUploadIndicator');
     expect(dropSpy).toBeCalledWith(testFileData);
 });

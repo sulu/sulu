@@ -1,6 +1,7 @@
 // @flow
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
-import {render, shallow} from 'enzyme';
 import Actions from '../Actions';
 
 test('The component should render', () => {
@@ -8,17 +9,22 @@ test('The component should render', () => {
         {title: 'Action 1', onClick: () => {}},
         {title: 'Action 2', onClick: () => {}},
     ];
-    const component = render(<Actions actions={actions} />);
-    expect(component).toMatchSnapshot();
+    const {asFragment} = render(<Actions actions={actions} />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('The component should call the corresponding callback when an action is clicked', () => {
+test('The component should call the corresponding callback when an action is clicked', async() => {
     const actions = [
         {title: 'Action 1', onClick: jest.fn()},
         {title: 'Action 2', onClick: jest.fn()},
     ];
-    const component = shallow(<Actions actions={actions} />);
-    component.find('Button').first().simulate('click');
+    const user = userEvent.setup();
+
+    render(<Actions actions={actions} />);
+
+    await user.click(screen.getByRole('button', {name: 'Action 1'}));
+
     expect(actions[0].onClick).toBeCalled();
     expect(actions[1].onClick).not.toBeCalled();
 });
