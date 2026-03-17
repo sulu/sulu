@@ -75,11 +75,11 @@ final class SnippetController implements SecuredControllerInterface
         // TODO this should be SnippetRepository::findFlatBy / ::countFlatBy methods
         //      but first we would need to avoid that the restHelper requires the request.
         //
-        $excludeGhosts = $request->query->has('search')
+        $hasFilterOrSearch = $request->query->has('search')
             || !empty($request->query->all('filter'));
 
         /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
-        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetInterface::RESOURCE_KEY, $excludeGhosts);
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetInterface::RESOURCE_KEY, $hasFilterOrSearch);
         /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create(SnippetInterface::class);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);

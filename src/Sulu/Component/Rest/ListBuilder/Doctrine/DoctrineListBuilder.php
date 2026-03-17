@@ -867,7 +867,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     {
         if (0 === \count($this->expressionFields)) {
             $descriptors = [];
-            $uniqueNames = \array_unique($this->getAllFieldNames($expressions));
+            $uniqueNames = \array_unique($this->getAllFieldNames($expressions)); // @phpstan-ignore argument.type
             foreach ($uniqueNames as $uniqueName) {
                 $descriptors[] = $this->fieldDescriptors[$uniqueName];
             }
