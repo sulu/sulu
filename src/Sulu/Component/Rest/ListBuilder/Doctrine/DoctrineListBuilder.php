@@ -675,8 +675,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         // unify result
-        /** @var string[] $fieldEntityNames */
-        return \array_unique($fieldEntityNames);
+        return \array_unique($fieldEntityNames); // @phpstan-ignore return.type, argument.type
     }
 
     /**
@@ -899,7 +898,7 @@ class DoctrineListBuilder extends AbstractListBuilder
             }
         }
 
-        return $fieldNames;
+        return $fieldNames; // @phpstan-ignore return.type
     }
 
     public function createAndExpression(array $expressions)
