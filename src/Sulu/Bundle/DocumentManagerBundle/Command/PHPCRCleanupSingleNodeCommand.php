@@ -58,6 +58,7 @@ class PHPCRCleanupSingleNodeCommand extends Command
         'creator',
         'changed',
         'changer',
+        'routePathName',
     ];
 
     private string $languagePrefix;
