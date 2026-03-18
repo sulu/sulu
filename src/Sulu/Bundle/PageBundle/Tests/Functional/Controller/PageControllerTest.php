@@ -2596,7 +2596,12 @@ class PageControllerTest extends SuluTestCase
         return $role;
     }
 
-    private function setUpContent($data)
+    /**
+     * @param array<int, array<string, mixed>> $data
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function setUpContent(array $data): array
     {
         /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
@@ -2610,7 +2615,9 @@ class PageControllerTest extends SuluTestCase
                 $pageData
             );
 
-            $data[$i] = (array) \json_decode($this->client->getResponse()->getContent(), true);
+            /** @var array<string, mixed> $decoded */
+            $decoded = \json_decode($this->client->getResponse()->getContent(), true);
+            $data[$i] = $decoded;
         }
 
         return $data;

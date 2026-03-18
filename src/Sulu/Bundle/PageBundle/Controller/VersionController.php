@@ -71,10 +71,12 @@ class VersionController extends AbstractRestController implements
 
         $versions = \array_slice($versions, $this->listRestHelper->getOffset(), $limit);
 
-        $userIds = \array_unique(\array_map(function($version) {
+        /** @var int[] $mappedUserIds */
+        $mappedUserIds = \array_map(function($version) {
             /* @var Version $version */
             return $version->getAuthor();
-        }, $versions));
+        }, $versions);
+        $userIds = \array_unique($mappedUserIds);
 
         $users = $this->userRepository->findUsersById($userIds);
         $fullNamesByIds = [];

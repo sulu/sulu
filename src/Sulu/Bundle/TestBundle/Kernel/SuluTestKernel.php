@@ -113,7 +113,6 @@ class SuluTestKernel extends SuluKernel
             $bundles[] = new \Symfony\Bundle\SecurityBundle\SecurityBundle();
         }
 
-        /** @var iterable<mixed, BundleInterface> */
         return $bundles;
     }
 

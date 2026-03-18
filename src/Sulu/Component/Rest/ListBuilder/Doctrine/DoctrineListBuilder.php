@@ -683,6 +683,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         // unify result
+        /** @var string[] $fieldEntityNames */
         return \array_unique($fieldEntityNames);
     }
 
@@ -860,7 +861,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @param AbstractDoctrineExpression[] $expressions
      *
-     * @return array
+     * @return array<string>
      */
     protected function getAllFieldNames($expressions)
     {

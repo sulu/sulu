@@ -493,7 +493,7 @@ class WebspaceImport extends Import implements WebspaceImportInterface
                 $property->getContentTypeName()
             );
         }
-
+        /** @var array<string> $rlpParts */
         $title = \trim(\implode(' ', $rlpParts));
 
         return $this->rlpStrategy->generate($title, $parentUuid, $webspaceKey, $locale);

@@ -354,12 +354,12 @@ class TagControllerTest extends SuluTestCase
         $this->client->getContainer()->get('event_dispatcher')
                 ->addListener('sulu.tag.merge', fn () => $eventListenerWasCalled = true);
 
+        /** @var array<string> $tagIds */
+        $tagIds = [$tag2Id, $tag3Id, $tag4Id];
         $this->client->jsonRequest(
             'POST',
             '/api/tags/merge',
-            ['src' => \implode(',', [
-                $tag2Id, $tag3Id, $tag4Id,
-            ]), 'dest' => $tag1Id]
+            ['src' => \implode(',', $tagIds), 'dest' => $tag1Id]
         );
         $this->assertHttpStatusCode(303, $this->client->getResponse());
         $this->assertEquals('/api/tags/' . $tag1->getId(), $this->client->getResponse()->headers->get('location'));
