@@ -48,6 +48,8 @@ class TagRequestHandler implements TagRequestHandlerInterface
 
         // extend comma separated list
         $tags = $request->get($tagsParameter, '');
+
+        /** @var array<string> $tagsArray */
         $tagsArray = \array_filter(\array_merge(\explode(',', $tags), [$tag['name']]));
         $tags = \implode(',', \array_unique($tagsArray));
 

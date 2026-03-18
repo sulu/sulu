@@ -86,6 +86,7 @@ final class RouteSchemaEvaluator implements RouteSchemaEvaluatorInterface
                 }
 
                 if (\is_array($pieces)) {
+                    /** @var array<string> $pieces */
                     return \implode($glue, $pieces);
                 }
 

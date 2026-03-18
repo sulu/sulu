@@ -21,7 +21,7 @@ interface SecuredControllerInterface
     /**
      * Returns the SecurityContext required for the controller.
      *
-     * @return string
+     * @return string|null
      */
     public function getSecurityContext();
 

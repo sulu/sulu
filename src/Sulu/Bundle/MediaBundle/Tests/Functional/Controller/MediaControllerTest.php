@@ -192,7 +192,7 @@ class MediaControllerTest extends SuluTestCase
         $this->em->flush();
     }
 
-    protected function createMedia($name, $locale = 'en-gb', $type = 'image', ?Media $previewMedia = null)
+    protected function createMedia($name, $locale = 'en-gb', $type = 'image', ?MediaInterface $previewMedia = null): Media
     {
         $media = new Media();
         $media->setPreviewImage($previewMedia);
@@ -783,20 +783,20 @@ class MediaControllerTest extends SuluTestCase
     public function testCgetFilterByTag(): void
     {
         $media1 = $this->createMedia('photo1');
-        $media1->getFiles()[0]->getLatestFileVersion()->removeTags();
+        $media1->getFiles()[0]?->getLatestFileVersion()?->removeTags();
 
         $media2 = $this->createMedia('photo2');
-        $media2->getFiles()[0]->getLatestFileVersion()->removeTags();
-        $media2->getFiles()[0]->getLatestFileVersion()->addTag($this->tag1);
+        $media2->getFiles()[0]?->getLatestFileVersion()?->removeTags();
+        $media2->getFiles()[0]?->getLatestFileVersion()?->addTag($this->tag1);
 
         $media3 = $this->createMedia('photo3');
-        $media3->getFiles()[0]->getLatestFileVersion()->removeTags();
-        $media3->getFiles()[0]->getLatestFileVersion()->addTag($this->tag2);
+        $media3->getFiles()[0]?->getLatestFileVersion()?->removeTags();
+        $media3->getFiles()[0]?->getLatestFileVersion()?->addTag($this->tag2);
 
         $media4 = $this->createMedia('photo4');
-        $media4->getFiles()[0]->getLatestFileVersion()->removeTags();
-        $media4->getFiles()[0]->getLatestFileVersion()->addTag($this->tag1);
-        $media4->getFiles()[0]->getLatestFileVersion()->addTag($this->tag2);
+        $media4->getFiles()[0]?->getLatestFileVersion()?->removeTags();
+        $media4->getFiles()[0]?->getLatestFileVersion()?->addTag($this->tag1);
+        $media4->getFiles()[0]?->getLatestFileVersion()?->addTag($this->tag2);
 
         $this->em->flush();
         $this->em->clear();
@@ -1187,7 +1187,8 @@ class MediaControllerTest extends SuluTestCase
 
         $media = $this->createMedia('photo');
         $file = $media->getFiles()[0];
-        $file->getFileVersion($file->getVersion())->addTargetGroup($targetGroup1);
+        $file?->getFileVersion($file->getVersion())
+            ?->addTargetGroup($targetGroup1);
 
         $this->em->flush();
 

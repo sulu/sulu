@@ -17,7 +17,7 @@ namespace Sulu\Bundle\MarkupBundle\Tag;
 class TagRegistry implements TagRegistryInterface
 {
     /**
-     * @param TagInterface[] $tags
+     * @param array<string, array<string, array<string, TagInterface>>> $tags
      */
     public function __construct(private array $tags)
     {

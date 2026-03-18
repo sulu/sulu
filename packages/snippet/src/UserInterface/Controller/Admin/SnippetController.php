@@ -349,6 +349,9 @@ final class SnippetController implements SecuredControllerInterface
         $listBuilder->addExpression($expression);
     }
 
+    /**
+     * @return string
+     */
     public function getSecurityContext()
     {
         return SnippetAdmin::SECURITY_CONTEXT;

@@ -228,6 +228,8 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             null,
             'COUNT(media)'
         );
+
+        /** @var string|int $result */
         $result = $query->getSingleResult()[1];
 
         /** @var int<0, max> */

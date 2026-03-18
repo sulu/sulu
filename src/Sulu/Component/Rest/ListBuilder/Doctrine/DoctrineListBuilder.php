@@ -65,7 +65,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * Array of unique field descriptors from expressions.
      *
-     * @var array
+     * @var array<FieldDescriptorInterface>
      */
     protected $expressionFields = [];
 
@@ -530,7 +530,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @param bool $onlyReturnFilterFields Define if only filtering FieldDescriptors should be returned
      *
-     * @return DoctrineFieldDescriptorInterface[]
+     * @return array<DoctrineFieldDescriptorInterface>
      */
     protected function getAllFields(bool $onlyReturnFilterFields = false, bool $returnSortFields = true)
     {
@@ -644,7 +644,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * Returns array of field-descriptor aliases.
      *
-     * @param array $filterFields
+     * @param array<DoctrineFieldDescriptorInterface> $filterFields
      *
      * @return string[]
      */
@@ -827,11 +827,11 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @param AbstractDoctrineExpression[] $expressions
      *
-     * @return array
+     * @return array<FieldDescriptorInterface>
      */
     protected function getUniqueExpressionFieldDescriptors(array $expressions)
     {
-        if (0 === \count($this->expressionFields)) {
+        if ([] === $this->expressionFields) {
             $descriptors = [];
             $uniqueNames = \array_unique($this->getAllFieldNames($expressions));
             foreach ($uniqueNames as $uniqueName) {
@@ -851,14 +851,14 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @param AbstractDoctrineExpression[] $expressions
      *
-     * @return array
+     * @return array<string>
      */
     protected function getAllFieldNames($expressions)
     {
         $fieldNames = [];
         foreach ($expressions as $expression) {
             if ($expression instanceof ConjunctionExpressionInterface) {
-                $fieldNames = \array_merge($fieldNames, $expression->getFieldNames());
+                $fieldNames = [...$fieldNames, ...$expression->getFieldNames()];
             } elseif ($expression instanceof BasicExpressionInterface) {
                 $fieldNames[] = $expression->getFieldName();
             }

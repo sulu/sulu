@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\TagBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -518,7 +519,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals('tag33', $response->_embedded->tags[2]->name);
     }
 
-    public function createTag($name)
+    public function createTag(string $name): TagInterface
     {
         $tag = $this->tagRepository->createNew();
         $tag->setName($name);

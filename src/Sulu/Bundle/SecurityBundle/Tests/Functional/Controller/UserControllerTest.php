@@ -768,14 +768,22 @@ class UserControllerTest extends SuluTestCase
             '/api/users?contactId=' . $this->contact2->getId()
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent());
+        /**
+         * @var array{
+         *  id: int,
+         *  username: string,
+         *  password ?:string,
+         *  userRoles: array<array{role: array{name: string}}>
+         *  } $response
+         */
+        $response = \json_decode($this->client->getResponse()->getContent(), associative: true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $this->assertEquals($this->user1->getId(), $response->id);
-        $this->assertEquals('admin', $response->username);
-        $this->assertFalse(\property_exists($response, 'password'));
+        $this->assertEquals($this->user1->getId(), $response['id']);
+        $this->assertEquals('admin', $response['username']);
+        $this->assertArrayNotHasKey('password', $response);
 
-        $names = \array_map(fn ($role) => $role->role->name, $response->userRoles);
+        $names = \array_map(fn (array $role): string => $role['role']['name'], $response['userRoles']);
         $existingNames = \implode(',', $names);
 
         $this->assertContains('Role1', $names, 'Expected Role1 to be present. Found: ' . $existingNames);

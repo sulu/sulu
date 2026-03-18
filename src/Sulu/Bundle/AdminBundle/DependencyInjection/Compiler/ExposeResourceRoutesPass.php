@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Webmozart\Assert\Assert;
 
 /**
  * This compiler pass is responsible for adding all configured admin resource
@@ -45,6 +46,7 @@ class ExposeResourceRoutesPass implements CompilerPassInterface
         if (!\is_array($alreadyDefinedRouteNames)) {
             throw new \InvalidArgumentException('Invalid type of the second argument of service "fos_js_routing.extractor". Expected array.');
         }
+        Assert::allString($alreadyDefinedRouteNames, 'Expecting route names to be string when extracting routes');
 
         $allRouteNames = \array_unique(\array_merge($alreadyDefinedRouteNames, $routeNames));
         $extractorDefinition->replaceArgument(1, $allRouteNames);

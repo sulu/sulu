@@ -299,11 +299,6 @@ class MediaController extends AbstractMediaController implements
         return Collection::class;
     }
 
-    /**
-     * Returns the id of the object to check.
-     *
-     * @return string
-     */
     public function getSecuredObjectId(Request $request)
     {
         return $request->get('collection');

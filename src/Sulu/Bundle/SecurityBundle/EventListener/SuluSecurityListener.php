@@ -108,10 +108,9 @@ class SuluSecurityListener implements EventSubscriberInterface
 
         // For object-level security, we need to load the entity to get its security context
         // if no static context was provided
-        // @phpstan-ignore notIdentical.alwaysTrue (getSecurityContext can return null)
+        // @phpstan-ignore notIdentical.alwaysTrue (objectId can return null)
         if (null === $securityContext && null !== $objectType && null !== $objectId && null !== $this->entityManager) {
             // Load the entity to get its security context
-            /** @var class-string<object> $objectType */
             $repository = $this->entityManager->getRepository($objectType);
             // @phpstan-ignore if.alwaysTrue (repository can be null in some edge cases)
             if ($repository) {

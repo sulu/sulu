@@ -158,6 +158,9 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         return \intval($value);
     }
 
+    /**
+     * @param array{parent ?: string|null, depth?: int|string|null, search?: string|null } $filter
+     */
     public function findCollections($filter = [], $limit = null, $offset = null, $sortBy = [])
     {
         list($parent, $depth, $search) = [

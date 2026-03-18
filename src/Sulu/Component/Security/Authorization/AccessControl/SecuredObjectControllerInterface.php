@@ -21,7 +21,7 @@ interface SecuredObjectControllerInterface
     /**
      * Returns the class name of the object to check.
      *
-     * @return string
+     * @return class-string
      */
     public function getSecuredClass();
 

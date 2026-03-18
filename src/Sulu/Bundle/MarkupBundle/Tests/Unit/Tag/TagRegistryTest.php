@@ -33,7 +33,7 @@ class TagRegistryTest extends TestCase
     {
         $this->expectException(TagNotFoundException::class);
 
-        $registry = new TagRegistry(['test' => $this->prophesize(TagInterface::class)->reveal()]);
+        $registry = new TagRegistry(['test' => ['sulu' => ['namespace' => $this->prophesize(TagInterface::class)->reveal()]]]);
         $registry->getTag('test-2', 'html');
     }
 

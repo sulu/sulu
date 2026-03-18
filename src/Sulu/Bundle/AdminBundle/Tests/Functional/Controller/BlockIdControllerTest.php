@@ -77,6 +77,7 @@ class BlockIdControllerTest extends SuluTestCase
         $this->assertIsArray($blockIds);
         $this->assertCount(3, $blockIds);
 
+        $ids = [];
         foreach ($blockIds as $blockId) {
             $this->assertIsArray($blockId);
             $this->assertArrayHasKey('id', $blockId);
@@ -84,16 +85,11 @@ class BlockIdControllerTest extends SuluTestCase
             $this->assertNotEmpty($blockId['id']);
             $this->assertSame(8, \strlen($blockId['id']));
             $this->assertMatchesRegularExpression('/^[a-f0-9]{8}$/', $blockId['id']);
-        }
 
-        // Verify all IDs are unique
-        $ids = [];
-        foreach ($blockIds as $blockId) {
-            $this->assertIsArray($blockId);
-            $this->assertArrayHasKey('id', $blockId);
             $ids[] = $blockId['id'];
         }
 
+        // Assert Ids are unique
         $this->assertCount(\count($ids), \array_unique($ids));
     }
 }

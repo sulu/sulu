@@ -42,8 +42,11 @@ class CollaborationRepository
         $collaboration->updateTime();
 
         $cacheItem = $this->cache->getItem($this->getCacheIdFromCollaboration($collaboration));
+
         $value = $cacheItem->get() ?? [];
         \assert(\is_array($value), 'Value from collaboration cache should be an array.');
+
+        /** @var array<Collaboration> $value */
         $value[$collaboration->getConnectionId()] = $collaboration;
 
         $value = \array_filter($value, function(Collaboration $collaboration) {

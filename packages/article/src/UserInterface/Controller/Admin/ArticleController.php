@@ -321,6 +321,9 @@ final class ArticleController implements SecuredControllerInterface
         return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
     }
 
+    /**
+     * @return string
+     */
     public function getSecurityContext()
     {
         return ArticleAdmin::SECURITY_CONTEXT;
