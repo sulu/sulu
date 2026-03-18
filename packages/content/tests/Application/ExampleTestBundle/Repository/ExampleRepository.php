@@ -274,7 +274,7 @@ class ExampleRepository
 
         $id = $filters['id'] ?? null;
         if (null !== $id) {
-            Assert::true(\is_int($id) || \is_string($id), 'Expected "id" filter to be int|string.');
+            Assert::true(\is_int($id) || \is_string($id), 'Expected "id" filter to be int|string.'); // @phpstan-ignore staticMethod.alreadyNarrowedType
             $queryBuilder->andWhere('example.id = :id')
                 ->setParameter('id', $id);
         }
