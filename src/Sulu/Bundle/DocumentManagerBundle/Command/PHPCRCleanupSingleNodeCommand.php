@@ -271,14 +271,14 @@ class PHPCRCleanupSingleNodeCommand extends Command
             Assert::isInstanceOf($document, UuidBehavior::class);
 
             $node = $this->session->getNodeByIdentifier($document->getUuid());
-            $defaultCleanupNode = new CleanupNode(clone $node);
+            $defaultCleanupNode = new CleanupNode($node);
             $this->persist($document, $defaultCleanupNode, $locale);
 
             $wasPublished = WorkflowStage::PUBLISHED === $workflowStage;
             $liveCleanupNode = null;
             if ($wasPublished) {
                 $liveNode = $this->liveSession->getNodeByIdentifier($document->getUuid());
-                $liveCleanupNode = new CleanupNode(clone $liveNode);
+                $liveCleanupNode = new CleanupNode($liveNode);
                 $this->publish($document, $liveCleanupNode, $locale);
             }
 
