@@ -19,10 +19,8 @@ use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPool;
 use Sulu\Bundle\MarkupBundle\Markup\LinkTag;
 use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagRegistry;
+use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-
-use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
-
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -45,7 +43,7 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu_markup.parser.html_extractor');
 
     $services->set('sulu_markup.parser.delegating_html_extractor', DelegatingTagExtractor::class)
-        ->args([tagged_iterator('sulu_markup.parser.html_extractor')]);
+        ->args([new TaggedIteratorArgument('sulu_markup.parser.html_extractor')]);
 
     $services->set('sulu_markup.parser', HtmlMarkupParser::class)
         ->args([
@@ -56,7 +54,7 @@ return static function(ContainerConfigurator $container) {
     $services->alias(MarkupParserInterface::class, 'sulu_markup.parser');
 
     $services->set('sulu_markup.response_listener', MarkupListener::class)
-        ->args([tagged_iterator('sulu_markup.parser', indexAttribute: 'type')])
+        ->args([new TaggedIteratorArgument('sulu_markup.parser', indexAttribute: 'type')])
         ->tag('kernel.event_subscriber');
 
     $services->set('sulu_markup.mailer_listener', MailerListener::class)
@@ -68,7 +66,7 @@ return static function(ContainerConfigurator $container) {
         ->tag('kernel.event_subscriber');
 
     $services->set('sulu_markup.link_tag.provider_pool', LinkProviderPool::class)
-        ->args([tagged_iterator('sulu.link.provider', indexAttribute: 'alias')]);
+        ->args([new TaggedIteratorArgument('sulu.link.provider', indexAttribute: 'alias')]);
 
     $services->set('sulu_markup.link_tag', LinkTag::class)
         ->args([

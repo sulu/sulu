@@ -10,10 +10,8 @@
  */
 
 use Sulu\Bundle\MarkupBundle\Listener\SwiftMailerListener;
+use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-
-use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
-
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -22,8 +20,9 @@ return static function(ContainerConfigurator $container) {
 
     $services->set('sulu_markup.swift_mailer_listener', SwiftMailerListener::class)
         ->args([
-            tagged_iterator('sulu_markup.parser', indexAttribute: 'type'),
+            new TaggedIteratorArgument('sulu_markup.parser', 'type'),
             new Reference(RequestStack::class),
+            '%kernel.default_locale%',
         ])
         ->tag('swiftmailer.default.plugin')
     ;
