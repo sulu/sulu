@@ -68,6 +68,7 @@ use Sulu\Page\Infrastructure\Sulu\Content\Visitor\SegmentSmartContentFiltersVisi
 use Sulu\Page\Infrastructure\Sulu\Content\Visitor\WebspaceSmartContentFiltersVisitor;
 use Sulu\Page\Infrastructure\Sulu\HttpCache\EventSubscriber\PageCacheInvalidationSubscriber;
 use Sulu\Page\Infrastructure\Sulu\Reference\PageReferenceRefresher;
+use Sulu\Page\Infrastructure\Sulu\Route\PageRouteDefaultsProvider;
 use Sulu\Page\Infrastructure\Sulu\Route\PageWebspaceRouteGenerator;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageIndexListener;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageReindexProvider;
@@ -428,6 +429,17 @@ final class SuluPageBundle extends AbstractBundle
             ])
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu_preview.object_provider', ['provider-key' => 'pages']);
+
+        $services->set('sulu_page.page_route_defaults_provider')
+            ->class(PageRouteDefaultsProvider::class)
+            ->args([
+                new Reference('sulu_page.page_repository'),
+                new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_admin.metadata_provider_registry'),
+                new Reference('sulu_http_cache.cache_lifetime.resolver'),
+                expr("container.hasParameter('sulu_audience_targeting.enabled')"),
+            ])
+            ->tag('sulu_route.route_defaults_provider', ['resource_key' => 'pages']);
 
         // Content services
         $services->set('sulu_page.page_teaser_provider')

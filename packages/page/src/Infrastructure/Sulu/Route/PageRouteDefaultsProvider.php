@@ -11,10 +11,8 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Article\Infrastructure\Sulu\Route;
+namespace Sulu\Page\Infrastructure\Sulu\Route;
 
-use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
-use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\CacheLifetimeMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TemplateMetadata;
@@ -22,12 +20,12 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
+use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Model\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -35,15 +33,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * @internal this class is internal and should not be extended or relied on in custom code
  */
-class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
+class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
 {
     public function __construct(
-        private ArticleRepositoryInterface $articleRepository,
+        private PageRepositoryInterface $pageRepository,
         private ContentAggregatorInterface $contentAggregator,
         private MetadataProviderRegistry $metadataProviderRegistry,
         private CacheLifetimeResolverInterface $cacheLifetimeResolver,
-        private WebspaceManagerInterface $webspaceManager,
-        private string $environment = 'prod',
+        private bool $audienceTargetingEnabled = false,
     ) {
     }
 
@@ -57,30 +54,26 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
             'version' => DimensionContentInterface::CURRENT_VERSION,
         ];
 
-        $article = $this->articleRepository->findOneBy(
+        $page = $this->pageRepository->findOneBy(
             [
                 'uuid' => $id,
             ],
             [
-                ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
+                PageRepositoryInterface::SELECT_PAGE_CONTENT => [
                     'dimensionAttributes' => $dimensionAttributes,
-                    'selects' => [
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_TAGS => true,
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES => true,
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES_TRANSLATION => true,
-                    ],
+                    'selects' => $this->getContentSelects(),
                 ],
             ],
         );
 
-        if (null === $article) {
-            throw new NotFoundHttpException(\sprintf('No article found for id "%s" and locale "%s"', $id, $locale));
+        if (null === $page) {
+            throw new NotFoundHttpException(\sprintf('No page found for id "%s" and locale "%s"', $id, $locale));
         }
 
         try {
-            $dimensionContent = $this->contentAggregator->aggregate($article, $dimensionAttributes);
+            $dimensionContent = $this->contentAggregator->aggregate($page, $dimensionAttributes);
         } catch (ContentNotFoundException $exception) {
-            throw new NotFoundHttpException(\sprintf('No article found for id "%s" and locale "%s"', $id, $locale), $exception);
+            throw new NotFoundHttpException(\sprintf('No page found for id "%s" and locale "%s"', $id, $locale), $exception);
         }
 
         if (!$dimensionContent instanceof TemplateInterface) {
@@ -89,7 +82,7 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
 
         $contentLocale = $dimensionContent->getLocale();
         if (!$contentLocale) {
-            throw new NotFoundHttpException(\sprintf('No article found for id "%s" and locale "%s"', $id, $locale));
+            throw new NotFoundHttpException(\sprintf('No page found for id "%s" and locale "%s"', $id, $locale));
         }
 
         $templateKey = $dimensionContent->getTemplateKey();
@@ -99,7 +92,7 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
 
         $templateMetadata = $this->resolveTemplateMetadata($dimensionContent::getTemplateType(), $templateKey, $contentLocale);
 
-        $defaults = [
+        $attributes = [
             'object' => $dimensionContent,
             'view' => $templateMetadata->getView(),
             '_controller' => $templateMetadata->getController(),
@@ -107,17 +100,28 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
 
         $cacheLifetime = $this->getCacheLifetime($templateMetadata);
         if ($cacheLifetime) {
-            $defaults[CacheLifetimeRequestStore::ATTRIBUTE_KEY] = $cacheLifetime;
+            $attributes[CacheLifetimeRequestStore::ATTRIBUTE_KEY] = $cacheLifetime;
         }
 
-        if ($dimensionContent instanceof ArticleDimensionContentInterface) {
-            $seoData = $this->getSeoData($dimensionContent, $route);
-            if ($seoData) {
-                $defaults['_seo'] = $seoData;
-            }
+        return $attributes;
+    }
+
+    /**
+     * @return array<string, bool>
+     */
+    private function getContentSelects(): array
+    {
+        $selects = [
+            DimensionContentQueryEnhancer::SELECT_EXCERPT_TAGS => true,
+            DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES => true,
+            DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES_TRANSLATION => true,
+        ];
+
+        if ($this->audienceTargetingEnabled) {
+            $selects[DimensionContentQueryEnhancer::SELECT_EXCERPT_AUDIENCE_TARGET_GROUPS] = true;
         }
 
-        return $defaults;
+        return $selects;
     }
 
     private function getCacheLifetime(TemplateMetadata $templateMetadata): ?int
@@ -162,36 +166,5 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
         }
 
         return $templateMetadata;
-    }
-
-    /**
-     * @return array<string, mixed>|null
-     */
-    private function getSeoData(ArticleDimensionContentInterface $dimensionContent, Route $route): ?array
-    {
-        $locale = $dimensionContent->getLocale();
-        if (!$locale) {
-            return null;
-        }
-
-        $mainWebspace = $dimensionContent->getMainWebspace();
-        if (!$mainWebspace) {
-            return null;
-        }
-
-        $canonicalUrl = $this->webspaceManager->findUrlByResourceLocator(
-            $route->getSlug(),
-            $this->environment,
-            $locale,
-            $mainWebspace,
-        );
-
-        if (!$canonicalUrl) {
-            return null;
-        }
-
-        return [
-            'canonicalUrl' => $canonicalUrl,
-        ];
     }
 }

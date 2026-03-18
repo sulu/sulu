@@ -274,7 +274,7 @@ class ExampleRepository
 
         $id = $filters['id'] ?? null;
         if (null !== $id) {
-            Assert::integer($id); // @phpstan-ignore staticMethod.alreadyNarrowedType
+            Assert::true(\is_int($id) || \is_string($id), 'Expected "id" filter to be int|string.');
             $queryBuilder->andWhere('example.id = :id')
                 ->setParameter('id', $id);
         }
@@ -282,6 +282,9 @@ class ExampleRepository
         $ids = $filters['ids'] ?? null;
         if (null !== $ids) {
             Assert::isArray($ids); // @phpstan-ignore staticMethod.alreadyNarrowedType
+            foreach ($ids as $value) {
+                Assert::true(\is_int($value) || \is_string($value), 'Expected "ids" filter values to be int|string.');
+            }
             $queryBuilder->andWhere('example.id IN(:ids)')
                 ->setParameter('ids', $ids);
         }
