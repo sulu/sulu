@@ -26,7 +26,6 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Model\Route;
@@ -83,10 +82,6 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
             throw new NotFoundHttpException(\sprintf('No article found for id "%s" and locale "%s"', $id, $locale), $exception);
         }
 
-        if (!$dimensionContent instanceof TemplateInterface) {
-            throw new \RuntimeException(\sprintf('Expected to get "%s" from ContentResolver but "%s" given.', TemplateInterface::class, $dimensionContent::class));
-        }
-
         $contentLocale = $dimensionContent->getLocale();
         if (!$contentLocale) {
             throw new NotFoundHttpException(\sprintf('No article found for id "%s" and locale "%s"', $id, $locale));
@@ -106,15 +101,13 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
         ];
 
         $cacheLifetime = $this->getCacheLifetime($templateMetadata);
-        if ($cacheLifetime) {
+        if (null !== $cacheLifetime) {
             $defaults[CacheLifetimeRequestStore::ATTRIBUTE_KEY] = $cacheLifetime;
         }
 
-        if ($dimensionContent instanceof ArticleDimensionContentInterface) {
-            $seoData = $this->getSeoData($dimensionContent, $route);
-            if ($seoData) {
-                $defaults['_seo'] = $seoData;
-            }
+        $seoData = $this->getSeoData($dimensionContent, $route);
+        if ($seoData) {
+            $defaults['_seo'] = $seoData;
         }
 
         return $defaults;

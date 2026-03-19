@@ -28,7 +28,6 @@ use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContent;
@@ -174,42 +173,6 @@ class PageRouteDefaultsProviderTest extends TestCase
             CacheLifetimeResolverInterface::TYPE_SECONDS,
             '3600',
         );
-
-        $provider->getDefaults(
-            new Route(Page::RESOURCE_KEY, '123-123-123', 'en', '/example')
-        );
-    }
-
-    public function testGetDefaultsReturnNoneTemplate(): void
-    {
-        $provider = new PageRouteDefaultsProvider(
-            $this->pageRepository->reveal(),
-            $this->contentAggregator->reveal(),
-            $this->metadataProviderRegistry,
-            $this->cacheLifetimeResolver,
-        );
-
-        $resolvedDimensionContent = $this->prophesize(DimensionContentInterface::class);
-        $resolvedDimensionContent->getLocale()->willReturn('en');
-
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage(\sprintf(
-            'Expected to get "%s" from ContentResolver but "%s" given.',
-            TemplateInterface::class,
-            \get_class($resolvedDimensionContent->reveal())
-        ));
-
-        $page = new Page('123-123-123');
-        $page->setWebspaceKey('sulu-io');
-
-        $this->pageRepository->findOneBy(
-            Argument::cetera()
-        )->willReturn($page);
-
-        $this->contentAggregator->aggregate(
-            $page,
-            ['locale' => 'en', 'stage' => 'live', 'version' => 0]
-        )->willReturn($resolvedDimensionContent->reveal());
 
         $provider->getDefaults(
             new Route(Page::RESOURCE_KEY, '123-123-123', 'en', '/example')

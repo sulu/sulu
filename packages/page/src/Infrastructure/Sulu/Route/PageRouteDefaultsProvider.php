@@ -23,7 +23,6 @@ use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
@@ -76,10 +75,6 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
             throw new NotFoundHttpException(\sprintf('No page found for id "%s" and locale "%s"', $id, $locale), $exception);
         }
 
-        if (!$dimensionContent instanceof TemplateInterface) {
-            throw new \RuntimeException(\sprintf('Expected to get "%s" from ContentResolver but "%s" given.', TemplateInterface::class, $dimensionContent::class));
-        }
-
         $contentLocale = $dimensionContent->getLocale();
         if (!$contentLocale) {
             throw new NotFoundHttpException(\sprintf('No page found for id "%s" and locale "%s"', $id, $locale));
@@ -92,18 +87,18 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
 
         $templateMetadata = $this->resolveTemplateMetadata($dimensionContent::getTemplateType(), $templateKey, $contentLocale);
 
-        $attributes = [
+        $defaults = [
             'object' => $dimensionContent,
             'view' => $templateMetadata->getView(),
             '_controller' => $templateMetadata->getController(),
         ];
 
         $cacheLifetime = $this->getCacheLifetime($templateMetadata);
-        if ($cacheLifetime) {
-            $attributes[CacheLifetimeRequestStore::ATTRIBUTE_KEY] = $cacheLifetime;
+        if (null !== $cacheLifetime) {
+            $defaults[CacheLifetimeRequestStore::ATTRIBUTE_KEY] = $cacheLifetime;
         }
 
-        return $attributes;
+        return $defaults;
     }
 
     /**

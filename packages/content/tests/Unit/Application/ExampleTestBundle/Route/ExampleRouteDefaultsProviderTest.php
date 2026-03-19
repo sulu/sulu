@@ -25,11 +25,9 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolver;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
-use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
@@ -42,7 +40,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ExampleRouteDefaultsProviderTest extends TestCase
 {
     use ProphecyTrait;
-    use SetGetPrivatePropertyTrait;
 
     /** @var ObjectProphecy<ExampleRepository> */
     private ObjectProphecy $exampleRepository;
@@ -75,67 +72,17 @@ class ExampleRouteDefaultsProviderTest extends TestCase
         );
     }
 
-    public function testGetDefaultsReturnsNoneTemplate(): void
-    {
-        $resolvedDimensionContent = $this->prophesize(DimensionContentInterface::class);
-        $resolvedDimensionContent->getLocale()->willReturn('en');
-
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage(\sprintf(
-            'Expected to get "%s" from ContentResolver but "%s" given.',
-            TemplateInterface::class,
-            \get_class($resolvedDimensionContent->reveal())
-        ));
-
-        $example = new Example();
-        $example->id = 123;
-
-        $this->exampleRepository->findOneBy(
-            [
-                'id' => 123,
-            ],
-            [
-                ExampleRepository::SELECT_EXAMPLE_CONTENT => [
-                    'dimensionAttributes' => [
-                        'locale' => 'en',
-                        'stage' => DimensionContentInterface::STAGE_LIVE,
-                        'version' => DimensionContentInterface::CURRENT_VERSION,
-                    ],
-                    'selects' => [
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_TAGS => true,
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES => true,
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES_TRANSLATION => true,
-                    ],
-                ],
-            ]
-        )->willReturn($example);
-
-        $this->contentAggregator->aggregate(
-            $example,
-            ['locale' => 'en', 'stage' => 'live', 'version' => 0]
-        )->willReturn($resolvedDimensionContent->reveal());
-
-        $route = new Route(
-            Example::RESOURCE_KEY,
-            '123',
-            'en',
-            '/example',
-        );
-
-        $this->exampleRouteDefaultsProvider->getDefaults($route);
-    }
-
     public function testGetDefaults(): void
     {
         $example = new Example();
-        $example->id = 123;
+        $example->id = '123';
         $resolvedDimensionContent = new ExampleDimensionContent($example);
         $resolvedDimensionContent->setLocale('en');
         $resolvedDimensionContent->setTemplateKey('default');
 
         $this->exampleRepository->findOneBy(
             [
-                'id' => 123,
+                'id' => '123',
             ],
             [
                 ExampleRepository::SELECT_EXAMPLE_CONTENT => [
@@ -239,14 +186,14 @@ class ExampleRouteDefaultsProviderTest extends TestCase
         );
 
         $example = new Example();
-        $example->id = 123;
+        $example->id = '123';
         $resolvedDimensionContent = new ExampleDimensionContent($example);
         $resolvedDimensionContent->setLocale('en');
         $resolvedDimensionContent->setTemplateKey('default');
 
         $this->exampleRepository->findOneBy(
             [
-                'id' => 123,
+                'id' => '123',
             ],
             [
                 ExampleRepository::SELECT_EXAMPLE_CONTENT => [
@@ -285,7 +232,7 @@ class ExampleRouteDefaultsProviderTest extends TestCase
         $this->expectException(NotFoundHttpException::class);
 
         $example = new Example();
-        $example->id = 123;
+        $example->id = '123';
 
         $this->exampleRepository->findOneBy(
             Argument::cetera()
