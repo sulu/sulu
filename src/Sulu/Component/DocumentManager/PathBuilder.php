@@ -53,6 +53,7 @@ class PathBuilder
 
             $results[] = $result;
         }
+
         /** @var array<string> $results */
         return '/' . \implode('/', $results);
     }

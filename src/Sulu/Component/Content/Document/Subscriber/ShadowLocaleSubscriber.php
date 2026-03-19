@@ -219,7 +219,6 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
             ));
         }
 
-        /** @var array<string> $locales */
         $locales = $this->inspector->getConcreteLocales($document);
         if (!\in_array($document->getShadowLocale(), $locales)) {
             $this->inspector->getNode($document)->revert();

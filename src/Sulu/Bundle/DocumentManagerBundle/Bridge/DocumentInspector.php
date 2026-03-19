@@ -210,7 +210,7 @@ class DocumentInspector extends BaseDocumentInspector
      *
      * @param ShadowLocaleBehavior $document
      *
-     * @return array
+     * @return array<string>
      */
     public function getConcreteLocales($document)
     {
