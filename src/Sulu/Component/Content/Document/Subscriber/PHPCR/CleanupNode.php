@@ -119,7 +119,7 @@ class CleanupNode implements \IteratorAggregate, NodeInterface
     {
         $this->writtenProperties[$name] = ['value' => $value, 'type' => $type];
 
-        return null;
+        return null; // @phpstan-ignore return.type
     }
 
     public function getNode($relPath)

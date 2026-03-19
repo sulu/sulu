@@ -20,6 +20,8 @@ use PHPCR\PropertyInterface;
  * shared ObjectManager when used on a cloned node in the cleanup command.
  *
  * @internal
+ *
+ * @implements \IteratorAggregate<mixed, mixed>
  */
 class CleanupNodeProperty implements \IteratorAggregate, PropertyInterface
 {
