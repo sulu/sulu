@@ -58,7 +58,7 @@ class ListRepository extends EntityRepository
             $this->getClassMetadata()->getAssociationNames(),
             $this->getClassMetadata()->getFieldNames(),
             $this->getEntityName(),
-            $this->helper->getFields(),
+            $this->helper->getFields() ?? [],
             $this->helper->getSorting(),
             $where,
             $textFields,
@@ -86,7 +86,7 @@ class ListRepository extends EntityRepository
             }
         }
         if (null != $searchPattern && '' != $searchPattern) {
-            if (\count($searchFields) > 0) {
+            if (\count($searchFields ?? []) > 0) {
                 if (\count($textFields) > 0) {
                     $query->setParameter('search', '%' . $searchPattern . '%');
                 }
