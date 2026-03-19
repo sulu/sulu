@@ -44,6 +44,7 @@ class SymfonyExpressionTokenProvider implements TokenProviderInterface
                 }
             }
 
+            /** @var array<string> $args */
             return \sprintf('\%s(%s)', 'implode', \implode(', ', $args));
         }, function($arguments, ...$args): string {
             foreach ($args as $i => $arg) {

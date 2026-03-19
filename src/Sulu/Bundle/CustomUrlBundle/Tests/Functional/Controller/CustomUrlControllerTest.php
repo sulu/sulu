@@ -750,7 +750,7 @@ class CustomUrlControllerTest extends SuluTestCase
         foreach ($items as $url => $data) {
             $uuids[] = $this->testPost($data, $url);
         }
-
+        /** @var array<string> $uuids */
         $this->client->jsonRequest('DELETE', '/api/webspaces/sulu_io/custom-urls?ids=' . \implode(',', $uuids));
 
         $response = $this->client->getResponse();

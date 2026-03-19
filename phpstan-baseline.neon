@@ -93131,3 +93131,9 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: tests/phpstan/object-manager.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\TestBundle\\Kernel\\SuluTestKernel\:\:registerBundles\(\) should return iterable\<Symfony\\Component\\HttpKernel\\Bundle\\BundleInterface\> but returns list\<.*\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Sulu/Bundle/TestBundle/Kernel/SuluTestKernel.php

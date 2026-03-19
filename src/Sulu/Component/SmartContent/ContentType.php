@@ -221,6 +221,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
 
         // prepare pagination, limitation and options
         $page = 1;
+        /** @var int|string|null $limit */
         $limit = (\array_key_exists('limitResult', $filters) && $configuration->hasLimit()) ?
             $filters['limitResult'] : null;
         $options = [
