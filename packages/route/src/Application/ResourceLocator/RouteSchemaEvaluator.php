@@ -82,11 +82,15 @@ final class RouteSchemaEvaluator implements RouteSchemaEvaluatorInterface
             fn (string $glue, string $pieces): string => \sprintf('implode(%s, %s)', $glue, $pieces),
             function(array $arguments, string $glue, mixed $pieces): string {
                 if ($pieces instanceof ArrayAccessObject || $pieces instanceof \ArrayObject) {
+                    /** @var array<string> $pieces */
                     $pieces = $pieces->getArrayCopy();
                 }
 
                 if (\is_array($pieces)) {
-                    return \implode($glue, $pieces);
+                    /** @var array<string> $stringPieces */
+                    $stringPieces = $pieces;
+
+                    return \implode($glue, $stringPieces);
                 }
 
                 /** @var string|int|float $pieces */

@@ -775,6 +775,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('admin', $response->username);
         $this->assertFalse(\property_exists($response, 'password'));
 
+        /** @var array<string> $names */
         $names = \array_map(fn ($role) => $role->role->name, $response->userRoles);
         $existingNames = \implode(',', $names);
 

@@ -680,8 +680,10 @@ class AccountController extends AbstractRestController implements SecuredControl
             $accountManager->setLogo($account, $request->get('logo')['id']);
             $accountModified = true;
         }
-        if (null !== $request->get('medias')) {
-            $accountManager->setMedias($account, $request->get('medias'));
+        /** @var array<int>|null $medias */
+        $medias = $request->get('medias');
+        if (null !== $medias) {
+            $accountManager->setMedias($account, $medias);
         }
 
         $mainContact = null;

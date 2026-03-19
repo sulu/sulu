@@ -142,6 +142,7 @@ class ReferenceController extends AbstractRestController
     {
         $count = 0;
         foreach ($rows as $row) {
+            /** @var array<string, string> $row */
             // without a unique identifier the frontend currently has a problem with the list component
             $row['id'] = \implode('__', [$row['referenceResourceKey'], $row['referenceResourceId'], $row['referenceLocale']]);
 

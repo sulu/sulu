@@ -192,6 +192,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             } elseif (null !== $depth) {
                 // the combination of depth and parent needs a bigger refactoring of this query.
                 $qb->andWhere('collection.depth <= :depth');
+                /** @var int|string $depth */
                 $qb->setParameter('depth', \intval($depth));
             }
             if (null !== $search) {

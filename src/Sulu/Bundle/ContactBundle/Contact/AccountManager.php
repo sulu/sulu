@@ -246,24 +246,21 @@ class AccountManager extends AbstractContactManager
      * Sets the medias of the given account to the given medias.
      * Currently associated medias are replaced.
      *
-     * @param array $mediaIds
+     * @param array<int> $mediaIds
      *
      * @throws EntityNotFoundException
      */
     public function setMedias(Account $account, $mediaIds)
     {
-        /** @var MediaInterface[] $foundMedias */
         $foundMedias = [];
         if (\count($mediaIds) > 0) {
+            /** @var MediaInterface[] $foundMedias */
             $foundMedias = $this->mediaRepository->findById($mediaIds);
         }
         $foundMediaIds = \array_map(
-            function($mediaEntity) {
-                return $mediaEntity->getId();
-            },
+            fn (MediaInterface $mediaEntity) => $mediaEntity->getId(),
             $foundMedias
         );
-
         if ($missingMediaIds = \array_diff($mediaIds, $foundMediaIds)) {
             throw new EntityNotFoundException($this->mediaRepository->getClassName(), \reset($missingMediaIds));
         }

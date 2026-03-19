@@ -94,6 +94,8 @@ class BlockIdControllerTest extends SuluTestCase
             $ids[] = $blockId['id'];
         }
 
-        $this->assertCount(\count($ids), \array_unique($ids));
+        /** @var array<string> $uniqueIds */
+        $uniqueIds = $ids;
+        $this->assertCount(\count($ids), \array_unique($uniqueIds));
     }
 }

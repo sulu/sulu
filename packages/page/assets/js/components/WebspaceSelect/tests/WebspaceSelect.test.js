@@ -1,10 +1,11 @@
 // @flow
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
-import {mount} from 'enzyme';
 import WebspaceSelect from '../WebspaceSelect';
 
 test('Render WebspaceSelect closed', () => {
-    const arrowMenu = mount(
+    const {baseElement} = render(
         <WebspaceSelect onChange={jest.fn()} value="sulu">
             <WebspaceSelect.Item value="sulu">Sulu</WebspaceSelect.Item>
             <WebspaceSelect.Item value="sulu_blog">Sulu Blog</WebspaceSelect.Item>
@@ -12,42 +13,43 @@ test('Render WebspaceSelect closed', () => {
         </WebspaceSelect>
     );
 
-    expect(arrowMenu.render()).toMatchSnapshot();
+    expect(baseElement).toMatchSnapshot();
 });
 
-test('Render WebspaceSelect opened', () => {
-    const arrowMenu = mount(
+test('Render WebspaceSelect opened', async() => {
+    const user = userEvent.setup();
+
+    render(
         <WebspaceSelect onChange={jest.fn()} value="sulu">
             <WebspaceSelect.Item value="sulu">Sulu</WebspaceSelect.Item>
             <WebspaceSelect.Item value="sulu_blog">Sulu Blog</WebspaceSelect.Item>
             <WebspaceSelect.Item value="sulu_doc">Sulu Doc</WebspaceSelect.Item>
         </WebspaceSelect>
     );
-    expect(arrowMenu.instance().open).toBe(false);
+
+    expect(screen.queryByText('Sulu Blog')).not.toBeInTheDocument();
 
     // click button to open webspace select
-    arrowMenu.find('WebspaceSelect button').simulate('click');
-    expect(arrowMenu.instance().open).toBe(true);
+    await user.click(screen.getByRole('button'));
+    expect(screen.getByText('Sulu Blog')).toBeInTheDocument();
 });
 
-test('Change event should be called correctly', () => {
+test('Change event should be called correctly', async() => {
     const handleChange = jest.fn();
     const value = 'sulu';
+    const user = userEvent.setup();
 
-    const webspaceSelect = mount(
+    render(
         <WebspaceSelect onChange={handleChange} value={value}>
             <WebspaceSelect.Item value="sulu">Sulu</WebspaceSelect.Item>
             <WebspaceSelect.Item value="sulu_blog">Sulu Blog</WebspaceSelect.Item>
             <WebspaceSelect.Item value="sulu_doc">Sulu Doc</WebspaceSelect.Item>
         </WebspaceSelect>
     );
-    expect(webspaceSelect.instance().open).toBe(false);
-
-    // click button to open webspace select
-    webspaceSelect.find('WebspaceSelect button').simulate('click');
-    expect(webspaceSelect.instance().open).toBe(true);
 
     // click second item to fire change event
-    webspaceSelect.find('Item').at(1).simulate('click');
+    await user.click(screen.getByRole('button'));
+    await user.click(screen.getByText('Sulu Blog'));
+
     expect(handleChange).toBeCalledWith('sulu_blog');
 });

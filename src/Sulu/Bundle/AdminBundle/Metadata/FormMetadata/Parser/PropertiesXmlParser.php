@@ -469,8 +469,12 @@ class PropertiesXmlParser
         }
         $property->setSpaceAfter($data['spaceAfter']);
         $property->setTags($data['tags'] ?? []);
-        $property->setMinOccurs(null !== $data['minOccurs'] ? \intval($data['minOccurs']) : null);
-        $property->setMaxOccurs(null !== $data['maxOccurs'] ? \intval($data['maxOccurs']) : null);
+        /** @var int|string|null $minOccurs */
+        $minOccurs = $data['minOccurs'];
+        /** @var int|string|null $maxOccurs */
+        $maxOccurs = $data['maxOccurs'];
+        $property->setMinOccurs(null !== $minOccurs ? \intval($minOccurs) : null);
+        $property->setMaxOccurs(null !== $maxOccurs ? \intval($maxOccurs) : null);
         $property->setDisabledCondition($this->normalizeConditionData($data['disabledCondition'] ?? null));
         $property->setVisibleCondition($this->normalizeConditionData($data['visibleCondition'] ?? null));
         $property->setOnInvalid(\array_key_exists('onInvalid', $data) ? $data['onInvalid'] : null);

@@ -1,21 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Assign the passed class to the container 1`] = `
-<div
-  class="container-class"
->
-  <h1>
-    Component
-  </h1>
-</div>
+<DocumentFragment>
+  <div
+    class="container-class"
+  >
+    <h1>
+      Component
+    </h1>
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Pass props to rendered component 1`] = `
-<div
-  class="container"
->
-  <h1>
-    Test
-  </h1>
-</div>
+<DocumentFragment>
+  <div
+    class="container"
+  >
+    <h1>
+      Test
+    </h1>
+  </div>
+</DocumentFragment>
 `;

@@ -1,18 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should render 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="stickySentinel"
-    style="top:-1px"
-  />,
+    style="top: -1px;"
+  />
   <div
     class="sticky"
-    style="top:0"
+    style="top: 0px;"
   >
     <span>
       Unsticky
     </span>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;

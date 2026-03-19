@@ -90,6 +90,7 @@ class AccessControlRepository extends EntityRepository implements AccessControlR
             ->setParameter('entityIds', $entityIds, ArrayParameterType::STRING)
         ;
 
+        /** @var string[] $idsWithPermissions */
         $idsWithPermissions = \array_column($queryBuilder->getQuery()->getArrayResult(), 'id');
         $idsWithoutPermissions = \array_diff($entityIds, $idsWithPermissions);
 

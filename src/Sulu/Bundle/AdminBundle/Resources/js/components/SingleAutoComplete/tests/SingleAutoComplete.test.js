@@ -1,9 +1,39 @@
+/* eslint-disable testing-library/prefer-user-event */
 // @flow
+import {fireEvent, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
-import {mount, shallow} from 'enzyme';
 import SingleAutoComplete from '../SingleAutoComplete';
 
-jest.mock('debounce', () => jest.fn((callback) => callback));
+jest.mock('debounce', () => jest.fn((callback) => {
+    const debounced = (...args) => callback(...args);
+    debounced.clear = jest.fn();
+
+    return debounced;
+}));
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+function renderSingleAutoComplete(props: any = {}) {
+    return render(
+        <SingleAutoComplete
+            displayProperty="name"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            onSearch={jest.fn()}
+            searchProperties={['name']}
+            suggestions={[]}
+            value={{name: 'Test'}}
+            {...props}
+        />
+    );
+}
+
+function getInput() {
+    return screen.getByRole('textbox');
+}
 
 test('SingleAutoComplete should render with suggestions', () => {
     const suggestions = [
@@ -11,25 +41,12 @@ test('SingleAutoComplete should render with suggestions', () => {
         {id: 2, name: 'Suggestion 2'},
         {id: 3, name: 'Suggestion 3'},
     ];
+    const {asFragment} = renderSingleAutoComplete({suggestions});
 
-    const singleAutoComplete = mount(
-        <SingleAutoComplete
-            displayProperty="name"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={{name: 'Test'}}
-        />
-    );
+    fireEvent.focus(getInput());
 
-    // suggestions are displayed when input field is focused
-    singleAutoComplete.find('Input').prop('onFocus')();
-    singleAutoComplete.update();
-
-    expect(singleAutoComplete.render()).toMatchSnapshot();
-    expect(singleAutoComplete.find('AutoCompletePopover').render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
+    expect(screen.getByRole('list')).toMatchSnapshot();
 });
 
 test('SingleAutoComplete should be disabled when in disabled state', () => {
@@ -39,52 +56,34 @@ test('SingleAutoComplete should be disabled when in disabled state', () => {
         {name: 'Suggestion 3'},
     ];
 
-    const singleAutoComplete = mount(
-        <SingleAutoComplete
-            disabled={true}
-            displayProperty="name"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={{name: 'Test'}}
-        />
-    );
+    renderSingleAutoComplete({
+        disabled: true,
+        suggestions,
+    });
 
-    expect(singleAutoComplete.find('input').prop('disabled')).toEqual(true);
+    expect(getInput()).toBeDisabled();
 });
 
-test('Selecting suggestion should fire onChange callback and update value of Input with selected value', () => {
+test('Selecting suggestion should fire onChange callback and update value of Input with selected value', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
-
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
         {id: 2, name: 'Suggestion 2'},
         {id: 3, name: 'Suggestion 3'},
     ];
 
-    const singleAutoComplete = mount(
-        <SingleAutoComplete
-            displayProperty="name"
-            onChange={changeSpy}
-            onFinish={jest.fn()}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={{name: 'Test'}}
-        />
-    );
+    renderSingleAutoComplete({
+        onChange: changeSpy,
+        suggestions,
+    });
 
-    expect(singleAutoComplete.find('Input').prop('value')).toEqual('Test');
+    expect(getInput().value).toEqual('Test');
 
-    // suggestions are displayed when input field is focused
-    singleAutoComplete.find('Input').prop('onFocus')();
-    singleAutoComplete.update();
+    fireEvent.focus(getInput());
+    await user.click(screen.getByRole('button', {name: 'Suggestion 1'}));
 
-    singleAutoComplete.find('Suggestion button').at(0).simulate('click');
-
-    expect(singleAutoComplete.find('Input').prop('value')).toEqual('Suggestion 1');
+    expect(getInput().value).toEqual('Suggestion 1');
     expect(changeSpy).toHaveBeenCalledWith(suggestions[0]);
 });
 
@@ -96,20 +95,13 @@ test('Should call onChange with undefined if all characters are removed from inp
         {id: 3, name: 'Suggestion 3'},
     ];
 
-    const singleAutoComplete = shallow(
-        <SingleAutoComplete
-            displayProperty="name"
-            onChange={changeSpy}
-            onFinish={jest.fn()}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={{name: 'Test'}}
-        />
-    );
+    renderSingleAutoComplete({
+        onChange: changeSpy,
+        suggestions,
+    });
 
-    expect(singleAutoComplete.find('Input').prop('value')).toEqual('Test');
-    singleAutoComplete.find('Input').simulate('change', '');
+    expect(getInput().value).toEqual('Test');
+    fireEvent.change(getInput(), {target: {value: ''}});
     expect(changeSpy).toBeCalledWith(undefined);
 });
 
@@ -119,44 +111,34 @@ test('Should call the onFinish callback when the Input lost focus', () => {
         {id: 1, name: 'Suggestion 1'},
     ];
 
-    const singleAutoComplete = shallow(
-        <SingleAutoComplete
-            displayProperty="name"
-            onChange={jest.fn()}
-            onFinish={finishSpy}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={{name: 'Test'}}
-        />
-    );
+    renderSingleAutoComplete({
+        onFinish: finishSpy,
+        suggestions,
+    });
 
-    singleAutoComplete.find('Input').simulate('blur');
-
-    expect(finishSpy).toBeCalledWith();
+    fireEvent.blur(getInput());
+    expect(finishSpy).toBeCalled();
 });
 
 test('Should update value of Input when the value prop is updated', () => {
-    const finishSpy = jest.fn();
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
     ];
+    const {rerender} = renderSingleAutoComplete({suggestions});
 
-    const singleAutoComplete = shallow(
+    expect(getInput().value).toEqual('Test');
+    rerender(
         <SingleAutoComplete
             displayProperty="name"
             onChange={jest.fn()}
-            onFinish={finishSpy}
+            onFinish={jest.fn()}
             onSearch={jest.fn()}
             searchProperties={['name']}
             suggestions={suggestions}
-            value={{name: 'Test'}}
+            value={{name: 'new value'}}
         />
     );
-
-    expect(singleAutoComplete.find('Input').prop('value')).toEqual('Test');
-    singleAutoComplete.setProps({value: {name: 'new value'}});
-    expect(singleAutoComplete.find('Input').prop('value')).toEqual('new value');
+    expect(getInput().value).toEqual('new value');
 });
 
 test('Should fire onSearch callback and open popover when input field is focused', () => {
@@ -165,24 +147,17 @@ test('Should fire onSearch callback and open popover when input field is focused
         {id: 1, name: 'Suggestion 1'},
     ];
 
-    const singleAutoComplete = shallow(
-        <SingleAutoComplete
-            displayProperty="name"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSearch={searchSpy}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={{name: 'Test'}}
-        />
-    );
+    renderSingleAutoComplete({
+        onSearch: searchSpy,
+        suggestions,
+    });
 
     expect(searchSpy).not.toBeCalled();
-    expect(singleAutoComplete.find('AutoCompletePopover').prop('open')).toEqual(false);
+    expect(screen.queryByRole('list')).not.toBeInTheDocument();
 
-    singleAutoComplete.find('Input').prop('onFocus')();
+    fireEvent.focus(getInput());
     expect(searchSpy).toBeCalledWith('Test');
-    expect(singleAutoComplete.find('AutoCompletePopover').prop('open')).toEqual(true);
+    expect(screen.getByRole('list')).toBeInTheDocument();
 });
 
 test('Should close popover when requested and reopen popover when input field is changed', () => {
@@ -191,26 +166,19 @@ test('Should close popover when requested and reopen popover when input field is
         {id: 1, name: 'Suggestion 1'},
     ];
 
-    const singleAutoComplete = shallow(
-        <SingleAutoComplete
-            displayProperty="name"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSearch={searchSpy}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={{name: 'Test'}}
-        />
-    );
+    renderSingleAutoComplete({
+        onSearch: searchSpy,
+        suggestions,
+    });
 
-    singleAutoComplete.find('Input').prop('onFocus')();
+    fireEvent.focus(getInput());
     expect(searchSpy).nthCalledWith(1, 'Test');
-    expect(singleAutoComplete.find('AutoCompletePopover').prop('open')).toEqual(true);
+    expect(screen.getByRole('list')).toBeInTheDocument();
 
-    singleAutoComplete.find('AutoCompletePopover').prop('onClose')();
-    expect(singleAutoComplete.find('AutoCompletePopover').prop('open')).toEqual(false);
+    fireEvent.click(screen.getByTestId('backdrop'));
+    expect(screen.queryByRole('list')).not.toBeInTheDocument();
 
-    singleAutoComplete.find('Input').prop('onChange')('search term');
+    fireEvent.change(getInput(), {target: {value: 'search term'}});
     expect(searchSpy).nthCalledWith(2, 'search term');
-    expect(singleAutoComplete.find('AutoCompletePopover').prop('open')).toEqual(true);
+    expect(screen.getByRole('list')).toBeInTheDocument();
 });

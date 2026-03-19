@@ -1,165 +1,173 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should not render the footer where there is no onConfirm and no actions 1`] = `
-Array [
-  <div
-    class="backdrop visible fixed"
-    data-testid="backdrop"
-    role="button"
-  />,
-  <div
-    class="container isDown"
-  >
+<body>
+  <div />
+  <div>
     <div
-      class="overlay small"
+      class="backdrop visible fixed"
+      data-testid="backdrop"
+      role="button"
+    />
+    <div
+      class="container isDown"
     >
-      <section
-        class="content"
+      <div
+        class="overlay small"
       >
-        <header
-          class="header"
+        <section
+          class="content"
         >
-          <h2>
-            My overlay title
-          </h2>
-          <span
-            aria-label="su-times"
-            class="su-times clickable icon"
-            role="button"
-            tabindex="0"
-          />
-        </header>
-        <article
-          class="article"
-        >
-          <p>
-            My overlay content
-          </p>
-        </article>
-        <div
-          class="snackbar"
-        >
-          <div
-            class="snackbar error"
-            role="button"
+          <header
+            class="header"
           >
+            <h2>
+              My overlay title
+            </h2>
             <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
+              aria-label="su-times"
+              class="su-times clickable icon"
+              role="button"
+              tabindex="0"
             />
+          </header>
+          <article
+            class="article"
+          >
+            <p>
+              My overlay content
+            </p>
+          </article>
+          <div
+            class="snackbar"
+          >
             <div
-              class="text"
+              class="snackbar error"
+              role="button"
             >
-              <strong>
-                sulu_admin.error
-              </strong>
-               - 
+              <span
+                aria-label="su-exclamation-triangle"
+                class="su-exclamation-triangle icon"
+              />
+              <div
+                class="text"
+              >
+                <strong>
+                  sulu_admin.error
+                </strong>
+                 - 
+                
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
-  </div>,
-]
+  </div>
+</body>
 `;
 
 exports[`The component should render in body when open 1`] = `
-Array [
-  <div
-    class="backdrop visible fixed"
-    data-testid="backdrop"
-    role="button"
-  />,
-  <div
-    class="container isDown"
-  >
+<body>
+  <div />
+  <div>
     <div
-      class="overlay small"
+      class="backdrop visible fixed"
+      data-testid="backdrop"
+      role="button"
+    />
+    <div
+      class="container isDown"
     >
-      <section
-        class="content"
+      <div
+        class="overlay small"
       >
-        <header
-          class="header"
+        <section
+          class="content"
         >
-          <h2>
-            My overlay title
-          </h2>
-          <span
-            aria-label="su-times"
-            class="su-times clickable icon"
-            role="button"
-            tabindex="0"
-          />
-        </header>
-        <article
-          class="article"
-        >
-          <p>
-            My overlay content
-          </p>
-        </article>
-        <footer
-          class="footer"
-        >
-          <div
-            class="actions"
+          <header
+            class="header"
           >
-            <button
-              class="button link hasText"
-              type="button"
-            >
-              <span
-                class="buttonText"
-              >
-                Action 1
-              </span>
-            </button>
-            <button
-              class="button link hasText"
-              type="button"
-            >
-              <span
-                class="buttonText"
-              >
-                Action 2
-              </span>
-            </button>
-          </div>
-          <button
-            class="button primary hasText"
-            type="button"
-          >
+            <h2>
+              My overlay title
+            </h2>
             <span
-              class="buttonText"
-            >
-              Apply
-            </span>
-          </button>
-        </footer>
-        <div
-          class="snackbar"
-        >
-          <div
-            class="snackbar error"
-            role="button"
-          >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
+              aria-label="su-times"
+              class="su-times clickable icon"
+              role="button"
+              tabindex="0"
             />
+          </header>
+          <article
+            class="article"
+          >
+            <p>
+              My overlay content
+            </p>
+          </article>
+          <footer
+            class="footer"
+          >
             <div
-              class="text"
+              class="actions"
             >
-              <strong>
-                sulu_admin.error
-              </strong>
-               - 
+              <button
+                class="button link hasText"
+                type="button"
+              >
+                <span
+                  class="buttonText"
+                >
+                  Action 1
+                </span>
+              </button>
+              <button
+                class="button link hasText"
+                type="button"
+              >
+                <span
+                  class="buttonText"
+                >
+                  Action 2
+                </span>
+              </button>
+            </div>
+            <button
+              class="button primary hasText"
+              type="button"
+            >
+              <span
+                class="buttonText"
+              >
+                Apply
+              </span>
+            </button>
+          </footer>
+          <div
+            class="snackbar"
+          >
+            <div
+              class="snackbar error"
+              role="button"
+            >
+              <span
+                aria-label="su-exclamation-triangle"
+                class="su-exclamation-triangle icon"
+              />
+              <div
+                class="text"
+              >
+                <strong>
+                  sulu_admin.error
+                </strong>
+                 - 
+                
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
-  </div>,
-]
+  </div>
+</body>
 `;

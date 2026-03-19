@@ -22,6 +22,9 @@ use Imagine\Image\Point;
  */
 class CropTransformation implements TransformationInterface
 {
+    /**
+     * @param array{x?: int|string, y?: int|string, w?: int|string, h?: int|string, retina?: string} $parameters
+     */
     public function execute(ImageInterface $image, $parameters)
     {
         @trigger_deprecation(

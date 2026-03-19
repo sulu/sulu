@@ -1,98 +1,108 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Bic should render 1`] = `
-<div
-  class="input default left"
->
+<DocumentFragment>
   <div
-    class="prependedContainer default"
+    class="input default left"
   >
-    <span
-      aria-label="su-earth"
-      class="su-earth icon default"
+    <div
+      class="prependedContainer default"
+    >
+      <span
+        aria-label="su-earth"
+        class="su-earth icon default"
+      />
+    </div>
+    <input
+      type="text"
+      value=""
     />
   </div>
-  <input
-    type="text"
-    value=""
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Bic should render error 1`] = `
-<div
-  class="input default left error"
->
+<DocumentFragment>
   <div
-    class="prependedContainer default"
+    class="input default left error"
   >
-    <span
-      aria-label="su-earth"
-      class="su-earth icon default"
+    <div
+      class="prependedContainer default"
+    >
+      <span
+        aria-label="su-earth"
+        class="su-earth icon default"
+      />
+    </div>
+    <input
+      type="text"
+      value=""
     />
   </div>
-  <input
-    type="text"
-    value=""
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Bic should render when disabled 1`] = `
-<div
-  class="input default left disabled"
->
+<DocumentFragment>
   <div
-    class="prependedContainer default"
+    class="input default left disabled"
   >
-    <span
-      aria-label="su-earth"
-      class="su-earth icon default"
+    <div
+      class="prependedContainer default"
+    >
+      <span
+        aria-label="su-earth"
+        class="su-earth icon default"
+      />
+    </div>
+    <input
+      disabled=""
+      type="text"
+      value="BBBBCCLLXXX"
     />
   </div>
-  <input
-    disabled=""
-    type="text"
-    value="BBBBCCLLXXX"
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Bic should render with placeholder 1`] = `
-<div
-  class="input default left"
->
+<DocumentFragment>
   <div
-    class="prependedContainer default"
+    class="input default left"
   >
-    <span
-      aria-label="su-earth"
-      class="su-earth icon default"
+    <div
+      class="prependedContainer default"
+    >
+      <span
+        aria-label="su-earth"
+        class="su-earth icon default"
+      />
+    </div>
+    <input
+      placeholder="My placeholder"
+      type="text"
+      value=""
     />
   </div>
-  <input
-    placeholder="My placeholder"
-    type="text"
-    value=""
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Bic should render with value 1`] = `
-<div
-  class="input default left"
->
+<DocumentFragment>
   <div
-    class="prependedContainer default"
+    class="input default left"
   >
-    <span
-      aria-label="su-earth"
-      class="su-earth icon default"
+    <div
+      class="prependedContainer default"
+    >
+      <span
+        aria-label="su-earth"
+        class="su-earth icon default"
+      />
+    </div>
+    <input
+      type="text"
+      value="BBBBCCLLXXX"
     />
   </div>
-  <input
-    type="text"
-    value="BBBBCCLLXXX"
-  />
-</div>
+</DocumentFragment>
 `;

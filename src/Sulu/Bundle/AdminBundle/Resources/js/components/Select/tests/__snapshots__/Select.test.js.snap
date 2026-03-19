@@ -1,49 +1,51 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should render with a dark skin 1`] = `
-<div
-  class="select"
-  role="none"
->
-  <button
-    class="displayValue dark hasIcon"
-    type="button"
+<DocumentFragment>
+  <div
+    class="select"
+    role="none"
   >
-    <span
-      aria-label="su-plus"
-      class="su-plus frontIcon"
-    />
-    <div
-      aria-label="My text"
-      class="croppedText"
-      title="My text"
+    <button
+      class="displayValue dark hasIcon"
+      type="button"
     >
+      <span
+        aria-label="su-plus"
+        class="su-plus frontIcon"
+      />
       <div
-        aria-hidden="true"
-        class="front"
+        aria-label="My text"
+        class="croppedText"
+        title="My text"
       >
-        My t
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          My t
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+            ext
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          My text
+        </div>
       </div>
-      <div
-        aria-hidden="true"
-        class="back"
-      >
-        <span>
-          ext
-        </span>
-      </div>
-      <div
-        class="whole"
-      >
-        My text
-      </div>
-    </div>
-    <span
-      aria-label="su-angle-down"
-      class="su-angle-down toggle"
-    />
-  </button>
-</div>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down toggle"
+      />
+    </button>
+  </div>
+</DocumentFragment>
 `;
 
 exports[`The component should render with a dark skin 2`] = `
