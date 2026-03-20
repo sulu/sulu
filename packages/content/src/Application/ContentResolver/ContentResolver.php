@@ -22,6 +22,8 @@ use Sulu\Content\Application\ContentResolver\ResolvableResourceQueue\ResolvableR
 use Sulu\Content\Application\ContentResolver\ResolvableResourceReplacer\ResolvableResourceReplacerInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableInterface;
+use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewInterface;
+use Sulu\Content\Application\ResourceLoader\ResourceLoaderProvider;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
@@ -42,7 +44,8 @@ readonly class ContentResolver implements ContentResolverInterface
         private ContentViewDataNormalizerInterface $contentViewDataNormalizer,
         private ContentAggregatorInterface $contentAggregator,
         private int $maxDepth,
-        private ContentEnhancerInterface $contentEnhancer
+        private ContentEnhancerInterface $contentEnhancer,
+        private ResourceLoaderProvider $resourceLoaderProvider
     ) {
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
     }
@@ -81,6 +84,9 @@ readonly class ContentResolver implements ContentResolverInterface
 
             // Process loaded resources
             foreach ($loadedResources as $loaderKey => $resources) {
+                $resourceLoader = $this->resourceLoaderProvider->getResourceLoader($loaderKey);
+                $supportsContentView = $resourceLoader instanceof ResourceLoaderContentViewInterface;
+
                 foreach ($resources as $id => $resourcePerMetadataIdentifier) {
                     $depth = $loaderIdDepths[$loaderKey][$id];
                     foreach ($resourcePerMetadataIdentifier as $metadataIdentifier => $resource) {
@@ -126,7 +132,28 @@ readonly class ContentResolver implements ContentResolverInterface
                                 );
                             }
 
-                            $sourceValue = $childContent;
+                            // Merge ResourceLoader content data into the resolved content
+                            // after property mapping so it's always present regardless of properties config
+                            if ($supportsContentView) {
+                                $entityContentView = $resourceLoader->resolveContentView($childContent);
+                                $entityContentData = $entityContentView->getContent();
+
+                                if (\is_array($entityContentData) && [] !== $entityContentData) {
+                                    /** @var array<string, mixed> $existingContent */
+                                    $existingContent = $resolvedValue['content'];
+                                    $resolvedValue['content'] = \array_merge($existingContent, $entityContentData);
+                                }
+
+                                $contentView = ContentView::create([], $entityContentView->getView());
+                            } else {
+                                $contentView = ContentView::create([], []);
+                            }
+
+                            $resolvedResources[$loaderKey][$id][$metadataIdentifier] = [
+                                'contentView' => $contentView,
+                                'resolved' => $resolvedValue,
+                            ];
+                            continue;
                         } elseif ($resource instanceof ContentView) {
                             /** @var array{
                              *     content: array{'0': array<string, mixed>},
@@ -153,8 +180,12 @@ readonly class ContentResolver implements ContentResolverInterface
                             $sourceValue = $resource;
                         }
 
+                        $contentView = $supportsContentView
+                            ? $resourceLoader->resolveContentView($sourceValue)
+                            : ContentView::create([], []);
+
                         $resolvedResources[$loaderKey][$id][$metadataIdentifier] = [
-                            'source' => $sourceValue,
+                            'contentView' => $contentView,
                             'resolved' => $resolvedValue,
                         ];
                     }
@@ -181,7 +212,7 @@ readonly class ContentResolver implements ContentResolverInterface
             $existing = $this->propertyAccessor->getValue($resolvedContent['view'], $path);
             $existingView = \is_array($existing) ? $existing : [];
 
-            $merged = $this->mergeViewEnhancement($existingView, $items, $enhancement['isList']);
+            $merged = $this->mergeViewEnhancement($existingView, $items, $enhancement['itemsPropertyName']);
             $this->propertyAccessor->setValue($resolvedContent['view'], $path, $merged);
         }
 
@@ -198,6 +229,8 @@ readonly class ContentResolver implements ContentResolverInterface
             $normalizedContentData,
             '[content]'
         );
+
+        $normalizedContentData = $this->mergeFieldViewDataIntoItems($normalizedContentData, $viewEnhancements);
 
         if (null !== $properties && [] !== $properties) {
             $this->contentViewDataNormalizer->recursivelyMapProperties(
@@ -251,37 +284,68 @@ readonly class ContentResolver implements ContentResolverInterface
      *
      * @return array<string|int, mixed>
      */
-    private function mergeViewEnhancement(array $existingView, array $items, bool $isList): array
+    private function mergeViewEnhancement(array $existingView, array $items, ?string $itemsPropertyName): array
     {
-        if ([] === $existingView) {
-            if (!$isList && 1 === \count($items) && \is_array($items[0])) {
-                return $items[0];
+        if (null === $itemsPropertyName) {
+            if (1 === \count($items) && \is_array($items[0])) {
+                return \array_merge($existingView, $items[0]);
             }
 
-            return $items;
-        }
-
-        if ($isList) {
-            if (\array_is_list($existingView)) {
-                return [...$existingView, ...$items];
-            }
-
-            $existingItems = $existingView['items'] ?? [];
-            if (\is_array($existingItems) && \array_is_list($existingItems)) {
-                $existingView['items'] = [...$existingItems, ...$items];
-            } else {
-                $existingView['items'] = $items;
-            }
+            $existingView['items'] = $items;
 
             return $existingView;
         }
 
-        if (1 === \count($items) && \is_array($items[0])) {
-            return \array_merge($existingView, $items[0]);
-        }
-
-        $existingView['items'] = $items;
+        $existingView[$itemsPropertyName] = $items;
 
         return $existingView;
+    }
+
+    /**
+     * After normalization, per-item field-level view data (e.g., title: [], url: []) lives at
+     * numeric indices alongside the 'items' array from viewEnhancements. This method merges
+     * those numeric entries into the corresponding 'items' entry for a clean structure.
+     *
+     * @param array{resource: object, content: array<string, mixed>, view: array<string, mixed>, extension: array<string, array<string, mixed>>} $normalizedContentData
+     * @param array<string, array{itemsPropertyName: ?string, items: list<mixed>}> $viewEnhancements
+     *
+     * @return array{resource: object, content: array<string, mixed>, view: array<string, mixed>, extension: array<string, array<string, mixed>>}
+     */
+    private function mergeFieldViewDataIntoItems(array $normalizedContentData, array $viewEnhancements): array
+    {
+        foreach ($viewEnhancements as $path => $enhancement) {
+            $itemsPropertyName = $enhancement['itemsPropertyName'];
+            if (null === $itemsPropertyName) {
+                continue;
+            }
+
+            // Strip the first path segment (resolver key like 'template') since
+            // normalizeContentViewData flattens it to the root level
+            $normalizedPath = \preg_replace('/^\[[^\]]+\]/', '', $path);
+            $viewPath = '[view]' . $normalizedPath;
+            if (!$this->propertyAccessor->isReadable($normalizedContentData, $viewPath)) {
+                continue;
+            }
+
+            $viewValue = $this->propertyAccessor->getValue($normalizedContentData, $viewPath);
+            if (!\is_array($viewValue) || !isset($viewValue[$itemsPropertyName])) {
+                continue;
+            }
+
+            /** @var list<array<string, mixed>> $items */
+            $items = $viewValue[$itemsPropertyName];
+            foreach ($items as $index => $item) {
+                if (isset($viewValue[$index]) && \is_array($viewValue[$index])) {
+                    $items[$index] = \array_merge($item, $viewValue[$index]);
+                    unset($viewValue[$index]);
+                }
+            }
+
+            $viewValue[$itemsPropertyName] = $items;
+            $this->propertyAccessor->setValue($normalizedContentData, $viewPath, $viewValue);
+        }
+
+        /** @var array{resource: object, content: array<string, mixed>, view: array<string, mixed>, extension: array<string, array<string, mixed>>} $normalizedContentData */
+        return $normalizedContentData;
     }
 }

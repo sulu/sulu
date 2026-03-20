@@ -11,11 +11,15 @@
 
 namespace Sulu\Content\Tests\Application\ExampleTestBundle\ResourceLoader;
 
-use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
+use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewInterface;
+use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\TemplateInterface;
+use Sulu\Content\Domain\Model\WebspaceInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Repository\ExampleRepository;
 
-class ExampleResourceLoader implements ResourceLoaderInterface
+class ExampleResourceLoader implements ResourceLoaderContentViewInterface
 {
     public const RESOURCE_LOADER_KEY = 'example';
 
@@ -41,6 +45,27 @@ class ExampleResourceLoader implements ResourceLoaderInterface
         }
 
         return $mappedResult;
+    }
+
+    public function resolveContentView(mixed $source): ContentView
+    {
+        $view = [];
+        $content = [];
+
+        if ($source instanceof TemplateInterface) {
+            $view['template'] = $source->getTemplateKey();
+        }
+
+        if ($source instanceof WebspaceInterface) {
+            $view['mainWebspace'] = $source->getMainWebspace();
+        }
+
+        if ($source instanceof AuthorInterface) {
+            $content['authored'] = $source->getAuthored()?->format('c');
+            $content['lastModified'] = $source->getLastModified()?->format('c');
+        }
+
+        return ContentView::create($content, $view);
     }
 
     public static function getKey(): string

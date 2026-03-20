@@ -30,7 +30,7 @@ class ResolvableResource implements ResolvableInterface
         ?\Closure $resourceCallback = null,
         private ?array $metadata = null,
         private ?string $resourceKey = null,
-        private ?\Closure $viewCallback = null,
+        private ?string $itemsPropertyName = null,
     ) {
         $this->resourceCallback = $resourceCallback ?? (static fn (mixed $resource) => $resource);
     }
@@ -50,13 +50,9 @@ class ResolvableResource implements ResolvableInterface
         return ($this->resourceCallback)($resource);
     }
 
-    public function executeViewCallback(mixed $source): mixed
+    public function getItemsPropertyName(): ?string
     {
-        if (null === $this->viewCallback) {
-            return null;
-        }
-
-        return ($this->viewCallback)($source);
+        return $this->itemsPropertyName;
     }
 
     public function getPriority(): int

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\ContentResolver\ResolvableResourceReplacer;
 
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableInterface;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 
@@ -30,11 +31,11 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
 
     /**
      * @param array<int|string, mixed> $content
-     * @param array<string, array<string|int, array<string, array{source: mixed, resolved: mixed}>>> $resolvedResources
+     * @param array<string, array<string|int, array<string, array{resolved: mixed, contentView: ContentView}>>> $resolvedResources
      *
      * @return array{
      *     content: array<int|string, mixed>,
-     *     viewEnhancements: array<string, array{items: list<mixed>, isList: bool}>,
+     *     viewEnhancements: array<string, array{itemsPropertyName: ?string, items: list<mixed>}>,
      * }
      */
     public function replaceResolvableResourcesWithResolvedValues(
@@ -43,7 +44,7 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
         int $depth,
         int $maxDepth
     ): array {
-        /** @var array<string, array{items: list<mixed>, isList: bool}> $viewEnhancements */
+        /** @var array<string, array{itemsPropertyName: ?string, items: list<mixed>}> $viewEnhancements */
         $viewEnhancements = [];
 
         $transformedContent = $this->replaceRecursively(
@@ -63,9 +64,9 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
 
     /**
      * @param array<int|string, mixed> $content
-     * @param array<string, array<string|int, array<string, array{source: mixed, resolved: mixed}>>> $resolvedResources
+     * @param array<string, array<string|int, array<string, array{resolved: mixed, contentView: ContentView}>>> $resolvedResources
      * @param list<int|string> $path Current path in the content structure
-     * @param array<string, array{items: list<mixed>, isList: bool}> $viewEnhancements
+     * @param array<string, array{itemsPropertyName: ?string, items: list<mixed>}> $viewEnhancements
      *
      * @return array<int|string, mixed>
      */
@@ -92,23 +93,28 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
             if ($value instanceof ResolvableInterface) {
                 $resolveResult = $this->resolveValue($value, $resolvedResources);
                 $resolved = $resolveResult['resolved'];
-                $source = $resolveResult['source'];
+                $contentView = $resolveResult['contentView'];
 
-                if ($value instanceof ResolvableResource && null !== $source) {
-                    $viewData = $value->executeViewCallback($source);
-                    if (null !== $viewData) {
+                $contentData = $contentView->getContent();
+                if (\is_array($contentData) && [] !== $contentData && \is_array($resolved)) {
+                    $resolved = \array_merge($resolved, $contentData);
+                }
+
+                if ($value instanceof ResolvableResource) {
+                    $viewData = $contentView->getView();
+                    if ([] !== $viewData) {
                         $viewPath = \is_int($key) ? $path : $currentPath;
                         if ([] !== $viewPath) {
                             $pathKey = $this->buildPropertyPath($viewPath);
+                            $itemsPropertyName = $value->getItemsPropertyName();
 
                             if (!isset($viewEnhancements[$pathKey])) {
                                 $viewEnhancements[$pathKey] = [
+                                    'itemsPropertyName' => $itemsPropertyName,
                                     'items' => [],
-                                    'isList' => false,
                                 ];
                             }
                             $viewEnhancements[$pathKey]['items'][] = $viewData;
-                            $viewEnhancements[$pathKey]['isList'] = $viewEnhancements[$pathKey]['isList'] || \is_int($key);
                         }
                     }
                 }
@@ -164,9 +170,9 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
     }
 
     /**
-     * @param array<string, array<string|int, array<string, array{source: mixed, resolved: mixed}>>> $resolvedResources
+     * @param array<string, array<string|int, array<string, array{resolved: mixed, contentView: ContentView}>>> $resolvedResources
      *
-     * @return array{source: mixed, resolved: mixed}
+     * @return array{contentView: ContentView, resolved: mixed}
      */
     private function resolveValue(
         ResolvableInterface $value,
@@ -179,7 +185,7 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
         $entry = $resolvedResources[$loaderKey][$id][$metadataIdentifier] ?? null;
 
         if (null === $entry) {
-            return ['source' => null, 'resolved' => null];
+            return ['contentView' => ContentView::create([], []), 'resolved' => null];
         }
 
         if ($value instanceof ResolvableResource && $value->getResourceKey()) {
@@ -187,7 +193,7 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
         }
 
         return [
-            'source' => $entry['source'],
+            'contentView' => $entry['contentView'],
             'resolved' => $value->executeResourceCallback($entry['resolved']),
         ];
     }

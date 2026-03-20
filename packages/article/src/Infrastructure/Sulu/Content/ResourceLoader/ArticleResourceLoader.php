@@ -13,8 +13,11 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader;
 
+use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
-use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
+use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewInterface;
+use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 /**
@@ -22,7 +25,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
  *
  * @final
  */
-class ArticleResourceLoader implements ResourceLoaderInterface
+class ArticleResourceLoader implements ResourceLoaderContentViewInterface
 {
     public const RESOURCE_LOADER_KEY = 'article';
 
@@ -56,6 +59,30 @@ class ArticleResourceLoader implements ResourceLoaderInterface
         }
 
         return $mappedResult;
+    }
+
+    public function resolveContentView(mixed $source): ContentView
+    {
+        $view = [];
+        $content = [];
+
+        if ($source instanceof ArticleDimensionContentInterface) {
+            $view = [
+                'uuid' => $source->getResource()->getUuid(),
+                'template' => $source->getTemplateKey(),
+                'mainWebspace' => $source->getMainWebspace(),
+                'additionalWebspaces' => $source->getAdditionalWebspaces(),
+            ];
+        }
+
+        if ($source instanceof AuthorInterface) {
+            $content = [
+                'authored' => $source->getAuthored()?->format('c'),
+                'lastModified' => $source->getLastModified()?->format('c'),
+            ];
+        }
+
+        return ContentView::create($content, $view);
     }
 
     public static function getKey(): string

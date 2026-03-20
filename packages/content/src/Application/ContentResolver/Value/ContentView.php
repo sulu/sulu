@@ -102,7 +102,7 @@ class ContentView
         int $priority = 0,
         ?\Closure $closure = null,
         ?array $metadata = null,
-        ?\Closure $viewCallback = null,
+        ?string $itemsPropertyName = null,
     ): self {
         return new self(
             new ResolvableResource(
@@ -112,7 +112,7 @@ class ContentView
                 resourceCallback: $closure,
                 metadata: $metadata,
                 resourceKey: $resourceKey,
-                viewCallback: $viewCallback,
+                itemsPropertyName: $itemsPropertyName,
             ),
             $view,
             [new Reference($id, $resourceKey)]
@@ -157,7 +157,7 @@ class ContentView
         array $view,
         int $priority = 0,
         ?array $metadata = null,
-        ?\Closure $viewCallback = null,
+        ?string $itemsPropertyName = null,
     ): self {
         $resolvableResources = [];
         $references = [];
@@ -168,7 +168,7 @@ class ContentView
                 priority: $priority,
                 metadata: $metadata,
                 resourceKey: $resourceKey,
-                viewCallback: $viewCallback,
+                itemsPropertyName: $itemsPropertyName,
             );
             $references[] = new Reference($id, $resourceKey);
         }

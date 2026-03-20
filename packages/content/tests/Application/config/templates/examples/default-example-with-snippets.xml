@@ -42,5 +42,12 @@
                 <title lang="de">Schnipsel Auswahl</title>
             </meta>
         </property>
+
+        <property name="singleSnippet" type="single_snippet_selection">
+            <meta>
+                <title lang="en">Single Snippet</title>
+                <title lang="de">Einzelnes Schnipsel</title>
+            </meta>
+        </property>
     </properties>
 </template>

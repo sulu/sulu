@@ -11,7 +11,6 @@
 
 namespace Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver;
 
-use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
@@ -66,20 +65,7 @@ class ArticleSelectionPropertyResolver implements PropertyResolverInterface
                     ],
                 ),
             ],
-            viewCallback: static function(mixed $source): array {
-                if ($source instanceof ArticleDimensionContentInterface) {
-                    return [
-                        'uuid' => $source->getResource()->getUuid(),
-                        'template' => $source->getTemplateKey(),
-                        'mainWebspace' => $source->getMainWebspace(),
-                        'additionalWebspaces' => $source->getAdditionalWebspaces(),
-                        'authored' => $source->getAuthored()?->format('c'),
-                        'lastModified' => $source->getLastModified()?->format('c'),
-                    ];
-                }
-
-                return [];
-            },
+            itemsPropertyName: 'items',
         );
     }
 

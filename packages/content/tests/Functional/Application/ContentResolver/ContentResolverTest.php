@@ -1379,14 +1379,17 @@ class ContentResolverTest extends SuluTestCase
         $snippetsView = $view['snippets'];
         self::assertIsArray($snippetsView);
 
-        self::assertCount(3, $snippetsView);
+        self::assertArrayHasKey('items', $snippetsView);
+        $snippetItems = $snippetsView['items'];
+        self::assertIsArray($snippetItems);
+        self::assertCount(3, $snippetItems);
 
         /** @var array<string, mixed> $snippetView0 */
-        $snippetView0 = $snippetsView[0];
+        $snippetView0 = $snippetItems[0];
         /** @var array<string, mixed> $snippetView1 */
-        $snippetView1 = $snippetsView[1];
+        $snippetView1 = $snippetItems[1];
         /** @var array<string, mixed> $snippetView2 */
-        $snippetView2 = $snippetsView[2];
+        $snippetView2 = $snippetItems[2];
 
         self::assertSame($snippet1->getUuid(), $snippetView0['uuid']);
         self::assertSame('snippet-1', $snippetView0['template']);
@@ -1434,10 +1437,13 @@ class ContentResolverTest extends SuluTestCase
         $snippetsView = $view['snippets'];
         self::assertIsArray($snippetsView);
 
-        self::assertCount(1, $snippetsView);
+        self::assertArrayHasKey('items', $snippetsView);
+        $snippetItems = $snippetsView['items'];
+        self::assertIsArray($snippetItems);
+        self::assertCount(1, $snippetItems);
 
         /** @var array<string, mixed> $snippetView0 */
-        $snippetView0 = $snippetsView[0];
+        $snippetView0 = $snippetItems[0];
         self::assertSame($snippet->getUuid(), $snippetView0['uuid']);
         self::assertSame('snippet-1', $snippetView0['template']);
     }
@@ -1464,5 +1470,194 @@ class ContentResolverTest extends SuluTestCase
         $view = $result['view'];
         self::assertArrayHasKey('snippets', $view);
         self::assertSame([], $view['snippets']);
+    }
+
+    public function testResolveExampleSelectionWithViewAndContentData(): void
+    {
+        $example1 = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'First Selected Example',
+                    'url' => '/first-selected',
+                    'description' => 'First description',
+                ],
+            ],
+        ]);
+
+        $example2 = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'example-2',
+                    'title' => 'Second Selected Example',
+                    'url' => '/second-selected',
+                ],
+            ],
+        ]);
+
+        static::getEntityManager()->flush();
+
+        $parentExample = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default-example-selection',
+                    'title' => 'Parent Example',
+                    'url' => '/parent-example',
+                    'examples' => [$example1->getId(), $example2->getId()],
+                ],
+            ],
+        ]);
+
+        static::getEntityManager()->flush();
+
+        $dimensionContent = $this->contentAggregator->aggregate($parentExample, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        /** @var array<string, mixed> $content */
+        $content = $result['content'];
+        self::assertArrayHasKey('examples', $content);
+        $examples = $content['examples'];
+        self::assertIsArray($examples);
+        self::assertCount(2, $examples);
+
+        /** @var array<string, mixed> $example1Content */
+        $example1Content = $examples[0];
+        /** @var array<string, mixed> $example2Content */
+        $example2Content = $examples[1];
+
+        self::assertSame('First Selected Example', $example1Content['title']);
+        self::assertSame('Second Selected Example', $example2Content['title']);
+
+        self::assertArrayHasKey('authored', $example1Content);
+        self::assertArrayHasKey('lastModified', $example1Content);
+        self::assertArrayHasKey('authored', $example2Content);
+        self::assertArrayHasKey('lastModified', $example2Content);
+
+        /** @var array<string, mixed> $view */
+        $view = $result['view'];
+        self::assertArrayHasKey('examples', $view);
+        $examplesView = $view['examples'];
+        self::assertIsArray($examplesView);
+
+        self::assertArrayHasKey('items', $examplesView);
+        $exampleItems = $examplesView['items'];
+        self::assertIsArray($exampleItems);
+        self::assertCount(2, $exampleItems);
+
+        /** @var array<string, mixed> $exampleView1 */
+        $exampleView1 = $exampleItems[0];
+        /** @var array<string, mixed> $exampleView2 */
+        $exampleView2 = $exampleItems[1];
+
+        self::assertSame('default', $exampleView1['template']);
+        self::assertSame('example-2', $exampleView2['template']);
+    }
+
+    public function testResolveSingleSnippetSelectionWithViewData(): void
+    {
+        $snippet = static::createSnippet([
+            'en' => [
+                'live' => [
+                    'template' => 'snippet-1',
+                    'title' => 'My Single Snippet',
+                    'description' => '<p>Snippet content</p>',
+                ],
+            ],
+        ]);
+
+        static::getEntityManager()->flush();
+
+        $page = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default-example-with-snippets',
+                    'title' => 'Page with Single Snippet',
+                    'url' => '/page-with-single-snippet-view',
+                    'snippets' => [],
+                    'singleSnippet' => $snippet->getUuid(),
+                ],
+            ],
+        ]);
+
+        static::getEntityManager()->flush();
+
+        $dimensionContent = $this->contentAggregator->aggregate($page, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        /** @var array<string, mixed> $content */
+        $content = $result['content'];
+        self::assertArrayHasKey('singleSnippet', $content);
+        $singleSnippetContent = $content['singleSnippet'];
+        self::assertIsArray($singleSnippetContent);
+        self::assertSame('My Single Snippet', $singleSnippetContent['title']);
+
+        /** @var array<string, mixed> $view */
+        $view = $result['view'];
+        self::assertArrayHasKey('singleSnippet', $view);
+        $singleSnippetView = $view['singleSnippet'];
+        self::assertIsArray($singleSnippetView);
+
+        self::assertSame($snippet->getUuid(), $singleSnippetView['uuid']);
+        self::assertSame('snippet-1', $singleSnippetView['template']);
+        self::assertSame($snippet->getUuid(), $singleSnippetView['id']);
+    }
+
+    public function testResolveSnippetAndExampleSelectionCombined(): void
+    {
+        $snippet = static::createSnippet([
+            'en' => [
+                'live' => [
+                    'template' => 'snippet-1',
+                    'title' => 'Combined Snippet',
+                ],
+            ],
+        ]);
+
+        static::getEntityManager()->flush();
+
+        $page = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default-example-with-snippets',
+                    'title' => 'Combined Page',
+                    'url' => '/combined-page',
+                    'snippets' => [$snippet->getUuid()],
+                    'singleSnippet' => $snippet->getUuid(),
+                ],
+            ],
+        ]);
+
+        static::getEntityManager()->flush();
+
+        $dimensionContent = $this->contentAggregator->aggregate($page, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        /** @var array<string, mixed> $content */
+        $content = $result['content'];
+
+        $snippets = $content['snippets'];
+        self::assertIsArray($snippets);
+        self::assertCount(1, $snippets);
+
+        $singleSnippet = $content['singleSnippet'];
+        self::assertIsArray($singleSnippet);
+        self::assertSame('Combined Snippet', $singleSnippet['title']);
+
+        /** @var array<string, mixed> $view */
+        $view = $result['view'];
+
+        $snippetsView = $view['snippets'];
+        self::assertIsArray($snippetsView);
+        self::assertArrayHasKey('items', $snippetsView);
+        /** @var list<array<string, mixed>> $snippetItems */
+        $snippetItems = $snippetsView['items'];
+        self::assertCount(1, $snippetItems);
+        self::assertSame($snippet->getUuid(), $snippetItems[0]['uuid']);
+        self::assertSame('snippet-1', $snippetItems[0]['template']);
+
+        $singleSnippetView = $view['singleSnippet'];
+        self::assertIsArray($singleSnippetView);
+        self::assertSame($snippet->getUuid(), $singleSnippetView['uuid']);
+        self::assertSame('snippet-1', $singleSnippetView['template']);
     }
 }

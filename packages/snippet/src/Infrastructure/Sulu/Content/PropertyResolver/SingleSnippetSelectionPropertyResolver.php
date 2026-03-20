@@ -13,7 +13,6 @@ namespace Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver;
 
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
-use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoader;
 
@@ -62,16 +61,6 @@ class SingleSnippetSelectionPropertyResolver implements PropertyResolverInterfac
             metadata: [
                 'properties' => $params['properties'] ?? null,
             ],
-            viewCallback: static function(mixed $source): array {
-                if ($source instanceof SnippetDimensionContentInterface) {
-                    return [
-                        'uuid' => $source->getResource()->getUuid(),
-                        'template' => $source->getTemplateKey(),
-                    ];
-                }
-
-                return [];
-            },
         );
     }
 

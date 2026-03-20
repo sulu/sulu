@@ -29,6 +29,7 @@ use Sulu\Content\Application\ContentResolver\ResolvableResourceReplacer\Resolvab
 use Sulu\Content\Application\ContentResolver\Resolver\ResolverInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\ResourceLoader\ResourceLoaderProvider;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityTrait;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -87,6 +88,8 @@ class ContentResolverTest extends TestCase
 
         $maxDepth = 5;
 
+        $resourceLoaderProvider = new ResourceLoaderProvider(new \ArrayIterator([]));
+
         $this->contentResolver = new ContentResolver(
             $this->contentViewResolver,
             $this->resolvableResourceLoader->reveal(),
@@ -95,7 +98,8 @@ class ContentResolverTest extends TestCase
             $this->contentViewDataNormalizer,
             $this->contentAggregator->reveal(),
             $maxDepth,
-            $this->contentEnhancer->reveal()
+            $this->contentEnhancer->reveal(),
+            $resourceLoaderProvider
         );
     }
 
@@ -215,7 +219,7 @@ class ContentResolverTest extends TestCase
         self::assertSame([], $result['extension']);
     }
 
-    public function testResolveSingleSelectionEnhancementMergesIntoObjectView(): void
+    public function testResolveSingleSelectionWithNoViewData(): void
     {
         $example = new TestExample();
         $example->id = 445;
@@ -234,9 +238,6 @@ class ContentResolverTest extends TestCase
             },
             null,
             'examples',
-            static function(array $source): array {
-                return ['uuid' => $source['uuid']];
-            }
         );
 
         $templateContentView = ContentView::create(
@@ -249,19 +250,19 @@ class ContentResolverTest extends TestCase
             ['example' => ['single-1' => [$singleResource->getMetadataIdentifier() => $singleResource]]],
             'en'
         )->willReturn(
-            ['example' => ['single-1' => [$singleResource->getMetadataIdentifier() => ['title' => 'Single Title', 'uuid' => 'uuid-single-1']]]]
+            ['example' => ['single-1' => [$singleResource->getMetadataIdentifier() => ['title' => 'Single Title']]]]
         );
 
         $result = $this->contentResolver->resolve($dimensionContent);
 
         self::assertSame('Single Title', $result['content']['single_selection']);
         self::assertSame(
-            ['id' => 'single-1', 'uuid' => 'uuid-single-1'],
+            ['id' => 'single-1'],
             $result['view']['single_selection']
         );
     }
 
-    public function testResolveMultiSelectionEnhancementWithSingleItemUsesItemsEnvelope(): void
+    public function testResolveMultiSelectionWithNoViewData(): void
     {
         $example = new TestExample();
         $example->id = 446;
@@ -280,9 +281,7 @@ class ContentResolverTest extends TestCase
             },
             null,
             'examples',
-            static function(array $source): array {
-                return ['uuid' => $source['uuid']];
-            }
+            'items',
         );
 
         $templateContentView = ContentView::create(
@@ -295,19 +294,14 @@ class ContentResolverTest extends TestCase
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => $multiResource]]],
             'en'
         )->willReturn(
-            ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => ['title' => 'Multi Title', 'uuid' => 'uuid-multi-1']]]]
+            ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => ['title' => 'Multi Title']]]]
         );
 
         $result = $this->contentResolver->resolve($dimensionContent);
 
         self::assertSame(['Multi Title'], $result['content']['multi_selection']);
         self::assertSame(
-            [
-                'presentAs' => 'grid',
-                'items' => [
-                    ['uuid' => 'uuid-multi-1'],
-                ],
-            ],
+            ['presentAs' => 'grid'],
             $result['view']['multi_selection']
         );
     }

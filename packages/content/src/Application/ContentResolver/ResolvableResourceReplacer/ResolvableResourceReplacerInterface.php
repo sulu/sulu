@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentResolver\ResolvableResourceReplacer;
 
+use Sulu\Content\Application\ContentResolver\Value\ContentView;
+
 /**
  * @internal This interface is intended for internal use only within the package/library.
  * Modifying or depending on this interface may result in unexpected behavior and is not supported.
@@ -21,11 +23,11 @@ interface ResolvableResourceReplacerInterface
 {
     /**
      * @param array<string, mixed> $content
-     * @param array<string, array<string|int, array<string, array{source: mixed, resolved: mixed}>>> $resolvedResources
+     * @param array<string, array<string|int, array<string, array{resolved: mixed, contentView: ContentView}>>> $resolvedResources
      *
      * @return array{
      *     content: array<string, mixed>,
-     *     viewEnhancements: array<string, array{items: list<mixed>, isList: bool}>,
+     *     viewEnhancements: array<string, array{itemsPropertyName: ?string, items: list<mixed>}>,
      * }
      */
     public function replaceResolvableResourcesWithResolvedValues(

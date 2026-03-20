@@ -14,8 +14,11 @@ namespace Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
+use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewInterface;
+use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -24,7 +27,7 @@ use Symfony\Bundle\SecurityBundle\Security;
  *
  * @final
  */
-class PageResourceLoader implements ResourceLoaderInterface
+class PageResourceLoader implements ResourceLoaderContentViewInterface
 {
     public const RESOURCE_LOADER_KEY = 'page';
 
@@ -83,6 +86,31 @@ class PageResourceLoader implements ResourceLoaderInterface
         }
 
         return $mappedResult;
+    }
+
+    public function resolveContentView(mixed $source): ContentView
+    {
+        $view = [];
+        $content = [];
+
+        if ($source instanceof PageDimensionContentInterface) {
+            $resource = $source->getResource();
+            $view = [
+                'uuid' => $resource->getUuid(),
+                'template' => $source->getTemplateKey(),
+                'webspaceKey' => $resource->getWebspaceKey(),
+                'parent' => $resource->getParent()?->getUuid(),
+            ];
+        }
+
+        if ($source instanceof AuthorInterface) {
+            $content = [
+                'authored' => $source->getAuthored()?->format('c'),
+                'lastModified' => $source->getLastModified()?->format('c'),
+            ];
+        }
+
+        return ContentView::create($content, $view);
     }
 
     public static function getKey(): string
