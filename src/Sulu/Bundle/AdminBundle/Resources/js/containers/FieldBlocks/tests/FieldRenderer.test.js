@@ -118,7 +118,32 @@ test('Should call onChange callback with correct index', () => {
 
     formRenderer.find(Renderer).prop('onChange')('test', 'value');
 
-    expect(changeSpy).toBeCalledWith(2, 'test', 'value');
+    expect(changeSpy).toBeCalledWith(2, 'test', 'value', undefined);
+});
+
+test('Should pass context through onChange callback', () => {
+    const changeSpy = jest.fn();
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+
+    const formRenderer = shallow(
+        <FieldRenderer
+            data={{}}
+            dataPath=""
+            formInspector={formInspector}
+            index={0}
+            onChange={changeSpy}
+            onFieldFinish={jest.fn()}
+            onSuccess={jest.fn()}
+            router={undefined}
+            schema={{}}
+            schemaPath=""
+            value={{}}
+        />
+    );
+
+    formRenderer.find(Renderer).prop('onChange')('alignment', 'left', {isDefaultValue: true});
+
+    expect(changeSpy).toBeCalledWith(0, 'alignment', 'left', {isDefaultValue: true});
 });
 
 test('Should call onFieldFinish when some subfield finishes editing', () => {
