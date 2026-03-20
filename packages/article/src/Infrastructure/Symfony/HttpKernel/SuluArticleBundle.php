@@ -437,7 +437,7 @@ final class SuluArticleBundle extends AbstractBundle
         $services->set('sulu_article.article_route_defaults_provider')
             ->class(ArticleRouteDefaultsProvider::class)
             ->args([
-                new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_article.article_repository'),
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_admin.metadata_provider_registry'),
                 new Reference('sulu_http_cache.cache_lifetime.resolver'),

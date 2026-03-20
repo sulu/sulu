@@ -66,6 +66,17 @@ services:
             - { name: 'sulu.context', context: 'admin' }
             - { name: 'sulu_preview.object_provider', provider-key: 'examples' }
 
+    example_test.example_route_defaults_provider:
+        class: Sulu\Content\Tests\Application\ExampleTestBundle\Route\ExampleRouteDefaultsProvider
+        arguments:
+            - '@example_test.example_repository'
+            - '@sulu_content.content_aggregator'
+            - '@sulu_admin.metadata_provider_registry'
+            - '@sulu_http_cache.cache_lifetime.resolver'
+            - '@=container.hasParameter("sulu_audience_targeting.enabled")'
+        tags:
+            - { name: 'sulu_route.route_defaults_provider', resource_key: 'examples' }
+
     example_test.example_selection_property_resolver:
         class: Sulu\Content\Tests\Application\ExampleTestBundle\PropertyResolver\ExampleSelectionPropertyResolver
         tags:

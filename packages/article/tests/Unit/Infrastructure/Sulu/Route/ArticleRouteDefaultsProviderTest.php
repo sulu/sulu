@@ -13,15 +13,13 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Tests\Unit\Infrastructure\Sulu\Route;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Article\Domain\Model\Article;
 use Sulu\Article\Domain\Model\ArticleDimensionContent;
+use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Article\Infrastructure\Sulu\Route\ArticleRouteDefaultsProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
@@ -31,6 +29,8 @@ use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolver;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Model\Route;
 use Symfony\Component\DependencyInjection\Container;
@@ -39,8 +39,8 @@ class ArticleRouteDefaultsProviderTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @var ObjectProphecy<EntityManagerInterface> */
-    private ObjectProphecy $entityManager;
+    /** @var ObjectProphecy<ArticleRepositoryInterface> */
+    private ObjectProphecy $articleRepository;
     /** @var ObjectProphecy<ContentAggregatorInterface> */
     private ObjectProphecy $contentAggregator;
     private MetadataProviderRegistry $metadataProviderRegistry;
@@ -52,7 +52,7 @@ class ArticleRouteDefaultsProviderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->entityManager = $this->prophesize(EntityManagerInterface::class);
+        $this->articleRepository = $this->prophesize(ArticleRepositoryInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->cacheLifetimeResolver = new CacheLifetimeResolver();
         $this->formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
@@ -65,7 +65,7 @@ class ArticleRouteDefaultsProviderTest extends TestCase
     protected function getArticleRouteDefaultsProviderInstance(): RouteDefaultsProviderInterface
     {
         return new ArticleRouteDefaultsProvider(
-            $this->entityManager->reveal(),
+            $this->articleRepository->reveal(),
             $this->contentAggregator->reveal(),
             $this->metadataProviderRegistry,
             $this->cacheLifetimeResolver,
@@ -83,26 +83,33 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $mainWebspace = 'sulu-io';
         $canonicalUrl = 'https://sulu.io/test-article';
 
-        $contentRichEntity = new Article();
-        $resolvedDimensionContent = new ArticleDimensionContent($contentRichEntity);
+        $article = new Article('123-123-123');
+        $resolvedDimensionContent = new ArticleDimensionContent($article);
         $resolvedDimensionContent->setLocale($locale);
         $resolvedDimensionContent->setTemplateKey('default');
         $resolvedDimensionContent->setMainWebspace($mainWebspace);
 
-        $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $query = $this->prophesize(Query::class);
+        $this->articleRepository->findOneBy(
+            [
+                'uuid' => '123-123-123',
+            ],
+            [
+                ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
+                    'dimensionAttributes' => [
+                        'locale' => $locale,
+                        'stage' => DimensionContentInterface::STAGE_LIVE,
+                        'version' => DimensionContentInterface::CURRENT_VERSION,
+                    ],
+                    'selects' => [
+                        DimensionContentQueryEnhancer::SELECT_EXCERPT_TAGS => true,
+                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES => true,
+                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES_TRANSLATION => true,
+                    ],
+                ],
+            ]
+        )->willReturn($article);
 
-        $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
-        $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
-        $queryBuilder->from(Article::class, 'entity')->willReturn($queryBuilder->reveal());
-        $queryBuilder->leftJoin(Argument::cetera())->willReturn($queryBuilder->reveal());
-        $queryBuilder->addSelect(Argument::cetera())->willReturn($queryBuilder->reveal());
-        $queryBuilder->where('entity = :id')->willReturn($queryBuilder->reveal());
-        $queryBuilder->setParameter(Argument::cetera())->willReturn($queryBuilder->reveal());
-        $queryBuilder->getQuery()->willReturn($query->reveal());
-        $query->getSingleResult()->willReturn($contentRichEntity);
-
-        $this->contentAggregator->aggregate($contentRichEntity, ['locale' => $locale, 'stage' => 'live', 'version' => 0])
+        $this->contentAggregator->aggregate($article, ['locale' => $locale, 'stage' => 'live', 'version' => 0])
             ->willReturn($resolvedDimensionContent);
 
         $this->prepareTemplateMetadata('ArticleController::indexAction', 'article.html.twig', 'seconds', '3600');
@@ -134,25 +141,32 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $locale = 'en';
         $slug = '/test-article';
 
-        $contentRichEntity = new Article();
-        $resolvedDimensionContent = new ArticleDimensionContent($contentRichEntity);
+        $article = new Article('123-123-123');
+        $resolvedDimensionContent = new ArticleDimensionContent($article);
         $resolvedDimensionContent->setLocale($locale);
         $resolvedDimensionContent->setTemplateKey('default');
 
-        $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $query = $this->prophesize(Query::class);
+        $this->articleRepository->findOneBy(
+            [
+                'uuid' => '123-123-123',
+            ],
+            [
+                ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
+                    'dimensionAttributes' => [
+                        'locale' => $locale,
+                        'stage' => DimensionContentInterface::STAGE_LIVE,
+                        'version' => DimensionContentInterface::CURRENT_VERSION,
+                    ],
+                    'selects' => [
+                        DimensionContentQueryEnhancer::SELECT_EXCERPT_TAGS => true,
+                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES => true,
+                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES_TRANSLATION => true,
+                    ],
+                ],
+            ]
+        )->willReturn($article);
 
-        $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
-        $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
-        $queryBuilder->from(Article::class, 'entity')->willReturn($queryBuilder->reveal());
-        $queryBuilder->leftJoin(Argument::cetera())->willReturn($queryBuilder->reveal());
-        $queryBuilder->addSelect(Argument::cetera())->willReturn($queryBuilder->reveal());
-        $queryBuilder->where('entity = :id')->willReturn($queryBuilder->reveal());
-        $queryBuilder->setParameter(Argument::cetera())->willReturn($queryBuilder->reveal());
-        $queryBuilder->getQuery()->willReturn($query->reveal());
-        $query->getSingleResult()->willReturn($contentRichEntity);
-
-        $this->contentAggregator->aggregate($contentRichEntity, ['locale' => $locale, 'stage' => 'live', 'version' => 0])
+        $this->contentAggregator->aggregate($article, ['locale' => $locale, 'stage' => 'live', 'version' => 0])
             ->willReturn($resolvedDimensionContent);
 
         $this->prepareTemplateMetadata('ArticleController::indexAction', 'article.html.twig', 'seconds', '3600');
@@ -172,6 +186,17 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $this->assertSame($resolvedDimensionContent, $result['object']);
         $this->assertSame('article.html.twig', $result['view']);
         $this->assertSame('ArticleController::indexAction', $result['_controller']);
+    }
+
+    public function testGetDefaultsNotFound(): void
+    {
+        $provider = $this->getArticleRouteDefaultsProviderInstance();
+
+        $this->articleRepository->findOneBy(Argument::cetera())->willReturn(null);
+
+        $this->expectException(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+
+        $provider->getDefaults(new Route(Article::RESOURCE_KEY, '123-123-123', 'en', '/test-article'));
     }
 
     private function prepareTemplateMetadata(string $controller, string $view, string $cacheLifeTimeType, string $cacheLifeTimeValue): void
