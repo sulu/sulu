@@ -11,8 +11,10 @@
 
 namespace Sulu\Bundle\PersistenceBundle\DependencyInjection;
 
+use Sulu\Component\Persistence\EventSubscriber\ORM\LegacyLengthSubscriber;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
@@ -28,5 +30,13 @@ class SuluPersistenceExtension extends Extension
 
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.php');
+
+        $container->setParameter('sulu.persistence.legacy_length', (bool) $config['legacy_length']);
+
+        if ($config['legacy_length']) {
+            $definition = new Definition(LegacyLengthSubscriber::class);
+            $definition->addTag('doctrine.event_listener', ['event' => 'loadClassMetadata']);
+            $container->setDefinition('sulu.persistence.event_subscriber.orm.legacy_length', $definition);
+        }
     }
 }

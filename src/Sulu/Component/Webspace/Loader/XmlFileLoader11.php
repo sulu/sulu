@@ -24,6 +24,11 @@ class XmlFileLoader11 extends XmlFileLoader10
 
     public const SCHEMA_URI = 'http://schemas.sulu.io/webspace/webspace-1.1.xsd';
 
+    protected function getDefaultSchemaLocation(): string
+    {
+        return self::SCHEMA_LOCATION;
+    }
+
     protected function parseXml($file)
     {
         $webspace = parent::parseXml($file);

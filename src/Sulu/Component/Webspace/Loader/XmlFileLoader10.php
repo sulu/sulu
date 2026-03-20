@@ -34,6 +34,7 @@ use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Util\XmlUtils;
 
 /**
@@ -52,6 +53,19 @@ class XmlFileLoader10 extends BaseXmlFileLoader
      * @var \DOMXPath
      */
     protected $xpath;
+
+    private string $schemaLocation;
+
+    public function __construct(FileLocatorInterface $locator, ?string $schemaLocation = null)
+    {
+        parent::__construct($locator);
+        $this->schemaLocation = $schemaLocation ?? $this->getDefaultSchemaLocation();
+    }
+
+    protected function getDefaultSchemaLocation(): string
+    {
+        return self::SCHEMA_LOCATION;
+    }
 
     /**
      * The webspace which is created by this file loader.
@@ -142,7 +156,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
     protected function tryLoad($file)
     {
         try {
-            return XmlUtils::loadFile($file, __DIR__ . static::SCHEMA_LOCATION);
+            return XmlUtils::loadFile($file, __DIR__ . $this->schemaLocation);
         } catch (\InvalidArgumentException $e) {
             throw new InvalidWebspaceException(
                 \sprintf(
