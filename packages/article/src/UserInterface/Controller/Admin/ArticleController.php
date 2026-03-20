@@ -62,6 +62,7 @@ final class ArticleController implements SecuredControllerInterface
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         private DoctrineListBuilderFactoryInterface $listBuilderFactory,
         private RestHelperInterface $restHelper,
+        private bool $isSingleLocale = false,
     ) {
         $this->messageBus = $messageBus;
     }
@@ -90,7 +91,16 @@ final class ArticleController implements SecuredControllerInterface
             || !empty($request->query->all('filter'));
 
         /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
-        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(ArticleInterface::RESOURCE_KEY, $hasFilterOrSearch);
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(ArticleInterface::RESOURCE_KEY);
+
+        if ($hasFilterOrSearch || $this->isSingleLocale) {
+            foreach ($fieldDescriptors as $name => $fieldDescriptor) {
+                $fieldDescriptors[$name] = $this->fieldDescriptorFactory->excludeCaseFieldDescriptor($fieldDescriptor, 'ghostDimensionContent');
+            }
+            unset($fieldDescriptors['ghostLocale']);
+        }
+
+        /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
         /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create(ArticleInterface::class);
         $listBuilder->setIdField($fieldDescriptors['id']); // TODO should be uuid field descriptor

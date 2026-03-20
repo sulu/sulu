@@ -65,7 +65,8 @@ final class SnippetController implements SecuredControllerInterface
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         private DoctrineListBuilderFactoryInterface $listBuilderFactory,
         private RestHelperInterface $restHelper,
-        private array $snippetAreas = []
+        private array $snippetAreas = [],
+        private bool $isSingleLocale = false,
     ) {
         $this->messageBus = $messageBus;
     }
@@ -79,7 +80,16 @@ final class SnippetController implements SecuredControllerInterface
             || !empty($request->query->all('filter'));
 
         /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
-        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetInterface::RESOURCE_KEY, $hasFilterOrSearch);
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetInterface::RESOURCE_KEY);
+
+        if ($hasFilterOrSearch || $this->isSingleLocale) {
+            foreach ($fieldDescriptors as $name => $fieldDescriptor) {
+                $fieldDescriptors[$name] = $this->fieldDescriptorFactory->excludeCaseFieldDescriptor($fieldDescriptor, 'ghostDimensionContent');
+            }
+            unset($fieldDescriptors['ghostLocale']);
+        }
+
+        /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
         /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create(SnippetInterface::class);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);

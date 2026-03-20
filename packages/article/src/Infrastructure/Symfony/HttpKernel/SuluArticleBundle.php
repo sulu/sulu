@@ -73,6 +73,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
+use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 
 use Symfony\Component\DependencyInjection\Reference;
@@ -290,6 +291,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_core.list_builder.field_descriptor_factory'),
                 new Reference('sulu_core.doctrine_list_builder_factory'),
                 new Reference('sulu_core.doctrine_rest_helper'),
+                param('sulu_core.is_single_locale'),
             ])
             ->tag('sulu.context', ['context' => 'admin']);
 

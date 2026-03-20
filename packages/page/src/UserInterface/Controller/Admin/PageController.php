@@ -78,6 +78,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         private TokenStorageInterface $tokenStorage,
         private WebspaceManagerInterface $webspaceManager,
         private SecurityCheckerInterface $securityChecker,
+        private bool $isSingleLocale = false,
     ) {
         // TODO controller should not need more then Repository, MessageBus, Serializer
     }
@@ -122,7 +123,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             includedFields: $includedFields,
             listKey: 'pages',
             filterByParentId: empty($ids),
-            excludeGhosts: $hasFilterOrSearch,
+            hasFilterOrSearch: $hasFilterOrSearch,
         );
 
         return new JsonResponse($this->normalizer->normalize(
@@ -373,13 +374,21 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         array $groupByFields = [],
         ?string $listKey = null,
         bool $filterByParentId = true,
-        bool $excludeGhosts = false,
+        bool $hasFilterOrSearch = false,
     ): CollectionRepresentation {
         $listKey = $listKey ?? $resourceKey;
 
         /** @var DoctrineFieldDescriptor[] $fieldDescriptors */
-        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors($listKey, $excludeGhosts);
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors($listKey);
 
+        if ($hasFilterOrSearch || $this->isSingleLocale) {
+            foreach ($fieldDescriptors as $name => $fieldDescriptor) {
+                $fieldDescriptors[$name] = $this->fieldDescriptorFactory->excludeCaseFieldDescriptor($fieldDescriptor, 'ghostDimensionContent');
+            }
+            unset($fieldDescriptors['ghostLocale']);
+        }
+
+        /** @var DoctrineFieldDescriptor[] $fieldDescriptors */
         /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create($fieldDescriptors['id']->getEntityName());
         $listBuilder->setIdField($fieldDescriptors['id']); // TODO should be uuid field descriptor

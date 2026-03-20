@@ -9,7 +9,6 @@
             <argument>%sulu_admin.lists.directories%</argument>
             <argument type="string">%sulu.cache_dir%/field_descriptor</argument>
             <argument>%kernel.debug%</argument>
-            <argument type="service" id="Sulu\Component\Localization\Manager\LocalizationManagerInterface"/>
 
             <tag name="kernel.cache_warmer" priority="1024" />
         </service>

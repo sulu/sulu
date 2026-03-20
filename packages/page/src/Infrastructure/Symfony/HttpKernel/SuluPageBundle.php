@@ -412,6 +412,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('security.token_storage'),
                 new Reference('sulu_core.webspace.webspace_manager'),
                 new Reference('sulu_security.security_checker'),
+                param('sulu_core.is_single_locale'),
             ])
             ->tag('sulu.context', ['context' => 'admin']);
 
