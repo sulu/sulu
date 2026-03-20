@@ -45,5 +45,40 @@
                 <title lang="de">Bild</title>
             </meta>
         </property>
+
+        <property name="nestedProperty/value_1" type="text_line">
+            <meta>
+                <title lang="en">Nested Property 1</title>
+                <title lang="de">Verschachtelte Eigenschaft 1</title>
+            </meta>
+        </property>
+
+        <property name="nestedProperty/value_2" type="text_line">
+            <meta>
+                <title lang="en">Nested Property 2</title>
+                <title lang="de">Verschachtelte Eigenschaft 2</title>
+            </meta>
+        </property>
+
+        <property name="metadata/content" type="text_line">
+            <meta>
+                <title lang="en">Metadata Content</title>
+                <title lang="de">Metadaten Inhalt</title>
+            </meta>
+        </property>
+
+        <property name="metadata/view" type="text_line">
+            <meta>
+                <title lang="en">Metadata View</title>
+                <title lang="de">Metadaten Ansicht</title>
+            </meta>
+        </property>
+
+        <property name="unlocalizedNested/value" type="text_line" multilingual="false">
+            <meta>
+                <title lang="en">Unlocalized Nested Value</title>
+                <title lang="de">Unlokalisierter verschachtelter Wert</title>
+            </meta>
+        </property>
     </properties>
 </template>
