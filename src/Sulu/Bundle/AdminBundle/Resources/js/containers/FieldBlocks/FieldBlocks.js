@@ -56,7 +56,12 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         const {types: oldTypes} = prevProps;
 
         if (!equals(toJS(prevProps.value), toJS(value))){
-            this.setValue(value);
+            // Only sync from props if no local changes were made since the last render.
+            // This prevents stale echoed values from overwriting local changes
+            // (e.g., default values applied by field components during mount).
+            if (!this.value || equals(toJS(this.value), toJS(prevProps.value))) {
+                this.setValue(value);
+            }
         }
 
         if (!types || !oldTypes) {
