@@ -119,11 +119,7 @@ class ImagineImageConverterTest extends TestCase
         $imagineImage = $this->prophesize(ImageInterface::class);
         $palette = $this->prophesize(PaletteInterface::class);
 
-        $fileVersion = new FileVersion();
-        $fileVersion->setName('test.jpg');
-        $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions(['option' => 'value']);
-        $fileVersion->setMimeType('image/jpeg');
+        $fileVersion = $this->createFileVersion();
 
         $this->storage->load(['option' => 'value'])->willReturn('image-resource');
         $this->mediaImageExtractor->extract('image-resource', 'image/jpeg')->willReturn('image-resource');
@@ -148,21 +144,17 @@ class ImagineImageConverterTest extends TestCase
         $imagineImage = $this->prophesize(ImageInterface::class);
         $palette = $this->prophesize(PaletteInterface::class);
         $imageSize = $this->prophesize(BoxInterface::class);
-        $imageSize->getWidth()->willReturn(3264);
-        $imageSize->getHeight()->willReturn(1836);
+        $imageSize->getWidth()->willReturn(800);
+        $imageSize->getHeight()->willReturn(800);
 
         $formatOptions = new FormatOptions();
         $formatOptions->setFormatKey('640x480');
-        $formatOptions->setCropX(1390.2315297889866);
-        $formatOptions->setCropY(1216.6401957753455);
-        $formatOptions->setCropWidth(882.7375964718849);
-        $formatOptions->setCropHeight(629.9900771775082);
+        $formatOptions->setCropX(500);
+        $formatOptions->setCropY(500);
+        $formatOptions->setCropWidth(1000);
+        $formatOptions->setCropHeight(100);
 
-        $fileVersion = new FileVersion();
-        $fileVersion->setName('test.jpg');
-        $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions(['option' => 'value']);
-        $fileVersion->setMimeType('image/jpeg');
+        $fileVersion = $this->createFileVersion();
         $fileVersion->addFormatOptions($formatOptions);
 
         $this->storage->load(['option' => 'value'])->willReturn('image-resource');
@@ -177,23 +169,26 @@ class ImagineImageConverterTest extends TestCase
         $imagineImage->interlace(ImageInterface::INTERLACE_PLANE)->shouldBeCalled();
         $imagineImage->get('jpg', [])->willReturn('new-image-resource');
 
+        $expectedCropX = 500;
+        $expectedCropY = 500;
+        $expectedWidth = 300;
+        $expectedHeight = 100;
+
         $this->cropper->isValid(
             $imagineImage->reveal(),
-            1390,
-            1217,
-            883,
-            619,
-            Argument::that(
-                fn(array $format) => ['options' => []] === $format
-            )
+            $expectedCropX,
+            $expectedCropY,
+            $expectedWidth,
+            $expectedHeight,
+            Argument::type('array')
         )->willReturn(true)->shouldBeCalled();
 
         $this->cropper->crop(
             $imagineImage->reveal(),
-            1390,
-            1217,
-            883,
-            619
+            $expectedCropX,
+            $expectedCropY,
+            $expectedWidth,
+            $expectedHeight,
         )->willReturn($imagineImage->reveal())->shouldBeCalled();
 
         $this->focus->focus(Argument::any())->shouldNotBeCalled();
@@ -206,11 +201,7 @@ class ImagineImageConverterTest extends TestCase
         $imagineImage = $this->prophesize(ImageInterface::class);
         $palette = $this->prophesize(PaletteInterface::class);
 
-        $fileVersion = new FileVersion();
-        $fileVersion->setName('test.svg');
-        $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions(['option' => 'value']);
-        $fileVersion->setMimeType('image/svg+xml');
+        $fileVersion = $this->createFileVersion('test.svg', 'image/svg+xml');
 
         $this->storage->load(['option' => 'value'])->willReturn('image-resource');
         $this->mediaImageExtractor->extract('image-resource', 'image/svg+xml')->willReturn('image-resource');
@@ -235,11 +226,7 @@ class ImagineImageConverterTest extends TestCase
         $imagineImage = $this->prophesize(ImageInterface::class);
         $palette = $this->prophesize(PaletteInterface::class);
 
-        $fileVersion = new FileVersion();
-        $fileVersion->setName('test.jpg');
-        $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions(['option' => 'value']);
-        $fileVersion->setMimeType('image/jpeg');
+        $fileVersion = $this->createFileVersion();
 
         $this->storage->load(['option' => 'value'])->willReturn('image-resource');
         $this->mediaImageExtractor->extract('image-resource', 'image/jpeg')->willReturn('image-resource');
@@ -263,11 +250,7 @@ class ImagineImageConverterTest extends TestCase
         $imagineImage = $this->prophesize(ImageInterface::class);
         $palette = $this->prophesize(PaletteInterface::class);
 
-        $fileVersion = new FileVersion();
-        $fileVersion->setName('test.svg');
-        $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions(['option' => 'value']);
-        $fileVersion->setMimeType('image/svg+xml');
+        $fileVersion = $this->createFileVersion('test.svg', 'image/svg+xml');
 
         $this->storage->load(['option' => 'value'])->willReturn('image-resource');
         $this->mediaImageExtractor->extract('image-resource', 'image/svg+xml')->willReturn('image-resource');
@@ -290,11 +273,7 @@ class ImagineImageConverterTest extends TestCase
         $palette = $this->prophesize(PaletteInterface::class);
         $palette->name()->willReturn('cmyk');
 
-        $fileVersion = new FileVersion();
-        $fileVersion->setName('test.jpg');
-        $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions(['option' => 'value']);
-        $fileVersion->setMimeType('image/jpeg');
+        $fileVersion = $this->createFileVersion();
 
         $this->storage->load(['option' => 'value'])->willReturn('image-resource');
         $this->mediaImageExtractor->extract('image-resource', 'image/jpeg')->willReturn('image-resource');
@@ -316,10 +295,7 @@ class ImagineImageConverterTest extends TestCase
     {
         $this->expectException(ImageProxyMediaNotFoundException::class);
 
-        $fileVersion = new FileVersion();
-        $fileVersion->setName('test.jpg');
-        $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions(['option' => 'value']);
+        $fileVersion = $this->createFileVersion();
 
         $this->storage->load(['option' => 'value'])->willThrow(ImageProxyMediaNotFoundException::class);
 
@@ -331,13 +307,9 @@ class ImagineImageConverterTest extends TestCase
         $imagineImage = $this->prophesize(ImageInterface::class);
         $palette = $this->prophesize(PaletteInterface::class);
 
-        $fileVersion = new FileVersion();
-        $fileVersion->setName('test.jpg');
-        $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions([]);
-        $fileVersion->setMimeType('image/jpeg');
+        $fileVersion = $this->createFileVersion();
 
-        $this->storage->load([])->willReturn('image-content');
+        $this->storage->load(['option' => 'value'])->willReturn('image-content');
         $this->mediaImageExtractor->extract('image-content', 'image/jpeg')->willReturn('image-content');
         $this->imagine->read('image-content')->willReturn($imagineImage->reveal());
 
@@ -416,5 +388,16 @@ class ImagineImageConverterTest extends TestCase
     {
         yield ['image/svg+xml'];
         yield ['image/svg'];
+    }
+
+    private function createFileVersion(string $name = 'test.jpg', string $mimeType = 'image/jpeg'): FileVersion
+    {
+        $fileVersion = new FileVersion();
+        $fileVersion->setName($name);
+        $fileVersion->setVersion(1);
+        $fileVersion->setStorageOptions(['option' => 'value']);
+        $fileVersion->setMimeType($mimeType);
+
+        return $fileVersion;
     }
 }

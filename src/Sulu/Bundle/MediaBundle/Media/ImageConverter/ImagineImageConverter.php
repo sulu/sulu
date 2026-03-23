@@ -288,34 +288,34 @@ class ImagineImageConverter implements ImageConverterInterface
      * Constructs the parameters for the cropper. Returns null when
      * the image should not be cropped.
      *
-     * @param FormatOptions|null $formatOptions
-     *
-     * @return ?array
+     * @return ?array{x: int, y:int, width: int, height: int}
      */
-    private function getCropParameters(ImageInterface $image, $formatOptions, array $format)
+    private function getCropParameters(ImageInterface $image, ?FormatOptions $formatOptions, array $format): ?array
     {
-        if (isset($formatOptions)) {
-            $parameters = $this->normalizeCropParameters($image, [
-                'x' => $formatOptions->getCropX(),
-                'y' => $formatOptions->getCropY(),
-                'width' => $formatOptions->getCropWidth(),
-                'height' => $formatOptions->getCropHeight(),
-            ]);
+        if (null === $formatOptions) {
+            return null;
+        }
 
-            if (!isset($parameters)) {
-                return null;
-            }
+        $parameters = $this->normalizeCropParameters($image, [
+            'x' => $formatOptions->getCropX(),
+            'y' => $formatOptions->getCropY(),
+            'width' => $formatOptions->getCropWidth(),
+            'height' => $formatOptions->getCropHeight(),
+        ]);
 
-            if ($this->cropper->isValid(
-                $image,
-                $parameters['x'],
-                $parameters['y'],
-                $parameters['width'],
-                $parameters['height'],
-                $format
-            )) {
-                return $parameters;
-            }
+        if (null === $parameters) {
+            return null;
+        }
+
+        if ($this->cropper->isValid(
+            $image,
+            $parameters['x'],
+            $parameters['y'],
+            $parameters['width'],
+            $parameters['height'],
+            $format
+        )) {
+            return $parameters;
         }
 
         return null;
@@ -405,7 +405,13 @@ class ImagineImageConverter implements ImageConverterInterface
     private function getFormat($formatKey)
     {
         if (!isset($this->formats[$formatKey])) {
-            throw new ImageProxyInvalidImageFormat('Format was not found');
+            throw new ImageProxyInvalidImageFormat(
+                \sprintf(
+                    'Format "%s" was not found. Supported Formats are: %s',
+                    $formatKey,
+                    \implode(', ', \array_keys($this->formats))
+                )
+            );
         }
 
         return $this->formats[$formatKey];

@@ -1423,15 +1423,9 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Entity/CollaborationRepository.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Entity\\CollaborationRepository\:\:update\(\) should return array\<Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration\> but returns list\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Entity/CollaborationRepository.php
-
-		-
 			message: '#^Parameter \#2 \$callback of function array_filter expects \(callable\(mixed\)\: bool\)\|null, Closure\(Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration\)\: bool given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Entity/CollaborationRepository.php
 
 		-
@@ -13177,12 +13171,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountFactory.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
 			message: '#^Call to an undefined method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepositoryInterface\:\:findByFilters\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -13197,12 +13185,6 @@ parameters:
 		-
 			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
@@ -13285,12 +13267,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:setMedias\(\) has parameter \$mediaIds with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 4
@@ -13315,12 +13291,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
-			message: '#^Parameter \#1 \$media of method Sulu\\Bundle\\ContactBundle\\Entity\\Account\:\:addMedia\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\MediaInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:remove\(\) expects object, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -13328,18 +13298,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$array of function array_map expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: '#^Parameter \#2 \$id of class Sulu\\Component\\Rest\\Exception\\EntityNotFoundException constructor expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: '#^Parameter \#2 \$media of class Sulu\\Bundle\\ContactBundle\\Domain\\Event\\AccountMediaAddedEvent constructor expects Sulu\\Bundle\\MediaBundle\\Entity\\MediaInterface, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
@@ -13354,12 +13312,6 @@ parameters:
 			message: '#^Result of \|\| is always false\.$#'
 			identifier: booleanOr.alwaysFalse
 			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: '#^Unable to resolve the template type TMaybeContained in call to method Doctrine\\Common\\Collections\\ReadableCollection\<int,Sulu\\Bundle\\MediaBundle\\Entity\\MediaInterface\>\:\:contains\(\)$#'
-			identifier: argument.templateType
-			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
@@ -14626,12 +14578,6 @@ parameters:
 			message: '#^Parameter \#2 \$mediaId of method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:setLogo\(\) expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 3
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Parameter \#2 \$mediaIds of method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:setMedias\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
@@ -21373,12 +21319,6 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/Bridge/DocumentInspector.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\DocumentManagerBundle\\Bridge\\DocumentInspector\:\:getConcreteLocales\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Bridge/DocumentInspector.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\DocumentManagerBundle\\Bridge\\DocumentInspector\:\:getLocalizedUrlsForPage\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -21575,54 +21515,6 @@ parameters:
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupCommand.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\DocumentManagerBundle\\Command\\PHPCRCleanupSingleNodeCommand\:\:cleanupNode\(\) has parameter \$writtenProperties with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\DocumentManagerBundle\\Command\\PHPCRCleanupSingleNodeCommand\:\:getLocales\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
-
-		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\DocumentManagerBundle\\Command\\PHPCRCleanupSingleNodeCommand\:\:cleanupNode\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
-
-		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Component\\DocumentManager\\DocumentManagerInterface\:\:find\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
-
-		-
-			message: '#^Parameter \#3 \$locale of method Sulu\\Bundle\\DocumentManagerBundle\\Command\\PHPCRCleanupSingleNodeCommand\:\:persist\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
-
-		-
-			message: '#^Parameter \#3 \$locale of method Sulu\\Bundle\\DocumentManagerBundle\\Command\\PHPCRCleanupSingleNodeCommand\:\:publish\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
-
-		-
-			message: '#^Parameter \#3 \$writtenProperties of method Sulu\\Bundle\\DocumentManagerBundle\\Command\\PHPCRCleanupSingleNodeCommand\:\:cleanupNode\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
-
-		-
-			message: '#^Variable \$liveCleanupNode might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
@@ -22209,12 +22101,6 @@ parameters:
 		-
 			message: '#^Argument of an invalid type DOMNodeList\<DOMNameSpaceNode\|DOMNode\>\|false supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
-
-		-
-			message: '#^Parameter \#1 \$child of method DOMNode\:\:removeChild\(\) expects TNode of DOMNode, DOMNameSpaceNode\|DOMNode given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
 
@@ -24379,18 +24265,6 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/Tag/TagInterface.php
 
 		-
-			message: '#^Parameter \#2 \$array of function array_key_exists expects array, Sulu\\Bundle\\MarkupBundle\\Tag\\TagInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tag/TagRegistry.php
-
-		-
-			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tag/TagRegistry.php
-
-		-
 			message: '#^Binary operation "\." between ''\<html\>\<body\>'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -24455,12 +24329,6 @@ parameters:
 			identifier: offsetAccess.invalidOffset
 			count: 2
 			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/LinkTagTest.php
-
-		-
-			message: '#^Parameter \#1 \$tags of class Sulu\\Bundle\\MarkupBundle\\Tag\\TagRegistry constructor expects array\<Sulu\\Bundle\\MarkupBundle\\Tag\\TagInterface\>, array\<string, array\<string, array\<string, Sulu\\Bundle\\MarkupBundle\\Tag\\TagInterface\>\>\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Tag/TagRegistryTest.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Admin\\MediaAdmin\:\:getConfig\(\) return type has no value type specified in iterable type array\.$#'
@@ -27391,12 +27259,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-
-			message: '#^Parameter \#1 \$value of function intval expects array\|bool\|float\|int\|resource\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
 			message: '#^Parameter \#2 \$user of method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:addAccessControl\(\) expects Sulu\\Component\\Security\\Authentication\\UserInterface, Sulu\\Component\\Security\\Authentication\\UserInterface\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -27812,12 +27674,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
-
-		-
-			message: '#^Parameter \#1 \$value of function intval expects array\|bool\|float\|int\|resource\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
@@ -28813,12 +28669,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\ImageConverter\\ImagineImageConverter\:\:getCropParameters\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\ImageConverter\\ImagineImageConverter\:\:getFormat\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -29021,18 +28871,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/Transformation/BlurTransformation.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\ImageConverter\\Transformation\\CropTransformation\:\:execute\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/Transformation/CropTransformation.php
-
-		-
-			message: '#^Parameter \#1 \$value of function intval expects array\|bool\|float\|int\|resource\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/Transformation/CropTransformation.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\ImageConverter\\Transformation\\GammaTransformation\:\:execute\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
@@ -36619,33 +36457,9 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
 
 		-
-			message: '#^Cannot call method getAuthor\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
-
-		-
-			message: '#^Cannot call method getAuthored\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
-
-		-
 			message: '#^Cannot call method getFullName\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
-
-		-
-			message: '#^Cannot call method getLocale\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
 			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
 
 		-
@@ -36679,12 +36493,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
 
 		-
-			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
-
-		-
 			message: '#^Parameter \#2 \$offset of function array_slice expects int, int\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -36692,12 +36500,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
-
-		-
-			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
@@ -37393,12 +37195,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/EventListener/PageRemoveSubscriber.php
 
 		-
-			message: '#^Parameter \#4 \$entityIds of method Sulu\\Component\\Security\\Authorization\\AccessControl\\AccessControlRepositoryInterface\:\:findIdsWithGrantedPermissions\(\) expects array\<int\|string\>, list\<mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/EventListener/PageRemoveSubscriber.php
-
-		-
 			message: '#^Parameter \$security of method Sulu\\Bundle\\PageBundle\\EventListener\\PageRemoveSubscriber\:\:__construct\(\) has invalid type Symfony\\Component\\Security\\Core\\Security\.$#'
 			identifier: class.notFound
 			count: 1
@@ -38000,12 +37796,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Repository\\NodeRepository\:\:getNodes\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Repository\\NodeRepository\:\:getNodesByIds\(\) has parameter \$ids with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
@@ -41679,7 +41469,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''article'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 14
+			count: 12
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -41745,7 +41535,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 101
+			count: 73
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -41788,12 +41578,6 @@ parameters:
 			message: '#^Cannot access offset ''pages'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 5
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''parentUuid'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -41859,19 +41643,19 @@ parameters:
 		-
 			message: '#^Cannot access offset ''tags'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
+			count: 2
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
 			message: '#^Cannot access offset ''template'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
 			message: '#^Cannot access offset ''title'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 42
+			count: 38
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -41883,7 +41667,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''url'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 23
+			count: 21
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -41901,7 +41685,7 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 56
+			count: 37
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -42097,18 +41881,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Tests\\Functional\\Controller\\PageControllerTest\:\:setUpContent\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Tests\\Functional\\Controller\\PageControllerTest\:\:setUpContent\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
 			message: '#^Parameter \#1 \$id of method PHPCR\\SessionInterface\:\:getNodeByIdentifier\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -42141,7 +41913,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 2
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -42183,7 +41955,7 @@ parameters:
 		-
 			message: '#^Parameter \#3 \$parameters of method Symfony\\Component\\BrowserKit\\AbstractBrowser\<Symfony\\Component\\HttpFoundation\\Request,Symfony\\Component\\HttpFoundation\\Response\>\:\:jsonRequest\(\) expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 7
+			count: 3
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -48171,18 +47943,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\RouteBundle\\Controller\\RouteController\:\:postAction\(\) should return Symfony\\Component\\HttpFoundation\\Response but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Controller/RouteController.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$parts has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Controller/RouteController.php
-
-		-
-			message: '#^Parameter \#1 \$array of class Sulu\\Bundle\\RouteBundle\\Model\\ResourceLocatorParts constructor expects array\<string, mixed\>\|object, array given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Controller/RouteController.php
 
@@ -57841,18 +57601,6 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/Event/TagMergeEvent.php
 
 		-
-			message: '#^Parameter \#1 \$keys of function array_combine expects array\<int\|string\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Search/TagsConverter.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between false and array\<mixed\> will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Search/TagsConverter.php
-
-		-
 			message: '#^Argument of an invalid type float\|int supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -58411,8 +58159,8 @@ parameters:
 			path: src/Sulu/Bundle/TestBundle/Kernel/SuluKernelBrowser.php
 
 		-
-			message: '#^PHPDoc tag @var with type iterable\<Symfony\\Component\\HttpKernel\\Bundle\\BundleInterface\> is not subtype of native type array\{0\: Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle, 1\: Symfony\\Bundle\\TwigBundle\\TwigBundle, 2\: Sulu\\Bundle\\CoreBundle\\SuluCoreBundle, 3\: Doctrine\\Bundle\\DoctrineBundle\\DoctrineBundle, 4\: Doctrine\\Bundle\\PHPCRBundle\\DoctrinePHPCRBundle, 5\: Stof\\DoctrineExtensionsBundle\\StofDoctrineExtensionsBundle, 6\: JMS\\SerializerBundle\\JMSSerializerBundle, 7\: FOS\\RestBundle\\FOSRestBundle, \.\.\.\}\.$#'
-			identifier: varTag.nativeType
+			message: '#^Method Sulu\\Bundle\\TestBundle\\Kernel\\SuluTestKernel\:\:registerBundles\(\) should return iterable\<Symfony\\Component\\HttpKernel\\Bundle\\BundleInterface\> but returns list\<int, Doctrine\\Bundle\\DoctrineBundle\\DoctrineBundle\|Doctrine\\Bundle\\FixturesBundle\\DoctrineFixturesBundle\|Doctrine\\Bundle\\PHPCRBundle\\DoctrinePHPCRBundle\|DTL\\Bundle\\PhpcrMigrations\\PhpcrMigrationsBundle\|FOS\\HttpCacheBundle\\FOSHttpCacheBundle\|FOS\\JsRoutingBundle\\FOSJsRoutingBundle\|FOS\\RestBundle\\FOSRestBundle\|HandcraftedInTheAlps\\RestRoutingBundle\\RestRoutingBundle\|JMS\\SerializerBundle\\JMSSerializerBundle\|Massive\\Bundle\\BuildBundle\\MassiveBuildBundle\|Massive\\Bundle\\SearchBundle\\MassiveSearchBundle\|PHPCR\\PhpcrMigrationsBundle\\PhpcrMigrationsBundle\|Stof\\DoctrineExtensionsBundle\\StofDoctrineExtensionsBundle\|Sulu\\Bundle\\ActivityBundle\\SuluActivityBundle\|Sulu\\Bundle\\AdminBundle\\SuluAdminBundle\|Sulu\\Bundle\\AudienceTargetingBundle\\SuluAudienceTargetingBundle\|Sulu\\Bundle\\CategoryBundle\\SuluCategoryBundle\|Sulu\\Bundle\\ContactBundle\\SuluContactBundle\|Sulu\\Bundle\\CoreBundle\\SuluCoreBundle\|Sulu\\Bundle\\CustomUrlBundle\\SuluCustomUrlBundle\|Sulu\\Bundle\\DocumentManagerBundle\\SuluDocumentManagerBundle\|Sulu\\Bundle\\HashBundle\\SuluHashBundle\|Sulu\\Bundle\\HttpCacheBundle\\SuluHttpCacheBundle\|Sulu\\Bundle\\LocationBundle\\SuluLocationBundle\|Sulu\\Bundle\\MarkupBundle\\SuluMarkupBundle\|Sulu\\Bundle\\MediaBundle\\SuluMediaBundle\|Sulu\\Bundle\\PageBundle\\SuluPageBundle\|Sulu\\Bundle\\PersistenceBundle\\SuluPersistenceBundle\|Sulu\\Bundle\\PreviewBundle\\SuluPreviewBundle\|Sulu\\Bundle\\ReferenceBundle\\SuluReferenceBundle\|Sulu\\Bundle\\RouteBundle\\SuluRouteBundle\|Sulu\\Bundle\\SearchBundle\\SuluSearchBundle\|Sulu\\Bundle\\SecurityBundle\\SuluSecurityBundle\|Sulu\\Bundle\\SnippetBundle\\SuluSnippetBundle\|Sulu\\Bundle\\TagBundle\\SuluTagBundle\|Sulu\\Bundle\\TestBundle\\SuluTestBundle\|Sulu\\Bundle\\TrashBundle\\SuluTrashBundle\|Sulu\\Bundle\\WebsiteBundle\\SuluWebsiteBundle\|Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle\|Symfony\\Bundle\\MonologBundle\\MonologBundle\|Symfony\\Bundle\\SecurityBundle\\SecurityBundle\|Symfony\\Bundle\\SwiftmailerBundle\\SwiftmailerBundle\|Symfony\\Bundle\\TwigBundle\\TwigBundle\|Symfony\\Cmf\\Bundle\\RoutingBundle\\CmfRoutingBundle\>\.$#'
+			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/TestBundle/Kernel/SuluTestKernel.php
 
@@ -59631,7 +59379,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''environments'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
 
 		-
@@ -59666,12 +59414,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$array of function array_column expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
-
-		-
-			message: '#^Parameter \#1 \$keys of function array_combine expects array\<int\|string\>, list given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
@@ -68545,18 +68287,6 @@ parameters:
 			path: src/Sulu/Component/Content/Exception/InvalidNavigationContextExtension.php
 
 		-
-			message: '#^Property Sulu\\Component\\Content\\Exception\\InvalidNavigationContextExtension\:\:\$navContexts \(array\<string\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Component/Content/Exception/InvalidNavigationContextExtension.php
-
-		-
-			message: '#^Property Sulu\\Component\\Content\\Exception\\InvalidNavigationContextExtension\:\:\$selectedNavContext \(array\<string\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Component/Content/Exception/InvalidNavigationContextExtension.php
-
-		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -71704,12 +71434,6 @@ parameters:
 			message: '#^Parameter \#1 \$type of method Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:setType\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$value of function intval expects array\|bool\|float\|int\|resource\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
 
 		-
@@ -82315,36 +82039,6 @@ parameters:
 			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionManagerInterface.php
 
 		-
-			message: '#^Method Sulu\\Component\\Media\\SystemCollections\\UnrecognizedSystemCollection\:\:__construct\(\) has parameter \$key with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/UnrecognizedSystemCollection.php
-
-		-
-			message: '#^Method Sulu\\Component\\Media\\SystemCollections\\UnrecognizedSystemCollection\:\:__construct\(\) has parameter \$recognizedSystemCollections with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/UnrecognizedSystemCollection.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/UnrecognizedSystemCollection.php
-
-		-
-			message: '#^Property Sulu\\Component\\Media\\SystemCollections\\UnrecognizedSystemCollection\:\:\$key \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/UnrecognizedSystemCollection.php
-
-		-
-			message: '#^Property Sulu\\Component\\Media\\SystemCollections\\UnrecognizedSystemCollection\:\:\$recognizedSystemCollections \(array\<string\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/UnrecognizedSystemCollection.php
-
-		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -84229,20 +83923,8 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\DoctrineListBuilder\:\:getAllFieldNames\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\DoctrineListBuilder\:\:getEntityNamesOfFieldDescriptors\(\) has parameter \$filterFields with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\DoctrineListBuilder\:\:getEntityNamesOfFieldDescriptors\(\) should return array\<string\> but returns array\<int\<0, max\>, mixed\>\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
@@ -84375,7 +84057,7 @@ parameters:
 		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
-			count: 2
+			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
 		-
@@ -84439,12 +84121,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Expression/BetweenExpressionInterface.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Expression\\ConjunctionExpressionInterface\:\:getFieldNames\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Expression/ConjunctionExpressionInterface.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Expression\\Doctrine\\DoctrineBetweenExpression\:\:getEnd\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -84467,12 +84143,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Expression/Doctrine/DoctrineBetweenExpression.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Expression\\Doctrine\\DoctrineConjunctionExpression\:\:getFieldNames\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Expression/Doctrine/DoctrineConjunctionExpression.php
 
 		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Expression\\Doctrine\\DoctrineInExpression\:\:__construct\(\) has parameter \$values with no value type specified in iterable type array\.$#'
@@ -85759,20 +85429,8 @@ parameters:
 			path: src/Sulu/Component/Rest/Listing/ListQueryBuilder.php
 
 		-
-			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListQueryBuilder.php
-
-		-
 			message: '#^Parameter \#3 \$alias of method Sulu\\Component\\Rest\\Listing\\ListQueryBuilder\:\:generateJoin\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListQueryBuilder.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: src/Sulu/Component/Rest/Listing/ListQueryBuilder.php
 
@@ -85928,12 +85586,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListRepository.php
-
-		-
-			message: '#^Parameter \#1 \$value of function intval expects array\|bool\|float\|int\|resource\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Rest/Listing/ListRepository.php
@@ -88486,12 +88138,6 @@ parameters:
 			message: '#^Parameter \#1 \$tagsParameter of method Sulu\\Component\\Tag\\Request\\TagRequestHandlerInterface\:\:getTags\(\) expects string, array\|bool\|string given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Component/SmartContent/ContentType.php
-
-		-
-			message: '#^Parameter \#1 \$value of function intval expects array\|bool\|float\|int\|resource\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Sulu/Component/SmartContent/ContentType.php
 
 		-
@@ -93131,9 +92777,3 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: tests/phpstan/object-manager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\TestBundle\\Kernel\\SuluTestKernel\:\:registerBundles\(\) should return iterable\<Symfony\\Component\\HttpKernel\\Bundle\\BundleInterface\> but returns list\<.*\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/Kernel/SuluTestKernel.php

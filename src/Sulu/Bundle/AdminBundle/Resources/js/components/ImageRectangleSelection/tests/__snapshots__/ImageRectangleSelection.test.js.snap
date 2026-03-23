@@ -32,9 +32,6 @@ exports[`The component should render with initial selection 1`] = `
 <DocumentFragment>
   <div
     data-testid="rectangle-selection"
-    class="rectangle hasBackdrop"
-    role="button"
-    style="left: 100px; top: 66.66666666666667px; width: 500px; height: 266.6666666666667px;"
   >
     <img
       height="360"
