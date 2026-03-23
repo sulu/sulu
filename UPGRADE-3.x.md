@@ -1,5 +1,38 @@
 # Upgrade
 
+## 3.0.5
+
+### Remove false cascade on author and route relations
+
+The cascade delete on the author and route relations has been removed to prevent accidental data loss when deleting authors or routes.
+
+```sql
+ALTER TABLE pa_page_dimension_contents DROP FOREIGN KEY `FK_209A42C034ECB4E6`;
+ALTER TABLE pa_page_dimension_contents DROP FOREIGN KEY `FK_209A42C0F675F31B`;
+ALTER TABLE pa_page_dimension_contents ADD CONSTRAINT FK_209A42C034ECB4E6 FOREIGN KEY (route_id) REFERENCES ro_routes (id) ON DELETE SET NULL;
+ALTER TABLE pa_page_dimension_contents ADD CONSTRAINT FK_209A42C0F675F31B FOREIGN KEY (author_id) REFERENCES co_contacts (id) ON DELETE SET NULL;
+ALTER TABLE ar_article_dimension_contents DROP FOREIGN KEY `FK_5674F7BF34ECB4E6`;
+ALTER TABLE ar_article_dimension_contents DROP FOREIGN KEY `FK_5674F7BFF675F31B`;
+ALTER TABLE ar_article_dimension_contents ADD CONSTRAINT FK_5674F7BF34ECB4E6 FOREIGN KEY (route_id) REFERENCES ro_routes (id) ON DELETE SET NULL;
+ALTER TABLE ar_article_dimension_contents ADD CONSTRAINT FK_5674F7BFF675F31B FOREIGN KEY (author_id) REFERENCES co_contacts (id) ON DELETE SET NULL;
+```
+
+### Improved page, snippet and article performance
+
+To improve the performance new indexes where added to the dimension tables:
+
+```sql
+CREATE INDEX idx_pa_page_dimension_contents_stage_version_locale ON pa_page_dimension_contents (stage, version, locale);
+CREATE INDEX idx_pa_page_dimension_contents_resource_lookup ON pa_page_dimension_contents (pageUuid, stage, version, locale, ghostLocale);
+CREATE INDEX idx_pa_page_dimension_contents_resource_template_lookup ON pa_page_dimension_contents (pageUuid, stage, version, locale, templateKey);
+CREATE INDEX idx_sn_snippet_dimension_contents_stage_version_locale ON sn_snippet_dimension_contents (stage, version, locale);
+CREATE INDEX idx_sn_snippet_dimension_contents_resource_lookup ON sn_snippet_dimension_contents (snippetUuid, stage, version, locale, ghostLocale);
+CREATE INDEX idx_sn_snippet_dimension_contents_resource_template_lookup ON sn_snippet_dimension_contents (snippetUuid, stage, version, locale, templateKey);
+CREATE INDEX idx_ar_article_dimension_contents_stage_version_locale ON ar_article_dimension_contents (stage, version, locale);
+CREATE INDEX idx_ar_article_dimension_contents_resource_lookup ON ar_article_dimension_contents (articleUuid, stage, version, locale, ghostLocale);
+CREATE INDEX idx_ar_article_dimension_contents_resource_template_lookup ON ar_article_dimension_contents (articleUuid, stage, version, locale, templateKey);
+```
+
 ## 3.0.3
 
 ### TeaserProvider Refactoring
