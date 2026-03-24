@@ -19,9 +19,7 @@ use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentEnhancer\DimensionContentEnhancerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
-use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
-use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 
 /**
  * @internal This class should not be instantiated by a project.
@@ -35,7 +33,6 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
         private PageRepositoryInterface $pageRepository,
         private ContentAggregatorInterface $contentAggregator,
         private LinkProviderPoolInterface $linkProviderPool,
-        private RouteGeneratorInterface $routeGenerator,
     ) {
     }
 
@@ -113,16 +110,7 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
         $targetDimensionContent = $this->contentAggregator->aggregate($page, $dimensionAttributes);
 
         $route = $targetDimensionContent->getRoute();
-        $targetLocale = $targetDimensionContent->getLocale();
-        /** @var PageInterface $targetPage */
-        $targetPage = $targetDimensionContent->getResource();
-        $url = null !== $route && null !== $targetLocale
-            ? $this->routeGenerator->generate(
-                $route->getSlug(),
-                $targetLocale,
-                $targetPage->getWebspaceKey(),
-            )
-            : null;
+        $url = $route?->getSlug();
 
         if (null !== $url && null !== $linkData) {
             $url = $this->appendQueryAndAnchor($url, $linkData);

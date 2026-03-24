@@ -27,7 +27,6 @@ use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Infrastructure\Sulu\Content\ContentResolver\PageLinkDimensionContentEnhancer;
-use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Sulu\Route\Domain\Model\Route;
 
 class PageLinkDimensionContentEnhancerTest extends TestCase
@@ -51,23 +50,16 @@ class PageLinkDimensionContentEnhancerTest extends TestCase
      */
     private ObjectProphecy $linkProviderPool;
 
-    /**
-     * @var ObjectProphecy<RouteGeneratorInterface>
-     */
-    private ObjectProphecy $routeGenerator;
-
     protected function setUp(): void
     {
         $this->pageRepository = $this->prophesize(PageRepositoryInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->linkProviderPool = $this->prophesize(LinkProviderPoolInterface::class);
-        $this->routeGenerator = $this->prophesize(RouteGeneratorInterface::class);
 
         $this->enhancer = new PageLinkDimensionContentEnhancer(
             $this->pageRepository->reveal(),
             $this->contentAggregator->reveal(),
             $this->linkProviderPool->reveal(),
-            $this->routeGenerator->reveal(),
         );
     }
 
@@ -125,7 +117,7 @@ class PageLinkDimensionContentEnhancerTest extends TestCase
         $targetDimensionContent->setTemplateData([
             'existing' => 'value',
             'title' => 'Link Page',
-            'url' => '/en/target-page',
+            'url' => '/target-page',
         ])->shouldBeCalled();
         $targetDimensionContent->setLinkData([
             'provider' => 'page',
@@ -142,8 +134,6 @@ class PageLinkDimensionContentEnhancerTest extends TestCase
             'stage' => DimensionContentInterface::STAGE_LIVE,
             'version' => DimensionContentInterface::CURRENT_VERSION,
         ])->willReturn($targetDimensionContent->reveal())->shouldBeCalled();
-
-        $this->routeGenerator->generate('/target-page', 'en', 'sulu-io')->willReturn('/en/target-page')->shouldBeCalled();
 
         $result = $this->enhancer->enhance($pageDimensionContent);
 

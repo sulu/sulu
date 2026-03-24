@@ -12,6 +12,8 @@
 namespace Sulu\Page\Infrastructure\Symfony\Twig\Extension;
 
 use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -23,6 +25,7 @@ final class ContentPathTwigExtension extends AbstractExtension
 {
     public function __construct(
         private readonly RouteGeneratorInterface $routeGenerator,
+        private readonly UrlMatcherInterface $urlMatcher,
     ) {
     }
 
@@ -48,10 +51,16 @@ final class ContentPathTwigExtension extends AbstractExtension
             return $slug;
         }
 
-        return $this->routeGenerator->generate(
-            $slug,
-            $locale,
-            $webspaceKey,
-        );
+        try {
+            $this->urlMatcher->match($slug);
+
+            return $slug;
+        } catch (ResourceNotFoundException) {
+            return $this->routeGenerator->generate(
+                $slug,
+                $locale,
+                $webspaceKey,
+            );
+        }
     }
 }

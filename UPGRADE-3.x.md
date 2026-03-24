@@ -439,7 +439,7 @@ If you need the old default properties, explicitly pass them to the navigation f
     'changer': 'object.changer',
     'created': 'object.created',
     'creator': 'object.creator',
-    'linkProvider': 'object.linkData.linkProvider'
+    'linkProvider': 'object.linkData[provider]'
 }) %}
 
 {# For excerpt fields, include them explicitly #}
