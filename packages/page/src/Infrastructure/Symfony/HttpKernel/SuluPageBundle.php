@@ -460,6 +460,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_route.route_generator'),
                 new Reference('sulu_http_cache.reference_store'),
                 new Reference('translator'),
+                '%sulu.model.page_content.class%',
             ])
             ->tag('sulu.link.provider', ['alias' => 'page']);
 

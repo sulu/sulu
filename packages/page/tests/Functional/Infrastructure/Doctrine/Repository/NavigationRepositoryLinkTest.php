@@ -180,7 +180,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
         /** @var array<string, mixed> $internalLinkNav */
         $internalLinkNav = $navigation[2];
         $this->assertSame('Internal Link Page', $internalLinkNav['title']);
-        $this->assertSame('http://sulu.io/en/target-page', $internalLinkNav['url']);
+        $this->assertSame('/target-page', $internalLinkNav['url']);
         $this->assertSame('sulu-io', $internalLinkNav['webspaceKey']);
         $this->assertSame('page', $internalLinkNav['linkProvider']);
 
@@ -246,7 +246,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
         /** @var array<string, mixed> $internalLinkNav */
         $internalLinkNav = $homepageChildren[1];
         $this->assertSame('Internal Link Page', $internalLinkNav['title']);
-        $this->assertSame('http://sulu.io/en/target-page', $internalLinkNav['url']);
+        $this->assertSame('/target-page', $internalLinkNav['url']);
         $this->assertSame('page', $internalLinkNav['linkProvider']);
         $this->assertArrayHasKey('children', $internalLinkNav);
 

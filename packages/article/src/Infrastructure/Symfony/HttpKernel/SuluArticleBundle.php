@@ -342,6 +342,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_core.webspace.request_analyzer'),
                 new Reference('sulu_http_cache.reference_store'),
                 new Reference('translator'),
+                '%sulu.model.article_content.class%',
             ])
             ->tag('sulu.link.provider', ['alias' => 'article']);
 

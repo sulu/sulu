@@ -18,6 +18,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Article\Domain\Model\ArticleDimensionContent;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleLinkProvider;
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
@@ -77,8 +78,10 @@ class ArticleLinkProviderTest extends TestCase
         };
     }
 
-    private function createProvider(?string $requestWebspace = null): ArticleLinkProvider
-    {
+    private function createProvider(
+        ?string $requestWebspace = null,
+        string $articleContentClass = ArticleDimensionContent::class,
+    ): ArticleLinkProvider {
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         if (null !== $requestWebspace) {
             $webspace = new Webspace();
@@ -94,6 +97,7 @@ class ArticleLinkProviderTest extends TestCase
             $requestAnalyzer->reveal(),
             $this->referenceStore->reveal(),
             $this->translator->reveal(),
+            $articleContentClass, // @phpstan-ignore argument.type
         );
     }
 
@@ -236,6 +240,36 @@ class ArticleLinkProviderTest extends TestCase
         $this->assertSame('/en/cli-article', $result[0]->getUrl());
     }
 
+    public function testPreloadUsesConfiguredArticleContentClass(): void
+    {
+        /** @phpstan-ignore-next-line We intentionally pass a non-existent class to verify the parameter is forwarded */
+        $customArticleContentClass = 'App\\Entity\\ArticleDimensionContent';
+
+        $this->mockQueryBuilder(
+            [
+                [
+                    'uuid' => 'article-7',
+                    'title' => 'Extended Article',
+                    'slug' => '/extended-article',
+                    'mainWebspace' => 'blog',
+                ],
+            ],
+            ['article-7'],
+            'en',
+            'live',
+            null,
+            $customArticleContentClass,
+        );
+
+        $this->referenceStore->add('article-7', ArticleInterface::RESOURCE_KEY)->shouldBeCalled();
+
+        $provider = $this->createProvider(null, $customArticleContentClass);
+        $result = [...$provider->preload(['article-7'], 'en', true)];
+
+        $this->assertCount(1, $result);
+        $this->assertSame('/en/extended-article', $result[0]->getUrl());
+    }
+
     public function testPreloadDraftStage(): void
     {
         $this->mockQueryBuilder(
@@ -300,11 +334,12 @@ class ArticleLinkProviderTest extends TestCase
         string $expectedLocale,
         string $expectedStage,
         ?string $expectedRequestWebspace,
+        string $expectedArticleContentClass = ArticleDimensionContent::class,
     ): void {
         $queryBuilder = $this->prophesize(QueryBuilder::class);
 
         $queryBuilder->select(Argument::cetera())->willReturn($queryBuilder);
-        $queryBuilder->from(Argument::cetera())->willReturn($queryBuilder);
+        $queryBuilder->from($expectedArticleContentClass, 'dimensionContent')->willReturn($queryBuilder)->shouldBeCalled();
         $queryBuilder->join(Argument::cetera())->willReturn($queryBuilder);
         $queryBuilder->leftJoin(Argument::cetera())->willReturn($queryBuilder);
         $queryBuilder->where(Argument::cetera())->willReturn($queryBuilder);
