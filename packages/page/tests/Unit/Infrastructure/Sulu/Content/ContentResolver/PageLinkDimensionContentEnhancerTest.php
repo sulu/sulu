@@ -28,6 +28,7 @@ use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Infrastructure\Sulu\Content\ContentResolver\PageLinkDimensionContentEnhancer;
 use Sulu\Route\Domain\Model\Route;
+use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 
 class PageLinkDimensionContentEnhancerTest extends TestCase
 {
@@ -50,16 +51,23 @@ class PageLinkDimensionContentEnhancerTest extends TestCase
      */
     private ObjectProphecy $linkProviderPool;
 
+    /**
+     * @var ObjectProphecy<RouteRepositoryInterface>
+     */
+    private ObjectProphecy $routeRepository;
+
     protected function setUp(): void
     {
         $this->pageRepository = $this->prophesize(PageRepositoryInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->linkProviderPool = $this->prophesize(LinkProviderPoolInterface::class);
+        $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
 
         $this->enhancer = new PageLinkDimensionContentEnhancer(
             $this->pageRepository->reveal(),
             $this->contentAggregator->reveal(),
             $this->linkProviderPool->reveal(),
+            $this->routeRepository->reveal(),
         );
     }
 
@@ -85,6 +93,36 @@ class PageLinkDimensionContentEnhancerTest extends TestCase
         $linkProvider->preload(['42'], 'en')->willReturn([
             new LinkItem('42', 'Example media', '/media/example.jpg?v=1', true),
         ])->shouldBeCalled();
+
+        $result = $this->enhancer->enhance($pageDimensionContent->reveal());
+
+        $this->assertSame($pageDimensionContent->reveal(), $result);
+    }
+
+    public function testEnhanceResolvesArticleLinkViaRouteRepository(): void
+    {
+        $pageDimensionContent = $this->prophesize(PageDimensionContentInterface::class);
+
+        $pageDimensionContent->getLocale()->willReturn('en');
+        $pageDimensionContent->getLinkData()->willReturn([
+            'provider' => 'article',
+            'href' => 'article-uuid-1',
+        ]);
+        $pageDimensionContent->getTemplateData()->willReturn([
+            'title' => 'Article Link Page',
+        ]);
+        $pageDimensionContent->setTemplateData([
+            'title' => 'Article Link Page',
+            'url' => '/my-article',
+        ])->shouldBeCalled();
+
+        $route = new Route('articles', 'article-uuid-1', 'en', '/my-article');
+        $this->routeRepository->findOneBy([
+            'resourceId' => 'article-uuid-1',
+            'locale' => 'en',
+        ])->willReturn($route)->shouldBeCalled();
+
+        $this->linkProviderPool->getProvider(Argument::any())->shouldNotBeCalled();
 
         $result = $this->enhancer->enhance($pageDimensionContent->reveal());
 

@@ -20,6 +20,7 @@ use Sulu\Content\Application\ContentEnhancer\DimensionContentEnhancerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
+use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 
 /**
  * @internal This class should not be instantiated by a project.
@@ -33,6 +34,7 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
         private PageRepositoryInterface $pageRepository,
         private ContentAggregatorInterface $contentAggregator,
         private LinkProviderPoolInterface $linkProviderPool,
+        private RouteRepositoryInterface $routeRepository,
     ) {
     }
 
@@ -139,22 +141,33 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
     {
         $linkData = $pageDimensionContent->getLinkData();
 
-        $url = $linkData['href'] ?? null;
+        $href = $linkData['href'] ?? null;
         $provider = $linkData['provider'] ?? null;
         $locale = $pageDimensionContent->getLocale();
-        if (!\is_string($provider) || (!\is_string($url) && !\is_int($url)) || null === $locale) {
+        if (!\is_string($provider) || (!\is_string($href) && !\is_int($href)) || null === $locale) {
             return $pageDimensionContent;
         }
 
-        $linkProvider = $this->linkProviderPool->getProvider($provider);
-        $preloadResult = $linkProvider->preload([(string) $url], $locale);
-        $linkItem = [...$preloadResult][0] ?? null;
+        // Skip route lookup for integer hrefs (e.g. media IDs) as they have no route entity
+        $url = \is_string($href)
+            ? $this->routeRepository->findOneBy([
+                'resourceId' => $href,
+                'locale' => $locale,
+            ])?->getSlug()
+            : null;
 
-        if (null === $linkItem) {
-            return $pageDimensionContent;
+        if (null === $url) {
+            $linkProvider = $this->linkProviderPool->getProvider($provider);
+            $preloadResult = $linkProvider->preload([(string) $href], $locale);
+            $linkItem = [...$preloadResult][0] ?? null;
+
+            if (null === $linkItem) {
+                return $pageDimensionContent;
+            }
+
+            $url = $linkItem->getUrl();
         }
 
-        $url = $linkItem->getUrl();
         if (null !== $linkData) {
             $url = $this->appendQueryAndAnchor($url, $linkData);
         }
