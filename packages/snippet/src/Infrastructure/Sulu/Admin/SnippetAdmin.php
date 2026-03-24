@@ -107,7 +107,7 @@ class SnippetAdmin extends Admin
                     ->setResourceKey($resourceKey)
                     ->addLocales($locales)
                     ->setBackView(static::LIST_VIEW)
-                    ->setTitleProperty('name')
+                    ->setTitleProperty('title')
             );
 
             $formToolbarActions = $this->contentViewBuilderFactory->getDefaultToolbarActions(SnippetInterface::class);

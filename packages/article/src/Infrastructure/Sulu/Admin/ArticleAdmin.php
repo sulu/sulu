@@ -173,7 +173,7 @@ class ArticleAdmin extends Admin
                 ->setResourceKey($resourceKey)
                 ->addLocales($locales)
                 ->setBackView(static::LIST_VIEW . '_' . $groupIdentifier)
-                ->setTitleProperty('name'),
+                ->setTitleProperty('title'),
         );
 
         $formToolbarActions = $this->contentViewBuilderFactory->getDefaultToolbarActions(ArticleInterface::class);

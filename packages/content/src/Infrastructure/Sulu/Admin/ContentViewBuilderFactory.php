@@ -362,6 +362,7 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
             $this->viewBuilderFactory
                 ->createResourceTabViewBuilder($insightsResourceTabViewName, '/insights')
                 ->setResourceKey($resourceKey)
+                ->setTitleProperty('')
                 ->setTabOrder(6144)
                 ->setTabTitle('sulu_admin.insights')
                 ->addRouterAttributesToBackView(['webspace'])
