@@ -28,6 +28,8 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager" />
             <argument type="service" id="services_resetter" />
             <argument>%kernel.project_dir%</argument>
+            <argument type="service" id="doctrine_phpcr.nodes_cache_pool" on-invalid="null" />
+            <argument type="service" id="doctrine_phpcr.meta_cache_pool" on-invalid="null" />
 
             <tag name="console.command" />
         </service>
