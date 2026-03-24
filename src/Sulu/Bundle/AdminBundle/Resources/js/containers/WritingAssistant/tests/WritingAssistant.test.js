@@ -177,7 +177,7 @@ describe('WritingAssistant Component', () => {
     });
 
     test('sends content data when includeContentContext is enabled', async() => {
-        sessionStorage.setItem('sulu_ai.include_content_context', 'true');
+        sessionStorage.setItem('sulu_admin.include_content_context', 'true');
 
         const contentData = {title: 'Page Title', description: 'Page Description'};
 
@@ -209,11 +209,11 @@ describe('WritingAssistant Component', () => {
             text: 'Initial value',
         });
 
-        sessionStorage.removeItem('sulu_ai.include_content_context');
+        sessionStorage.removeItem('sulu_admin.include_content_context');
     });
 
     test('does not send content data when includeContentContext is disabled', async() => {
-        sessionStorage.setItem('sulu_ai.include_content_context', 'false');
+        sessionStorage.setItem('sulu_admin.include_content_context', 'false');
 
         const contentData = {title: 'Page Title'};
 
@@ -243,7 +243,7 @@ describe('WritingAssistant Component', () => {
             text: 'Initial value',
         });
 
-        sessionStorage.removeItem('sulu_ai.include_content_context');
+        sessionStorage.removeItem('sulu_admin.include_content_context');
     });
 
     test('does not show content context checkbox when no contentData is provided', () => {

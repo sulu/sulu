@@ -350,7 +350,7 @@ describe('AiApplication', () => {
     });
 
     test('captures dataPath from sulu.focus event', () => {
-        render(<AiApplication {...props} />);
+        const instance = new AiApplication(props);
 
         const mockElement = document.createElement('div');
         Object.defineProperty(mockElement, 'parentElement', {
@@ -376,18 +376,7 @@ describe('AiApplication', () => {
             },
         });
 
-        fireEvent(document, event);
-
-        const instance = new AiApplication(props);
-        // $FlowFixMe
-        instance.selectedComponent = {
-            dataPath: '/block/0/text',
-            // $FlowFixMe
-            formInspector: {locale: {get: () => 'en'}},
-            getValue: jest.fn(),
-            schemaType: 'text_line',
-            setValue: jest.fn(),
-        };
+        instance.handleSuluFocus(event);
 
         expect(instance.selectedComponent.dataPath).toBe('/block/0/text');
     });

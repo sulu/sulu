@@ -52,13 +52,14 @@ export default class WritingAssistant extends React.Component<Props> {
     @observable snackbarMessage = undefined;
     @observable lastResponse = undefined;
     @observable currentValue: string;
-    @observable includeContentContext: boolean =
-        sessionStorage.getItem('sulu_ai.include_content_context') === 'true';
+    @observable includeContentContext: boolean = false;
 
     constructor(props: Props) {
         super(props);
 
         this.selectedExpert = this.experts[0].uuid;
+        this.includeContentContext =
+            sessionStorage.getItem('sulu_admin.include_content_context') === 'true';
         // push initial message
         this.messages.push(
             {
@@ -114,8 +115,8 @@ export default class WritingAssistant extends React.Component<Props> {
             message: prompt,
             expertUuid: this.selectedExpert,
             locale,
-            resourceId: String(this.props.resourceId || ''),
-            resourceKey: this.props.resourceKey || '',
+            resourceId: String(this.props.resourceId ?? ''),
+            resourceKey: this.props.resourceKey ?? '',
         };
 
         if (this.includeContentContext && this.props.contentData) {
@@ -153,7 +154,7 @@ export default class WritingAssistant extends React.Component<Props> {
 
     @action handleIncludeContentContextChange = (checked: boolean) => {
         this.includeContentContext = checked;
-        sessionStorage.setItem('sulu_ai.include_content_context', String(checked));
+        sessionStorage.setItem('sulu_admin.include_content_context', String(checked));
     };
 
     @computed get canIncludeContentContext(): boolean {

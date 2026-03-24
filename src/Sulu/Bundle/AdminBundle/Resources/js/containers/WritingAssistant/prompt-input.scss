@@ -1,3 +1,5 @@
+@import '../Application/colors.scss';
+
 .predefined-prompts-dropdown {
     max-width: 20vh;
 }
@@ -10,7 +12,7 @@
 .expert-select {
     flex-grow: 1;
     flex-basis: 0;
-    border-right: 1px solid #ccc;
+    border-right: 1px solid $silver;
     padding-right: 8px;
     min-width: 10vh;
 }
@@ -18,7 +20,7 @@
 .single-expert {
     flex-grow: 1;
     flex-basis: 0;
-    border-right: 1px solid #ccc;
+    border-right: 1px solid $silver;
     padding-right: 8px;
     min-width: 10vh;
     line-height: 30px;
@@ -53,6 +55,6 @@
     align-items: center;
     white-space: nowrap;
     margin-right: auto;
-    border-left: 1px solid #ccc;
+    border-left: 1px solid $silver;
     padding-left: 8px;
 }

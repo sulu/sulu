@@ -259,6 +259,10 @@ export default class AiApplication extends Component<Props> {
         }
 
         const {schema, data} = this.selectedComponent.formInspector.formStore;
+        if (!schema || !data) {
+            return undefined;
+        }
+
         const contentData = {};
 
         const collectFields = (schemaLevel) => {
