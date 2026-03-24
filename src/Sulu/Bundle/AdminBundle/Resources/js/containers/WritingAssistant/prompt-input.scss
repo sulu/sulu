@@ -47,3 +47,12 @@
         min-width: 80px;
     }
 }
+
+.content-context-checkbox {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    margin-right: auto;
+    border-left: 1px solid #ccc;
+    padding-left: 8px;
+}

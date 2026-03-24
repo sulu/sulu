@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import symfonyRouting from 'fos-jsrouting/router';
 import {translate} from '../../utils';
@@ -45,6 +45,7 @@ type Props = {|
 @observer
 export default class AiApplication extends Component<Props> {
     @observable selectedComponent: {
+        dataPath: string,
         formInspector: FormInspector,
         getValue: () => string,
         isInsideBlock: boolean,
@@ -96,6 +97,7 @@ export default class AiApplication extends Component<Props> {
         }
 
         const detail: {
+            dataPath: string,
             formInspector: FormInspector,
             getValue: () => string,
             schemaPath: string,
@@ -108,6 +110,7 @@ export default class AiApplication extends Component<Props> {
         }
 
         this.selectedComponent = {
+            dataPath: detail.dataPath,
             formInspector: detail.formInspector,
             getValue: detail.getValue,
             isInsideBlock: this.isInsideBlock(detail.formInspector, detail.schemaPath),
@@ -250,6 +253,30 @@ export default class AiApplication extends Component<Props> {
         });
     }
 
+    @computed get contentData(): ?Object {
+        if (!this.selectedComponent?.formInspector?.formStore) {
+            return undefined;
+        }
+
+        const {schema, data} = this.selectedComponent.formInspector.formStore;
+        const contentData = {};
+
+        const collectFields = (schemaLevel) => {
+            Object.keys(schemaLevel).forEach((key) => {
+                const entry = schemaLevel[key];
+                if (entry.type === 'section' && entry.items) {
+                    collectFields(entry.items);
+                } else if (data[key] !== undefined) {
+                    contentData[key] = toJS(data[key]);
+                }
+            });
+        };
+
+        collectFields(schema);
+
+        return Object.keys(contentData).length > 0 ? contentData : undefined;
+    }
+
     @computed get actionUrl() {
         if (!this.props.feedback) {
             return undefined;
@@ -306,10 +333,13 @@ export default class AiApplication extends Component<Props> {
                             url: this.actionUrl,
                         }}
                         configuration={this.props.writingAssistant}
+                        contentData={this.contentData}
+                        dataPath={this.selectedComponent.dataPath}
                         locale={locale}
                         messages={{
                             addMessage: translate('sulu_admin.writing_assistant_prompt_placeholder'),
                             copiedToClipboard: translate('sulu_admin.sucessfully_copied_to_clipboard'),
+                            includeContentContext: translate('sulu_admin.include_content_context'),
                             initialMessage: translate('sulu_admin.selected_text'),
                             predefinedPrompts: translate('sulu_admin.predefined_prompts'),
                             send: translate('sulu_admin.send'),
@@ -317,6 +347,8 @@ export default class AiApplication extends Component<Props> {
                         }}
                         onConfirm={this.handleWritingAssistantConfirm}
                         onDialogClose={this.handleWritingAssistantClose}
+                        resourceId={this.selectedComponent.formInspector.id}
+                        resourceKey={this.selectedComponent.formInspector.resourceKey}
                         type={schemaType}
                         url={this.writingAssistantUrl}
                         value={this.selectedText}

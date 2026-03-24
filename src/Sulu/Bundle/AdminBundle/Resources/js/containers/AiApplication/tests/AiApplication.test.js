@@ -349,6 +349,146 @@ describe('AiApplication', () => {
         expect(instance.hasFocus).toBe(false);
     });
 
+    test('captures dataPath from sulu.focus event', () => {
+        render(<AiApplication {...props} />);
+
+        const mockElement = document.createElement('div');
+        Object.defineProperty(mockElement, 'parentElement', {
+            // $FlowFixMe
+            value: {
+                getBoundingClientRect: jest.fn().mockReturnValue({
+                    top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 0,
+                }),
+            },
+        });
+
+        const event = new Event('sulu.focus');
+        Object.defineProperty(event, 'target', {value: mockElement});
+        // $FlowFixMe
+        Object.defineProperty(event, 'detail', {
+            value: {
+                dataPath: '/block/0/text',
+                formInspector: {locale: {get: () => 'en'}, getSchemaEntryByPath: jest.fn()},
+                getValue: jest.fn().mockReturnValue('some text'),
+                schemaPath: 'title',
+                schemaType: 'text_line',
+                setValue: jest.fn(),
+            },
+        });
+
+        fireEvent(document, event);
+
+        const instance = new AiApplication(props);
+        // $FlowFixMe
+        instance.selectedComponent = {
+            dataPath: '/block/0/text',
+            // $FlowFixMe
+            formInspector: {locale: {get: () => 'en'}},
+            getValue: jest.fn(),
+            schemaType: 'text_line',
+            setValue: jest.fn(),
+        };
+
+        expect(instance.selectedComponent.dataPath).toBe('/block/0/text');
+    });
+
+    test('contentData computed returns form data filtered by schema', () => {
+        const instance = new AiApplication(props);
+        // $FlowFixMe
+        instance.selectedComponent = {
+            // $FlowFixMe
+            formInspector: {
+                formStore: {
+                    schema: {
+                        title: {type: 'text_line'},
+                        description: {type: 'text_area'},
+                    },
+                    data: {
+                        title: 'My Page',
+                        description: 'A description',
+                        internalField: 'should not appear',
+                    },
+                },
+            },
+        };
+
+        const result = instance.contentData;
+
+        expect(result).toEqual({
+            title: 'My Page',
+            description: 'A description',
+        });
+    });
+
+    test('contentData computed handles nested sections', () => {
+        const instance = new AiApplication(props);
+        // $FlowFixMe
+        instance.selectedComponent = {
+            // $FlowFixMe
+            formInspector: {
+                formStore: {
+                    schema: {
+                        details: {
+                            type: 'section',
+                            items: {
+                                title: {type: 'text_line'},
+                                summary: {type: 'text_area'},
+                            },
+                        },
+                        metadata: {
+                            type: 'section',
+                            items: {
+                                author: {type: 'text_line'},
+                            },
+                        },
+                    },
+                    data: {
+                        title: 'Page Title',
+                        summary: 'Page Summary',
+                        author: 'John',
+                    },
+                },
+            },
+        };
+
+        const result = instance.contentData;
+
+        expect(result).toEqual({
+            title: 'Page Title',
+            summary: 'Page Summary',
+            author: 'John',
+        });
+    });
+
+    test('contentData computed returns undefined when no formStore', () => {
+        const instance = new AiApplication(props);
+        // $FlowFixMe
+        instance.selectedComponent = {
+            // $FlowFixMe
+            formInspector: {},
+        };
+
+        expect(instance.contentData).toBeUndefined();
+    });
+
+    test('contentData computed returns undefined when data is empty', () => {
+        const instance = new AiApplication(props);
+        // $FlowFixMe
+        instance.selectedComponent = {
+            // $FlowFixMe
+            formInspector: {
+                formStore: {
+                    schema: {
+                        title: {type: 'text_line'},
+                    },
+                    data: {},
+                },
+            },
+        };
+
+        expect(instance.contentData).toBeUndefined();
+    });
+
     test('handles translate confirm', () => {
         render(<AiApplication {...props} />);
 

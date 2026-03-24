@@ -38,6 +38,7 @@ describe('WritingAssistant Component', () => {
         messages: {
             addMessage: 'Add Message',
             copiedToClipboard: 'Copied to Clipboard',
+            includeContentContext: 'Add whole content as context',
             initialMessage: 'Initial Message',
             predefinedPrompts: 'Predefined Prompts',
             send: 'Send',
@@ -102,6 +103,8 @@ describe('WritingAssistant Component', () => {
             expertUuid: '1',
             locale: 'en',
             message: 'Test message',
+            resourceId: '',
+            resourceKey: '',
             text: 'Initial value',
         });
     });
@@ -145,5 +148,135 @@ describe('WritingAssistant Component', () => {
         await userEvent.click(copyButton);
 
         expect(writeText).toHaveBeenCalledWith('Optimized text');
+    });
+
+    test('sends resourceId and resourceKey even without content context', async() => {
+        render(
+            <WritingAssistant
+                {...defaultProps}
+                resourceId="page-123"
+                resourceKey="pages"
+            />
+        );
+
+        const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
+        await userEvent.type(input, 'Test message{enter}');
+
+        await waitFor(() => {
+            expect(screen.getByText('Optimized text')).toBeInTheDocument();
+        });
+
+        expect(Requester.post).toHaveBeenCalledWith('https://example.com/api', {
+            expertUuid: '1',
+            locale: 'en',
+            message: 'Test message',
+            resourceId: 'page-123',
+            resourceKey: 'pages',
+            text: 'Initial value',
+        });
+    });
+
+    test('sends content data when includeContentContext is enabled', async() => {
+        sessionStorage.setItem('sulu_ai.include_content_context', 'true');
+
+        const contentData = {title: 'Page Title', description: 'Page Description'};
+
+        render(
+            <WritingAssistant
+                {...defaultProps}
+                contentData={contentData}
+                dataPath="/block/0/text"
+                resourceId="page-123"
+                resourceKey="pages"
+            />
+        );
+
+        const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
+        await userEvent.type(input, 'Improve this{enter}');
+
+        await waitFor(() => {
+            expect(screen.getByText('Optimized text')).toBeInTheDocument();
+        });
+
+        expect(Requester.post).toHaveBeenCalledWith('https://example.com/api', {
+            data: contentData,
+            dataPath: '/block/0/text',
+            expertUuid: '1',
+            locale: 'en',
+            message: 'Improve this',
+            resourceId: 'page-123',
+            resourceKey: 'pages',
+            text: 'Initial value',
+        });
+
+        sessionStorage.removeItem('sulu_ai.include_content_context');
+    });
+
+    test('does not send content data when includeContentContext is disabled', async() => {
+        sessionStorage.setItem('sulu_ai.include_content_context', 'false');
+
+        const contentData = {title: 'Page Title'};
+
+        render(
+            <WritingAssistant
+                {...defaultProps}
+                contentData={contentData}
+                dataPath="/block/0/text"
+                resourceId="page-123"
+                resourceKey="pages"
+            />
+        );
+
+        const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
+        await userEvent.type(input, 'Improve this{enter}');
+
+        await waitFor(() => {
+            expect(screen.getByText('Optimized text')).toBeInTheDocument();
+        });
+
+        expect(Requester.post).toHaveBeenCalledWith('https://example.com/api', {
+            expertUuid: '1',
+            locale: 'en',
+            message: 'Improve this',
+            resourceId: 'page-123',
+            resourceKey: 'pages',
+            text: 'Initial value',
+        });
+
+        sessionStorage.removeItem('sulu_ai.include_content_context');
+    });
+
+    test('does not show content context checkbox when no contentData is provided', () => {
+        render(<WritingAssistant {...defaultProps} />);
+
+        expect(screen.queryByText('Add whole content as context')).not.toBeInTheDocument();
+    });
+
+    test('shows content context checkbox when contentData is provided', () => {
+        const predefinedPrompts = [
+            {id: 1, name: 'Prompt 1', prompt: 'Prompt 1 text'},
+            {id: 2, name: 'Prompt 2', prompt: 'Prompt 2 text'},
+        ];
+        const configuration = {
+            ...defaultProps.configuration,
+            experts: {
+                '1': {
+                    ...defaultProps.configuration.experts['1'],
+                    options: {predefinedPrompts},
+                },
+            },
+        };
+
+        render(
+            <WritingAssistant
+                {...defaultProps}
+                configuration={configuration}
+                contentData={{title: 'Test'}}
+                resourceId="page-123"
+                resourceKey="pages"
+            />
+        );
+
+        expect(screen.getByText('Add whole content as context')).toBeInTheDocument();
     });
 });
