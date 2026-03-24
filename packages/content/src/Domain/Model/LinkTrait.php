@@ -44,6 +44,8 @@ trait LinkTrait
      */
     public function setLinkData(?array $linkData): void
     {
+        $this->linkProvider = null;
+
         if (\is_array($linkData)) {
             $linkProvider = $linkData['provider'] ?? null;
             Assert::string($linkProvider);

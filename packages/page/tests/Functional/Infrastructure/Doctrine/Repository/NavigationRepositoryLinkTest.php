@@ -41,7 +41,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
             'changer' => 'object.changer',
             'created' => 'object.created',
             'creator' => 'object.creator',
-            'linkProvider' => 'object.linkData.linkProvider',
+            'linkProvider' => 'object.linkData[provider]',
         ];
 
         if ($withExcerpt) {
@@ -182,12 +182,14 @@ class NavigationRepositoryLinkTest extends SuluTestCase
         $this->assertSame('Internal Link Page', $internalLinkNav['title']);
         $this->assertSame('http://sulu.io/en/target-page', $internalLinkNav['url']);
         $this->assertSame('sulu-io', $internalLinkNav['webspaceKey']);
+        $this->assertSame('page', $internalLinkNav['linkProvider']);
 
         // Test external link resolve url
         /** @var array<string, mixed> $externalLinkNav */
         $externalLinkNav = $navigation[3];
         $this->assertSame('External Link Page', $externalLinkNav['title']);
         $this->assertSame('https://example.com', $externalLinkNav['url']);
+        $this->assertSame('external', $externalLinkNav['linkProvider']);
     }
 
     public function testGetNavigationFlatWithExcerpt(): void
@@ -245,6 +247,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
         $internalLinkNav = $homepageChildren[1];
         $this->assertSame('Internal Link Page', $internalLinkNav['title']);
         $this->assertSame('http://sulu.io/en/target-page', $internalLinkNav['url']);
+        $this->assertSame('page', $internalLinkNav['linkProvider']);
         $this->assertArrayHasKey('children', $internalLinkNav);
 
         // Test external link resolve url
@@ -252,6 +255,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
         $externalLinkNav = $homepageChildren[2];
         $this->assertSame('External Link Page', $externalLinkNav['title']);
         $this->assertSame('https://example.com', $externalLinkNav['url']);
+        $this->assertSame('external', $externalLinkNav['linkProvider']);
         $this->assertArrayHasKey('children', $externalLinkNav);
     }
 }

@@ -73,7 +73,7 @@ class NavigationRepositoryTest extends TestCase
             'changer' => 'object.changer',
             'created' => 'object.created',
             'creator' => 'object.creator',
-            'linkProvider' => 'object.linkData.linkProvider',
+            'linkProvider' => 'object.linkData[provider]',
         ];
 
         if ($loadExcerpt) {

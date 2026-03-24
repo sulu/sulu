@@ -135,6 +135,7 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
                 'url' => $url,
             ],
         ]);
+        $targetDimensionContent->setLinkData($linkData);
 
         return $targetDimensionContent; // @phpstan-ignore-line return.type
     }
@@ -153,12 +154,12 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
         $url = $linkData['href'] ?? null;
         $provider = $linkData['provider'] ?? null;
         $locale = $pageDimensionContent->getLocale();
-        if (!\is_string($provider) || !\is_string($url) || null === $locale) {
+        if (!\is_string($provider) || (!\is_string($url) && !\is_int($url)) || null === $locale) {
             return $pageDimensionContent;
         }
 
         $linkProvider = $this->linkProviderPool->getProvider($provider);
-        $preloadResult = $linkProvider->preload([$url], $locale);
+        $preloadResult = $linkProvider->preload([(string) $url], $locale);
         $linkItem = [...$preloadResult][0] ?? null;
 
         if (null === $linkItem) {
