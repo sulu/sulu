@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Bundle\DocumentManagerBundle\Command;
 
 use PHPCR\SessionInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -45,6 +46,8 @@ class PHPCRCleanupCommand extends Command
         private WebspaceManagerInterface $webspaceManager,
         private ServicesResetter $servicesResetter,
         private string $projectDirectory,
+        private ?CacheItemPoolInterface $phpcrNodesCachePool = null,
+        private ?CacheItemPoolInterface $phpcrMetaCachePool = null,
     ) {
         parent::__construct();
     }
@@ -273,6 +276,8 @@ class PHPCRCleanupCommand extends Command
             }
 
             $this->servicesResetter->reset();
+            $this->phpcrNodesCachePool?->clear();
+            $this->phpcrMetaCachePool?->clear();
         }
 
         $progressBar->finish();
