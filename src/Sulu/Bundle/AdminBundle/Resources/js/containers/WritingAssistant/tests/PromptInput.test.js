@@ -121,4 +121,77 @@ describe('PromptInput Component', () => {
         const button = screen.getByText('Send');
         expect(button).toBeEnabled();
     });
+
+    test('does not render content context checkbox when canIncludeContentContext is false', () => {
+        render(<PromptInput {...defaultProps} canIncludeContentContext={false} />);
+
+        expect(screen.queryByText('Add content context')).not.toBeInTheDocument();
+    });
+
+    test('does not render content context checkbox when canIncludeContentContext is undefined', () => {
+        render(<PromptInput {...defaultProps} />);
+
+        expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+    });
+
+    test('renders content context checkbox when canIncludeContentContext is true', () => {
+        render(
+            <PromptInput
+                {...defaultProps}
+                canIncludeContentContext={true}
+                includeContentContext={false}
+                includeContentContextLabel="Add whole content as context"
+                predefinedPrompts={{
+                    handleClick: jest.fn(),
+                    label: 'Predefined Prompts',
+                    options: [{id: 1, name: 'Prompt 1'}],
+                }}
+            />
+        );
+
+        expect(screen.getByText('Add whole content as context')).toBeInTheDocument();
+    });
+
+    test('calls onIncludeContentContextChange when checkbox is toggled', async() => {
+        const onIncludeContentContextChange = jest.fn();
+
+        render(
+            <PromptInput
+                {...defaultProps}
+                canIncludeContentContext={true}
+                includeContentContext={false}
+                includeContentContextLabel="Add whole content as context"
+                onIncludeContentContextChange={onIncludeContentContextChange}
+                predefinedPrompts={{
+                    handleClick: jest.fn(),
+                    label: 'Predefined Prompts',
+                    options: [{id: 1, name: 'Prompt 1'}],
+                }}
+            />
+        );
+
+        const checkbox = screen.getByRole('checkbox');
+        await userEvent.click(checkbox);
+
+        expect(onIncludeContentContextChange).toHaveBeenCalledWith(true, undefined);
+    });
+
+    test('renders checkbox as checked when includeContentContext is true', () => {
+        render(
+            <PromptInput
+                {...defaultProps}
+                canIncludeContentContext={true}
+                includeContentContext={true}
+                includeContentContextLabel="Add whole content as context"
+                predefinedPrompts={{
+                    handleClick: jest.fn(),
+                    label: 'Predefined Prompts',
+                    options: [{id: 1, name: 'Prompt 1'}],
+                }}
+            />
+        );
+
+        const checkbox = screen.getByRole('checkbox');
+        expect(checkbox).toBeChecked();
+    });
 });

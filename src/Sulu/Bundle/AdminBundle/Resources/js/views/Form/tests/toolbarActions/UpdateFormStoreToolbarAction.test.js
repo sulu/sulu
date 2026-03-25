@@ -229,6 +229,32 @@ test('Fetch data on confirm', async() => {
     expect(action.showDialog).toBe(false);
 });
 
+test('Passes webspaceKey from options to route generation', async() => {
+    const action = createUpdateFormStoreToolbarAction();
+    action.showDialog = true;
+    action.resourceFormStore.resourceStore.id = 5;
+    action.resourceFormStore.resourceStore.data = {id: 5};
+    action.resourceFormStore.options = {webspace: 'sulu_io'};
+    // $FlowFixMe
+    action.resourceFormStore.locale.get = jest.fn().mockReturnValue('en');
+    // $FlowFixMe
+    action.resourceFormStore.change = jest.fn();
+
+    symfonyRouting.generate.mockReturnValue('/test/5?locale=en&webspaceKey=sulu_io');
+    Requester.post.mockResolvedValue({});
+
+    const element = mount(action.getNode());
+    element.find('Button[skin="primary"]').simulate('click');
+
+    await new Promise((resolve) => setTimeout(resolve));
+
+    expect(symfonyRouting.generate).toHaveBeenCalledWith('test_route', expect.objectContaining({
+        id: 5,
+        locale: 'en',
+        webspaceKey: 'sulu_io',
+    }));
+});
+
 test('Handle error on fetch', async() => {
     const action = createUpdateFormStoreToolbarAction();
     action.showDialog = true;

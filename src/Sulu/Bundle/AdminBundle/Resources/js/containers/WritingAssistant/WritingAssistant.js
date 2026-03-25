@@ -17,10 +17,13 @@ type Props = {|
             [string]: ExpertType,
         },
     },
+    contentData?: ?Object,
+    dataPath?: ?string,
     locale: string,
     messages: {
         addMessage: string,
         copiedToClipboard: string,
+        includeContentContext: string,
         initialMessage: string,
         predefinedPrompts: string,
         send: string,
@@ -28,9 +31,12 @@ type Props = {|
     },
     onConfirm: (text: string) => void,
     onDialogClose: () => void,
+    resourceId?: ?(string | number),
+    resourceKey?: ?string,
     type: 'text_line' | 'text_area' | 'text_editor',
     url: string,
     value?: string,
+    webspaceKey?: ?string,
 |};
 
 /**
@@ -47,11 +53,14 @@ export default class WritingAssistant extends React.Component<Props> {
     @observable snackbarMessage = undefined;
     @observable lastResponse = undefined;
     @observable currentValue: string;
+    @observable includeContentContext: boolean = false;
 
     constructor(props: Props) {
         super(props);
 
         this.selectedExpert = this.experts[0].uuid;
+        this.includeContentContext =
+            sessionStorage.getItem('sulu_admin.include_content_context') === 'true';
         // push initial message
         this.messages.push(
             {
@@ -101,15 +110,23 @@ export default class WritingAssistant extends React.Component<Props> {
             commandTitle: title ?? prompt,
             expert: this.props.configuration.experts[this.selectedExpert].name,
         };
-        return Requester.post(
-            url,
-            {
-                text: this.currentValue,
-                message: prompt,
-                expertUuid: this.selectedExpert,
-                locale,
-            }
-        ).then(action((data) => {
+
+        const body: Object = {
+            text: this.currentValue,
+            message: prompt,
+            expertUuid: this.selectedExpert,
+            locale,
+            resourceId: String(this.props.resourceId ?? ''),
+            resourceKey: this.props.resourceKey ?? '',
+            webspaceKey: this.props.webspaceKey,
+        };
+
+        if (this.includeContentContext && this.props.contentData) {
+            body.data = toJS(this.props.contentData);
+            body.dataPath = this.props.dataPath;
+        }
+
+        return Requester.post(url, body).then(action((data) => {
             this.loader = undefined;
             this.lastResponse = data;
             return data.response;
@@ -136,6 +153,15 @@ export default class WritingAssistant extends React.Component<Props> {
     @action handleExpertSelect = (expert: string) => {
         this.selectedExpert = expert;
     };
+
+    @action handleIncludeContentContextChange = (checked: boolean) => {
+        this.includeContentContext = checked;
+        sessionStorage.setItem('sulu_admin.include_content_context', String(checked));
+    };
+
+    @computed get canIncludeContentContext(): boolean {
+        return !!this.props.contentData;
+    }
 
     @action handleOnRetry = (prompt: string, title: string) => {
         void this.handleAddMessage(prompt, title);
@@ -231,6 +257,7 @@ export default class WritingAssistant extends React.Component<Props> {
             messages: {
                 writingAssistant: writingAssistantMessage,
                 addMessage: addMessageMessage,
+                includeContentContext: includeContentContextMessage,
                 send: sendMessage,
             },
         } = this.props;
@@ -268,13 +295,17 @@ export default class WritingAssistant extends React.Component<Props> {
                             onRetry={this.handleOnRetry}
                         />
                         <PromptInput
+                            canIncludeContentContext={this.canIncludeContentContext}
                             experts={this.expertsButton}
+                            includeContentContext={this.includeContentContext}
+                            includeContentContextLabel={includeContentContextMessage}
                             isLoading={!!this.loader}
                             messages={{
                                 addMessage: addMessageMessage,
                                 send: sendMessage,
                             }}
                             onAddMessage={this.handleAddMessage}
+                            onIncludeContentContextChange={this.handleIncludeContentContextChange}
                             predefinedPrompts={this.predefinedPrompts}
                         />
                     </div>

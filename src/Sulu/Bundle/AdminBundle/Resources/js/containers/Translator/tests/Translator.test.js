@@ -60,6 +60,9 @@ describe('Translator', () => {
                 sourceLanguage: undefined,
                 targetLanguage: 'en',
                 type: 'text_line',
+                resourceId: undefined,
+                resourceKey: undefined,
+                webspaceKey: undefined,
             });
         });
 
@@ -79,6 +82,9 @@ describe('Translator', () => {
                 sourceLanguage: undefined,
                 targetLanguage: 'en',
                 type: 'text_editor',
+                resourceId: undefined,
+                resourceKey: undefined,
+                webspaceKey: undefined,
             });
         });
     });
@@ -104,6 +110,9 @@ describe('Translator', () => {
                 sourceLanguage: undefined,
                 targetLanguage: 'en',
                 type: 'text_line',
+                resourceId: undefined,
+                resourceKey: undefined,
+                webspaceKey: undefined,
             });
         });
 
@@ -137,6 +146,9 @@ describe('Translator', () => {
                 sourceLanguage: 'de',
                 targetLanguage: 'en',
                 type: 'text_line',
+                resourceId: undefined,
+                resourceKey: undefined,
+                webspaceKey: undefined,
             });
         });
     });
@@ -168,6 +180,9 @@ describe('Translator', () => {
                 sourceLanguage: undefined,
                 targetLanguage: 'fr',
                 type: 'text_line',
+                resourceId: undefined,
+                resourceKey: undefined,
+                webspaceKey: undefined,
             });
         });
 
@@ -211,6 +226,33 @@ describe('Translator', () => {
         await userEvent.click(closeButton);
 
         expect(mockProps.onDialogClose).toHaveBeenCalled();
+    });
+
+    test('sends webspaceKey, resourceId and resourceKey when provided', async() => {
+        Requester.post.mockResolvedValue({
+            response: {text: 'Hello', sourceLanguage: undefined, targetLanguage: 'en'},
+        });
+
+        render(
+            <Translator
+                {...mockProps}
+                resourceId="page-123"
+                resourceKey="pages"
+                webspaceKey="sulu_io"
+            />
+        );
+
+        await waitFor(() => {
+            expect(Requester.post).toHaveBeenCalledWith('/api/translate', {
+                text: 'Hallo',
+                sourceLanguage: undefined,
+                targetLanguage: 'en',
+                type: 'text_line',
+                resourceId: 'page-123',
+                resourceKey: 'pages',
+                webspaceKey: 'sulu_io',
+            });
+        });
     });
 
     test('calls action prop with correct parameters when translation occurs', async() => {
