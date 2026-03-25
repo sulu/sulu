@@ -346,7 +346,11 @@ final class NavigationRepository implements NavigationRepositoryInterface
          */
         $resolvedContent = $this->contentResolver->resolve($pageDimensionContent, $properties);
 
-        return $resolvedContent['nav'];
+        $result = $resolvedContent['nav'];
+
+        $result['targetType'] = $result['targetType'] ?? 'page';
+
+        return $result;
     }
 
     /**

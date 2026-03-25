@@ -251,6 +251,7 @@ class NavigationTwigExtension extends AbstractExtension
         return [
             'title' => 'title',
             'url' => 'url',
+            'targetType' => 'object.linkData[provider]',
         ];
     }
 }
