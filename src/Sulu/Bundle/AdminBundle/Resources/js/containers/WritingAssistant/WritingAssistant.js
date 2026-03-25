@@ -36,6 +36,7 @@ type Props = {|
     type: 'text_line' | 'text_area' | 'text_editor',
     url: string,
     value?: string,
+    webspaceKey?: ?string,
 |};
 
 /**
@@ -117,6 +118,7 @@ export default class WritingAssistant extends React.Component<Props> {
             locale,
             resourceId: String(this.props.resourceId ?? ''),
             resourceKey: this.props.resourceKey ?? '',
+            webspaceKey: this.props.webspaceKey,
         };
 
         if (this.includeContentContext && this.props.contentData) {

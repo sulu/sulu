@@ -21,6 +21,8 @@ type Props = {|
     |},
     onConfirm: (text: string) => void,
     onDialogClose: () => void,
+    resourceId?: ?(string | number),
+    resourceKey?: ?string,
     sourceLanguages: Array<{|
         label: string,
         locale: string,
@@ -32,6 +34,7 @@ type Props = {|
     type: 'text_line' | 'text_area' | 'text_editor',
     url: string,
     value?: string,
+    webspaceKey?: ?string,
 |};
 
 /**
@@ -87,6 +90,9 @@ export default class Translator extends React.Component<Props> {
         const {
             url,
             type,
+            resourceId,
+            resourceKey,
+            webspaceKey,
             messages: {
                 errorTranslatingText: errorTranslatingTextMessage,
             },
@@ -102,6 +108,9 @@ export default class Translator extends React.Component<Props> {
                 sourceLanguage: this.sourceLanguage,
                 targetLanguage: this.targetLanguage,
                 type,
+                resourceId,
+                resourceKey,
+                webspaceKey,
             }
         ).then(action((data: {
             response: {

@@ -106,6 +106,7 @@ describe('WritingAssistant Component', () => {
             resourceId: '',
             resourceKey: '',
             text: 'Initial value',
+            webspaceKey: undefined,
         });
     });
 
@@ -173,6 +174,7 @@ describe('WritingAssistant Component', () => {
             resourceId: 'page-123',
             resourceKey: 'pages',
             text: 'Initial value',
+            webspaceKey: undefined,
         });
     });
 
@@ -207,6 +209,7 @@ describe('WritingAssistant Component', () => {
             resourceId: 'page-123',
             resourceKey: 'pages',
             text: 'Initial value',
+            webspaceKey: undefined,
         });
 
         sessionStorage.removeItem('sulu_admin.include_content_context');
@@ -241,9 +244,38 @@ describe('WritingAssistant Component', () => {
             resourceId: 'page-123',
             resourceKey: 'pages',
             text: 'Initial value',
+            webspaceKey: undefined,
         });
 
         sessionStorage.removeItem('sulu_admin.include_content_context');
+    });
+
+    test('sends webspaceKey when provided', async() => {
+        render(
+            <WritingAssistant
+                {...defaultProps}
+                resourceId="page-123"
+                resourceKey="pages"
+                webspaceKey="sulu_io"
+            />
+        );
+
+        const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
+        await userEvent.type(input, 'Test message{enter}');
+
+        await waitFor(() => {
+            expect(screen.getByText('Optimized text')).toBeInTheDocument();
+        });
+
+        expect(Requester.post).toHaveBeenCalledWith('https://example.com/api', {
+            expertUuid: '1',
+            locale: 'en',
+            message: 'Test message',
+            resourceId: 'page-123',
+            resourceKey: 'pages',
+            text: 'Initial value',
+            webspaceKey: 'sulu_io',
+        });
     });
 
     test('does not show content context checkbox when no contentData is provided', () => {

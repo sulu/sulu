@@ -356,6 +356,7 @@ export default class AiApplication extends Component<Props> {
                         type={schemaType}
                         url={this.writingAssistantUrl}
                         value={this.selectedText}
+                        webspaceKey={this.selectedComponent.formInspector.options?.webspace}
                     />
                 )}
                 {this.translateOpen && translationEnabled && (
@@ -374,11 +375,14 @@ export default class AiApplication extends Component<Props> {
                         }}
                         onConfirm={this.handleTranslateConfirm}
                         onDialogClose={this.handleTranslateClose}
+                        resourceId={this.selectedComponent.formInspector.id}
+                        resourceKey={this.selectedComponent.formInspector.resourceKey}
                         sourceLanguages={this.props.translation.sourceLanguages}
                         targetLanguages={this.props.translation.targetLanguages}
                         type={schemaType}
                         url={this.translationUrl}
                         value={this.selectedText}
+                        webspaceKey={this.selectedComponent.formInspector.options?.webspace}
                     />
                 )}
             </div>

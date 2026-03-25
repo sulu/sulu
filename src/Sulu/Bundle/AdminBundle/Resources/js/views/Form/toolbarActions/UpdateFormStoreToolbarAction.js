@@ -236,6 +236,7 @@ export default class UpdateFormStoreToolbarAction extends AbstractFormToolbarAct
         const url = symfonyRouting.generate(this.options.route, {
             id,
             locale: locale?.get(),
+            ...(this.resourceFormStore.options?.webspace ? {webspaceKey: this.resourceFormStore.options.webspace} : {}),
             ...(this.options.routeParams || {}),
         });
 
