@@ -375,7 +375,7 @@ class MediaManagerTest extends TestCase
             ],
             '/download/{id}/media/{slug}',
             $this->targetGroupRepository->reveal(),
-            null,
+            '/admin/download/{id}/media/{slug}',
             $trashManager->reveal()
         );
 
@@ -456,7 +456,7 @@ class MediaManagerTest extends TestCase
             ],
             '/download/{id}/media/{slug}',
             $this->targetGroupRepository->reveal(),
-            null,
+            '/admin/download/{id}/media/{slug}',
             $trashManager->reveal()
         );
 
