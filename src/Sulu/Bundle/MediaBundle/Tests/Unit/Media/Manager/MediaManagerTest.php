@@ -24,6 +24,7 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaCreatedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaModifiedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaRemovedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\MediaRemovedNoTrashEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaVersionAddedEvent;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
@@ -44,6 +45,7 @@ use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
+use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface as SuluUserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -341,11 +343,174 @@ class MediaManagerTest extends TestCase
         $this->em->detach($formatOptions->reveal())->shouldBeCalled();
         $this->em->remove($media->reveal())->shouldBeCalled();
 
+        // No trashManager configured, trash is considered disabled so MediaRemovedEvent is collected
         $this->domainEventCollector->collect(Argument::type(MediaRemovedEvent::class))->shouldBeCalled();
 
         $this->em->flush()->shouldBeCalled();
 
         $this->mediaManager->delete(1, true);
+    }
+
+    public function testDeleteContinuesWhenTrashManagerThrows(): void
+    {
+        $trashManager = $this->prophesize(TrashManagerInterface::class);
+
+        $mediaManager = new MediaManager(
+            $this->mediaRepository->reveal(),
+            $this->collectionRepository->reveal(),
+            $this->userRepository->reveal(),
+            $this->categoryRepository->reveal(),
+            $this->em->reveal(),
+            $this->storage->reveal(),
+            $this->validator->reveal(),
+            $this->formatManager->reveal(),
+            $this->tagManager->reveal(),
+            $this->typeManager->reveal(),
+            $this->pathCleaner->reveal(),
+            $this->domainEventCollector->reveal(),
+            $this->tokenStorage->reveal(),
+            $this->securityChecker->reveal(),
+            [
+                $this->mediaPropertiesProvider->reveal(),
+            ],
+            '/download/{id}/media/{slug}',
+            $this->targetGroupRepository->reveal(),
+            null,
+            $trashManager->reveal()
+        );
+
+        $collection = $this->prophesize(Collection::class);
+        $collection->getId()->willReturn(2);
+
+        $file = $this->prophesize(File::class);
+        $fileVersion = $this->prophesize(FileVersion::class);
+        $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $file->getLatestFileVersion()->willReturn($fileVersion->reveal());
+        $fileVersion->getId()->willReturn(1);
+        $fileVersion->getName()->willReturn('test');
+        $fileVersion->getMimeType()->willReturn('image/png');
+        $fileVersion->getStorageOptions()->willReturn(['segment' => '01', 'fileName' => 'test.jpg']);
+
+        $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
+        $fileVersionMeta->getTitle()->willReturn('Test image');
+        $fileVersionMeta->getLocale()->willReturn('en');
+        $fileVersion->getMeta()->willReturn([$fileVersionMeta->reveal()]);
+        $fileVersion->getDefaultMeta()->willReturn($fileVersionMeta->reveal());
+
+        $formatOptions = $this->prophesize(FormatOptions::class);
+        $fileVersion->getFormatOptions()->willReturn([$formatOptions->reveal()]);
+
+        $media = $this->prophesize(Media::class);
+        $media->getCollection()->willReturn($collection);
+        $media->getFiles()->willReturn([$file->reveal()]);
+        $media->getId()->willReturn(1);
+
+        $this->mediaRepository->findMediaById(1)->willReturn($media);
+        $this->securityChecker->checkPermission(
+            new SecurityCondition('sulu.media.collections', null, Collection::class, 2),
+            'delete'
+        )->shouldBeCalled();
+
+        // TrashManager::store() throws an exception (e.g. physical file missing)
+        $trashManager->store(Argument::cetera())->willThrow(new \RuntimeException('File not found'));
+
+        $this->formatManager->purge(1, 'test', 'image/png')->shouldBeCalled();
+        $this->storage->remove(['segment' => '01', 'fileName' => 'test.jpg'])->shouldBeCalled();
+        $this->em->detach($fileVersion->reveal())->shouldBeCalled();
+        $this->em->detach($file->reveal())->shouldBeCalled();
+        $this->em->remove($fileVersionMeta->reveal())->shouldBeCalled();
+        $this->em->detach($formatOptions->reveal())->shouldBeCalled();
+        $this->em->remove($media->reveal())->shouldBeCalled();
+
+        // When trash storage fails, MediaRemovedNoTrashEvent should be collected
+        $this->domainEventCollector->collect(
+            Argument::type(MediaRemovedNoTrashEvent::class)
+        )->shouldBeCalled();
+
+        $this->em->flush()->shouldBeCalled();
+
+        $mediaManager->delete(1, true);
+    }
+
+    public function testDeleteWithTrashManagerSuccess(): void
+    {
+        $trashManager = $this->prophesize(TrashManagerInterface::class);
+
+        $mediaManager = new MediaManager(
+            $this->mediaRepository->reveal(),
+            $this->collectionRepository->reveal(),
+            $this->userRepository->reveal(),
+            $this->categoryRepository->reveal(),
+            $this->em->reveal(),
+            $this->storage->reveal(),
+            $this->validator->reveal(),
+            $this->formatManager->reveal(),
+            $this->tagManager->reveal(),
+            $this->typeManager->reveal(),
+            $this->pathCleaner->reveal(),
+            $this->domainEventCollector->reveal(),
+            $this->tokenStorage->reveal(),
+            $this->securityChecker->reveal(),
+            [
+                $this->mediaPropertiesProvider->reveal(),
+            ],
+            '/download/{id}/media/{slug}',
+            $this->targetGroupRepository->reveal(),
+            null,
+            $trashManager->reveal()
+        );
+
+        $collection = $this->prophesize(Collection::class);
+        $collection->getId()->willReturn(2);
+
+        $file = $this->prophesize(File::class);
+        $fileVersion = $this->prophesize(FileVersion::class);
+        $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $file->getLatestFileVersion()->willReturn($fileVersion->reveal());
+        $fileVersion->getId()->willReturn(1);
+        $fileVersion->getName()->willReturn('test');
+        $fileVersion->getMimeType()->willReturn('image/png');
+        $fileVersion->getStorageOptions()->willReturn(['segment' => '01', 'fileName' => 'test.jpg']);
+
+        $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
+        $fileVersionMeta->getTitle()->willReturn('Test image');
+        $fileVersionMeta->getLocale()->willReturn('en');
+        $fileVersion->getMeta()->willReturn([$fileVersionMeta->reveal()]);
+        $fileVersion->getDefaultMeta()->willReturn($fileVersionMeta->reveal());
+
+        $formatOptions = $this->prophesize(FormatOptions::class);
+        $fileVersion->getFormatOptions()->willReturn([$formatOptions->reveal()]);
+
+        $media = $this->prophesize(Media::class);
+        $media->getCollection()->willReturn($collection);
+        $media->getFiles()->willReturn([$file->reveal()]);
+        $media->getId()->willReturn(1);
+
+        $this->mediaRepository->findMediaById(1)->willReturn($media);
+        $this->securityChecker->checkPermission(
+            new SecurityCondition('sulu.media.collections', null, Collection::class, 2),
+            'delete'
+        )->shouldBeCalled();
+
+        // TrashManager::store() succeeds
+        $trashManager->store(Argument::cetera())->shouldBeCalled();
+
+        $this->formatManager->purge(1, 'test', 'image/png')->shouldBeCalled();
+        $this->storage->remove(['segment' => '01', 'fileName' => 'test.jpg'])->shouldBeCalled();
+        $this->em->detach($fileVersion->reveal())->shouldBeCalled();
+        $this->em->detach($file->reveal())->shouldBeCalled();
+        $this->em->remove($fileVersionMeta->reveal())->shouldBeCalled();
+        $this->em->detach($formatOptions->reveal())->shouldBeCalled();
+        $this->em->remove($media->reveal())->shouldBeCalled();
+
+        // When trash storage succeeds, MediaRemovedEvent should be collected
+        $this->domainEventCollector->collect(
+            Argument::type(MediaRemovedEvent::class)
+        )->shouldBeCalled();
+
+        $this->em->flush()->shouldBeCalled();
+
+        $mediaManager->delete(1, true);
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('provideSpecialCharacterFileName')]

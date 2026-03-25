@@ -15,7 +15,7 @@ import {getDifference} from '../../utils/DifferenceCalculator';
 import blockIdGenerator from '../../services/blockIdGenerator';
 import blockPreviewTransformerRegistry from './registries/blockPreviewTransformerRegistry';
 import FieldRenderer from './FieldRenderer';
-import type {BlockError, FieldTypeProps, FormStoreInterface} from '../Form/types';
+import type {BlockError, ChangeContext, FieldTypeProps, FormStoreInterface} from '../Form/types';
 import type {BlockEntry} from './types';
 import type {Message} from '../../components/BlockCollection/types';
 
@@ -57,7 +57,12 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         const {types: oldTypes} = prevProps;
 
         if (!equals(toJS(prevProps.value), toJS(value))){
-            this.setValue(value);
+            // Only sync from props if no local changes were made since the last render.
+            // This prevents stale echoed values from overwriting local changes
+            // (e.g., default values applied by field components during mount).
+            if (!this.value || equals(toJS(this.value), toJS(prevProps.value))) {
+                this.setValue(value);
+            }
         }
 
         if (!types || !oldTypes) {
@@ -284,7 +289,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         this.value = value;
     };
 
-    handleBlockChange = (index: number, name: string, value: Object) => {
+    handleBlockChange = (index: number, name: string, value: Object, context?: ChangeContext) => {
         const {onChange} = this.props;
         const oldValues = this.value;
 
@@ -297,7 +302,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
         this.setValue(newValues);
 
-        onChange(newValues);
+        onChange(newValues, context);
     };
 
     handleBlocksChange = (value: Object) => {
