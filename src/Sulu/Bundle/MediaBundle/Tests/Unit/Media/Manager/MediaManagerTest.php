@@ -366,7 +366,7 @@ class MediaManagerTest extends TestCase
             $this->formatManager->reveal(),
             $this->tagManager->reveal(),
             $this->typeManager->reveal(),
-            $this->pathCleaner->reveal(),
+            $this->pathCleanup,
             $this->domainEventCollector->reveal(),
             $this->tokenStorage->reveal(),
             $this->securityChecker->reveal(),
@@ -375,7 +375,7 @@ class MediaManagerTest extends TestCase
             ],
             '/download/{id}/media/{slug}',
             $this->targetGroupRepository->reveal(),
-            null,
+            '/admin/download/{id}/media/{slug}',
             $trashManager->reveal()
         );
 
@@ -384,7 +384,7 @@ class MediaManagerTest extends TestCase
 
         $file = $this->prophesize(File::class);
         $fileVersion = $this->prophesize(FileVersion::class);
-        $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $file->getFileVersions()->willReturn(new ArrayCollection([$fileVersion->reveal()]));
         $file->getLatestFileVersion()->willReturn($fileVersion->reveal());
         $fileVersion->getId()->willReturn(1);
         $fileVersion->getName()->willReturn('test');
@@ -394,15 +394,15 @@ class MediaManagerTest extends TestCase
         $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
         $fileVersionMeta->getTitle()->willReturn('Test image');
         $fileVersionMeta->getLocale()->willReturn('en');
-        $fileVersion->getMeta()->willReturn([$fileVersionMeta->reveal()]);
+        $fileVersion->getMeta()->willReturn(new ArrayCollection([$fileVersionMeta->reveal()]));
         $fileVersion->getDefaultMeta()->willReturn($fileVersionMeta->reveal());
 
         $formatOptions = $this->prophesize(FormatOptions::class);
-        $fileVersion->getFormatOptions()->willReturn([$formatOptions->reveal()]);
+        $fileVersion->getFormatOptions()->willReturn(new ArrayCollection([$formatOptions->reveal()]));
 
         $media = $this->prophesize(Media::class);
         $media->getCollection()->willReturn($collection);
-        $media->getFiles()->willReturn([$file->reveal()]);
+        $media->getFiles()->willReturn(new ArrayCollection([$file->reveal()]));
         $media->getId()->willReturn(1);
 
         $this->mediaRepository->findMediaById(1)->willReturn($media);
@@ -447,7 +447,7 @@ class MediaManagerTest extends TestCase
             $this->formatManager->reveal(),
             $this->tagManager->reveal(),
             $this->typeManager->reveal(),
-            $this->pathCleaner->reveal(),
+            $this->pathCleanup,
             $this->domainEventCollector->reveal(),
             $this->tokenStorage->reveal(),
             $this->securityChecker->reveal(),
@@ -456,7 +456,7 @@ class MediaManagerTest extends TestCase
             ],
             '/download/{id}/media/{slug}',
             $this->targetGroupRepository->reveal(),
-            null,
+            '/admin/download/{id}/media/{slug}',
             $trashManager->reveal()
         );
 
@@ -465,7 +465,7 @@ class MediaManagerTest extends TestCase
 
         $file = $this->prophesize(File::class);
         $fileVersion = $this->prophesize(FileVersion::class);
-        $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $file->getFileVersions()->willReturn(new ArrayCollection([$fileVersion->reveal()]));
         $file->getLatestFileVersion()->willReturn($fileVersion->reveal());
         $fileVersion->getId()->willReturn(1);
         $fileVersion->getName()->willReturn('test');
@@ -475,15 +475,15 @@ class MediaManagerTest extends TestCase
         $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
         $fileVersionMeta->getTitle()->willReturn('Test image');
         $fileVersionMeta->getLocale()->willReturn('en');
-        $fileVersion->getMeta()->willReturn([$fileVersionMeta->reveal()]);
+        $fileVersion->getMeta()->willReturn(new ArrayCollection([$fileVersionMeta->reveal()]));
         $fileVersion->getDefaultMeta()->willReturn($fileVersionMeta->reveal());
 
         $formatOptions = $this->prophesize(FormatOptions::class);
-        $fileVersion->getFormatOptions()->willReturn([$formatOptions->reveal()]);
+        $fileVersion->getFormatOptions()->willReturn(new ArrayCollection([$formatOptions->reveal()]));
 
         $media = $this->prophesize(Media::class);
         $media->getCollection()->willReturn($collection);
-        $media->getFiles()->willReturn([$file->reveal()]);
+        $media->getFiles()->willReturn(new ArrayCollection([$file->reveal()]));
         $media->getId()->willReturn(1);
 
         $this->mediaRepository->findMediaById(1)->willReturn($media);
