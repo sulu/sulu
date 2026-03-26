@@ -602,7 +602,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
 
         $this->queryBuilder->andWhere(
-            '(' . self::$translationEntityNameAlias . '.desc LIKE :search OR ' . self::$entityNameAlias . '.name LIKE :search)'
+            '(LOWER(' . self::$translationEntityNameAlias . '.desc) LIKE LOWER(:search) OR LOWER(' . self::$entityNameAlias . '.name) LIKE LOWER(:search))'
         )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->setParameter('search', '%value%')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
 
@@ -628,7 +628,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->search('val*e');
 
         $this->queryBuilder->andWhere(
-            '(' . self::$translationEntityNameAlias . '.desc LIKE :search OR ' . self::$entityNameAlias . '.name LIKE :search)'
+            '(LOWER(' . self::$translationEntityNameAlias . '.desc) LIKE LOWER(:search) OR LOWER(' . self::$entityNameAlias . '.name) LIKE LOWER(:search))'
         )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->setParameter('search', '%val%e%')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
 

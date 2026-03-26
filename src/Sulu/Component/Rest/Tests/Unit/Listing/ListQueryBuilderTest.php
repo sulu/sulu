@@ -98,7 +98,7 @@ class ListQueryBuilderTest extends TestCase
 
         $dql = \str_replace(' ,', ',', \trim(\preg_replace('/\s+/', ' ', $builder->find())));
 
-        $this->assertEquals('SELECT u FROM Sulu\Bundle\CoreBundle\Entity\Example u WHERE (u.field LIKE :search)', $dql);
+        $this->assertEquals('SELECT u FROM Sulu\Bundle\CoreBundle\Entity\Example u WHERE (LOWER(u.field) LIKE LOWER(:search))', $dql);
     }
 
     public function testFindWithWhereAndSearch(): void
@@ -116,7 +116,7 @@ class ListQueryBuilderTest extends TestCase
         $dql = \str_replace(' ,', ',', \trim(\preg_replace('/\s+/', ' ', $builder->find())));
 
         $this->assertEquals(
-            'SELECT u FROM Sulu\Bundle\CoreBundle\Entity\Example u WHERE u.field1 = 1 AND u.field2 = 2 AND (u.field LIKE :search)',
+            'SELECT u FROM Sulu\Bundle\CoreBundle\Entity\Example u WHERE u.field1 = 1 AND u.field2 = 2 AND (LOWER(u.field) LIKE LOWER(:search))',
             $dql
         );
     }
@@ -137,7 +137,7 @@ class ListQueryBuilderTest extends TestCase
         $dql = \str_replace(' ,', ',', \trim(\preg_replace('/\s+/', ' ', $builder->find())));
 
         $this->assertEquals(
-            'SELECT u FROM Sulu\Bundle\CoreBundle\Entity\Example u WHERE u.field1 = 1 AND u.field2 = 2 AND (u.field1 LIKE :search OR u.field2 = :strictSearch OR u.field3 = :strictSearch)',
+            'SELECT u FROM Sulu\Bundle\CoreBundle\Entity\Example u WHERE u.field1 = 1 AND u.field2 = 2 AND (LOWER(u.field1) LIKE LOWER(:search) OR u.field2 = :strictSearch OR u.field3 = :strictSearch)',
             $dql
         );
     }

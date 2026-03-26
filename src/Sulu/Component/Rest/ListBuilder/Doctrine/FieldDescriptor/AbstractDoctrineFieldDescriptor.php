@@ -22,7 +22,7 @@ abstract class AbstractDoctrineFieldDescriptor extends FieldDescriptor implement
 
     public function getSearch()
     {
-        return \sprintf('%s LIKE :search', $this->getSelect());
+        return \sprintf('LOWER(%s) LIKE LOWER(:search)', $this->getSelect());
     }
 
     public function getWhere()
