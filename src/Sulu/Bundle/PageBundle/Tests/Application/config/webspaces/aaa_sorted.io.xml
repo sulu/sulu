@@ -4,16 +4,14 @@
           xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
 
     <name>ZZ Sorted</name>
-    <key>001_sorted_io</key>
+    <key>aaa_sorted_io</key>
 
     <security permission-check="false">
         <system>test_security_system</system>
     </security>
 
     <localizations>
-        <localization language="en" shadow="auto">
-            <localization language="en" country="us" shadow="auto"/>
-        </localization>
+        <localization language="en" default="true"/>
     </localizations>
 
     <theme>default</theme>
