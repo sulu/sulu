@@ -285,7 +285,6 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
     public function testThrowForMissingExcludedTemplate(): void
     {
         $this->expectException(InvalidTemplateException::class);
-        $this->expectException(InvalidTemplateException::class);
 
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
@@ -302,7 +301,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
             new Replacer(),
-            $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple',
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/sorting',
             ['default', 'overview']
         );
 
@@ -311,8 +310,9 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
         $webspaces = \array_values($webspaceCollection->getWebspaces());
 
-        $this->assertCount(2, $webspaces);
+        $this->assertCount(3, $webspaces);
         $this->assertEquals('Massive Art', $webspaces[0]->getName());
         $this->assertEquals('Sulu CMF', $webspaces[1]->getName());
+        $this->assertEquals('ZZ Sorted', $webspaces[2]->getName());
     }
 }
