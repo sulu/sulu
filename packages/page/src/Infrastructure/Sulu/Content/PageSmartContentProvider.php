@@ -137,6 +137,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
             ->enableDatasource(PageInterface::RESOURCE_KEY, PageInterface::RESOURCE_KEY, 'column_list')
             ->enableSorting(
                 [
+                    ['column' => '', 'title' => 'sulu_admin.default'],
                     ['column' => 'workflowPublished', 'title' => 'sulu_admin.published'],
                     ['column' => 'authored', 'title' => 'sulu_admin.authored'],
                     ['column' => 'created', 'title' => 'sulu_admin.created'],
@@ -214,6 +215,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
             $sortBys,
         );
         $this->addInternalFilters($queryBuilder, $filters, $alias);
+        $this->addInternalSortBys($queryBuilder, $sortBys, $alias);
         $this->enhanceQueryBuilderWithAccessControl($queryBuilder, $filters, $alias);
 
         // TODO refactor this part to not use distinct
@@ -359,6 +361,26 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
                 $websiteTagNames,
                 $filters['websiteTagOperator'],
             );
+        }
+    }
+
+    /**
+     * @param array<string, string> $sortBys
+     */
+    protected function addInternalSortBys(QueryBuilder $queryBuilder, array $sortBys, string $alias): void
+    {
+        if ([] === $sortBys) {
+            $queryBuilder->addOrderBy($alias . '.lft', 'ASC');
+
+            return;
+        }
+
+        foreach ($sortBys as $sortBy => $sortMethod) {
+            if ('' !== $sortBy) {
+                continue;
+            }
+
+            $queryBuilder->addOrderBy($alias . '.lft', $sortMethod);
         }
     }
 

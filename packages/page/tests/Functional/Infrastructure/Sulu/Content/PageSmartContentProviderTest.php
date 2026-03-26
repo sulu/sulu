@@ -814,6 +814,21 @@ class PageSmartContentProviderTest extends SuluTestCase
     public static function sortingProvider(): array
     {
         return [
+            'default_no_sort' => [
+                [],
+                'Latest in Tech',
+                'External Link Page',
+            ],
+            'default_asc' => [
+                ['' => 'ASC'],
+                'Latest in Tech',
+                'External Link Page',
+            ],
+            'default_desc' => [
+                ['' => 'DESC'],
+                'External Link Page',
+                'Latest in Tech',
+            ],
             'title_asc' => [
                 ['title' => 'asc'],
                 'Digital Lifestyle',
@@ -973,6 +988,36 @@ class PageSmartContentProviderTest extends SuluTestCase
         // Last should have oldest authored date among sulu-io pages (not parent page)
         $this->assertStringContainsString('Latest in Tech', $result[10]['title']);
         $this->assertSame(self::$pages['tech1']->getUuid(), $result[10]['id']);
+    }
+
+    public function testDefaultSortUsesTreeOrder(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), ...['locale' => 'en']], []);
+
+        $this->assertCount(11, $result);
+
+        // Pages should be in tree order (lft), which matches creation order for same-level siblings
+        $expectedOrder = [
+            'tech1',
+            'sports1',
+            'health1',
+            'business1',
+            'entertainment1',
+            'tech_health',
+            'business_tech',
+            'multi_category_multi_tag',
+            'link_target',
+            'link_internal',
+            'link_external',
+        ];
+
+        foreach ($expectedOrder as $index => $key) {
+            $this->assertSame(
+                self::$pages[$key]->getUuid(),
+                $result[$index]['id'],
+                \sprintf("Expected '%s' at position %d, got '%s'", $key, $index, $result[$index]['title']),
+            );
+        }
     }
 
     public function testFindFlatByTypesSingleTemplateFilter(): void

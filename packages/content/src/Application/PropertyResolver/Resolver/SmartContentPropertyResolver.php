@@ -117,7 +117,8 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
             'includeSubFolders' => $data['includeSubFolders'] ?? false,
             'excludeDuplicates' => 'true' === $parameters['exclude_duplicates'] || true === $parameters['exclude_duplicates'],
         ];
-        $sortBys = $data['sortBy'] ?? null ? [$data['sortBy'] => $data['sortMethod'] ?? 'ASC'] : null;
+        $sortBy = $data['sortBy'] ?? null;
+        $sortBys = null !== $sortBy ? [$sortBy => $data['sortMethod'] ?? 'ASC'] : [];
 
         foreach ($this->smartContentFiltersVisitors as $visitor) {
             $filters = $visitor->visit($data, $filters, $parameters);
