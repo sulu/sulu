@@ -1,19 +1,15 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import Router from '../../../services/Router';
-import ResourceStore from '../../../stores/ResourceStore';
-import Renderer from '../Renderer';
 import FormInspector from '../FormInspector';
-import ResourceFormStore from '../stores/ResourceFormStore';
+import Renderer from '../Renderer';
 import Field from '../Field';
 
 jest.mock('../../../services/Router/Router', () => jest.fn());
-jest.mock('../FormInspector', () => jest.fn(function() {
-    this.isFieldModified = jest.fn();
+jest.mock('../../../utils/Translator', () => ({
+    translate: jest.fn((key) => key),
 }));
-jest.mock('../stores/ResourceFormStore', () => jest.fn());
-jest.mock('../../../stores/ResourceStore', () => jest.fn());
 
 jest.mock('../registries/fieldRegistry', () => ({
     get: jest.fn((type) => {
@@ -31,6 +27,44 @@ jest.mock('../registries/fieldRegistry', () => ({
     getOptions: jest.fn().mockReturnValue({}),
 }));
 
+function createFormInspector() {
+    return new FormInspector(({isFieldModified: jest.fn()}: any));
+}
+
+function renderRenderer(props: Object = {}) {
+    return render(
+        <Renderer
+            data={{}}
+            dataPath=""
+            formInspector={createFormInspector()}
+            onChange={jest.fn()}
+            onFieldFinish={jest.fn()}
+            onSuccess={undefined}
+            router={undefined}
+            schema={{}}
+            schemaPath=""
+            value={{}}
+            {...props}
+        />
+    );
+}
+
+function renderRendererAndCollectFieldProps(props: Object = {}) {
+    const createElementSpy = jest.spyOn(React, 'createElement');
+    const view = renderRenderer(props);
+
+    const fieldProps = createElementSpy.mock.calls
+        .filter(([component]) => component === Field)
+        .map(([, componentProps]) => componentProps);
+
+    createElementSpy.mockRestore();
+
+    return {
+        ...view,
+        fieldProps,
+    };
+}
+
 test('Should call onFieldFinish callback when editing a field has finished', () => {
     const schema = {
         text: {
@@ -43,27 +77,18 @@ test('Should call onFieldFinish callback when editing a field has finished', () 
         },
     };
     const fieldFinishSpy = jest.fn();
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = createFormInspector();
 
-    const renderer = mount(
-        <Renderer
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            onChange={jest.fn()}
-            onFieldFinish={fieldFinishSpy}
-            onSuccess={undefined}
-            router={undefined}
-            schema={schema}
-            schemaPath=""
-            value={{}}
-        />
-    );
+    const {fieldProps} = renderRendererAndCollectFieldProps({
+        formInspector,
+        onFieldFinish: fieldFinishSpy,
+        schema,
+    });
 
-    renderer.find(Field).at(0).prop('onFinish')('/text', '/text');
+    fieldProps[0].onFinish('/text', '/text');
     expect(fieldFinishSpy).toHaveBeenLastCalledWith('/text', '/text');
 
-    renderer.find(Field).at(1).prop('onFinish')('/datetime', '/datetime');
+    fieldProps[1].onFinish('/datetime', '/datetime');
     expect(fieldFinishSpy).toHaveBeenLastCalledWith('/datetime', '/datetime');
 });
 
@@ -79,26 +104,18 @@ test('Should render field types based on schema', () => {
         },
     };
 
-    const changeSpy = jest.fn();
+    const formInspector = createFormInspector();
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    const {asFragment} = renderRenderer({
+        data: {},
+        formInspector,
+        onChange: jest.fn(),
+        onFieldFinish: jest.fn(),
+        schema,
+        value: {},
+    });
 
-    const renderer = render(
-        <Renderer
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFieldFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={schema}
-            schemaPath=""
-            value={{}}
-        />
-    );
-
-    expect(renderer).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should render nested field types with based on schema', () => {
@@ -120,26 +137,18 @@ test('Should render nested field types with based on schema', () => {
         },
     };
 
-    const changeSpy = jest.fn();
+    const formInspector = createFormInspector();
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    const {asFragment} = renderRenderer({
+        data,
+        formInspector,
+        onChange: jest.fn(),
+        onFieldFinish: jest.fn(),
+        schema,
+        value: data,
+    });
 
-    const renderer = render(
-        <Renderer
-            data={data}
-            dataPath=""
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFieldFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={schema}
-            schemaPath=""
-            value={data}
-        />
-    );
-
-    expect(renderer).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should not render fields when the schema contains a visibleCondition evaluating false', () => {
@@ -180,27 +189,18 @@ test('Should not render fields when the schema contains a visibleCondition evalu
     };
 
     const data = {test: 'Test'};
+    const formInspector = createFormInspector();
 
-    const changeSpy = jest.fn();
+    const {asFragment} = renderRenderer({
+        data,
+        formInspector,
+        onChange: jest.fn(),
+        onFieldFinish: jest.fn(),
+        schema,
+        value: data,
+    });
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-
-    const renderer = render(
-        <Renderer
-            data={data}
-            dataPath=""
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFieldFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={schema}
-            schemaPath=""
-            value={data}
-        />
-    );
-
-    expect(renderer).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should pass correct dataPath and schemaPath to fields', () => {
@@ -221,29 +221,25 @@ test('Should pass correct dataPath and schemaPath to fields', () => {
         },
     };
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = createFormInspector();
 
-    const renderer = shallow(
-        <Renderer
-            data={{}}
-            dataPath="/block/0"
-            formInspector={formInspector}
-            onChange={jest.fn()}
-            onFieldFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={schema}
-            schemaPath="/test"
-            value={{}}
-        />
-    );
+    const {fieldProps} = renderRendererAndCollectFieldProps({
+        data: {},
+        dataPath: '/block/0',
+        formInspector,
+        onChange: jest.fn(),
+        onFieldFinish: jest.fn(),
+        schema,
+        schemaPath: '/test',
+        value: {},
+    });
 
-    expect(renderer.find('Field').at(0).prop('schemaPath')).toEqual('/test/highlight/items/title');
-    expect(renderer.find('Field').at(0).prop('dataPath')).toEqual('/block/0/title');
-    expect(renderer.find('Field').at(1).prop('schemaPath')).toEqual('/test/highlight/items/url');
-    expect(renderer.find('Field').at(1).prop('dataPath')).toEqual('/block/0/url');
-    expect(renderer.find('Field').at(2).prop('schemaPath')).toEqual('/test/article');
-    expect(renderer.find('Field').at(2).prop('dataPath')).toEqual('/block/0/article');
+    expect(fieldProps[0].schemaPath).toEqual('/test/highlight/items/title');
+    expect(fieldProps[0].dataPath).toEqual('/block/0/title');
+    expect(fieldProps[1].schemaPath).toEqual('/test/highlight/items/url');
+    expect(fieldProps[1].dataPath).toEqual('/block/0/url');
+    expect(fieldProps[2].schemaPath).toEqual('/test/article');
+    expect(fieldProps[2].dataPath).toEqual('/block/0/article');
 });
 
 test('Should pass correct data and value to fields', () => {
@@ -275,29 +271,25 @@ test('Should pass correct data and value to fields', () => {
         block: value,
     };
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = createFormInspector();
 
-    const renderer = shallow(
-        <Renderer
-            data={data}
-            dataPath="/block/0"
-            formInspector={formInspector}
-            onChange={jest.fn()}
-            onFieldFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={schema}
-            schemaPath="/test"
-            value={value}
-        />
-    );
+    const {fieldProps} = renderRendererAndCollectFieldProps({
+        data,
+        dataPath: '/block/0',
+        formInspector,
+        onChange: jest.fn(),
+        onFieldFinish: jest.fn(),
+        schema,
+        schemaPath: '/test',
+        value,
+    });
 
-    expect(renderer.find('Field').at(0).prop('data')).toEqual(data);
-    expect(renderer.find('Field').at(0).prop('value')).toEqual('Some title');
-    expect(renderer.find('Field').at(1).prop('data')).toEqual(data);
-    expect(renderer.find('Field').at(1).prop('value')).toEqual('some-url');
-    expect(renderer.find('Field').at(2).prop('data')).toEqual(data);
-    expect(renderer.find('Field').at(2).prop('value')).toEqual('Some article');
+    expect(fieldProps[0].data).toEqual(data);
+    expect(fieldProps[0].value).toEqual('Some title');
+    expect(fieldProps[1].data).toEqual(data);
+    expect(fieldProps[1].value).toEqual('some-url');
+    expect(fieldProps[2].data).toEqual(data);
+    expect(fieldProps[2].value).toEqual('Some article');
 });
 
 test('Should pass name, schema and formInspector to fields', () => {
@@ -316,38 +308,33 @@ test('Should pass name, schema and formInspector to fields', () => {
     const fieldFinishSpy = jest.fn();
     const successSpy = jest.fn();
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = createFormInspector();
 
-    const renderer = shallow(
-        <Renderer
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFieldFinish={fieldFinishSpy}
-            onSuccess={successSpy}
-            router={undefined}
-            schema={schema}
-            schemaPath=""
-            value={{}}
-        />
-    );
+    const {fieldProps} = renderRendererAndCollectFieldProps({
+        data: {},
+        dataPath: '',
+        formInspector,
+        onChange: changeSpy,
+        onFieldFinish: fieldFinishSpy,
+        onSuccess: successSpy,
+        schema,
+        schemaPath: '',
+        value: {},
+    });
 
-    const fields = renderer.find('Field');
-
-    expect(fields.at(0).prop('formInspector')).toBe(formInspector);
-    expect(fields.at(0).prop('name')).toBe('text');
-    expect(fields.at(0).prop('onChange')).toBe(changeSpy);
-    expect(fields.at(0).prop('onFinish')).toBeInstanceOf(Function);
-    expect(fields.at(0).prop('error')).toBe(undefined);
-    expect(fields.at(0).prop('router')).toBe(undefined);
-    expect(fields.at(1).prop('formInspector')).toBe(formInspector);
-    expect(fields.at(1).prop('name')).toBe('datetime');
-    expect(fields.at(1).prop('onChange')).toBe(changeSpy);
-    expect(fields.at(1).prop('onFinish')).toBeInstanceOf(Function);
-    expect(fields.at(1).prop('onSuccess')).toBe(successSpy);
-    expect(fields.at(1).prop('error')).toBe(undefined);
-    expect(fields.at(1).prop('router')).toBe(undefined);
+    expect(fieldProps[0].formInspector).toBe(formInspector);
+    expect(fieldProps[0].name).toBe('text');
+    expect(fieldProps[0].onChange).toBe(changeSpy);
+    expect(fieldProps[0].onFinish).toBeInstanceOf(Function);
+    expect(fieldProps[0].error).toBe(undefined);
+    expect(fieldProps[0].router).toBe(undefined);
+    expect(fieldProps[1].formInspector).toBe(formInspector);
+    expect(fieldProps[1].name).toBe('datetime');
+    expect(fieldProps[1].onChange).toBe(changeSpy);
+    expect(fieldProps[1].onFinish).toBeInstanceOf(Function);
+    expect(fieldProps[1].onSuccess).toBe(successSpy);
+    expect(fieldProps[1].error).toBe(undefined);
+    expect(fieldProps[1].router).toBe(undefined);
 });
 
 test('Should pass router to fields if given', () => {
@@ -366,28 +353,22 @@ test('Should pass router to fields if given', () => {
     const fieldFinishSpy = jest.fn();
 
     const router = new Router();
+    const formInspector = createFormInspector();
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    const {fieldProps} = renderRendererAndCollectFieldProps({
+        data: {},
+        dataPath: '',
+        formInspector,
+        onChange: changeSpy,
+        onFieldFinish: fieldFinishSpy,
+        router,
+        schema,
+        schemaPath: '',
+        value: {},
+    });
 
-    const renderer = shallow(
-        <Renderer
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFieldFinish={fieldFinishSpy}
-            onSuccess={undefined}
-            router={router}
-            schema={schema}
-            schemaPath=""
-            value={{}}
-        />
-    );
-
-    const fields = renderer.find('Field');
-
-    expect(fields.at(0).prop('router')).toBe(router);
-    expect(fields.at(1).prop('router')).toBe(router);
+    expect(fieldProps[0].router).toBe(router);
+    expect(fieldProps[1].router).toBe(router);
 });
 
 test('Should pass errors to fields that have already been modified at least once', () => {
@@ -417,31 +398,24 @@ test('Should pass errors to fields that have already been modified at least once
 
     const changeSpy = jest.fn();
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-    formInspector.isFieldModified.mockImplementation((dataPath) => {
-        return dataPath === '/text' ? true : false;
+    const formInspector = createFormInspector();
+    const formStore: any = (formInspector: any).formStore;
+    formStore.isFieldModified.mockImplementation((dataPath) => dataPath === '/text');
+
+    const {fieldProps} = renderRendererAndCollectFieldProps({
+        data: {},
+        dataPath: '',
+        errors,
+        formInspector,
+        onChange: changeSpy,
+        onFieldFinish: jest.fn(),
+        schema,
+        schemaPath: '',
+        value: {},
     });
 
-    const renderer = shallow(
-        <Renderer
-            data={{}}
-            dataPath=""
-            errors={errors}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFieldFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={schema}
-            schemaPath=""
-            value={{}}
-        />
-    );
-
-    const fields = renderer.find('Field');
-
-    expect(fields.at(0).prop('error')).toBe(textError);
-    expect(fields.at(1).prop('error')).toBe(undefined);
+    expect(fieldProps[0].error).toBe(textError);
+    expect(fieldProps[1].error).toBe(undefined);
 });
 
 test('Should pass all errors to fields if showAllErrors is set to true', () => {
@@ -470,32 +444,25 @@ test('Should pass all errors to fields if showAllErrors is set to true', () => {
     };
 
     const changeSpy = jest.fn();
+    const formInspector = createFormInspector();
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    const {fieldProps} = renderRendererAndCollectFieldProps({
+        data: {},
+        dataPath: '',
+        errors,
+        formInspector,
+        onChange: changeSpy,
+        onFieldFinish: jest.fn(),
+        schema,
+        schemaPath: '',
+        showAllErrors: true,
+        value: {},
+    });
 
-    const renderer = shallow(
-        <Renderer
-            data={{}}
-            dataPath=""
-            errors={errors}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFieldFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={schema}
-            schemaPath=""
-            showAllErrors={true}
-            value={{}}
-        />
-    );
+    fieldProps[0].onFinish('text');
 
-    renderer.find(Field).at(0).prop('onFinish')('text');
-
-    const fields = renderer.find('Field');
-
-    expect(fields.at(0).prop('error')).toBe(textError);
-    expect(fields.at(1).prop('error')).toBe(datetimeError);
+    expect(fieldProps[0].error).toBe(textError);
+    expect(fieldProps[1].error).toBe(datetimeError);
 });
 
 test('Should render nested sections', () => {
@@ -528,22 +495,20 @@ test('Should render nested sections', () => {
         },
     };
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = createFormInspector();
 
-    expect(render(
-        <Renderer
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFieldFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={schema}
-            schemaPath=""
-            value={{}}
-        />
-    )).toMatchSnapshot();
+    const {asFragment} = renderRenderer({
+        data: {},
+        dataPath: '',
+        formInspector,
+        onChange: changeSpy,
+        onFieldFinish: jest.fn(),
+        schema,
+        schemaPath: '',
+        value: {},
+    });
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should render sections with colSpan', () => {
@@ -574,22 +539,20 @@ test('Should render sections with colSpan', () => {
         },
     };
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = createFormInspector();
 
-    expect(render(
-        <Renderer
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFieldFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={schema}
-            schemaPath=""
-            value={{}}
-        />
-    )).toMatchSnapshot();
+    const {asFragment} = renderRenderer({
+        data: {},
+        dataPath: '',
+        formInspector,
+        onChange: changeSpy,
+        onFieldFinish: jest.fn(),
+        schema,
+        schemaPath: '',
+        value: {},
+    });
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should render sections without label', () => {
@@ -619,20 +582,18 @@ test('Should render sections without label', () => {
         },
     };
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = createFormInspector();
 
-    expect(render(
-        <Renderer
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFieldFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={schema}
-            schemaPath=""
-            value={{}}
-        />
-    )).toMatchSnapshot();
+    const {asFragment} = renderRenderer({
+        data: {},
+        dataPath: '',
+        formInspector,
+        onChange: changeSpy,
+        onFieldFinish: jest.fn(),
+        schema,
+        schemaPath: '',
+        value: {},
+    });
+
+    expect(asFragment()).toMatchSnapshot();
 });

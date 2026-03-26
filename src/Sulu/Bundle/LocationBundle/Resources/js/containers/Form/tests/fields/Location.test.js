@@ -1,16 +1,23 @@
 // @flow
+import {render, screen} from '@testing-library/react';
 import React from 'react';
-import {shallow} from 'enzyme';
 import fieldTypeDefaultProps from 'sulu-admin-bundle/utils/TestHelper/fieldTypeDefaultProps';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
-import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/ResourceFormStore';
-import {FormInspector} from 'sulu-admin-bundle/containers/Form';
 import {Location} from '../../../../containers/Form';
 import LocationComponent from '../../../../containers/Location/Location';
 
-jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn());
-jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn());
-jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn());
+jest.mock('../../../../containers/Location/Location', () => jest.fn(({disabled, value}) => (
+    <div data-testid="location-component">
+        {disabled ? 'disabled' : 'enabled'}:{value ? 'with-value' : 'without-value'}
+    </div>
+)));
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+function createFormInspector(locale: any = undefined) {
+    return ({locale}: any);
+}
 
 test('Pass props correctly to Location component', () => {
     const locationData = {
@@ -25,18 +32,20 @@ test('Pass props correctly to Location component', () => {
         zoom: 5,
     };
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    const location = shallow(
+    render(
         <Location
             {...fieldTypeDefaultProps}
             disabled={true}
-            formInspector={formInspector}
+            formInspector={createFormInspector()}
             value={locationData}
         />
     );
 
-    expect(location.find(LocationComponent).props().disabled).toBe(true);
-    expect(location.find(LocationComponent).props().value).toBe(locationData);
+    expect(screen.getByTestId('location-component')).toHaveTextContent('disabled:with-value');
+    expect(LocationComponent).toHaveBeenCalledTimes(1);
+    const [locationComponentProps] = (LocationComponent: any).mock.calls[0];
+    expect(locationComponentProps.disabled).toBe(true);
+    expect(locationComponentProps.value).toBe(locationData);
 });
 
 test('Call onChange and onFinish when onChange callback of Location component is fired', () => {
@@ -51,22 +60,22 @@ test('Call onChange and onFinish when onChange callback of Location component is
         town: 'town-123',
         zoom: 5,
     };
-
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    const location = shallow(
+    render(
         <Location
             {...fieldTypeDefaultProps}
             disabled={true}
-            formInspector={formInspector}
+            formInspector={createFormInspector()}
             onChange={changeSpy}
             onFinish={finishSpy}
         />
     );
 
-    location.find(LocationComponent).props().onChange(newLocation);
+    const [locationComponentProps] = (LocationComponent: any).mock.calls[0];
+    locationComponentProps.onChange(newLocation);
+
     expect(changeSpy).toBeCalledWith(newLocation);
     expect(finishSpy).toBeCalledWith();
 });

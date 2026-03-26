@@ -1,59 +1,39 @@
 // @flow
+import {render} from '@testing-library/react';
 import React from 'react';
-import {shallow} from 'enzyme';
 import fieldTypeDefaultProps from 'sulu-admin-bundle/utils/TestHelper/fieldTypeDefaultProps';
-import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
 import Permissions from '../../fields/Permissions';
+import PermissionsContainer from '../../../Permissions';
 import type {ContextPermission} from '../../../Permissions';
 
-jest.mock('sulu-admin-bundle/containers', () => ({
-    FormInspector: jest.fn(function(formStore) {
-        this.getValueByPath = jest.fn();
-        this.locale = formStore.locale;
-    }),
-    ResourceFormStore: jest.fn(function(resourceStore) {
-        this.locale = resourceStore.locale;
-    }),
-}));
+jest.mock('../../../Permissions', () => jest.fn(() => null));
 
-jest.mock('sulu-admin-bundle/stores', () => ({
-    ResourceStore: jest.fn(function(resourceKey, id, observableOptions = {}) {
-        this.locale = observableOptions.locale;
-    }),
-}));
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+function createFormInspector(system: ?string) {
+    return ({
+        getValueByPath: jest.fn((path) => (path === '/system' ? system : undefined)),
+    }: any);
+}
 
 test('Pass props correctly to Permissions', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    formInspector.getValueByPath.mockImplementation((path) => {
-        switch (path) {
-            case '/system':
-                return 'Sulu';
-        }
-    });
-
-    const permissions = shallow(
+    render(
         <Permissions
             {...fieldTypeDefaultProps}
             disabled={true}
-            formInspector={formInspector}
+            formInspector={createFormInspector('Sulu')}
         />
     );
 
-    expect(permissions.prop('system')).toEqual('Sulu');
-    expect(permissions.prop('value')).toEqual([]);
-    expect(permissions.prop('disabled')).toEqual(true);
+    const [permissionsProps] = (PermissionsContainer: any).mock.calls[0];
+    expect(permissionsProps.system).toEqual('Sulu');
+    expect(permissionsProps.value).toEqual([]);
+    expect(permissionsProps.disabled).toEqual(true);
 });
 
 test('Pass props with value correctly to Permissions', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    formInspector.getValueByPath.mockImplementation((path) => {
-        switch (path) {
-            case '/system':
-                return 'Sulu';
-        }
-    });
-
     const value: Array<ContextPermission> = [
         {
             id: 1,
@@ -77,14 +57,15 @@ test('Pass props with value correctly to Permissions', () => {
         },
     ];
 
-    const permissions = shallow(
+    render(
         <Permissions
             {...fieldTypeDefaultProps}
-            formInspector={formInspector}
+            formInspector={createFormInspector('Sulu')}
             value={value}
         />
     );
 
-    expect(permissions.prop('system')).toEqual('Sulu');
-    expect(permissions.prop('value')).toEqual(value);
+    const [permissionsProps] = (PermissionsContainer: any).mock.calls[0];
+    expect(permissionsProps.system).toEqual('Sulu');
+    expect(permissionsProps.value).toEqual(value);
 });

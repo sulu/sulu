@@ -1,18 +1,78 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import Select from '../../fields/Select';
+import MultiSelectComponent from '../../../../components/MultiSelect';
+
+jest.mock('../../../../components/MultiSelect', () => {
+    const React = require('react');
+    const MultiSelect: any = jest.fn(function MultiSelect(props) {
+        return <div>{props.children}</div>;
+    });
+
+    MultiSelect.Option = jest.fn(() => null);
+
+    return MultiSelect;
+});
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
 
+function createFormInspector() {
+    return new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+}
+
+function renderSelect(props: Object = {}) {
+    return render(
+        <Select
+            {...fieldTypeDefaultProps}
+            formInspector={createFormInspector()}
+            schemaOptions={{
+                values: {
+                    name: 'values',
+                    value: [
+                        {
+                            name: 'mr',
+                            title: 'Mister',
+                        },
+                        {
+                            name: 'ms',
+                            title: 'Miss',
+                        },
+                    ],
+                },
+            }}
+            {...props}
+        />
+    );
+}
+
+function getLatestMultiSelectProps() {
+    const calls = ((MultiSelectComponent: any).mock.calls: any);
+    return calls[calls.length - 1][0];
+}
+
+function getOptionProps(index: number) {
+    const calls = (((MultiSelectComponent: any).Option: any).mock.calls: any);
+    return calls[index][0];
+}
+
+function expectRenderToThrow(renderFn: () => void, message: RegExp) {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    expect(renderFn).toThrow(message);
+    consoleErrorSpy.mockRestore();
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
 test('Pass props correctly to Select', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = {
         values: {
             name: 'values',
@@ -28,30 +88,26 @@ test('Pass props correctly to Select', () => {
             ],
         },
     };
-    const select = shallow(
-        <Select
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-            value={['test']}
-        />
-    );
 
-    expect(select.prop('values')).toEqual(['test']);
-    expect(select.prop('disabled')).toBe(true);
-    expect(select.find('Option').at(0).props()).toEqual(expect.objectContaining({
+    renderSelect({
+        disabled: true,
+        schemaOptions,
+        value: ['test'],
+    });
+
+    expect(getLatestMultiSelectProps().values).toEqual(['test']);
+    expect(getLatestMultiSelectProps().disabled).toBe(true);
+    expect(getOptionProps(0)).toEqual(expect.objectContaining({
         value: 'mr',
         children: 'Mister',
     }));
-    expect(select.find('Option').at(1).props()).toEqual(expect.objectContaining({
+    expect(getOptionProps(1)).toEqual(expect.objectContaining({
         value: 'ms',
         children: 'Miss',
     }));
 });
 
 test('Should throw an exception if defaultValue is of wrong type', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = {
         default_values: {
             name: 'default_values',
@@ -72,17 +128,15 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
         },
     };
 
-    expect(() => shallow(
-        <Select
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={(schemaOptions: any)}
-        />
-    )).toThrow(/"default_values"/);
+    expectRenderToThrow(
+        () => renderSelect({
+            schemaOptions: (schemaOptions: any),
+        }),
+        /"default_values"/
+    );
 });
 
 test('Should throw an exception if value is of wrong type', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = {
         values: {
             name: 'values',
@@ -99,122 +153,57 @@ test('Should throw an exception if value is of wrong type', () => {
         },
     };
 
-    expect(() => shallow(
-        <Select
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={(schemaOptions: any)}
-        />
-    )).toThrow(/"values"/);
+    expectRenderToThrow(
+        () => renderSelect({
+            schemaOptions: (schemaOptions: any),
+        }),
+        /"values"/
+    );
 });
 
 test('Should call onChange with undefined if value is changed to an empty array', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-    const schemaOptions = {
-        values: {
-            name: 'values',
-            value: [
-                {
-                    name: 'mr',
-                    title: 'Mister',
-                },
-                {
-                    name: 'ms',
-                    title: 'Miss',
-                },
-            ],
-        },
-    };
 
-    const select = shallow(
-        <Select
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
+    renderSelect({
+        onChange: changeSpy,
+        onFinish: finishSpy,
+    });
 
-    select.simulate('change', []);
+    getLatestMultiSelectProps().onChange([]);
 
     expect(changeSpy).toBeCalledWith(undefined);
     expect(finishSpy).toBeCalledWith();
 });
 
 test('Should call onChange with allowed values only if value contains old values', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-    const schemaOptions = {
-        values: {
-            name: 'values',
-            value: [
-                {
-                    name: 'mr',
-                    title: 'Mister',
-                },
-                {
-                    name: 'ms',
-                    title: 'Miss',
-                },
-            ],
-        },
-    };
 
-    const select = shallow(
-        <Select
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
+    renderSelect({
+        onChange: changeSpy,
+        onFinish: finishSpy,
+    });
 
-    select.simulate('change', ['mr', 'removed-value']);
+    getLatestMultiSelectProps().onChange(['mr', 'removed-value']);
 
     expect(changeSpy).toBeCalledWith(['mr']);
     expect(finishSpy).toBeCalledWith();
 });
 
 test('Should call onFinish callback on every onChange', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const finishSpy = jest.fn();
-    const schemaOptions = {
-        values: {
-            name: 'values',
-            value: [
-                {
-                    name: 'mr',
-                    title: 'Mister',
-                },
-                {
-                    name: 'ms',
-                    title: 'Miss',
-                },
-            ],
-        },
-    };
 
-    const select = shallow(
-        <Select
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onFinish={finishSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
+    renderSelect({
+        onFinish: finishSpy,
+    });
 
-    select.simulate('change', []);
+    getLatestMultiSelectProps().onChange([]);
 
     expect(finishSpy).toBeCalledWith();
 });
 
 test('Set default value of null should not call onChange', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const schemaOptions = {
         default_values: {
@@ -234,20 +223,16 @@ test('Set default value of null should not call onChange', () => {
             ],
         },
     };
-    shallow(
-        <Select
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            schemaOptions={(schemaOptions: any)}
-        />
-    );
+
+    renderSelect({
+        onChange: changeSpy,
+        schemaOptions: (schemaOptions: any),
+    });
 
     expect(changeSpy).not.toBeCalled();
 });
 
 test('Set default value if no value is passed', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const schemaOptions = {
         default_values: {
@@ -268,20 +253,16 @@ test('Set default value if no value is passed', () => {
             ],
         },
     };
-    shallow(
-        <Select
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
+
+    renderSelect({
+        onChange: changeSpy,
+        schemaOptions,
+    });
 
     expect(changeSpy).toBeCalledWith(['mr'], {'isDefaultValue': true});
 });
 
 test('Set default value to a number of 0 should work', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const schemaOptions = {
         default_values: {
@@ -302,35 +283,29 @@ test('Set default value to a number of 0 should work', () => {
             ],
         },
     };
-    shallow(
-        <Select
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
+
+    renderSelect({
+        onChange: changeSpy,
+        schemaOptions,
+    });
 
     expect(changeSpy).toBeCalledWith([0], {'isDefaultValue': true});
 });
 
 test('Throw error if no value option is passed', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    expect(() => shallow(
-        <Select
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-        />)
-    ).toThrow(/"values"/);
+    expectRenderToThrow(
+        () => renderSelect({
+            schemaOptions: {},
+        }),
+        /"values"/
+    );
 });
 
 test('Throw error if value option with wrong is passed', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    expect(() => shallow(
-        <Select
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={{values: {name: 'values', value: true}}}
-        />)
-    ).toThrow(/"values"/);
+    expectRenderToThrow(
+        () => renderSelect({
+            schemaOptions: {values: {name: 'values', value: true}},
+        }),
+        /"values"/
+    );
 });

@@ -125,7 +125,8 @@ exports[`Render column with ascending sort icon 1`] = `
       class="loader"
     />
     <span>
-      Page:
+      Page
+      :
     </span>
     <span
       class="inputContainer"
@@ -143,7 +144,9 @@ exports[`Render column with ascending sort icon 1`] = `
     <span
       class="display"
     >
-      of 3
+      of
+       
+      3
     </span>
     <div
       class="buttonGroup"
@@ -297,7 +300,8 @@ exports[`Render column with descending sort icon 1`] = `
       class="loader"
     />
     <span>
-      Page:
+      Page
+      :
     </span>
     <span
       class="inputContainer"
@@ -315,7 +319,9 @@ exports[`Render column with descending sort icon 1`] = `
     <span
       class="display"
     >
-      of 3
+      of
+       
+      3
     </span>
     <div
       class="buttonGroup"
@@ -483,7 +489,8 @@ exports[`Render data with all different visibility types schema 1`] = `
       class="loader"
     />
     <span>
-      Page:
+      Page
+      :
     </span>
     <span
       class="inputContainer"
@@ -494,14 +501,16 @@ exports[`Render data with all different visibility types schema 1`] = `
         <input
           inputmode="numeric"
           type="text"
-          value="1"
+          value="2"
         />
       </div>
     </span>
     <span
       class="display"
     >
-      of 5
+      of
+       
+      5
     </span>
     <div
       class="buttonGroup"
@@ -771,7 +780,8 @@ exports[`Render data with pencil button and given itemActions when onItemEdit ca
       class="loader"
     />
     <span>
-      Page:
+      Page
+      :
     </span>
     <span
       class="inputContainer"
@@ -789,7 +799,9 @@ exports[`Render data with pencil button and given itemActions when onItemEdit ca
     <span
       class="display"
     >
-      of 3
+      of
+       
+      3
     </span>
     <div
       class="buttonGroup"
@@ -976,7 +988,8 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
       class="loader"
     />
     <span>
-      Page:
+      Page
+      :
     </span>
     <span
       class="inputContainer"
@@ -994,7 +1007,9 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
     <span
       class="display"
     >
-      of 3
+      of
+       
+      3
     </span>
     <div
       class="buttonGroup"
@@ -1284,7 +1299,8 @@ exports[`Render data with schema 1`] = `
       class="loader"
     />
     <span>
-      Page:
+      Page
+      :
     </span>
     <span
       class="inputContainer"
@@ -1295,14 +1311,16 @@ exports[`Render data with schema 1`] = `
         <input
           inputmode="numeric"
           type="text"
-          value="1"
+          value="2"
         />
       </div>
     </span>
     <span
       class="display"
     >
-      of 5
+      of
+       
+      5
     </span>
     <div
       class="buttonGroup"
@@ -1355,6 +1373,7 @@ exports[`Render data with schema and selections 1`] = `
                 >
                   <input
                     type="checkbox"
+                    value=""
                   />
                   <span />
                 </span>
@@ -1561,7 +1580,8 @@ exports[`Render data with schema and selections 1`] = `
       class="loader"
     />
     <span>
-      Page:
+      Page
+      :
     </span>
     <span
       class="inputContainer"
@@ -1579,7 +1599,9 @@ exports[`Render data with schema and selections 1`] = `
     <span
       class="display"
     >
-      of 3
+      of
+       
+      3
     </span>
     <div
       class="buttonGroup"
@@ -1724,7 +1746,8 @@ exports[`Render data with schema in different order 1`] = `
       class="loader"
     />
     <span>
-      Page:
+      Page
+      :
     </span>
     <span
       class="inputContainer"
@@ -1735,14 +1758,16 @@ exports[`Render data with schema in different order 1`] = `
         <input
           inputmode="numeric"
           type="text"
-          value="1"
+          value="2"
         />
       </div>
     </span>
     <span
       class="display"
     >
-      of 3
+      of
+       
+      3
     </span>
     <div
       class="buttonGroup"
@@ -1846,7 +1871,8 @@ exports[`Render data with schema not containing all fields 1`] = `
       class="loader"
     />
     <span>
-      Page:
+      Page
+      :
     </span>
     <span
       class="inputContainer"
@@ -1864,7 +1890,9 @@ exports[`Render data with schema not containing all fields 1`] = `
     <span
       class="display"
     >
-      of 3
+      of
+       
+      3
     </span>
     <div
       class="buttonGroup"
@@ -2110,7 +2138,8 @@ exports[`Render data with shrunken cell 1`] = `
       class="loader"
     />
     <span>
-      Page:
+      Page
+      :
     </span>
     <span
       class="inputContainer"
@@ -2121,14 +2150,16 @@ exports[`Render data with shrunken cell 1`] = `
         <input
           inputmode="numeric"
           type="text"
-          value="1"
+          value="2"
         />
       </div>
     </span>
     <span
       class="display"
     >
-      of 5
+      of
+       
+      5
     </span>
     <div
       class="buttonGroup"
@@ -2243,7 +2274,8 @@ exports[`Render data with skin 1`] = `
       class="loader"
     />
     <span>
-      Page:
+      Page
+      :
     </span>
     <span
       class="inputContainer"
@@ -2254,14 +2286,16 @@ exports[`Render data with skin 1`] = `
         <input
           inputmode="numeric"
           type="text"
-          value="1"
+          value="2"
         />
       </div>
     </span>
     <span
       class="display"
     >
-      of 5
+      of
+       
+      5
     </span>
     <div
       class="buttonGroup"
@@ -2361,7 +2395,8 @@ exports[`Render data without header 1`] = `
       class="loader"
     />
     <span>
-      Page:
+      Page
+      :
     </span>
     <span
       class="inputContainer"
@@ -2372,14 +2407,16 @@ exports[`Render data without header 1`] = `
         <input
           inputmode="numeric"
           type="text"
-          value="1"
+          value="2"
         />
       </div>
     </span>
     <span
       class="display"
     >
-      of 5
+      of
+       
+      5
     </span>
     <div
       class="buttonGroup"

@@ -1,14 +1,89 @@
 // @flow
+/* eslint-disable react/jsx-no-bind */
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
 import ResourceCheckboxGroup from '../ResourceCheckboxGroup';
+import CheckboxComponent, {CheckboxGroup as CheckboxGroupComponent} from '../../../components/Checkbox';
 import ResourceListStore from '../../../stores/ResourceListStore';
 
 jest.mock('../../../stores/ResourceListStore', () => jest.fn());
 
+jest.mock('../../../components/Loader', () => jest.fn(function Loader() {
+    return <div data-testid="loader" />;
+}));
+
+jest.mock('../../../components/Checkbox', () => {
+    const React = require('react');
+
+    const Checkbox: any = jest.fn(function Checkbox(props) {
+        function handleInputChange(event) {
+            if (props.onChange) {
+                props.onChange(event.currentTarget.checked, props.value);
+            }
+        }
+
+        return (
+            <label>
+                <input
+                    aria-label={String(props.children)}
+                    checked={!!props.checked}
+                    disabled={props.disabled}
+                    onChange={handleInputChange}
+                    type="checkbox"
+                />
+                {props.children}
+            </label>
+        );
+    });
+
+    const CheckboxGroup: any = jest.fn(function CheckboxGroup(props) {
+        function handleGroupChange(checked, changedValue) {
+            if (checked && changedValue) {
+                props.onChange([...props.values, changedValue]);
+                return;
+            }
+
+            props.onChange(props.values.filter((value) => value !== changedValue));
+        }
+
+        return (
+            <div>
+                {React.Children.map(props.children, (child) => React.cloneElement(child, {
+                    checked: props.values.includes(child.props.value),
+                    disabled: props.disabled,
+                    onChange: handleGroupChange,
+                }))}
+            </div>
+        );
+    });
+
+    return {
+        __esModule: true,
+        CheckboxGroup,
+        default: Checkbox,
+    };
+});
+
 jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
+
+function getLatestCheckboxGroupProps() {
+    const calls = (CheckboxGroupComponent: any).mock.calls;
+
+    return calls[calls.length - 1][0];
+}
+
+function getLatestCheckboxProps(value) {
+    const calls = (CheckboxComponent: any).mock.calls;
+    const matchingCalls = calls.map(([props]) => props).filter((props) => props.value === value);
+
+    return matchingCalls[matchingCalls.length - 1];
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test('Render with data', () => {
     // $FlowFixMe
@@ -33,7 +108,7 @@ test('Render with data', () => {
         ];
     });
 
-    const resourceCheckboxGroup = mount(
+    const {asFragment} = render(
         <ResourceCheckboxGroup
             displayProperty="name"
             onChange={jest.fn()}
@@ -43,7 +118,7 @@ test('Render with data', () => {
     );
 
     expect(ResourceListStore).toBeCalledWith('test', {});
-    expect(resourceCheckboxGroup.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render in disabled state', () => {
@@ -64,7 +139,7 @@ test('Render in disabled state', () => {
         ];
     });
 
-    const resourceCheckboxGroup = shallow(
+    render(
         <ResourceCheckboxGroup
             disabled={true}
             displayProperty="name"
@@ -75,7 +150,7 @@ test('Render in disabled state', () => {
     );
 
     expect(ResourceListStore).toBeCalledWith('test', {});
-    expect(resourceCheckboxGroup.find('CheckboxGroup').prop('disabled')).toEqual(true);
+    expect(getLatestCheckboxGroupProps().disabled).toEqual(true);
 });
 
 test('Render in loading state', () => {
@@ -85,7 +160,7 @@ test('Render in loading state', () => {
         this.data = undefined;
     });
 
-    const resourceCheckboxGroup = shallow(
+    render(
         <ResourceCheckboxGroup
             displayProperty="name"
             onChange={jest.fn()}
@@ -94,7 +169,7 @@ test('Render in loading state', () => {
         />
     );
 
-    expect(resourceCheckboxGroup.find('Loader')).toHaveLength(1);
+    expect(screen.getByTestId('loader')).toBeInTheDocument();
 });
 
 test('Pass requestParameters', () => {
@@ -122,7 +197,7 @@ test('Pass requestParameters', () => {
 
     const requestParameters = {'testOption': 'testValue'};
 
-    mount(
+    render(
         <ResourceCheckboxGroup
             displayProperty="name"
             onChange={jest.fn()}
@@ -151,7 +226,7 @@ test('Pass requestParameters when requestParameters props changed', () => {
     const requestParameters1 = {};
     const requestParameters2 = {'testOption': 'testValue'};
 
-    const resourceCheckboxGroup = mount(
+    const {rerender} = render(
         <ResourceCheckboxGroup
             displayProperty="name"
             onChange={jest.fn()}
@@ -161,13 +236,15 @@ test('Pass requestParameters when requestParameters props changed', () => {
         />
     );
 
-    resourceCheckboxGroup.setProps({
-        requestParameters: requestParameters2,
-        displayProperty: 'name',
-        onChange: jest.fn(),
-        resourceKey: 'test',
-        values: undefined,
-    });
+    rerender(
+        <ResourceCheckboxGroup
+            displayProperty="name"
+            onChange={jest.fn()}
+            requestParameters={requestParameters2}
+            resourceKey="test"
+            values={undefined}
+        />
+    );
 
     // $FlowFixMe
     expect(ResourceListStore.mock.calls).toEqual([
@@ -191,7 +268,7 @@ test('Pass requestParameters when resourceKey props changed', () => {
 
     const requestParameters = {};
 
-    const resourceCheckboxGroup = mount(
+    const {rerender} = render(
         <ResourceCheckboxGroup
             displayProperty="name"
             onChange={jest.fn()}
@@ -201,13 +278,15 @@ test('Pass requestParameters when resourceKey props changed', () => {
         />
     );
 
-    resourceCheckboxGroup.setProps({
-        requestParameters,
-        displayProperty: 'name',
-        onChange: jest.fn(),
-        resourceKey: 'test2',
-        values: undefined,
-    });
+    rerender(
+        <ResourceCheckboxGroup
+            displayProperty="name"
+            onChange={jest.fn()}
+            requestParameters={requestParameters}
+            resourceKey="test2"
+            values={undefined}
+        />
+    );
 
     // $FlowFixMe
     expect(ResourceListStore.mock.calls).toEqual([
@@ -239,7 +318,7 @@ test('Render with values', () => {
         ];
     });
 
-    const resourceCheckboxGroup = mount(
+    render(
         <ResourceCheckboxGroup
             displayProperty="name"
             onChange={jest.fn()}
@@ -248,9 +327,9 @@ test('Render with values', () => {
         />
     );
 
-    expect(resourceCheckboxGroup.find('Checkbox').at(0).prop('checked')).toEqual(false);
-    expect(resourceCheckboxGroup.find('Checkbox').at(1).prop('checked')).toEqual(true);
-    expect(resourceCheckboxGroup.find('Checkbox').at(2).prop('checked')).toEqual(true);
+    expect(getLatestCheckboxProps(2).checked).toEqual(false);
+    expect(getLatestCheckboxProps(5).checked).toEqual(true);
+    expect(getLatestCheckboxProps(99).checked).toEqual(true);
 });
 
 test('The component should trigger the change callback', () => {
@@ -277,7 +356,7 @@ test('The component should trigger the change callback', () => {
     });
 
     const onChangeSpy = jest.fn();
-    const resourceCheckboxGroup = shallow(
+    render(
         <ResourceCheckboxGroup
             displayProperty="name"
             onChange={onChangeSpy}
@@ -299,6 +378,6 @@ test('The component should trigger the change callback', () => {
         },
     ];
 
-    resourceCheckboxGroup.find('CheckboxGroup').props().onChange([5, 99]);
+    getLatestCheckboxGroupProps().onChange([5, 99]);
     expect(onChangeSpy).toHaveBeenCalledWith([5, 99], expectedValues);
 });

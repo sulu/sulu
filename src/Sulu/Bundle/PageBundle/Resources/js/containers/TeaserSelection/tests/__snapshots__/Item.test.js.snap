@@ -1,180 +1,188 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render Item with data and image 1`] = `
-<div
-  class="item"
->
+<DocumentFragment>
   <div
-    class="media"
+    class="item"
   >
-    <img
-      src="/admin/image/2"
-    />
-  </div>
-  <div
-    class="content"
-  >
-    <p
-      class="title"
+    <div
+      class="media"
     >
-      Title
-    </p>
-    <p
-      class="description"
+      <img
+        src="/admin/image/2"
+      />
+    </div>
+    <div
+      class="content"
     >
-      Description
+      <p
+        class="title"
+      >
+        Title
+      </p>
+      <p
+        class="description"
+      >
+        Description
 
+      </p>
+    </div>
+    <p
+      class="type"
+    >
+      Page (sulu_page.edited)
     </p>
   </div>
-  <p
-    class="type"
-  >
-    Page (sulu_page.edited)
-  </p>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render Item with data as form 1`] = `
-<div
-  class="editForm"
->
+<DocumentFragment>
   <div
-    class="form"
+    class="editForm"
   >
     <div
-      class="mediaColumn"
+      class="form"
+    >
+      <div
+        class="mediaColumn"
+      >
+        <button
+          class="mediaButton"
+          type="button"
+        >
+          <div
+            class="mimeTypeIndicator"
+            style="color: rgb(255, 255, 255); font-size: 16px; background-color: rgb(246, 126, 0);"
+          >
+            <span
+              aria-label="fa-file-image-o"
+              class="fa fa-file-image-o"
+            />
+          </div>
+          <span
+            aria-label="su-pen"
+            class="su-pen mediaButtonIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="formColumn"
+      >
+        <div
+          class="titleInput"
+        >
+          <div
+            class="input default left"
+          >
+            <input
+              type="text"
+              value="Title"
+            />
+          </div>
+        </div>
+        <div
+          class="descriptionTextArea"
+        >
+          <textarea>
+            Description
+          </textarea>
+        </div>
+      </div>
+    </div>
+    <div
+      class="buttons"
     >
       <button
-        class="mediaButton"
+        class="button secondary hasText"
         type="button"
       >
-        <div
-          class="mimeTypeIndicator"
-          style="color: rgb(255, 255, 255); font-size: 16px; background-color: rgb(246, 126, 0);"
-        >
-          <span
-            aria-label="fa-file-image-o"
-            class="fa fa-file-image-o"
-          />
-        </div>
         <span
-          aria-label="su-pen"
-          class="su-pen mediaButtonIcon"
-        />
+          class="buttonText"
+        >
+          sulu_admin.cancel
+        </span>
+      </button>
+      <button
+        class="button link hasText"
+        type="button"
+      >
+        <span
+          class="buttonText"
+        >
+          sulu_admin.reset
+        </span>
+      </button>
+      <button
+        class="button primary hasText"
+        type="button"
+      >
+        <span
+          class="buttonText"
+        >
+          sulu_admin.apply
+        </span>
       </button>
     </div>
-    <div
-      class="formColumn"
-    >
-      <div
-        class="titleInput"
-      >
-        <div
-          class="input default left"
-        >
-          <input
-            type="text"
-            value="Title"
-          />
-        </div>
-      </div>
-      <div
-        class="descriptionTextArea"
-      >
-        <textarea>
-          Description
-        </textarea>
-      </div>
-    </div>
   </div>
-  <div
-    class="buttons"
-  >
-    <button
-      class="button secondary hasText"
-      type="button"
-    >
-      <span
-        class="buttonText"
-      >
-        sulu_admin.cancel
-      </span>
-    </button>
-    <button
-      class="button link hasText"
-      type="button"
-    >
-      <span
-        class="buttonText"
-      >
-        sulu_admin.reset
-      </span>
-    </button>
-    <button
-      class="button primary hasText"
-      type="button"
-    >
-      <span
-        class="buttonText"
-      >
-        sulu_admin.apply
-      </span>
-    </button>
-  </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render Item with data but without image 1`] = `
-<div
-  class="item"
->
+<DocumentFragment>
   <div
-    class="media"
-  />
-  <div
-    class="content"
+    class="item"
   >
-    <p
-      class="title"
+    <div
+      class="media"
+    />
+    <div
+      class="content"
     >
-      Title
-    </p>
-    <p
-      class="description"
-    >
-      Description
+      <p
+        class="title"
+      >
+        Title
+      </p>
+      <p
+        class="description"
+      >
+        Description
 
+      </p>
+    </div>
+    <p
+      class="type"
+    >
+      Page
     </p>
   </div>
-  <p
-    class="type"
-  >
-    Page
-  </p>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render Item without data 1`] = `
-<div
-  class="item"
->
+<DocumentFragment>
   <div
-    class="media"
-  />
-  <div
-    class="content"
+    class="item"
   >
-    <p
-      class="title"
+    <div
+      class="media"
     />
+    <div
+      class="content"
+    >
+      <p
+        class="title"
+      />
+      <p
+        class="description"
+      />
+    </div>
     <p
-      class="description"
-    />
+      class="type"
+    >
+      Page
+    </p>
   </div>
-  <p
-    class="type"
-  >
-    Page
-  </p>
-</div>
+</DocumentFragment>
 `;

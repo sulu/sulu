@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Toolbar from '../Toolbar';
 import toolbarStorePool from '../stores/toolbarStorePool';
 
@@ -91,7 +92,9 @@ test('Render the items and icons from the ToolbarStore', () => {
         ]
     );
 
-    expect(render(<Toolbar storeKey={storeKey} />)).toMatchSnapshot();
+    const {asFragment} = render(<Toolbar storeKey={storeKey} />);
+
+    expect(asFragment()).toMatchSnapshot();
     expect(toolbarStorePool.createStore).toBeCalledWith(storeKey);
 });
 
@@ -112,8 +115,9 @@ test('Render the error from the ToolbarStore', () => {
         ]
     );
 
-    const toolbar = mount(<Toolbar storeKey={storeKey} />);
-    expect(toolbar.render()).toMatchSnapshot();
+    const {asFragment} = render(<Toolbar storeKey={storeKey} />);
+
+    expect(asFragment()).toMatchSnapshot();
     expect(toolbarStorePool.createStore).toBeCalledWith(storeKey);
 });
 
@@ -134,9 +138,9 @@ test('Render the warning from the ToolbarStore', () => {
         ]
     );
 
-    const toolbar = mount(<Toolbar storeKey={storeKey} />);
+    const {asFragment} = render(<Toolbar storeKey={storeKey} />);
 
-    expect(toolbar.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
     expect(toolbarStorePool.createStore).toBeCalledWith(storeKey);
 });
 
@@ -166,13 +170,14 @@ test('Render the items as disabled if one is loading', () => {
         ]
     );
 
-    const view = shallow(<Toolbar storeKey={storeKey} />);
+    render(<Toolbar storeKey={storeKey} />);
     expect(toolbarStorePool.createStore).toBeCalledWith(storeKey);
 
-    const buttons = view.find('Button');
-    expect(buttons.at(0).prop('disabled')).toBe(true);
-    expect(buttons.at(1).prop('disabled')).toBe(true);
-    expect(buttons.at(2).prop('disabled')).toBe(true);
+    const buttons = screen.getAllByRole('button').filter((element) => element.tagName === 'BUTTON');
+    expect(buttons).toHaveLength(3);
+    expect(buttons[0]).toBeDisabled();
+    expect(buttons[1]).toBeDisabled();
+    expect(buttons[2]).toBeDisabled();
 });
 
 test('Show success message on back button for some time', () => {
@@ -185,7 +190,8 @@ test('Show success message on back button for some time', () => {
     toolbarStoreMock.getBackButtonConfig.mockReturnValue({});
     toolbarStoreMock.showSuccess = true;
 
-    expect(render(<Toolbar storeKey={storeKey} />)).toMatchSnapshot();
+    const {asFragment} = render(<Toolbar storeKey={storeKey} />);
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Show success message on navigation button for some time', () => {
@@ -198,10 +204,12 @@ test('Show success message on navigation button for some time', () => {
     toolbarStoreMock.getBackButtonConfig.mockReturnValue({});
     toolbarStoreMock.showSuccess = true;
 
-    expect(render(<Toolbar onNavigationButtonClick={jest.fn()} storeKey={storeKey} />)).toMatchSnapshot();
+    const {asFragment} = render(<Toolbar onNavigationButtonClick={jest.fn()} storeKey={storeKey} />);
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Click on the success message should open the navigation', () => {
+test('Click on the success message should open the navigation', async() => {
+    const user = userEvent.setup();
     const storeKey = 'testStore';
     const navigationButtonClickSpy = jest.fn();
 
@@ -212,14 +220,14 @@ test('Click on the success message should open the navigation', () => {
     toolbarStoreMock.getBackButtonConfig.mockReturnValue({});
     toolbarStoreMock.showSuccess = true;
 
-    const view = shallow(<Toolbar onNavigationButtonClick={navigationButtonClickSpy} storeKey={storeKey} />);
-
-    view.find('Button[success=true]').simulate('click');
+    render(<Toolbar onNavigationButtonClick={navigationButtonClickSpy} storeKey={storeKey} />);
+    await user.click(screen.getByRole('button', {name: 'su-check'}));
 
     expect(navigationButtonClickSpy).toBeCalledWith();
 });
 
-test('Click on the success message should navigate back', () => {
+test('Click on the success message should navigate back', async() => {
+    const user = userEvent.setup();
     const storeKey = 'testStore';
     const backSpy = jest.fn();
 
@@ -232,14 +240,14 @@ test('Click on the success message should navigate back', () => {
     });
     toolbarStoreMock.showSuccess = true;
 
-    const view = shallow(<Toolbar storeKey={storeKey} />);
-
-    view.find('Button[success=true]').simulate('click');
+    render(<Toolbar storeKey={storeKey} />);
+    await user.click(screen.getByRole('button', {name: 'su-check'}));
 
     expect(backSpy).toBeCalledWith();
 });
 
-test('Remove last error if close button on snackbar is clicked', () => {
+test('Remove last error if close button on snackbar is clicked', async() => {
+    const user = userEvent.setup();
     const storeKey = 'testStore';
 
     // $FlowFixMe
@@ -247,7 +255,7 @@ test('Remove last error if close button on snackbar is clicked', () => {
 
     toolbarStoreMock.getLocaleConfig.mockReturnValue(undefined);
     toolbarStoreMock.getBackButtonConfig.mockReturnValue({});
-    toolbarStoreMock.errors.push({code: 100, message: 'Something went wrong'});
+    toolbarStoreMock.errors.push('Something went wrong');
 
     toolbarStoreMock.getItemsConfig.mockReturnValue(
         [
@@ -260,11 +268,9 @@ test('Remove last error if close button on snackbar is clicked', () => {
         ]
     );
 
-    const view = shallow(<Toolbar storeKey={storeKey} />);
-
-    expect(view.find('Snackbar[type="error"]')).toHaveLength(1);
+    render(<Toolbar storeKey={storeKey} />);
 
     expect(toolbarStoreMock.errors).toHaveLength(1);
-    view.find('Snackbar[type="error"]').simulate('closeClick');
+    await user.click(screen.getByLabelText('su-times'));
     expect(toolbarStoreMock.errors).toHaveLength(0);
 });

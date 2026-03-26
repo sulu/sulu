@@ -1,8 +1,9 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import log from 'loglevel';
 import listAdapterDefaultProps from '../../../../utils/TestHelper/listAdapterDefaultProps';
+import Pagination from '../../../../components/Pagination';
 import TableAdapter from '../../adapters/TableAdapter';
 import StringFieldTransformer from '../../fieldTransformers/StringFieldTransformer';
 import IconFieldTransformer from '../../fieldTransformers/IconFieldTransformer';
@@ -28,6 +29,32 @@ jest.mock('../../registries/listFieldTransformerRegistry', () => ({
 jest.mock('loglevel', () => ({
     warn: jest.fn(),
 }));
+
+const renderTableAdapter = (customProps: Object = {}) => {
+    let props = {
+        ...listAdapterDefaultProps,
+        ...customProps,
+    };
+    const tableAdapterRef: any = React.createRef();
+    const view = render(<TableAdapter {...props} ref={tableAdapterRef} />);
+
+    const getInstance = () => {
+        if (!tableAdapterRef.current) {
+            throw new Error('Expected TableAdapter to be rendered');
+        }
+
+        return tableAdapterRef.current;
+    };
+
+    return {
+        ...view,
+        getInstance,
+        setProps: (newProps: Object) => {
+            props = {...props, ...newProps};
+            view.rerender(<TableAdapter {...props} ref={tableAdapterRef} />);
+        },
+    };
+};
 
 beforeEach(() => {
     listFieldTransformerRegistry.get.mockReturnValue(new StringFieldTransformer());
@@ -101,7 +128,7 @@ test('Render data with schema', () => {
         },
     };
 
-    const tableAdapter = render(
+    const view = render(
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -111,7 +138,7 @@ test('Render data with schema', () => {
         />
     );
 
-    expect(tableAdapter).toMatchSnapshot();
+    expect(view.container.firstChild).toMatchSnapshot();
 });
 
 test('Render data as icons', () => {
@@ -157,30 +184,31 @@ test('Render data as icons', () => {
             label: 'Status',
         },
     };
-    const tableAdapter = mount(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            page={1}
-            pageCount={1}
-            schema={schema}
-        />
-    );
+    const tableAdapter = renderTableAdapter({
+        data,
+        page: 1,
+        pageCount: 1,
+        schema,
+    });
+    const rows = tableAdapter.getInstance().renderRows();
+    const firstStatusValue = rows[0].props.children[0].props.children[1];
+    const secondStatusValue = rows[1].props.children[0].props.children[1];
+    const thirdStatusValue = rows[2].props.children[0].props.children[1];
+    const fourthStatusValue = rows[3].props.children[0].props.children[1];
 
-    expect(tableAdapter.find('Row').at(0).find('Icon').props().name).toEqual('su-clock');
-    expect(tableAdapter.find('Row').at(0).find('Icon').props().style).toEqual(undefined);
+    expect(firstStatusValue.props.name).toEqual('su-clock');
+    expect(firstStatusValue.props.style).toEqual(undefined);
 
-    expect(tableAdapter.find('Row').at(1).find('Cell').text()).toEqual('running');
-    expect(tableAdapter.find('Row').at(1).find('Icon')).toHaveLength(0);
+    expect(secondStatusValue).toEqual('running');
     expect(log.warn).toBeCalledWith(
         'There was no icon specified in the "mapping" transformer parameter for the value "running".'
     );
 
-    expect(tableAdapter.find('Row').at(2).find('Icon').props().name).toEqual('su-check-circle');
-    expect(tableAdapter.find('Row').at(2).find('Icon').props().style).toEqual({color: 'green'});
+    expect(thirdStatusValue.props.name).toEqual('su-check-circle');
+    expect(thirdStatusValue.props.style).toEqual({color: 'green'});
 
-    expect(tableAdapter.find('Row').at(3).find('Icon').props().name).toEqual('su-ban');
-    expect(tableAdapter.find('Row').at(3).find('Icon').props().style).toEqual({});
+    expect(fourthStatusValue.props.name).toEqual('su-ban');
+    expect(fourthStatusValue.props.style).toEqual({});
 });
 
 test('Render data with skin', () => {
@@ -206,7 +234,7 @@ test('Render data with skin', () => {
             label: 'Description',
         },
     };
-    const tableAdapter = render(
+    const view = render(
         <TableAdapter
             {...listAdapterDefaultProps}
             adapterOptions={{
@@ -219,7 +247,7 @@ test('Render data with skin', () => {
         />
     );
 
-    expect(tableAdapter).toMatchSnapshot();
+    expect(view.container.firstChild).toMatchSnapshot();
 });
 
 test('Render data with shrunken cell', () => {
@@ -268,7 +296,7 @@ test('Render data with shrunken cell', () => {
             width: 'auto',
         },
     };
-    const tableAdapter = render(
+    const view = render(
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -278,7 +306,7 @@ test('Render data with shrunken cell', () => {
         />
     );
 
-    expect(tableAdapter).toMatchSnapshot();
+    expect(view.container.firstChild).toMatchSnapshot();
 });
 
 test('Render data without header', () => {
@@ -304,7 +332,7 @@ test('Render data without header', () => {
             label: 'Description',
         },
     };
-    const tableAdapter = render(
+    const view = render(
         <TableAdapter
             {...listAdapterDefaultProps}
             adapterOptions={{
@@ -317,7 +345,7 @@ test('Render data without header', () => {
         />
     );
 
-    expect(tableAdapter).toMatchSnapshot();
+    expect(view.container.firstChild).toMatchSnapshot();
 });
 
 test('Attach onClick handler for sorting if schema says the header is sortable', () => {
@@ -344,16 +372,14 @@ test('Attach onClick handler for sorting if schema says the header is sortable',
         },
     };
 
-    const tableAdapter = shallow(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            onSort={sortSpy}
-            schema={schema}
-        />
-    );
+    const tableAdapter = renderTableAdapter({
+        onSort: sortSpy,
+        schema,
+    });
+    const headerCells = tableAdapter.getInstance().renderHeaderCells();
 
-    expect(tableAdapter.find('HeaderCell').at(0).prop('onClick')).toBe(sortSpy);
-    expect(tableAdapter.find('HeaderCell').at(1).prop('onClick')).toEqual(undefined);
+    expect(headerCells[0].props.onClick).toBe(sortSpy);
+    expect(headerCells[1].props.onClick).toEqual(undefined);
 });
 
 test('Render data with all different visibility types schema', () => {
@@ -407,7 +433,7 @@ test('Render data with all different visibility types schema', () => {
             label: 'Test 2',
         },
     };
-    const tableAdapter = render(
+    const view = render(
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -417,7 +443,7 @@ test('Render data with all different visibility types schema', () => {
         />
     );
 
-    expect(tableAdapter).toMatchSnapshot();
+    expect(view.container.firstChild).toMatchSnapshot();
 });
 
 test('Render data with schema and selections', () => {
@@ -458,7 +484,7 @@ test('Render data with schema and selections', () => {
             visibility: 'yes',
         },
     };
-    const tableAdapter = render(
+    const view = render(
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -470,7 +496,7 @@ test('Render data with schema and selections', () => {
         />
     );
 
-    expect(tableAdapter).toMatchSnapshot();
+    expect(view.container.firstChild).toMatchSnapshot();
 });
 
 test('Render data with schema in different order', () => {
@@ -506,7 +532,7 @@ test('Render data with schema in different order', () => {
             visibility: 'yes',
         },
     };
-    const tableAdapter = render(
+    const view = render(
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -516,7 +542,7 @@ test('Render data with schema in different order', () => {
         />
     );
 
-    expect(tableAdapter).toMatchSnapshot();
+    expect(view.container.firstChild).toMatchSnapshot();
 });
 
 test('Render data with schema not containing all fields', () => {
@@ -543,7 +569,7 @@ test('Render data with schema not containing all fields', () => {
             visibility: 'no',
         },
     };
-    const tableAdapter = render(
+    const view = render(
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -553,7 +579,7 @@ test('Render data with schema not containing all fields', () => {
         />
     );
 
-    expect(tableAdapter).toMatchSnapshot();
+    expect(view.container.firstChild).toMatchSnapshot();
 });
 
 test('Render data with pencil button when onItemEdit callback is passed', () => {
@@ -589,7 +615,7 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
             visibility: 'yes',
         },
     };
-    const tableAdapter = render(
+    const view = render(
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -600,7 +626,7 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
         />
     );
 
-    expect(tableAdapter).toMatchSnapshot();
+    expect(view.container.firstChild).toMatchSnapshot();
 });
 
 test('Render correct button based on permissions when item permissions are provided', () => {
@@ -635,25 +661,26 @@ test('Render correct button based on permissions when item permissions are provi
             visibility: 'no',
         },
     };
-    const tableAdapter = mount(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            onItemClick={jest.fn()}
-            page={1}
-            pageCount={3}
-            schema={schema}
-        />
-    );
+    const tableAdapter = renderTableAdapter({
+        data,
+        onItemClick: jest.fn(),
+        page: 1,
+        pageCount: 3,
+        schema,
+    });
+    const tableAdapterInstance = tableAdapter.getInstance();
+    const firstItemButtons = tableAdapterInstance.getButtons(data[0]);
+    const secondItemButtons = tableAdapterInstance.getButtons(data[1]);
+    const thirdItemButtons = tableAdapterInstance.getButtons(data[2]);
 
-    expect(tableAdapter.find('Row').at(0).find('ButtonCell').props().icon).toEqual('su-pen');
-    expect(tableAdapter.find('Row').at(0).find('ButtonCell').props().disabled).toEqual(true);
+    expect(firstItemButtons[0].icon).toEqual('su-pen');
+    expect(firstItemButtons[0].disabled).toEqual(true);
 
-    expect(tableAdapter.find('Row').at(1).find('ButtonCell').props().icon).toEqual('su-eye');
-    expect(tableAdapter.find('Row').at(1).find('ButtonCell').props().disabled).toEqual(false);
+    expect(secondItemButtons[0].icon).toEqual('su-eye');
+    expect(secondItemButtons[0].disabled).toEqual(false);
 
-    expect(tableAdapter.find('Row').at(2).find('ButtonCell').props().icon).toEqual('su-pen');
-    expect(tableAdapter.find('Row').at(2).find('ButtonCell').props().disabled).toEqual(false);
+    expect(thirdItemButtons[0].icon).toEqual('su-pen');
+    expect(thirdItemButtons[0].disabled).toEqual(false);
 });
 
 test('Render disabled rows based on given disabledIds prop', () => {
@@ -682,21 +709,19 @@ test('Render disabled rows based on given disabledIds prop', () => {
             visibility: 'no',
         },
     };
-    const tableAdapter = mount(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            disabledIds={[1, 3]}
-            onItemClick={jest.fn()}
-            page={1}
-            pageCount={3}
-            schema={schema}
-        />
-    );
+    const tableAdapter = renderTableAdapter({
+        data,
+        disabledIds: [1, 3],
+        onItemClick: jest.fn(),
+        page: 1,
+        pageCount: 3,
+        schema,
+    });
+    const rows = tableAdapter.getInstance().renderRows();
 
-    expect(tableAdapter.find('Row').at(0).props().disabled).toEqual(true);
-    expect(tableAdapter.find('Row').at(1).props().disabled).toEqual(false);
-    expect(tableAdapter.find('Row').at(2).props().disabled).toEqual(true);
+    expect(rows[0].props.disabled).toEqual(true);
+    expect(rows[1].props.disabled).toEqual(false);
+    expect(rows[2].props.disabled).toEqual(true);
 });
 
 test('Render data with pencil button and given itemActions when onItemEdit callback is passed', () => {
@@ -743,7 +768,7 @@ test('Render data with pencil button and given itemActions when onItemEdit callb
         },
     ];
 
-    const tableAdapter = render(
+    const view = render(
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -756,7 +781,7 @@ test('Render data with pencil button and given itemActions when onItemEdit callb
         />
     );
 
-    expect(tableAdapter).toMatchSnapshot();
+    expect(view.container.firstChild).toMatchSnapshot();
 });
 
 test('Render column with ascending sort icon', () => {
@@ -787,7 +812,7 @@ test('Render column with ascending sort icon', () => {
             visibility: 'yes',
         },
     };
-    const tableAdapter = render(
+    const view = render(
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -799,7 +824,7 @@ test('Render column with ascending sort icon', () => {
         />
     );
 
-    expect(tableAdapter).toMatchSnapshot();
+    expect(view.container.firstChild).toMatchSnapshot();
 });
 
 test('Render column with descending sort icon', () => {
@@ -830,7 +855,7 @@ test('Render column with descending sort icon', () => {
             visibility: 'yes',
         },
     };
-    const tableAdapter = render(
+    const view = render(
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -842,7 +867,7 @@ test('Render column with descending sort icon', () => {
         />
     );
 
-    expect(tableAdapter).toMatchSnapshot();
+    expect(view.container.firstChild).toMatchSnapshot();
 });
 
 test('Click on pencil should execute onItemClick callback', () => {
@@ -879,17 +904,14 @@ test('Click on pencil should execute onItemClick callback', () => {
             visibility: 'yes',
         },
     };
-    const tableAdapter = shallow(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            onItemClick={rowEditClickSpy}
-            page={1}
-            pageCount={3}
-            schema={schema}
-        />
-    );
-    const buttons = tableAdapter.find('Table').prop('buttons');
+    const tableAdapter = renderTableAdapter({
+        data,
+        onItemClick: rowEditClickSpy,
+        page: 1,
+        pageCount: 3,
+        schema,
+    });
+    const buttons = tableAdapter.getInstance().getButtons();
     expect(buttons).toHaveLength(1);
     expect(buttons[0].icon).toBe('su-pen');
 
@@ -937,22 +959,21 @@ test('Click on itemAction should execute its callback', () => {
         },
     ]);
 
-    const tableAdapter = shallow(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            itemActionsProvider={actionsProvider}
-            onItemClick={jest.fn()}
-            page={1}
-            pageCount={3}
-            schema={schema}
-        />
-    );
+    const tableAdapter = renderTableAdapter({
+        data,
+        itemActionsProvider: actionsProvider,
+        onItemClick: jest.fn(),
+        page: 1,
+        pageCount: 3,
+        schema,
+    });
 
+    tableAdapter.getInstance().getButtons(item1);
+    tableAdapter.getInstance().getButtons(item2);
     expect(actionsProvider).toBeCalledWith(item1);
     expect(actionsProvider).toBeCalledWith(item2);
 
-    const buttons = tableAdapter.find('Table').prop('buttons');
+    const buttons = tableAdapter.getInstance().getButtons();
     expect(buttons).toHaveLength(2);
     expect(buttons[1].icon).toBe('su-process');
 
@@ -994,18 +1015,17 @@ test('Click on checkbox should call onItemSelectionChange callback', () => {
             visibility: 'yes',
         },
     };
-    const tableAdapter = shallow(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            onItemSelectionChange={rowSelectionChangeSpy}
-            page={1}
-            pageCount={3}
-            schema={schema}
-        />
-    );
+    const tableAdapter = renderTableAdapter({
+        data,
+        onItemSelectionChange: rowSelectionChangeSpy,
+        page: 1,
+        pageCount: 3,
+        schema,
+    });
+    const tableAdapterOutput = tableAdapter.getInstance().render();
+    const table = tableAdapterOutput.type === Pagination ? tableAdapterOutput.props.children : tableAdapterOutput;
 
-    expect(tableAdapter.find('Table').get(0).props.onRowSelectionChange).toBe(rowSelectionChangeSpy);
+    expect(table.props.onRowSelectionChange).toBe(rowSelectionChangeSpy);
 });
 
 test('Click on checkbox in header should call onAllSelectionChange callback', () => {
@@ -1022,32 +1042,30 @@ test('Click on checkbox in header should call onAllSelectionChange callback', ()
             visibility: 'no',
         },
     };
-    const tableAdapter = shallow(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            onAllSelectionChange={allSelectionChangeSpy}
-            schema={schema}
-        />
-    );
+    const tableAdapter = renderTableAdapter({
+        data,
+        onAllSelectionChange: allSelectionChangeSpy,
+        schema,
+    });
+    const tableAdapterOutput = tableAdapter.getInstance().render();
+    const table = tableAdapterOutput.type === Pagination ? tableAdapterOutput.props.children : tableAdapterOutput;
 
-    expect(tableAdapter.find('Table').get(0).props.onAllSelectionChange).toBe(allSelectionChangeSpy);
+    expect(table.props.onAllSelectionChange).toBe(allSelectionChangeSpy);
 });
 
 test('Pagination should be passed correct props', () => {
     const pageChangeSpy = jest.fn();
     const limitChangeSpy = jest.fn();
-    const tableAdapter = shallow(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            limit={10}
-            onLimitChange={limitChangeSpy}
-            onPageChange={pageChangeSpy}
-            page={2}
-            pageCount={7}
-        />
-    );
-    expect(tableAdapter.find('Pagination').get(0).props).toEqual({
+    const tableAdapter = renderTableAdapter({
+        limit: 10,
+        onLimitChange: limitChangeSpy,
+        onPageChange: pageChangeSpy,
+        page: 2,
+        pageCount: 7,
+    });
+    const pagination = tableAdapter.getInstance().render();
+    expect(pagination.type).toBe(Pagination);
+    expect(pagination.props).toEqual({
         totalPages: 7,
         currentPage: 2,
         currentLimit: 10,
@@ -1069,42 +1087,33 @@ test('Pagination should not be rendered if API is not paginated', () => {
 
     const pageChangeSpy = jest.fn();
     const limitChangeSpy = jest.fn();
-    const tableAdapter = shallow(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            onLimitChange={limitChangeSpy}
-            onPageChange={pageChangeSpy}
-            page={1}
-            pageCount={undefined}
-        />
-    );
-    expect(tableAdapter.find('Pagination')).toHaveLength(0);
+    const tableAdapter = renderTableAdapter({
+        data,
+        onLimitChange: limitChangeSpy,
+        onPageChange: pageChangeSpy,
+        page: 1,
+        pageCount: undefined,
+    });
+    expect(tableAdapter.getInstance().render().type).not.toBe(Pagination);
 });
 
 test('Pagination should not be rendered if no data is available', () => {
     const pageChangeSpy = jest.fn();
     const limitChangeSpy = jest.fn();
-    const tableAdapter = shallow(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            onLimitChange={limitChangeSpy}
-            onPageChange={pageChangeSpy}
-            page={1}
-        />
-    );
-    expect(tableAdapter.find('Pagination')).toHaveLength(0);
+    const tableAdapter = renderTableAdapter({
+        onLimitChange: limitChangeSpy,
+        onPageChange: pageChangeSpy,
+        page: 1,
+    });
+    expect(tableAdapter.getInstance().render().type).not.toBe(Pagination);
 });
 
 test('Pagination should not be rendered if pagination is false', () => {
-    const tableAdapter = shallow(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            limit={10}
-            page={2}
-            pageCount={7}
-            paginated={false}
-        />
-    );
-    expect(tableAdapter.find('Pagination')).toHaveLength(0);
+    const tableAdapter = renderTableAdapter({
+        limit: 10,
+        page: 2,
+        pageCount: 7,
+        paginated: false,
+    });
+    expect(tableAdapter.getInstance().render().type).not.toBe(Pagination);
 });

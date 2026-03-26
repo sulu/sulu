@@ -1,26 +1,29 @@
 // @flow
 import React from 'react';
-import {shallow, render} from 'enzyme';
+import userEvent from '@testing-library/user-event';
+import {fireEvent, render, screen} from '@testing-library/react';
 import EditLine from '../EditLine';
 
 test('Render an EditLine', () => {
-    expect(render(<EditLine id="1" onChange={jest.fn()} onRemove={jest.fn()} value="Test" />)).toMatchSnapshot();
+    const {asFragment} = render(<EditLine id="1" onChange={jest.fn()} onRemove={jest.fn()} value="Test" />);
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Call onChange callback if input changes', () => {
     const changeSpy = jest.fn();
-    const editLine = shallow(<EditLine id={3} onChange={changeSpy} onRemove={jest.fn()} value="old" />);
+    render(<EditLine id={3} onChange={changeSpy} onRemove={jest.fn()} value="old" />);
 
-    editLine.find('Input').simulate('change', 'new');
+    fireEvent.change(screen.getByRole('textbox'), {target: {value: 'new'}});
 
-    expect(changeSpy).toBeCalledWith(3, 'new');
+    expect(changeSpy).toHaveBeenLastCalledWith(3, 'new');
 });
 
-test('Call onRemove callback if line is removed', () => {
+test('Call onRemove callback if line is removed', async() => {
     const removeSpy = jest.fn();
-    const editLine = shallow(<EditLine id={3} onChange={jest.fn()} onRemove={removeSpy} value="old" />);
+    const user = userEvent.setup();
+    render(<EditLine id={3} onChange={jest.fn()} onRemove={removeSpy} value="old" />);
 
-    editLine.find('Button').simulate('click');
+    await user.click(screen.getByRole('button'));
 
     expect(removeSpy).toBeCalledWith(3);
 });

@@ -1,6 +1,6 @@
 // @flow
-import {mount} from 'enzyme';
 import React from 'react';
+import {render, screen, waitFor} from '@testing-library/react';
 import Router from '../../../services/Router';
 import Requester from '../../../services/Requester';
 import Badge from '../Badge';
@@ -27,14 +27,16 @@ jest.mock('../../../services/Router', () => jest.fn(function() {
 
 test('Should create new BadgeStore', () => {
     const router = new Router({});
+    const badgeRef = React.createRef();
 
     const promise = Promise.resolve({data: 'foo'});
     Requester.get.mockReturnValue(promise);
     Requester.handleResponseHooks = [];
 
-    const badge = mount(
+    render(
         <Badge
             dataPath="/data"
+            ref={badgeRef}
             requestParameters={{
                 limit: 0,
             }}
@@ -49,7 +51,10 @@ test('Should create new BadgeStore', () => {
         />
     );
 
-    const store = badge.instance().store;
+    const store = badgeRef.current?.store;
+    if (!store) {
+        throw new Error('Expected badge store instance');
+    }
 
     expect(store).toBeInstanceOf(BadgeStore);
     expect(store.routeName).toBe('foo');
@@ -75,7 +80,7 @@ test('Should pass correct props to badge component', () => {
     Requester.get.mockReturnValue(promise);
     Requester.handleResponseHooks = [];
 
-    const badge = mount(
+    render(
         <Badge
             dataPath={null}
             requestParameters={{
@@ -92,10 +97,10 @@ test('Should pass correct props to badge component', () => {
         />
     );
 
-    return promise.then(() => {
-        badge.update();
-        expect(badge.children().find('Badge').length).toBe(1);
-        expect(badge.children().find('Badge').text()).toBe('hello');
+    return promise.then(async() => {
+        await waitFor(() => {
+            expect(screen.getByText('hello')).toBeInTheDocument();
+        });
     });
 });
 
@@ -106,7 +111,7 @@ test('Should not render Badge component if visibleCondition fails', () => {
     Requester.get.mockReturnValue(promise);
     Requester.handleResponseHooks = [];
 
-    const badge = mount(
+    const {container} = render(
         <Badge
             dataPath="/data"
             requestParameters={{
@@ -123,8 +128,9 @@ test('Should not render Badge component if visibleCondition fails', () => {
         />
     );
 
-    return promise.then(() => {
-        badge.update();
-        expect(badge.children().find('Badge').length).toBe(0);
+    return promise.then(async() => {
+        await waitFor(() => {
+            expect(container).toBeEmptyDOMElement();
+        });
     });
 });

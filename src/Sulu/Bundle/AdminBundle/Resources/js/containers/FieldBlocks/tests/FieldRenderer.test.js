@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import Router from '../../../services/Router';
 import FieldRenderer from '../FieldRenderer';
 import {FormInspector, ResourceFormStore, Renderer} from '../../Form';
@@ -11,10 +11,19 @@ jest.mock('../../../services/Router/Router', () => jest.fn());
 jest.mock('../../Form', () => ({
     FormInspector: jest.fn(),
     ResourceFormStore: jest.fn(),
-    Renderer: jest.fn(),
+    Renderer: jest.fn(() => null),
 }));
 
 jest.mock('../../../stores/ResourceStore', () => jest.fn());
+
+function getLatestRendererProps() {
+    const calls = (Renderer: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test('Should pass props correctly to Renderer', () => {
     const fieldFinishSpy = jest.fn();
@@ -41,7 +50,7 @@ test('Should pass props correctly to Renderer', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
     const router = new Router();
 
-    const formRenderer = shallow(
+    render(
         <FieldRenderer
             data={data}
             dataPath="/block/0/test"
@@ -58,7 +67,7 @@ test('Should pass props correctly to Renderer', () => {
         />
     );
 
-    expect(formRenderer.find(Renderer).props()).toEqual(expect.objectContaining({
+    expect(getLatestRendererProps()).toEqual(expect.objectContaining({
         data,
         dataPath: '/block/0/test',
         errors,
@@ -76,7 +85,7 @@ test('Should pass props correctly to Renderer', () => {
 test('Should pass showAllErrors prop to Renderer', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
-    const formRenderer = shallow(
+    render(
         <FieldRenderer
             data={{}}
             dataPath=""
@@ -93,14 +102,14 @@ test('Should pass showAllErrors prop to Renderer', () => {
         />
     );
 
-    expect(formRenderer.find(Renderer).prop('showAllErrors')).toEqual(true);
+    expect(getLatestRendererProps().showAllErrors).toEqual(true);
 });
 
 test('Should call onChange callback with correct index', () => {
     const changeSpy = jest.fn();
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
-    const formRenderer = shallow(
+    render(
         <FieldRenderer
             data={{}}
             dataPath=""
@@ -116,7 +125,7 @@ test('Should call onChange callback with correct index', () => {
         />
     );
 
-    formRenderer.find(Renderer).prop('onChange')('test', 'value');
+    getLatestRendererProps().onChange('test', 'value');
 
     expect(changeSpy).toBeCalledWith(2, 'test', 'value', undefined);
 });
@@ -125,7 +134,7 @@ test('Should pass context through onChange callback', () => {
     const changeSpy = jest.fn();
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
-    const formRenderer = shallow(
+    render(
         <FieldRenderer
             data={{}}
             dataPath=""
@@ -141,7 +150,7 @@ test('Should pass context through onChange callback', () => {
         />
     );
 
-    formRenderer.find(Renderer).prop('onChange')('alignment', 'left', {isDefaultValue: true});
+    getLatestRendererProps().onChange('alignment', 'left', {isDefaultValue: true});
 
     expect(changeSpy).toBeCalledWith(0, 'alignment', 'left', {isDefaultValue: true});
 });
@@ -150,7 +159,7 @@ test('Should call onFieldFinish when some subfield finishes editing', () => {
     const fieldFinishSpy = jest.fn();
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
-    const formRenderer = shallow(
+    render(
         <FieldRenderer
             data={{}}
             dataPath=""
@@ -166,7 +175,7 @@ test('Should call onFieldFinish when some subfield finishes editing', () => {
         />
     );
 
-    formRenderer.find(Renderer).prop('onFieldFinish')();
+    getLatestRendererProps().onFieldFinish();
 
     expect(fieldFinishSpy).toBeCalledWith();
 });

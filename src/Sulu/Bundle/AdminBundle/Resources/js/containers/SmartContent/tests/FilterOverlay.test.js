@@ -1,7 +1,13 @@
 // @flow
 import React from 'react';
+import {act, render, screen} from '@testing-library/react';
 import {extendObservable as mockExtendObservable} from 'mobx';
-import {shallow, mount} from 'enzyme';
+import Button from '../../../components/Button';
+import Number from '../../../components/Number';
+import Overlay from '../../../components/Overlay';
+import SingleSelect from '../../../components/SingleSelect';
+import Toggler from '../../../components/Toggler';
+import MultiSelect from '../../../components/MultiSelect';
 import MultiListOverlay from '../../../containers/MultiListOverlay';
 import SingleListOverlay from '../../../containers/SingleListOverlay';
 import SmartContentStore from '../stores/SmartContentStore';
@@ -14,7 +20,38 @@ jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../../containers/MultiAutoComplete', () => jest.fn(() => null));
+jest.mock('../../../components/Button', () => jest.fn(({children, onClick}) => (
+    <button onClick={onClick} type="button">{children}</button>
+)));
+
+jest.mock('../../../components/Toggler', () => jest.fn(({children}) => (
+    <div>{children}</div>
+)));
+
+jest.mock('../../../components/Number', () => jest.fn(() => null));
+
+jest.mock('../../../components/SingleSelect', () => {
+    const SingleSelect: any = jest.fn(() => null);
+    SingleSelect.Option = function SingleSelectOption() {
+        return null;
+    };
+
+    return SingleSelect;
+});
+
+jest.mock('../../../components/MultiSelect', () => {
+    const MultiSelect: any = jest.fn(() => null);
+    MultiSelect.Option = function MultiSelectOption() {
+        return null;
+    };
+
+    return MultiSelect;
+});
+
+jest.mock('../../../components/Overlay', () => jest.fn(({children}) => (
+    <div data-testid="overlay">{children}</div>
+)));
+
 jest.mock('../../../containers/MultiListOverlay', () => jest.fn(() => null));
 jest.mock('../../../containers/SingleListOverlay', () => jest.fn(() => null));
 jest.mock('../../../stores/MultiSelectionStore', () => jest.fn(function() {
@@ -23,43 +60,150 @@ jest.mock('../../../stores/MultiSelectionStore', () => jest.fn(function() {
     });
 }));
 
+const ButtonMock = (Button: any);
+const NumberMock = (Number: any);
+const OverlayMock = (Overlay: any);
+const SingleSelectMock = (SingleSelect: any);
+const TogglerMock = (Toggler: any);
+const MultiSelectMock = (MultiSelect: any);
+const MultiListOverlayMock = (MultiListOverlay: any);
+const SingleListOverlayMock = (SingleListOverlay: any);
+const MultiSelectionStoreMock = (MultiSelectionStore: any);
+
+const defaultValue = {
+    dataSource: 1,
+    includeSubFolders: true,
+    categories: [],
+    categoryOperator: 'and',
+    tags: [],
+    tagOperator: 'or',
+    audienceTargeting: true,
+    sortBy: 'title',
+    sortMethod: 'asc',
+    presentAs: 'two',
+    limitResult: 5,
+    types: [],
+};
+
+const getMockCallProps = (mockComponent) => {
+    return mockComponent.mock.calls.map(([props]) => props);
+};
+
+const getLastMockCallProps = (mockComponent) => {
+    const props = getMockCallProps(mockComponent);
+
+    if (props.length === 0) {
+        throw new Error('Expected mock component to be called');
+    }
+
+    return props[props.length - 1];
+};
+
+const getLastMockCallPropsMatching = (mockComponent, matcher) => {
+    const props = getMockCallProps(mockComponent).filter(matcher);
+
+    if (props.length === 0) {
+        throw new Error('Expected matching mock component props');
+    }
+
+    return props[props.length - 1];
+};
+
+const getOverlayProps = () => getLastMockCallProps(OverlayMock);
+const getNumberProps = () => getLastMockCallProps(NumberMock);
+const getMultiSelectProps = () => getLastMockCallProps(MultiSelectMock);
+const getButtonProps = (children) => getLastMockCallPropsMatching(ButtonMock, (props) => props.children === children);
+const getTogglerProps = (children) => getLastMockCallPropsMatching(
+    TogglerMock,
+    (props) => props.children === children
+);
+const getSingleSelectPropsAt = (index) => {
+    const singleSelectCallsPerRender = 5;
+    const singleSelectProps = getMockCallProps(SingleSelectMock).slice(-singleSelectCallsPerRender);
+
+    if (!singleSelectProps[index]) {
+        throw new Error('Expected SingleSelect props at index "' + index + '"');
+    }
+
+    return singleSelectProps[index];
+};
+const getMultiListOverlayProps = (matcher) => getLastMockCallPropsMatching(MultiListOverlayMock, matcher);
+const getSingleListOverlayProps = (matcher) => getLastMockCallPropsMatching(SingleListOverlayMock, matcher);
+
+const getTagSelectionStore = () => {
+    const stores = MultiSelectionStoreMock.mock.instances;
+
+    if (stores.length === 0) {
+        throw new Error('Expected MultiSelectionStore to be instantiated');
+    }
+
+    return stores[stores.length - 1];
+};
+
+const getFilterOverlayInstance = (filterOverlayRef) => {
+    if (!filterOverlayRef.current) {
+        throw new Error('Expected FilterOverlay ref to be available');
+    }
+
+    return (filterOverlayRef.current: any);
+};
+
+const renderFilterOverlay = ({
+    categoryRootKey = undefined,
+    dataSourceAdapter = undefined,
+    dataSourceListKey = undefined,
+    dataSourceResourceKey = undefined,
+    defaultValue: filterDefaultValue = defaultValue,
+    filterOverlayRef = undefined,
+    onClose = jest.fn(),
+    open = true,
+    presentations = {},
+    sections = [],
+    smartContentStore = new SmartContentStore('content'),
+    sortings = [],
+    title = 'Test',
+    types = [],
+}: Object = {}) => {
+    return {
+        ...render(
+            <FilterOverlay
+                categoryRootKey={categoryRootKey}
+                dataSourceAdapter={dataSourceAdapter}
+                dataSourceListKey={dataSourceListKey}
+                dataSourceResourceKey={dataSourceResourceKey}
+                defaultValue={filterDefaultValue}
+                onClose={onClose}
+                open={open}
+                presentations={presentations}
+                ref={filterOverlayRef}
+                sections={sections}
+                smartContentStore={smartContentStore}
+                sortings={sortings}
+                title={title}
+                types={types}
+            />
+        ),
+        onClose,
+        smartContentStore,
+    };
+};
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
 test('Do not display if open is set to false', () => {
     const smartContentStore = new SmartContentStore('content');
 
-    const defaultValue = {
-        dataSource: 1,
-        includeSubFolders: true,
-        categories: [],
-        categoryOperator: 'and',
-        tags: [],
-        tagOperator: 'or',
-        audienceTargeting: true,
-        sortBy: 'title',
-        sortMethod: 'asc',
-        presentAs: 'two',
-        limitResult: 5,
-        types: [],
-    };
+    renderFilterOverlay({
+        dataSourceAdapter: 'table',
+        dataSourceListKey: 'snippets',
+        dataSourceResourceKey: 'snippets',
+        open: false,
+        smartContentStore,
+    });
 
-    const filterOverlay = shallow(
-        <FilterOverlay
-            categoryRootKey={undefined}
-            dataSourceAdapter="table"
-            dataSourceListKey="snippets"
-            dataSourceResourceKey="snippets"
-            defaultValue={defaultValue}
-            onClose={jest.fn()}
-            open={false}
-            presentations={{}}
-            sections={[]}
-            smartContentStore={smartContentStore}
-            sortings={[]}
-            title="Test"
-            types={[]}
-        />
-    );
-
-    expect(filterOverlay.find('Overlay').prop('open')).toEqual(false);
+    expect(getOverlayProps().open).toEqual(false);
 });
 
 test('Pass rootKey for categories to options for category list', () => {
@@ -67,40 +211,17 @@ test('Pass rootKey for categories to options for category list', () => {
     // $FlowFixMe
     smartContentStore.loading = false;
 
-    const defaultValue = {
-        dataSource: 1,
-        includeSubFolders: true,
-        categories: [],
-        categoryOperator: 'and',
-        tags: [],
-        tagOperator: 'or',
-        audienceTargeting: true,
-        sortBy: 'title',
-        sortMethod: 'asc',
-        presentAs: 'two',
-        limitResult: 5,
-        types: [],
-    };
+    renderFilterOverlay({
+        categoryRootKey: 'test1',
+        dataSourceAdapter: 'table',
+        dataSourceListKey: 'snippets',
+        dataSourceResourceKey: 'snippets',
+        open: false,
+        sections: ['categories'],
+        smartContentStore,
+    });
 
-    const filterOverlay = shallow(
-        <FilterOverlay
-            categoryRootKey="test1"
-            dataSourceAdapter="table"
-            dataSourceListKey="snippets"
-            dataSourceResourceKey="snippets"
-            defaultValue={defaultValue}
-            onClose={jest.fn()}
-            open={false}
-            presentations={{}}
-            sections={['categories']}
-            smartContentStore={smartContentStore}
-            sortings={[]}
-            title="Test"
-            types={[]}
-        />
-    );
-
-    expect(filterOverlay.find(MultiListOverlay).find('[resourceKey="categories"]').prop('options'))
+    expect(getMultiListOverlayProps((props) => props.resourceKey === 'categories').options)
         .toEqual({rootKey: 'test1'});
 });
 
@@ -109,41 +230,16 @@ test('Render with ListOverlays if smartContentStore is loaded', () => {
     // $FlowFixMe
     smartContentStore.loading = false;
 
-    const defaultValue = {
-        dataSource: 1,
-        includeSubFolders: true,
-        categories: [],
-        categoryOperator: 'and',
-        tags: [],
-        tagOperator: 'or',
-        audienceTargeting: true,
-        sortBy: 'title',
-        sortMethod: 'asc',
-        presentAs: 'two',
-        limitResult: 5,
-        types: [],
-    };
+    renderFilterOverlay({
+        dataSourceAdapter: 'table',
+        dataSourceListKey: 'snippets',
+        dataSourceResourceKey: 'snippets',
+        sections: ['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit'],
+        smartContentStore,
+    });
 
-    const filterOverlay = shallow(
-        <FilterOverlay
-            categoryRootKey={undefined}
-            dataSourceAdapter="table"
-            dataSourceListKey="snippets"
-            dataSourceResourceKey="snippets"
-            defaultValue={defaultValue}
-            onClose={jest.fn()}
-            open={true}
-            presentations={{}}
-            sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
-            smartContentStore={smartContentStore}
-            sortings={[]}
-            title="Test"
-            types={[]}
-        />
-    );
-
-    expect(filterOverlay.find(SingleListOverlay)).toHaveLength(1);
-    expect(filterOverlay.find(MultiListOverlay)).toHaveLength(1);
+    expect(SingleListOverlayMock).toHaveBeenCalledTimes(1);
+    expect(MultiListOverlayMock).toHaveBeenCalledTimes(1);
 });
 
 test('Render without ListOverlays if smartContentStore is not loaded', () => {
@@ -151,227 +247,154 @@ test('Render without ListOverlays if smartContentStore is not loaded', () => {
     // $FlowFixMe
     smartContentStore.loading = true;
 
-    const defaultValue = {
-        dataSource: 1,
-        includeSubFolders: true,
-        categories: [],
-        categoryOperator: 'and',
-        tags: [],
-        tagOperator: 'or',
-        audienceTargeting: true,
-        sortBy: 'title',
-        sortMethod: 'asc',
-        presentAs: 'two',
-        limitResult: 5,
-        types: [],
-    };
+    renderFilterOverlay({
+        sections: ['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit'],
+        smartContentStore,
+    });
 
-    const filterOverlay = mount(
-        <FilterOverlay
-            categoryRootKey={undefined}
-            dataSourceAdapter={undefined}
-            dataSourceListKey={undefined}
-            dataSourceResourceKey={undefined}
-            defaultValue={defaultValue}
-            onClose={jest.fn()}
-            open={true}
-            presentations={{}}
-            sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
-            smartContentStore={smartContentStore}
-            sortings={[]}
-            title="Test"
-            types={[]}
-        />
-    );
-    expect(filterOverlay.find(SingleListOverlay)).toHaveLength(0);
-    expect(filterOverlay.find(MultiListOverlay)).toHaveLength(0);
+    expect(SingleListOverlayMock).not.toBeCalled();
+    expect(MultiListOverlayMock).not.toBeCalled();
 });
 
 test('Render with all fields', () => {
     const smartContentStore = new SmartContentStore('content');
 
-    const defaultValue = {
-        dataSource: 1,
-        includeSubFolders: true,
-        categories: [],
-        categoryOperator: 'and',
-        tags: [],
-        tagOperator: 'or',
-        audienceTargeting: true,
-        sortBy: 'title',
-        sortMethod: 'asc',
-        presentAs: 'two',
-        limitResult: 5,
-        types: [],
-    };
+    renderFilterOverlay({
+        sections: ['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit'],
+        smartContentStore,
+    });
 
-    const filterOverlay = mount(
-        <FilterOverlay
-            categoryRootKey={undefined}
-            dataSourceAdapter={undefined}
-            dataSourceListKey={undefined}
-            dataSourceResourceKey={undefined}
-            defaultValue={defaultValue}
-            onClose={jest.fn()}
-            open={true}
-            presentations={{}}
-            sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
-            smartContentStore={smartContentStore}
-            sortings={[]}
-            title="Test"
-            types={[]}
-        />
-    );
-    expect(filterOverlay.find('Portal').at(1).render()).toMatchSnapshot();
+    expect(screen.getByText('sulu_admin.data_source')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.filter_by_categories')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.filter_by_tags')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.target_groups')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.sort_by')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.present_as')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.limit_result_to')).toBeInTheDocument();
 });
 
 test('Render with no fields', () => {
     const smartContentStore = new SmartContentStore('content');
 
-    const defaultValue = {
-        dataSource: 1,
-        includeSubFolders: true,
-        categories: [],
-        categoryOperator: 'and',
-        tags: [],
-        tagOperator: 'or',
-        audienceTargeting: true,
-        sortBy: 'title',
-        sortMethod: 'asc',
-        presentAs: 'two',
-        limitResult: 5,
-        types: [],
-    };
+    renderFilterOverlay({
+        sections: [],
+        smartContentStore,
+    });
 
-    const filterOverlay = mount(
-        <FilterOverlay
-            categoryRootKey={undefined}
-            dataSourceAdapter={undefined}
-            dataSourceListKey={undefined}
-            dataSourceResourceKey={undefined}
-            defaultValue={defaultValue}
-            onClose={jest.fn()}
-            open={true}
-            presentations={{}}
-            sections={[]}
-            smartContentStore={smartContentStore}
-            sortings={[]}
-            title="Test"
-            types={[]}
-        />
-    );
-    expect(filterOverlay.find('Portal').at(1).render()).toMatchSnapshot();
+    expect(screen.queryByText('sulu_admin.data_source')).not.toBeInTheDocument();
+    expect(screen.queryByText('sulu_admin.filter_by_categories')).not.toBeInTheDocument();
+    expect(screen.queryByText('sulu_admin.filter_by_tags')).not.toBeInTheDocument();
+    expect(screen.queryByText('sulu_admin.target_groups')).not.toBeInTheDocument();
+    expect(screen.queryByText('sulu_admin.sort_by')).not.toBeInTheDocument();
+    expect(screen.queryByText('sulu_admin.present_as')).not.toBeInTheDocument();
+    expect(screen.queryByText('sulu_admin.limit_result_to')).not.toBeInTheDocument();
 });
 
 test('Fill all fields using and update SmartContentStore on confirm', () => {
     const smartContentStore = new SmartContentStore('content');
     const closeSpy = jest.fn();
+    const filterOverlayRef = React.createRef();
+    const pagesOverlayMatcher = (props) => props.listKey === 'pages_list' && props.resourceKey === 'pages';
+    const categoriesOverlayMatcher = (props) => props.resourceKey === 'categories';
 
-    const defaultValue = {
-        dataSource: 1,
-        includeSubFolders: true,
-        categories: [],
-        categoryOperator: 'and',
-        tags: [],
-        tagOperator: 'or',
-        audienceTargeting: true,
-        sortBy: 'title',
-        sortMethod: 'asc',
-        presentAs: 'two',
-        limitResult: 5,
-        types: [],
-    };
+    renderFilterOverlay({
+        dataSourceAdapter: 'table',
+        dataSourceListKey: 'pages_list',
+        dataSourceResourceKey: 'pages',
+        filterOverlayRef,
+        onClose: closeSpy,
+        presentations: {
+            small: 'Small',
+            large: 'Large',
+        },
+        sections: [
+            'datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit', 'types',
+        ],
+        smartContentStore,
+        sortings: [
+            {name: 'title', value: 'Title'},
+            {name: 'changed', value: 'Changed'},
+        ],
+        types: [
+            {name: 'default', value: 'default'},
+            {name: 'homepage', value: 'homepage'},
+        ],
+    });
 
-    const filterOverlay = mount(
-        <FilterOverlay
-            categoryRootKey={undefined}
-            dataSourceAdapter="table"
-            dataSourceListKey="pages_list"
-            dataSourceResourceKey="pages"
-            defaultValue={defaultValue}
-            onClose={closeSpy}
-            open={true}
-            presentations={{
-                small: 'Small',
-                large: 'Large',
-            }}
-            sections={[
-                'datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit', 'types',
-            ]}
-            smartContentStore={smartContentStore}
-            sortings={[
-                {name: 'title', value: 'Title'},
-                {name: 'changed', value: 'Changed'},
-            ]}
-            title="Test"
-            types={[
-                {name: 'default', value: 'default'},
-                {name: 'homepage', value: 'homepage'},
-            ]}
-        />
-    );
+    act(() => {
+        getButtonProps('sulu_admin.choose_data_source').onClick();
+    });
+    expect(getSingleListOverlayProps(pagesOverlayMatcher).open).toEqual(true);
 
-    const pagesOptions = {listKey: 'pages_list', resourceKey: 'pages'};
+    act(() => {
+        getSingleListOverlayProps(pagesOverlayMatcher).onConfirm({id: 2, title: 'Test'});
+    });
+    expect(getSingleListOverlayProps(pagesOverlayMatcher).open).toEqual(false);
+    expect(screen.getByText(/sulu_admin\.data_source:\s*Test/)).toBeInTheDocument();
 
-    filterOverlay.find('Button[children="sulu_admin.choose_data_source"]').prop('onClick')();
-    filterOverlay.update();
-    expect(filterOverlay.find(SingleListOverlay).find(pagesOptions).prop('open')).toEqual(true);
-    filterOverlay.find(SingleListOverlay).find(pagesOptions).prop('onConfirm')({id: 2, title: 'Test'});
-    filterOverlay.update();
-    expect(filterOverlay.find(SingleListOverlay).find(pagesOptions).prop('open')).toEqual(false);
-    expect(filterOverlay.find('section').at(1).find('label[className="description"]').text())
-        .toEqual('sulu_admin.data_source: Test');
+    act(() => {
+        getTogglerProps('sulu_admin.include_sub_elements').onChange(true);
+    });
+    expect(getTogglerProps('sulu_admin.include_sub_elements').checked).toEqual(true);
 
-    filterOverlay.find('Toggler[children="sulu_admin.include_sub_elements"]').prop('onChange')(true);
-    filterOverlay.update();
-    expect(filterOverlay.find('Toggler[children="sulu_admin.include_sub_elements"]').prop('checked')).toEqual(true);
+    act(() => {
+        getButtonProps('sulu_admin.choose_categories').onClick();
+    });
+    expect(getMultiListOverlayProps(categoriesOverlayMatcher).open).toEqual(true);
 
-    filterOverlay.find('Button[children="sulu_admin.choose_categories"]').prop('onClick')();
-    filterOverlay.update();
-    expect(filterOverlay.find(MultiListOverlay).find({resourceKey: 'categories'}).prop('open')).toEqual(true);
-    filterOverlay.find(MultiListOverlay).find({resourceKey: 'categories'}).prop('onConfirm')([
-        {id: 1, name: 'Test1'},
-        {id: 3, name: 'Test2'},
-    ]);
-    filterOverlay.update();
-    expect(filterOverlay.find(MultiListOverlay).find({resourceKey: 'categories'}).prop('open')).toEqual(false);
-    expect(filterOverlay.find('section').at(2).find('label[className="description"]').text())
-        .toEqual('sulu_category.categories: Test1, Test2');
+    act(() => {
+        getMultiListOverlayProps(categoriesOverlayMatcher).onConfirm([
+            {id: 1, name: 'Test1'},
+            {id: 3, name: 'Test2'},
+        ]);
+    });
+    expect(getMultiListOverlayProps(categoriesOverlayMatcher).open).toEqual(false);
+    expect(screen.getByText(/sulu_category\.categories:\s*Test1,\s*Test2/)).toBeInTheDocument();
 
-    filterOverlay.find('div[className="categories"]').find('SingleSelect').prop('onChange')('and');
-    filterOverlay.update();
-    expect(filterOverlay.find('div[className="categories"]').find('SingleSelect').prop('value')).toEqual('and');
+    act(() => {
+        getSingleSelectPropsAt(0).onChange('and');
+    });
+    expect(getSingleSelectPropsAt(0).value).toEqual('and');
 
-    filterOverlay.instance().tagSelectionStore.items.push({id: 1, name: 'Test 1'}, {id: 2, name: 'Test 3'});
-    expect(filterOverlay.instance().tags).toEqual(['Test 1', 'Test 3']);
+    act(() => {
+        getTagSelectionStore().items.push({id: 1, name: 'Test 1'}, {id: 2, name: 'Test 3'});
+    });
+    expect(getFilterOverlayInstance(filterOverlayRef).tags).toEqual(['Test 1', 'Test 3']);
 
-    filterOverlay.find('div[className="tags"]').find('SingleSelect').prop('onChange')('or');
-    filterOverlay.update();
-    expect(filterOverlay.find('div[className="tags"]').find('SingleSelect').prop('value')).toEqual('or');
+    act(() => {
+        getSingleSelectPropsAt(1).onChange('or');
+    });
+    expect(getSingleSelectPropsAt(1).value).toEqual('or');
 
-    filterOverlay.find('div[className="types"]').find('MultiSelect').prop('onChange')(['default']);
-    filterOverlay.update();
-    expect(filterOverlay.find('div[className="types"]').find('MultiSelect').prop('values')).toEqual(['default']);
+    act(() => {
+        getMultiSelectProps().onChange(['default']);
+    });
+    expect(getMultiSelectProps().values).toEqual(['default']);
 
-    filterOverlay.find('Toggler[children="sulu_admin.use_target_groups"]').prop('onChange')(false);
-    filterOverlay.update();
-    expect(filterOverlay.find('Toggler[children="sulu_admin.use_target_groups"]').prop('checked')).toEqual(false);
+    act(() => {
+        getTogglerProps('sulu_admin.use_target_groups').onChange(false);
+    });
+    expect(getTogglerProps('sulu_admin.use_target_groups').checked).toEqual(false);
 
-    filterOverlay.find('div[className="sortColumn"]').find('SingleSelect').prop('onChange')('changed');
-    filterOverlay.update();
-    expect(filterOverlay.find('div[className="sortColumn"]').find('SingleSelect').prop('value')).toEqual('changed');
+    act(() => {
+        getSingleSelectPropsAt(2).onChange('changed');
+    });
+    expect(getSingleSelectPropsAt(2).value).toEqual('changed');
 
-    filterOverlay.find('div[className="sortOrder"]').find('SingleSelect').prop('onChange')('asc');
-    filterOverlay.update();
-    expect(filterOverlay.find('div[className="sortOrder"]').find('SingleSelect').prop('value')).toEqual('asc');
+    act(() => {
+        getSingleSelectPropsAt(3).onChange('asc');
+    });
+    expect(getSingleSelectPropsAt(3).value).toEqual('asc');
 
-    filterOverlay.find('div[className="presentation"]').find('SingleSelect').prop('onChange')('large');
-    filterOverlay.update();
-    expect(filterOverlay.find('div[className="presentation"]').find('SingleSelect').prop('value')).toEqual('large');
+    act(() => {
+        getSingleSelectPropsAt(4).onChange('large');
+    });
+    expect(getSingleSelectPropsAt(4).value).toEqual('large');
 
-    filterOverlay.find('div[className="limit"] Number').prop('onChange')(7);
-    filterOverlay.update();
-    expect(filterOverlay.find('div[className="limit"] Number').prop('value')).toEqual(7);
+    act(() => {
+        getNumberProps().onChange(7);
+    });
+    expect(getNumberProps().value).toEqual(7);
 
     expect(smartContentStore.dataSource).toEqual(undefined);
     expect(smartContentStore.includeSubElements).toEqual(undefined);
@@ -386,7 +409,9 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     expect(smartContentStore.limit).toEqual(undefined);
     expect(smartContentStore.types).toEqual(undefined);
 
-    filterOverlay.find('Overlay').prop('onConfirm')();
+    act(() => {
+        getOverlayProps().onConfirm();
+    });
 
     expect(smartContentStore.dataSource).toEqual({id: 2, title: 'Test'});
     expect(smartContentStore.includeSubElements).toEqual(true);
@@ -418,83 +443,57 @@ test('Prefill all fields with correct values', () => {
     smartContentStore.presentation = 'small';
     smartContentStore.limit = 8;
     smartContentStore.types = ['default', 'homepage'];
+    const categoryOverlayMatcher = (props) => props.listKey === 'categories' && props.resourceKey === 'categories';
 
-    const defaultValue = {
-        dataSource: 1,
-        includeSubFolders: true,
-        categories: [],
-        categoryOperator: 'and',
-        tags: [],
-        tagOperator: 'or',
-        audienceTargeting: true,
-        sortBy: 'title',
-        sortMethod: 'asc',
-        presentAs: 'two',
-        limitResult: 5,
-        types: [],
-    };
+    renderFilterOverlay({
+        dataSourceAdapter: 'table',
+        dataSourceListKey: 'pages',
+        dataSourceResourceKey: 'pages',
+        presentations: {
+            small: 'Small',
+            large: 'Large',
+        },
+        sections: [
+            'datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit', 'types',
+        ],
+        smartContentStore,
+        sortings: [
+            {name: 'title', value: 'Title'},
+            {name: 'created', value: 'Created'},
+        ],
+        types: [
+            {name: 'default', value: 'default'},
+            {name: 'homepage', value: 'homepage'},
+        ],
+    });
 
-    const filterOverlay = mount(
-        <FilterOverlay
-            categoryRootKey={undefined}
-            dataSourceAdapter="table"
-            dataSourceListKey="pages"
-            dataSourceResourceKey="pages"
-            defaultValue={defaultValue}
-            onClose={jest.fn()}
-            open={true}
-            presentations={{
-                small: 'Small',
-                large: 'Large',
-            }}
-            sections={[
-                'datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit', 'types',
-            ]}
-            smartContentStore={smartContentStore}
-            sortings={[
-                {name: 'title', value: 'Title'},
-                {name: 'created', value: 'Created'},
-            ]}
-            title="Test"
-            types={[
-                {name: 'default', value: 'default'},
-                {name: 'homepage', value: 'homepage'},
-            ]}
-        />
-    );
-
-    const categoryOptions = {listKey: 'categories', resourceKey: 'categories'};
-
-    expect(filterOverlay.find('section').at(1).find('label[className="description"]').text())
-        .toEqual('sulu_admin.data_source: Homepage');
-    expect(filterOverlay.find(SingleListOverlay).find({resourceKey: 'pages'}).prop('preSelectedItem'))
+    expect(screen.getByText(/sulu_admin\.data_source:\s*Homepage/)).toBeInTheDocument();
+    expect(getSingleListOverlayProps((props) => props.resourceKey === 'pages').preSelectedItem)
         .toEqual({id: 4, title: 'Homepage'});
-    expect(filterOverlay.find('Toggler[children="sulu_admin.include_sub_elements"]').prop('checked')).toEqual(true);
+    expect(getTogglerProps('sulu_admin.include_sub_elements').checked).toEqual(true);
 
-    expect(filterOverlay.find('section').at(2).find('label[className="description"]').text())
-        .toEqual('sulu_category.categories: Test1, Test3');
-    expect(filterOverlay.find(MultiListOverlay).find(categoryOptions).prop('preSelectedItems'))
+    expect(screen.getByText(/sulu_category\.categories:\s*Test1,\s*Test3/)).toBeInTheDocument();
+    expect(getMultiListOverlayProps(categoryOverlayMatcher).preSelectedItems)
         .toEqual([{id: 1, name: 'Test1'}, {id: 5, name: 'Test3'}]);
-    expect(filterOverlay.find('div[className="categories"]').find('SingleSelect').prop('value')).toEqual('or');
+    expect(getSingleSelectPropsAt(0).value).toEqual('or');
 
     expect(MultiSelectionStore).toBeCalledWith('tags', [1, 2], undefined, 'names');
-    expect(filterOverlay.find('div[className="tags"]').find('SingleSelect').prop('value')).toEqual('and');
+    expect(getSingleSelectPropsAt(1).value).toEqual('and');
 
-    expect(filterOverlay.find('div[className="types"]').find('MultiSelect').prop('values')).toEqual(
-        ['default', 'homepage']
-    );
+    expect(getMultiSelectProps().values).toEqual(['default', 'homepage']);
 
-    expect(filterOverlay.find('Toggler[children="sulu_admin.use_target_groups"]').prop('checked')).toEqual(true);
+    expect(getTogglerProps('sulu_admin.use_target_groups').checked).toEqual(true);
 
-    expect(filterOverlay.find('div[className="sortColumn"]').find('SingleSelect').prop('value')).toEqual('created');
-    expect(filterOverlay.find('div[className="sortOrder"]').find('SingleSelect').prop('value')).toEqual('desc');
+    expect(getSingleSelectPropsAt(2).value).toEqual('created');
+    expect(getSingleSelectPropsAt(3).value).toEqual('desc');
 
-    expect(filterOverlay.find('div[className="presentation"]').find('SingleSelect').prop('value')).toEqual('small');
-    expect(filterOverlay.find('div[className="limit"] Number').prop('value')).toEqual(8);
+    expect(getSingleSelectPropsAt(4).value).toEqual('small');
+    expect(getNumberProps().value).toEqual(8);
 });
 
 test('Reset all fields when reset action is clicked', () => {
     const smartContentStore = new SmartContentStore('content');
+    const filterOverlayRef = React.createRef();
     smartContentStore.dataSource = {id: 4, url: '/home'};
     smartContentStore.includeSubElements = true;
     smartContentStore.categories = [{id: 1, name: 'Test1'}, {id: 5, name: 'Test3'}];
@@ -508,61 +507,41 @@ test('Reset all fields when reset action is clicked', () => {
     smartContentStore.limit = 5;
     smartContentStore.types = ['default', 'homepage'];
 
-    const defaultValue = {
-        dataSource: 1,
-        includeSubFolders: true,
-        categories: [],
-        categoryOperator: 'and',
-        tags: [],
-        tagOperator: 'or',
-        audienceTargeting: true,
-        sortBy: 'title',
-        sortMethod: 'asc',
-        presentAs: 'two',
-        limitResult: 5,
-        types: [],
-    };
+    renderFilterOverlay({
+        dataSourceAdapter: 'table',
+        dataSourceListKey: 'pages',
+        dataSourceResourceKey: 'pages',
+        filterOverlayRef,
+        presentations: {
+            small: 'Small',
+            large: 'Large',
+        },
+        sections: ['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit'],
+        smartContentStore,
+        sortings: [
+            {name: 'title', value: 'Title'},
+            {name: 'created', value: 'Created'},
+        ],
+        types: [
+            {name: 'default', value: 'default'},
+            {name: 'homepage', value: 'homepage'},
+        ],
+    });
 
-    const filterOverlay = mount(
-        <FilterOverlay
-            categoryRootKey={undefined}
-            dataSourceAdapter="table"
-            dataSourceListKey="pages"
-            dataSourceResourceKey="pages"
-            defaultValue={defaultValue}
-            onClose={jest.fn()}
-            open={true}
-            presentations={{
-                small: 'Small',
-                large: 'Large',
-            }}
-            sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
-            smartContentStore={smartContentStore}
-            sortings={[
-                {name: 'title', value: 'Title'},
-                {name: 'created', value: 'Created'},
-            ]}
-            title="Test"
-            types={[
-                {name: 'default', value: 'default'},
-                {name: 'homepage', value: 'homepage'},
-            ]}
-        />
-    );
+    act(() => {
+        getOverlayProps().actions[0].onClick();
+    });
 
-    filterOverlay.find('Overlay').prop('actions')[0].onClick();
-    filterOverlay.update();
-
-    expect(filterOverlay.instance().dataSource).toEqual(1);
-    expect(filterOverlay.instance().includeSubElements).toEqual(true);
-    expect(filterOverlay.instance().categories).toEqual([]);
-    expect(filterOverlay.instance().categoryOperator).toEqual('and');
-    expect(filterOverlay.instance().tags).toEqual([]);
-    expect(filterOverlay.instance().tagOperator).toEqual('or');
-    expect(filterOverlay.instance().audienceTargeting).toEqual(true);
-    expect(filterOverlay.instance().sortBy).toEqual('title');
-    expect(filterOverlay.instance().sortOrder).toEqual('asc');
-    expect(filterOverlay.instance().presentation).toEqual('two');
-    expect(filterOverlay.instance().limit).toEqual(5);
-    expect(filterOverlay.instance().types).toEqual([]);
+    expect(getFilterOverlayInstance(filterOverlayRef).dataSource).toEqual(1);
+    expect(getFilterOverlayInstance(filterOverlayRef).includeSubElements).toEqual(true);
+    expect(getFilterOverlayInstance(filterOverlayRef).categories).toEqual([]);
+    expect(getFilterOverlayInstance(filterOverlayRef).categoryOperator).toEqual('and');
+    expect(getFilterOverlayInstance(filterOverlayRef).tags).toEqual([]);
+    expect(getFilterOverlayInstance(filterOverlayRef).tagOperator).toEqual('or');
+    expect(getFilterOverlayInstance(filterOverlayRef).audienceTargeting).toEqual(true);
+    expect(getFilterOverlayInstance(filterOverlayRef).sortBy).toEqual('title');
+    expect(getFilterOverlayInstance(filterOverlayRef).sortOrder).toEqual('asc');
+    expect(getFilterOverlayInstance(filterOverlayRef).presentation).toEqual('two');
+    expect(getFilterOverlayInstance(filterOverlayRef).limit).toEqual(5);
+    expect(getFilterOverlayInstance(filterOverlayRef).types).toEqual([]);
 });

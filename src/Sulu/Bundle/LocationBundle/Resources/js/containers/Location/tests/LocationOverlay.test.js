@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
-import {Input, Number, Overlay} from 'sulu-admin-bundle/components';
+import {act, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import {Overlay as OverlayComponent} from 'sulu-admin-bundle/components';
 import {SingleAutoComplete} from 'sulu-admin-bundle/containers';
 import {MapContainer, Marker} from 'react-leaflet';
 import LocationOverlay from '../LocationOverlay';
@@ -10,18 +11,112 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-test('Component should render without a given initial-value', () => {
-    const locationOverlay = mount(
+jest.mock('sulu-admin-bundle/components', () => {
+    const actual = jest.requireActual('sulu-admin-bundle/components');
+
+    return {
+        ...actual,
+        Overlay: jest.fn(function Overlay(props) {
+            return <div data-testid="overlay">{props.children}</div>;
+        }),
+    };
+});
+
+jest.mock('sulu-admin-bundle/containers', () => ({
+    SingleAutoComplete: jest.fn(() => null),
+}));
+
+jest.mock('react-leaflet', () => ({
+    MapContainer: jest.fn(function MapContainer(props) {
+        return <div data-testid="map-container">{props.children}</div>;
+    }),
+    Marker: jest.fn(function Marker(props) {
+        return <div data-testid="marker">{props.children}</div>;
+    }),
+    TileLayer: jest.fn(() => null),
+}));
+
+function getLatestOverlayProps() {
+    const calls = (OverlayComponent: any).mock.calls;
+
+    return calls[calls.length - 1][0];
+}
+
+function getLatestSingleAutoCompleteProps() {
+    const calls = (SingleAutoComplete: any).mock.calls;
+
+    return calls[calls.length - 1][0];
+}
+
+function getLatestMapContainerProps() {
+    const calls = (MapContainer: any).mock.calls;
+
+    return calls[calls.length - 1][0];
+}
+
+function getLatestMarkerProps() {
+    const calls = (Marker: any).mock.calls;
+
+    return calls[calls.length - 1][0];
+}
+
+function renderLocationOverlay(props: Object = {}) {
+    return render(
         <LocationOverlay
             locale="en"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
             value={null}
+            {...props}
         />
     );
+}
 
-    expect(locationOverlay.render()).toMatchSnapshot();
+function getLatInput() {
+    return screen.getAllByRole('spinbutton')[0];
+}
+
+function getLongInput() {
+    return screen.getAllByRole('spinbutton')[1];
+}
+
+function getZoomInput() {
+    return screen.getAllByRole('spinbutton')[2];
+}
+
+function getTitleInput() {
+    return screen.getAllByRole('textbox')[0];
+}
+
+function getStreetInput() {
+    return screen.getAllByRole('textbox')[1];
+}
+
+function getNumberInput() {
+    return screen.getAllByRole('textbox')[2];
+}
+
+function getCodeInput() {
+    return screen.getAllByRole('textbox')[3];
+}
+
+function getTownInput() {
+    return screen.getAllByRole('textbox')[4];
+}
+
+function getCountryInput() {
+    return screen.getAllByRole('textbox')[5];
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+test('Component should render without a given initial-value', () => {
+    const {asFragment} = renderLocationOverlay();
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Component should render with a given initial-value', () => {
@@ -37,31 +132,15 @@ test('Component should render with a given initial-value', () => {
         zoom: 5,
     };
 
-    const locationOverlay = mount(
-        <LocationOverlay
-            locale="en"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            value={locationData}
-        />
-    );
+    const {asFragment} = renderLocationOverlay({value: locationData});
 
-    expect(locationOverlay.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should pass correct props the the Overlay component', () => {
-    const locationOverlay = mount(
-        <LocationOverlay
-            locale="en"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            value={null}
-        />
-    );
+    renderLocationOverlay();
 
-    expect(locationOverlay.find(Overlay).props()).toEqual(expect.objectContaining({
+    expect(getLatestOverlayProps()).toEqual(expect.objectContaining({
         confirmDisabled: false,
         confirmText: 'sulu_admin.confirm',
         open: true,
@@ -71,40 +150,24 @@ test('Should pass correct props the the Overlay component', () => {
 });
 
 test('Should pass correct props the the SingleAutoComplete component', () => {
-    const locationOverlay = mount(
-        <LocationOverlay
-            locale="en"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            value={null}
-        />
-    );
+    renderLocationOverlay();
 
-    expect(locationOverlay.find(SingleAutoComplete).props()).toEqual(expect.objectContaining({
+    expect(getLatestSingleAutoCompleteProps()).toEqual(expect.objectContaining({
         displayProperty: 'displayTitle',
         searchProperties: ['displayTitle'],
     }));
 });
 
 test('Should pass correct props the Map component and Marker component when no initial-value is given', () => {
-    const locationOverlay = mount(
-        <LocationOverlay
-            locale="en"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            value={null}
-        />
-    );
+    renderLocationOverlay();
 
-    expect(locationOverlay.find(MapContainer).props()).toEqual(expect.objectContaining({
+    expect(getLatestMapContainerProps()).toEqual(expect.objectContaining({
         attributionControl: false,
         center: [0, 0],
         zoom: 1,
     }));
 
-    expect(locationOverlay.find(Marker).props()).toEqual(expect.objectContaining({
+    expect(getLatestMarkerProps()).toEqual(expect.objectContaining({
         draggable: true,
         position: [0, 0],
     }));
@@ -123,23 +186,15 @@ test('Should pass correct props the Map component and Marker component when an i
         zoom: 5,
     };
 
-    const locationOverlay = mount(
-        <LocationOverlay
-            locale="en"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            value={locationData}
-        />
-    );
+    renderLocationOverlay({value: locationData});
 
-    expect(locationOverlay.find(MapContainer).props()).toEqual(expect.objectContaining({
+    expect(getLatestMapContainerProps()).toEqual(expect.objectContaining({
         attributionControl: false,
         center: [22, 33],
         zoom: 5,
     }));
 
-    expect(locationOverlay.find(Marker).props()).toEqual(expect.objectContaining({
+    expect(getLatestMarkerProps()).toEqual(expect.objectContaining({
         draggable: true,
         position: [22, 33],
     }));
@@ -158,40 +213,26 @@ test('Should pass correct props to the input fields', () => {
         zoom: 5,
     };
 
-    const locationOverlay = mount(
-        <LocationOverlay
-            locale="en"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            value={locationData}
-        />
-    );
+    renderLocationOverlay({value: locationData});
 
-    expect(locationOverlay.find(Number).at(0).props().value).toEqual(22); // lat
-    expect(locationOverlay.find(Number).at(1).props().value).toEqual(33); // long
-    expect(locationOverlay.find(Number).at(2).props().value).toEqual(5); // zoom
-    expect(locationOverlay.find(Input).at(4).props().value).toEqual('title-123'); // title
-    expect(locationOverlay.find(Input).at(5).props().value).toEqual('street-123'); // street
-    expect(locationOverlay.find(Input).at(6).props().value).toBeUndefined(); // number
-    expect(locationOverlay.find(Input).at(7).props().value).toEqual('code-123'); // code
-    expect(locationOverlay.find(Input).at(8).props().value).toEqual('town-123'); // town
-    expect(locationOverlay.find(Input).at(9).props().value).toBeUndefined(); // country
+    expect(getLatInput()).toHaveValue(22); // lat
+    expect(getLongInput()).toHaveValue(33); // long
+    expect(getZoomInput()).toHaveValue(5); // zoom
+    expect(getTitleInput()).toHaveValue('title-123'); // title
+    expect(getStreetInput()).toHaveValue('street-123'); // street
+    expect(getNumberInput()).toHaveValue(''); // number
+    expect(getCodeInput()).toHaveValue('code-123'); // code
+    expect(getTownInput()).toHaveValue('town-123'); // town
+    expect(getCountryInput()).toHaveValue(''); // country
 });
 
 test('Should pass correct props to the map, marker and input fields after auto-complete was changed', () => {
-    const locationOverlay = mount(
-        <LocationOverlay
-            locale="en"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            value={null}
-        />
-    );
+    renderLocationOverlay();
 
     const mockedMap = {setView: jest.fn(), on: jest.fn()};
-    locationOverlay.find(MapContainer).props().whenCreated(mockedMap);
+    act(() => {
+        getLatestMapContainerProps().whenCreated(mockedMap);
+    });
 
     const autoCompleteResult = {
         latitude: 10,
@@ -204,37 +245,27 @@ test('Should pass correct props to the map, marker and input fields after auto-c
         country: 'new-country',
     };
 
-    locationOverlay.find(SingleAutoComplete).props().selectionStore.set(autoCompleteResult);
-    locationOverlay.update();
+    act(() => {
+        getLatestSingleAutoCompleteProps().selectionStore.set(autoCompleteResult);
+    });
 
-    expect(locationOverlay.find(Number).at(0).props().value).toEqual(autoCompleteResult.latitude); // lat
-    expect(locationOverlay.find(Number).at(1).props().value).toEqual(autoCompleteResult.longitude); // long
-    expect(locationOverlay.find(Number).at(2).props().value).toEqual(1); // zoom
-    expect(locationOverlay.find(Input).at(4).props().value).toEqual(autoCompleteResult.displayTitle); // title
-    expect(locationOverlay.find(Input).at(5).props().value).toEqual(autoCompleteResult.street); // street
-    expect(locationOverlay.find(Input).at(6).props().value).toEqual(autoCompleteResult.number); // number
-    expect(locationOverlay.find(Input).at(7).props().value).toEqual(autoCompleteResult.code); // code
-    expect(locationOverlay.find(Input).at(8).props().value).toEqual(autoCompleteResult.town); // town
-    expect(locationOverlay.find(Input).at(9).props().value).toEqual(autoCompleteResult.country); // country
+    expect(getLatInput()).toHaveValue(autoCompleteResult.latitude); // lat
+    expect(getLongInput()).toHaveValue(autoCompleteResult.longitude); // long
+    expect(getZoomInput()).toHaveValue(1); // zoom
+    expect(getTitleInput()).toHaveValue(autoCompleteResult.displayTitle); // title
+    expect(getStreetInput()).toHaveValue(autoCompleteResult.street); // street
+    expect(getNumberInput()).toHaveValue(autoCompleteResult.number); // number
+    expect(getCodeInput()).toHaveValue(autoCompleteResult.code); // code
+    expect(getTownInput()).toHaveValue(autoCompleteResult.town); // town
+    expect(getCountryInput()).toHaveValue(autoCompleteResult.country); // country
 
     expect(mockedMap.setView).toBeCalledWith([autoCompleteResult.latitude, autoCompleteResult.longitude], 1);
-    expect(locationOverlay.find(Marker).props().position).toEqual(
-        [autoCompleteResult.latitude, autoCompleteResult.longitude]
-    );
+    expect(getLatestMarkerProps().position).toEqual([autoCompleteResult.latitude, autoCompleteResult.longitude]);
 });
 
 test('Should call onConfirm callback when the Overlay is confirmed after auto-complete was changed', () => {
     const confirmSpy = jest.fn();
-
-    const locationOverlay = mount(
-        <LocationOverlay
-            locale="en"
-            onClose={jest.fn()}
-            onConfirm={confirmSpy}
-            open={true}
-            value={null}
-        />
-    );
+    renderLocationOverlay({onConfirm: confirmSpy});
 
     const autoCompleteResult = {
         latitude: 10,
@@ -247,8 +278,10 @@ test('Should call onConfirm callback when the Overlay is confirmed after auto-co
         country: 'new-country',
     };
 
-    locationOverlay.find(SingleAutoComplete).props().selectionStore.set(autoCompleteResult);
-    locationOverlay.find(Overlay).props().onConfirm();
+    act(() => {
+        getLatestSingleAutoCompleteProps().selectionStore.set(autoCompleteResult);
+        getLatestOverlayProps().onConfirm();
+    });
 
     expect(confirmSpy).toBeCalledWith(expect.objectContaining({
         lat: 10,
@@ -264,26 +297,20 @@ test('Should call onConfirm callback when the Overlay is confirmed after auto-co
 });
 
 test('Should pass correct props to the map and input fields after map was zoomed', () => {
-    const locationOverlay = mount(
-        <LocationOverlay
-            locale="en"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            value={null}
-        />
-    );
+    renderLocationOverlay();
 
     const mockedMap = {setView: jest.fn(), on: jest.fn((event, handler) => {
         if (event === 'zoomanim') {
             handler({zoom: 10});
         }
     })};
-    locationOverlay.find(MapContainer).props().whenCreated(mockedMap);
-    locationOverlay.update();
 
-    expect(locationOverlay.find(Number).at(2).props().value).toEqual(10); // zoom
-    expect(locationOverlay.find(MapContainer).props().zoom).toEqual(10);
+    act(() => {
+        getLatestMapContainerProps().whenCreated(mockedMap);
+    });
+
+    expect(getZoomInput()).toHaveValue(10); // zoom
+    expect(getLatestMapContainerProps().zoom).toEqual(10);
 });
 
 test('Should call onConfirm callback when the Overlay is confirmed after map was zoomed', () => {
@@ -300,24 +327,18 @@ test('Should call onConfirm callback when the Overlay is confirmed after map was
     };
     const confirmSpy = jest.fn();
 
-    const locationOverlay = mount(
-        <LocationOverlay
-            locale="en"
-            onClose={jest.fn()}
-            onConfirm={confirmSpy}
-            open={true}
-            value={locationData}
-        />
-    );
+    renderLocationOverlay({onConfirm: confirmSpy, value: locationData});
 
     const mockedMap = {setView: jest.fn(), on: jest.fn((event, handler) => {
         if (event === 'zoomanim') {
             handler({zoom: 10});
         }
     })};
-    locationOverlay.find(MapContainer).props().whenCreated(mockedMap);
 
-    locationOverlay.find(Overlay).props().onConfirm();
+    act(() => {
+        getLatestMapContainerProps().whenCreated(mockedMap);
+        getLatestOverlayProps().onConfirm();
+    });
 
     expect(confirmSpy).toBeCalledWith(expect.objectContaining({
         lat: 1,
@@ -333,33 +354,29 @@ test('Should call onConfirm callback when the Overlay is confirmed after map was
 });
 
 test('Should pass correct props to the map, marker and input fields when marker is dragged', () => {
-    const locationOverlay = mount(
-        <LocationOverlay
-            locale="en"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            value={null}
-        />
-    );
+    renderLocationOverlay();
 
     const mockedMap = {setView: jest.fn(), on: jest.fn()};
-    locationOverlay.find(MapContainer).props().whenCreated(mockedMap);
+    act(() => {
+        getLatestMapContainerProps().whenCreated(mockedMap);
+    });
 
-    locationOverlay.find(Marker).props().eventHandlers.drag({latlng: {lng: 11, lat: 22}});
-    locationOverlay.update();
+    act(() => {
+        getLatestMarkerProps().eventHandlers.drag({latlng: {lng: 11, lat: 22}});
+    });
 
-    expect(locationOverlay.find(Number).at(0).props().value).toEqual(22); // lat
-    expect(locationOverlay.find(Number).at(1).props().value).toEqual(11); // long
-    expect(locationOverlay.find(Marker).props().position).toEqual([22, 11]);
+    expect(getLatInput()).toHaveValue(22); // lat
+    expect(getLongInput()).toHaveValue(11); // long
+    expect(getLatestMarkerProps().position).toEqual([22, 11]);
     expect(mockedMap.setView).not.toBeCalled();
 
-    locationOverlay.find(Marker).props().eventHandlers.dragend();
-    locationOverlay.update();
+    act(() => {
+        getLatestMarkerProps().eventHandlers.dragend();
+    });
 
-    expect(locationOverlay.find(Number).at(0).props().value).toEqual(22); // lat
-    expect(locationOverlay.find(Number).at(1).props().value).toEqual(11); // long
-    expect(locationOverlay.find(Marker).props().position).toEqual([22, 11]);
+    expect(getLatInput()).toHaveValue(22); // lat
+    expect(getLongInput()).toHaveValue(11); // long
+    expect(getLatestMarkerProps().position).toEqual([22, 11]);
     expect(mockedMap.setView).toBeCalledWith([22, 11], 1);
 });
 
@@ -377,19 +394,13 @@ test('Should call onConfirm callback when the Overlay is confirmed after marker 
     };
     const confirmSpy = jest.fn();
 
-    const locationOverlay = mount(
-        <LocationOverlay
-            locale="en"
-            onClose={jest.fn()}
-            onConfirm={confirmSpy}
-            open={true}
-            value={locationData}
-        />
-    );
+    renderLocationOverlay({onConfirm: confirmSpy, value: locationData});
 
-    locationOverlay.find(Marker).props().eventHandlers.drag({latlng: {lng: 11, lat: 22}});
-    locationOverlay.find(Marker).props().eventHandlers.dragend();
-    locationOverlay.find(Overlay).props().onConfirm();
+    act(() => {
+        getLatestMarkerProps().eventHandlers.drag({latlng: {lng: 11, lat: 22}});
+        getLatestMarkerProps().eventHandlers.dragend();
+        getLatestOverlayProps().onConfirm();
+    });
 
     expect(confirmSpy).toBeCalledWith(expect.objectContaining({
         lat: 22,
@@ -404,7 +415,8 @@ test('Should call onConfirm callback when the Overlay is confirmed after marker 
     }));
 });
 
-test('Should call onConfirm callback when the Overlay is confirmed after setting lat and ling to zero', () => {
+test('Should call onConfirm callback when the Overlay is confirmed after setting lat and ling to zero', async() => {
+    const user = userEvent.setup();
     const locationData = {
         lat: 1,
         long: 1,
@@ -418,19 +430,16 @@ test('Should call onConfirm callback when the Overlay is confirmed after setting
     };
     const confirmSpy = jest.fn();
 
-    const locationOverlay = mount(
-        <LocationOverlay
-            locale="en"
-            onClose={jest.fn()}
-            onConfirm={confirmSpy}
-            open={true}
-            value={locationData}
-        />
-    );
+    renderLocationOverlay({onConfirm: confirmSpy, value: locationData});
 
-    locationOverlay.find(Number).at(0).props().onChange(0); // lat
-    locationOverlay.find(Number).at(1).props().onChange(0); // long
-    locationOverlay.find(Overlay).props().onConfirm();
+    await user.clear(getLatInput());
+    await user.type(getLatInput(), '0');
+    await user.clear(getLongInput());
+    await user.type(getLongInput(), '0');
+
+    act(() => {
+        getLatestOverlayProps().onConfirm();
+    });
 
     expect(confirmSpy).toBeCalledWith(expect.objectContaining({
         lat: 0,
@@ -458,34 +467,26 @@ test('Should pass correct props to the map, marker and input fields after reset'
         zoom: 5,
     };
 
-    const locationOverlay = mount(
-        <LocationOverlay
-            locale="en"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            value={locationData}
-        />
-    );
+    renderLocationOverlay({value: locationData});
 
     const mockedMap = {setView: jest.fn(), on: jest.fn()};
-    locationOverlay.find(MapContainer).props().whenCreated(mockedMap);
+    act(() => {
+        getLatestMapContainerProps().whenCreated(mockedMap);
+        getLatestOverlayProps().actions[0].onClick();
+    });
 
-    locationOverlay.find(Overlay).props().actions[0].onClick();
-    locationOverlay.update();
-
-    expect(locationOverlay.find(Number).at(0).props().value).toBeNull(); // lat
-    expect(locationOverlay.find(Number).at(1).props().value).toBeNull(); // long
-    expect(locationOverlay.find(Number).at(2).props().value).toEqual(1); // zoom
-    expect(locationOverlay.find(Input).at(4).props().value).toBeNull(); // title
-    expect(locationOverlay.find(Input).at(5).props().value).toBeNull(); // street
-    expect(locationOverlay.find(Input).at(6).props().value).toBeNull(); // number
-    expect(locationOverlay.find(Input).at(7).props().value).toBeNull(); // code
-    expect(locationOverlay.find(Input).at(8).props().value).toBeNull(); // town
-    expect(locationOverlay.find(Input).at(9).props().value).toBeNull(); // country
+    expect(getLatInput()).toHaveValue(null); // lat
+    expect(getLongInput()).toHaveValue(null); // long
+    expect(getZoomInput()).toHaveValue(1); // zoom
+    expect(getTitleInput()).toHaveValue(''); // title
+    expect(getStreetInput()).toHaveValue(''); // street
+    expect(getNumberInput()).toHaveValue(''); // number
+    expect(getCodeInput()).toHaveValue(''); // code
+    expect(getTownInput()).toHaveValue(''); // town
+    expect(getCountryInput()).toHaveValue(''); // country
 
     expect(mockedMap.setView).toBeCalledWith([0, 0], 1);
-    expect(locationOverlay.find(Marker).props().position).toEqual([0, 0]);
+    expect(getLatestMarkerProps().position).toEqual([0, 0]);
 });
 
 test('Should call onConfirm callback when the Overlay is confirmed after reset', () => {
@@ -502,161 +503,12 @@ test('Should call onConfirm callback when the Overlay is confirmed after reset',
     };
     const confirmSpy = jest.fn();
 
-    const locationOverlay = mount(
-        <LocationOverlay
-            locale="en"
-            onClose={jest.fn()}
-            onConfirm={confirmSpy}
-            open={true}
-            value={locationData}
-        />
-    );
+    renderLocationOverlay({onConfirm: confirmSpy, value: locationData});
 
-    locationOverlay.find(Overlay).props().actions[0].onClick();
-    locationOverlay.find(Overlay).props().onConfirm();
+    act(() => {
+        getLatestOverlayProps().actions[0].onClick();
+        getLatestOverlayProps().onConfirm();
+    });
 
     expect(confirmSpy).toBeCalledWith(null);
-});
-
-test('Should pass correct props to the map, marker and input fields after input fields are changed', () => {
-    const locationOverlay = mount(
-        <LocationOverlay
-            locale="en"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            value={null}
-        />
-    );
-
-    const mockedMap = {setView: jest.fn(), on: jest.fn()};
-    locationOverlay.find(MapContainer).props().whenCreated(mockedMap);
-
-    locationOverlay.find(Number).at(0).props().onChange(10); // lat
-    locationOverlay.find(Number).at(1).props().onChange(20); // long
-    locationOverlay.find(Number).at(2).props().onChange(12); // zoom
-    locationOverlay.find(Input).at(4).props().onChange('new-title'); // title
-    locationOverlay.find(Input).at(5).props().onChange('new-street'); // street
-    locationOverlay.find(Input).at(6).props().onChange('new-number'); // number
-    locationOverlay.find(Input).at(7).props().onChange('new-code'); // code
-    locationOverlay.find(Input).at(8).props().onChange('new-town'); // town
-    locationOverlay.find(Input).at(9).props().onChange('new-country'); // country
-    locationOverlay.update();
-
-    expect(locationOverlay.find(Number).at(0).props().value).toEqual(10); // lat
-    expect(locationOverlay.find(Number).at(1).props().value).toEqual(20); // long
-    expect(locationOverlay.find(Number).at(2).props().value).toEqual(12); // zoom
-    expect(locationOverlay.find(Input).at(4).props().value).toEqual('new-title'); // title
-    expect(locationOverlay.find(Input).at(5).props().value).toEqual('new-street'); // street
-    expect(locationOverlay.find(Input).at(6).props().value).toEqual('new-number'); // number
-    expect(locationOverlay.find(Input).at(7).props().value).toEqual('new-code'); // code
-    expect(locationOverlay.find(Input).at(8).props().value).toEqual('new-town'); // town
-    expect(locationOverlay.find(Input).at(9).props().value).toEqual('new-country'); // country
-
-    expect(mockedMap.setView).toBeCalledWith([10, 20], 12);
-    expect(locationOverlay.find(Marker).props().position).toEqual([10, 20]);
-});
-
-test('Should call onConfirm callback when the Overlay is confirmed after input fields are changed', () => {
-    const confirmSpy = jest.fn();
-
-    const locationOverlay = mount(
-        <LocationOverlay
-            locale="en"
-            onClose={jest.fn()}
-            onConfirm={confirmSpy}
-            open={true}
-            value={null}
-        />
-    );
-
-    locationOverlay.find(Number).at(0).props().onChange(10); // lat
-    locationOverlay.find(Number).at(1).props().onChange(20); // long
-    locationOverlay.find(Number).at(2).props().onChange(12); // zoom
-    locationOverlay.find(Input).at(4).props().onChange('new-title'); // title
-    locationOverlay.find(Input).at(5).props().onChange('new-street'); // street
-    locationOverlay.find(Input).at(6).props().onChange('new-number'); // number
-    locationOverlay.find(Input).at(7).props().onChange('new-code'); // code
-    locationOverlay.find(Input).at(8).props().onChange('new-town'); // town
-    locationOverlay.find(Input).at(9).props().onChange('new-country'); // country
-    locationOverlay.find(Overlay).props().onConfirm();
-
-    expect(confirmSpy).toBeCalledWith(expect.objectContaining({
-        lat: 10,
-        long: 20,
-        zoom: 12,
-        title: 'new-title',
-        street: 'new-street',
-        number: 'new-number',
-        code: 'new-code',
-        town: 'new-town',
-        country: 'new-country',
-    }));
-});
-
-test('Should call given onClose callback when onClose callback of Overlay is fired', () => {
-    const closeSpy = jest.fn();
-
-    const locationOverlay = mount(
-        <LocationOverlay
-            locale="en"
-            onClose={closeSpy}
-            onConfirm={jest.fn()}
-            open={true}
-            value={null}
-        />
-    );
-
-    locationOverlay.find(Overlay).props().onClose();
-
-    expect(closeSpy).toBeCalledWith();
-});
-
-test('Should enable confirm button if longitude and latitude are both not set or both set', () => {
-    const closeSpy = jest.fn();
-
-    const locationOverlay = mount(
-        <LocationOverlay
-            locale="en"
-            onClose={closeSpy}
-            onConfirm={jest.fn()}
-            open={true}
-            value={null}
-        />
-    );
-
-    locationOverlay.find(Number).at(0).props().onChange(null); // lat
-    locationOverlay.find(Number).at(1).props().onChange(null); // long
-    locationOverlay.update();
-    expect(locationOverlay.find(Overlay).props().confirmDisabled).toEqual(false);
-
-    locationOverlay.find(Number).at(0).props().onChange(11); // lat
-    locationOverlay.find(Number).at(1).props().onChange(null); // long
-    locationOverlay.update();
-    expect(locationOverlay.find(Overlay).props().confirmDisabled).toEqual(true);
-
-    locationOverlay.find(Number).at(0).props().onChange(null); // lat
-    locationOverlay.find(Number).at(1).props().onChange(11); // long
-    locationOverlay.update();
-    expect(locationOverlay.find(Overlay).props().confirmDisabled).toEqual(true);
-
-    locationOverlay.find(Number).at(0).props().onChange(11); // lat
-    locationOverlay.find(Number).at(1).props().onChange(11); // long
-    locationOverlay.update();
-    expect(locationOverlay.find(Overlay).props().confirmDisabled).toEqual(false);
-
-    locationOverlay.find(Number).at(0).props().onChange(0); // lat
-    locationOverlay.find(Number).at(1).props().onChange(11); // long
-    locationOverlay.update();
-    expect(locationOverlay.find(Overlay).props().confirmDisabled).toEqual(false);
-
-    locationOverlay.find(Number).at(0).props().onChange(11); // lat
-    locationOverlay.find(Number).at(1).props().onChange(0); // long
-    locationOverlay.update();
-    expect(locationOverlay.find(Overlay).props().confirmDisabled).toEqual(false);
-
-    locationOverlay.find(Number).at(0).props().onChange(0); // lat
-    locationOverlay.find(Number).at(1).props().onChange(0); // long
-    locationOverlay.update();
-    expect(locationOverlay.find(Overlay).props().confirmDisabled).toEqual(false);
 });

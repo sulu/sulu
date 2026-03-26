@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
@@ -11,6 +11,27 @@ import UrlComponent from '../../../../components/Url';
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
+jest.mock('../../../../components/Url', () => {
+    const Url: any = jest.fn(() => null);
+
+    Url.defaultProps = {
+        disabled: false,
+        protocols: ['http://', 'https://', 'ftp://', 'ftps://', 'mailto:', 'tel:'],
+        valid: true,
+    };
+
+    return Url;
+});
+
+function getLatestUrlProps() {
+    const calls = (UrlComponent: any).mock.calls;
+
+    return calls[calls.length - 1][0];
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test('Pass error prop correctly to Url component', () => {
     const schemaOptions = {
@@ -26,7 +47,7 @@ test('Pass error prop correctly to Url component', () => {
     const error = {keyword: 'minLength', parameters: {}};
 
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    const url = shallow(
+    render(
         <Url
             {...fieldTypeDefaultProps}
             error={error}
@@ -35,7 +56,7 @@ test('Pass error prop correctly to Url component', () => {
         />
     );
 
-    expect(url.find(UrlComponent).prop('valid')).toEqual(false);
+    expect(getLatestUrlProps().valid).toEqual(false);
 });
 
 test('Pass props correctly to Url component', () => {
@@ -50,7 +71,7 @@ test('Pass props correctly to Url component', () => {
     };
 
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    const url = shallow(
+    render(
         <Url
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -60,16 +81,16 @@ test('Pass props correctly to Url component', () => {
         />
     );
 
-    expect(url.find(UrlComponent).prop('protocols')).toEqual(['http://', 'https://']);
-    expect(url.find(UrlComponent).prop('value')).toEqual('http://www.sulu.io');
-    expect(url.find(UrlComponent).prop('disabled')).toEqual(true);
+    expect(getLatestUrlProps().protocols).toEqual(['http://', 'https://']);
+    expect(getLatestUrlProps().value).toEqual('http://www.sulu.io');
+    expect(getLatestUrlProps().disabled).toEqual(true);
 });
 
 test('Pass no schemaOptions to Url component and render correct defaults', () => {
     const schemaOptions = {};
 
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    const url = shallow(
+    render(
         <Url
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -79,11 +100,11 @@ test('Pass no schemaOptions to Url component and render correct defaults', () =>
         />
     );
 
-    expect(url.find(UrlComponent).prop('protocols')).toEqual(
+    expect(getLatestUrlProps().protocols).toEqual(
         ['http://', 'https://', 'ftp://', 'ftps://', 'mailto:', 'tel:']
     );
-    expect(url.find(UrlComponent).prop('value')).toEqual('http://www.sulu.io');
-    expect(url.find(UrlComponent).prop('disabled')).toEqual(true);
+    expect(getLatestUrlProps().value).toEqual('http://www.sulu.io');
+    expect(getLatestUrlProps().disabled).toEqual(true);
 });
 
 test('Not call changed when only protocol is given', () => {
@@ -99,7 +120,7 @@ test('Not call changed when only protocol is given', () => {
     const changeSpy = jest.fn();
 
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    const url = shallow(
+    render(
         <Url
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -108,10 +129,10 @@ test('Not call changed when only protocol is given', () => {
         />
     );
 
-    expect(url.find(UrlComponent).prop('protocols')).toEqual(
+    expect(getLatestUrlProps().protocols).toEqual(
         ['http://', 'https://', 'ftp://', 'ftps://', 'mailto:', 'tel:']
     );
-    expect(url.find(UrlComponent).prop('defaultProtocol')).toEqual('http://');
+    expect(getLatestUrlProps().defaultProtocol).toEqual('http://');
     expect(changeSpy).not.toBeCalled();
 });
 
@@ -128,7 +149,7 @@ test('Pass correct default props to Url component', () => {
     const changeSpy = jest.fn();
 
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    const url = shallow(
+    render(
         <Url
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -137,7 +158,7 @@ test('Pass correct default props to Url component', () => {
         />
     );
 
-    expect(url.find(UrlComponent).prop('protocols')).toEqual(
+    expect(getLatestUrlProps().protocols).toEqual(
         ['http://', 'https://', 'ftp://', 'ftps://', 'mailto:', 'tel:']
     );
     expect(changeSpy).toBeCalledWith('http://github.com', {'isDefaultValue': true});
@@ -161,7 +182,7 @@ test('Throw error if only specific_part default is set', () => {
     };
 
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    expect(() => shallow(
+    expect(() => render(
         <Url
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -191,7 +212,7 @@ test('Do not build URL from defaults if value is already given', () => {
     };
 
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    shallow(
+    render(
         <Url
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -225,7 +246,7 @@ test('Build URL from defaults to pass as value to URL component', () => {
     };
 
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    shallow(
+    render(
         <Url
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -251,7 +272,7 @@ test('Should not pass any arguments to onFinish callback', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const finishSpy = jest.fn();
 
-    const url = shallow(
+    render(
         <Url
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -260,7 +281,7 @@ test('Should not pass any arguments to onFinish callback', () => {
         />
     );
 
-    url.find('Url').prop('onBlur')('Test');
+    getLatestUrlProps().onBlur('Test');
 
     expect(finishSpy).toBeCalledWith();
 });

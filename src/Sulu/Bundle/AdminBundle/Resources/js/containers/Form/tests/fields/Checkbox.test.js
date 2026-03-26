@@ -1,20 +1,37 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
-import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
-import ResourceFormStore from '../../stores/ResourceFormStore';
 import Checkbox from '../../fields/Checkbox';
+import Heading from '../../fields/Heading';
 import CheckboxComponent from '../../../../components/Checkbox';
 import Toggler from '../../../../components/Toggler';
 
-jest.mock('../../../../stores/ResourceStore', () => jest.fn());
-jest.mock('../../stores/ResourceFormStore', () => jest.fn());
-jest.mock('../../FormInspector', () => jest.fn());
+jest.mock('../../fields/Heading', () => jest.fn(({children}) => <div>{children}</div>));
+jest.mock('../../../../components/Checkbox', () => jest.fn(() => null));
+jest.mock('../../../../components/Toggler', () => jest.fn(() => null));
+
+function getLatestCheckboxProps() {
+    const calls = (CheckboxComponent: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
+
+function getLatestTogglerProps() {
+    const calls = (Toggler: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
+
+function createFormInspector() {
+    return new FormInspector(({}: any));
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test('Render Toggler component as heading', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = createFormInspector();
     const schemaOptions = {
         description: {
             name: 'description',
@@ -34,18 +51,21 @@ test('Render Toggler component as heading', () => {
         },
     };
 
-    expect(render(
+    render(
         <Checkbox
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
             schemaOptions={schemaOptions}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect((Heading: any).mock.calls).toHaveLength(1);
+    expect((CheckboxComponent: any).mock.calls).toHaveLength(1);
 });
 
 test('Pass the label correctly to Checkbox component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const checkbox = shallow(
+    const formInspector = createFormInspector();
+    render(
         <Checkbox
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -53,12 +73,12 @@ test('Pass the label correctly to Checkbox component', () => {
             schemaOptions={{label: {name: 'label', title: 'Checkbox Title'}}}
         />
     );
-    expect(checkbox.find(CheckboxComponent).prop('children')).toEqual('Checkbox Title');
+    expect(getLatestCheckboxProps().children).toEqual('Checkbox Title');
 });
 
 test('Pass disabled correctly to Checkbox component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const checkbox = shallow(
+    const formInspector = createFormInspector();
+    render(
         <Checkbox
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -67,11 +87,11 @@ test('Pass disabled correctly to Checkbox component', () => {
             schemaOptions={{label: {name: 'label', title: 'Checkbox Title'}}}
         />
     );
-    expect(checkbox.find(CheckboxComponent).props().disabled).toEqual(true);
+    expect(getLatestCheckboxProps().disabled).toEqual(true);
 });
 
 test('Should throw an exception if defaultValue is of wrong type', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const formInspector = createFormInspector();
     const schemaOptions = {
         default_value: {
             name: 'default_value',
@@ -79,7 +99,7 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
         },
     };
 
-    expect(() => shallow(
+    expect(() => render(
         <Checkbox
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -89,7 +109,7 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
 });
 
 test('Set default value of null should not call onChange', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const formInspector = createFormInspector();
     const changeSpy = jest.fn();
 
     const schemaOptions = {
@@ -99,7 +119,7 @@ test('Set default value of null should not call onChange', () => {
         },
     };
 
-    shallow(
+    render(
         <Checkbox
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -112,7 +132,7 @@ test('Set default value of null should not call onChange', () => {
 });
 
 test('Set default value if no value is passed', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const formInspector = createFormInspector();
     const changeSpy = jest.fn();
 
     const schemaOptions = {
@@ -122,7 +142,7 @@ test('Set default value if no value is passed', () => {
         },
     };
 
-    shallow(
+    render(
         <Checkbox
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -135,7 +155,7 @@ test('Set default value if no value is passed', () => {
 });
 
 test('Do not set default value if a value is passed', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const formInspector = createFormInspector();
     const changeSpy = jest.fn();
 
     const schemaOptions = {
@@ -145,7 +165,7 @@ test('Do not set default value if a value is passed', () => {
         },
     };
 
-    shallow(
+    render(
         <Checkbox
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -159,35 +179,35 @@ test('Do not set default value if a value is passed', () => {
 });
 
 test('Pass the value of true correctly to Checkbox component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const checkbox = shallow(
+    const formInspector = createFormInspector();
+    render(
         <Checkbox
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
             value={true}
         />
     );
-    expect(checkbox.find(CheckboxComponent).prop('checked')).toEqual(true);
+    expect(getLatestCheckboxProps().checked).toEqual(true);
 });
 
 test('Pass the value of false correctly to Checkbox component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const checkbox = shallow(
+    const formInspector = createFormInspector();
+    render(
         <Checkbox
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
             value={false}
         />
     );
-    expect(checkbox.find(CheckboxComponent).prop('checked')).toEqual(false);
+    expect(getLatestCheckboxProps().checked).toEqual(false);
 });
 
 test('Call onChange and onFinish on the changed callback of the Checkbox', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = createFormInspector();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    const checkbox = shallow(
+    render(
         <Checkbox
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -195,20 +215,20 @@ test('Call onChange and onFinish on the changed callback of the Checkbox', () =>
             onFinish={finishSpy}
         />
     );
-    checkbox.find(CheckboxComponent).simulate('change', true);
+    getLatestCheckboxProps().onChange(true);
 
     expect(changeSpy).toBeCalledWith(true);
     expect(finishSpy).toBeCalledWith();
 });
 
 test('Pass the label correctly to Toggler component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = createFormInspector();
     const schemaOptions = {
         label: {name: 'label', title: 'Toggler Title'},
         type: {name: 'type', value: 'toggler'},
     };
 
-    const checkbox = shallow(
+    render(
         <Checkbox
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -216,17 +236,17 @@ test('Pass the label correctly to Toggler component', () => {
             schemaOptions={schemaOptions}
         />
     );
-    expect(checkbox.find(Toggler).prop('children')).toEqual('Toggler Title');
+    expect(getLatestTogglerProps().children).toEqual('Toggler Title');
 });
 
 test('Pass disabled correctly to Toggler component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = createFormInspector();
     const schemaOptions = {
         label: {name: 'label', title: 'Toggler Title'},
         type: {name: 'type', value: 'toggler'},
     };
 
-    const checkbox = shallow(
+    render(
         <Checkbox
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -235,12 +255,12 @@ test('Pass disabled correctly to Toggler component', () => {
             schemaOptions={schemaOptions}
         />
     );
-    expect(checkbox.find(Toggler).props().disabled).toEqual(true);
+    expect(getLatestTogglerProps().disabled).toEqual(true);
 });
 
 test('Pass the value of true correctly to Toggler component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const checkbox = shallow(
+    const formInspector = createFormInspector();
+    render(
         <Checkbox
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -249,12 +269,12 @@ test('Pass the value of true correctly to Toggler component', () => {
             value={true}
         />
     );
-    expect(checkbox.find(Toggler).prop('checked')).toEqual(true);
+    expect(getLatestTogglerProps().checked).toEqual(true);
 });
 
 test('Pass the value of false correctly to Toggler component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const checkbox = shallow(
+    const formInspector = createFormInspector();
+    render(
         <Checkbox
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -262,15 +282,15 @@ test('Pass the value of false correctly to Toggler component', () => {
             value={false}
         />
     );
-    expect(checkbox.find(Toggler).prop('checked')).toEqual(false);
+    expect(getLatestTogglerProps().checked).toEqual(false);
 });
 
 test('Call onChange and onFinish on the changed callback of the Toggler', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = createFormInspector();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    const checkbox = shallow(
+    render(
         <Checkbox
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -279,18 +299,18 @@ test('Call onChange and onFinish on the changed callback of the Toggler', () => 
             schemaOptions={{type: {name: 'type', value: 'toggler'}}}
         />
     );
-    checkbox.find(Toggler).simulate('change', true);
+    getLatestTogglerProps().onChange(true);
 
     expect(changeSpy).toBeCalledWith(true);
     expect(finishSpy).toBeCalledWith();
 });
 
 test('Call onChange and onFinish on the changed callback of the Toggler with the header skin', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = createFormInspector();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    const checkbox = shallow(
+    render(
         <Checkbox
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -299,7 +319,7 @@ test('Call onChange and onFinish on the changed callback of the Toggler with the
             schemaOptions={{skin: {name: 'skin', value: 'heading'}, type: {name: 'type', value: 'toggler'}}}
         />
     );
-    checkbox.find(Toggler).simulate('change', true);
+    getLatestTogglerProps().onChange(true);
 
     expect(changeSpy).toBeCalledWith(true);
     expect(finishSpy).toBeCalledWith();

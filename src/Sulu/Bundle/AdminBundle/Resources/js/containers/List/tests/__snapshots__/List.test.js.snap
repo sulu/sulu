@@ -91,7 +91,7 @@ exports[`Render Loader instead of Adapter if nothing was loaded yet 1`] = `
   >
     <div
       class="spinner loader"
-      style="width:40px;height:40px"
+      style="width: 40px; height: 40px;"
     >
       <div
         class="doubleBounce1"
@@ -268,7 +268,8 @@ exports[`Render the adapter with filters 1`] = `
             class="chip primary medium clickable"
             type="button"
           >
-            Title: 
+            Title
+            : 
             <span
               aria-label="su-times"
               class="su-times clickable icon"
@@ -284,7 +285,8 @@ exports[`Render the adapter with filters 1`] = `
             class="chip primary medium clickable"
             type="button"
           >
-            Created at: 
+            Created at
+            : 
             <span
               aria-label="su-times"
               class="su-times clickable icon"

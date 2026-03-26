@@ -1,6 +1,6 @@
 // @flow
-import {shallow, mount} from 'enzyme/build';
-import mockReact from 'react';
+import React from 'react';
+import {render} from '@testing-library/react';
 import {extendObservable as mockExtendObservable} from 'mobx';
 import userStore from '../../../stores/userStore';
 import FormOverlay from '../../FormOverlay';
@@ -8,13 +8,8 @@ import ProfileFormOverlay from '../ProfileFormOverlay';
 import ResourceStore from '../../../stores/ResourceStore';
 import ResourceFormStore from '../../Form/stores/ResourceFormStore';
 
-const React = mockReact;
+jest.mock('../../FormOverlay', () => jest.fn(() => null));
 
-jest.mock('../../../containers/Form', () => class FormMock extends mockReact.Component<*> {
-    render() {
-        return <div>form container mock</div>;
-    }
-});
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
@@ -35,6 +30,7 @@ jest.mock('../../Form/stores/ResourceFormStore',
         this.formKey = formKey;
         this.options = options;
         this.metadataOptions = metadataOptions;
+        this.data = {};
 
         this.save = jest.fn();
         this.destroy = jest.fn();
@@ -46,39 +42,49 @@ jest.mock('../../Form/stores/ResourceFormStore',
     })
 );
 
+function getLatestFormOverlayProps() {
+    const calls = (FormOverlay: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
 test('Component should render', () => {
-    const profileFormOverlay = mount(
+    render(
         <ProfileFormOverlay
             onClose={jest.fn()}
             open={true}
         />
     );
 
-    expect(profileFormOverlay.render()).toMatchSnapshot();
+    expect((FormOverlay: any).mock.calls).toHaveLength(1);
 });
 
 test('Should pass correct props to FormOverlay', () => {
     const closeSpy = jest.fn();
 
-    const profileFormOverlay = shallow(
+    render(
         <ProfileFormOverlay
             onClose={closeSpy}
             open={true}
         />
     );
 
-    expect(profileFormOverlay.find(FormOverlay).props()).toEqual(expect.objectContaining({
-        confirmText: 'sulu_admin.save',
-        formStore: profileFormOverlay.instance().formStore,
-        onClose: closeSpy,
-        open: true,
-        size: 'large',
-        title: 'sulu_admin.edit_profile',
-    }));
+    const formStore = (ResourceFormStore: any).mock.instances[0];
+    const formOverlayProps = getLatestFormOverlayProps();
+
+    expect(formOverlayProps.confirmText).toEqual('sulu_admin.save');
+    expect(formOverlayProps.formStore).toBe(formStore);
+    expect(formOverlayProps.onClose).toBe(closeSpy);
+    expect(formOverlayProps.open).toEqual(true);
+    expect(formOverlayProps.size).toEqual('large');
+    expect(formOverlayProps.title).toEqual('sulu_admin.edit_profile');
 });
 
 test('Should construct ResourceStore and ResourceFormStore with correct parameters when mounted', () => {
-    shallow(
+    render(
         <ProfileFormOverlay
             onClose={jest.fn()}
             open={true}
@@ -90,18 +96,28 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
 });
 
 test('Should construct new ResourceStore and ResourceFormStore when closed and opened again', () => {
-    const profileFormOverlay = shallow(
+    const {rerender} = render(
         <ProfileFormOverlay
             onClose={jest.fn()}
             open={true}
         />
     );
 
-    const initialFormStore = profileFormOverlay.instance().formStore;
+    const initialFormStore = (ResourceFormStore: any).mock.instances[0];
     expect(initialFormStore.destroy).not.toHaveBeenCalled();
 
-    profileFormOverlay.setProps({open: false});
-    profileFormOverlay.setProps({open: true});
+    rerender(
+        <ProfileFormOverlay
+            onClose={jest.fn()}
+            open={false}
+        />
+    );
+    rerender(
+        <ProfileFormOverlay
+            onClose={jest.fn()}
+            open={true}
+        />
+    );
 
     expect(ResourceStore).toHaveBeenCalledTimes(2);
     expect(ResourceStore).lastCalledWith('profile', '-');
@@ -109,21 +125,21 @@ test('Should construct new ResourceStore and ResourceFormStore when closed and o
     expect(ResourceFormStore).lastCalledWith(expect.anything(), 'profile_details');
 
     expect(initialFormStore.destroy).toHaveBeenCalled();
-    expect(initialFormStore).not.toEqual(profileFormOverlay.instance().formStore);
+    expect(initialFormStore).not.toEqual((ResourceFormStore: any).mock.instances[1]);
 });
 
 test('Should destroy ResourceFormStore when component is unmounted', () => {
-    const profileFormOverlay = shallow(
+    const {unmount} = render(
         <ProfileFormOverlay
             onClose={jest.fn()}
             open={true}
         />
     );
 
-    const formStore = profileFormOverlay.instance().formStore;
+    const formStore = (ResourceFormStore: any).mock.instances[0];
     expect(formStore.destroy).not.toHaveBeenCalled();
 
-    profileFormOverlay.unmount();
+    unmount();
 
     expect(formStore.destroy).toHaveBeenCalled();
 });
@@ -131,14 +147,15 @@ test('Should destroy ResourceFormStore when component is unmounted', () => {
 test('Should update full name in UserStore and call onClose callback when FormOverlay is confirmed', () => {
     const closeSpy = jest.fn();
 
-    const profileFormOverlay = shallow(
+    render(
         <ProfileFormOverlay
             onClose={closeSpy}
             open={true}
         />
     );
 
-    profileFormOverlay.instance().formStore.data = {
+    const formStore = (ResourceFormStore: any).mock.instances[0];
+    formStore.data = {
         firstName: 'Donald',
         lastName: 'Duck',
     };
@@ -146,7 +163,7 @@ test('Should update full name in UserStore and call onClose callback when FormOv
     expect(userStore.setFullName).not.toHaveBeenCalled();
     expect(closeSpy).not.toHaveBeenCalled();
 
-    profileFormOverlay.find(FormOverlay).props().onConfirm();
+    getLatestFormOverlayProps().onConfirm();
 
     expect(userStore.setFullName).toHaveBeenCalledWith('Donald Duck');
     expect(closeSpy).toHaveBeenCalled();

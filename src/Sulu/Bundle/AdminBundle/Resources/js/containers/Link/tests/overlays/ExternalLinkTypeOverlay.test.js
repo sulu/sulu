@@ -1,14 +1,20 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {render, screen, within} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import ExternalLinkTypeOverlay from '../../overlays/ExternalLinkTypeOverlay';
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-test('Render overlay with an undefined URL', () => {
-    const externalLinkOverlay = mount(
+const defaultOptions = {
+    displayProperties: [],
+    resourceKey: '',
+};
+
+function renderExternalLinkTypeOverlay(props: Object = {}) {
+    return render(
         <ExternalLinkTypeOverlay
             href={undefined}
             onCancel={jest.fn()}
@@ -18,80 +24,70 @@ test('Render overlay with an undefined URL', () => {
             onTargetChange={jest.fn()}
             onTitleChange={jest.fn()}
             open={true}
-            options={
-                {
-                    displayProperties: [],
-                    resourceKey: '',
-                }
-            }
+            options={defaultOptions}
             rel={undefined}
             target={undefined}
             title={undefined}
+            {...props}
         />
     );
+}
 
-    expect(externalLinkOverlay.find('Form').render()).toMatchSnapshot();
+function getField(label: RegExp | string) {
+    const labelElement = screen.getByText(label);
+    const field = labelElement.closest('.field');
+    if (!field) {
+        throw new Error('Expected field for label "' + String(label) + '"');
+    }
+
+    return field;
+}
+
+function getUrlInput() {
+    return within(getField(/sulu_admin.link_url/)).getByRole('textbox');
+}
+
+function getGridElement() {
+    const body = document.body;
+
+    if (!body) {
+        throw new Error('Expected document.body to exist');
+    }
+
+    return body.querySelector('.grid');
+}
+
+async function selectUrlProtocol(user, protocol: string) {
+    await user.click(within(getField(/sulu_admin.link_url/)).getByLabelText('su-angle-down'));
+    await user.click(screen.getByText(protocol));
+}
+
+test('Render overlay with an undefined URL', () => {
+    renderExternalLinkTypeOverlay({href: undefined});
+
+    expect(getGridElement()).toMatchSnapshot();
 });
 
 test('Render overlay with mailto URL', () => {
-    const externalLinkOverlay = mount(
-        <ExternalLinkTypeOverlay
-            href="mailto:test@example.org?subject=Subject&body=Body"
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            onHrefChange={jest.fn()}
-            onRelChange={jest.fn()}
-            onTargetChange={jest.fn()}
-            onTitleChange={jest.fn()}
-            open={true}
-            options={
-                {
-                    displayProperties: [],
-                    resourceKey: '',
-                }
-            }
-            rel={undefined}
-            target={undefined}
-            title={undefined}
-        />
-    );
+    renderExternalLinkTypeOverlay({href: 'mailto:test@example.org?subject=Subject&body=Body'});
 
-    expect(externalLinkOverlay.find('Form').render()).toMatchSnapshot();
+    expect(getGridElement()).toMatchSnapshot();
 });
 
 test('Render overlay with a URL', () => {
-    const externalLinkOverlay = mount(
-        <ExternalLinkTypeOverlay
-            href="http://www.sulu.io"
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            onHrefChange={jest.fn()}
-            onRelChange={jest.fn()}
-            onTargetChange={jest.fn()}
-            onTitleChange={jest.fn()}
-            open={true}
-            options={
-                {
-                    displayProperties: [],
-                    resourceKey: '',
-                }
-            }
-            rel={undefined}
-            target={undefined}
-            title={undefined}
-        />
-    );
+    renderExternalLinkTypeOverlay({href: 'http://www.sulu.io'});
 
-    expect(externalLinkOverlay.find('Form').render()).toMatchSnapshot();
+    expect(getGridElement()).toMatchSnapshot();
 });
 
-test('Pass correct props to Dialog', () => {
+test('Pass correct props to Dialog', async() => {
+    const user = userEvent.setup();
     const cancelSpy = jest.fn();
     const confirmSpy = jest.fn();
 
-    const externalLinkOverlay = shallow(
+    const {rerender} = render(
         <ExternalLinkTypeOverlay
-            href={undefined}
+            href="http://www.sulu.io"
             onCancel={cancelSpy}
             onConfirm={confirmSpy}
             onHrefChange={jest.fn()}
@@ -99,289 +95,198 @@ test('Pass correct props to Dialog', () => {
             onTargetChange={jest.fn()}
             onTitleChange={jest.fn()}
             open={false}
-            options={
-                {
-                    displayProperties: [],
-                    resourceKey: '',
-                }
-            }
+            options={defaultOptions}
             rel={undefined}
             target={undefined}
             title={undefined}
         />
     );
 
-    expect(externalLinkOverlay.find('Dialog').prop('onCancel')).toEqual(cancelSpy);
-    expect(externalLinkOverlay.find('Dialog').prop('onConfirm')).toEqual(confirmSpy);
-    expect(externalLinkOverlay.find('Dialog').prop('open')).toEqual(false);
-});
+    expect(screen.queryByText('sulu_admin.link')).not.toBeInTheDocument();
 
-test('Display given URL with query parameters in href input', () => {
-    const targetChangeSpy = jest.fn();
-    const urlChangeSpy = jest.fn();
-
-    const externalLinkOverlay = shallow(
+    rerender(
         <ExternalLinkTypeOverlay
-            href="http://www.sulu.io/contact-us?param=value-1"
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            onHrefChange={urlChangeSpy}
-            onTargetChange={targetChangeSpy}
-            onTitleChange={jest.fn()}
-            open={true}
-            options={
-                {
-                    displayProperties: [],
-                    resourceKey: '',
-                }
-            }
-            target="_blank"
-            title={undefined}
-        />
-    );
-
-    expect(externalLinkOverlay.find('Url').prop('value')).toEqual('http://www.sulu.io/contact-us?param=value-1');
-});
-
-test('Do not call onHrefChange handler if input did not loose focus', () => {
-    const targetChangeSpy = jest.fn();
-    const urlChangeSpy = jest.fn();
-
-    const externalLinkOverlay = shallow(
-        <ExternalLinkTypeOverlay
-            href={undefined}
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            onHrefChange={urlChangeSpy}
+            href="http://www.sulu.io"
+            onCancel={cancelSpy}
+            onConfirm={confirmSpy}
+            onHrefChange={jest.fn()}
             onRelChange={jest.fn()}
-            onTargetChange={targetChangeSpy}
-            onTitleChange={jest.fn()}
-            open={true}
-            options={
-                {
-                    displayProperties: [],
-                    resourceKey: '',
-                }
-            }
-            rel={undefined}
-            target="_blank"
-            title={undefined}
-        />
-    );
-
-    externalLinkOverlay.find('Url').prop('onChange')('http://www.sulu.io');
-    expect(urlChangeSpy).not.toBeCalled();
-});
-
-test('Fields should change immediately after protocol was changed', () => {
-    const targetChangeSpy = jest.fn();
-    const urlChangeSpy = jest.fn();
-
-    const externalLinkOverlay = mount(
-        <ExternalLinkTypeOverlay
-            href={undefined}
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            onHrefChange={urlChangeSpy}
-            onRelChange={jest.fn()}
-            onTargetChange={targetChangeSpy}
-            onTitleChange={jest.fn()}
-            open={true}
-            options={
-                {
-                    displayProperties: [],
-                    resourceKey: '',
-                }
-            }
-            rel={undefined}
-            target="_blank"
-            title={undefined}
-        />
-    );
-
-    expect(externalLinkOverlay.find('Field[label="sulu_admin.link_target"]')).toHaveLength(1);
-    expect(externalLinkOverlay.find('Field[label="sulu_admin.mail_subject"]')).toHaveLength(0);
-    expect(externalLinkOverlay.find('Field[label="sulu_admin.mail_body"]')).toHaveLength(0);
-
-    externalLinkOverlay.find('Url').prop('onProtocolChange')('mailto:');
-
-    externalLinkOverlay.update();
-    expect(externalLinkOverlay.find('Field[label="sulu_admin.link_target"]')).toHaveLength(0);
-    expect(externalLinkOverlay.find('Field[label="sulu_admin.mail_subject"]')).toHaveLength(1);
-    expect(externalLinkOverlay.find('Field[label="sulu_admin.mail_body"]')).toHaveLength(1);
-});
-
-test('Call onHrefChange with URL that includes mail subject and mail body for mailto links', () => {
-    const targetChangeSpy = jest.fn();
-    const urlChangeSpy = jest.fn();
-
-    const externalLinkOverlay = shallow(
-        <ExternalLinkTypeOverlay
-            href="mailto:bla@example.org"
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            onHrefChange={urlChangeSpy}
-            onRelChange={jest.fn()}
-            onTargetChange={targetChangeSpy}
-            onTitleChange={jest.fn()}
-            open={true}
-            options={
-                {
-                    displayProperties: [],
-                    resourceKey: '',
-                }
-            }
-            rel={undefined}
-            target="_blank"
-            title={undefined}
-        />
-    );
-
-    externalLinkOverlay.find('Url').prop('onChange')('mailto:test@example.org');
-    externalLinkOverlay.find('Url').prop('onProtocolChange')('mailto:');
-    expect(urlChangeSpy).not.toBeCalledWith('mailto:test@example.org');
-    externalLinkOverlay.find('Url').prop('onBlur')();
-    expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org');
-    expect(targetChangeSpy).toBeCalledWith('_self');
-
-    externalLinkOverlay.update();
-    externalLinkOverlay.find('Field[label="sulu_admin.mail_subject"] Input').prop('onChange')('Subject Line');
-    expect(urlChangeSpy).not.toBeCalledWith('mailto:test@example.org?subject=Subject%20Line');
-    externalLinkOverlay.find('Field[label="sulu_admin.mail_subject"] Input').prop('onBlur')();
-    expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org?subject=Subject%20Line');
-
-    externalLinkOverlay.update();
-    externalLinkOverlay.find('Field[label="sulu_admin.mail_body"] TextArea').prop('onChange')('Body Text');
-    expect(urlChangeSpy).not.toBeCalledWith('mailto:test@example.org?subject=Subject%20Line&body=Body%20Text');
-    externalLinkOverlay.find('Field[label="sulu_admin.mail_body"] TextArea').prop('onBlur')();
-    expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org?subject=Subject%20Line&body=Body%20Text');
-});
-
-test('Should not include mail subject and body in URL after switching to another protocol', () => {
-    const urlChangeSpy = jest.fn();
-
-    const externalLinkOverlay = mount(
-        <ExternalLinkTypeOverlay
-            href="mailto:test@example.org?subject=Subject&body=Body%20Text"
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            onHrefChange={urlChangeSpy}
             onTargetChange={jest.fn()}
             onTitleChange={jest.fn()}
             open={true}
-            options={
-                {
-                    displayProperties: [],
-                    resourceKey: '',
-                }
-            }
-            target="_blank"
+            options={defaultOptions}
+            rel={undefined}
+            target={undefined}
             title={undefined}
         />
     );
 
-    externalLinkOverlay.find('Url').prop('onBlur')();
-    expect(urlChangeSpy).toHaveBeenNthCalledWith(1, 'mailto:test@example.org?subject=Subject&body=Body%20Text');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.confirm'}));
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.cancel'}));
 
-    externalLinkOverlay.find('Url').find('SingleSelect').prop('onChange')('https://');
-    expect(urlChangeSpy).toHaveBeenNthCalledWith(2, 'https://test@example.org');
+    expect(cancelSpy).toBeCalled();
+    expect(confirmSpy).toBeCalled();
 });
 
-test('Reset target to self when a mailto link is entered', () => {
+test('Display given URL with query parameters in href input', () => {
+    renderExternalLinkTypeOverlay({
+        href: 'http://www.sulu.io/contact-us?param=value-1',
+        target: '_blank',
+    });
+
+    expect(getUrlInput()).toHaveValue('www.sulu.io/contact-us?param=value-1');
+});
+
+test('Do not call onHrefChange handler if input did not loose focus', async() => {
+    const user = userEvent.setup();
+    const urlChangeSpy = jest.fn();
+
+    renderExternalLinkTypeOverlay({
+        onHrefChange: urlChangeSpy,
+        target: '_blank',
+    });
+
+    await user.type(getUrlInput(), 'www.sulu.io');
+    expect(urlChangeSpy).not.toBeCalled();
+});
+
+test('Fields should change immediately after protocol was changed', async() => {
+    const user = userEvent.setup();
+    renderExternalLinkTypeOverlay({target: '_blank'});
+
+    expect(screen.getByText('sulu_admin.link_target *')).toBeInTheDocument();
+    expect(screen.queryByText('sulu_admin.mail_subject')).not.toBeInTheDocument();
+    expect(screen.queryByText('sulu_admin.mail_body')).not.toBeInTheDocument();
+
+    await selectUrlProtocol(user, 'mailto:');
+
+    expect(screen.queryByText('sulu_admin.link_target *')).not.toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.mail_subject')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.mail_body')).toBeInTheDocument();
+});
+
+test('Call onHrefChange with URL that includes mail subject and mail body for mailto links', async() => {
+    const user = userEvent.setup();
     const targetChangeSpy = jest.fn();
     const urlChangeSpy = jest.fn();
 
-    const externalLinkOverlay = shallow(
-        <ExternalLinkTypeOverlay
-            href="http://www.sulu.io"
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            onHrefChange={urlChangeSpy}
-            onRelChange={jest.fn()}
-            onTargetChange={targetChangeSpy}
-            onTitleChange={jest.fn()}
-            open={true}
-            options={
-                {
-                    displayProperties: [],
-                    resourceKey: '',
-                }
-            }
-            rel={undefined}
-            target="_blank"
-            title={undefined}
-        />
-    );
+    renderExternalLinkTypeOverlay({
+        href: 'mailto:bla@example.org',
+        onHrefChange: urlChangeSpy,
+        onTargetChange: targetChangeSpy,
+        target: '_blank',
+    });
 
-    externalLinkOverlay.find('Url').prop('onChange')('mailto:test@example.org');
-    externalLinkOverlay.find('Url').prop('onBlur')();
+    const urlInput = getUrlInput();
+    await user.clear(urlInput);
+    await user.type(urlInput, 'test@example.org');
+    expect(urlChangeSpy).not.toBeCalledWith('mailto:test@example.org');
+    await user.tab();
+    expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org');
+    expect(targetChangeSpy).toBeCalledWith('_self');
+
+    const mailSubjectInput = within(getField('sulu_admin.mail_subject')).getByRole('textbox');
+    await user.type(mailSubjectInput, 'Subject Line');
+    expect(urlChangeSpy).not.toBeCalledWith('mailto:test@example.org?subject=Subject%20Line');
+    await user.tab();
+    expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org?subject=Subject%20Line');
+
+    const mailBodyInput = within(getField('sulu_admin.mail_body')).getByRole('textbox');
+    await user.type(mailBodyInput, 'Body Text');
+    expect(urlChangeSpy).not.toBeCalledWith('mailto:test@example.org?subject=Subject%20Line&body=Body%20Text');
+    await user.tab();
+    expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org?subject=Subject%20Line&body=Body%20Text');
+});
+
+test('Should not include mail subject and body in URL after switching to another protocol', async() => {
+    const user = userEvent.setup();
+    const urlChangeSpy = jest.fn();
+
+    renderExternalLinkTypeOverlay({
+        href: 'mailto:test@example.org?subject=Subject&body=Body%20Text',
+        onHrefChange: urlChangeSpy,
+        target: '_blank',
+    });
+
+    await user.click(getUrlInput());
+    await user.tab();
+    expect(urlChangeSpy).toHaveBeenNthCalledWith(1, 'mailto:test@example.org?subject=Subject&body=Body%20Text');
+
+    await selectUrlProtocol(user, 'https://');
+    expect(urlChangeSpy).toHaveBeenLastCalledWith('https://test@example.org');
+});
+
+test('Reset target to self when a mailto link is entered', async() => {
+    const user = userEvent.setup();
+    const targetChangeSpy = jest.fn();
+    const urlChangeSpy = jest.fn();
+
+    renderExternalLinkTypeOverlay({
+        href: 'http://www.sulu.io',
+        onHrefChange: urlChangeSpy,
+        onTargetChange: targetChangeSpy,
+        target: '_blank',
+    });
+
+    const urlInput = getUrlInput();
+    await user.clear(urlInput);
+    await user.type(urlInput, 'mailto:test@example.org');
+    await user.tab();
+
     expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org');
     expect(targetChangeSpy).toBeCalledWith('_self');
 });
 
-test('Should not reset target to self when a non-mail URL is entered', () => {
+test('Should not reset target to self when a non-mail URL is entered', async() => {
+    const user = userEvent.setup();
     const targetChangeSpy = jest.fn();
     const urlChangeSpy = jest.fn();
 
-    const externalLinkOverlay = shallow(
-        <ExternalLinkTypeOverlay
-            href="http://www.sulu.io"
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            onHrefChange={urlChangeSpy}
-            onRelChange={jest.fn()}
-            onTargetChange={targetChangeSpy}
-            onTitleChange={jest.fn()}
-            open={true}
-            options={
-                {
-                    displayProperties: [],
-                    resourceKey: '',
-                }
-            }
-            rel={undefined}
-            target="_blank"
-            title={undefined}
-        />
-    );
+    renderExternalLinkTypeOverlay({
+        href: 'http://www.sulu.io',
+        onHrefChange: urlChangeSpy,
+        onTargetChange: targetChangeSpy,
+        target: '_blank',
+    });
 
-    externalLinkOverlay.find('Url').prop('onChange')('http://sulu.io');
-    externalLinkOverlay.find('Url').prop('onBlur')();
+    const urlInput = getUrlInput();
+    await user.clear(urlInput);
+    await user.type(urlInput, 'http://sulu.io');
+    await user.tab();
+
     expect(urlChangeSpy).toBeCalledWith('http://sulu.io');
     expect(targetChangeSpy).not.toBeCalled();
 });
 
-test('Rel value should be transformed correctly', () => {
-    const urlChangeSpy = jest.fn();
+test('Rel value should be transformed correctly', async() => {
+    const user = userEvent.setup();
     const relChangeSpy = jest.fn();
 
-    const externalLinkOverlay = mount(
+    const {rerender} = renderExternalLinkTypeOverlay({
+        onRelChange: relChangeSpy,
+        rel: 'noopener  noreferrer ',
+    });
+
+    await user.click(screen.getByLabelText('sulu_admin.no_follow'));
+    expect(relChangeSpy).toBeCalledWith('noopener noreferrer nofollow');
+
+    rerender(
         <ExternalLinkTypeOverlay
             href={undefined}
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
-            onHrefChange={urlChangeSpy}
+            onHrefChange={jest.fn()}
             onRelChange={relChangeSpy}
             onTargetChange={jest.fn()}
             onTitleChange={jest.fn()}
             open={true}
-            options={
-                {
-                    displayProperties: [],
-                    resourceKey: '',
-                }
-            }
-            rel="noopener  noreferrer "
+            options={defaultOptions}
+            rel="noopener noreferrer nofollow"
             target={undefined}
             title={undefined}
         />
     );
 
-    externalLinkOverlay.find('Toggler').prop('onChange')(true);
-    externalLinkOverlay.update();
-    expect(relChangeSpy).toBeCalledWith('noopener noreferrer nofollow');
-
-    externalLinkOverlay.find('Toggler').prop('onChange')(false);
-    externalLinkOverlay.update();
+    await user.click(screen.getByLabelText('sulu_admin.no_follow'));
     expect(relChangeSpy).toBeCalledWith('noopener noreferrer');
 });

@@ -1,16 +1,72 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {act, render} from '@testing-library/react';
+import {Form, Input, Overlay, SingleSelect} from 'sulu-admin-bundle/components';
+import ConditionList from '../ConditionList';
 import RuleOverlay from '../RuleOverlay';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
+jest.mock('sulu-admin-bundle/components', () => {
+    const FormMock: any = jest.fn(({children}) => <div>{children}</div>);
+    FormMock.Field = jest.fn(({children}) => <div>{children}</div>);
+    const SingleSelectMock: any = jest.fn(() => null);
+    SingleSelectMock.Option = jest.fn(() => null);
+
+    return {
+        Form: FormMock,
+        Input: jest.fn(() => null),
+        Overlay: jest.fn(({children}) => <div>{children}</div>),
+        SingleSelect: SingleSelectMock,
+    };
+});
+
+jest.mock('../ConditionList', () => jest.fn(() => null));
+
+function getLatestOverlayProps() {
+    const calls = (Overlay: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
+
+function getLatestInputProps() {
+    const calls = (Input: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
+
+function getLatestSingleSelectProps() {
+    const calls = (SingleSelect: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
+
+function getLatestConditionListProps() {
+    const calls = (ConditionList: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
+
+function getLatestFieldProps(label: string) {
+    const fieldCalls = (Form.Field: any).mock.calls
+        .map(([props]) => props)
+        .reverse();
+
+    const fieldProps = fieldCalls.find((props) => props.label === label);
+    if (!fieldProps) {
+        throw new Error('Expected Form.Field with label "' + label + '"');
+    }
+
+    return fieldProps;
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
 test('Render RuleOverlay without value', () => {
-    const ruleOverlay = mount(<RuleOverlay onClose={jest.fn()} onConfirm={jest.fn()} open={true} value={undefined} />);
-    expect(ruleOverlay.render())
-        .toMatchSnapshot();
+    render(<RuleOverlay onClose={jest.fn()} onConfirm={jest.fn()} open={true} value={undefined} />);
+    expect(getLatestInputProps().value).toEqual(undefined);
+    expect(getLatestSingleSelectProps().value).toEqual(undefined);
+    expect(getLatestConditionListProps().value).toEqual([]);
 });
 
 test('Write passed values to input, single select and condition list when overlay is opened', () => {
@@ -24,7 +80,7 @@ test('Write passed values to input, single select and condition list when overla
         },
     ];
 
-    const ruleOverlay = shallow(
+    const {rerender} = render(
         <RuleOverlay
             onClose={jest.fn()}
             onConfirm={jest.fn()}
@@ -33,56 +89,93 @@ test('Write passed values to input, single select and condition list when overla
         />
     );
 
-    ruleOverlay.setProps({open: true});
-    ruleOverlay.update();
+    rerender(
+        <RuleOverlay
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            value={{conditions, frequency: 2, title: 'Rule 1'}}
+        />
+    );
 
-    expect(ruleOverlay.find('Input').prop('value')).toEqual('Rule 1');
-    expect(ruleOverlay.find('SingleSelect').prop('value')).toEqual(2);
-    expect(ruleOverlay.find('ConditionList').prop('value')).toEqual(conditions);
+    expect(getLatestInputProps().value).toEqual('Rule 1');
+    expect(getLatestSingleSelectProps().value).toEqual(2);
+    expect(getLatestConditionListProps().value).toEqual(conditions);
 
-    ruleOverlay.find('Input').prop('onChange')('Rule 1 edited');
-    ruleOverlay.find('SingleSelect').prop('onChange')(3);
-    ruleOverlay.find('ConditionList').prop('onChange')([]);
+    act(() => {
+        getLatestInputProps().onChange('Rule 1 edited');
+    });
+    act(() => {
+        getLatestSingleSelectProps().onChange(3);
+    });
+    act(() => {
+        getLatestConditionListProps().onChange([]);
+    });
 
-    ruleOverlay.setProps({open: false});
-    ruleOverlay.update();
-    ruleOverlay.setProps({open: true});
-    ruleOverlay.update();
+    rerender(
+        <RuleOverlay
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            value={{conditions, frequency: 2, title: 'Rule 1'}}
+        />
+    );
+    rerender(
+        <RuleOverlay
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            value={{conditions, frequency: 2, title: 'Rule 1'}}
+        />
+    );
 
-    expect(ruleOverlay.find('Input').prop('value')).toEqual('Rule 1');
-    expect(ruleOverlay.find('SingleSelect').prop('value')).toEqual(2);
-    expect(ruleOverlay.find('ConditionList').prop('value')).toEqual(conditions);
+    expect(getLatestInputProps().value).toEqual('Rule 1');
+    expect(getLatestSingleSelectProps().value).toEqual(2);
+    expect(getLatestConditionListProps().value).toEqual(conditions);
 
-    ruleOverlay.setProps({open: false});
-    ruleOverlay.update();
-    ruleOverlay.setProps({open: true, value: undefined});
-    ruleOverlay.update();
+    rerender(
+        <RuleOverlay
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            value={{conditions, frequency: 2, title: 'Rule 1'}}
+        />
+    );
+    rerender(<RuleOverlay onClose={jest.fn()} onConfirm={jest.fn()} open={true} value={undefined} />);
 
-    expect(ruleOverlay.find('Input').prop('value')).toEqual(undefined);
-    expect(ruleOverlay.find('SingleSelect').prop('value')).toEqual(undefined);
-    expect(ruleOverlay.find('ConditionList').prop('value')).toEqual([]);
+    expect(getLatestInputProps().value).toEqual(undefined);
+    expect(getLatestSingleSelectProps().value).toEqual(undefined);
+    expect(getLatestConditionListProps().value).toEqual([]);
 });
 
 test('Call confirm with the current values', () => {
     const confirmSpy = jest.fn();
 
-    const ruleOverlay = shallow(
+    render(
         <RuleOverlay onClose={jest.fn()} onConfirm={confirmSpy} open={true} value={undefined} />
     );
 
-    ruleOverlay.find('Input').prop('onChange')('Rule 11');
-    ruleOverlay.find('SingleSelect').prop('onChange')(2);
-    ruleOverlay.find('ConditionList').prop('onChange')([
-        {
-            condition: {
-                parameter: 'asdf',
-                value: 'jklö',
+    act(() => {
+        getLatestInputProps().onChange('Rule 11');
+    });
+    act(() => {
+        getLatestSingleSelectProps().onChange(2);
+    });
+    act(() => {
+        getLatestConditionListProps().onChange([
+            {
+                condition: {
+                    parameter: 'asdf',
+                    value: 'jklö',
+                },
+                type: 'query_string',
             },
-            type: 'query_string',
-        },
-    ]);
+        ]);
+    });
 
-    ruleOverlay.find('Overlay').prop('onConfirm')();
+    act(() => {
+        getLatestOverlayProps().onConfirm();
+    });
 
     expect(confirmSpy).toBeCalledWith({
         conditions: [
@@ -102,17 +195,19 @@ test('Call confirm with the current values', () => {
 test('Show error if empty fields are confirmed', () => {
     const confirmSpy = jest.fn();
 
-    const ruleOverlay = shallow(
+    render(
         <RuleOverlay onClose={jest.fn()} onConfirm={confirmSpy} open={true} value={undefined} />
     );
 
-    expect(ruleOverlay.find('Field[label="sulu_admin.title"]').prop('error')).toEqual(undefined);
-    expect(ruleOverlay.find('Field[label="sulu_audience_targeting.assigned_at"]').prop('error')).toEqual(undefined);
+    expect(getLatestFieldProps('sulu_admin.title').error).toEqual(undefined);
+    expect(getLatestFieldProps('sulu_audience_targeting.assigned_at').error).toEqual(undefined);
 
-    ruleOverlay.find('Overlay').prop('onConfirm')();
+    act(() => {
+        getLatestOverlayProps().onConfirm();
+    });
 
-    expect(ruleOverlay.find('Field[label="sulu_admin.title"]').prop('error')).toEqual('sulu_admin.error_required');
-    expect(ruleOverlay.find('Field[label="sulu_audience_targeting.assigned_at"]').prop('error'))
+    expect(getLatestFieldProps('sulu_admin.title').error).toEqual('sulu_admin.error_required');
+    expect(getLatestFieldProps('sulu_audience_targeting.assigned_at').error)
         .toEqual('sulu_admin.error_required');
 
     expect(confirmSpy).not.toBeCalled();
@@ -121,8 +216,8 @@ test('Show error if empty fields are confirmed', () => {
 test('Call onClose callback when overlay is closed', () => {
     const closeSpy = jest.fn();
 
-    const ruleOverlay = shallow(<RuleOverlay onClose={closeSpy} onConfirm={jest.fn()} open={true} value={undefined} />);
-    ruleOverlay.find('Overlay').prop('onClose')();
+    render(<RuleOverlay onClose={closeSpy} onConfirm={jest.fn()} open={true} value={undefined} />);
+    getLatestOverlayProps().onClose();
 
     expect(closeSpy).toBeCalledWith();
 });

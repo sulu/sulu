@@ -23,6 +23,24 @@ function mobxAwareEqualityTester(a, b, customTesters) {
 
 expect.addEqualityTesters([mobxAwareEqualityTester]);
 
+const oldToLocaleString = Number.prototype.toLocaleString;
+// $FlowFixMe[cannot-write]
+Number.prototype.toLocaleString = function(locale, options) {
+    return oldToLocaleString.call(this, locale || 'en-US', options);
+};
+
+const oldDateToLocaleString = Date.prototype.toLocaleString;
+// $FlowFixMe[cannot-write]
+Date.prototype.toLocaleString = function(locale, options) {
+    return oldDateToLocaleString.call(this, locale || 'en-US', options);
+};
+
+const oldDateToLocaleDateString = Date.prototype.toLocaleDateString;
+// $FlowFixMe[cannot-write]
+Date.prototype.toLocaleDateString = function(locale, options) {
+    return oldDateToLocaleDateString.call(this, locale || 'en-US', options);
+};
+
 jest.mock('sulu-admin-bundle/services/Config', () => ({
     endpoints: {
         'config': 'config_url',

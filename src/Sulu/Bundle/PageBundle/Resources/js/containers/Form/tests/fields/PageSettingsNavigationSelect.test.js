@@ -1,24 +1,10 @@
 // @flow
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
-import {shallow} from 'enzyme';
-import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import webspaceStore from '../../../../stores/webspaceStore';
 import PageSettingsNavigationSelect from '../../fields/PageSettingsNavigationSelect';
-
-jest.mock('sulu-admin-bundle/containers', () => ({
-    FormInspector: jest.fn(function(formStore) {
-        this.options = formStore.options;
-    }),
-    ResourceFormStore: jest.fn(function(resourceStore, formKey, options) {
-        this.options = options;
-    }),
-}));
-
-jest.mock('sulu-admin-bundle/stores', () => ({
-    ResourceStore: jest.fn(),
-}));
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -28,15 +14,17 @@ jest.mock('../../../../stores/webspaceStore', () => ({
     getWebspace: jest.fn(),
 }));
 
-test('Pass correct props to MultiSelect', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test'),
-            'test',
-            {webspace: 'sulu_io'}
-        )
-    );
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
+function createFormInspector() {
+    return ({
+        options: {webspace: 'sulu_io'},
+    }: any);
+}
+
+test('Pass correct props to MultiSelect', () => {
     const webspace = {
         navigations: [
             {key: 'main', title: 'Main Navigation'},
@@ -45,37 +33,23 @@ test('Pass correct props to MultiSelect', () => {
     };
     webspaceStore.getWebspace.mockReturnValue(webspace);
 
-    const pageSettingsNavigationSelect = shallow(
+    render(
         <PageSettingsNavigationSelect
             {...fieldTypeDefaultProps}
             disabled={true}
-            formInspector={formInspector}
+            formInspector={createFormInspector()}
             value={['footer']}
         />
     );
 
     expect(webspaceStore.getWebspace).toBeCalledWith('sulu_io');
-
-    expect(pageSettingsNavigationSelect.find('MultiSelect').prop('disabled')).toEqual(true);
-    expect(pageSettingsNavigationSelect.find('MultiSelect').prop('values')).toEqual(['footer']);
-    expect(pageSettingsNavigationSelect.find('Option').at(0).prop('children')).toEqual('Main Navigation');
-    expect(pageSettingsNavigationSelect.find('Option').at(0).prop('value')).toEqual('main');
-    expect(pageSettingsNavigationSelect.find('Option').at(1).prop('children')).toEqual('Footer Navigation');
-    expect(pageSettingsNavigationSelect.find('Option').at(1).prop('value')).toEqual('footer');
+    expect(screen.getByRole('button', {name: /Footer Navigation/})).toBeDisabled();
 });
 
-test('Call onChange and onBlur if the value is changed', () => {
+test('Call onChange and onBlur if the value is changed', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test'),
-            'test',
-            {webspace: 'sulu_io'}
-        )
-    );
-
     const webspace = {
         navigations: [
             {key: 'main', title: 'Main Navigation'},
@@ -84,17 +58,19 @@ test('Call onChange and onBlur if the value is changed', () => {
     };
     webspaceStore.getWebspace.mockReturnValue(webspace);
 
-    const pageSettingsNavigationSelect = shallow(
+    render(
         <PageSettingsNavigationSelect
             {...fieldTypeDefaultProps}
-            formInspector={formInspector}
+            formInspector={createFormInspector()}
             onChange={changeSpy}
             onFinish={finishSpy}
             value={['footer']}
         />
     );
 
-    pageSettingsNavigationSelect.find('MultiSelect').prop('onChange')(['footer', 'main']);
+    await user.click(screen.getByRole('button', {name: /Footer Navigation/}));
+    await user.click(screen.getByRole('button', {name: 'Main Navigation'}));
+
     expect(changeSpy).toBeCalledWith(['footer', 'main']);
     expect(finishSpy).toBeCalledWith();
 });

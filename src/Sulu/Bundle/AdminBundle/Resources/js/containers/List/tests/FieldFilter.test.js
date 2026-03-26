@@ -1,8 +1,55 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {act} from 'react-dom/test-utils';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import FieldFilter from '../FieldFilter';
+import FieldFilterItemComponent from '../FieldFilterItem';
 import listFieldFilterTypeRegistry from '../registries/listFieldFilterTypeRegistry';
+
+jest.mock('../FieldFilterItem', () => jest.fn(function FieldFilterItem() {
+    return <div />;
+}));
+
+jest.mock('../../../components/Button', () => jest.fn(function Button(props) {
+    return (
+        <button onClick={props.onClick} type="button">
+            {props.children || props.icon}
+        </button>
+    );
+}));
+
+jest.mock('../../../components/ArrowMenu', () => {
+    const ArrowMenu: any = jest.fn(function ArrowMenu(props) {
+        return (
+            <div>
+                {props.anchorElement}
+                {props.children}
+            </div>
+        );
+    });
+    ArrowMenu.Section = jest.fn(function Section(props) {
+        return <div>{props.children}</div>;
+    });
+    ArrowMenu.Action = jest.fn(function Action(props) {
+        function handleClick() {
+            props.onClick(props.value);
+        }
+
+        return (
+            <button
+                disabled={props.disabled}
+                // eslint-disable-next-line react/jsx-no-bind
+                onClick={handleClick}
+                type="button"
+            >
+                {props.children}
+            </button>
+        );
+    });
+
+    return ArrowMenu;
+});
 
 jest.mock('../registries/listFieldFilterTypeRegistry', () => ({
     get: jest.fn(),
@@ -13,11 +60,23 @@ jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
+function getLatestFieldFilterItemProps(column) {
+    const calls = (FieldFilterItemComponent: any).mock.calls;
+    const matchingProps = calls.map(([props]) => props).filter((props) => props.column === column);
+
+    return matchingProps[matchingProps.length - 1];
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
 test('Render empty FieldFilter', () => {
     const schema = {};
     const value = {};
 
-    expect(render(<FieldFilter fields={schema} onChange={jest.fn()} value={value} />)).toMatchSnapshot();
+    const {asFragment} = render(<FieldFilter fields={schema} onChange={jest.fn()} value={value} />);
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render FieldFilter with schema and value', () => {
@@ -47,16 +106,16 @@ test('Render FieldFilter with schema and value', () => {
         lastName: undefined,
     };
 
-    const fieldFilter = shallow(<FieldFilter fields={schema} onChange={jest.fn()} value={value} />);
-    expect(fieldFilter.find('FieldFilterItem')).toHaveLength(2);
-    expect(fieldFilter.find('FieldFilterItem').at(0).props()).toEqual(expect.objectContaining({
+    render(<FieldFilter fields={schema} onChange={jest.fn()} value={value} />);
+    expect(FieldFilterItemComponent).toHaveBeenCalledTimes(2);
+    expect(getLatestFieldFilterItemProps('firstName')).toEqual(expect.objectContaining({
         column: 'firstName',
         filterType: 'text',
         filterTypeParameters: {test: 'value'},
         label: 'First name',
         value: undefined,
     }));
-    expect(fieldFilter.find('FieldFilterItem').at(1).props()).toEqual(expect.objectContaining({
+    expect(getLatestFieldFilterItemProps('lastName')).toEqual(expect.objectContaining({
         column: 'lastName',
         filterType: 'text',
         filterTypeParameters: null,
@@ -65,7 +124,9 @@ test('Render FieldFilter with schema and value', () => {
     }));
 });
 
-test('Show filter options in disabled state if a filter for them was already added', () => {
+test('Show filter options in disabled state if a filter for them was already added', async() => {
+    const user = userEvent.setup();
+
     listFieldFilterTypeRegistry.get.mockReturnValue(class {
         getFormNode = jest.fn();
         getValueNode = jest.fn();
@@ -99,15 +160,16 @@ test('Show filter options in disabled state if a filter for them was already add
         firstName: undefined,
     };
 
-    const fieldFilter = mount(<FieldFilter fields={schema} onChange={changeSpy} value={value} />);
+    render(<FieldFilter fields={schema} onChange={changeSpy} value={value} />);
+    await user.click(screen.getByRole('button', {name: 'su-filter'}));
 
-    fieldFilter.find('Button[icon="su-filter"]').simulate('click');
-
-    expect(fieldFilter.find('ArrowMenu Action[value="firstName"]').prop('disabled')).toEqual(true);
-    expect(fieldFilter.find('ArrowMenu Action[value="lastName"]').prop('disabled')).toEqual(false);
+    expect(screen.getByRole('button', {name: 'First name'})).toBeDisabled();
+    expect(screen.getByRole('button', {name: 'Last name'})).toBeEnabled();
 });
 
-test('Call onChange with new filter chip when Action in ArrowMenu was clicked', () => {
+test('Call onChange with new filter chip when Action in ArrowMenu was clicked', async() => {
+    const user = userEvent.setup();
+
     listFieldFilterTypeRegistry.get.mockReturnValue(class {
         getFormNode = jest.fn();
         getValueNode = jest.fn();
@@ -141,9 +203,9 @@ test('Call onChange with new filter chip when Action in ArrowMenu was clicked', 
         firstName: undefined,
     };
 
-    const fieldFilter = mount(<FieldFilter fields={schema} onChange={changeSpy} value={value} />);
-    fieldFilter.find('Button[icon="su-filter"]').simulate('click');
-    fieldFilter.find('ArrowMenu Action[value="lastName"]').simulate('click');
+    render(<FieldFilter fields={schema} onChange={changeSpy} value={value} />);
+    await user.click(screen.getByRole('button', {name: 'su-filter'}));
+    await user.click(screen.getByRole('button', {name: 'Last name'}));
 
     expect(changeSpy).toBeCalledWith({firstName: undefined, lastName: undefined});
 });
@@ -182,18 +244,21 @@ test('Call onChange with new filter value when onChange from FieldFilterItem is 
         firstName: undefined,
     };
 
-    const fieldFilter = mount(<FieldFilter fields={schema} onChange={changeSpy} value={value} />);
+    render(<FieldFilter fields={schema} onChange={changeSpy} value={value} />);
 
-    expect(fieldFilter.find('FieldFilterItem[column="firstName"]').prop('open')).toEqual(false);
-    fieldFilter.find('FieldFilterItem[column="firstName"]').prop('onClick')('firstName');
-    fieldFilter.update();
-    expect(fieldFilter.find('FieldFilterItem[column="firstName"]').prop('open')).toEqual(true);
+    expect(getLatestFieldFilterItemProps('firstName').open).toEqual(false);
 
-    fieldFilter.find('FieldFilterItem[column="firstName"]').prop('onChange')('firstName', 'Max');
+    act(() => {
+        getLatestFieldFilterItemProps('firstName').onClick('firstName');
+    });
+    expect(getLatestFieldFilterItemProps('firstName').open).toEqual(true);
 
-    fieldFilter.update();
+    act(() => {
+        getLatestFieldFilterItemProps('firstName').onChange('firstName', 'Max');
+    });
+
     expect(changeSpy).toBeCalledWith({firstName: 'Max'});
-    expect(fieldFilter.find('FieldFilterItem[column="firstName"]').prop('open')).toEqual(false);
+    expect(getLatestFieldFilterItemProps('firstName').open).toEqual(false);
 });
 
 test('Call onChange without filter chip for which delete icon was clicked', () => {
@@ -231,9 +296,11 @@ test('Call onChange without filter chip for which delete icon was clicked', () =
         lastName: 'Last Name',
     };
 
-    const fieldFilter = mount(<FieldFilter fields={schema} onChange={changeSpy} value={value} />);
+    render(<FieldFilter fields={schema} onChange={changeSpy} value={value} />);
 
-    fieldFilter.find('Chip[value="lastName"] Icon[name="su-times"]').simulate('click');
+    act(() => {
+        getLatestFieldFilterItemProps('lastName').onDelete('lastName');
+    });
 
     expect(changeSpy).toBeCalledWith({firstName: 'First Name'});
 });

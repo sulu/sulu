@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import moment from 'moment-timezone';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -12,8 +12,15 @@ import DatePickerComponent from '../../../../components/DatePicker';
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
+jest.mock('../../../../components/DatePicker', () => jest.fn(() => null));
+
+function getLatestDatePickerProps() {
+    const calls = (DatePickerComponent: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
 
 beforeEach(() => {
+    jest.clearAllMocks();
     moment.tz.setDefault('Europe/Vienna');
 });
 
@@ -25,7 +32,7 @@ test('Pass error correctly to component', () => {
         timeFormat: false,
     };
 
-    const datePicker = shallow(
+    render(
         <DatePicker
             {...fieldTypeDefaultProps}
             error={error}
@@ -34,7 +41,7 @@ test('Pass error correctly to component', () => {
         />
     );
 
-    expect(datePicker.find(DatePickerComponent).prop('valid')).toBe(false);
+    expect(getLatestDatePickerProps().valid).toBe(false);
 });
 
 test('Pass options for date picker to component', () => {
@@ -44,7 +51,7 @@ test('Pass options for date picker to component', () => {
         timeFormat: false,
     };
 
-    const datePicker = shallow(
+    render(
         <DatePicker
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -52,7 +59,7 @@ test('Pass options for date picker to component', () => {
         />
     );
 
-    expect(datePicker.find(DatePickerComponent).prop('options')).toEqual({});
+    expect(getLatestDatePickerProps().options).toEqual({});
 });
 
 test('Pass options for time picker to component', () => {
@@ -62,7 +69,7 @@ test('Pass options for time picker to component', () => {
         timeFormat: true,
     };
 
-    const datePicker = shallow(
+    render(
         <DatePicker
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -70,7 +77,7 @@ test('Pass options for time picker to component', () => {
         />
     );
 
-    expect(datePicker.find(DatePickerComponent).prop('options')).toEqual({dateFormat: false, timeFormat: true});
+    expect(getLatestDatePickerProps().options).toEqual({dateFormat: false, timeFormat: true});
 });
 
 test('Pass options for date time picker to component', () => {
@@ -80,7 +87,7 @@ test('Pass options for date time picker to component', () => {
         timeFormat: true,
     };
 
-    const datePicker = shallow(
+    render(
         <DatePicker
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -88,7 +95,7 @@ test('Pass options for date time picker to component', () => {
         />
     );
 
-    expect(datePicker.find(DatePickerComponent).prop('options')).toEqual({timeFormat: true});
+    expect(getLatestDatePickerProps().options).toEqual({timeFormat: true});
 });
 
 test('Pass invalid value correctly to component', () => {
@@ -98,7 +105,7 @@ test('Pass invalid value correctly to component', () => {
         timeFormat: false,
     };
 
-    const datePicker = shallow(
+    render(
         <DatePicker
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -107,7 +114,7 @@ test('Pass invalid value correctly to component', () => {
         />
     );
 
-    expect(datePicker.find(DatePickerComponent).prop('value')).toBe(undefined);
+    expect(getLatestDatePickerProps().value).toBe(undefined);
 });
 
 test('Pass disabled correctly to component', () => {
@@ -117,7 +124,7 @@ test('Pass disabled correctly to component', () => {
         timeFormat: false,
     };
 
-    const datePicker = shallow(
+    render(
         <DatePicker
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -127,7 +134,7 @@ test('Pass disabled correctly to component', () => {
         />
     );
 
-    expect(datePicker.find(DatePickerComponent).prop('disabled')).toBe(true);
+    expect(getLatestDatePickerProps().disabled).toBe(true);
 });
 
 test('Convert value and pass it correctly to component', () => {
@@ -137,7 +144,7 @@ test('Convert value and pass it correctly to component', () => {
         timeFormat: false,
     };
 
-    const datePicker = shallow(
+    render(
         <DatePicker
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -146,7 +153,7 @@ test('Convert value and pass it correctly to component', () => {
         />
     );
 
-    expect(datePicker.find(DatePickerComponent).prop('value')).toBeInstanceOf(Date);
+    expect(getLatestDatePickerProps().value).toBeInstanceOf(Date);
 });
 
 test('Should call onFinish callback on every onChange with correctly converted date value', () => {
@@ -159,7 +166,7 @@ test('Should call onFinish callback on every onChange with correctly converted d
     const finishSpy = jest.fn();
     const changeSpy = jest.fn();
 
-    const datePicker = shallow(
+    render(
         <DatePicker
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -169,7 +176,7 @@ test('Should call onFinish callback on every onChange with correctly converted d
         />
     );
 
-    datePicker.find(DatePickerComponent).simulate('change', new Date(Date.UTC(2018, 4, 15)));
+    getLatestDatePickerProps().onChange(new Date(Date.UTC(2018, 4, 15)));
 
     expect(finishSpy).toBeCalled();
     expect(changeSpy).toBeCalledWith('2018-05-15');
@@ -185,7 +192,7 @@ test('Should call onFinish callback on every onChange with correctly converted t
     const finishSpy = jest.fn();
     const changeSpy = jest.fn();
 
-    const datePicker = shallow(
+    render(
         <DatePicker
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -195,7 +202,7 @@ test('Should call onFinish callback on every onChange with correctly converted t
         />
     );
 
-    datePicker.find(DatePickerComponent).simulate('change', new Date(Date.UTC(2018, 4, 15)));
+    getLatestDatePickerProps().onChange(new Date(Date.UTC(2018, 4, 15)));
 
     expect(finishSpy).toBeCalled();
     expect(changeSpy).toBeCalledWith('02:00:00');
@@ -211,7 +218,7 @@ test('Should call onFinish callback on every onChange with correctly converted d
     const finishSpy = jest.fn();
     const changeSpy = jest.fn();
 
-    const datePicker = shallow(
+    render(
         <DatePicker
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -221,7 +228,7 @@ test('Should call onFinish callback on every onChange with correctly converted d
         />
     );
 
-    datePicker.find(DatePickerComponent).simulate('change', new Date(Date.UTC(2018, 4, 15, 6, 30, 0)));
+    getLatestDatePickerProps().onChange(new Date(Date.UTC(2018, 4, 15, 6, 30, 0)));
 
     expect(finishSpy).toBeCalled();
     expect(changeSpy).toBeCalledWith('2018-05-15T08:30:00');

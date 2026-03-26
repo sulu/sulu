@@ -1,15 +1,31 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import ResourceMultiSelect from '../ResourceMultiSelect';
 import MultiSelectComponent from '../../../components/MultiSelect';
 import ResourceListStore from '../../../stores/ResourceListStore';
 
 jest.mock('../../../stores/ResourceListStore', () => jest.fn());
+jest.mock('../../../components/MultiSelect', () => {
+    const MultiSelect: any = jest.fn(({children}) => <div>{children}</div>);
+    MultiSelect.Option = jest.fn(({children}) => <div>{children}</div>);
+
+    return MultiSelect;
+});
 
 jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
+
+function getLatestMultiSelectProps() {
+    const calls = (MultiSelectComponent: any).mock.calls;
+
+    return calls[calls.length - 1][0];
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test('Render with data', () => {
     // $FlowFixMe
@@ -34,7 +50,7 @@ test('Render with data', () => {
         ];
     });
 
-    const resourceMultiSelect = mount(
+    render(
         <ResourceMultiSelect
             displayProperty="name"
             onChange={jest.fn()}
@@ -44,7 +60,7 @@ test('Render with data', () => {
     );
 
     expect(ResourceListStore).toBeCalledWith('test', {limit: ''}, 'id');
-    expect(resourceMultiSelect.render()).toMatchSnapshot();
+    expect((MultiSelectComponent.Option: any).mock.calls.map(([props]) => props.value)).toEqual([2, 5, 99]);
 });
 
 test('Render in disabled state', () => {
@@ -65,7 +81,7 @@ test('Render in disabled state', () => {
         ];
     });
 
-    const resourceMultiSelect = shallow(
+    render(
         <ResourceMultiSelect
             disabled={true}
             displayProperty="name"
@@ -76,7 +92,7 @@ test('Render in disabled state', () => {
     );
 
     expect(ResourceListStore).toBeCalledWith('test', {limit: ''}, 'id');
-    expect(resourceMultiSelect.find('MultiSelect').prop('disabled')).toEqual(true);
+    expect(getLatestMultiSelectProps().disabled).toEqual(true);
 });
 
 test('Render in loading state', () => {
@@ -86,7 +102,7 @@ test('Render in loading state', () => {
         this.data = undefined;
     });
 
-    const resourceMultiSelect = shallow(
+    render(
         <ResourceMultiSelect
             displayProperty="name"
             onChange={jest.fn()}
@@ -95,7 +111,7 @@ test('Render in loading state', () => {
         />
     );
 
-    expect(resourceMultiSelect.find('Loader')).toHaveLength(1);
+    expect(MultiSelectComponent).not.toBeCalled();
 });
 
 test('Pass requestParameters', () => {
@@ -123,7 +139,7 @@ test('Pass requestParameters', () => {
 
     const requestParameters = {'testOption': 'testValue'};
 
-    mount(
+    render(
         <ResourceMultiSelect
             displayProperty="name"
             onChange={jest.fn()}
@@ -152,7 +168,7 @@ test('Pass requestParameters when requestParameters props changed', () => {
     const requestParameters1 = {};
     const requestParameters2 = {'testOption': 'testValue'};
 
-    const resourceMultiSelect = mount(
+    const {rerender} = render(
         <ResourceMultiSelect
             displayProperty="name"
             onChange={jest.fn()}
@@ -162,13 +178,15 @@ test('Pass requestParameters when requestParameters props changed', () => {
         />
     );
 
-    resourceMultiSelect.setProps({
-        requestParameters: requestParameters2,
-        displayProperty: 'name',
-        onChange: jest.fn(),
-        resourceKey: 'test',
-        values: undefined,
-    });
+    rerender(
+        <ResourceMultiSelect
+            displayProperty="name"
+            onChange={jest.fn()}
+            requestParameters={requestParameters2}
+            resourceKey="test"
+            values={undefined}
+        />
+    );
 
     // $FlowFixMe
     expect(ResourceListStore.mock.calls).toEqual([
@@ -190,7 +208,7 @@ test('Pass requestParameters when resourceKey props changed', () => {
         ];
     });
 
-    const resourceMultiSelect = mount(
+    const {rerender} = render(
         <ResourceMultiSelect
             displayProperty="name"
             onChange={jest.fn()}
@@ -199,12 +217,14 @@ test('Pass requestParameters when resourceKey props changed', () => {
         />
     );
 
-    resourceMultiSelect.setProps({
-        displayProperty: 'name',
-        onChange: jest.fn(),
-        resourceKey: 'test2',
-        values: undefined,
-    });
+    rerender(
+        <ResourceMultiSelect
+            displayProperty="name"
+            onChange={jest.fn()}
+            resourceKey="test2"
+            values={undefined}
+        />
+    );
 
     // $FlowFixMe
     expect(ResourceListStore.mock.calls).toEqual([
@@ -237,7 +257,7 @@ test('The component should trigger the change callback', () => {
     });
 
     const onChangeSpy = jest.fn();
-    const resourceMultiSelect = shallow(
+    render(
         <ResourceMultiSelect
             displayProperty="name"
             onChange={onChangeSpy}
@@ -259,7 +279,7 @@ test('The component should trigger the change callback', () => {
         },
     ];
 
-    resourceMultiSelect.find(MultiSelectComponent).props().onChange([5, 99]);
+    getLatestMultiSelectProps().onChange([5, 99]);
     expect(onChangeSpy).toHaveBeenCalledWith([5, 99], expectedValues);
 });
 
@@ -278,7 +298,7 @@ test('The component should trigger the close callback', () => {
 
     const closeSpy = jest.fn();
 
-    const resourceMultiSelect = shallow(
+    render(
         <ResourceMultiSelect
             displayProperty="name"
             onChange={jest.fn()}
@@ -289,6 +309,6 @@ test('The component should trigger the close callback', () => {
     );
 
     expect(closeSpy).not.toBeCalled();
-    resourceMultiSelect.find(MultiSelectComponent).prop('onClose')();
+    getLatestMultiSelectProps().onClose();
     expect(closeSpy).toBeCalled();
 });

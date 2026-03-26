@@ -1,13 +1,21 @@
 // @flow
 import React from 'react';
 import {extendObservable, observable} from 'mobx';
-import {mount, render} from 'enzyme';
+import {act, render, screen} from '@testing-library/react';
 import toolbarStorePool, {DEFAULT_STORE_KEY} from '../stores/toolbarStorePool';
 import withToolbar from '../withToolbar';
 
 jest.mock('../stores/toolbarStorePool', () => ({
     setToolbarConfig: jest.fn(),
 }));
+
+jest.mock('loglevel', () => ({
+    info: jest.fn(),
+}));
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test('Pass props to rendered component', () => {
     const Component = class Component extends React.Component<*> {
@@ -18,7 +26,14 @@ test('Pass props to rendered component', () => {
 
     const ComponentWithToolbar = withToolbar(Component, () => ({}));
 
-    expect(render(<ComponentWithToolbar title="Test" />)).toMatchSnapshot();
+    render(
+        <ComponentWithToolbar
+            router={{addUpdateRouteHook: jest.fn().mockReturnValue(jest.fn())}}
+            title="Test"
+        />
+    );
+
+    expect(screen.getByText('Test')).toBeInTheDocument();
 });
 
 test('Bind toolbar method to component instance', () => {
@@ -48,10 +63,10 @@ test('Bind toolbar method to component instance', () => {
     }, storeKey);
 
     const router = {
-        addUpdateRouteHook: jest.fn(),
+        addUpdateRouteHook: jest.fn().mockReturnValue(jest.fn()),
     };
 
-    mount(<ComponentWithToolbar router={router} />);
+    render(<ComponentWithToolbar router={router} />);
     expect(toolbarStorePool.setToolbarConfig).toBeCalledWith(storeKey, {
         items: [
             {
@@ -66,9 +81,18 @@ test('Bind toolbar method to component instance', () => {
 });
 
 test('Call life-cycle events of rendered component', () => {
+    const componentWillUnmount = jest.fn();
+    const componentRender = jest.fn();
+
     const Component = class Component extends React.Component<*> {
-        componentWillUnmount = jest.fn();
-        render = jest.fn();
+        componentWillUnmount() {
+            componentWillUnmount();
+        }
+
+        render() {
+            componentRender();
+            return <h1>Test</h1>;
+        }
     };
 
     const ComponentWithToolbar = withToolbar(Component, () => ({}));
@@ -78,11 +102,10 @@ test('Call life-cycle events of rendered component', () => {
         addUpdateRouteHook: jest.fn().mockReturnValue(updateRouteHookDisposer),
     };
 
-    const component = mount(<ComponentWithToolbar router={router} />);
-    expect(component.instance().render).toBeCalled();
+    const {unmount} = render(<ComponentWithToolbar router={router} />);
+    expect(componentRender).toBeCalled();
 
-    const componentWillUnmount = component.instance().componentWillUnmount;
-    component.unmount();
+    unmount();
     expect(componentWillUnmount).toBeCalled();
 });
 
@@ -101,10 +124,10 @@ test('Reset config of toolbarStore when component is unmounted', () => {
         addUpdateRouteHook: jest.fn().mockReturnValue(updateRouteHookDisposer),
     };
 
-    const component = mount(<ComponentWithToolbar router={router} />);
+    const {unmount} = render(<ComponentWithToolbar router={router} />);
     expect(toolbarStorePool.setToolbarConfig).toBeCalledWith('default', config);
 
-    component.unmount();
+    unmount();
     expect(updateRouteHookDisposer).toBeCalledWith();
     expect(toolbarStorePool.setToolbarConfig).toHaveBeenLastCalledWith('default', {});
 });
@@ -119,26 +142,39 @@ test('Dispose toolbar when a new view is rendered', () => {
     const ComponentWithToolbar = withToolbar(Component, () => ({items: config.items.toJS()}), 'default');
 
     const router = {
-        addUpdateRouteHook: jest.fn(),
+        addUpdateRouteHook: jest.fn().mockReturnValue(jest.fn()),
         route: {
             name: 'route1',
         },
     };
 
-    mount(<ComponentWithToolbar router={router} />);
+    render(<ComponentWithToolbar router={router} />);
     expect(toolbarStorePool.setToolbarConfig).toHaveBeenLastCalledWith('default', {items: []});
 
-    config.items.push({});
+    act(() => {
+        config.items.push({});
+    });
     expect(toolbarStorePool.setToolbarConfig).toHaveBeenLastCalledWith('default', {items: [{}]});
 
-    router.addUpdateRouteHook.mock.calls[0][0]();
-    config.items.push({});
+    act(() => {
+        router.addUpdateRouteHook.mock.calls[0][0]();
+    });
+    act(() => {
+        config.items.push({});
+    });
     expect(toolbarStorePool.setToolbarConfig).toHaveBeenLastCalledWith('default', {items: [{}]});
 });
 
 test('Recall toolbar-function when changing observable', () => {
+    let componentInstance: any;
+
     const Component = class Component extends React.Component<*> {
         @observable test = true;
+
+        constructor(props) {
+            super(props);
+            componentInstance = this;
+        }
 
         render() {
             return <h1>Test</h1>;
@@ -150,16 +186,18 @@ test('Recall toolbar-function when changing observable', () => {
     });
 
     const router = {
-        addUpdateRouteHook: jest.fn(),
+        addUpdateRouteHook: jest.fn().mockReturnValue(jest.fn()),
     };
 
-    const component = mount(<ComponentWithToolbar router={router} />);
+    render(<ComponentWithToolbar router={router} />);
 
     expect(toolbarStorePool.setToolbarConfig).toBeCalledWith(DEFAULT_STORE_KEY, {
         disableAll: true,
     });
 
-    component.instance().test = false;
+    act(() => {
+        componentInstance.test = false;
+    });
     expect(toolbarStorePool.setToolbarConfig).toBeCalledWith(DEFAULT_STORE_KEY, {
         disableAll: false,
     });
