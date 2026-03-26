@@ -63,21 +63,18 @@
             <key>sorted_io</key>
 
             <localizations>
-                <localization language="de" country="at" default="true"/>
-                <localization language="de"/>
+                <localization language="en"/>
             </localizations>
 
             <environments>
                 <environment type="prod">
                     <urls>
-                        <url language="de" country="at" segment="s">sorted.at</url>
-                        <url redirect="sorted.at" segment="s">www.sorted.io</url>
+                        <url language="en">sorted.at</url>
                     </urls>
                 </environment>
                 <environment type="test">
                     <urls>
-                        <url language="de" country="at" segment="s">sorted.at</url>
-                        <url redirect="test.sorted.at" segment="s">www.test.sorted.io</url>
+                        <url language="en">dev.sorted.at</url>
                     </urls>
                 </environment>
 
