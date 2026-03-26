@@ -660,9 +660,9 @@ class PageController extends AbstractRestController implements ClassResourceInte
             $user
         );
 
-        $sortedWebspaceContents = $this->reSortWebspaceContents($webspaceContents, $webspaces);
+        $webspaceContents = $this->reSortWebspaceContents($webspaceContents, $webspaces);
 
-        foreach ($sortedWebspaceContents as $webspaceContent) {
+        foreach ($webspaceContents as $webspaceContent) {
             $webspaceContent->setDataProperty('title', $webspaces[$webspaceContent->getWebspaceKey()]->getName());
 
             if ($webspaceContent->getWebspaceKey() === $webspaceKey) {
@@ -670,7 +670,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
             }
         }
 
-        return $sortedWebspaceContents;
+        return $webspaceContents;
     }
 
     private function getWebspace(Request $request, bool $force = true): ?string
