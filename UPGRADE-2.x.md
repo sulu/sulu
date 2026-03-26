@@ -1,5 +1,20 @@
 # Upgrade
 
+## 2.6.22
+
+There might be issues updating a project which still requires `Swiftmailer`.
+As announced with `2.5.0` (2022-07-13) Sulu recommends replace `Swiftmailer`
+with the `symfony/mailer` package. Check the upgrade guide [of 2.5.0 below](#replace-swiftmailer-with-symfony-mailer)
+to remove `Swiftmailer` from your project if still installed.
+
+## 2.6.21
+
+The type of the `apiKey` in the `se_users` table has been changed to `string`.
+
+```sql
+ALTER TABLE se_users CHANGE apiKey apiKey VARCHAR(128) DEFAULT NULL;
+```
+
 ## 2.6.16
 
 * Deprecated \Sulu\Bundle\MediaBundle\Controller\AbstractMediaController::getTitleFromUpload -> MediaManager::getTitleFromUpload
@@ -1009,8 +1024,12 @@ framework:
         dsn: '%env(MAILER_DSN)%'
 ```
 
-It should also be considered to remove the **SwiftMailer** and **SwiftMailerBundle**
-from your application and replace it with [**Symfony Mailer**](https://symfony.com/doc/6.1/mailer.html).
+It should also be considered to remove the **SwiftMailer** and **SwiftMailerBundle**:
+from your application and replace it with [**Symfony Mailer**](https://symfony.com/doc/6.4/mailer.html).
+
+```bash
+composer remove symfony/swiftmailer-bundle
+```
 
 ## 2.4.19
 

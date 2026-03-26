@@ -19,7 +19,6 @@ class GroupBarFixture implements DocumentFixtureInterface, DocumentFixtureGroupI
 {
     public function load(DocumentManager $documentManager): void
     {
-        return;
     }
 
     public function getOrder()

@@ -9,12 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SearchBundle\Search\Configuration;
+namespace Sulu\Bundle\SearchBundle\Tests\Unit\Search\Configuration;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfigurationProvider;
+use Sulu\Bundle\SearchBundle\Search\Configuration\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class IndexConfigurationProviderTest extends TestCase

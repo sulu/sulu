@@ -47,7 +47,9 @@ $config->setRiskyAllowed(true)
         'fully_qualified_strict_types' => false,
         'new_with_parentheses' => true,
         'trailing_comma_in_multiline' => ['after_heredoc' => true, 'elements' => ['array_destructuring', 'arrays', 'match']],
+        'no_useless_else' => false,
     ])
     ->setFinder($finder);
 
 return $config;
+

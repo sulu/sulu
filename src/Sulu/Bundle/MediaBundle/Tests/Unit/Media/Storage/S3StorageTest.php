@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\Storage;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\Storage;
 
 use Aws\S3\S3Client;
 use League\Flysystem\AdapterInterface;
@@ -19,6 +19,8 @@ use League\Flysystem\Filesystem;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Bundle\MediaBundle\Media\Storage\S3Storage;
+use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 
 class S3StorageTest extends TestCase

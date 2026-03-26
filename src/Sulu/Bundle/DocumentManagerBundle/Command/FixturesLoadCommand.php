@@ -155,6 +155,7 @@ EOT
             }
 
             // add to fixtures when one of the provided groups match
+            /** @var string[] $fixtureGroups */
             if (\count(\array_intersect($groups, $fixtureGroups))) {
                 $fixtures[] = $fixture;
 

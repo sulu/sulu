@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Search\EventListener;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Search\EventListener;
 
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use PHPUnit\Framework\TestCase;
@@ -18,6 +18,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository;
+use Sulu\Bundle\MediaBundle\Search\EventListener\PermissionListener;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
 
 class PermissionListenerTest extends TestCase

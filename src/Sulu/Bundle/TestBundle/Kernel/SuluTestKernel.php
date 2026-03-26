@@ -15,7 +15,6 @@ use Sulu\Bundle\TestBundle\SuluTestBundle;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * Represents a kernel for sulu-application tests.
@@ -113,7 +112,6 @@ class SuluTestKernel extends SuluKernel
             $bundles[] = new \Symfony\Bundle\SecurityBundle\SecurityBundle();
         }
 
-        /** @var iterable<mixed, BundleInterface> */
         return $bundles;
     }
 

@@ -1,85 +1,91 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render with completely filled placeholder 1`] = `
-<div
-  class="customUrl"
->
-  <span>
-    sulu.io/
-  </span>
+<DocumentFragment>
   <div
-    class="input default left"
+    class="customUrl"
   >
-    <input
-      type="text"
-      value="test1"
-    />
+    <span>
+      sulu.io/
+    </span>
+    <div
+      class="input default left"
+    >
+      <input
+        type="text"
+        value="test1"
+      />
+    </div>
+    <span>
+      /
+    </span>
+    <div
+      class="input default left"
+    >
+      <input
+        type="text"
+        value="test2"
+      />
+    </div>
   </div>
-  <span>
-    /
-  </span>
-  <div
-    class="input default left"
-  >
-    <input
-      type="text"
-      value="test2"
-    />
-  </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render with empty placeholder 1`] = `
-<div
-  class="customUrl"
->
+<DocumentFragment>
   <div
-    class="input default left"
+    class="customUrl"
   >
-    <input
-      type="text"
-      value=""
-    />
+    <div
+      class="input default left"
+    >
+      <input
+        type="text"
+        value=""
+      />
+    </div>
+    <span>
+      .sulu.io/
+    </span>
+    <div
+      class="input default left"
+    >
+      <input
+        type="text"
+        value=""
+      />
+    </div>
   </div>
-  <span>
-    .sulu.io/
-  </span>
-  <div
-    class="input default left"
-  >
-    <input
-      type="text"
-      value=""
-    />
-  </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render with partially filled placeholder 1`] = `
-<div
-  class="customUrl"
->
+<DocumentFragment>
   <div
-    class="input default left"
+    class="customUrl"
   >
-    <input
-      type="text"
-      value="test"
-    />
+    <div
+      class="input default left"
+    >
+      <input
+        type="text"
+        value="test"
+      />
+    </div>
+    <span>
+      .
+    </span>
+    <div
+      class="input default left"
+    >
+      <input
+        type="text"
+        value=""
+      />
+    </div>
+    <span>
+      .sulu.io
+    </span>
   </div>
-  <span>
-    .
-  </span>
-  <div
-    class="input default left"
-  >
-    <input
-      type="text"
-      value=""
-    />
-  </div>
-  <span>
-    .sulu.io
-  </span>
-</div>
+</DocumentFragment>
 `;

@@ -21,6 +21,7 @@ use Sulu\Bundle\MediaBundle\Domain\Event\MediaCreatedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaModifiedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaMovedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaRemovedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\MediaRemovedNoTrashEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaTranslationAddedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaVersionAddedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaVersionRemovedEvent;
@@ -390,7 +391,7 @@ class MediaManager implements MediaManagerInterface
      */
     private function buildData($uploadedFile, $data, $user)
     {
-        if (!($uploadedFile instanceof UploadedFile)) {
+        if (!$uploadedFile instanceof UploadedFile) {
             throw new InvalidFileException('Given uploaded file is not of instance UploadedFile');
         }
 
@@ -630,6 +631,9 @@ class MediaManager implements MediaManagerInterface
         return $collection;
     }
 
+    /**
+     * @throws MediaNotFoundException
+     */
     public function delete($id, $checkSecurity = false)
     {
         $mediaEntity = $this->getEntityById($id);
@@ -637,7 +641,6 @@ class MediaManager implements MediaManagerInterface
         $defaultFileVersionMeta = $this->getDefaultFileVersionMeta($mediaEntity);
         $mediaTitle = $defaultFileVersionMeta ? $defaultFileVersionMeta->getTitle() : null;
         $locale = $defaultFileVersionMeta ? $defaultFileVersionMeta->getLocale() : null;
-        $collectionId = $mediaEntity->getCollection()->getId();
 
         if ($checkSecurity) {
             $this->securityChecker->checkPermission(
@@ -651,9 +654,19 @@ class MediaManager implements MediaManagerInterface
             );
         }
 
+        $trashDisabledOrStored = true;
         if (null !== $this->trashManager) {
-            $this->trashManager->store(MediaInterface::RESOURCE_KEY, $mediaEntity);
+            try {
+                $this->trashManager->store(MediaInterface::RESOURCE_KEY, $mediaEntity);
+            } catch (\Exception $e) {
+                $trashDisabledOrStored = false;
+                // Trash storage failed (e.g. physical file missing), continue with deletion
+            }
         }
+
+        $mediaEvent = $trashDisabledOrStored
+            ? new MediaRemovedEvent($mediaEntity->getId(), $mediaEntity->getCollection()->getId(), $mediaTitle, $locale)
+            : new MediaRemovedNoTrashEvent($mediaEntity->getId(), $mediaEntity->getCollection()->getId(), $mediaTitle, $locale);
 
         /** @var File $file */
         foreach ($mediaEntity->getFiles() as $file) {
@@ -681,9 +694,7 @@ class MediaManager implements MediaManagerInterface
 
         $this->em->remove($mediaEntity);
 
-        $this->domainEventCollector->collect(
-            new MediaRemovedEvent($mediaEntity->getId(), $collectionId, $mediaTitle, $locale)
-        );
+        $this->domainEventCollector->collect($mediaEvent);
 
         $this->em->flush();
     }

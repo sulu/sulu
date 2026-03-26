@@ -119,6 +119,7 @@ class GoogleGeolocator implements GeolocatorInterface
                     foreach ($map[$field] as $fieldValue) {
                         $parts[] = $fieldValue[$property['field']];
                     }
+                    /** @var array<string> $parts */
                     $location->{$property['method']}(\implode(', ', $parts));
                 }
             }

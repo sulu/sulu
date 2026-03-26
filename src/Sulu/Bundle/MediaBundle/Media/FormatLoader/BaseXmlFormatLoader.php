@@ -243,7 +243,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
     /**
      * For a given format node returns the scale information of the format.
      *
-     * @return array
+     * @return array|null
      */
     abstract protected function getScaleFromFormatNode(\DOMNode $formatNode);
 

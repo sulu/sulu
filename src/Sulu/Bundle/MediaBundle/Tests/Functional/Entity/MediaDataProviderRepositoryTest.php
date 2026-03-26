@@ -541,6 +541,66 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 [],
                 [],
             ],
+            // datasource sub folder with options mimetype/type
+            [
+                ['dataSource' => 1, 'includeSubFolders' => true],
+                null,
+                0,
+                null,
+                \array_slice(self::$mediaData, 0, 2),
+                [],
+                ['mimetype' => 'image/jpg', 'type' => 'image'],
+            ],
+            // datasource no sub folder with options mimetype/type
+            [
+                ['dataSource' => 1, 'includeSubFolders' => false],
+                null,
+                0,
+                null,
+                \array_slice(self::$mediaData, 0, 1),
+                [],
+                ['mimetype' => 'image/jpg', 'type' => 'image'],
+            ],
+            // datasource sub folder with option mimetype
+            [
+                ['dataSource' => 1, 'includeSubFolders' => true],
+                null,
+                0,
+                null,
+                \array_slice(self::$mediaData, 0, 2),
+                [],
+                ['mimetype' => 'image/jpg'],
+            ],
+            // datasource no sub folder with option mimetype
+            [
+                ['dataSource' => 1, 'includeSubFolders' => false],
+                null,
+                0,
+                null,
+                \array_slice(self::$mediaData, 0, 1),
+                [],
+                ['mimetype' => 'image/jpg'],
+            ],
+            // datasource sub folder with option type
+            [
+                ['dataSource' => 1, 'includeSubFolders' => true],
+                null,
+                0,
+                null,
+                \array_slice(self::$mediaData, 0, 3),
+                [],
+                ['type' => 'image'],
+            ],
+            // datasource no sub folder with option type
+            [
+                ['dataSource' => 1, 'includeSubFolders' => false],
+                null,
+                0,
+                null,
+                \array_slice(self::$mediaData, 0, 1),
+                [],
+                ['type' => 'image'],
+            ],
             // datasource sub folder without includeSubFolders
             [
                 ['dataSource' => 1],

@@ -1,5 +1,7 @@
 {
     "sulu_category.categories": "Categories",
+    "sulu_category.category_selection_label": "{count} {count, plural, =1 {Category} other {Categories}} selected",
+    "sulu_category.category_selection_overlay_title": "Select categories",
     "sulu_category.key": "Key",
     "sulu_category.name": "Name",
     "sulu_category.keywords": "Keywords",

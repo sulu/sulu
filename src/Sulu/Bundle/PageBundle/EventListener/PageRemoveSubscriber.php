@@ -119,7 +119,9 @@ class PageRemoveSubscriber implements EventSubscriberInterface
 
         $anonymousRole = $this->systemStore->getAnonymousRole();
 
+        /** @var string[] $descendantPageIds */
         $descendantPageIds = \array_column($descendantPages, 'id');
+        /** @var string[] $descendantAuthorizedPageIds */
         $descendantAuthorizedPageIds = $this->accessControlRepository->findIdsWithGrantedPermissions(
             $this->getCurrentUser(),
             $this->permissions[PermissionTypes::DELETE],

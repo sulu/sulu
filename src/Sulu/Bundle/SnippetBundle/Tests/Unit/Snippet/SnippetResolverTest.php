@@ -9,13 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SnippetBundle\Snippet;
+namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Snippet;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
+use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -254,5 +255,43 @@ class SnippetResolverTest extends TestCase
             ],
             $resolver->resolve(['123-123-123'], 'sulu_io', 'de', null, true)
         );
+    }
+
+    public function testResolveCaching(): void
+    {
+        $contentMapper = $this->prophesize(ContentMapperInterface::class);
+        $structureResolver = $this->prophesize(StructureResolverInterface::class);
+
+        $uuid = '123-123-123';
+        $webspaceKey = 'sulu_io';
+        $locale = 'de';
+
+        $structure = $this->prophesize(SnippetBridge::class);
+        $structure->getUuid()->willReturn($uuid);
+        $structure->getKey()->willReturn('test');
+        $structure->getHasTranslation()->willReturn(true);
+        $structure->setIsShadow(Argument::any())->shouldBeCalled();
+        $structure->setShadowBaseLanguage(Argument::any())->shouldBeCalled();
+
+        $resolver = new SnippetResolver($contentMapper->reveal(), $structureResolver->reveal());
+
+        $contentMapper->load($uuid, $webspaceKey, $locale)
+            ->shouldBeCalledTimes(3)
+            ->willReturn($structure->reveal());
+
+        $structureResolver->resolve($structure->reveal(), false)
+            ->shouldBeCalledTimes(2)
+            ->willReturn(['content' => ['title' => 'test'], 'view' => ['title' => []]]);
+
+        $structureResolver->resolve($structure->reveal(), true)
+            ->shouldBeCalledTimes(1)
+            ->willReturn(['content' => ['title' => 'test'], 'extension' => ['excerpt' => ['categories' => [], 'tags' => []]], 'view' => ['title' => []]]);
+
+        $resolver->resolve([$uuid], $webspaceKey, $locale);
+        $resolver->resolve([$uuid], $webspaceKey, $locale); //cached
+
+        $resolver->resolve([$uuid], $webspaceKey, $locale, null, true); //not cached
+
+        $resolver->resolve([$uuid], $webspaceKey, $locale, 'en', false); //not cached
     }
 }

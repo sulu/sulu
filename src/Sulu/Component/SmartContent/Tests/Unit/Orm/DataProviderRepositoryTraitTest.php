@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\SmartContent\Tests\Orm;
+namespace Sulu\Component\SmartContent\Tests\Unit\Orm;
 
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;

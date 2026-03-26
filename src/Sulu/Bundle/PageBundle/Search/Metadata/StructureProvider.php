@@ -33,6 +33,7 @@ use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\ItemMetadata;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\Metadata;
@@ -160,6 +161,7 @@ EOT;
                         'field' => $this->factory->createMetadataField('title'),
                         'aggregate' => true,
                         'indexed' => false,
+                        'html' => false,
                     ]
                 );
             }
@@ -172,6 +174,7 @@ EOT;
                 [
                     'type' => 'string',
                     'field' => $this->factory->createMetadataProperty('webspaceName'),
+                    'html' => false,
                 ]
             );
         }
@@ -184,6 +187,7 @@ EOT;
                     'field' => $this->factory->createMetadataExpression(
                         'object.getWorkflowStage() == 1 ? "test" : "published"'
                     ),
+                    'html' => false,
                 ]
             );
             $indexMeta->addFieldMapping(
@@ -193,6 +197,7 @@ EOT;
                     'field' => $this->factory->createMetadataExpression(
                         'object.getPublished()'
                     ),
+                    'html' => false,
                 ]
             );
         }
@@ -205,6 +210,7 @@ EOT;
                     'field' => $this->factory->createMetadataExpression(
                         'object.getAuthored()'
                     ),
+                    'html' => false,
                 ]
             );
         }
@@ -216,6 +222,7 @@ EOT;
                 'stored' => true,
                 'indexed' => true,
                 'field' => $this->factory->createMetadataProperty('structureType'),
+                'html' => false,
             ]
         );
 
@@ -264,6 +271,12 @@ EOT;
     private function mapProperty(ItemMetadata $property, $metadata, string $prefix = '', $condition = null)
     {
         $propertyName = $prefix . $property->getName();
+        $isHtml = false;
+        $contentType = null;
+
+        if ($property instanceof PropertyMetadata) {
+            $contentType = $property->getType();
+        }
 
         if ($metadata instanceof IndexMetadata) {
             $field = $this->factory->createMetadataExpression(
@@ -273,6 +286,7 @@ EOT;
                 ),
                 $condition
             );
+            $isHtml = 'text_editor' === $contentType;
         } else {
             $field = $this->factory->createMetadataProperty(
                 '[' . $property->getName() . ']',
@@ -303,6 +317,7 @@ EOT;
                         'type' => 'complex',
                         'mapping' => $propertyMapping,
                         'field' => $field,
+                        'html' => $isHtml,
                     ]
                 );
             }
@@ -318,6 +333,7 @@ EOT;
                     'field' => $field,
                     'aggregate' => true,
                     'indexed' => false,
+                    'html' => 'text_editor' === $contentType,
                 ]
             );
         }
@@ -329,6 +345,7 @@ EOT;
                     'field' => $field,
                     'aggregate' => true,
                     'indexed' => false,
+                    'html' => $isHtml,
                 ]
             );
         }
@@ -351,6 +368,7 @@ EOT;
                             'type' => 'string',
                             'aggregate' => true,
                             'indexed' => false,
+                            'html' => 'text_editor' === $contentType,
                         ]
                     );
                     break;
@@ -363,6 +381,7 @@ EOT;
                             'type' => 'string',
                             'aggregate' => true,
                             'indexed' => false,
+                            'html' => $isHtml,
                         ]
                     );
                     break;
@@ -390,6 +409,7 @@ EOT;
                     'field' => $field,
                     'aggregate' => true,
                     'indexed' => isset($tagAttributes['index']) && 'indexed' === $tagAttributes['index'],
+                    'html' => 'text_editor' === $contentType,
                 ]
             );
         }

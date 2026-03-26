@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render the MultiAutoComplete with open suggestions list 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="multiAutoComplete"
   >
@@ -37,65 +37,59 @@ Array [
         value=""
       />
     </div>
-  </div>,
-  <div
-    class="backdrop fixed"
-    data-testid="backdrop"
-    role="button"
-  />,
-  <div
-    class="container"
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Render the MultiAutoComplete with open suggestions list 2`] = `
+<ul
+  class="menu"
+  style="top: 10px; left: 10px; position: fixed; pointer-events: auto;"
+>
+  <li
+    class="suggestionItem"
+    style="min-width: -10px;"
   >
-    <ul
-      class="menu"
-      style="top: 10px; left: 10px; position: fixed; pointer-events: auto;"
+    <button
+      class="suggestion"
+      type="button"
     >
-      <li
-        class="suggestionItem"
-        style="min-width: -10px;"
+      <span
+        class="column"
       >
-        <button
-          class="suggestion"
-          type="button"
-        >
-          <span
-            class="column"
-          >
-            Suggestion 1
-          </span>
-        </button>
-      </li>
-      <li
-        class="suggestionItem"
-        style="min-width: -10px;"
+        Suggestion 1
+      </span>
+    </button>
+  </li>
+  <li
+    class="suggestionItem"
+    style="min-width: -10px;"
+  >
+    <button
+      class="suggestion"
+      type="button"
+    >
+      <span
+        class="column"
       >
-        <button
-          class="suggestion"
-          type="button"
-        >
-          <span
-            class="column"
-          >
-            Suggestion 2
-          </span>
-        </button>
-      </li>
-      <li
-        class="suggestionItem"
-        style="min-width: -10px;"
+        Suggestion 2
+      </span>
+    </button>
+  </li>
+  <li
+    class="suggestionItem"
+    style="min-width: -10px;"
+  >
+    <button
+      class="suggestion"
+      type="button"
+    >
+      <span
+        class="column"
       >
-        <button
-          class="suggestion"
-          type="button"
-        >
-          <span
-            class="column"
-          >
-            Suggestion 3
-          </span>
-        </button>
-      </li>
-    </ul>
-  </div>,
-]
+        Suggestion 3
+      </span>
+    </button>
+  </li>
+</ul>
 `;

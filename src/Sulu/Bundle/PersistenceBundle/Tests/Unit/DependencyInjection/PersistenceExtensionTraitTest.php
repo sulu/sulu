@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\LocationBundle\Tests\Unit\DependencyInjection;
+namespace Sulu\Bundle\PersistenceBundle\Tests\Unit\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractContainerBuilderTestCase;
 use Sulu\Bundle\PersistenceBundle\Tests\Unit\Fixture\DependencyInjection\UsingPersistenceExtensionTrait;

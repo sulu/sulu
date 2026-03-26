@@ -42,9 +42,22 @@ jobs:
               run: |
                   cat var/translations/admin-merged-3-0.en.json
 
+            - name: Switch Branch to 3.1
+              run: |
+                  git fetch origin 3.1
+                  git checkout origin/3.1
+
+            - name: Merge all translation files from 3.1
+              run: |
+                  jq -s '.|add' src/Sulu/Bundle/*/Resources/translations/admin.en.json packages/*/translations/admin.en.json > var/translations/admin-merged-3-1.en.json
+
+            - name: Output merged translations 3.1
+              run: |
+                  cat var/translations/admin-merged-3-1.en.json
+
             - name: Merge branches
               run: |
-                  jq -s '.|add' var/translations/admin-merged-2-6.en.json var/translations/admin-merged-3-0.en.json > admin.en.json
+                  jq -s '.|add' var/translations/admin-merged-2-6.en.json var/translations/admin-merged-3-0.en.json var/translations/admin-merged-3-1.en.json > admin.en.json
 
             - name: Output merged all translations
               run: |

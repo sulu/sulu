@@ -9,9 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContactBundle\Util;
+namespace Sulu\Bundle\ContactBundle\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\ContactBundle\Util\IndexComparator;
 
 class IndexComparatorTest extends TestCase
 {

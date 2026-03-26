@@ -235,6 +235,9 @@ class NodeRepository implements NodeRepositoryInterface
         return $result;
     }
 
+    /**
+     * @param array<string> $ids
+     */
     public function getNodesByIds(
         $ids,
         $webspaceKey,

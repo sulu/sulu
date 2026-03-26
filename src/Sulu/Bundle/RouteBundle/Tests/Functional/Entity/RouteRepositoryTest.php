@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\RouteBundle\Tests\Functional\Controller;
+namespace Sulu\Bundle\RouteBundle\Tests\Functional\Entity;
 
 use Sulu\Bundle\RouteBundle\Entity\Route;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;

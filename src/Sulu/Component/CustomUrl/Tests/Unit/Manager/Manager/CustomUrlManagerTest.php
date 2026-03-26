@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\CustomUrl\Tests\Unit\Manager;
+namespace Sulu\Component\CustomUrl\Tests\Unit\Manager\Manager;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;

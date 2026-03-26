@@ -9,12 +9,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Twig;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Twig;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Twig\DispositionTypeTwigExtension;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class DispositionTypeTwigExtensionTest extends TestCase

@@ -161,7 +161,7 @@ class DocumentInspector extends BaseDocumentInspector
             return $this->documentRegistry->getLocaleForDocument($document);
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -210,7 +210,7 @@ class DocumentInspector extends BaseDocumentInspector
      *
      * @param ShadowLocaleBehavior $document
      *
-     * @return array
+     * @return array<string>
      */
     public function getConcreteLocales($document)
     {
@@ -346,7 +346,7 @@ class DocumentInspector extends BaseDocumentInspector
      *
      * @param string $path path of node
      *
-     * @return string
+     * @return string|null
      */
     private function extractWebspaceFromPath($path)
     {
@@ -363,6 +363,6 @@ class DocumentInspector extends BaseDocumentInspector
             return $matches[1];
         }
 
-        return;
+        return null;
     }
 }

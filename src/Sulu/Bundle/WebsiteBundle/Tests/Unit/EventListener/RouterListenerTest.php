@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Unit\Sulu\Bundle\WebsiteBundle\EventListener;
+namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\EventListener;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;

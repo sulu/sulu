@@ -1,25 +1,23 @@
 // @flow
-import {shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
-import Select from '../../Select';
 import MultiSelect from '../../MultiSelect';
 
 const Option = MultiSelect.Option;
 const Divider = MultiSelect.Divider;
 
-jest.mock('../../Select');
-
 jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
-test('The component should render a generic select', () => {
-    const onChange = jest.fn();
-    const select = shallow(
+function renderMultiSelect(props: any = {}) {
+    return render(
         <MultiSelect
             allSelectedText="All selected"
             noneSelectedText="None selected"
-            onChange={onChange}
+            onChange={jest.fn()}
+            {...props}
         >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -27,151 +25,102 @@ test('The component should render a generic select', () => {
             <Option value="option-3">Option 3</Option>
         </MultiSelect>
     );
-    expect(select.getElement().type).toBe(Select);
+}
+
+function getDisplayButton() {
+    const displayButton = document.querySelector('button.displayValue');
+
+    if (!displayButton) {
+        throw new Error('Expected display value button');
+    }
+
+    return displayButton;
+}
+
+test('The component should render a generic select', () => {
+    renderMultiSelect();
+
+    expect(getDisplayButton()).toHaveTextContent('None selected');
 });
 
 test('The component should pass the disabled value to the select component', () => {
-    const onChange = jest.fn();
-    const select = shallow(
-        <MultiSelect
-            allSelectedText="All selected"
-            disabled={true}
-            noneSelectedText="None selected"
-            onChange={onChange}
-        >
-            <Option value="option-1">Option 1</Option>
-            <Option value="option-2">Option 2</Option>
-        </MultiSelect>
-    );
+    renderMultiSelect({disabled: true});
 
-    expect(select.find(Select).props().disabled).toBe(true);
+    expect(getDisplayButton()).toBeDisabled();
 });
 
 test('The component should pass the correct display value if nothing is selected', () => {
-    const onChange = jest.fn();
-    const select = shallow(
-        <MultiSelect
-            allSelectedText="All selected"
-            noneSelectedText="None selected"
-            onChange={onChange}
-        >
-            <Option value="option-1">Option 1</Option>
-            <Option value="option-2">Option 2</Option>
-            <Divider />
-            <Option value="option-3">Option 3</Option>
-        </MultiSelect>
-    );
-    const displayValue = select.find(Select).props().displayValue;
-    expect(displayValue).toBe('None selected');
+    renderMultiSelect();
+
+    expect(getDisplayButton()).toHaveTextContent('None selected');
 });
 
 test('The component should pass the correct display value if everything is selected', () => {
-    const onChange = jest.fn();
-    const select = shallow(
-        <MultiSelect
-            allSelectedText="All selected"
-            noneSelectedText="None selected"
-            onChange={onChange}
-            values={['option-1', 'option-2', 'option-3']}
-        >
-            <Option value="option-1">Option 1</Option>
-            <Option value="option-2">Option 2</Option>
-            <Divider />
-            <Option value="option-3">Option 3</Option>
-        </MultiSelect>
-    );
-    const displayValue = select.find(Select).props().displayValue;
-    expect(displayValue).toBe('All selected');
+    renderMultiSelect({values: ['option-1', 'option-2', 'option-3']});
+
+    expect(getDisplayButton()).toHaveTextContent('All selected');
 });
 
 test('The component should pass the correct display value if some options are selected', () => {
-    const onChange = jest.fn();
-    const select = shallow(
-        <MultiSelect
-            allSelectedText="All selected"
-            noneSelectedText="None selected"
-            onChange={onChange}
-            values={['option-1', 'option-2']}
-        >
-            <Option value="option-1">Option 1</Option>
-            <Option value="option-2">Option 2</Option>
-            <Divider />
-            <Option value="option-3">Option 3</Option>
-        </MultiSelect>
-    );
-    const displayValue = select.find(Select).props().displayValue;
-    expect(displayValue).toBe('Option 1, Option 2');
+    renderMultiSelect({values: ['option-1', 'option-2']});
+
+    expect(getDisplayButton()).toHaveTextContent('Option 1, Option 2');
 });
 
-test('The component should select the correct option', () => {
-    const onChange = jest.fn();
-    const select = shallow(
-        <MultiSelect
-            allSelectedText="All selected"
-            noneSelectedText="None selected"
-            onChange={onChange}
-            values={['option-1', 'option-2']}
-        >
-            <Option value="option-1">Option 1</Option>
-            <Option value="option-2">Option 2</Option>
-            <Divider />
-            <Option value="option-3">Option 3</Option>
-        </MultiSelect>
-    );
-    const isOptionSelected = select.find(Select).props().isOptionSelected;
-    expect(isOptionSelected({props: {value: 'option-1'}})).toBe(true);
-    expect(isOptionSelected({props: {value: 'option-2'}})).toBe(true);
-    expect(isOptionSelected({props: {value: 'option-3'}})).toBe(false);
+test('The component should select the correct option', async() => {
+    const user = userEvent.setup();
+    renderMultiSelect({values: ['option-1', 'option-2']});
+
+    await user.click(getDisplayButton());
+
+    const selectedButtons = screen.getAllByRole('button', {name: /Option \d/})
+        .filter((button) => button.classList.contains('selected'));
+    expect(selectedButtons).toHaveLength(2);
+    expect(screen.getByRole('button', {name: /Option 1$/})).toHaveClass('selected');
+    expect(screen.getByRole('button', {name: /Option 2$/})).toHaveClass('selected');
+    expect(screen.getByRole('button', {name: /Option 3$/})).not.toHaveClass('selected');
 });
 
-test('The component should trigger the change callback on select with an added value', () => {
+test('The component should trigger the change callback on select with an added value', async() => {
+    const user = userEvent.setup();
     const onChangeSpy = jest.fn();
-    const select = shallow(
-        <MultiSelect
-            allSelectedText="All selected"
-            noneSelectedText="None selected"
-            onChange={onChangeSpy}
-            values={['option-1', 'option-2']}
-        >
-            <Option value="option-1">Option 1</Option>
-            <Option value="option-2">Option 2</Option>
-            <Divider />
-            <Option value="option-3">Option 3</Option>
-        </MultiSelect>
-    );
-    select.find(Select).props().onSelect('option-3');
+
+    renderMultiSelect({
+        onChange: onChangeSpy,
+        values: ['option-1', 'option-2'],
+    });
+
+    await user.click(getDisplayButton());
+    await user.click(screen.getByRole('button', {name: /Option 3$/}));
+
     expect(onChangeSpy).toHaveBeenCalledWith(['option-1', 'option-2', 'option-3']);
 });
 
-test('The component should trigger the change callback on select with a removed value', () => {
+test('The component should trigger the change callback on select with a removed value', async() => {
+    const user = userEvent.setup();
     const onChangeSpy = jest.fn();
-    const select = shallow(
-        <MultiSelect
-            allSelectedText="All selected"
-            noneSelectedText="None selected"
-            onChange={onChangeSpy}
-            values={['option-1', 'option-2']}
-        >
-            <Option value="option-1">Option 1</Option>
-            <Option value="option-2">Option 2</Option>
-            <Divider />
-            <Option value="option-3">Option 3</Option>
-        </MultiSelect>
-    );
-    select.find(Select).props().onSelect('option-2');
+
+    renderMultiSelect({
+        onChange: onChangeSpy,
+        values: ['option-1', 'option-2'],
+    });
+
+    await user.click(getDisplayButton());
+    await user.click(screen.getByRole('button', {name: /Option 2$/}));
+
     expect(onChangeSpy).toHaveBeenCalledWith(['option-1']);
 });
 
-test('The component should trigger the close callback when the MultiSelect is closed', () => {
+test('The component should trigger the close callback when the MultiSelect is closed', async() => {
+    const user = userEvent.setup();
     const closeSpy = jest.fn();
-    const select = shallow(
-        <MultiSelect onChange={jest.fn()} onClose={closeSpy}>
-            <Option value="option-1">Option 1</Option>
-            <Option value="option-2">Option 2</Option>
-        </MultiSelect>
-    );
+
+    renderMultiSelect({
+        onClose: closeSpy,
+    });
 
     expect(closeSpy).not.toBeCalled();
-    select.find(Select).prop('onClose')();
+    await user.click(getDisplayButton());
+    await user.click(screen.getByTestId('backdrop'));
     expect(closeSpy).toBeCalled();
 });

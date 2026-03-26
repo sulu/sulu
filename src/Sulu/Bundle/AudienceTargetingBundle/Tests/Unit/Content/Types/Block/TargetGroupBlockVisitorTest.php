@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Tests\Unit\Types\Block;
+namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Content\Types\Block;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;

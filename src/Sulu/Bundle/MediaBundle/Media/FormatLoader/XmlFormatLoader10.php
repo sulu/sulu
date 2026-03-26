@@ -98,7 +98,7 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
             }
         }
 
-        return;
+        return null;
     }
 
     protected function getTransformationsFromFormatNode(\DOMNode $formatNode)

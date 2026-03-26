@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Tests\Navigation;
+namespace Sulu\Bundle\AdminBundle\Tests\Unit\Navigation;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;

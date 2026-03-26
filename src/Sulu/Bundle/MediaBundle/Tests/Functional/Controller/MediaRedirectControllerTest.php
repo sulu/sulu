@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Functional\Controller;
+namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;

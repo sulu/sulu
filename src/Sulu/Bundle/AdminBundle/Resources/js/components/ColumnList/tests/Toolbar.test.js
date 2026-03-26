@@ -1,10 +1,10 @@
 // @flow
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
-import {mount} from 'enzyme';
 import Toolbar from '../Toolbar';
-import ToolbarDropdown from '../ToolbarDropdown';
 
-test('Should render with active', () => {
+test('Should render with active', async() => {
     const toolbarItems = [
         {
             icon: 'fa-plus',
@@ -27,22 +27,19 @@ test('Should render with active', () => {
             ],
         },
     ];
+    const user = userEvent.setup();
+    const {baseElement} = render(<Toolbar toolbarItems={toolbarItems} />);
 
-    const toolbar = mount(<Toolbar toolbarItems={toolbarItems} />);
-
-    expect(toolbar.find(ToolbarDropdown).length).toBe(1);
-
-    toolbar.find('.fa-plus').simulate('click');
+    await user.click(screen.getByRole('button', {name: 'fa-plus'}));
     expect(toolbarItems[0].onClick).toBeCalledWith();
 
     // check for opened dropdown in body
-    toolbar.find(ToolbarDropdown).find('button').simulate('click');
-    toolbar.update();
-    expect(toolbar.render()).toMatchSnapshot();
-    expect(toolbar.find('ArrowMenu').render()).toMatchSnapshot();
+    await user.click(screen.getByRole('button', {name: 'fa-gear su-angle-down'}));
+    expect(screen.getAllByText('Option1')).toHaveLength(2);
+    expect(baseElement).toMatchSnapshot();
 });
 
-test('Should close dropdown when item is clicked', () => {
+test('Should close dropdown when item is clicked', async() => {
     const toolbarItems = [
         {
             icon: 'fa-gear',
@@ -59,13 +56,15 @@ test('Should close dropdown when item is clicked', () => {
             ],
         },
     ];
+    const user = userEvent.setup();
 
-    const toolbar = mount(<Toolbar toolbarItems={toolbarItems} />);
+    render(<Toolbar toolbarItems={toolbarItems} />);
 
-    expect(toolbar.find('ToolbarDropdown').find('Action')).toHaveLength(0);
-    toolbar.find(ToolbarDropdown).find('button').simulate('click');
-    expect(toolbar.find('ToolbarDropdown').find('Action')).toHaveLength(2);
+    expect(screen.queryByText('Option1')).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', {name: 'fa-gear su-angle-down'}));
+    expect(screen.getByText('Option1')).toBeInTheDocument();
+    expect(screen.getByText('Option2')).toBeInTheDocument();
 
-    toolbar.find('ToolbarDropdown Action[children="Option1"]').simulate('click');
-    expect(toolbar.find('ToolbarDropdown').find('Action')).toHaveLength(0);
+    await user.click(screen.getByText('Option1'));
+    expect(screen.queryByText('Option1')).not.toBeInTheDocument();
 });

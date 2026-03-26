@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PageBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\Sitemap;
+namespace Sulu\Bundle\PageBundle\Tests\Unit\Sitemap;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;

@@ -6,6 +6,7 @@ import {Button, Dialog, Loader, Table} from 'sulu-admin-bundle/components';
 import {SingleListOverlay, withToolbar} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
 import {CacheClearToolbarAction} from 'sulu-website-bundle/containers';
+import Hint from 'sulu-admin-bundle/components/Hint';
 import SnippetAreaStore from './stores/SnippetAreaStore';
 import snippetAreasStyles from './snippetAreas.scss';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
@@ -85,6 +86,20 @@ class SnippetAreas extends React.Component<ViewProps> {
             return <Loader />;
         }
 
+        if (this.snippetAreaStore.forbidden) {
+            return <Hint icon="su-lock" title={translate('sulu_admin.no_permissions')} />;
+        }
+
+        if (this.snippetAreaStore.unexpectedError) {
+            return <Hint icon="su-exclamation-triangle" title={translate('sulu_admin.unexpected_error')} />;
+        }
+
+        const {
+            attributes: {
+                locale,
+            },
+        } = this.props.router;
+
         return (
             <Fragment>
                 <Table skin="light">
@@ -139,6 +154,7 @@ class SnippetAreas extends React.Component<ViewProps> {
                     confirmLoading={this.snippetAreaStore.saving}
                     key={this.openedAreaKey}
                     listKey="snippets"
+                    locale={observable.box(locale)}
                     onClose={this.handleListOverlayClose}
                     onConfirm={this.handleListOverlayConfirm}
                     open={!!this.openedAreaKey}

@@ -9,7 +9,7 @@ jest.mock('../../stores/metadataStore', () => ({
     getSchema: jest.fn(),
 }));
 
-test('Create a MemoryFormStore with schema', (done) => {
+test('Create a MemoryFormStore with schema', () => {
     const schema = {
         title: {},
     };
@@ -35,6 +35,5 @@ test('Create a MemoryFormStore with schema', (done) => {
         expect(memoryFormStore.innerFormStore).toBeInstanceOf(MemoryFormStore);
         expect(memoryFormStore.schema).toEqual(schema);
         expect(memoryFormStore.metadataOptions).toEqual(metadataOptions);
-        done();
     });
 });
