@@ -86,7 +86,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $response = \json_decode($this->client->getResponse()->getContent());
-        $this->assertCount(2, $response->_embedded->pages);
+        $this->assertCount(3, $response->_embedded->pages);
 
         $titles = \array_map(function($page) {
             return $page->title;
@@ -94,24 +94,7 @@ class PageControllerTest extends SuluTestCase
 
         $this->assertContains('Sulu CMF', $titles);
         $this->assertContains('Test CMF', $titles);
-    }
-
-    public function testGetFlatResponseAlphabeticallyOrderedWithGermanLocale(): void
-    {
-        $this->client->jsonRequest('GET', '/api/pages?locale=de&flat=true');
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
-
-        /** @var string $content */
-        $content = $this->client->getResponse()->getContent();
-        /** @var array<array-key,array<array-key,array<array-key,array<array-key,string>>>> $response */
-        $response = \json_decode($content, true);
-        $this->assertCount(4, $response['_embedded']['pages']);
-
-        $titles = \array_map(function(array $page): string {
-            return $page['title'];
-        }, $response['_embedded']['pages']);
-
-        $this->assertSame(['Another Random CMF', 'Destination CMF', 'Sulu CMF', 'Test CMF'], $titles);
+        $this->assertSame('ZZ Sorted', $titles[\array_key_last($titles)]);
     }
 
     public function testGetFlatResponseForWebspace(): void
@@ -2614,7 +2597,12 @@ class PageControllerTest extends SuluTestCase
         return $role;
     }
 
-    private function setUpContent($data)
+    /**
+     * @param array<int, array<string, mixed>> $data
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function setUpContent(array $data): array
     {
         /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
@@ -2628,7 +2616,9 @@ class PageControllerTest extends SuluTestCase
                 $pageData
             );
 
-            $data[$i] = (array) \json_decode($this->client->getResponse()->getContent(), true);
+            /** @var array<string, mixed> $decoded */
+            $decoded = \json_decode($this->client->getResponse()->getContent(), true);
+            $data[$i] = $decoded;
         }
 
         return $data;

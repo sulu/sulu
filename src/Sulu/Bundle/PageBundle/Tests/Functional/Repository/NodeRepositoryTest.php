@@ -134,9 +134,9 @@ class NodeRepositoryTest extends SuluTestCase
         $result = $this->nodeRepository->getWebspaceNodes('en');
 
         $this->assertEquals('Destination CMF', $result['_embedded']['pages'][0]['title']);
-        $this->assertEquals('Another Random CMF', $result['_embedded']['pages'][1]['title']);
-        $this->assertEquals('Sulu CMF', $result['_embedded']['pages'][2]['title']);
-        $this->assertEquals('Test CMF', $result['_embedded']['pages'][3]['title']);
+        $this->assertEquals('Sulu CMF', $result['_embedded']['pages'][1]['title']);
+        $this->assertEquals('Test CMF', $result['_embedded']['pages'][2]['title']);
+        $this->assertEquals('ZZ Sorted', $result['_embedded']['pages'][3]['title']);
     }
 
     /**

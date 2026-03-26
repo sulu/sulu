@@ -660,7 +660,9 @@ class PageController extends AbstractRestController implements ClassResourceInte
             $user
         );
 
-        foreach ($webspaceContents as $webspaceContent) {
+        $sortedWebspaceContents = $this->reSortWebspaceContents($webspaceContents, $webspaces);
+
+        foreach ($sortedWebspaceContents as $webspaceContent) {
             $webspaceContent->setDataProperty('title', $webspaces[$webspaceContent->getWebspaceKey()]->getName());
 
             if ($webspaceContent->getWebspaceKey() === $webspaceKey) {
@@ -668,7 +670,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
             }
         }
 
-        return $this->sortWebspaceContent($webspaceContents);
+        return $sortedWebspaceContents;
     }
 
     private function getWebspace(Request $request, bool $force = true): ?string
@@ -688,20 +690,25 @@ class PageController extends AbstractRestController implements ClassResourceInte
 
     /**
      * @param Content[] $webspaceContents
+     * @param Webspace[] $webspaces
      *
      * @return Content[]
      */
-    private function sortWebspaceContent(array $webspaceContents): array
+    private function reSortWebspaceContents(array $webspaceContents, array $webspaces): array
     {
-        \usort($webspaceContents, function(Content $a, Content $b): int {
-            /** @var string $titleA */
-            $titleA = $a->getPropertyWithDefault('title');
-            /** @var string $titleB */
-            $titleB = $b->getPropertyWithDefault('title');
+        $webspaceContentsByKey = [];
+        foreach ($webspaceContents as $webspaceContent) {
+            $webspaceContentsByKey[$webspaceContent->getWebspaceKey()] = $webspaceContent;
+        }
 
-            return \strnatcasecmp($titleA, $titleB);
-        });
+        $sortedWebspaceContents = [];
+        foreach (\array_keys($webspaces) as $webspaceKey) {
+            if (!isset($webspaceContentsByKey[$webspaceKey])) {
+                continue;
+            }
+            $sortedWebspaceContents[] = $webspaceContentsByKey[$webspaceKey];
+        }
 
-        return $webspaceContents;
+        return $sortedWebspaceContents;
     }
 }

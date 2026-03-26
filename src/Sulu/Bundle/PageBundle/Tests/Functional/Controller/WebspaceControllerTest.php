@@ -24,14 +24,13 @@ class WebspaceControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        /** @var array<array-key,array<array-key,array<array-key,array<array-key,string>>>> $data */
         $data = $response['_embedded']['webspaces'];
         $this->assertCount(4, $data);
 
         $destinationWebspace = $data[0];
-        $sortIndicatorWebspace = $data[1];
-        $suluWebspace = $data[2];
-        $testWebspace = $data[3];
+        $suluWebspace = $data[1];
+        $testWebspace = $data[2];
+        $sortedWebspace = $data[3];
 
         $this->assertEquals('Destination CMF', $destinationWebspace['name']);
         $this->assertCount(2, $destinationWebspace['navigations']);
@@ -42,7 +41,6 @@ class WebspaceControllerTest extends SuluTestCase
         $this->assertSame('de', $destinationWebspace['allLocalizations'][0]['localization']);
         $this->assertSame('es', $destinationWebspace['allLocalizations'][1]['name']);
         $this->assertSame('es', $destinationWebspace['allLocalizations'][1]['localization']);
-        $this->assertEquals('Another Random CMF', $sortIndicatorWebspace['name']);
         $this->assertEquals('Sulu CMF', $suluWebspace['name']);
         $this->assertCount(2, $suluWebspace['navigations']);
         $this->assertEquals('main', $suluWebspace['navigations'][0]['key']);
@@ -52,5 +50,9 @@ class WebspaceControllerTest extends SuluTestCase
         $this->assertEquals('main', $testWebspace['navigations'][0]['key']);
         $this->assertEquals('footer', $testWebspace['navigations'][1]['key']);
         $this->assertEquals('leaf', $testWebspace['resourceLocatorStrategy']['inputType']);
+        $this->assertEquals('ZZ Sorted', $sortedWebspace['name']);
+        $this->assertCount(2, $sortedWebspace['navigations']);
+        $this->assertEquals('main', $sortedWebspace['navigations'][0]['key']);
+        $this->assertEquals('footer', $sortedWebspace['navigations'][1]['key']);
     }
 }

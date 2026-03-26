@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Webspace\Tests\Unit;
+namespace Sulu\Component\Webspace\Tests\Unit\Manager;
 
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -18,7 +18,9 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Exception\InvalidTemplateException;
 use Sulu\Component\Webspace\Loader\XmlFileLoader10;
 use Sulu\Component\Webspace\Loader\XmlFileLoader11;
+use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceCollectionBuilder;
+use Sulu\Component\Webspace\Tests\Unit\WebspaceTestCase;
 use Sulu\Component\Webspace\Url\Replacer;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\DelegatingLoader;
@@ -34,7 +36,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
     private $loader;
 
     /**
-     * @var \PHPUnit\Framework\MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject&LoggerInterface
      */
     private $logger;
 
@@ -283,6 +285,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
     public function testThrowForMissingExcludedTemplate(): void
     {
         $this->expectException(InvalidTemplateException::class);
+        $this->expectException(InvalidTemplateException::class);
 
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
@@ -292,5 +295,24 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         );
 
         $webspaceCollection = $webspaceCollectionBuilder->build();
+    }
+
+    public function testBuildSorting(): void
+    {
+        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
+            $this->loader,
+            new Replacer(),
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple',
+            ['default', 'overview']
+        );
+
+        /** @var WebspaceCollection $webspaceCollection */
+        $webspaceCollection = $webspaceCollectionBuilder->build();
+
+        $webspaces = \array_values($webspaceCollection->getWebspaces());
+
+        $this->assertCount(2, $webspaces);
+        $this->assertEquals('Massive Art', $webspaces[0]->getName());
+        $this->assertEquals('Sulu CMF', $webspaces[1]->getName());
     }
 }
