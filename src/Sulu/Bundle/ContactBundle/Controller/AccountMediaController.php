@@ -26,13 +26,14 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Class AccountMediaController.
  */
-class AccountMediaController extends AbstractMediaController
+class AccountMediaController extends AbstractMediaController implements SecuredControllerInterface
 {
     protected static $mediaEntityKey = 'account_media';
 
@@ -103,5 +104,10 @@ class AccountMediaController extends AbstractMediaController
             $contactId,
             $request
         );
+    }
+
+    public function getSecurityContext(): string
+    {
+        return 'sulu.contact.people';
     }
 }
