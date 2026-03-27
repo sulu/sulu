@@ -53,6 +53,7 @@ readonly class ExcerptTaxonomyResolver implements ResolverInterface
 
         $formMetadataItems = $formMetadata->getFlatFieldMetadata();
         $data = $this->getExcerptTaxonomyData($dimensionContent);
+        $nullProperties = [];
         if (null !== $properties) {
             $filteredFormMetadataItems = [];
             $filteredTemplateData = [];
@@ -60,6 +61,8 @@ readonly class ExcerptTaxonomyResolver implements ResolverInterface
             foreach ($properties as $key => $value) {
                 if (\array_key_exists($value, $formMetadataItems)) {
                     $filteredFormMetadataItems[$key] = $formMetadataItems[$value];
+                } else {
+                    $nullProperties[$key] = null;
                 }
                 if (\array_key_exists($value, $data)) {
                     $filteredTemplateData[$key] = $data[$value];
@@ -72,7 +75,7 @@ readonly class ExcerptTaxonomyResolver implements ResolverInterface
         $resolvedItems = $this->metadataResolver->resolveItems($formMetadataItems, $data, $locale);
 
         return ContentView::create(
-            $this->normalizeResolvedItems($resolvedItems, $properties),
+            \array_merge($nullProperties, $this->normalizeResolvedItems($resolvedItems, $properties)),
             [],
         );
     }

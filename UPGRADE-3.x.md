@@ -1,5 +1,58 @@
 # Upgrade
 
+## 3.0.6
+
+### Consistent smart content params across article, page and snippet providers
+
+Several smart content `<param>` names for selecting templates were ambiguous between providers and have been deprecated:
+
+- `types` is deprecated.
+  - For article providers (`articles`, `articles_page_tree`), use `groups`.
+  - For all other providers (`pages`, `snippets`), use `templateKeys`.
+- `structureTypes` is deprecated. Use `templateKeys`.
+
+**Migration:**
+
+Update your template XML files. For example:
+
+```xml
+<!-- articles: before -->
+<property name="my_articles" type="smart_content">
+    <params>
+        <param name="provider" value="articles"/>
+        <param name="types" value="blog,news"/>
+    </params>
+</property>
+
+<!-- articles: after -->
+<property name="my_articles" type="smart_content">
+    <params>
+        <param name="provider" value="articles"/>
+        <param name="groups" value="blog,news"/>
+    </params>
+</property>
+```
+
+```xml
+<!-- pages/snippets: before -->
+<property name="my_pages" type="smart_content">
+    <params>
+        <param name="provider" value="pages"/>
+        <param name="structureTypes" value="default"/>
+    </params>
+</property>
+
+<!-- pages/snippets: after -->
+<property name="my_pages" type="smart_content">
+    <params>
+        <param name="provider" value="pages"/>
+        <param name="templateKeys" value="default"/>
+    </params>
+</property>
+```
+
+If a deprecated param name is still used, the container build will fail with a message pointing at the affected template and property.
+
 ## 3.0.5
 
 ### Remove false cascade on author and route relations

@@ -52,6 +52,7 @@ readonly class TemplateResolver implements ResolverInterface
 
         $formMetadataItems = $formMetadata->getFlatFieldMetadata();
         $data = $dimensionContent->getTemplateData();
+        $nullProperties = [];
         if (null !== $properties) {
             $filteredFormMetadataItems = [];
             $filteredTemplateData = [];
@@ -59,6 +60,8 @@ readonly class TemplateResolver implements ResolverInterface
             foreach ($properties as $key => $value) {
                 if (\array_key_exists($value, $formMetadataItems)) {
                     $filteredFormMetadataItems[$key] = $formMetadataItems[$value];
+                } else {
+                    $nullProperties[$key] = null;
                 }
                 if (\array_key_exists($value, $data)) {
                     $filteredTemplateData[$key] = $data[$value];
@@ -69,7 +72,7 @@ readonly class TemplateResolver implements ResolverInterface
         }
 
         return ContentView::create(
-            $this->metadataResolver->resolveItems($formMetadataItems, $data, $locale),
+            \array_merge($nullProperties, $this->metadataResolver->resolveItems($formMetadataItems, $data, $locale)),
             []
         );
     }

@@ -48,6 +48,7 @@ readonly class SeoResolver implements ResolverInterface
             return !\in_array($item->getType(), $this->excludedPropertyTypes(), true);
         });
         $data = $this->getSeoData($dimensionContent);
+        $nullProperties = [];
         if (null !== $properties) {
             $filteredFormMetadataItems = [];
             $filteredTemplateData = [];
@@ -55,6 +56,8 @@ readonly class SeoResolver implements ResolverInterface
             foreach ($properties as $key => $value) {
                 if (\array_key_exists($value, $formMetadataItems)) {
                     $filteredFormMetadataItems[$key] = $formMetadataItems[$value];
+                } else {
+                    $nullProperties[$key] = null;
                 }
                 if (\array_key_exists($value, $data)) {
                     $filteredTemplateData[$key] = $data[$value];
@@ -67,7 +70,7 @@ readonly class SeoResolver implements ResolverInterface
         $resolvedItems = $this->metadataResolver->resolveItems($formMetadataItems, $data, $locale);
 
         return ContentView::create(
-            $this->normalizeResolvedItems($resolvedItems, $properties),
+            \array_merge($nullProperties, $this->normalizeResolvedItems($resolvedItems, $properties)),
             [],
         );
     }

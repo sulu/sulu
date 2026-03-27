@@ -49,6 +49,10 @@ class MediaSmartContentFiltersVisitor implements SmartContentFiltersVisitorInter
             }
         }
 
+        if ('true' === ($parameters['ignoreWebspaces'] ?? null) || true === ($parameters['ignoreWebspaces'] ?? null)) {
+            return $filters;
+        }
+
         $webspace = $this->requestAnalyzer->getWebspace();
 
         if ($webspace instanceof Webspace) { // @phpstan-ignore-line instanceof.alwaysTrue

@@ -41,6 +41,45 @@ class ExcerptTaxonomyResolverTest extends TestCase
         self::assertNull($resolver->resolve($this->prophesize(DimensionContentInterface::class)->reveal()));
     }
 
+    public function testResolveWithPropertiesNotInMetadata(): void
+    {
+        $example = new Example();
+        $dimensionContent = new ExampleDimensionContent($example);
+        $example->addDimensionContent($dimensionContent);
+        $dimensionContent->setLocale('en');
+
+        $dimensionContent->setExcerptData([
+            'title' => 'Sulu',
+        ]);
+
+        $formMetadata = $this->prophesize(FormMetadata::class);
+        $formMetadata->getFlatFieldMetadata()
+            ->willReturn([]);
+        $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
+        $formMetadataProvider->getMetadata('content_excerpt', 'en', ['instanceOf' => ExampleDimensionContent::class])
+            ->willReturn($formMetadata->reveal());
+
+        $metadataResolver = $this->prophesize(MetadataResolver::class);
+        $metadataResolver->resolveItems(Argument::any(), Argument::any(), Argument::any())
+            ->willReturn([]);
+
+        $resolver = new ExcerptTaxonomyResolver(
+            $formMetadataProvider->reveal(),
+            $metadataResolver->reveal(),
+        );
+
+        $contentView = $resolver->resolve($dimensionContent, ['excerptTitle' => 'excerpt.title', 'nonExistent' => 'excerpt.nonExistent']);
+        self::assertInstanceOf(ContentView::class, $contentView);
+
+        $content = $contentView->getContent();
+        self::assertIsArray($content);
+        self::assertCount(2, $content);
+        self::assertArrayHasKey('excerptTitle', $content);
+        self::assertNull($content['excerptTitle']);
+        self::assertArrayHasKey('nonExistent', $content);
+        self::assertNull($content['nonExistent']);
+    }
+
     public function testResolve(): void
     {
         $example = new Example();

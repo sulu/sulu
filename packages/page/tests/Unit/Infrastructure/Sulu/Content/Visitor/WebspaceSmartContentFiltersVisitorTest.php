@@ -111,4 +111,54 @@ class WebspaceSmartContentFiltersVisitorTest extends TestCase
         $this->assertEquals(['tag1', 'tag2'], $result['tags']);
         $this->assertEquals([1, 2, 3], $result['categories']);
     }
+
+    public function testVisitWithIgnoreWebspacesSkipsWebspaceKey(): void
+    {
+        $request = $this->prophesize(Request::class);
+        $webspace = $this->prophesize(Webspace::class);
+        $webspace->getKey()->willReturn('example');
+
+        $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace->reveal());
+
+        $filters = ['locale' => 'en'];
+        $parameters = ['ignoreWebspaces' => 'true'];
+        $result = $this->visitor->visit([], $filters, $parameters);
+
+        $this->assertArrayNotHasKey('webspaceKey', $result);
+        $this->assertEquals('en', $result['locale']);
+    }
+
+    public function testVisitWithIgnoreWebspacesFalseAddsWebspaceKey(): void
+    {
+        $request = $this->prophesize(Request::class);
+        $webspace = $this->prophesize(Webspace::class);
+        $webspace->getKey()->willReturn('example');
+
+        $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace->reveal());
+
+        $filters = ['locale' => 'en'];
+        $parameters = ['ignoreWebspaces' => 'false'];
+        $result = $this->visitor->visit([], $filters, $parameters);
+
+        $this->assertArrayHasKey('webspaceKey', $result);
+        $this->assertEquals('example', $result['webspaceKey']);
+    }
+
+    public function testVisitWithIgnoreWebspacesBoolTrueSkipsWebspaceKey(): void
+    {
+        $request = $this->prophesize(Request::class);
+        $webspace = $this->prophesize(Webspace::class);
+        $webspace->getKey()->willReturn('example');
+
+        $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace->reveal());
+
+        $filters = ['locale' => 'en'];
+        $parameters = ['ignoreWebspaces' => true];
+        $result = $this->visitor->visit([], $filters, $parameters);
+
+        $this->assertArrayNotHasKey('webspaceKey', $result);
+    }
 }

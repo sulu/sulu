@@ -69,6 +69,47 @@ class TemplateResolverTest extends TestCase
         $templateResolver->resolve($dimensionContent);
     }
 
+    public function testResolveWithPropertiesNotInMetadata(): void
+    {
+        $example = new Example();
+        $dimensionContent = new ExampleDimensionContent($example);
+        $example->addDimensionContent($dimensionContent);
+        $dimensionContent->setLocale('en');
+        $dimensionContent->setTemplateKey('default');
+        $dimensionContent->setTemplateData(['title' => 'Sulu']);
+
+        $formMetadata = new TypedFormMetadata();
+        $defaultFormMetadata = new FormMetadata();
+        $fieldMetadata = new FieldMetadata('title');
+        $fieldMetadata->setType('text_line');
+        $defaultFormMetadata->setItems(['title' => $fieldMetadata]);
+        $formMetadata->addForm('default', $defaultFormMetadata);
+        $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
+        $formMetadataProvider->getMetadata('example', 'en', [])
+            ->willReturn($formMetadata);
+
+        $metadataResolver = new MetadataResolver(
+            new PropertyResolverProvider(
+                new \ArrayIterator(['default' => new DefaultPropertyResolver()])
+            )
+        );
+
+        $templateResolver = new TemplateResolver(
+            $formMetadataProvider->reveal(),
+            $metadataResolver
+        );
+
+        $contentView = $templateResolver->resolve($dimensionContent, ['title' => 'title', 'nonExistent' => 'nonExistent']);
+        self::assertInstanceOf(ContentView::class, $contentView);
+
+        $content = $contentView->getContent();
+        self::assertIsArray($content);
+        self::assertCount(2, $content);
+        self::assertInstanceOf(ContentView::class, $content['title']);
+        self::assertSame('Sulu', $content['title']->getContent());
+        self::assertNull($content['nonExistent']);
+    }
+
     public function testResolve(): void
     {
         $example = new Example();

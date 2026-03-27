@@ -38,6 +38,7 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
  *       websiteTagOperator: 'AND'|'OR',
  *       types: string[],
  *       typesOperator: 'OR',
+ *       templateKeys?: string[],
  *       locale: string,
  *       dataSource: string|null,
  *       limit: int|null,
@@ -61,6 +62,7 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
  *        websiteTagOperator: 'AND'|'OR',
  *        types: string[],
  *        typesOperator: 'OR',
+ *        templateKeys?: string[],
  *        locale: string,
  *        dataSource: string|null,
  *        limit: int|null,
@@ -156,7 +158,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         $alias = 'article';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
 
-        $filters = $this->mapFilters($filters);
+        $filters = $this->mapFilters($filters, $params);
         $this->dimensionContentQueryEnhancer->addFilters(
             $queryBuilder,
             $alias,
@@ -193,7 +195,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         $alias = 'article';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
 
-        $filters = $this->mapFilters($filters);
+        $filters = $this->mapFilters($filters, $params);
         $this->dimensionContentQueryEnhancer->addFilters(
             $queryBuilder,
             $alias,
@@ -233,6 +235,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
 
     /**
      * @param ArticleSmartContentFilters|ArticleSmartContentCountFilters $filters
+     * @param array<string, mixed> $params
      *
      * @return array{
      *         categoryIds?: int[],
@@ -255,19 +258,14 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      *         webspaceKey?: string
      *     }
      */
-    protected function mapFilters(array $filters): array
+    protected function mapFilters(array $filters, array $params = []): array
     {
-        if ($filters['types']) {
-            $templates = [];
-            foreach ($this->groupProvider->getGroups() as $group) {
-                if (\in_array($group->identifier, $filters['types'], true)) {
-                    $templates = \array_merge($templates, \array_filter($group->templates, 'is_string'));
-                }
-            }
-
-            $filters['templateKeys'] = $templates;
-            unset($filters['types']);
-        }
+        $filters['templateKeys'] = $this->resolveTemplateKeys(
+            $filters['templateKeys'] ?? [],
+            $filters['types'],
+            $params,
+        );
+        unset($filters['types']);
 
         if ($filters['categories']) {
             $filters['categoryIds'] = $filters['categories'];
@@ -280,6 +278,61 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         }
 
         return $filters;
+    }
+
+    /**
+     * @param array<string> $existingTemplateKeys
+     * @param array<string> $filterGroupIdentifiers
+     * @param array<string, mixed> $params
+     *
+     * @return list<string>
+     */
+    private function resolveTemplateKeys(array $existingTemplateKeys, array $filterGroupIdentifiers, array $params): array
+    {
+        $groupIdentifiers = $filterGroupIdentifiers;
+        if ([] === $groupIdentifiers) {
+            $groupsParam = $params['groups'] ?? null;
+            if (\is_string($groupsParam)) {
+                $groupIdentifiers = \array_values(\array_filter(\array_map('trim', \explode(',', $groupsParam))));
+            }
+        }
+
+        $templateKeys = \array_values($existingTemplateKeys);
+        if ([] !== $groupIdentifiers) {
+            $templatesFromGroups = $this->expandGroupsToTemplates($groupIdentifiers);
+            $templateKeys = [] !== $templateKeys
+                ? \array_values(\array_intersect($templateKeys, $templatesFromGroups))
+                : $templatesFromGroups;
+        }
+
+        $templateParam = $params['templateKeys'] ?? null;
+        if (\is_string($templateParam)) {
+            $templateKeysParam = \array_values(\array_filter(\array_map('trim', \explode(',', $templateParam))));
+            if ([] !== $templateKeysParam) {
+                $templateKeys = [] !== $templateKeys
+                    ? \array_values(\array_intersect($templateKeys, $templateKeysParam))
+                    : $templateKeysParam;
+            }
+        }
+
+        return $templateKeys;
+    }
+
+    /**
+     * @param array<string> $identifiers
+     *
+     * @return list<string>
+     */
+    private function expandGroupsToTemplates(array $identifiers): array
+    {
+        $templates = [];
+        foreach ($this->groupProvider->getGroups() as $group) {
+            if (\in_array($group->identifier, $identifiers, true)) {
+                $templates = \array_merge($templates, \array_filter($group->templates, 'is_string'));
+            }
+        }
+
+        return \array_values(\array_unique($templates));
     }
 
     /**

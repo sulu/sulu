@@ -33,9 +33,9 @@ readonly class DimensionContentResolver implements ResolverInterface
 
         $data = [];
         foreach ($properties as $key => $path) {
-            if ($this->propertyAccessor->isReadable($dimensionContent, $path)) {
-                $data[$key] = $this->propertyAccessor->getValue($dimensionContent, $path);
-            }
+            $data[$key] = $this->propertyAccessor->isReadable($dimensionContent, $path)
+                ? $this->propertyAccessor->getValue($dimensionContent, $path)
+                : null;
         }
 
         return ContentView::create(
