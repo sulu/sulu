@@ -92,7 +92,7 @@ abstract class ItemMetadata
             $name,
             __CLASS__);
 
-        return $this[$name];
+        return $this->$name;
     }
 
     public function __set($name, $value)
@@ -105,7 +105,7 @@ abstract class ItemMetadata
             __CLASS__
         );
 
-        $this[$name] = $value;
+        $this->$name = $value;
     }
 
     /**
