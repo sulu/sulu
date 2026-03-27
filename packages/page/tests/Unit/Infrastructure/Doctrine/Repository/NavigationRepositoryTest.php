@@ -32,6 +32,7 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Doctrine\Repository\NavigationRepository;
+use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class NavigationRepositoryTest extends TestCase
@@ -73,7 +74,7 @@ class NavigationRepositoryTest extends TestCase
             'changer' => 'object.changer',
             'created' => 'object.created',
             'creator' => 'object.creator',
-            'linkProvider' => 'object.linkData.linkProvider',
+            'linkProvider' => 'object.linkData[provider]',
         ];
 
         if ($loadExcerpt) {
@@ -203,6 +204,7 @@ class NavigationRepositoryTest extends TestCase
         $this->assertArrayHasKey('excerpt', $result[0]);
         $this->assertSame('Page Title', $result[0]['title']);
         $this->assertSame('sulu-io', $result[0]['webspaceKey']);
+        $this->assertSame(PageLinkProvider::ALIAS, $result[0]['targetType']);
     }
 
     public function testGetNavigationFlat(): void
@@ -283,6 +285,7 @@ class NavigationRepositoryTest extends TestCase
         $this->assertArrayNotHasKey('excerpt', $result[0]); // Excerpt not requested
         $this->assertSame('German Page', $result[0]['title']);
         $this->assertSame('sulu-io', $result[0]['webspaceKey']);
+        $this->assertSame(PageLinkProvider::ALIAS, $result[0]['targetType']);
     }
 
     public function testGetNavigationTreeWithoutSegment(): void
@@ -360,6 +363,7 @@ class NavigationRepositoryTest extends TestCase
         $this->assertCount(1, $result);
         $this->assertSame('No Segment Page', $result[0]['title']);
         $this->assertSame('test-webspace', $result[0]['webspaceKey']);
+        $this->assertSame(PageLinkProvider::ALIAS, $result[0]['targetType']);
     }
 
     public function testGetNavigationTreeWithMultipleDepthLevels(): void

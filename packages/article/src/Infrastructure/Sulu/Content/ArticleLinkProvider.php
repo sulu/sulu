@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Article\Infrastructure\Sulu\Content;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Article\Domain\Model\ArticleDimensionContent;
+use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
@@ -31,12 +31,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 final class ArticleLinkProvider implements LinkProviderInterface
 {
+    /**
+     * @param class-string<ArticleDimensionContentInterface> $articleContentClass
+     */
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly RouteGeneratorInterface $routeGenerator,
         private readonly RequestAnalyzerInterface $requestAnalyzer,
         private readonly ReferenceStoreInterface $referenceStore,
         private readonly TranslatorInterface $translator,
+        private readonly string $articleContentClass,
     ) {
     }
 
@@ -105,7 +109,7 @@ final class ArticleLinkProvider implements LinkProviderInterface
     ): array {
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('article.uuid', 'dimensionContent.title', 'route.slug', 'dimensionContent.mainWebspace')
-            ->from(ArticleDimensionContent::class, 'dimensionContent')
+            ->from($this->articleContentClass, 'dimensionContent')
             ->join('dimensionContent.article', 'article')
             ->leftJoin('dimensionContent.route', 'route')
             ->where('article.uuid IN (:uuids)')

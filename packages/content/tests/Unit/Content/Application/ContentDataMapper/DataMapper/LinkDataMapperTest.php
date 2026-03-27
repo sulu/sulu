@@ -14,12 +14,15 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentDataMapper\DataMapper;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\LinkDataMapper;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 
 class LinkDataMapperTest extends TestCase
 {
+    use SetGetPrivatePropertyTrait;
+
     private LinkDataMapper $mapper;
 
     protected function setUp(): void
@@ -92,5 +95,6 @@ class LinkDataMapperTest extends TestCase
         $this->mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertNull($localizedDimensionContent->getLinkData());
+        $this->assertNull(self::getPrivateProperty($localizedDimensionContent, 'linkProvider'));
     }
 }

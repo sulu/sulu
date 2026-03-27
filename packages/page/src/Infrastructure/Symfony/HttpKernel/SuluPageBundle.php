@@ -283,7 +283,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_page.page_repository'),
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_markup.link_tag.provider_pool'),
-                new Reference('sulu_route.route_generator'),
+                new Reference('sulu_route.route_repository'),
             ])
             ->tag('sulu_content.dimension_content_enhancer');
 
@@ -461,8 +461,9 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_route.route_generator'),
                 new Reference('sulu_http_cache.reference_store'),
                 new Reference('translator'),
+                '%sulu.model.page_content.class%',
             ])
-            ->tag('sulu.link.provider', ['alias' => 'page']);
+            ->tag('sulu.link.provider', ['alias' => PageLinkProvider::ALIAS]);
 
         // Smart Content services
         $services->set('sulu_page.page_smart_content_provider')
@@ -526,6 +527,7 @@ final class SuluPageBundle extends AbstractBundle
             ->class(ContentPathTwigExtension::class)
             ->args([
                 new Reference('sulu_route.route_generator'),
+                new Reference('router.default'),
             ])
             ->tag('twig.extension');
 

@@ -20,6 +20,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
+use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
 use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
@@ -51,6 +52,11 @@ class PageLinkProviderTest extends TestCase
 
     private PageLinkProvider $pageLinkProvider;
 
+    /**
+     * @var class-string<PageDimensionContent>
+     */
+    private string $pageContentClass = PageDimensionContent::class;
+
     protected function setUp(): void
     {
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
@@ -81,6 +87,7 @@ class PageLinkProviderTest extends TestCase
             $this->routeGenerator,
             $this->referenceStore->reveal(),
             $this->translator->reveal(),
+            $this->pageContentClass,
         );
     }
 
@@ -263,6 +270,44 @@ class PageLinkProviderTest extends TestCase
         $this->assertFalse($result[0]->isPublished());
     }
 
+    public function testPreloadUsesConfiguredPageContentClass(): void
+    {
+        /** @phpstan-ignore-next-line We intentionally pass a non-existent class to verify the parameter is forwarded */
+        $customPageContentClass = 'App\\Entity\\PageDimensionContent';
+
+        $this->pageLinkProvider = new PageLinkProvider(
+            $this->entityManager->reveal(),
+            $this->routeGenerator,
+            $this->referenceStore->reveal(),
+            $this->translator->reveal(),
+            $customPageContentClass, // @phpstan-ignore argument.type
+        );
+
+        $this->mockQueryBuilder(
+            [
+                [
+                    'uuid' => 'uuid-custom',
+                    'title' => 'Custom Page',
+                    'slug' => '/custom-page',
+                    'webspaceKey' => 'sulu_io',
+                    'linkProvider' => null,
+                    'linkData' => null,
+                ],
+            ],
+            ['uuid-custom'],
+            'en',
+            'live',
+            $customPageContentClass,
+        );
+
+        $this->referenceStore->add('uuid-custom', PageInterface::RESOURCE_KEY)->shouldBeCalled();
+
+        $result = [...$this->pageLinkProvider->preload(['uuid-custom'], 'en', true)];
+
+        $this->assertCount(1, $result);
+        $this->assertSame('/en/custom-page', $result[0]->getUrl());
+    }
+
     /**
      * @param array<int, array<string, mixed>> $rows
      * @param string[] $expectedUuids
@@ -274,8 +319,16 @@ class PageLinkProviderTest extends TestCase
         array $expectedUuids,
         string $expectedLocale,
         string $expectedStage,
+        string $expectedPageContentClass = PageDimensionContent::class,
     ): ObjectProphecy {
-        $queryBuilder = $this->createQueryBuilderMock($rows, $expectedUuids, $expectedLocale, $expectedStage);
+        $queryBuilder = $this->createQueryBuilderMock(
+            $rows,
+            $expectedUuids,
+            $expectedLocale,
+            $expectedStage,
+            'uuids',
+            $expectedPageContentClass,
+        );
         $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
 
         return $queryBuilder;
@@ -293,11 +346,12 @@ class PageLinkProviderTest extends TestCase
         string $expectedLocale,
         string $expectedStage,
         string $uuidParameterName = 'uuids',
+        string $expectedPageContentClass = PageDimensionContent::class,
     ): ObjectProphecy {
         $queryBuilder = $this->prophesize(QueryBuilder::class);
 
         $queryBuilder->select(Argument::cetera())->willReturn($queryBuilder);
-        $queryBuilder->from(Argument::cetera())->willReturn($queryBuilder);
+        $queryBuilder->from($expectedPageContentClass, 'dimensionContent')->willReturn($queryBuilder)->shouldBeCalled();
         $queryBuilder->join(Argument::cetera())->willReturn($queryBuilder);
         $queryBuilder->leftJoin(Argument::cetera())->willReturn($queryBuilder);
         $queryBuilder->where(Argument::cetera())->willReturn($queryBuilder);

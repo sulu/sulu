@@ -33,6 +33,7 @@ class NavigationTwigExtensionTest extends TestCase
         return [
             'title' => 'title',
             'url' => 'url',
+            'targetType' => 'object.linkData[provider]',
         ];
     }
 

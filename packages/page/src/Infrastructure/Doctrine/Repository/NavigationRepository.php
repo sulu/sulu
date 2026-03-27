@@ -29,6 +29,7 @@ use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\NavigationRepositoryInterface;
+use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Webmozart\Assert\Assert;
 
@@ -346,7 +347,11 @@ final class NavigationRepository implements NavigationRepositoryInterface
          */
         $resolvedContent = $this->contentResolver->resolve($pageDimensionContent, $properties);
 
-        return $resolvedContent['nav'];
+        $result = $resolvedContent['nav'];
+
+        $result['targetType'] = $result['targetType'] ?? PageLinkProvider::ALIAS;
+
+        return $result;
     }
 
     /**

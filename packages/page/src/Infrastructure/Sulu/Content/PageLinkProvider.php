@@ -20,7 +20,7 @@ use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkUrlTrait;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Page\Domain\Model\PageDimensionContent;
+use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -33,11 +33,17 @@ final class PageLinkProvider implements LinkProviderInterface
 {
     use LinkUrlTrait;
 
+    public const ALIAS = 'page';
+
+    /**
+     * @param class-string<PageDimensionContentInterface> $pageContentClass
+     */
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly RouteGeneratorInterface $routeGenerator,
         private readonly ReferenceStoreInterface $referenceStore,
         private readonly TranslatorInterface $translator,
+        private readonly string $pageContentClass,
     ) {
     }
 
@@ -66,7 +72,7 @@ final class PageLinkProvider implements LinkProviderInterface
 
         $internalLinkTargetUuids = [];
         foreach ($rows as $row) {
-            if ('page' === $row['linkProvider'] && \is_array($row['linkData']) && \is_string($row['linkData']['href'] ?? null)) {
+            if (self::ALIAS === $row['linkProvider'] && \is_array($row['linkData']) && \is_string($row['linkData']['href'] ?? null)) {
                 $internalLinkTargetUuids[] = $row['linkData']['href'];
             }
         }
@@ -114,7 +120,7 @@ final class PageLinkProvider implements LinkProviderInterface
         return $this->entityManager->createQueryBuilder()
             ->select('page.uuid', 'dimensionContent.title', 'route.slug', 'page.webspaceKey',
                 'dimensionContent.linkProvider', 'dimensionContent.linkData')
-            ->from(PageDimensionContent::class, 'dimensionContent')
+            ->from($this->pageContentClass, 'dimensionContent')
             ->join('dimensionContent.page', 'page')
             ->leftJoin('dimensionContent.route', 'route')
             ->where('page.uuid IN (:uuids)')
@@ -139,7 +145,7 @@ final class PageLinkProvider implements LinkProviderInterface
         /** @var list<array{uuid: string, slug: ?string, webspaceKey: string}> */
         return $this->entityManager->createQueryBuilder()
             ->select('page.uuid', 'route.slug', 'page.webspaceKey')
-            ->from(PageDimensionContent::class, 'dimensionContent')
+            ->from($this->pageContentClass, 'dimensionContent')
             ->join('dimensionContent.page', 'page')
             ->leftJoin('dimensionContent.route', 'route')
             ->where('page.uuid IN (:targetUuids)')
@@ -167,7 +173,7 @@ final class PageLinkProvider implements LinkProviderInterface
             return $this->appendQueryAndAnchor($linkData['href'], $linkData);
         }
 
-        if ('page' === $linkProvider && \is_array($linkData) && \is_string($linkData['href'] ?? null)) {
+        if (self::ALIAS === $linkProvider && \is_array($linkData) && \is_string($linkData['href'] ?? null)) {
             $targetUuid = $linkData['href'];
             $target = $targetRoutes[$targetUuid] ?? null;
             if (null === $target || null === $target['slug']) {
