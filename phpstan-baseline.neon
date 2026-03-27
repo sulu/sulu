@@ -27211,12 +27211,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
 			message: '#^Parameter \#2 \$user of method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:addAccessControl\(\) expects Sulu\\Component\\Security\\Authentication\\UserInterface, Sulu\\Component\\Security\\Authentication\\UserInterface\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -46029,7 +46023,7 @@ parameters:
 		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
-			count: 5
+			count: 4
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Content/Structure/SeoStructureExtensionTest.php
 
 		-
@@ -70009,12 +70003,6 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/ItemMetadata.php
 
 		-
-			message: '#^Cannot access offset mixed on \$this\(Sulu\\Component\\Content\\Metadata\\ItemMetadata\)\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Component/Content/Metadata/ItemMetadata.php
-
-		-
 			message: '#^Method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:__get\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -72243,7 +72231,7 @@ parameters:
 		-
 			message: '#^Cannot access offset string\|null on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
+			count: 2
 			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
 
 		-
@@ -72291,24 +72279,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Component\\Content\\Query\\ListToTreeConverter\:\:toArray\(\) has parameter \$tree with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
-
-		-
-			message: '#^Offset ''children'' does not exist on array\{\}\.$#'
-			identifier: offsetAccess.notFound
-			count: 2
-			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
-
-		-
-			message: '#^Offset ''children'' on array\{\} in empty\(\) does not exist\.$#'
-			identifier: empty.offset
-			count: 1
-			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
-
-		-
-			message: '#^Offset ''children'' on array\{\} in isset\(\) does not exist\.$#'
-			identifier: isset.offset
 			count: 1
 			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
 
