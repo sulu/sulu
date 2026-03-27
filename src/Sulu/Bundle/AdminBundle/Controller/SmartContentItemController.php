@@ -82,11 +82,9 @@ class SmartContentItemController extends AbstractRestController
         $params = $this->getParams($decodedParams);
         $providerType = (string) ($filters['provider'] ?? null);
 
-        $sortBys = [];
-        if ($filters['sortBy'] ?? null) {
-            $sortBys[$filters['sortBy']] = $filters['sortMethod'] ?? 'asc';
-            unset($filters['sortBy'], $filters['sortMethod']);
-        }
+        $sortBy = $filters['sortBy'] ?? null;
+        $sortBys = null !== $sortBy ? [$sortBy => $filters['sortMethod'] ?? 'ASC'] : [];
+        unset($filters['sortBy'], $filters['sortMethod']);
 
         $filters = [
             // Categories

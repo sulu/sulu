@@ -563,6 +563,55 @@ class SmartContentContentResolverTest extends SuluTestCase
         self::assertSame(3, $view['total']);
     }
 
+    public function testResolveSmartContentWithoutSortByUsesDefaultOrder(): void
+    {
+        static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Charlie',
+                    'url' => '/charlie-no-sort',
+                ],
+            ],
+        ]);
+        static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Alpha',
+                    'url' => '/alpha-no-sort',
+                ],
+            ],
+        ]);
+        static::getEntityManager()->flush();
+
+        $page = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default-example-smart-content',
+                    'title' => 'No Sort Page',
+                    'url' => '/no-sort',
+                    'examples' => [
+                        'types' => ['default'],
+                    ],
+                ],
+            ],
+        ]);
+        static::getEntityManager()->flush();
+
+        $this->pushWebsiteRequest();
+
+        $dimensionContent = $this->contentAggregator->aggregate($page, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        /** @var array<int, array<string, mixed>> $examples */
+        $examples = $result['content']['examples'];
+        self::assertGreaterThanOrEqual(2, \count($examples));
+        $titles = \array_map(static fn (array $item): string => \is_string($item['title']) ? $item['title'] : '', $examples);
+        self::assertContains('Charlie', $titles);
+        self::assertContains('Alpha', $titles);
+    }
+
     public function testRecursionMaxDepthReplacesDeepWithNull(): void
     {
         // Create two pages with smart content that selects itself first via title ASC
