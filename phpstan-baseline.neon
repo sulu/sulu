@@ -1519,15 +1519,9 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Entity/CollaborationRepository.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Entity\\CollaborationRepository\:\:update\(\) should return array\<Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration\> but returns list\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Entity/CollaborationRepository.php
-
-		-
 			message: '#^Parameter \#2 \$callback of function array_filter expects \(callable\(mixed\)\: bool\)\|null, Closure\(Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration\)\: bool given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Entity/CollaborationRepository.php
 
 		-
@@ -2170,12 +2164,6 @@ parameters:
 			message: '#^Parameter \#1 \$type of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FieldMetadata\:\:setType\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$value of function intval expects array\|bool\|float\|int\|resource\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
 
 		-
@@ -12475,12 +12463,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountFactory.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
 			message: '#^Call to an undefined method Sulu\\Bundle\\MediaBundle\\Entity\\MediaRepositoryInterface\:\:findById\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -12489,12 +12471,6 @@ parameters:
 		-
 			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
@@ -12559,12 +12535,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:setMedias\(\) has parameter \$mediaIds with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 4
@@ -12583,31 +12553,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
-			message: '#^Parameter \#1 \$media of method Sulu\\Bundle\\ContactBundle\\Entity\\Account\:\:addMedia\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\MediaInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:remove\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: '#^Parameter \#2 \$array of function array_map expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: '#^Parameter \#2 \$id of class Sulu\\Component\\Rest\\Exception\\EntityNotFoundException constructor expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: '#^Parameter \#2 \$media of class Sulu\\Bundle\\ContactBundle\\Domain\\Event\\AccountMediaAddedEvent constructor expects Sulu\\Bundle\\MediaBundle\\Entity\\MediaInterface, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
@@ -12622,12 +12568,6 @@ parameters:
 			message: '#^Result of \|\| is always false\.$#'
 			identifier: booleanOr.alwaysFalse
 			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: '#^Unable to resolve the template type TMaybeContained in call to method Doctrine\\Common\\Collections\\ReadableCollection\<int,Sulu\\Bundle\\MediaBundle\\Entity\\MediaInterface\>\:\:contains\(\)$#'
-			identifier: argument.templateType
-			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
@@ -13504,12 +13444,6 @@ parameters:
 			message: '#^Parameter \#2 \$mediaId of method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:setLogo\(\) expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 3
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Parameter \#2 \$mediaIds of method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:setMedias\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
@@ -19021,18 +18955,6 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/Tag/TagInterface.php
 
 		-
-			message: '#^Parameter \#2 \$array of function array_key_exists expects array, Sulu\\Bundle\\MarkupBundle\\Tag\\TagInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tag/TagRegistry.php
-
-		-
-			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tag/TagRegistry.php
-
-		-
 			message: '#^Binary operation "\." between ''\<html\>\<body\>'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -19097,12 +19019,6 @@ parameters:
 			identifier: offsetAccess.invalidOffset
 			count: 2
 			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/LinkTagTest.php
-
-		-
-			message: '#^Parameter \#1 \$tags of class Sulu\\Bundle\\MarkupBundle\\Tag\\TagRegistry constructor expects array\<Sulu\\Bundle\\MarkupBundle\\Tag\\TagInterface\>, array\<string, array\<string, array\<string, Sulu\\Bundle\\MarkupBundle\\Tag\\TagInterface\>\>\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Tag/TagRegistryTest.php
 
 		-
 			message: '#^Parameter \#1 \$backView of method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ResourceTabViewBuilderInterface\:\:setBackView\(\) expects string, mixed given\.$#'
@@ -20959,12 +20875,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-
-			message: '#^Parameter \#1 \$value of function intval expects array\|bool\|float\|int\|resource\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
 			message: '#^Result of && is always true\.$#'
 			identifier: booleanAnd.alwaysTrue
 			count: 2
@@ -21110,12 +21020,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
-
-		-
-			message: '#^Parameter \#1 \$value of function intval expects array\|bool\|float\|int\|resource\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
@@ -22081,12 +21985,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\ImageConverter\\ImagineImageConverter\:\:getCropParameters\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\ImageConverter\\ImagineImageConverter\:\:getFormat\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -22277,18 +22175,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/Transformation/BlurTransformation.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\ImageConverter\\Transformation\\CropTransformation\:\:execute\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/Transformation/CropTransformation.php
-
-		-
-			message: '#^Parameter \#1 \$value of function intval expects array\|bool\|float\|int\|resource\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/Transformation/CropTransformation.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\ImageConverter\\Transformation\\GammaTransformation\:\:execute\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
@@ -33205,36 +33091,6 @@ parameters:
 			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionManagerInterface.php
 
 		-
-			message: '#^Method Sulu\\Component\\Media\\SystemCollections\\UnrecognizedSystemCollection\:\:__construct\(\) has parameter \$key with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/UnrecognizedSystemCollection.php
-
-		-
-			message: '#^Method Sulu\\Component\\Media\\SystemCollections\\UnrecognizedSystemCollection\:\:__construct\(\) has parameter \$recognizedSystemCollections with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/UnrecognizedSystemCollection.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/UnrecognizedSystemCollection.php
-
-		-
-			message: '#^Property Sulu\\Component\\Media\\SystemCollections\\UnrecognizedSystemCollection\:\:\$key \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/UnrecognizedSystemCollection.php
-
-		-
-			message: '#^Property Sulu\\Component\\Media\\SystemCollections\\UnrecognizedSystemCollection\:\:\$recognizedSystemCollections \(array\<string\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/UnrecognizedSystemCollection.php
-
-		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 2
@@ -34441,20 +34297,8 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\DoctrineListBuilder\:\:getAllFieldNames\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\DoctrineListBuilder\:\:getEntityNamesOfFieldDescriptors\(\) has parameter \$filterFields with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\DoctrineListBuilder\:\:getEntityNamesOfFieldDescriptors\(\) should return array\<string\> but returns array\<int\<0, max\>, mixed\>\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
@@ -34581,7 +34425,7 @@ parameters:
 		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
-			count: 2
+			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
 		-
@@ -34645,12 +34489,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Expression/BetweenExpressionInterface.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Expression\\ConjunctionExpressionInterface\:\:getFieldNames\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Expression/ConjunctionExpressionInterface.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Expression\\Doctrine\\DoctrineBetweenExpression\:\:getEnd\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -34673,12 +34511,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Expression/Doctrine/DoctrineBetweenExpression.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Expression\\Doctrine\\DoctrineConjunctionExpression\:\:getFieldNames\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Expression/Doctrine/DoctrineConjunctionExpression.php
 
 		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Expression\\Doctrine\\DoctrineInExpression\:\:__construct\(\) has parameter \$values with no value type specified in iterable type array\.$#'
@@ -35239,30 +35071,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Metadata\\FieldDescriptorFactory\:\:getFieldDescriptors\(\) should return array\<Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface\>\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Metadata\\FieldDescriptorFactory\:\:getGeneralFieldDescriptor\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Metadata\\FieldDescriptorFactory\:\:getGeneralFieldDescriptor\(\) has parameter \$options with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Metadata\\FieldDescriptorFactory\:\:getGeneralFieldDescriptor\(\) is unused\.$#'
-			identifier: method.unused
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Metadata\\FieldDescriptorFactory\:\:getGroupConcatenationFieldDescriptor\(\) has parameter \$options with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -35385,7 +35193,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$options of method Sulu\\Component\\Rest\\ListBuilder\\Metadata\\FieldDescriptorFactory\:\:resolveOptions\(\) expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 17
+			count: 16
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
 
 		-
@@ -40637,9 +40445,3 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: tests/phpstan/object-manager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\TestBundle\\Kernel\\SuluTestKernel\:\:registerBundles\(\) should return iterable\<Symfony\\Component\\HttpKernel\\Bundle\\BundleInterface\> but returns list\<.*\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/Kernel/SuluTestKernel.php

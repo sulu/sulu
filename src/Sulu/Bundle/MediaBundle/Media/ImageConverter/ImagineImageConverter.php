@@ -288,33 +288,71 @@ class ImagineImageConverter implements ImageConverterInterface
      * Constructs the parameters for the cropper. Returns null when
      * the image should not be cropped.
      *
-     * @param FormatOptions|null $formatOptions
-     *
-     * @return ?array
+     * @return ?array{x: int, y: int, width: int, height: int}
      */
-    private function getCropParameters(ImageInterface $image, $formatOptions, array $format)
+    private function getCropParameters(ImageInterface $image, ?FormatOptions $formatOptions, array $format): ?array
     {
-        if (isset($formatOptions)) {
-            $parameters = [
-                'x' => $formatOptions->getCropX(),
-                'y' => $formatOptions->getCropY(),
-                'width' => $formatOptions->getCropWidth(),
-                'height' => $formatOptions->getCropHeight(),
-            ];
+        if (null === $formatOptions) {
+            return null;
+        }
 
-            if ($this->cropper->isValid(
-                $image,
-                $parameters['x'],
-                $parameters['y'],
-                $parameters['width'],
-                $parameters['height'],
-                $format
-            )) {
-                return $parameters;
-            }
+        $parameters = $this->normalizeCropParameters($image, [
+            'x' => $formatOptions->getCropX(),
+            'y' => $formatOptions->getCropY(),
+            'width' => $formatOptions->getCropWidth(),
+            'height' => $formatOptions->getCropHeight(),
+        ]);
+
+        if (null === $parameters) {
+            return null;
+        }
+
+        if ($this->cropper->isValid(
+            $image,
+            $parameters['x'],
+            $parameters['y'],
+            $parameters['width'],
+            $parameters['height'],
+            $format
+        )) {
+            return $parameters;
         }
 
         return null;
+    }
+
+    /**
+     * @param array{x: int, y: int, width: int, height: int} $parameters
+     *
+     * @return ?array{x: int, y: int, width: int, height: int}
+     */
+    private function normalizeCropParameters(ImageInterface $image, array $parameters): ?array
+    {
+        $imageWidth = $image->getSize()->getWidth();
+        $imageHeight = $image->getSize()->getHeight();
+
+        $x = \max(0, $parameters['x']);
+        $y = \max(0, $parameters['y']);
+        $width = \max(0, $parameters['width']);
+        $height = \max(0, $parameters['height']);
+
+        if ($x >= $imageWidth || $y >= $imageHeight || 0 === $width || 0 === $height) {
+            return null;
+        }
+
+        $width = \min($width, $imageWidth - $x);
+        $height = \min($height, $imageHeight - $y);
+
+        if (0 === $width || 0 === $height) {
+            return null;
+        }
+
+        return [
+            'x' => $x,
+            'y' => $y,
+            'width' => $width,
+            'height' => $height,
+        ];
     }
 
     /**
@@ -367,7 +405,13 @@ class ImagineImageConverter implements ImageConverterInterface
     private function getFormat($formatKey)
     {
         if (!isset($this->formats[$formatKey])) {
-            throw new ImageProxyInvalidImageFormat('Format was not found');
+            throw new ImageProxyInvalidImageFormat(
+                \sprintf(
+                    'Format "%s" was not found. Supported Formats are: %s',
+                    $formatKey,
+                    \implode(', ', \array_keys($this->formats))
+                )
+            );
         }
 
         return $this->formats[$formatKey];
