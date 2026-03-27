@@ -33,6 +33,8 @@ final class PageLinkProvider implements LinkProviderInterface
 {
     use LinkUrlTrait;
 
+    public const ALIAS = 'page';
+
     /**
      * @param class-string<PageDimensionContentInterface> $pageContentClass
      */
@@ -70,7 +72,7 @@ final class PageLinkProvider implements LinkProviderInterface
 
         $internalLinkTargetUuids = [];
         foreach ($rows as $row) {
-            if ('page' === $row['linkProvider'] && \is_array($row['linkData']) && \is_string($row['linkData']['href'] ?? null)) {
+            if (self::ALIAS === $row['linkProvider'] && \is_array($row['linkData']) && \is_string($row['linkData']['href'] ?? null)) {
                 $internalLinkTargetUuids[] = $row['linkData']['href'];
             }
         }
@@ -171,7 +173,7 @@ final class PageLinkProvider implements LinkProviderInterface
             return $this->appendQueryAndAnchor($linkData['href'], $linkData);
         }
 
-        if ('page' === $linkProvider && \is_array($linkData) && \is_string($linkData['href'] ?? null)) {
+        if (self::ALIAS === $linkProvider && \is_array($linkData) && \is_string($linkData['href'] ?? null)) {
             $targetUuid = $linkData['href'];
             $target = $targetRoutes[$targetUuid] ?? null;
             if (null === $target || null === $target['slug']) {

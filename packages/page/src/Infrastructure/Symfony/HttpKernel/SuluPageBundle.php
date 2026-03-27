@@ -463,7 +463,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('translator'),
                 '%sulu.model.page_content.class%',
             ])
-            ->tag('sulu.link.provider', ['alias' => 'page']);
+            ->tag('sulu.link.provider', ['alias' => PageLinkProvider::ALIAS]);
 
         // Smart Content services
         $services->set('sulu_page.page_smart_content_provider')
