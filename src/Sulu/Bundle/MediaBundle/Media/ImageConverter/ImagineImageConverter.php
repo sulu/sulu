@@ -288,7 +288,7 @@ class ImagineImageConverter implements ImageConverterInterface
      * Constructs the parameters for the cropper. Returns null when
      * the image should not be cropped.
      *
-     * @return ?array{x: int, y:int, width: int, height: int}
+     * @return ?array{x: int, y: int, width: int, height: int}
      */
     private function getCropParameters(ImageInterface $image, ?FormatOptions $formatOptions, array $format): ?array
     {
