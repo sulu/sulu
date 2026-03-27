@@ -358,7 +358,9 @@ export default class Router {
         };
 
         for (const [key, observableValue] of this.bindings.entries()) {
-            attributesWithBindings[key] = observableValue.get();
+            if (attributesWithBindings[key] === undefined) {
+                attributesWithBindings[key] = observableValue.get();
+            }
         }
 
         return this.buildUrl(route, attributesWithBindings);
