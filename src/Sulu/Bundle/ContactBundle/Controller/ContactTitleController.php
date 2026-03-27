@@ -25,13 +25,14 @@ use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @RouteResource("contact-title")
  */
-class ContactTitleController extends AbstractRestController implements ClassResourceInterface
+class ContactTitleController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
     protected static $entityName = ContactTitle::class;
 
@@ -306,5 +307,10 @@ class ContactTitleController extends AbstractRestController implements ClassReso
         }
 
         return $title;
+    }
+
+    public function getSecurityContext(): string
+    {
+        return 'sulu.contact.people';
     }
 }
