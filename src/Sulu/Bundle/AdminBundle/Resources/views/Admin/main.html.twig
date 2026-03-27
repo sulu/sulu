@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ app.request.locale|split('_')[0] }}">
+<html lang="{{ app.request.locale|replace({'_': '-'}) }}">
 <head>
     {%- block meta ~%}
         <meta charset="utf-8">
