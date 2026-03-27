@@ -85,11 +85,16 @@ class CropOverlay extends React.Component<Props> {
             return {};
         }
 
+        const cropX = Math.max(0, Math.floor(selection.left));
+        const cropY = Math.max(0, Math.floor(selection.top));
+        const cropRight = Math.max(cropX, Math.ceil(selection.left + selection.width));
+        const cropBottom = Math.max(cropY, Math.ceil(selection.top + selection.height));
+
         return {
-            cropX: selection.left,
-            cropY: selection.top,
-            cropWidth: selection.width,
-            cropHeight: selection.height,
+            cropX,
+            cropY,
+            cropWidth: cropRight - cropX,
+            cropHeight: cropBottom - cropY,
         };
     }
 
