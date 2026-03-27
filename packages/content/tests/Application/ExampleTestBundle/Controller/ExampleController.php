@@ -60,7 +60,10 @@ class ExampleController extends AbstractRestController
         /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create(Example::class);
         $listBuilder->addSelectField($fieldDescriptors['locale']);
-        $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);
+
+        if (isset($fieldDescriptors['ghostLocale'])) {
+            $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);
+        }
         $listBuilder->setParameter('locale', $request->query->get('locale'));
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 

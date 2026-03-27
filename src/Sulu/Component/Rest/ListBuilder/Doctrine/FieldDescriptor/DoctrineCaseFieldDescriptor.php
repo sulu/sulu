@@ -66,4 +66,30 @@ class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
     {
         return \array_merge($this->case1->getJoins(), $this->case2->getJoins());
     }
+
+    public function getCase1FieldDescriptor(): DoctrineFieldDescriptor
+    {
+        return $this->createFieldDescriptorFromCase($this->case1);
+    }
+
+    public function getCase2FieldDescriptor(): DoctrineFieldDescriptor
+    {
+        return $this->createFieldDescriptorFromCase($this->case2);
+    }
+
+    private function createFieldDescriptorFromCase(DoctrineDescriptor $case): DoctrineFieldDescriptor
+    {
+        return new DoctrineFieldDescriptor(
+            $case->fieldName,
+            $this->getName(),
+            $case->entityName,
+            $this->getTranslation(),
+            $case->joins,
+            $this->getVisibility(),
+            $this->getSearchability(),
+            $this->getType(),
+            $this->getSortable(),
+            $this->getWidth(),
+        );
+    }
 }

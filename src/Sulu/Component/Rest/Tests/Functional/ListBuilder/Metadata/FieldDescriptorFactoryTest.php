@@ -53,6 +53,11 @@ class FieldDescriptorFactoryTest extends TestCase
      */
     private $fieldDescriptorFactory;
 
+    /**
+     * @var ListXmlLoader
+     */
+    private $listXmlLoader;
+
     public function setup(): void
     {
         $parameterBag = $this->prophesize(ParameterBagInterface::class);
@@ -72,12 +77,8 @@ class FieldDescriptorFactoryTest extends TestCase
         }
         $filesystem->mkdir($this->configCachePath);
 
-        $this->fieldDescriptorFactory = new FieldDescriptorFactory(
-            new ListXmlLoader($parameterBag->reveal()),
-            [__DIR__ . '/Resources'],
-            $this->configCachePath,
-            $this->debug
-        );
+        $this->listXmlLoader = new ListXmlLoader($parameterBag->reveal());
+        $this->fieldDescriptorFactory = $this->createFieldDescriptorFactory();
     }
 
     public function testGetFieldDescriptors(): void
@@ -183,6 +184,46 @@ class FieldDescriptorFactoryTest extends TestCase
         );
     }
 
+    public function testExcludeCaseFieldDescriptorSimplifiesCaseToCase1(): void
+    {
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('single-locale');
+        $this->assertNotNull($fieldDescriptors);
+        $this->assertInstanceOf(DoctrineCaseFieldDescriptor::class, $fieldDescriptors['templateKey']);
+
+        $simplified = $this->fieldDescriptorFactory->excludeCaseFieldDescriptor(
+            $fieldDescriptors['templateKey'],
+            'ghostDimensionContent',
+        );
+
+        $this->assertInstanceOf(DoctrineFieldDescriptor::class, $simplified);
+        $this->assertSame('dimensionContent.templateKey', $simplified->getSelect());
+        $this->assertSame(['dimensionContent'], \array_keys($simplified->getJoins()));
+        $this->assertSame('templateKey', $simplified->getMetadata()->getName());
+        $this->assertSame('select', $simplified->getMetadata()->getFilterType());
+    }
+
+    public function testExcludeCaseFieldDescriptorReturnsNonCaseUnchanged(): void
+    {
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('single-locale');
+        $this->assertNotNull($fieldDescriptors);
+
+        $locale = $fieldDescriptors['locale'];
+        $result = $this->fieldDescriptorFactory->excludeCaseFieldDescriptor($locale, 'ghostDimensionContent');
+
+        $this->assertSame($locale, $result);
+    }
+
+    public function testExcludeCaseFieldDescriptorNoMatchReturnsOriginal(): void
+    {
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('single-locale');
+        $this->assertNotNull($fieldDescriptors);
+
+        $templateKey = $fieldDescriptors['templateKey'];
+        $result = $this->fieldDescriptorFactory->excludeCaseFieldDescriptor($templateKey, 'nonExistentEntity');
+
+        $this->assertSame($templateKey, $result);
+    }
+
     public function testGetFieldDescriptorsIdentity(): void
     {
         /** @var FieldDescriptorInterface[] $fieldDescriptor */
@@ -274,6 +315,16 @@ class FieldDescriptorFactoryTest extends TestCase
     public function testGetFieldDescriptorsNotExisting(): void
     {
         $this->assertNull($this->fieldDescriptorFactory->getFieldDescriptors('not-existing'));
+    }
+
+    private function createFieldDescriptorFactory(): FieldDescriptorFactory
+    {
+        return new FieldDescriptorFactory(
+            $this->listXmlLoader,
+            [__DIR__ . '/Resources'],
+            $this->configCachePath,
+            $this->debug,
+        );
     }
 
     private function assertFieldDescriptors(array $expected, ?array $fieldDescriptors)

@@ -20,6 +20,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcat
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineIdentityFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Finder\Finder;
@@ -37,7 +38,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
         private ListXmlLoader $listXmlLoader,
         private array $listDirectories,
         private string $cachePath,
-        private bool $debug
+        private bool $debug,
     ) {
     }
 
@@ -128,7 +129,34 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             return null;
         }
 
-        return \unserialize(\file_get_contents($configCache->getPath()));
+        /** @var array<string, FieldDescriptorInterface> $fieldDescriptors */
+        $fieldDescriptors = \unserialize(\file_get_contents($configCache->getPath()));
+
+        return $fieldDescriptors;
+    }
+
+    public function excludeCaseFieldDescriptor(FieldDescriptorInterface $fieldDescriptor, string $entityName): FieldDescriptorInterface
+    {
+        if (!$fieldDescriptor instanceof DoctrineCaseFieldDescriptor) {
+            return $fieldDescriptor;
+        }
+
+        $case1 = $fieldDescriptor->getCase1FieldDescriptor();
+        $case2 = $fieldDescriptor->getCase2FieldDescriptor();
+
+        if ($case2->getEntityName() === $entityName) {
+            $case1->setMetadata($fieldDescriptor->getMetadata());
+
+            return $case1;
+        }
+
+        if ($case1->getEntityName() === $entityName) {
+            $case2->setMetadata($fieldDescriptor->getMetadata());
+
+            return $case2;
+        }
+
+        return $fieldDescriptor;
     }
 
     private function getSingleFieldDescriptor(AbstractPropertyMetadata $propertyMetadata, $options)
@@ -304,19 +332,6 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $propertyMetadata->getType(),
             $propertyMetadata->isSortable(),
             $propertyMetadata->getWidth()
-        );
-    }
-
-    private function getGeneralFieldDescriptor(AbstractPropertyMetadata $generalMetadata, $options)
-    {
-        return new FieldDescriptor(
-            $this->resolveOptions($generalMetadata->getName(), $options),
-            $generalMetadata->getTranslation(),
-            $generalMetadata->getVisibility(),
-            $generalMetadata->getSearchability(),
-            $generalMetadata->getType(),
-            $generalMetadata->isSortable(),
-            $generalMetadata->getWidth()
         );
     }
 
