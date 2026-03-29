@@ -59,6 +59,7 @@ readonly class PageTreeArticleSmartContentProvider extends ArticleSmartContentPr
      *     websiteTagOperator: 'AND'|'OR',
      *     dataSource?: string|null,
      *     locale?: string|null,
+     *     includeSubFolders?: bool,
      * } $filters
      */
     protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
@@ -71,6 +72,7 @@ readonly class PageTreeArticleSmartContentProvider extends ArticleSmartContentPr
         }
 
         $locale = $filters['locale'] ?? null;
+        $includeSubFolders = $filters['includeSubFolders'] ?? false;
 
         $queryBuilder->join(
             Route::class,
@@ -84,8 +86,29 @@ readonly class PageTreeArticleSmartContentProvider extends ArticleSmartContentPr
         $queryBuilder->setParameter('routeLocale', $locale);
 
         $queryBuilder->join('articleRoute.parentRoute', 'parentRoute');
-        $queryBuilder->andWhere('parentRoute.resourceId = :dataSource');
-        $queryBuilder->setParameter('dataSource', $dataSource);
+
+        if (!$includeSubFolders) {
+            // Only match articles whose parent route points directly to the dataSource page
+            $queryBuilder->andWhere('parentRoute.resourceId = :dataSource');
+            $queryBuilder->setParameter('dataSource', $dataSource);
+        } else {
+            // Match articles whose parent route points to the dataSource page or any of its descendants
+            // Using the nested set model (lft/rgt) of Page to efficiently query descendants
+            $queryBuilder->join(
+                PageInterface::class,
+                'dataSourcePage',
+                'WITH',
+                'dataSourcePage.uuid = :dataSource'
+            );
+            $queryBuilder->join(
+                PageInterface::class,
+                'targetPage',
+                'WITH',
+                'targetPage.uuid = parentRoute.resourceId'
+            );
+            $queryBuilder->andWhere('targetPage.lft BETWEEN dataSourcePage.lft AND dataSourcePage.rgt');
+            $queryBuilder->setParameter('dataSource', $dataSource);
+        }
     }
 
     public function getType(): string
