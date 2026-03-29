@@ -1829,3 +1829,34 @@ test('Should not generate IDs when generateBlockIds is not provided', async() =>
     // Should not try to generate IDs or call onChange since generateBlockIds is not provided
     expect(changeSpy).not.toHaveBeenCalled();
 });
+
+test('Should handle object value gracefully when switching templates', () => {
+    // When switching templates, the value might temporarily be an object {} instead of an array []
+    // This should not cause a crash
+    const {rerenderBlockCollection} = renderBlockCollection({
+        value: [{type: 'editor', content: 'Test'}],
+    });
+
+    // Simulate template switch where value becomes an object instead of array
+    // $FlowFixMe - intentionally passing wrong type to test error handling
+    rerenderBlockCollection({value: {}});
+
+    // Should render without crashing, with no blocks visible
+    expect(getBlocks()).toHaveLength(0);
+});
+
+test('Should handle null value gracefully', () => {
+    // $FlowFixMe - intentionally passing wrong type to test error handling
+    renderBlockCollection({value: null});
+
+    // Should render without crashing, with no blocks visible
+    expect(getBlocks()).toHaveLength(0);
+});
+
+test('Should handle undefined value gracefully', () => {
+    // $FlowFixMe - intentionally passing wrong type to test error handling
+    renderBlockCollection({value: undefined});
+
+    // Should render without crashing, with no blocks visible
+    expect(getBlocks()).toHaveLength(0);
+});

@@ -151,7 +151,7 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
 
         return (
             <div className={sortableBlockListClass}>
-                {value && value.map((block, index) => (
+                {Array.isArray(value) && value.map((block, index) => (
                     <Fragment key={index}>
                         <SortableBlock
                             actions={this.blockActions}

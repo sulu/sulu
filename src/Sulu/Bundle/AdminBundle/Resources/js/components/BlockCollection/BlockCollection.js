@@ -34,6 +34,17 @@ type Props<T: string, U: {_id?: string, type: T, ...}> = {|
 
 const BLOCKS_CLIPBOARD_KEY = 'blocks';
 
+/**
+ * Ensures that the value is an array. When switching templates, the value might be
+ * an object {} instead of an array [], which would cause errors when calling array methods.
+ */
+function ensureArray<V>(value: mixed): Array<V> {
+    if (Array.isArray(value)) {
+        return value;
+    }
+    return [];
+}
+
 @observer
 class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.Component<Props<T, U>> {
     static idCounter = 0;
@@ -85,7 +96,11 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
     constructor(props: Props<T, U>) {
         super(props);
 
-        this.fillArraysDisposer = reaction(() => this.props.value.length, this.fillArrays, {fireImmediately: true});
+        this.fillArraysDisposer = reaction(
+            () => ensureArray(this.props.value).length,
+            this.fillArrays,
+            {fireImmediately: true}
+        );
         this.setPasteableBlocksDisposer = clipboard.observe(BLOCKS_CLIPBOARD_KEY, action((blocks) => {
             this.pasteableBlocks = blocks || [];
         }), true);
@@ -106,7 +121,8 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
         // 2. The value reference changed
         // 3. There are actually blocks without IDs
         if (generateBlockIds && prevProps.value !== value) {
-            const hasBlocksWithoutIds = value && value.some((block) => !block._id);
+            const valueArray = ensureArray(value);
+            const hasBlocksWithoutIds = valueArray.length > 0 && valueArray.some((block) => !block._id);
             if (hasBlocksWithoutIds) {
                 this.ensureBlockIds();
             }
@@ -120,14 +136,15 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
 
     @action ensureBlockIds = async() => {
         const {generateBlockIds, onChange, value} = this.props;
+        const valueArray = ensureArray(value);
 
         // Prevent multiple simultaneous ID generation operations
-        if (this.isGeneratingIds || !value || !generateBlockIds) {
+        if (this.isGeneratingIds || valueArray.length === 0 || !generateBlockIds) {
             return;
         }
 
         // Find all blocks without IDs
-        const blocksWithoutIds = value.filter((block) => !block._id);
+        const blocksWithoutIds = valueArray.filter((block) => !block._id);
 
         if (blocksWithoutIds.length === 0) {
             return;
@@ -146,7 +163,7 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
 
             // Update the value with the generated IDs
             let generatedIdIndex = 0;
-            const updatedValue = value.map((block) => {
+            const updatedValue = valueArray.map((block) => {
                 if (!block._id) {
                     return {...block, _id: generatedIds[generatedIdIndex++]};
                 }
@@ -162,37 +179,38 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
     @action fillArrays = async() => {
         const {collapsable, defaultType, generateBlockIds, minOccurs, onChange, value} = this.props;
         const {expandedBlocks, generatedBlockIds, selectedBlocks} = this;
+        const valueArray = ensureArray(value);
 
         // Prevent concurrent executions
-        if (this.isFillingArrays || !value) {
+        if (this.isFillingArrays) {
             return;
         }
 
         this.isFillingArrays = true;
 
         try {
-            if (expandedBlocks.length > value.length) {
-                expandedBlocks.splice(value.length);
+            if (expandedBlocks.length > valueArray.length) {
+                expandedBlocks.splice(valueArray.length);
             }
 
-            if (selectedBlocks.length > value.length) {
-                selectedBlocks.splice(value.length);
+            if (selectedBlocks.length > valueArray.length) {
+                selectedBlocks.splice(valueArray.length);
             }
 
-            if (generatedBlockIds.length > value.length) {
-                generatedBlockIds.splice(value.length);
+            if (generatedBlockIds.length > valueArray.length) {
+                generatedBlockIds.splice(valueArray.length);
             }
 
             const collapsed = collapsable ? false : true;
 
-            expandedBlocks.push(...new Array(value.length - expandedBlocks.length).fill(collapsed));
-            selectedBlocks.push(...new Array(value.length - selectedBlocks.length).fill(false));
+            expandedBlocks.push(...new Array(valueArray.length - expandedBlocks.length).fill(collapsed));
+            selectedBlocks.push(...new Array(valueArray.length - selectedBlocks.length).fill(false));
             generatedBlockIds.push(
-                ...new Array(value.length - generatedBlockIds.length).fill(false).map(() => ++BlockCollection.idCounter)
+                ...new Array(valueArray.length - generatedBlockIds.length).fill(false).map(() => ++BlockCollection.idCounter)
             );
 
-            if (minOccurs && value.length < minOccurs) {
-                const newBlockCount = minOccurs - value.length;
+            if (minOccurs && valueArray.length < minOccurs) {
+                const newBlockCount = minOccurs - valueArray.length;
 
                 // Create blocks and generate IDs if needed
                 let newBlocks;
@@ -239,7 +257,7 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
                     );
 
                     // $FlowFixMe
-                    onChange([...value, ...newBlocks]);
+                    onChange([...valueArray, ...newBlocks]);
                 });
             }
         } finally {
@@ -261,14 +279,15 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
 
     @action handleAddBlock = async(insertionIndex: number) => {
         const {defaultType, generateBlockIds, onChange, value} = this.props;
+        const valueArray = ensureArray(value);
 
         if (this.hasMaximumReached) {
             throw new Error('The maximum amount of blocks has already been reached!');
         }
 
-        if (value) {
-            const elementsBefore = value.slice(0, insertionIndex);
-            const elementsAfter = value.slice(insertionIndex);
+        if (valueArray.length > 0 || insertionIndex === 0) {
+            const elementsBefore = valueArray.slice(0, insertionIndex);
+            const elementsAfter = valueArray.slice(insertionIndex);
 
             // Create new block - field components will apply defaults in their constructors
             let newBlock;
@@ -310,13 +329,10 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
 
     @action handlePasteBlocks = async(insertionIndex: number) => {
         const {generateBlockIds, onChange, onDisplaySnackbar, value} = this.props;
+        const valueArray = ensureArray(value);
 
         if (this.hasMaximumReached) {
             throw new Error('The maximum amount of blocks has already been reached!');
-        }
-
-        if (!value) {
-            return;
         }
 
         this.expandedBlocks.splice(
@@ -349,8 +365,8 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
             return newBlock;
         });
 
-        const elementsBefore = value.slice(0, insertionIndex);
-        const elementsAfter = value.slice(insertionIndex);
+        const elementsBefore = valueArray.slice(0, insertionIndex);
+        const elementsAfter = valueArray.slice(insertionIndex);
 
         // $FlowFixMe
         onChange([...elementsBefore, ...newElements, ...elementsAfter]);
@@ -375,8 +391,9 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
 
     @action removeBlocks = (indexes: Array<number>, shouldDisplaySnackbar: boolean = true) => {
         const {onChange, onDisplaySnackbar, movable, value} = this.props;
+        const valueArray = ensureArray(value);
 
-        if (!value) {
+        if (valueArray.length === 0) {
             return;
         }
 
@@ -397,7 +414,7 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
             this.mode = movable ? 'sortable' : 'static';
         }
 
-        onChange(value.filter((block, index) => indexes.indexOf(index) === -1));
+        onChange(valueArray.filter((block, index) => indexes.indexOf(index) === -1));
 
         if (shouldDisplaySnackbar && onDisplaySnackbar) {
             onDisplaySnackbar({
@@ -410,8 +427,9 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
 
     handleDuplicateSelectedBlocks = () => {
         const {value} = this.props;
+        const valueArray = ensureArray(value);
 
-        this.duplicateBlocks(this.selectedBlockIndexes, value.length);
+        this.duplicateBlocks(this.selectedBlockIndexes, valueArray.length);
     };
 
     handleDuplicateBlock = (index: number) => {
@@ -420,13 +438,14 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
 
     @action duplicateBlocks = async(indexes: Array<number>, insertAfterIndex: number) => {
         const {generateBlockIds, onChange, onDisplaySnackbar, value} = this.props;
+        const valueArray = ensureArray(value);
 
-        if (!value || indexes.length === 0) {
+        if (valueArray.length === 0 || indexes.length === 0) {
             return;
         }
 
         // Validate maximum limit before any operations
-        if (value.length + indexes.length > (this.props.maxOccurs || Infinity)) {
+        if (valueArray.length + indexes.length > (this.props.maxOccurs || Infinity)) {
             throw new Error('The maximum amount of blocks has already been reached!');
         }
 
@@ -459,8 +478,8 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
         const duplicatedBlocks = indexes.map((sourceIndex, count) => {
             // Remove all _id fields (including nested ones) from the duplicated block
             const duplicatedBlock = generateBlockIds
-                ? this.removeBlockIds(toJS(value[sourceIndex]))
-                : {...toJS(value[sourceIndex])};
+                ? this.removeBlockIds(toJS(valueArray[sourceIndex]))
+                : {...toJS(valueArray[sourceIndex])};
 
             // Assign new ID to top-level block
             if (generateBlockIds && generatedIds.length > count) {
@@ -470,8 +489,8 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
             return duplicatedBlock;
         });
 
-        const elementsBefore = value.slice(0, insertionIndex);
-        const elementsAfter = value.slice(insertionIndex);
+        const elementsBefore = valueArray.slice(0, insertionIndex);
+        const elementsAfter = valueArray.slice(insertionIndex);
         onChange([...elementsBefore, ...duplicatedBlocks, ...elementsAfter]);
 
         if (onDisplaySnackbar) {
@@ -493,15 +512,16 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
 
     copyBlocks = (indexes: Array<number>, shouldDisplaySnackbar: boolean = true) => {
         const {generateBlockIds, onDisplaySnackbar, value} = this.props;
+        const valueArray = ensureArray(value);
 
-        if (!value) {
+        if (valueArray.length === 0) {
             return;
         }
 
         const blocks = [];
 
         indexes.forEach(( index) => {
-            let block = toJS(value[index]);
+            let block = toJS(valueArray[index]);
 
             // Remove _id from copied blocks (including nested blocks) so new IDs are generated on paste
             if (generateBlockIds) {
@@ -533,16 +553,16 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
     };
 
     cutBlocks = (indexes: Array<number>) => {
-        const {generateBlockIds, onDisplaySnackbar, value} = this.props;
+        const {generateBlockIds, onDisplaySnackbar, value} = this.props;       const valueArray = ensureArray(value);
 
-        if (!value) {
+        if (valueArray.length === 0) {
             return;
         }
 
         const blocks = [];
 
         indexes.forEach(( index) => {
-            let block = toJS(value[index]);
+            let block = toJS(valueArray[index]);
 
             // Remove _id from cut blocks (including nested blocks) so new IDs are generated on paste
             if (generateBlockIds) {
@@ -612,14 +632,16 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
 
     @computed get hasMaximumReached() {
         const {maxOccurs, value} = this.props;
+        const valueArray = ensureArray(value);
 
-        return !!maxOccurs && value.length >= maxOccurs;
+        return !!maxOccurs && valueArray.length >= maxOccurs;
     }
 
     @computed get hasMinimumReached() {
         const {minOccurs, value} = this.props;
+        const valueArray = ensureArray(value);
 
-        return !!minOccurs && value.length <= minOccurs;
+        return !!minOccurs && valueArray.length <= minOccurs;
     }
 
     @computed get blockActions() {
@@ -670,7 +692,8 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
 
     renderAddButton = (aboveBlockIndex: number) => {
         const {addButtonText, pasteButtonText, disabled, value} = this.props;
-        const isDividerButton = aboveBlockIndex < value.length - 1;
+        const valueArray = ensureArray(value);
+        const isDividerButton = aboveBlockIndex < valueArray.length - 1;
 
         const containerClass = classNames(
             blockCollectionStyles.addButtonContainer,
@@ -750,6 +773,7 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
 
     renderBlockToolbar = (isSticky: boolean) => {
         const {value} = this.props;
+        const valueArray = ensureArray(value);
         const selectedBlocksCount = this.selectedBlocks.filter((element) => element).length;
 
         return (
@@ -776,7 +800,7 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
                         handleClick: this.handleRemoveSelectedBlocks,
                     },
                 ]}
-                allSelected={selectedBlocksCount === value.length}
+                allSelected={selectedBlocksCount === valueArray.length}
                 mode={isSticky ? 'sticky' : 'static'}
                 onCancel={this.handleBlockToolbarCancel}
                 onSelectAll={this.handleBlockToolbarSelectAll}
@@ -835,11 +859,12 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
             types,
             value,
         } = this.props;
+        const valueArray = ensureArray(value);
 
         return (
             <section className={blockCollectionStyles.blocks}>
                 {
-                    value.length > 1 ? (
+                    valueArray.length > 1 ? (
                         this.mode === 'selectable'
                             ? <Sticky top={10}>
                                 {this.renderBlockToolbar}
@@ -870,9 +895,9 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
                     selectedBlocks={this.selectedBlocks}
                     types={types}
                     useDragHandle={true}
-                    value={value}
+                    value={valueArray}
                 />
-                {this.renderAddButton(value.length - 1)}
+                {this.renderAddButton(valueArray.length - 1)}
             </section>
         );
     }
