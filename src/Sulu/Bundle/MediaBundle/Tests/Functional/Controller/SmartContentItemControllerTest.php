@@ -20,11 +20,16 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
+use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class SmartContentItemControllerTest extends SuluTestCase
 {
+    /**
+     * @var array<string, Tag>
+     */
+    private array $tags = [];
     /**
      * @var EntityManagerInterface
      */
@@ -212,6 +217,147 @@ class SmartContentItemControllerTest extends SuluTestCase
 
         $this->assertContains('media-1-en', $titles);
         $this->assertContains('media-2-en', $titles);
+    }
+
+    public function testGetItemsFilteredByTags(): void
+    {
+        $collection = $this->createCollection('Test');
+
+        // Create tags
+        $tagMobile = $this->createTag('mobile');
+        $tagWeb = $this->createTag('web');
+        $tagCloud = $this->createTag('cloud');
+
+        // Create media with different tags
+        $media1 = $this->createMediaWithTags('media-mobile', $collection, 'image/jpeg', [$tagMobile]);
+        $media2 = $this->createMediaWithTags('media-web', $collection, 'image/jpeg', [$tagWeb]);
+        $media3 = $this->createMediaWithTags('media-mobile-web', $collection, 'image/jpeg', [$tagMobile, $tagWeb]);
+        $media4 = $this->createMediaWithTags('media-cloud', $collection, 'image/jpeg', [$tagCloud]);
+        $media5 = $this->createMediaWithTags('media-no-tag', $collection, 'image/jpeg', []);
+
+        $this->em->flush();
+
+        // Test filtering by single tag ID (OR)
+        $this->client->jsonRequest(
+            'GET',
+            '/api/items?provider=media&locale=en&tags=' . $tagMobile->getId() . '&tagOperator=OR&dataSource=' . $collection->getId()
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertCount(2, $result['_embedded']['items']);
+
+        $resultIds = \array_map(fn ($item) => $item['id'], $result['_embedded']['items']);
+        $this->assertContains($media1->getId(), $resultIds);
+        $this->assertContains($media3->getId(), $resultIds);
+    }
+
+    public function testGetItemsFilteredByMultipleTagsOR(): void
+    {
+        $collection = $this->createCollection('Test');
+
+        // Create tags
+        $tagMobile = $this->createTag('mobile');
+        $tagWeb = $this->createTag('web');
+        $tagCloud = $this->createTag('cloud');
+
+        // Create media with different tags
+        $media1 = $this->createMediaWithTags('media-mobile', $collection, 'image/jpeg', [$tagMobile]);
+        $media2 = $this->createMediaWithTags('media-web', $collection, 'image/jpeg', [$tagWeb]);
+        $media3 = $this->createMediaWithTags('media-cloud', $collection, 'image/jpeg', [$tagCloud]);
+
+        $this->em->flush();
+
+        // Test filtering by multiple tag IDs (OR) - should return media with mobile OR cloud
+        $this->client->jsonRequest(
+            'GET',
+            '/api/items?provider=media&locale=en&tags=' . $tagMobile->getId() . ',' . $tagCloud->getId() . '&tagOperator=OR&dataSource=' . $collection->getId()
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertCount(2, $result['_embedded']['items']);
+
+        $resultIds = \array_map(fn ($item) => $item['id'], $result['_embedded']['items']);
+        $this->assertContains($media1->getId(), $resultIds);
+        $this->assertContains($media3->getId(), $resultIds);
+        $this->assertNotContains($media2->getId(), $resultIds);
+    }
+
+    public function testGetItemsFilteredByMultipleTagsAND(): void
+    {
+        $collection = $this->createCollection('Test');
+
+        // Create tags
+        $tagMobile = $this->createTag('mobile');
+        $tagWeb = $this->createTag('web');
+
+        // Create media with different tags
+        $media1 = $this->createMediaWithTags('media-mobile-only', $collection, 'image/jpeg', [$tagMobile]);
+        $media2 = $this->createMediaWithTags('media-web-only', $collection, 'image/jpeg', [$tagWeb]);
+        $media3 = $this->createMediaWithTags('media-both', $collection, 'image/jpeg', [$tagMobile, $tagWeb]);
+
+        $this->em->flush();
+
+        // Test filtering by multiple tag IDs (AND) - should return only media with BOTH mobile AND web
+        $this->client->jsonRequest(
+            'GET',
+            '/api/items?provider=media&locale=en&tags=' . $tagMobile->getId() . ',' . $tagWeb->getId() . '&tagOperator=AND&dataSource=' . $collection->getId()
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertCount(1, $result['_embedded']['items']);
+        $this->assertEquals($media3->getId(), $result['_embedded']['items'][0]['id']);
+    }
+
+    private function createTag(string $name): Tag
+    {
+        $tag = new Tag();
+        $tag->setName($name);
+        $this->em->persist($tag);
+        $this->tags[$name] = $tag;
+
+        return $tag;
+    }
+
+    /**
+     * @param Tag[] $tags
+     */
+    private function createMediaWithTags(string $title, Collection $collection, string $mimeType, array $tags, string $locale = 'en'): Media
+    {
+        $file = new File();
+        $fileVersion = new FileVersion();
+        $fileVersionMeta = new FileVersionMeta();
+        $fileVersionMeta->setTitle($title);
+        $fileVersionMeta->setLocale($locale);
+        $fileVersionMeta->setFileVersion($fileVersion);
+        $fileVersion->addMeta($fileVersionMeta);
+        $fileVersion->setVersion(1);
+        $fileVersion->setName($title);
+        $fileVersion->setSize(0);
+        $fileVersion->setMimeType($mimeType);
+        $fileVersion->setFile($file);
+
+        foreach ($tags as $tag) {
+            $fileVersion->addTag($tag);
+        }
+
+        $file->setVersion(1);
+        $file->addFileVersion($fileVersion);
+
+        $media = new Media();
+        $media->setType(MediaInterface::TYPE_IMAGE);
+        $file->setMedia($media);
+        $media->addFile($file);
+        $media->setCollection($collection);
+
+        $this->em->persist($media);
+
+        return $media;
     }
 
     private function createCollection(string $name): Collection

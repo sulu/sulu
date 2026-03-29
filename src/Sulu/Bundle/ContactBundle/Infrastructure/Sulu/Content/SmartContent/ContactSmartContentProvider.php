@@ -144,15 +144,15 @@ readonly class ContactSmartContentProvider implements SmartContentProviderInterf
             $queryBuilder->orderBy($sortBy, $sortMethod);
         }
 
-        $tagNames = $filters['tags'];
-        if ([] !== $tagNames) {
+        $tagIds = $filters['tags'];
+        if ([] !== $tagIds) {
             $this->smartContentQueryEnhancer->addJoinFilter(
                 $queryBuilder,
                 $alias . '.tags',
-                'filterTagName',
-                'name',
-                'tagNames',
-                $tagNames,
+                'filterTagId',
+                'id',
+                'tagIds',
+                $tagIds,
                 $filters['tagOperator'],
             );
         }

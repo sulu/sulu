@@ -253,7 +253,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         }
 
         if ($filters['tags']) {
-            $filters['tagNames'] = $filters['tags'];
+            $filters['tagIds'] = $filters['tags'];
             unset($filters['tags']);
         }
 
