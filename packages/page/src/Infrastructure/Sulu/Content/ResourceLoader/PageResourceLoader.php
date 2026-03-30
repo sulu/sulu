@@ -36,6 +36,7 @@ class PageResourceLoader implements ResourceLoaderInterface
         private readonly ?Security $security,
         private readonly ?array $permissions,
         private readonly RequestAnalyzerInterface $requestAnalyzer,
+        private readonly bool $showDrafts = false,
     ) {
     }
 
@@ -48,7 +49,7 @@ class PageResourceLoader implements ResourceLoaderInterface
         $filters = [
             'uuids' => $ids,
             'locale' => $locale,
-            'stage' => DimensionContentInterface::STAGE_LIVE,
+            'stage' => $this->showDrafts ? DimensionContentInterface::STAGE_DRAFT : DimensionContentInterface::STAGE_LIVE,
         ];
 
         if (($params['filters'] ?? null) && \is_array($params['filters'])) {

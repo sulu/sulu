@@ -320,6 +320,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('security.helper', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
                 param('sulu_security.permissions'),
                 new Reference('sulu_core.webspace.request_analyzer'),
+                expr("container.hasParameter('sulu.preview') ? parameter('sulu.preview') : false"),
             ])
             ->tag('sulu_content.resource_loader', ['type' => PageResourceLoader::RESOURCE_LOADER_KEY]);
 

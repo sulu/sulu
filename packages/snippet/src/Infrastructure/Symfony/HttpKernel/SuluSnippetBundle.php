@@ -70,6 +70,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
+use function Symfony\Component\DependencyInjection\Loader\Configurator\expr;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 
@@ -350,6 +351,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->class(SnippetResourceLoader::class)
             ->args([
                 new Reference('sulu_snippet.snippet_repository'),
+                expr("container.hasParameter('sulu.preview') ? parameter('sulu.preview') : false"),
             ])
             ->tag('sulu_content.resource_loader', ['type' => SnippetResourceLoader::RESOURCE_LOADER_KEY]);
 

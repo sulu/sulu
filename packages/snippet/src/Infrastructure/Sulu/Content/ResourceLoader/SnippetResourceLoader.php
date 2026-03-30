@@ -28,6 +28,7 @@ class SnippetResourceLoader implements ResourceLoaderInterface
 
     public function __construct(
         private SnippetRepositoryInterface $snippetRepository,
+        private readonly bool $showDrafts = false,
     ) {
     }
 
@@ -44,7 +45,7 @@ class SnippetResourceLoader implements ResourceLoaderInterface
             [
                 'uuids' => $ids,
                 'locale' => $locale,
-                'stage' => DimensionContentInterface::STAGE_LIVE,
+                'stage' => $this->showDrafts ? DimensionContentInterface::STAGE_DRAFT : DimensionContentInterface::STAGE_LIVE,
             ],
             [],
             [SnippetRepositoryInterface::GROUP_SELECT_SNIPPET_WEBSITE => true]
