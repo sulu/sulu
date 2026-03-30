@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable, toJS, reaction, computed, runInAction} from 'mobx';
+import {action, isArrayLike, observable, toJS, reaction, computed, runInAction} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import {arrayMove, translate, clipboard} from '../../utils';
@@ -35,11 +35,13 @@ type Props<T: string, U: {_id?: string, type: T, ...}> = {|
 const BLOCKS_CLIPBOARD_KEY = 'blocks';
 
 /**
- * Ensures that the value is an array. When switching templates, the value might be
+ * Ensures that the value is an array-like object. When switching templates, the value might be
  * an object {} instead of an array [], which would cause errors when calling array methods.
+ * Uses isArrayLike from MobX to also handle MobX observable arrays.
  */
 function ensureArray<V>(value: mixed): Array<V> {
-    if (Array.isArray(value)) {
+    if (isArrayLike(value)) {
+        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
         return value;
     }
     return [];
@@ -176,90 +178,102 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
         }
     };
 
-    @action fillArrays = async() => {
+    @action fillArrays = () => {
         const {collapsable, defaultType, generateBlockIds, minOccurs, onChange, value} = this.props;
         const {expandedBlocks, generatedBlockIds, selectedBlocks} = this;
         const valueArray = ensureArray(value);
 
-        // Prevent concurrent executions
-        if (this.isFillingArrays) {
+        // Synchronize tracking arrays with current value
+        if (expandedBlocks.length > valueArray.length) {
+            expandedBlocks.splice(valueArray.length);
+        }
+
+        if (selectedBlocks.length > valueArray.length) {
+            selectedBlocks.splice(valueArray.length);
+        }
+
+        if (generatedBlockIds.length > valueArray.length) {
+            generatedBlockIds.splice(valueArray.length);
+        }
+
+        const collapsed = collapsable ? false : true;
+
+        expandedBlocks.push(...new Array(valueArray.length - expandedBlocks.length).fill(collapsed));
+        selectedBlocks.push(...new Array(valueArray.length - selectedBlocks.length).fill(false));
+        generatedBlockIds.push(
+            ...new Array(valueArray.length - generatedBlockIds.length).fill(false).map(() => ++BlockCollection.idCounter)
+        );
+
+        // Handle minOccurs - add blocks if needed
+        if (minOccurs && valueArray.length < minOccurs) {
+            const newBlockCount = minOccurs - valueArray.length;
+
+            // If generateBlockIds is provided, handle async ID generation
+            if (generateBlockIds) {
+                this.fillMinOccursBlocksAsync(newBlockCount, valueArray);
+            } else {
+                // Create blocks without IDs synchronously
+                expandedBlocks.push(...new Array(newBlockCount).fill(true));
+                selectedBlocks.push(...new Array(newBlockCount).fill(false));
+                generatedBlockIds.push(
+                    ...new Array(newBlockCount).fill(false).map(() => ++BlockCollection.idCounter)
+                );
+
+                const newBlocks = Array.from(
+                    {length: newBlockCount},
+                    // $FlowFixMe
+                    () => ({type: defaultType})
+                );
+
+                // $FlowFixMe
+                onChange([...valueArray, ...newBlocks]);
+            }
+        }
+    };
+
+    @action fillMinOccursBlocksAsync = async(newBlockCount: number, valueArray: Array<any>) => {
+        const {defaultType, generateBlockIds, onChange} = this.props;
+        const {expandedBlocks, generatedBlockIds, selectedBlocks} = this;
+
+        if (!generateBlockIds || this.isFillingArrays) {
             return;
         }
 
         this.isFillingArrays = true;
 
         try {
-            if (expandedBlocks.length > valueArray.length) {
-                expandedBlocks.splice(valueArray.length);
+            const blockIds = await generateBlockIds(newBlockCount);
+
+            if (!blockIds || !Array.isArray(blockIds) || blockIds.length !== newBlockCount) {
+                return;
             }
 
-            if (selectedBlocks.length > valueArray.length) {
-                selectedBlocks.splice(valueArray.length);
-            }
-
-            if (generatedBlockIds.length > valueArray.length) {
-                generatedBlockIds.splice(valueArray.length);
-            }
-
-            const collapsed = collapsable ? false : true;
-
-            expandedBlocks.push(...new Array(valueArray.length - expandedBlocks.length).fill(collapsed));
-            selectedBlocks.push(...new Array(valueArray.length - selectedBlocks.length).fill(false));
-            generatedBlockIds.push(
-                ...new Array(valueArray.length - generatedBlockIds.length).fill(false).map(() => ++BlockCollection.idCounter)
-            );
-
-            if (minOccurs && valueArray.length < minOccurs) {
-                const newBlockCount = minOccurs - valueArray.length;
-
-                // Create blocks and generate IDs if needed
-                let newBlocks;
-                if (generateBlockIds) {
-                    try {
-                        const blockIds = await generateBlockIds(newBlockCount);
-
-                        if (!blockIds || !Array.isArray(blockIds) || blockIds.length !== newBlockCount) {
-                            throw new Error(
-                                `generateBlockIds must return an array with exactly ${newBlockCount} elements`
-                            );
-                        }
-
-                        // Create blocks with IDs
-                        newBlocks = Array.from(
-                            {length: newBlockCount},
-                            (_, index) => {
-                                if (blockIds[index] === undefined || blockIds[index] === null) {
-                                    throw new Error(`generateBlockIds returned an invalid ID at index ${index}`);
-                                }
-                                // $FlowFixMe
-                                return {type: defaultType, _id: blockIds[index]};
-                            }
-                        );
-                    } catch (error) {
-                        // On error, don't add blocks to maintain consistent state
-                        // Return early to prevent adding blocks with invalid or missing IDs
-                        return;
+            // Create blocks with IDs
+            const newBlocks = Array.from(
+                {length: newBlockCount},
+                (_, index) => {
+                    if (blockIds[index] === undefined || blockIds[index] === null) {
+                        return null;
                     }
-                } else {
-                    // Create blocks without IDs when generateBlockIds is not provided
-                    newBlocks = Array.from(
-                        {length: newBlockCount},
-                        // $FlowFixMe
-                        () => ({type: defaultType})
-                    );
-                }
-
-                runInAction(() => {
-                    expandedBlocks.push(...new Array(newBlockCount).fill(true));
-                    selectedBlocks.push(...new Array(newBlockCount).fill(false));
-                    generatedBlockIds.push(
-                        ...new Array(newBlockCount).fill(false).map(() => ++BlockCollection.idCounter)
-                    );
-
                     // $FlowFixMe
-                    onChange([...valueArray, ...newBlocks]);
-                });
+                    return {type: defaultType, _id: blockIds[index]};
+                }
+            ).filter(Boolean);
+
+            if (newBlocks.length !== newBlockCount) {
+                return;
             }
+
+            runInAction(() => {
+                expandedBlocks.push(...new Array(newBlockCount).fill(true));
+                selectedBlocks.push(...new Array(newBlockCount).fill(false));
+                generatedBlockIds.push(
+                    ...new Array(newBlockCount).fill(false).map(() => ++BlockCollection.idCounter)
+                );
+
+                // $FlowFixMe
+                onChange([...valueArray, ...newBlocks]);
+            });
         } finally {
             this.isFillingArrays = false;
         }

@@ -1860,3 +1860,145 @@ test('Should handle undefined value gracefully', () => {
     // Should render without crashing, with no blocks visible
     expect(getBlocks()).toHaveLength(0);
 });
+
+test('Should handle blocks with nested object properties when switching templates (menu.xml scenario)', () => {
+    // Simulates the menu.xml structure: pages → subpages → subpages2
+    // When switching templates, nested block data might temporarily be objects instead of arrays
+    const renderBlockContent = jest.fn((value, type, index, expanded) => {
+        // Simulate rendering nested BlockCollection for subpages
+        // The nested value might be an object {} instead of array []
+        const subpages = value.subpages;
+        // ensureArray should handle this in the actual component
+        return <div data-testid={`block-content-${index}`}>{JSON.stringify(value)}</div>;
+    });
+
+    const {rerenderBlockCollection} = renderBlockCollection({
+        value: [
+            {
+                type: 'page',
+                title: 'Page 1',
+                subpages: [{type: 'subpage', title: 'Subpage 1'}],
+            },
+        ],
+        renderBlockContent,
+    });
+
+    expect(getBlocks()).toHaveLength(1);
+
+    // Simulate template switch where nested blocks become objects instead of arrays
+    // This is what happens in the bug reported in issue #8697
+    // $FlowFixMe - intentionally passing wrong type to test error handling
+    rerenderBlockCollection({
+        value: [
+            {
+                type: 'page',
+                title: 'Page 1',
+                subpages: {}, // Object instead of array (bug scenario)
+            },
+        ],
+    });
+
+    // Should render without crashing
+    expect(getBlocks()).toHaveLength(1);
+});
+
+test('Should handle deeply nested blocks becoming objects (3-level nesting from menu.xml)', () => {
+    // Simulates the 3-level nesting in menu.xml: pages → subpages → subpages2
+    const renderBlockContent = jest.fn((value, type, index, expanded) => {
+        return <div data-testid={`block-content-${index}`}>{JSON.stringify(value)}</div>;
+    });
+
+    const {rerenderBlockCollection} = renderBlockCollection({
+        value: [
+            {
+                type: 'page',
+                title: 'Main Page',
+                subpages: [
+                    {
+                        type: 'subpage',
+                        title: 'Subpage',
+                        subpages2: [{type: 'subpage2', title: 'Deep Subpage'}],
+                    },
+                ],
+            },
+        ],
+        renderBlockContent,
+    });
+
+    expect(getBlocks()).toHaveLength(1);
+
+    // Simulate deep nesting becoming objects at multiple levels
+    // $FlowFixMe - intentionally passing wrong type to test error handling
+    rerenderBlockCollection({
+        value: [
+            {
+                type: 'page',
+                title: 'Main Page',
+                subpages: {
+                    // First level becomes object
+                    0: {
+                        type: 'subpage',
+                        title: 'Subpage',
+                        subpages2: {}, // Second level also becomes object
+                    },
+                },
+            },
+        ],
+    });
+
+    // Should render without crashing
+    expect(getBlocks()).toHaveLength(1);
+});
+
+test('Should handle footer.xml scenario with multiple nested block types becoming objects', () => {
+    // Simulates footer.xml structure with pages and socials nested blocks
+    const renderBlockContent = jest.fn((value, type, index, expanded) => {
+        return <div data-testid={`block-content-${index}`}>{JSON.stringify(value)}</div>;
+    });
+
+    const {rerenderBlockCollection} = renderBlockCollection({
+        value: [
+            {
+                type: 'footer',
+                pages: [{type: 'page', title: 'About'}],
+                socials: [{type: 'social', icon: 'facebook'}],
+            },
+        ],
+        renderBlockContent,
+    });
+
+    expect(getBlocks()).toHaveLength(1);
+
+    // Simulate both nested blocks becoming objects (typical during template switch)
+    // $FlowFixMe - intentionally passing wrong type to test error handling
+    rerenderBlockCollection({
+        value: [
+            {
+                type: 'footer',
+                pages: {}, // Object instead of array
+                socials: {}, // Object instead of array
+            },
+        ],
+    });
+
+    // Should render without crashing
+    expect(getBlocks()).toHaveLength(1);
+});
+
+test('Should handle transition from valid array to object and back to array', () => {
+    // Tests the complete lifecycle: array → object (bug) → array (fixed)
+    const {rerenderBlockCollection} = renderBlockCollection({
+        value: [{type: 'editor', content: 'Test'}],
+    });
+
+    expect(getBlocks()).toHaveLength(1);
+
+    // Transition to object (simulating bug condition)
+    // $FlowFixMe - intentionally passing wrong type to test error handling
+    rerenderBlockCollection({value: {}});
+    expect(getBlocks()).toHaveLength(0);
+
+    // Transition back to array (after fix/template load completes)
+    rerenderBlockCollection({value: [{type: 'editor', content: 'Updated'}]});
+    expect(getBlocks()).toHaveLength(1);
+});
