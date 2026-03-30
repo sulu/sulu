@@ -1,0 +1,227 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns:xi="http://www.w3.org/2001/XInclude"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>footer</key>
+    <areas>
+        <area key="footer">
+            <meta>
+                <title lang="en">Footer</title>
+                <title lang="pl">Stopka</title>
+                <title lang="hy">Ետնամաս</title>
+                <title lang="hu">Lábléc</title>
+            </meta>
+        </area>
+    </areas>
+    <meta>
+        <title lang="en">Footer</title>
+        <title lang="pl">Dolna nawigacja</title>
+        <title lang="hy">Ետնամաս</title>
+        <title lang="hu">Lábléc</title>
+    </meta>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title lang="en">Title</title>
+                <title lang="pl">Nazwa</title>
+                <title lang="hy">Անվանում</title>
+                <title lang="hu">Név</title>
+            </meta>
+
+            <tag name="sulu.node.name"/>
+        </property>
+        <section name="logo_and_contact">
+            <meta>
+                <title lang="en">Logo and contact</title>
+                <title lang="pl">Logo i kontakt</title>
+                <title lang="hy">Լոգո և կապ</title>
+                <title lang="hu">Logo és kapcsolat</title>
+            </meta>
+            <properties>
+                <property name="logo" type="single_media_selection" mandatory="true">
+                    <meta>
+                        <title lang="en">Logo</title>
+                        <title lang="pl">Logo</title>
+                        <title lang="hy">Լոգո</title>
+                        <title lang="hu">Logo</title>
+                    </meta>
+                    <params>
+                        <param name="types" value="image"/>
+                    </params>
+                </property>
+                <property name="address" type="text_editor" mandatory="true">
+                    <meta>
+                        <title lang="en">Address</title>
+                        <title lang="pl">Adres</title>
+                        <title lang="hy">Հասցե</title>
+                        <title lang="hu">Cím</title>
+                    </meta>
+                </property>
+                <property name="phone" type="phone" colspan="6" mandatory="true">
+                    <meta>
+                        <title lang="en">Phone</title>
+                        <title lang="pl">Telefon</title>
+                        <title lang="hy">Հեռախոս</title>
+                        <title lang="hu">Telefon</title>
+                    </meta>
+                </property>
+                <property name="email" type="email" colspan="6" mandatory="true">
+                    <meta>
+                        <title lang="en">Email</title>
+                        <title lang="pl">Email</title>
+                        <title lang="hy">Էլ. փոստ</title>
+                        <title lang="hu">E-mail</title>
+                    </meta>
+                </property>
+                <property name="identification_data" type="text_editor" mandatory="false">
+                    <meta>
+                        <title lang="en">Identification data</title>
+                        <title lang="pl">Dane identyfikacji</title>
+                        <title lang="hy">Համաձայնագրային տվյալներ</title>
+                        <title lang="hu">Azonosítási adatok</title>
+                    </meta>
+                </property>
+            </properties>
+        </section>
+        <section name="pages_and_socials">
+            <meta>
+                <title lang="en">Pages and socials</title>
+                <title lang="pl">Strony i media</title>
+                <title lang="hy">Էջեր և սոցիալական ցանցեր</title>
+                <title lang="hu">Oldalak és közösségi média</title>
+            </meta>
+            <properties>
+                <property name="pages_title" type="text_line" mandatory="true">
+                    <meta>
+                        <title lang="en">Pages title</title>
+                        <title lang="pl">Tytuł stron</title>
+                        <title lang="hy">Էջերի վերնագիր</title>
+                        <title lang="hu">Oldalak címe</title>
+                    </meta>
+                </property>
+                <block name="pages">
+                    <meta>
+                        <title lang="en">Menu pages</title>
+                        <title lang="pl">Elementy menu</title>
+                        <title lang="hy">Մենյու էջեր</title>
+                        <title lang="hu">Menü oldalak</title>
+                    </meta>
+                    <types>
+                        <type name="page">
+                            <meta>
+                                <title lang="en">Menu element</title>
+                                <title lang="pl">Element menu</title>
+                                <title lang="hy">Մենյու տարր</title>
+                                <title lang="hu">Menü elem</title>
+                            </meta>
+
+                            <properties>
+                                <xi:include
+                                    href="../fragments/partials/button.xml"
+                                    xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+                                    xpointer(/sulu:properties/sulu:property)"/>
+                            </properties>
+                        </type>
+                    </types>
+                </block>
+                <property name="socials_title" type="text_line" mandatory="true">
+                    <meta>
+                        <title lang="en">Socials title</title>
+                        <title lang="pl">Tytuł medium społecznościowych</title>
+                        <title lang="hy">Սոցիալական ցանցերի վերնագիր</title>
+                        <title lang="hu">Közösségi média címe</title>
+                    </meta>
+                </property>
+                <block name="socials">
+                    <meta>
+                        <title lang="en">Socials</title>
+                        <title lang="pl">Media społecznościowe</title>
+                        <title lang="hy">Սոցիալական ցանցեր</title>
+                        <title lang="hu">Közösségi média</title>
+                    </meta>
+
+                    <types>
+                        <type name="social">
+                            <meta>
+                                <title lang="en">Social</title>
+                                <title lang="pl">Medium społecznościowe</title>
+                                <title lang="hy">Սոցիալական ցանց</title>
+                                <title lang="hu">Közösségi média</title>
+                            </meta>
+
+                            <properties>
+                                <xi:include
+                                        href="../fragments/partials/button.xml"
+                                        xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+                                    xpointer(/sulu:properties/sulu:property)"/>
+                            </properties>
+                        </type>
+                    </types>
+                </block>
+            </properties>
+        </section>
+        <section name="form">
+            <meta>
+                <title lang="en">Form section</title>
+                <title lang="pl">Sekcja formularza</title>
+                <title lang="hy">Ֆորմայի բաժին</title>
+                <title lang="hu">Űrlap szakasz</title>
+            </meta>
+            <properties>
+                <property name="form_title" type="text_line" mandatory="true">
+                    <meta>
+                        <title lang="en">Form title</title>
+                        <title lang="pl">Tytuł formularza</title>
+                        <title lang="hy">Ֆորմայի վերնագիր</title>
+                        <title lang="hu">Űrlap címe</title>
+                    </meta>
+                </property>
+                <property name="form_full_name" type="text_line" mandatory="true">
+                    <meta>
+                        <title lang="en">Form full name label</title>
+                        <title lang="pl">Etykieta imienia i nazwiska w formularzu</title>
+                        <title lang="hy">Ֆորմայի ամբողջական անունի պիտակ</title>
+                        <title lang="hu">Teljes név címke a űrlapon</title>
+                    </meta>
+                </property>
+                <property name="form_email" type="text_line" mandatory="true">
+                    <meta>
+                        <title lang="en">Form email label</title>
+                        <title lang="pl">Etykieta maila w formularzu</title>
+                        <title lang="hy">Ֆորմայի էլ. փոստի պիտակ</title>
+                        <title lang="hu">E-mail címke a űrlapon</title>
+                    </meta>
+                </property>
+                <property name="form_message" type="text_line" mandatory="true">
+                    <meta>
+                        <title lang="en">Form message label</title>
+                        <title lang="pl">Etykieta wiadomości w formularzu</title>
+                        <title lang="hy">Ֆորմայի հաղորդագրության պիտակ</title>
+                        <title lang="hu">Üzenet címke a űrlapon</title>
+                    </meta>
+                </property>
+            </properties>
+        </section>
+        <section name="copyright">
+            <meta>
+                <title lang="en">Copyright notice</title>
+                <title lang="pl">Informacja o prawach autorskich</title>
+                <title lang="hy">Հեղինակային իրավունքների հայտարարություն</title>
+                <title lang="hu">Szerzői jogi közlemény</title>
+            </meta>
+            <properties>
+                <property name="copyright" type="text_line">
+                    <meta>
+                        <title lang="en">Text</title>
+                        <title lang="pl">Tekst</title>
+                        <title lang="hy">Տեքստ</title>
+                        <title lang="hu">Szöveg</title>
+                    </meta>
+                </property>
+            </properties>
+        </section>
+    </properties>
+</template>
