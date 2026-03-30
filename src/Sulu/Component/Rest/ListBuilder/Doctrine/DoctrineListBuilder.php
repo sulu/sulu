@@ -731,8 +731,22 @@ class DoctrineListBuilder extends AbstractListBuilder
             $joins = $this->getJoins();
         }
 
+        // Collect join entity names referenced by WHERE expressions (filters) and search fields.
+        // When an expression filters on a LEFT JOINed table (e.g. templateKey IN (...)),
+        // it eliminates NULL rows, making LEFT JOIN semantically equivalent to INNER JOIN.
+        // Using INNER JOIN allows MySQL to reorder tables and choose better query plans.
+        $filteredJoinEntityNames = $this->getFilteredJoinEntityNames();
+
         foreach ($joins as $entity => $join) {
-            switch ($join->getJoinMethod()) {
+            $joinMethod = $join->getJoinMethod();
+
+            if (DoctrineJoinDescriptor::JOIN_METHOD_LEFT === $joinMethod
+                && \in_array($entity, $filteredJoinEntityNames, true)
+            ) {
+                $joinMethod = DoctrineJoinDescriptor::JOIN_METHOD_INNER;
+            }
+
+            switch ($joinMethod) {
                 case DoctrineJoinDescriptor::JOIN_METHOD_LEFT:
                     $queryBuilder->leftJoin(
                         $join->getJoin() ?: $entity,
@@ -751,6 +765,123 @@ class DoctrineListBuilder extends AbstractListBuilder
                     break;
             }
         }
+    }
+
+    /**
+     * Returns entity names of joins that are referenced by filter expressions or search fields.
+     * These joins have WHERE conditions that eliminate NULL rows, so LEFT JOIN
+     * can safely be upgraded to INNER JOIN for better query optimization.
+     *
+     * @return list<string>
+     */
+    private function getFilteredJoinEntityNames(): array
+    {
+        $entityNames = [];
+
+        foreach ($this->expressions as $expression) {
+            $fieldNames = $this->getExpressionFieldNames([$expression]);
+
+            foreach ($fieldNames as $fieldName) {
+                $joinEntityNames = $this->getJoinEntityNamesForField($fieldName);
+                if ([] === $joinEntityNames) {
+                    continue;
+                }
+
+                if ($this->requiresLeftJoin($expression, $fieldName)) {
+                    continue;
+                }
+
+                $entityNames = \array_merge($entityNames, $joinEntityNames);
+            }
+        }
+
+        if (null !== $this->search && [] !== $this->searchFields) {
+            $searchJoinSets = \array_map(
+                static fn (DoctrineFieldDescriptorInterface $field): array => \array_keys($field->getJoins()),
+                $this->searchFields,
+            );
+
+            $entityNames = \array_merge(
+                $entityNames,
+                \array_intersect(...$searchJoinSets),
+            );
+        }
+
+        return \array_values(\array_unique($entityNames));
+    }
+
+    /**
+     * @param AbstractDoctrineExpression[] $expressions
+     *
+     * @return list<string>
+     */
+    private function getExpressionFieldNames(array $expressions): array
+    {
+        $fieldNames = [];
+
+        foreach ($expressions as $expression) {
+            if ($expression instanceof ConjunctionExpressionInterface) {
+                $fieldNames = \array_merge(
+                    $fieldNames,
+                    $this->getExpressionFieldNames(
+                        \array_values(
+                            \array_filter(
+                                $expression->getExpressions(),
+                                static fn ($subExpression): bool => $subExpression instanceof AbstractDoctrineExpression,
+                            )
+                        )
+                    )
+                );
+
+                continue;
+            }
+
+            if ($expression instanceof BasicExpressionInterface) {
+                $fieldNames[] = $expression->getFieldName();
+            }
+        }
+
+        return \array_values(\array_unique($fieldNames));
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getJoinEntityNamesForField(string $fieldName): array
+    {
+        $field = $this->fieldDescriptors[$fieldName] ?? null;
+        if (!$field instanceof DoctrineFieldDescriptorInterface) {
+            return [];
+        }
+
+        return \array_keys($field->getJoins());
+    }
+
+    private function requiresLeftJoin(AbstractDoctrineExpression $expression, string $fieldName): bool
+    {
+        if ($expression instanceof ConjunctionExpressionInterface) {
+            foreach ($expression->getExpressions() as $subExpression) {
+                if ($subExpression instanceof AbstractDoctrineExpression
+                    && $this->requiresLeftJoin($subExpression, $fieldName)
+                ) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        if (!$expression instanceof BasicExpressionInterface || $expression->getFieldName() !== $fieldName) {
+            return false;
+        }
+
+        if ($expression instanceof DoctrineIsNullExpression) {
+            return true;
+        }
+
+        return $expression instanceof DoctrineWhereExpression
+            && null === $expression->getValue()
+            && self::WHERE_COMPARATOR_EQUAL === $expression->getComparator();
     }
 
     public function createNotExpression(ExpressionInterface $expression)

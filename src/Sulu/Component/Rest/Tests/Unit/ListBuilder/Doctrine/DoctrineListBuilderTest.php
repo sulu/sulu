@@ -331,14 +331,14 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->andWhere(Argument::containingString('anotherEntityName.name = :name_alias'))->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->setParameter(Argument::containingString('name_alias'), 'test')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
 
-        $this->queryBuilder->leftJoin(
+        $this->queryBuilder->innerJoin(
             self::$entityNameAlias . '.translations',
             self::$translationEntityNameAlias,
             DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_WITH,
             ''
         )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
 
-        $this->queryBuilder->leftJoin(
+        $this->queryBuilder->innerJoin(
             'anotherEntityName.translations',
             'anotherEntityName',
             DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_WITH,
@@ -501,8 +501,8 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->where(self::$entityNameAlias . '.id IN (:ids)')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
 
-        // join is only needed in the preselect query, not in the main query. therefore it should be added a one time
-        $this->queryBuilder->leftJoin(
+        // where() expression references the joined entity, so LEFT JOIN is upgraded to INNER JOIN
+        $this->queryBuilder->innerJoin(
             self::$entityNameAlias . '.translations',
             self::$translationEntityNameAlias,
             'WITH',
@@ -1158,6 +1158,224 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->leftJoin('a.test', 'a', 'WITH', '')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         // called when select ids and for selecting data
         $this->queryBuilder->innerJoin('b.test', 'b', 'WITH', '')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testLeftJoinUpgradedToInnerJoinWhenFilterExpressionReferencesJoin(): void
+    {
+        $fieldDescriptor = new DoctrineFieldDescriptor(
+            'name', 'name', self::$translationEntityName, 'translation', [
+                self::$translationEntityName => new DoctrineJoinDescriptor(
+                    self::$translationEntityName,
+                    self::$entityNameAlias . '.translations',
+                    '',
+                    DoctrineJoinDescriptor::JOIN_METHOD_LEFT,
+                ),
+            ]
+        );
+
+        // in() adds an expression referencing the joined entity — should upgrade LEFT to INNER
+        $this->doctrineListBuilder->in($fieldDescriptor, ['value1', 'value2']);
+
+        $this->queryBuilder->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->distinct(Argument::any())->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->where(self::$entityNameAlias . '.id IN (:ids)')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->andWhere(Argument::any())->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter(Argument::cetera())->willReturn($this->queryBuilder->reveal());
+
+        $this->queryBuilder->innerJoin(
+            self::$entityNameAlias . '.translations',
+            self::$translationEntityNameAlias,
+            'WITH',
+            ''
+        )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        $this->queryBuilder->leftJoin(Argument::cetera())->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testLeftJoinNotUpgradedWhenIsNullExpressionReferencesJoin(): void
+    {
+        $fieldDescriptor = new DoctrineFieldDescriptor(
+            'name', 'name', self::$translationEntityName, 'translation', [
+                self::$translationEntityName => new DoctrineJoinDescriptor(
+                    self::$translationEntityName,
+                    self::$entityNameAlias . '.translations',
+                    '',
+                    DoctrineJoinDescriptor::JOIN_METHOD_LEFT,
+                ),
+            ]
+        );
+
+        $this->doctrineListBuilder->setFieldDescriptors(['name' => $fieldDescriptor]);
+        $this->doctrineListBuilder->addExpression(
+            $this->doctrineListBuilder->createIsNullExpression($fieldDescriptor)
+        );
+
+        $this->queryBuilder->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->distinct(Argument::any())->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->where(self::$entityNameAlias . '.id IN (:ids)')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->andWhere(Argument::containingString(' IS NULL'))->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        $this->queryBuilder->leftJoin(
+            self::$entityNameAlias . '.translations',
+            self::$translationEntityNameAlias,
+            'WITH',
+            ''
+        )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        $this->queryBuilder->innerJoin(Argument::cetera())->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testLeftJoinNotUpgradedWhenNullEqualityExpressionReferencesJoin(): void
+    {
+        $fieldDescriptor = new DoctrineFieldDescriptor(
+            'name', 'name', self::$translationEntityName, 'translation', [
+                self::$translationEntityName => new DoctrineJoinDescriptor(
+                    self::$translationEntityName,
+                    self::$entityNameAlias . '.translations',
+                    '',
+                    DoctrineJoinDescriptor::JOIN_METHOD_LEFT,
+                ),
+            ]
+        );
+
+        $this->doctrineListBuilder->where($fieldDescriptor, null);
+
+        $this->queryBuilder->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->distinct(Argument::any())->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->where(self::$entityNameAlias . '.id IN (:ids)')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->andWhere(Argument::containingString(' IS NULL'))->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        $this->queryBuilder->leftJoin(
+            self::$entityNameAlias . '.translations',
+            self::$translationEntityNameAlias,
+            'WITH',
+            ''
+        )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        $this->queryBuilder->innerJoin(Argument::cetera())->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testLeftJoinNotUpgradedWhenOrExpressionContainsNullCheckForJoin(): void
+    {
+        $fieldDescriptor = new DoctrineFieldDescriptor(
+            'name', 'name', self::$translationEntityName, 'translation', [
+                self::$translationEntityName => new DoctrineJoinDescriptor(
+                    self::$translationEntityName,
+                    self::$entityNameAlias . '.translations',
+                    '',
+                    DoctrineJoinDescriptor::JOIN_METHOD_LEFT,
+                ),
+            ]
+        );
+
+        $this->doctrineListBuilder->setFieldDescriptors(['name' => $fieldDescriptor]);
+        $this->doctrineListBuilder->addExpression(
+            $this->doctrineListBuilder->createOrExpression([
+                $this->doctrineListBuilder->createIsNullExpression($fieldDescriptor),
+                $this->doctrineListBuilder->createInExpression($fieldDescriptor, ['value1', 'value2']),
+            ])
+        );
+
+        $this->queryBuilder->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->distinct(Argument::any())->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->where(self::$entityNameAlias . '.id IN (:ids)')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->andWhere(Argument::containingString(' IS NULL'))->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter(Argument::cetera())->willReturn($this->queryBuilder->reveal());
+
+        $this->queryBuilder->leftJoin(
+            self::$entityNameAlias . '.translations',
+            self::$translationEntityNameAlias,
+            'WITH',
+            ''
+        )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        $this->queryBuilder->innerJoin(Argument::cetera())->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testLeftJoinNotUpgradedWhenNoExpressionReferencesJoin(): void
+    {
+        $this->doctrineListBuilder->addSelectField(
+            new DoctrineFieldDescriptor(
+                'name', 'name', self::$translationEntityName, 'translation', [
+                    self::$translationEntityName => new DoctrineJoinDescriptor(
+                        self::$translationEntityName,
+                        self::$entityNameAlias . '.translations',
+                        '',
+                        DoctrineJoinDescriptor::JOIN_METHOD_LEFT,
+                    ),
+                ]
+            )
+        );
+
+        $this->queryBuilder->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->distinct(Argument::any())->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->where(self::$entityNameAlias . '.id IN (:ids)')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->addSelect(Argument::any())->willReturn($this->queryBuilder->reveal());
+
+        // No expression references the join — stays LEFT
+        $this->queryBuilder->leftJoin(
+            self::$entityNameAlias . '.translations',
+            self::$translationEntityNameAlias,
+            'WITH',
+            ''
+        )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testLeftJoinUpgradedToInnerJoinWhenSearchReferencesJoin(): void
+    {
+        $fieldDescriptor = new DoctrineFieldDescriptor(
+            'name', 'name', self::$translationEntityName, 'translation', [
+                self::$translationEntityName => new DoctrineJoinDescriptor(
+                    self::$translationEntityName,
+                    self::$entityNameAlias . '.translations',
+                    '',
+                    DoctrineJoinDescriptor::JOIN_METHOD_LEFT,
+                ),
+            ]
+        );
+
+        $this->doctrineListBuilder->addSearchField($fieldDescriptor);
+        $this->doctrineListBuilder->search('test-search');
+
+        $this->queryBuilder->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->distinct(Argument::any())->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->where(self::$entityNameAlias . '.id IN (:ids)')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->andWhere(Argument::any())->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter('search', '%test-search%')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        // search() is set and references the join — should upgrade LEFT to INNER
+        $this->queryBuilder->innerJoin(
+            self::$entityNameAlias . '.translations',
+            self::$translationEntityNameAlias,
+            'WITH',
+            ''
+        )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        $this->queryBuilder->leftJoin(Argument::cetera())->shouldNotBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
@@ -1915,7 +2133,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->andWhere(Argument::containingString('.name = :name'))->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->setParameter(Argument::containingString('name'), 'test-value')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
-        $this->queryBuilder->leftJoin(
+        $this->queryBuilder->innerJoin(
             self::$entityNameAlias . '.translations',
             self::$translationEntityNameAlias,
             'WITH',
@@ -1986,7 +2204,7 @@ class DoctrineListBuilderTest extends TestCase
 
         // Verify COUNT(DISTINCT ...) is used in the select
         $this->queryBuilder->select(Argument::containingString('COUNT(DISTINCT'))->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
-        $this->queryBuilder->leftJoin(Argument::cetera())->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->innerJoin(Argument::cetera())->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->andWhere(Argument::cetera())->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->setParameter('search', '%value%')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
 
