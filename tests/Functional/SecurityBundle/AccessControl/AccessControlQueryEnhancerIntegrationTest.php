@@ -11,12 +11,11 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\AccessControl;
 
+use Doctrine\Bundle\DoctrineBundle\DataCollector\DoctrineDataCollector;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
-use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
-use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
@@ -78,9 +77,7 @@ class AccessControlQueryEnhancerIntegrationTest extends SuluTestCase
         $this->entityManager->flush();
 
         // Set permissions: Admin role has VIEW, User role has no permissions
-        $accessControlManager = $this->getContainer()->get('sulu_security.access_control_manager');
-        \assert($accessControlManager instanceof AccessControlManagerInterface);
-        $accessControlManager->setPermissions(
+        $this->getAccessControlManager()->setPermissions(
             Collection::class,
             (string) $collection->getId(),
             [
@@ -104,33 +101,30 @@ class AccessControlQueryEnhancerIntegrationTest extends SuluTestCase
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
 
-        $data = \json_decode($response->getContent(), true);
-        $this->assertIsArray($data);
-        $this->assertArrayHasKey('_embedded', $data);
-
         // Verify collection is accessible
-        $collections = $data['_embedded']['collections'];
+        $collections = $this->getCollectionsFromResponse();
         $collectionIds = \array_column($collections, 'id');
         $this->assertContains($collection->getId(), $collectionIds, 'User should be able to access collection through Admin role');
 
         // Verify SQL uses EXISTS with role.id IN condition
-        /** @var Profile $profile */
-        $profile = $this->client->getProfile();
-        $this->assertNotNull($profile, 'Profiler should be enabled');
-
-        $queries = $profile->getCollector('db')->getQueries();
+        $queries = $this->getDoctrineQueries();
         $this->assertNotEmpty($queries, 'Database queries should be logged');
 
         // Find query that checks AccessControl
         $accessControlQuery = null;
+        $accessControlParams = null;
+
         foreach ($queries['default'] as $query) {
             if (\str_contains($query['sql'], 'se_access_controls') && \str_contains($query['sql'], 'EXISTS')) {
                 $accessControlQuery = $query['sql'];
+                $accessControlParams = $query['params'];
+
                 break;
             }
         }
 
         $this->assertNotNull($accessControlQuery, 'Query should contain AccessControl check with EXISTS');
+        $this->assertIsArray($accessControlParams, 'Query should have parameters');
 
         // Verify EXISTS subquery structure
         $this->assertStringContainsString('EXISTS', $accessControlQuery, 'Should use EXISTS clause');
@@ -140,14 +134,16 @@ class AccessControlQueryEnhancerIntegrationTest extends SuluTestCase
         $this->assertStringContainsString('BIT_AND', $accessControlQuery, 'Should use BIT_AND for permission check');
 
         // Verify the query parameters contain both role IDs
-        $this->assertNotEmpty($query['params'] ?? [], 'Query should have parameters');
         $roleIdsParam = null;
-        foreach ($query['params'] ?? [] as $param) {
+
+        foreach ($accessControlParams as $param) {
             if (\is_array($param) && \in_array($adminRole->getId(), $param, true)) {
                 $roleIdsParam = $param;
+
                 break;
             }
         }
+
         $this->assertNotNull($roleIdsParam, 'Query parameters should contain role IDs');
         $this->assertContains($adminRole->getId(), $roleIdsParam, 'Should include Admin role ID');
         $this->assertContains($userRole->getId(), $roleIdsParam, 'Should include User role ID');
@@ -189,9 +185,7 @@ class AccessControlQueryEnhancerIntegrationTest extends SuluTestCase
         $this->entityManager->flush();
 
         // Set permissions: Only SuperAdmin role has VIEW
-        $accessControlManager = $this->getContainer()->get('sulu_security.access_control_manager');
-        \assert($accessControlManager instanceof AccessControlManagerInterface);
-        $accessControlManager->setPermissions(
+        $this->getAccessControlManager()->setPermissions(
             Collection::class,
             (string) $collection->getId(),
             [
@@ -213,12 +207,8 @@ class AccessControlQueryEnhancerIntegrationTest extends SuluTestCase
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
 
-        $data = \json_decode($response->getContent(), true);
-        $this->assertIsArray($data);
-        $this->assertArrayHasKey('_embedded', $data);
-
         // Verify collection is NOT accessible
-        $collections = $data['_embedded']['collections'];
+        $collections = $this->getCollectionsFromResponse();
         $collectionIds = \array_column($collections, 'id');
         $this->assertNotContains(
             $collection->getId(),
@@ -256,9 +246,7 @@ class AccessControlQueryEnhancerIntegrationTest extends SuluTestCase
         $this->entityManager->flush();
 
         // Set permissions: Admin role has VIEW
-        $accessControlManager = $this->getContainer()->get('sulu_security.access_control_manager');
-        \assert($accessControlManager instanceof AccessControlManagerInterface);
-        $accessControlManager->setPermissions(
+        $this->getAccessControlManager()->setPermissions(
             Collection::class,
             (string) $collection->getId(),
             [
@@ -278,17 +266,15 @@ class AccessControlQueryEnhancerIntegrationTest extends SuluTestCase
         // Request collections list
         $this->client->request('GET', '/admin/api/collections?locale=en');
 
-        /** @var Profile $profile */
-        $profile = $this->client->getProfile();
-        $this->assertNotNull($profile);
-
-        $queries = $profile->getCollector('db')->getQueries();
+        $queries = $this->getDoctrineQueries();
 
         // Find AccessControl query
         $accessControlQuery = null;
+
         foreach ($queries['default'] as $query) {
             if (\str_contains($query['sql'], 'se_access_controls') && \str_contains($query['sql'], 'EXISTS')) {
                 $accessControlQuery = $query['sql'];
+
                 break;
             }
         }
@@ -325,11 +311,7 @@ class AccessControlQueryEnhancerIntegrationTest extends SuluTestCase
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
 
-        $data = \json_decode($response->getContent(), true);
-        $this->assertIsArray($data);
-        $this->assertArrayHasKey('_embedded', $data);
-
-        $collections = $data['_embedded']['collections'];
+        $collections = $this->getCollectionsFromResponse();
         $collectionIds = \array_column($collections, 'id');
         $this->assertContains($collection->getId(), $collectionIds);
     }
@@ -357,9 +339,7 @@ class AccessControlQueryEnhancerIntegrationTest extends SuluTestCase
         $this->entityManager->persist($collection);
         $this->entityManager->flush();
 
-        $accessControlManager = $this->getContainer()->get('sulu_security.access_control_manager');
-        \assert($accessControlManager instanceof AccessControlManagerInterface);
-        $accessControlManager->setPermissions(
+        $this->getAccessControlManager()->setPermissions(
             Collection::class,
             (string) $collection->getId(),
             [
@@ -375,13 +355,49 @@ class AccessControlQueryEnhancerIntegrationTest extends SuluTestCase
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
 
-        $data = \json_decode($response->getContent(), true);
-        $this->assertIsArray($data);
-        $this->assertArrayHasKey('_embedded', $data);
-
-        $collections = $data['_embedded']['collections'];
+        $collections = $this->getCollectionsFromResponse();
         $collectionIds = \array_column($collections, 'id');
         $this->assertContains($collection->getId(), $collectionIds);
+    }
+
+    private function getAccessControlManager(): AccessControlManagerInterface
+    {
+        /** @var AccessControlManagerInterface $accessControlManager */
+        $accessControlManager = $this->getContainer()->get('sulu_security.access_control_manager');
+
+        return $accessControlManager;
+    }
+
+    /**
+     * @return array{default: list<array{sql: string, params: list<mixed>}>}
+     */
+    private function getDoctrineQueries(): array
+    {
+        /** @var Profile|null $profile */
+        $profile = $this->client->getProfile();
+        self::assertInstanceOf(Profile::class, $profile, 'Profiler should be enabled');
+
+        $collector = $profile->getCollector('db');
+        self::assertInstanceOf(DoctrineDataCollector::class, $collector);
+
+        /** @var array{default: list<array{sql: string, params: list<mixed>}>} $queries */
+        $queries = $collector->getQueries();
+
+        return $queries;
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    private function getCollectionsFromResponse(): array
+    {
+        $content = $this->client->getResponse()->getContent();
+        self::assertIsString($content);
+
+        /** @var array{_embedded: array{collections: list<array<string, mixed>>}} $data */
+        $data = \json_decode($content, true, 512, \JSON_THROW_ON_ERROR);
+
+        return $data['_embedded']['collections'];
     }
 
     private function createRole(string $name, string $system = 'Sulu'): Role
