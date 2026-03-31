@@ -132,7 +132,7 @@ This means that the webspace, template and navigation context keys need to match
 the pattern `[a-z0-9_-]+` and with a max length of 31 characters.
 
 If you have webspace or template keys that do not match this pattern, you need to change them before
-via [a PHPCR migration](https://docs.sulu.io/en/2.6/cookbook/migrate-content-data.html) or manually in the database.
+via [a PHPCR migration](https://docs.sulu.io/en/3.x/cookbook/migrate-content-data.html) or manually in the database.
 
 ### Pre Update step to 3.0 Sulu Article Bundle
 
@@ -981,12 +981,30 @@ sulu_tag_api:
 
 ### Upgrade resourceLocator and route property type
 
-The new content structure used in Sulu 3.0 requires that all the `resource_locators` or `route` properties must be
+The new content structure used in Sulu 3.0 requires that all the `resource_locator` or `route` properties must be
 renamed to `url` in your templates and use the `route` always.
 
+If previously your route for articles or custom entities were generated on the backend it is now done on the frontend,
+at least one property, mostly the `title`, requires the tag `sulu.rlp.part` to be added to trigger the route generation
+during unfocus of that tagged property.
+
+Also the route property is recommended to be `mandatory` to prevent saving without any generated URL:
+
 ```diff
+        <property name="title" type="text_line" mandatory="true">
+             <meta>
+                 <title lang="en">Title</title>
+                 <title lang="de">Titel</title>
+             </meta>
+             <params>
+                 <param name="headline" value="true"/>
+             </params>
+
++            <tag name="sulu.rlp.part"/>
+         </property>
+
 -        <property name="routePath" type="route">
-+        <property name="url" type="route">
++        <property name="url" type="route" mandatory="true">
             <meta>
                 <title lang="en">Resourcelocator</title>
                 <title lang="de">Adresse</title>
@@ -998,11 +1016,11 @@ renamed to `url` in your templates and use the `route` always.
 ```
 
 To make things easier between pages and articles the `resource_locator` field type is now replaced by the `route` 
-field type, so all routable entities use the same field type.:
+field type, so all routable entities use the same field type:
 
 ```diff
 -        <property name="url" type="resource_locator">
-+        <property name="url" type="route">
++        <property name="url" type="route" mandatory="true">
             <meta>
                 <title lang="en">Resourcelocator</title>
                 <title lang="de">Adresse</title>
@@ -1018,7 +1036,8 @@ to be consistent with the PHP naming.
 ### Route mapping configuration moved to templates
 
 Previously for articles or custom entities you could configure the route generation via a config.
-This was removed and you define the schema via `route_schema` param in your articles template:
+This was removed, and you now define the schema via the `route_schema` param in your articles template.
+Also, the `entity_class` param from the previous route mapping configuration is no longer needed in this setup:
 
 ```diff
 # config/packages/sulu_route.yaml
@@ -1040,6 +1059,7 @@ This was removed and you define the schema via `route_schema` param in your arti
             </meta>
             
 +           <params>
+-               <param name="entity_class" value="Sulu\Bundle\ArticleBundle\Document\ArticleDocument"/>
 +               <param name="route_schema" value="/blog/{implode('-', object)}"/>
 +           </params>
         </property>
