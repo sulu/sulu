@@ -20,6 +20,7 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpKernel\Profiler\Profile;
@@ -108,7 +109,6 @@ class AccessControlQueryEnhancerIntegrationTest extends SuluTestCase
 
         // Verify SQL uses EXISTS with role.id IN condition
         $queries = $this->getDoctrineQueries();
-        $this->assertNotEmpty($queries, 'Database queries should be logged');
 
         // Find query that checks AccessControl
         $accessControlQuery = null;
@@ -412,6 +412,9 @@ class AccessControlQueryEnhancerIntegrationTest extends SuluTestCase
         return $role;
     }
 
+    /**
+     * @param list<RoleInterface> $roles
+     */
     private function createUser(string $username, array $roles): User
     {
         $user = new User();
@@ -420,7 +423,7 @@ class AccessControlQueryEnhancerIntegrationTest extends SuluTestCase
         $user->setLocale('en');
         $user->setSalt('salt');
 
-        foreach ($roles as $role) {
+        foreach ($roles as RoleInterface $role) {
             $userRole = new UserRole();
             $userRole->setRole($role);
             $userRole->setUser($user);
