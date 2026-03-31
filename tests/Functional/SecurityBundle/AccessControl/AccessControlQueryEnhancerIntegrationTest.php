@@ -297,11 +297,98 @@ class AccessControlQueryEnhancerIntegrationTest extends SuluTestCase
         $this->assertStringContainsString('EXISTS', $accessControlQuery, 'Should use EXISTS for single role too');
     }
 
-    private function createRole(string $name): Role
+    public function testUserWithoutRolesCanAccessUnrestrictedCollection(): void
+    {
+        $collectionType = new CollectionType();
+        $collectionType->setName('collection');
+        $collectionType->setKey('collection');
+        $this->entityManager->persist($collectionType);
+        $this->entityManager->flush();
+
+        $collection = new Collection();
+        $collection->setType($collectionType);
+
+        $collectionMeta = new CollectionMeta();
+        $collectionMeta->setTitle('Unrestricted Collection');
+        $collectionMeta->setLocale('en');
+        $collectionMeta->setCollection($collection);
+        $collection->addMeta($collectionMeta);
+
+        $this->entityManager->persist($collection);
+        $this->entityManager->flush();
+
+        $user = $this->createUser('testuser', []);
+
+        $this->client->loginUser($user);
+        $this->client->request('GET', '/admin/api/collections?locale=en');
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $data = \json_decode($response->getContent(), true);
+        $this->assertIsArray($data);
+        $this->assertArrayHasKey('_embedded', $data);
+
+        $collections = $data['_embedded']['collections'];
+        $collectionIds = \array_column($collections, 'id');
+        $this->assertContains($collection->getId(), $collectionIds);
+    }
+
+    public function testRestrictedCollectionInOtherSystemDoesNotHideEntity(): void
+    {
+        $suluRole = $this->createRole('Admin');
+        $websiteRole = $this->createRole('Website Admin', 'Website');
+
+        $collectionType = new CollectionType();
+        $collectionType->setName('collection');
+        $collectionType->setKey('collection');
+        $this->entityManager->persist($collectionType);
+        $this->entityManager->flush();
+
+        $collection = new Collection();
+        $collection->setType($collectionType);
+
+        $collectionMeta = new CollectionMeta();
+        $collectionMeta->setTitle('Website Restricted Collection');
+        $collectionMeta->setLocale('en');
+        $collectionMeta->setCollection($collection);
+        $collection->addMeta($collectionMeta);
+
+        $this->entityManager->persist($collection);
+        $this->entityManager->flush();
+
+        $accessControlManager = $this->getContainer()->get('sulu_security.access_control_manager');
+        \assert($accessControlManager instanceof AccessControlManagerInterface);
+        $accessControlManager->setPermissions(
+            Collection::class,
+            (string) $collection->getId(),
+            [
+                $websiteRole->getId() => ['view' => true, 'edit' => false, 'delete' => false],
+            ]
+        );
+
+        $user = $this->createUser('testuser', [$suluRole]);
+
+        $this->client->loginUser($user);
+        $this->client->request('GET', '/admin/api/collections?locale=en');
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $data = \json_decode($response->getContent(), true);
+        $this->assertIsArray($data);
+        $this->assertArrayHasKey('_embedded', $data);
+
+        $collections = $data['_embedded']['collections'];
+        $collectionIds = \array_column($collections, 'id');
+        $this->assertContains($collection->getId(), $collectionIds);
+    }
+
+    private function createRole(string $name, string $system = 'Sulu'): Role
     {
         $role = new Role();
         $role->setName($name);
-        $role->setSystem('Sulu');
+        $role->setSystem($system);
 
         $this->entityManager->persist($role);
         $this->entityManager->flush();

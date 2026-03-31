@@ -87,19 +87,21 @@ class AccessControlQueryEnhancer implements AccessControlQueryEnhancerInterface
         ?string $entityClassField = null
     ): void {
         $roleIds = $this->getUserRoleIds($user);
+        $system = $this->systemStore->getSystem();
 
-        if (empty($roleIds)) {
-            $queryBuilder->andWhere('1 = 0');
-            return;
+        $existsSubQuery = $this->entityManager->createQueryBuilder();
+        $existsSubQuery->select('1');
+        $existsSubQuery->from(AccessControl::class, 'acl');
+        $existsSubQuery->innerJoin('acl.role', 'role');
+
+        $existsSubQuery->andWhere('acl.permissions IS NOT NULL');
+
+        if ([] !== $roleIds) {
+            $existsSubQuery->andWhere('role.id IN (:roleIds)');
+            $existsSubQuery->andWhere('BIT_AND(acl.permissions, :permission) = :permission');
+        } else {
+            $existsSubQuery->andWhere('1 = 0');
         }
-
-        $existsSubQuery = $this->entityManager->createQueryBuilder()
-            ->select('1')
-            ->from(AccessControl::class, 'acl')
-            ->innerJoin('acl.role', 'role')
-            ->where('role.id IN (:roleIds)')
-            ->andWhere('BIT_AND(acl.permissions, :permission) = :permission')
-            ->andWhere('acl.permissions IS NOT NULL');
 
         if ($entityClassField) {
             $existsSubQuery->andWhere('acl.entityClass = ' . $entityAlias . '.' . $entityClassField);
@@ -112,10 +114,14 @@ class AccessControlQueryEnhancer implements AccessControlQueryEnhancerInterface
 
         // Create a subquery to check if ANY AccessControl records exist for this entity
         // This allows unrestricted entities (without any permission records) to be visible
-        $noRestrictionsSubQuery = $this->entityManager->createQueryBuilder()
-            ->select('1')
-            ->from(AccessControl::class, 'acl_check')
-            ->where($this->getEntityIdConditionWithAlias($entityClass, $entityAlias, $entityIdField, 'acl_check'));
+        $noRestrictionsSubQuery = $this->entityManager->createQueryBuilder();
+        $noRestrictionsSubQuery->select('1');
+        $noRestrictionsSubQuery->from(AccessControl::class, 'acl_check');
+        $noRestrictionsSubQuery->innerJoin('acl_check.role', 'role_check');
+
+        $noRestrictionsSubQuery->where(
+            $this->getEntityIdConditionWithAlias($entityClass, $entityAlias, $entityIdField, 'acl_check')
+        );
 
         if ($entityClassField) {
             $noRestrictionsSubQuery->andWhere('acl_check.entityClass = ' . $entityAlias . '.' . $entityClassField);
@@ -123,9 +129,15 @@ class AccessControlQueryEnhancer implements AccessControlQueryEnhancerInterface
             $noRestrictionsSubQuery->andWhere('acl_check.entityClass = :entityClass');
         }
 
-        // Set parameters before adding WHERE clause
-        $queryBuilder->setParameter('roleIds', $roleIds);
-        $queryBuilder->setParameter('permission', $permission);
+        if (null !== $system) {
+            $noRestrictionsSubQuery->andWhere('role_check.system = :system');
+            $queryBuilder->setParameter('system', $system);
+        }
+
+        if ([] !== $roleIds) {
+            $queryBuilder->setParameter('roleIds', $roleIds);
+            $queryBuilder->setParameter('permission', $permission);
+        }
 
         if (!$entityClassField) {
             $queryBuilder->setParameter('entityClass', $entityClass);

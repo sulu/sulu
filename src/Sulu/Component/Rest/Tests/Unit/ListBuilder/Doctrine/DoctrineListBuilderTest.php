@@ -1551,7 +1551,7 @@ class DoctrineListBuilderTest extends TestCase
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->where('role.id IN (:roleIds)')
+        $accessQueryBuilder->andWhere('role.id IN (:roleIds)')
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
@@ -1584,11 +1584,19 @@ class DoctrineListBuilderTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($noRestrictionsQueryBuilder->reveal());
 
+        $noRestrictionsQueryBuilder->innerJoin('acl_check.role', 'role_check')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
         $noRestrictionsQueryBuilder->where('acl_check.entityId = ' . self::$entityNameAlias . '.id')
             ->willReturn($noRestrictionsQueryBuilder->reveal())
             ->shouldBeCalled();
 
         $noRestrictionsQueryBuilder->andWhere('acl_check.entityClass = :entityClass')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $noRestrictionsQueryBuilder->andWhere('role_check.system = :system')
             ->willReturn($noRestrictionsQueryBuilder->reveal())
             ->shouldBeCalled();
 
@@ -1605,6 +1613,10 @@ class DoctrineListBuilderTest extends TestCase
             ->shouldBeCalled();
 
         $this->queryBuilder->setParameter('entityClass', self::$entityName)
+            ->willReturn($this->queryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $this->queryBuilder->setParameter('system', 'Sulu')
             ->willReturn($this->queryBuilder->reveal())
             ->shouldBeCalled();
 
@@ -1678,7 +1690,7 @@ class DoctrineListBuilderTest extends TestCase
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->where('role.id IN (:roleIds)')
+        $accessQueryBuilder->andWhere('role.id IN (:roleIds)')
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
@@ -1712,12 +1724,20 @@ class DoctrineListBuilderTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($noRestrictionsQueryBuilder->reveal());
 
+        $noRestrictionsQueryBuilder->innerJoin('acl_check.role', 'role_check')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
         // For integer ID, use entityIdInteger in noRestrictionsQueryBuilder too
         $noRestrictionsQueryBuilder->where('acl_check.entityIdInteger = ' . self::$entityNameAlias . '.id')
             ->willReturn($noRestrictionsQueryBuilder->reveal())
             ->shouldBeCalled();
 
         $noRestrictionsQueryBuilder->andWhere('acl_check.entityClass = :entityClass')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $noRestrictionsQueryBuilder->andWhere('role_check.system = :system')
             ->willReturn($noRestrictionsQueryBuilder->reveal())
             ->shouldBeCalled();
 
@@ -1734,6 +1754,10 @@ class DoctrineListBuilderTest extends TestCase
             ->shouldBeCalled();
 
         $this->queryBuilder->setParameter('entityClass', self::$entityName)
+            ->willReturn($this->queryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $this->queryBuilder->setParameter('system', 'Sulu')
             ->willReturn($this->queryBuilder->reveal())
             ->shouldBeCalled();
 
@@ -1802,7 +1826,7 @@ class DoctrineListBuilderTest extends TestCase
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->where('role.id IN (:roleIds)')
+        $accessQueryBuilder->andWhere('role.id IN (:roleIds)')
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
@@ -1835,12 +1859,20 @@ class DoctrineListBuilderTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($noRestrictionsQueryBuilder->reveal());
 
+        $noRestrictionsQueryBuilder->innerJoin('acl_check.role', 'role_check')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
         // For stdClass tests, use 'stdClass' as the entity alias
         $noRestrictionsQueryBuilder->where('acl_check.entityId = stdClass.id')
             ->willReturn($noRestrictionsQueryBuilder->reveal())
             ->shouldBeCalled();
 
         $noRestrictionsQueryBuilder->andWhere('acl_check.entityClass = :entityClass')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $noRestrictionsQueryBuilder->andWhere('role_check.system = :system')
             ->willReturn($noRestrictionsQueryBuilder->reveal())
             ->shouldBeCalled();
 
@@ -1857,6 +1889,10 @@ class DoctrineListBuilderTest extends TestCase
             ->shouldBeCalled();
 
         $this->queryBuilder->setParameter('entityClass', \stdClass::class)
+            ->willReturn($this->queryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $this->queryBuilder->setParameter('system', 'Sulu')
             ->willReturn($this->queryBuilder->reveal())
             ->shouldBeCalled();
 
@@ -1937,7 +1973,7 @@ class DoctrineListBuilderTest extends TestCase
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->where('role.id IN (:roleIds)')
+        $accessQueryBuilder->andWhere('role.id IN (:roleIds)')
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
@@ -1970,12 +2006,20 @@ class DoctrineListBuilderTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($noRestrictionsQueryBuilder->reveal());
 
+        $noRestrictionsQueryBuilder->innerJoin('acl_check.role', 'role_check')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
         // For stdClass tests, use 'stdClass' as the entity alias
         $noRestrictionsQueryBuilder->where('acl_check.entityId = stdClass.id')
             ->willReturn($noRestrictionsQueryBuilder->reveal())
             ->shouldBeCalled();
 
         $noRestrictionsQueryBuilder->andWhere('acl_check.entityClass = :entityClass')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $noRestrictionsQueryBuilder->andWhere('role_check.system = :system')
             ->willReturn($noRestrictionsQueryBuilder->reveal())
             ->shouldBeCalled();
 
@@ -1992,6 +2036,10 @@ class DoctrineListBuilderTest extends TestCase
             ->shouldBeCalled();
 
         $this->queryBuilder->setParameter('entityClass', \stdClass::class)
+            ->willReturn($this->queryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $this->queryBuilder->setParameter('system', 'Sulu')
             ->willReturn($this->queryBuilder->reveal())
             ->shouldBeCalled();
 
