@@ -438,6 +438,8 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_admin.metadata_provider_registry'),
                 new Reference('sulu_http_cache.cache_lifetime.resolver'),
+                new Reference('sulu_route.route_repository'),
+                new Reference('sulu_route.route_generator'),
                 expr("container.hasParameter('sulu_audience_targeting.enabled')"),
             ])
             ->tag('sulu_route.route_defaults_provider', ['resource_key' => 'pages']);

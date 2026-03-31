@@ -19,6 +19,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 final class ExternalLinkProvider implements LinkProviderInterface
 {
+    public const ALIAS = 'external';
+
     public function __construct(
         private TranslatorInterface $translator,
     ) {

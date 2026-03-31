@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderInterface;
 use Sulu\Bundle\AdminBundle\Teaser\Teaser;
 use Sulu\Bundle\AdminBundle\Teaser\TeaserTagPropertyExtractor;
+use Sulu\Bundle\MarkupBundle\Markup\Link\ExternalLinkProvider;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentEnhancer\ContentEnhancerInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
@@ -150,7 +151,7 @@ class PageTeaserProvider implements TeaserProviderInterface
     protected function resolveUrl(PageDimensionContentInterface $dimensionContent): ?string
     {
         $linkData = $dimensionContent->getLinkData();
-        if ('external' === ($linkData['provider'] ?? null) && \is_string($linkData['href'] ?? null)) {
+        if (ExternalLinkProvider::ALIAS === ($linkData['provider'] ?? null) && \is_string($linkData['href'] ?? null)) {
             return $linkData['href'];
         }
 
