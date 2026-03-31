@@ -1036,8 +1036,8 @@ to be consistent with the PHP naming.
 ### Route mapping configuration moved to templates
 
 Previously for articles or custom entities you could configure the route generation via a config.
-This was removed and you define the schema via `route_schema` param in your articles template
-also the `entity_class` param was removed in this case:
+This was removed, and you now define the schema via the `route_schema` param in your articles template.
+Also, the `entity_class` param from the previous route mapping configuration is no longer needed in this setup:
 
 ```diff
 # config/packages/sulu_route.yaml
