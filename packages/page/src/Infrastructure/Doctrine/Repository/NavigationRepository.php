@@ -335,6 +335,9 @@ final class NavigationRepository implements NavigationRepositoryInterface
             'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);
 
+        $sourceProperties = $properties;
+        $linkData = $pageDimensionContent->getLinkData();
+
         // prefix all properties with "nav." to only resolve navigation related content
         foreach ($properties as $key => $value) {
             unset($properties[$key]);
@@ -350,6 +353,23 @@ final class NavigationRepository implements NavigationRepositoryInterface
         $result = $resolvedContent['nav'];
 
         $result['targetType'] = $result['targetType'] ?? PageLinkProvider::ALIAS;
+
+        if (PageLinkProvider::ALIAS === ($linkData['provider'] ?? null)) {
+            foreach ($sourceProperties as $key => $value) {
+                $structurePropertyValue = match ($value) {
+                    'object.resource.depth' => $page->getDepth(),
+                    'object.resource.lft' => $page->getLft(),
+                    'object.resource.rgt' => $page->getRgt(),
+                    default => null,
+                };
+
+                if (null === $structurePropertyValue) {
+                    continue;
+                }
+
+                $result[$key] = $structurePropertyValue;
+            }
+        }
 
         return $result;
     }

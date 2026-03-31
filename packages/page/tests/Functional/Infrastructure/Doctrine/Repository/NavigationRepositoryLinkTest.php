@@ -16,6 +16,7 @@ namespace Sulu\Page\Tests\Functional\Infrastructure\Doctrine\Repository;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Page\Domain\Repository\NavigationRepositoryInterface;
+use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
 use Sulu\Page\Tests\Traits\CreatePageTrait;
 use Symfony\Component\Routing\RequestContext;
 
@@ -26,10 +27,22 @@ class NavigationRepositoryLinkTest extends SuluTestCase
 
     private NavigationRepositoryInterface $navigationRepository;
 
+    private static int $internalLinkPageDepth;
+
+    private static int $internalLinkPageLft;
+
+    private static int $internalLinkPageRgt;
+
+    private static int $targetPageDepth;
+
+    private static int $targetPageLft;
+
+    private static int $targetPageRgt;
+
     /**
      * @return array<string, string>
      */
-    private function getDefaultProperties(bool $withExcerpt = false): array
+    private function getDefaultProperties(bool $withExcerpt = false, bool $withStructure = false): array
     {
         $properties = [
             'uuid' => 'object.resource.id',
@@ -43,6 +56,12 @@ class NavigationRepositoryLinkTest extends SuluTestCase
             'creator' => 'object.creator',
             'linkProvider' => 'object.linkData[provider]',
         ];
+
+        if ($withStructure) {
+            $properties['depth'] = 'object.resource.depth';
+            $properties['lft'] = 'object.resource.lft';
+            $properties['rgt'] = 'object.resource.rgt';
+        }
 
         if ($withExcerpt) {
             $properties['excerpt.title'] = 'excerpt.title';
@@ -114,7 +133,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
                     'excerpt' => [
                         'title' => 'Target Page Excerpt',
                     ],
-                    'parentId' => $homepage->getId(),
+                    'parentId' => $contentPage->getId(),
                 ],
             ],
         ]);
@@ -129,7 +148,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
                     'linkOn' => true,
                     'linkData' => [
                         'href' => $targetPage->getUuid(),
-                        'provider' => 'page',
+                        'provider' => PageLinkProvider::ALIAS,
                     ],
                     'excerpt' => [
                         'title' => 'Internal Link Excerpt',
@@ -138,6 +157,13 @@ class NavigationRepositoryLinkTest extends SuluTestCase
                 ],
             ],
         ]);
+
+        self::$internalLinkPageDepth = $internalLinkPage->getDepth();
+        self::$internalLinkPageLft = $internalLinkPage->getLft();
+        self::$internalLinkPageRgt = $internalLinkPage->getRgt();
+        self::$targetPageDepth = $targetPage->getDepth();
+        self::$targetPageLft = $targetPage->getLft();
+        self::$targetPageRgt = $targetPage->getRgt();
 
         $externalLinkPage = self::createPage([
             'en' => [
@@ -257,5 +283,33 @@ class NavigationRepositoryLinkTest extends SuluTestCase
         $this->assertSame('https://example.com', $externalLinkNav['url']);
         $this->assertSame('external', $externalLinkNav['linkProvider']);
         $this->assertArrayHasKey('children', $externalLinkNav);
+    }
+
+    public function testGetNavigationTreePreservesSourcePositionMetadataForInternalLinks(): void
+    {
+        $navigation = $this->navigationRepository->getNavigationTree(
+            'main',
+            'en',
+            'sulu-io',
+            null,
+            2,
+            $this->getDefaultProperties(false, true)
+        );
+
+        /** @var array<string, mixed> $homepageNav */
+        $homepageNav = $navigation[0];
+        /** @var array<int, array<string, mixed>> $homepageChildren */
+        $homepageChildren = $homepageNav['children'];
+        /** @var array<string, mixed> $internalLinkNav */
+        $internalLinkNav = $homepageChildren[1];
+
+        $this->assertSame('Internal Link Page', $internalLinkNav['title']);
+        $this->assertSame('/target-page', $internalLinkNav['url']);
+        $this->assertSame(self::$internalLinkPageDepth, $internalLinkNav['depth']);
+        $this->assertSame(self::$internalLinkPageLft, $internalLinkNav['lft']);
+        $this->assertSame(self::$internalLinkPageRgt, $internalLinkNav['rgt']);
+        $this->assertNotSame(self::$targetPageDepth, $internalLinkNav['depth']);
+        $this->assertNotSame(self::$targetPageLft, $internalLinkNav['lft']);
+        $this->assertNotSame(self::$targetPageRgt, $internalLinkNav['rgt']);
     }
 }
