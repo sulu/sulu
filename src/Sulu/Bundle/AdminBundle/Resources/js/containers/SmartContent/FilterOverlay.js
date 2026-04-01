@@ -57,7 +57,7 @@ class FilterOverlay extends React.Component<Props> {
         super(props);
 
         this.updateFilterCriteriaDisposer = autorun(() => this.updateFilterCriteria(this.props.smartContentStore));
-i         this.tagSelectionStore = new MultiSelectionStore('tags', this.tags || [], undefined, 'ids');
+        this.tagSelectionStore = new MultiSelectionStore('tags', this.tags || [], undefined, 'ids');
         this.tagSelectionStoreDisposer = autorun(() => {
             this.tags = this.tagSelectionStore.items.map((item) => item.id);
         });
