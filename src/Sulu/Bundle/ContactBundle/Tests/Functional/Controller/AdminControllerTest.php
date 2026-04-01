@@ -20,11 +20,14 @@ use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfileType;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class AdminControllerTest extends SuluTestCase
 {
+    use AssertSnapshotTrait;
+
     /**
      * @var KernelBrowser
      */
@@ -176,16 +179,7 @@ class AdminControllerTest extends SuluTestCase
 
         $this->client->jsonRequest('GET', '/admin/metadata/form/account_details');
 
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = \json_decode($this->client->getResponse()->getContent(), true);
-
-        $this->assertIsArray($response);
-        $form = $response['form'];
-        $this->assertArrayHasKey('logo', $form);
-        $this->assertArrayHasKey('account', $form);
-
-        $schema = $response['schema'];
-        $this->assertEquals(['name'], $schema['required']);
+        $this->assertResponseSnapshot('contact-form-metadata.json', $this->client->getResponse(), 200);
     }
 
     private function createCollectionTypes(): void

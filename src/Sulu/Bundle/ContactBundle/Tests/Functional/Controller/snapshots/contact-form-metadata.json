@@ -1,0 +1,372 @@
+ {
+     "form": {
+         "account": {
+             "colSpan": 8,
+             "disabledCondition": null,
+             "items": {
+                 "addresses": {
+                     "colSpan": 12,
+                     "disabledCondition": null,
+                     "items": {
+                         "addresses": {
+                             "colSpan": 12,
+                             "defaultType": null,
+                             "disabledCondition": null,
+                             "maxOccurs": null,
+                             "minOccurs": null,
+                             "multilingual": true,
+                             "onInvalid": null,
+                             "options": [],
+                             "required": false,
+                             "spaceAfter": null,
+                             "tags": [],
+                             "type": "addresses",
+                             "types": [],
+                             "visibleCondition": null
+                         }
+                     },
+                     "label": "Addresses",
+                     "type": "section",
+                     "visibleCondition": null
+                 },
+                 "bankAccounts": {
+                     "colSpan": 12,
+                     "disabledCondition": null,
+                     "items": {
+                         "bankAccounts": {
+                             "colSpan": 12,
+                             "defaultType": null,
+                             "disabledCondition": null,
+                             "maxOccurs": null,
+                             "minOccurs": null,
+                             "multilingual": true,
+                             "onInvalid": null,
+                             "options": [],
+                             "required": false,
+                             "spaceAfter": null,
+                             "tags": [],
+                             "type": "bankAccounts",
+                             "types": [],
+                             "visibleCondition": null
+                         }
+                     },
+                     "label": "Bank accounts",
+                     "type": "section",
+                     "visibleCondition": null
+                 },
+                 "contactDetails": {
+                     "colSpan": 12,
+                     "disabledCondition": null,
+                     "items": {
+                         "contactDetails": {
+                             "colSpan": 12,
+                             "defaultType": null,
+                             "disabledCondition": null,
+                             "maxOccurs": null,
+                             "minOccurs": null,
+                             "multilingual": true,
+                             "onInvalid": null,
+                             "options": [],
+                             "required": false,
+                             "spaceAfter": null,
+                             "tags": [],
+                             "type": "contact_details",
+                             "types": [],
+                             "visibleCondition": null
+                         }
+                     },
+                     "label": "Contact details",
+                     "type": "section",
+                     "visibleCondition": null
+                 },
+                 "corporation": {
+                     "colSpan": 6,
+                     "defaultType": null,
+                     "disabledCondition": null,
+                     "label": "Corporation",
+                     "maxOccurs": null,
+                     "minOccurs": null,
+                     "multilingual": true,
+                 "taxonomies": {
+                     "colSpan": 12,
+                     "disabledCondition": null,
+                     "items": {
+                         "categories": {
+                             "colSpan": 12,
+                             "defaultType": null,
+                             "disabledCondition": null,
+                             "label": "Categories",
+                             "maxOccurs": null,
+                             "minOccurs": null,
+                             "multilingual": true,
+                             "onInvalid": null,
+                             "options": [],
+                             "required": false,
+                             "spaceAfter": null,
+                             "tags": [],
+                             "type": "category_selection",
+                             "types": [],
+                             "visibleCondition": null
+                         },
+                         "tags": {
+                             "colSpan": 12,
+                             "defaultType": null,
+                             "disabledCondition": null,
+                             "label": "Tags",
+                             "maxOccurs": null,
+                             "minOccurs": null,
+                             "multilingual": true,
+                             "onInvalid": null,
+                             "options": [],
+                             "required": false,
+                             "spaceAfter": null,
+                             "tags": [],
+                             "type": "tag_selection",
+                             "types": [],
+                             "visibleCondition": null
+                         }
+                     },
+                     "label": "Taxonomies",
+                     "type": "section",
+                     "visibleCondition": null
+                 },
+                 "uid": {
+                     "colSpan": 6,
+                     "defaultType": null,
+                     "disabledCondition": null,
+                     "label": "UID",
+                     "maxOccurs": null,
+                     "minOccurs": null,
+                     "multilingual": true,
+                     "onInvalid": null,
+                     "options": [],
+                     "required": false,
+                     "spaceAfter": null,
+                     "tags": [],
+                     "type": "text_line",
+                     "types": [],
+                     "visibleCondition": null
+                 }
+             },
+             "type": "section",
+             "visibleCondition": null
+         },
+         "logo": {
+             "colSpan": 4,
+             "disabledCondition": null,
+             "items": {
+                 "logo": {
+                     "colSpan": 11,
+                     "defaultType": null,
+                     "disabledCondition": null,
+                     "maxOccurs": null,
+                     "minOccurs": null,
+                     "multilingual": true,
+                     "onInvalid": null,
+                     "options": {
+                         "collection_id": {
+                             "name": "collection_id",
+                             "type": "expression",
+                             "value": 42
+                         },
+                         "empty_icon": {
+                             "name": "empty_icon",
+                             "type": "string",
+                             "value": "su-house"
+                         },
+                         "image_size": {
+                             "name": "image_size",
+                             "type": "string",
+                             "value": "sulu-400x400-inset"
+                         },
+                         "upload_text": {
+                             "infoText": "Drop image or click to change logo",
+                             "name": "upload_text",
+                             "type": "string",
+                             "value": null
+                         }
+                     },
+                     "required": false,
+                     "spaceAfter": 1,
+                     "tags": [],
+                     "type": "single_media_upload",
+                     "types": [],
+                     "visibleCondition": null
+                 }
+             },
+             "type": "section",
+             "visibleCondition": null
+         }
+     },
+     "group": null,
+     "key": "account_details",
+     "name": "account_details",
+     "schema": {
+         "properties": {
+             "categories": {
+                 "anyOf": [
+                     {
+                         "type": "null"
+                     },
+                     {
+                         "items": {
+                             "type": [
+                                 "number",
+                                 "string",
+                                 "boolean",
+                                 "object",
+                                 "array",
+                                 "null"
+                             ]
+                         },
+                         "maxItems": 0,
+                         "type": "array"
+                     },
+                     {
+                         "items": {
+                             "anyOf": [
+                                 {
+                                     "type": "string"
+                                 },
+                                 {
+                                     "type": "number"
+                                 }
+                             ]
+                         },
+                         "type": "array",
+                         "uniqueItems": true
+                     }
+                 ]
+             },
+             "corporation": {
+                 "anyOf": [
+                     {
+                         "type": "null"
+                     },
+                     {
+                         "maxLength": 0,
+                         "type": "string"
+                     },
+                     {
+                         "type": "string"
+                     }
+                 ]
+             },
+             "mainContact": {
+                 "anyOf": [
+                     {
+                         "type": "null"
+                     },
+                     {
+                         "maxProperties": 0,
+                         "type": "object"
+                     },
+                     {
+                         "type": "string"
+                     },
+                     {
+                         "type": "number"
+                     },
+                     {
+                         "minProperties": 1,
+                         "type": "object"
+                     }
+                 ]
+             },
+             "name": {
+                 "minLength": 1,
+                 "type": "string"
+             },
+             "note": {
+                 "anyOf": [
+                     {
+                         "type": "null"
+                     },
+                     {
+                         "maxLength": 0,
+                         "type": "string"
+                     },
+                     {
+                         "type": "string"
+                     }
+                 ]
+             },
+             "parent": {
+                 "anyOf": [
+                     {
+                         "type": "null"
+                     },
+                     {
+                         "maxProperties": 0,
+                         "type": "object"
+                     },
+                     {
+                         "type": "string"
+                     },
+                     {
+                         "type": "number"
+                     },
+                     {
+                         "minProperties": 1,
+                         "type": "object"
+                     }
+                 ]
+             },
+             "tags": {
+                 "anyOf": [
+                     {
+                         "type": "null"
+                     },
+                     {
+                         "items": {
+                             "type": [
+                                 "number",
+                                 "string",
+                                 "boolean",
+                                 "object",
+                                 "array",
+                                 "null"
+                             ]
+                         },
+                         "maxItems": 0,
+                         "type": "array"
+                     },
+                     {
+                         "items": {
+                             "anyOf": [
+                                 {
+                                     "type": "string"
+                                 },
+                                 {
+                                     "type": "number"
+                                 }
+                             ]
+                         },
+                         "type": "array",
+                         "uniqueItems": true
+                     }
+                 ]
+             },
+             "uid": {
+                 "anyOf": [
+                     {
+                         "type": "null"
+                     },
+                     {
+                         "maxLength": 0,
+                         "type": "string"
+                     },
+                     {
+                         "type": "string"
+                     }
+                 ]
+             }
+         },
+         "required": [
+             "name"
+         ],
+         "type": "object"
+     },
+     "tags": [],
+     "title": "Account details"
+ }
