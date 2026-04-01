@@ -164,13 +164,7 @@ class AdminControllerTest extends SuluTestCase
 
         $this->client->jsonRequest('GET', '/admin/metadata/form/contact_details');
 
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = \json_decode($this->client->getResponse()->getContent(), true);
-
-        $this->assertIsArray($response);
-        $this->assertArrayHasKey('avatar', $response['form']);
-        $this->assertArrayHasKey('contact', $response['form']);
-        $this->assertEquals(['firstName', 'lastName', 'formOfAddress'], $response['schema']['required']);
+        $this->assertResponseSnapshot('contact-form-metadata.json', $this->client->getResponse(), 200);
     }
 
     public function testAccountFormMetadataAction(): void
@@ -179,7 +173,7 @@ class AdminControllerTest extends SuluTestCase
 
         $this->client->jsonRequest('GET', '/admin/metadata/form/account_details');
 
-        $this->assertResponseSnapshot('contact-form-metadata.json', $this->client->getResponse(), 200);
+        $this->assertResponseSnapshot('account-form-metadata.json', $this->client->getResponse(), 200);
     }
 
     private function createCollectionTypes(): void
