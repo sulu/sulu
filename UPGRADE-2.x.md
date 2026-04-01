@@ -17,6 +17,8 @@ ALTER TABLE se_users CHANGE apiKey apiKey VARCHAR(128) DEFAULT NULL;
 
 An index on the `idRoles` column has been added to the `se_access_controls` table to improve query performance for permission checks with multiple roles.
 
+The access control query logic for doctrine entities with multiple roles has been fixed. Access is now granted if any assigned role grants the requested permission for an entity, instead of incorrectly denying access when another assigned role has no permission for the same entity.
+
 ```sql
 CREATE INDEX IDX_C526DC5238C751C4 ON se_access_controls (idRoles);
 ```
