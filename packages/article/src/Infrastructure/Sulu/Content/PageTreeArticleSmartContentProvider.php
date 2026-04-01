@@ -88,12 +88,9 @@ readonly class PageTreeArticleSmartContentProvider extends ArticleSmartContentPr
         $queryBuilder->join('articleRoute.parentRoute', 'parentRoute');
 
         if (!$includeSubFolders) {
-            // Only match articles whose parent route points directly to the dataSource page
             $queryBuilder->andWhere('parentRoute.resourceId = :dataSource');
             $queryBuilder->setParameter('dataSource', $dataSource);
         } else {
-            // Match articles whose parent route points to the dataSource page or any of its descendants
-            // Using the nested set model (lft/rgt) of Page to efficiently query descendants
             $queryBuilder->join(
                 PageInterface::class,
                 'dataSourcePage',
