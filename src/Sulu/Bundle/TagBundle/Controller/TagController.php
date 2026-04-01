@@ -103,6 +103,12 @@ class TagController extends AbstractRestController implements SecuredControllerI
                 $listBuilder->limit(\count($names));
             }
 
+            $ids = \array_filter(\explode(',', $request->get('ids', '')));
+            if (\count($ids) > 0) {
+                $listBuilder->in($fieldDescriptors['id'], $ids);
+                $listBuilder->limit(\count($ids));
+            }
+
             $list = new PaginatedRepresentation(
                 $listBuilder->execute(),
                 TagInterface::RESOURCE_KEY,

@@ -34,17 +34,17 @@ class TagSelectionPropertyResolver implements PropertyResolverInterface
             return ContentView::create([], ['ids' => [], ...$params]);
         }
 
-        /** @var string[] $names */
-        $names = $data;
+        /** @var int[] $ids */
+        $ids = $data;
 
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? TagResourceLoader::getKey();
 
         return ContentView::createResolvablesWithReferences(
-            $names,
+            $ids,
             $resourceLoaderKey,
             TagInterface::RESOURCE_KEY,
-            ['ids' => $names, ...$params],
+            ['ids' => $ids, ...$params],
         );
     }
 
