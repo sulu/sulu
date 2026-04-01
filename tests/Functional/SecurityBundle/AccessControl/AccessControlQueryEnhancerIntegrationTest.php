@@ -423,7 +423,7 @@ class AccessControlQueryEnhancerIntegrationTest extends SuluTestCase
         $user->setLocale('en');
         $user->setSalt('salt');
 
-        foreach ($roles as RoleInterface $role) {
+        foreach ($roles as $role) {
             $userRole = new UserRole();
             $userRole->setRole($role);
             $userRole->setUser($user);
