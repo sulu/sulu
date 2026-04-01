@@ -245,12 +245,12 @@ return [
 
 ### New Reserved Templates directory for Global Blocks
 
-With the introduction of the new [Global Blocks](https://docs.sulu.io/en/2.6/book/templates.html#templates-global-blocks) there
+With the introduction of the new [Global Blocks](https://docs.sulu.io/en/2.x/book/templates.html#templates-global-blocks) there
 is a new reserved directory `config/templates/blocks`.
 
 If you already did use that directory for `xi:includes` you should move the existing blocks to `config/templates/includes/blocks`.
 Migrating to Global Blocks is not required and can be done step by step if you want to use the new Global Blocks
-feature. Have a look at the Global Blocks [Documentation](https://docs.sulu.io/en/2.6/book/templates.html#templates-global-blocks).
+feature. Have a look at the Global Blocks [Documentation](https://docs.sulu.io/en/2.x/book/templates.html#templates-global-blocks).
 
 ### Custom Admin Builds npm version changed
 
@@ -279,7 +279,7 @@ Sulu now uses Webpack 5 to build the administration interface application. To en
 If you have integrated custom JavaScript components into the administration interface,
 you might need to adjust your components to be compatible with the updated dependencies.
 If you have not integrated custom JavaScript code, you project is adjusted automatically by the
-[update build](https://docs.sulu.io/en/2.6/upgrades/upgrade-2.x.html) command.
+[update build](https://docs.sulu.io/en/2.x/upgrades/upgrade-2.x.html) command.
 
 Additionally, the following packages where upgraded:
 
@@ -726,7 +726,7 @@ The JavaScript dependencies of the Sulu administration interface were updated to
 If you have integrated custom JavaScript components into the administration interface,
 you might need to adjust your components to be compatible with the updated dependencies.
 If you have not integrated custom JavaScript code, you project is adjusted automatically by the
-[update build](https://docs.sulu.io/en/2.6/upgrades/upgrade-2.x.html) command.
+[update build](https://docs.sulu.io/en/2.x/upgrades/upgrade-2.x.html) command.
 
 ### Rename labelRef to inputContainerRef
 
