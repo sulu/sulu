@@ -1,19 +1,23 @@
 // @flow
-import {render} from 'enzyme';
+import {render} from '@testing-library/react';
 import React from 'react';
 import MimeTypeIndicator from '../MimeTypeIndicator';
 
 test('Should render a MimeTypeIndicator', () => {
-    expect(render(<MimeTypeIndicator mimeType="application/vnd.ms-excel" />)).toMatchSnapshot();
+    const {asFragment} = render(<MimeTypeIndicator mimeType="application/vnd.ms-excel" />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should render a MimeTypeIndicator with different dimensions', () => {
-    expect(render(
+    const {asFragment} = render(
         <MimeTypeIndicator
             height={200}
             iconSize={32}
             mimeType="application/vnd.ms-excel"
             width={200}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });

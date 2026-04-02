@@ -98,7 +98,10 @@ class ListRepository extends EntityRepository
 
         // if just used for counting
         if ($justCount) {
-            return \intval($query->getSingleResult()['totalcount']);
+            /** @var int|string $totalCount */
+            $totalCount = $query->getSingleResult()['totalcount'];
+
+            return \intval($totalCount);
         }
 
         $results = $query->getArrayResult();

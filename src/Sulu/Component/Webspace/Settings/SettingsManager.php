@@ -31,7 +31,7 @@ class SettingsManager implements SettingsManagerInterface
         $propertyName = $this->getPropertyName($key);
 
         $value = $data;
-        if (!($data instanceof NodeInterface)) {
+        if (!$data instanceof NodeInterface) {
             $value = \json_encode($data);
         }
 

@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ActivityBundle\Tests\Unit\Application\Dispatcher;
+namespace Sulu\Bundle\ActivityBundle\Tests\Unit\Application\Collector;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;

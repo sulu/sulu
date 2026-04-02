@@ -58,7 +58,7 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                                 'adapter' => 'cache.app',
                             ],
                             'sulu_admin.icon_cache' => [
-                                'adapter' => 'cache.app',
+                                'adapter' => 'cache.system',
                             ],
                         ],
                     ],

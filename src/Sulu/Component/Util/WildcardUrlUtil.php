@@ -58,7 +58,7 @@ final class WildcardUrlUtil
      * @param string $url
      * @param string $portalUrl
      *
-     * @return string
+     * @return string|null
      */
     public static function resolve($url, $portalUrl)
     {
@@ -75,6 +75,6 @@ final class WildcardUrlUtil
             return $portalUrl;
         }
 
-        return;
+        return null;
     }
 }

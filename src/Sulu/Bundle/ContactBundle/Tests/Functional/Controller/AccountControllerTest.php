@@ -86,6 +86,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->clear();
 
         // Get ids of new accounts.
+        /** @var array<string> $ids */
         $ids = \array_map(
             function($account) {
                 return $account->getId();
@@ -118,6 +119,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->clear();
 
         // Get ids of new accounts.
+        /** @var array<string> $ids */
         $ids = \array_map(
             function($account) {
                 return $account->getId();

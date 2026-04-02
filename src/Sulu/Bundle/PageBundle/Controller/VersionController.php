@@ -61,8 +61,9 @@ class VersionController extends AbstractRestController implements
         $locale = $this->getRequestParameter($request, 'locale', true);
 
         $document = $this->documentManager->find($id, $request->query->get('locale'));
+        /** @var Version[] $versions */
         $versions = \array_reverse(\array_filter($document->getVersions(), function($version) use ($locale) {
-            /* @var Version $version */
+            /** @var Version $version */
             return $version->getLocale() === $locale;
         }));
         $total = \count($versions);
@@ -71,10 +72,11 @@ class VersionController extends AbstractRestController implements
 
         $versions = \array_slice($versions, $this->listRestHelper->getOffset(), $limit);
 
-        $userIds = \array_unique(\array_map(function($version) {
-            /* @var Version $version */
-            return $version->getAuthor();
-        }, $versions));
+        $mappedUserIds = \array_map(
+            fn (Version $version) => $version->getAuthor(),
+            $versions
+        );
+        $userIds = \array_unique($mappedUserIds);
 
         $users = $this->userRepository->findUsersById($userIds);
         $fullNamesByIds = [];

@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Tests\Functional\ResourceLocator\Strategy;
+namespace Sulu\Component\Content\Tests\Unit\ResourceLocator\Strategy;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeGenerator;

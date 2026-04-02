@@ -18,6 +18,7 @@ use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Security\Authentication\RoleSettingRepositoryInterface;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @RouteResource("setting")
  */
-class RoleSettingController extends AbstractRestController implements ClassResourceInterface
+class RoleSettingController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
     public function __construct(
         ViewHandlerInterface $viewHandler,
@@ -74,5 +75,10 @@ class RoleSettingController extends AbstractRestController implements ClassResou
         $this->entityManager->flush();
 
         return $this->handleView($this->view($setting->getValue()));
+    }
+
+    public function getSecurityContext(): string
+    {
+        return 'sulu.security.roles';
     }
 }

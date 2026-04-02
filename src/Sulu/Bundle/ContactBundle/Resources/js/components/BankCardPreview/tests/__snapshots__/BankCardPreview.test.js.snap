@@ -1,35 +1,39 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render BankCardPreview with bank name 1`] = `
-<section
-  class="bankCardPreview"
->
-  <div
-    class="bankName"
+<DocumentFragment>
+  <section
+    class="bankCardPreview"
   >
-    <strong>
-      Testbank
-    </strong>
-  </div>
-  AT483200000012345864
-  <br />
-  GIBAATWGXXX
-</section>
+    <div
+      class="bankName"
+    >
+      <strong>
+        Testbank
+      </strong>
+    </div>
+    AT483200000012345864
+    <br />
+    GIBAATWGXXX
+  </section>
+</DocumentFragment>
 `;
 
 exports[`Render BankCardPreview without bank name 1`] = `
-<section
-  class="bankCardPreview"
->
-  <div
-    class="bankName"
+<DocumentFragment>
+  <section
+    class="bankCardPreview"
   >
-    <strong>
-       
-    </strong>
-  </div>
-  AT483200000012345864
-  <br />
-  GIBAATWGXXX
-</section>
+    <div
+      class="bankName"
+    >
+      <strong>
+         
+      </strong>
+    </div>
+    AT483200000012345864
+    <br />
+    GIBAATWGXXX
+  </section>
+</DocumentFragment>
 `;

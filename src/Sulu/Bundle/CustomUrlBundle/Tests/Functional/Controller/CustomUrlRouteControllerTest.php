@@ -145,7 +145,7 @@ class CustomUrlRouteControllerTest extends SuluTestCase
                 $uuids[] = $customUrlRoute[0]['id'];
             }
         }
-
+        /** @var array<string> $uuids */
         $this->client->jsonRequest(
             'DELETE',
             '/api/webspaces/sulu_io/custom-urls/' . $uuid . '/routes?ids=' . \implode(',', $uuids)

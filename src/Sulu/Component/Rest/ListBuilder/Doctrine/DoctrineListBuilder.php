@@ -28,11 +28,15 @@ use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\AbstractDoctrineExpressi
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineAndExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineBetweenExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineInExpression;
+use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineIsNotNullExpression;
+use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineIsNullExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineNotExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineOrExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineWhereExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Exception\InvalidExpressionArgumentException;
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Expression\IsNotNullExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Expression\IsNullExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Filter\FilterTypeRegistry;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -194,7 +198,13 @@ class DoctrineListBuilder extends AbstractListBuilder
 
     public function count()
     {
-        $subQueryBuilder = $this->createSubQueryBuilder('COUNT( ' . $this->idField->getSelect() . ')', false);
+        $applyDistinct = $this->distinct || $this->hasJoins();
+
+        $countExpression = $applyDistinct
+            ? 'COUNT(DISTINCT ' . $this->idField->getSelect() . ')'
+            : 'COUNT(' . $this->idField->getSelect() . ')';
+
+        $subQueryBuilder = $this->createSubQueryBuilder($countExpression, false);
 
         $this->assignParameters($subQueryBuilder);
 
@@ -356,7 +366,13 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function findIdsByGivenCriteria()
     {
-        $subQueryBuilder = $this->createSubQueryBuilder($this->getSelectAs($this->idField));
+        $applyDistinct = $this->distinct || $this->hasJoins();
+
+        $subQueryBuilder = $this->createSubQueryBuilder(
+            $this->getSelectAs($this->idField),
+            true,
+            $applyDistinct
+        );
         if (null != $this->limit) {
             $subQueryBuilder->setMaxResults((int) $this->limit)->setFirstResult((int) ($this->limit * ($this->page - 1)));
         }
@@ -542,7 +558,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @return QueryBuilder
      */
-    protected function createSubQueryBuilder(string $select, bool $includeSortFields = true)
+    protected function createSubQueryBuilder(string $select, bool $includeSortFields = true, bool $applyDistinct = false)
     {
         // get all filter-fields
         $filterFields = $this->getAllFields(true, $includeSortFields);
@@ -555,6 +571,10 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         // create querybuilder and add select
         $queryBuilder = $this->createQueryBuilder($addJoins)->select($select);
+
+        if ($applyDistinct) {
+            $queryBuilder->distinct(true);
+        }
 
         if ($this->user && $this->permission && \array_key_exists($this->permission, $this->permissions)) {
             if ($this->accessControlQueryEnhancer && $this->permissionCheckWithDynamicEntityClass) {
@@ -663,6 +683,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         // unify result
+        /** @var string[] $fieldEntityNames */
         return \array_unique($fieldEntityNames);
     }
 
@@ -788,6 +809,22 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
+     * This is used to determine if DISTINCT should be applied to ID subqueries
+     * to prevent duplicate IDs when filtering by joined fields.
+     */
+    protected function hasJoins(): bool
+    {
+        $filterFields = $this->getAllFields(true, true);
+        foreach ($filterFields as $field) {
+            if (!empty($field->getJoins())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Set id-field of the "root" entity.
      */
     public function setIdField(DoctrineFieldDescriptorInterface $idField)
@@ -824,7 +861,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @param AbstractDoctrineExpression[] $expressions
      *
-     * @return array
+     * @return array<string>
      */
     protected function getAllFieldNames($expressions)
     {
@@ -880,5 +917,29 @@ class DoctrineListBuilder extends AbstractListBuilder
     {
         return $field instanceof DoctrineCountFieldDescriptor
             || $field instanceof DoctrineGroupConcatFieldDescriptor;
+    }
+
+    /**
+     * @return IsNullExpressionInterface
+     */
+    public function createIsNullExpression(FieldDescriptorInterface $fieldDescriptor)
+    {
+        if (!$fieldDescriptor instanceof DoctrineFieldDescriptorInterface) {
+            throw new InvalidExpressionArgumentException('is_null', 'fieldDescriptor');
+        }
+
+        return new DoctrineIsNullExpression($fieldDescriptor);
+    }
+
+    /**
+     * @return IsNotNullExpressionInterface
+     */
+    public function createIsNotNullExpression(FieldDescriptorInterface $fieldDescriptor)
+    {
+        if (!$fieldDescriptor instanceof DoctrineFieldDescriptorInterface) {
+            throw new InvalidExpressionArgumentException('is_not_null', 'fieldDescriptor');
+        }
+
+        return new DoctrineIsNotNullExpression($fieldDescriptor);
     }
 }

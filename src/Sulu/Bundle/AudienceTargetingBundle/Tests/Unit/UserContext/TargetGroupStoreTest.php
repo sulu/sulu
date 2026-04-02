@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Request;
+namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\UserContext;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStore;

@@ -1237,7 +1237,7 @@ test('ListStore should delete linked item when onRequestItemDelete callback is i
     expect(list.find('Dialog').at(1).prop('open')).toEqual(true);
 
     list.find('Dialog').at(1).prop('onConfirm')();
-    return requestDeletePromise.then(() => {
+    requestDeletePromise.then(() => {
         expect(listStore.delete).toBeCalledWith(5);
 
         setTimeout(() => {
@@ -1296,7 +1296,7 @@ test('ListStore should not delete linked item when onRequestItemDelete callback 
     expect(list.find('Dialog').at(1).prop('open')).toEqual(true);
 
     list.find('Dialog').at(1).prop('onConfirm')();
-    return requestDeletePromise.then(() => {
+    requestDeletePromise.then(() => {
         expect(listStore.delete).toBeCalledWith(5);
         // $FlowFixMe
         listStore.delete.mockReset();
@@ -1475,7 +1475,7 @@ test('ListStore should delete item with dependants when onFinish callback called
     expect(list.find('Dialog').at(1).prop('open')).toEqual(true);
 
     list.find('Dialog').at(1).prop('onConfirm')();
-    return requestDeletePromise.then(() => {
+    requestDeletePromise.then(() => {
         expect(listStore.delete).toHaveBeenCalledWith(5);
 
         setTimeout(() => {
@@ -1535,7 +1535,7 @@ test('ListStore should not delete item with dependants when onCancel callback ca
     expect(list.find('Dialog').at(1).prop('open')).toEqual(true);
 
     list.find('Dialog').at(1).prop('onConfirm')();
-    return requestDeletePromise.then(() => {
+    requestDeletePromise.then(() => {
         expect(listStore.delete).toHaveBeenCalledWith(5);
 
         setTimeout(() => {

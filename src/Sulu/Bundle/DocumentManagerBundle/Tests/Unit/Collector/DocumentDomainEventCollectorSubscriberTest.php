@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\TagBundle\Tests\Unit\Application\Dispatcher;
+namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Collector;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;

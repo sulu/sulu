@@ -424,7 +424,7 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
             ->where(\sprintf('contact.id NOT IN (%s)', $subQueryBuilder->getDQL()));
 
         if ($search) {
-            $queryBuilder->andWhere('contact.firstName LIKE :firstNameSearch or contact.lastName LIKE :lastNameSearch');
+            $queryBuilder->andWhere('LOWER(contact.firstName) LIKE LOWER(:firstNameSearch) or LOWER(contact.lastName) LIKE LOWER(:lastNameSearch)');
             $queryBuilder->setParameter('firstNameSearch', '%' . $search . '%');
             $queryBuilder->setParameter('lastNameSearch', '%' . $search . '%');
         }

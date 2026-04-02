@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {mount, render, shallow} from 'enzyme';
+import {fireEvent, render, screen} from '@testing-library/react';
 import React from 'react';
 import ModifiableRectangle from '../ModifiableRectangle';
 
@@ -7,29 +7,45 @@ jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-test('The component should render', () => {
-    const view = render(<ModifiableRectangle height={100} width={200} />);
+function dispatchMouseDown(element, pageX, pageY) {
+    const mouseDownEvent = new MouseEvent('mousedown', {
+        bubbles: true,
+        cancelable: true,
+        clientX: pageX,
+        clientY: pageY,
+    });
 
-    expect(view).toMatchSnapshot();
+    Object.defineProperty(mouseDownEvent, 'pageX', {value: pageX});
+    Object.defineProperty(mouseDownEvent, 'pageY', {value: pageY});
+
+    element.dispatchEvent(mouseDownEvent);
+}
+
+test('The component should render', () => {
+    const {asFragment} = render(<ModifiableRectangle height={100} width={200} />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('The component should render with minimum size notification', () => {
-    const view = render(<ModifiableRectangle height={100} minSizeReached={true} width={200} />);
+    const {asFragment} = render(<ModifiableRectangle height={100} minSizeReached={true} width={200} />);
 
-    expect(view).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('The component should render with correct positions', () => {
-    const view = render(<ModifiableRectangle height={100} left={10} top={20} width={200} />);
+    const {asFragment} = render(<ModifiableRectangle height={100} left={10} top={20} width={200} />);
 
-    expect(view).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('The component should call the double click callback', () => {
     const clickSpy = jest.fn();
-    const rectangle = shallow(<ModifiableRectangle height={100} onDoubleClick={clickSpy} width={200} />);
 
-    rectangle.find('.rectangle').simulate('dblclick');
+    render(<ModifiableRectangle height={100} onDoubleClick={clickSpy} width={200} />);
+
+    fireEvent.doubleClick(screen.getByRole('button'));
+
     expect(clickSpy).toHaveBeenCalledTimes(1);
 });
 
@@ -38,11 +54,12 @@ test('The component should call the change callback on move', () => {
     const changeSpy = jest.fn();
     window.addEventListener = jest.fn((event, cb) => windowListeners[event] = cb);
 
-    const rectangle = mount(<ModifiableRectangle height={100} onChange={changeSpy} width={200} />);
+    render(<ModifiableRectangle height={100} onChange={changeSpy} width={200} />);
+
     expect(windowListeners.mousemove).toBeDefined();
     expect(windowListeners.mouseup).toBeDefined();
 
-    rectangle.simulate('mousedown', {pageX: 10, pageY: 20});
+    dispatchMouseDown(screen.getByRole('button'), 10, 20);
     windowListeners.mousemove({pageX: 15, pageY: 30});
 
     expect(changeSpy).toHaveBeenCalledTimes(1);
@@ -59,12 +76,12 @@ test('The component should call the change callback on resize', () => {
     const changeSpy = jest.fn();
     window.addEventListener = jest.fn((event, cb) => windowListeners[event] = cb);
 
-    const rectangle = mount(<ModifiableRectangle height={100} onChange={changeSpy} width={200} />);
-    const resizeHandle = rectangle.find('.resizeHandle');
+    render(<ModifiableRectangle height={100} onChange={changeSpy} width={200} />);
+
     expect(windowListeners.mousemove).toBeDefined();
     expect(windowListeners.mouseup).toBeDefined();
 
-    resizeHandle.simulate('mousedown', {pageX: 10, pageY: 20});
+    dispatchMouseDown(screen.getByRole('slider'), 10, 20);
     windowListeners.mousemove({pageX: 15, pageY: 30});
 
     expect(changeSpy).toHaveBeenCalledTimes(1);

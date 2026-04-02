@@ -70,7 +70,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         if ($property->getIsBlock()) {
             /** @var BlockPropertyInterface $blockProperty */
             $blockProperty = $property;
-            while (!($blockProperty instanceof BlockPropertyInterface)) {
+            while (!$blockProperty instanceof BlockPropertyInterface) {
                 $blockProperty = $blockProperty->getProperty();
             }
 
@@ -146,7 +146,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         if ($property->getIsBlock()) {
             /** @var BlockPropertyInterface $blockProperty */
             $blockProperty = $property;
-            while (!($blockProperty instanceof BlockPropertyInterface)) {
+            while (!$blockProperty instanceof BlockPropertyInterface) {
                 $blockProperty = $blockProperty->getProperty();
             }
 
@@ -195,7 +195,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         if ($property->getIsBlock()) {
             /** @var BlockPropertyInterface $blockProperty */
             $blockProperty = $property;
-            while (!($blockProperty instanceof BlockPropertyInterface)) {
+            while (!$blockProperty instanceof BlockPropertyInterface) {
                 $blockProperty = $blockProperty->getProperty();
             }
 
@@ -367,7 +367,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
     {
         /** @var BlockPropertyInterface $blockProperty */
         $blockProperty = $property;
-        while (!($blockProperty instanceof BlockPropertyInterface)) {
+        while (!$blockProperty instanceof BlockPropertyInterface) {
             $blockProperty = $blockProperty->getProperty();
         }
 

@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\Tests\Functional;
+namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\EventListener;
 
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;

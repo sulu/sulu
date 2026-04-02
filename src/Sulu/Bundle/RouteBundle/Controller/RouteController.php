@@ -168,7 +168,7 @@ class RouteController extends AbstractRestController implements ClassResourceInt
         $entityClass = $this->getRequestParameter($request, 'entityClass') ?? $mapping['entityClass'] ?? null;
         $routeSchema = $this->getRequestParameter($request, 'routeSchema') ?? $mapping['options']['route_schema'] ?? null;
 
-        /** @var array $parts */
+        /** @var array<string, string> $parts */
         $parts = $this->getRequestParameter($request, 'parts', true);
         $route = '/' . \implode('-', $parts);
 

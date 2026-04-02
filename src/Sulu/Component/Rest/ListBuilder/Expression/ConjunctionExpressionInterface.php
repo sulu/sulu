@@ -26,7 +26,7 @@ interface ConjunctionExpressionInterface extends ExpressionInterface
     /**
      * Returns an array of the used field names of the current expression and all subexpressions.
      *
-     * @return array
+     * @return array<string>
      */
     public function getFieldNames();
 }

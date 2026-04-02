@@ -49,7 +49,7 @@ class TeaserSerializeEventSubscriber implements EventSubscriberInterface
         $visitor = $event->getVisitor();
         $context = $event->getContext();
 
-        if (!($teaser instanceof Teaser)) {
+        if (!$teaser instanceof Teaser) {
             return;
         }
 

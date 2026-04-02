@@ -46,7 +46,7 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
             return [];
         }
 
-        if (!($document instanceof SecurityBehavior)) {
+        if (!$document instanceof SecurityBehavior) {
             return [];
         }
 

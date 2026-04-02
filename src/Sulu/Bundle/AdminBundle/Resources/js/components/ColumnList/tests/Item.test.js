@@ -1,18 +1,25 @@
 // @flow
+import {fireEvent, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
-import {render, shallow} from 'enzyme';
 import Item from '../Item';
 
 test('Should render item as not selected by default', () => {
-    expect(render(<Item id={1} order={1}>Test</Item>)).toMatchSnapshot();
+    const {asFragment} = render(<Item id={1} order={1}>Test</Item>);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should render item as selected', () => {
-    expect(render(<Item id={1} order={2} selected={true}>Test</Item>)).toMatchSnapshot();
+    const {asFragment} = render(<Item id={1} order={2} selected={true}>Test</Item>);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should render item as disabled', () => {
-    expect(render(<Item disabled={true} id={1} order={3}>Test</Item>)).toMatchSnapshot();
+    const {asFragment} = render(<Item disabled={true} id={1} order={3}>Test</Item>);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should render item with indicators', () => {
@@ -21,7 +28,9 @@ test('Should render item with indicators', () => {
         <span key={2}>shadow</span>,
     ];
 
-    expect(render(<Item id={2} indicators={indicators} order={4}>Test with indicators</Item>)).toMatchSnapshot();
+    const {asFragment} = render(<Item id={2} indicators={indicators} order={4}>Test with indicators</Item>);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should render item with order input', () => {
@@ -30,16 +39,18 @@ test('Should render item with order input', () => {
         <span key={2}>shadow</span>,
     ];
 
-    expect(render(<Item id={2} indicators={indicators} order={4} showOrderField={true}>Test with indicators</Item>))
-        .toMatchSnapshot();
+    const {asFragment} = render(
+        <Item id={2} indicators={indicators} order={4} showOrderField={true}>Test with indicators</Item>
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should call onDoubleClick', () => {
     const doubleClickSpy = jest.fn();
 
-    const item = shallow(<Item id={2} onDoubleClick={doubleClickSpy}>Test with indicators</Item>);
-
-    item.find('div.item').simulate('doubleclick');
+    render(<Item id={2} onDoubleClick={doubleClickSpy}>Test with indicators</Item>);
+    fireEvent.doubleClick(screen.getByRole('button'));
 
     expect(doubleClickSpy).toBeCalled();
 });
@@ -47,74 +58,83 @@ test('Should call onDoubleClick', () => {
 test('Should not call onDoubleClick if order field is shown', () => {
     const doubleClickSpy = jest.fn();
 
-    const item = shallow(<Item id={2} onDoubleClick={doubleClickSpy} showOrderField={true}>Test with indicators</Item>);
-
-    item.find('div.item').simulate('doubleclick');
+    render(<Item id={2} onDoubleClick={doubleClickSpy} showOrderField={true}>Test with indicators</Item>);
+    fireEvent.doubleClick(screen.getByRole('button'));
 
     expect(doubleClickSpy).not.toBeCalled();
 });
 
-test('Should call onOrderChange callback when order has changed', () => {
+test('Should call onOrderChange callback when order has changed', async() => {
     const orderChangePromise = Promise.resolve(true);
     const orderChangeSpy = jest.fn().mockReturnValue(orderChangePromise);
-    const item = shallow(
+    const user = userEvent.setup();
+
+    render(
         <Item id={2} onOrderChange={orderChangeSpy} order={4} showOrderField={true}>Test with indicators</Item>
     );
+    const input = screen.getByRole('textbox');
 
-    item.find('Input').simulate('change', 5);
-    item.find('Input').simulate('blur');
+    await user.clear(input);
+    await user.type(input, '5');
+    fireEvent.blur(input);
     expect(orderChangeSpy).toBeCalledWith(2, 5);
 
-    expect(item.instance().order).toEqual(5);
-    return orderChangePromise.then(() => {
-        expect(item.instance().order).toEqual(5);
-    });
+    expect(input).toHaveValue('5');
+
+    await orderChangePromise;
+    expect(input).toHaveValue('5');
 });
 
-test('Should call onOrderChange callback when order has changed and reset order if cancelled', () => {
+test('Should call onOrderChange callback when order has changed and reset order if cancelled', async() => {
     const orderChangePromise = Promise.resolve(false);
     const orderChangeSpy = jest.fn().mockReturnValue(orderChangePromise);
-    const item = shallow(
+    const user = userEvent.setup();
+
+    render(
         <Item id={2} onOrderChange={orderChangeSpy} order={4} showOrderField={true}>Test with indicators</Item>
     );
+    const input = screen.getByRole('textbox');
 
-    item.find('Input').simulate('change', 5);
-    item.find('Input').simulate('blur');
+    await user.clear(input);
+    await user.type(input, '5');
+    fireEvent.blur(input);
     expect(orderChangeSpy).toBeCalledWith(2, 5);
 
-    expect(item.instance().order).toEqual(5);
-    return orderChangePromise.then(() => {
-        expect(item.instance().order).toEqual(4);
-    });
+    expect(input).toHaveValue('5');
+
+    await orderChangePromise;
+    expect(input).toHaveValue('4');
 });
 
-test('Should call onOrderChange callback when order has changed after pressing enter', () => {
-    const inputSpy = {
-        currentTarget: {
-            blur: jest.fn(),
-        },
-    };
-
+test('Should call onOrderChange callback when order has changed after pressing enter', async() => {
     const orderChangeSpy = jest.fn();
-    const item = shallow(
+    const user = userEvent.setup();
+
+    render(
         <Item id={2} onOrderChange={orderChangeSpy} order={4} showOrderField={true}>Test with indicators</Item>
     );
+    const input = screen.getByRole('textbox');
+    const blurSpy = jest.spyOn(HTMLInputElement.prototype, 'blur').mockImplementation(() => {});
 
-    item.find('Input').prop('onKeyPress')('Enter', inputSpy);
+    await user.type(input, '{enter}');
 
-    expect(inputSpy.currentTarget.blur).toBeCalledWith();
+    expect(blurSpy).toBeCalledWith();
+    blurSpy.mockRestore();
 });
 
-test('Should change order when item receives new props', () => {
-    const item = shallow(
+test('Should change order when item receives new props', async() => {
+    const {rerender} = render(
         <Item id={2} order={4} showOrderField={true}>Test with indicators</Item>
     );
+    const user = userEvent.setup();
+    const input = screen.getByRole('textbox');
 
-    expect(item.find('Input').prop('value')).toEqual(4);
+    expect(input).toHaveValue('4');
 
-    item.find('Input').simulate('change', 5);
-    expect(item.find('Input').prop('value')).toEqual(5);
+    await user.clear(input);
+    await user.type(input, '5');
+    expect(input).toHaveValue('5');
 
-    item.setProps({order: 1});
-    expect(item.find('Input').prop('value')).toEqual(1);
+    rerender(<Item id={2} order={1} showOrderField={true}>Test with indicators</Item>);
+    expect(input).toHaveValue('1');
 });

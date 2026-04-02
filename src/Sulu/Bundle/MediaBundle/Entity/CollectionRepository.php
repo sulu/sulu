@@ -212,10 +212,11 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             } elseif (null !== $depth) {
                 // the combination of depth and parent needs a bigger refactoring of this query.
                 $qb->andWhere('collection.depth <= :depth');
+                /** @var int|string $depth */
                 $qb->setParameter('depth', \intval($depth));
             }
             if (null !== $search) {
-                $qb->andWhere('collectionMeta.title LIKE :search');
+                $qb->andWhere('LOWER(collectionMeta.title) LIKE LOWER(:search)');
                 $qb->setParameter('search', '%' . $search . '%');
             }
             if (null !== $offset) {
@@ -353,7 +354,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         }
 
         if (\array_key_exists('search', $filter) && null !== $filter['search']) {
-            $queryBuilder->andWhere('collectionMeta.title LIKE :search OR defaultMeta.locale != :locale');
+            $queryBuilder->andWhere('LOWER(collectionMeta.title) LIKE LOWER(:search) OR defaultMeta.locale != :locale');
             $queryBuilder->setParameter('search', '%' . $filter['search'] . '%');
         }
 
