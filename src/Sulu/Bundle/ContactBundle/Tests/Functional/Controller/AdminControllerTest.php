@@ -11,15 +11,13 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\Id\AssignedGenerator;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfileType;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
-use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -179,22 +177,6 @@ class AdminControllerTest extends SuluTestCase
     private function createCollectionTypes(): void
     {
         $em = $this->getEntityManager();
-        $metadata = $em->getClassMetaData(CollectionType::class);
-        $metadata->setIdGenerator(new AssignedGenerator());
-        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-
-        $collectionType1 = new CollectionType();
-        $collectionType1->setId(1);
-        $collectionType1->setName('Default Collection Type');
-        $collectionType1->setKey('collection.default');
-
-        $collectionType2 = new CollectionType();
-        $collectionType2->setId(2);
-        $collectionType2->setName('System Collections');
-        $collectionType2->setKey('collection.system');
-
-        $em->persist($collectionType1);
-        $em->persist($collectionType2);
-        $em->flush();
+        (new LoadCollectionTypes())->load($em);
     }
 }
