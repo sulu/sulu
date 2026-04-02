@@ -98,7 +98,7 @@ final class SnippetRepository implements SnippetRepositoryInterface
 
         try {
             /** @var SnippetInterface $snippet */
-            $snippet = $queryBuilder->getQuery()->getSingleResult();
+            $snippet = $this->dimensionContentQueryEnhancer->createQuery($queryBuilder)->getSingleResult();
         } catch (NoResultException $e) {
             throw new SnippetNotFoundException($filters, 0, $e);
         }
@@ -112,7 +112,7 @@ final class SnippetRepository implements SnippetRepositoryInterface
 
         try {
             /** @var SnippetInterface $snippet */
-            $snippet = $queryBuilder->getQuery()->getSingleResult();
+            $snippet = $this->dimensionContentQueryEnhancer->createQuery($queryBuilder)->getSingleResult();
         } catch (NoResultException $e) {
             return null;
         }
@@ -144,7 +144,7 @@ final class SnippetRepository implements SnippetRepositoryInterface
         $queryBuilder = $this->createQueryBuilder($filters, $sortBy, $selects);
 
         /** @var iterable<SnippetInterface> $snippets */
-        $snippets = $queryBuilder->getQuery()->getResult();
+        $snippets = $this->dimensionContentQueryEnhancer->createQuery($queryBuilder)->getResult();
 
         foreach ($snippets as $snippet) {
             yield $snippet;

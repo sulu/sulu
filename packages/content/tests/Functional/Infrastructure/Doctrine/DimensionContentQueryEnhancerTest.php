@@ -729,4 +729,49 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
             'segmentKey' => 'segment-nonexistent',
         ]));
     }
+
+    /**
+     * Verifies that loading the same entity with different locales in a single
+     * request returns correct dimension content for each locale, not stale data
+     * from the identity map.
+     */
+    public function testLoadSameEntityWithDifferentLocalesWithoutClear(): void
+    {
+        static::purgeDatabase();
+
+        $example = static::createExample();
+        static::createExampleContent($example, [
+            'locale' => 'en',
+            'stage' => 'live',
+            'templateKey' => 'default',
+            'templateData' => ['title' => 'English Title'],
+        ]);
+        static::createExampleContent($example, [
+            'locale' => 'de',
+            'stage' => 'live',
+            'templateKey' => 'example-2',
+            'templateData' => ['title' => 'German Title'],
+        ]);
+        static::getEntityManager()->flush();
+        $exampleId = $example->getId();
+        static::getEntityManager()->clear();
+
+        // First load: English
+        $enExample = $this->exampleRepository->getOneBy(
+            ['id' => $exampleId, 'locale' => 'en', 'stage' => 'live'],
+            [ExampleRepository::GROUP_SELECT_EXAMPLE_ADMIN => true]
+        );
+        $enResolved = $this->contentManager->resolve($enExample, ['locale' => 'en', 'stage' => 'live']);
+        $this->assertSame('default', $enResolved->getTemplateKey());
+        $this->assertSame('English Title', $enResolved->getTemplateData()['title']);
+
+        // Second load: German - WITHOUT clearing the entity manager.
+        $deExample = $this->exampleRepository->getOneBy(
+            ['id' => $exampleId, 'locale' => 'de', 'stage' => 'live'],
+            [ExampleRepository::GROUP_SELECT_EXAMPLE_ADMIN => true]
+        );
+        $deResolved = $this->contentManager->resolve($deExample, ['locale' => 'de', 'stage' => 'live']);
+        $this->assertSame('example-2', $deResolved->getTemplateKey());
+        $this->assertSame('German Title', $deResolved->getTemplateData()['title']);
+    }
 }

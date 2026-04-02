@@ -15,6 +15,7 @@ namespace Sulu\Content\Infrastructure\Doctrine;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -66,6 +67,28 @@ class DimensionContentQueryEnhancer
             self::SELECT_ROUTE => true,
         ],
     ];
+
+    /**
+     * Creates a Query and sets HINT_REFRESH when the QueryBuilder joins
+     * dimensionContent, to force Doctrine to re-hydrate entities from query
+     * results instead of returning stale data from the identity map.
+     *
+     * Without this, loading the same content entity with different dimension
+     * attributes (e.g. first EN then DE locale) in a single request returns
+     * the first locale's dimensionContents for both queries.
+     *
+     * @return Query<mixed, mixed>
+     */
+    public function createQuery(QueryBuilder $queryBuilder): Query
+    {
+        $query = $queryBuilder->getQuery();
+
+        if (\in_array('dimensionContent', $queryBuilder->getAllAliases(), true)) {
+            $query->setHint(Query::HINT_REFRESH, true);
+        }
+
+        return $query;
+    }
 
     /**
      * TODO it should be possible to add custom filters for all contents here example when the

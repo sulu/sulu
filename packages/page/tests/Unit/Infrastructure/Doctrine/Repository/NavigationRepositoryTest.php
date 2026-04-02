@@ -141,7 +141,7 @@ class NavigationRepositoryTest extends TestCase
         $queryBuilder->andWhere('page.depth <= :depth')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('depth', 1)->willReturn($queryBuilder->reveal());
         $queryBuilder->addOrderBy('page.lft', 'asc')->willReturn($queryBuilder->reveal());
-        $queryBuilder->getQuery()->willReturn($query->reveal());
+        $this->dimensionContentQueryEnhancer->createQuery($queryBuilder->reveal())->willReturn($query->reveal());
 
         $expectedFilters = [
             'locale' => 'en',
@@ -222,7 +222,7 @@ class NavigationRepositoryTest extends TestCase
         $queryBuilder->andWhere('page.depth <= :depth')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('depth', 2)->willReturn($queryBuilder->reveal());
         $queryBuilder->addOrderBy('page.lft', 'asc')->willReturn($queryBuilder->reveal());
-        $queryBuilder->getQuery()->willReturn($query->reveal());
+        $this->dimensionContentQueryEnhancer->createQuery($queryBuilder->reveal())->willReturn($query->reveal());
 
         $expectedFilters = [
             'locale' => 'de',
@@ -304,7 +304,7 @@ class NavigationRepositoryTest extends TestCase
         $queryBuilder->andWhere('page.depth <= :depth')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('depth', 3)->willReturn($queryBuilder->reveal());
         $queryBuilder->addOrderBy('page.lft', 'asc')->willReturn($queryBuilder->reveal());
-        $queryBuilder->getQuery()->willReturn($query->reveal());
+        $this->dimensionContentQueryEnhancer->createQuery($queryBuilder->reveal())->willReturn($query->reveal());
 
         $expectedFilters = [
             'locale' => 'en',
@@ -386,7 +386,7 @@ class NavigationRepositoryTest extends TestCase
         $queryBuilder->andWhere('page.depth <= :depth')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('depth', 2)->willReturn($queryBuilder->reveal());
         $queryBuilder->addOrderBy('page.lft', 'asc')->willReturn($queryBuilder->reveal());
-        $queryBuilder->getQuery()->willReturn($query->reveal());
+        $this->dimensionContentQueryEnhancer->createQuery($queryBuilder->reveal())->willReturn($query->reveal());
 
         $expectedFilters = [
             'locale' => 'en',
@@ -472,7 +472,7 @@ class NavigationRepositoryTest extends TestCase
         $queryBuilder->andWhere('page.depth <= :depth')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('depth', 1)->willReturn($queryBuilder->reveal());
         $queryBuilder->addOrderBy('page.lft', 'asc')->willReturn($queryBuilder->reveal());
-        $queryBuilder->getQuery()->willReturn($query->reveal());
+        $this->dimensionContentQueryEnhancer->createQuery($queryBuilder->reveal())->willReturn($query->reveal());
 
         $expectedFilters = [
             'locale' => 'en',

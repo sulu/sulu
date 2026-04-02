@@ -126,7 +126,7 @@ final class NavigationRepository implements NavigationRepositoryInterface
         $filters = $this->buildChildrenFilters($uuid, $locale, $webspaceKey, $depth, $navigationContext);
 
         /** @var iterable<PageInterface> $pages */
-        $pages = $this->createQueryBuilder($filters)->getQuery()->getResult();
+        $pages = $this->dimensionContentQueryEnhancer->createQuery($this->createQueryBuilder($filters))->getResult();
 
         return $this->resolveAndNormalizePages($pages, $locale, $properties);
     }
@@ -152,25 +152,25 @@ final class NavigationRepository implements NavigationRepositoryInterface
         array $properties = []
     ): array {
         /** @var PageInterface|null $page */
-        $page = $this->createQueryBuilder([
+        $page = $this->dimensionContentQueryEnhancer->createQuery($this->createQueryBuilder([
             'uuid' => $uuid,
             'locale' => $locale,
             'stage' => DimensionContentInterface::STAGE_LIVE,
-        ])->getQuery()->getOneOrNullResult();
+        ]))->getOneOrNullResult();
 
         if (null === $page) {
             return [];
         }
 
         /** @var PageInterface[] $ancestors */
-        $ancestors = $this->createQueryBuilder([
+        $ancestors = $this->dimensionContentQueryEnhancer->createQuery($this->createQueryBuilder([
             'ancestorLft' => $page->getLft(),
             'ancestorRgt' => $page->getRgt(),
             'webspaceKey' => $webspaceKey,
             'locale' => $locale,
             'stage' => DimensionContentInterface::STAGE_LIVE,
             'skipAccessControl' => true,
-        ])->getQuery()->getResult();
+        ]))->getResult();
 
         /** @var PageInterface[] $pages */
         $pages = [...$ancestors, $page];
@@ -263,7 +263,7 @@ final class NavigationRepository implements NavigationRepositoryInterface
      */
     private function findBy(array $filters = []): \Generator
     {
-        $query = $this->createQueryBuilder($filters)->getQuery();
+        $query = $this->dimensionContentQueryEnhancer->createQuery($this->createQueryBuilder($filters));
 
         /** @var PageInterface $page */
         foreach ($query->getResult() as $page) { // @phpstan-ignore-line foreach.nonIterable
@@ -289,7 +289,7 @@ final class NavigationRepository implements NavigationRepositoryInterface
     {
         $queryBuilder = $this->createQueryBuilder($filters);
 
-        $query = $queryBuilder->getQuery();
+        $query = $this->dimensionContentQueryEnhancer->createQuery($queryBuilder);
         // Hint is necessary for the TreeObjectHydrator to work
         // https://github.com/doctrine-extensions/DoctrineExtensions/blob/main/doc/tree.md#building-trees-from-your-entities
         $query->setHint(Query::HINT_INCLUDE_META_COLUMNS, true);

@@ -98,7 +98,7 @@ final class ArticleRepository implements ArticleRepositoryInterface
 
         try {
             /** @var ArticleInterface $article */
-            $article = $queryBuilder->getQuery()->getSingleResult();
+            $article = $this->dimensionContentQueryEnhancer->createQuery($queryBuilder)->getSingleResult();
         } catch (NoResultException $e) {
             throw new ArticleNotFoundException($filters, 0, $e);
         }
@@ -112,7 +112,7 @@ final class ArticleRepository implements ArticleRepositoryInterface
 
         try {
             /** @var ArticleInterface $article */
-            $article = $queryBuilder->getQuery()->getSingleResult();
+            $article = $this->dimensionContentQueryEnhancer->createQuery($queryBuilder)->getSingleResult();
         } catch (NoResultException $e) {
             return null;
         }
@@ -144,7 +144,7 @@ final class ArticleRepository implements ArticleRepositoryInterface
         $queryBuilder = $this->createQueryBuilder($filters, $sortBy, $selects);
 
         /** @var iterable<ArticleInterface> $articles */
-        $articles = $queryBuilder->getQuery()->getResult();
+        $articles = $this->dimensionContentQueryEnhancer->createQuery($queryBuilder)->getResult();
 
         foreach ($articles as $article) {
             yield $article;

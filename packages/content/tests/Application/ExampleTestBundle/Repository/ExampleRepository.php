@@ -99,7 +99,7 @@ class ExampleRepository
 
         try {
             /** @var Example $example */
-            $example = $queryBuilder->getQuery()->getSingleResult();
+            $example = $this->dimensionContentQueryEnhancer->createQuery($queryBuilder)->getSingleResult();
         } catch (NoResultException $e) {
             throw new ExampleNotFoundException($filters, 0, $e);
         }
@@ -126,7 +126,7 @@ class ExampleRepository
 
         try {
             /** @var Example $example */
-            $example = $queryBuilder->getQuery()->getSingleResult();
+            $example = $this->dimensionContentQueryEnhancer->createQuery($queryBuilder)->getSingleResult();
         } catch (NoResultException $e) {
             return null;
         }
@@ -215,7 +215,7 @@ class ExampleRepository
 
         // TODO optimize hydration with toIterable()
         /** @var iterable<Example> $examples */
-        $examples = $queryBuilder->getQuery()->getResult();
+        $examples = $this->dimensionContentQueryEnhancer->createQuery($queryBuilder)->getResult();
 
         foreach ($examples as $example) {
             yield $example;
