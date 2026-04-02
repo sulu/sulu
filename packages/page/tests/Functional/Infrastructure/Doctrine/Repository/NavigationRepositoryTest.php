@@ -267,6 +267,47 @@ class NavigationRepositoryTest extends SuluTestCase
         $this->assertSame('Grandchild 1', $result[0]['children'][0]['title']);
     }
 
+    public function testGetNavigationTreeDoesNotPromoteChildrenOfFilteredParentsToRootLevel(): void
+    {
+        $hiddenParent = self::createPage([
+            'en' => [
+                'live' => [
+                    'parentId' => $this->parent->getUuid(),
+                    'template' => 'default',
+                    'title' => 'Hidden Parent',
+                    'url' => '/hidden-parent',
+                    'navigationContexts' => ['footer'],
+                ],
+            ],
+        ]);
+
+        self::createPage([
+            'en' => [
+                'live' => [
+                    'parentId' => $hiddenParent->getUuid(),
+                    'template' => 'default',
+                    'title' => 'Promoted Grandchild',
+                    'url' => '/promoted-grandchild',
+                    'navigationContexts' => ['main'],
+                ],
+            ],
+        ]);
+
+        $result = $this->navigationRepository->getNavigationTree(
+            'main',
+            'en',
+            'sulu-io',
+            null,
+            2,
+            $this->getDefaultProperties()
+        );
+
+        $this->assertCount(1, $result);
+        $this->assertSame('Parent Page', $result[0]['title']);
+        \assert(\is_array($result[0]['children']));
+        $this->assertSame(['Child 1'], \array_column($result[0]['children'], 'title'));
+    }
+
     public function testGetNavigationTreeByUuidReturnsEmptyForInvalidUuid(): void
     {
         $result = $this->navigationRepository->getNavigationTreeByUuid(
