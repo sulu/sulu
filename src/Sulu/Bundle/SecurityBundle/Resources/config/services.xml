@@ -219,7 +219,10 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service id="sulu_security.twig_extension.user.cache_adapter" class="Symfony\Component\Cache\Adapter\ArrayAdapter" />
+        <service id="sulu_security.twig_extension.user.cache_adapter" class="Symfony\Component\Cache\Adapter\ArrayAdapter">
+            <argument>0</argument>
+            <argument>false</argument>
+        </service>
 
         <service id="sulu_security.twig_extension.user" class="Sulu\Bundle\SecurityBundle\Twig\UserTwigExtension">
             <argument type="service" id="sulu_security.twig_extension.user.cache_adapter"/>
