@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Page\Tests\Unit\Infrastructure\Doctrine\Repository;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -128,7 +127,9 @@ class NavigationRepositoryTest extends TestCase
     public function testGetNavigationTree(): void
     {
         $page = $this->prophesize(PageInterface::class);
-        $page->getChildren()->willReturn(new ArrayCollection([]));
+        $page->getUuid()->willReturn('page-uuid-1');
+        $page->getDepth()->willReturn(1);
+        $page->getParent()->willReturn(null);
         $page->getWebspaceKey()->willReturn('sulu-io');
 
         $queryBuilder = $this->prophesize(QueryBuilder::class);
@@ -179,8 +180,7 @@ class NavigationRepositoryTest extends TestCase
         $queryBuilder->andWhere('filterNavigationContext.navigationContext IN (:navigationContexts)')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('navigationContexts', ['main'])->willReturn($queryBuilder->reveal());
 
-        $query->setHint('doctrine.includeMetaColumns', true)->willReturn($query->reveal())->shouldBeCalled();
-        $query->getResult('sulu_page_tree')->willReturn([$page->reveal()]);
+        $query->getResult()->willReturn([$page->reveal()]);
 
         $dimensionContent = $this->prophesize(DimensionContentInterface::class);
         $this->contentAggregator->aggregate($page->reveal(), ['locale' => 'en', 'stage' => 'live'])
@@ -291,7 +291,9 @@ class NavigationRepositoryTest extends TestCase
     public function testGetNavigationTreeWithoutSegment(): void
     {
         $page = $this->prophesize(PageInterface::class);
-        $page->getChildren()->willReturn(new ArrayCollection([]));
+        $page->getUuid()->willReturn('page-uuid-1');
+        $page->getDepth()->willReturn(1);
+        $page->getParent()->willReturn(null);
         $page->getWebspaceKey()->willReturn('test-webspace');
 
         $queryBuilder = $this->prophesize(QueryBuilder::class);
@@ -342,8 +344,7 @@ class NavigationRepositoryTest extends TestCase
         $queryBuilder->andWhere('filterNavigationContext.navigationContext IN (:navigationContexts)')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('navigationContexts', ['sidebar'])->willReturn($queryBuilder->reveal());
 
-        $query->setHint('doctrine.includeMetaColumns', true)->willReturn($query->reveal())->shouldBeCalled();
-        $query->getResult('sulu_page_tree')->willReturn([$page->reveal()]);
+        $query->getResult()->willReturn([$page->reveal()]);
 
         $dimensionContent = $this->prophesize(DimensionContentInterface::class);
         $this->contentAggregator->aggregate($page->reveal(), ['locale' => 'en', 'stage' => 'live'])
@@ -371,9 +372,13 @@ class NavigationRepositoryTest extends TestCase
         $parentPage = $this->prophesize(PageInterface::class);
         $childPage = $this->prophesize(PageInterface::class);
 
-        $parentPage->getChildren()->willReturn(new ArrayCollection([$childPage->reveal()]));
+        $parentPage->getUuid()->willReturn('parent-uuid');
+        $parentPage->getDepth()->willReturn(1);
+        $parentPage->getParent()->willReturn(null);
         $parentPage->getWebspaceKey()->willReturn('sulu-io');
-        $childPage->getChildren()->willReturn(new ArrayCollection([]));
+        $childPage->getUuid()->willReturn('child-uuid');
+        $childPage->getDepth()->willReturn(2);
+        $childPage->getParent()->willReturn($parentPage->reveal());
         $childPage->getWebspaceKey()->willReturn('sulu-io');
 
         $queryBuilder = $this->prophesize(QueryBuilder::class);
@@ -424,8 +429,7 @@ class NavigationRepositoryTest extends TestCase
         $queryBuilder->andWhere('filterNavigationContext.navigationContext IN (:navigationContexts)')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('navigationContexts', ['main'])->willReturn($queryBuilder->reveal());
 
-        $query->setHint('doctrine.includeMetaColumns', true)->willReturn($query->reveal())->shouldBeCalled();
-        $query->getResult('sulu_page_tree')->willReturn([$parentPage->reveal()]);
+        $query->getResult()->willReturn([$parentPage->reveal(), $childPage->reveal()]);
 
         $parentDimensionContent = $this->prophesize(DimensionContentInterface::class);
         $this->contentAggregator->aggregate($parentPage->reveal(), ['locale' => 'en', 'stage' => 'live'])

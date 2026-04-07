@@ -13,7 +13,6 @@ namespace Sulu\Page\Infrastructure\Doctrine\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
@@ -83,7 +82,7 @@ final class NavigationRepository implements NavigationRepositoryInterface
         int $depth = 1,
         array $properties = []
     ): array {
-        $pages = $this->findByAsTree([
+        $pages = $this->findBy([
             'locale' => $locale,
             'navigationContexts' => [$navigationContext],
             'depth' => $depth,
@@ -92,7 +91,7 @@ final class NavigationRepository implements NavigationRepositoryInterface
             'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);
 
-        return $this->normalizePageTree($pages, $properties, $locale, 1, $depth);
+        return $this->normalizePageTree($pages, $properties, $locale);
     }
 
     public function getNavigationFlat(
@@ -140,9 +139,9 @@ final class NavigationRepository implements NavigationRepositoryInterface
         array $properties = []
     ): array {
         $filters = $this->buildChildrenFilters($uuid, $locale, $webspaceKey, $depth, $navigationContext);
-        $pages = $this->findByAsTree($filters);
+        $pages = $this->findBy($filters);
 
-        return $this->normalizePageTree($pages, $properties, $locale, 1, $depth);
+        return $this->normalizePageTree($pages, $properties, $locale, $uuid);
     }
 
     public function getBreadcrumb(
@@ -272,50 +271,80 @@ final class NavigationRepository implements NavigationRepositoryInterface
     }
 
     /**
-     * @param array{
-     *      locale?: string|null,
-     *      stage?: string|null,
-     *      webspaceKey?: string,
-     *      segmentKey?: string|null,
-     *      page?: int,
-     *      limit?: int,
-     *      navigationContexts?: string[],
-     *      depth?: int,
-     *  } $filters
-     *
-     * @return \Generator<PageInterface>
-     */
-    private function findByAsTree(array $filters = []): \Generator
-    {
-        $queryBuilder = $this->createQueryBuilder($filters);
-
-        $query = $queryBuilder->getQuery();
-        // Hint is necessary for the TreeObjectHydrator to work
-        // https://github.com/doctrine-extensions/DoctrineExtensions/blob/main/doc/tree.md#building-trees-from-your-entities
-        $query->setHint(Query::HINT_INCLUDE_META_COLUMNS, true);
-
-        /** @var iterable<PageInterface> $pages */
-        $pages = $query->getResult('sulu_page_tree');
-
-        foreach ($pages as $page) {
-            yield $page;
-        }
-    }
-
-    /**
      * @param iterable<PageInterface> $pages
      * @param array<string, string> $properties
      *
      * @return array<string, mixed>[]
      */
-    private function normalizePageTree(iterable $pages, array $properties, string $locale, int $depth, int $maxDepth): array
-    {
-        $result = [];
+    private function normalizePageTree(
+        iterable $pages,
+        array $properties,
+        string $locale,
+        ?string $rootParentUuid = null,
+    ): array {
+        $pagesByUuid = [];
+        $rootDepth = null;
         foreach ($pages as $page) {
-            $normalizedContent = $this->resolvePageContent($page, $locale, $properties);
+            $pagesByUuid[$page->getUuid()] = $page;
 
-            $children = $depth < $maxDepth ? $page->getChildren() : [];
-            $normalizedContent['children'] = $this->normalizePageTree($children, $properties, $locale, $depth + 1, $maxDepth);
+            if (null === $rootParentUuid) {
+                $depth = $page->getDepth();
+                $rootDepth = null === $rootDepth ? $depth : \min($rootDepth, $depth);
+            }
+        }
+
+        $rootPageUuids = [];
+        $childPageUuidsByParent = [];
+
+        foreach ($pagesByUuid as $uuid => $page) {
+            $parentUuid = $page->getParent()?->getUuid();
+
+            $isRoot = null !== $rootParentUuid
+                ? $parentUuid === $rootParentUuid
+                : $page->getDepth() === $rootDepth;
+
+            if ($isRoot) {
+                $rootPageUuids[] = $uuid;
+            } elseif (null !== $parentUuid && \array_key_exists($parentUuid, $pagesByUuid)) {
+                $childPageUuidsByParent[$parentUuid][] = $uuid;
+            }
+        }
+
+        return $this->normalizePageTreeNodes(
+            $rootPageUuids,
+            $pagesByUuid,
+            $childPageUuidsByParent,
+            $properties,
+            $locale,
+        );
+    }
+
+    /**
+     * @param string[] $pageUuids
+     * @param array<string, PageInterface> $pagesByUuid
+     * @param array<string, string[]> $childPageUuidsByParent
+     * @param array<string, string> $properties
+     *
+     * @return array<string, mixed>[]
+     */
+    private function normalizePageTreeNodes(
+        array $pageUuids,
+        array $pagesByUuid,
+        array $childPageUuidsByParent,
+        array $properties,
+        string $locale,
+    ): array {
+        $result = [];
+        foreach ($pageUuids as $pageUuid) {
+            $page = $pagesByUuid[$pageUuid];
+            $normalizedContent = $this->resolvePageContent($page, $locale, $properties);
+            $normalizedContent['children'] = $this->normalizePageTreeNodes(
+                $childPageUuidsByParent[$pageUuid] ?? [],
+                $pagesByUuid,
+                $childPageUuidsByParent,
+                $properties,
+                $locale,
+            );
 
             $result[] = $normalizedContent;
         }

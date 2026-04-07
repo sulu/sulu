@@ -358,7 +358,7 @@ class NavigationRepositoryPermissionTest extends SuluTestCase
         $this->assertContains($childPage->getUuid(), $uuids);
     }
 
-    public function testNavigationTreeWithDeniedParentStillShowsAllowedChildren(): void
+    public function testNavigationTreeWithDeniedParentDoesNotPromoteAllowedChildren(): void
     {
         $deniedParent = $this->createSimplePage('sulu-test-secure', 'en', 'Denied Parent');
 
@@ -393,7 +393,7 @@ class NavigationRepositoryPermissionTest extends SuluTestCase
         $uuids = $this->collectTreeUuids($result);
         $this->assertContains($allowedPage->getUuid(), $uuids);
         $this->assertNotContains($deniedParent->getUuid(), $uuids);
-        $this->assertContains($childOfDenied->getUuid(), $uuids);
+        $this->assertNotContains($childOfDenied->getUuid(), $uuids);
     }
 
     /**
