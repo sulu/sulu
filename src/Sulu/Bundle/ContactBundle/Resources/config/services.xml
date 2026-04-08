@@ -50,8 +50,7 @@
         </service>
 
         <service id="sulu_contact.twig.cache_adapter" class="Symfony\Component\Cache\Adapter\ArrayAdapter">
-            <argument>0</argument>
-            <argument>false</argument>
+            <argument key="$storeSerialized">false</argument>
         </service>
         <service id="sulu_contact.twig" class="Sulu\Bundle\ContactBundle\Twig\ContactTwigExtension">
             <argument type="service" id="sulu_contact.twig.cache_adapter"/>
