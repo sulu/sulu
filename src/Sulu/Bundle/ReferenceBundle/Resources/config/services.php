@@ -10,7 +10,8 @@
  */
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\ReferenceBundle\Application\MessageHandler\RefreshReferenceMessageHandler;
+use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Doctrine\Repository\ReferenceRepository;
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\Admin\ReferenceAdmin;
@@ -18,11 +19,11 @@ use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\Admin\View\ReferenceViewBuil
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\Admin\View\ReferenceViewBuilderFactoryInterface;
 use Sulu\Bundle\ReferenceBundle\UserInterface\Command\RefreshCommand;
 use Sulu\Bundle\ReferenceBundle\UserInterface\Controller\Admin\ReferenceController;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-
-use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
-
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 return static function(ContainerConfigurator $container) {
     $services = $container->services();
@@ -40,8 +41,8 @@ return static function(ContainerConfigurator $container) {
 
     $services->set('sulu_reference.reference_list_view_builder_factory', ReferenceViewBuilderFactory::class)
         ->args([
-            new Reference('sulu_admin.view_builder_factory'),
-            new Reference('sulu_security.security_checker'),
+            new Reference(ViewBuilderFactoryInterface::class),
+            new Reference(SecurityCheckerInterface::class),
         ]);
 
     $services->alias(ReferenceViewBuilderFactoryInterface::class, 'sulu_reference.reference_list_view_builder_factory');
@@ -51,16 +52,16 @@ return static function(ContainerConfigurator $container) {
         ->public()
         ->args([
             new Reference(ReferenceRepositoryInterface::class),
-            new Reference('sulu_security.security_checker'),
-            new Reference('fos_rest.view_handler'),
-            new Reference('security.token_storage'),
+            new Reference(SecurityCheckerInterface::class),
+            new Reference(ViewHandlerInterface::class),
+            new Reference(TokenStorageInterface::class),
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 
     // Command
     $services->set('sulu_reference.refresh_command', RefreshCommand::class)
         ->args([
-            tagged_iterator('sulu_reference.refresher', defaultIndexMethod: 'getResourceKey'),
+            new TaggedIteratorArgument('sulu_reference.refresher', defaultIndexMethod: 'getResourceKey'),
             new Reference(ReferenceRepositoryInterface::class),
             '%sulu.context%',
         ])
