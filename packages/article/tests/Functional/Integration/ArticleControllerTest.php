@@ -14,6 +14,7 @@ namespace Sulu\Article\Tests\Functional\Integration;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
@@ -653,6 +654,76 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertIsArray($content['_embedded']['articles']);
         $this->assertIsArray($content['_embedded']['articles'][0]);
         $this->assertSame('Blog Template Test', $content['_embedded']['articles'][0]['title']);
+    }
+
+    public function testGetListWithTitleSearch(): void
+    {
+        self::purgeDatabase();
+
+        $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'article',
+            'title' => 'Needle Article',
+            'url' => '/needle-article',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+
+        $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'article',
+            'title' => 'Haystack Article',
+            'url' => '/haystack-article',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+
+        $this->client->request('GET', '/admin/api/articles?locale=en&search=Needle&searchFields=title&fields=title,id');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{total: int, _embedded: array{articles: array<int, array{title: string, id: string}>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+
+        $this->assertSame(1, $content['total']);
+        $this->assertCount(1, $content['_embedded']['articles']);
+        $this->assertSame('Needle Article', $content['_embedded']['articles'][0]['title']);
+    }
+
+    public function testGetListWithTagFiltering(): void
+    {
+        self::purgeDatabase();
+
+        $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'article',
+            'title' => 'Tagged Match Article',
+            'url' => '/tagged-match-article',
+            'excerptTags' => ['Tag Filter Match'],
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+
+        $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'article',
+            'title' => 'Tagged Other Article',
+            'url' => '/tagged-other-article',
+            'excerptTags' => ['Tag Filter Other'],
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+
+        /** @var TagInterface|null $tag */
+        $tag = self::getEntityManager()->getRepository(TagInterface::class)->findOneBy(['name' => 'Tag Filter Match']);
+        $this->assertNotNull($tag);
+
+        $this->client->request('GET', '/admin/api/articles?locale=en&filter[tagId]=' . $tag->getId() . '&fields=title,id');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{total: int, _embedded: array{articles: array<int, array{title: string, id: string}>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+
+        $this->assertSame(1, $content['total']);
+        $this->assertCount(1, $content['_embedded']['articles']);
+        $this->assertSame('Tagged Match Article', $content['_embedded']['articles'][0]['title']);
     }
 
     protected function getSnapshotFolder(): string
