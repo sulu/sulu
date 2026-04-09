@@ -40,7 +40,7 @@ class ContactTwigExtension extends AbstractExtension
     }
 
     /**
-     * @param string|int $id id to resolve
+     * @param mixed $id id to resolve
      *
      * @return ContactInterface|null
      *
@@ -48,6 +48,10 @@ class ContactTwigExtension extends AbstractExtension
      */
     public function resolveContactFunction($id)
     {
+        if (!\is_string($id) && !\is_int($id)) {
+            return null;
+        }
+
         return $this->cache->get((string) $id, function() use ($id) {
             return $this->contactRepository->find($id);
         });
