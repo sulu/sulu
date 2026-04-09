@@ -217,19 +217,17 @@ class ArticleAdmin extends Admin
             $viewCollection->add($viewBuilder);
         }
 
-        $editView = $viewCollection->get(static::EDIT_TABS_VIEW . '_' . $groupIdentifier . '.content');
-        if (\method_exists($editView, 'addMetadataRequestParameters')) {
-            $editView->addMetadataRequestParameters([
-                'templates' => \implode(',', $group->templates),
-            ]);
-        }
+        $this->addRequestParameters(
+            $viewCollection,
+            static::EDIT_TABS_VIEW . '_' . $groupIdentifier . '.content',
+            ['templates' => \implode(',', $group->templates)]
+        );
 
-        $addView = $viewCollection->get(static::ADD_TABS_VIEW . '_' . $groupIdentifier . '.content');
-        if (\method_exists($addView, 'addMetadataRequestParameters')) {
-            $addView->addMetadataRequestParameters([
-                'templates' => \implode(',', $group->templates),
-            ]);
-        }
+        $this->addRequestParameters(
+            $viewCollection,
+            static::ADD_TABS_VIEW . '_' . $groupIdentifier . '.content',
+            ['templates' => \implode(',', $group->templates)]
+        );
 
         $insightsResourceTabViewName = self::EDIT_TABS_VIEW . '_' . $groupIdentifier . '.insights';
         if ($viewCollection->has($insightsResourceTabViewName) && $this->activityViewBuilderFactory->hasActivityListPermission()) {
@@ -242,6 +240,21 @@ class ArticleAdmin extends Admin
                     )
                     ->setParent($insightsResourceTabViewName),
             );
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $metadata
+     */
+    private function addRequestParameters(ViewCollection $viewCollection, string $viewName, array $metadata): void
+    {
+        if (!$viewCollection->has($viewName)) {
+            return;
+        }
+
+        $view = $viewCollection->get($viewName);
+        if (\method_exists($view, 'addMetadataRequestParameters')) {
+            $view->addMetadataRequestParameters($metadata);
         }
     }
 
