@@ -224,10 +224,10 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 $qb->setMaxResults($limit);
             }
 
-            /** @var Collection[] */
+            /** @var Paginator<CollectionInterface> */
             return new Paginator($qb->getQuery());
         } catch (NoResultException $ex) {
-            return [];
+            return null;
         }
     }
 
