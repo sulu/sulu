@@ -227,7 +227,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             /** @var Paginator<CollectionInterface> */
             return new Paginator($qb->getQuery());
         } catch (NoResultException $ex) {
-            return null;
+            return [];
         }
     }
 

@@ -84,7 +84,7 @@ interface CollectionRepositoryInterface
      * @param int $offset
      * @param array $sortBy sort by e.g. array('title' => 'ASC')
      *
-     * @return Paginator<CollectionInterface>|null
+     * @return Paginator<CollectionInterface>|array{}
      */
     public function findCollections($filter = [], $limit = null, $offset = null, $sortBy = []);
 

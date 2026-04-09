@@ -24973,12 +24973,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
 		-
-			message: '#^Instanceof between array\<Sulu\\Bundle\\MediaBundle\\Entity\\CollectionInterface\> and Doctrine\\ORM\\Tools\\Pagination\\Paginator will always evaluate to false\.$#'
-			identifier: instanceof.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
-
-		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
@@ -27178,12 +27172,6 @@ parameters:
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^PHPDoc tag @var with type array\<Sulu\\Bundle\\MediaBundle\\Entity\\Collection\> is not subtype of native type Doctrine\\ORM\\Tools\\Pagination\\Paginator\<mixed\>\.$#'
-			identifier: varTag.nativeType
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-

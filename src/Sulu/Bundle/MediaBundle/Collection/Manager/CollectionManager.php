@@ -123,10 +123,11 @@ class CollectionManager implements CollectionManagerInterface
     public function get($locale, $filter = [], $limit = null, $offset = null, $sortBy = [])
     {
         $collectionEntities = $this->collectionRepository->findCollections($filter, $limit, $offset, $sortBy);
-        $this->count = $collectionEntities?->count() ?? 0;
+        $this->count = $collectionEntities instanceof Paginator ?
+            $collectionEntities->count() : \count($collectionEntities);
 
         $collections = [];
-        foreach ($collectionEntities ?? [] as $entity) {
+        foreach ($collectionEntities as $entity) {
             $collections[] = $this->getApiEntity($entity, $locale);
         }
 
