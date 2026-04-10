@@ -256,7 +256,7 @@ class MetadataLoaderTest extends TestCase
             ],
             [
                 'workflowPlace' => true,
-                'workflowPublished' => true,
+                'published' => true,
             ],
             [
             ],

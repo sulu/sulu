@@ -47,7 +47,7 @@ class UnpublishTransitionSubscriber implements EventSubscriberInterface
         }
 
         if ($dimensionContent instanceof WorkflowInterface) {
-            $dimensionContent->setWorkflowPublished(null);
+            $dimensionContent->setPublished(null);
         }
 
         $context = $transitionEvent->getContext();

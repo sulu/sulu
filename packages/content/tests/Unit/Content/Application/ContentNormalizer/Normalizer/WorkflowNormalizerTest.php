@@ -54,9 +54,8 @@ class WorkflowNormalizerTest extends TestCase
         $object = $this->prophesize(\stdClass::class);
 
         $data = [
-            'workflowPublished' => '12345',
+            'published' => '12345',
             'publishedState' => '123',
-            'published' => '456',
         ];
 
         $this->assertSame(
@@ -72,7 +71,7 @@ class WorkflowNormalizerTest extends TestCase
 
         $data = [
             'workflowPlace' => 'published',
-            'workflowPublished' => '2019-01-01',
+            'published' => '2019-01-01',
         ];
 
         $expectedResult = [
@@ -94,7 +93,7 @@ class WorkflowNormalizerTest extends TestCase
 
         $data = [
             'workflowPlace' => 'unpublished',
-            'workflowPublished' => null,
+            'published' => null,
         ];
 
         $expectedResult = [

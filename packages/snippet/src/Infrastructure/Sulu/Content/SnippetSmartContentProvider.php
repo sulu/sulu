@@ -111,7 +111,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
             ->enableAudienceTargeting()
             ->enableSorting(
                 [
-                    ['column' => 'workflowPublished', 'title' => 'sulu_admin.published'],
+                    ['column' => 'published', 'title' => 'sulu_admin.published'],
                     ['column' => 'authored', 'title' => 'sulu_admin.authored'],
                     ['column' => 'created', 'title' => 'sulu_admin.created'],
                     ['column' => 'title', 'title' => 'sulu_admin.title'],
@@ -148,7 +148,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
      * @param SnippetSmartContentFilters $filters
      * @param array{
      *     title?: 'asc'|'desc',
-     *     workflowPublished?: 'asc'|'desc',
+     *     published?: 'asc'|'desc',
      *     created?: 'asc'|'desc',
      *     changed?: 'asc'|'desc',
      * } $sortBys

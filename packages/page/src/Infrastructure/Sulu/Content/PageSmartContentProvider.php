@@ -138,7 +138,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
             ->enableSorting(
                 [
                     ['column' => '', 'title' => 'sulu_admin.default'],
-                    ['column' => 'workflowPublished', 'title' => 'sulu_admin.published'],
+                    ['column' => 'published', 'title' => 'sulu_admin.published'],
                     ['column' => 'authored', 'title' => 'sulu_admin.authored'],
                     ['column' => 'created', 'title' => 'sulu_admin.created'],
                     ['column' => 'changed', 'title' => 'sulu_admin.changed'],
@@ -191,7 +191,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
      * @param array{
      *     title?: 'asc'|'desc',
      *     authored?: 'asc'|'desc',
-     *     workflowPublished?: 'asc'|'desc',
+     *     published?: 'asc'|'desc',
      *     created?: 'asc'|'desc',
      *     changed?: 'asc'|'desc',
      * } $sortBys

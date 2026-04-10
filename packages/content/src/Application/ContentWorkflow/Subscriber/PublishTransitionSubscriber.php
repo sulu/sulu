@@ -69,8 +69,8 @@ class PublishTransitionSubscriber implements EventSubscriberInterface
         $locale = $dimensionContent->getLocale();
 
         if ($dimensionContent instanceof WorkflowInterface) {
-            if (!$dimensionContent->getWorkflowPublished()) {
-                $dimensionContent->setWorkflowPublished(new \DateTimeImmutable());
+            if (!$dimensionContent->getPublished()) {
+                $dimensionContent->setPublished(new \DateTimeImmutable());
             }
         }
 

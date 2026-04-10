@@ -24,8 +24,6 @@ class WorkflowNormalizer implements NormalizerInterface
         }
 
         $normalizedData['publishedState'] = WorkflowInterface::WORKFLOW_PLACE_PUBLISHED === $normalizedData['workflowPlace'];
-        $normalizedData['published'] = $normalizedData['workflowPublished'];
-        unset($normalizedData['workflowPublished']);
 
         return $normalizedData;
     }

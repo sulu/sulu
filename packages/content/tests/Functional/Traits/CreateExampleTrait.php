@@ -47,7 +47,7 @@ trait CreateExampleTrait
      *     author?: ?ContactInterface,
      *     authored?: ?\DateTimeImmutable,
      *     workflowPlace?: ?string,
-     *     workflowPublished?: ?\DateTimeImmutable,
+     *     published?: ?\DateTimeImmutable,
      * } $data
      */
     public function createExampleContent(Example $example, array $data = []): void
@@ -67,7 +67,7 @@ trait CreateExampleTrait
         $localizedDimensionContent->setAuthor($data['author'] ?? null);
         $localizedDimensionContent->setAuthored($data['authored'] ?? null);
         $localizedDimensionContent->setWorkflowPlace($data['workflowPlace'] ?? null);
-        $localizedDimensionContent->setWorkflowPublished($data['workflowPublished'] ?? null);
+        $localizedDimensionContent->setPublished($data['published'] ?? null);
 
         $templateKey = $data['templateKey'] ?? 'default';
         if ($templateKey) {

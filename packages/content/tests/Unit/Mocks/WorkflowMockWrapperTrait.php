@@ -39,14 +39,14 @@ trait WorkflowMockWrapperTrait
         $this->instance->setWorkflowPlace($workflowPlace);
     }
 
-    public function getWorkflowPublished(): ?\DateTimeImmutable
+    public function getPublished(): ?\DateTimeImmutable
     {
-        return $this->instance->getWorkflowPublished();
+        return $this->instance->getPublished();
     }
 
-    public function setWorkflowPublished(?\DateTimeImmutable $workflowPublished): void
+    public function setPublished(?\DateTimeImmutable $published): void
     {
-        $this->instance->setWorkflowPublished($workflowPublished);
+        $this->instance->setPublished($published);
     }
 
     public static function getWorkflowInitialPlace(): string

@@ -70,7 +70,7 @@ class WorkflowDataMapperTest extends TestCase
         $workflowMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame('unpublished', $localizedDimensionContent->getWorkflowPlace());
-        $this->assertNull($localizedDimensionContent->getWorkflowPublished());
+        $this->assertNull($localizedDimensionContent->getPublished());
     }
 
     public function testMapStageData(): void
@@ -88,8 +88,8 @@ class WorkflowDataMapperTest extends TestCase
         $workflowMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame('unpublished', $localizedDimensionContent->getWorkflowPlace());
-        $workflowPublished = $localizedDimensionContent->getWorkflowPublished();
-        $this->assertNull($workflowPublished);
+        $published = $localizedDimensionContent->getPublished();
+        $this->assertNull($published);
     }
 
     public function testMapLiveData(): void
@@ -109,9 +109,9 @@ class WorkflowDataMapperTest extends TestCase
         $workflowMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertNull($localizedDimensionContent->getWorkflowPlace());
-        $workflowPublished = $localizedDimensionContent->getWorkflowPublished();
-        $this->assertNotNull($workflowPublished);
-        $this->assertSame($publishedDate, $workflowPublished->format('c'));
+        $published = $localizedDimensionContent->getPublished();
+        $this->assertNotNull($published);
+        $this->assertSame($publishedDate, $published->format('c'));
     }
 
     public function testMapWorkflowPlaceAlreadySet(): void
@@ -153,7 +153,7 @@ class WorkflowDataMapperTest extends TestCase
         $localizedDimensionContent->setLocale('en');
 
         $localizedDimensionContent->setWorkflowPlace('something-else');
-        $localizedDimensionContent->setWorkflowPublished(new \DateTimeImmutable('2021-01-01 00:00:00'));
+        $localizedDimensionContent->setPublished(new \DateTimeImmutable('2021-01-01 00:00:00'));
 
         $this->contentWorkflow->apply(
             $example,
@@ -169,9 +169,9 @@ class WorkflowDataMapperTest extends TestCase
         $workflowMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame('something-else', $localizedDimensionContent->getWorkflowPlace());
-        $workflowPublished = $localizedDimensionContent->getWorkflowPublished();
-        $this->assertNotNull($workflowPublished);
-        $this->assertSame('2021-01-01 00:00:00', $workflowPublished->format('Y-m-d H:i:s'));
+        $published = $localizedDimensionContent->getPublished();
+        $this->assertNotNull($published);
+        $this->assertSame('2021-01-01 00:00:00', $published->format('Y-m-d H:i:s'));
     }
 
     public function testMapLocalizedLivePublishedNotSet(): void
