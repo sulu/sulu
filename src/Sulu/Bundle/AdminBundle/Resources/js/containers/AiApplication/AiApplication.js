@@ -18,6 +18,8 @@ type Props = {|
         formKey: string,
         route: string,
     },
+    htmlFieldTypes: Array<string>,
+    textFieldTypes: Array<string>,
     translation: {
         enabled: boolean,
         route: string,
@@ -44,6 +46,11 @@ type Props = {|
  */
 @observer
 export default class AiApplication extends Component<Props> {
+    static defaultProps = {
+        htmlFieldTypes: ['text_editor'],
+        textFieldTypes: ['text_line', 'text_area'],
+    };
+
     @observable selectedComponent: {
         dataPath: string,
         formInspector: FormInspector,
@@ -212,19 +219,24 @@ export default class AiApplication extends Component<Props> {
     }
 
     @computed get delta() {
-        if (this.selectedComponent?.schemaType === 'text_line') {
-            return 5;
-        }
-
-        if (this.selectedComponent?.schemaType === 'text_area') {
-            return 5;
-        }
-
-        if (this.selectedComponent?.schemaType === 'text_editor') {
+        const schemaType = this.selectedComponent?.schemaType;
+        if (schemaType && this.props.htmlFieldTypes.includes(schemaType)) {
             return 50;
         }
 
         return 5;
+    }
+
+    canonicalFieldType(schemaType: string): 'text_line' | 'text_area' | 'text_editor' {
+        if (this.props.htmlFieldTypes.includes(schemaType)) {
+            return 'text_editor';
+        }
+
+        if (schemaType === 'text_area') {
+            return 'text_area';
+        }
+
+        return 'text_line';
     }
 
     @action handleWritingAssistantOpen = () => {
@@ -312,9 +324,13 @@ export default class AiApplication extends Component<Props> {
         }
 
         const schemaType = this.selectedComponent?.schemaType || 'text_line';
-        if (schemaType !== 'text_line' && schemaType !== 'text_area' && schemaType !== 'text_editor') {
+        if (!this.props.textFieldTypes.includes(schemaType)
+            && !this.props.htmlFieldTypes.includes(schemaType)
+        ) {
             return null;
         }
+
+        const canonicalType = this.canonicalFieldType(schemaType);
 
         return (
             <div style={this.position}>
@@ -353,7 +369,7 @@ export default class AiApplication extends Component<Props> {
                         onDialogClose={this.handleWritingAssistantClose}
                         resourceId={this.selectedComponent.formInspector.id}
                         resourceKey={this.selectedComponent.formInspector.resourceKey}
-                        type={schemaType}
+                        type={canonicalType}
                         url={this.writingAssistantUrl}
                         value={this.selectedText}
                         webspaceKey={this.selectedComponent.formInspector.options?.webspace}
@@ -379,7 +395,7 @@ export default class AiApplication extends Component<Props> {
                         resourceKey={this.selectedComponent.formInspector.resourceKey}
                         sourceLanguages={this.props.translation.sourceLanguages}
                         targetLanguages={this.props.translation.targetLanguages}
-                        type={schemaType}
+                        type={canonicalType}
                         url={this.translationUrl}
                         value={this.selectedText}
                         webspaceKey={this.selectedComponent.formInspector.options?.webspace}

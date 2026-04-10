@@ -96,6 +96,88 @@ describe('AiApplication', () => {
         expect(screen.getByTitle('sulu_admin.writing_assistant')).toBeInTheDocument();
     });
 
+    test('does not render for an unknown schemaType by default', () => {
+        const {container} = render(<AiApplication {...props} />);
+
+        const mockElement = document.createElement('div');
+        Object.defineProperty(mockElement, 'parentElement', {
+            // $FlowFixMe
+            value: {
+                getBoundingClientRect: jest.fn().mockReturnValue({
+                    top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 0,
+                }),
+            },
+        });
+
+        const event = new Event('sulu.focus');
+        Object.defineProperty(event, 'target', {value: mockElement});
+        // $FlowFixMe
+        Object.defineProperty(event, 'detail', {
+            value: {
+                formInspector: {locale: {get: () => 'en'}},
+                getValue: jest.fn(),
+                schemaPath: 'schemaPath',
+                schemaType: 'configurable_text_editor',
+                setValue: jest.fn(),
+            },
+        });
+
+        fireEvent(document, event);
+
+        expect(container).toBeEmptyDOMElement();
+    });
+
+    test('renders FeatureBadge for custom htmlFieldTypes', () => {
+        render(
+            <AiApplication
+                {...props}
+                htmlFieldTypes={['text_editor', 'configurable_text_editor']}
+            />
+        );
+
+        const mockElement = document.createElement('div');
+        Object.defineProperty(mockElement, 'parentElement', {
+            // $FlowFixMe
+            value: {
+                getBoundingClientRect: jest.fn().mockReturnValue({
+                    top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 0,
+                }),
+            },
+        });
+
+        const event = new Event('sulu.focus');
+        Object.defineProperty(event, 'target', {value: mockElement});
+        // $FlowFixMe
+        Object.defineProperty(event, 'detail', {
+            value: {
+                formInspector: {locale: {get: () => 'en'}},
+                getValue: jest.fn(),
+                schemaPath: 'schemaPath',
+                schemaType: 'configurable_text_editor',
+                setValue: jest.fn(),
+            },
+        });
+
+        fireEvent(document, event);
+
+        expect(screen.getByTitle('sulu_admin.translator')).toBeInTheDocument();
+        expect(screen.getByTitle('sulu_admin.writing_assistant')).toBeInTheDocument();
+    });
+
+    test('canonicalFieldType classifies custom html types as text_editor', () => {
+        const instance = new AiApplication({
+            ...props,
+            htmlFieldTypes: ['text_editor', 'configurable_text_editor'],
+            textFieldTypes: ['text_line', 'text_area', 'custom_line'],
+        });
+
+        expect(instance.canonicalFieldType('configurable_text_editor')).toBe('text_editor');
+        expect(instance.canonicalFieldType('text_editor')).toBe('text_editor');
+        expect(instance.canonicalFieldType('text_area')).toBe('text_area');
+        expect(instance.canonicalFieldType('custom_line')).toBe('text_line');
+        expect(instance.canonicalFieldType('text_line')).toBe('text_line');
+    });
+
     test('handles scroll and resize events', () => {
         render(<AiApplication {...props} />);
 

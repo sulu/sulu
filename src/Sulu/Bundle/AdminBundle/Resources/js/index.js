@@ -465,6 +465,8 @@ initializer.addUpdateConfigHook('sulu_ai', (config: Object, initialized: boolean
 
     render(<AiApplication
         feedback={config['feedback']}
+        htmlFieldTypes={config['html_field_types'] || ['text_editor']}
+        textFieldTypes={config['text_field_types'] || ['text_line', 'text_area']}
         translation={config['translation']}
         writingAssistant={config['writing_assistant']}
     />, div);
