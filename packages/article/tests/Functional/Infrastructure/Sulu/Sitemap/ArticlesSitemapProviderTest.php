@@ -156,6 +156,35 @@ class ArticlesSitemapProviderTest extends WebsiteTestCase
             ],
         );
 
+        self::$articles['shadow'] = self::createArticle(
+            [
+                'title' => 'Article With Shadow Locale',
+                'template' => 'article',
+                'locale' => 'en',
+                'url' => '/article-with-shadow-locale',
+                'mainWebspace' => 'blog',
+            ],
+        );
+
+        self::copyLocaleArticle(
+            self::$articles['shadow']->getUuid(),
+            'en',
+            'de',
+        );
+
+        self::modifyArticle(
+            self::$articles['shadow']->getUuid(),
+            [
+                'title' => 'Artikel mit Schatten-Locale',
+                'template' => 'article',
+                'locale' => 'de',
+                'url' => '/artikel-mit-schatten-locale',
+                'shadowOn' => true,
+                'shadowLocale' => 'en',
+                'mainWebspace' => 'blog',
+            ],
+        );
+
         // Create articles for sulu.io webspace
         self::$articles['product'] = self::createArticle(
             [
