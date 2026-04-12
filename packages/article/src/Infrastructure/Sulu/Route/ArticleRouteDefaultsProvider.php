@@ -29,6 +29,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Model\Route;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -42,6 +43,7 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
         private MetadataProviderRegistry $metadataProviderRegistry,
         private CacheLifetimeResolverInterface $cacheLifetimeResolver,
         private WebspaceManagerInterface $webspaceManager,
+        private RequestStack $requestStack,
         private string $environment = 'prod',
     ) {
     }
@@ -162,6 +164,12 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
      */
     private function getSeoData(ArticleDimensionContentInterface $dimensionContent, Route $route): ?array
     {
+        // Skip auto-canonical when the editor has set one manually.
+        $editorCanonical = $dimensionContent->getSeoCanonicalUrl();
+        if (null !== $editorCanonical && '' !== $editorCanonical) {
+            return null;
+        }
+
         $locale = $dimensionContent->getLocale();
         if (!$locale) {
             return null;
@@ -172,11 +180,18 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
             return null;
         }
 
+        $request = $this->requestStack->getCurrentRequest();
+
+        // Shadow content canonicalizes to the shadow target locale.
+        $canonicalLocale = $dimensionContent->getShadowLocale() ?? $locale;
+
         $canonicalUrl = $this->webspaceManager->findUrlByResourceLocator(
             $route->getSlug(),
             $this->environment,
-            $locale,
+            $canonicalLocale,
             $mainWebspace,
+            $request?->getHost(),
+            $request?->getScheme(),
         );
 
         if (!$canonicalUrl) {

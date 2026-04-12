@@ -85,7 +85,7 @@ final readonly class RouteCollectionForRequestRouteLoader implements RouteCollec
         $route = $this->routeRepository->findFirstBy([
             'webspaceOrNull' => $webspace,
             'locale' => $locale,
-            'slug' => $slug,
+            'slug' => \rawurldecode($slug),
         ], ['webspace' => 'desc']);
 
         if (null === $route) {
@@ -99,7 +99,7 @@ final readonly class RouteCollectionForRequestRouteLoader implements RouteCollec
 
         $routeCollection = new RouteCollection();
         $symfonyRoute = new SymfonyRoute(
-            $request->getPathInfo(),
+            \rawurldecode($request->getPathInfo()),
             $defaults,
             host: $request->getHost(),
         );

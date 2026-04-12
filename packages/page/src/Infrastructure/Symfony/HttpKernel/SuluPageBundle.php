@@ -441,6 +441,9 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_route.route_repository'),
                 new Reference('sulu_route.route_generator'),
                 expr("container.hasParameter('sulu_audience_targeting.enabled')"),
+                new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('request_stack'),
+                '%kernel.environment%',
             ])
             ->tag('sulu_route.route_defaults_provider', ['resource_key' => 'pages']);
 
