@@ -24751,12 +24751,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
 		-
-			message: '#^Instanceof between array\<Sulu\\Bundle\\MediaBundle\\Entity\\Collection\> and Doctrine\\ORM\\Tools\\Pagination\\Paginator will always evaluate to false\.$#'
-			identifier: instanceof.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
-
-		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
@@ -24915,7 +24909,7 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
 		-
@@ -24943,7 +24937,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
 		-
-			message: '#^Parameter \#1 \$entity of method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManager\:\:getApiEntity\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\CollectionInterface, Sulu\\Bundle\\MediaBundle\\Entity\\Collection\|null given\.$#'
+			message: '#^Parameter \#1 \$entity of method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManager\:\:getApiEntity\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\CollectionInterface, Sulu\\Bundle\\MediaBundle\\Entity\\CollectionInterface\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
@@ -26833,12 +26827,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
@@ -26853,36 +26841,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:countCollections\(\) has parameter \$filter with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:countCollections\(\) should return int but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:findCollectionBreadcrumbById\(\) should return array\<Sulu\\Bundle\\MediaBundle\\Entity\\Collection\> but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:findCollectionById\(\) should return Sulu\\Bundle\\MediaBundle\\Entity\\Collection\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:findCollectionByKey\(\) should return Sulu\\Bundle\\MediaBundle\\Entity\\Collection but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:findCollectionByKey\(\) should return Sulu\\Bundle\\MediaBundle\\Entity\\Collection but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
@@ -26907,12 +26865,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:findCollections\(\) has parameter \$sortBy with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:findCollections\(\) should return array\<Sulu\\Bundle\\MediaBundle\\Entity\\Collection\> but empty return statement found\.$#'
-			identifier: return.empty
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
@@ -26953,12 +26905,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-
-			message: '#^PHPDoc tag @var with type array\<Sulu\\Bundle\\MediaBundle\\Entity\\Collection\> is not subtype of native type Doctrine\\ORM\\Tools\\Pagination\\Paginator\<mixed\>\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
 			message: '#^Parameter \#1 \$firstResult of method Doctrine\\ORM\\QueryBuilder\:\:setFirstResult\(\) expects int\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -26980,12 +26926,6 @@ parameters:
 			message: '#^Parameter \#1 \$string of function strtolower expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 3
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-
