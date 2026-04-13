@@ -138,7 +138,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
             ->enableSorting(
                 [
                     ['column' => '', 'title' => 'sulu_admin.default'],
-                    ['column' => 'workflowPublished', 'title' => 'sulu_admin.published'],
+                    ['column' => 'published', 'title' => 'sulu_admin.published'],
                     ['column' => 'authored', 'title' => 'sulu_admin.authored'],
                     ['column' => 'created', 'title' => 'sulu_admin.created'],
                     ['column' => 'changed', 'title' => 'sulu_admin.changed'],
@@ -191,7 +191,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
      * @param array{
      *     title?: 'asc'|'desc',
      *     authored?: 'asc'|'desc',
-     *     workflowPublished?: 'asc'|'desc',
+     *     published?: 'asc'|'desc',
      *     created?: 'asc'|'desc',
      *     changed?: 'asc'|'desc',
      * } $sortBys
@@ -202,6 +202,8 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
     {
         /** @var PageSmartContentFilters $filters */
         $filters = $this->enhanceWithDimensionAttributes($filters);
+
+        $sortBys = $this->mapSortBys($sortBys);
 
         $alias = 'page';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
@@ -276,6 +278,31 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
         }
 
         return $filters;
+    }
+
+    /**
+     * @param array{
+     *     title?: 'asc'|'desc',
+     *     published?: 'asc'|'desc',
+     *     created?: 'asc'|'desc',
+     *     changed?: 'asc'|'desc',
+     * } $sortBys
+     *
+     * @return array{
+     *     title?: 'asc'|'desc',
+     *     workflowPublished?: 'asc'|'desc',
+     *     created?: 'asc'|'desc',
+     *     changed?: 'asc'|'desc',
+     * }
+     */
+    protected function mapSortBys(array $sortBys): array
+    {
+        if (\array_key_exists('published', $sortBys)) {
+            $sortBys['workflowPublished'] = $sortBys['published'];
+            unset($sortBys['published']);
+        }
+
+        return $sortBys;
     }
 
     /**
