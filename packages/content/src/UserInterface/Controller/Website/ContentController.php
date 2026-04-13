@@ -22,6 +22,7 @@ use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentResolver\ContentResolverInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\RoutableInterface;
+use Sulu\Content\Infrastructure\Sulu\Route\Exception\WebspaceUrlNotFoundException;
 use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -182,15 +183,19 @@ class ContentController extends AbstractController
         $localizations = [];
         foreach ($webspaceLocales as $webspaceLocale) {
             $locale = $webspaceLocale->getLocale(Localization::UNDERSCORE);
-            $localizations[$locale] = [
-                'url' => $this->container->get('sulu_route.route_generator')->generate(
-                    '/',
-                    $locale,
-                    $webspaceKey,
-                ),
-                'locale' => $locale,
-                'alternate' => false,
-            ];
+            try {
+                $localizations[$locale] = [
+                    'url' => $this->container->get('sulu_route.route_generator')->generate(
+                        '/',
+                        $locale,
+                        $webspaceKey,
+                    ),
+                    'locale' => $locale,
+                    'alternate' => false,
+                ];
+            } catch (WebspaceUrlNotFoundException) {
+                continue;
+            }
         }
 
         $routes = [];
@@ -204,15 +209,19 @@ class ContentController extends AbstractController
 
         foreach ($routes as $route) {
             $locale = $route->getLocale();
-            $localizations[$locale] = [
-                'url' => $this->container->get('sulu_route.route_generator')->generate(
-                    $route->getSlug(),
-                    $route->getLocale(),
-                    $webspaceKey,
-                ),
-                'locale' => $locale,
-                'alternate' => true,
-            ];
+            try {
+                $localizations[$locale] = [
+                    'url' => $this->container->get('sulu_route.route_generator')->generate(
+                        $route->getSlug(),
+                        $route->getLocale(),
+                        $webspaceKey,
+                    ),
+                    'locale' => $locale,
+                    'alternate' => true,
+                ];
+            } catch (WebspaceUrlNotFoundException) {
+                continue;
+            }
         }
 
         return $localizations;
