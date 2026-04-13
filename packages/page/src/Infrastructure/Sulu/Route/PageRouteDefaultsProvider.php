@@ -22,13 +22,11 @@ use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\ExternalLinkProvider;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkUrlTrait;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\LinkInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
-use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
@@ -37,7 +35,6 @@ use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -55,9 +52,6 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
         private RouteRepositoryInterface $routeRepository,
         private RouteGeneratorInterface $routeGenerator,
         private bool $audienceTargetingEnabled = false,
-        private ?WebspaceManagerInterface $webspaceManager = null,
-        private ?RequestStack $requestStack = null,
-        private string $environment = 'prod',
     ) {
     }
 
@@ -119,11 +113,6 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
         $cacheLifetime = $this->getCacheLifetime($templateMetadata);
         if (null !== $cacheLifetime) {
             $defaults[CacheLifetimeRequestStore::ATTRIBUTE_KEY] = $cacheLifetime;
-        }
-
-        $seoData = $this->getSeoData($dimensionContent, $page->getWebspaceKey(), $route);
-        if ($seoData) {
-            $defaults['_seo'] = $seoData;
         }
 
         return $defaults;
@@ -224,49 +213,6 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
         }
 
         return $this->cacheLifetimeResolver->resolve($cacheLifeTimeType, $cacheLifeTimeValue);
-    }
-
-    /**
-     * @return array<string, mixed>|null
-     */
-    private function getSeoData(PageDimensionContentInterface $dimensionContent, string $webspaceKey, Route $route): ?array
-    {
-        // Skip auto-canonical when the editor has set one manually.
-        $editorCanonical = $dimensionContent->getSeoCanonicalUrl();
-        if (null !== $editorCanonical && '' !== $editorCanonical) {
-            return null;
-        }
-
-        $locale = $dimensionContent->getLocale();
-        if (!$locale) {
-            return null;
-        }
-
-        if (null === $this->webspaceManager || null === $this->requestStack) {
-            return null;
-        }
-
-        $request = $this->requestStack->getCurrentRequest();
-
-        // Shadow content canonicalizes to the shadow target locale.
-        $canonicalLocale = $dimensionContent->getShadowLocale() ?? $locale;
-
-        $canonicalUrl = $this->webspaceManager->findUrlByResourceLocator(
-            $route->getSlug(),
-            $this->environment,
-            $canonicalLocale,
-            $webspaceKey,
-            $request?->getHost(),
-            $request?->getScheme(),
-        );
-
-        if (!$canonicalUrl) {
-            return null;
-        }
-
-        return [
-            'canonicalUrl' => $canonicalUrl,
-        ];
     }
 
     private function resolveTemplateMetadata(string $type, string $templateKey, string $locale): TemplateMetadata

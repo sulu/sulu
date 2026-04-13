@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Infrastructure\Sulu\Route;
 
-use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\CacheLifetimeMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
@@ -22,14 +21,12 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Model\Route;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -42,9 +39,6 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
         private ContentAggregatorInterface $contentAggregator,
         private MetadataProviderRegistry $metadataProviderRegistry,
         private CacheLifetimeResolverInterface $cacheLifetimeResolver,
-        private WebspaceManagerInterface $webspaceManager,
-        private RequestStack $requestStack,
-        private string $environment = 'prod',
     ) {
     }
 
@@ -107,11 +101,6 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
             $defaults[CacheLifetimeRequestStore::ATTRIBUTE_KEY] = $cacheLifetime;
         }
 
-        $seoData = $this->getSeoData($dimensionContent, $route);
-        if ($seoData) {
-            $defaults['_seo'] = $seoData;
-        }
-
         return $defaults;
     }
 
@@ -157,49 +146,5 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
         }
 
         return $templateMetadata;
-    }
-
-    /**
-     * @return array<string, mixed>|null
-     */
-    private function getSeoData(ArticleDimensionContentInterface $dimensionContent, Route $route): ?array
-    {
-        // Skip auto-canonical when the editor has set one manually.
-        $editorCanonical = $dimensionContent->getSeoCanonicalUrl();
-        if (null !== $editorCanonical && '' !== $editorCanonical) {
-            return null;
-        }
-
-        $locale = $dimensionContent->getLocale();
-        if (!$locale) {
-            return null;
-        }
-
-        $mainWebspace = $dimensionContent->getMainWebspace();
-        if (!$mainWebspace) {
-            return null;
-        }
-
-        $request = $this->requestStack->getCurrentRequest();
-
-        // Shadow content canonicalizes to the shadow target locale.
-        $canonicalLocale = $dimensionContent->getShadowLocale() ?? $locale;
-
-        $canonicalUrl = $this->webspaceManager->findUrlByResourceLocator(
-            $route->getSlug(),
-            $this->environment,
-            $canonicalLocale,
-            $mainWebspace,
-            $request?->getHost(),
-            $request?->getScheme(),
-        );
-
-        if (!$canonicalUrl) {
-            return null;
-        }
-
-        return [
-            'canonicalUrl' => $canonicalUrl,
-        ];
     }
 }

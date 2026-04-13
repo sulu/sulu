@@ -27,15 +27,12 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TemplateMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolver;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Model\Route;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class ArticleRouteDefaultsProviderTest extends TestCase
 {
@@ -47,12 +44,8 @@ class ArticleRouteDefaultsProviderTest extends TestCase
     private ObjectProphecy $contentAggregator;
     private MetadataProviderRegistry $metadataProviderRegistry;
     private CacheLifetimeResolver $cacheLifetimeResolver;
-    /** @var ObjectProphecy<WebspaceManagerInterface> */
-    private ObjectProphecy $webspaceManager;
     /** @var ObjectProphecy<FormMetadataProvider> */
     private ObjectProphecy $formMetadataProvider;
-    /** @var ObjectProphecy<RequestStack> */
-    private ObjectProphecy $requestStack;
 
     protected function setUp(): void
     {
@@ -63,8 +56,6 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $container = new Container();
         $container->set('form', $this->formMetadataProvider->reveal());
         $this->metadataProviderRegistry = new MetadataProviderRegistry($container);
-        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
-        $this->requestStack = $this->prophesize(RequestStack::class);
     }
 
     protected function getArticleRouteDefaultsProviderInstance(): RouteDefaultsProviderInterface
@@ -74,143 +65,10 @@ class ArticleRouteDefaultsProviderTest extends TestCase
             $this->contentAggregator->reveal(),
             $this->metadataProviderRegistry,
             $this->cacheLifetimeResolver,
-            $this->webspaceManager->reveal(),
-            $this->requestStack->reveal(),
-            'test'
         );
     }
 
-    public function testGetDefaultsWithSeoData(): void
-    {
-        $provider = $this->getArticleRouteDefaultsProviderInstance();
-
-        $locale = 'en';
-        $slug = '/test-article';
-        $mainWebspace = 'sulu-io';
-        $host = 'sulu.io';
-        $scheme = 'https';
-        $canonicalUrl = 'https://sulu.io/test-article';
-
-        $article = new Article('123-123-123');
-        $resolvedDimensionContent = new ArticleDimensionContent($article);
-        $resolvedDimensionContent->setLocale($locale);
-        $resolvedDimensionContent->setTemplateKey('default');
-        $resolvedDimensionContent->setMainWebspace($mainWebspace);
-
-        $this->articleRepository->findOneBy(
-            [
-                'uuid' => '123-123-123',
-            ],
-            [
-                ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
-                    'dimensionAttributes' => [
-                        'locale' => $locale,
-                        'stage' => DimensionContentInterface::STAGE_LIVE,
-                        'version' => DimensionContentInterface::CURRENT_VERSION,
-                    ],
-                    'selects' => [
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_TAGS => true,
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES => true,
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES_TRANSLATION => true,
-                    ],
-                ],
-            ]
-        )->willReturn($article);
-
-        $this->contentAggregator->aggregate($article, ['locale' => $locale, 'stage' => 'live', 'version' => 0])
-            ->willReturn($resolvedDimensionContent);
-
-        $this->prepareTemplateMetadata('ArticleController::indexAction', 'article.html.twig', 'seconds', '3600');
-
-        $request = Request::create($scheme . '://' . $host . $slug);
-        $this->requestStack->getCurrentRequest()->willReturn($request);
-
-        $this->webspaceManager->findUrlByResourceLocator($slug, 'test', $locale, $mainWebspace, $host, $scheme)
-            ->willReturn($canonicalUrl);
-
-        $route = new Route(
-            Article::RESOURCE_KEY,
-            '123-123-123',
-            $locale,
-            $slug,
-        );
-
-        $result = $provider->getDefaults($route);
-
-        $this->assertArrayHasKey('_seo', $result);
-        $this->assertIsArray($result['_seo']);
-        $this->assertSame($canonicalUrl, $result['_seo']['canonicalUrl']);
-        $this->assertSame($resolvedDimensionContent, $result['object']);
-        $this->assertSame('article.html.twig', $result['view']);
-        $this->assertSame('ArticleController::indexAction', $result['_controller']);
-    }
-
-    public function testGetDefaultsUsesShadowLocaleForCanonical(): void
-    {
-        $provider = $this->getArticleRouteDefaultsProviderInstance();
-
-        $shadowLocale = 'de';
-        $contentLocale = 'de_ch';
-        $slug = '/test-article';
-        $mainWebspace = 'sulu-io';
-        $host = 'sulu.io';
-        $scheme = 'https';
-        $canonicalUrl = 'https://sulu.io/test-article';
-
-        $article = new Article('123-123-123');
-        $resolvedDimensionContent = new ArticleDimensionContent($article);
-        $resolvedDimensionContent->setLocale($contentLocale);
-        $resolvedDimensionContent->setTemplateKey('default');
-        $resolvedDimensionContent->setMainWebspace($mainWebspace);
-        $resolvedDimensionContent->setShadowLocale($shadowLocale);
-
-        $this->articleRepository->findOneBy(
-            [
-                'uuid' => '123-123-123',
-            ],
-            [
-                ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
-                    'dimensionAttributes' => [
-                        'locale' => $contentLocale,
-                        'stage' => DimensionContentInterface::STAGE_LIVE,
-                        'version' => DimensionContentInterface::CURRENT_VERSION,
-                    ],
-                    'selects' => [
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_TAGS => true,
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES => true,
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES_TRANSLATION => true,
-                    ],
-                ],
-            ]
-        )->willReturn($article);
-
-        $this->contentAggregator->aggregate($article, ['locale' => $contentLocale, 'stage' => 'live', 'version' => 0])
-            ->willReturn($resolvedDimensionContent);
-
-        $this->prepareTemplateMetadata('ArticleController::indexAction', 'article.html.twig', 'seconds', '3600');
-
-        $request = Request::create($scheme . '://' . $host . $slug);
-        $this->requestStack->getCurrentRequest()->willReturn($request);
-
-        $this->webspaceManager->findUrlByResourceLocator($slug, 'test', $shadowLocale, $mainWebspace, $host, $scheme)
-            ->willReturn($canonicalUrl);
-
-        $route = new Route(
-            Article::RESOURCE_KEY,
-            '123-123-123',
-            $contentLocale,
-            $slug,
-        );
-
-        $result = $provider->getDefaults($route);
-
-        $this->assertArrayHasKey('_seo', $result);
-        $seoData = $result['_seo'];
-        \assert(\is_array($seoData));
-        $this->assertSame($canonicalUrl, $seoData['canonicalUrl']);
-    }
-
-    public function testGetDefaultsWithoutSeoData(): void
+    public function testGetDefaults(): void
     {
         $provider = $this->getArticleRouteDefaultsProviderInstance();
 
@@ -260,124 +118,6 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $this->assertSame($resolvedDimensionContent, $result['object']);
         $this->assertSame('article.html.twig', $result['view']);
         $this->assertSame('ArticleController::indexAction', $result['_controller']);
-    }
-
-    public function testGetDefaultsSkipsCanonicalWhenEditorSet(): void
-    {
-        $provider = $this->getArticleRouteDefaultsProviderInstance();
-
-        $locale = 'en';
-        $slug = '/test-article';
-        $mainWebspace = 'sulu-io';
-
-        $article = new Article('123-123-123');
-        $resolvedDimensionContent = new ArticleDimensionContent($article);
-        $resolvedDimensionContent->setLocale($locale);
-        $resolvedDimensionContent->setTemplateKey('default');
-        $resolvedDimensionContent->setMainWebspace($mainWebspace);
-        $resolvedDimensionContent->setSeoData(['canonicalUrl' => 'https://www.example.com/custom-canonical']);
-
-        $this->articleRepository->findOneBy(
-            [
-                'uuid' => '123-123-123',
-            ],
-            [
-                ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
-                    'dimensionAttributes' => [
-                        'locale' => $locale,
-                        'stage' => DimensionContentInterface::STAGE_LIVE,
-                        'version' => DimensionContentInterface::CURRENT_VERSION,
-                    ],
-                    'selects' => [
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_TAGS => true,
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES => true,
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES_TRANSLATION => true,
-                    ],
-                ],
-            ]
-        )->willReturn($article);
-
-        $this->contentAggregator->aggregate($article, ['locale' => $locale, 'stage' => 'live', 'version' => 0])
-            ->willReturn($resolvedDimensionContent);
-
-        $this->prepareTemplateMetadata('ArticleController::indexAction', 'article.html.twig', 'seconds', '3600');
-
-        $this->requestStack->getCurrentRequest()->shouldNotBeCalled();
-        $this->webspaceManager->findUrlByResourceLocator(Argument::cetera())->shouldNotBeCalled();
-
-        $route = new Route(
-            Article::RESOURCE_KEY,
-            '123-123-123',
-            $locale,
-            $slug,
-        );
-
-        $result = $provider->getDefaults($route);
-
-        $this->assertArrayNotHasKey('_seo', $result);
-        $this->assertSame($resolvedDimensionContent, $result['object']);
-        $this->assertSame('article.html.twig', $result['view']);
-        $this->assertSame('ArticleController::indexAction', $result['_controller']);
-    }
-
-    public function testGetDefaultsHandlesNoCurrentRequest(): void
-    {
-        $provider = $this->getArticleRouteDefaultsProviderInstance();
-
-        $locale = 'en';
-        $slug = '/test-article';
-        $mainWebspace = 'sulu-io';
-        $canonicalUrl = 'https://sulu.io/test-article';
-
-        $article = new Article('123-123-123');
-        $resolvedDimensionContent = new ArticleDimensionContent($article);
-        $resolvedDimensionContent->setLocale($locale);
-        $resolvedDimensionContent->setTemplateKey('default');
-        $resolvedDimensionContent->setMainWebspace($mainWebspace);
-
-        $this->articleRepository->findOneBy(
-            [
-                'uuid' => '123-123-123',
-            ],
-            [
-                ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
-                    'dimensionAttributes' => [
-                        'locale' => $locale,
-                        'stage' => DimensionContentInterface::STAGE_LIVE,
-                        'version' => DimensionContentInterface::CURRENT_VERSION,
-                    ],
-                    'selects' => [
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_TAGS => true,
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES => true,
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES_TRANSLATION => true,
-                    ],
-                ],
-            ]
-        )->willReturn($article);
-
-        $this->contentAggregator->aggregate($article, ['locale' => $locale, 'stage' => 'live', 'version' => 0])
-            ->willReturn($resolvedDimensionContent);
-
-        $this->prepareTemplateMetadata('ArticleController::indexAction', 'article.html.twig', 'seconds', '3600');
-
-        $this->requestStack->getCurrentRequest()->willReturn(null);
-
-        $this->webspaceManager->findUrlByResourceLocator($slug, 'test', $locale, $mainWebspace, null, null)
-            ->willReturn($canonicalUrl);
-
-        $route = new Route(
-            Article::RESOURCE_KEY,
-            '123-123-123',
-            $locale,
-            $slug,
-        );
-
-        $result = $provider->getDefaults($route);
-
-        $this->assertArrayHasKey('_seo', $result);
-        $seoData = $result['_seo'];
-        \assert(\is_array($seoData));
-        $this->assertSame($canonicalUrl, $seoData['canonicalUrl']);
     }
 
     public function testGetDefaultsNotFound(): void

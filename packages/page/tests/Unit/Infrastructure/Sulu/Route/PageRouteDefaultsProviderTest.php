@@ -26,7 +26,6 @@ use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolver;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\ExternalLinkProvider;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -41,8 +40,6 @@ use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PageRouteDefaultsProviderTest extends TestCase
@@ -64,12 +61,6 @@ class PageRouteDefaultsProviderTest extends TestCase
     /** @var ObjectProphecy<RouteGeneratorInterface> */
     private ObjectProphecy $routeGenerator;
 
-    /** @var ObjectProphecy<WebspaceManagerInterface> */
-    private ObjectProphecy $webspaceManager;
-
-    /** @var ObjectProphecy<RequestStack> */
-    private ObjectProphecy $requestStack;
-
     private CacheLifetimeResolver $cacheLifetimeResolver;
 
     private MetadataProviderRegistry $metadataProviderRegistry;
@@ -82,8 +73,6 @@ class PageRouteDefaultsProviderTest extends TestCase
         $this->formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
         $this->routeGenerator = $this->prophesize(RouteGeneratorInterface::class);
-        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
-        $this->requestStack = $this->prophesize(RequestStack::class);
         $container = new Container();
         $container->set('form', $this->formMetadataProvider->reveal());
         $this->metadataProviderRegistry = new MetadataProviderRegistry($container);
@@ -448,204 +437,6 @@ class PageRouteDefaultsProviderTest extends TestCase
         );
 
         $this->assertSame('https://example.com/target?utm_source=sulu#top', $result['path']);
-    }
-
-    public function testGetDefaultsWithSeoData(): void
-    {
-        $provider = new PageRouteDefaultsProvider(
-            $this->pageRepository->reveal(),
-            $this->contentAggregator->reveal(),
-            $this->metadataProviderRegistry,
-            $this->cacheLifetimeResolver,
-            $this->routeRepository->reveal(),
-            $this->routeGenerator->reveal(),
-            false,
-            $this->webspaceManager->reveal(),
-            $this->requestStack->reveal(),
-            'test',
-        );
-
-        $host = 'sulu.io';
-        $scheme = 'https';
-        $slug = '/example';
-        $canonicalUrl = 'https://sulu.io/example';
-
-        $page = new Page('123-123-123');
-        $page->setWebspaceKey('sulu-io');
-        $resolvedDimensionContent = new PageDimensionContent($page);
-        $resolvedDimensionContent->setLocale('en');
-        $resolvedDimensionContent->setTemplateKey('default');
-
-        $this->pageRepository->findOneBy(Argument::cetera())->willReturn($page);
-
-        $this->contentAggregator->aggregate($page, ['locale' => 'en', 'stage' => 'live', 'version' => 0])
-            ->willReturn($resolvedDimensionContent);
-
-        $this->prepareTemplateMetadata(
-            'App\Controller\TestController:testAction',
-            'default',
-            CacheLifetimeResolverInterface::TYPE_SECONDS,
-            '3600',
-        );
-
-        $request = Request::create($scheme . '://' . $host . $slug);
-        $this->requestStack->getCurrentRequest()->willReturn($request);
-
-        $this->webspaceManager->findUrlByResourceLocator($slug, 'test', 'en', 'sulu-io', $host, $scheme)
-            ->willReturn($canonicalUrl);
-
-        $result = $provider->getDefaults(new Route(Page::RESOURCE_KEY, '123-123-123', 'en', $slug));
-
-        $this->assertArrayHasKey('_seo', $result);
-        $seoData = $result['_seo'];
-        \assert(\is_array($seoData));
-        $this->assertSame($canonicalUrl, $seoData['canonicalUrl']);
-    }
-
-    public function testGetDefaultsUsesShadowLocaleForCanonical(): void
-    {
-        $provider = new PageRouteDefaultsProvider(
-            $this->pageRepository->reveal(),
-            $this->contentAggregator->reveal(),
-            $this->metadataProviderRegistry,
-            $this->cacheLifetimeResolver,
-            $this->routeRepository->reveal(),
-            $this->routeGenerator->reveal(),
-            false,
-            $this->webspaceManager->reveal(),
-            $this->requestStack->reveal(),
-            'test',
-        );
-
-        $shadowLocale = 'de';
-        $contentLocale = 'de_ch';
-        $slug = '/example';
-        $host = 'sulu.io';
-        $scheme = 'https';
-        $canonicalUrl = 'https://sulu.io/example';
-
-        $page = new Page('123-123-123');
-        $page->setWebspaceKey('sulu-io');
-        $resolvedDimensionContent = new PageDimensionContent($page);
-        $resolvedDimensionContent->setLocale($contentLocale);
-        $resolvedDimensionContent->setTemplateKey('default');
-        $resolvedDimensionContent->setShadowLocale($shadowLocale);
-
-        $this->pageRepository->findOneBy(Argument::cetera())->willReturn($page);
-
-        $this->contentAggregator->aggregate($page, ['locale' => $contentLocale, 'stage' => 'live', 'version' => 0])
-            ->willReturn($resolvedDimensionContent);
-
-        $this->prepareTemplateMetadata(
-            'App\Controller\TestController:testAction',
-            'default',
-            CacheLifetimeResolverInterface::TYPE_SECONDS,
-            '3600',
-        );
-
-        $request = Request::create($scheme . '://' . $host . $slug);
-        $this->requestStack->getCurrentRequest()->willReturn($request);
-
-        $this->webspaceManager->findUrlByResourceLocator($slug, 'test', $shadowLocale, 'sulu-io', $host, $scheme)
-            ->willReturn($canonicalUrl);
-
-        $result = $provider->getDefaults(new Route(Page::RESOURCE_KEY, '123-123-123', $contentLocale, $slug));
-
-        $this->assertArrayHasKey('_seo', $result);
-        $seoData = $result['_seo'];
-        \assert(\is_array($seoData));
-        $this->assertSame($canonicalUrl, $seoData['canonicalUrl']);
-    }
-
-    public function testGetDefaultsSkipsCanonicalWhenEditorSet(): void
-    {
-        $provider = new PageRouteDefaultsProvider(
-            $this->pageRepository->reveal(),
-            $this->contentAggregator->reveal(),
-            $this->metadataProviderRegistry,
-            $this->cacheLifetimeResolver,
-            $this->routeRepository->reveal(),
-            $this->routeGenerator->reveal(),
-            false,
-            $this->webspaceManager->reveal(),
-            $this->requestStack->reveal(),
-            'test',
-        );
-
-        $page = new Page('123-123-123');
-        $page->setWebspaceKey('sulu-io');
-        $resolvedDimensionContent = new PageDimensionContent($page);
-        $resolvedDimensionContent->setLocale('en');
-        $resolvedDimensionContent->setTemplateKey('default');
-        $resolvedDimensionContent->setSeoData(['canonicalUrl' => 'https://www.example.com/custom-canonical']);
-
-        $this->pageRepository->findOneBy(Argument::cetera())->willReturn($page);
-
-        $this->contentAggregator->aggregate($page, ['locale' => 'en', 'stage' => 'live', 'version' => 0])
-            ->willReturn($resolvedDimensionContent);
-
-        $this->prepareTemplateMetadata(
-            'App\Controller\TestController:testAction',
-            'default',
-            CacheLifetimeResolverInterface::TYPE_SECONDS,
-            '3600',
-        );
-
-        $this->requestStack->getCurrentRequest()->shouldNotBeCalled();
-        $this->webspaceManager->findUrlByResourceLocator(Argument::cetera())->shouldNotBeCalled();
-
-        $result = $provider->getDefaults(new Route(Page::RESOURCE_KEY, '123-123-123', 'en', '/example'));
-
-        $this->assertArrayNotHasKey('_seo', $result);
-    }
-
-    public function testGetDefaultsHandlesNoCurrentRequest(): void
-    {
-        $provider = new PageRouteDefaultsProvider(
-            $this->pageRepository->reveal(),
-            $this->contentAggregator->reveal(),
-            $this->metadataProviderRegistry,
-            $this->cacheLifetimeResolver,
-            $this->routeRepository->reveal(),
-            $this->routeGenerator->reveal(),
-            false,
-            $this->webspaceManager->reveal(),
-            $this->requestStack->reveal(),
-            'test',
-        );
-
-        $slug = '/example';
-        $canonicalUrl = 'https://sulu.io/example';
-
-        $page = new Page('123-123-123');
-        $page->setWebspaceKey('sulu-io');
-        $resolvedDimensionContent = new PageDimensionContent($page);
-        $resolvedDimensionContent->setLocale('en');
-        $resolvedDimensionContent->setTemplateKey('default');
-
-        $this->pageRepository->findOneBy(Argument::cetera())->willReturn($page);
-
-        $this->contentAggregator->aggregate($page, ['locale' => 'en', 'stage' => 'live', 'version' => 0])
-            ->willReturn($resolvedDimensionContent);
-
-        $this->prepareTemplateMetadata(
-            'App\Controller\TestController:testAction',
-            'default',
-            CacheLifetimeResolverInterface::TYPE_SECONDS,
-            '3600',
-        );
-
-        $this->requestStack->getCurrentRequest()->willReturn(null);
-
-        $this->webspaceManager->findUrlByResourceLocator($slug, 'test', 'en', 'sulu-io', null, null)
-            ->willReturn($canonicalUrl);
-
-        $result = $provider->getDefaults(new Route(Page::RESOURCE_KEY, '123-123-123', 'en', $slug));
-
-        $this->assertArrayHasKey('_seo', $result);
-        $seoData = $result['_seo'];
-        \assert(\is_array($seoData));
-        $this->assertSame($canonicalUrl, $seoData['canonicalUrl']);
     }
 
     private function prepareTemplateMetadata(string $controller, string $view, string $cacheLifeTimeType, string $cacheLifeTimeValue): void
