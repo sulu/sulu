@@ -39,6 +39,8 @@ interface TagManagerInterface
      * @param string $name The name to find or create
      *
      * @return TagInterface
+     *
+     * @deprecated since 3.0.
      */
     public function findOrCreateByName($name);
 
