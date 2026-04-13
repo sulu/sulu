@@ -17,7 +17,7 @@ trait WorkflowTrait
 {
     protected ?string $workflowPlace = null;
 
-    protected ?\DateTimeImmutable $published = null;
+    protected ?\DateTimeImmutable $workflowPublished = null;
 
     public static function getWorkflowName(): string
     {
@@ -44,13 +44,13 @@ trait WorkflowTrait
         $this->workflowPlace = $workflowPlace;
     }
 
-    public function getPublished(): ?\DateTimeImmutable
+    public function getWorkflowPublished(): ?\DateTimeImmutable
     {
-        return $this->published;
+        return $this->workflowPublished;
     }
 
-    public function setPublished(?\DateTimeImmutable $published): void
+    public function setWorkflowPublished(?\DateTimeImmutable $workflowPublished): void
     {
-        $this->published = $published;
+        $this->workflowPublished = $workflowPublished;
     }
 }

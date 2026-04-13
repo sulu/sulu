@@ -98,6 +98,6 @@ class WorkflowDataMapper implements DataMapperInterface
             throw new \RuntimeException('Expected "published" to be set in the data array.');
         }
 
-        $object->setPublished(new \DateTimeImmutable($published));
+        $object->setWorkflowPublished(new \DateTimeImmutable($published));
     }
 }

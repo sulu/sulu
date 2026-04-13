@@ -35,8 +35,8 @@ final class WorkflowMerger implements MergerInterface
             $targetObject->setWorkflowPlace($workflowPlace);
         }
 
-        if ($published = $sourceObject->getPublished()) {
-            $targetObject->setPublished($published);
+        if ($workflowPublished = $sourceObject->getWorkflowPublished()) {
+            $targetObject->setWorkflowPublished($workflowPublished);
         }
     }
 }

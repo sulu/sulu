@@ -548,16 +548,16 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
         $this->assertSame('2020-03-01', $exampleDimensionContent3->getAuthored()?->format('Y-m-d'));
     }
 
-    public function testSortByPublished(): void
+    public function testSortByWorkflowPublished(): void
     {
         static::purgeDatabase();
 
         $example = static::createExample();
         $example2 = static::createExample();
         $example3 = static::createExample();
-        static::createExampleContent($example, ['templateData' => ['title' => 'Example A'], 'published' => new \DateTimeImmutable('2020-01-01')]);
-        static::createExampleContent($example2, ['templateData' => ['title' => 'Example B'], 'published' => new \DateTimeImmutable('2020-03-01')]);
-        static::createExampleContent($example3, ['templateData' => ['title' => 'Example C'], 'published' => new \DateTimeImmutable('2020-02-01')]);
+        static::createExampleContent($example, ['templateData' => ['title' => 'Example A'], 'workflowPublished' => new \DateTimeImmutable('2020-01-01')]);
+        static::createExampleContent($example2, ['templateData' => ['title' => 'Example B'], 'workflowPublished' => new \DateTimeImmutable('2020-03-01')]);
+        static::createExampleContent($example3, ['templateData' => ['title' => 'Example C'], 'workflowPublished' => new \DateTimeImmutable('2020-02-01')]);
         static::getEntityManager()->flush();
         static::getEntityManager()->clear();
 
@@ -568,7 +568,7 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
                     'stage' => 'draft',
                 ],
                 [
-                    'published' => 'desc',
+                    'workflowPublished' => 'desc',
                 ],
                 [
                     ExampleRepository::SELECT_EXAMPLE_CONTENT => true,
@@ -578,13 +578,13 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
         $this->assertCount(3, $result);
         /** @var ExampleDimensionContent $exampleDimensionContent */
         $exampleDimensionContent = $this->contentManager->resolve($result[0], ['locale' => 'en', 'stage' => 'draft']);
-        $this->assertSame('2020-03-01', $exampleDimensionContent->getPublished()?->format('Y-m-d'));
+        $this->assertSame('2020-03-01', $exampleDimensionContent->getWorkflowPublished()?->format('Y-m-d'));
         /** @var ExampleDimensionContent $exampleDimensionContent2 */
         $exampleDimensionContent2 = $this->contentManager->resolve($result[1], ['locale' => 'en', 'stage' => 'draft']);
-        $this->assertSame('2020-02-01', $exampleDimensionContent2->getPublished()?->format('Y-m-d'));
+        $this->assertSame('2020-02-01', $exampleDimensionContent2->getWorkflowPublished()?->format('Y-m-d'));
         /** @var ExampleDimensionContent $exampleDimensionContent3 */
         $exampleDimensionContent3 = $this->contentManager->resolve($result[2], ['locale' => 'en', 'stage' => 'draft']);
-        $this->assertSame('2020-01-01', $exampleDimensionContent3->getPublished()?->format('Y-m-d'));
+        $this->assertSame('2020-01-01', $exampleDimensionContent3->getWorkflowPublished()?->format('Y-m-d'));
 
         $result = \iterator_to_array(
             $this->exampleRepository->findBy(
@@ -593,7 +593,7 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
                     'stage' => 'draft',
                 ],
                 [
-                    'published' => 'asc',
+                    'workflowPublished' => 'asc',
                 ],
                 [
                     ExampleRepository::SELECT_EXAMPLE_CONTENT => true,
@@ -603,13 +603,13 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
         $this->assertCount(3, $result);
         /** @var ExampleDimensionContent $exampleDimensionContent */
         $exampleDimensionContent = $this->contentManager->resolve($result[0], ['locale' => 'en', 'stage' => 'draft']);
-        $this->assertSame('2020-01-01', $exampleDimensionContent->getPublished()?->format('Y-m-d'));
+        $this->assertSame('2020-01-01', $exampleDimensionContent->getWorkflowPublished()?->format('Y-m-d'));
         /** @var ExampleDimensionContent $exampleDimensionContent2 */
         $exampleDimensionContent2 = $this->contentManager->resolve($result[1], ['locale' => 'en', 'stage' => 'draft']);
-        $this->assertSame('2020-02-01', $exampleDimensionContent2->getPublished()?->format('Y-m-d'));
+        $this->assertSame('2020-02-01', $exampleDimensionContent2->getWorkflowPublished()?->format('Y-m-d'));
         /** @var ExampleDimensionContent $exampleDimensionContent3 */
         $exampleDimensionContent3 = $this->contentManager->resolve($result[2], ['locale' => 'en', 'stage' => 'draft']);
-        $this->assertSame('2020-03-01', $exampleDimensionContent3->getPublished()?->format('Y-m-d'));
+        $this->assertSame('2020-03-01', $exampleDimensionContent3->getWorkflowPublished()?->format('Y-m-d'));
     }
 
     public function testAudienceTargetingFilters(): void

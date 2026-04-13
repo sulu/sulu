@@ -95,7 +95,7 @@ class DimensionContentQueryEnhancer
      * @param array{
      *     title?: 'asc'|'desc',
      *     authored?: 'asc'|'desc',
-     *     published?: 'asc'|'desc',
+     *     workflowPublished?: 'asc'|'desc',
      *     created?: 'asc'|'desc',
      *     changed?: 'asc'|'desc',
      * } $sortBys
@@ -225,7 +225,7 @@ class DimensionContentQueryEnhancer
 
         // Sort by
         foreach ($sortBys as $field => $order) {
-            if (\in_array($field, ['title', 'authored', 'published'], true)) {
+            if (\in_array($field, ['title', 'authored', 'workflowPublished'], true)) {
                 $queryBuilder->addOrderBy('filterDimensionContent.' . $field, $order);
             } elseif (\in_array($field, ['created', 'changed'], true)) {
                 $queryBuilder->addOrderBy($contentRichEntityAlias . '.' . $field, $order);

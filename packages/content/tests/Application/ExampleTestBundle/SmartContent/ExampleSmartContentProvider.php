@@ -152,6 +152,8 @@ readonly class ExampleSmartContentProvider implements SmartContentProviderInterf
         /** @var ExampleSmartContentFilters $filters */
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
+        $sortBys = $this->mapSortBys($sortBys);
+
         $alias = 'example';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
 
@@ -238,6 +240,31 @@ readonly class ExampleSmartContentProvider implements SmartContentProviderInterf
         }
 
         return $filters;
+    }
+
+    /**
+     * @param array{
+     *     title?: 'asc'|'desc',
+     *     published?: 'asc'|'desc',
+     *     created?: 'asc'|'desc',
+     *     changed?: 'asc'|'desc',
+     * } $sortBys
+     *
+     * @return array{
+     *     title?: 'asc'|'desc',
+     *     workflowPublished?: 'asc'|'desc',
+     *     created?: 'asc'|'desc',
+     *     changed?: 'asc'|'desc',
+     * }
+     */
+    protected function mapSortBys(array $sortBys): array
+    {
+        if (\array_key_exists('published', $sortBys)) {
+            $sortBys['workflowPublished'] = $sortBys['published'];
+            unset($sortBys['published']);
+        }
+
+        return $sortBys;
     }
 
     /**

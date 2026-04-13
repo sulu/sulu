@@ -2,22 +2,6 @@
 
 ## 3.0.5
 
-### `workflowPublished` renamed to `published`
-
-The `workflowPublished` property on dimension content entities, and the corresponding database column, have been renamed to `published`.
-
-**Impact:**
-
-- The sort/filter key `workflowPublished` accepted by `DimensionContentQueryEnhancer::addFilters()` and all SmartContent providers (`PageSmartContentProvider`, `SnippetSmartContentProvider`, `ArticleSmartContentProvider`) is now `published`.
-- The methods `getWorkflowPublished()` / `setWorkflowPublished()` on `WorkflowInterface` and `WorkflowTrait` are now `getPublished()` / `setPublished()`.
-- The `workflowPublished` key is no longer present in the raw normalized data array; it was already exposed as `published` in the API output and continues to be.
-
-**Migration:**
-
-1. Run the provided `migrate_workflow_published.sql` script against your database.
-2. If you pass `workflowPublished` as a sort key to any SmartContent provider or `DimensionContentQueryEnhancer`, change it to `published`.
-3. If you call `getWorkflowPublished()` / `setWorkflowPublished()` anywhere in your project code, rename to `getPublished()` / `setPublished()`.
-
 ### Remove false cascade on author and route relations
 
 The cascade delete on the author and route relations has been removed to prevent accidental data loss when deleting authors or routes.

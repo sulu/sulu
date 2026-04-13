@@ -135,7 +135,7 @@
         </property>
 
         <property name="published" translation="sulu_admin.published" type="date" visibility="never">
-            <field-name>published</field-name>
+            <field-name>workflowPublished</field-name>
             <entity-name>dimensionContent</entity-name>
             <transformer type="datetime"/>
         </property>

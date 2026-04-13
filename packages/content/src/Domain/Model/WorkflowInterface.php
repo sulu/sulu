@@ -57,7 +57,7 @@ interface WorkflowInterface
 
     public function setWorkflowPlace(?string $workflowPlace): void;
 
-    public function getPublished(): ?\DateTimeImmutable;
+    public function getWorkflowPublished(): ?\DateTimeImmutable;
 
-    public function setPublished(?\DateTimeImmutable $published): void;
+    public function setWorkflowPublished(?\DateTimeImmutable $workflowPublished): void;
 }
