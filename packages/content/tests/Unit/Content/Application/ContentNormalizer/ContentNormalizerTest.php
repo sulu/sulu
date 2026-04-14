@@ -220,8 +220,8 @@ class ContentNormalizerTest extends TestCase
             ],
             'excerptSegment' => null,
             'excerptTags' => [
-                'Tag 1',
-                'Tag 2',
+                1,
+                2,
             ],
             'ghostLocale' => 'en',
             'id' => 5,

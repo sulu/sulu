@@ -75,4 +75,11 @@ interface TagManagerInterface
      * @throws Exception\TagNotFoundException
      */
     public function merge($srcTagIds, $destTagId);
+
+    /**
+     * @param int[] $ids
+     *
+     * @return TagInterface[]
+     */
+    public function findByIds(array $ids): array;
 }

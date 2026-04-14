@@ -144,7 +144,7 @@ class SmartContentContentResolverTest extends SuluTestCase
                             'description' => 'excerpt-example-description-0',
                         ],
                         'excerptCategories' => [$category->getId()],
-                        'excerptTags' => [$tag->getName()],
+                        'excerptTags' => [$tag->getId()],
                         'seo' => [
                             'title' => 'seo-example-title-0',
                             'description' => 'seo-example-description-0',
@@ -319,7 +319,7 @@ class SmartContentContentResolverTest extends SuluTestCase
                     'title' => 'Match',
                     'url' => '/match',
                     'excerptCategories' => [$cat1->getId()],
-                    'excerptTags' => [$tag1->getName(), $tag2->getName()],
+                    'excerptTags' => [$tag1->getId(), $tag2->getId()],
                 ],
             ],
         ]);
@@ -331,7 +331,7 @@ class SmartContentContentResolverTest extends SuluTestCase
                     'title' => 'Partial',
                     'url' => '/partial',
                     'excerptCategories' => [$cat1->getId()],
-                    'excerptTags' => [$tag1->getName()],
+                    'excerptTags' => [$tag1->getId()],
                 ],
             ],
         ]);
@@ -343,7 +343,7 @@ class SmartContentContentResolverTest extends SuluTestCase
                     'title' => 'Other',
                     'url' => '/other',
                     'excerptCategories' => [$cat2->getId()],
-                    'excerptTags' => [$tag1->getName(), $tag2->getName()],
+                    'excerptTags' => [$tag1->getId(), $tag2->getId()],
                 ],
             ],
         ]);
@@ -358,7 +358,7 @@ class SmartContentContentResolverTest extends SuluTestCase
                     'examples' => [
                         'categories' => [$cat1->getId()],
                         'categoryOperator' => 'OR',
-                        'tags' => [$tag1->getName(), $tag2->getName()],
+                        'tags' => [$tag1->getId(), $tag2->getId()],
                         'tagOperator' => 'AND',
                     ],
                 ],
@@ -460,7 +460,7 @@ class SmartContentContentResolverTest extends SuluTestCase
                     'title' => 'Match Both',
                     'url' => '/match-both',
                     'excerptCategories' => [$catA->getId(), $catB->getId()],
-                    'excerptTags' => [$tagA->getName(), $tagB->getName()],
+                    'excerptTags' => [$tagA->getId(), $tagB->getId()],
                 ],
             ],
         ]);
@@ -472,7 +472,7 @@ class SmartContentContentResolverTest extends SuluTestCase
                     'title' => 'Partial Tag',
                     'url' => '/partial-tag',
                     'excerptCategories' => [$catA->getId()],
-                    'excerptTags' => [$tagA->getName()],
+                    'excerptTags' => [$tagA->getId()],
                 ],
             ],
         ]);

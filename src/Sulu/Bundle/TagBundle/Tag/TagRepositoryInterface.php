@@ -37,4 +37,13 @@ interface TagRepositoryInterface extends RepositoryInterface
      * @return TagInterface|null
      */
     public function findTagByName($name);
+
+    /**
+     * Finds the tags with the given IDs.
+     *
+     * @param int[] $ids
+     *
+     * @return TagInterface[]
+     */
+    public function findTagsByIds(array $ids);
 }

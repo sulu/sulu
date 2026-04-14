@@ -17,7 +17,7 @@
         </service>
 
         <service id="sulu_content.taxonomy_data_mapper" class="Sulu\Content\Application\ContentDataMapper\DataMapper\TaxonomyDataMapper">
-            <argument type="service" id="sulu_content.tag_factory"/>
+            <argument type="service" id="sulu_tag.tag_manager"/>
             <argument type="service" id="sulu_content.category_factory"/>
             <argument type="service" id="sulu_audience_targeting.target_group_factory" on-invalid="null"/>
 

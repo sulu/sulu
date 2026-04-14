@@ -20,10 +20,10 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\TaxonomyDataMapper;
 use Sulu\Content\Domain\Factory\CategoryFactoryInterface;
-use Sulu\Content\Domain\Factory\TagFactoryInterface;
 use Sulu\Content\Domain\Factory\TargetGroupFactoryInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
@@ -35,9 +35,9 @@ class TaxonomyDataMapperTest extends TestCase
     use SetGetPrivatePropertyTrait;
 
     /**
-     * @var ObjectProphecy<TagFactoryInterface>
+     * @var ObjectProphecy<TagManagerInterface>
      */
-    private $tagFactory;
+    private $tagManager;
 
     /**
      * @var ObjectProphecy<CategoryFactoryInterface>
@@ -51,20 +51,20 @@ class TaxonomyDataMapperTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->tagFactory = $this->prophesize(TagFactoryInterface::class);
+        $this->tagManager = $this->prophesize(TagManagerInterface::class);
         $this->categoryFactory = $this->prophesize(CategoryFactoryInterface::class);
         $this->targetGroupFactory = $this->prophesize(TargetGroupFactoryInterface::class);
     }
 
     protected function createTaxonomyDataMapperInstance(): TaxonomyDataMapper
     {
-        return new TaxonomyDataMapper($this->tagFactory->reveal(), $this->categoryFactory->reveal(), $this->targetGroupFactory->reveal());
+        return new TaxonomyDataMapper($this->tagManager->reveal(), $this->categoryFactory->reveal(), $this->targetGroupFactory->reveal());
     }
 
     public function testMapNoTaxonomyInterface(): void
     {
         $data = [
-            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptTags' => [1, 2],
             'excerptCategories' => [3, 4],
             'excerptSegment' => 'test-segment',
         ];
@@ -72,7 +72,7 @@ class TaxonomyDataMapperTest extends TestCase
         $unlocalizedDimensionContent = $this->prophesize(DimensionContentInterface::class);
         $localizedDimensionContent = $this->prophesize(DimensionContentInterface::class);
 
-        $this->tagFactory->create(Argument::any())
+        $this->tagManager->findByIds(Argument::any())
             ->shouldNotBeCalled();
 
         $this->categoryFactory->create(Argument::any())
@@ -90,7 +90,7 @@ class TaxonomyDataMapperTest extends TestCase
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent = new ExampleDimensionContent($example);
 
-        $this->tagFactory->create(Argument::any())
+        $this->tagManager->findByIds(Argument::any())
             ->shouldNotBeCalled();
 
         $this->categoryFactory->create(Argument::any())
@@ -106,7 +106,7 @@ class TaxonomyDataMapperTest extends TestCase
     public function testMapWithTagsAndCategories(): void
     {
         $data = [
-            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptTags' => [1, 2],
             'excerptCategories' => [3, 4],
         ];
 
@@ -115,11 +115,13 @@ class TaxonomyDataMapperTest extends TestCase
         $localizedDimensionContent = new ExampleDimensionContent($example);
 
         $tag1 = new Tag();
+        $this->setPrivateProperty($tag1, 'id', 1);
         $tag1->setName('Tag 1');
         $tag2 = new Tag();
+        $this->setPrivateProperty($tag2, 'id', 2);
         $tag2->setName('Tag 2');
 
-        $this->tagFactory->create(['Tag 1', 'Tag 2'])->willReturn([$tag1, $tag2])->shouldBeCalled();
+        $this->tagManager->findByIds([1, 2])->willReturn([$tag1, $tag2])->shouldBeCalled();
 
         $category1 = new Category();
         $category1->setId(3);
@@ -130,6 +132,7 @@ class TaxonomyDataMapperTest extends TestCase
         $taxonomyMapper = $this->createTaxonomyDataMapperInstance();
         $taxonomyMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
+        $this->assertSame([1, 2], $localizedDimensionContent->getExcerptTagIds());
         $this->assertSame(['Tag 1', 'Tag 2'], $localizedDimensionContent->getExcerptTagNames());
         $this->assertSame([3, 4], $localizedDimensionContent->getExcerptCategoryIds());
     }
@@ -195,7 +198,7 @@ class TaxonomyDataMapperTest extends TestCase
     {
         $data = [
             'excerptSegment' => 'test-segment',
-            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptTags' => [1, 2],
             'excerptCategories' => [3, 4],
             'excerptAudienceTargetGroups' => [5, 6],
         ];
@@ -205,11 +208,13 @@ class TaxonomyDataMapperTest extends TestCase
         $localizedDimensionContent = new ExampleDimensionContent($example);
 
         $tag1 = new Tag();
+        $this->setPrivateProperty($tag1, 'id', 1);
         $tag1->setName('Tag 1');
         $tag2 = new Tag();
+        $this->setPrivateProperty($tag2, 'id', 2);
         $tag2->setName('Tag 2');
 
-        $this->tagFactory->create(['Tag 1', 'Tag 2'])->willReturn([$tag1, $tag2])->shouldBeCalled();
+        $this->tagManager->findByIds([1, 2])->willReturn([$tag1, $tag2])->shouldBeCalled();
 
         $category1 = new Category();
         $category1->setId(3);
@@ -227,6 +232,7 @@ class TaxonomyDataMapperTest extends TestCase
         $taxonomyMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame('test-segment', $localizedDimensionContent->getExcerptSegment());
+        $this->assertSame([1, 2], $localizedDimensionContent->getExcerptTagIds());
         $this->assertSame(['Tag 1', 'Tag 2'], $localizedDimensionContent->getExcerptTagNames());
         $this->assertSame([3, 4], $localizedDimensionContent->getExcerptCategoryIds());
         $this->assertSame([5, 6], $localizedDimensionContent->getExcerptAudienceTargetGroupIds());
@@ -245,7 +251,7 @@ class TaxonomyDataMapperTest extends TestCase
 
         // Create mapper without target group factory (simulate when audience targeting bundle is not installed)
         $taxonomyMapper = new TaxonomyDataMapper(
-            $this->tagFactory->reveal(),
+            $this->tagManager->reveal(),
             $this->categoryFactory->reveal(),
             null // No target group factory
         );

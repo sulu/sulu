@@ -50,4 +50,17 @@ class TagRepository extends EntityRepository implements TagRepositoryInterface
             return null;
         }
     }
+
+    /**
+     * @return TagInterface[]
+     */
+    public function findTagsByIds(array $ids): array
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->where('t.id IN (:ids)')
+            ->setParameter('ids', $ids);
+
+        /** @var array<TagInterface> */
+        return $qb->getQuery()->getResult();
+    }
 }

@@ -375,7 +375,24 @@ class AccountSmartContentProviderTest extends SuluTestCase
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array{
+     *     categories: int[],
+     *     categoryOperator: 'AND'|'OR',
+     *     websiteCategories: string[],
+     *     websiteCategoryOperator: 'AND'|'OR',
+     *     tags: int[],
+     *     tagOperator: 'AND'|'OR',
+     *     websiteTags: string[],
+     *     websiteTagOperator: 'AND'|'OR',
+     *     types: string[],
+     *     typesOperator: 'OR',
+     *     locale: string,
+     *     dataSource: string|null,
+     *     limit: int|null,
+     *     offset: int,
+     *     includeSubFolders: bool,
+     *     excludeDuplicates: bool,
+     * }
      */
     private function getDefaultFilters(): array
     {

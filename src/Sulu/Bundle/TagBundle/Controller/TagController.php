@@ -103,8 +103,9 @@ class TagController extends AbstractRestController implements SecuredControllerI
                 $listBuilder->limit(\count($names));
             }
 
-            $ids = \array_filter(\explode(',', $request->get('ids', '')));
-            if (\count($ids) > 0) {
+            $idsParam = $request->get('ids', '');
+            $ids = \array_filter(\explode(',', \is_string($idsParam) ? $idsParam : ''));
+            if (\count($ids) > 0 && isset($fieldDescriptors['id'])) {
                 $listBuilder->in($fieldDescriptors['id'], $ids);
                 $listBuilder->limit(\count($ids));
             }
@@ -229,7 +230,8 @@ class TagController extends AbstractRestController implements SecuredControllerI
     public function postMergeAction(Request $request)
     {
         try {
-            $srcTagIds = \explode(',', $request->get('src'));
+            $srcParam = $request->get('src');
+            $srcTagIds = \explode(',', \is_scalar($srcParam) ? (string) $srcParam : '');
             $destTagId = $request->get('dest');
 
             $destTag = $this->tagManager->merge($srcTagIds, $destTagId);

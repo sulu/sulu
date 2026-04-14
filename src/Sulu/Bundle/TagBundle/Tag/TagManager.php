@@ -184,4 +184,12 @@ class TagManager implements TagManagerInterface
 
         return $destTag;
     }
+
+    /**
+     * @return TagInterface[]
+     */
+    public function findByIds(array $ids): array
+    {
+        return $this->tagRepository->findTagsByIds($ids);
+    }
 }

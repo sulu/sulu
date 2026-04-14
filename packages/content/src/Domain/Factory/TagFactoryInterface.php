@@ -15,12 +15,17 @@ namespace Sulu\Content\Domain\Factory;
 
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 
+/**
+ * @deprecated since 3.0, use TagManagerInterface::findByIds() instead.
+ */
 interface TagFactoryInterface
 {
     /**
      * @param string[] $tagNames
      *
      * @return TagInterface[]
+     *
+     * @deprecated since 3.0, use TagManagerInterface::findByIds() instead.
      */
     public function create(array $tagNames): array;
 }

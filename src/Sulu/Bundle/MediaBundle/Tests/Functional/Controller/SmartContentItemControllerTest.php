@@ -27,10 +27,6 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 class SmartContentItemControllerTest extends SuluTestCase
 {
     /**
-     * @var array<string, Tag>
-     */
-    private array $tags = [];
-    /**
      * @var EntityManagerInterface
      */
     protected $em;
@@ -245,7 +241,10 @@ class SmartContentItemControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $result = \json_decode($this->client->getResponse()->getContent(), true);
+        $content = $this->client->getResponse()->getContent();
+        $this->assertIsString($content);
+        /** @var array{_embedded: array{items: array<array{id: mixed}>}} $result */
+        $result = \json_decode($content, true);
         $this->assertCount(2, $result['_embedded']['items']);
 
         $resultIds = \array_map(fn ($item) => $item['id'], $result['_embedded']['items']);
@@ -277,7 +276,10 @@ class SmartContentItemControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $result = \json_decode($this->client->getResponse()->getContent(), true);
+        $content = $this->client->getResponse()->getContent();
+        $this->assertIsString($content);
+        /** @var array{_embedded: array{items: array<array{id: mixed}>}} $result */
+        $result = \json_decode($content, true);
         $this->assertCount(2, $result['_embedded']['items']);
 
         $resultIds = \array_map(fn ($item) => $item['id'], $result['_embedded']['items']);
@@ -309,7 +311,10 @@ class SmartContentItemControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $result = \json_decode($this->client->getResponse()->getContent(), true);
+        $content = $this->client->getResponse()->getContent();
+        $this->assertIsString($content);
+        /** @var array{_embedded: array{items: array<array{id: mixed}>}} $result */
+        $result = \json_decode($content, true);
         $this->assertCount(1, $result['_embedded']['items']);
         $this->assertEquals($media3->getId(), $result['_embedded']['items'][0]['id']);
     }
@@ -319,7 +324,6 @@ class SmartContentItemControllerTest extends SuluTestCase
         $tag = new Tag();
         $tag->setName($name);
         $this->em->persist($tag);
-        $this->tags[$name] = $tag;
 
         return $tag;
     }

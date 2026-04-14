@@ -82,6 +82,10 @@ class ExampleControllerTest extends SuluTestCase
     {
         self::purgeDatabase();
 
+        $tag1 = self::createTag(['name' => 'Tag 1']);
+        $tag2 = self::createTag(['name' => 'Tag 2']);
+        self::getEntityManager()->flush();
+
         $this->client->request('POST', '/admin/api/examples?locale=en&action=publish', [], [], [], \json_encode([
             'template' => 'example-2',
             'title' => 'Test Example',
@@ -102,7 +106,7 @@ class ExampleControllerTest extends SuluTestCase
                 'description' => 'Excerpt Description',
                 'more' => 'Excerpt More',
             ],
-            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptTags' => [$tag1->getId(), $tag2->getId()],
             'excerptCategories' => [],
             'excerptIcon' => null,
             'excerptMedia' => null,
@@ -252,6 +256,10 @@ class ExampleControllerTest extends SuluTestCase
     {
         \sleep(1); // Ensure that the version timestamp is different from the previous version
 
+        $modTag1 = self::createTag(['name' => 'Modified Tag 1']);
+        $modTag2 = self::createTag(['name' => 'Modified Tag 2']);
+        self::getEntityManager()->flush();
+
         $this->client->request(
             'PUT', '/admin/api/examples/' . $id . '?locale=en&action=publish', [], [], [],
             \json_encode(
@@ -274,7 +282,7 @@ class ExampleControllerTest extends SuluTestCase
                         'description' => 'Modified Excerpt Description',
                         'more' => 'Modified Excerpt More',
                     ],
-                    'excerptTags' => ['Modified Tag 1', 'Modified Tag 2'],
+                    'excerptTags' => [$modTag1->getId(), $modTag2->getId()],
                     'excerptCategories' => [],
                     'excerptIcon' => null,
                     'excerptMedia' => null,
@@ -339,6 +347,10 @@ class ExampleControllerTest extends SuluTestCase
     {
         self::purgeDatabase();
 
+        $tag1 = self::createTag(['name' => 'Tag 1']);
+        $tag2 = self::createTag(['name' => 'Tag 2']);
+        self::getEntityManager()->flush();
+
         $this->client->request('POST', '/admin/api/examples?locale=en', [], [], [], \json_encode([
             'template' => 'example-2',
             'title' => 'Test Example',
@@ -358,7 +370,7 @@ class ExampleControllerTest extends SuluTestCase
                 'description' => 'Excerpt Description',
                 'more' => 'Excerpt More',
             ],
-            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptTags' => [$tag1->getId(), $tag2->getId()],
             'excerptCategories' => [],
             'excerptIcon' => null,
             'excerptMedia' => null,
@@ -427,6 +439,10 @@ class ExampleControllerTest extends SuluTestCase
     #[Depends('testGet')]
     public function testPut(int $id): void
     {
+        $tag3 = self::createTag(['name' => 'Tag 3']);
+        $tag4 = self::createTag(['name' => 'Tag 4']);
+        self::getEntityManager()->flush();
+
         $this->client->request('PUT', '/admin/api/examples/' . $id . '?locale=en', [], [], [], \json_encode([
             'template' => 'default',
             'title' => 'Test Example 2',
@@ -446,7 +462,7 @@ class ExampleControllerTest extends SuluTestCase
                 'description' => 'Excerpt Description 2',
                 'more' => 'Excerpt More 2',
             ],
-            'excerptTags' => ['Tag 3', 'Tag 4'],
+            'excerptTags' => [$tag3->getId(), $tag4->getId()],
             'excerptCategories' => [],
             'excerptIcon' => null,
             'excerptMedia' => null,
@@ -1056,6 +1072,8 @@ class ExampleControllerTest extends SuluTestCase
 
         $category = $this->createCategory(['key' => 'test-category']);
         $this->createCategoryTranslation($category, ['title' => 'Test Category', 'locale' => 'en']);
+        $tag1 = self::createTag(['name' => 'Test Tag 1']);
+        $tag2 = self::createTag(['name' => 'Test Tag 2']);
         self::getEntityManager()->flush();
 
         /** @var ExampleRepository $exampleRepository */
@@ -1063,7 +1081,7 @@ class ExampleControllerTest extends SuluTestCase
         $this->client->request('POST', '/admin/api/examples?locale=en', [], [], [], \json_encode([
             'template' => 'default',
             'title' => 'Tag Test Example',
-            'excerptTags' => ['Test Tag 1', 'Test Tag 2'],
+            'excerptTags' => [$tag1->getId(), $tag2->getId()],
             'excerptCategories' => [$category->getId()],
             'url' => '/test-example',
         ]) ?: null);

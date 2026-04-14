@@ -258,14 +258,14 @@ class PageSmartContentProviderPermissionTest extends SuluTestCase
     /**
      * @param array<string, mixed> $additionalFilters
      *
-     * @return array{categories: array<int>, categoryOperator: 'AND'|'OR', websiteCategories: array<string>, websiteCategoryOperator: 'AND'|'OR', tags: array<string>, tagOperator: 'AND'|'OR', websiteTags: array<string>, websiteTagOperator: 'AND'|'OR', types: array<string>, typesOperator: 'OR', locale: string, dataSource: string|null, limit: int|null, offset: int, includeSubFolders: bool, excludeDuplicates: bool, webspaceKey: string, stage: string}
+     * @return array{categories: array<int>, categoryOperator: 'AND'|'OR', websiteCategories: array<string>, websiteCategoryOperator: 'AND'|'OR', tags: array<int>, tagOperator: 'AND'|'OR', websiteTags: array<string>, websiteTagOperator: 'AND'|'OR', types: array<string>, typesOperator: 'OR', locale: string, dataSource: string|null, limit: int|null, offset: int, includeSubFolders: bool, excludeDuplicates: bool, webspaceKey: string, stage: string}
      */
     private function createFilters(string $webspaceKey, string $locale, array $additionalFilters = []): array
     {
         // Determine which homepage to use based on webspace
         $homepage = 'sulu-io' === $webspaceKey ? $this->homepageNonSecure : $this->homepageSecure;
 
-        /** @var array{categories: array<int>, categoryOperator: 'AND'|'OR', websiteCategories: array<string>, websiteCategoryOperator: 'AND'|'OR', tags: array<string>, tagOperator: 'AND'|'OR', websiteTags: array<string>, websiteTagOperator: 'AND'|'OR', types: array<string>, typesOperator: 'OR', locale: string, dataSource: string|null, limit: int|null, offset: int, includeSubFolders: bool, excludeDuplicates: bool, webspaceKey: string, stage: string} */
+        /** @var array{categories: array<int>, categoryOperator: 'AND'|'OR', websiteCategories: array<string>, websiteCategoryOperator: 'AND'|'OR', tags: array<int>, tagOperator: 'AND'|'OR', websiteTags: array<string>, websiteTagOperator: 'AND'|'OR', types: array<string>, typesOperator: 'OR', locale: string, dataSource: string|null, limit: int|null, offset: int, includeSubFolders: bool, excludeDuplicates: bool, webspaceKey: string, stage: string} */
         return \array_merge([
             'locale' => $locale,
             'webspaceKey' => $webspaceKey,

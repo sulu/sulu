@@ -53,6 +53,22 @@ Update your template XML files. For example:
 
 If a deprecated param name is still used, the container build will fail with a message pointing at the affected template and property.
 
+
+### SmartContent tag filter now uses tag IDs instead of tag names
+
+The SmartContent tag filter previously stored and compared tags by **name**. It now stores and compares tags by **ID** to be consistent with how categories are handled and to restore compatibility with content migrated from Sulu 2.6.
+
+**Impact:** If you have custom `SmartContentProviderInterface` implementations, you must update their `mapFilters()` method to convert the `tags` key (array of integer IDs) into whatever key your `DimensionContentQueryEnhancer` expects (typically `tagIds`):
+
+```php
+if ($filters['tags']) {
+    $filters['tagIds'] = $filters['tags'];
+    unset($filters['tags']);
+}
+```
+
+**Stored content:** Any SmartContent filter configuration that was saved with tag names (as strings) will no longer filter correctly. You need to migrate stored SmartContent data to use tag IDs instead of tag names.
+
 ## 3.0.5
 
 ### Remove false cascade on author and route relations

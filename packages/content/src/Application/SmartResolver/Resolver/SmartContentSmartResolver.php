@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
  *       categoryOperator: 'AND'|'OR',
  *       websiteCategories: string[],
  *       websiteCategoryOperator: 'AND'|'OR',
- *       tags: string[],
+ *       tags: int[],
  *       tagOperator: 'AND'|'OR',
  *       websiteTags: string[],
  *       websiteTagOperator: 'AND'|'OR',

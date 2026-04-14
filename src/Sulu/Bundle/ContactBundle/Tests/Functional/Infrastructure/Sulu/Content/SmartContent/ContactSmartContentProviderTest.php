@@ -393,11 +393,28 @@ class ContactSmartContentProviderTest extends SuluTestCase
         ]);
 
         $this->assertCount(6, $result);
-        $this->assertSame('Alex', $result[0]['firstName']);
+        $this->assertSame('Alex MultiSkill', $result[0]['title']);
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array{
+     *     categories: int[],
+     *     categoryOperator: 'AND'|'OR',
+     *     websiteCategories: string[],
+     *     websiteCategoryOperator: 'AND'|'OR',
+     *     tags: int[],
+     *     tagOperator: 'AND'|'OR',
+     *     websiteTags: string[],
+     *     websiteTagOperator: 'AND'|'OR',
+     *     types: string[],
+     *     typesOperator: 'OR',
+     *     locale: string,
+     *     dataSource: string|null,
+     *     limit: int|null,
+     *     offset: int,
+     *     includeSubFolders: bool,
+     *     excludeDuplicates: bool,
+     * }
      */
     private function getDefaultFilters(): array
     {

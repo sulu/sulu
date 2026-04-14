@@ -40,7 +40,8 @@
         <service id="Sulu\Content\Application\ContentMerger\ContentMergerInterface" alias="sulu_content.content_merger"/>
 
         <!-- TagFactory -->
-        <service id="sulu_content.tag_factory" class="Sulu\Content\Infrastructure\Doctrine\TagFactory">
+        <!-- @deprecated since 3.0, use sulu_tag.tag_manager (TagManagerInterface::findByIds()) instead -->
+        <service id="sulu_content.tag_factory" class="Sulu\Content\Infrastructure\Doctrine\TagFactory" public="true">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu.repository.tag"/>
         </service>
