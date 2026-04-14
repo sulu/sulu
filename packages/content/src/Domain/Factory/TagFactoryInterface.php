@@ -16,7 +16,7 @@ namespace Sulu\Content\Domain\Factory;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 
 /**
- * @deprecated since 3.0, use TagManagerInterface::findByIds() instead.
+ * @deprecated since 3.0, use TagRepositoryInterface::findTagsByIds() instead.
  */
 interface TagFactoryInterface
 {
@@ -25,7 +25,7 @@ interface TagFactoryInterface
      *
      * @return TagInterface[]
      *
-     * @deprecated since 3.0, use TagManagerInterface::findByIds() instead.
+     * @deprecated since 3.0, use TagRepositoryInterface::findTagsByIds() instead.
      */
     public function create(array $tagNames): array;
 }

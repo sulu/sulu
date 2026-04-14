@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentDataMapper\DataMapper;
 
-use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Content\Domain\Factory\CategoryFactoryInterface;
 use Sulu\Content\Domain\Factory\TargetGroupFactoryInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -23,7 +23,7 @@ use Webmozart\Assert\Assert;
 class TaxonomyDataMapper implements DataMapperInterface
 {
     public function __construct(
-        private TagManagerInterface $tagManager,
+        private TagRepositoryInterface $tagRepository,
         private CategoryFactoryInterface $categoryFactory,
         private ?TargetGroupFactoryInterface $targetGroupFactory,
     ) {
@@ -58,7 +58,7 @@ class TaxonomyDataMapper implements DataMapperInterface
             Assert::isArray($data['excerptTags']);
             Assert::allInteger($data['excerptTags']);
             $dimensionContent->setExcerptTags(
-                $this->tagManager->findByIds($data['excerptTags'])
+                $this->tagRepository->findTagsByIds($data['excerptTags'])
             );
         }
         if (\array_key_exists('excerptCategories', $data)) {
