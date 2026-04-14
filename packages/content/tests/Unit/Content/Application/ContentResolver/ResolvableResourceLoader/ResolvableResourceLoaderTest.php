@@ -213,6 +213,40 @@ class ResolvableResourceLoaderTest extends TestCase
         ], $result['example']['123'][$metadata2]);
     }
 
+    public function testLoadResourcesWithContext(): void
+    {
+        $contextAwareLoader = new class() implements ResourceLoaderInterface {
+            /** @var array<mixed> */
+            public array $lastParams = [];
+
+            public function load(array $ids, ?string $locale, array $params = []): array
+            {
+                $this->lastParams = $params;
+
+                return ['1' => ['title' => 'test']];
+            }
+
+            public static function getKey(): string
+            {
+                return 'context_test';
+            }
+        };
+
+        $provider = new ResourceLoaderProvider(['context_test' => $contextAwareLoader]);
+        $loader = new ResolvableResourceLoader($provider, $this->smartResolverProvider);
+
+        $resolvable = new ResolvableResource('1', 'context_test', 1);
+        $resourcesPerLoader = [
+            'context_test' => [
+                '1' => [$resolvable->getMetadataIdentifier() => $resolvable],
+            ],
+        ];
+
+        $loader->loadResources($resourcesPerLoader, 'de_li', ['_shadowLocale' => 'de']);
+
+        self::assertSame('de', $contextAwareLoader->lastParams['_shadowLocale']);
+    }
+
     public function testLoadResourcesWithInvalidLoaderKey(): void
     {
         $this->expectException(\RuntimeException::class);

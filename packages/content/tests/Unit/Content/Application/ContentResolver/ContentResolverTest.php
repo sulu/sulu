@@ -173,12 +173,14 @@ class ContentResolverTest extends TestCase
 
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['333' => [$highPriorityResource->getMetadataIdentifier() => $highPriorityResource]]],
-            'en'
+            'en',
+            []
         )->willReturn(['example' => ['333' => [$highPriorityResource->getMetadataIdentifier() => 'High Priority Result']]]);
 
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['444' => [$lowPriorityResource->getMetadataIdentifier() => $lowPriorityResource]]],
-            'en'
+            'en',
+            []
         )->willReturn(['example' => ['444' => [$lowPriorityResource->getMetadataIdentifier() => 'Low Priority Result']]]);
 
         $result = $this->contentResolver->resolve($dimensionContent);

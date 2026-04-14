@@ -25,8 +25,9 @@ interface ResolvableResourceLoaderInterface
      * Loads and resolves resources from various resource loaders.
      *
      * @param array<string, array<string|int, array<string, ResolvableInterface>>> $resourcesPerLoader Resource loaders and their associated resources to load
+     * @param array<string, mixed> $context Additional context passed to resource loaders (e.g. _shadowLocale)
      *
      * @return array<string, array<string|int, array<string, mixed>>> Resolved resources organized by resource loader key
      */
-    public function loadResources(array $resourcesPerLoader, ?string $locale): array;
+    public function loadResources(array $resourcesPerLoader, ?string $locale, array $context = []): array;
 }
