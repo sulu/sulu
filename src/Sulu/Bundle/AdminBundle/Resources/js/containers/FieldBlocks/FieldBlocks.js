@@ -512,7 +512,10 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
         const newValue = [
             ...oldValues.slice(0, openedBlockSettingsIndex),
-            {...oldValues[openedBlockSettingsIndex], [SETTINGS_KEY]: (({blockType: _b, ...rest}) => rest)(blockSettingsFormStore.data)},
+            {
+                ...oldValues[openedBlockSettingsIndex],
+                [SETTINGS_KEY]: (({blockType: _b, ...rest}) => rest)(blockSettingsFormStore.data),
+            },
             ...oldValues.slice(openedBlockSettingsIndex + 1),
         ];
 
