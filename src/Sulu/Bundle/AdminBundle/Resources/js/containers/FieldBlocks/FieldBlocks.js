@@ -470,7 +470,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         this.blockSettingsFormStore?.destroy();
         this.blockSettingsFormStore = memoryFormStoreFactory.createFromFormKey(
             settingsFormKey,
-            {...this.value[index][SETTINGS_KEY]},
+            {...this.value[index][SETTINGS_KEY], blockType: this.value[index]?.type},
             this.props.formInspector.locale,
             undefined,
             this.props.formInspector.options
@@ -512,7 +512,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
         const newValue = [
             ...oldValues.slice(0, openedBlockSettingsIndex),
-            {...oldValues[openedBlockSettingsIndex], [SETTINGS_KEY]: blockSettingsFormStore.data},
+            {...oldValues[openedBlockSettingsIndex], [SETTINGS_KEY]: (({blockType: _b, ...rest}) => rest)(blockSettingsFormStore.data)},
             ...oldValues.slice(openedBlockSettingsIndex + 1),
         ];
 

@@ -2145,3 +2145,60 @@ test('Throw error if passed block_id_generator schema option is not a boolean', 
         />
     )).toThrow('The "block" field types only accepts booleans as "block_id_generator" schema option!');
 });
+
+test('Should inject blockType of clicked block into settings form data and strip it on save', () => {
+    const changeSpy = jest.fn();
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const types = {
+        default: {
+            title: 'Default',
+            form: {},
+        },
+    };
+    const value = [
+        {type: 'content-images', settings: {}},
+        {type: 'content-text', settings: {}},
+    ];
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const schemaPromise = Promise.resolve({});
+    const jsonSchemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="default"
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'content_block_settings'}}}
+            types={types}
+            value={value}
+        />
+    );
+
+    fieldBlocks.find('Block').at(1).simulate('click');
+    fieldBlocks.find('Block').at(1).find('Icon[name="su-cog"]').simulate('click');
+
+    // blockType is available in form store data so __parent.blockType works in visibleCondition
+    expect(fieldBlocks.instance().blockSettingsFormStore.data.blockType).toEqual('content-text');
+
+    // blockType is not passed via metadataOptions
+    expect(metadataStore.getSchema).toBeCalledWith('content_block_settings', undefined, undefined);
+    expect(metadataStore.getJsonSchema).toBeCalledWith('content_block_settings', undefined, undefined);
+
+    return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
+        fieldBlocks.update();
+        fieldBlocks.find('FormOverlay Button[children="sulu_admin.apply"]').simulate('click');
+
+        // blockType is stripped from saved settings so it is not persisted in the database
+        expect(changeSpy).toBeCalledWith(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    settings: expect.not.objectContaining({blockType: expect.anything()}),
+                }),
+            ])
+        );
+    });
+});
