@@ -156,6 +156,35 @@ class ArticlesSitemapProviderTest extends WebsiteTestCase
             ],
         );
 
+        self::$articles['shadow'] = self::createArticle(
+            [
+                'title' => 'Article With Shadow Locale',
+                'template' => 'article',
+                'locale' => 'en',
+                'url' => '/article-with-shadow-locale',
+                'mainWebspace' => 'blog',
+            ],
+        );
+
+        self::copyLocaleArticle(
+            self::$articles['shadow']->getUuid(),
+            'en',
+            'de',
+        );
+
+        self::modifyArticle(
+            self::$articles['shadow']->getUuid(),
+            [
+                'title' => 'Artikel mit Schatten-Locale',
+                'template' => 'article',
+                'locale' => 'de',
+                'url' => '/artikel-mit-schatten-locale',
+                'shadowOn' => true,
+                'shadowLocale' => 'en',
+                'mainWebspace' => 'blog',
+            ],
+        );
+
         // Create articles for sulu.io webspace
         self::$articles['product'] = self::createArticle(
             [
@@ -238,7 +267,7 @@ class ArticlesSitemapProviderTest extends WebsiteTestCase
         /** @var string $sitemap */
         $sitemap = self::$client->getResponse()->getContent();
 
-        $this->assertSnapshot('blog-articles-sitemap.xml', $sitemap);
+        $this->assertSnapshot('blog-articles-sitemap.xml', $this->beautifySitemapContent($sitemap));
     }
 
     public function testSuluSitemapXML(): void
@@ -247,7 +276,26 @@ class ArticlesSitemapProviderTest extends WebsiteTestCase
         /** @var string $sitemap */
         $sitemap = self::$client->getResponse()->getContent();
 
-        $this->assertSnapshot('sulu-articles-sitemap.xml', $sitemap);
+        $this->assertSnapshot('sulu-articles-sitemap.xml', $this->beautifySitemapContent($sitemap));
+    }
+
+    private function beautifySitemapContent(string $sitemap): string
+    {
+        $replaces = [
+            '<urlset ' => \PHP_EOL . '<urlset ',
+            '<url>' => \PHP_EOL . '    <url>',
+            '<loc>' => \PHP_EOL . '        <loc>',
+            '<lastmod>' => \PHP_EOL . '        <lastmod>',
+            '</url>' => \PHP_EOL . '    </url>',
+            '</urlset>' => \PHP_EOL . '</urlset>',
+            '<xhtml:link' => \PHP_EOL . '        <xhtml:link',
+        ];
+
+        foreach ($replaces as $search => $replace) {
+            $sitemap = \str_replace($search, $replace, $sitemap);
+        }
+
+        return $sitemap;
     }
 
     private static function updateChangedDate(): void

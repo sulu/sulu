@@ -199,8 +199,71 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $provider->getDefaults(new Route(Article::RESOURCE_KEY, '123-123-123', 'en', '/test-article'));
     }
 
-    private function prepareTemplateMetadata(string $controller, string $view, string $cacheLifeTimeType, string $cacheLifeTimeValue): void
+    public function testGetDefaultsReturnsAggregatedContentForShadowLocaleRoute(): void
     {
+        $provider = $this->getArticleRouteDefaultsProviderInstance();
+
+        $routeLocale = 'de';
+        $contentLocale = 'en';
+        $slug = '/deutscher-artikel';
+
+        $article = new Article('123-123-123');
+        $resolvedDimensionContent = new ArticleDimensionContent($article);
+        $resolvedDimensionContent->setLocale($contentLocale);
+        $resolvedDimensionContent->setTemplateKey('default');
+
+        $this->articleRepository->findOneBy(
+            [
+                'uuid' => '123-123-123',
+            ],
+            [
+                ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
+                    'dimensionAttributes' => [
+                        'locale' => $routeLocale,
+                        'stage' => DimensionContentInterface::STAGE_LIVE,
+                        'version' => DimensionContentInterface::CURRENT_VERSION,
+                    ],
+                    'selects' => [
+                        DimensionContentQueryEnhancer::SELECT_EXCERPT_TAGS => true,
+                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES => true,
+                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES_TRANSLATION => true,
+                    ],
+                ],
+            ]
+        )->willReturn($article);
+
+        $this->contentAggregator->aggregate($article, ['locale' => $routeLocale, 'stage' => 'live', 'version' => 0])
+            ->willReturn($resolvedDimensionContent);
+
+        $this->prepareTemplateMetadata(
+            'ArticleController::indexAction',
+            'article.html.twig',
+            'seconds',
+            '3600',
+            $contentLocale,
+        );
+
+        $route = new Route(
+            Article::RESOURCE_KEY,
+            '123-123-123',
+            $routeLocale,
+            $slug,
+        );
+
+        $result = $provider->getDefaults($route);
+
+        $this->assertSame($resolvedDimensionContent, $result['object']);
+        $this->assertSame('article.html.twig', $result['view']);
+        $this->assertSame('ArticleController::indexAction', $result['_controller']);
+    }
+
+    private function prepareTemplateMetadata(
+        string $controller,
+        string $view,
+        string $cacheLifeTimeType,
+        string $cacheLifeTimeValue,
+        ?string $locale = null,
+    ): void {
         $typedMetadata = new TypedFormMetadata();
         $formMetadata = new FormMetadata();
         $formMetadata->setKey('default');
@@ -209,7 +272,9 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $templateMetadata = new TemplateMetadata($controller, $view);
         $formMetadata->setTemplate($templateMetadata);
 
-        $this->formMetadataProvider->getMetadata(Argument::cetera())
+        $localeArgument = $locale ?? Argument::type('string');
+
+        $this->formMetadataProvider->getMetadata(Article::TEMPLATE_TYPE, $localeArgument, [])
             ->willReturn($typedMetadata)
             ->shouldBeCalled();
     }

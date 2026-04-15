@@ -209,7 +209,7 @@ class ArticleAdmin extends Admin
             return;
         }
 
-        $previewCondition = 'availableLocales && locale in availableLocales';
+        $previewCondition = 'shadowOn != true && availableLocales && locale in availableLocales';
         foreach ($viewBuilders as $viewBuilder) {
             if ($viewBuilder instanceof PreviewFormViewBuilder) {
                 $viewBuilder->setPreviewCondition($previewCondition);
