@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Infrastructure\Sulu\Route;
 
-use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\CacheLifetimeMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
@@ -22,7 +21,6 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -41,8 +39,6 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
         private ContentAggregatorInterface $contentAggregator,
         private MetadataProviderRegistry $metadataProviderRegistry,
         private CacheLifetimeResolverInterface $cacheLifetimeResolver,
-        private WebspaceManagerInterface $webspaceManager,
-        private string $environment = 'prod',
     ) {
     }
 
@@ -105,11 +101,6 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
             $defaults[CacheLifetimeRequestStore::ATTRIBUTE_KEY] = $cacheLifetime;
         }
 
-        $seoData = $this->getSeoData($dimensionContent, $route);
-        if ($seoData) {
-            $defaults['_seo'] = $seoData;
-        }
-
         return $defaults;
     }
 
@@ -155,36 +146,5 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
         }
 
         return $templateMetadata;
-    }
-
-    /**
-     * @return array<string, mixed>|null
-     */
-    private function getSeoData(ArticleDimensionContentInterface $dimensionContent, Route $route): ?array
-    {
-        $locale = $dimensionContent->getLocale();
-        if (!$locale) {
-            return null;
-        }
-
-        $mainWebspace = $dimensionContent->getMainWebspace();
-        if (!$mainWebspace) {
-            return null;
-        }
-
-        $canonicalUrl = $this->webspaceManager->findUrlByResourceLocator(
-            $route->getSlug(),
-            $this->environment,
-            $locale,
-            $mainWebspace,
-        );
-
-        if (!$canonicalUrl) {
-            return null;
-        }
-
-        return [
-            'canonicalUrl' => $canonicalUrl,
-        ];
     }
 }

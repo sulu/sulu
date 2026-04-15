@@ -12,6 +12,7 @@
 namespace Sulu\Route\Tests\Unit\Application\Routing\Matcher;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -121,5 +122,48 @@ class RouteCollectionForRequestRouteLoaderTest extends TestCase
             ],
             $route->getDefaults(),
         );
+    }
+
+    #[DataProvider('provideEncodedSlugMatches')]
+    public function testGetRouteCollectionForRequestMatchDecodesEncodedSlug(string $encodedSlug, string $decodedSlug): void
+    {
+        $request = Request::create($encodedSlug);
+        $request->attributes->set(RequestAttributeEnum::WEBSPACE->value, 'the_site');
+        $request->attributes->set(RequestAttributeEnum::SLUG->value, $encodedSlug);
+
+        $routeModel = new Route('resource_key_example', '1', 'en', $decodedSlug, 'the_site');
+        static::setPrivateProperty($routeModel, 'id', 1);
+
+        $this->routeRepository->findFirstBy([
+            'webspaceOrNull' => 'the_site',
+            'locale' => 'en',
+            'slug' => $decodedSlug,
+        ], ['webspace' => 'desc'])->willReturn($routeModel);
+
+        $routeCollection = $this->routeCollectionForRequestRouteLoader->getRouteCollectionForRequest($request);
+
+        $this->assertCount(1, $routeCollection);
+        $route = $routeCollection->get('sulu_route.route_id_1');
+
+        $this->assertNotNull($route);
+        $this->assertSame(
+            [
+                '_controller' => 'example.controller',
+                '_sulu_route' => $routeModel,
+            ],
+            $route->getDefaults(),
+        );
+    }
+
+    /**
+     * @return array<string, array{string, string}>
+     */
+    public static function provideEncodedSlugMatches(): array
+    {
+        return [
+            'umlaut' => ['/design-system-k%C3%B6nnen', '/design-system-können'],
+            'cjk' => ['/%E4%BD%A0%E5%A5%BD', '/你好'],
+            'emoji' => ['/%F0%9F%98%80', '/😀'],
+        ];
     }
 }

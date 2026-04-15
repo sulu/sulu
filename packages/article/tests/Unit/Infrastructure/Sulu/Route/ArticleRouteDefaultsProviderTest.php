@@ -27,7 +27,6 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TemplateMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolver;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
@@ -45,8 +44,6 @@ class ArticleRouteDefaultsProviderTest extends TestCase
     private ObjectProphecy $contentAggregator;
     private MetadataProviderRegistry $metadataProviderRegistry;
     private CacheLifetimeResolver $cacheLifetimeResolver;
-    /** @var ObjectProphecy<WebspaceManagerInterface> */
-    private ObjectProphecy $webspaceManager;
     /** @var ObjectProphecy<FormMetadataProvider> */
     private ObjectProphecy $formMetadataProvider;
 
@@ -59,7 +56,6 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $container = new Container();
         $container->set('form', $this->formMetadataProvider->reveal());
         $this->metadataProviderRegistry = new MetadataProviderRegistry($container);
-        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
     }
 
     protected function getArticleRouteDefaultsProviderInstance(): RouteDefaultsProviderInterface
@@ -69,72 +65,10 @@ class ArticleRouteDefaultsProviderTest extends TestCase
             $this->contentAggregator->reveal(),
             $this->metadataProviderRegistry,
             $this->cacheLifetimeResolver,
-            $this->webspaceManager->reveal(),
-            'test'
         );
     }
 
-    public function testGetDefaultsWithSeoData(): void
-    {
-        $provider = $this->getArticleRouteDefaultsProviderInstance();
-
-        $locale = 'en';
-        $slug = '/test-article';
-        $mainWebspace = 'sulu-io';
-        $canonicalUrl = 'https://sulu.io/test-article';
-
-        $article = new Article('123-123-123');
-        $resolvedDimensionContent = new ArticleDimensionContent($article);
-        $resolvedDimensionContent->setLocale($locale);
-        $resolvedDimensionContent->setTemplateKey('default');
-        $resolvedDimensionContent->setMainWebspace($mainWebspace);
-
-        $this->articleRepository->findOneBy(
-            [
-                'uuid' => '123-123-123',
-            ],
-            [
-                ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
-                    'dimensionAttributes' => [
-                        'locale' => $locale,
-                        'stage' => DimensionContentInterface::STAGE_LIVE,
-                        'version' => DimensionContentInterface::CURRENT_VERSION,
-                    ],
-                    'selects' => [
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_TAGS => true,
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES => true,
-                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES_TRANSLATION => true,
-                    ],
-                ],
-            ]
-        )->willReturn($article);
-
-        $this->contentAggregator->aggregate($article, ['locale' => $locale, 'stage' => 'live', 'version' => 0])
-            ->willReturn($resolvedDimensionContent);
-
-        $this->prepareTemplateMetadata('ArticleController::indexAction', 'article.html.twig', 'seconds', '3600');
-
-        $this->webspaceManager->findUrlByResourceLocator($slug, 'test', $locale, $mainWebspace)
-            ->willReturn($canonicalUrl);
-
-        $route = new Route(
-            Article::RESOURCE_KEY,
-            '123-123-123',
-            $locale,
-            $slug,
-        );
-
-        $result = $provider->getDefaults($route);
-
-        $this->assertArrayHasKey('_seo', $result);
-        $this->assertIsArray($result['_seo']);
-        $this->assertSame($canonicalUrl, $result['_seo']['canonicalUrl']);
-        $this->assertSame($resolvedDimensionContent, $result['object']);
-        $this->assertSame('article.html.twig', $result['view']);
-        $this->assertSame('ArticleController::indexAction', $result['_controller']);
-    }
-
-    public function testGetDefaultsWithoutSeoData(): void
+    public function testGetDefaults(): void
     {
         $provider = $this->getArticleRouteDefaultsProviderInstance();
 
@@ -170,8 +104,6 @@ class ArticleRouteDefaultsProviderTest extends TestCase
             ->willReturn($resolvedDimensionContent);
 
         $this->prepareTemplateMetadata('ArticleController::indexAction', 'article.html.twig', 'seconds', '3600');
-
-        // No webspace resolver calls should be made for non-webspace supporting content
 
         $route = new Route(
             Article::RESOURCE_KEY,
