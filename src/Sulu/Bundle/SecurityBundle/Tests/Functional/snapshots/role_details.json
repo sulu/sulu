@@ -11,11 +11,6 @@
                     "name": "headline",
                     "type": "string",
                     "value": true
-                },
-                "autofocus": {
-                    "name": "autofocus",
-                    "type": "string",
-                    "value": true
                 }
             },
             "types": [],
