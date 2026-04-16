@@ -10,8 +10,8 @@
     "description": "<p>Test Snippet 2</p>",
     "excerptCategories": [],
     "excerptTags": [
-        "@integer@",
-        "@integer@"
+        3,
+        4
     ],
     "excerptAudienceTargetGroups": [],
     "excerptSegment": null,

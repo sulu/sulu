@@ -69,6 +69,10 @@ if ($filters['tags']) {
 
 **Stored content:** Any SmartContent filter configuration that was saved with tag names (as strings) will no longer filter correctly. You need to migrate stored SmartContent data to use tag IDs instead of tag names.
 
+### Tag creation in SmartContent now requires permission
+
+Creating tags inline from the SmartContent filter overlay now correctly requires the `sulu.tags.tags` `add` permission. Previously, any user could create tags through the SmartContent interface regardless of their tag permissions.
+
 ## 3.0.5
 
 ### Remove false cascade on author and route relations

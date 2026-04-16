@@ -22,8 +22,8 @@
     "excerptCategories": [],
     "excerptSegment": null,
     "excerptTags": [
-        "@integer@",
-        "@integer@"
+        1,
+        2
     ],
     "ghostLocale": "en",
     "id": "@integer@",

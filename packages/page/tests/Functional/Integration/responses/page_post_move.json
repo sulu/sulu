@@ -29,7 +29,7 @@
         "media": null
     },
     "excerptCategories" : [ ],
-    "excerptTags" : [ "@integer@", "@integer@" ],
+    "excerptTags" : [ 7, 8 ],
     "excerptAudienceTargetGroups" : [ "@integer@", "@integer@" ],
     "excerptSegment" : { "sulu-io" : "@string@" },
     "ghostLocale" : "en",

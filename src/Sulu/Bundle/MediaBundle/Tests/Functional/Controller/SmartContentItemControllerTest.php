@@ -219,12 +219,10 @@ class SmartContentItemControllerTest extends SuluTestCase
     {
         $collection = $this->createCollection('Test');
 
-        // Create tags
         $tagMobile = $this->createTag('mobile');
         $tagWeb = $this->createTag('web');
         $tagCloud = $this->createTag('cloud');
 
-        // Create media with different tags
         $media1 = $this->createMediaWithTags('media-mobile', $collection, 'image/jpeg', [$tagMobile]);
         $media2 = $this->createMediaWithTags('media-web', $collection, 'image/jpeg', [$tagWeb]);
         $media3 = $this->createMediaWithTags('media-mobile-web', $collection, 'image/jpeg', [$tagMobile, $tagWeb]);
@@ -233,7 +231,6 @@ class SmartContentItemControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        // Test filtering by single tag ID (OR)
         $this->client->jsonRequest(
             'GET',
             '/api/items?provider=media&locale=en&tags=' . $tagMobile->getId() . '&tagOperator=OR&dataSource=' . $collection->getId()
@@ -256,19 +253,15 @@ class SmartContentItemControllerTest extends SuluTestCase
     {
         $collection = $this->createCollection('Test');
 
-        // Create tags
         $tagMobile = $this->createTag('mobile');
         $tagWeb = $this->createTag('web');
         $tagCloud = $this->createTag('cloud');
 
-        // Create media with different tags
         $media1 = $this->createMediaWithTags('media-mobile', $collection, 'image/jpeg', [$tagMobile]);
         $media2 = $this->createMediaWithTags('media-web', $collection, 'image/jpeg', [$tagWeb]);
         $media3 = $this->createMediaWithTags('media-cloud', $collection, 'image/jpeg', [$tagCloud]);
 
         $this->em->flush();
-
-        // Test filtering by multiple tag IDs (OR) - should return media with mobile OR cloud
         $this->client->jsonRequest(
             'GET',
             '/api/items?provider=media&locale=en&tags=' . $tagMobile->getId() . ',' . $tagCloud->getId() . '&tagOperator=OR&dataSource=' . $collection->getId()
@@ -292,18 +285,14 @@ class SmartContentItemControllerTest extends SuluTestCase
     {
         $collection = $this->createCollection('Test');
 
-        // Create tags
         $tagMobile = $this->createTag('mobile');
         $tagWeb = $this->createTag('web');
 
-        // Create media with different tags
         $media1 = $this->createMediaWithTags('media-mobile-only', $collection, 'image/jpeg', [$tagMobile]);
         $media2 = $this->createMediaWithTags('media-web-only', $collection, 'image/jpeg', [$tagWeb]);
         $media3 = $this->createMediaWithTags('media-both', $collection, 'image/jpeg', [$tagMobile, $tagWeb]);
 
         $this->em->flush();
-
-        // Test filtering by multiple tag IDs (AND) - should return only media with BOTH mobile AND web
         $this->client->jsonRequest(
             'GET',
             '/api/items?provider=media&locale=en&tags=' . $tagMobile->getId() . ',' . $tagWeb->getId() . '&tagOperator=AND&dataSource=' . $collection->getId()
