@@ -50,26 +50,4 @@ class TagRepository extends EntityRepository implements TagRepositoryInterface
             return null;
         }
     }
-
-    /**
-     * @return TagInterface[]
-     */
-    public function findTagsByIds(array $ids): array
-    {
-        $tags = $this->findBy(['id' => $ids]);
-
-        $indexedTags = [];
-        foreach ($tags as $tag) {
-            $indexedTags[$tag->getId()] = $tag;
-        }
-
-        $orderedTags = [];
-        foreach ($ids as $id) {
-            if (isset($indexedTags[$id])) {
-                $orderedTags[] = $indexedTags[$id];
-            }
-        }
-
-        return $orderedTags;
-    }
 }

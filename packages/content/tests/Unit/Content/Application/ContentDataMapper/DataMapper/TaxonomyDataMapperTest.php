@@ -72,7 +72,7 @@ class TaxonomyDataMapperTest extends TestCase
         $unlocalizedDimensionContent = $this->prophesize(DimensionContentInterface::class);
         $localizedDimensionContent = $this->prophesize(DimensionContentInterface::class);
 
-        $this->tagRepository->findTagsByIds(Argument::any())
+        $this->tagRepository->findBy(Argument::cetera())
             ->shouldNotBeCalled();
 
         $this->categoryFactory->create(Argument::any())
@@ -90,7 +90,7 @@ class TaxonomyDataMapperTest extends TestCase
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent = new ExampleDimensionContent($example);
 
-        $this->tagRepository->findTagsByIds(Argument::any())
+        $this->tagRepository->findBy(Argument::cetera())
             ->shouldNotBeCalled();
 
         $this->categoryFactory->create(Argument::any())
@@ -121,7 +121,7 @@ class TaxonomyDataMapperTest extends TestCase
         $this->setPrivateProperty($tag2, 'id', 2);
         $tag2->setName('Tag 2');
 
-        $this->tagRepository->findTagsByIds([1, 2])->willReturn([$tag1, $tag2])->shouldBeCalled();
+        $this->tagRepository->findBy(['id' => [1, 2]])->willReturn([$tag1, $tag2])->shouldBeCalled();
 
         $category1 = new Category();
         $category1->setId(3);
@@ -214,7 +214,7 @@ class TaxonomyDataMapperTest extends TestCase
         $this->setPrivateProperty($tag2, 'id', 2);
         $tag2->setName('Tag 2');
 
-        $this->tagRepository->findTagsByIds([1, 2])->willReturn([$tag1, $tag2])->shouldBeCalled();
+        $this->tagRepository->findBy(['id' => [1, 2]])->willReturn([$tag1, $tag2])->shouldBeCalled();
 
         $category1 = new Category();
         $category1->setId(3);

@@ -57,9 +57,22 @@ class TaxonomyDataMapper implements DataMapperInterface
         if (\array_key_exists('excerptTags', $data)) {
             Assert::isArray($data['excerptTags']);
             Assert::allInteger($data['excerptTags']);
-            $dimensionContent->setExcerptTags(
-                $this->tagRepository->findTagsByIds($data['excerptTags'])
-            );
+
+            $tags = $this->tagRepository->findBy(['id' => $data['excerptTags']]);
+
+            $indexedTags = [];
+            foreach ($tags as $tag) {
+                $indexedTags[$tag->getId()] = $tag;
+            }
+
+            $orderedTags = [];
+            foreach ($data['excerptTags'] as $id) {
+                if (isset($indexedTags[$id])) {
+                    $orderedTags[] = $indexedTags[$id];
+                }
+            }
+
+            $dimensionContent->setExcerptTags($orderedTags);
         }
         if (\array_key_exists('excerptCategories', $data)) {
             Assert::isArray($data['excerptCategories']);
