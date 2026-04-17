@@ -39,6 +39,31 @@ test('Closing the overlay should call the onClose callback', () => {
     expect(closeSpy).toBeCalledWith();
 });
 
+test('Convert selection to format options with edge-based integer coordinates', () => {
+    const cropOverlay = shallow(
+        <CropOverlay
+            id={4}
+            image="test.jpg"
+            locale="de"
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+        />
+    );
+
+    expect(cropOverlay.instance().convertSelectionToFormatOptions({
+        left: 100.6,
+        top: 74.63,
+        width: 152.4,
+        height: 125.37,
+    })).toEqual({
+        cropX: 100,
+        cropY: 74,
+        cropWidth: 153,
+        cropHeight: 126,
+    });
+});
+
 test('Reset format croppings when closing overlay', () => {
     const formats = [
         {

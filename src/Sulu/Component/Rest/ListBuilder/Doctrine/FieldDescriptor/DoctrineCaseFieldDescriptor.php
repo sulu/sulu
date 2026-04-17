@@ -55,7 +55,7 @@ class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
     public function getSearch()
     {
         return \sprintf(
-            '%s LIKE :search OR (%s is NULL AND %s LIKE :search)',
+            'LOWER(%s) LIKE LOWER(:search) OR (%s IS NULL AND LOWER(%s) LIKE LOWER(:search))',
             $this->case1->getSelect(),
             $this->case1->getSelect(),
             $this->case2->getSelect()

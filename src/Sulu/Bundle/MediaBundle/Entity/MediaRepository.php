@@ -391,7 +391,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 ->innerJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
                 ->leftJoin('fileVersion.meta', 'fileVersionMeta');
 
-            $queryBuilder->andWhere('fileVersionMeta.title LIKE :search');
+            $queryBuilder->andWhere('LOWER(fileVersionMeta.title) LIKE LOWER(:search)');
             $queryBuilder->setParameter('search', '%' . $search . '%');
         }
 

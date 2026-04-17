@@ -379,7 +379,11 @@ class ListQueryBuilder
                         $comparator = 'LIKE';
                         $search = ':search';
                     }
-                    $searches[] = $prefixActual . '.' . $col . ' ' . $comparator . ' ' . $search;
+                    if ('LIKE' === $comparator) {
+                        $searches[] = 'LOWER(' . $prefixActual . '.' . $col . ') LIKE LOWER(' . $search . ')';
+                    } else {
+                        $searches[] = $prefixActual . '.' . $col . ' ' . $comparator . ' ' . $search;
+                    }
                 }
             }
 

@@ -28,6 +28,7 @@ class VersionRouteLoader extends Loader
 
     /**
      * @param string $resource
+     * @param string|null $type
      */
     public function load($resource, $type = null): mixed
     {
@@ -38,6 +39,10 @@ class VersionRouteLoader extends Loader
         return $this->import($resource, 'rest');
     }
 
+    /**
+     * @param string $resource
+     * @param string|null $type
+     */
     public function supports($resource, $type = null): bool
     {
         return 'versioning_rest' === $type;

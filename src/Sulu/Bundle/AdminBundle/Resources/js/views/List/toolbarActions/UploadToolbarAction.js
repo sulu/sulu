@@ -153,6 +153,7 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
                 switch (code) {
                     case 'file-invalid-type':
                         error = translate('sulu_admin.dropzone_error_file-invalid-type', {
+                            fileType: fileRejection.file.type,
                             fileName: fileRejection.file.name,
                             allowedTypes: this.accept ? Object.keys(this.accept).join(', ') : undefined,
                         });
