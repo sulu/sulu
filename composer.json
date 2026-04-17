@@ -70,6 +70,7 @@
         "symfony-cmf/routing-bundle": "^3.0",
         "symfony/asset": "^6.4 || ^7.1",
         "symfony/cache": "^6.4 || ^7.1",
+        "symfony/clock": "^6.4 || ^7.1",
         "symfony/config": "^6.4 || ^7.1",
         "symfony/console": "^6.4 || ^7.1",
         "symfony/css-selector": "^6.4 || ^7.1",
