@@ -194,7 +194,7 @@ class TrashItemController extends AbstractRestController
 
     public function postTriggerAction(int $id, Request $request): Response
     {
-        $action = $request->query->get('action') ?? throw new MissingParameterException(self::class, 'action');
+        $action = $request->query->getString('action') ?: throw new MissingParameterException(self::class, 'action');
 
         try {
             return match ($action) {

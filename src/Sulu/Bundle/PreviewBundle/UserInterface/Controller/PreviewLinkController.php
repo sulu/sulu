@@ -53,7 +53,7 @@ class PreviewLinkController extends AbstractRestController
 
     public function postTriggerAction(Request $request, string $resourceId): Response
     {
-        $action = $request->query->get('action') ?? throw new MissingParameterException(self::class, 'action');
+        $action = $request->query->getString('action') ?: throw new MissingParameterException(self::class, 'action');
 
         try {
             switch ($action) {

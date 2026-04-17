@@ -151,7 +151,7 @@ class UserController extends AbstractRestController implements SecuredController
      */
     public function postTriggerAction($id, Request $request)
     {
-        $action = $request->query->get('action');
+        $action = $request->query->getString('action');
 
         try {
             $user = match ($action) {

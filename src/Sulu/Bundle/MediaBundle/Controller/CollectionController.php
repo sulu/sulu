@@ -275,7 +275,7 @@ class CollectionController extends AbstractRestController implements SecuredCont
      */
     public function postTriggerAction($id, Request $request)
     {
-        $action = $request->query->get('action') ?? throw new MissingParameterException(self::class, 'action');
+        $action = $request->query->getString('action') ?: throw new MissingParameterException(self::class, 'action');
 
         try {
             return match ($action) {
