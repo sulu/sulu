@@ -26,24 +26,24 @@ use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Webmozart\Assert\Assert;
 
-class SuluAdmin extends Admin
+final class SuluAdmin extends Admin
 {
     /**
      * @param array<mixed> $resources
      * @param iterable<SmartContentProviderInterface> $smartContentProviders
      */
     public function __construct(
-        private TokenStorageInterface $tokenStorage,
-        private ViewRegistry $viewRegistry,
-        private NavigationRegistry $navigationRegistry,
-        private FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
-        private ContactManagerInterface $contactManager,
-        private iterable $smartContentProviders,
-        private LinkProviderPoolInterface $linkProviderPool,
-        private LocalizationManagerInterface $localizationManager,
-        private array $resources,
-        private int $collaborationInterval,
-        private bool $collaborationEnabled,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ViewRegistry $viewRegistry,
+        private readonly NavigationRegistry $navigationRegistry,
+        private readonly FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
+        private readonly ContactManagerInterface $contactManager,
+        private readonly iterable $smartContentProviders,
+        private readonly LinkProviderPoolInterface $linkProviderPool,
+        private readonly LocalizationManagerInterface $localizationManager,
+        private readonly array $resources,
+        private readonly int $collaborationInterval,
+        private readonly bool $collaborationEnabled,
     ) {
     }
 
@@ -56,7 +56,7 @@ class SuluAdmin extends Admin
         $navigationItemCollection->add($settingsNavigationItem);
     }
 
-    public function getConfig(): ?array
+    public function getConfig(): array
     {
         /** @var User|null $user */
         $user = $this->tokenStorage->getToken()?->getUser();
@@ -86,13 +86,13 @@ class SuluAdmin extends Admin
         ];
     }
 
-    public function getConfigKey(): ?string
+    public function getConfigKey(): string
     {
         return 'sulu_admin';
     }
 
     public static function getPriority(): int
     {
-        return 10000;
+        return \PHP_INT_MAX - 1;
     }
 }
