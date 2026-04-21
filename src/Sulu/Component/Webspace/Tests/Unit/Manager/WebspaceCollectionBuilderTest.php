@@ -294,4 +294,20 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
         $webspaceCollection = $webspaceCollectionBuilder->build();
     }
+
+    public function testThrowForDuplicatePortalName(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Portal with key "sulucmf_at" already exists in webspace "massiveart" and conflicts with webspace "sulu_io". Portal keys must be unique across all webspaces.');
+
+        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
+            $this->loader,
+            new Replacer(),
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/duplicate-portal-key',
+            ['default', 'overview']
+        );
+
+        $webspaceCollection = $webspaceCollectionBuilder->build();
+    }
+
 }
