@@ -134,9 +134,9 @@ class WebspaceCollectionBuilder
             $this->portals[] = $portal;
 
             // Assert portal key unique
-            if (!array_key_exists($portal->getKey(), $this->portalKeys)) {
+            if (\array_key_exists($portal->getKey(), $this->portalKeys)) {
                 throw new \InvalidArgumentException(
-                    sprintf(
+                    \sprintf(
                         'Portal with key "%s" already exists in webspace "%s" and conflicts with webspace "%s". Portal keys must be unique across all webspaces.',
                         $portal->getKey(),
                         $this->portalKeys[$portal->getKey()],
