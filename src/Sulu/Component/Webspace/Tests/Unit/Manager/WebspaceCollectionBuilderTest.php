@@ -309,5 +309,4 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
         $webspaceCollection = $webspaceCollectionBuilder->build();
     }
-
 }

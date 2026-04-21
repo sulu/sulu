@@ -1,5 +1,9 @@
 # Upgrade
 
+## 2.6.23
+
+Portal Keys now have to be globally unique. It is validated on cache clear.
+
 ## 2.6.22
 
 There might be issues updating a project which still requires `Swiftmailer`.

@@ -53,14 +53,14 @@ class WebspaceCollectionBuilder
      */
     private $typedFormMetadata;
 
-    /*
-     * Saves which portal key belongs to which webspace. To keep portal keys unique across webspaces
+    /**
+     * Saves which portal key belongs to which webspace. To keep portal keys unique across webspaces.
      *
      * Portal Key => Webspace Key
      *
      * @var array<string, string>
      */
-    private $portalKeys = [];
+    private array $portalKeys = [];
 
     /**
      * @param string $path
