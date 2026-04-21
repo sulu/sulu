@@ -53,6 +53,15 @@ class WebspaceCollectionBuilder
      */
     private $typedFormMetadata;
 
+    /*
+     * Saves which portal key belongs to which webspace. To keep portal keys unique across webspaces
+     *
+     * Portal Key => Webspace Key
+     *
+     * @var array<string, string>
+     */
+    private $portalKeys = [];
+
     /**
      * @param string $path
      */
@@ -76,6 +85,7 @@ class WebspaceCollectionBuilder
         $this->webspaces = [];
         $this->portals = [];
         $this->portalInformations = [];
+        $this->portalKeys = [];
 
         foreach ($finder as $file) {
             // add file resource for cache invalidation
@@ -122,6 +132,19 @@ class WebspaceCollectionBuilder
     {
         foreach ($webspace->getPortals() as $portal) {
             $this->portals[] = $portal;
+
+            // Assert portal key unique
+            if (!array_key_exists($portal->getKey(), $this->portalKeys)) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Portal with key "%s" already exists in webspace "%s" and conflicts with webspace "%s". Portal keys must be unique across all webspaces.',
+                        $portal->getKey(),
+                        $this->portalKeys[$portal->getKey()],
+                        $webspace->getKey()
+                    )
+                );
+            }
+            $this->portalKeys[$portal->getKey()] = $webspace->getKey();
 
             $this->buildEnvironments($portal);
         }
