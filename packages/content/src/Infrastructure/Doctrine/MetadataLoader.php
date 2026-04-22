@@ -17,6 +17,7 @@ use Doctrine\Inflector\InflectorFactory;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\InverseSideMapping;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
@@ -141,6 +142,18 @@ final class MetadataLoader
 
             $this->addIndex($metadata, 'link_provider', ['linkProvider']);
         }
+
+        // Doctrine leaves `declared` null on inverse-side associations (OneToMany, inverse
+        // OneToOne, inverse ManyToMany) that a concrete entity inherits from a mapped-superclass.
+        // Doctrine then builds reflection against the concrete child class, where the inherited
+        // private property does not exist, and throws `ReflectionException: Property X::$y does
+        // not exist`. Owning-side associations are populated correctly and are skipped here.
+        // ORM 3.x stores mappings as `InverseSideMapping` objects; ORM 2.x stores them as arrays.
+        if (!$metadata->isMappedSuperclass) {
+            foreach ($metadata->associationMappings as $key => $mapping) {
+                $this->backfillInverseSideDeclared($metadata, $key, $mapping);
+            }
+        }
     }
 
     /**
@@ -255,6 +268,53 @@ final class MetadataLoader
         $tableName = $metadata->getTableName();
 
         $builder->addIndex($fields, 'idx_' . $tableName . '_' . $name);
+    }
+
+    /**
+     * @param ClassMetadata<object> $metadata
+     * @param mixed $mapping object on ORM 3.x, array on ORM 2.x
+     */
+    private function backfillInverseSideDeclared(ClassMetadata $metadata, string $key, mixed $mapping): void
+    {
+        if (\is_array($mapping)) {
+            $fieldName = $mapping['fieldName'] ?? null;
+
+            if (!\is_string($fieldName) || ($mapping['isOwningSide'] ?? true) || isset($mapping['declared'])) {
+                return;
+            }
+
+            $mapping['declared'] = $this->findDeclaringClass($metadata->getName(), $fieldName);
+            /* @phpstan-ignore assign.propertyType */
+            $metadata->associationMappings[$key] = $mapping;
+
+            return;
+        }
+
+        if (!$mapping instanceof InverseSideMapping || null !== $mapping->declared) {
+            return;
+        }
+
+        $mapping->declared = $this->findDeclaringClass($metadata->getName(), $mapping->fieldName);
+    }
+
+    /**
+     * @param class-string $className
+     *
+     * @return class-string
+     */
+    private function findDeclaringClass(string $className, string $propertyName): string
+    {
+        foreach (\class_parents($className) as $parent) {
+            $parentReflection = new \ReflectionClass($parent);
+
+            foreach ($parentReflection->getProperties() as $property) {
+                if ($property->getName() === $propertyName) {
+                    return $parentReflection->getName();
+                }
+            }
+        }
+
+        return $className;
     }
 
     /**

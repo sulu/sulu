@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Page\Infrastructure\Symfony\HttpKernel;
 
-use Gedmo\Tree\Hydrator\ORM\TreeObjectHydrator;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
@@ -42,6 +41,7 @@ use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
+use Sulu\Page\Infrastructure\Doctrine\Hydrator\SafeTreeObjectHydrator;
 use Sulu\Page\Infrastructure\Doctrine\Repository\NavigationRepository;
 use Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository;
 use Sulu\Page\Infrastructure\JMS\Serializer\WebspaceSerializeEventSubscriber;
@@ -83,6 +83,7 @@ use Sulu\Page\Infrastructure\Sulu\Security\PageDescendantSecurityListener;
 use Sulu\Page\Infrastructure\Sulu\Security\PageSecurityListener;
 use Sulu\Page\Infrastructure\Sulu\Sitemap\PagesSitemapProvider;
 use Sulu\Page\Infrastructure\Sulu\Trash\PageTrashItemHandler;
+use Sulu\Page\Infrastructure\Symfony\DependencyInjection\Compiler\OverrideTreeListenerPass;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\ContentPathTwigExtension;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\PageTwigExtension;
@@ -786,7 +787,7 @@ final class SuluPageBundle extends AbstractBundle
                             ],
                         ],
                         'hydrators' => [
-                            'sulu_page_tree' => TreeObjectHydrator::class,
+                            'sulu_page_tree' => SafeTreeObjectHydrator::class,
                         ],
                     ],
                 ],
@@ -853,5 +854,6 @@ final class SuluPageBundle extends AbstractBundle
             PageInterface::class => 'sulu.model.page.class',
             PageDimensionContentInterface::class => 'sulu.model.page_content.class',
         ], $container);
+        $container->addCompilerPass(new OverrideTreeListenerPass());
     }
 }
