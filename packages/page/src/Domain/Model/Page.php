@@ -93,6 +93,11 @@ class Page implements PageInterface
         return $this->parent;
     }
 
+    public function getParentId(): ?string
+    {
+        return $this->parent?->getId();
+    }
+
     public function getChildren(): Collection
     {
         return $this->children;
