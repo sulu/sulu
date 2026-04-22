@@ -50,15 +50,7 @@ class CacheCommandSubscriber implements EventSubscriberInterface
     {
         $command = $event->getCommand();
 
-        if (null === $command
-            || !\in_array(
-                $command->getName(),
-                [
-                    CacheClearCommand::getDefaultName(),
-                    CacheWarmupCommand::getDefaultName(),
-                ]
-            )
-        ) {
+        if (!($command instanceof CacheClearCommand) && !($command instanceof CacheWarmupCommand)) {
             return;
         }
 

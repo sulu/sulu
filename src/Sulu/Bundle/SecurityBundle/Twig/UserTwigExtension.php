@@ -39,12 +39,16 @@ class UserTwigExtension extends AbstractExtension
     /**
      * resolves user id to user data.
      *
-     * @param int $id id to resolve
+     * @param mixed $id id to resolve
      *
      * @return UserInterface|null
      */
     public function resolveUserFunction($id)
     {
+        if (!\is_int($id)) {
+            return null;
+        }
+
         return $this->cache->get((string) $id, function() use ($id) {
             return $this->userRepository->findUserById($id);
         });

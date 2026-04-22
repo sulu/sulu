@@ -109,7 +109,17 @@ class DimensionContentQueryEnhancer
     ): void {
         $effectiveAttributes = $dimensionContentClassName::getEffectiveDimensionAttributes($filters);
 
-        $queryBuilder->leftJoin(
+        // Use INNER JOIN when any filter adds a non-nullable WHERE on the joined table.
+        // These conditions eliminate NULL rows, making LEFT JOIN semantically equivalent
+        // to INNER JOIN — but MySQL can optimize INNER JOINs significantly better
+        // (reorder tables, push conditions into index access).
+        // Filters with "OR ... IS NULL" fallbacks (audienceTargeting, segmentKey) preserve
+        // NULLs and are excluded from this check.
+        $hasStrictFilters = $this->hasStrictDimensionContentFilters($dimensionContentClassName, $filters);
+
+        $joinMethod = $hasStrictFilters ? 'innerJoin' : 'leftJoin';
+
+        $queryBuilder->$joinMethod(
             $dimensionContentClassName,
             'filterDimensionContent',
             Join::WITH,
@@ -375,5 +385,37 @@ class DimensionContentQueryEnhancer
                 \sprintf('The operator "%s" is not supported for this filter.', $operator),
             );
         }
+    }
+
+    /**
+     * Checks if any filter adds a non-nullable WHERE condition on the dimension content join.
+     *
+     * @template T of DimensionContentInterface
+     *
+     * @param class-string<T> $dimensionContentClassName
+     * @param array<string, mixed> $filters
+     */
+    private function hasStrictDimensionContentFilters(string $dimensionContentClassName, array $filters): bool
+    {
+        if (\is_subclass_of($dimensionContentClassName, TemplateInterface::class)
+            && !empty($filters['templateKeys'] ?? null)
+        ) {
+            return true;
+        }
+
+        if (\is_subclass_of($dimensionContentClassName, ExcerptInterface::class)) {
+            if (!empty($filters['categoryIds'] ?? null)
+                || !empty($filters['categoryKeys'] ?? null)
+                || !empty($filters['tagIds'] ?? null)
+                || !empty($filters['tagNames'] ?? null)
+            ) {
+                return true;
+            }
+        }
+
+        // audienceTargeting and segmentKey use "OR ... IS NULL" fallbacks,
+        // so they preserve NULLs and don't qualify as strict filters.
+
+        return false;
     }
 }

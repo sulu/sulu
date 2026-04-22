@@ -8,7 +8,7 @@
     <tag name="sulu_content.content_settings_form" instanceOf="Sulu\Content\Domain\Model\ShadowInterface" priority="-40"/>
 
     <properties>
-        <section name="shadow" visibleCondition="linkOn == false">
+        <section name="shadow" visibleCondition="linkOn != true">
             <meta>
                 <title>sulu_content.shadow_page</title>
             </meta>

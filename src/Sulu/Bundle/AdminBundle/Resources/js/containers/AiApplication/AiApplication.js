@@ -138,17 +138,18 @@ export default class AiApplication extends Component<Props> {
     }
 
     isInsideBlock(formInspector: FormInspector, schemaPath: string) {
-        if (schemaPath.startsWith('/ext')) {
-            return false;
-        }
-
         const parts = schemaPath.split('/');
 
         for (let i = 2; i < parts.length; i++) {
             const path = '/' + parts.slice(1, i).join('/');
-            const schema = formInspector.getSchemaEntryByPath(path);
-            if (schema?.type === 'block') {
-                return true;
+
+            try {
+                const schema = formInspector.getSchemaEntryByPath(path);
+                if (schema?.type === 'block') {
+                    return true;
+                }
+            } catch (e) {
+                return false;
             }
         }
 

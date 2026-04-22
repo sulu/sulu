@@ -20,6 +20,7 @@ use Sulu\Content\Application\ContentEnhancer\DimensionContentEnhancerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
+use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 
 /**
@@ -52,7 +53,7 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
 
         return match ($linkData['provider'] ?? null) {
             null => $dimensionContent,
-            'page' => $this->resolvePage(
+            PageLinkProvider::ALIAS => $this->resolvePage(
                 $dimensionContent,
                 $dimensionContent::getEffectiveDimensionAttributes(
                     [

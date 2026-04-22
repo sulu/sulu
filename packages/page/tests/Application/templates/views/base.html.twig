@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>{{ content.title }}</title>
+    {% include "@SuluWebsite/Extension/seo.html.twig" with {
+        "seo": extension.seo|default([]),
+        "content": content|default([]),
+        "localizations": localizations|default([]),
+        "shadowBaseLocale": shadowBaseLocale|default(),
+    } %}
 </head>
 <body>
     {% block content %}{% endblock %}

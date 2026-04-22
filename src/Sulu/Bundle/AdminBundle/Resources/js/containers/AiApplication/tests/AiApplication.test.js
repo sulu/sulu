@@ -349,6 +349,54 @@ describe('AiApplication', () => {
         expect(instance.hasFocus).toBe(false);
     });
 
+    test('isInsideBlock returns false when schema lookup throws on a path segment', () => {
+        const instance = new AiApplication(props);
+
+        const formInspector = {
+            getSchemaEntryByPath: jest.fn().mockImplementation(() => {
+                throw new Error('Invalid reference token: excerpt');
+            }),
+        };
+
+        // $FlowFixMe - only the methods used by isInsideBlock are relevant here
+        const result = instance.isInsideBlock(formInspector, '/excerpt/description');
+
+        expect(result).toBe(false);
+        expect(formInspector.getSchemaEntryByPath).toHaveBeenCalledWith('/excerpt');
+    });
+
+    test('isInsideBlock returns true when any ancestor in the schema path is a block', () => {
+        const instance = new AiApplication(props);
+
+        const formInspector = {
+            getSchemaEntryByPath: jest.fn().mockImplementation((path) => {
+                if (path === '/content') {
+                    return {type: 'block'};
+                }
+
+                return {type: 'text_line'};
+            }),
+        };
+
+        // $FlowFixMe - only the methods used by isInsideBlock are relevant here
+        const result = instance.isInsideBlock(formInspector, '/content/0/title');
+
+        expect(result).toBe(true);
+    });
+
+    test('isInsideBlock returns false when no ancestor is a block', () => {
+        const instance = new AiApplication(props);
+
+        const formInspector = {
+            getSchemaEntryByPath: jest.fn().mockReturnValue({type: 'section'}),
+        };
+
+        // $FlowFixMe - only the methods used by isInsideBlock are relevant here
+        const result = instance.isInsideBlock(formInspector, '/details/title');
+
+        expect(result).toBe(false);
+    });
+
     test('captures dataPath from sulu.focus event', () => {
         const instance = new AiApplication(props);
 

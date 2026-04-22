@@ -19,6 +19,7 @@ use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\Filter\FilterTypeRegistry;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -28,7 +29,7 @@ class DoctrineListBuilderCaseFieldTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testCreateInExpressionForCaseFieldUsesRegisteredFieldDescriptor(): void
+    public function testCreateInExpressionForCaseFieldRegistersIndividualCaseDescriptors(): void
     {
         $entityManager = $this->prophesize(EntityManager::class);
         $filterTypeRegistry = $this->prophesize(FilterTypeRegistry::class);
@@ -45,28 +46,19 @@ class DoctrineListBuilderCaseFieldTest extends TestCase
             new AccessControlQueryEnhancer($systemStore->reveal(), $entityManager->reveal())
         );
 
+        $case1Join = new DoctrineJoinDescriptor(
+            'dimensionContent',
+            'Sulu\Bundle\CoreBundle\Entity\Example.dimensionContents'
+        );
+        $case2Join = new DoctrineJoinDescriptor(
+            'ghostDimensionContent',
+            'Sulu\Bundle\CoreBundle\Entity\Example.dimensionContents'
+        );
+
         $templateKeyFieldDescriptor = new DoctrineCaseFieldDescriptor(
             'templateKey',
-            new DoctrineDescriptor(
-                'dimensionContent',
-                'templateKey',
-                [
-                    'dimensionContent' => new DoctrineJoinDescriptor(
-                        'dimensionContent',
-                        'Sulu\Bundle\CoreBundle\Entity\Example.dimensionContents'
-                    ),
-                ]
-            ),
-            new DoctrineDescriptor(
-                'ghostDimensionContent',
-                'templateKey',
-                [
-                    'ghostDimensionContent' => new DoctrineJoinDescriptor(
-                        'ghostDimensionContent',
-                        'Sulu\Bundle\CoreBundle\Entity\Example.dimensionContents'
-                    ),
-                ]
-            )
+            new DoctrineDescriptor('dimensionContent', 'templateKey', ['dimensionContent' => $case1Join]),
+            new DoctrineDescriptor('ghostDimensionContent', 'templateKey', ['ghostDimensionContent' => $case2Join])
         );
 
         $doctrineListBuilder->setFieldDescriptors([
@@ -79,11 +71,16 @@ class DoctrineListBuilderCaseFieldTest extends TestCase
             ->getMethod('getUniqueExpressionFieldDescriptors');
         $getUniqueExpressionFieldDescriptors->setAccessible(true);
 
+        /** @var DoctrineFieldDescriptor[] $expressionFieldDescriptors */
         $expressionFieldDescriptors = $getUniqueExpressionFieldDescriptors->invoke(
             $doctrineListBuilder,
             [$expression]
         );
 
-        $this->assertSame([$templateKeyFieldDescriptor], $expressionFieldDescriptors);
+        $this->assertCount(2, $expressionFieldDescriptors);
+        $this->assertSame('templateKey__case1', $expressionFieldDescriptors[0]->getName());
+        $this->assertSame('templateKey__case2', $expressionFieldDescriptors[1]->getName());
+        $this->assertSame(['dimensionContent' => $case1Join], $expressionFieldDescriptors[0]->getJoins());
+        $this->assertSame(['ghostDimensionContent' => $case2Join], $expressionFieldDescriptors[1]->getJoins());
     }
 }

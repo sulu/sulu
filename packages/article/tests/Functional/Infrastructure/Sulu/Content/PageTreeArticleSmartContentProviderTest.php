@@ -95,6 +95,29 @@ class PageTreeArticleSmartContentProviderTest extends SuluTestCase
             ],
         ]);
 
+        // Create child pages for testing includeSubFolders
+        self::$pages['blog_tech'] = self::createPage([
+            'en' => [
+                'live' => [
+                    'title' => 'Tech Blog',
+                    'url' => '/blog/tech',
+                    'template' => 'default',
+                    'parentId' => self::$pages['blog']->getUuid(),
+                ],
+            ],
+        ]);
+
+        self::$pages['blog_tech_ai'] = self::createPage([
+            'en' => [
+                'live' => [
+                    'title' => 'AI Tech Blog',
+                    'url' => '/blog/tech/ai',
+                    'template' => 'default',
+                    'parentId' => self::$pages['blog_tech']->getUuid(),
+                ],
+            ],
+        ]);
+
         // Create articles
         self::$articles['blog_article_1'] = self::createArticle([
             'en' => [
@@ -146,11 +169,35 @@ class PageTreeArticleSmartContentProviderTest extends SuluTestCase
             ],
         ]);
 
+        // Create articles for child pages (to test includeSubFolders)
+        self::$articles['tech_article_1'] = self::createArticle([
+            'en' => [
+                'live' => [
+                    'title' => 'Tech Article',
+                    'url' => '/blog/tech/tech-article',
+                    'template' => 'article',
+                ],
+            ],
+        ]);
+
+        self::$articles['ai_article_1'] = self::createArticle([
+            'en' => [
+                'live' => [
+                    'title' => 'AI Article',
+                    'url' => '/blog/tech/ai/ai-article',
+                    'template' => 'article',
+                ],
+            ],
+        ]);
+
         // Link article routes to page routes
         self::linkArticleToPage($entityManager, $routeRepository, self::$articles['blog_article_1'], self::$pages['blog']);
         self::linkArticleToPage($entityManager, $routeRepository, self::$articles['blog_article_2'], self::$pages['blog']);
         self::linkArticleToPage($entityManager, $routeRepository, self::$articles['news_article_1'], self::$pages['news']);
         self::linkArticleToPage($entityManager, $routeRepository, self::$articles['news_article_2'], self::$pages['news']);
+        // Link child page articles
+        self::linkArticleToPage($entityManager, $routeRepository, self::$articles['tech_article_1'], self::$pages['blog_tech']);
+        self::linkArticleToPage($entityManager, $routeRepository, self::$articles['ai_article_1'], self::$pages['blog_tech_ai']);
 
         $entityManager->flush();
     }
@@ -250,7 +297,8 @@ class PageTreeArticleSmartContentProviderTest extends SuluTestCase
         ], []);
 
         // Without dataSource filter, all published articles should be returned
-        $this->assertCount(5, $result);
+        // blog_article_1, blog_article_2, news_article_1, news_article_2, standalone_article, tech_article_1, ai_article_1
+        $this->assertCount(7, $result);
     }
 
     public function testCountByWithBlogDataSource(): void
@@ -332,6 +380,100 @@ class PageTreeArticleSmartContentProviderTest extends SuluTestCase
         $this->assertCount(2, $result);
         $this->assertSame('Second Blog Post', $result[0]['title']);
         $this->assertSame('First Blog Post', $result[1]['title']);
+    }
+
+    public function testFindFlatByWithIncludeSubFoldersDisabled(): void
+    {
+        // Without includeSubFolders, should only return articles directly linked to the blog page
+        $result = $this->smartContentProvider->findFlatBy([
+            ...$this->getDefaultFilters(),
+            'locale' => 'en',
+            'dataSource' => self::$pages['blog']->getUuid(),
+            'includeSubFolders' => false,
+        ], []);
+
+        $this->assertCount(2, $result);
+
+        $resultIds = \array_map(fn ($article) => $article['id'], $result);
+
+        // Only direct blog articles should be included
+        $this->assertContains(self::$articles['blog_article_1']->getUuid(), $resultIds);
+        $this->assertContains(self::$articles['blog_article_2']->getUuid(), $resultIds);
+        // Articles from child pages should NOT be included
+        $this->assertNotContains(self::$articles['tech_article_1']->getUuid(), $resultIds);
+        $this->assertNotContains(self::$articles['ai_article_1']->getUuid(), $resultIds);
+    }
+
+    public function testFindFlatByWithIncludeSubFoldersEnabled(): void
+    {
+        // With includeSubFolders, should return articles from blog page AND all subpages
+        $result = $this->smartContentProvider->findFlatBy([
+            ...$this->getDefaultFilters(),
+            'locale' => 'en',
+            'dataSource' => self::$pages['blog']->getUuid(),
+            'includeSubFolders' => true,
+        ], []);
+
+        $this->assertCount(4, $result);
+
+        $resultIds = \array_map(fn ($article) => $article['id'], $result);
+
+        // Direct blog articles should be included
+        $this->assertContains(self::$articles['blog_article_1']->getUuid(), $resultIds);
+        $this->assertContains(self::$articles['blog_article_2']->getUuid(), $resultIds);
+        // Articles from child pages should also be included
+        $this->assertContains(self::$articles['tech_article_1']->getUuid(), $resultIds);
+        $this->assertContains(self::$articles['ai_article_1']->getUuid(), $resultIds);
+        // News articles should NOT be included
+        $this->assertNotContains(self::$articles['news_article_1']->getUuid(), $resultIds);
+    }
+
+    public function testFindFlatByWithIncludeSubFoldersFromChildPage(): void
+    {
+        // includeSubFolders from a child page (blog_tech) should include grandchild articles
+        $result = $this->smartContentProvider->findFlatBy([
+            ...$this->getDefaultFilters(),
+            'locale' => 'en',
+            'dataSource' => self::$pages['blog_tech']->getUuid(),
+            'includeSubFolders' => true,
+        ], []);
+
+        $this->assertCount(2, $result);
+
+        $resultIds = \array_map(fn ($article) => $article['id'], $result);
+
+        // Tech article (direct child of blog_tech) should be included
+        $this->assertContains(self::$articles['tech_article_1']->getUuid(), $resultIds);
+        // AI article (grandchild via blog_tech_ai) should be included
+        $this->assertContains(self::$articles['ai_article_1']->getUuid(), $resultIds);
+        // Blog articles (parent page) should NOT be included
+        $this->assertNotContains(self::$articles['blog_article_1']->getUuid(), $resultIds);
+    }
+
+    public function testCountByWithIncludeSubFoldersEnabled(): void
+    {
+        $count = $this->smartContentProvider->countBy([
+            ...$this->getDefaultFilters(),
+            'locale' => 'en',
+            'dataSource' => self::$pages['blog']->getUuid(),
+            'includeSubFolders' => true,
+        ]);
+
+        // Should count blog articles (2) + tech article (1) + AI article (1) = 4
+        $this->assertSame(4, $count);
+    }
+
+    public function testCountByWithIncludeSubFoldersDisabled(): void
+    {
+        $count = $this->smartContentProvider->countBy([
+            ...$this->getDefaultFilters(),
+            'locale' => 'en',
+            'dataSource' => self::$pages['blog']->getUuid(),
+            'includeSubFolders' => false,
+        ]);
+
+        // Should only count direct blog articles (2)
+        $this->assertSame(2, $count);
     }
 
     /**

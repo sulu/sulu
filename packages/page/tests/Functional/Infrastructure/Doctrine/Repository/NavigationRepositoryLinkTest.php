@@ -16,6 +16,7 @@ namespace Sulu\Page\Tests\Functional\Infrastructure\Doctrine\Repository;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Page\Domain\Repository\NavigationRepositoryInterface;
+use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
 use Sulu\Page\Tests\Traits\CreatePageTrait;
 use Symfony\Component\Routing\RequestContext;
 
@@ -114,12 +115,12 @@ class NavigationRepositoryLinkTest extends SuluTestCase
                     'excerpt' => [
                         'title' => 'Target Page Excerpt',
                     ],
-                    'parentId' => $homepage->getId(),
+                    'parentId' => $contentPage->getId(),
                 ],
             ],
         ]);
 
-        $internalLinkPage = self::createPage([
+        self::createPage([
             'en' => [
                 'live' => [
                     'title' => 'Internal Link Page',
@@ -129,7 +130,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
                     'linkOn' => true,
                     'linkData' => [
                         'href' => $targetPage->getUuid(),
-                        'provider' => 'page',
+                        'provider' => PageLinkProvider::ALIAS,
                     ],
                     'excerpt' => [
                         'title' => 'Internal Link Excerpt',
@@ -139,7 +140,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
             ],
         ]);
 
-        $externalLinkPage = self::createPage([
+        self::createPage([
             'en' => [
                 'live' => [
                     'title' => 'External Link Page',
@@ -257,5 +258,41 @@ class NavigationRepositoryLinkTest extends SuluTestCase
         $this->assertSame('https://example.com', $externalLinkNav['url']);
         $this->assertSame('external', $externalLinkNav['linkProvider']);
         $this->assertArrayHasKey('children', $externalLinkNav);
+    }
+
+    public function testGetNavigationTreeResolvesTargetPositionMetadataForInternalLinks(): void
+    {
+        $properties = [
+            ...$this->getDefaultProperties(),
+            'depth' => 'object.resource.depth',
+            'lft' => 'object.resource.lft',
+            'rgt' => 'object.resource.rgt',
+        ];
+
+        $navigation = $this->navigationRepository->getNavigationTree(
+            'main',
+            'en',
+            'sulu-io',
+            null,
+            2,
+            $properties
+        );
+
+        /** @var array<string, mixed> $homepageNav */
+        $homepageNav = $navigation[0];
+        /** @var array<int, array<string, mixed>> $homepageChildren */
+        $homepageChildren = $homepageNav['children'];
+        /** @var array<string, mixed> $contentPageNav */
+        $contentPageNav = $homepageChildren[0];
+        /** @var array<string, mixed> $internalLinkNav */
+        $internalLinkNav = $homepageChildren[1];
+        /** @var array<string, mixed> $externalLinkNav */
+        $externalLinkNav = $homepageChildren[2];
+
+        $this->assertSame('Internal Link Page', $internalLinkNav['title']);
+        $this->assertSame('/target-page', $internalLinkNav['url']);
+        $this->assertSame(2, $internalLinkNav['depth']);
+        $this->assertGreaterThan($contentPageNav['lft'], $internalLinkNav['lft']);
+        $this->assertLessThan($contentPageNav['rgt'], $internalLinkNav['rgt']);
     }
 }

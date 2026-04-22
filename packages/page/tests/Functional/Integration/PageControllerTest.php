@@ -942,6 +942,63 @@ class PageControllerTest extends SuluTestCase
     }
 
     /* --- The following tests are independent tests and purge the database on their own --- */
+
+    public function testGetListWithExpandedIdsFlatAndSelectedJoinedFields(): void
+    {
+        self::purgeDatabase();
+
+        $homepage = $this->createHomepage('0199ee04-c220-784e-a6fa-ac985870f2d5', 'sulu-io');
+
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/pages?locale=en&action=publish&parentId=%s&webspace=sulu-io', $homepage->getId()),
+            [],
+            [],
+            [],
+            \json_encode([
+                'template' => 'default',
+                'title' => 'Expanded Child Page',
+                'url' => '/expanded-child-page',
+                'author' => null,
+                'authored' => '2020-05-08T00:00:00+00:00',
+            ]) ?: null,
+        );
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+
+        self::ensureKernelShutdown();
+
+        $this->client->request(
+            'GET',
+            \sprintf(
+                '/admin/api/pages?exclude-ghosts=false&exclude-shadows=false&locale=en&webspace=sulu-io&expandedIds=%s&fields=title,author,creator,id&flat=true',
+                $homepage->getId(),
+            ),
+        );
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{_embedded: array{pages: array<int, array<string, mixed>>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $pages = $content['_embedded']['pages'];
+
+        $this->assertCount(1, $pages);
+        $this->assertSame($homepage->getId(), $pages[0]['id']);
+        $this->assertArrayHasKey('_embedded', $pages[0]);
+
+        /** @var array{pages: array<int, array<string, mixed>>} $embedded */
+        $embedded = $pages[0]['_embedded'];
+        $this->assertCount(1, $embedded['pages']);
+
+        /** @var array<string, mixed> $childPage */
+        $childPage = $embedded['pages'][0];
+
+        $this->assertSame('Expanded Child Page', $childPage['title']);
+        $this->assertArrayHasKey('author', $childPage);
+        $this->assertArrayHasKey('creator', $childPage);
+        $this->assertIsString($childPage['creator']);
+        $this->assertNotSame('', $childPage['creator']);
+    }
+
     public function testNestedTemplatePropertyWithSlash(): void
     {
         self::purgeDatabase();

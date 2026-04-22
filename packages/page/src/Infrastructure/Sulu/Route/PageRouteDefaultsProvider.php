@@ -20,13 +20,21 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
+use Sulu\Bundle\MarkupBundle\Markup\Link\ExternalLinkProvider;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkUrlTrait;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\LinkInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
+use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
+use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Model\Route;
+use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -34,11 +42,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
 {
+    use LinkUrlTrait;
+
     public function __construct(
         private PageRepositoryInterface $pageRepository,
         private ContentAggregatorInterface $contentAggregator,
         private MetadataProviderRegistry $metadataProviderRegistry,
         private CacheLifetimeResolverInterface $cacheLifetimeResolver,
+        private RouteRepositoryInterface $routeRepository,
+        private RouteGeneratorInterface $routeGenerator,
         private bool $audienceTargetingEnabled = false,
     ) {
     }
@@ -80,6 +92,11 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
             throw new NotFoundHttpException(\sprintf('No page found for id "%s" and locale "%s"', $id, $locale));
         }
 
+        $redirectDefaults = $this->resolveRedirectDefaults($dimensionContent, $contentLocale);
+        if (null !== $redirectDefaults) {
+            return $redirectDefaults;
+        }
+
         $templateKey = $dimensionContent->getTemplateKey();
         if (!$templateKey) {
             throw new NotFoundHttpException(\sprintf('No template found for id "%s" and locale "%s"', $id, $locale));
@@ -99,6 +116,65 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
         }
 
         return $defaults;
+    }
+
+    /**
+     * @param DimensionContentInterface<PageInterface> $dimensionContent
+     *
+     * @return array{_controller: class-string<RedirectController>, path: string, permanent: true, _sulu_route_target?: Route}|null
+     */
+    private function resolveRedirectDefaults(DimensionContentInterface $dimensionContent, string $locale): ?array
+    {
+        if (!$dimensionContent instanceof LinkInterface) {
+            return null;
+        }
+
+        $linkData = $dimensionContent->getLinkData();
+        if (!\is_array($linkData)) {
+            return null;
+        }
+
+        $provider = $linkData['provider'] ?? null;
+        $href = $linkData['href'] ?? null;
+
+        if (!\is_string($provider) || !\is_string($href)) {
+            return null;
+        }
+
+        if (ExternalLinkProvider::ALIAS === $provider) {
+            return [
+                '_controller' => RedirectController::class,
+                'path' => $this->appendQueryAndAnchor($href, $linkData),
+                'permanent' => true,
+            ];
+        }
+
+        if (PageLinkProvider::ALIAS !== $provider) {
+            return null;
+        }
+
+        $targetRoute = $this->routeRepository->findOneBy([
+            'resourceKey' => PageInterface::RESOURCE_KEY,
+            'resourceId' => $href,
+            'locale' => $locale,
+        ]);
+
+        if (!$targetRoute instanceof Route) {
+            throw new NotFoundHttpException(\sprintf('No linked target route found for page "%s" and locale "%s"', $href, $locale));
+        }
+
+        $url = $this->routeGenerator->generate(
+            $targetRoute->getSlug(),
+            $targetRoute->getLocale(),
+            $targetRoute->getWebspace(),
+        );
+
+        return [
+            '_controller' => RedirectController::class,
+            'path' => $this->appendQueryAndAnchor($url, $linkData),
+            'permanent' => true,
+            '_sulu_route_target' => $targetRoute,
+        ];
     }
 
     /**

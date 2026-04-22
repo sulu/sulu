@@ -109,4 +109,33 @@ class ArticleTwigExtensionTest extends SuluTestCase
 
         $this->assertNull($result);
     }
+
+    public function testLoadArticleWithShadowLocale(): void
+    {
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'English Article',
+                    'url' => '/english-article',
+                    'description' => 'English description',
+                ],
+            ],
+            'de' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'German Shadow Article',
+                    'url' => '/deutscher-artikel',
+                    'shadowOn' => true,
+                    'shadowLocale' => 'en',
+                ],
+            ],
+        ]);
+
+        $result = $this->articleTwigExtension->loadArticle($article->getUuid(), ['title' => 'title'], 'de');
+
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('title', $result);
+        $this->assertSame('English Article', $result['title']);
+    }
 }

@@ -15,6 +15,7 @@ namespace Sulu\Page\Infrastructure\Sulu\Content;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Bundle\MarkupBundle\Markup\Link\ExternalLinkProvider;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
@@ -169,7 +170,7 @@ final class PageLinkProvider implements LinkProviderInterface
         $linkProvider = $row['linkProvider'];
         $linkData = $row['linkData'];
 
-        if ('external' === $linkProvider && \is_array($linkData) && \is_string($linkData['href'] ?? null)) {
+        if (ExternalLinkProvider::ALIAS === $linkProvider && \is_array($linkData) && \is_string($linkData['href'] ?? null)) {
             return $this->appendQueryAndAnchor($linkData['href'], $linkData);
         }
 

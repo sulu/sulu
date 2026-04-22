@@ -1,0 +1,46 @@
+{
+    "author": null,
+    "authored": null,
+    "availableLocales": [
+        "en",
+        "de"
+    ],
+    "changed": "@datetime@",
+    "changer": "@integer@",
+    "contentLocales": [
+        "en",
+        "de"
+    ],
+    "created": "@datetime@",
+    "creator": "@integer@",
+    "description": null,
+    "excerptAudienceTargetGroups": [],
+    "excerptCategories": [],
+    "excerptSegment": null,
+    "excerptTags": [],
+    "ghostLocale": "en",
+    "id": "@string@",
+    "image": null,
+    "lastModified": null,
+    "lastModifiedEnabled": false,
+    "mainWebspace": "sulu-io",
+    "additionalWebspaces": [],
+    "customizeWebspaceSettings": false,
+    "locale": "de",
+    "published": null,
+    "publishedState": false,
+    "seoHideInSitemap": false,
+    "seoNoFollow": false,
+    "seoNoIndex": false,
+    "shadowLocale": "en",
+    "shadowLocales": {
+        "de": "en"
+    },
+    "shadowOn": true,
+    "stage": "draft",
+    "template": "article",
+    "title": "Test Article (DE)",
+    "version": 0,
+    "url": "/mein-artikel",
+    "workflowPlace": "unpublished"
+}

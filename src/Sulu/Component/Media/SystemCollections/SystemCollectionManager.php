@@ -18,9 +18,6 @@ use Sulu\Component\Cache\CacheInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * Manages system-collections.
- */
 class SystemCollectionManager implements SystemCollectionManagerInterface
 {
     /**
@@ -65,10 +62,8 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
 
     /**
      * Returns system collections.
-     *
-     * @return array
      */
-    private function getSystemCollections()
+    private function getSystemCollections(): array
     {
         if (!$this->systemCollections) {
             if (!$this->cache->isFresh()) {
@@ -88,31 +83,25 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
 
     /**
      * Returns current user.
-     *
-     * @return int
      */
-    private function getUserId()
+    private function getUserId(): ?int
     {
         if (!$this->tokenProvider || null === ($token = $this->tokenProvider->getToken())) {
-            return;
+            return null;
         }
 
-        if (!$token->getUser() instanceof UserInterface) {
-            return;
+        $user = $token->getUser();
+        if (!$user instanceof UserInterface) {
+            return null;
         }
 
-        return $token->getUser()->getId();
+        return $user->getId();
     }
 
     /**
      * Go thru configuration and build all system collections.
-     *
-     * @param string $locale
-     * @param int $userId
-     *
-     * @return array
      */
-    private function buildSystemCollections($locale, $userId)
+    private function buildSystemCollections(string $locale, ?int $userId): array
     {
         $root = $this->getOrCreateRoot(SystemCollectionManagerInterface::COLLECTION_KEY, 'System', $locale, $userId);
         $collections = ['root' => $root->getId()];
@@ -126,23 +115,19 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
     /**
      * Iterates over an array of children collections, creates them.
      * This function is recursive!
-     *
-     * @param array $children
-     * @param string $userId
-     * @param int|null $parent
-     * @param string $namespace
-     *
-     * @return array
      */
-    private function iterateOverCollections($children, $userId, $parent = null, $namespace = '')
+    private function iterateOverCollections(array $children, ?int $userId, ?int $parent = null, string $namespace = ''): array
     {
         $format = ('' !== $namespace ? '%s.%s' : '%s%s');
         $collections = [];
         foreach ($children as $collectionKey => $collectionItem) {
             $key = \sprintf($format, $namespace, $collectionKey);
+
+            /** @var array<string, string> $titles */
+            $titles = $collectionItem['meta_title'];
             $collections[$key] = $this->getOrCreateCollection(
                 $key,
-                $collectionItem['meta_title'],
+                $titles,
                 $userId,
                 $parent
             )->getId();
@@ -163,69 +148,62 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
 
     /**
      * Finds or create a new system-collection namespace.
-     *
-     * @param string $namespace
-     * @param string $title
-     * @param string $locale
-     * @param int $userId
-     * @param int|null $parent id of parent collection or null for root
-     *
-     * @return Collection
      */
-    private function getOrCreateRoot($namespace, $title, $locale, $userId, $parent = null)
-    {
+    private function getOrCreateRoot(
+        string $namespace,
+        string $title,
+        string $locale,
+        ?int $userId,
+        ?int $parent = null,
+    ): Collection {
         if (null !== ($collection = $this->collectionManager->getByKey($namespace, $locale))) {
             $collection->setTitle($title);
 
             return $collection;
         }
 
-        return $this->createCollection($title, $namespace, $locale, $userId, $parent);
+        return $this->createOrUpdateCollection($title, $namespace, $locale, $userId, $parent);
     }
 
     /**
      * Finds or create a new system-collection.
      *
-     * @param string $key
-     * @param array $localizedTitles
-     * @param int $userId
-     * @param int|null $parent id of parent collection or null for root
-     *
-     * @return Collection
+     * @param array<string, string> $localizedTitles
      */
-    private function getOrCreateCollection($key, $localizedTitles, $userId, $parent)
+    private function getOrCreateCollection(string $key, array $localizedTitles, ?int $userId, ?int $parent): Collection
     {
         $locales = \array_keys($localizedTitles);
         $firstLocale = \array_shift($locales);
+        \assert(null !== $firstLocale);
 
         $collection = $this->collectionManager->getByKey($key, $firstLocale);
         if (null === $collection) {
-            $collection = $this->createCollection($localizedTitles[$firstLocale], $key, $firstLocale, $userId, $parent);
+            $collection = $this->createOrUpdateCollection($localizedTitles[$firstLocale], $key, $firstLocale, $userId, $parent);
         } else {
             $collection->setTitle($localizedTitles[$firstLocale]);
         }
 
         foreach ($locales as $locale) {
-            $this->createCollection($localizedTitles[$locale], $key, $locale, $userId, $parent, $collection->getId());
+            $this->createOrUpdateCollection($localizedTitles[$locale], $key, $locale, $userId, $parent, $collection->getId());
         }
 
         return $collection;
     }
 
     /**
-     * Creates a new collection.
+     * Creates or updates a collection collection.
      *
-     * @param string $title
-     * @param string $key
-     * @param string $locale
-     * @param int $userId
-     * @param int|null $parent id of parent collection or null for root
-     * @param int|null $id if not null a colleciton will be updated
-     *
-     * @return Collection
+     * ID != null: collection will be updated
+     * No ID: collection will be created
      */
-    private function createCollection($title, $key, $locale, $userId, $parent = null, $id = null)
-    {
+    private function createOrUpdateCollection(
+        string $title,
+        string $key,
+        string $locale,
+        ?int $userId,
+        ?int $parent = null,
+        ?int $id = null,
+    ): Collection {
         $data = [
             'title' => $title,
             'key' => $key,

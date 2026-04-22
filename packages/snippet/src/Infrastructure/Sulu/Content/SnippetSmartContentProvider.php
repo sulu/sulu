@@ -111,7 +111,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
             ->enableAudienceTargeting()
             ->enableSorting(
                 [
-                    ['column' => 'workflowPublished', 'title' => 'sulu_admin.published'],
+                    ['column' => 'published', 'title' => 'sulu_admin.published'],
                     ['column' => 'authored', 'title' => 'sulu_admin.authored'],
                     ['column' => 'created', 'title' => 'sulu_admin.created'],
                     ['column' => 'title', 'title' => 'sulu_admin.title'],
@@ -148,7 +148,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
      * @param SnippetSmartContentFilters $filters
      * @param array{
      *     title?: 'asc'|'desc',
-     *     workflowPublished?: 'asc'|'desc',
+     *     published?: 'asc'|'desc',
      *     created?: 'asc'|'desc',
      *     changed?: 'asc'|'desc',
      * } $sortBys
@@ -157,6 +157,8 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
      */
     public function findFlatBy(array $filters, array $sortBys, array $params = []): array
     {
+        $sortBys = $this->mapSortBys($sortBys);
+
         $alias = 'snippet';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
 
@@ -251,6 +253,31 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         }
 
         return $filters;
+    }
+
+    /**
+     * @param array{
+     *     title?: 'asc'|'desc',
+     *     published?: 'asc'|'desc',
+     *     created?: 'asc'|'desc',
+     *     changed?: 'asc'|'desc',
+     * } $sortBys
+     *
+     * @return array{
+     *     title?: 'asc'|'desc',
+     *     workflowPublished?: 'asc'|'desc',
+     *     created?: 'asc'|'desc',
+     *     changed?: 'asc'|'desc',
+     * }
+     */
+    protected function mapSortBys(array $sortBys): array
+    {
+        if (\array_key_exists('published', $sortBys)) {
+            $sortBys['workflowPublished'] = $sortBys['published'];
+            unset($sortBys['published']);
+        }
+
+        return $sortBys;
     }
 
     /**

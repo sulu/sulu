@@ -731,8 +731,22 @@ class DoctrineListBuilder extends AbstractListBuilder
             $joins = $this->getJoins();
         }
 
+        // Collect join entity names referenced by WHERE expressions (filters) and search fields.
+        // When an expression filters on a LEFT JOINed table (e.g. templateKey IN (...)),
+        // it eliminates NULL rows, making LEFT JOIN semantically equivalent to INNER JOIN.
+        // Using INNER JOIN allows MySQL to reorder tables and choose better query plans.
+        $filteredJoinEntityNames = $this->getFilteredJoinEntityNames();
+
         foreach ($joins as $entity => $join) {
-            switch ($join->getJoinMethod()) {
+            $joinMethod = $join->getJoinMethod();
+
+            if (DoctrineJoinDescriptor::JOIN_METHOD_LEFT === $joinMethod
+                && \in_array($entity, $filteredJoinEntityNames, true)
+            ) {
+                $joinMethod = DoctrineJoinDescriptor::JOIN_METHOD_INNER;
+            }
+
+            switch ($joinMethod) {
                 case DoctrineJoinDescriptor::JOIN_METHOD_LEFT:
                     $queryBuilder->leftJoin(
                         $join->getJoin() ?: $entity,
@@ -751,6 +765,116 @@ class DoctrineListBuilder extends AbstractListBuilder
                     break;
             }
         }
+    }
+
+    /**
+     * Returns entity names of joins that are referenced by filter expressions or search fields.
+     * These joins have WHERE conditions that eliminate NULL rows, so LEFT JOIN
+     * can safely be upgraded to INNER JOIN for better query optimization.
+     *
+     * @return list<string>
+     */
+    private function getFilteredJoinEntityNames(): array
+    {
+        $entityNames = [];
+
+        foreach ($this->expressions as $expression) {
+            $entityNames = \array_merge($entityNames, $this->getStrictJoinEntityNamesForExpression($expression));
+        }
+
+        if (null !== $this->search && [] !== $this->searchFields) {
+            $searchFields = \array_values(
+                \array_filter(
+                    $this->searchFields,
+                    static fn (DoctrineFieldDescriptorInterface $field): bool => !$field instanceof DoctrineCaseFieldDescriptor,
+                ),
+            );
+
+            if ([] !== $searchFields) {
+                $searchJoinSets = \array_map(
+                    static fn (DoctrineFieldDescriptorInterface $field): array => \array_keys($field->getJoins()),
+                    $searchFields,
+                );
+
+                $entityNames = \array_merge(
+                    $entityNames,
+                    \array_intersect(...$searchJoinSets),
+                );
+            }
+        }
+
+        return \array_values(\array_unique($entityNames));
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getStrictJoinEntityNamesForExpression(AbstractDoctrineExpression $expression): array
+    {
+        if ($expression instanceof DoctrineAndExpression) {
+            $entityNames = [];
+
+            foreach ($expression->getExpressions() as $subExpression) {
+                if (!$subExpression instanceof AbstractDoctrineExpression) {
+                    continue;
+                }
+
+                $entityNames = \array_merge($entityNames, $this->getStrictJoinEntityNamesForExpression($subExpression));
+            }
+
+            return \array_values(\array_unique($entityNames));
+        }
+
+        if ($expression instanceof DoctrineOrExpression) {
+            $strictJoinEntityNames = null;
+
+            foreach ($expression->getExpressions() as $subExpression) {
+                if (!$subExpression instanceof AbstractDoctrineExpression) {
+                    continue;
+                }
+
+                $subExpressionStrictJoinEntityNames = $this->getStrictJoinEntityNamesForExpression($subExpression);
+                $strictJoinEntityNames = null === $strictJoinEntityNames
+                    ? $subExpressionStrictJoinEntityNames
+                    : \array_values(\array_intersect($strictJoinEntityNames, $subExpressionStrictJoinEntityNames));
+            }
+
+            return $strictJoinEntityNames ?? [];
+        }
+
+        if (!$expression instanceof BasicExpressionInterface || $this->allowsNullJoinResult($expression)) {
+            return [];
+        }
+
+        return $this->getJoinEntityNamesForField($expression->getFieldName());
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getJoinEntityNamesForField(string $fieldName): array
+    {
+        $field = $this->fieldDescriptors[$fieldName] ?? null;
+        if (!$field instanceof DoctrineFieldDescriptorInterface) {
+            return [];
+        }
+
+        return \array_keys($field->getJoins());
+    }
+
+    private function allowsNullJoinResult(AbstractDoctrineExpression $expression): bool
+    {
+        if (!$expression instanceof BasicExpressionInterface) {
+            return false;
+        }
+
+        if ($expression instanceof DoctrineIsNullExpression) {
+            return true;
+        }
+
+        return $expression instanceof DoctrineWhereExpression
+            && null === $expression->getValue()
+            && self::WHERE_COMPARATOR_EQUAL === $expression->getComparator();
     }
 
     public function createNotExpression(ExpressionInterface $expression)
@@ -798,8 +922,31 @@ class DoctrineListBuilder extends AbstractListBuilder
         DoctrineCaseFieldDescriptor $caseField,
         array $values,
     ): AbstractDoctrineExpression {
-        $case1 = $caseField->getCase1FieldDescriptor();
-        $case2 = $caseField->getCase2FieldDescriptor();
+        $case1Original = $caseField->getCase1FieldDescriptor();
+        $case2Original = $caseField->getCase2FieldDescriptor();
+
+        /** @var array<DoctrineJoinDescriptor> $case1Joins */
+        $case1Joins = $case1Original->getJoins();
+        /** @var array<DoctrineJoinDescriptor> $case2Joins */
+        $case2Joins = $case2Original->getJoins();
+
+        $case1 = new DoctrineFieldDescriptor(
+            $case1Original->getFieldName(),
+            $caseField->getName() . '__case1',
+            $case1Original->getEntityName(),
+            null,
+            $case1Joins,
+        );
+        $case2 = new DoctrineFieldDescriptor(
+            $case2Original->getFieldName(),
+            $caseField->getName() . '__case2',
+            $case2Original->getEntityName(),
+            null,
+            $case2Joins,
+        );
+
+        $this->fieldDescriptors[$case1->getName()] = $case1;
+        $this->fieldDescriptors[$case2->getName()] = $case2;
 
         return new DoctrineOrExpression([
             new DoctrineAndExpression([
