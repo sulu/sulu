@@ -26,6 +26,8 @@ use Gedmo\Tree\Hydrator\ORM\TreeObjectHydrator;
  * Upstream issue: https://github.com/doctrine-extensions/DoctrineExtensions/issues/2921
  * Upstream fix (open PR): https://github.com/doctrine-extensions/DoctrineExtensions/pull/3041
  *
+ * @internal
+ *
  * @phpstan-ignore class.extendsFinalByPhpDoc
  */
 final class SafeTreeObjectHydrator extends TreeObjectHydrator

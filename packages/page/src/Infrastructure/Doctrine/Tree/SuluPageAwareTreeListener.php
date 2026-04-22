@@ -25,6 +25,8 @@ use Sulu\Page\Domain\Model\Page as SuluPage;
  * parent class to the concrete class so the tree strategy can resolve its configuration.
  *
  * Upstream issue (closed without fix since 2016): https://github.com/doctrine-extensions/DoctrineExtensions/issues/1696
+ *
+ * @internal
  */
 final class SuluPageAwareTreeListener extends TreeListener
 {

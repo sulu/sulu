@@ -18,6 +18,9 @@ use Sulu\Page\Infrastructure\Doctrine\Tree\SuluPageAwareTreeListener;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ * @internal
+ */
 final class OverrideTreeListenerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
