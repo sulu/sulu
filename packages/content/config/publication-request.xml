@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="sulu_content.publication_request_repository" class="Sulu\Content\Infrastructure\Doctrine\PublicationRequest\PublicationRequestRepository">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+        </service>
+
+        <service id="Sulu\Content\Domain\Repository\PublicationRequestRepositoryInterface" alias="sulu_content.publication_request_repository"/>
+    </services>
+</container>

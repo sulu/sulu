@@ -59,6 +59,7 @@ final class SuluContentBundle extends AbstractBundle
     {
         // TODO refactor to PHP based service definitions
         $loader = new XmlFileLoader($builder, new FileLocator(\dirname(__DIR__, 4) . '/config'));
+        $loader->load('publication-request.xml');
         $loader->load('data-mapper.xml');
         $loader->load('merger.xml');
         $loader->load('normalizer.xml');
@@ -90,6 +91,26 @@ final class SuluContentBundle extends AbstractBundle
      */
     public function prependExtension(ContainerConfigurator $container, ContainerBuilder $builder): void
     {
+        if ($builder->hasExtension('doctrine')) {
+            $builder->prependExtensionConfig(
+                'doctrine',
+                [
+                    'orm' => [
+                        'mappings' => [
+                            'SuluContentPublicationRequest' => [
+                                'type' => 'xml',
+                                'prefix' => 'Sulu\Content\Domain\Model\PublicationRequest',
+                                'dir' => \dirname(__DIR__, 4) . '/config/doctrine/PublicationRequest',
+                                'alias' => 'SuluContentPublicationRequest',
+                                'is_bundle' => false,
+                                'mapping' => true,
+                            ],
+                        ],
+                    ],
+                ],
+            );
+        }
+
         if ($builder->hasExtension('sulu_admin')) {
             $builder->prependExtensionConfig(
                 'sulu_admin',
