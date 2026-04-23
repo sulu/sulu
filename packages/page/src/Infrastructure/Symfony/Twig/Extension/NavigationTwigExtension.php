@@ -70,7 +70,7 @@ class NavigationTwigExtension extends AbstractExtension
             $webspaceKey,
             $segment?->getKey(),
             $depth,
-            $properties ?? $this->getDefaultProperties(),
+            \array_merge($this->getDefaultProperties(), $properties ?? []),
         );
     }
 
@@ -99,7 +99,7 @@ class NavigationTwigExtension extends AbstractExtension
             $webspaceKey,
             $segment?->getKey(),
             $depth,
-            $properties ?? $this->getDefaultProperties()
+            \array_merge($this->getDefaultProperties(), $properties ?? []),
         );
     }
 
@@ -131,7 +131,7 @@ class NavigationTwigExtension extends AbstractExtension
                 $uuid,
                 $locale,
                 $webspaceKey,
-                $properties ?? $this->getDefaultProperties()
+                \array_merge($this->getDefaultProperties(), $properties ?? []),
             );
 
             if (!isset($breadcrumb[$level])) {
@@ -152,7 +152,7 @@ class NavigationTwigExtension extends AbstractExtension
             $webspaceKey,
             $depth,
             $context,
-            $properties ?? $this->getDefaultProperties()
+            \array_merge($this->getDefaultProperties(), $properties ?? []),
         );
     }
 
@@ -184,7 +184,7 @@ class NavigationTwigExtension extends AbstractExtension
                 $uuid,
                 $locale,
                 $webspaceKey,
-                $properties ?? $this->getDefaultProperties()
+                \array_merge($this->getDefaultProperties(), $properties ?? []),
             );
 
             if (!isset($breadcrumb[$level])) {
@@ -205,7 +205,7 @@ class NavigationTwigExtension extends AbstractExtension
             $webspaceKey,
             $depth,
             $context,
-            $properties ?? $this->getDefaultProperties()
+            \array_merge($this->getDefaultProperties(), $properties ?? []),
         );
     }
 
@@ -230,7 +230,7 @@ class NavigationTwigExtension extends AbstractExtension
             $uuid,
             $locale,
             $webspaceKey,
-            $properties ?? $this->getDefaultProperties()
+            \array_merge($this->getDefaultProperties(), $properties ?? []),
         );
     }
 
