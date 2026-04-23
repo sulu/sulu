@@ -119,6 +119,9 @@ class {{ cache_class }} extends {{ base_class }}
 
         $portal->addEnvironment($environment);
 {% endfor %}
+        if (isset($portalRefs['{{ portal.key }}'])) {
+            throw new \InvalidArgumentException('Portal with key "{{ portal.key }}" already exists in webspace "' . $portalRefs['{{ portal.key }}']->getWebspace()->getKey() . '" and conflicts with webspace "{{ webspace.key }}". Portal keys must be unique across all webspaces.');
+        }
         $portalRefs['{{ portal.key }}'] = $portal;
         $webspace->addPortal($portal);
 
