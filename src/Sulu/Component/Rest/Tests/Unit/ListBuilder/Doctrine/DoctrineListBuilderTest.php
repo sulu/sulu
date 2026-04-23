@@ -14,6 +14,7 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Doctrine;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Expr\Select;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
@@ -1788,72 +1789,126 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->setPermissionCheck($user->reveal(), PermissionTypes::VIEW);
 
         $accessQueryBuilder = $this->prophesize(QueryBuilder::class);
+        $noRestrictionsQueryBuilder = $this->prophesize(QueryBuilder::class);
+        $expr = $this->prophesize(Expr::class);
+
         $this->entityManager->createQueryBuilder()->willReturn(
             $this->queryBuilder->reveal(),
             $accessQueryBuilder->reveal(),
+            $noRestrictionsQueryBuilder->reveal(),
             $this->queryBuilder->reveal()
         );
 
-        $accessQueryBuilder->from(self::$entityName, 'entity')
+        // New EXISTS-based query structure
+        $accessQueryBuilder->select('1')
             ->shouldBeCalled()
             ->willReturn($accessQueryBuilder->reveal());
 
-        $accessQueryBuilder->select('entity.id')
+        $accessQueryBuilder->from(AccessControl::class, 'acl')
             ->shouldBeCalled()
             ->willReturn($accessQueryBuilder->reveal());
-        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
 
-        $accessQueryBuilder->setParameter('entityClass', self::$entityName)
+        $accessQueryBuilder->innerJoin('acl.role', 'role')
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->innerJoin(
-            AccessControl::class,
-            'accessControl',
-            'WITH',
-            'accessControl.entityClass = :entityClass AND accessControl.entityId = entity.id'
-        )
+        $accessQueryBuilder->andWhere('role.id IN (:roleIds)')
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->innerJoin('accessControl.role', 'role')
+        $accessQueryBuilder->andWhere('BIT_AND(acl.permissions, :permission) = :permission')
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->andWhere(
-            'BIT_AND(accessControl.permissions, :permission) <> :permission AND accessControl.permissions IS NOT NULL'
-        )
+        $accessQueryBuilder->andWhere('acl.permissions IS NOT NULL')
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->andWhere('role.id IN(:roleIds)')
+        $accessQueryBuilder->andWhere('acl.entityClass = :entityClass')
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->setParameter('roleIds', [1])
+        $accessQueryBuilder->andWhere('acl.entityId = ' . self::$entityNameAlias . '.id')
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
-        $accessQueryBuilder->setParameter('permission', 64)
-            ->willReturn($accessQueryBuilder->reveal())->shouldBeCalled();
 
-        $accessQuery = $this->prophesize(Query::class);
-        $accessQueryBuilder->getQuery()
-            ->willReturn($accessQueryBuilder->reveal())
-            ->willReturn($accessQuery->reveal());
-        $accessQuery->getScalarResult()->willReturn([['id' => 42]]);
+        $accessQueryBuilder->getDQL()
+            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->shouldBeCalled();
+
+        // Mock for NOT EXISTS subquery (checking if any AccessControl records exist)
+        $noRestrictionsQueryBuilder->select('1')
+            ->shouldBeCalled()
+            ->willReturn($noRestrictionsQueryBuilder->reveal());
+
+        $noRestrictionsQueryBuilder->from(AccessControl::class, 'acl_check')
+            ->shouldBeCalled()
+            ->willReturn($noRestrictionsQueryBuilder->reveal());
+
+        $noRestrictionsQueryBuilder->innerJoin('acl_check.role', 'role_check')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $noRestrictionsQueryBuilder->where('acl_check.entityId = ' . self::$entityNameAlias . '.id')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $noRestrictionsQueryBuilder->andWhere('acl_check.entityClass = :entityClass')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $noRestrictionsQueryBuilder->andWhere('role_check.system = :system')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $noRestrictionsQueryBuilder->getDQL()
+            ->willReturn('SELECT 1 FROM AccessControl acl_check ...')
+            ->shouldBeCalled();
+
+        $this->queryBuilder->setParameter('roleIds', [1])
+            ->willReturn($this->queryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $this->queryBuilder->setParameter('permission', 64)
+            ->willReturn($this->queryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $this->queryBuilder->setParameter('entityClass', self::$entityName)
+            ->willReturn($this->queryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $this->queryBuilder->setParameter('system', 'Sulu')
+            ->willReturn($this->queryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $this->queryBuilder->expr()
+            ->willReturn($expr->reveal())
+            ->shouldBeCalled();
+
+        $expr->exists('SELECT 1 FROM AccessControl acl_check ...')
+            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
+            ->shouldBeCalled();
+
+        $expr->not('EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
+            ->willReturn('NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
+            ->shouldBeCalled();
+
+        $expr->exists('EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->shouldBeCalled();
+
+        $expr->orX('NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...)', 'EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->willReturn('(NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...) OR EXISTS (SELECT 1 FROM AccessControl acl ...))')
+            ->shouldBeCalled();
+
+        $this->queryBuilder->andWhere('(NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...) OR EXISTS (SELECT 1 FROM AccessControl acl ...))')
+            ->willReturn($this->queryBuilder->reveal())
+            ->shouldBeCalled();
 
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->distinct(false)->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
-
-        $this->queryBuilder->andWhere('(Sulu_Bundle_CoreBundle_Entity_Example.id NOT IN (:accessControlIds) OR Sulu_Bundle_CoreBundle_Entity_Example.id IS NULL)')
-            ->willReturn($this->queryBuilder->reveal())
-            ->shouldBeCalled();
-
-        $this->queryBuilder->setParameter('accessControlIds', [42])
-            ->willReturn($this->queryBuilder->reveal())
-            ->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
@@ -1869,9 +1924,13 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->setPermissionCheck($user->reveal(), PermissionTypes::VIEW);
 
         $accessQueryBuilder = $this->prophesize(QueryBuilder::class);
+        $noRestrictionsQueryBuilder = $this->prophesize(QueryBuilder::class);
+        $expr = $this->prophesize(Expr::class);
+
         $this->entityManager->createQueryBuilder()->willReturn(
             $this->queryBuilder->reveal(),
             $accessQueryBuilder->reveal(),
+            $noRestrictionsQueryBuilder->reveal(),
             $this->queryBuilder->reveal()
         );
 
@@ -1879,67 +1938,118 @@ class DoctrineListBuilderTest extends TestCase
             ->willReturn('integer')
             ->shouldBeCalled();
 
-        $accessQueryBuilder->from(self::$entityName, 'entity')
+        // New EXISTS-based query structure
+        $accessQueryBuilder->select('1')
             ->shouldBeCalled()
             ->willReturn($accessQueryBuilder->reveal());
 
-        $accessQueryBuilder->select('entity.id')
+        $accessQueryBuilder->from(AccessControl::class, 'acl')
             ->shouldBeCalled()
             ->willReturn($accessQueryBuilder->reveal());
-        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
 
-        $accessQueryBuilder->setParameter('entityClass', self::$entityName)
+        $accessQueryBuilder->innerJoin('acl.role', 'role')
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->innerJoin(
-            AccessControl::class,
-            'accessControl',
-            'WITH',
-            'accessControl.entityClass = :entityClass AND accessControl.entityIdInteger = entity.id'
-        )
+        $accessQueryBuilder->andWhere('role.id IN (:roleIds)')
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->innerJoin('accessControl.role', 'role')
+        $accessQueryBuilder->andWhere('BIT_AND(acl.permissions, :permission) = :permission')
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->andWhere(
-            'BIT_AND(accessControl.permissions, :permission) <> :permission AND accessControl.permissions IS NOT NULL'
-        )
+        $accessQueryBuilder->andWhere('acl.permissions IS NOT NULL')
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->andWhere('role.id IN(:roleIds)')
+        $accessQueryBuilder->andWhere('acl.entityClass = :entityClass')
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->setParameter('roleIds', [1])
-            ->willReturn($accessQueryBuilder->reveal())
-            ->shouldBeCalled();
-        $accessQueryBuilder->setParameter('permission', 64)
+        // For integer ID, use entityIdInteger
+        $accessQueryBuilder->andWhere('acl.entityIdInteger = ' . self::$entityNameAlias . '.id')
             ->willReturn($accessQueryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQuery = $this->prophesize(Query::class);
-        $accessQueryBuilder->getQuery()
-            ->willReturn($accessQueryBuilder->reveal())
-            ->willReturn($accessQuery->reveal());
-        $accessQuery->getScalarResult()->willReturn([['id' => 42]]);
+        $accessQueryBuilder->getDQL()
+            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->shouldBeCalled();
+
+        // Mock for NOT EXISTS subquery (checking if any AccessControl records exist)
+        $noRestrictionsQueryBuilder->select('1')
+            ->shouldBeCalled()
+            ->willReturn($noRestrictionsQueryBuilder->reveal());
+
+        $noRestrictionsQueryBuilder->from(AccessControl::class, 'acl_check')
+            ->shouldBeCalled()
+            ->willReturn($noRestrictionsQueryBuilder->reveal());
+
+        $noRestrictionsQueryBuilder->innerJoin('acl_check.role', 'role_check')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        // For integer ID, use entityIdInteger in noRestrictionsQueryBuilder too
+        $noRestrictionsQueryBuilder->where('acl_check.entityIdInteger = ' . self::$entityNameAlias . '.id')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $noRestrictionsQueryBuilder->andWhere('acl_check.entityClass = :entityClass')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $noRestrictionsQueryBuilder->andWhere('role_check.system = :system')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $noRestrictionsQueryBuilder->getDQL()
+            ->willReturn('SELECT 1 FROM AccessControl acl_check ...')
+            ->shouldBeCalled();
+
+        $this->queryBuilder->setParameter('roleIds', [1])
+            ->willReturn($this->queryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $this->queryBuilder->setParameter('permission', 64)
+            ->willReturn($this->queryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $this->queryBuilder->setParameter('entityClass', self::$entityName)
+            ->willReturn($this->queryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $this->queryBuilder->setParameter('system', 'Sulu')
+            ->willReturn($this->queryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $this->queryBuilder->expr()
+            ->willReturn($expr->reveal())
+            ->shouldBeCalled();
+
+        $expr->exists('SELECT 1 FROM AccessControl acl_check ...')
+            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
+            ->shouldBeCalled();
+
+        $expr->not('EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
+            ->willReturn('NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
+            ->shouldBeCalled();
+
+        $expr->exists('EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->shouldBeCalled();
+
+        $expr->orX('NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...)', 'EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->willReturn('(NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...) OR EXISTS (SELECT 1 FROM AccessControl acl ...))')
+            ->shouldBeCalled();
+
+        $this->queryBuilder->andWhere('(NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...) OR EXISTS (SELECT 1 FROM AccessControl acl ...))')
+            ->willReturn($this->queryBuilder->reveal())
+            ->shouldBeCalled();
 
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->distinct(false)->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
-
-        $this->queryBuilder->andWhere('(Sulu_Bundle_CoreBundle_Entity_Example.id NOT IN (:accessControlIds) OR Sulu_Bundle_CoreBundle_Entity_Example.id IS NULL)')
-            ->willReturn($this->queryBuilder->reveal())
-            ->shouldBeCalled();
-
-        $this->queryBuilder->setParameter('accessControlIds', [42])
-            ->willReturn($this->queryBuilder->reveal())
-            ->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
@@ -1955,72 +2065,126 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->setPermissionCheck($user->reveal(), PermissionTypes::VIEW, \stdClass::class);
 
         $accessQueryBuilder = $this->prophesize(QueryBuilder::class);
+        $noRestrictionsQueryBuilder = $this->prophesize(QueryBuilder::class);
+        $expr = $this->prophesize(Expr::class);
+
         $this->entityManager->createQueryBuilder()->willReturn(
             $this->queryBuilder->reveal(),
             $accessQueryBuilder->reveal(),
+            $noRestrictionsQueryBuilder->reveal(),
             $this->queryBuilder->reveal()
         );
 
-        $accessQueryBuilder->from(\stdClass::class, 'entity')
+        $accessQueryBuilder->select('1')
             ->shouldBeCalled()
             ->willReturn($accessQueryBuilder->reveal());
 
-        $accessQueryBuilder->select('entity.id')
+        $accessQueryBuilder->from(AccessControl::class, 'acl')
             ->shouldBeCalled()
             ->willReturn($accessQueryBuilder->reveal());
-        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')
+
+        $accessQueryBuilder->innerJoin('acl.role', 'role')
+            ->willReturn($accessQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $accessQueryBuilder->andWhere('role.id IN (:roleIds)')
+            ->willReturn($accessQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $accessQueryBuilder->andWhere('BIT_AND(acl.permissions, :permission) = :permission')
+            ->willReturn($accessQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $accessQueryBuilder->andWhere('acl.permissions IS NOT NULL')
+            ->willReturn($accessQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $accessQueryBuilder->andWhere('acl.entityClass = :entityClass')
+            ->willReturn($accessQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $accessQueryBuilder->andWhere('acl.entityId = stdClass.id')
+            ->willReturn($accessQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $accessQueryBuilder->getDQL()
+            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->shouldBeCalled();
+
+        // Mock for NOT EXISTS subquery (checking if any AccessControl records exist)
+        $noRestrictionsQueryBuilder->select('1')
+            ->shouldBeCalled()
+            ->willReturn($noRestrictionsQueryBuilder->reveal());
+
+        $noRestrictionsQueryBuilder->from(AccessControl::class, 'acl_check')
+            ->shouldBeCalled()
+            ->willReturn($noRestrictionsQueryBuilder->reveal());
+
+        $noRestrictionsQueryBuilder->innerJoin('acl_check.role', 'role_check')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        // For stdClass tests, use 'stdClass' as the entity alias
+        $noRestrictionsQueryBuilder->where('acl_check.entityId = stdClass.id')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $noRestrictionsQueryBuilder->andWhere('acl_check.entityClass = :entityClass')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $noRestrictionsQueryBuilder->andWhere('role_check.system = :system')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $noRestrictionsQueryBuilder->getDQL()
+            ->willReturn('SELECT 1 FROM AccessControl acl_check ...')
+            ->shouldBeCalled();
+
+        $this->queryBuilder->setParameter('roleIds', [1])
             ->willReturn($this->queryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->setParameter('entityClass', \stdClass::class)
+        $this->queryBuilder->setParameter('permission', 64)
             ->willReturn($this->queryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->innerJoin(
-            AccessControl::class,
-            'accessControl',
-            'WITH',
-            'accessControl.entityClass = :entityClass AND accessControl.entityId = entity.id'
-        )
-            ->willReturn($accessQueryBuilder->reveal())
+        $this->queryBuilder->setParameter('entityClass', \stdClass::class)
+            ->willReturn($this->queryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->innerJoin('accessControl.role', 'role')
-            ->willReturn($accessQueryBuilder->reveal())
+        $this->queryBuilder->setParameter('system', 'Sulu')
+            ->willReturn($this->queryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->andWhere(
-            'BIT_AND(accessControl.permissions, :permission) <> :permission AND accessControl.permissions IS NOT NULL'
-        )
-            ->willReturn($accessQueryBuilder->reveal())
+        $this->queryBuilder->expr()
+            ->willReturn($expr->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->andWhere('role.id IN(:roleIds)')
-            ->willReturn($accessQueryBuilder->reveal())->shouldBeCalled();
-
-        $accessQueryBuilder->setParameter('roleIds', [1])
-            ->willReturn($accessQueryBuilder->reveal())
-            ->shouldBeCalled();
-        $accessQueryBuilder->setParameter('permission', 64)
-            ->willReturn($accessQueryBuilder->reveal())
+        $expr->exists('SELECT 1 FROM AccessControl acl_check ...')
+            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
             ->shouldBeCalled();
 
-        $accessQuery = $this->prophesize(Query::class);
-        $accessQueryBuilder->getQuery()->willReturn($accessQuery->reveal());
-        $accessQuery->getScalarResult()->willReturn([['id' => 42]]);
+        $expr->not('EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
+            ->willReturn('NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
+            ->shouldBeCalled();
+
+        $expr->exists('EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->shouldBeCalled();
+
+        $expr->orX('NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...)', 'EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->willReturn('(NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...) OR EXISTS (SELECT 1 FROM AccessControl acl ...))')
+            ->shouldBeCalled();
+
+        $this->queryBuilder->andWhere('(NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...) OR EXISTS (SELECT 1 FROM AccessControl acl ...))')
+            ->willReturn($this->queryBuilder->reveal())
+            ->shouldBeCalled();
 
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->distinct(false)->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
-
-        $this->queryBuilder->andWhere('(stdClass.id NOT IN (:accessControlIds) OR stdClass.id IS NULL)')
-            ->willReturn($this->queryBuilder->reveal())
-            ->shouldBeCalled();
-
-        $this->queryBuilder->setParameter('accessControlIds', [42])
-            ->willReturn($this->queryBuilder->reveal())
-            ->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
@@ -2048,65 +2212,126 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->addPermissionCheckField($permissionCheckField->reveal());
 
         $accessQueryBuilder = $this->prophesize(QueryBuilder::class);
+        $noRestrictionsQueryBuilder = $this->prophesize(QueryBuilder::class);
+        $expr = $this->prophesize(Expr::class);
+
         $this->entityManager->createQueryBuilder()->willReturn(
             $this->queryBuilder->reveal(),
             $accessQueryBuilder->reveal(),
+            $noRestrictionsQueryBuilder->reveal(),
             $this->queryBuilder->reveal()
         );
 
-        $accessQueryBuilder->from(\stdClass::class, 'entity')
+        $accessQueryBuilder->select('1')
             ->shouldBeCalled()
             ->willReturn($accessQueryBuilder->reveal());
 
-        $accessQueryBuilder->select('entity.id')
+        $accessQueryBuilder->from(AccessControl::class, 'acl')
             ->shouldBeCalled()
             ->willReturn($accessQueryBuilder->reveal());
-        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')
+
+        $accessQueryBuilder->innerJoin('acl.role', 'role')
+            ->willReturn($accessQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $accessQueryBuilder->andWhere('role.id IN (:roleIds)')
+            ->willReturn($accessQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $accessQueryBuilder->andWhere('BIT_AND(acl.permissions, :permission) = :permission')
+            ->willReturn($accessQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $accessQueryBuilder->andWhere('acl.permissions IS NOT NULL')
+            ->willReturn($accessQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $accessQueryBuilder->andWhere('acl.entityClass = :entityClass')
+            ->willReturn($accessQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $accessQueryBuilder->andWhere('acl.entityId = stdClass.id')
+            ->willReturn($accessQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $accessQueryBuilder->getDQL()
+            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->shouldBeCalled();
+
+        // Mock for NOT EXISTS subquery (checking if any AccessControl records exist)
+        $noRestrictionsQueryBuilder->select('1')
+            ->shouldBeCalled()
+            ->willReturn($noRestrictionsQueryBuilder->reveal());
+
+        $noRestrictionsQueryBuilder->from(AccessControl::class, 'acl_check')
+            ->shouldBeCalled()
+            ->willReturn($noRestrictionsQueryBuilder->reveal());
+
+        $noRestrictionsQueryBuilder->innerJoin('acl_check.role', 'role_check')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        // For stdClass tests, use 'stdClass' as the entity alias
+        $noRestrictionsQueryBuilder->where('acl_check.entityId = stdClass.id')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $noRestrictionsQueryBuilder->andWhere('acl_check.entityClass = :entityClass')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $noRestrictionsQueryBuilder->andWhere('role_check.system = :system')
+            ->willReturn($noRestrictionsQueryBuilder->reveal())
+            ->shouldBeCalled();
+
+        $noRestrictionsQueryBuilder->getDQL()
+            ->willReturn('SELECT 1 FROM AccessControl acl_check ...')
+            ->shouldBeCalled();
+
+        $this->queryBuilder->setParameter('roleIds', [1])
             ->willReturn($this->queryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->setParameter('entityClass', \stdClass::class)
-            ->willReturn($accessQueryBuilder->reveal())
+        $this->queryBuilder->setParameter('permission', 64)
+            ->willReturn($this->queryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->innerJoin(
-            AccessControl::class,
-            'accessControl',
-            'WITH',
-            'accessControl.entityClass = :entityClass AND accessControl.entityId = entity.id'
-        )
-            ->willReturn($accessQueryBuilder->reveal())
+        $this->queryBuilder->setParameter('entityClass', \stdClass::class)
+            ->willReturn($this->queryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->innerJoin('accessControl.role', 'role')
-            ->willReturn($accessQueryBuilder->reveal())
+        $this->queryBuilder->setParameter('system', 'Sulu')
+            ->willReturn($this->queryBuilder->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->andWhere(
-            'BIT_AND(accessControl.permissions, :permission) <> :permission AND accessControl.permissions IS NOT NULL'
-        )
-            ->willReturn($accessQueryBuilder->reveal())
+        $this->queryBuilder->expr()
+            ->willReturn($expr->reveal())
             ->shouldBeCalled();
 
-        $accessQueryBuilder->andWhere('role.id IN(:roleIds)')
-            ->willReturn($accessQueryBuilder->reveal())
+        $expr->exists('SELECT 1 FROM AccessControl acl_check ...')
+            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
             ->shouldBeCalled();
 
-        $accessQueryBuilder->setParameter('roleIds', [1])->willReturn($accessQueryBuilder->reveal())->shouldBeCalled();
-        $accessQueryBuilder->setParameter('permission', 64)->willReturn($accessQueryBuilder->reveal())->shouldBeCalled();
+        $expr->not('EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
+            ->willReturn('NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
+            ->shouldBeCalled();
 
-        $accessQuery = $this->prophesize(Query::class);
-        $accessQueryBuilder->getQuery()->willReturn($accessQuery->reveal());
-        $accessQuery->getScalarResult()->willReturn([['id' => 42]]);
+        $expr->exists('EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->shouldBeCalled();
+
+        $expr->orX('NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...)', 'EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->willReturn('(NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...) OR EXISTS (SELECT 1 FROM AccessControl acl ...))')
+            ->shouldBeCalled();
+
+        $this->queryBuilder->andWhere('(NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...) OR EXISTS (SELECT 1 FROM AccessControl acl ...))')
+            ->willReturn($this->queryBuilder->reveal())
+            ->shouldBeCalled();
 
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->distinct(false)->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
-
-        $this->queryBuilder->andWhere('(stdClass.id NOT IN (:accessControlIds) OR stdClass.id IS NULL)')
-            ->willReturn($this->queryBuilder->reveal())
-            ->shouldBeCalled();
 
         $this->queryBuilder->leftJoin(
             'stdClass.myTest',
@@ -2114,10 +2339,6 @@ class DoctrineListBuilderTest extends TestCase
             'ON',
             'stdClass.id = MyTest.id'
         )
-            ->willReturn($this->queryBuilder->reveal())
-            ->shouldBeCalled();
-
-        $this->queryBuilder->setParameter('accessControlIds', [42])
             ->willReturn($this->queryBuilder->reveal())
             ->shouldBeCalled();
 

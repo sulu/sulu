@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
@@ -71,7 +72,7 @@ interface CollectionRepositoryInterface
      *
      * @param int $id
      *
-     * @return Collection|null
+     * @return CollectionInterface|null
      */
     public function findCollectionById($id);
 
@@ -83,7 +84,7 @@ interface CollectionRepositoryInterface
      * @param int $offset
      * @param array $sortBy sort by e.g. array('title' => 'ASC')
      *
-     * @return Collection[]
+     * @return Paginator<CollectionInterface>|array{}
      */
     public function findCollections($filter = [], $limit = null, $offset = null, $sortBy = []);
 
@@ -92,7 +93,7 @@ interface CollectionRepositoryInterface
      *
      * @param int $id
      *
-     * @return Collection[]
+     * @return CollectionInterface[]
      */
     public function findCollectionBreadcrumbById($id);
 
@@ -101,7 +102,7 @@ interface CollectionRepositoryInterface
      *
      * @param string $key
      *
-     * @return Collection
+     * @return CollectionInterface|null
      */
     public function findCollectionByKey($key);
 

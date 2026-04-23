@@ -12,6 +12,7 @@
 namespace Sulu\Page\Domain\Model;
 
 use Doctrine\Common\Collections\Collection;
+use Sulu\Bundle\SecurityBundle\Entity\PermissionInheritanceInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
@@ -19,7 +20,7 @@ use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 /**
  * @extends ContentRichEntityInterface<PageDimensionContentInterface>
  */
-interface PageInterface extends AuditableInterface, ContentRichEntityInterface, SecuredEntityInterface
+interface PageInterface extends AuditableInterface, ContentRichEntityInterface, SecuredEntityInterface, PermissionInheritanceInterface
 {
     public const TEMPLATE_TYPE = 'page';
     public const RESOURCE_KEY = 'pages';
