@@ -71,12 +71,11 @@ class AccessControlQueryEnhancer implements AccessControlQueryEnhancerInterface
     }
 
     /**
-     * Following function uses an own query to load the restricted (not accessible ids). This is faster as embedding the
-     * query as subquery. Also loading the "accessible" ids would be more performance intense because sulu has more
-     * "accessible" entities that not accessible. Optimized embedded queries are mostly not compatible for MySQL 5.7
-     * because of restrictions.
+     * Following function uses an EXISTS subquery to find entities where at least one of the user's roles
+     * has the required permission. This fixes the issue where users with multiple roles would lose access
+     * if any role lacked permission, instead of maintaining access if any role had permission.
      *
-     * As long as we dont have thousands of not "accessible" ids this approach should be faster.
+     * The EXISTS approach ensures correct permission logic while maintaining good performance.
      *
      * @param class-string $entityClass
      */
@@ -89,39 +88,82 @@ class AccessControlQueryEnhancer implements AccessControlQueryEnhancerInterface
         string $entityIdField = 'id',
         ?string $entityClassField = null
     ): void {
-        $subQueryBuilder = $this->entityManager->createQueryBuilder()
-            ->from($entityClass, 'entity')
-            ->select('entity.' . $entityIdField);
+        $roleIds = $this->getUserRoleIds($user);
+        $system = $this->systemStore->getSystem();
 
-        $accessClassCondition = 'accessControl.entityClass = :entityClass';
-        if ($entityClassField) {
-            $accessClassCondition = 'accessControl.entityClass = entity.' . $entityClassField;
+        $existsSubQuery = $this->entityManager->createQueryBuilder();
+        $existsSubQuery->select('1');
+        $existsSubQuery->from(AccessControl::class, 'acl');
+        $existsSubQuery->innerJoin('acl.role', 'role');
+
+        $existsSubQuery->andWhere('acl.permissions IS NOT NULL');
+
+        if ([] !== $roleIds) {
+            $existsSubQuery->andWhere('role.id IN (:roleIds)');
+            $existsSubQuery->andWhere('BIT_AND(acl.permissions, :permission) = :permission');
         } else {
-            $subQueryBuilder->setParameter('entityClass', $entityClass);
+            $existsSubQuery->andWhere('1 = 0');
         }
 
-        $subQueryBuilder->innerJoin(
-            AccessControl::class,
-            'accessControl',
-            'WITH',
-            $accessClassCondition . ' AND ' . $this->getEntityIdCondition($entityClass, 'entity', $entityIdField)
+        if ($entityClassField) {
+            $existsSubQuery->andWhere('acl.entityClass = ' . $entityAlias . '.' . $entityClassField);
+        } else {
+            $existsSubQuery->andWhere('acl.entityClass = :entityClass');
+        }
+
+        $entityIdCondition = $this->getEntityIdCondition($entityClass, $entityAlias, $entityIdField);
+        $existsSubQuery->andWhere($entityIdCondition);
+
+        // Create a subquery to check if ANY AccessControl records exist for this entity
+        // This allows unrestricted entities (without any permission records) to be visible
+        $noRestrictionsSubQuery = $this->entityManager->createQueryBuilder();
+        $noRestrictionsSubQuery->select('1');
+        $noRestrictionsSubQuery->from(AccessControl::class, 'acl_check');
+        $noRestrictionsSubQuery->innerJoin('acl_check.role', 'role_check');
+
+        $noRestrictionsSubQuery->where(
+            $this->getEntityIdConditionWithAlias($entityClass, $entityAlias, $entityIdField, 'acl_check')
         );
-        $subQueryBuilder->innerJoin('accessControl.role', 'role');
-        $subQueryBuilder->andWhere(
-            'BIT_AND(accessControl.permissions, :permission) <> :permission AND accessControl.permissions IS NOT NULL'
-        );
 
-        $subQueryBuilder->andWhere('role.id IN(:roleIds)');
+        if ($entityClassField) {
+            $noRestrictionsSubQuery->andWhere('acl_check.entityClass = ' . $entityAlias . '.' . $entityClassField);
+        } else {
+            $noRestrictionsSubQuery->andWhere('acl_check.entityClass = :entityClass');
+        }
 
-        $subQueryBuilder->setParameter('roleIds', $this->getUserRoleIds($user));
-        $subQueryBuilder->setParameter('permission', $permission);
+        if (null !== $system) {
+            $noRestrictionsSubQuery->andWhere('role_check.system = :system');
+            $queryBuilder->setParameter('system', $system);
+        }
 
-        $result = $subQueryBuilder->getQuery()->getScalarResult();
-        $ids = \array_column($result, $entityIdField);
+        if ([] !== $roleIds) {
+            $queryBuilder->setParameter('roleIds', $roleIds);
+            $queryBuilder->setParameter('permission', $permission);
+        }
 
-        if (\count($ids) > 0) {
-            $queryBuilder->andWhere(\sprintf('(%s.%s NOT IN (:accessControlIds) OR %s.%s IS NULL)', $entityAlias, $entityIdField, $entityAlias, $entityIdField));
-            $queryBuilder->setParameter('accessControlIds', $ids);
+        if (!$entityClassField) {
+            $queryBuilder->setParameter('entityClass', $entityClass);
+        }
+
+        // Show entities if:
+        // 1. No AccessControl records exist (unrestricted), OR
+        // 2. Dynamic entity class field is NULL (no permission check needed), OR
+        // 3. User has permission via at least one of their roles
+        if ($entityClassField) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->orX(
+                    $entityAlias . '.' . $entityClassField . ' IS NULL',
+                    $queryBuilder->expr()->not($queryBuilder->expr()->exists($noRestrictionsSubQuery->getDQL())),
+                    $queryBuilder->expr()->exists($existsSubQuery->getDQL())
+                )
+            );
+        } else {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->orX(
+                    $queryBuilder->expr()->not($queryBuilder->expr()->exists($noRestrictionsSubQuery->getDQL())),
+                    $queryBuilder->expr()->exists($existsSubQuery->getDQL())
+                )
+            );
         }
     }
 
@@ -130,11 +172,19 @@ class AccessControlQueryEnhancer implements AccessControlQueryEnhancerInterface
      */
     private function getEntityIdCondition(string $entityClass, string $entityAlias, string $entityIdField = 'id'): string
     {
-        $entityIdCondition = 'accessControl.entityId = ' . $entityAlias . '.' . $entityIdField;
+        return $this->getEntityIdConditionWithAlias($entityClass, $entityAlias, $entityIdField, 'acl');
+    }
+
+    /**
+     * @param class-string $entityClass
+     */
+    private function getEntityIdConditionWithAlias(string $entityClass, string $entityAlias, string $entityIdField, string $aclAlias): string
+    {
+        $entityIdCondition = $aclAlias . '.entityId = ' . $entityAlias . '.' . $entityIdField;
         try {
             $metadata = $this->entityManager->getClassMetadata($entityClass);
             if ('integer' === $metadata->getTypeOfField($entityIdField)) {
-                $entityIdCondition = 'accessControl.entityIdInteger = ' . $entityAlias . '.' . $entityIdField;
+                $entityIdCondition = $aclAlias . '.entityIdInteger = ' . $entityAlias . '.' . $entityIdField;
             }
         } catch (MappingException $e) {
             $metadata = null;

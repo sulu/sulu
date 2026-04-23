@@ -20,6 +20,8 @@ interface CacheLifetimeEnhancerInterface
 {
     /**
      * Call this method to enhance the response.
+     *
+     * @return void
      */
     public function enhance(Response $response): void;
 }

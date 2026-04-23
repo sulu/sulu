@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\Entity\Collaboration;
 use Sulu\Bundle\AdminBundle\Entity\CollaborationRepository;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class CollaborationController
@@ -31,6 +32,9 @@ class CollaborationController
     ) {
     }
 
+    /**
+     * @return Response
+     */
     public function cputAction(Request $request)
     {
         $collaboration = $this->collaborationRepository->find(
@@ -51,6 +55,9 @@ class CollaborationController
         );
     }
 
+    /**
+     * @return Response
+     */
     public function cdeleteAction(Request $request)
     {
         $collaborations = \array_values($this->collaborationRepository->delete($this->createCollaboration($request)));
@@ -60,6 +67,9 @@ class CollaborationController
         );
     }
 
+    /**
+     * @return Collaboration
+     */
     private function createCollaboration(Request $request)
     {
         $user = $this->tokenStorage->getToken()->getUser();
@@ -87,7 +97,7 @@ class CollaborationController
         return $request->query->get('resourceKey');
     }
 
-    private function getConnectionId(Request $request)
+    private function getConnectionId(Request $request): string
     {
         return \sha1($request->getSession()->getId() . $this->secret);
     }

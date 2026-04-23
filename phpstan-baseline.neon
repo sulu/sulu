@@ -1255,30 +1255,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Controller/CollaborationController.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Controller\\CollaborationController\:\:cdeleteAction\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/CollaborationController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Controller\\CollaborationController\:\:cputAction\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/CollaborationController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Controller\\CollaborationController\:\:createCollaboration\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/CollaborationController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Controller\\CollaborationController\:\:getConnectionId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/CollaborationController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Controller\\CollaborationController\:\:getId\(\) never returns int so it can be removed from the return type\.$#'
 			identifier: return.unusedType
 			count: 1
@@ -1297,24 +1273,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Controller/CollaborationController.php
 
 		-
-			message: '#^Parameter \#1 \$collaboration of method Sulu\\Bundle\\AdminBundle\\Entity\\CollaborationRepository\:\:delete\(\) expects Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/CollaborationController.php
-
-		-
-			message: '#^Parameter \#1 \$collaboration of method Sulu\\Bundle\\AdminBundle\\Entity\\CollaborationRepository\:\:update\(\) expects Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/CollaborationController.php
-
-		-
-			message: '#^Parameter \#1 \$connectionId of class Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/CollaborationController.php
-
-		-
 			message: '#^Parameter \#2 \$id of method Sulu\\Bundle\\AdminBundle\\Entity\\CollaborationRepository\:\:find\(\) expects string, int\|string given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1328,12 +1286,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$userId of class Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration constructor expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/CollaborationController.php
-
-		-
-			message: '#^Parameter \#3 \$connectionId of method Sulu\\Bundle\\AdminBundle\\Entity\\CollaborationRepository\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Controller/CollaborationController.php
@@ -6511,12 +6463,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\Category\:\:setTranslation\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\Category\:\:toArray\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -6571,26 +6517,8 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Api/RootCategory.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\RootCategory\:\:getCategories\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Api/RootCategory.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\RootCategory\:\:getEmbedded\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Api/RootCategory.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\CategoryBundle\\Api\\RootCategory\:\:\$categories \(array\<Sulu\\Bundle\\CategoryBundle\\Api\\Category\>\) does not accept array\.$#'
 			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Api/RootCategory.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\CategoryBundle\\Api\\RootCategory\:\:\$id \(int\) does not accept default value of type string\.$#'
-			identifier: property.defaultValue
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Api/RootCategory.php
 
@@ -19573,12 +19501,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
 		-
-			message: '#^Instanceof between array\<Sulu\\Bundle\\MediaBundle\\Entity\\Collection\> and Doctrine\\ORM\\Tools\\Pagination\\Paginator will always evaluate to false\.$#'
-			identifier: instanceof.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
-
-		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
@@ -19737,7 +19659,7 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
 		-
@@ -19765,7 +19687,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
 		-
-			message: '#^Parameter \#1 \$entity of method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManager\:\:getApiEntity\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\CollectionInterface, Sulu\\Bundle\\MediaBundle\\Entity\\Collection\|null given\.$#'
+			message: '#^Parameter \#1 \$entity of method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManager\:\:getApiEntity\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\CollectionInterface, Sulu\\Bundle\\MediaBundle\\Entity\\CollectionInterface\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
@@ -20737,44 +20659,8 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:countCollections\(\) has parameter \$filter with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:countCollections\(\) should return int but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:findCollectionBreadcrumbById\(\) should return array\<Sulu\\Bundle\\MediaBundle\\Entity\\Collection\> but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:findCollectionById\(\) should return Sulu\\Bundle\\MediaBundle\\Entity\\Collection\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:findCollectionByKey\(\) should return Sulu\\Bundle\\MediaBundle\\Entity\\Collection but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:findCollectionByKey\(\) should return Sulu\\Bundle\\MediaBundle\\Entity\\Collection but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
@@ -20799,12 +20685,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:findCollections\(\) has parameter \$sortBy with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:findCollections\(\) should return array\<Sulu\\Bundle\\MediaBundle\\Entity\\Collection\> but empty return statement found\.$#'
-			identifier: return.empty
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
@@ -20845,12 +20725,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-
-			message: '#^PHPDoc tag @var with type array\<Sulu\\Bundle\\MediaBundle\\Entity\\Collection\> is not subtype of native type Doctrine\\ORM\\Tools\\Pagination\\Paginator\<mixed\>\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
 			message: '#^Parameter \#1 \$firstResult of method Doctrine\\ORM\\QueryBuilder\:\:setFirstResult\(\) expects int\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -20866,12 +20740,6 @@ parameters:
 			message: '#^Parameter \#1 \$string of function strtolower expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 3
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-
@@ -30895,12 +30763,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Controller/SitemapController.php
 
 		-
-			message: '#^Parameter \#2 \$alias of method Sulu\\Bundle\\WebsiteBundle\\Controller\\SitemapController\:\:sitemapPaginatedAction\(\) expects string, int\<min, \-1\>\|int\<1, max\>\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/SitemapController.php
-
-		-
 			message: '#^Parameter \#2 \$values of method Symfony\\Component\\HttpFoundation\\ResponseHeaderBag\:\:set\(\) expects array\<string\>\|string\|null, int given\.$#'
 			identifier: argument.type
 			count: 1
@@ -37855,12 +37717,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:analyze\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
-
-		-
 			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:getAttribute\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -37945,12 +37801,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzer\:\:validate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
-
-		-
 			message: '#^Parameter \#1 \$attributes of method Sulu\\Component\\Webspace\\Analyzer\\Attributes\\RequestProcessorInterface\:\:validate\(\) expects Sulu\\Component\\Webspace\\Analyzer\\Attributes\\RequestAttributes, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -37981,19 +37831,7 @@ parameters:
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzerInterface\:\:analyze\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzerInterface.php
-
-		-
 			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzerInterface\:\:getAttribute\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzerInterface.php
-
-		-
-			message: '#^Method Sulu\\Component\\Webspace\\Analyzer\\RequestAnalyzerInterface\:\:validate\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzerInterface.php
