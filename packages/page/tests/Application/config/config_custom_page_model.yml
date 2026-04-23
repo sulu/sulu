@@ -1,0 +1,15 @@
+doctrine:
+    orm:
+        mappings:
+            PageTestsApplication:
+                type: attribute
+                prefix: Sulu\Page\Tests\Application\Entity
+                dir: "%kernel.project_dir%/Entity"
+                alias: PageTestsApplication
+                is_bundle: false
+                mapping: true
+
+sulu_page:
+    objects:
+        page:
+            model: Sulu\Page\Tests\Application\Entity\Page
