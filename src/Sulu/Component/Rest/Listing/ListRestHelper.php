@@ -190,7 +190,7 @@ class ListRestHelper
     /**
      * Returns an array with all the fields the search pattern should be executed on.
      *
-     * @return array<string>|null
+     * @return array<string>
      */
     public function getSearchFields()
     {

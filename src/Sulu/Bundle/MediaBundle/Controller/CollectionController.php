@@ -209,7 +209,7 @@ class CollectionController extends AbstractRestController implements ClassResour
                     $this->getRequestParameter($request, 'locale', true),
                     $offset,
                     $limit,
-                    (string) $search,
+                    $search,
                     $depth,
                     null !== $sortBy ? [$sortBy => $sortOrder] : [],
                     $this->securityChecker->hasPermission('sulu.media.system_collections', 'view'),
