@@ -35,7 +35,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * The value for which the searchfields will be searched.
      *
-     * @var string
+     * @var string|null
      */
     protected $search;
 

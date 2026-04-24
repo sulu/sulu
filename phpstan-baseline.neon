@@ -6529,18 +6529,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\Category\:\:getChanged\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\Category\:\:getCreated\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\Category\:\:getDefaultLocale\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -6555,18 +6543,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\Category\:\:getGhostLocale\(\) should return string but empty return statement found\.$#'
 			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\Category\:\:getId\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\Category\:\:getId\(\) should return array but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
 
@@ -6694,12 +6670,6 @@ parameters:
 			message: '#^Strict comparison using \=\=\= between null and Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryTranslationInterface will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 6
-			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between null and array will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
 
 		-
@@ -25383,7 +25353,7 @@ parameters:
 		-
 			message: '#^Cannot access offset string on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
+			count: 4
 			path: src/Sulu/Bundle/MediaBundle/Content/Types/ImageMapContentType.php
 
 		-
@@ -25849,19 +25819,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
 
 		-
-			message: '#^Parameter \#4 \$search of method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManagerInterface\:\:getTree\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
 			message: '#^Parameter \#5 \$depth of method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManagerInterface\:\:getTree\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
-			message: '#^Parameter \#5 \$page of class Sulu\\Component\\Rest\\ListBuilder\\ListRepresentation constructor expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
@@ -36115,12 +36073,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
 
 		-
-			message: '#^Parameter \#5 \$page of class Sulu\\Component\\Rest\\ListBuilder\\ListRepresentation constructor expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
-
-		-
 			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
 			count: 1
@@ -43911,13 +43863,13 @@ parameters:
 		-
 			message: '#^Offset ''changed'' might not exist on Sulu\\Component\\Content\\Repository\\Content\|null\.$#'
 			identifier: offsetAccess.notFound
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Repository/ContentRepositoryTest.php
 
 		-
 			message: '#^Offset ''created'' might not exist on Sulu\\Component\\Content\\Repository\\Content\|null\.$#'
 			identifier: offsetAccess.notFound
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Repository/ContentRepositoryTest.php
 
 		-
@@ -48497,12 +48449,6 @@ parameters:
 			identifier: method.nonObject
 			count: 1
 			path: src/Sulu/Bundle/SearchBundle/Build/InitBuilder.php
-
-		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Controller/SearchController.php
 
 		-
 			message: '#^Parameter \#1 \$query of method Massive\\Bundle\\SearchBundle\\Search\\SearchManagerInterface\:\:createSearch\(\) expects string, string\|null given\.$#'
@@ -54427,24 +54373,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
 
 		-
-			message: '#^Parameter \#3 \$search of method Sulu\\Bundle\\SnippetBundle\\Snippet\\SnippetRepository\:\:getSnippetsAmount\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
-
-		-
-			message: '#^Parameter \#5 \$page of class Sulu\\Component\\Rest\\ListBuilder\\ListRepresentation constructor expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
-
-		-
-			message: '#^Parameter \#5 \$search of method Sulu\\Bundle\\SnippetBundle\\Snippet\\SnippetRepository\:\:getSnippets\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\SnippetBundle\\Controller\\SnippetController\:\:\$structureManager is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
@@ -58767,12 +58695,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Controller\\SitemapController\:\:getDumpedSitemapResponse\(\) should return Symfony\\Component\\HttpFoundation\\BinaryFileResponse\|null but empty return statement found\.$#'
 			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/SitemapController.php
-
-		-
-			message: '#^Parameter \#2 \$alias of method Sulu\\Bundle\\WebsiteBundle\\Controller\\SitemapController\:\:sitemapPaginatedAction\(\) expects string, int\<min, \-1\>\|int\<1, max\>\|string given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Controller/SitemapController.php
 
@@ -63393,7 +63315,7 @@ parameters:
 		-
 			message: '#^Cannot access offset string on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
 
 		-
@@ -83719,12 +83641,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getExcludedIds\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getFields\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -83743,19 +83659,7 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getIds\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getIds\(\) should return array but returns array\<int\<0, max\>, string\>\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getLimit\(\) should return int but returns mixed\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getLimit\(\) should return int\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
@@ -83767,8 +83671,8 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getPage\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getPage\(\) should return int but returns mixed\.$#'
+			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
@@ -83779,8 +83683,8 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getSearchPattern\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getSearchPattern\(\) should return string\|null but returns mixed\.$#'
+			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
@@ -83803,12 +83707,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelperInterface\:\:getExcludedIds\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelperInterface.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelperInterface\:\:getFields\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -83821,26 +83719,8 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelperInterface.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelperInterface\:\:getIds\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelperInterface.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelperInterface\:\:getPage\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelperInterface.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelperInterface\:\:getSearchFields\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelperInterface.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelperInterface\:\:getSearchPattern\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelperInterface.php
 
@@ -84847,21 +84727,9 @@ parameters:
 			path: src/Sulu/Component/Rest/Listing/ListRepository.php
 
 		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, array\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListRepository.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListRepository.php
-
-		-
-			message: '#^Parameter \#2 \$intersectArray of method Sulu\\Component\\Rest\\Listing\\ListRepository\:\:getFieldsWitTypes\(\) expects array\<string\>\|null, array\|null given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Sulu/Component/Rest/Listing/ListRepository.php
 
 		-
@@ -84879,12 +84747,6 @@ parameters:
 		-
 			message: '#^Parameter \#3 \$justCount \(bool\) of method Sulu\\Component\\Rest\\Listing\\ListRepository\:\:find\(\) should be compatible with parameter \$lockVersion \(int\|null\) of method Doctrine\\ORM\\EntityRepository\<object\>\:\:find\(\)$#'
 			identifier: method.childParameterType
-			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListRepository.php
-
-		-
-			message: '#^Parameter \#4 \$fields of class Sulu\\Component\\Rest\\Listing\\ListQueryBuilder constructor expects array\<string\>, array\|null given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Rest/Listing/ListRepository.php
 
@@ -84967,18 +84829,6 @@ parameters:
 			path: src/Sulu/Component/Rest/Listing/ListRestHelper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Listing\\ListRestHelper\:\:getAllFields\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListRestHelper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\Listing\\ListRestHelper\:\:getFields\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListRestHelper.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\Listing\\ListRestHelper\:\:getLimit\(\) should return int but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -84993,12 +84843,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Component\\Rest\\Listing\\ListRestHelper\:\:getPage\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListRestHelper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\Listing\\ListRestHelper\:\:getSearchFields\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Rest/Listing/ListRestHelper.php
 
@@ -85130,18 +84974,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Rest/RestHelper.php
-
-		-
-			message: '#^Parameter \#1 \$page of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:setCurrentPage\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Rest/RestHelper.php
-
-		-
-			message: '#^Parameter \#1 \$search of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:search\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Rest/RestHelper.php
@@ -90787,12 +90619,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Tests/Functional/Analyzer/RequestAnalyzerTest.php
 
 		-
-			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertTrue\(\) with true will always evaluate to true\.$#'
-			identifier: method.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Analyzer/Attributes/AdminRequestProcessorTest.php
-
-		-
 			message: '#^Method Sulu\\Component\\Webspace\\Tests\\Unit\\Analyzer\\Attributes\\AdminRequestProcessorTest\:\:provideData\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -90827,18 +90653,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Webspace/Tests/Unit/Analyzer/Attributes/AdminRequestProcessorTest.php
-
-		-
-			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertTrue\(\) with true will always evaluate to true\.$#'
-			identifier: method.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Analyzer/Attributes/ParameterRequestProcessorTest.php
-
-		-
-			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertTrue\(\) with true will always evaluate to true\.$#'
-			identifier: method.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Analyzer/Attributes/PortalInformationRequestProcessorTest.php
 
 		-
 			message: '#^Cannot access offset ''format'' on mixed\.$#'
@@ -91055,12 +90869,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Webspace/Tests/Unit/Analyzer/Attributes/UrlRequestProcessorTest.php
-
-		-
-			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertTrue\(\) with true will always evaluate to true\.$#'
-			identifier: method.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Analyzer/Attributes/WebsiteRequestProcessorTest.php
 
 		-
 			message: '#^Cannot call method getUrl\(\) on mixed\.$#'
