@@ -27,6 +27,10 @@ class NavigationRepositoryLinkTest extends SuluTestCase
 
     private NavigationRepositoryInterface $navigationRepository;
 
+    private static string $targetPageUuid;
+
+    private static string $internalLinkPageUuid;
+
     /**
      * @return array<string, string>
      */
@@ -119,8 +123,9 @@ class NavigationRepositoryLinkTest extends SuluTestCase
                 ],
             ],
         ]);
+        self::$targetPageUuid = $targetPage->getUuid();
 
-        self::createPage([
+        $internalLinkPage = self::createPage([
             'en' => [
                 'live' => [
                     'title' => 'Internal Link Page',
@@ -139,6 +144,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
                 ],
             ],
         ]);
+        self::$internalLinkPageUuid = $internalLinkPage->getUuid();
 
         self::createPage([
             'en' => [
@@ -184,6 +190,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
         $this->assertSame('/target-page', $internalLinkNav['url']);
         $this->assertSame('sulu-io', $internalLinkNav['webspaceKey']);
         $this->assertSame('page', $internalLinkNav['linkProvider']);
+        $this->assertSame(self::$internalLinkPageUuid, $internalLinkNav['uuid']);
 
         // Test external link resolve url
         /** @var array<string, mixed> $externalLinkNav */
@@ -249,6 +256,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
         $this->assertSame('Internal Link Page', $internalLinkNav['title']);
         $this->assertSame('/target-page', $internalLinkNav['url']);
         $this->assertSame('page', $internalLinkNav['linkProvider']);
+        $this->assertSame(self::$internalLinkPageUuid, $internalLinkNav['uuid']);
         $this->assertArrayHasKey('children', $internalLinkNav);
 
         // Test external link resolve url
@@ -260,7 +268,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
         $this->assertArrayHasKey('children', $externalLinkNav);
     }
 
-    public function testGetNavigationTreeResolvesTargetPositionMetadataForInternalLinks(): void
+    public function testGetNavigationTreeResolvesSourcePositionMetadataForInternalLinks(): void
     {
         $properties = [
             ...$this->getDefaultProperties(),
@@ -286,13 +294,15 @@ class NavigationRepositoryLinkTest extends SuluTestCase
         $contentPageNav = $homepageChildren[0];
         /** @var array<string, mixed> $internalLinkNav */
         $internalLinkNav = $homepageChildren[1];
-        /** @var array<string, mixed> $externalLinkNav */
-        $externalLinkNav = $homepageChildren[2];
 
         $this->assertSame('Internal Link Page', $internalLinkNav['title']);
         $this->assertSame('/target-page', $internalLinkNav['url']);
-        $this->assertSame(2, $internalLinkNav['depth']);
-        $this->assertGreaterThan($contentPageNav['lft'], $internalLinkNav['lft']);
-        $this->assertLessThan($contentPageNav['rgt'], $internalLinkNav['rgt']);
+
+        $this->assertSame(self::$internalLinkPageUuid, $internalLinkNav['uuid']);
+        $this->assertNotSame(self::$targetPageUuid, $internalLinkNav['uuid']);
+        $this->assertSame($contentPageNav['depth'], $internalLinkNav['depth']);
+        // source is a sibling of the content page, so its lft sits after the content page's subtree
+        $this->assertGreaterThan($contentPageNav['rgt'], $internalLinkNav['lft']);
+        $this->assertGreaterThan($internalLinkNav['lft'], $internalLinkNav['rgt']);
     }
 }

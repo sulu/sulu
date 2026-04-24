@@ -18,10 +18,12 @@ use Sulu\Bundle\MarkupBundle\Markup\Link\LinkUrlTrait;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentEnhancer\DimensionContentEnhancerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * @internal This class should not be instantiated by a project.
@@ -112,23 +114,26 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
         /** @var PageDimensionContentInterface $targetDimensionContent */
         $targetDimensionContent = $this->contentAggregator->aggregate($page, $dimensionAttributes);
 
-        $route = $targetDimensionContent->getRoute();
+        Assert::isInstanceOf($targetDimensionContent, PageDimensionContent::class);
+        $enhancedDimensionContent = $targetDimensionContent->withPage($pageDimensionContent->getResource());
+
+        $route = $enhancedDimensionContent->getRoute();
         $url = $route?->getSlug();
 
         if (null !== $url && null !== $linkData) {
             $url = $this->appendQueryAndAnchor($url, $linkData);
         }
 
-        $targetDimensionContent->setTemplateData([
-            ...$targetDimensionContent->getTemplateData(),
+        $enhancedDimensionContent->setTemplateData([
+            ...$enhancedDimensionContent->getTemplateData(),
             ...[
                 'title' => $pageDimensionContent->getTitle(),
                 'url' => $url,
             ],
         ]);
-        $targetDimensionContent->setLinkData($linkData);
+        $enhancedDimensionContent->setLinkData($linkData);
 
-        return $targetDimensionContent; // @phpstan-ignore-line return.type
+        return $enhancedDimensionContent; // @phpstan-ignore-line return.type
     }
 
     /**
