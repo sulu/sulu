@@ -34615,7 +34615,7 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getLimit\(\) should return int but returns mixed\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getLimit\(\) should return int\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
@@ -34627,8 +34627,8 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getPage\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getPage\(\) should return int but returns mixed\.$#'
+			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
@@ -34639,8 +34639,8 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getSearchPattern\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getSearchPattern\(\) should return string\|null but returns mixed\.$#'
+			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
