@@ -454,7 +454,7 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     private function getPortalInformationsPolyfill(string $environment, ?array $types = null): array
     {
-        return $this->webspaceRepository
+        return $this->webspaceRepository && $environment === $this->environment
             ? $this->webspaceRepository->findAllPortalInformations($types)
             : $this->getWebspaceCollection()->getPortalInformations($environment, $types);
     }
