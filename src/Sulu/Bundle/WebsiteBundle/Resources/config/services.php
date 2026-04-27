@@ -84,7 +84,7 @@ return static function(ContainerConfigurator $container) {
         ->tag('container.service_subscriber')
         ->tag('controller.service_arguments')
         ->tag('sulu.context', ['context' => 'website'])
-        ->call('setContainer', [new Reference(ContainerInterface::class)]);
+        ->call('setContainer', [new Reference(\Psr\Container\ContainerInterface::class)]);
 
     $services->set('sulu_website.sitemap_controller', SitemapController::class)
         ->public()
