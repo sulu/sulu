@@ -51,7 +51,6 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_markup.parser.delegating_html_extractor'),
         ])
         ->tag('sulu_markup.parser', ['type' => 'html']);
-    $services->alias(MarkupParserInterface::class, 'sulu_markup.parser');
 
     $services->set('sulu_markup.response_listener', MarkupListener::class)
         ->args([new TaggedIteratorArgument('sulu_markup.parser', indexAttribute: 'type')])
@@ -59,8 +58,8 @@ return static function(ContainerConfigurator $container) {
 
     $services->set('sulu_markup.mailer_listener', MailerListener::class)
         ->args([
-            new Reference(MarkupParserInterface::class),
-            new Reference(RequestStack::class),
+            new Reference('sulu_markup.parser'),
+            new Reference('request_stack'),
             '%kernel.default_locale%',
         ])
         ->tag('kernel.event_subscriber');
