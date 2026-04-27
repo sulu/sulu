@@ -19,7 +19,10 @@ use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
+use Sulu\Bundle\ContactBundle\Api\Contact as ContactApi;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
+use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
@@ -29,8 +32,9 @@ use Webmozart\Assert\Assert;
 final class SuluAdmin extends Admin
 {
     /**
-     * @param array<mixed> $resources
+     * @param array<string, array{routes: array<string, string>}> $resources
      * @param iterable<SmartContentProviderInterface> $smartContentProviders
+     * @param ContactManagerInterface<ContactInterface, ContactApi, ContactAddress> $contactManager
      */
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
