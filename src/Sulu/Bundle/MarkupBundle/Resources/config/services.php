@@ -17,13 +17,11 @@ use Sulu\Bundle\MarkupBundle\Markup\HtmlTagExtractor;
 use Sulu\Bundle\MarkupBundle\Markup\Link\ExternalLinkProvider;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPool;
 use Sulu\Bundle\MarkupBundle\Markup\LinkTag;
-use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagRegistry;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\ExpressionLanguage\Expression;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 return static function(ContainerConfigurator $container) {
