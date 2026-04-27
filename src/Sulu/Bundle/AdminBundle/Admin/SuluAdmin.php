@@ -64,6 +64,21 @@ final class SuluAdmin extends Admin
         $navigationItemCollection->add($settingsNavigationItem);
     }
 
+    /**
+     * @return array{
+     * 'fieldTypeOptions' : array<mixed>,
+     * 'internalLinkTypes' : array<mixed>,
+     * 'localizations' : array<mixed>,
+     * 'navigation' : list<array<mixed>>,
+     * 'routes' : array<mixed>,
+     * 'resources' : array<mixed>,
+     * 'smartContent' : array<mixed>,
+     * 'user' :User,
+     * 'contact' : ContactApi,
+     * 'collaborationEnabled' : bool,
+     * 'collaborationInterval' : int,
+     * }
+     */
     public function getConfig(): array
     {
         $user = $this->tokenStorage->getToken()?->getUser();
@@ -80,13 +95,13 @@ final class SuluAdmin extends Admin
             'internalLinkTypes' => $this->linkProviderPool->getConfiguration(),
             'localizations' => \array_values($this->localizationManager->getLocalizations()),
             'navigation' => \array_map(
-                fn (NavigationItem $navigationItem) => $navigationItem->toArray(),
+                fn (NavigationItem $navigationItem): array => $navigationItem->toArray(),
                 \array_values($this->navigationRegistry->getNavigationItems())
             ),
             'routes' => $this->viewRegistry->getViews(),
             'resources' => $this->resources,
             'smartContent' => \array_map(
-                fn (SmartContentProviderInterface $dataProvider) => $dataProvider->getConfiguration(),
+                static fn (SmartContentProviderInterface $dataProvider) => $dataProvider->getConfiguration(),
                 \iterator_to_array($this->smartContentProviders)
             ),
             'user' => $user,
