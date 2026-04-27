@@ -21,14 +21,12 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
-use Sulu\Bundle\AdminBundle\Admin\View\View as SuluView;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
-use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPool;
@@ -98,11 +96,6 @@ class AdminControllerTest extends TestCase
     private ContainerInterface $metadataProviderContainer;
 
     /**
-     * @var ObjectProphecy<ViewRegistry>
-     */
-    private $viewRegistry;
-
-    /**
      * @var ObjectProphecy<NavigationRegistry>
      */
     private $navigationRegistry;
@@ -116,11 +109,6 @@ class AdminControllerTest extends TestCase
      * @var ObjectProphecy<ContactManagerInterface>
      */
     private $contactManager;
-
-    /**
-     * @var \ArrayIterator<string, SmartContentProviderInterface>
-     */
-    private $smartContentProviders;
 
     private LinkProviderPoolInterface $linkProviderPool;
 
@@ -189,11 +177,11 @@ class AdminControllerTest extends TestCase
 
         $this->metadataProviderContainer = new Container();
         $metadataProviderRegistry = new MetadataProviderRegistry($this->metadataProviderContainer);
-        $this->viewRegistry = $this->prophesize(ViewRegistry::class);
+        $viewRegistry = $this->prophesize(ViewRegistry::class);
         $this->navigationRegistry = $this->prophesize(NavigationRegistry::class);
         $this->fieldTypeOptionRegistry = $this->prophesize(FieldTypeOptionRegistryInterface::class);
         $this->contactManager = $this->prophesize(ContactManagerInterface::class);
-        $this->smartContentProviders = new \ArrayIterator([]);
+        $smartContentProviders = new \ArrayIterator([]);
         $this->linkProviderPool = new LinkProviderPool([]);
         $this->localizationManager = $this->prophesize(LocalizationManagerInterface::class);
 
@@ -210,11 +198,11 @@ class AdminControllerTest extends TestCase
             $this->engine->reveal(),
             $this->translatorBag->reveal(),
             $metadataProviderRegistry,
-            $this->viewRegistry->reveal(),
+            $viewRegistry->reveal(),
             $this->navigationRegistry->reveal(),
             $this->fieldTypeOptionRegistry->reveal(),
             $this->contactManager->reveal(),
-            $this->smartContentProviders,
+            $smartContentProviders,
             $this->linkProviderPool,
             $this->localizationManager->reveal(),
             $this->environment,
@@ -231,16 +219,8 @@ class AdminControllerTest extends TestCase
 
     public function testConfigAction(): void
     {
-        $views = [
-            new SuluView('sulu_snippet.list', '/snippets', 'sulu_admin.list'),
-        ];
-        $this->viewRegistry->getViews()->willReturn($views);
-
         $contact = $this->prophesize(ContactInterface::class);
         $contact->getId()->willReturn(5);
-
-        $this->user->getContact()->willReturn($contact->reveal());
-        $this->user->getLocale()->willReturn('en');
 
         $admin1 = $this->prophesize(Admin::class);
         $admin1Config = ['test1' => 'value1'];
@@ -258,7 +238,6 @@ class AdminControllerTest extends TestCase
 
         $this->adminPool->getAdmins()->willReturn([$admin1, $admin2, $admin3]);
 
-        $smartContentProviders = [];
         $this->viewHandler->handle(
             Argument::that(
                 function(View $view) {
@@ -266,8 +245,8 @@ class AdminControllerTest extends TestCase
                     $data = $view->getData();
 
                     return 'json' === $view->getFormat()
-                        && 'value1' === $data['sulu_admin']['test1']
-                        && 'value2' === $data['admin2']['test2'];
+                        && ['test1' => 'value1'] === $data['sulu_admin']
+                        && ['test2' => 'value2'] === $data['admin2'];
                 }
             )
         )->shouldBeCalled()->willReturn(new Response());
