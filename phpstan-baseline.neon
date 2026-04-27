@@ -19657,12 +19657,6 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/Build/DatabaseBuilder.php
 
 		-
-			message: '#^Cannot call method getOption\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Build/DatabaseBuilder.php
-
-		-
 			message: '#^Cannot call method getSchemaManager\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -19673,12 +19667,6 @@ parameters:
 			identifier: method.nonObject
 			count: 1
 			path: src/Sulu/Bundle/CoreBundle/Build/DatabaseBuilder.php
-
-		-
-			message: '#^Cannot call method getOption\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Build/PhpcrBuilder.php
 
 		-
 			message: '#^Cannot call method initialize\(\) on mixed\.$#'
@@ -19701,7 +19689,7 @@ parameters:
 		-
 			message: '#^Cannot call method getFormatter\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 3
+			count: 1
 			path: src/Sulu/Bundle/CoreBundle/Build/SuluBuilder.php
 
 		-
@@ -19711,21 +19699,9 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/Build/SuluBuilder.php
 
 		-
-			message: '#^Cannot call method setIndentLevel\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/CoreBundle/Build/SuluBuilder.php
-
-		-
 			message: '#^Cannot call method setStyle\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Build/SuluBuilder.php
-
-		-
-			message: '#^Cannot call method writeln\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
 			path: src/Sulu/Bundle/CoreBundle/Build/SuluBuilder.php
 
 		-
@@ -19783,14 +19759,14 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/Build/SuluBuilder.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\CoreBundle\\Build\\SuluBuilder\:\:\$input has no type specified\.$#'
-			identifier: missingType.property
+			message: '#^Property Sulu\\Bundle\\CoreBundle\\Build\\SuluBuilder\:\:\$input \(Symfony\\Component\\Console\\Input\\InputInterface\) does not accept mixed\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Bundle/CoreBundle/Build/SuluBuilder.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\CoreBundle\\Build\\SuluBuilder\:\:\$output has no type specified\.$#'
-			identifier: missingType.property
+			message: '#^Property Sulu\\Bundle\\CoreBundle\\Build\\SuluBuilder\:\:\$output \(Symfony\\Component\\Console\\Output\\OutputInterface\) does not accept mixed\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Bundle/CoreBundle/Build/SuluBuilder.php
 
@@ -48439,12 +48415,6 @@ parameters:
 			path: src/Sulu/Bundle/SearchBundle/Build/IndexBuilder.php
 
 		-
-			message: '#^Cannot call method getOption\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Build/InitBuilder.php
-
-		-
 			message: '#^Parameter \#1 \$query of method Massive\\Bundle\\SearchBundle\\Search\\SearchManagerInterface\:\:createSearch\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -49189,12 +49159,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Build/UserBuilder.php
 
 		-
-			message: '#^Cannot call method getOption\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Build/UserBuilder.php
-
-		-
 			message: '#^Cannot call method getParameter\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -49204,12 +49168,6 @@ parameters:
 			message: '#^Cannot call method remove\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Build/UserBuilder.php
-
-		-
-			message: '#^Cannot call method writeln\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
 			path: src/Sulu/Bundle/SecurityBundle/Build/UserBuilder.php
 
 		-
