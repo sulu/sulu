@@ -90,7 +90,6 @@ return $config
     ->ignoreErrorsOnPackages(
         [
             'doctrine/annotations',
-            'symfony/http-client', // required and used via symfony/http-client-contracts
             'guzzlehttp/promises', // required for faster fos http cache clearing
             'nyholm/psr7', // required for faster fos http cache clearing
             'symfony/css-selector', // kept for future usage
