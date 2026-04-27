@@ -75,6 +75,7 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
 
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.php');
+        $loader->load('command.php');
 
         /** @var array<string, class-string> $bundles */
         $bundles = $container->getParameter('kernel.bundles');
@@ -88,7 +89,7 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
         }
 
         if (\interface_exists(LogoutSuccessHandlerInterface::class)) {
-            $loader->load('logout_success_handler.xml');
+            $loader->load('logout_success_handler.php');
         }
 
         if ($config['checker']['enabled']) {

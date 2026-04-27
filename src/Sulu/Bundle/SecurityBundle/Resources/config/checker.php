@@ -13,7 +13,6 @@ use Sulu\Bundle\SecurityBundle\EventListener\LastLoginListener;
 use Sulu\Bundle\SecurityBundle\EventListener\SuluSecurityListener;
 use Sulu\Component\Security\Authorization\SecurityChecker;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -32,7 +31,6 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_security.event_listener.security', SuluSecurityListener::class)
         ->args([
             new Reference('sulu_security.security_checker'),
-            new Reference('doctrine.orm.entity_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
         ->tag('kernel.event_subscriber');
 

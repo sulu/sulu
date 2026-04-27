@@ -9,34 +9,43 @@
  * with this source code in the file LICENSE.
  */
 
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+
+use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
+use Sulu\Bundle\ContactBundle\Entity\PositionRepository;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Bundle\SecurityBundle\Admin\Helper\SecuritySystemsSelect;
 use Sulu\Bundle\SecurityBundle\Admin\Helper\SystemLanguageSelect;
 use Sulu\Bundle\SecurityBundle\Admin\SecurityAdmin;
 use Sulu\Bundle\SecurityBundle\Build\SecurityBuilder;
 use Sulu\Bundle\SecurityBundle\Build\UserBuilder;
-use Sulu\Bundle\SecurityBundle\Command\CreateRoleCommand;
-use Sulu\Bundle\SecurityBundle\Command\CreateUserCommand;
-use Sulu\Bundle\SecurityBundle\Command\InitCommand;
+use Sulu\Bundle\SecurityBundle\Controller\ContextsController;
+use Sulu\Bundle\SecurityBundle\Controller\GroupController;
 use Sulu\Bundle\SecurityBundle\Controller\PermissionController;
 use Sulu\Bundle\SecurityBundle\Controller\ProfileController;
 use Sulu\Bundle\SecurityBundle\Controller\ResettingController;
 use Sulu\Bundle\SecurityBundle\Controller\RoleController;
 use Sulu\Bundle\SecurityBundle\Controller\RoleSettingController;
 use Sulu\Bundle\SecurityBundle\Controller\UserController;
+use Sulu\Bundle\SecurityBundle\DataFixtures\ORM\LoadSecurityTypes;
+use Sulu\Bundle\SecurityBundle\Entity\Group;
+use Sulu\Bundle\SecurityBundle\Entity\GroupRepository;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
 use Sulu\Bundle\SecurityBundle\Entity\UserSettingRepository;
-use Sulu\Bundle\SecurityBundle\EventListener\AuthenticationFailureListener;
+use Sulu\Bundle\SecurityBundle\EventListener\AuhenticationFailureListener;
 use Sulu\Bundle\SecurityBundle\EventListener\LogoutEventSubscriber;
 use Sulu\Bundle\SecurityBundle\EventListener\PermissionInheritanceSubscriber;
+use Sulu\Bundle\SecurityBundle\EventListener\PhpcrSecuritySubscriber;
 use Sulu\Bundle\SecurityBundle\EventListener\SystemListener;
 use Sulu\Bundle\SecurityBundle\EventListener\UserLocaleListener;
 use Sulu\Bundle\SecurityBundle\Metadata\PasswordPolicyFormMetadataVisitor;
 use Sulu\Bundle\SecurityBundle\Metadata\TwoFactorFormMetadataVisitor;
 use Sulu\Bundle\SecurityBundle\Security\AuthenticationEntryPoint;
 use Sulu\Bundle\SecurityBundle\Security\AuthenticationHandler;
+use Sulu\Bundle\SecurityBundle\Serializer\Subscriber\SecuritySubscriber;
 use Sulu\Bundle\SecurityBundle\System\SystemStore;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Bundle\SecurityBundle\Twig\UserTwigExtension;
@@ -46,22 +55,39 @@ use Sulu\Bundle\SecurityBundle\Util\TokenGenerator;
 use Sulu\Component\Security\Authentication\SaltGenerator;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManager;
 use Sulu\Component\Security\Authorization\AccessControl\DoctrineAccessControlProvider;
+use Sulu\Component\Security\Authorization\AccessControl\PhpcrAccessControlProvider;
 use Sulu\Component\Security\Authorization\MaskConverter;
 use Sulu\Component\Security\Authorization\SecurityContextVoter;
 use Sulu\Component\Security\Serializer\Subscriber\SecuredEntitySubscriber;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-
-use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
-
 use Symfony\Component\DependencyInjection\Reference;
 
 return static function(ContainerConfigurator $container) {
     $services = $container->services();
     $parameters = $container->parameters();
     $parameters->set('sulu_security.permissions', ['view' => 64, 'add' => 32, 'edit' => 16, 'delete' => 8, 'archive' => 4, 'live' => 2, 'security' => 1]);
+    $parameters->set('permissions', '%sulu_security.permissions%');
+    $parameters->set('sulu_security.admin.class', SecurityAdmin::class);
+    $parameters->set('sulu_security.authentication_entry_point.class', AuthenticationEntryPoint::class);
+    $parameters->set('sulu_security.authentication_handler.class', AuthenticationHandler::class);
+    $parameters->set('sulu_security.mask_converter.class', MaskConverter::class);
+    $parameters->set('sulu_security.salt_generator.class', SaltGenerator::class);
+    $parameters->set('sulu_security.token_generator.class', TokenGenerator::class);
+    $parameters->set('sulu_security.security_context_voter.class', SecurityContextVoter::class);
+    $parameters->set('sulu_security.access_control_manager.class', AccessControlManager::class);
+    $parameters->set('sulu_security.phpcr_access_control_provider.class', PhpcrAccessControlProvider::class);
+    $parameters->set('sulu_security.doctrine_access_control_provider.class', DoctrineAccessControlProvider::class);
+    $parameters->set('sulu_security.permission_controller.class', PermissionController::class);
+    $parameters->set('sulu_security.group_repository.class', GroupRepository::class);
+    $parameters->set('sulu_security.user_repository.class', UserRepository::class);
+    $parameters->set('sulu_security.user_setting_repository.class', UserSettingRepository::class);
+    $parameters->set('sulu_security.user_repository_factory.class', 'Sulu\Component\Security\Authentication\UserRepositoryFactory');
+    $parameters->set('sulu_security.build.user.class', UserBuilder::class);
+    $parameters->set('sulu_security.entity.role', Role::class);
+    $parameters->set('sulu_security.entity.group', Group::class);
     $parameters->set('sulu_security.entity.user_setting', UserSetting::class);
+    $parameters->set('sulu_security.profile_controller.class', ProfileController::class);
 
     $services->set('sulu_security.resetting_controller', ResettingController::class)
         ->public()
@@ -73,7 +99,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('security.token_storage'),
             new Reference('event_dispatcher'),
             new Reference('mailer'),
-            new Reference('security.password_hasher_factory'),
+            new Reference('sulu_security.encoder_factory'),
             new Reference('sulu.repository.user'),
             new Reference('router'),
             new Reference('doctrine.orm.entity_manager'),
@@ -90,11 +116,11 @@ return static function(ContainerConfigurator $container) {
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 
-    $services->set('sulu_security.admin', SecurityAdmin::class)
-        ->lazy()
+    $services->set('sulu_security.admin', '%sulu_security.admin.class%')
         ->args([
             new Reference(ViewBuilderFactoryInterface::class),
             new Reference('sulu_security.security_checker'),
+            new Reference('router'),
             new Reference('translator'),
             new Reference('sulu_admin.admin_pool'),
             '%sulu_admin.resources%',
@@ -115,35 +141,35 @@ return static function(ContainerConfigurator $container) {
         ->args(['%sulu_core.translated_locales%'])
         ->tag('sulu.context', ['context' => 'admin']);
 
-    $services->set('sulu_security.authentication_entry_point', AuthenticationEntryPoint::class);
+    $services->set('sulu_security.authentication_entry_point', '%sulu_security.authentication_entry_point.class%');
 
-    $services->set('sulu_security.authentication_handler', AuthenticationHandler::class)
+    $services->set('sulu_security.authentication_handler', '%sulu_security.authentication_handler.class%')
         ->args([
             new Reference('router'),
             '%sulu_security.two_factor_methods%',
         ]);
 
-    $services->set('sulu_security.mask_converter', MaskConverter::class)
+    $services->set('sulu_security.mask_converter', '%sulu_security.mask_converter.class%')
         ->public()
-        ->args(['%sulu_security.permissions%']);
+        ->args(['%permissions%']);
 
-    $services->set('sulu_security.salt_generator', SaltGenerator::class)
+    $services->set('sulu_security.salt_generator', '%sulu_security.salt_generator.class%')
         ->public();
 
-    $services->alias(SaltGenerator::class, 'sulu_security.salt_generator');
+    $services->alias('%sulu_security.salt_generator.class%', 'sulu_security.salt_generator');
 
-    $services->set('sulu_security.token_generator', TokenGenerator::class)
+    $services->set('sulu_security.token_generator', '%sulu_security.token_generator.class%')
         ->public();
 
-    $services->set('sulu_security.security_context_voter', SecurityContextVoter::class)
+    $services->set('sulu_security.security_context_voter', '%sulu_security.security_context_voter.class%')
         ->private()
         ->args([
             new Reference('sulu_security.access_control_manager'),
-            '%sulu_security.permissions%',
+            '%permissions%',
         ])
         ->tag('security.voter');
 
-    $services->set('sulu_security.access_control_manager', AccessControlManager::class)
+    $services->set('sulu_security.access_control_manager', '%sulu_security.access_control_manager.class%')
         ->args([
             new Reference('sulu_security.mask_converter'),
             new Reference('event_dispatcher'),
@@ -153,7 +179,6 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu.repository.access_control'),
             new Reference('security.helper', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             '%sulu_security.permissions%',
-            tagged_iterator('sulu.access_control'),
         ]);
 
     $services->set('sulu_security.system_store', SystemStore::class)
@@ -162,7 +187,15 @@ return static function(ContainerConfigurator $container) {
 
     $services->alias(SystemStoreInterface::class, 'sulu_security.system_store');
 
-    $services->set('sulu_security.doctrine_access_control_provider', DoctrineAccessControlProvider::class)
+    $services->set('sulu_security.phpcr_access_control_provider', '%sulu_security.phpcr_access_control_provider.class%')
+        ->args([
+            new Reference('sulu_document_manager.document_manager'),
+            new Reference('sulu.repository.role'),
+            '%permissions%',
+        ])
+        ->tag('sulu.access_control');
+
+    $services->set('sulu_security.doctrine_access_control_provider', '%sulu_security.doctrine_access_control_provider.class%')
         ->args([
             new Reference('doctrine.orm.default_entity_manager'),
             new Reference('sulu.repository.role'),
@@ -171,7 +204,7 @@ return static function(ContainerConfigurator $container) {
         ])
         ->tag('sulu.access_control');
 
-    $services->set('sulu_security.permission_controller', PermissionController::class)
+    $services->set('sulu_security.permission_controller', '%sulu_security.permission_controller.class%')
         ->public()
         ->args([
             new Reference('sulu_security.access_control_manager'),
@@ -182,7 +215,7 @@ return static function(ContainerConfigurator $container) {
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 
-    $services->set('sulu_security.profile_controller', ProfileController::class)
+    $services->set('sulu_security.profile_controller', '%sulu_security.profile_controller.class%')
         ->public()
         ->args([
             new Reference('security.token_storage'),
@@ -192,6 +225,25 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_security.user_manager'),
             '%sulu.model.user.class%',
             '%sulu.model.contact.class%',
+        ])
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_security.contexts_controller', ContextsController::class)
+        ->public()
+        ->args([
+            new Reference('fos_rest.view_handler'),
+            new Reference('sulu_admin.admin_pool'),
+        ])
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_security.group_controller', GroupController::class)
+        ->public()
+        ->args([
+            new Reference('fos_rest.view_handler'),
+            new Reference('sulu_core.doctrine_rest_helper'),
+            new Reference('sulu_core.doctrine_list_builder_factory'),
+            new Reference('sulu.repository.role'),
+            new Reference('doctrine.orm.entity_manager'),
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 
@@ -231,12 +283,16 @@ return static function(ContainerConfigurator $container) {
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 
-    $services->set('sulu_security.user_setting_repository', UserSettingRepository::class)
+    $services->set('sulu_security.group_repository', '%sulu_security.group_repository.class%')
+        ->args(['%sulu_security.entity.group%'])
+        ->factory([new Reference('doctrine.orm.entity_manager'), 'getRepository']);
+
+    $services->set('sulu_security.user_setting_repository', '%sulu_security.user_setting_repository.class%')
         ->public()
         ->args(['%sulu_security.entity.user_setting%'])
         ->factory([new Reference('doctrine.orm.entity_manager'), 'getRepository']);
 
-    $services->set('sulu_security.user_repository', UserRepository::class)
+    $services->set('sulu_security.user_repository', '%sulu_security.user_repository.class%')
         ->public()
         ->args(['%sulu.model.user.class%'])
         ->factory([new Reference('doctrine.orm.entity_manager'), 'getRepository']);
@@ -248,7 +304,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('doctrine.orm.entity_manager'),
         ]);
 
-    $services->set('sulu_security.build.user', UserBuilder::class)
+    $services->set('sulu_security.build.user', '%sulu_security.build.user.class%')
         ->tag('massive_build.builder');
 
     $services->set('sulu_security.build.security', SecurityBuilder::class)
@@ -262,11 +318,22 @@ return static function(ContainerConfigurator $container) {
         ->tag('jms_serializer.event_subscriber')
         ->tag('sulu.context', ['context' => 'admin']);
 
+    $services->set('sulu_security.document.serializer.subscriber.security', SecuritySubscriber::class)
+        ->args([
+            new Reference('sulu_security.access_control_manager'),
+            new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+        ])
+        ->tag('jms_serializer.event_subscriber');
+
     $services->set('sulu_security.twig_extension.user.cache_adapter', ArrayAdapter::class);
+
+    $services->set('sulu_security.twig_extension.user.cache', PositionRepository::class)
+        ->args([new Reference('sulu_security.twig_extension.user.cache_adapter')])
+        ->factory([DoctrineProvider::class, 'wrap']);
 
     $services->set('sulu_security.twig_extension.user', UserTwigExtension::class)
         ->args([
-            new Reference('sulu_security.twig_extension.user.cache_adapter'),
+            new Reference('sulu_security.twig_extension.user.cache'),
             new Reference('sulu.repository.user'),
         ])
         ->tag('twig.extension');
@@ -282,13 +349,18 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_security.system_listener', SystemListener::class)
         ->args([
             new Reference('sulu_security.system_store'),
+            null,
             '%sulu.context%',
         ])
         ->tag('kernel.event_subscriber');
 
-    $services->set('sulu_security.login_failure_listener', AuthenticationFailureListener::class)
+    $services->set('sulu_security.fixtures.security_types', LoadSecurityTypes::class)
+        ->args(['%sulu_security.security_types.fixture%'])
+        ->tag('doctrine.fixture.orm');
+
+    $services->set('sulu_security.login_failure_listener', AuhenticationFailureListener::class)
         ->args([
-            new Reference('security.password_hasher_factory'),
+            new Reference('sulu_security.encoder_factory'),
             new Reference('sulu.repository.user'),
         ])
         ->tag('kernel.event_subscriber')
@@ -309,12 +381,20 @@ return static function(ContainerConfigurator $container) {
         ->args([new Reference('sulu_security.access_control_manager')])
         ->tag('doctrine.event_listener', ['event' => 'postPersist']);
 
+    $services->set('sulu_security.phpcr_security_subscriber', PhpcrSecuritySubscriber::class)
+        ->args([
+            new Reference('sulu_security.phpcr_access_control_provider'),
+            new Reference('sulu_security.doctrine_access_control_provider'),
+        ])
+        ->tag('kernel.event_subscriber');
+
     $services->set('sulu_security.user_manager', UserManager::class)
         ->public()
         ->args([
             new Reference('doctrine.orm.entity_manager'),
-            new Reference('security.password_hasher_factory', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            new Reference('sulu_security.encoder_factory', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             new Reference('sulu.repository.role'),
+            new Reference('sulu_security.group_repository'),
             new Reference('sulu_contact.contact_manager'),
             new Reference('sulu_security.salt_generator'),
             new Reference('sulu.repository.user'),
@@ -337,37 +417,4 @@ return static function(ContainerConfigurator $container) {
             new Reference('security.helper', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
         ->tag('sulu_admin.form_metadata_visitor');
-
-    // Commands
-    $services->set('sulu_security.command.create_role', CreateRoleCommand::class)
-        ->args([
-            new Reference('doctrine.orm.entity_manager'),
-            new Reference('sulu.repository.role'),
-            new Reference('sulu_admin.admin_pool'),
-        ])
-        ->tag('console.command')
-        ->tag('sulu.context', ['context' => 'admin']);
-
-    $services->set('sulu_security.command.init', InitCommand::class)
-        ->args([
-            new Reference('doctrine.orm.entity_manager'),
-            new Reference('sulu.repository.role'),
-            new Reference('sulu_admin.admin_pool'),
-        ])
-        ->tag('console.command')
-        ->tag('sulu.context', ['context' => 'admin']);
-
-    $services->set('sulu_security.command.create_user', CreateUserCommand::class)
-        ->args([
-            new Reference('doctrine.orm.entity_manager'),
-            new Reference('sulu.repository.user'),
-            new Reference('sulu.repository.role'),
-            new Reference('sulu.repository.contact'),
-            new Reference('sulu.core.localization_manager'),
-            new Reference('sulu_security.salt_generator'),
-            new Reference('security.password_hasher_factory'),
-            '%sulu_core.locales%',
-        ])
-        ->tag('console.command')
-        ->tag('sulu.context', ['context' => 'admin']);
 };
