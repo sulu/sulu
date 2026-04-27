@@ -19,6 +19,5 @@ return static function(ContainerConfigurator $container) {
 
     $services = $container->services();
     $services->set('sulu_location.geolocator', '%sulu_location.guzzle.client.class%')
-    ->deprecate('sulu/sulu', '2.1.9', '')
-    ;
+        ->deprecate('sulu/sulu', '2.1.9', '');
 };
