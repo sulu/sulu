@@ -47,7 +47,10 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu.context', ['context' => 'admin']);
 
     $services->set('sulu_preview.cache_command_subscriber', CacheCommandSubscriber::class)
-        ->args([new Reference('sulu_preview.preview.kernel_factory')])
+        ->args([
+            new Reference('sulu_preview.preview.kernel_factory'),
+            '%kernel.environment%',
+        ])
         ->tag('kernel.event_subscriber')
         ->tag('sulu.context', ['context' => 'admin']);
 
