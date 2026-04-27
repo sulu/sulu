@@ -73,7 +73,6 @@ return static function(ContainerConfigurator $container) {
                     : null
             '),
         ]);
-    $services->alias(PreviewRendererInterface::class, 'sulu_preview.preview.renderer');
 
     $services->set('sulu_preview.preview', Preview::class)
         ->args([
