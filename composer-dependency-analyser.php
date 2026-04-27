@@ -14,6 +14,8 @@ use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 
 $config = new Configuration();
 
+require __DIR__ . '/vendor/symfony/dependency-injection/Loader/Configurator/ContainerConfigurator.php'; // see https://github.com/shipmonk-rnd/composer-dependency-analyser/issues/147#issuecomment-2202156380
+
 $optionalIgnoreUnknownClasses = [];
 $optionalIgnoreShadowDependencyExtensions = [];
 
