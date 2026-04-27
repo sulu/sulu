@@ -595,7 +595,6 @@ return static function(ContainerConfigurator $container) {
 
     // TODO: Remove the alias to this non-existing interface
     $services->alias('Sulu\Bundle\MediaBundle\FileInspector\SvgSafetyInspectorInterface', 'sulu_media.file_inspector.svg_inspector');
-    $services->alias(FileInspectorInterface::class, 'sulu_media.file_inspector.svg_inspector');
 
     $services->set('sulu_media.file_inspector.subscriber', UploadFileSubscriber::class)
         ->args([tagged_iterator('sulu_media.file_inspector')])
