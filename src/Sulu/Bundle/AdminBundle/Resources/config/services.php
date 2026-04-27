@@ -13,6 +13,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
+use Sulu\Bundle\AdminBundle\Admin\SuluAdmin;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
@@ -121,6 +122,24 @@ return static function(ContainerConfigurator $container) {
             '%sulu_security.has_single_sign_on_providers%',
         ])
         ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_admin.sulu_admin', SuluAdmin::class)
+        ->args([
+            new Reference('security.token_storage'),
+            new Reference('sulu_admin.view_registry'),
+            new Reference('sulu_admin.navigation_registry'),
+            new Reference('sulu_admin.field_type_option_registry'),
+            new Reference('sulu_contact.contact_manager'),
+            tagged_iterator('sulu_content.smart_content_provider', indexAttribute: 'type', defaultIndexMethod: 'getType'),
+            new Reference('sulu_markup.link_tag.provider_pool'),
+            new Reference('sulu.core.localization_manager'),
+            '%sulu_admin.resources%',
+            '%sulu_admin.collaboration_interval%',
+            '%sulu_admin.collaboration_enabled%',
+        ])
+        ->tag('sulu.admin')
+        ->tag('sulu.context', ['context' => 'admin'])
+    ;
 
     $services->set('sulu_admin.admin_pool', AdminPool::class)
         ->public()
