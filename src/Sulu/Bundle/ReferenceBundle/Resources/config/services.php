@@ -61,7 +61,7 @@ return static function(ContainerConfigurator $container) {
     // Command
     $services->set('sulu_reference.refresh_command', RefreshCommand::class)
         ->args([
-            new TaggedIteratorArgument('sulu_reference.refresher', defaultIndexMethod: 'getResourceKey'),
+            new TaggedIteratorArgument('sulu_reference.refresher'),
             new Reference(ReferenceRepositoryInterface::class),
             '%sulu.context%',
         ])

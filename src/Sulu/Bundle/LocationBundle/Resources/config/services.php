@@ -23,7 +23,7 @@ return static function(ContainerConfigurator $container) {
     // Content Types
     $services->set('sulu_location.content.type.location', '%sulu_location.content.type.location.class%')
         ->tag('sulu.content.type', ['alias' => 'location'])
-        ->tag('sulu.content.export', ['format' => '1.2.xliff', 'translate' => 'false'])
+        ->tag('sulu.content.export', ['format' => '1.2.xliff', 'translate' => false])
     ;
 
     // Controller

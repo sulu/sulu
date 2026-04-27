@@ -18,7 +18,6 @@ use Sulu\Bundle\PreviewBundle\Preview\Events;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistry;
 use Sulu\Bundle\PreviewBundle\Preview\Preview;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRenderer;
-use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\WebsiteKernelFactory;
 use Sulu\Bundle\PreviewBundle\UserInterface\Controller\PreviewController;
 use Sulu\Bundle\PreviewBundle\UserInterface\Controller\PreviewLinkController;
@@ -55,8 +54,7 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu.context', ['context' => 'admin']);
 
     // Preview
-    $services->set('sulu_preview.preview.kernel_factory', WebsiteKernelFactory::class)
-        ->args(['%kernel.environment%']);
+    $services->set('sulu_preview.preview.kernel_factory', WebsiteKernelFactory::class);
 
     $services->set('sulu_preview.preview.renderer', PreviewRenderer::class)
         ->args([
@@ -73,7 +71,6 @@ return static function(ContainerConfigurator $container) {
                     : null
             '),
         ]);
-    $services->alias(PreviewRendererInterface::class, 'sulu_preview.preview.renderer');
 
     $services->set('sulu_preview.preview', Preview::class)
         ->args([
