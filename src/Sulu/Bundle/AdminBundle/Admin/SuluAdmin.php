@@ -62,12 +62,14 @@ final class SuluAdmin extends Admin
 
     public function getConfig(): array
     {
-        /** @var User|null $user */
         $user = $this->tokenStorage->getToken()?->getUser();
-        Assert::notNull($user, 'The user has to be logged in to see this endpoint');
+        Assert::isInstanceOf($user, User::class, 'The logged in user has to be an instance of "%2$s". Got: "%s"');
+
+        $contactEntity = $user->getContact();
+        Assert::notNull($contactEntity, 'The logged in user has to have an associated contact');
 
         $locale = $user->getLocale();
-        $contact = $this->contactManager->getById($user->getContact()->getId(), $locale);
+        $contact = $this->contactManager->getById($contactEntity->getId(), $locale);
 
         return [
             'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
