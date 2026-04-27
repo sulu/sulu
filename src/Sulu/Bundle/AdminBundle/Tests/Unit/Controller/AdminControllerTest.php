@@ -219,6 +219,8 @@ class AdminControllerTest extends TestCase
 
     public function testConfigAction(): void
     {
+        $this->user->getLocale()->willReturn('en');
+
         $contact = $this->prophesize(ContactInterface::class);
         $contact->getId()->willReturn(5);
 
