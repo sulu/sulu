@@ -267,6 +267,29 @@ class PageDimensionContentTest extends TestCase
         $this->assertFalse($this->pageDimensionContent->hasNavigationContext('main'));
     }
 
+    public function testWithRouteReturnsCloneWithRouteAttached(): void
+    {
+        $route = new Route('pages', 'uuid', 'en', '/foo', 'sulu-io');
+
+        $clone = $this->pageDimensionContent->withRoute($route);
+
+        $this->assertNotSame($this->pageDimensionContent, $clone);
+        $this->assertSame($route, $clone->getRoute());
+        $this->assertNull($this->pageDimensionContent->getRoute());
+    }
+
+    public function testWithRouteAcceptsNull(): void
+    {
+        $route = $this->prophesize(Route::class);
+        $route->setWebspace('sulu-io')->shouldBeCalled()->willReturn($route->reveal());
+        $this->pageDimensionContent->setRoute($route->reveal());
+
+        $clone = $this->pageDimensionContent->withRoute(null);
+
+        $this->assertNull($clone->getRoute());
+        $this->assertSame($route->reveal(), $this->pageDimensionContent->getRoute());
+    }
+
     public function testNavigationContextsWorkflow(): void
     {
         // Start empty

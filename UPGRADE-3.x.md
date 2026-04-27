@@ -111,6 +111,14 @@ The following APIs were deprecated in this release and will be removed in a futu
 
 ## 3.0.5
 
+### Route URL no longer stored in templateData
+
+The URL of `route` and `page_tree_route` template fields is no longer persisted into the `templateData` JSON column of 
+dimension content tables. The `Route` entity is now the single source of truth for the URL value, and the URL is derived 
+from it on read by `RoutableTemplateResolver` and `RoutableNormalizer`.
+
+Existing rows do not need to be migrated — stale URL values in `templateData` are ignored on read and overwritten on the next save.
+
 ### Remove false cascade on author and route relations
 
 The cascade delete on the author and route relations has been removed to prevent accidental data loss when deleting authors or routes.

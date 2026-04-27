@@ -248,14 +248,12 @@ class PublishTransitionSubscriberTest extends TestCase
         $dimensionContent = $this->prophesize(DimensionContentInterface::class);
         $dimensionContent->willImplement(WorkflowInterface::class);
         $dimensionContent->willImplement(ShadowInterface::class);
-        $dimensionContent->willImplement(TemplateInterface::class);
         $dimensionContentCollection = $this->prophesize(DimensionContentCollectionInterface::class);
         $contentRichEntity = $this->prophesize(ContentRichEntityInterface::class);
         $dimensionAttributes = ['locale' => 'en', 'stage' => 'draft'];
 
         $dimensionContent->getLocale()->willReturn('en');
         $dimensionContent->getShadowLocale()->willReturn('de');
-        $dimensionContent->getTemplateData()->willReturn(['url' => '/test-de']);
         $dimensionContent->getWorkflowPublished()->willReturn(null);
         $dimensionContent->setWorkflowPublished(Argument::cetera())->shouldBeCalled();
 
@@ -295,7 +293,6 @@ class PublishTransitionSubscriberTest extends TestCase
                 'data' => [
                     'shadowOn' => true,
                     'shadowLocale' => 'de',
-                    'url' => '/test-de',
                 ],
             ]
         )

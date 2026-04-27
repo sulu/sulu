@@ -36,7 +36,7 @@ class TemplateResolverTest extends TestCase
     {
         $templateResolver = new TemplateResolver(
             $this->prophesize(MetadataProviderInterface::class)->reveal(),
-            $this->prophesize(MetadataResolver::class)->reveal()
+            $this->prophesize(MetadataResolver::class)->reveal(),
         );
 
         self::assertNull($templateResolver->resolve($this->prophesize(DimensionContentInterface::class)->reveal()));
@@ -60,7 +60,7 @@ class TemplateResolverTest extends TestCase
 
         $templateResolver = new TemplateResolver(
             $formMetadataProvider->reveal(),
-            $this->prophesize(MetadataResolver::class)->reveal()
+            $this->prophesize(MetadataResolver::class)->reveal(),
         );
 
         $this->expectException(\RuntimeException::class);
@@ -137,7 +137,7 @@ class TemplateResolverTest extends TestCase
 
         $templateResolver = new TemplateResolver(
             $formMetadataProvider->reveal(),
-            $metadataResolver
+            $metadataResolver,
         );
 
         $contentView = $templateResolver->resolve($dimensionContent);

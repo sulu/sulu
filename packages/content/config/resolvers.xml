@@ -54,6 +54,13 @@
             <tag name="sulu_content.content_resolver" type="template"/>
         </service>
 
+        <service id="sulu_content.routable_template_resolver"
+                 class="Sulu\Content\Application\ContentResolver\Resolver\RoutableTemplateResolver"
+                 decorates="sulu_content.template_resolver">
+            <argument type="service" id=".inner"/>
+            <argument type="service" id="sulu_admin.form_metadata_provider"/>
+        </service>
+
         <!-- Settings Resolver -->
         <service id="sulu_content.settings_resolver"
                  class="Sulu\Content\Application\ContentResolver\Resolver\SettingsResolver">

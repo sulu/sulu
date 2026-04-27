@@ -170,10 +170,7 @@ class ExampleTeaserProvider implements TeaserProviderInterface
             );
         }
 
-        $templateData = $dimensionContent->getTemplateData();
-        $url = $templateData['url'] ?? null;
-
-        return \is_string($url) ? $url : null;
+        return null;
     }
 
     protected function resolveTitle(ExampleDimensionContent $dimensionContent): ?string

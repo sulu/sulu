@@ -68,7 +68,7 @@ class SmartContentContentResolverTest extends SuluTestCase
                     'description' => 'Example 0 description',
                 ],
             ],
-        ]);
+        ], ['create_route' => true]);
         static::getEntityManager()->flush();
 
         $example1 = static::createExample(
@@ -322,7 +322,7 @@ class SmartContentContentResolverTest extends SuluTestCase
                     'excerptTags' => [$tag1->getId(), $tag2->getId()],
                 ],
             ],
-        ]);
+        ], ['create_route' => true]);
         // only one tag -> should not match when tagOperator AND
         static::createExample([
             'en' => [

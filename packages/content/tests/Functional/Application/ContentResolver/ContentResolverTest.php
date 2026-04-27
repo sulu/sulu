@@ -26,6 +26,7 @@ use Sulu\Content\Tests\Functional\Traits\CreateCategoryTrait;
 use Sulu\Content\Tests\Functional\Traits\CreateMediaTrait;
 use Sulu\Content\Tests\Functional\Traits\CreateTagTrait;
 use Sulu\Content\Tests\Traits\CreateExampleTrait;
+use Symfony\Component\Routing\RequestContext;
 
 class ContentResolverTest extends SuluTestCase
 {
@@ -43,6 +44,10 @@ class ContentResolverTest extends SuluTestCase
 
         $this->contentResolver = self::getContainer()->get('sulu_content.content_resolver');
         $this->contentAggregator = self::getContainer()->get('sulu_content.content_aggregator');
+
+        /** @var RequestContext $requestContext */
+        $requestContext = self::getContainer()->get('router')->getContext();
+        $requestContext->setParameter('webspace', 'sulu-io');
     }
 
     // TODO add tests for
@@ -166,6 +171,7 @@ class ContentResolverTest extends SuluTestCase
                     ],
                 ],
             ],
+            ['create_route' => true],
         );
         static::getEntityManager()->flush();
 
@@ -195,6 +201,7 @@ class ContentResolverTest extends SuluTestCase
                     'seoHideInSitemap' => true,
                 ],
             ],
+            ['create_route' => true],
         );
 
         static::getEntityManager()->flush();
@@ -347,7 +354,7 @@ class ContentResolverTest extends SuluTestCase
                     'description' => 'First example description',
                 ],
             ],
-        ]);
+        ], ['create_route' => true]);
 
         $example2 = static::createExample([
             'en' => [
@@ -358,7 +365,7 @@ class ContentResolverTest extends SuluTestCase
                     'description' => 'Second example description',
                 ],
             ],
-        ]);
+        ], ['create_route' => true]);
 
         static::getEntityManager()->flush();
 
@@ -738,6 +745,7 @@ class ContentResolverTest extends SuluTestCase
                     ],
                 ],
             ],
+            ['create_route' => true],
         );
         static::getEntityManager()->flush();
 
