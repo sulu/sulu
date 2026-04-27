@@ -70,6 +70,7 @@ return $config
     // DEV_DEPENDENCY_IN_PROD: optional dependency
     ->ignoreErrorsOnPackages(
         [
+            'google/cloud-storage',
             'league/flysystem',
             'league/flysystem-aws-s3-v3',
             'league/flysystem-azure-blob-storage',
