@@ -39,8 +39,8 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\MediaDataProviderRepository;
 use Sulu\Bundle\MediaBundle\EventListener\CacheInvalidationListener;
+use Sulu\Bundle\MediaBundle\FileInspector\FileInspectorInterface;
 use Sulu\Bundle\MediaBundle\FileInspector\SvgFileInspector;
-use Sulu\Bundle\MediaBundle\FileInspector\SvgSafetyInspectorInterface;
 use Sulu\Bundle\MediaBundle\FileInspector\SvgSanitizerFactory;
 use Sulu\Bundle\MediaBundle\FileInspector\UploadFileSubscriber;
 use Sulu\Bundle\MediaBundle\Markup\Link\MediaLinkProvider;
@@ -455,11 +455,11 @@ return static function(ContainerConfigurator $container) {
         ->tag('twig.extension');
 
     $services->set('sulu_media.twig_extension.media', '%sulu_media.twig_extension.media.class%')
-        ->args([service('sulu_media.media_manager')])
+        ->args([new Reference('sulu_media.media_manager')])
         ->tag('twig.extension');
 
     $services->set('sulu_media.video_thumbnail_generator', '%sulu_media.video_thumbnail_generator.class%')
-        ->args([service('sulu_media.ffmpeg', ContainerInterface::NULL_ON_INVALID_REFERENCE)]);
+        ->args([new Reference('sulu_media.ffmpeg', ContainerInterface::NULL_ON_INVALID_REFERENCE)]);
 
     $services->set('sulu_media.permission_listener', PermissionListener::class)
         ->args([
@@ -513,7 +513,7 @@ return static function(ContainerConfigurator $container) {
     $services->alias(SystemCollectionManagerInterface::class, 'sulu_media.system_collections.manager');
 
     $services->set('sulu_media.system_collections.builder', SystemCollectionBuilder::class)
-        ->args([service('sulu_media.system_collections.manager')])
+        ->args([new Reference('sulu_media.system_collections.manager')])
         ->tag('massive_build.builder');
 
     $services->set('sulu_media.disposition_type.resolver', DispositionTypeResolver::class)
@@ -532,7 +532,7 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu_website.reference_store', ['alias' => 'collection']);
 
     $services->set('sulu_media.doctrine.invalidation_listener', CacheInvalidationListener::class)
-        ->args([service('sulu_http_cache.cache_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE)])
+        ->args([new Reference('sulu_http_cache.cache_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE)])
         ->tag('doctrine.event_listener', ['event' => 'postPersist'])
         ->tag('doctrine.event_listener', ['event' => 'postUpdate'])
         ->tag('doctrine.event_listener', ['event' => 'preRemove']);
@@ -593,7 +593,9 @@ return static function(ContainerConfigurator $container) {
         ])
         ->tag('sulu_media.file_inspector');
 
-    $services->alias(SvgSafetyInspectorInterface::class, 'sulu_media.file_inspector.svg_inspector');
+    // TODO: Remove the alias to this non-existing interface
+    $services->alias('Sulu\Bundle\MediaBundle\FileInspector\SvgSafetyInspectorInterface', 'sulu_media.file_inspector.svg_inspector');
+    $services->alias(FileInspectorInterface::class, 'sulu_media.file_inspector.svg_inspector');
 
     $services->set('sulu_media.file_inspector.subscriber', UploadFileSubscriber::class)
         ->args([tagged_iterator('sulu_media.file_inspector')])
