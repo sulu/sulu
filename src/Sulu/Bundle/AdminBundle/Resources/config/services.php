@@ -143,6 +143,7 @@ return static function(ContainerConfigurator $container) {
 
     $services->set('sulu_admin.admin_pool', AdminPool::class)
         ->public()
+        ->lazy()
         ->args([tagged_iterator('sulu.admin', defaultPriorityMethod: 'getPriority')])
         ->tag('sulu.context', ['context' => 'admin']);
 

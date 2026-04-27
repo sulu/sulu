@@ -39,9 +39,10 @@ class SuluAdminTest extends TestCase
 
     private SuluAdmin $suluAdmin;
 
+    /** @var array<string, array{routes: array<string, string>}> */
     private array $resources = [
         'tags' => [
-            'endpoint' => [
+            'routes' => [
                 'list' => 'sulu_tag.get_tags',
                 'detail' => 'sulu_tag.get_tag',
             ],
@@ -129,7 +130,7 @@ class SuluAdminTest extends TestCase
         $this->assertSame('navigation_item1', $config['navigation'][0]['title']);
         $this->assertSame('navigation_item2', $config['navigation'][1]['title']);
         $this->assertSame($config['resources'], $this->resources);
-        $this->assertSame(true, $config['collaborationEnabled']);
+        $this->assertTrue($config['collaborationEnabled']);
         $this->assertSame(10000, $config['collaborationInterval']);
     }
 }
