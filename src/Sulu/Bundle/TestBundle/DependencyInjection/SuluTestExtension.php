@@ -13,8 +13,8 @@ namespace Sulu\Bundle\TestBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
 class SuluTestExtension extends Extension
 {
@@ -23,10 +23,10 @@ class SuluTestExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         if (isset($config['enable_test_user_provider']) && $config['enable_test_user_provider']) {
-            $loader->load('test_user_provider.xml');
+            $loader->load('test_user_provider.php');
         }
     }
 }
