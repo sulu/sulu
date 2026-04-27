@@ -41,6 +41,7 @@ return $config
     ->ignoreErrorsOnPackages(
         [
             'guzzlehttp/guzzle', // bc layer replaced later by symfony/http-client
+            'aws/aws-sdk-php', // bc layer replaced later by flysystem v3
         ],
         [ErrorType::SHADOW_DEPENDENCY]
     )

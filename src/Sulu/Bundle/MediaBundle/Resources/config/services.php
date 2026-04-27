@@ -39,7 +39,6 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\MediaDataProviderRepository;
 use Sulu\Bundle\MediaBundle\EventListener\CacheInvalidationListener;
-use Sulu\Bundle\MediaBundle\FileInspector\FileInspectorInterface;
 use Sulu\Bundle\MediaBundle\FileInspector\SvgFileInspector;
 use Sulu\Bundle\MediaBundle\FileInspector\SvgSanitizerFactory;
 use Sulu\Bundle\MediaBundle\FileInspector\UploadFileSubscriber;
