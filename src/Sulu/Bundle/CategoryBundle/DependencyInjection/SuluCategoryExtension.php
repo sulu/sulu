@@ -27,7 +27,7 @@ use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class SuluCategoryExtension extends Extension implements PrependExtensionInterface
@@ -39,13 +39,13 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
-        $loader->load('command.xml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.php');
+        $loader->load('command.php');
 
         $bundles = $container->getParameter('kernel.bundles');
         if (\array_key_exists('SuluTrashBundle', $bundles)) {
-            $loader->load('services_trash.xml');
+            $loader->load('services_trash.php');
         }
 
         $this->configurePersistence($config['objects'], $container);
