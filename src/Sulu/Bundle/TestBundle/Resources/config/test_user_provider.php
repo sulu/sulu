@@ -9,7 +9,6 @@
  * with this source code in the file LICENSE.
  */
 
-use Sulu\Bundle\TestBundle\Entity\TestUserRepository;
 use Sulu\Bundle\TestBundle\Testing\TestUserProvider;
 use Sulu\Bundle\TestBundle\Testing\TestVoter;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -19,7 +18,7 @@ return static function(ContainerConfigurator $container) {
     $parameters = $container->parameters();
     $parameters->set('sulu.test_user_provider.class', TestUserProvider::class);
     $parameters->set('sulu.test_voter.class', TestVoter::class);
-    $parameters->set('sulu_test.test_user_repository.class', TestUserRepository::class);
+    $parameters->set('sulu_test.test_user_repository.class', 'Sulu\Bundle\TestBundle\Entity\TestUserRepository'); // kept for BC reasons
 
     $services = $container->services();
 
