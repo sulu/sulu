@@ -45,7 +45,7 @@ class Environment
     public function __construct(?string $type = null)
     {
         if (null === $type) {
-            @trigger_deprecation('sulu/sulu', '2.5', 'Not passing the type of the environment is deprecated.');
+            @trigger_deprecation('sulu/sulu', '3.0', 'Not passing the type of the environment is deprecated.');
         } else {
             $this->type = $type;
         }
@@ -60,7 +60,7 @@ class Environment
      */
     public function setType($type)
     {
-        @trigger_deprecation('sulu/sulu', '2.5', 'Using the setter to set the type of the environment is deprecated. Use the constructor instead.');
+        @trigger_deprecation('sulu/sulu', '3.0', 'Environment::setType is deprecated. Use the constructor instead.');
         $this->type = $type;
     }
 
