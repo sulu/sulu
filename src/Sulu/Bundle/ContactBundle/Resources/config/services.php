@@ -1,0 +1,278 @@
+<?php
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+
+use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
+use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
+use Sulu\Bundle\ContactBundle\Contact\AccountFactory;
+use Sulu\Bundle\ContactBundle\Contact\AccountManager;
+use Sulu\Bundle\ContactBundle\Contact\ContactManager;
+use Sulu\Bundle\ContactBundle\Controller\AccountController;
+use Sulu\Bundle\ContactBundle\Controller\AccountMediaController;
+use Sulu\Bundle\ContactBundle\Controller\ContactController;
+use Sulu\Bundle\ContactBundle\Controller\ContactMediaController;
+use Sulu\Bundle\ContactBundle\Controller\ContactTitleController;
+use Sulu\Bundle\ContactBundle\Controller\PositionController;
+use Sulu\Bundle\ContactBundle\DataFixtures\ORM\LoadDefaultTypes;
+use Sulu\Bundle\ContactBundle\Domain\Event\AccountCreatedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\AccountModifiedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\AccountRemovedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\AccountRestoredEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactCreatedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactModifiedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactRemovedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactRestoredEvent;
+use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
+use Sulu\Bundle\ContactBundle\Entity\ContactTitleRepository;
+use Sulu\Bundle\ContactBundle\Entity\Position;
+use Sulu\Bundle\ContactBundle\Entity\PositionRepository;
+use Sulu\Bundle\ContactBundle\EventListener\AccountListener;
+use Sulu\Bundle\ContactBundle\EventListener\CacheInvalidationListener;
+use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\SmartContent\AccountSmartContentProvider;
+use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\SmartContent\ContactSmartContentProvider;
+use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\AdminAccountReindexProvider;
+use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\AdminContactIndexListener;
+use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\AdminContactReindexProvider;
+use Sulu\Bundle\ContactBundle\Provider\FormOfAddressProvider;
+use Sulu\Bundle\ContactBundle\Twig\ContactTwigExtension;
+use Sulu\Bundle\ContactBundle\Util\CustomerIdConverter;
+use Sulu\Bundle\ContactBundle\Util\IndexComparator;
+use Sulu\Component\Rest\ListBuilder\Filter\SelectFilterType;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Reference;
+
+return static function(ContainerConfigurator $container) {
+    $services = $container->services();
+    $parameters = $container->parameters();
+    $parameters->set('sulu_contact.contact_title.entity', ContactTitle::class);
+    $parameters->set('sulu_contact.position.entity', Position::class);
+
+    $services->set('sulu_contact.admin', ContactAdmin::class)
+        ->args([
+            new Reference(ViewBuilderFactoryInterface::class),
+            new Reference('sulu_security.security_checker'),
+            new Reference('doctrine'),
+        ])
+        ->tag('sulu.admin')
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_contact.contact_title_repository', ContactTitleRepository::class)
+        ->args(['%sulu_contact.contact_title.entity%'])
+        ->factory([new Reference('doctrine'), 'getRepository']);
+
+    $services->set('sulu_contact.position_repository', PositionRepository::class)
+        ->args(['%sulu_contact.position.entity%'])
+        ->factory([new Reference('doctrine'), 'getRepository']);
+
+    $services->set('sulu_contact.account_listener', AccountListener::class)
+        ->tag('doctrine.event_listener', ['event' => 'postPersist']);
+
+    $services->set('sulu_contact.account_manager', AccountManager::class)
+        ->public()
+        ->args([
+            new Reference('doctrine.orm.entity_manager'),
+            new Reference('sulu_tag.tag_manager'),
+            new Reference('sulu_media.media_manager'),
+            new Reference('sulu_contact.account_factory'),
+            new Reference('sulu.repository.account'),
+            new Reference('sulu.repository.contact'),
+            new Reference('sulu.repository.media'),
+            new Reference('sulu_activity.domain_event_collector'),
+            '%sulu.model.account.class%',
+        ]);
+
+    $services->set('sulu_contact.contact_manager', ContactManager::class)
+        ->public()
+        ->args([
+            new Reference('doctrine.orm.entity_manager'),
+            new Reference('sulu_tag.tag_manager'),
+            new Reference('sulu_media.media_manager'),
+            new Reference('sulu.repository.account'),
+            new Reference('sulu_contact.contact_title_repository'),
+            new Reference('sulu.repository.contact'),
+            new Reference('sulu.repository.media'),
+            new Reference('sulu_activity.domain_event_collector'),
+            new Reference('sulu.repository.user'),
+            new Reference('sulu_trash.trash_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+        ]);
+
+    $services->set('sulu_contact.twig.cache_adapter', ArrayAdapter::class)
+        ->args(['$storeSerialized' => false]);
+
+    $services->set('sulu_contact.twig', ContactTwigExtension::class)
+        ->args([
+            new Reference('sulu_contact.twig.cache_adapter'),
+            new Reference('sulu.repository.contact'),
+        ])
+        ->tag('twig.extension');
+
+    $services->set('sulu_contact.account_factory', AccountFactory::class)
+        ->public()
+        ->args(['%sulu.model.account.class%']);
+
+    $services->set('sulu_contact.contact_smart_content_provider', ContactSmartContentProvider::class)
+        ->args([
+            new Reference('doctrine.orm.entity_manager'),
+            new Reference('sulu_admin.smart_content_query_enhancer'),
+        ])
+        ->tag('sulu_content.smart_content_provider', ['type' => 'contacts']);
+
+    $services->set('sulu_contact.account_smart_content_provider', AccountSmartContentProvider::class)
+        ->args([
+            new Reference('doctrine.orm.entity_manager'),
+            new Reference('sulu_admin.smart_content_query_enhancer'),
+        ])
+        ->tag('sulu_content.smart_content_provider', ['type' => 'accounts']);
+
+    $services->set('sulu_contact.util.index_comparator', IndexComparator::class)
+        ->public();
+
+    $services->set('sulu_contact.util.id_converter', CustomerIdConverter::class)
+        ->private();
+
+    $services->set('sulu_contact.doctrine.invalidation_listener', CacheInvalidationListener::class)
+        ->args([new Reference('sulu_http_cache.cache_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE)])
+        ->tag('doctrine.event_listener', ['event' => 'postPersist'])
+        ->tag('doctrine.event_listener', ['event' => 'postUpdate'])
+        ->tag('doctrine.event_listener', ['event' => 'preRemove']);
+
+    $services->set('sulu_contact.fixtures.default_types', LoadDefaultTypes::class)
+        ->tag('doctrine.fixture.orm');
+
+    $services->set('sulu_contact.account_controller', AccountController::class)
+        ->public()
+        ->args([
+            new Reference('fos_rest.view_handler'),
+            new Reference('security.token_storage'),
+            new Reference('sulu_core.doctrine_rest_helper'),
+            new Reference('sulu_core.doctrine_list_builder_factory'),
+            new Reference('sulu_core.list_builder.field_descriptor_factory'),
+            new Reference('sulu_media.media_manager'),
+            new Reference('sulu.repository.account'),
+            new Reference('doctrine.orm.entity_manager'),
+            new Reference('sulu_contact.account_manager'),
+            new Reference('sulu_contact.account_factory'),
+            new Reference('sulu_activity.domain_event_collector'),
+            '%sulu.model.account.class%',
+            '%sulu.model.contact.class%',
+            new Reference('sulu_trash.trash_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+        ])
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_contact.account_media_controller', AccountMediaController::class)
+        ->public()
+        ->args([
+            new Reference('fos_rest.view_handler'),
+            new Reference('security.token_storage'),
+            new Reference('sulu_core.doctrine_rest_helper'),
+            new Reference('sulu_core.doctrine_list_builder_factory'),
+            new Reference('doctrine.orm.entity_manager'),
+            new Reference('sulu.repository.media'),
+            new Reference('sulu_media.media_manager'),
+            new Reference('sulu_contact.account_manager'),
+            new Reference('sulu_activity.domain_event_collector'),
+            '%sulu.model.account.class%',
+            '%sulu.model.media.class%',
+            new Reference('sulu_media.media_list_builder_factory'),
+            new Reference('sulu_media.media_list_representation_factory'),
+            new Reference('sulu_core.list_builder.field_descriptor_factory'),
+        ])
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_contact.contact_controller', ContactController::class)
+        ->public()
+        ->args([
+            new Reference('fos_rest.view_handler'),
+            new Reference('security.token_storage'),
+            new Reference('sulu_core.doctrine_rest_helper'),
+            new Reference('sulu_core.list_builder.field_descriptor_factory'),
+            new Reference('sulu_core.doctrine_list_builder_factory'),
+            new Reference('sulu_contact.contact_manager'),
+            new Reference('sulu_media.media_manager'),
+            new Reference('sulu_contact.util.index_comparator'),
+            '%sulu.model.contact.class%',
+        ])
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_contact.contact_media_controller', ContactMediaController::class)
+        ->public()
+        ->args([
+            new Reference('fos_rest.view_handler'),
+            new Reference('security.token_storage'),
+            new Reference('sulu_core.doctrine_rest_helper'),
+            new Reference('sulu_core.doctrine_list_builder_factory'),
+            new Reference('doctrine.orm.entity_manager'),
+            new Reference('sulu.repository.media'),
+            new Reference('sulu_media.media_manager'),
+            new Reference('sulu_contact.contact_manager'),
+            new Reference('sulu_activity.domain_event_collector'),
+            '%sulu.model.contact.class%',
+            '%sulu.model.media.class%',
+            new Reference('sulu_media.media_list_builder_factory'),
+            new Reference('sulu_media.media_list_representation_factory'),
+            new Reference('sulu_core.list_builder.field_descriptor_factory'),
+        ])
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_contact.contact_title_controller', ContactTitleController::class)
+        ->public()
+        ->args([
+            new Reference('fos_rest.view_handler'),
+            new Reference('sulu_contact.contact_title_repository'),
+            new Reference('doctrine.orm.entity_manager'),
+            new Reference('sulu_activity.domain_event_collector'),
+        ])
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_contact.position_controller', PositionController::class)
+        ->public()
+        ->args([
+            new Reference('fos_rest.view_handler'),
+            new Reference('sulu_contact.position_repository'),
+            new Reference('doctrine.orm.entity_manager'),
+            new Reference('sulu_activity.domain_event_collector'),
+        ])
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_contact.country_filter_type', SelectFilterType::class)
+        ->tag('sulu_core.list_builder_filter_type', ['alias' => 'country']);
+
+    $services->set('sulu_contact.form_of_address_provider', FormOfAddressProvider::class)
+        ->public()
+        ->args([new Reference('translator')]);
+
+    $services->set('sulu_contact.admin_contact_index_listener', AdminContactIndexListener::class)
+        ->args([new Reference('sulu_message_bus')])
+        ->tag('kernel.event_listener', ['event' => AccountCreatedEvent::class, 'method' => 'onAccountChanged'])
+        ->tag('kernel.event_listener', ['event' => AccountModifiedEvent::class, 'method' => 'onAccountChanged'])
+        ->tag('kernel.event_listener', ['event' => AccountRemovedEvent::class, 'method' => 'onAccountChanged'])
+        ->tag('kernel.event_listener', ['event' => AccountRestoredEvent::class, 'method' => 'onAccountChanged'])
+        ->tag('kernel.event_listener', ['event' => ContactCreatedEvent::class, 'method' => 'onContactChanged'])
+        ->tag('kernel.event_listener', ['event' => ContactModifiedEvent::class, 'method' => 'onContactChanged'])
+        ->tag('kernel.event_listener', ['event' => ContactRemovedEvent::class, 'method' => 'onContactChanged'])
+        ->tag('kernel.event_listener', ['event' => ContactRestoredEvent::class, 'method' => 'onContactChanged']);
+
+    $services->set('sulu_contact.admin_account_reindex_provider', AdminAccountReindexProvider::class)
+        ->args([
+            new Reference('doctrine.orm.entity_manager'),
+            tagged_iterator('sulu_contact.admin_account_reindex_provider_enhancer'),
+        ])
+        ->tag('cmsig_seal.reindex_provider');
+
+    $services->set('sulu_contact.admin_contact_reindex_provider', AdminContactReindexProvider::class)
+        ->args([
+            new Reference('doctrine.orm.entity_manager'),
+            tagged_iterator('sulu_contact.admin_contact_reindex_provider_enhancer'),
+        ])
+        ->tag('cmsig_seal.reindex_provider');
+};
