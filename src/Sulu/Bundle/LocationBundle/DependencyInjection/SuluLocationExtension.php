@@ -44,7 +44,7 @@ class SuluLocationExtension extends Extension implements PrependExtensionInterfa
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
+        $loader->load('services.php');
 
         $this->configureGeolocators($config, $container, $loader);
     }
