@@ -70,7 +70,7 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference('twig'),
             new Reference('sulu_page.structure.factory'),
-            new Reference('sulu_page.controller_name_converter', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            new Reference('sulu_page.controller_name_converter', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             new Reference('sulu.content.structure_manager'),
             new Reference('sulu.content.webspace_structure_provider'),
             new Reference('sulu_core.webspace.webspace_manager'),
