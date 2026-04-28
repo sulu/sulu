@@ -23,7 +23,6 @@ use Symfony\Component\DependencyInjection\Reference;
 
 return static function(ContainerConfigurator $container) {
     $services = $container->services();
-    $parameters = $container->parameters();
 
     $services->set('sulu_media.media_selection_property_resolver', MediaSelectionPropertyResolver::class)
         ->tag('sulu_content.property_resolver');
