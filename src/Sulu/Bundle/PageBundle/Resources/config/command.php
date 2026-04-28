@@ -95,7 +95,7 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_page.command.webspace_import', WebspaceImportCommand::class)
         ->args([
             new Reference('sulu_page.import.webspace'),
-            new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            new Reference('logger', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
         ->tag('console.command');
 
