@@ -27,10 +27,13 @@ return static function(ContainerConfigurator $container) {
 
     $services->set('sulu.persistence.event_subscriber.orm.user_blame', UserBlameSubscriber::class)
         ->args([new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE)])
+        // Keep this priority lower than the metadata subscriber so metadata extensions are applied first.
         ->tag('doctrine.event_listener', ['event' => 'loadClassMetadata', 'priority' => 50])
+        // Keep the same priority for related flush handling to preserve listener ordering.
         ->tag('doctrine.event_listener', ['event' => 'onFlush', 'priority' => 50]);
 
     $services->set('sulu.persistence.event_subscriber.orm.metadata', MetadataSubscriber::class)
         ->args(['%sulu.persistence.objects%'])
+        // Run very early so custom metadata is registered before other loadClassMetadata listeners depend on it.
         ->tag('doctrine.event_listener', ['event' => 'loadClassMetadata', 'priority' => 8000]);
 };
