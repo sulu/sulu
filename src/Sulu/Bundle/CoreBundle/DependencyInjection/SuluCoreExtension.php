@@ -27,7 +27,8 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\FileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
 /**
  * This is the class that loads and manages your bundle configuration.
@@ -232,7 +233,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         foreach ($config['locales'] as $locale => $localeName) {
             if (\strtolower($locale) !== $locale) {
@@ -288,22 +289,22 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
         $this->initListBuilder($container, $loader);
 
-        $loader->load('rest.xml');
-        $loader->load('build.xml');
-        $loader->load('localization.xml');
-        $loader->load('serializer.xml');
-        $loader->load('request_analyzer.xml');
-        $loader->load('doctrine.xml');
+        $loader->load('rest.php');
+        $loader->load('build.php');
+        $loader->load('localization.php');
+        $loader->load('serializer.php');
+        $loader->load('request_analyzer.php');
+        $loader->load('doctrine.php');
     }
 
     /**
      * @return void
      */
-    private function initWebspace(array $webspaceConfig, ContainerBuilder $container, XmlFileLoader $loader)
+    private function initWebspace(array $webspaceConfig, ContainerBuilder $container, FileLoader $loader)
     {
         $container->setParameter('sulu_core.webspace.config_dir', $webspaceConfig['config_dir']);
 
-        $loader->load('webspace.xml');
+        $loader->load('webspace.php');
     }
 
     /**
@@ -318,11 +319,11 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     /**
      * @return void
      */
-    private function initCache(array $cache, ContainerBuilder $container, XmlFileLoader $loader)
+    private function initCache(array $cache, ContainerBuilder $container, FileLoader $loader)
     {
         $container->setParameter('sulu_core.cache.memoize.default_lifetime', $cache['memoize']['default_lifetime']);
 
-        $loader->load('cache.xml');
+        $loader->load('cache.php');
     }
 
     /**
@@ -330,11 +331,11 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
      *
      * @return void
      */
-    private function initListBuilder(ContainerBuilder $container, XmlFileLoader $loader)
+    private function initListBuilder(ContainerBuilder $container, FileLoader $loader)
     {
         $bundles = $container->getParameter('kernel.bundles');
         if (\array_key_exists('SuluAdminBundle', $bundles)) {
-            $loader->load('list_builder.xml');
+            $loader->load('list_builder.php');
         }
     }
 }
