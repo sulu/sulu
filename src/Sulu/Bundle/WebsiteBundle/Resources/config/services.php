@@ -137,7 +137,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('request_stack'),
             new Reference('event_dispatcher'),
             '%kernel.project_dir%/var',
-            new Reference('sulu_http_cache.cache_manager')->nullOnInvalid(),
+            new Reference('sulu_http_cache.cache_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             '%sulu_http_cache.tags.enabled%',
         ]);
 
