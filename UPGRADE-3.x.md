@@ -10,7 +10,7 @@ We refactored the Migrations the abstract class is now under the Infrastructure 
 
  - `Sulu\Content\Migrations\AbstractTagNameToIdMigration` -> `Sulu\Content\Infrastructure\Doctrine\Migrations\AbstractTagNameToIdMigration`
 
-### Cleaning up the environment use in the webspaces
+### Cleaning up environment usage in webspaces
 
 The function `Sulu\Component\Webspace\Environment::setType()` is now deprecated and should be replaced with a call to the constructor with the correct environment:
 ```diff
