@@ -947,8 +947,7 @@ sulu_admin:
         snippets:
             default_type: 'my_snippet_key'
             directories:
-                snippet_project_a:
-                    path: '%kernel.project_dir%/config/templates/snippets/projectA'
+                snippet_project_a: '%kernel.project_dir%/config/templates/snippets/projectA'
 ```
 
 ### ResourceLocator endpoint changed
