@@ -1,0 +1,73 @@
+<?php
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+
+use Sulu\Bundle\MarkupBundle\Listener\MailerListener;
+use Sulu\Bundle\MarkupBundle\Listener\MarkupListener;
+use Sulu\Bundle\MarkupBundle\Markup\DelegatingTagExtractor;
+use Sulu\Bundle\MarkupBundle\Markup\HtmlMarkupParser;
+use Sulu\Bundle\MarkupBundle\Markup\HtmlTagExtractor;
+use Sulu\Bundle\MarkupBundle\Markup\Link\ExternalLinkProvider;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPool;
+use Sulu\Bundle\MarkupBundle\Markup\LinkTag;
+use Sulu\Bundle\MarkupBundle\Tag\TagRegistry;
+use Symfony\Component\DependencyInjection\Reference;
+
+return static function(ContainerConfigurator $container) {
+    $services = $container->services();
+
+    $services->set('sulu_markup.tag.registry', TagRegistry::class)
+        ->args([[]]);
+
+    $services->set('sulu_markup.parser.html_extractor', HtmlTagExtractor::class)
+        ->public()
+        ->args(['sulu'])
+        ->tag('sulu_markup.parser.html_extractor');
+
+    $services->set('sulu_markup.parser.delegating_html_extractor', DelegatingTagExtractor::class)
+        ->args([tagged_iterator('sulu_markup.parser.html_extractor')]);
+
+    $services->set('sulu_markup.parser', HtmlMarkupParser::class)
+        ->args([
+            new Reference('sulu_markup.tag.registry'),
+            new Reference('sulu_markup.parser.delegating_html_extractor'),
+        ])
+        ->tag('sulu_markup.parser', ['type' => 'html']);
+
+    $services->set('sulu_markup.response_listener', MarkupListener::class)
+        ->args([tagged_iterator('sulu_markup.parser', indexAttribute: 'type')])
+        ->tag('kernel.event_subscriber');
+
+    $services->set('sulu_markup.mailer_listener', MailerListener::class)
+        ->args([
+            new Reference('sulu_markup.parser'),
+            new Reference('request_stack'),
+            '%kernel.default_locale%',
+        ])
+        ->tag('kernel.event_subscriber');
+
+    $services->set('sulu_markup.link_tag.provider_pool', LinkProviderPool::class)
+        ->args([tagged_iterator('sulu.link.provider', indexAttribute: 'alias')]);
+
+    $services->set('sulu_markup.link_tag', LinkTag::class)
+        ->args([
+            new Reference('sulu_markup.link_tag.provider_pool'),
+            expr('container.hasParameter(\'sulu.preview\') ? parameter(\'sulu.preview\') : false'),
+            new Reference('url_helper'),
+            '%sulu_markup.link_tag.provider_attribute%',
+        ])
+        ->tag('sulu_markup.tag', ['tag' => 'link', 'type' => 'html']);
+
+    $services->set('sulu_markup.external_link_provider', ExternalLinkProvider::class)
+        ->args([new Reference('translator')])
+        ->tag('sulu.link.provider', ['alias' => 'external']);
+};
