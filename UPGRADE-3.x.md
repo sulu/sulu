@@ -19,7 +19,7 @@ The function `Sulu\Component\Webspace\Environment::setType()` is now deprecated 
 + $environment = new Environment('prod');
 ```
 
-Using the `Url::getEnvironment()` and `Url::setEnvironment()` functions is deprecated. Use the environment of the `Portal::getEnvironment` instead.
+Using the `Url::getEnvironment()` and `Url::setEnvironment()` functions is deprecated. Retrieve the environment from the portal instead via `Portal::getEnvironment($type)`, and use the returned `Environment` object for reading or updating the environment configuration.
 
 ## 3.0.7
 
