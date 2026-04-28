@@ -34,7 +34,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Process\ExecutableFinder;
 
@@ -316,12 +316,12 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         );
 
         // load services
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
-        $loader->load('command.xml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.php');
+        $loader->load('command.php');
 
         if (\class_exists(SvgImagine::class)) {
-            $loader->load('services_imagine_svg.xml');
+            $loader->load('services_imagine_svg.php');
         }
 
         $hasVipsAdapter = false;
@@ -334,7 +334,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                 )
             )
         ) {
-            $loader->load('services_imagine_vips.xml');
+            $loader->load('services_imagine_vips.php');
             $hasVipsAdapter = true;
         }
 
@@ -354,19 +354,19 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         }
 
         if (\array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
-            $loader->load('audience_targeting.xml');
+            $loader->load('audience_targeting.php');
         }
 
         if (\array_key_exists('SuluTrashBundle', $bundles)) {
-            $loader->load('services_trash.xml');
+            $loader->load('services_trash.php');
         }
 
         if (\array_key_exists('SuluContentBundle', $bundles)) {
-            $loader->load('services_content.xml');
+            $loader->load('services_content.php');
         }
 
         if (\array_key_exists('SuluAdminBundle', $bundles)) {
-            $loader->load('services_admin.xml');
+            $loader->load('services_admin.php');
         }
 
         $ffmpegBinary = $container->resolveEnvPlaceholders($config['ffmpeg']['ffmpeg_binary'] ?? null, true);
@@ -384,7 +384,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $container->setParameter('sulu_media.ffmpeg.binary_timeout', $config['ffmpeg']['binary_timeout']);
             $container->setParameter('sulu_media.ffmpeg.threads_count', $config['ffmpeg']['threads_count']);
 
-            $loader->load('ffmpeg.xml');
+            $loader->load('ffmpeg.php');
         }
 
         /** array<string> @mimeTypes */
