@@ -191,7 +191,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('jms_serializer'),
             new Reference('sulu_document_manager.document_inspector'),
         ])
-        ->tag('sulu_preview.object_provider', ['provider-key' => 'pages']);
+        ->tag('sulu_preview.object_provider', ['provider_key' => 'pages', 'provider-key' => 'pages']);
 
     $services->set('sulu_page.preview.defaults_provider', PageRouteDefaultsProvider::class)
         ->args([
