@@ -103,7 +103,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('request_stack'),
             new Reference('translator'),
         ])
-        ->tag('sulu.audience_target_rule', ['alias' => \locale::class]);
+        ->tag('sulu.audience_target_rule', ['alias' => 'locale']);
 
     $services->set('sulu_audience_targeting.rules.referrer', ReferrerRule::class)
         ->args([
