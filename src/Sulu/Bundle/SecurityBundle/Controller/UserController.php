@@ -23,6 +23,7 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestHelperInterface;
@@ -47,21 +48,34 @@ class UserController extends AbstractRestController implements SecuredController
         private DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
         private UserManager $userManager,
         private EntityManagerInterface $entityManager,
-        private string $userClass
+        private string $userClass,
+        private ?FieldDescriptorFactoryInterface $fieldDescriptorFactory = null,
     ) {
         parent::__construct($viewHandler);
+
+        if (null === $this->fieldDescriptorFactory) {
+            @trigger_deprecation('sulu/sulu', '2.6', 'Instantiating UserController without the $fieldDescriptorFactory argument is deprecated.');
+        }
     }
 
     /**
      * Contains the field descriptors used by the list response.
-     * TODO: move field descriptors to a manager.
      *
      * @var DoctrineFieldDescriptor[]
+     *
+     * @deprecated Extend the FieldDescriptorFactory
      */
     protected $fieldDescriptors;
 
+    /**
+     * @deprecated Extend the FieldDescriptorFactory
+     */
     protected function getFieldDescriptors()
     {
+        if (null !== $this->fieldDescriptorFactory) {
+            return $this->fieldDescriptorFactory->getFieldDescriptors(UserInterface::RESOURCE_KEY);
+        }
+
         if (empty($this->fieldDescriptors)) {
             $this->initFieldDescriptors();
         }
