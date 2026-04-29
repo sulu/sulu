@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>default-snippet-selection</key>
+
+    <meta>
+        <title lang="en">Default Snippet Selection</title>
+        <title lang="de">Standard Schnipsel Auswahl</title>
+    </meta>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title lang="en">Title</title>
+                <title lang="de">Titel</title>
+            </meta>
+
+            <tag name="sulu.node.name"/>
+        </property>
+
+        <property name="url" type="route">
+            <meta>
+                <title lang="en">URL</title>
+                <title lang="de">URL</title>
+            </meta>
+        </property>
+
+        <property name="snippet" type="single_snippet_selection">
+            <meta>
+                <title lang="en">Snippet</title>
+                <title lang="de">Schnipsel</title>
+            </meta>
+            <params>
+                <param name="properties" type="collection">
+                    <param name="description" value="description"/>
+                </param>
+            </params>
+        </property>
+    </properties>
+</template>
