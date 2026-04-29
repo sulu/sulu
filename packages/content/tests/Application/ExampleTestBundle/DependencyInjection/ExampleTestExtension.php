@@ -24,6 +24,24 @@ class ExampleTestExtension extends Extension implements PrependExtensionInterfac
 {
     public function prepend(ContainerBuilder $container): void
     {
+        if ($container->hasExtension('doctrine')) {
+            $container->prependExtensionConfig(
+                'doctrine',
+                [
+                    'orm' => [
+                        'mappings' => [
+                            'ExampleTestBundle' => [
+                                'type' => 'xml',
+                                'dir' => __DIR__ . '/../Resources/config/doctrine',
+                                'prefix' => 'Sulu\Content\Tests\Application\ExampleTestBundle\Entity',
+                                'alias' => 'ExampleTestBundle',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+
         if ($container->hasExtension('sulu_admin')) {
             $container->prependExtensionConfig(
                 'sulu_admin',
