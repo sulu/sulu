@@ -20,8 +20,8 @@ class WebspaceControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $client->jsonRequest('GET', '/api/webspaces?locale=en');
-        $response = \json_decode($client->getResponse()->getContent(), true);
         /** @var array{_embedded: array{webspaces: array<array{name: string, navigations: array<array{key: string}>, allLocalizations: array<array{name: string, localization: string}>, resourceLocatorStrategy: array{inputType: string}}>}} $response */
+        $response = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
