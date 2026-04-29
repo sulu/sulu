@@ -310,9 +310,11 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
         $webspaces = \array_values($webspaceCollection->getWebspaces());
 
-        $this->assertCount(3, $webspaces);
+        $this->assertCount(5, $webspaces);
         $this->assertEquals('Massive Art', $webspaces[0]->getName());
         $this->assertEquals('Sulu CMF', $webspaces[1]->getName());
-        $this->assertEquals('ZZ Sorted', $webspaces[2]->getName());
+        $this->assertEquals('Webspace 2', $webspaces[2]->getName());
+        $this->assertEquals('Webspace 10', $webspaces[3]->getName());
+        $this->assertEquals('ZZ Sorted', $webspaces[4]->getName());
     }
 }

@@ -21,6 +21,7 @@ class WebspaceControllerTest extends SuluTestCase
 
         $client->jsonRequest('GET', '/api/webspaces?locale=en');
         $response = \json_decode($client->getResponse()->getContent(), true);
+        /** @var array{_embedded: array{webspaces: array<array{name: string, navigations: array<array{key: string}>, allLocalizations: array<array{name: string, localization: string}>, resourceLocatorStrategy: array{inputType: string}}>}} $response */
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 

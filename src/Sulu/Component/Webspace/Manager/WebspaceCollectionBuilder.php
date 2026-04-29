@@ -102,7 +102,7 @@ class WebspaceCollectionBuilder
         \uasort(
             $this->webspaces,
             function(Webspace $a, Webspace $b) {
-                return \strcasecmp((string) $a->getName(), (string) $b->getName());
+                return \strnatcasecmp((string) $a->getName(), (string) $b->getName());
             }
         );
 
