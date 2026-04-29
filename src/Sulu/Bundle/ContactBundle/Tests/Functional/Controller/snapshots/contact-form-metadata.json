@@ -1,0 +1,556 @@
+{
+    "name": "contact_details",
+    "form": {
+        "avatar": {
+            "disabledCondition": null,
+            "visibleCondition": null,
+            "type": "section",
+            "colSpan": 4,
+            "items": {
+                "avatar": {
+                    "disabledCondition": null,
+                    "visibleCondition": null,
+                    "type": "single_media_upload",
+                    "colSpan": 11,
+                    "options": {
+                        "upload_text": {
+                            "name": "upload_text",
+                            "type": "string",
+                            "value": null,
+                            "infoText": "Drop image or click to change avatar"
+                        },
+                        "skin": {
+                            "name": "skin",
+                            "type": "string",
+                            "value": "round"
+                        },
+                        "empty_icon": {
+                            "name": "empty_icon",
+                            "type": "string",
+                            "value": "su-user"
+                        },
+                        "collection_id": {
+                            "name": "collection_id",
+                            "type": "expression",
+                            "value": 41
+                        }
+                    },
+                    "types": [],
+                    "defaultType": null,
+                    "required": false,
+                    "multilingual": true,
+                    "spaceAfter": 1,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": []
+                }
+            }
+        },
+        "contact": {
+            "disabledCondition": null,
+            "visibleCondition": null,
+            "type": "section",
+            "colSpan": 8,
+            "items": {
+                "firstName": {
+                    "disabledCondition": null,
+                    "visibleCondition": null,
+                    "type": "text_line",
+                    "colSpan": 6,
+                    "options": {
+                        "headline": {
+                            "name": "headline",
+                            "type": "string",
+                            "value": true
+                        }
+                    },
+                    "types": [],
+                    "defaultType": null,
+                    "required": true,
+                    "multilingual": true,
+                    "spaceAfter": null,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": [],
+                    "label": "First Name"
+                },
+                "lastName": {
+                    "disabledCondition": null,
+                    "visibleCondition": null,
+                    "type": "text_line",
+                    "colSpan": 6,
+                    "options": {
+                        "headline": {
+                            "name": "headline",
+                            "type": "string",
+                            "value": true
+                        }
+                    },
+                    "types": [],
+                    "defaultType": null,
+                    "required": true,
+                    "multilingual": true,
+                    "spaceAfter": null,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": [],
+                    "label": "Last Name"
+                },
+                "formOfAddress": {
+                    "disabledCondition": null,
+                    "visibleCondition": null,
+                    "type": "single_select",
+                    "colSpan": 3,
+                    "options": {
+                        "values": {
+                            "name": "values",
+                            "type": "expression",
+                            "value": [
+                                {
+                                    "name": "1",
+                                    "title": "Ms."
+                                },
+                                {
+                                    "name": "0",
+                                    "title": "Mr."
+                                },
+                                {
+                                    "name": "2",
+                                    "title": "Neutral"
+                                }
+                            ]
+                        }
+                    },
+                    "types": [],
+                    "defaultType": null,
+                    "required": true,
+                    "multilingual": true,
+                    "spaceAfter": null,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": [],
+                    "label": "Form of Address"
+                },
+                "title": {
+                    "disabledCondition": null,
+                    "visibleCondition": null,
+                    "type": "single_contact_title_selection",
+                    "colSpan": 3,
+                    "options": {
+                        "editable": {
+                            "name": "editable",
+                            "type": "string",
+                            "value": true
+                        }
+                    },
+                    "types": [],
+                    "defaultType": null,
+                    "required": false,
+                    "multilingual": true,
+                    "spaceAfter": null,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": [],
+                    "label": "Title"
+                },
+                "birthday": {
+                    "disabledCondition": null,
+                    "visibleCondition": null,
+                    "type": "date",
+                    "colSpan": 6,
+                    "options": [],
+                    "types": [],
+                    "defaultType": null,
+                    "required": false,
+                    "multilingual": true,
+                    "spaceAfter": null,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": [],
+                    "label": "Birthday"
+                },
+                "account": {
+                    "disabledCondition": null,
+                    "visibleCondition": null,
+                    "type": "single_account_selection",
+                    "colSpan": 6,
+                    "options": [],
+                    "types": [],
+                    "defaultType": null,
+                    "required": false,
+                    "multilingual": true,
+                    "spaceAfter": null,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": [],
+                    "label": "Organization"
+                },
+                "position": {
+                    "disabledCondition": "account == null",
+                    "visibleCondition": null,
+                    "type": "single_contact_position_selection",
+                    "colSpan": 6,
+                    "options": {
+                        "editable": {
+                            "name": "editable",
+                            "type": "string",
+                            "value": true
+                        }
+                    },
+                    "types": [],
+                    "defaultType": null,
+                    "required": false,
+                    "multilingual": true,
+                    "spaceAfter": null,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": [],
+                    "label": "Position"
+                },
+                "salutation": {
+                    "disabledCondition": null,
+                    "visibleCondition": null,
+                    "type": "text_line",
+                    "colSpan": 12,
+                    "options": [],
+                    "types": [],
+                    "defaultType": null,
+                    "required": false,
+                    "multilingual": true,
+                    "spaceAfter": null,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": [],
+                    "label": "Salutation"
+                },
+                "note": {
+                    "disabledCondition": null,
+                    "visibleCondition": null,
+                    "type": "text_area",
+                    "colSpan": 12,
+                    "options": [],
+                    "types": [],
+                    "defaultType": null,
+                    "required": false,
+                    "multilingual": true,
+                    "spaceAfter": null,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": [],
+                    "label": "Note"
+                },
+                "contactDetails": {
+                    "disabledCondition": null,
+                    "visibleCondition": null,
+                    "type": "section",
+                    "colSpan": 12,
+                    "items": {
+                        "contactDetails": {
+                            "disabledCondition": null,
+                            "visibleCondition": null,
+                            "type": "contact_details",
+                            "colSpan": 12,
+                            "options": [],
+                            "types": [],
+                            "defaultType": null,
+                            "required": false,
+                            "multilingual": true,
+                            "spaceAfter": null,
+                            "minOccurs": null,
+                            "maxOccurs": null,
+                            "onInvalid": null,
+                            "tags": []
+                        }
+                    },
+                    "label": "Contact details"
+                },
+                "addresses": {
+                    "disabledCondition": null,
+                    "visibleCondition": null,
+                    "type": "section",
+                    "colSpan": 12,
+                    "items": {
+                        "addresses": {
+                            "disabledCondition": null,
+                            "visibleCondition": null,
+                            "type": "addresses",
+                            "colSpan": 12,
+                            "options": [],
+                            "types": [],
+                            "defaultType": null,
+                            "required": false,
+                            "multilingual": true,
+                            "spaceAfter": null,
+                            "minOccurs": null,
+                            "maxOccurs": null,
+                            "onInvalid": null,
+                            "tags": []
+                        }
+                    },
+                    "label": "Addresses"
+                },
+                "bankAccounts": {
+                    "disabledCondition": null,
+                    "visibleCondition": null,
+                    "type": "section",
+                    "colSpan": 12,
+                    "items": {
+                        "bankAccounts": {
+                            "disabledCondition": null,
+                            "visibleCondition": null,
+                            "type": "bankAccounts",
+                            "colSpan": 12,
+                            "options": [],
+                            "types": [],
+                            "defaultType": null,
+                            "required": false,
+                            "multilingual": true,
+                            "spaceAfter": null,
+                            "minOccurs": null,
+                            "maxOccurs": null,
+                            "onInvalid": null,
+                            "tags": []
+                        }
+                    },
+                    "label": "Bank accounts"
+                },
+                "taxonomies": {
+                    "disabledCondition": null,
+                    "visibleCondition": null,
+                    "type": "section",
+                    "colSpan": 12,
+                    "items": {
+                        "tags": {
+                            "disabledCondition": null,
+                            "visibleCondition": null,
+                            "type": "tag_selection",
+                            "colSpan": 12,
+                            "options": [],
+                            "types": [],
+                            "defaultType": null,
+                            "required": false,
+                            "multilingual": true,
+                            "spaceAfter": null,
+                            "minOccurs": null,
+                            "maxOccurs": null,
+                            "onInvalid": null,
+                            "tags": [],
+                            "label": "Tags"
+                        },
+                        "categories": {
+                            "disabledCondition": null,
+                            "visibleCondition": null,
+                            "type": "category_selection",
+                            "colSpan": 12,
+                            "options": [],
+                            "types": [],
+                            "defaultType": null,
+                            "required": false,
+                            "multilingual": true,
+                            "spaceAfter": null,
+                            "minOccurs": null,
+                            "maxOccurs": null,
+                            "onInvalid": null,
+                            "tags": [],
+                            "label": "Categories"
+                        }
+                    },
+                    "label": "Taxonomies"
+                }
+            }
+        }
+    },
+    "schema": {
+        "type": "object",
+        "properties": {
+            "firstName": {
+                "type": "string",
+                "minLength": 1
+            },
+            "lastName": {
+                "type": "string",
+                "minLength": 1
+            },
+            "title": {
+                "anyOf": [
+                    {
+                        "type": "null"
+                    },
+                    {
+                        "type": "object",
+                        "maxProperties": 0
+                    },
+                    {
+                        "type": "string"
+                    },
+                    {
+                        "type": "number"
+                    },
+                    {
+                        "type": "object",
+                        "minProperties": 1
+                    }
+                ]
+            },
+            "account": {
+                "anyOf": [
+                    {
+                        "type": "null"
+                    },
+                    {
+                        "type": "object",
+                        "maxProperties": 0
+                    },
+                    {
+                        "type": "string"
+                    },
+                    {
+                        "type": "number"
+                    },
+                    {
+                        "type": "object",
+                        "minProperties": 1
+                    }
+                ]
+            },
+            "position": {
+                "anyOf": [
+                    {
+                        "type": "null"
+                    },
+                    {
+                        "type": "object",
+                        "maxProperties": 0
+                    },
+                    {
+                        "type": "string"
+                    },
+                    {
+                        "type": "number"
+                    },
+                    {
+                        "type": "object",
+                        "minProperties": 1
+                    }
+                ]
+            },
+            "salutation": {
+                "anyOf": [
+                    {
+                        "type": "null"
+                    },
+                    {
+                        "type": "string",
+                        "maxLength": 0
+                    },
+                    {
+                        "type": "string"
+                    }
+                ]
+            },
+            "note": {
+                "anyOf": [
+                    {
+                        "type": "null"
+                    },
+                    {
+                        "type": "string",
+                        "maxLength": 0
+                    },
+                    {
+                        "type": "string"
+                    }
+                ]
+            },
+            "tags": {
+                "anyOf": [
+                    {
+                        "type": "null"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": [
+                                "number",
+                                "string",
+                                "boolean",
+                                "object",
+                                "array",
+                                "null"
+                            ]
+                        },
+                        "maxItems": 0
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "number"
+                                }
+                            ]
+                        },
+                        "uniqueItems": true
+                    }
+                ]
+            },
+            "categories": {
+                "anyOf": [
+                    {
+                        "type": "null"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": [
+                                "number",
+                                "string",
+                                "boolean",
+                                "object",
+                                "array",
+                                "null"
+                            ]
+                        },
+                        "maxItems": 0
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "number"
+                                }
+                            ]
+                        },
+                        "uniqueItems": true
+                    }
+                ]
+            }
+        },
+        "required": [
+            "firstName",
+            "lastName",
+            "formOfAddress"
+        ]
+    },
+    "key": "contact_details",
+    "group": null,
+    "tags": [],
+    "title": "Contact details"
+}

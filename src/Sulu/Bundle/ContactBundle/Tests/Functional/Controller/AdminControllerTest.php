@@ -11,20 +11,21 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\Id\AssignedGenerator;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfileType;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
-use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
+use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class AdminControllerTest extends SuluTestCase
 {
+    use AssertSnapshotTrait;
+
     /**
      * @var KernelBrowser
      */
@@ -161,13 +162,7 @@ class AdminControllerTest extends SuluTestCase
 
         $this->client->jsonRequest('GET', '/admin/metadata/form/contact_details');
 
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = \json_decode($this->client->getResponse()->getContent(), true);
-
-        $this->assertIsArray($response);
-        $this->assertArrayHasKey('avatar', $response['form']);
-        $this->assertArrayHasKey('contact', $response['form']);
-        $this->assertEquals(['firstName', 'lastName', 'formOfAddress'], $response['schema']['required']);
+        $this->assertResponseSnapshot('contact-form-metadata.json', $this->client->getResponse(), 200);
     }
 
     public function testAccountFormMetadataAction(): void
@@ -176,37 +171,12 @@ class AdminControllerTest extends SuluTestCase
 
         $this->client->jsonRequest('GET', '/admin/metadata/form/account_details');
 
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = \json_decode($this->client->getResponse()->getContent(), true);
-
-        $this->assertIsArray($response);
-        $form = $response['form'];
-        $this->assertArrayHasKey('logo', $form);
-        $this->assertArrayHasKey('account', $form);
-
-        $schema = $response['schema'];
-        $this->assertEquals(['name'], $schema['required']);
+        $this->assertResponseSnapshot('account-form-metadata.json', $this->client->getResponse(), 200);
     }
 
     private function createCollectionTypes(): void
     {
         $em = $this->getEntityManager();
-        $metadata = $em->getClassMetaData(CollectionType::class);
-        $metadata->setIdGenerator(new AssignedGenerator());
-        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-
-        $collectionType1 = new CollectionType();
-        $collectionType1->setId(1);
-        $collectionType1->setName('Default Collection Type');
-        $collectionType1->setKey('collection.default');
-
-        $collectionType2 = new CollectionType();
-        $collectionType2->setId(2);
-        $collectionType2->setName('System Collections');
-        $collectionType2->setKey('collection.system');
-
-        $em->persist($collectionType1);
-        $em->persist($collectionType2);
-        $em->flush();
+        (new LoadCollectionTypes())->load($em);
     }
 }
