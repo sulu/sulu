@@ -1,5 +1,12 @@
 # Upgrade
 
+## 2.6.23
+
+The `Sulu\Bundle\SecurityBundle\Controller\UserController` now takes an optional argument for the
+`FieldDescriptorFactory`. However, omitting this argument is deprecated, so integrators should start
+passing/injecting the `FieldDescriptorFactory` now to remain compatible with a future version where it
+will become required.
+
 ## 2.6.22
 
 There might be issues updating a project which still requires `Swiftmailer`.
