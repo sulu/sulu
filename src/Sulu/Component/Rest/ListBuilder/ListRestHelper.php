@@ -66,14 +66,19 @@ class ListRestHelper implements ListRestHelperInterface
         return (null !== $excludedIdsString) ? \array_filter(\explode(',', $excludedIdsString)) : [];
     }
 
-    /**
-     * Returns the desired sort column.
-     *
-     * @return string
-     */
     public function getSortColumn()
     {
-        return $this->getRequest()->get('sortBy', null);
+        $sortColumn = $this->getRequest()->get('sortBy', null);
+        if (null === $sortColumn || !\is_string($sortColumn)) {
+            return null;
+        }
+
+        // Only allow sort columns like id, otherEntity.id and no function calls (empty strings are also invalid)
+        if (!\preg_match('#^(\w|\.)+$#', $sortColumn)) {
+            return null;
+        }
+
+        return $sortColumn;
     }
 
     /**
