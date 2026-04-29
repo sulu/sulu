@@ -77,6 +77,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());
 
+        /** @var object{webspaces: object{destination_io: object{key: string, name: string, defaultTemplates: object{page: string, homepage: string}, navigations: array<object{key: string}>, resourceLocatorStrategy: object{inputType: string}, customUrls: array<mixed>}, sulu_io: object{key: string}, test_io: object{key: string, security: object{system: string, permissionCheck: bool}, localizations: array<object{language: string, default: bool}>, segments: array<object{key: string, title: string, default: bool}>}, aaa_sorted_io: object{key: string}}} $pageConfig */
         $pageConfig = $response->sulu_page;
 
         $this->assertCount(4, (array) $pageConfig->webspaces);
