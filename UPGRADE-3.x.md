@@ -1049,7 +1049,20 @@ Also, the `entity_class` param from the previous route mapping configuration is 
 ```diff
         <!-- config/templates/articles/your_template.xml -->
 
-        <property name="url" type="route">
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title lang="en">Title</title>
+                <title lang="de">Titel</title>
+            </meta>
+            <params>
+                <param name="headline" value="true"/>
+            </params>
+
++           <tag name="sulu.rlp.part"/>
+        </property>
+
+-       <property name="url" type="route">
++       <property name="url" type="route" mandatory="true">
             <meta>
                 <title lang="en">Resourcelocator</title>
                 <title lang="de">Adresse</title>
@@ -1059,8 +1072,14 @@ Also, the `entity_class` param from the previous route mapping configuration is 
 -               <param name="entity_class" value="Sulu\Bundle\ArticleBundle\Document\ArticleDocument"/>
 +               <param name="route_schema" value="/blog/{implode('-', object)}"/>
 +           </params>
+
++           <tag name="sulu.rlp"/>
         </property>
 ```
+
+The `sulu.rlp.part` tag on the title property is required — it tells the admin frontend which fields
+to use as inputs when generating the URL suggestion. Without it, `route_schema` has no effect because
+URL generation is never triggered. The `sulu.rlp` tag marks the field that stores the generated URL.
 
 It is also supported by the `page_tree_route` which still uses the selected page as prefixed URL.
 
