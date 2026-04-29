@@ -125,7 +125,7 @@ class CategoryManager implements CategoryManagerInterface
         $isNewTranslation = true;
 
         if (!$isNewCategory) {
-            $categoryEntity = $this->findById($this->getProperty($data, 'id'));
+            $categoryEntity = $this->findById((int) $this->getProperty($data, 'id'));
 
             if (false !== $categoryEntity->findTranslationByLocale($locale)) {
                 $isNewTranslation = false;

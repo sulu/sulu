@@ -1624,23 +1624,28 @@ class DoctrineListBuilderTest extends TestCase
             ->willReturn($expr->reveal())
             ->shouldBeCalled();
 
+        $noRestrictionsExistsFunc = new Expr\Func('EXISTS', ['SELECT 1 FROM AccessControl acl_check ...']);
+        $notExistsFunc = new Expr\Func('NOT', [$noRestrictionsExistsFunc]);
+        $existsFunc = new Expr\Func('EXISTS', ['EXISTS (SELECT 1 FROM AccessControl acl ...)']);
+        $orExpression = new Expr\Orx([$notExistsFunc, $existsFunc]);
+
         $expr->exists('SELECT 1 FROM AccessControl acl_check ...')
-            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
+            ->willReturn($noRestrictionsExistsFunc)
             ->shouldBeCalled();
 
-        $expr->not('EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
-            ->willReturn('NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
+        $expr->not($noRestrictionsExistsFunc)
+            ->willReturn($notExistsFunc)
             ->shouldBeCalled();
 
         $expr->exists('EXISTS (SELECT 1 FROM AccessControl acl ...)')
-            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->willReturn($existsFunc)
             ->shouldBeCalled();
 
-        $expr->orX('NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...)', 'EXISTS (SELECT 1 FROM AccessControl acl ...)')
-            ->willReturn('(NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...) OR EXISTS (SELECT 1 FROM AccessControl acl ...))')
+        $expr->orX($notExistsFunc, $existsFunc)
+            ->willReturn($orExpression)
             ->shouldBeCalled();
 
-        $this->queryBuilder->andWhere('(NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...) OR EXISTS (SELECT 1 FROM AccessControl acl ...))')
+        $this->queryBuilder->andWhere($orExpression)
             ->willReturn($this->queryBuilder->reveal())
             ->shouldBeCalled();
 
@@ -1765,23 +1770,28 @@ class DoctrineListBuilderTest extends TestCase
             ->willReturn($expr->reveal())
             ->shouldBeCalled();
 
+        $noRestrictionsExistsFunc = new Expr\Func('EXISTS', ['SELECT 1 FROM AccessControl acl_check ...']);
+        $notExistsFunc = new Expr\Func('NOT', [$noRestrictionsExistsFunc]);
+        $existsFunc = new Expr\Func('EXISTS', ['EXISTS (SELECT 1 FROM AccessControl acl ...)']);
+        $orExpression = new Expr\Orx([$notExistsFunc, $existsFunc]);
+
         $expr->exists('SELECT 1 FROM AccessControl acl_check ...')
-            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
+            ->willReturn($noRestrictionsExistsFunc)
             ->shouldBeCalled();
 
-        $expr->not('EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
-            ->willReturn('NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
+        $expr->not($noRestrictionsExistsFunc)
+            ->willReturn($notExistsFunc)
             ->shouldBeCalled();
 
         $expr->exists('EXISTS (SELECT 1 FROM AccessControl acl ...)')
-            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->willReturn($existsFunc)
             ->shouldBeCalled();
 
-        $expr->orX('NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...)', 'EXISTS (SELECT 1 FROM AccessControl acl ...)')
-            ->willReturn('(NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...) OR EXISTS (SELECT 1 FROM AccessControl acl ...))')
+        $expr->orX($notExistsFunc, $existsFunc)
+            ->willReturn($orExpression)
             ->shouldBeCalled();
 
-        $this->queryBuilder->andWhere('(NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...) OR EXISTS (SELECT 1 FROM AccessControl acl ...))')
+        $this->queryBuilder->andWhere($orExpression)
             ->willReturn($this->queryBuilder->reveal())
             ->shouldBeCalled();
 
@@ -1900,23 +1910,28 @@ class DoctrineListBuilderTest extends TestCase
             ->willReturn($expr->reveal())
             ->shouldBeCalled();
 
+        $noRestrictionsExistsFunc = new Expr\Func('EXISTS', ['SELECT 1 FROM AccessControl acl_check ...']);
+        $notExistsFunc = new Expr\Func('NOT', [$noRestrictionsExistsFunc]);
+        $existsFunc = new Expr\Func('EXISTS', ['EXISTS (SELECT 1 FROM AccessControl acl ...)']);
+        $orExpression = new Expr\Orx([$notExistsFunc, $existsFunc]);
+
         $expr->exists('SELECT 1 FROM AccessControl acl_check ...')
-            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
+            ->willReturn($noRestrictionsExistsFunc)
             ->shouldBeCalled();
 
-        $expr->not('EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
-            ->willReturn('NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
+        $expr->not($noRestrictionsExistsFunc)
+            ->willReturn($notExistsFunc)
             ->shouldBeCalled();
 
         $expr->exists('EXISTS (SELECT 1 FROM AccessControl acl ...)')
-            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->willReturn($existsFunc)
             ->shouldBeCalled();
 
-        $expr->orX('NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...)', 'EXISTS (SELECT 1 FROM AccessControl acl ...)')
-            ->willReturn('(NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...) OR EXISTS (SELECT 1 FROM AccessControl acl ...))')
+        $expr->orX($notExistsFunc, $existsFunc)
+            ->willReturn($orExpression)
             ->shouldBeCalled();
 
-        $this->queryBuilder->andWhere('(NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...) OR EXISTS (SELECT 1 FROM AccessControl acl ...))')
+        $this->queryBuilder->andWhere($orExpression)
             ->willReturn($this->queryBuilder->reveal())
             ->shouldBeCalled();
 
@@ -2047,23 +2062,28 @@ class DoctrineListBuilderTest extends TestCase
             ->willReturn($expr->reveal())
             ->shouldBeCalled();
 
+        $noRestrictionsExistsFunc = new Expr\Func('EXISTS', ['SELECT 1 FROM AccessControl acl_check ...']);
+        $notExistsFunc = new Expr\Func('NOT', [$noRestrictionsExistsFunc]);
+        $existsFunc = new Expr\Func('EXISTS', ['EXISTS (SELECT 1 FROM AccessControl acl ...)']);
+        $orExpression = new Expr\Orx([$notExistsFunc, $existsFunc]);
+
         $expr->exists('SELECT 1 FROM AccessControl acl_check ...')
-            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
+            ->willReturn($noRestrictionsExistsFunc)
             ->shouldBeCalled();
 
-        $expr->not('EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
-            ->willReturn('NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...)')
+        $expr->not($noRestrictionsExistsFunc)
+            ->willReturn($notExistsFunc)
             ->shouldBeCalled();
 
         $expr->exists('EXISTS (SELECT 1 FROM AccessControl acl ...)')
-            ->willReturn('EXISTS (SELECT 1 FROM AccessControl acl ...)')
+            ->willReturn($existsFunc)
             ->shouldBeCalled();
 
-        $expr->orX('NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...)', 'EXISTS (SELECT 1 FROM AccessControl acl ...)')
-            ->willReturn('(NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...) OR EXISTS (SELECT 1 FROM AccessControl acl ...))')
+        $expr->orX($notExistsFunc, $existsFunc)
+            ->willReturn($orExpression)
             ->shouldBeCalled();
 
-        $this->queryBuilder->andWhere('(NOT EXISTS (SELECT 1 FROM AccessControl acl_check ...) OR EXISTS (SELECT 1 FROM AccessControl acl ...))')
+        $this->queryBuilder->andWhere($orExpression)
             ->willReturn($this->queryBuilder->reveal())
             ->shouldBeCalled();
 

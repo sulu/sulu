@@ -14,7 +14,7 @@ namespace Sulu\Bundle\HttpCacheBundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -82,9 +82,9 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
 
     public function load(array $configs, ContainerBuilder $container)
     {
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('event-subscribers.xml');
-        $loader->load('services.xml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('event-subscribers.php');
+        $loader->load('services.php');
 
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
@@ -103,13 +103,13 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
             }
         }
 
-        $loader->load('cache-lifetime-enhancer.xml');
+        $loader->load('cache-lifetime-enhancer.php');
 
         if ($proxyClientAvailable) {
-            $loader->load('cache-manager.xml');
+            $loader->load('cache-manager.php');
 
             if (true === $config['tags']['enabled']) {
-                $loader->load('tags.xml');
+                $loader->load('tags.php');
             }
         }
     }

@@ -14,6 +14,8 @@ use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 
 $config = new Configuration();
 
+require __DIR__ . '/vendor/symfony/dependency-injection/Loader/Configurator/ContainerConfigurator.php'; // see https://github.com/shipmonk-rnd/composer-dependency-analyser/issues/147#issuecomment-2202156380
+
 $optionalIgnoreUnknownClasses = [];
 $optionalIgnoreShadowDependencyExtensions = [];
 
@@ -39,6 +41,7 @@ return $config
     ->ignoreErrorsOnPackages(
         [
             'guzzlehttp/guzzle', // bc layer replaced later by symfony/http-client
+            'aws/aws-sdk-php', // bc layer replaced later by flysystem v3
         ],
         [ErrorType::SHADOW_DEPENDENCY]
     )
@@ -68,6 +71,7 @@ return $config
     // DEV_DEPENDENCY_IN_PROD: optional dependency
     ->ignoreErrorsOnPackages(
         [
+            'google/cloud-storage',
             'league/flysystem',
             'league/flysystem-aws-s3-v3',
             'league/flysystem-azure-blob-storage',
@@ -90,7 +94,6 @@ return $config
     ->ignoreErrorsOnPackages(
         [
             'doctrine/annotations',
-            'symfony/http-client', // required and used via symfony/http-client-contracts
             'guzzlehttp/promises', // required for faster fos http cache clearing
             'nyholm/psr7', // required for faster fos http cache clearing
             'symfony/css-selector', // kept for future usage

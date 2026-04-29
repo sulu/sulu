@@ -24,7 +24,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class SuluPageExtension extends Extension implements PrependExtensionInterface
@@ -262,38 +262,38 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         if (\array_key_exists('SuluSearchBundle', $bundles)) {
             $this->processSearch($config, $loader, $container);
         }
 
-        $loader->load('services.xml');
-        $loader->load('smart_content.xml');
-        $loader->load('teaser.xml');
-        $loader->load('content_types.xml');
-        $loader->load('structure.xml');
-        $loader->load('extension.xml');
-        $loader->load('form.xml');
-        $loader->load('compat.xml');
-        $loader->load('document.xml');
-        $loader->load('serializer.xml');
-        $loader->load('export.xml');
-        $loader->load('import.xml');
-        $loader->load('command.xml');
-        $loader->load('link-tag.xml');
-        $loader->load('versioning.xml');
+        $loader->load('services.php');
+        $loader->load('smart_content.php');
+        $loader->load('teaser.php');
+        $loader->load('content_types.php');
+        $loader->load('structure.php');
+        $loader->load('extension.php');
+        $loader->load('form.php');
+        $loader->load('compat.php');
+        $loader->load('document.php');
+        $loader->load('serializer.php');
+        $loader->load('export.php');
+        $loader->load('import.php');
+        $loader->load('command.php');
+        $loader->load('link-tag.php');
+        $loader->load('versioning.php');
 
         if (\array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
-            $loader->load('rule.xml');
+            $loader->load('rule.php');
         }
 
         if (\array_key_exists('SuluTrashBundle', $bundles)) {
-            $loader->load('services_trash.xml');
+            $loader->load('services_trash.php');
         }
 
         if (\array_key_exists('SuluReferenceBundle', $bundles)) {
-            $loader->load('services_reference.xml');
+            $loader->load('services_reference.php');
         }
 
         $this->appendDefaultAuthor($config, $container);
@@ -309,7 +309,7 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
     private function processSearch($config, LoaderInterface $loader, ContainerBuilder $container)
     {
         $container->setParameter('sulu_page.search.mapping', $config['search']['mapping']);
-        $loader->load('search.xml');
+        $loader->load('search.php');
     }
 
     /**
