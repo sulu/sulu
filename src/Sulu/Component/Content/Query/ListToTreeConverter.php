@@ -28,7 +28,7 @@ class ListToTreeConverter
     /**
      * generate a tree of the given data with the path property.
      *
-     * @param array $data
+     * @param array<array{path:string}> $data
      *
      * @return array
      */
