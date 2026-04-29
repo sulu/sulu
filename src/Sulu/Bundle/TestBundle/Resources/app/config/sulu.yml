@@ -17,7 +17,6 @@ framework:
 doctrine:
     orm:
         naming_strategy: doctrine.orm.naming_strategy.underscore
-        auto_mapping: false
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
         dbname_suffix: '_test%env(default::TEST_TOKEN)%'
