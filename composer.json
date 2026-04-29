@@ -39,7 +39,7 @@
         "doctrine/collections": "^1.6 || ^2.0",
         "doctrine/data-fixtures": "^1.5 || ^2.0",
         "doctrine/dbal": "^3.9 || ^4.0",
-        "doctrine/doctrine-bundle": "^2.6",
+        "doctrine/doctrine-bundle": "^2.6 || ^3.0",
         "doctrine/doctrine-fixtures-bundle": "^3.4 || ^4.0",
         "doctrine/inflector": "^1.4.1 || ^2.0.1",
         "doctrine/orm": "^2.17.3 || ^3.3",
