@@ -92,13 +92,11 @@ class ResourceLocatorHistory extends React.Component<Props> {
                             <Table buttons={[{icon: 'su-trash-alt', onClick: this.handleDeleteClick}]}>
                                 <Table.Header>
                                     <Table.HeaderCell>{translate('sulu_admin.url')}</Table.HeaderCell>
-                                    <Table.HeaderCell>{translate('sulu_admin.created')}</Table.HeaderCell>
                                 </Table.Header>
                                 <Table.Body>
                                     {historyRoutes.map((historyRoute) => (
                                         <Table.Row id={historyRoute.id} key={historyRoute.id}>
                                             <Table.Cell>{historyRoute.slug}</Table.Cell>
-                                            <Table.Cell>{(new Date(historyRoute.created)).toLocaleString()}</Table.Cell>
                                         </Table.Row>
                                     ))}
                                 </Table.Body>
