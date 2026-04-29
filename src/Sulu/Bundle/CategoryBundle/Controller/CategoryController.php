@@ -24,8 +24,8 @@ use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
-use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
+use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
@@ -89,7 +89,7 @@ class CategoryController extends AbstractRestController implements ClassResource
 
         if ('true' == $request->get('flat')) {
             $rootId = ($rootKey) ? $this->categoryManager->findByKey($rootKey)->getId() : null;
-            $expandedIds = \array_filter(\explode(',', $request->get('expandedIds', $request->get('selectedIds', ''))));
+            $expandedIds = \array_filter(\explode(',', $request->get('expandedIds', $request->get('selectedIds', $request->query->get('ids', '')))));
             $defaultSort = !$request->query->has('sortBy');
             $list = $this->getListRepresentation(
                 $request,
@@ -262,7 +262,11 @@ class CategoryController extends AbstractRestController implements ClassResource
             }
         }
 
-        if (!empty($expandedIds) && !$search) {
+        $usesIdsFallback = $request->query->has('ids')
+                    && !$request->query->has('expandedIds')
+                    && !$request->query->has('selectedIds');
+
+        if (!empty($expandedIds) && !$search && !$usesIdsFallback) {
             $categoriesByParentId = [];
             foreach ($categories as &$category) {
                 $categoryParentId = $category['parent'];
@@ -282,7 +286,7 @@ class CategoryController extends AbstractRestController implements ClassResource
                 ];
             }
 
-            $categories = $categoriesByParentId[$parentId];
+            $categories = $categoriesByParentId[$parentId] ?? [];
         }
 
         if ($includeRoot && !$parentId) {
@@ -294,14 +298,12 @@ class CategoryController extends AbstractRestController implements ClassResource
             ];
         }
 
-        return new ListRepresentation(
+        return new PaginatedRepresentation(
             $categories,
             CategoryInterface::RESOURCE_KEY,
-            'sulu_category.get_categories',
-            $request->query->all(),
-            $listBuilder->getCurrentPage(),
-            $listBuilder->getLimit(),
-            $listBuilder->count()
+            (int) $listBuilder->getCurrentPage(),
+            (int) $listBuilder->getLimit(),
+            (int) $listBuilder->count()
         );
     }
 
