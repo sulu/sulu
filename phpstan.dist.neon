@@ -17,6 +17,8 @@ parameters:
     parallel:
         processTimeout: 300.0
     reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        - message: '#^Property .*\\Entity\\.*\:\:\$id is never written, only read\.$#'
     excludePaths:
         - %currentWorkingDirectory%/node_modules/*
         - %currentWorkingDirectory%/var/*
