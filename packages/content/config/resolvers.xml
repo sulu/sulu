@@ -50,8 +50,6 @@
                  class="Sulu\Content\Application\ContentResolver\Resolver\TemplateResolver">
             <argument type="service" id="sulu_admin.form_metadata_provider"/>
             <argument type="service" id="sulu_content.metadata_resolver"/>
-
-            <tag name="sulu_content.content_resolver" type="template"/>
         </service>
 
         <service id="sulu_content.routable_template_resolver"
@@ -59,6 +57,8 @@
                  decorates="sulu_content.template_resolver">
             <argument type="service" id=".inner"/>
             <argument type="service" id="sulu_admin.form_metadata_provider"/>
+
+            <tag name="sulu_content.content_resolver" type="template"/>
         </service>
 
         <!-- Settings Resolver -->

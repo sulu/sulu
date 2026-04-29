@@ -76,11 +76,11 @@ class RoutableTemplateResolverTest extends TestCase
         $this->assertSame('Sulu', $content['title']->getContent());
     }
 
-    public function testResolveDoesNotOverwriteExistingTemplateDataValue(): void
+    public function testResolveOverwritesStaleTemplateDataValueWithRouteSlug(): void
     {
         $route = new Route('examples', '1', 'en', '/my-page');
         $dimensionContent = $this->createDimensionContent('en', 'default', $route);
-        $dimensionContent->setTemplateData(['url' => '/explicit-override']);
+        $dimensionContent->setTemplateData(['url' => '/stale-value']);
 
         $resolver = $this->createResolver(
             $this->createMetadataProvider('default', [
@@ -94,7 +94,32 @@ class RoutableTemplateResolverTest extends TestCase
         $this->assertIsArray($content);
         $urlView = $content['url'];
         $this->assertInstanceOf(ContentView::class, $urlView);
-        $this->assertSame('/explicit-override', $urlView->getContent());
+        $this->assertSame('/my-page', $urlView->getContent());
+    }
+
+    public function testResolveDoesNotOverwriteLinkUrlWithRouteSlug(): void
+    {
+        $route = new Route('examples', '1', 'en', '/external-link');
+        $dimensionContent = $this->createDimensionContent('en', 'default', $route);
+        $dimensionContent->setTemplateData(['url' => 'https://example.com']);
+        $dimensionContent->setLinkData([
+            'href' => 'https://example.com',
+            'provider' => 'external',
+        ]);
+
+        $resolver = $this->createResolver(
+            $this->createMetadataProvider('default', [
+                'url' => $this->createField('url', 'route'),
+            ]),
+        );
+
+        $contentView = $resolver->resolve($dimensionContent);
+        $this->assertInstanceOf(ContentView::class, $contentView);
+        $content = $contentView->getContent();
+        $this->assertIsArray($content);
+        $urlView = $content['url'];
+        $this->assertInstanceOf(ContentView::class, $urlView);
+        $this->assertSame('https://example.com', $urlView->getContent());
     }
 
     public function testResolvePageTreeRouteFieldRunsThroughPropertyResolver(): void

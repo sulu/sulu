@@ -16,7 +16,9 @@ namespace Sulu\Content\Application\ContentResolver\Resolver;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\LinkInterface;
 use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Route\Domain\Model\Route;
@@ -39,10 +41,14 @@ readonly class RoutableTemplateResolver implements ResolverInterface
             return $this->inner->resolve($dimensionContent, $properties);
         }
 
+        if ($this->shouldSkipRouteFieldOverwrite($dimensionContent)) {
+            return $this->inner->resolve($dimensionContent, $properties);
+        }
+
         /** @var string $locale */
         $locale = $dimensionContent->getLocale();
         $templateKey = $dimensionContent->getTemplateKey();
-        $templateType = $dimensionContent->getTemplateType();
+        $templateType = $dimensionContent::getTemplateType();
 
         /** @var TypedFormMetadata $typedFormMetadata */
         $typedFormMetadata = $this->formMetadataProvider->getMetadata($templateType, $locale, []);
@@ -55,15 +61,29 @@ readonly class RoutableTemplateResolver implements ResolverInterface
                 if ('route' !== $type && 'page_tree_route' !== $type) {
                     continue;
                 }
-                if (\array_key_exists($name, $data) && null !== $data[$name]) {
-                    continue;
-                }
+
                 $data[$name] = $this->resolveRouteFieldUrl($dimensionContent, $type);
             }
             $dimensionContent->setTemplateData($data);
         }
 
         return $this->inner->resolve($dimensionContent, $properties);
+    }
+
+    /**
+     * @template T of ContentRichEntityInterface
+     *
+     * @param DimensionContentInterface<T> $dimensionContent
+     */
+    private function shouldSkipRouteFieldOverwrite(DimensionContentInterface $dimensionContent): bool
+    {
+        if (!$dimensionContent instanceof LinkInterface) {
+            return false;
+        }
+
+        $linkData = $dimensionContent->getLinkData();
+
+        return null !== ($linkData['provider'] ?? null);
     }
 
     /**
