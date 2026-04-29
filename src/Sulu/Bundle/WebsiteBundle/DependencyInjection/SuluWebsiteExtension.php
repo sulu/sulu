@@ -19,7 +19,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
 /**
  * This is the class that loads and manages your bundle configuration.
@@ -105,24 +105,24 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
         $container->registerForAutoconfiguration(SitemapProviderInterface::class)
             ->addTag('sulu.sitemap.provider');
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
-        $loader->load('sitemap.xml');
-        $loader->load('command.xml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.php');
+        $loader->load('sitemap.php');
+        $loader->load('command.php');
 
         $bundles = $container->getParameter('kernel.bundles');
         $analyticsEnabled = $config['analytics']['enabled'];
 
         if ($analyticsEnabled) {
-            $loader->load('analytics.xml');
+            $loader->load('analytics.php');
         }
 
         if ($analyticsEnabled && \array_key_exists('SuluTrashBundle', $bundles)) { // @phpstan-ignore-line function.alreadyNarrowedType
-            $loader->load('analytics_trash.xml');
+            $loader->load('analytics_trash.php');
         }
 
         if (SuluKernel::CONTEXT_WEBSITE == $container->getParameter('sulu.context')) {
-            $loader->load('website.xml');
+            $loader->load('website.php');
 
             // default local provider
             $container->setAlias('sulu_website.default_locale.provider', $config['default_locale']['provider_service_id']);

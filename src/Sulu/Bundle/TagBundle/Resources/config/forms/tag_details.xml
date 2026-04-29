@@ -14,6 +14,7 @@
             <params>
                 <param name="headline" value="true"/>
                 <param name="pattern" value="^[^,]*$"/>
+                <param name="autofocus" value="true"/>
             </params>
         </property>
     </properties>

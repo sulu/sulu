@@ -11,7 +11,7 @@ handleChange = (value) => {
     <ImageFocusPoint
         value={value}
         onChange={handleChange}
-        image="https://source.unsplash.com/random/600x400"
+        image="https://picsum.photos/600/400"
     />
     <div>Selection: {JSON.stringify(value)}</div>
 </div>

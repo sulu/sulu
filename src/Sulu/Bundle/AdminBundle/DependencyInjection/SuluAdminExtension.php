@@ -26,7 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
 class SuluAdminExtension extends Extension implements PrependExtensionInterface
 {
@@ -173,8 +173,8 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
 
         $container->setParameter('sulu_admin.icon_sets', $config['icon_sets'] ?? []);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.php');
 
         $container->registerForAutoconfiguration(Admin::class)
             ->addTag('sulu.admin')

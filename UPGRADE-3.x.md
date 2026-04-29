@@ -125,7 +125,7 @@ Make sure that you have all PHPCR migration run via:
 php bin/adminconsole phpcr:migrations:migrate
 ```
 
-### Pre Update strict webspace, template and navigation context key validation
+### Pre Update step to 3.0 strict webspace, template and navigation context key validation
 
 In Sulu 3.0 the webspace and template keys are now strictly validated.
 This means that the webspace, template and navigation context keys need to match
@@ -277,7 +277,7 @@ sulu_search:
 +    resource: "@SuluSearchBundle/config/routing_website.yaml"
 ```
 
-The new `SearchBundle` is build on top of [SEAL](https://github.com/PHP-CMSIG/search) and supports
+The new `SearchBundle` is built on top of [SEAL](https://github.com/PHP-CMSIG/search) and supports
 a wide range of search engines. If your project did use ZendSearch before the best way is to
 update to the Loupe Adapter which only requires SQLite.
 
@@ -313,7 +313,7 @@ composer require cmsig/seal-loupe-adapter --no-scripts
 Make sure you have the `pdo_sqlite` extension installed and enabled.
 In Linux package manager it is provided via e.g.: `php8.4-sqlite3` package:
 
-```php
+```bash
 apt-get update
 apt-get install php8.4-sqlite3
 ```
@@ -622,8 +622,6 @@ These unused parameters have been removed:
 - `sulu_security.group_repository.class`
 - `sulu_security.entity_group.class`
 - `sulu_security.entity.group`
-- `sulu_media.adobe_creative_key`
-- `sulu_media.format_manager.blocked_file_types` -> `sulu_media.media.blocked_file_types`
 
 The resource routes has been removed:
 
@@ -817,11 +815,11 @@ Before:
 
 ```yaml
 sulu_media:
-    storage: google_cloud
+    storage: azure_blob
     storages:
-        google_cloud:
-            key_file_path: '/path/to/key.json'
-            bucket_name: 'sulu-bucket'
+        azure_blob:
+            connection_string: 'your azure connection string'
+            container_name: 'your azure container name'
             path_prefix: 'optional path prefix'
 ```
 
@@ -871,16 +869,16 @@ Here are some quick examples of the most commonly used functions:
     - To modify something you no longer load it, instead use the `Modify...` messages listed below.
  - `DocumentManager::create`
     - `MessageBusInterface::dispatch(new Envelope(new CreatePageMessage($webspaceKey, $parentId, $data), [new EnableFlushStamp()]));`
-    - `MessageBusInterface::dispatch(new Envelope(new CreateArticleMessage($webspaceKey, $parentId, $data), [new EnableFlushStamp()]));`
-    - `MessageBusInterface::dispatch(new Envelope(new CreateSnipetMessage($webspaceKey, $parentId, $data), [new EnableFlushStamp()]));`
+    - `MessageBusInterface::dispatch(new Envelope(new CreateArticleMessage($data), [new EnableFlushStamp()]));`
+    - `MessageBusInterface::dispatch(new Envelope(new CreateSnippetMessage($data), [new EnableFlushStamp()]));`
  - `DocumentManager::find` and `edit`:
-    - `MessageBusInterface::dispatch(new Envelope(new ModifyPageMessage($webspaceKey, $parentId, $data), [new EnableFlushStamp()]));`
-    - `MessageBusInterface::dispatch(new Envelope(new ModifyArticleMessage($webspaceKey, $parentId, $data), [new EnableFlushStamp()]));`
-    - `MessageBusInterface::dispatch(new Envelope(new ModifySnipetMessage($webspaceKey, $parentId, $data), [new EnableFlushStamp()]));`
+    - `MessageBusInterface::dispatch(new Envelope(new ModifyPageMessage(['uuid' => $uuid], $data), [new EnableFlushStamp()]));`
+    - `MessageBusInterface::dispatch(new Envelope(new ModifyArticleMessage(['uuid' => $uuid], $data), [new EnableFlushStamp()]));`
+    - `MessageBusInterface::dispatch(new Envelope(new ModifySnippetMessage(['uuid' => $uuid], $data), [new EnableFlushStamp()]));`
  - `DocumentManager::publish`:
-    - `MessageBusInterface::dispatch(new Envelope(new ApplyWorkflowTransitionPageMessage(['uuid' => $uuid], $data, WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH), [new EnableFlushStamp()]));`
-    - `MessageBusInterface::dispatch(new Envelope(new ApplyWorkflowTransitionArticleMessage(['uuid' => $uuid], $data, WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH), [new EnableFlushStamp()]));`
-    - `MessageBusInterface::dispatch(new Envelope(new ApplyWorkflowTransitionSnippetMessage(['uuid' => $uuid], $data, WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH), [new EnableFlushStamp()]));`
+    - `MessageBusInterface::dispatch(new Envelope(new ApplyWorkflowTransitionPageMessage(['uuid' => $uuid], $locale, WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH), [new EnableFlushStamp()]));`
+    - `MessageBusInterface::dispatch(new Envelope(new ApplyWorkflowTransitionArticleMessage(['uuid' => $uuid], $locale, WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH), [new EnableFlushStamp()]));`
+    - `MessageBusInterface::dispatch(new Envelope(new ApplyWorkflowTransitionSnippetMessage(['uuid' => $uuid], $locale, WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH), [new EnableFlushStamp()]));`
  - `DocumentManager::unpublish`:
     - `MessageBusInterface::dispatch(new Envelope(new ApplyWorkflowTransitionPageMessage(['uuid' => $uuid], $locale, WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH), [new EnableFlushStamp()]));`
     - `MessageBusInterface::dispatch(new Envelope(new ApplyWorkflowTransitionArticleMessage(['uuid' => $uuid], $locale, WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH), [new EnableFlushStamp()]));`
@@ -947,8 +945,7 @@ sulu_admin:
         snippets:
             default_type: 'my_snippet_key'
             directories:
-                snippet_project_a:
-                    path: '%kernel.project_dir%/config/templates/snippets/projectA'
+                snippet_project_a: '%kernel.project_dir%/config/templates/snippets/projectA'
 ```
 
 ### ResourceLocator endpoint changed
@@ -1052,7 +1049,20 @@ Also, the `entity_class` param from the previous route mapping configuration is 
 ```diff
         <!-- config/templates/articles/your_template.xml -->
 
-        <property name="url" type="route">
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title lang="en">Title</title>
+                <title lang="de">Titel</title>
+            </meta>
+            <params>
+                <param name="headline" value="true"/>
+            </params>
+
++           <tag name="sulu.rlp.part"/>
+        </property>
+
+-       <property name="url" type="route">
++       <property name="url" type="route" mandatory="true">
             <meta>
                 <title lang="en">Resourcelocator</title>
                 <title lang="de">Adresse</title>
@@ -1062,8 +1072,14 @@ Also, the `entity_class` param from the previous route mapping configuration is 
 -               <param name="entity_class" value="Sulu\Bundle\ArticleBundle\Document\ArticleDocument"/>
 +               <param name="route_schema" value="/blog/{implode('-', object)}"/>
 +           </params>
+
++           <tag name="sulu.rlp"/>
         </property>
 ```
+
+The `sulu.rlp.part` tag on the title property is required — it tells the admin frontend which fields
+to use as inputs when generating the URL suggestion. Without it, `route_schema` has no effect because
+URL generation is never triggered. The `sulu.rlp` tag marks the field that stores the generated URL.
 
 It is also supported by the `page_tree_route` which still uses the selected page as prefixed URL.
 
@@ -1282,7 +1298,6 @@ Removed classes / services / interfaces / traits:
 - `Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage`
 - `Sulu\Bundle\MediaBundle\Media\Storage\S3Storage`
 - `Sulu\Bundle\MediaBundle\DependencyInjection\S3ClientCompilerPass` (internal)
-- `Sulu\Bundle\MediaBundle\Media\Storage\S3Storage`
 - `Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer`
 - `Sulu\Bundle\MediaBundle\Content\Types\CollectionSelection`
 - `Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType`
@@ -1293,14 +1308,14 @@ Removed classes / services / interfaces / traits:
 - `Sulu\Bundle\AdminBundle\Command\DownloadBuildCommand`
 - `Sulu\Component\Rest\ListBuilder\ListRepresentation`
 - `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\LocalizedFormMetadataCollection`
-- `src\Sulu\Component\Content\Metadata\XmlParserTrait`  (internal)
+- `Sulu\Component\Content\Metadata\XmlParserTrait` (internal)
 - `Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser` (moved and internal)
 - `Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\TextPropertyMetadataMapper` (moved and internal)
 - `Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SelectionPropertyMetadataMapper` (moved and internal)
 - `Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SingleSelectionPropertyMetadataMapper` (moved and internal)
 - `ContentTypes` implementing `PropertyMetadataMapperInterface` (moved and internal)
 - `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader\AbstractLoader` (moved and internal)
-- `Sulu\Commponent\Content\Document\Subscriber\Compat\ContentMapperSubscriber`
+- `Sulu\Component\Content\Document\Subscriber\Compat\ContentMapperSubscriber`
 - `Sulu\Component\Content\Mapper\ContentEvents`
 - `Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent`
 - `Sulu\Component\Content\Mapper\Event\ContentNodeEvent`
@@ -1314,7 +1329,6 @@ Removed classes / services / interfaces / traits:
 - `Sulu\Bundle\ContactBundle\Content\Types\SingleAccountSelection`
 - `Sulu\Bundle\CoreBundle\DataFixtures\ReplacerXmlLoader`
 - `Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\ReplacersCompilerPass`
-- `Sulu\Bundle\PageBundle\Routing\DecoratedContentRouteProvider`
 - `Sulu\Bundle\PageBundle\Routing\DecoratedContentRouteProvider`
 - `Sulu\Bundle\TagBundle\Content\Types\TagSelection`
 - `Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler\RouteProviderCompilerPass`
@@ -1348,7 +1362,6 @@ Removed classes / services / interfaces / traits:
 - `Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface` (internal)
 - `Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRenderer` (internal)
 - `Sulu\Bundle\PreviewBundle\Preview\Renderer\WebsiteKernelFactory` (internal)
-- `Sulu\Bundle\PreviewBundle\Preview\Renderer\WebsiteKernelFactory` (internal)
 - `Sulu\Bundle\PreviewBundle\Preview\Preview` (internal)
 - `Sulu\Bundle\PreviewBundle\Preview\PreviewCache` (internal)
 - `Sulu\Bundle\PreviewBundle\Preview\PreviewCacheItem` (internal)
@@ -1358,20 +1371,16 @@ Removed classes / services / interfaces / traits:
 - `Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\SuluVersionPass` (moved and internal)
 - `Sulu\Bundle\PageBundle\Controller\WebspaceController`
 - `Sulu\Bundle\SecurityBundle\Security\LogoutSuccessHandler` (replaced by `LogoutEventSubscriber`)
-- `Sulu\Bundle\SecurityBundle\EventListener\AuhenticationFailureListener` (moved and internal)
+- `Sulu\Bundle\SecurityBundle\EventListener\AuthenticationFailureListener` (moved and internal)
 - `Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\AccessControlProviderPass` (use tagged_iterator)
 - `Sulu\Bundle\MarkupBundle\DependencyInjection\Compiler\ParserCompilerPass` (use tagged_iterator)
 - `Sulu\Bundle\MediaBundle\DependencyInjection\FormatCacheClearerCompilerPass` (use tagged_iterator)
 - `Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait`
-- `Sulu/Bundle/AdminBundle/DependencyInjection/Compiler/AddAdminPass` (replaced by a `tagged_iterator`)
-- `Sulu/Bundle/AdminBundle/DependencyInjection/Compiler/AddMetadataProviderPass` (replaced by a `tagged_locator`)
+- `Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddAdminPass` (replaced by a `tagged_iterator`)
+- `Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddMetadataProviderPass` (replaced by a `tagged_locator`)
 - `Sulu\Bundle\AudienceTargetingBundle\DependencyInjection\Compiler\AddRulesPass` -> (`sulu.audience_target_rule`)
 - `Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterLocalizationProvidersPass` (`sulu.localization_provider`)
 - `Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass` (replaced by symfony's tagged_iterator)
-- `Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreNotExistsException`
-- `Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePool`
-- `Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface`
-- `Sulu\Bundle\WebsiteBundle\ReferenceStore\WebspaceReferenceStore`
 - `Sulu\Bundle\MediaBundle\DependencyInjection\ImageTransformationCompilerPass` (replaced by `tagged_locator`)
 - `Sulu\Bundle\PreviewBundle\Preview\PreviewCache` -> (using Symfony cache now)
 - `sulu_contact.twig.cache`, `sulu_core.cache.memoize.cache`, `sulu_security.twig_extension.user.cache` -> ArrayAdapter of Symfony caching
@@ -1432,7 +1441,7 @@ Removed deprecated functions and properties:
 - `Sulu\Bundle\AdminBundle\Admin\AdminPool::addAdmin` (use dependency injection via tagged service instead)
 - `Sulu\Bundle\MediaBundle\Controller\MediaController::__construct` (MediaListBuilder and Representation are required
 and some parameters have been removed)
-- `Sulu\Bundle\AdminBundle\Metadata\MetadataProvierRegistry::addMetadataProiver` (use dependency injection via tagged service instead)
+- `Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry::addMetadataProvider` (use dependency injection via tagged service instead)
 - `Sulu\Bundle\TagBundle\Entity\TagRepository::findAllTags` (use `findAll` instead)
 - `Sulu\Bundle\TagBundle\Tag\TagManager::findAll` (use repository instead)
 - `Sulu\Bundle\TagBundle\Tag\TagManagerInterface::resolveTagIds` (use the Repository)
@@ -1444,9 +1453,9 @@ Removed unused arguments:
 - `Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor::__construct` `$contentMapper` (2nd argument) removed
 - `Sulu\Bundle\SecurityBundle\UserManager\UserManager::__construct` `$groupRepository` (4th argument) removed
 - `Sulu\Bundle\SecurityBundle\Admin\SecurityAdmin::__construct` `$urlGenerator` (3rd argument) removed
-- `Sulu\Bundle\ContactBundle\Controller\ContactController::__construct` `$contactRepository` (7rd argument) removed
-- `Sulu\Bundle\ContactBundle\Controller\ContactController::__construct` `$userRepository` (9rd argument) removed
-- `Sulu\Bundle\ContactBundle\Controller\ContactController::__construct` `$suluSecuritySystem` (12rd argument) removed
+- `Sulu\Bundle\ContactBundle\Controller\ContactController::__construct` `$contactRepository` (7th argument) removed
+- `Sulu\Bundle\ContactBundle\Controller\ContactController::__construct` `$userRepository` (9th argument) removed
+- `Sulu\Bundle\ContactBundle\Controller\ContactController::__construct` `$suluSecuritySystem` (12th argument) removed
 - `Sulu\Component\Webspace\PortalInformation::__construct` `$segment` (6th argument) removed
 
 Removed kernel parameters:
@@ -1469,6 +1478,8 @@ Removed container parameters:
 
 - `sulu_security.security_types.fixture`
 - `sulu_media.media.max_file_size` (replaced by `sulu_media.media.max_filesize`)
+- `sulu_media.adobe_creative_key`
+- `sulu_media.format_manager.blocked_file_types` (replaced by `sulu_media.media.blocked_file_types`)
 
 ### Native PHP types for entities and interfaces
 
@@ -1510,8 +1521,7 @@ The following methods have been updated with a return type hint:
 - `DispatchSpecificDomainEventSubscriber::getSubscribedEvents()`: returns `array`
 - `SetDomainEventUserSubscriber::getSubscribedEvents()`: returns `array`
 - `StoreActivitySubscriber::getSubscribedEvents()`: returns `array`
-- `DownloadLanguageCommand:.configure()`: returns `void`
-- `DownloadLanguageCommand:.configure()`: returns `void`
+- `DownloadLanguageCommand::configure()`: returns `void`
 - `SuluAdminExtension::prepend()`: returns `void`
 - `SchemaHandler::getSubscribingMethods()`: returns `array`
 - `DropdownToolbarActionSubscriber::getSubscribedEvents()`: returns `array`
@@ -1528,7 +1538,6 @@ The following methods have been updated with a return type hint:
 - `RecoverCommand::configure()`: returns `void`
 - `SuluCategoryExtension::load()`: returns `void`
 - `SuluCategoryExtension::prepend()`: returns `void`
-- `AccountRecoverCommand::configure()`: returns `void`
 - `AccountRecoverCommand::configure()`: returns `void`
 - `SuluContactExtension::load()`: returns `void`
 - `SuluContactExtension::prepend()`: returns `void`
@@ -1566,16 +1575,16 @@ The following methods have been updated with a return type hint:
 - `SuluTagExtension::load()`: returns `void`
 - `SuluTestExtension::load()`: returns `void`
 - `DumpSitemapCommand::configure()`: returns `void`
-- `DeregisterDefaultRouteLIstenerCompilerPass::process()`: returns `void`
+- `DeregisterDefaultRouteListenerCompilerPass::process()`: returns `void`
 - `SuluWebsiteExtension::prepend()`: returns `void`
 - `SuluWebsiteExtension::load()`: returns `void`
-- `RedirectExceptionSubscriber::getSubscribedEvents()`: returns `void`
+- `RedirectExceptionSubscriber::getSubscribedEvents()`: returns `array`
 - `RouterListener::onKernelRequest()`: returns `void`
 - `RouterListener::onKernelFinishRequest()`: returns `void`
 - `RouterListener::getSubscribedEvents()`: returns `array`
-- `SegmentCacheLIstener::getSubscribedEvents()`: returns `array`
-- `SegmentCacheLIstener::preHandle()`: returns `array`
-- `SegmentCacheLIstener::postHandle()`: returns `array`
+- `SegmentCacheListener::getSubscribedEvents()`: returns `array`
+- `SegmentCacheListener::preHandle()`: returns `void`
+- `SegmentCacheListener::postHandle()`: returns `void`
 - `TranslatorListener::getSubscribedEvents()`: returns `array`
 - `AnalyticsSerializeEventSubscriber::getSubscribedEvents()`: returns `array`
 - `DomainEventEventSubscriber::getSubscribedEvents()`: returns `array`
@@ -1709,6 +1718,7 @@ To update the references call the following command:
 
 ```bash
 bin/console sulu:reference:refresh
+```
 
 ### Upgrading Data from Sulu 2.6 to Sulu 3.0
 
@@ -1863,12 +1873,11 @@ Affected classes / interfaces:
 - `Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface::findMediaByIdForRendering` (added `?int $version`)
 - `Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManager::returnImage` (added `?int $version`)
 - `Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface::returnImage` (added `?int $version`)
-- `Sulu\Bundle\MediaBundle\Media\ImageConverter\MediaImageExtractor::extract` (added `string $resourceType`)
-- `Sulu\Bundle\MediaBundle\Media\ImageConverter\MediaImageExtractorInterface::extract` (added `string $resourceType`)
-- `Sulu\Bundle\TagBundle\Search\TagsConverter::convert` (added `?Document`)
+- `Sulu\Bundle\MediaBundle\Media\ImageConverter\MediaImageExtractor::extract` (added `string $resourceMimeType`)
+- `Sulu\Bundle\MediaBundle\Media\ImageConverter\MediaImageExtractorInterface::extract` (added `string $resourceMimeType`)
 - `Sulu\Bundle\WebsiteBundle\Cache\CacheClearer::clear` (added `?array $tags`)
 - `Sulu\Bundle\WebsiteBundle\Cache\CacheClearerInterface::clear` (added `?array $tags`)
-- `Sulu\Bundle\SecurityBundle\EventListener\SystemListener::__construct` (removed `RequestAnalyserInterface $requestAnalyser`)
+- `Sulu\Bundle\SecurityBundle\EventListener\SystemListener::__construct` (removed `?RequestAnalyzerInterface $requestAnalyzer`)
 
 ### Extending Block Settings
 

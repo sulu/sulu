@@ -62,13 +62,6 @@ Array [
                         sulu_admin.url
                       </span>
                     </th>
-                    <th
-                      class="headerCell"
-                    >
-                      <span>
-                        sulu_admin.created
-                      </span>
-                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -100,15 +93,6 @@ Array [
                         /test
                       </div>
                     </td>
-                    <td
-                      class="cell"
-                    >
-                      <div
-                        class="cellContent"
-                      >
-                        4/10/2019, 1:06:16 PM
-                      </div>
-                    </td>
                   </tr>
                   <tr
                     class="row"
@@ -136,15 +120,6 @@ Array [
                         class="cellContent"
                       >
                         /testing
-                      </div>
-                    </td>
-                    <td
-                      class="cell"
-                    >
-                      <div
-                        class="cellContent"
-                      >
-                        4/10/2019, 4:01:12 PM
                       </div>
                     </td>
                   </tr>

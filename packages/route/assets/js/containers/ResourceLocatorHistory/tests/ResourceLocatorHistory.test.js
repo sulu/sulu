@@ -79,12 +79,10 @@ test('Show history routes in overlay', () => {
         {
             id: 3,
             slug: '/test',
-            created: '2019-04-10T13:06:16',
         },
         {
             id: 6,
             slug: '/testing',
-            created: '2019-04-10T16:01:12',
         },
     ];
 
@@ -145,7 +143,6 @@ test('Do not delete if confirmation dialog is cancelled', () => {
         {
             id: 3,
             slug: '/test',
-            created: '2019-04-10T13:06:16',
         },
     ];
 
@@ -179,7 +176,6 @@ test('Delete if confirmation dialog is confirmed', () => {
         {
             id: 3,
             slug: 'sulu.io/test',
-            created: '2019-04-10T13:06:16',
         },
     ];
 
