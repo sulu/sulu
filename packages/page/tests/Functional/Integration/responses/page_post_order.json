@@ -30,6 +30,7 @@
     "excerptAudienceTargetGroups": [],
     "excerptSegment": null,
     "ghostLocale": "en",
+    "hasSub": false,
     "id": "@string@",
     "image": null,
     "lastModified": null,
