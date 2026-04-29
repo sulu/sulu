@@ -14,6 +14,7 @@ namespace Sulu\Bundle\AdminBundle;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\ExposeResourceRoutesPass;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\FormMetadataCachePass;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\SuluVersionPass;
+use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\ValidateSmartContentParamsPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -28,6 +29,7 @@ final class SuluAdminBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new SuluVersionPass());
+        $container->addCompilerPass(new ValidateSmartContentParamsPass());
 
         if ($container->hasExtension('fos_js_routing')) {
             $container->addCompilerPass(new ExposeResourceRoutesPass());

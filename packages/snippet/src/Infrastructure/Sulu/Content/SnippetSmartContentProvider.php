@@ -37,6 +37,7 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoade
  *       websiteTagOperator: 'AND'|'OR',
  *       types: string[],
  *       typesOperator: 'OR',
+ *       templateKeys?: string[],
  *       locale: string,
  *       dataSource: string|null,
  *       limit: int|null,
@@ -58,6 +59,7 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoade
  *       websiteTagOperator: 'AND'|'OR',
  *       types: string[],
  *       typesOperator: 'OR',
+ *       templateKeys?: string[],
  *       locale: string,
  *       dataSource: string|null,
  *       limit: int|null,
@@ -130,7 +132,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         $alias = 'snippet';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
 
-        $filters = $this->mapFilters($filters);
+        $filters = $this->mapFilters($filters, $params);
         $this->dimensionContentQueryEnhancer->addFilters(
             $queryBuilder,
             $alias,
@@ -164,7 +166,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
 
         /** @var SnippetSmartContentFilters $filters */
         $filters = $this->enhanceWithDimensionAttributes($filters);
-        $filters = $this->mapFilters($filters);
+        $filters = $this->mapFilters($filters, $params);
         $this->dimensionContentQueryEnhancer->addFilters(
             $queryBuilder,
             $alias,
@@ -214,6 +216,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
 
     /**
      * @param SnippetSmartContentFilters|SnippetSmartContentCountFilters $filters
+     * @param array<string, mixed> $params
      *
      * @return array{
      *         categoryIds?: int[],
@@ -235,12 +238,14 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
      *         audienceTargeting?: bool
      *     }
      */
-    protected function mapFilters(array $filters): array
+    protected function mapFilters(array $filters, array $params = []): array
     {
-        if ($filters['types']) {
-            $filters['templateKeys'] = $filters['types'];
-            unset($filters['types']);
-        }
+        $filters['templateKeys'] = $this->resolveTemplateKeys(
+            $filters['templateKeys'] ?? [],
+            $filters['types'],
+            $params,
+        );
+        unset($filters['types']);
 
         if ($filters['categories']) {
             $filters['categoryIds'] = $filters['categories'];
@@ -253,6 +258,30 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         }
 
         return $filters;
+    }
+
+    /**
+     * @param array<string> $existingTemplateKeys
+     * @param array<string> $filterTemplateKeys
+     * @param array<string, mixed> $params
+     *
+     * @return list<string>
+     */
+    private function resolveTemplateKeys(array $existingTemplateKeys, array $filterTemplateKeys, array $params): array
+    {
+        $templateKeys = \array_values(\array_unique(\array_merge($existingTemplateKeys, $filterTemplateKeys)));
+
+        $templateParam = $params['templateKeys'] ?? null;
+        if (\is_string($templateParam)) {
+            $templateKeysParam = \array_values(\array_filter(\array_map('trim', \explode(',', $templateParam))));
+            if ([] !== $templateKeysParam) {
+                $templateKeys = [] !== $templateKeys
+                    ? \array_values(\array_intersect($templateKeys, $templateKeysParam))
+                    : $templateKeysParam;
+            }
+        }
+
+        return $templateKeys;
     }
 
     /**

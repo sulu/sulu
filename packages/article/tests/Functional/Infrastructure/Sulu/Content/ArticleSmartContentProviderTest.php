@@ -744,6 +744,36 @@ class ArticleSmartContentProviderTest extends SuluTestCase
         }
     }
 
+    public function testFindFlatByGroupsAndTemplateKeysIntersection(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy([
+            ...$this->getDefaultFilters(),
+            ...['locale' => 'en'],
+        ], [], ['groups' => 'default,blog-group', 'templateKeys' => 'blog']);
+
+        $this->assertCount(2, $result);
+
+        $resultIds = \array_map(fn ($article) => $article['id'], $result);
+        $this->assertContains(self::$articles['tech2']->getUuid(), $resultIds);
+        $this->assertContains(self::$articles['business2']->getUuid(), $resultIds);
+    }
+
+    public function testFindFlatByGroupsWithoutTemplateKeysUsesAllGroupTemplates(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy([
+            ...$this->getDefaultFilters(),
+            ...['locale' => 'en'],
+        ], [], ['groups' => 'blog-group,news-group']);
+
+        $this->assertCount(4, $result);
+
+        $resultIds = \array_map(fn ($article) => $article['id'], $result);
+        $this->assertContains(self::$articles['tech2']->getUuid(), $resultIds);
+        $this->assertContains(self::$articles['business2']->getUuid(), $resultIds);
+        $this->assertContains(self::$articles['sports2']->getUuid(), $resultIds);
+        $this->assertContains(self::$articles['entertainment2']->getUuid(), $resultIds);
+    }
+
     public function testFindFlatByWebspace(): void
     {
         $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), ...['locale' => 'en', 'webspaceKey' => 'blog']], []);

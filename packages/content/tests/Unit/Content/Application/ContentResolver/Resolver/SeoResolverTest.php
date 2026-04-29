@@ -39,6 +39,45 @@ class SeoResolverTest extends TestCase
         self::assertNull($templateResolver->resolve($this->prophesize(DimensionContentInterface::class)->reveal()));
     }
 
+    public function testResolveWithPropertiesNotInMetadata(): void
+    {
+        $example = new Example();
+        $dimensionContent = new ExampleDimensionContent($example);
+        $example->addDimensionContent($dimensionContent);
+        $dimensionContent->setLocale('en');
+
+        $dimensionContent->setSeoData([
+            'title' => 'Sulu',
+        ]);
+
+        $formMetadata = $this->prophesize(FormMetadata::class);
+        $formMetadata->getFlatFieldMetadata()
+            ->willReturn([]);
+        $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
+        $formMetadataProvider->getMetadata('content_seo', 'en', ['instanceOf' => ExampleDimensionContent::class])
+            ->willReturn($formMetadata->reveal());
+
+        $metadataResolver = $this->prophesize(MetadataResolver::class);
+        $metadataResolver->resolveItems(Argument::any(), Argument::any(), Argument::any())
+            ->willReturn([]);
+
+        $resolver = new SeoResolver(
+            $formMetadataProvider->reveal(),
+            $metadataResolver->reveal(),
+        );
+
+        $contentView = $resolver->resolve($dimensionContent, ['seoTitle' => 'seo.title', 'nonExistent' => 'seo.nonExistent']);
+        self::assertInstanceOf(ContentView::class, $contentView);
+
+        $content = $contentView->getContent();
+        self::assertIsArray($content);
+        self::assertCount(2, $content);
+        self::assertArrayHasKey('seoTitle', $content);
+        self::assertNull($content['seoTitle']);
+        self::assertArrayHasKey('nonExistent', $content);
+        self::assertNull($content['nonExistent']);
+    }
+
     public function testResolve(): void
     {
         $example = new Example();

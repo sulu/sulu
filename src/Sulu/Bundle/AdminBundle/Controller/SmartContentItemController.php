@@ -86,6 +86,10 @@ class SmartContentItemController extends AbstractRestController
         $sortBys = null !== $sortBy ? [$sortBy => $filters['sortMethod'] ?? 'ASC'] : [];
         unset($filters['sortBy'], $filters['sortMethod']);
 
+        // Resolve ignoreWebspaces
+        $ignoreWebspaces = isset($params['ignoreWebspaces'])
+            && ('true' === $params['ignoreWebspaces']->getValue() || true === $params['ignoreWebspaces']->getValue());
+
         $filters = [
             // Categories
             'categories' => isset($filters['categories']) ? \array_filter(\explode(',', $filters['categories'])) : [],
@@ -100,7 +104,7 @@ class SmartContentItemController extends AbstractRestController
             'websiteTagOperator' => 'OR',
 
             // Types
-            'types' => isset($filters['types']) ? \explode(',', $filters['types']) : [],
+            'types' => isset($filters['types']) ? \array_filter(\explode(',', $filters['types'])) : [],
             'typesOperator' => 'OR',
 
             // Other filters
@@ -111,7 +115,7 @@ class SmartContentItemController extends AbstractRestController
             'maxPerPage' => ($params['max_per_page'] ?? null) ? $params['max_per_page']->getValue() : null,
             'includeSubFolders' => isset($filters['includeSubFolders']) && ('true' === $filters['includeSubFolders'] || true === $filters['includeSubFolders']),
             'excludeDuplicates' => isset($params['exclude_duplicates']) && ('true' === $params['exclude_duplicates']->getValue() || true === $params['exclude_duplicates']->getValue()),
-            'webspaceKey' => $filters['webspace'] ?? null,
+            'webspaceKey' => $ignoreWebspaces ? null : ($filters['webspace'] ?? null),
         ];
 
         // Transform page/maxPerPage to offset for provider compatibility
@@ -134,7 +138,15 @@ class SmartContentItemController extends AbstractRestController
             );
         }
         $provider = $this->smartContentProviderLocator->get($providerType);
-        $items = $provider->findFlatBy($filters, $sortBys);
+
+        // Normalize params for provider (convert PropertyParameter[] to plain values)
+        $normalizedParams = [];
+        foreach ($params as $name => $param) {
+            $normalizedParams[$name] = $param->getValue();
+        }
+
+        /** @var array<string, mixed> $normalizedParams */
+        $items = $provider->findFlatBy($filters, $sortBys, $normalizedParams);
 
         return $this->handleView(
             $this->view(

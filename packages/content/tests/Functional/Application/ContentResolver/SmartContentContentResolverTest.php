@@ -612,6 +612,58 @@ class SmartContentContentResolverTest extends SuluTestCase
         self::assertContains('Alpha', $titles);
     }
 
+    public function testResolveSmartContentWithTemplateParam(): void
+    {
+        static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Default Template Item',
+                    'url' => '/default-item',
+                ],
+            ],
+        ]);
+
+        static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'example-2',
+                    'title' => 'Example 2 Template Item',
+                    'url' => '/example-2-item',
+                ],
+            ],
+        ]);
+        static::getEntityManager()->flush();
+
+        // The smart-content-tpl-param template hardcodes templateKeys="default" in its XML params;
+        // only examples using that template should be returned, even without filter types.
+        $container = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'smart-content-tpl-param',
+                    'title' => 'Smart Content Container',
+                    'url' => '/smart-content-container',
+                    'examples_by_template' => [],
+                ],
+            ],
+        ]);
+        static::getEntityManager()->flush();
+
+        $this->pushWebsiteRequest();
+
+        $dimensionContent = $this->contentAggregator->aggregate($container, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        $content = $result['content'];
+        self::assertArrayHasKey('examples_by_template', $content);
+
+        /** @var array<int, array<string, mixed>> $items */
+        $items = $content['examples_by_template'];
+
+        self::assertCount(1, $items);
+        self::assertSame('Default Template Item', $items[0]['title']);
+    }
+
     public function testRecursionMaxDepthReplacesDeepWithNull(): void
     {
         // Create two pages with smart content that selects itself first via title ASC
