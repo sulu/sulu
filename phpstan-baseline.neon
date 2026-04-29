@@ -20185,6 +20185,12 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/Entity/ApiEntity.php
 
 		-
+			message: '#^Property Sulu\\Bundle\\CoreBundle\\Entity\\ApiEntity\:\:\$id is never written, only read\.$#'
+			identifier: property.onlyRead
+			count: 1
+			path: src/Sulu/Bundle/CoreBundle/Entity/ApiEntity.php
+
+		-
 			message: '#^Method Sulu\\Bundle\\CoreBundle\\Entity\\ApiEntityWrapper\:\:getEntity\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
