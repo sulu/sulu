@@ -25411,12 +25411,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/AbstractMediaController.php
 
 		-
-			message: '#^Binary operation "\-" between mixed and 1 results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
