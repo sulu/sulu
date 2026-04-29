@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\CategoryBundle\Controller;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
+use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Api\RootCategory;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
@@ -35,9 +36,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Makes categories available through a REST API.
  */
-class CategoryController extends AbstractRestController implements SecuredControllerInterface
+class CategoryController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
     use RequestParametersTrait;
+
+    /**
+     * @deprecated Use the CategoryInterface::RESOURCE_KEY constant instead
+     */
+    protected static $entityKey = 'categories';
 
     /**
      * @param class-string $categoryClass
