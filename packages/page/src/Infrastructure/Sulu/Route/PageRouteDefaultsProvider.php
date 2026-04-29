@@ -20,7 +20,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
-use Sulu\Bundle\MarkupBundle\Markup\Link\ExternalLinkProvider;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkUrlTrait;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
@@ -29,11 +29,8 @@ use Sulu\Content\Domain\Model\LinkInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
-use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
-use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Model\Route;
-use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -49,8 +46,7 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
         private ContentAggregatorInterface $contentAggregator,
         private MetadataProviderRegistry $metadataProviderRegistry,
         private CacheLifetimeResolverInterface $cacheLifetimeResolver,
-        private RouteRepositoryInterface $routeRepository,
-        private RouteGeneratorInterface $routeGenerator,
+        private LinkProviderPoolInterface $linkProviderPool,
         private bool $audienceTargetingEnabled = false,
     ) {
     }
@@ -121,7 +117,7 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
     /**
      * @param DimensionContentInterface<PageInterface> $dimensionContent
      *
-     * @return array{_controller: class-string<RedirectController>, path: string, permanent: true, _sulu_route_target?: Route}|null
+     * @return array{_controller: class-string<RedirectController>, path: string, permanent: true}|null
      */
     private function resolveRedirectDefaults(DimensionContentInterface $dimensionContent, string $locale): ?array
     {
@@ -135,45 +131,26 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
         }
 
         $provider = $linkData['provider'] ?? null;
+        /** @var string|int|null $href */
         $href = $linkData['href'] ?? null;
 
-        if (!\is_string($provider) || !\is_string($href)) {
+        if (!\is_string($provider) || null === $href) {
             return null;
         }
 
-        if (ExternalLinkProvider::ALIAS === $provider) {
-            return [
-                '_controller' => RedirectController::class,
-                'path' => $this->appendQueryAndAnchor($href, $linkData),
-                'permanent' => true,
-            ];
-        }
-
-        if (PageLinkProvider::ALIAS !== $provider) {
+        if (!$this->linkProviderPool->hasProvider($provider)) {
             return null;
         }
 
-        $targetRoute = $this->routeRepository->findOneBy([
-            'resourceKey' => PageInterface::RESOURCE_KEY,
-            'resourceId' => $href,
-            'locale' => $locale,
-        ]);
-
-        if (!$targetRoute instanceof Route) {
-            throw new NotFoundHttpException(\sprintf('No linked target route found for page "%s" and locale "%s"', $href, $locale));
+        $items = [...$this->linkProviderPool->getProvider($provider)->preload([(string) $href], $locale)];
+        if (!isset($items[0])) {
+            return null;
         }
-
-        $url = $this->routeGenerator->generate(
-            $targetRoute->getSlug(),
-            $targetRoute->getLocale(),
-            $targetRoute->getWebspace(),
-        );
 
         return [
             '_controller' => RedirectController::class,
-            'path' => $this->appendQueryAndAnchor($url, $linkData),
+            'path' => $this->appendQueryAndAnchor($items[0]->getUrl(), $linkData),
             'permanent' => true,
-            '_sulu_route_target' => $targetRoute,
         ];
     }
 
