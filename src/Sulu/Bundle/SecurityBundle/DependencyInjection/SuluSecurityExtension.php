@@ -171,6 +171,24 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
             );
         }
 
+        if ($container->hasExtension('doctrine')) {
+            $container->prependExtensionConfig(
+                'doctrine',
+                [
+                    'orm' => [
+                        'mappings' => [
+                            'SuluSecurityBundle' => [
+                                'type' => 'xml',
+                                'dir' => __DIR__ . '/../Resources/config/doctrine',
+                                'prefix' => 'Sulu\Bundle\SecurityBundle\Entity',
+                                'alias' => 'SuluSecurityBundle',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+
         if ($container->hasExtension('framework')
             && SuluKernel::CONTEXT_ADMIN === $container->getParameter('sulu.context')
         ) {

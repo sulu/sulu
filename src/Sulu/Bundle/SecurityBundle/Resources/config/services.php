@@ -52,6 +52,7 @@ use Sulu\Bundle\SecurityBundle\Twig\UserTwigExtension;
 use Sulu\Bundle\SecurityBundle\User\UserProvider;
 use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Bundle\SecurityBundle\Util\TokenGenerator;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Security\Authentication\SaltGenerator;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManager;
 use Sulu\Component\Security\Authorization\AccessControl\DoctrineAccessControlProvider;
@@ -280,6 +281,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_security.user_manager'),
             new Reference('doctrine.orm.entity_manager'),
             '%sulu.model.user.class%',
+            new Reference(FieldDescriptorFactoryInterface::class),
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 
