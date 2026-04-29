@@ -17,8 +17,8 @@
     "excerptCategories": [],
     "excerptSegment": null,
     "excerptTags": [
-        1,
-        2
+        "@integer@",
+        "@integer@"
     ],
     "excerpt": {
         "title": "Excerpt Title",

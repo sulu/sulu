@@ -23,8 +23,8 @@
     "excerptCategories": [],
     "excerptSegment": "test-segment",
     "excerptTags": [
-        1,
-        2
+        "@integer@",
+        "@integer@"
     ],
     "ghostLocale": "en",
     "id": "@string@",
