@@ -89,7 +89,6 @@ class SuluTagExtension extends Extension implements PrependExtensionInterface
 
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.php');
-        $loader->load('services_content.php');
 
         if (\array_key_exists('SuluTrashBundle', $bundles)) {
             $loader->load('services_trash.php');

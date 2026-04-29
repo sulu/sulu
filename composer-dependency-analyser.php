@@ -84,7 +84,6 @@ return $config
         [
             'guzzlehttp/promises', // required for faster fos http cache clearing
             'nyholm/psr7', // required for faster fos http cache clearing
-            'symfony/http-client', // required and used via symfony/http-client-contracts
             'symfony/css-selector', // kept for future usage
         ],
         [ErrorType::UNUSED_DEPENDENCY],
