@@ -32,8 +32,8 @@ test('Render the component with an error', () => {
 test('Set the correct values for protocol and path when initializing', () => {
     render(<Url onChange={jest.fn()} value="http://www.sulu.io" />);
 
-    const protocol = screen.queryByTitle('http://').lastChild;
-    const input = screen.queryByRole('textbox');
+    const protocol = screen.getByTitle('http://').lastChild;
+    const input = screen.getByRole('textbox');
 
     expect(input).toHaveValue('www.sulu.io');
     expect(protocol).toHaveTextContent('http://');
@@ -42,8 +42,8 @@ test('Set the correct values for protocol and path when initializing', () => {
 test('Set the correct values for protocol and path when updating', () => {
     render(<Url onChange={jest.fn()} value="https://www.sulu.io" />);
 
-    const protocol = screen.queryByTitle('https://').lastChild;
-    const input = screen.queryByRole('textbox');
+    const protocol = screen.getByTitle('https://').lastChild;
+    const input = screen.getByRole('textbox');
 
     expect(input).toHaveValue('www.sulu.io');
     expect(protocol).toHaveTextContent('https://');
@@ -52,7 +52,7 @@ test('Set the correct values for protocol and path when updating', () => {
 test('Should log a warning if a not available protocol has been given', () => {
     render(<Url onChange={jest.fn()} protocols={['http://']} value="https://www.sulu.io" />);
 
-    const input = screen.queryByRole('textbox');
+    const input = screen.getByRole('textbox');
 
     expect(input).toHaveValue('https://www.sulu.io');
     expect(log.warn).toBeCalled();
@@ -69,11 +69,11 @@ test('Show error when invalid email was passed via updated prop', () => {
 test('Should not reset value of protocol select when undefined value is passed', () => {
     const {rerender} = render(<Url onChange={jest.fn()} value="https://" />);
 
-    expect(screen.queryByTitle('https://').lastChild).toHaveTextContent('https://');
-    expect(screen.queryByRole('textbox')).toHaveValue('');
+    expect(screen.getByTitle('https://').lastChild).toHaveTextContent('https://');
+    expect(screen.getByRole('textbox')).toHaveValue('');
     rerender(<Url onChange={jest.fn()} value={undefined} />);
-    expect(screen.queryByTitle('https://').lastChild).toHaveTextContent('https://');
-    expect(screen.queryByRole('textbox')).toHaveValue('');
+    expect(screen.getByTitle('https://').lastChild).toHaveTextContent('https://');
+    expect(screen.getByRole('textbox')).toHaveValue('');
 });
 
 test('Remove error when valid email was passed via updated prop', () => {
@@ -98,7 +98,7 @@ test('Call onChange callback with the first protocol if none was selected', asyn
     const changeSpy = jest.fn();
     render(<Url onChange={changeSpy} value="sulu.a" />);
 
-    const input = screen.queryByRole('textbox');
+    const input = screen.getByRole('textbox');
     await userEvent.type(input, 't');
 
     expect(changeSpy).toBeCalledWith('http://sulu.at');
@@ -108,8 +108,8 @@ test('Call onChange callback when protocol was changed', async() => {
     const changeSpy = jest.fn();
     render(<Url onChange={changeSpy} value="https://www.sulu.io" />);
 
-    await userEvent.click(screen.queryByLabelText('su-angle-down'));
-    await userEvent.click(screen.queryByText('http://'));
+    await userEvent.click(screen.getByLabelText('su-angle-down'));
+    await userEvent.click(screen.getByText('http://'));
 
     expect(changeSpy).toBeCalledWith('http://www.sulu.io');
 });
@@ -118,7 +118,7 @@ test('Call onChange callback when path was changed', async() => {
     const changeSpy = jest.fn();
     render(<Url onChange={changeSpy} value="https://www.sulu.io" />);
 
-    const input = screen.queryByRole('textbox');
+    const input = screen.getByRole('textbox');
     await userEvent.type(input, 'x');
 
     expect(changeSpy).toBeCalledWith('https://www.sulu.iox');
@@ -128,7 +128,7 @@ test('Call onChange callback when path was changed but not blurred', async() => 
     const changeSpy = jest.fn();
     render(<Url onChange={changeSpy} value="https://www.sulu.io" />);
 
-    const input = screen.queryByRole('textbox');
+    const input = screen.getByRole('textbox');
     await userEvent.type(input, 'x');
 
     expect(changeSpy).toBeCalledWith('https://www.sulu.iox');
@@ -138,7 +138,7 @@ test('Call onChange callback when path was changed to invalid url but not blurre
     const changeSpy = jest.fn();
     render(<Url onChange={changeSpy} value="https://www.sulu.io" />);
 
-    const input = screen.queryByRole('textbox');
+    const input = screen.getByRole('textbox');
     await userEvent.type(input, '[Backspace]');
 
     expect(changeSpy).toBeCalledWith('https://www.sulu.i');
@@ -148,8 +148,8 @@ test('Call onChange callback if url is not valid but leave the current value', a
     const changeSpy = jest.fn();
     const {container} = render(<Url onChange={changeSpy} value="https://www.sulu.io" />);
 
-    const input = screen.queryByRole('textbox');
-    const protocol = screen.queryByTitle('https://').lastChild;
+    const input = screen.getByRole('textbox');
+    const protocol = screen.getByTitle('https://').lastChild;
     await userEvent.type(input, '.');
 
     expect(changeSpy).toBeCalledWith('https://www.sulu.io.');
@@ -162,8 +162,8 @@ test('Call onChange callback with undefined if email is not valid but leave the 
     const changeSpy = jest.fn();
     const {container} = render(<Url onChange={changeSpy} value="mailto:hello@sulu.io" />);
 
-    const input = screen.queryByRole('textbox');
-    const protocol = screen.queryByTitle('mailto:').lastChild;
+    const input = screen.getByRole('textbox');
+    const protocol = screen.getByTitle('mailto:').lastChild;
     await userEvent.type(input, '@');
 
     expect(changeSpy).toBeCalledWith(undefined);
@@ -178,8 +178,8 @@ test('Call onChange callback with correct mail address', async() => {
     const changeSpy = jest.fn();
     const {container} = render(<Url onChange={changeSpy} protocols={['mailto:']} value="test@example." />);
 
-    const input = screen.queryByRole('textbox');
-    const protocol = screen.queryByTitle('mailto:').lastChild;
+    const input = screen.getByRole('textbox');
+    const protocol = screen.getByTitle('mailto:').lastChild;
     await userEvent.type(input, 'a');
 
     expect(changeSpy).toBeCalledWith('mailto:test@example.a');
@@ -194,8 +194,8 @@ test('Call onChange callback with correct value with custom protocol', async() =
     const changeSpy = jest.fn();
     const {container} = render(<Url onChange={changeSpy} protocols={['custom-protocol:']} value={undefined} />);
 
-    const input = screen.queryByRole('textbox');
-    const protocol = screen.queryByTitle('custom-protocol:').lastChild;
+    const input = screen.getByRole('textbox');
+    const protocol = screen.getByTitle('custom-protocol:').lastChild;
     await userEvent.type(input, 'X');
 
     expect(changeSpy).toBeCalledWith('custom-protocol:X');
@@ -208,8 +208,8 @@ test('Call onChange callback with undefined if incorrect mail address is entered
     const changeSpy = jest.fn();
     const {container} = render(<Url onChange={changeSpy} protocols={['mailto:']} value={undefined} />);
 
-    const input = screen.queryByRole('textbox');
-    const protocol = screen.queryByTitle('mailto:').lastChild;
+    const input = screen.getByRole('textbox');
+    const protocol = screen.getByTitle('mailto:').lastChild;
     await userEvent.type(input, 'X');
 
     expect(protocol).toHaveTextContent('mailto');
@@ -224,8 +224,8 @@ test('Should remove the protocol from path and set it on the protocol select', a
     const changeSpy = jest.fn();
     render(<Url onChange={changeSpy} value="http://www.sulu.a" />);
 
-    const input = screen.queryByRole('textbox');
-    const protocol = screen.queryByTitle('http://').lastChild;
+    const input = screen.getByRole('textbox');
+    const protocol = screen.getByTitle('http://').lastChild;
     await userEvent.type(input, 't');
 
     expect(protocol).toHaveTextContent('http://');
@@ -238,8 +238,8 @@ test(
         const changeSpy = jest.fn();
         render(<Url onChange={changeSpy} value="http://www.sulu.a" />);
 
-        const input = screen.queryByRole('textbox');
-        const protocol = screen.queryByTitle('http://').lastChild;
+        const input = screen.getByRole('textbox');
+        const protocol = screen.getByTitle('http://').lastChild;
         await userEvent.type(input, 't');
 
         expect(protocol).toHaveTextContent('http://');
@@ -250,8 +250,8 @@ test('Call onBlur callback when protocol was changed', async() => {
     const blurSpy = jest.fn();
     render(<Url onBlur={blurSpy} onChange={jest.fn()} value="https://www.sulu.io" />);
 
-    await userEvent.click(screen.queryByLabelText('su-angle-down'));
-    await userEvent.click(screen.queryByText('http://'));
+    await userEvent.click(screen.getByLabelText('su-angle-down'));
+    await userEvent.click(screen.getByText('http://'));
 
     expect(blurSpy).toBeCalledWith();
 });
@@ -260,7 +260,7 @@ test('Call onBlur callback when path was changed', async() => {
     const blurSpy = jest.fn();
     render(<Url onBlur={blurSpy} onChange={jest.fn()} value="https://www.sulu.io" />);
 
-    const input = screen.queryByRole('textbox');
+    const input = screen.getByRole('textbox');
     await userEvent.click(input);
     expect(blurSpy).not.toBeCalledWith();
 
@@ -289,8 +289,8 @@ test('Should call onProtocolChange when protocol is changed', async() => {
     const protocolChangeSpy = jest.fn();
     render(<Url onChange={changeSpy} onProtocolChange={protocolChangeSpy} value={undefined} />);
 
-    await userEvent.click(screen.queryByLabelText('su-angle-down'));
-    await userEvent.click(screen.queryByText('https://'));
+    await userEvent.click(screen.getByLabelText('su-angle-down'));
+    await userEvent.click(screen.getByText('https://'));
 
     expect(protocolChangeSpy).toHaveBeenLastCalledWith('https://');
 });

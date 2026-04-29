@@ -29,6 +29,8 @@ class InvalidNavigationContextExtension extends \Exception
      */
     public function __construct($selectedNavContext, $navContexts)
     {
+        /** @var array<string> $selectedNavContext */
+        /** @var array<string> $navContexts */
         parent::__construct(
             \sprintf(
                 'Navigation Context "%s" not found in [%s]',

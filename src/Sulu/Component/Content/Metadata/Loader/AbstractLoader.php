@@ -93,6 +93,7 @@ abstract class AbstractLoader implements LoaderInterface
     {
         $result = [];
 
+        /** @var \DOMElement $node */
         foreach ($xpath->query($path) ?: [] as $node) {
             $tag = [
                 'name' => null,
@@ -100,7 +101,7 @@ abstract class AbstractLoader implements LoaderInterface
             ];
 
             /** @var \DOMAttr $attr */
-            foreach ($node->attributes ?? [] as $key => $attr) {
+            foreach ($node->attributes as $key => $attr) {
                 if (\in_array($key, ['name'])) {
                     $tag[$key] = $attr->value;
                 } else {
@@ -133,11 +134,12 @@ abstract class AbstractLoader implements LoaderInterface
     {
         $result = [];
 
+        /** @var \DOMElement $node */
         foreach ($xpath->query($path) ?: [] as $node) {
             $area = [];
 
             /** @var \DOMAttr $attr */
-            foreach ($node->attributes ?? [] as $key => $attr) {
+            foreach ($node->attributes as $key => $attr) {
                 if (\in_array($key, ['key', 'cache-invalidation'])) {
                     $area[$key] = $attr->value;
                 } else {

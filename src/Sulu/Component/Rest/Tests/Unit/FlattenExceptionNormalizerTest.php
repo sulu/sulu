@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Filter;
+namespace Sulu\Component\Rest\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;

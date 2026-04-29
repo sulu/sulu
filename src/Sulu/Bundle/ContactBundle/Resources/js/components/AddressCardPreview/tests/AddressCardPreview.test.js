@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render} from 'enzyme';
+import {render} from '@testing-library/react';
 import AddressCardPreview from '../AddressCardPreview';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
@@ -8,7 +8,7 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 }));
 
 test('Render AddressCardPreview with minimal information', () => {
-    expect(render(
+    const {asFragment} = render(
         <AddressCardPreview
             billingAddress={false}
             city={undefined}
@@ -22,11 +22,13 @@ test('Render AddressCardPreview with minimal information', () => {
             type="Home"
             zip={undefined}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render AddressCardPreview with every available information', () => {
-    expect(render(
+    const {asFragment} = render(
         <AddressCardPreview
             billingAddress={true}
             city="Dornbirn"
@@ -40,5 +42,7 @@ test('Render AddressCardPreview with every available information', () => {
             type="Home"
             zip="6850"
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });

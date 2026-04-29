@@ -50,17 +50,16 @@ class TagsConverter implements ConverterInterface
         }
 
         if (\is_array($value)) {
+            /** @var int[] $ids */
             $ids = $this->tagManager->resolveTagNames($value);
             $resultValue = $ids;
             $tags = \array_combine($ids, $value);
 
-            if (false !== $tags) {
-                $index = 0;
-                foreach ($tags as $id => $tagName) {
-                    $fields[] = new Field($index . '#id', $id);
-                    $fields[] = new Field($index . '#name', $tagName);
-                    ++$index;
-                }
+            $index = 0;
+            foreach ($tags as $id => $tagName) {
+                $fields[] = new Field($index . '#id', $id);
+                $fields[] = new Field($index . '#name', $tagName);
+                ++$index;
             }
         }
 

@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\Storage;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\Storage;
 
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\AzureBlobStorage\AzureBlobStorageAdapter;
@@ -19,6 +19,8 @@ use MicrosoftAzure\Storage\Blob\BlobRestProxy;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Bundle\MediaBundle\Media\Storage\AzureBlobStorage;
+use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 
 class AzureBlobStorageTest extends TestCase

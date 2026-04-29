@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Comonent\DocumentManager\tests\Unit\Subscriber\Phpcr;
+namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Phpcr;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;

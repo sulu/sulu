@@ -1,102 +1,112 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ResourceLocator should render when disabled 1`] = `
-<div
-  class="resourceLocator"
->
-  <span
-    class="fixed"
-  >
-    /
-  </span>
+<DocumentFragment>
   <div
-    class="input default left disabled"
+    class="resourceLocator"
   >
-    <input
-      disabled=""
-      type="text"
-      value="parent"
-    />
+    <span
+      class="fixed"
+    >
+      /
+    </span>
+    <div
+      class="input default left disabled"
+    >
+      <input
+        disabled=""
+        type="text"
+        value="parent"
+      />
+    </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`ResourceLocator should render with type full 1`] = `
-<div
-  class="resourceLocator"
->
-  <span
-    class="fixed"
-  >
-    /
-  </span>
+<DocumentFragment>
   <div
-    class="input default left"
+    class="resourceLocator"
   >
-    <input
-      type="text"
-      value="parent"
-    />
+    <span
+      class="fixed"
+    >
+      /
+    </span>
+    <div
+      class="input default left"
+    >
+      <input
+        type="text"
+        value="parent"
+      />
+    </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`ResourceLocator should render with type full and a value of undefined 1`] = `
-<div
-  class="resourceLocator"
->
-  <span
-    class="fixed"
-  >
-    /
-  </span>
+<DocumentFragment>
   <div
-    class="input default left"
+    class="resourceLocator"
   >
-    <input
-      type="text"
-      value=""
-    />
+    <span
+      class="fixed"
+    >
+      /
+    </span>
+    <div
+      class="input default left"
+    >
+      <input
+        type="text"
+        value=""
+      />
+    </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`ResourceLocator should render with type leaf 1`] = `
-<div
-  class="resourceLocator"
->
-  <span
-    class="fixed"
-  >
-    /parent/
-  </span>
+<DocumentFragment>
   <div
-    class="input default left"
+    class="resourceLocator"
   >
-    <input
-      type="text"
-      value="child"
-    />
+    <span
+      class="fixed"
+    >
+      /parent/
+    </span>
+    <div
+      class="input default left"
+    >
+      <input
+        type="text"
+        value="child"
+      />
+    </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`ResourceLocator should render with type leaf and a value of undefined 1`] = `
-<div
-  class="resourceLocator"
->
-  <span
-    class="fixed"
-  >
-    /
-  </span>
+<DocumentFragment>
   <div
-    class="input default left"
+    class="resourceLocator"
   >
-    <input
-      type="text"
-      value=""
-    />
+    <span
+      class="fixed"
+    >
+      /
+    </span>
+    <div
+      class="input default left"
+    >
+      <input
+        type="text"
+        value=""
+      />
+    </div>
   </div>
-</div>
+</DocumentFragment>
 `;

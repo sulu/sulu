@@ -415,6 +415,7 @@ class Urlizer
             }
         }
 
+        /** @var array<string> $chars */
         return \implode('', $chars);
     }
 

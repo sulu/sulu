@@ -19,7 +19,7 @@ use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -33,6 +33,24 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
 
     public function prepend(ContainerBuilder $container)
     {
+        if ($container->hasExtension('doctrine')) {
+            $container->prependExtensionConfig(
+                'doctrine',
+                [
+                    'orm' => [
+                        'mappings' => [
+                            'SuluWebsiteBundle' => [
+                                'type' => 'xml',
+                                'dir' => __DIR__ . '/../Resources/config/doctrine',
+                                'prefix' => 'Sulu\Bundle\WebsiteBundle\Entity',
+                                'alias' => 'SuluWebsiteBundle',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+
         if ($container->hasExtension('sulu_admin')) {
             $container->prependExtensionConfig(
                 'sulu_admin',
@@ -123,24 +141,24 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
         $container->registerForAutoconfiguration(SitemapProviderInterface::class)
             ->addTag('sulu.sitemap.provider');
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
-        $loader->load('sitemap.xml');
-        $loader->load('command.xml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.php');
+        $loader->load('sitemap.php');
+        $loader->load('command.php');
 
         $bundles = $container->getParameter('kernel.bundles');
         $analyticsEnabled = $config['analytics']['enabled'];
 
         if ($analyticsEnabled) {
-            $loader->load('analytics.xml');
+            $loader->load('analytics.php');
         }
 
         if ($analyticsEnabled && \array_key_exists('SuluTrashBundle', $bundles)) {
-            $loader->load('analytics_trash.xml');
+            $loader->load('analytics_trash.php');
         }
 
         if (SuluKernel::CONTEXT_WEBSITE == $container->getParameter('sulu.context')) {
-            $loader->load('website.xml');
+            $loader->load('website.php');
 
             // default local provider
             $container->setAlias('sulu_website.default_locale.provider', $config['default_locale']['provider_service_id']);

@@ -4,8 +4,6 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Option from '../Option';
 
-jest.mock('../../../utils/DOM/afterElementsRendered');
-
 test('The component should render', () => {
     const {container} = render(<Option value="my-option">My option</Option>);
     expect(container).toMatchSnapshot();

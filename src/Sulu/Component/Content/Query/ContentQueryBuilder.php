@@ -147,17 +147,22 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             return 'page.[jcr:mixinTypes] = "' . $mixinType . '"';
         }, static::$mixinTypes));
 
+        /** @var array<string> $select */
+        $selectString = \implode(', ', $select);
+        /** @var array<string> $order */
+        $orderString = \implode(', ', $order);
+
         $sql2 = \sprintf(
             'SELECT %s
              FROM [nt:unstructured] AS page
              WHERE (%s)
                 AND (%s)
                 %s %s',
-            \implode(', ', $select),
+            $selectString,
             $mixinTypeWhere,
             $where,
             \count($order) > 0 ? 'ORDER BY' : '',
-            \implode(', ', $order)
+            $orderString
         );
 
         return [$sql2, $additionalFields];

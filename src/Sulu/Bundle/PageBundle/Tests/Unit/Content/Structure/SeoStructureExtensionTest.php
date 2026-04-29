@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PageBundle\Tests\Unit\Structure;
+namespace Sulu\Bundle\PageBundle\Tests\Unit\Content\Structure;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;

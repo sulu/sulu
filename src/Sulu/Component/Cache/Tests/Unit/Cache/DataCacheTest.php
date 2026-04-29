@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Cache\Tests\Unit;
+namespace Sulu\Component\Cache\Tests\Unit\Cache;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Cache\CacheInterface;

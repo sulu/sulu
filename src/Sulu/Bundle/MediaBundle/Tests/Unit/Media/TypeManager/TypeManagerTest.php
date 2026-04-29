@@ -9,10 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\TypeManager;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\TypeManager;
 
 use Doctrine\Persistence\ObjectManager;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManager;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class TypeManagerTest extends SuluTestCase

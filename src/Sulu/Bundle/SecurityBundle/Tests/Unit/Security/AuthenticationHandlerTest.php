@@ -9,11 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SecurityBundle\Security;
+namespace Sulu\Bundle\SecurityBundle\Tests\Unit\Security;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\SecurityBundle\Security\AuthenticationHandler;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;

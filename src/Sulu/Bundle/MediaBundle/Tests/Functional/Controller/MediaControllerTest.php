@@ -595,7 +595,9 @@ class MediaControllerTest extends SuluTestCase
         $media2 = $this->createMedia('photo2');
         $this->createMedia('photo3');
 
-        $excludedIds = \implode(',', [$media->getId(), $media2->getId()]);
+        /** @var array<string> $excludedIdsList */
+        $excludedIdsList = [$media->getId(), $media2->getId()];
+        $excludedIds = \implode(',', $excludedIdsList);
 
         $this->client->jsonRequest(
             'GET',

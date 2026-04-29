@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Webspace\Tests\Unit;
+namespace Sulu\Component\Webspace\Tests\Unit\Manager;
 
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -19,6 +19,7 @@ use Sulu\Component\Webspace\Exception\InvalidTemplateException;
 use Sulu\Component\Webspace\Loader\XmlFileLoader10;
 use Sulu\Component\Webspace\Loader\XmlFileLoader11;
 use Sulu\Component\Webspace\Manager\WebspaceCollectionBuilder;
+use Sulu\Component\Webspace\Tests\Unit\WebspaceTestCase;
 use Sulu\Component\Webspace\Url\Replacer;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\DelegatingLoader;
@@ -34,7 +35,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
     private $loader;
 
     /**
-     * @var \PHPUnit\Framework\MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject&LoggerInterface
      */
     private $logger;
 

@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace vendor\sulu\sulu\src\Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Initialalizer;
+namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Initialalizer;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;

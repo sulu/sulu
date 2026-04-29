@@ -50,9 +50,24 @@ class CustomUrlNodeType implements NodeTypeDefinitionInterface
         return false;
     }
 
+    /**
+     * Returns the name of the primary item (one of the child items of the nodes
+     * of this node type).
+     *
+     * If this node has no primary item, then this method returns null. This
+     * indicator is used by the method NodeInterface::getPrimaryItem().
+     *
+     * In implementations that support node type registration, if this
+     * NodeTypeDefinitionInterface object is actually a newly-created empty
+     * NodeTypeTemplateInterface, then this method will return null.
+     *
+     * @return string|null the name of the primary item
+     *
+     * @api
+     */
     public function getPrimaryItemName()
     {
-        return;
+        return null;
     }
 
     public function getDeclaredPropertyDefinitions()

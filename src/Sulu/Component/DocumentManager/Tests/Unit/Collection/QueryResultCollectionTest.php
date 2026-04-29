@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Comonent\DocumentManager\tests\Unit\Collection;
+namespace Sulu\Component\DocumentManager\Tests\Unit\Collection;
 
 use PHPCR\NodeInterface;
 use PHPCR\Query\QueryResultInterface;

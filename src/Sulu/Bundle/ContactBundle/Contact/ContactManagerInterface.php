@@ -68,6 +68,7 @@ interface ContactManagerInterface
      * @param Collection<AddressRelationEntity> $arrayCollection
      *
      * @return bool returns true if a element was unset
+     * @return void
      */
     public function unsetMain($arrayCollection);
 

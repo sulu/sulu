@@ -26,7 +26,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class SuluAdminExtension extends Extension implements PrependExtensionInterface
@@ -58,7 +58,7 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                                 'adapter' => 'cache.app',
                             ],
                             'sulu_admin.icon_cache' => [
-                                'adapter' => 'cache.app',
+                                'adapter' => 'cache.system',
                             ],
                         ],
                     ],
@@ -172,8 +172,8 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         $container->setParameter($this->getAlias() . '.lists.directories', $config['lists']['directories'] ?? []);
         $container->setParameter($this->getAlias() . '.icon_sets', $config['icon_sets'] ?? []);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.php');
 
         $container->registerForAutoconfiguration(Admin::class)
             ->addTag(AddAdminPass::ADMIN_TAG)

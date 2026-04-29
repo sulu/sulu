@@ -74,7 +74,7 @@ interface ListBuilderInterface
      *
      * @param string $fieldName
      *
-     * @return FieldDescriptorInterface
+     * @return FieldDescriptorInterface|null
      */
     public function getSelectField($fieldName);
 
@@ -102,7 +102,7 @@ interface ListBuilderInterface
     /**
      * Sets the search value for the search fields.
      *
-     * @param string $search
+     * @param string|null $search
      *
      * @return ListBuilderInterface
      */

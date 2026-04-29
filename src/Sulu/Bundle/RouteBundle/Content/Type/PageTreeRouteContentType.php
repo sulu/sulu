@@ -219,11 +219,9 @@ class PageTreeRouteContentType extends SimpleContentType implements PropertyMeta
         return $route->getPath();
     }
 
-    /**
-     * Get RouteRepository.
-     */
     private function getRouteRepository(): RouteRepositoryInterface
     {
+        /** @var RouteRepositoryInterface */
         return $this->entityManager->getRepository(Route::class);
     }
 

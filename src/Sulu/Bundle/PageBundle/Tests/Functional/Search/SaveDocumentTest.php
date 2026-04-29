@@ -11,7 +11,12 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Search;
 
+use Composer\InstalledVersions;
+use Massive\Bundle\SearchBundle\Search\Field;
+use Massive\Bundle\SearchBundle\Search\QueryHit;
+use Massive\Bundle\SearchBundle\Search\SearchResult;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
+use Sulu\Bundle\SearchBundle\Search\Document;
 use Sulu\Component\Content\Document\WorkflowStage;
 
 class SaveDocumentTest extends BaseTestCase
@@ -167,6 +172,58 @@ class SaveDocumentTest extends BaseTestCase
         foreach ($searches as $search => $count) {
             $res = $searchManager->createSearch($search)->locale('de')->index('page_sulu_io')->execute();
             $this->assertCount($count, $res, 'Searching for: ' . $search);
+        }
+    }
+
+    public function testSaveDocumentStripTags(): void
+    {
+        $version = InstalledVersions::getPrettyVersion('massive/search-bundle') ?? '2.10.0';
+        if (\version_compare($version, '2.10.0', '<')) {
+            $this->markTestSkipped('This feature requires atleast "massive/search-bundle" of 2.10.0.');
+        }
+
+        $document = new PageDocument();
+        $document->setTitle('Places');
+        $document->setStructureType('text_editor');
+        $document->setResourceSegment('/places');
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $document->getStructure()->bind([
+            'title' => 'Sulu',
+            'article' => '<p>Sulu is the best</p>',
+            'block' => [
+                [
+                    'type' => 'article',
+                    'title' => 'Sulu',
+                    'article' => '<p><strong>Sulu</strong> is very cool</p>',
+                ],
+            ],
+        ], false);
+        $document->setParent($this->homeDocument);
+
+        $this->documentManager->persist($document, 'de');
+        $this->documentManager->flush();
+
+        $searchManager = $this->getSearchManager();
+
+        /** @var SearchResult $res */
+        $res = $searchManager->createSearch('Sulu')->locale('de')->index('page_sulu_io')->execute();
+
+        /** @var QueryHit $hit */
+        foreach ($res as $hit) {
+            /** @var Document $document */
+            $document = $hit->getDocument();
+            $this->assertSame('Sulu is the best', $document->getDescription());
+            $articleBlockValue = '';
+            /** @var Field[] $fields */
+            $fields = $document->getFields();
+
+            foreach ($fields as $field) {
+                if ('block_article_article' === $field->getName()) {
+                    $articleBlockValue = $field->getValue();
+                }
+            }
+
+            $this->assertSame('Sulu is very cool', $articleBlockValue, 'Article block value should be stripped of tags');
         }
     }
 }

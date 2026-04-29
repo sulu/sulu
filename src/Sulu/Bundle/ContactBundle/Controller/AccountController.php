@@ -615,7 +615,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
      *
      * @throws EntityNotFoundException
      */
-    private function setParent($parentData, AccountInterface $account)
+    private function setParent($parentData, AccountInterface $account): void
     {
         if (null != $parentData && isset($parentData['id']) && 'null' !== $parentData['id'] && '' !== $parentData['id']) {
             $parent = $this->accountRepository->findAccountById($parentData['id']);
@@ -693,8 +693,10 @@ class AccountController extends AbstractRestController implements ClassResourceI
             $accountManager->setLogo($account, $request->get('logo')['id']);
             $accountModified = true;
         }
-        if (null !== $request->get('medias')) {
-            $accountManager->setMedias($account, $request->get('medias'));
+        /** @var array<int>|null $medias */
+        $medias = $request->get('medias');
+        if (null !== $medias) {
+            $accountManager->setMedias($account, $medias);
         }
 
         $mainContact = null;

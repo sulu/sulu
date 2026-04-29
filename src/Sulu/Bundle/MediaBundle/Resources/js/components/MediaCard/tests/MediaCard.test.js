@@ -1,99 +1,116 @@
+/* global global */
 // @flow
-import {mount} from 'enzyme';
+import {act, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import MediaCard from '../MediaCard';
 
-test('Render a MediaCard component', () => {
-    const mediaCard = mount(
+const IMAGE_URL = 'http://lorempixel.com/300/200';
+const imageInstances: Array<MockImage> = [];
+const OriginalImage = global.Image;
+
+class MockImage {
+    _src: string;
+    onerror: () => void;
+    onload: () => void;
+
+    constructor() {
+        imageInstances.push(this);
+    }
+
+    set src(src: string) {
+        this._src = src;
+    }
+
+    get src() {
+        return this._src;
+    }
+}
+
+beforeEach(() => {
+    imageInstances.length = 0;
+    // $FlowFixMe[prop-missing]
+    global.Image = MockImage;
+});
+
+afterEach(() => {
+    // $FlowFixMe[prop-missing]
+    global.Image = OriginalImage;
+});
+
+function renderMediaCard(props: any = {}) {
+    return render(
         <MediaCard
             downloadText=""
             downloadUrl=""
             id="test"
-            image="http://lorempixel.com/300/200"
+            image={IMAGE_URL}
             meta="Test/Test"
             mimeType="image/jpeg"
             title="Test"
+            {...props}
         />
     );
+}
 
-    mediaCard.instance().image.onload();
+function triggerImageLoad(index = 0) {
+    act(() => {
+        imageInstances[index].onload();
+    });
+}
 
-    expect(mediaCard.render()).toMatchSnapshot();
+function triggerImageError(index = 0) {
+    act(() => {
+        imageInstances[index].onerror();
+    });
+}
+
+function getRequiredElement(container, selector) {
+    const element = container.querySelector(selector);
+
+    if (!element) {
+        throw new Error(`Expected element for selector "${selector}"`);
+    }
+
+    return element;
+}
+
+test('Render a MediaCard component', () => {
+    const {asFragment} = renderMediaCard();
+
+    triggerImageLoad();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a MediaCard component with ghostLocale', () => {
-    const mediaCard = mount(
-        <MediaCard
-            downloadText=""
-            downloadUrl=""
-            ghostLocale="en"
-            id="test"
-            image="http://lorempixel.com/300/200"
-            meta="Test/Test"
-            mimeType="image/jpeg"
-            title="Test"
-        />
-    );
+    const {asFragment} = renderMediaCard({ghostLocale: 'en'});
 
-    mediaCard.instance().image.onload();
-
-    expect(mediaCard.render()).toMatchSnapshot();
+    triggerImageLoad();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a MediaCard component with loader if image has not been loaded yet', () => {
-    const mediaCard = mount(
-        <MediaCard
-            downloadText=""
-            downloadUrl=""
-            id="test"
-            image="http://lorempixel.com/300/200"
-            meta="Test/Test"
-            mimeType="image/jpeg"
-            title="Test"
-        />
-    );
+    const {asFragment} = renderMediaCard();
 
-    expect(mediaCard.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a MediaCard component with MimeTypeIndicator if an error appeared while loading the image', () => {
-    const mediaCard = mount(
-        <MediaCard
-            downloadText=""
-            downloadUrl=""
-            id="test"
-            image="http://lorempixel.com/300/200"
-            meta="Test/Test"
-            mimeType="image/jpeg"
-            title="Test"
-        />
-    );
+    const {asFragment} = renderMediaCard();
 
-    mediaCard.instance().image.onerror();
-
-    expect(mediaCard.render()).toMatchSnapshot();
+    triggerImageError();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a MediaCard component with a checkbox for selection', () => {
-    const mediaCard = mount(
-        <MediaCard
-            downloadText=""
-            downloadUrl=""
-            id="test"
-            image="http://lorempixel.com/300/200"
-            meta="Test/Test"
-            mimeType="image/jpeg"
-            onSelectionChange={jest.fn()}
-            title="Test"
-        />
-    );
+    const {asFragment} = renderMediaCard({onSelectionChange: jest.fn()});
 
-    mediaCard.instance().image.onload();
-
-    expect(mediaCard.render()).toMatchSnapshot();
+    triggerImageLoad();
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Render a MediaCard with download list', () => {
+test('Render a MediaCard with download list', async() => {
+    const user = userEvent.setup();
     const imageSizes = [
         {
             url: 'http://lorempixel.com/300/200',
@@ -109,47 +126,33 @@ test('Render a MediaCard with download list', () => {
         },
     ];
 
-    const mediaCard = mount(
-        <MediaCard
-            downloadCopyText="Copy URL"
-            downloadText="Direct download"
-            downloadUrl="http://lorempixel.com/300/200"
-            id="test"
-            image="http://lorempixel.com/300/200"
-            imageSizes={imageSizes}
-            meta="Test/Test"
-            mimeType="image/jpeg"
-            title="Test"
-        />
-    );
+    renderMediaCard({
+        downloadCopyText: 'Copy URL',
+        downloadText: 'Direct download',
+        downloadUrl: 'http://lorempixel.com/300/200',
+        imageSizes,
+    });
 
-    mediaCard.instance().openDownloadList();
-    mediaCard.update();
-    expect(mediaCard.find('DownloadList Popover').render()).toMatchSnapshot();
+    await user.click(screen.getByRole('button', {name: 'su-download'}));
+
+    expect(document.body).toMatchSnapshot();
 });
 
-test('Clicking on an item should call the responsible handler on the MediaCard component', () => {
+test('Clicking on an item should call the responsible handler on the MediaCard component', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
     const selectionSpy = jest.fn();
     const itemId = 'test';
 
-    const mediaCard = mount(
-        <MediaCard
-            downloadText=""
-            downloadUrl=""
-            id={itemId}
-            image="http://lorempixel.com/300/200"
-            meta="Test/Test"
-            mimeType="image/jpeg"
-            onClick={clickSpy}
-            onSelectionChange={selectionSpy}
-            title="Test"
-        />
-    );
+    const {container} = renderMediaCard({
+        id: itemId,
+        onClick: clickSpy,
+        onSelectionChange: selectionSpy,
+    });
 
-    mediaCard.find('MediaCard .media').simulate('click');
+    await user.click(getRequiredElement(container, '.media'));
     expect(clickSpy).toHaveBeenCalledWith(itemId, true);
 
-    mediaCard.find('MediaCard .description').simulate('click');
+    await user.click(getRequiredElement(container, '.description'));
     expect(selectionSpy).toHaveBeenCalledWith(itemId, true);
 });

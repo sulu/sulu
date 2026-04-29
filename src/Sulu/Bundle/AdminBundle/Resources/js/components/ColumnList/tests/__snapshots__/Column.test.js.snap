@@ -1,8 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should render column with toolbar 1`] = `
-<div
-  class="column"
-  role="button"
-/>
+<DocumentFragment>
+  <div
+    class="column"
+    role="button"
+  />
+</DocumentFragment>
 `;

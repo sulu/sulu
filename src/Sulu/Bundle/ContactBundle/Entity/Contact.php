@@ -252,11 +252,19 @@ class Contact extends ApiEntity implements ContactInterface
         $this->medias = new ArrayCollection();
     }
 
+    /**
+     * @return int
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @param string $firstName
+     *
+     * @return $this
+     */
     public function setFirstName($firstName)
     {
         $this->firstName = $firstName;
@@ -264,11 +272,19 @@ class Contact extends ApiEntity implements ContactInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getFirstName()
     {
         return $this->firstName;
     }
 
+    /**
+     * @param string|null $middleName
+     *
+     * @return $this
+     */
     public function setMiddleName($middleName)
     {
         $this->middleName = $middleName;
@@ -284,6 +300,11 @@ class Contact extends ApiEntity implements ContactInterface
         return $this->middleName;
     }
 
+    /**
+     * @param string $lastName
+     *
+     * @return $this
+     */
     public function setLastName($lastName)
     {
         $this->lastName = $lastName;
@@ -296,6 +317,9 @@ class Contact extends ApiEntity implements ContactInterface
         $this->avatar = $avatar;
     }
 
+    /**
+     * @return string
+     */
     public function getLastName()
     {
         return $this->lastName;

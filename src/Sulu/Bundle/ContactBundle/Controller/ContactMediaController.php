@@ -28,6 +28,7 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -36,7 +37,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *
  * @RouteResource("Medias")
  */
-class ContactMediaController extends AbstractMediaController implements ClassResourceInterface
+class ContactMediaController extends AbstractMediaController implements ClassResourceInterface, SecuredControllerInterface
 {
     protected static $mediaEntityKey = 'contact_media';
 
@@ -107,5 +108,10 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
             $contactId,
             $request
         );
+    }
+
+    public function getSecurityContext(): string
+    {
+        return 'sulu.contact.organizations';
     }
 }

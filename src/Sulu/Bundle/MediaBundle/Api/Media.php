@@ -159,7 +159,7 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     #[VirtualProperty]
     #[SerializedName('collection')]
@@ -167,10 +167,11 @@ class Media extends ApiWrapper
     {
         $collection = $this->entity->getCollection();
         if ($collection) {
+            /** @var int */
             return $collection->getId();
         }
 
-        return;
+        return null;
     }
 
     /**

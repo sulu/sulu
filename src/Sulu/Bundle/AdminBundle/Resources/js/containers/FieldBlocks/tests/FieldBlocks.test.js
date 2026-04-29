@@ -1223,11 +1223,52 @@ test ('Should set nested properties in handleBlockChange and call onChange with 
     fieldBlocks.find('FieldRenderer').prop('onChange')(0, 'options/test1', 'value1');
 
     const expectedArray1 = [{type: 'default', options: {test1: 'value1'}}];
-    expect(changeSpy).toBeCalledWith(expectedArray1);
+    expect(changeSpy).toBeCalledWith(expectedArray1, undefined);
 
     fieldBlocks.find('FieldRenderer').prop('onChange')(0, 'options/test2/test3', 'value2');
     const expectedArray2 = [{type: 'default', options: {test1: 'value1', test2: {test3: 'value2'}}}];
-    expect(changeSpy).toBeCalledWith(expectedArray2);
+    expect(changeSpy).toBeCalledWith(expectedArray2, undefined);
+});
+
+test('Should pass context through handleBlockChange to onChange', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+    const value = [{type: 'default'}];
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const changeSpy = jest.fn();
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            dataPath=""
+            defaultType="editor"
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaPath=""
+            types={types}
+            value={value}
+        />
+    );
+
+    fieldBlocks.find('Block').simulate('click');
+    fieldBlocks.find('FieldRenderer').prop('onChange')(0, 'alignment', 'left', {isDefaultValue: true});
+
+    expect(changeSpy).toBeCalledWith(
+        [{type: 'default', alignment: 'left'}],
+        {isDefaultValue: true}
+    );
 });
 
 test('Should call onFinish when the order of the blocks has changed', () => {
@@ -1922,7 +1963,8 @@ test('Should set correct default values for multiple single_select in blocks', (
                 'position_right': 'right',
                 'type': 'default',
             },
-        ]
+        ],
+        {isDefaultValue: true}
     );
 });
 

@@ -17,27 +17,20 @@ namespace Sulu\Component\Media\SystemCollections;
 class UnrecognizedSystemCollection extends \Exception
 {
     /**
-     * @var string
+     * @param string $key
+     * @param string[] $recognizedSystemCollections
      */
-    private $key;
-
-    /**
-     * @var string[]
-     */
-    private $recognizedSystemCollections;
-
-    public function __construct($key, array $recognizedSystemCollections)
-    {
+    public function __construct(
+        private $key,
+        private array $recognizedSystemCollections
+    ) {
         parent::__construct(
             \sprintf(
                 'Unrecognized system collection "%s" available collections: [%s]',
-                $key,
-                \implode(', ', $recognizedSystemCollections)
+                $this->key,
+                \implode(', ', $this->recognizedSystemCollections)
             )
         );
-
-        $this->key = $key;
-        $this->recognizedSystemCollections = $recognizedSystemCollections;
     }
 
     /**

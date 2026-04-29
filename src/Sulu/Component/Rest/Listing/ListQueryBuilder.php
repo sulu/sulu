@@ -351,7 +351,9 @@ class ListQueryBuilder
             // Get all fields which will appear in the where clause
             // The search fields already have the right format, and we have to use only the keys of where, because its
             // values contain the filter expression
-            $fields = \array_unique(\array_merge($whereKeys, $this->searchFields));
+            /** @var string[] $mergedFields */
+            $mergedFields = \array_merge($whereKeys, $this->searchFields);
+            $fields = \array_unique($mergedFields);
 
             foreach ($fields as $key) {
                 $keys = \explode('_', $key);
@@ -377,7 +379,11 @@ class ListQueryBuilder
                         $comparator = 'LIKE';
                         $search = ':search';
                     }
-                    $searches[] = $prefixActual . '.' . $col . ' ' . $comparator . ' ' . $search;
+                    if ('LIKE' === $comparator) {
+                        $searches[] = 'LOWER(' . $prefixActual . '.' . $col . ') LIKE LOWER(' . $search . ')';
+                    } else {
+                        $searches[] = $prefixActual . '.' . $col . ' ' . $comparator . ' ' . $search;
+                    }
                 }
             }
 

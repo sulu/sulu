@@ -1,6 +1,7 @@
 // @flow
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
 import log from 'loglevel';
 import SortableBlock from '../SortableBlock';
 
@@ -19,7 +20,7 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 test('Render collapsed sortable block', () => {
-    expect(render(
+    const {asFragment} = render(
         <SortableBlock
             actions={[]}
             activeType="editor"
@@ -33,7 +34,9 @@ test('Render collapsed sortable block', () => {
             sortIndex={1}
             value={{content: 'Test Content'}}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render expanded sortable, non-collapsable block with types', () => {
@@ -41,7 +44,7 @@ test('Render expanded sortable, non-collapsable block with types', () => {
         (value, type) => 'Test for ' + value.content + (type ? ' and type ' + type : '')
     );
 
-    expect(render(
+    const {asFragment} = render(
         <SortableBlock
             actions={[]}
             activeType="type2"
@@ -54,7 +57,9 @@ test('Render expanded sortable, non-collapsable block with types', () => {
             types={{type1: 'Type 1', type2: 'Type 2'}}
             value={{content: 'Test Content'}}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render block in selection mode unselected', () => {
@@ -62,7 +67,7 @@ test('Render block in selection mode unselected', () => {
         (value, type) => 'Test for ' + value.content + (type ? ' and type ' + type : '')
     );
 
-    expect(render(
+    const {asFragment} = render(
         <SortableBlock
             actions={[]}
             activeType="type2"
@@ -76,7 +81,9 @@ test('Render block in selection mode unselected', () => {
             types={{type1: 'Type 1', type2: 'Type 2'}}
             value={{content: 'Test Content'}}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render block in selection mode selected', () => {
@@ -84,7 +91,7 @@ test('Render block in selection mode selected', () => {
         (value, type) => 'Test for ' + value.content + (type ? ' and type ' + type : '')
     );
 
-    expect(render(
+    const {asFragment} = render(
         <SortableBlock
             actions={[]}
             activeType="type2"
@@ -98,11 +105,13 @@ test('Render block in selection mode selected', () => {
             types={{type1: 'Type 1', type2: 'Type 2'}}
             value={{content: 'Test Content'}}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should not show block types if only a single block is passed', () => {
-    const sortableBlock = mount(
+    render(
         <SortableBlock
             actions={[]}
             activeType="editor"
@@ -117,10 +126,11 @@ test('Should not show block types if only a single block is passed', () => {
         />
     );
 
-    expect(sortableBlock.find('SingleSelect')).toHaveLength(0);
+    expect(screen.queryByRole('button', {name: /Editor/})).not.toBeInTheDocument();
 });
 
-test('Should apply sortIndex to given actions and pass wrapped actions to Block component', () => {
+test('Should apply sortIndex to given actions and pass wrapped actions to Block component', async() => {
+    const user = userEvent.setup();
     const onActionClickSpy = jest.fn();
     const actions = [
         {
@@ -140,7 +150,7 @@ test('Should apply sortIndex to given actions and pass wrapped actions to Block 
         },
     ];
 
-    const sortableBlock = mount(
+    render(
         <SortableBlock
             actions={actions}
             activeType="editor"
@@ -154,29 +164,14 @@ test('Should apply sortIndex to given actions and pass wrapped actions to Block 
         />
     );
 
-    const blockActions = sortableBlock.find('Block').prop('actions');
-    expect(blockActions).toEqual([
-        expect.objectContaining({
-            type: 'button',
-            icon: 'su-test-1',
-            label: 'Test Action 1',
-        }),
-        {
-            type: 'divider',
-        },
-        expect.objectContaining({
-            type: 'button',
-            icon: 'su-test-2',
-            label: 'Test Action 2',
-        }),
-    ]);
-
     expect(onActionClickSpy).not.toBeCalled();
-    blockActions[0].onClick();
+    await user.click(screen.getByLabelText('su-more-circle'));
+    await user.click(screen.getByRole('button', {name: /Test Action 1/}));
     expect(onActionClickSpy).toBeCalledWith(101);
 });
 
-test('Should pass remove action to Block component if depracted onRemove prop is set', () => {
+test('Should pass remove action to Block component if depracted onRemove prop is set', async() => {
+    const user = userEvent.setup();
     const removeSpy = jest.fn();
     const actions = [
         {
@@ -187,7 +182,7 @@ test('Should pass remove action to Block component if depracted onRemove prop is
         },
     ];
 
-    const sortableBlock = mount(
+    render(
         <SortableBlock
             actions={actions}
             activeType="editor"
@@ -205,27 +200,14 @@ test('Should pass remove action to Block component if depracted onRemove prop is
         expect.stringContaining('The "onRemove" prop of the "SortableBlock" component is deprecated')
     );
 
-    const blockActions = sortableBlock.find('Block').prop('actions');
-    expect(blockActions).toEqual([
-        expect.objectContaining({
-            type: 'button',
-            icon: 'su-test',
-            label: 'Test Action',
-        }),
-        expect.objectContaining({
-            type: 'button',
-            icon: 'su-trash-alt',
-            label: 'sulu_admin.delete',
-        }),
-    ]);
-
     expect(removeSpy).not.toBeCalled();
-    blockActions[1].onClick();
+    await user.click(screen.getByLabelText('su-more-circle'));
+    await user.click(screen.getByRole('button', {name: /sulu_admin\.delete/}));
     expect(removeSpy).toBeCalledWith(101);
 });
 
 test('Should not show the settings icon if no onSettingsClick callback is passed', () => {
-    const sortableBlock = mount(
+    render(
         <SortableBlock
             actions={[]}
             activeType="editor"
@@ -239,15 +221,16 @@ test('Should not show the settings icon if no onSettingsClick callback is passed
         />
     );
 
-    expect(sortableBlock.find('Icon[name="su-cog"]')).toHaveLength(0);
+    expect(screen.queryByLabelText('su-cog')).not.toBeInTheDocument();
 });
 
-test('Should call onCollapse when the block is being collapsed', () => {
+test('Should call onCollapse when the block is being collapsed', async() => {
+    const user = userEvent.setup();
     const collapseSpy = jest.fn();
     const expandSpy = jest.fn();
     const removeSpy = jest.fn();
 
-    const sortableBlock = shallow(
+    render(
         <SortableBlock
             actions={[]}
             activeType="editor"
@@ -262,23 +245,24 @@ test('Should call onCollapse when the block is being collapsed', () => {
         />
     );
 
-    sortableBlock.find('Block').prop('onCollapse')();
+    await user.click(screen.getByLabelText('su-collapse-vertical'));
 
     expect(collapseSpy).toBeCalledWith(1);
     expect(expandSpy).not.toBeCalled();
     expect(removeSpy).not.toBeCalled();
 });
 
-test('Should call onExpand when the block is being expanded', () => {
+test('Should call onExpand when the block is being expanded', async() => {
+    const user = userEvent.setup();
     const collapseSpy = jest.fn();
     const expandSpy = jest.fn();
     const removeSpy = jest.fn();
 
-    const sortableBlock = shallow(
+    render(
         <SortableBlock
             actions={[]}
             activeType="editor"
-            expanded={true}
+            expanded={false}
             onCollapse={collapseSpy}
             onExpand={expandSpy}
             onRemove={removeSpy}
@@ -289,19 +273,20 @@ test('Should call onExpand when the block is being expanded', () => {
         />
     );
 
-    sortableBlock.find('Block').prop('onExpand')();
+    await user.click(screen.getByRole('switch'));
 
     expect(collapseSpy).not.toBeCalled();
     expect(expandSpy).toBeCalledWith(1);
     expect(removeSpy).not.toBeCalled();
 });
 
-test('Should call onSettingClick when the block setting icon is clicked', () => {
+test('Should call onSettingClick when the block setting icon is clicked', async() => {
+    const user = userEvent.setup();
     const collapseSpy = jest.fn();
     const expandSpy = jest.fn();
     const settingsClickSpy = jest.fn();
 
-    const sortableBlock = shallow(
+    render(
         <SortableBlock
             actions={[]}
             activeType="editor"
@@ -316,17 +301,18 @@ test('Should call onSettingClick when the block setting icon is clicked', () => 
         />
     );
 
-    sortableBlock.find('Block').prop('onSettingsClick')();
+    await user.click(screen.getByLabelText('su-cog'));
 
     expect(collapseSpy).not.toBeCalled();
     expect(expandSpy).not.toBeCalled();
     expect(settingsClickSpy).toBeCalledWith(1);
 });
 
-test('Should call onTypeChange when the block has changed its type', () => {
+test('Should call onTypeChange when the block has changed its type', async() => {
+    const user = userEvent.setup();
     const typeChangeSpy = jest.fn();
 
-    const sortableBlock = shallow(
+    render(
         <SortableBlock
             actions={[]}
             activeType="editor"
@@ -338,11 +324,13 @@ test('Should call onTypeChange when the block has changed its type', () => {
             renderBlockContent={jest.fn()}
             selected={false}
             sortIndex={1}
+            types={{editor: 'Editor', type1: 'Type 1'}}
             value={{content: 'Test Content'}}
         />
     );
 
-    sortableBlock.find('Block').prop('onTypeChange')('type1');
+    await user.click(screen.getByRole('button', {name: /Editor/}));
+    await user.click(screen.getByRole('button', {name: /Type 1/}));
 
     expect(typeChangeSpy).toBeCalledWith('type1', 1);
 });
@@ -351,7 +339,7 @@ test('Should call renderBlockContent with the correct arguments', () => {
     const renderBlockContentSpy = jest.fn();
     const value = {content: 'Test 1'};
 
-    shallow(
+    render(
         <SortableBlock
             actions={[]}
             activeType="editor"
@@ -373,7 +361,7 @@ test('Should call renderBlockContent with the correct arguments when block is co
     const renderBlockContentSpy = jest.fn();
     const value = {content: 'Test 1'};
 
-    shallow(
+    render(
         <SortableBlock
             actions={[]}
             activeType="editor"
@@ -395,7 +383,7 @@ test('Should call renderBlockContent with the correct arguments when types are i
     const renderBlockContentSpy = jest.fn();
     const value = {content: 'Test 2'};
 
-    shallow(
+    render(
         <SortableBlock
             actions={[]}
             activeType="test"

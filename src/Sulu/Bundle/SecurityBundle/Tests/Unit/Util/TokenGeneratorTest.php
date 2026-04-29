@@ -9,9 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SecurityBundle\Util;
+namespace Sulu\Bundle\SecurityBundle\Tests\Unit\Util;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\SecurityBundle\Util\TokenGenerator;
 
 class TokenGeneratorTest extends TestCase
 {

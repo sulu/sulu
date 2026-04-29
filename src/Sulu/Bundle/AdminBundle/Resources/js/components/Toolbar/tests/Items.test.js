@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {render, mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
 import React from 'react';
 import debounce from 'debounce';
 import Items from '../Items';
@@ -15,50 +15,58 @@ window.ResizeObserver = jest.fn(function() {
 });
 
 test('Render items', () => {
-    expect(render(<Items />)).toMatchSnapshot();
+    const {asFragment} = render(<Items />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render items with children', () => {
-    expect(render(<Items><Button onClick={clickSpy}>Test</Button></Items>)).toMatchSnapshot();
+    const {asFragment} = render(<Items><Button onClick={clickSpy}>Test</Button></Items>);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Resize div should call callback', () => {
     const resizeFunction = jest.fn();
     debounce.mockReturnValue(resizeFunction);
 
-    const items = mount(
+    render(
         <Items>
             <Button>Test</Button>
         </Items>
     );
 
     expect(ResizeObserver).toBeCalledWith(resizeFunction);
-    expect(ResizeObserver.mock.instances[0].observe).toBeCalledWith(items.instance().parentRef);
+    const childRef = screen.getByRole('list');
+    const parentRef = childRef.parentElement;
+    expect(ResizeObserver.mock.instances[0].observe).toBeCalledWith(parentRef);
 
-    expect(items.instance().showText).toEqual(true);
+    if (!(parentRef instanceof HTMLElement) || !(childRef instanceof HTMLElement)) {
+        throw new Error('Expected toolbar items refs');
+    }
 
-    items.instance().childRef = {
-        offsetWidth: 50,
-    };
-
-    items.instance().parentRef = {
-        offsetWidth: 40,
-    };
+    Object.defineProperty(childRef, 'offsetWidth', {
+        value: 50,
+        configurable: true,
+    });
+    Object.defineProperty(parentRef, 'offsetWidth', {
+        value: 40,
+        configurable: true,
+    });
 
     debounce.mock.calls[0][0]();
 
-    expect(items.instance().expandedWidth).toEqual(50);
-    expect(items.instance().parentWidth).toEqual(40);
-    expect(items.instance().showText).toEqual(false);
+    expect(screen.queryByText('Test')).not.toBeInTheDocument();
 });
 
 test('ResizeObserver.disconnect should be called before component unmount', () => {
-    const items = mount(
+    const {unmount} = render(
         <Items>
             <Button>Test</Button>
         </Items>
     );
 
-    items.instance().componentWillUnmount();
+    unmount();
+
     expect(ResizeObserver.mock.instances[0].disconnect).toBeCalled();
 });

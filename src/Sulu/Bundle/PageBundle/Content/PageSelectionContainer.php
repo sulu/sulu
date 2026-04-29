@@ -188,7 +188,7 @@ class PageSelectionContainer implements ArrayableInterface
                 return $this->getData();
         }
 
-        return;
+        return null;
     }
 
     /**

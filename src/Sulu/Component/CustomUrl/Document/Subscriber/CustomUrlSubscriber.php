@@ -56,7 +56,7 @@ class CustomUrlSubscriber implements EventSubscriberInterface
     public function handlePersist(PersistEvent $event)
     {
         $document = $event->getDocument();
-        if (!($document instanceof CustomUrlBehavior)) {
+        if (!$document instanceof CustomUrlBehavior) {
             return;
         }
 
@@ -180,7 +180,7 @@ class CustomUrlSubscriber implements EventSubscriberInterface
     public function handleRemove(RemoveEvent $event)
     {
         $document = $event->getDocument();
-        if (!($document instanceof CustomUrlBehavior)) {
+        if (!$document instanceof CustomUrlBehavior) {
             return;
         }
 

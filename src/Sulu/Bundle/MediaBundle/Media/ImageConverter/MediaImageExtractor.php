@@ -72,15 +72,24 @@ class MediaImageExtractor implements MediaImageExtractorInterface
      */
     private function convertPdfToImage($resource)
     {
-        $temporaryFilePath = $this->createTemporaryFile($resource);
+        // Create temporary file for source PDF
+        $sourcePdfPath = $this->createTemporaryFile($resource);
+
+        // Create a separate temporary file for output image
+        $outputImagePath = \tempnam(\sys_get_temp_dir(), 'media') . '.jpg';
 
         $command = $this->ghostScriptPath .
-            ' -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -sOutputFile=' . $temporaryFilePath . ' ' .
-            '-dJPEGQ=100 -r300x300 -q ' . $temporaryFilePath . ' -c quit';
+            ' -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -sOutputFile=' . $outputImagePath . ' ' .
+            '-dJPEGQ=100 -r300x300 -q ' . $sourcePdfPath . ' -c quit';
 
         \shell_exec($command);
-        $output = \file_get_contents($temporaryFilePath);
-        \unlink($temporaryFilePath);
+
+        // Read generated image
+        $output = \file_get_contents($outputImagePath);
+
+        // Clean up temporary files
+        \unlink($sourcePdfPath);
+        \unlink($outputImagePath);
 
         if (!$output) {
             throw new GhostScriptNotFoundException(

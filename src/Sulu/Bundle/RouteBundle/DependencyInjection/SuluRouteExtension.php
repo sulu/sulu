@@ -17,7 +17,7 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -29,6 +29,24 @@ class SuluRouteExtension extends Extension implements PrependExtensionInterface
 
     public function prepend(ContainerBuilder $container)
     {
+        if ($container->hasExtension('doctrine')) {
+            $container->prependExtensionConfig(
+                'doctrine',
+                [
+                    'orm' => [
+                        'mappings' => [
+                            'SuluRouteBundle' => [
+                                'type' => 'xml',
+                                'dir' => __DIR__ . '/../Resources/config/doctrine',
+                                'prefix' => 'Sulu\Bundle\RouteBundle\Entity',
+                                'alias' => 'SuluRouteBundle',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+
         if ($container->hasExtension('sulu_admin')) {
             $container->prependExtensionConfig(
                 'sulu_admin',
@@ -62,18 +80,18 @@ class SuluRouteExtension extends Extension implements PrependExtensionInterface
             $resourceKeyMappings
         );
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
-        $loader->load('routing.xml');
-        $loader->load('manager.xml');
-        $loader->load('generator.xml');
-        $loader->load('command.xml');
-        $loader->load('page_tree_move.xml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.php');
+        $loader->load('routing.php');
+        $loader->load('manager.php');
+        $loader->load('generator.php');
+        $loader->load('command.php');
+        $loader->load('page_tree_move.php');
 
         $pageRouteCascade = $config['content_types']['page_tree_route']['page_route_cascade'];
 
         if ('off' !== $pageRouteCascade) {
-            $loader->load('page_tree_update.xml');
+            $loader->load('page_tree_update.php');
         } else {
             $container->setAlias(
                 'sulu_route.page_tree_route.updater.request',

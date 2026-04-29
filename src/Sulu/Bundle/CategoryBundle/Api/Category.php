@@ -19,7 +19,6 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
 use Sulu\Bundle\MediaBundle\Api\Media;
-use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 class Category extends ApiEntityWrapper
@@ -33,13 +32,14 @@ class Category extends ApiEntityWrapper
     /**
      * Returns the id of the category.
      *
-     * @return array
+     * @return int
      */
     #[VirtualProperty]
     #[SerializedName('id')]
     #[Groups(['fullCategory', 'partialCategory'])]
     public function getId()
     {
+        /** @var int */
         return $this->entity->getId();
     }
 
@@ -181,7 +181,7 @@ class Category extends ApiEntityWrapper
     /**
      * Returns the name of the Category dependent on the locale.
      *
-     * @return array
+     * @return array|null
      */
     #[VirtualProperty]
     #[SerializedName('meta')]
@@ -206,7 +206,7 @@ class Category extends ApiEntityWrapper
             return $arrReturn;
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -250,26 +250,28 @@ class Category extends ApiEntityWrapper
     /**
      * Returns the created date for the category.
      *
-     * @return string
+     * @return \DateTimeInterface
      */
     #[VirtualProperty]
     #[SerializedName('created')]
     #[Groups(['fullCategory'])]
     public function getCreated()
     {
+        /** @var \DateTimeInterface */
         return $this->entity->getCreated();
     }
 
     /**
      * Returns the created date for the category.
      *
-     * @return string
+     * @return \DateTimeInterface
      */
     #[VirtualProperty]
     #[SerializedName('changed')]
     #[Groups(['fullCategory'])]
     public function getChanged()
     {
+        /** @var \DateTimeInterface */
         return $this->entity->getChanged();
     }
 
@@ -296,6 +298,8 @@ class Category extends ApiEntityWrapper
     /**
      * Sets a translation to the entity.
      * If no other translation was assigned before, the translation is added as default.
+     *
+     * @return void
      */
     public function setTranslation(CategoryTranslationInterface $translation)
     {
@@ -310,7 +314,10 @@ class Category extends ApiEntityWrapper
         $translationEntity->setTranslation($translation->getTranslation());
         $translationEntity->setLocale($translation->getLocale());
 
-        if (null === $this->getId() && null === $this->getDefaultLocale()) {
+        /** @var int|null $id */
+        $id = $this->getId();
+
+        if (null === $id && null === $this->getDefaultLocale()) {
             // new entity and new translation
             // save first locale as default
             $this->entity->setDefaultLocale($translationEntity->getLocale());
@@ -355,7 +362,7 @@ class Category extends ApiEntityWrapper
             return new self($parent, $this->locale);
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -373,7 +380,7 @@ class Category extends ApiEntityWrapper
             return $parent->getId();
         }
 
-        return;
+        return null;
     }
 
     /**

@@ -19,7 +19,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
 class SuluSnippetExtension extends Extension implements PrependExtensionInterface
 {
@@ -192,20 +192,20 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
             $config['twig']['snippet']['cache_lifetime']
         );
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('content.xml');
-        $loader->load('snippet.xml');
-        $loader->load('export.xml');
-        $loader->load('import.xml');
-        $loader->load('admin.xml');
-        $loader->load('command.xml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('content.php');
+        $loader->load('snippet.php');
+        $loader->load('export.php');
+        $loader->load('import.php');
+        $loader->load('admin.php');
+        $loader->load('command.php');
 
         if (\array_key_exists('SuluReferenceBundle', $bundles)) {
-            $loader->load('services_reference.xml');
+            $loader->load('services_reference.php');
         }
 
         if (\array_key_exists('SuluTrashBundle', $bundles)) {
-            $loader->load('services_trash.xml');
+            $loader->load('services_trash.php');
         }
     }
 }

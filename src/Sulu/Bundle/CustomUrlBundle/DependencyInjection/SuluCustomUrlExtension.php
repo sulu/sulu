@@ -21,7 +21,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
 /**
  * Loads configuration and services for custom-urls.
@@ -35,14 +35,14 @@ class SuluCustomUrlExtension extends Extension implements PrependExtensionInterf
     {
         $bundles = $container->getParameter('kernel.bundles');
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('admin.xml');
-        $loader->load('document.xml');
-        $loader->load('routing.xml');
-        $loader->load('event_listener.xml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('admin.php');
+        $loader->load('document.php');
+        $loader->load('routing.php');
+        $loader->load('event_listener.php');
 
         if (\array_key_exists('SuluTrashBundle', $bundles)) {
-            $loader->load('services_trash.xml');
+            $loader->load('services_trash.php');
         }
     }
 

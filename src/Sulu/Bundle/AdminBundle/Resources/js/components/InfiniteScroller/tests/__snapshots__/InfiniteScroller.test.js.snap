@@ -1,45 +1,49 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`InfiniteScroller should show a loader when the loading prop is set to true 1`] = `
-<div
-  id="scrollable"
->
-  <section>
-    <div>
-      <div />
-    </div>
-    <div
-      class="indicator"
-    >
+<DocumentFragment>
+  <div
+    id="scrollable"
+  >
+    <section>
+      <div>
+        <div />
+      </div>
       <div
-        class="spinner"
-        style="width:40px;height:40px"
+        class="indicator"
       >
         <div
-          class="doubleBounce1"
-        />
-        <div
-          class="doubleBounce2"
-        />
+          class="spinner"
+          style="width: 40px; height: 40px;"
+        >
+          <div
+            class="doubleBounce1"
+          />
+          <div
+            class="doubleBounce2"
+          />
+        </div>
       </div>
-    </div>
-  </section>
-</div>
+    </section>
+  </div>
+</DocumentFragment>
 `;
 
 exports[`InfiniteScroller should show an info message when the last page has been reached 1`] = `
-<div
-  id="scrollable"
->
-  <section>
-    <div>
-      <div />
-    </div>
-    <div
-      class="indicator"
-    >
-      Last page reached
-    </div>
-  </section>
-</div>
+<DocumentFragment>
+  <div
+    id="scrollable"
+  >
+    <section>
+      <div>
+        <div />
+      </div>
+      <div
+        class="indicator"
+      >
+        Last page reached
+      </div>
+    </section>
+  </div>
+</DocumentFragment>
 `;

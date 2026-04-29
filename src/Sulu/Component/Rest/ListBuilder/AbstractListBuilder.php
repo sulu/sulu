@@ -35,7 +35,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * The value for which the searchfields will be searched.
      *
-     * @var string
+     * @var string|null
      */
     protected $search;
 
@@ -168,7 +168,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
             return $this->selectFields[$fieldName];
         }
 
-        return;
+        return null;
     }
 
     public function hasSelectField($name)
@@ -195,7 +195,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
             return $this->fieldDescriptors[$fieldName];
         }
 
-        return;
+        return null;
     }
 
     public function addSearchField(FieldDescriptorInterface $fieldDescriptor)

@@ -1,26 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render WebspaceSelect closed 1`] = `
-<div
-  class="webspaceSelect"
->
-  <button
-    class="button"
-    type="button"
-  >
-    <span
-      aria-label="su-webspace"
-      class="su-webspace buttonIcon"
-    />
-    <span
-      class="buttonValue"
+<body>
+  <div>
+    <div
+      class="webspaceSelect"
     >
-      Sulu
-    </span>
-    <span
-      aria-label="su-angle-down"
-      class="su-angle-down buttonIcon"
-    />
-  </button>
-</div>
+      <button
+        class="button"
+        type="button"
+      >
+        <span
+          aria-label="su-webspace"
+          class="su-webspace buttonIcon"
+        />
+        <span
+          class="buttonValue"
+        >
+          Sulu
+        </span>
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down buttonIcon"
+        />
+      </button>
+    </div>
+  </div>
+</body>
 `;

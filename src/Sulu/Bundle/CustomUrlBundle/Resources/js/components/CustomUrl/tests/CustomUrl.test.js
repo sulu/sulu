@@ -1,45 +1,54 @@
 // @flow
+import {fireEvent, render, screen} from '@testing-library/react';
 import React from 'react';
-import {mount, render} from 'enzyme';
 import CustomUrl from '../../CustomUrl';
 
 test('Render with empty placeholder', () => {
-    expect(render(<CustomUrl baseDomain="*.sulu.io/*" onChange={jest.fn()} value={[]} />)).toMatchSnapshot();
+    const {asFragment} = render(<CustomUrl baseDomain="*.sulu.io/*" onChange={jest.fn()} value={[]} />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render with partially filled placeholder', () => {
-    expect(render(<CustomUrl baseDomain="*.*.sulu.io" onChange={jest.fn()} value={['test']} />)).toMatchSnapshot();
+    const {asFragment} = render(<CustomUrl baseDomain="*.*.sulu.io" onChange={jest.fn()} value={['test']} />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render with completely filled placeholder', () => {
-    expect(render(<CustomUrl baseDomain="sulu.io/*/*" onChange={jest.fn()} value={['test1', 'test2']} />))
-        .toMatchSnapshot();
+    const {asFragment} = render(<CustomUrl baseDomain="sulu.io/*/*" onChange={jest.fn()} value={['test1', 'test2']} />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Call onBlur for every input field', () => {
     const blurSpy = jest.fn();
-    const customUrl = mount(<CustomUrl baseDomain="*.sulu.io/*" onBlur={blurSpy} onChange={jest.fn()} value={[]} />);
+
+    render(<CustomUrl baseDomain="*.sulu.io/*" onBlur={blurSpy} onChange={jest.fn()} value={[]} />);
+    const inputs = screen.getAllByRole('textbox');
 
     expect(blurSpy).not.toBeCalled();
 
-    customUrl.find('Input').at(0).prop('onBlur')();
-    expect(blurSpy).toHaveBeenLastCalledWith();
+    fireEvent.blur(inputs[0]);
+    expect(blurSpy).toHaveBeenCalledTimes(1);
 
-    customUrl.find('Input').at(1).prop('onBlur')();
-    expect(blurSpy).toHaveBeenLastCalledWith();
-
+    fireEvent.blur(inputs[1]);
     expect(blurSpy).toHaveBeenCalledTimes(2);
 });
 
 test('Call onChange after change of every input field', () => {
     const changeSpy = jest.fn();
-    const customUrl = mount(<CustomUrl baseDomain="*.sulu.io/*" onChange={changeSpy} value={[]} />);
+
+    render(<CustomUrl baseDomain="*.sulu.io/*" onChange={changeSpy} value={[]} />);
+    const inputs = screen.getAllByRole('textbox');
 
     expect(changeSpy).not.toBeCalled();
 
-    customUrl.find('Input').at(0).prop('onChange')('test1');
+    // eslint-disable-next-line testing-library/prefer-user-event
+    fireEvent.change(inputs[0], {target: {value: 'test1'}});
     expect(changeSpy).toHaveBeenLastCalledWith(['test1']);
 
-    customUrl.find('Input').at(1).prop('onChange')('test2');
+    // eslint-disable-next-line testing-library/prefer-user-event
+    fireEvent.change(inputs[1], {target: {value: 'test2'}});
     expect(changeSpy).toHaveBeenLastCalledWith([undefined, 'test2']);
 });

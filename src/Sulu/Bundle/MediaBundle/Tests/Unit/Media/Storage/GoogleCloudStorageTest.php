@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\Storage;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\Storage;
 
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FileNotFoundException;
@@ -17,6 +17,8 @@ use League\Flysystem\Filesystem;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Bundle\MediaBundle\Media\Storage\GoogleCloudStorage;
+use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter;
 use Symfony\Component\Filesystem\Exception\IOException;
 

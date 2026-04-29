@@ -3,10 +3,11 @@
 import React, {Component} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import {Button, Input, SingleSelect, DropdownButton} from '../../components';
+import {Button, Checkbox, Input, SingleSelect, DropdownButton} from '../../components';
 import promptInputStyles from './prompt-input.scss';
 
 type Props = {|
+    canIncludeContentContext?: boolean,
     experts: {
         name: string,
         text: string,
@@ -18,12 +19,15 @@ type Props = {|
         selected: string,
         type: 'select',
     },
+    includeContentContext?: boolean,
+    includeContentContextLabel?: string,
     isLoading: boolean,
     messages: {
         addMessage: string,
         send: string,
     },
     onAddMessage: (text: string) => Promise<void>,
+    onIncludeContentContextChange?: (checked: boolean) => void,
     predefinedPrompts: ?{
         handleClick: (index: number) => void,
         label: string,
@@ -85,6 +89,31 @@ class PromptInput extends Component<Props> {
         );
     };
 
+    renderContentContextCheckbox = () => {
+        const {
+            canIncludeContentContext,
+            includeContentContext,
+            includeContentContextLabel,
+            onIncludeContentContextChange,
+        } = this.props;
+
+        if (!canIncludeContentContext) {
+            return null;
+        }
+
+        return (
+            <div className={promptInputStyles.contentContextCheckbox}>
+                <Checkbox
+                    checked={includeContentContext}
+                    onChange={onIncludeContentContextChange}
+                    size="small"
+                >
+                    {includeContentContextLabel}
+                </Checkbox>
+            </div>
+        );
+    };
+
     render() {
         const {
             experts,
@@ -116,6 +145,7 @@ class PromptInput extends Component<Props> {
                         </div>
                     )}
                     {this.renderPredefinedPrompts()}
+                    {this.renderContentContextCheckbox()}
                 </div>
                 <div className={promptInputStyles.input}>
                     {predefinedPrompts === undefined && (

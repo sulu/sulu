@@ -1,5 +1,35 @@
 # Upgrade
 
+## 2.6.23
+
+The `Sulu\Bundle\SecurityBundle\Controller\UserController` now takes an optional argument for the
+`FieldDescriptorFactory`. However, omitting this argument is deprecated, so integrators should start
+passing/injecting the `FieldDescriptorFactory` now to remain compatible with a future version where it
+will become required.
+
+## 2.6.22
+
+There might be issues updating a project which still requires `Swiftmailer`.
+As announced with `2.5.0` (2022-07-13) Sulu recommends replace `Swiftmailer`
+with the `symfony/mailer` package. Check the upgrade guide [of 2.5.0 below](#replace-swiftmailer-with-symfony-mailer)
+to remove `Swiftmailer` from your project if still installed.
+
+## 2.6.21
+
+The type of the `apiKey` in the `se_users` table has been changed to `string`.
+
+```sql
+ALTER TABLE se_users CHANGE apiKey apiKey VARCHAR(128) DEFAULT NULL;
+```
+
+An index on the `idRoles` column has been added to the `se_access_controls` table to improve query performance for permission checks with multiple roles.
+
+The access control query logic for doctrine entities with multiple roles has been fixed. Access is now granted if any assigned role grants the requested permission for an entity, instead of incorrectly denying access when another assigned role has no permission for the same entity.
+
+```sql
+CREATE INDEX IDX_C526DC5238C751C4 ON se_access_controls (idRoles);
+```
+
 ## 2.6.16
 
 * Deprecated \Sulu\Bundle\MediaBundle\Controller\AbstractMediaController::getTitleFromUpload -> MediaManager::getTitleFromUpload
@@ -222,12 +252,12 @@ return [
 
 ### New Reserved Templates directory for Global Blocks
 
-With the introduction of the new [Global Blocks](https://docs.sulu.io/en/2.6/book/templates.html#templates-global-blocks) there
+With the introduction of the new [Global Blocks](https://docs.sulu.io/en/2.x/book/templates.html#templates-global-blocks) there
 is a new reserved directory `config/templates/blocks`.
 
 If you already did use that directory for `xi:includes` you should move the existing blocks to `config/templates/includes/blocks`.
 Migrating to Global Blocks is not required and can be done step by step if you want to use the new Global Blocks
-feature. Have a look at the Global Blocks [Documentation](https://docs.sulu.io/en/2.6/book/templates.html#templates-global-blocks).
+feature. Have a look at the Global Blocks [Documentation](https://docs.sulu.io/en/2.x/book/templates.html#templates-global-blocks).
 
 ### Custom Admin Builds npm version changed
 
@@ -256,7 +286,7 @@ Sulu now uses Webpack 5 to build the administration interface application. To en
 If you have integrated custom JavaScript components into the administration interface,
 you might need to adjust your components to be compatible with the updated dependencies.
 If you have not integrated custom JavaScript code, you project is adjusted automatically by the
-[update build](https://docs.sulu.io/en/2.6/upgrades/upgrade-2.x.html) command.
+[update build](https://docs.sulu.io/en/2.x/upgrades/upgrade-2.x.html) command.
 
 Additionally, the following packages where upgraded:
 
@@ -703,7 +733,7 @@ The JavaScript dependencies of the Sulu administration interface were updated to
 If you have integrated custom JavaScript components into the administration interface,
 you might need to adjust your components to be compatible with the updated dependencies.
 If you have not integrated custom JavaScript code, you project is adjusted automatically by the
-[update build](https://docs.sulu.io/en/2.6/upgrades/upgrade-2.x.html) command.
+[update build](https://docs.sulu.io/en/2.x/upgrades/upgrade-2.x.html) command.
 
 ### Rename labelRef to inputContainerRef
 
@@ -1009,8 +1039,12 @@ framework:
         dsn: '%env(MAILER_DSN)%'
 ```
 
-It should also be considered to remove the **SwiftMailer** and **SwiftMailerBundle**
-from your application and replace it with [**Symfony Mailer**](https://symfony.com/doc/6.1/mailer.html).
+It should also be considered to remove the **SwiftMailer** and **SwiftMailerBundle**:
+from your application and replace it with [**Symfony Mailer**](https://symfony.com/doc/6.4/mailer.html).
+
+```bash
+composer remove symfony/swiftmailer-bundle
+```
 
 ## 2.4.19
 

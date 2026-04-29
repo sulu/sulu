@@ -9,12 +9,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PageBundle\Search\EventSubscriber;
+namespace Sulu\Bundle\PageBundle\Tests\Unit\Search\EventSubscriber;
 
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\PageBundle\Search\EventSubscriber\StructureSubscriber;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
