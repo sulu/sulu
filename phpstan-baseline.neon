@@ -6835,12 +6835,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Category/CategoryManager.php
 
 		-
-			message: '#^Parameter \#1 \$id of method Sulu\\Bundle\\CategoryBundle\\Category\\CategoryManager\:\:findById\(\) expects int, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Category/CategoryManager.php
-
-		-
 			message: '#^Parameter \#1 \$id of method Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryMetaInterface\:\:setId\(\) expects int, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -55545,7 +55539,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayNotHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Controller/SnippetControllerTest.php
 
 		-
@@ -71643,7 +71637,7 @@ parameters:
 		-
 			message: '#^Cannot access offset int\<0, max\> on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
+			count: 3
 			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
 
 		-
@@ -71733,7 +71727,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
 
 		-

@@ -263,6 +263,24 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                 ]
             );
         }
+
+        if ($container->hasExtension('doctrine')) {
+            $container->prependExtensionConfig(
+                'doctrine',
+                [
+                    'orm' => [
+                        'mappings' => [
+                            'SuluContactBundle' => [
+                                'type' => 'xml',
+                                'dir' => __DIR__ . '/../Resources/config/doctrine',
+                                'prefix' => 'Sulu\Bundle\ContactBundle\Entity',
+                                'alias' => 'SuluContactBundle',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
     }
 
     public function load(array $configs, ContainerBuilder $container)
