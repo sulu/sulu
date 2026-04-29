@@ -6403,18 +6403,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\Category\:\:getChanged\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\Category\:\:getCreated\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Api\\Category\:\:getDefaultLocale\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -6644,12 +6632,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$id of method Sulu\\Bundle\\CategoryBundle\\Category\\CategoryManager\:\:findById\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Category/CategoryManager.php
-
-		-
-			message: '#^Parameter \#1 \$id of method Sulu\\Bundle\\CategoryBundle\\Category\\CategoryManager\:\:findById\(\) expects int, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Category/CategoryManager.php
@@ -19951,12 +19933,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
 
 		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManagerInterface\:\:getById\(\) invoked with 8 parameters, 2\-6 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -20024,12 +20000,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#3 \$destinationId of method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManagerInterface\:\:move\(\) expects int\|null, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
-			message: '#^Parameter \#4 \$search of method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManagerInterface\:\:getTree\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
@@ -34579,12 +34549,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getExcludedIds\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getFields\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -34598,18 +34562,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getFilter\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getIds\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getIds\(\) should return array but returns array\<int\<0, max\>, string\>\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
@@ -34663,12 +34615,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelperInterface\:\:getExcludedIds\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelperInterface.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelperInterface\:\:getFields\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -34681,26 +34627,8 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelperInterface.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelperInterface\:\:getIds\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelperInterface.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelperInterface\:\:getPage\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelperInterface.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelperInterface\:\:getSearchFields\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelperInterface.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelperInterface\:\:getSearchPattern\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelperInterface.php
 
@@ -35528,18 +35456,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Rest/RestHelper.php
-
-		-
-			message: '#^Parameter \#1 \$page of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:setCurrentPage\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Rest/RestHelper.php
-
-		-
-			message: '#^Parameter \#1 \$search of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:search\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Rest/RestHelper.php

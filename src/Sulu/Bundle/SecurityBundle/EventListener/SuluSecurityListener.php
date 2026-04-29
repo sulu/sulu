@@ -50,13 +50,8 @@ class SuluSecurityListener implements EventSubscriberInterface
         $action = '__invoke';
 
         if (\is_array($controller)) {
-            if (isset($controller[1])) {
-                $action = $controller[1];
-            }
-
-            if (isset($controller[0])) {
-                $controller = $controller[0];
-            }
+            $action = $controller[1];
+            $controller = $controller[0];
         }
 
         if (
