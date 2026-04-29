@@ -193,11 +193,11 @@ class CategoryController extends AbstractRestController implements SecuredContro
 
     protected function getListRepresentation(
         Request $request,
-                $locale,
-                $parentId = null,
-                $expandedIds = [],
-                $expandSelf = false,
-                $includeRoot = false,
+        $locale,
+        $parentId = null,
+        $expandedIds = [],
+        $expandSelf = false,
+        $includeRoot = false,
         bool $defaultSort = true
     ) {
         $listBuilder = $this->initializeListBuilder($locale, $defaultSort);
@@ -256,7 +256,11 @@ class CategoryController extends AbstractRestController implements SecuredContro
             }
         }
 
-        if (!empty($expandedIds) && !$search && !empty($parentId)) {
+        $usesIdsFallback = $request->query->has('ids')
+                    && !$request->query->has('expandedIds')
+                    && !$request->query->has('selectedIds');
+
+        if (!empty($expandedIds) && !$search && !$usesIdsFallback) {
             $categoriesByParentId = [];
             foreach ($categories as &$category) {
                 $categoryParentId = $category['parent'];
@@ -276,7 +280,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
                 ];
             }
 
-            $categories = $categoriesByParentId[$parentId];
+            $categories = $categoriesByParentId[$parentId] ?? [];
         }
 
         if ($includeRoot && !$parentId) {
