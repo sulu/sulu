@@ -62,6 +62,7 @@
             </meta>
             <params>
                 <param name="headline" value="true"/>
+                <param name="autofocus" value="true"/>
             </params>
         </property>
 

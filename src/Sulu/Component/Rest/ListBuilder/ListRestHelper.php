@@ -52,12 +52,6 @@ class ListRestHelper implements ListRestHelperInterface
         return $request;
     }
 
-    /**
-     * Returns an array of ids to which the response should be restricted.
-     * If null is returned, entities in the response should not be restricted by their id.
-     *
-     * @return array
-     */
     public function getIds()
     {
         $idsString = $this->getRequest()->get('ids');
@@ -65,11 +59,6 @@ class ListRestHelper implements ListRestHelperInterface
         return (null !== $idsString) ? \array_filter(\explode(',', $idsString)) : null;
     }
 
-    /**
-     * Returns an array of ids which should be excluded from the response.
-     *
-     * @return array
-     */
     public function getExcludedIds()
     {
         $excludedIdsString = $this->getRequest()->get('excludedIds');
@@ -100,7 +89,7 @@ class ListRestHelper implements ListRestHelperInterface
     /**
      * Returns the maximum number of elements in a single response.
      *
-     * @return int
+     * @return int|null
      */
     public function getLimit()
     {

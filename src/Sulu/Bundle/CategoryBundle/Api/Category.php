@@ -214,26 +214,28 @@ class Category extends ApiEntityWrapper
     /**
      * Returns the created date for the category.
      *
-     * @return string
+     * @return \DateTimeInterface
      */
     #[VirtualProperty]
     #[SerializedName('created')]
     #[Groups(['fullCategory'])]
     public function getCreated()
     {
+        /** @var \DateTimeInterface */
         return $this->entity->getCreated();
     }
 
     /**
      * Returns the created date for the category.
      *
-     * @return string
+     * @return \DateTimeInterface
      */
     #[VirtualProperty]
     #[SerializedName('changed')]
     #[Groups(['fullCategory'])]
     public function getChanged()
     {
+        /** @var \DateTimeInterface */
         return $this->entity->getChanged();
     }
 

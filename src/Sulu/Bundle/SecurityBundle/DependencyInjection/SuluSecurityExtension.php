@@ -30,7 +30,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Security\Http\AccessToken\AccessTokenExtractorInterface;
 
@@ -68,27 +68,27 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
         $container->registerForAutoconfiguration(DescendantProviderInterface::class)
             ->addTag('sulu_security.access_control_descendant_provider');
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
-        $loader->load('command.xml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.php');
+        $loader->load('command.php');
 
         /** @var array<string, class-string> $bundles */
         $bundles = $container->getParameter('kernel.bundles');
 
         if (\in_array(SchebTwoFactorBundle::class, $bundles, true)) {
-            $loader->load('2fa.xml');
+            $loader->load('2fa.php');
 
             if (\interface_exists(AuthCodeMailerInterface::class)) {
-                $loader->load('2fa_email.xml');
+                $loader->load('2fa_email.php');
             }
         }
 
         if ($config['checker']['enabled']) {
-            $loader->load('checker.xml');
+            $loader->load('checker.php');
         }
 
         if ($twoFactorForcePattern) {
-            $loader->load('2fa_force.xml');
+            $loader->load('2fa_force.php');
         }
 
         $this->configurePersistence($config['objects'], $container);
@@ -111,7 +111,7 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
             throw new \RuntimeException('The symfony/security-http package is required to use the SuluSecurityBundle. At least symfony/security-http 6.2 is required.');
         }
 
-        $loader->load('single_sign_on.xml');
+        $loader->load('single_sign_on.php');
 
         $container->setParameter(
             'sulu_security.has_single_sign_on_providers',

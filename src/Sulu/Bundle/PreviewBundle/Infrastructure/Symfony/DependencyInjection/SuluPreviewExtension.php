@@ -18,7 +18,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
 /**
  * @internal No BC promises are given for this class. It may be changed or removed at any time.
@@ -35,8 +35,8 @@ class SuluPreviewExtension extends Extension implements PrependExtensionInterfac
         $container->setParameter('sulu_preview.mode', $config['mode']);
         $container->setParameter('sulu_preview.delay', $config['delay']);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../../../Resources/config'));
-        $loader->load('services.xml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../../../Resources/config'));
+        $loader->load('services.php');
 
         $this->configurePersistence($config['objects'], $container);
         $container->addAliases(

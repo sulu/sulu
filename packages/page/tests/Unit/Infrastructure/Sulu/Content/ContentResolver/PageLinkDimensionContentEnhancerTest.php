@@ -129,7 +129,7 @@ class PageLinkDimensionContentEnhancerTest extends TestCase
         $this->assertSame($pageDimensionContent->reveal(), $result);
     }
 
-    public function testEnhancePreservesSourceLinkDataWhenResolvingPageLink(): void
+    public function testEnhanceInternalPageLinkReportsSourceIdentityWithTargetContent(): void
     {
         $sourcePage = $this->prophesize(PageInterface::class);
         $sourcePage->getId()->willReturn('uuid-link');
@@ -147,20 +147,12 @@ class PageLinkDimensionContentEnhancerTest extends TestCase
         $targetPage = $this->prophesize(PageInterface::class);
         $targetPage->getWebspaceKey()->willReturn('sulu-io');
 
-        $targetDimensionContent = $this->prophesize(PageDimensionContentInterface::class);
-        $targetDimensionContent->getRoute()->willReturn(new Route('pages', 'uuid-target', 'en', '/target-page'));
-        $targetDimensionContent->getLocale()->willReturn('en');
-        $targetDimensionContent->getResource()->willReturn($targetPage->reveal());
-        $targetDimensionContent->getTemplateData()->willReturn(['existing' => 'value']);
-        $targetDimensionContent->setTemplateData([
-            'existing' => 'value',
-            'title' => 'Link Page',
-            'url' => '/target-page',
-        ])->shouldBeCalled();
-        $targetDimensionContent->setLinkData([
-            'provider' => 'page',
-            'href' => 'uuid-target',
-        ])->shouldBeCalled();
+        $targetDimensionContent = new PageDimensionContent($targetPage->reveal());
+        $targetDimensionContent->setLocale('en');
+        $targetDimensionContent->setStage(DimensionContentInterface::STAGE_LIVE);
+        $targetDimensionContent->setVersion(DimensionContentInterface::CURRENT_VERSION);
+        $targetDimensionContent->setTemplateData(['existing' => 'value', 'title' => 'Target Page']);
+        $targetDimensionContent->setRoute(new Route('pages', 'uuid-target', 'en', '/target-page'));
 
         $this->pageRepository->findOneBy(
             ['uuid' => 'uuid-target'],
@@ -171,10 +163,29 @@ class PageLinkDimensionContentEnhancerTest extends TestCase
             'locale' => 'en',
             'stage' => DimensionContentInterface::STAGE_LIVE,
             'version' => DimensionContentInterface::CURRENT_VERSION,
-        ])->willReturn($targetDimensionContent->reveal())->shouldBeCalled();
+        ])->willReturn($targetDimensionContent)->shouldBeCalled();
 
         $result = $this->enhancer->enhance($pageDimensionContent);
 
-        $this->assertSame($targetDimensionContent->reveal(), $result);
+        $this->assertNotSame($targetDimensionContent, $result);
+        $this->assertSame($sourcePage->reveal(), $result->getResource());
+        $this->assertSame([
+            'existing' => 'value',
+            'title' => 'Link Page',
+            'url' => '/target-page',
+        ], $result->getTemplateData());
+        $this->assertSame('Link Page', $result->getTitle());
+        $this->assertSame([
+            'provider' => 'page',
+            'href' => 'uuid-target',
+        ], $result->getLinkData());
+
+        // the clone took all writes so the aggregator's instance stays unmodified
+        $this->assertSame($targetPage->reveal(), $targetDimensionContent->getResource());
+        $this->assertSame(
+            ['existing' => 'value', 'title' => 'Target Page'],
+            $targetDimensionContent->getTemplateData(),
+        );
+        $this->assertNull($targetDimensionContent->getLinkData());
     }
 }

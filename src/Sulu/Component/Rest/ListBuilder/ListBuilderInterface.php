@@ -87,7 +87,7 @@ interface ListBuilderInterface
     /**
      * Sets the search value for the search fields.
      *
-     * @param string $search
+     * @param string|null $search
      *
      * @return ListBuilderInterface
      */
