@@ -11,9 +11,6 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use ProxyManager\Configuration;
-use ProxyManager\FileLocator\FileLocator;
-use ProxyManager\GeneratorStrategy\FileWriterGeneratorStrategy;
 use Sulu\Component\Cache\Memoize;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\DependencyInjection\Reference;
@@ -29,17 +26,4 @@ return static function(ContainerConfigurator $container) {
             '%sulu_core.cache.memoize.default_lifetime%',
         ])
         ->tag('kernel.reset', ['method' => 'reset']);
-
-    $services->set('sulu_core.proxy_manager.configuration', Configuration::class)
-        ->private()
-        ->call('setProxiesTargetDir', ['%sulu_core.proxy_cache_dir%'])
-        ->call('setGeneratorStrategy', [new Reference('sulu_core.proxy_manager.file_writer_generator_strategy')]);
-
-    $services->set('sulu_core.proxy_manager.file_writer_generator_strategy', FileWriterGeneratorStrategy::class)
-        ->private()
-        ->args([new Reference('sulu_core.proxy_manager.file_locator')]);
-
-    $services->set('sulu_core.proxy_manager.file_locator', FileLocator::class)
-        ->private()
-        ->args([expr('service(\'sulu_core.proxy_manager.configuration\').getProxiesTargetDir()')]);
 };

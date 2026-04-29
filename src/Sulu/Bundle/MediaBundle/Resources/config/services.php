@@ -500,8 +500,6 @@ return static function(ContainerConfigurator $container) {
         ])
         ->tag('sulu_media.file_inspector');
 
-    $services->alias('Sulu\Bundle\MediaBundle\FileInspector\SvgSafetyInspectorInterface', 'sulu_media.file_inspector.svg_inspector');
-
     $services->set('sulu_media.file_inspector.subscriber', UploadFileSubscriber::class)
         ->args([tagged_iterator('sulu_media.file_inspector')])
         ->tag('kernel.event_subscriber');
