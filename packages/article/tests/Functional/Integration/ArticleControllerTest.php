@@ -14,7 +14,6 @@ namespace Sulu\Article\Tests\Functional\Integration;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Article\Domain\Model\ArticleInterface;
-use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
@@ -744,11 +743,15 @@ class ArticleControllerTest extends SuluTestCase
     {
         self::purgeDatabase();
 
+        $tagMatch = self::createTag(['name' => 'Tag Filter Match']);
+        $tagOther = self::createTag(['name' => 'Tag Filter Other']);
+        self::getEntityManager()->flush();
+
         $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
             'template' => 'article',
             'title' => 'Tagged Match Article',
             'url' => '/tagged-match-article',
-            'excerptTags' => ['Tag Filter Match'],
+            'excerptTags' => [$tagMatch->getId()],
             'mainWebspace' => 'sulu-io',
         ]) ?: null);
         $this->assertHttpStatusCode(201, $this->client->getResponse());
@@ -757,16 +760,12 @@ class ArticleControllerTest extends SuluTestCase
             'template' => 'article',
             'title' => 'Tagged Other Article',
             'url' => '/tagged-other-article',
-            'excerptTags' => ['Tag Filter Other'],
+            'excerptTags' => [$tagOther->getId()],
             'mainWebspace' => 'sulu-io',
         ]) ?: null);
         $this->assertHttpStatusCode(201, $this->client->getResponse());
 
-        /** @var TagInterface|null $tag */
-        $tag = self::getEntityManager()->getRepository(TagInterface::class)->findOneBy(['name' => 'Tag Filter Match']);
-        $this->assertNotNull($tag);
-
-        $this->client->request('GET', '/admin/api/articles?locale=en&filter[tagId]=' . $tag->getId() . '&fields=title,id');
+        $this->client->request('GET', '/admin/api/articles?locale=en&filter[tagId]=' . $tagMatch->getId() . '&fields=title,id');
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
 
