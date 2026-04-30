@@ -27,7 +27,6 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
-use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -43,8 +42,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class CollectionController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
 {
-    use RequestParametersTrait;
-
     /**
      * @var string
      */
@@ -98,7 +95,10 @@ class CollectionController extends AbstractRestController implements ClassResour
      */
     public function getAction($id, Request $request)
     {
-        $locale = $this->getLocale($request) ?? $request->getLocale();
+        $locale = $this->getLocale($request);
+        if (null === $locale) {
+            throw new MissingParameterException(self::class, 'locale');
+        }
 
         if ($request->query->getBoolean('tree')) {
             $collections = $this->collectionManager->getTreeById($id, $locale);
@@ -119,7 +119,7 @@ class CollectionController extends AbstractRestController implements ClassResour
         /** @var int $offset */
         $offset = $this->listRestHelper->getOffset();
         $search = $this->listRestHelper->getSearchPattern();
-        $sortBy = $this->listRestHelper->getSortColumn();
+        $sortBy = $this->listRestHelper->getSortColumn() ?? 'title';
         $sortOrder = $this->listRestHelper->getSortOrder();
 
         $filter = [
@@ -129,26 +129,6 @@ class CollectionController extends AbstractRestController implements ClassResour
         ];
 
         try {
-            $locale = $this->getLocale($request);
-            $depth = \intval($this->getRequestParameter($request, 'depth', false, 0));
-            $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
-            $children = $this->getBooleanRequestParameter($request, 'children', false, false);
-
-            // filter children
-            $limit = $this->listRestHelper->getLimit();
-            $offset = $this->listRestHelper->getOffset();
-            $search = $this->listRestHelper->getSearchPattern();
-            /** @var string|null $sortBy */
-            $sortBy = $request->get('sortBy', 'title');
-            /** @var string $sortOrder */
-            $sortOrder = $request->get('sortOrder', 'ASC');
-
-            $filter = [
-                'limit' => $limit,
-                'offset' => $offset,
-                'search' => $search,
-            ];
-
             $view = $this->responseGetById(
                 $id,
                 function($id) use ($locale, $depth, $breadcrumb, $filter, $sortBy, $sortOrder, $children) {
@@ -158,7 +138,7 @@ class CollectionController extends AbstractRestController implements ClassResour
                         $depth,
                         $breadcrumb,
                         $filter,
-                        null !== $sortBy ? [$sortBy => $sortOrder] : [],
+                        [$sortBy => $sortOrder],
                         $children,
                         $this->permissions[PermissionTypes::VIEW]
                     );
@@ -188,16 +168,17 @@ class CollectionController extends AbstractRestController implements ClassResour
     public function cgetAction(Request $request)
     {
         $depth = $request->query->getInt('depth');
-        $parentId = $request->get('parentId', null);
+        $parentId = $request->query->get('parentId', null);
         $limit = $request->query->getInt('limit', 1000);
 
         /** @var int $offset */
         $offset = $this->listRestHelper->getOffset();
         $search = $this->listRestHelper->getSearchPattern();
-        $sortBy = $this->listRestHelper->getSortColumn();
+        $sortBy = $this->listRestHelper->getSortColumn() ?? 'title';
         $sortOrder = $this->listRestHelper->getSortOrder();
         $includeRoot = $request->query->getBoolean('includeRoot');
-        $locale = $request->query->getString('locale');
+
+        $locale = $request->query->get('locale') ?: throw new MissingParameterException(self::class, 'locale');
 
         if ('root' === $parentId) {
             $includeRoot = false;
@@ -205,25 +186,7 @@ class CollectionController extends AbstractRestController implements ClassResour
         }
 
         try {
-            $flat = $this->getBooleanRequestParameter($request, 'flat', false);
-            $depth = $request->get('depth', 0);
-            $parentId = $request->get('parentId', null);
-            /** @var int|null $limit */
-            $limit = $request->get('limit', null);
-            $offset = $this->getOffset($request, $limit);
-            $search = $this->listRestHelper->getSearchPattern();
-            /** @var string|null $sortBy */
-            $sortBy = $request->get('sortBy', 'title');
-            /** @var string $sortOrder */
-            $sortOrder = $request->get('sortOrder', 'ASC');
-            $includeRoot = $this->getBooleanRequestParameter($request, 'includeRoot', false, false);
-
-            if ('root' === $parentId) {
-                $includeRoot = false;
-                $parentId = null;
-            }
-
-            if ($flat) {
+            if ($request->query->getBoolean('flat')) {
                 $collections = $this->collectionManager->get(
                     $locale,
                     [
@@ -232,7 +195,7 @@ class CollectionController extends AbstractRestController implements ClassResour
                     ],
                     $limit,
                     $offset,
-                    null !== $sortBy ? [$sortBy => $sortOrder] : []
+                    [$sortBy => $sortOrder],
                 );
             } else {
                 $collections = $this->collectionManager->getTree(
@@ -241,7 +204,7 @@ class CollectionController extends AbstractRestController implements ClassResour
                     $limit,
                     $search,
                     $depth,
-                    null !== $sortBy ? [$sortBy => $sortOrder] : [],
+                    [$sortBy => $sortOrder],
                     $this->securityChecker->hasPermission('sulu.media.system_collections', 'view'),
                     $this->permissions[PermissionTypes::VIEW]
                 );
@@ -359,7 +322,7 @@ class CollectionController extends AbstractRestController implements ClassResour
     {
         /** @var int|null $destinationId */
         $destinationId = $request->query->get('destination');
-        $locale = $request->query->getString('locale');
+        $locale = $request->query->get('locale') ?: throw new MissingParameterException(self::class, 'locale');
 
         $collection = $this->collectionManager->move($id, $locale, $destinationId);
         $view = $this->view($collection);
@@ -372,9 +335,14 @@ class CollectionController extends AbstractRestController implements ClassResour
      */
     protected function getData(Request $request)
     {
+        $type = $this->defaultCollectionType;
+        if ($request->request->has('type')) {
+            $type = $request->request->all('type');
+        }
+
         return [
             'style' => $request->request->all('style'),
-            'type' => $request->request->all('type', $this->defaultCollectionType),
+            'type' => $type,
             'parent' => $request->request->get('parent'),
             'locale' => $request->request->get('locale'),
             'title' => $request->request->get('title'),
@@ -455,6 +423,6 @@ class CollectionController extends AbstractRestController implements ClassResour
 
     public function getSecuredObjectId(Request $request)
     {
-        return $request->get('id') ?: $request->get('parent');
+        return $request->attributes->get('id') ?: $request->query->get('parent');
     }
 }

@@ -25441,12 +25441,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Controller\\CollectionController\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Controller\\CollectionController\:\:getSecuredClass\(\) should return string but returns string\|null\.$#'
 			identifier: return.type
 			count: 1
@@ -25497,6 +25491,42 @@ parameters:
 		-
 			message: '#^Parameter \#5 \$depth of method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManagerInterface\:\:getTree\(\) expects int, mixed given\.$#'
 			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
+
+		-
+			message: '#^Parameter \#3 \$destinationId of method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManagerInterface\:\:move\(\) expects int\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
+
+		-
+			message: '#^Parameter \#5 \$depth of method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManagerInterface\:\:getTree\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
 
@@ -29236,12 +29266,6 @@ parameters:
 			message: '#^Binary operation "\." between ''/api/collections/'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 11
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-

@@ -456,10 +456,14 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?page=1&limit=4&flat=true&sortBy=title&sortOrder=DESC',
-            [
+            '/api/collections?' . \http_build_query([
+                'page' => 1,
+                'limit' => 4,
+                'flat' => true,
+                'sortBy' => 'title',
+                'sortOrder' => 'DESC',
                 'locale' => 'de',
-            ]
+            ])
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -1101,7 +1105,7 @@ class CollectionControllerTest extends SuluTestCase
                     'color' => '#00ccff',
                 ],
                 'type' => [
-                    'id' => $this->collectionType1->getId()
+                    'id' => $this->collectionType1->getId(),
                 ],
                 'title' => 'Test Collection changed',
                 'description' => 'This Description is only for testing changed',
@@ -1184,7 +1188,7 @@ class CollectionControllerTest extends SuluTestCase
                     'color' => '#00ccff',
                 ],
                 'type' => [
-                    'id' => 1
+                    'id' => 1,
                 ],
                 'title' => 'Test Collection changed',
                 'description' => 'This Description is only for testing changed',
@@ -1213,7 +1217,7 @@ class CollectionControllerTest extends SuluTestCase
                     'color' => '#00ccff',
                 ],
                 'type' => [
-                    'id' => $this->collectionType1->getId()
+                    'id' => $this->collectionType1->getId(),
                 ],
                 'title' => 'Test Child Collection changed',
                 'description' => 'This Description is only for testing changed',
@@ -1860,10 +1864,11 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'POST',
-            '/api/collections/' . $ids[3] . '?action=move&destination=' . $ids[0],
-            [
+            '/api/collections/' . $ids[3] . '?' . \http_build_query([
+                'action' => 'move',
+                'destination' => $ids[0],
                 'locale' => 'en-gb',
-            ]
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
