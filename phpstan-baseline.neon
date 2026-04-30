@@ -7503,19 +7503,7 @@ parameters:
 		-
 			message: '#^Binary operation "\." between ''/api/categories/'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 27
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/api/categories…'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 16
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 4
+			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -7633,18 +7621,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 54
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
-			message: '#^Cannot call method getKey\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 9
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
 			message: '#^Cannot call method setMedias\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -7653,13 +7629,7 @@ parameters:
 		-
 			message: '#^Cannot cast mixed to string\.$#'
 			identifier: cast.string
-			count: 3
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Tests\\Functional\\Controller\\CategoryControllerTest\:\:createCategory\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
+			count: 2
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -7690,12 +7660,6 @@ parameters:
 			message: '#^Parameter \#1 \$array of function usort expects TArray of array, mixed given\.$#'
 			identifier: argument.type
 			count: 13
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$category of method Sulu\\Bundle\\CategoryBundle\\Tests\\Functional\\Controller\\CategoryControllerTest\:\:createCategoryTranslation\(\) expects Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 110
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -7744,12 +7708,6 @@ parameters:
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
 			count: 19
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
-			message: '#^Parameter \#3 \$parentCategory of method Sulu\\Bundle\\CategoryBundle\\Tests\\Functional\\Controller\\CategoryControllerTest\:\:createCategory\(\) expects Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryInterface\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 40
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -15043,12 +15001,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
-			message: '#^Cannot access offset ''required'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
-
-		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 12
@@ -15117,13 +15069,13 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
 			identifier: argument.type
-			count: 5
+			count: 3
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
 			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
@@ -26467,7 +26419,19 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Build/UserBuilder.php
 
 		-
+			message: '#^Parameter \#1 \$input of method Symfony\\Component\\Console\\Helper\\QuestionHelper\:\:ask\(\) expects Symfony\\Component\\Console\\Input\\InputInterface, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Build/UserBuilder.php
+
+		-
 			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Build/UserBuilder.php
+
+		-
+			message: '#^Parameter \#2 \$output of method Symfony\\Component\\Console\\Helper\\QuestionHelper\:\:ask\(\) expects Symfony\\Component\\Console\\Output\\OutputInterface, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Build/UserBuilder.php

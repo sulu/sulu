@@ -94,6 +94,13 @@ class WebspaceCollectionBuilder
             $this->buildPortals($webspace);
         }
 
+        \uasort(
+            $this->webspaces,
+            function(Webspace $a, Webspace $b) {
+                return \strnatcasecmp((string) $a->getName(), (string) $b->getName());
+            }
+        );
+
         $environments = \array_keys($this->portalInformations);
 
         foreach ($environments as $environment) {

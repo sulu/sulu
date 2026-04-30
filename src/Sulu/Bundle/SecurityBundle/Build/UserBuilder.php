@@ -13,6 +13,8 @@ namespace Sulu\Bundle\SecurityBundle\Build;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\CoreBundle\Build\SuluBuilder;
+use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Question\Question;
 
 /**
  * Builder for creating users.
@@ -32,7 +34,6 @@ class UserBuilder extends SuluBuilder
     public function build()
     {
         $user = 'admin';
-        $password = 'admin';
         $roleName = 'User';
         $system = Admin::SULU_ADMIN_SECURITY_SYSTEM;
         $locale = 'en';
@@ -52,6 +53,13 @@ class UserBuilder extends SuluBuilder
             return;
         }
 
+        // Running after the admin user check, otherwise we don't need the password.
+        $helper = new QuestionHelper();
+        $question = new Question("Please provide an admin password (default: admin)\n");
+
+        /** @var string $password */
+        $password = $helper->ask($this->input, $this->output, $question) ?: 'admin';
+
         $this->execCommand(
             'Creating role: ' . $roleName,
             'sulu:security:role:create',
@@ -64,7 +72,7 @@ class UserBuilder extends SuluBuilder
             \sprintf('Created role "<comment>%s</comment>" in system "<comment>%s</comment>"', $roleName, $system)
         );
 
-        // locale choosen doesn't exist, fallback
+        // locale chosen doesn't exist, fallback
         if (!\in_array($locale, $userLocales)) {
             $locale = \array_shift($userLocales);
         }

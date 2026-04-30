@@ -84,7 +84,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
 
         if ('true' == $request->get('flat')) {
             $rootId = ($rootKey) ? $this->categoryManager->findByKey($rootKey)->getId() : null;
-            $expandedIds = \array_filter(\explode(',', $request->get('expandedIds', $request->get('selectedIds', ''))));
+            $expandedIds = \array_filter(\explode(',', $request->get('expandedIds', $request->get('selectedIds', $request->query->get('ids', '')))));
             $defaultSort = !$request->query->has('sortBy');
             $list = $this->getListRepresentation(
                 $request,
@@ -257,7 +257,11 @@ class CategoryController extends AbstractRestController implements SecuredContro
             }
         }
 
-        if (!empty($expandedIds) && !$search) {
+        $usesIdsFallback = $request->query->has('ids')
+                    && !$request->query->has('expandedIds')
+                    && !$request->query->has('selectedIds');
+
+        if (!empty($expandedIds) && !$search && !$usesIdsFallback) {
             $categoriesByParentId = [];
             foreach ($categories as &$category) {
                 $categoryParentId = $category['parent'];
@@ -277,7 +281,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
                 ];
             }
 
-            $categories = $categoriesByParentId[$parentId];
+            $categories = $categoriesByParentId[$parentId] ?? [];
         }
 
         if ($includeRoot && !$parentId) {

@@ -17,6 +17,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Exception\InvalidTemplateException;
 use Sulu\Component\Webspace\Loader\XmlFileLoader10;
 use Sulu\Component\Webspace\Loader\XmlFileLoader11;
+use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceCollectionBuilder;
 use Sulu\Component\Webspace\Tests\Unit\WebspaceTestCase;
 use Sulu\Component\Webspace\Url\Replacer;
@@ -285,5 +286,27 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         );
 
         $webspaceCollection = $webspaceCollectionBuilder->build();
+    }
+
+    public function testBuildSorting(): void
+    {
+        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
+            $this->loader,
+            new Replacer(),
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/sorting',
+            ['default', 'overview']
+        );
+
+        /** @var WebspaceCollection $webspaceCollection */
+        $webspaceCollection = $webspaceCollectionBuilder->build();
+
+        $webspaces = \array_values($webspaceCollection->getWebspaces());
+
+        $this->assertCount(5, $webspaces);
+        $this->assertEquals('Massive Art', $webspaces[0]->getName());
+        $this->assertEquals('Sulu CMF', $webspaces[1]->getName());
+        $this->assertEquals('Webspace 2', $webspaces[2]->getName());
+        $this->assertEquals('Webspace 10', $webspaces[3]->getName());
+        $this->assertEquals('ZZ Sorted', $webspaces[4]->getName());
     }
 }

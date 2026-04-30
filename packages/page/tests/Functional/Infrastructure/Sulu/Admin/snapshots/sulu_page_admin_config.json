@@ -264,6 +264,72 @@
                     "name": "de"
                 }
             ]
+        },
+        "aaa-sorted-io": {
+            "name": "ZZ Sorted",
+            "key": "aaa-sorted-io",
+            "localizations": [
+                {
+                    "locale": "en",
+                    "language": "en",
+                    "country": "",
+                    "shadow": "",
+                    "children": [],
+                    "parent": null,
+                    "default": true
+                }
+            ],
+            "theme": "default",
+            "security": {
+                "system": "Website",
+                "permissionCheck": false
+            },
+            "defaultTemplates": {
+                "homepage": "homepage",
+                "home": "homepage",
+                "page": "default"
+            },
+            "portalInformation": [
+                [],
+                []
+            ],
+            "urls": [
+                {
+                    "language": "",
+                    "country": "",
+                    "segment": "",
+                    "redirect": "",
+                    "main": true,
+                    "url": "aaa-sorted.io\/{localization}",
+                    "environment": "test"
+                }
+            ],
+            "customUrls": [],
+            "navigations": [
+                {
+                    "key": "main",
+                    "title": "Mainnavigation"
+                }
+            ],
+            "segments": [],
+            "resourceLocatorStrategy": {
+                "inputType": "leaf"
+            },
+            "_permissions": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false,
+                "archive": false,
+                "live": false,
+                "security": false
+            },
+            "allLocalizations": [
+                {
+                    "localization": "en",
+                    "name": "en"
+                }
+            ]
         }
     }
 }
