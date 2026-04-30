@@ -1,6 +1,7 @@
 @import 'normalize.css/normalize.css';
 @import './colors.scss';
 @import './fonts.scss';
+@import './variables.scss';
 
 $bodyBackgroundColor: $wildSand;
 $h1TextColor: $black;
@@ -22,8 +23,8 @@ html {
 
 body {
     background: $bodyBackgroundColor;
-    font-family: 'Open Sans', Helvetica, Arial, sans-serif;
-    font-size: 12px;
+    font-family: $baseFontFamily;
+    font-size: $baseFontSize;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     width: 100%;

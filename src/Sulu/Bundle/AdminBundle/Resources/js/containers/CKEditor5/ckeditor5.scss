@@ -4,7 +4,8 @@
 @import '../../components/Tabs/variables.scss';
 @import '../../components/Toolbar/variables.scss';
 
-$textEditorFontSize: 12px;
+$textEditorFontSize: $baseFontSize;
+$textEditorFontFamily: $baseFontFamily;
 $textEditorButtonMinSize: 20px;
 $textEditorBorderRadius: 3px;
 $textEditorBackgroundColor: $silver;
@@ -23,7 +24,10 @@ $textEditorUnpublishedLinkColor: $gold;
     :root {
         /* font size */
         --ck-font-size-base: $textEditorFontSize;
+        --ck-font-face: $textEditorFontFamily;
         --ck-icon-size: $textEditorFontSize;
+        --ck-content-font-family: $textEditorFontFamily;
+        --ck-content-font-size: $textEditorFontSize;
 
         /* z-index */
         --ck-z-default: 0;
@@ -87,6 +91,8 @@ $textEditorUnpublishedLinkColor: $gold;
         z-index: 1;
 
         .ck.ck-toolbar {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
             padding: 5px 10px;
 
             &.ck-toolbar_vertical > .ck-toolbar__items > .ck {
@@ -174,6 +180,7 @@ $textEditorUnpublishedLinkColor: $gold;
 
     .ck.ck-balloon-panel.ck-powered-by-balloon {
         background: transparent !important;
+        z-index: auto !important;
     }
 
     .ck.ck-editor {
@@ -184,6 +191,8 @@ $textEditorUnpublishedLinkColor: $gold;
 
         .ck.ck-content {
             border-color: $textEditorBackgroundColor !important;
+            font-family: $textEditorFontFamily;
+            font-size: $textEditorFontSize;
             line-height: 20px;
             min-height: 100px;
             padding-bottom: 5px;
