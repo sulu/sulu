@@ -2,6 +2,27 @@
 
 ## 3.0.6
 
+### CKEditor upgrade to 47
+
+For security reasons, the new version uses the `^47.0` CKEditor version.
+
+Run:
+
+```bash
+bin/adminconsole sulu:admin:update-build
+```
+
+If you have any custom CKEditor plugins, you might need to adjust them to be compatible with CKEditor 47.
+
+Keep in mind that CKEditor also requires at least `Node 20` to create a custom admin build.
+
+### Additional Optional Parameter fieldDescriptorFactory for UserController
+
+The `Sulu\Bundle\SecurityBundle\Controller\UserController` now takes an optional argument for the
+`FieldDescriptorFactory`. However, omitting this argument is deprecated, so integrators should start
+passing/injecting the `FieldDescriptorFactory` now to remain compatible with a future version where it
+will become required.
+
 ### Consistent smart content params across article, page and snippet providers
 
 Several smart content `<param>` names for selecting templates were ambiguous between providers and have been deprecated:
@@ -119,6 +140,22 @@ CREATE INDEX idx_sn_snippet_dimension_contents_resource_template_lookup ON sn_sn
 CREATE INDEX idx_ar_article_dimension_contents_stage_version_locale ON ar_article_dimension_contents (stage, version, locale);
 CREATE INDEX idx_ar_article_dimension_contents_resource_lookup ON ar_article_dimension_contents (articleUuid, stage, version, locale, ghostLocale);
 CREATE INDEX idx_ar_article_dimension_contents_resource_template_lookup ON ar_article_dimension_contents (articleUuid, stage, version, locale, templateKey);
+```
+
+## 3.0.4
+
+The type of the `apiKey` in the `se_users` table has been changed to `string`.
+
+```sql
+ALTER TABLE se_users CHANGE apiKey apiKey VARCHAR(128) DEFAULT NULL;
+```
+
+An index on the `idRoles` column has been added to the `se_access_controls` table to improve query performance for permission checks with multiple roles.
+
+The access control query logic for doctrine entities with multiple roles has been fixed. Access is now granted if any assigned role grants the requested permission for an entity, instead of incorrectly denying access when another assigned role has no permission for the same entity.
+
+```sql
+CREATE INDEX IDX_C526DC5238C751C4 ON se_access_controls (idRoles);
 ```
 
 ## 3.0.3
