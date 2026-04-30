@@ -53,6 +53,11 @@ abstract class AbstractTagNameToIdMigration extends AbstractMigration
         $this->convertRows();
     }
 
+    public function down(Schema $schema): void
+    {
+        $this->throwIrreversibleMigrationException();
+    }
+
     /**
      * @return array<string, int>
      */
@@ -82,7 +87,7 @@ abstract class AbstractTagNameToIdMigration extends AbstractMigration
             ->select('id', 'templateData AS template_data')
             ->from($this->getTable())
             ->executeQuery()
-            ->fetchAllAssociative();
+            ->iterateAssociative();
 
         foreach ($rows as $row) {
             $raw = $row['template_data'] ?? null;
