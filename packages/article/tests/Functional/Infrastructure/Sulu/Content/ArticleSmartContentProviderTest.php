@@ -38,7 +38,7 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
  *     template?: string,
  *     locale?: string,
  *     excerptCategories?: int[],
- *     excerptTags?: string[],
+ *     excerptTags?: int[],
  *     author?: int|null,
  *     authored?: string|null,
  *     mainWebspace?: string,
@@ -67,7 +67,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
     private static array $categories = [];
 
     /**
-     * @var array<string, string>
+     * @var array<string, int>
      */
     private static array $tags = [];
 
@@ -100,20 +100,16 @@ class ArticleSmartContentProviderTest extends SuluTestCase
         self::$categories['entertainment'] = self::createCategory(['en' => ['title' => 'Entertainment']]);
         $entityManager->flush();
 
-        // Create tags
-        self::$tags = [
-            'mobile' => 'mobile',
-            'web' => 'web',
-            'cloud' => 'cloud',
-            'football' => 'football',
-            'tennis' => 'tennis',
-            'fitness' => 'fitness',
-            'diet' => 'diet',
-            'startup' => 'startup',
-            'finance' => 'finance',
-            'movies' => 'movies',
-            'music' => 'music',
-        ];
+        $tagObjects = [];
+        foreach (['mobile', 'web', 'cloud', 'football', 'tennis', 'fitness', 'diet', 'startup', 'finance', 'movies', 'music'] as $tagName) {
+            $tagObjects[$tagName] = self::createTag(['name' => $tagName]);
+        }
+
+        $entityManager->flush();
+
+        foreach ($tagObjects as $tagName => $tag) {
+            self::$tags[$tagName] = $tag->getId();
+        }
 
         // Create articles with various combinations of categories and tags
         self::$articles['tech1'] = self::createArticle([
@@ -742,6 +738,36 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             }
             $this->assertContains($article->getUuid(), $resultIds, "Article '$key' should be in the default group");
         }
+    }
+
+    public function testFindFlatByGroupsAndTemplateKeysIntersection(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy([
+            ...$this->getDefaultFilters(),
+            ...['locale' => 'en'],
+        ], [], ['groups' => 'default,blog-group', 'templateKeys' => 'blog']);
+
+        $this->assertCount(2, $result);
+
+        $resultIds = \array_map(fn ($article) => $article['id'], $result);
+        $this->assertContains(self::$articles['tech2']->getUuid(), $resultIds);
+        $this->assertContains(self::$articles['business2']->getUuid(), $resultIds);
+    }
+
+    public function testFindFlatByGroupsWithoutTemplateKeysUsesAllGroupTemplates(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy([
+            ...$this->getDefaultFilters(),
+            ...['locale' => 'en'],
+        ], [], ['groups' => 'blog-group,news-group']);
+
+        $this->assertCount(4, $result);
+
+        $resultIds = \array_map(fn ($article) => $article['id'], $result);
+        $this->assertContains(self::$articles['tech2']->getUuid(), $resultIds);
+        $this->assertContains(self::$articles['business2']->getUuid(), $resultIds);
+        $this->assertContains(self::$articles['sports2']->getUuid(), $resultIds);
+        $this->assertContains(self::$articles['entertainment2']->getUuid(), $resultIds);
     }
 
     public function testFindFlatByWebspace(): void

@@ -32,6 +32,10 @@ class WebspaceSmartContentFiltersVisitor implements SmartContentFiltersVisitorIn
 
     public function visit(array $data, array $filters, array $parameters): array
     {
+        if ('true' === ($parameters['ignoreWebspaces'] ?? null) || true === ($parameters['ignoreWebspaces'] ?? null)) {
+            return $filters;
+        }
+
         $request = $this->requestStack->getCurrentRequest();
         if (null === $request) {
             return $filters;

@@ -45,6 +45,11 @@ interface TaxonomyInterface
     public function getExcerptTagNames(): array;
 
     /**
+     * @return int[]
+     */
+    public function getExcerptTagIds(): array;
+
+    /**
      * @param TagInterface[] $excerptTags
      */
     public function setExcerptTags(array $excerptTags): void;

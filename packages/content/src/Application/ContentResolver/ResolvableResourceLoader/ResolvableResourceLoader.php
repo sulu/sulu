@@ -30,7 +30,7 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
     ) {
     }
 
-    public function loadResources(array $resourcesPerLoader, ?string $locale): array
+    public function loadResources(array $resourcesPerLoader, ?string $locale, array $context = []): array
     {
         $loadedResources = [];
         foreach ($resourcesPerLoader as $loaderKey => $resourcesToLoad) {
@@ -64,7 +64,7 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
             }
 
             if (\count($resolvableResources) > 0) {
-                $result = $this->loadResolvableResources($resolvableResources, $loaderKey, $locale);
+                $result = $this->loadResolvableResources($resolvableResources, $loaderKey, $locale, $context);
                 foreach ($result as $id => $loadedResource) {
                     foreach ($metadataIdentifiersPerResourceId[$id] as $metadataIdentifier) {
                         $loadedResources[$loaderKey][$id][$metadataIdentifier] = $loadedResource;
@@ -100,10 +100,11 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
 
     /**
      * @param array<ResolvableResource> $resolvableResources
+     * @param array<string, mixed> $context
      *
      * @return array<string|int, mixed>
      */
-    private function loadResolvableResources(array $resolvableResources, string $loaderKey, ?string $locale): array
+    private function loadResolvableResources(array $resolvableResources, string $loaderKey, ?string $locale, array $context = []): array
     {
         $resourceLoader = $this->resourceLoaderProvider->getResourceLoader($loaderKey);
         if (!$resourceLoader) {
@@ -119,7 +120,7 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
         return $resourceLoader->load(
             $resourceIds,
             $locale,
-            $params
+            \array_merge($params, $context),
         );
     }
 }

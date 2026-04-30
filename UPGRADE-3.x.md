@@ -1,5 +1,93 @@
 # Upgrade
 
+## 3.0.6
+
+### Consistent smart content params across article, page and snippet providers
+
+Several smart content `<param>` names for selecting templates were ambiguous between providers and have been deprecated:
+
+- `types` is deprecated.
+  - For article providers (`articles`, `articles_page_tree`), use `groups`.
+  - For all other providers (`pages`, `snippets`), use `templateKeys`.
+- `structureTypes` is deprecated. Use `templateKeys`.
+
+**Migration:**
+
+Update your template XML files. For example:
+
+```xml
+<!-- articles: before -->
+<property name="my_articles" type="smart_content">
+    <params>
+        <param name="provider" value="articles"/>
+        <param name="types" value="blog,news"/>
+    </params>
+</property>
+
+<!-- articles: after -->
+<property name="my_articles" type="smart_content">
+    <params>
+        <param name="provider" value="articles"/>
+        <param name="groups" value="blog,news"/>
+    </params>
+</property>
+```
+
+```xml
+<!-- pages/snippets: before -->
+<property name="my_pages" type="smart_content">
+    <params>
+        <param name="provider" value="pages"/>
+        <param name="structureTypes" value="default"/>
+    </params>
+</property>
+
+<!-- pages/snippets: after -->
+<property name="my_pages" type="smart_content">
+    <params>
+        <param name="provider" value="pages"/>
+        <param name="templateKeys" value="default"/>
+    </params>
+</property>
+```
+
+If a deprecated param name is still used, the container build will fail with a message pointing at the affected template and property.
+
+
+### SmartContent tag filter now uses tag IDs instead of tag names
+
+The SmartContent tag filter previously stored and compared tags by **name**. It now stores and compares tags by **ID** to
+be consistent with how categories are handled and to restore compatibility with content migrated from Sulu 2.6.
+
+Any SmartContent filter configuration that was saved with tag names (as strings) will no longer filter correctly.
+
+### `tag_selection` field type now uses tag IDs instead of tag names
+
+The `tag_selection` field type now persists selected tags as integer IDs instead of name strings.
+
+`TagSelectionPropertyResolver` and `TagResourceLoader` now interpret the 
+stored data as integer IDs and look up tags via `TagRepositoryInterface::findBy(['id' => $ids])`. The `TagResourceLoader::load()`
+result map is now keyed by tag ID instead of tag name.
+
+### `TaxonomyDataMapper` constructor signature changed
+
+The constructor argument of `Sulu\Content\Application\ContentDataMapper\DataMapper\TaxonomyDataMapper` was changed from 
+`Sulu\Content\Domain\Factory\TagFactoryInterface` to `Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface`.
+In addition, the input expected on `excerptTags` changed from `string[]` (tag names) to `int[]` (tag IDs).
+
+### Tag creation in SmartContent now requires permission
+
+Creating tags inline from the SmartContent filter overlay now correctly requires the `sulu.tags.tags` `add` permission. Previously, any user could create tags through the SmartContent interface regardless of their tag permissions.
+
+Inline tag creation in the admin frontend now goes through the `TagController` `POST /admin/api/tags` endpoint instead of the implicit `TagManagerInterface::findOrCreateByName()` path, so the standard permission voter applies.
+
+### Deprecations
+
+The following APIs were deprecated in this release and will be removed in a future major version:
+
+- `Sulu\Content\Domain\Factory\TagFactoryInterface` and its `create(string[] $tagNames): TagInterface[]` method. Use `Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface::findBy(['id' => $ids])` instead.
+- `Sulu\Bundle\TagBundle\Tag\TagManagerInterface::findOrCreateByName()` and the corresponding `Sulu\Bundle\TagBundle\Tag\TagManager::findOrCreateByName()`. Create tags via the `TagController` `POST /admin/api/tags` endpoint so permissions are enforced.
+
 ## 3.0.5
 
 ### Remove false cascade on author and route relations

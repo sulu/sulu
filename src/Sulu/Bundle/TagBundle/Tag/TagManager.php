@@ -62,6 +62,9 @@ class TagManager implements TagManagerInterface
         return $this->tagRepository->findTagByName($name);
     }
 
+    /**
+     * @deprecated since 3.0.
+     */
     public function findOrCreateByName($name)
     {
         $tag = $this->findByName($name);

@@ -19,6 +19,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
+use Sulu\Content\Tests\Traits\CreateTagTrait;
 use Sulu\Page\Application\Message\CreatePageMessage;
 use Sulu\Page\Application\Message\ModifyPageMessage;
 use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
@@ -37,6 +38,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 class PageControllerTest extends SuluTestCase
 {
     use AssertSnapshotTrait;
+    use CreateTagTrait;
 
     /**
      * @var KernelBrowser
@@ -156,6 +158,10 @@ class PageControllerTest extends SuluTestCase
     {
         self::purgeDatabase();
 
+        $tag1 = self::createTag(['name' => 'Tag 1']);
+        $tag2 = self::createTag(['name' => 'Tag 2']);
+        self::getEntityManager()->flush();
+
         $targetGroupIds = $this->createTargetGroups();
         $homepage = $this->createHomepage('0199ee04-c220-784e-a6fa-ac985870f2d5', 'sulu-io');
 
@@ -165,7 +171,7 @@ class PageControllerTest extends SuluTestCase
                 'description' => 'Excerpt Description',
                 'more' => 'Excerpt More',
             ],
-            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptTags' => [$tag1->getId(), $tag2->getId()],
             'excerptCategories' => [],
             'excerptIcon' => null,
             'excerptMedia' => null,
@@ -246,6 +252,10 @@ class PageControllerTest extends SuluTestCase
     {
         \sleep(1); // Ensure that the version timestamp is different from the previous version
 
+        $modTag1 = self::createTag(['name' => 'Modified Tag 1']);
+        $modTag2 = self::createTag(['name' => 'Modified Tag 2']);
+        self::getEntityManager()->flush();
+
         $targetGroupIds = $this->createTargetGroups();
 
         $excerptData = [
@@ -256,7 +266,7 @@ class PageControllerTest extends SuluTestCase
                 'icon' => null,
                 'media' => null,
             ],
-            'excerptTags' => ['Modified Tag 1', 'Modified Tag 2'],
+            'excerptTags' => [$modTag1->getId(), $modTag2->getId()],
             'excerptCategories' => [],
             'excerptSegment' => 'enterprise-segment',
         ];
@@ -345,6 +355,10 @@ class PageControllerTest extends SuluTestCase
     {
         self::purgeDatabase();
 
+        $tag1 = self::createTag(['name' => 'Tag 1']);
+        $tag2 = self::createTag(['name' => 'Tag 2']);
+        self::getEntityManager()->flush();
+
         $targetGroupIds = $this->createTargetGroups();
         $homepage = $this->createHomepage('0199ee04-c220-784e-a6fa-ac985870f2d5', 'sulu-io');
 
@@ -354,7 +368,7 @@ class PageControllerTest extends SuluTestCase
                 'description' => 'Excerpt Description',
                 'more' => 'Excerpt More',
             ],
-            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptTags' => [$tag1->getId(), $tag2->getId()],
             'excerptCategories' => [],
             'excerptIcon' => null,
             'excerptMedia' => null,
@@ -408,6 +422,10 @@ class PageControllerTest extends SuluTestCase
     #[Depends('testPost')]
     public function testPostPublishBlogWebspace(): void
     {
+        $blogTag1 = self::createTag(['name' => 'Blog Tag 1']);
+        $blogTag2 = self::createTag(['name' => 'Blog Tag 2']);
+        self::getEntityManager()->flush();
+
         $targetGroupIds = $this->createTargetGroups();
         $homepage = $this->createHomepage('0199ee13-6eae-7e0e-b559-ed579da52916', 'blog');
 
@@ -417,7 +435,7 @@ class PageControllerTest extends SuluTestCase
                 'description' => 'Excerpt Description',
                 'more' => 'Excerpt More',
             ],
-            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptTags' => [$blogTag1->getId(), $blogTag2->getId()],
             'excerptCategories' => [],
             'excerptIcon' => null,
             'excerptMedia' => null,
@@ -544,6 +562,10 @@ class PageControllerTest extends SuluTestCase
     #[Depends('testGet')]
     public function testPut(string $id): void
     {
+        $tag3 = self::createTag(['name' => 'Tag 3']);
+        $tag4 = self::createTag(['name' => 'Tag 4']);
+        self::getEntityManager()->flush();
+
         $targetGroupIds = $this->createTargetGroups();
 
         $excerptData = [
@@ -552,7 +574,7 @@ class PageControllerTest extends SuluTestCase
                 'description' => 'Excerpt Description 2',
                 'more' => 'Excerpt More 2',
             ],
-            'excerptTags' => ['Tag 3', 'Tag 4'],
+            'excerptTags' => [$tag3->getId(), $tag4->getId()],
             'excerptCategories' => [],
             'excerptIcon' => null,
             'excerptMedia' => null,
@@ -663,6 +685,10 @@ class PageControllerTest extends SuluTestCase
     #[Depends('testGetListIncludeGhostShadow')]
     public function testCopy(): string
     {
+        $copyTag1 = self::createTag(['name' => 'Copy Tag 1']);
+        $copyTag2 = self::createTag(['name' => 'Copy Tag 2']);
+        self::getEntityManager()->flush();
+
         $targetGroupIds = $this->createTargetGroups();
 
         $excerptData = [
@@ -673,7 +699,7 @@ class PageControllerTest extends SuluTestCase
                 'icon' => null,
                 'media' => null,
             ],
-            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptTags' => [$copyTag1->getId(), $copyTag2->getId()],
             'excerptCategories' => [],
             'excerptSegment' => 'copy-segment',
         ];

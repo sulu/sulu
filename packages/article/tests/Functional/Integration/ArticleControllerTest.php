@@ -14,10 +14,10 @@ namespace Sulu\Article\Tests\Functional\Integration;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Article\Domain\Model\ArticleInterface;
-use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
+use Sulu\Content\Tests\Traits\CreateTagTrait;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -29,6 +29,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 class ArticleControllerTest extends SuluTestCase
 {
     use AssertSnapshotTrait;
+    use CreateTagTrait;
 
     /**
      * @var KernelBrowser
@@ -60,6 +61,10 @@ class ArticleControllerTest extends SuluTestCase
     {
         self::purgeDatabase();
 
+        $tag1 = self::createTag(['name' => 'Tag 1']);
+        $tag2 = self::createTag(['name' => 'Tag 2']);
+        self::getEntityManager()->flush();
+
         $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
             'template' => 'article',
             'title' => 'Test Article',
@@ -85,7 +90,7 @@ class ArticleControllerTest extends SuluTestCase
                 'icon' => null,
                 'image' => null,
             ],
-            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptTags' => [$tag1->getId(), $tag2->getId()],
             'excerptCategories' => [],
             'excerptSegment' => 'test-segment',
             'excerptAudienceTargetGroups' => [],
@@ -141,6 +146,10 @@ class ArticleControllerTest extends SuluTestCase
     {
         \sleep(1); // Ensure that the version timestamp is different from the previous version
 
+        $modTag1 = self::createTag(['name' => 'Modified Tag 1']);
+        $modTag2 = self::createTag(['name' => 'Modified Tag 2']);
+        self::getEntityManager()->flush();
+
         $this->client->request(
             'PUT',
             '/admin/api/articles/' . $id . '?locale=en&action=publish',
@@ -170,7 +179,7 @@ class ArticleControllerTest extends SuluTestCase
                         'icon' => null,
                         'image' => null,
                     ],
-                    'excerptTags' => ['Tag 1', 'Tag 2'],
+                    'excerptTags' => [$modTag1->getId(), $modTag2->getId()],
                     'excerptCategories' => [],
                     'excerptSegment' => 'modified-segment',
                     'excerptAudienceTargetGroups' => [],
@@ -231,6 +240,10 @@ class ArticleControllerTest extends SuluTestCase
     {
         self::purgeDatabase();
 
+        $tag1 = self::createTag(['name' => 'Tag 1']);
+        $tag2 = self::createTag(['name' => 'Tag 2']);
+        self::getEntityManager()->flush();
+
         $this->client->request('POST', '/admin/api/articles?locale=en', [], [], [], \json_encode([
             'template' => 'article',
             'title' => 'Test Article',
@@ -254,7 +267,7 @@ class ArticleControllerTest extends SuluTestCase
                 'icon' => null,
                 'image' => null,
             ],
-            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptTags' => [$tag1->getId(), $tag2->getId()],
             'excerptCategories' => [],
             'excerptSegment' => 'draft-segment',
             'excerptAudienceTargetGroups' => [],
@@ -357,6 +370,10 @@ class ArticleControllerTest extends SuluTestCase
     #[Depends('testPutShadowLocale')]
     public function testPut(string $id): void
     {
+        $tag3 = self::createTag(['name' => 'Tag 3']);
+        $tag4 = self::createTag(['name' => 'Tag 4']);
+        self::getEntityManager()->flush();
+
         $this->client->request('PUT', '/admin/api/articles/' . $id . '?locale=en', [], [], [], \json_encode([
             'template' => 'article',
             'title' => 'Test Article 2',
@@ -378,7 +395,7 @@ class ArticleControllerTest extends SuluTestCase
                 'icon' => null,
                 'image' => null,
             ],
-            'excerptTags' => ['Tag 3', 'Tag 4'],
+            'excerptTags' => [$tag3->getId(), $tag4->getId()],
             'excerptCategories' => [],
             'excerptSegment' => 'updated-segment',
             'excerptAudienceTargetGroups' => [],
@@ -726,11 +743,15 @@ class ArticleControllerTest extends SuluTestCase
     {
         self::purgeDatabase();
 
+        $tagMatch = self::createTag(['name' => 'Tag Filter Match']);
+        $tagOther = self::createTag(['name' => 'Tag Filter Other']);
+        self::getEntityManager()->flush();
+
         $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
             'template' => 'article',
             'title' => 'Tagged Match Article',
             'url' => '/tagged-match-article',
-            'excerptTags' => ['Tag Filter Match'],
+            'excerptTags' => [$tagMatch->getId()],
             'mainWebspace' => 'sulu-io',
         ]) ?: null);
         $this->assertHttpStatusCode(201, $this->client->getResponse());
@@ -739,16 +760,12 @@ class ArticleControllerTest extends SuluTestCase
             'template' => 'article',
             'title' => 'Tagged Other Article',
             'url' => '/tagged-other-article',
-            'excerptTags' => ['Tag Filter Other'],
+            'excerptTags' => [$tagOther->getId()],
             'mainWebspace' => 'sulu-io',
         ]) ?: null);
         $this->assertHttpStatusCode(201, $this->client->getResponse());
 
-        /** @var TagInterface|null $tag */
-        $tag = self::getEntityManager()->getRepository(TagInterface::class)->findOneBy(['name' => 'Tag Filter Match']);
-        $this->assertNotNull($tag);
-
-        $this->client->request('GET', '/admin/api/articles?locale=en&filter[tagId]=' . $tag->getId() . '&fields=title,id');
+        $this->client->request('GET', '/admin/api/articles?locale=en&filter[tagId]=' . $tagMatch->getId() . '&fields=title,id');
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
 

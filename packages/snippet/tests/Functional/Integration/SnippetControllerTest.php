@@ -19,6 +19,7 @@ use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
+use Sulu\Content\Tests\Traits\CreateTagTrait;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetController;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -31,6 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 class SnippetControllerTest extends SuluTestCase
 {
     use AssertSnapshotTrait;
+    use CreateTagTrait;
 
     /**
      * @var KernelBrowser
@@ -57,13 +59,17 @@ class SnippetControllerTest extends SuluTestCase
     {
         self::purgeDatabase();
 
+        $tag1 = self::createTag(['name' => 'Tag 1']);
+        $tag2 = self::createTag(['name' => 'Tag 2']);
+        self::getEntityManager()->flush();
+
         $this->client->request('POST', '/admin/api/snippets?locale=en&action=publish', [], [], [], \json_encode([
             'template' => 'snippet',
             'title' => 'Test Snippet',
             'published' => '2020-05-08T00:00:00+00:00', // Should be ignored
             'description' => null,
             'image' => null,
-            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptTags' => [$tag1->getId(), $tag2->getId()],
             'excerptCategories' => [],
         ]) ?: null);
 
@@ -95,6 +101,10 @@ class SnippetControllerTest extends SuluTestCase
     {
         \sleep(1); // Ensure that the version timestamp is different from the previous version
 
+        $modTag1 = self::createTag(['name' => 'Modified Tag 1']);
+        $modTag2 = self::createTag(['name' => 'Modified Tag 2']);
+        self::getEntityManager()->flush();
+
         $this->client->request(
             'PUT', '/admin/api/snippets/' . $id . '?locale=en&action=publish', [], [], [],
             \json_encode(
@@ -102,7 +112,7 @@ class SnippetControllerTest extends SuluTestCase
                     'template' => 'snippet',
                     'title' => 'Test modified version snippet',
                     'description' => 'modified version',
-                    'excerptTags' => ['Modified Tag 1', 'Modified Tag 2'],
+                    'excerptTags' => [$modTag1->getId(), $modTag2->getId()],
                     'excerptCategories' => [],
                 ],
             ) ?: null,
@@ -152,11 +162,15 @@ class SnippetControllerTest extends SuluTestCase
     {
         self::purgeDatabase();
 
+        $tag1 = self::createTag(['name' => 'Tag 1']);
+        $tag2 = self::createTag(['name' => 'Tag 2']);
+        self::getEntityManager()->flush();
+
         $this->client->request('POST', '/admin/api/snippets?locale=en', [], [], [], \json_encode([
             'template' => 'snippet',
             'title' => 'Test Snippet',
             'images' => null,
-            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptTags' => [$tag1->getId(), $tag2->getId()],
             'excerptCategories' => [],
         ]) ?: null);
 
@@ -200,11 +214,15 @@ class SnippetControllerTest extends SuluTestCase
     #[Depends('testGet')]
     public function testPut(string $id): void
     {
+        $tag3 = self::createTag(['name' => 'Tag 3']);
+        $tag4 = self::createTag(['name' => 'Tag 4']);
+        self::getEntityManager()->flush();
+
         $this->client->request('PUT', '/admin/api/snippets/' . $id . '?locale=en', [], [], [], \json_encode([
             'template' => 'snippet',
             'title' => 'Test Snippet 2',
             'description' => '<p>Test Snippet 2</p>',
-            'excerptTags' => ['Tag 3', 'Tag 4'],
+            'excerptTags' => [$tag3->getId(), $tag4->getId()],
             'excerptCategories' => [],
         ]) ?: null);
 

@@ -25,6 +25,7 @@
     "excerptAudienceTargetGroups": [],
     "excerptSegment": null,
     "ghostLocale": "en",
+    "hasSub": false,
     "id": "@string@",
     "lastModified": null,
     "lastModifiedEnabled": false,

@@ -82,12 +82,13 @@ class TaxonomyNormalizerTest extends TestCase
         $object->getResource()->willReturn($resource->reveal());
 
         $data = [
+            'excerptTagIds' => [1, 2],
             'excerptTagNames' => ['Tag 1', 'Tag 2'],
             'excerptCategoryIds' => [3, 4],
         ];
 
         $expectedResult = [
-            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptTags' => [1, 2],
             'excerptCategories' => [3, 4],
             'excerptAudienceTargetGroups' => [],
         ];
@@ -109,13 +110,14 @@ class TaxonomyNormalizerTest extends TestCase
         $object->getResource()->willReturn($resource->reveal());
 
         $data = [
+            'excerptTagIds' => [1, 2],
             'excerptTagNames' => ['Tag 1', 'Tag 2'],
             'excerptCategoryIds' => [3, 4],
             'excerptAudienceTargetGroupIds' => [5, 6, 7],
         ];
 
         $expectedResult = [
-            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptTags' => [1, 2],
             'excerptCategories' => [3, 4],
             'excerptAudienceTargetGroups' => [5, 6, 7],
         ];

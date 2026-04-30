@@ -89,4 +89,56 @@ class MediaSmartContentFiltersVisitorTest extends TestCase
 
         $this->assertSame(['webspaceKey' => 'website'], $this->mediaSmartContentFiltersVisitor->visit([], [], []));
     }
+
+    public function testIgnoreWebspacesStringTrueSkipsWebspaceKey(): void
+    {
+        $request = new Request();
+        $this->requestStack->push($request);
+
+        $webspace = new Webspace();
+        $webspace->setKey('website');
+        $suluAttribute = new RequestAttributes([
+            'webspace' => $webspace,
+        ]);
+        $request->attributes->set(RequestAnalyzer::SULU_ATTRIBUTE, $suluAttribute);
+
+        $result = $this->mediaSmartContentFiltersVisitor->visit([], [], ['ignoreWebspaces' => 'true']);
+
+        $this->assertArrayNotHasKey('webspaceKey', $result);
+    }
+
+    public function testIgnoreWebspacesBoolTrueSkipsWebspaceKey(): void
+    {
+        $request = new Request();
+        $this->requestStack->push($request);
+
+        $webspace = new Webspace();
+        $webspace->setKey('website');
+        $suluAttribute = new RequestAttributes([
+            'webspace' => $webspace,
+        ]);
+        $request->attributes->set(RequestAnalyzer::SULU_ATTRIBUTE, $suluAttribute);
+
+        $result = $this->mediaSmartContentFiltersVisitor->visit([], [], ['ignoreWebspaces' => true]);
+
+        $this->assertArrayNotHasKey('webspaceKey', $result);
+    }
+
+    public function testIgnoreWebspacesStringFalseAddsWebspaceKey(): void
+    {
+        $request = new Request();
+        $this->requestStack->push($request);
+
+        $webspace = new Webspace();
+        $webspace->setKey('website');
+        $suluAttribute = new RequestAttributes([
+            'webspace' => $webspace,
+        ]);
+        $request->attributes->set(RequestAnalyzer::SULU_ATTRIBUTE, $suluAttribute);
+
+        $result = $this->mediaSmartContentFiltersVisitor->visit([], [], ['ignoreWebspaces' => 'false']);
+
+        $this->assertArrayHasKey('webspaceKey', $result);
+        $this->assertSame('website', $result['webspaceKey']);
+    }
 }

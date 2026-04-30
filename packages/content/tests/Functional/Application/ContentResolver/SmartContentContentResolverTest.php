@@ -144,7 +144,7 @@ class SmartContentContentResolverTest extends SuluTestCase
                             'description' => 'excerpt-example-description-0',
                         ],
                         'excerptCategories' => [$category->getId()],
-                        'excerptTags' => [$tag->getName()],
+                        'excerptTags' => [$tag->getId()],
                         'seo' => [
                             'title' => 'seo-example-title-0',
                             'description' => 'seo-example-description-0',
@@ -319,7 +319,7 @@ class SmartContentContentResolverTest extends SuluTestCase
                     'title' => 'Match',
                     'url' => '/match',
                     'excerptCategories' => [$cat1->getId()],
-                    'excerptTags' => [$tag1->getName(), $tag2->getName()],
+                    'excerptTags' => [$tag1->getId(), $tag2->getId()],
                 ],
             ],
         ]);
@@ -331,7 +331,7 @@ class SmartContentContentResolverTest extends SuluTestCase
                     'title' => 'Partial',
                     'url' => '/partial',
                     'excerptCategories' => [$cat1->getId()],
-                    'excerptTags' => [$tag1->getName()],
+                    'excerptTags' => [$tag1->getId()],
                 ],
             ],
         ]);
@@ -343,7 +343,7 @@ class SmartContentContentResolverTest extends SuluTestCase
                     'title' => 'Other',
                     'url' => '/other',
                     'excerptCategories' => [$cat2->getId()],
-                    'excerptTags' => [$tag1->getName(), $tag2->getName()],
+                    'excerptTags' => [$tag1->getId(), $tag2->getId()],
                 ],
             ],
         ]);
@@ -358,7 +358,7 @@ class SmartContentContentResolverTest extends SuluTestCase
                     'examples' => [
                         'categories' => [$cat1->getId()],
                         'categoryOperator' => 'OR',
-                        'tags' => [$tag1->getName(), $tag2->getName()],
+                        'tags' => [$tag1->getId(), $tag2->getId()],
                         'tagOperator' => 'AND',
                     ],
                 ],
@@ -460,7 +460,7 @@ class SmartContentContentResolverTest extends SuluTestCase
                     'title' => 'Match Both',
                     'url' => '/match-both',
                     'excerptCategories' => [$catA->getId(), $catB->getId()],
-                    'excerptTags' => [$tagA->getName(), $tagB->getName()],
+                    'excerptTags' => [$tagA->getId(), $tagB->getId()],
                 ],
             ],
         ]);
@@ -472,7 +472,7 @@ class SmartContentContentResolverTest extends SuluTestCase
                     'title' => 'Partial Tag',
                     'url' => '/partial-tag',
                     'excerptCategories' => [$catA->getId()],
-                    'excerptTags' => [$tagA->getName()],
+                    'excerptTags' => [$tagA->getId()],
                 ],
             ],
         ]);
@@ -610,6 +610,58 @@ class SmartContentContentResolverTest extends SuluTestCase
         $titles = \array_map(static fn (array $item): string => \is_string($item['title']) ? $item['title'] : '', $examples);
         self::assertContains('Charlie', $titles);
         self::assertContains('Alpha', $titles);
+    }
+
+    public function testResolveSmartContentWithTemplateParam(): void
+    {
+        static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Default Template Item',
+                    'url' => '/default-item',
+                ],
+            ],
+        ]);
+
+        static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'example-2',
+                    'title' => 'Example 2 Template Item',
+                    'url' => '/example-2-item',
+                ],
+            ],
+        ]);
+        static::getEntityManager()->flush();
+
+        // The smart-content-tpl-param template hardcodes templateKeys="default" in its XML params;
+        // only examples using that template should be returned, even without filter types.
+        $container = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'smart-content-tpl-param',
+                    'title' => 'Smart Content Container',
+                    'url' => '/smart-content-container',
+                    'examples_by_template' => [],
+                ],
+            ],
+        ]);
+        static::getEntityManager()->flush();
+
+        $this->pushWebsiteRequest();
+
+        $dimensionContent = $this->contentAggregator->aggregate($container, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        $content = $result['content'];
+        self::assertArrayHasKey('examples_by_template', $content);
+
+        /** @var array<int, array<string, mixed>> $items */
+        $items = $content['examples_by_template'];
+
+        self::assertCount(1, $items);
+        self::assertSame('Default Template Item', $items[0]['title']);
     }
 
     public function testRecursionMaxDepthReplacesDeepWithNull(): void

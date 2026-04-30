@@ -31,8 +31,8 @@
     },
     "excerptCategories": [],
     "excerptTags": [
-        "Tag 1",
-        "Tag 2"
+        "@integer@",
+        "@integer@"
     ],
     "excerptAudienceTargetGroups": [
         "@integer@",
@@ -42,6 +42,7 @@
         "sulu-io": "@string@"
     },
     "ghostLocale": "en",
+    "hasSub": false,
     "id": "@string@",
     "image": null,
     "lastModified": "2022-05-08T00:00:00+00:00",

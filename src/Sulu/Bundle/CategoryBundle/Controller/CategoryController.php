@@ -18,6 +18,7 @@ use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Component\Rest\AbstractRestController;
+use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
@@ -83,7 +84,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
 
         if ('true' == $request->get('flat')) {
             $rootId = ($rootKey) ? $this->categoryManager->findByKey($rootKey)->getId() : null;
-            $expandedIds = \array_filter(\explode(',', $request->get('expandedIds', $request->get('selectedIds', ''))));
+            $expandedIds = \array_filter(\explode(',', $request->get('expandedIds', $request->get('selectedIds', $request->query->get('ids', '')))));
             $defaultSort = !$request->query->has('sortBy');
             $list = $this->getListRepresentation(
                 $request,
@@ -110,7 +111,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
 
     public function postTriggerAction($id, Request $request)
     {
-        $action = $this->getRequestParameter($request, 'action', true);
+        $action = $request->query->getString('action') ?: throw new MissingParameterException(self::class, 'action');
 
         try {
             return match ($action) {
@@ -256,7 +257,11 @@ class CategoryController extends AbstractRestController implements SecuredContro
             }
         }
 
-        if (!empty($expandedIds) && !$search) {
+        $usesIdsFallback = $request->query->has('ids')
+                    && !$request->query->has('expandedIds')
+                    && !$request->query->has('selectedIds');
+
+        if (!empty($expandedIds) && !$search && !$usesIdsFallback) {
             $categoriesByParentId = [];
             foreach ($categories as &$category) {
                 $categoryParentId = $category['parent'];
@@ -276,7 +281,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
                 ];
             }
 
-            $categories = $categoriesByParentId[$parentId];
+            $categories = $categoriesByParentId[$parentId] ?? [];
         }
 
         if ($includeRoot && !$parentId) {

@@ -27,13 +27,14 @@
         "more": "Excerpt More"
     },
     "excerptCategories" : [ ],
-    "excerptTags" : [ "Tag 1", "Tag 2" ],
+    "excerptTags" : [ "@integer@", "@integer@" ],
     "excerptAudienceTargetGroups": [
         "@integer@",
         "@integer@"
     ],
     "excerptSegment" : { "sulu-io" : "@string@" },
     "ghostLocale" : "en",
+    "hasSub" : false,
     "id" : "@string@",
     "image" : null,
     "lastModified" : "@dateTime@",

@@ -18,6 +18,9 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 use Sulu\Content\Domain\Factory\TagFactoryInterface;
 
+/**
+ * @deprecated since 3.0, use TagManagerInterface::findByIds() instead.
+ */
 class TagFactory implements TagFactoryInterface
 {
     /**

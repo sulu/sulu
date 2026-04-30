@@ -36,8 +36,14 @@ class AdminConfigControllerTest extends SuluTestCase
         $this->assertIsArray($data);
         $this->assertArrayHasKey('sulu_page', $data);
 
+        /** @var array{webspaces: array<string, mixed>} $suluPageData */
         $suluPageData = $data['sulu_page'];
 
         $this->assertSnapshot('sulu_page_admin_config.json', \json_encode($suluPageData, \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT));
+
+        $this->assertSame(
+            ['blog', 'sulu-io', 'sulu-test-secure', 'aaa-sorted-io'],
+            \array_keys($suluPageData['webspaces']),
+        );
     }
 }

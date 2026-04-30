@@ -24,6 +24,8 @@ use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\ShadowInterface;
+use Sulu\Content\Domain\Model\TemplateInterface;
 use Webmozart\Assert\Assert;
 
 readonly class ContentResolver implements ContentResolverInterface
@@ -45,6 +47,12 @@ readonly class ContentResolver implements ContentResolverInterface
         $locale = $dimensionContent->getLocale();
         Assert::string($locale, 'Locale must be a string');
 
+        // Pass shadow base locale as context for resource loader fallback.
+        $context = [];
+        if ($dimensionContent instanceof ShadowInterface && null !== $dimensionContent->getShadowLocale()) {
+            $context['_shadowLocale'] = $dimensionContent->getShadowLocale();
+        }
+
         // Initial resolution to gather ResolvableResources
         /** @var array<int, array<string, array<int, array<int|string, array<string, ResolvableInterface>>>>> $priorityQueue */
         $priorityQueue = [];
@@ -64,7 +72,7 @@ readonly class ContentResolver implements ContentResolverInterface
             $loaderIdDepths = $extractedResources['loaderIdDepths'];
 
             // Load resources at this priority level
-            $loadedResources = $this->resolvableResourceLoader->loadResources($resourcesToLoad, $locale);
+            $loadedResources = $this->resolvableResourceLoader->loadResources($resourcesToLoad, $locale, $context);
 
             // Process loaded resources
             foreach ($loadedResources as $loaderKey => $resources) {
@@ -77,6 +85,18 @@ readonly class ContentResolver implements ContentResolverInterface
                                 'locale' => $locale,
                                 'stage' => DimensionContentInterface::STAGE_LIVE,
                             ]);
+
+                            // Retry with shadow base locale if child has no content in page locale.
+                            $shadowLocale = $context['_shadowLocale'] ?? null;
+                            if ($childContent instanceof TemplateInterface
+                                && (null === $childContent->getTemplateKey() || '' === $childContent->getTemplateKey())
+                                && \is_string($shadowLocale)
+                            ) {
+                                $childContent = $this->contentAggregator->aggregate($resource, [
+                                    'locale' => $shadowLocale,
+                                    'stage' => DimensionContentInterface::STAGE_LIVE,
+                                ]);
+                            }
 
                             /** @var ResolvableInterface $resolvableResource */
                             $resolvableResource = $resourcesToLoad[$loaderKey][$id][$metadataIdentifier];

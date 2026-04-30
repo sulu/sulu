@@ -15,6 +15,7 @@ namespace Sulu\Snippet\Tests\Functional\Integration;
 
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Content\Tests\Traits\CreateTagTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
@@ -24,6 +25,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 class SnippetAreaControllerTest extends SuluTestCase
 {
     use AssertSnapshotTrait;
+    use CreateTagTrait;
 
     protected KernelBrowser $client;
 
@@ -46,6 +48,10 @@ class SnippetAreaControllerTest extends SuluTestCase
 
     public function testPost(): void
     {
+        $tag1 = self::createTag(['name' => 'Tag 1']);
+        $tag2 = self::createTag(['name' => 'Tag 2']);
+        self::getEntityManager()->flush();
+
         $this->client->jsonRequest('POST', '/admin/api/snippets?locale=en&action=publish', [
             'template' => 'snippet',
             'title' => 'Test Snippet',
@@ -53,7 +59,7 @@ class SnippetAreaControllerTest extends SuluTestCase
             'excerptTitle' => 'Excerpt Title',
             'excerptDescription' => 'Excerpt Description',
             'excerptMore' => 'Excerpt More',
-            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptTags' => [$tag1->getId(), $tag2->getId()],
             'excerptCategories' => [],
             'excerptIcon' => null,
             'excerptMedia' => null,
@@ -131,6 +137,10 @@ class SnippetAreaControllerTest extends SuluTestCase
 
     public function testPutWithoutEditPermission(): void
     {
+        $tag1 = self::createTag(['name' => 'Tag 1']);
+        $tag2 = self::createTag(['name' => 'Tag 2']);
+        self::getEntityManager()->flush();
+
         $this->client->jsonRequest('POST', '/admin/api/snippets?locale=en&action=publish', [
             'template' => 'snippet',
             'title' => 'Test Snippet',
@@ -138,7 +148,7 @@ class SnippetAreaControllerTest extends SuluTestCase
             'excerptTitle' => 'Excerpt Title',
             'excerptDescription' => 'Excerpt Description',
             'excerptMore' => 'Excerpt More',
-            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptTags' => [$tag1->getId(), $tag2->getId()],
             'excerptCategories' => [],
             'excerptIcon' => null,
             'excerptMedia' => null,
@@ -163,6 +173,10 @@ class SnippetAreaControllerTest extends SuluTestCase
 
     public function testDeleteWithoutEditPermission(): void
     {
+        $tag1 = self::createTag(['name' => 'Tag 1']);
+        $tag2 = self::createTag(['name' => 'Tag 2']);
+        self::getEntityManager()->flush();
+
         $this->client->jsonRequest('POST', '/admin/api/snippets?locale=en&action=publish', [
             'template' => 'snippet',
             'title' => 'Test Snippet',
@@ -170,7 +184,7 @@ class SnippetAreaControllerTest extends SuluTestCase
             'excerptTitle' => 'Excerpt Title',
             'excerptDescription' => 'Excerpt Description',
             'excerptMore' => 'Excerpt More',
-            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptTags' => [$tag1->getId(), $tag2->getId()],
             'excerptCategories' => [],
             'excerptIcon' => null,
             'excerptMedia' => null,
@@ -197,6 +211,10 @@ class SnippetAreaControllerTest extends SuluTestCase
 
     public function testDelete(): void
     {
+        $tag1 = self::createTag(['name' => 'Tag 1']);
+        $tag2 = self::createTag(['name' => 'Tag 2']);
+        self::getEntityManager()->flush();
+
         $this->client->jsonRequest('POST', '/admin/api/snippets?locale=en&action=publish', [
             'template' => 'snippet',
             'title' => 'Test Snippet',
@@ -204,7 +222,7 @@ class SnippetAreaControllerTest extends SuluTestCase
             'excerptTitle' => 'Excerpt Title',
             'excerptDescription' => 'Excerpt Description',
             'excerptMore' => 'Excerpt More',
-            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptTags' => [$tag1->getId(), $tag2->getId()],
             'excerptCategories' => [],
             'excerptIcon' => null,
             'excerptMedia' => null,

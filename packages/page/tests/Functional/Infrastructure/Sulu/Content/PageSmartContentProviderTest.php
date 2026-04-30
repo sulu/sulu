@@ -39,7 +39,7 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
  *     template?: string,
  *     locale?: string,
  *     excerptCategories?: int[],
- *     excerptTags?: string[],
+ *     excerptTags?: int[],
  *     parent?: string|null,
  *     author?: int|null,
  *     authored?: string|null,
@@ -67,7 +67,7 @@ class PageSmartContentProviderTest extends SuluTestCase
     private static array $categories = [];
 
     /**
-     * @var array<string, string>
+     * @var array<string, int>
      */
     private static array $tags = [];
 
@@ -105,19 +105,16 @@ class PageSmartContentProviderTest extends SuluTestCase
         $entityManager->flush();
 
         // Create tags
-        self::$tags = [
-            'mobile' => 'mobile',
-            'web' => 'web',
-            'cloud' => 'cloud',
-            'football' => 'football',
-            'tennis' => 'tennis',
-            'fitness' => 'fitness',
-            'diet' => 'diet',
-            'startup' => 'startup',
-            'finance' => 'finance',
-            'movies' => 'movies',
-            'music' => 'music',
-        ];
+        $tagEntities = [];
+        foreach (['mobile', 'web', 'cloud', 'football', 'tennis', 'fitness', 'diet', 'startup', 'finance', 'movies', 'music'] as $tagName) {
+            $tagEntities[$tagName] = self::createTag(['name' => $tagName]);
+        }
+
+        $entityManager->flush();
+
+        foreach ($tagEntities as $tagName => $tagEntity) {
+            self::$tags[$tagName] = $tagEntity->getId();
+        }
 
         // Create parent pages for testing dataSource filter
         foreach (self::$webspaces as $webspaceKey) {

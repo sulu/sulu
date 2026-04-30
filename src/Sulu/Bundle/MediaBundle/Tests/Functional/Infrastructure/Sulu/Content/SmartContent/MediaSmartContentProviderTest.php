@@ -58,7 +58,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
     private static array $categories = [];
 
     /**
-     * @var array<string, string>
+     * @var array<string, int>
      */
     private static array $tags = [];
 
@@ -87,25 +87,20 @@ class MediaSmartContentProviderTest extends SuluTestCase
         self::$categories['business'] = self::createCategory(['en' => ['title' => 'Business']]);
         self::$categories['entertainment'] = self::createCategory(['en' => ['title' => 'Entertainment']]);
 
-        self::$tags = [
-            'mobile' => 'mobile',
-            'web' => 'web',
-            'cloud' => 'cloud',
-            'football' => 'football',
-            'tennis' => 'tennis',
-            'fitness' => 'fitness',
-            'diet' => 'diet',
-            'startup' => 'startup',
-            'finance' => 'finance',
-            'movies' => 'movies',
-            'music' => 'music',
-        ];
+        $tagEntities = [];
+        foreach (['mobile', 'web', 'cloud', 'football', 'tennis', 'fitness', 'diet', 'startup', 'finance', 'movies', 'music'] as $tagName) {
+            $tagEntities[$tagName] = self::createTag(['name' => $tagName]);
+        }
 
         self::$collections['main'] = self::createCollection(['title' => 'Main Collection', 'locale' => 'en', 'key' => 'main']);
         self::$collections['tech'] = self::createCollection(['title' => 'Tech Collection', 'locale' => 'en', 'key' => 'tech']);
         self::$collections['sports'] = self::createCollection(['title' => 'Sports Collection', 'locale' => 'en', 'key' => 'sports']);
 
         $entityManager->flush();
+
+        foreach ($tagEntities as $tagName => $tagEntity) {
+            self::$tags[$tagName] = $tagEntity->getId();
+        }
 
         // Technology media
         self::$media['tech1'] = self::createAndEnhanceMedia(
@@ -911,13 +906,13 @@ class MediaSmartContentProviderTest extends SuluTestCase
     /**
      * @param MediaData $data
      * @param int[] $categoryIds
-     * @param string[] $tagNames
+     * @param int[] $tagIds
      */
     private static function createAndEnhanceMedia(
         CollectionInterface $collection,
         array $data = [],
         array $categoryIds = [],
-        array $tagNames = [],
+        array $tagIds = [],
         ?\DateTimeInterface $createdAt = null,
     ): MediaInterface {
         $entityManager = self::getContainer()->get('doctrine.orm.entity_manager');
@@ -941,12 +936,9 @@ class MediaSmartContentProviderTest extends SuluTestCase
                     $fileVersion->addCategory($category);
                 }
 
-                foreach ($tagNames as $tagName) {
-                    $tag = $entityManager->getRepository(Tag::class)
-                        ->findOneBy(['name' => $tagName]);
-                    if (!$tag) {
-                        $tag = self::createTag(['name' => $tagName]);
-                    }
+                foreach ($tagIds as $tagId) {
+                    /** @var Tag $tag */
+                    $tag = $entityManager->getReference(Tag::class, $tagId);
                     $fileVersion->addTag($tag);
                 }
 

@@ -382,7 +382,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_content.dimension_content_query_enhancer'),
                 new Reference('sulu_security.access_control_query_enhancer'),
             ])
-            ->tag('sulu.descendant_provider');
+            ->tag('sulu_security.access_control_descendant_provider');
 
         $services->alias(PageRepositoryInterface::class, 'sulu_page.page_repository');
         $services->alias(PageRepository::class, 'sulu_page.page_repository');

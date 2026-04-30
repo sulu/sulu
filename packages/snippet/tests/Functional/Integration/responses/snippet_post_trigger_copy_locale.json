@@ -10,8 +10,8 @@
     "description": null,
     "excerptCategories": [],
     "excerptTags": [
-        "Tag 1",
-        "Tag 2"
+        "@integer@",
+        "@integer@"
     ],
     "excerptAudienceTargetGroups": [],
     "excerptSegment": null,

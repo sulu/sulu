@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentDataMapper\DataMapper;
 
+use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Content\Domain\Factory\CategoryFactoryInterface;
-use Sulu\Content\Domain\Factory\TagFactoryInterface;
 use Sulu\Content\Domain\Factory\TargetGroupFactoryInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\TaxonomyInterface;
@@ -23,7 +23,7 @@ use Webmozart\Assert\Assert;
 class TaxonomyDataMapper implements DataMapperInterface
 {
     public function __construct(
-        private TagFactoryInterface $tagFactory,
+        private TagRepositoryInterface $tagRepository,
         private CategoryFactoryInterface $categoryFactory,
         private ?TargetGroupFactoryInterface $targetGroupFactory,
     ) {
@@ -56,10 +56,23 @@ class TaxonomyDataMapper implements DataMapperInterface
         }
         if (\array_key_exists('excerptTags', $data)) {
             Assert::isArray($data['excerptTags']);
-            Assert::allString($data['excerptTags']);
-            $dimensionContent->setExcerptTags(
-                $this->tagFactory->create($data['excerptTags'])
-            );
+            Assert::allInteger($data['excerptTags']);
+
+            $tags = $this->tagRepository->findBy(['id' => $data['excerptTags']]);
+
+            $indexedTags = [];
+            foreach ($tags as $tag) {
+                $indexedTags[$tag->getId()] = $tag;
+            }
+
+            $orderedTags = [];
+            foreach ($data['excerptTags'] as $id) {
+                if (isset($indexedTags[$id])) {
+                    $orderedTags[] = $indexedTags[$id];
+                }
+            }
+
+            $dimensionContent->setExcerptTags($orderedTags);
         }
         if (\array_key_exists('excerptCategories', $data)) {
             Assert::isArray($data['excerptCategories']);

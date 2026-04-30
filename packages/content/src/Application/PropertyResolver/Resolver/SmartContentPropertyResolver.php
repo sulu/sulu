@@ -49,10 +49,7 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
      *     excludeDuplicates?: bool,
      *     audienceTargeting?: bool
      * } $data
-     * @param array{
-     *     resourceLoader?: string,
-     *     properties?: array<string, mixed>|null,
-     * } $params
+     * @param array<string, mixed> $params
      */
     public function resolve(mixed $data, string $locale, array $params = []): ContentView
     {

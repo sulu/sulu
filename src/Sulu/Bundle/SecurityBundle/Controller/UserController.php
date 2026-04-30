@@ -106,11 +106,6 @@ class UserController extends AbstractRestController implements SecuredController
             'locale',
             $this->userClass
         );
-        $this->fieldDescriptors['apiKey'] = new DoctrineFieldDescriptor(
-            'apiKey',
-            'apiKey',
-            $this->userClass
-        );
     }
 
     /**
@@ -165,7 +160,7 @@ class UserController extends AbstractRestController implements SecuredController
      */
     public function postTriggerAction($id, Request $request)
     {
-        $action = $request->get('action');
+        $action = $request->query->getString('action');
 
         try {
             $user = match ($action) {

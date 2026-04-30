@@ -57,9 +57,9 @@ class FilterOverlay extends React.Component<Props> {
         super(props);
 
         this.updateFilterCriteriaDisposer = autorun(() => this.updateFilterCriteria(this.props.smartContentStore));
-        this.tagSelectionStore = new MultiSelectionStore('tags', this.tags || [], undefined, 'names');
+        this.tagSelectionStore = new MultiSelectionStore('tags', this.tags || [], undefined, 'ids');
         this.tagSelectionStoreDisposer = autorun(() => {
-            this.tags = this.tagSelectionStore.items.map((item) => item.name);
+            this.tags = this.tagSelectionStore.items.map((item) => item.id);
         });
     }
 
@@ -308,7 +308,7 @@ class FilterOverlay extends React.Component<Props> {
                                     <div className={filterOverlayStyles.tagsAutoComplete}>
                                         <MultiAutoComplete
                                             displayProperty="name"
-                                            idProperty="name"
+                                            idProperty="id"
                                             searchProperties={['name']}
                                             selectionStore={this.tagSelectionStore}
                                         />

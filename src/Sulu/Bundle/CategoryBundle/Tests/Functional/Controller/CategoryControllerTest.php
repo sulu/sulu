@@ -219,6 +219,16 @@ class CategoryControllerTest extends SuluTestCase
 
     public function testCGetByIds(): void
     {
+        $this->testCGetByIdsWithTargetUrl('/api/categories?locale=en&ids=%s');
+    }
+
+    public function testCGetByIdsIgnoresFlat(): void
+    {
+        $this->testCGetByIdsWithTargetUrl('/api/categories?locale=en&ids=%s&flat=true');
+    }
+
+    private function testCGetByIdsWithTargetUrl(string $url): void
+    {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
         $category2 = $this->createCategory('second-category-key', 'en');
@@ -233,7 +243,7 @@ class CategoryControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/categories?locale=en&ids=' . $category3->getId() . ',' . $category4->getId()
+            \sprintf($url, $category3->getId() . ',' . $category4->getId())
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -1632,7 +1642,7 @@ class CategoryControllerTest extends SuluTestCase
         ?string $key = null,
         ?string $defaultLocale = null,
         ?CategoryInterface $parentCategory = null
-    ) {
+    ): CategoryInterface {
         $category = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category->setKey($key);
         $category->setDefaultLocale($defaultLocale);

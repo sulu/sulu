@@ -64,6 +64,110 @@ test('Create data object for schema while keeping existing data', () => {
     });
 });
 
+test('Create data object for schema with partial nested data', () => {
+    const schema = {
+        'seo/title': {label: 'SEO Title', type: 'text_line'},
+        'seo/description': {label: 'SEO Description', type: 'text_line'},
+        'seo/keywords': {label: 'SEO Keywords', type: 'text_line'},
+    };
+
+    const memoryFormStore = new MemoryFormStore({seo: {title: 'Existing Title'}}, schema);
+
+    expect(memoryFormStore.data).toEqual({
+        seo: {
+            title: 'Existing Title',
+            description: undefined,
+            keywords: undefined,
+        },
+    });
+});
+
+test('Create data object for schema with empty nested object', () => {
+    const schema = {
+        'excerpt/title': {label: 'Title', type: 'text_line'},
+        'excerpt/description': {label: 'Description', type: 'text_line'},
+    };
+
+    const memoryFormStore = new MemoryFormStore({excerpt: {}}, schema);
+
+    expect(memoryFormStore.data).toEqual({
+        excerpt: {
+            title: undefined,
+            description: undefined,
+        },
+    });
+});
+
+test('Create data object for schema preserving array values from data', () => {
+    const schema = {
+        'settings/tags': {label: 'Tags', type: 'tag_selection'},
+        'settings/name': {label: 'Name', type: 'text_line'},
+    };
+
+    const memoryFormStore = new MemoryFormStore({settings: {tags: ['tag1', 'tag2']}}, schema);
+
+    expect(memoryFormStore.data).toEqual({
+        settings: {
+            tags: ['tag1', 'tag2'],
+            name: undefined,
+        },
+    });
+});
+
+test('Create data object for schema with fully populated nested data', () => {
+    const schema = {
+        'seo/title': {label: 'SEO Title', type: 'text_line'},
+        'seo/description': {label: 'SEO Description', type: 'text_line'},
+    };
+
+    const memoryFormStore = new MemoryFormStore(
+        {seo: {title: 'Title', description: 'Desc'}},
+        schema
+    );
+
+    expect(memoryFormStore.data).toEqual({
+        seo: {
+            title: 'Title',
+            description: 'Desc',
+        },
+    });
+});
+
+test('Create data object for schema with null nested value', () => {
+    const schema = {
+        'seo/title': {label: 'SEO Title', type: 'text_line'},
+    };
+
+    const memoryFormStore = new MemoryFormStore({seo: null}, schema);
+
+    expect(memoryFormStore.data).toEqual({
+        seo: null,
+    });
+});
+
+test('Create data object for schema with deeply nested partial data', () => {
+    const schema = {
+        'ext/seo/og/title': {label: 'OG Title', type: 'text_line'},
+        'ext/seo/og/description': {label: 'OG Description', type: 'text_line'},
+    };
+
+    const memoryFormStore = new MemoryFormStore(
+        {ext: {seo: {og: {title: 'OG Title'}}}},
+        schema
+    );
+
+    expect(memoryFormStore.data).toEqual({
+        ext: {
+            seo: {
+                og: {
+                    title: 'OG Title',
+                    description: undefined,
+                },
+            },
+        },
+    });
+});
+
 test('Create data object for schema with sections', () => {
     const schema = {
         section1: {

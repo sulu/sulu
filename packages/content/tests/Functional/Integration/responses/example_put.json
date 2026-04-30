@@ -28,8 +28,8 @@
     "excerptCategories": [],
     "excerptSegment": null,
     "excerptTags": [
-        "Tag 3",
-        "Tag 4"
+        "@integer@",
+        "@integer@"
     ],
     "ghostLocale": "en",
     "id": "@integer@",

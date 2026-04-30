@@ -15,6 +15,7 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\PreviewBundle\Application\Manager\PreviewLinkManagerInterface;
 use Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface;
 use Sulu\Component\Rest\AbstractRestController;
+use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,7 +53,7 @@ class PreviewLinkController extends AbstractRestController
 
     public function postTriggerAction(Request $request, string $resourceId): Response
     {
-        $action = $this->getRequestParameter($request, 'action', true);
+        $action = $request->query->getString('action') ?: throw new MissingParameterException(self::class, 'action');
 
         try {
             switch ($action) {

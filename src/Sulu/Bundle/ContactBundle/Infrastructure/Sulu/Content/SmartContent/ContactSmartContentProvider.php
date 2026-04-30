@@ -27,7 +27,7 @@ use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\Contact
  *      categoryOperator: 'AND'|'OR',
  *      websiteCategories: string[],
  *      websiteCategoryOperator: 'AND'|'OR',
- *      tags: string[],
+ *      tags: int[],
  *      tagOperator: 'AND'|'OR',
  *      websiteTags: string[],
  *      websiteTagOperator: 'AND'|'OR',
@@ -45,7 +45,7 @@ use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\Contact
  *      categoryOperator: 'AND'|'OR',
  *      websiteCategories: string[],
  *      websiteCategoryOperator: 'AND'|'OR',
- *      tags: string[],
+ *      tags: int[],
  *      tagOperator: 'AND'|'OR',
  *      websiteTags: string[],
  *      websiteTagOperator: 'AND'|'OR',
@@ -144,15 +144,15 @@ readonly class ContactSmartContentProvider implements SmartContentProviderInterf
             $queryBuilder->orderBy($sortBy, $sortMethod);
         }
 
-        $tagNames = $filters['tags'];
-        if ([] !== $tagNames) {
+        $tagIds = $filters['tags'];
+        if ([] !== $tagIds) {
             $this->smartContentQueryEnhancer->addJoinFilter(
                 $queryBuilder,
                 $alias . '.tags',
-                'filterTagName',
-                'name',
-                'tagNames',
-                $tagNames,
+                'filterTagId',
+                'id',
+                'tagIds',
+                $tagIds,
                 $filters['tagOperator'],
             );
         }

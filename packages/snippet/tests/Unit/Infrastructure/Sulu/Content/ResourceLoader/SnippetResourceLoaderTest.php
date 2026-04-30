@@ -70,6 +70,92 @@ class SnippetResourceLoaderTest extends TestCase
         ], $result);
     }
 
+    public function testLoadWithShadowLocaleFallback(): void
+    {
+        $snippet1 = $this->createSnippet('1');
+
+        // First query: de_li finds snippet 1 but not snippet 2.
+        $this->snippetRepository->findBy(
+            [
+                'uuids' => ['1', '2'],
+                'locale' => 'de_li',
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+            ],
+            [],
+            [SnippetRepositoryInterface::GROUP_SELECT_SNIPPET_WEBSITE => true]
+        )->willReturn([$snippet1])
+            ->shouldBeCalled();
+
+        $snippet2 = $this->createSnippet('2');
+
+        // Second query: shadow base locale de finds snippet 2.
+        $this->snippetRepository->findBy(
+            [
+                'uuids' => ['2'],
+                'locale' => 'de',
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+            ],
+            [],
+            [SnippetRepositoryInterface::GROUP_SELECT_SNIPPET_WEBSITE => true]
+        )->willReturn([$snippet2])
+            ->shouldBeCalled();
+
+        $result = $this->loader->load(['1', '2'], 'de_li', ['_shadowLocale' => 'de']);
+
+        $this->assertSame([
+            '1' => $snippet1,
+            '2' => $snippet2,
+        ], $result);
+    }
+
+    public function testLoadWithShadowLocaleNotTriggeredWhenAllFound(): void
+    {
+        $snippet1 = $this->createSnippet('1');
+        $snippet2 = $this->createSnippet('2');
+
+        // All snippets found in page locale — no fallback query.
+        $this->snippetRepository->findBy(
+            [
+                'uuids' => ['1', '2'],
+                'locale' => 'de_li',
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+            ],
+            [],
+            [SnippetRepositoryInterface::GROUP_SELECT_SNIPPET_WEBSITE => true]
+        )->willReturn([$snippet1, $snippet2])
+            ->shouldBeCalled();
+
+        $result = $this->loader->load(['1', '2'], 'de_li', ['_shadowLocale' => 'de']);
+
+        $this->assertSame([
+            '1' => $snippet1,
+            '2' => $snippet2,
+        ], $result);
+    }
+
+    public function testLoadWithoutShadowLocaleNoFallback(): void
+    {
+        $snippet1 = $this->createSnippet('1');
+
+        // No _shadowLocale in params — no fallback for missing snippet 2.
+        $this->snippetRepository->findBy(
+            [
+                'uuids' => ['1', '2'],
+                'locale' => 'de_li',
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+            ],
+            [],
+            [SnippetRepositoryInterface::GROUP_SELECT_SNIPPET_WEBSITE => true]
+        )->willReturn([$snippet1])
+            ->shouldBeCalled();
+
+        $result = $this->loader->load(['1', '2'], 'de_li');
+
+        $this->assertSame([
+            '1' => $snippet1,
+        ], $result);
+    }
+
     private static function createSnippet(string $uuid): Snippet
     {
         return new Snippet($uuid);

@@ -33,6 +33,7 @@ class PageNormalizer implements NormalizerInterface
 
         $normalizedData['webspace'] = $page->getWebspaceKey();
         $normalizedData['parentUuid'] = $page->getParent()?->getUuid();
+        $normalizedData['hasSub'] = ($page->getLft() + 1) !== $page->getRgt();
 
         return $normalizedData;
     }

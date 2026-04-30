@@ -15,6 +15,7 @@ namespace Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader;
 
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 
 /**
@@ -40,6 +41,26 @@ class SnippetResourceLoader implements ResourceLoaderInterface
             return [];
         }
 
+        $mappedResult = $this->loadForLocale($ids, $locale);
+
+        // Fall back to shadow base locale for missing snippets.
+        $missingIds = \array_values(\array_diff($ids, \array_keys($mappedResult)));
+        $shadowLocale = $params['_shadowLocale'] ?? null;
+        if ([] !== $missingIds && \is_string($shadowLocale)) {
+            $fallbackResult = $this->loadForLocale($missingIds, $shadowLocale);
+            $mappedResult += $fallbackResult;
+        }
+
+        return $mappedResult;
+    }
+
+    /**
+     * @param string[] $ids
+     *
+     * @return array<string, SnippetInterface>
+     */
+    private function loadForLocale(array $ids, string $locale): array
+    {
         $result = $this->snippetRepository->findBy(
             [
                 'uuids' => $ids,
