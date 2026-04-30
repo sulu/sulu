@@ -793,6 +793,17 @@ final class SuluPageBundle extends AbstractBundle
             );
         }
 
+        if ($builder->hasExtension('doctrine_migrations')) {
+            $builder->prependExtensionConfig(
+                'doctrine_migrations',
+                [
+                    'migrations_paths' => [
+                        'Sulu\\Page\\Migrations' => \dirname(__DIR__, 4) . '/src/Migrations',
+                    ],
+                ],
+            );
+        }
+
         if ($builder->hasExtension('jms_serializer')) {
             $builder->prependExtensionConfig(
                 'jms_serializer',
