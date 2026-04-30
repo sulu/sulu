@@ -112,11 +112,6 @@ class UserController extends AbstractRestController implements ClassResourceInte
             'locale',
             $this->userClass
         );
-        $this->fieldDescriptors['apiKey'] = new DoctrineFieldDescriptor(
-            'apiKey',
-            'apiKey',
-            $this->userClass
-        );
     }
 
     /**
