@@ -38,8 +38,11 @@ class RouteFieldSkipTemplateDataMapperFormMetadataVisitorTest extends TestCase
         $pageTreeUrl->setType('page_tree_route');
         $formMetadata->addItem($pageTreeUrl);
 
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('default', $formMetadata);
+
         (new RouteFieldSkipTemplateDataMapperFormMetadataVisitor())
-            ->visitFormMetadata($formMetadata, 'en');
+            ->visitTypedFormMetadata($typedFormMetadata, 'examples', 'en');
 
         $this->assertFalse($title->hasTag(TemplateDataMapper::SKIP_TAG));
         $this->assertTrue($url->hasTag(TemplateDataMapper::SKIP_TAG));
@@ -54,9 +57,12 @@ class RouteFieldSkipTemplateDataMapperFormMetadataVisitorTest extends TestCase
         $url->setType('route');
         $formMetadata->addItem($url);
 
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('default', $formMetadata);
+
         $visitor = new RouteFieldSkipTemplateDataMapperFormMetadataVisitor();
-        $visitor->visitFormMetadata($formMetadata, 'en');
-        $visitor->visitFormMetadata($formMetadata, 'en');
+        $visitor->visitTypedFormMetadata($typedFormMetadata, 'examples', 'en');
+        $visitor->visitTypedFormMetadata($typedFormMetadata, 'examples', 'en');
 
         $matchingTags = \array_filter(
             $url->getTags(),

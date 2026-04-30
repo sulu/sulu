@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Sulu\Content\Infrastructure\Sulu\Form;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataVisitorInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadataVisitorInterface;
@@ -27,9 +26,20 @@ use Sulu\Content\Application\ContentDataMapper\DataMapper\TemplateDataMapper;
  *
  * @internal
  */
-final class RouteFieldSkipTemplateDataMapperFormMetadataVisitor implements FormMetadataVisitorInterface, TypedFormMetadataVisitorInterface
+final class RouteFieldSkipTemplateDataMapperFormMetadataVisitor implements TypedFormMetadataVisitorInterface
 {
-    public function visitFormMetadata(FormMetadata $formMetadata, string $locale, array $metadataOptions = []): void
+    public function visitTypedFormMetadata(
+        TypedFormMetadata $formMetadata,
+        string $key,
+        string $locale,
+        array $metadataOptions = [],
+    ): void {
+        foreach ($formMetadata->getForms() as $form) {
+            $this->visitFormMetadata($form);
+        }
+    }
+
+    private function visitFormMetadata(FormMetadata $formMetadata): void
     {
         foreach ($formMetadata->getFlatFieldMetadata() as $field) {
             $type = $field->getType();
@@ -44,17 +54,6 @@ final class RouteFieldSkipTemplateDataMapperFormMetadataVisitor implements FormM
             $tag = new TagMetadata();
             $tag->setName(TemplateDataMapper::SKIP_TAG);
             $field->addTag($tag);
-        }
-    }
-
-    public function visitTypedFormMetadata(
-        TypedFormMetadata $formMetadata,
-        string $key,
-        string $locale,
-        array $metadataOptions = [],
-    ): void {
-        foreach ($formMetadata->getForms() as $form) {
-            $this->visitFormMetadata($form, $locale, $metadataOptions);
         }
     }
 }

@@ -39,7 +39,6 @@
         </service>
 
         <service id="sulu_content.route_field_skip_template_data_mapper_form_metadata_visitor" class="Sulu\Content\Infrastructure\Sulu\Form\RouteFieldSkipTemplateDataMapperFormMetadataVisitor">
-            <tag name="sulu_admin.form_metadata_visitor" />
             <tag name="sulu_admin.typed_form_metadata_visitor" />
         </service>
     </services>
