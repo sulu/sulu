@@ -146,36 +146,13 @@ If you extended these classes or traits in custom teaser providers, refactor you
 The security context for snippet areas changed from `sulu.snippet.snippet_areas` to `sulu.webspaces.{webspaceKey}.snippet-areas`
 to align with Sulu's webspace-based permission architecture.
 
-**Migration:** Configure snippet area permissions per webspace in **Settings** → **User Roles** → **Permissions** → **Webspaces**,
-or run this SQL to automatically migrate all roles with the old permission:
+**Migration:** This migration runs automatically when you execute the Doctrine migrations:
 
-```sql
--- Migrate permissions to all webspaces automatically
-INSERT INTO se_permissions (context, permissions, idRoles)
-SELECT
-    CONCAT(SUBSTRING_INDEX(p2.context, '.', 3), '.snippet-areas') as context,
-    p.permissions,
-    p.idRoles
-FROM se_permissions p
-CROSS JOIN (
-    SELECT DISTINCT SUBSTRING_INDEX(context, '.', 3) as context
-    FROM se_permissions
-    WHERE context LIKE 'sulu.webspaces.%'
-    AND (
-        LENGTH(context) - LENGTH(REPLACE(context, '.', '')) = 2
-        OR LENGTH(context) - LENGTH(REPLACE(context, '.', '')) = 3
-    )
-) p2
-WHERE p.context = 'sulu.snippet.snippet_areas'
-AND NOT EXISTS (
-    SELECT 1 FROM se_permissions p3
-    WHERE p3.context = CONCAT(SUBSTRING_INDEX(p2.context, '.', 3), '.snippet-areas')
-    AND p3.idRoles = p.idRoles
-);
-
--- Remove old permission
-DELETE FROM se_permissions WHERE context = 'sulu.snippet.snippet_areas';
+```shell
+php bin/adminconsole doctrine:migrations:migrate
 ```
+
+You can alternatively configure snippet area permissions per webspace in **Settings** → **User Roles** → **Permissions** → **Webspaces**.
 
 ## 3.0.1
 
@@ -661,22 +638,11 @@ DROP TABLE me_file_version_content_languages;
 DROP TABLE me_file_version_publish_languages;
 ```
 
-Also the `MediaType` entity has been removed the value has been moved to the `me_media` table itself as a string column:
+Also the `MediaType` entity has been removed the value has been moved to the `me_media` table itself as a string column.
+This migration runs automatically when you execute the Doctrine migrations:
 
-```sql
-ALTER TABLE me_media ADD COLUMN type VARCHAR(10) DEFAULT NULL;
-UPDATE me_media m
-    JOIN me_media_types mt ON mt.id = m.idMediaTypes
-    SET m.type = mt.name;
-
-ALTER TABLE me_media DROP FOREIGN KEY FK_A694E57284671716;
-DROP TABLE me_media_types;
-DROP INDEX IDX_A694E57284671716 ON me_media;
-
-ALTER TABLE me_media MODIFY type VARCHAR(10) NOT NULL;
-ALTER TABLE me_media DROP idMediaTypes;
-
-CREATE INDEX IDX_A694E5728CDE5729 ON me_media (type);
+```shell
+php bin/adminconsole doctrine:migrations:migrate
 ```
 
 #### CategoryBundle
@@ -775,34 +741,25 @@ ALTER TABLE ta_tags CHANGE created created DATETIME NOT NULL COMMENT '(DC2Type:d
 
 ### Migrate Permission settings
 
-> [!IMPORTANT]
-> Doctrine migration cannot detect the following migrations, you need to execute it manually,
-> or create a custom migration for it. The following SQL commands are for MySQL-based projects for other used 
-> databases you might need to change it.
+The legacy permission contexts `sulu.modules.articles` and `sulu.global.snippets` are renamed to
+`sulu.article.articles` and `sulu.snippet.snippets`. This migration runs automatically when you execute
+the Doctrine migrations:
 
-```sql
-UPDATE `se_permissions` SET `context` = 'sulu.article.articles' WHERE `context` = 'sulu.modules.articles';
-UPDATE `se_permissions` SET `context` = 'sulu.snippet.snippets' WHERE `context` = 'sulu.global.snippets';
+```shell
+php bin/adminconsole doctrine:migrations:migrate
 ```
 
 ### Remove legacy user settings
 
-> [!IMPORTANT]
-> Doctrine migration cannot detect the following migrations, you need to execute it manually,
-> or create a custom migration for it. The following SQL commands are for MySQL-based projects for other used
-> databases you might need to change it.
+Removing legacy `sulu_admin.list_store.{articles,snippets,pages}*` user settings from the database
+helps ensure compatibility with the new content storage architecture. Some columns from the old
+settings may no longer exist in the updated schema, and retaining outdated data can lead to
+exceptions in the admin interface.
 
-This step is optional but highly recommended, removing legacy user settings from the database helps ensure compatibility
-with the new content storage architecture. Some columns from the old settings may no longer exist in the updated schema.
-Retaining outdated data can lead to issues or exceptions in the admin interface, especially if user settings reference
-fields that are no longer available.
+This migration runs automatically when you execute the Doctrine migrations:
 
-To safely remove these obsolete settings, execute the following SQL commands:
-
-```sql
-DELETE FROM se_user_settings WHERE settingsKey LIKE 'sulu_admin.list_store.articles%';
-DELETE FROM se_user_settings WHERE settingsKey LIKE 'sulu_admin.list_store.snippets%';
-DELETE FROM se_user_settings WHERE settingsKey LIKE 'sulu_admin.list_store.pages%';
+```shell
+php bin/adminconsole doctrine:migrations:migrate
 ```
 
 ### Updating to flysystem 3
