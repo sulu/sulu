@@ -77,12 +77,16 @@ class AdminControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());
 
+        /** @var \stdClass $pageConfig */
         $pageConfig = $response->sulu_page;
 
-        $this->assertCount(3, (array) $pageConfig->webspaces);
+        $this->assertCount(4, (array) $pageConfig->webspaces);
         $this->assertEquals('destination_io', $pageConfig->webspaces->destination_io->key);
         $this->assertEquals('sulu_io', $pageConfig->webspaces->sulu_io->key);
         $this->assertEquals('test_io', $pageConfig->webspaces->test_io->key);
+        /* @phpstan-ignore-next-line */
+        $this->assertEquals('aaa_sorted_io', $pageConfig->webspaces->aaa_sorted_io->key);
+
         $this->assertEquals('test_security_system', $pageConfig->webspaces->test_io->security->system);
         $this->assertEquals(true, $pageConfig->webspaces->test_io->security->permissionCheck);
 

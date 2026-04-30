@@ -660,6 +660,8 @@ class PageController extends AbstractRestController implements ClassResourceInte
             $user
         );
 
+        $webspaceContents = $this->reSortWebspaceContents($webspaceContents, $webspaces);
+
         foreach ($webspaceContents as $webspaceContent) {
             $webspaceContent->setDataProperty('title', $webspaces[$webspaceContent->getWebspaceKey()]->getName());
 
@@ -684,5 +686,29 @@ class PageController extends AbstractRestController implements ClassResourceInte
             SecurityBehavior::class,
             $request->get('id')
         );
+    }
+
+    /**
+     * @param Content[] $webspaceContents
+     * @param Webspace[] $webspaces
+     *
+     * @return Content[]
+     */
+    private function reSortWebspaceContents(array $webspaceContents, array $webspaces): array
+    {
+        $webspaceContentsByKey = [];
+        foreach ($webspaceContents as $webspaceContent) {
+            $webspaceContentsByKey[$webspaceContent->getWebspaceKey()] = $webspaceContent;
+        }
+
+        $sortedWebspaceContents = [];
+        foreach (\array_keys($webspaces) as $webspaceKey) {
+            if (!isset($webspaceContentsByKey[$webspaceKey])) {
+                continue;
+            }
+            $sortedWebspaceContents[] = $webspaceContentsByKey[$webspaceKey];
+        }
+
+        return $sortedWebspaceContents;
     }
 }
