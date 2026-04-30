@@ -106,11 +106,6 @@ class UserController extends AbstractRestController implements SecuredController
             'locale',
             $this->userClass
         );
-        $this->fieldDescriptors['apiKey'] = new DoctrineFieldDescriptor(
-            'apiKey',
-            'apiKey',
-            $this->userClass
-        );
     }
 
     /**

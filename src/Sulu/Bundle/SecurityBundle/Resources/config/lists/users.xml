@@ -42,15 +42,5 @@
             <field-name>locale</field-name>
             <entity-name>%sulu.model.user.class%</entity-name>
         </property>
-
-        <property
-            name="apiKey"
-            visibility="yes"
-            searchability="never"
-            translation="sulu_admin.apiKey"
-        >
-            <field-name>apiKey</field-name>
-            <entity-name>%sulu.model.user.class%</entity-name>
-        </property>
     </properties>
 </list>
