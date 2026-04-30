@@ -24,7 +24,7 @@ readonly class TemplateResolver implements ResolverInterface
 {
     public function __construct(
         private MetadataProviderInterface $formMetadataProvider,
-        private MetadataResolver $metadataResolver
+        private MetadataResolver $metadataResolver,
     ) {
     }
 

@@ -18,6 +18,7 @@ use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Teaser\ExampleTeaserProvider;
 use Sulu\Content\Tests\Traits\CreateExampleTrait;
+use Symfony\Component\Routing\RequestContext;
 
 class ContentTeaserProviderTest extends WebsiteTestCase
 {
@@ -61,7 +62,7 @@ class ContentTeaserProviderTest extends WebsiteTestCase
                     ],
                 ],
             ],
-        ]);
+        ], ['create_route' => true]);
 
         // Example 2 (only en, published)
         $example2 = static::createExample([
@@ -70,7 +71,7 @@ class ContentTeaserProviderTest extends WebsiteTestCase
                     'title' => 'example-2',
                 ],
             ],
-        ]);
+        ], ['create_route' => true]);
 
         // Example 3 (both locales, only en published)
         $example3 = static::createExample([
@@ -85,7 +86,7 @@ class ContentTeaserProviderTest extends WebsiteTestCase
                     'title' => 'beispiel-3',
                 ],
             ],
-        ]);
+        ], ['create_route' => true]);
 
         // Example 4 (only de, published)
         $example4 = static::createExample([
@@ -95,7 +96,7 @@ class ContentTeaserProviderTest extends WebsiteTestCase
                     'article' => '<p>Test article</p>',
                 ],
             ],
-        ]);
+        ], ['create_route' => true]);
 
         // Example 5 (only en, not published)
         $example5 = static::createExample([
@@ -118,6 +119,10 @@ class ContentTeaserProviderTest extends WebsiteTestCase
     protected function setUp(): void
     {
         $this->exampleTeaserProvider = $this->getContainer()->get('example_test.example_teaser_provider');
+
+        /** @var RequestContext $requestContext */
+        $requestContext = self::getContainer()->get('router')->getContext();
+        $requestContext->setParameter('webspace', 'sulu-io');
     }
 
     public function testEmpty(): void

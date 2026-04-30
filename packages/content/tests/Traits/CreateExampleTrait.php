@@ -144,17 +144,19 @@ trait CreateExampleTrait
                 );
 
                 if ($options['create_route'] ?? false) {
-                    /** @var array{url: string} $draftTemplateData */
-                    $draftTemplateData = $draftLocalizedDimension->getTemplateData();
+                    /** @var array{url: string} $filledDraftData */
+                    $filledDraftData = $fillWithDefaultData($draftData);
 
                     $route = Route::createRouteWithTempId(
                         Example::RESOURCE_KEY,
                         fn () => (string) $example->getId(),
                         $locale,
-                        $draftTemplateData['url'],
+                        $filledDraftData['url'],
                     );
 
                     $entityManager->persist($route);
+                    $liveLocalizedDimension->setRoute($route);
+                    $draftLocalizedDimension->setRoute($route);
                 }
             }
         }

@@ -85,6 +85,17 @@ class PageDimensionContent implements PageDimensionContentInterface
         return $clone;
     }
 
+    /**
+     * @internal the returned clone is detached from Doctrine's unit of work and must not be persisted
+     */
+    public function withRoute(?Route $route): static
+    {
+        $clone = clone $this;
+        $clone->route = $route;
+
+        return $clone;
+    }
+
     public function getTitle(): ?string
     {
         return $this->title;

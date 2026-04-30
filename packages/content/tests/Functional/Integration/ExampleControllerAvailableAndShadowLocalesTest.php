@@ -83,7 +83,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test EN',
-                    'url' => '/test-en',
                 ],
             ],
         ], $data);
@@ -128,7 +127,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test EN',
-                    'url' => '/test-en',
                 ],
             ],
             [
@@ -140,7 +138,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test DE',
-                    'url' => '/test-de',
                 ],
             ],
         ], $data);
@@ -183,7 +180,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test EN',
-                    'url' => '/test-en',
                 ],
             ],
             [
@@ -195,7 +191,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test DE',
-                    'url' => '/test-de',
                 ],
             ],
             [
@@ -215,7 +210,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test EN',
-                    'url' => '/test-en',
                 ],
             ],
         ], $data);
@@ -260,7 +254,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test EN',
-                    'url' => '/test-en',
                 ],
             ],
             [
@@ -272,7 +265,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test DE',
-                    'url' => '/test-de',
                 ],
             ],
             [
@@ -292,7 +284,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test EN',
-                    'url' => '/test-en',
                 ],
             ],
             [
@@ -304,7 +295,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test EN',
-                    'url' => '/test-de',
                 ],
             ],
         ], $data);
@@ -347,7 +337,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test EN New',
-                    'url' => '/test-en',
                 ],
             ],
             [
@@ -359,7 +348,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test DE',
-                    'url' => '/test-de',
                 ],
             ],
             [
@@ -379,7 +367,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test EN New',
-                    'url' => '/test-en',
                 ],
             ],
             [
@@ -391,7 +378,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test EN New',
-                    'url' => '/test-de',
                 ],
             ],
         ], $data);
@@ -436,7 +422,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test EN New',
-                    'url' => '/test-en',
                 ],
             ],
             [
@@ -448,7 +433,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test DE',
-                    'url' => '/test-de',
                 ],
             ],
             [
@@ -468,7 +452,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test EN New',
-                    'url' => '/test-en',
                 ],
             ],
         ], $data);
@@ -511,7 +494,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test EN New 2',
-                    'url' => '/test-en',
                 ],
             ],
             [
@@ -523,7 +505,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test DE',
-                    'url' => '/test-de',
                 ],
             ],
             [
@@ -543,7 +524,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
                 'templateData' => [
                     'images' => null,
                     'title' => 'Test EN New 2',
-                    'url' => '/test-en',
                 ],
             ],
         ], $data);

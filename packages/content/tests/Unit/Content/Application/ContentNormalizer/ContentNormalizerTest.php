@@ -14,6 +14,9 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentNormalizer;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Application\ContentNormalizer\ContentNormalizer;
@@ -47,6 +50,15 @@ class ContentNormalizerTest extends TestCase
 
     protected function createContentNormalizerInstance(): ContentNormalizerInterface
     {
+        $emptyTypedFormMetadata = new TypedFormMetadata();
+        $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
+        $formMetadataProvider->getMetadata(\Prophecy\Argument::cetera())
+            ->willReturn($emptyTypedFormMetadata);
+
+        $container = $this->prophesize(\Psr\Container\ContainerInterface::class);
+        $container->has('form')->willReturn(true);
+        $container->get('form')->willReturn($formMetadataProvider->reveal());
+
         return new ContentNormalizer([
             new DimensionContentNormalizer(),
             new TaxonomyNormalizer(),
@@ -54,7 +66,9 @@ class ContentNormalizerTest extends TestCase
             new SeoNormalizer(),
             new TemplateNormalizer(),
             new WorkflowNormalizer(),
-            new RoutableNormalizer(),
+            new RoutableNormalizer(
+                new MetadataProviderRegistry($container->reveal()),
+            ),
         ]);
     }
 
@@ -144,7 +158,7 @@ class ContentNormalizerTest extends TestCase
 
             public static function getTemplateType(): string
             {
-                throw new \RuntimeException('Should not be called while executing tests.');
+                return 'example';
             }
 
             /**

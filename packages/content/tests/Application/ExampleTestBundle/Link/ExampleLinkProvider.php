@@ -62,10 +62,8 @@ final class ExampleLinkProvider implements LinkProviderInterface
             $dimensionContent = $this->contentManager->resolve($example, $dimensionAttributes);
             $this->referenceStore->add((string) $example->getId(), Example::RESOURCE_KEY);
 
-            /** @var string|null $url */
-            $url = $dimensionContent->getTemplateData()['url'] ?? null;
+            $url = $dimensionContent->getRoute()?->getSlug();
             if (null === $url) {
-                // TODO what to do when there is no url?
                 continue;
             }
 
