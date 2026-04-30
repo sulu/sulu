@@ -21,6 +21,8 @@ use Sulu\Content\Domain\Model\TemplateInterface;
 
 class TemplateDataMapper implements DataMapperInterface
 {
+    public const SKIP_TAG = 'sulu_content.skip_template_data_mapper';
+
     public function __construct(private MetadataProviderRegistry $metadataProviderRegistry)
     {
     }
@@ -97,8 +99,7 @@ class TemplateDataMapper implements DataMapperInterface
         $defaultLocalizedData = $localizedData; // use existing localizedData only as default to remove not longer existing properties of the template
         $localizedData = [];
         foreach ($metadata->getFlatFieldMetadata() as $property) {
-            $type = $property->getType();
-            if ('route' === $type || 'page_tree_route' === $type) {
+            if ($property->hasTag(self::SKIP_TAG)) {
                 continue;
             }
 

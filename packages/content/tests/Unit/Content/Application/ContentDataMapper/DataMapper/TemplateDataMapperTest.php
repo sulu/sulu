@@ -18,6 +18,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
@@ -375,7 +376,7 @@ class TemplateDataMapperTest extends TestCase
         $this->assertSame(['title' => 'Test Localized'], $localizedDimensionContent->getTemplateData());
     }
 
-    public function testMapDataSkipsRouteFieldType(): void
+    public function testMapDataSkipsFieldsWithSkipTag(): void
     {
         $data = [
             'template' => 'template-key',
@@ -391,34 +392,9 @@ class TemplateDataMapperTest extends TestCase
         $urlFieldMetadata = new FieldMetadata('url');
         $urlFieldMetadata->setType('route');
         $urlFieldMetadata->setMultilingual(true);
-
-        $templateMapper = $this->createTemplateDataMapperInstance([$urlFieldMetadata]);
-        $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
-
-        $this->assertSame(['title' => 'Test Title'], $localizedDimensionContent->getTemplateData());
-        $this->assertArrayNotHasKey('url', $localizedDimensionContent->getTemplateData());
-        $this->assertArrayNotHasKey('url', $unlocalizedDimensionContent->getTemplateData());
-    }
-
-    public function testMapDataSkipsPageTreeRouteFieldType(): void
-    {
-        $data = [
-            'template' => 'template-key',
-            'title' => 'Test Title',
-            'url' => [
-                'page' => ['uuid' => 'parent-uuid', 'path' => '/parent'],
-                'suffix' => '/child',
-            ],
-        ];
-
-        $example = new Example();
-        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
-        $localizedDimensionContent = new ExampleDimensionContent($example);
-        $localizedDimensionContent->setLocale('en');
-
-        $urlFieldMetadata = new FieldMetadata('url');
-        $urlFieldMetadata->setType('page_tree_route');
-        $urlFieldMetadata->setMultilingual(true);
+        $skipTag = new TagMetadata();
+        $skipTag->setName(TemplateDataMapper::SKIP_TAG);
+        $urlFieldMetadata->addTag($skipTag);
 
         $templateMapper = $this->createTemplateDataMapperInstance([$urlFieldMetadata]);
         $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);

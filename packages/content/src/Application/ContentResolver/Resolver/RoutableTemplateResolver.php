@@ -41,6 +41,9 @@ readonly class RoutableTemplateResolver implements ResolverInterface
             return $this->inner->resolve($dimensionContent, $properties);
         }
 
+        // Linked content is rendered through its target's URL (resolved by the link
+        // provider), so the local Route entity must not overwrite the URL stored in
+        // templateData for those dimension contents.
         if ($this->shouldSkipRouteFieldOverwrite($dimensionContent)) {
             return $this->inner->resolve($dimensionContent, $properties);
         }
@@ -64,6 +67,9 @@ readonly class RoutableTemplateResolver implements ResolverInterface
 
                 $data[$name] = $this->resolveRouteFieldUrl($dimensionContent, $type);
             }
+            // The Route entity is the source of truth for the URL: route fields are
+            // not persisted into templateData by the TemplateDataMapper, so we fill
+            // them here from the Route entity before delegating to the inner resolver.
             $dimensionContent->setTemplateData($data);
         }
 

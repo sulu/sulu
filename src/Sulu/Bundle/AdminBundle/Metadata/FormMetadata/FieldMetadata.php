@@ -183,6 +183,17 @@ class FieldMetadata extends ItemMetadata
         return $this->tags;
     }
 
+    public function hasTag(string $name): bool
+    {
+        foreach ($this->tags as $tag) {
+            if ($tag->getName() === $name) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function addTag(TagMetadata $tag): void
     {
         $this->tags[] = $tag;
