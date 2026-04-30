@@ -18,9 +18,10 @@ use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollectionInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
-use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
+use Sulu\Route\Domain\Model\Route;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Workflow\Event\TransitionEvent;
 
@@ -128,8 +129,13 @@ class PublishTransitionSubscriber implements EventSubscriberInterface
             'shadowLocale' => $shadowLocale,
         ];
 
-        if ($dimensionContent instanceof TemplateInterface) {
-            $data['url'] = $dimensionContent->getTemplateData()['url'] ?? null; // TODO get correct route property
+        // Preserve the shadow locale's own route slug so the copy from the source locale
+        // does not overwrite the shadow locale's Route entity with the source locale's url.
+        if ($dimensionContent instanceof RoutableInterface) {
+            $route = $dimensionContent->getRoute();
+            if ($route instanceof Route) {
+                $data['url'] = $route->getSlug();
+            }
         }
 
         $this->contentCopier->copy(

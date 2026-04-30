@@ -29,6 +29,8 @@
         </service>
 
         <service id="sulu_content.routable_normalizer" class="Sulu\Content\Application\ContentNormalizer\Normalizer\RoutableNormalizer">
+            <argument type="service" id="sulu_admin.metadata_provider_registry"/>
+
             <tag name="sulu_content.normalizer" priority="16"/>
         </service>
 

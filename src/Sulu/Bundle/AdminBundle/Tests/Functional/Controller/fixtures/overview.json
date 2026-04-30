@@ -58,6 +58,11 @@
                     "name": "sulu.rlp",
                     "priority": null,
                     "attributes": []
+                },
+                {
+                    "name": "sulu_content.skip_template_data_mapper",
+                    "priority": null,
+                    "attributes": []
                 }
             ]
         },

@@ -18,6 +18,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
@@ -183,6 +184,7 @@ class TemplateDataMapperTest extends TestCase
 
         $nestedPropertyMetadata = new FieldMetadata('nestedProperty/value');
         $nestedPropertyMetadata->setMultilingual(true);
+        $nestedPropertyMetadata->setType('text_line');
 
         $templateMapper = $this->createTemplateDataMapperInstance([$nestedPropertyMetadata]);
         $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
@@ -215,9 +217,11 @@ class TemplateDataMapperTest extends TestCase
 
         $nestedPropertyValue1Metadata = new FieldMetadata('nestedProperty/value_1');
         $nestedPropertyValue1Metadata->setMultilingual(true);
+        $nestedPropertyValue1Metadata->setType('text_line');
 
         $nestedPropertyValue2Metadata = new FieldMetadata('nestedProperty/value_2');
         $nestedPropertyValue2Metadata->setMultilingual(true);
+        $nestedPropertyValue2Metadata->setType('text_line');
 
         $templateMapper = $this->createTemplateDataMapperInstance([
             $nestedPropertyValue1Metadata,
@@ -256,6 +260,7 @@ class TemplateDataMapperTest extends TestCase
 
         $unlocalizedNestedField = new FieldMetadata('unlocalizedNested/value');
         $unlocalizedNestedField->setMultilingual(false);
+        $unlocalizedNestedField->setType('text_line');
 
         $templateMapper = $this->createTemplateDataMapperInstance([$unlocalizedNestedField]);
         $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
@@ -308,6 +313,7 @@ class TemplateDataMapperTest extends TestCase
 
         $unlocalizedNestedField = new FieldMetadata('unlocalizedNested/value');
         $unlocalizedNestedField->setMultilingual(false);
+        $unlocalizedNestedField->setType('text_line');
 
         $templateMapper = $this->createTemplateDataMapperInstance([$unlocalizedNestedField]);
         $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
@@ -338,6 +344,7 @@ class TemplateDataMapperTest extends TestCase
 
         $floatPropertyMetadata = new FieldMetadata((string) 1.1);
         $floatPropertyMetadata->setMultilingual(true);
+        $floatPropertyMetadata->setType('text_line');
 
         $templateMapper = $this->createTemplateDataMapperInstance([$floatPropertyMetadata]);
         $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
@@ -369,6 +376,34 @@ class TemplateDataMapperTest extends TestCase
         $this->assertSame(['title' => 'Test Localized'], $localizedDimensionContent->getTemplateData());
     }
 
+    public function testMapDataSkipsFieldsWithSkipTag(): void
+    {
+        $data = [
+            'template' => 'template-key',
+            'title' => 'Test Title',
+            'url' => '/should-not-end-up-in-template-data',
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+
+        $urlFieldMetadata = new FieldMetadata('url');
+        $urlFieldMetadata->setType('route');
+        $urlFieldMetadata->setMultilingual(true);
+        $skipTag = new TagMetadata();
+        $skipTag->setName(TemplateDataMapper::SKIP_TAG);
+        $urlFieldMetadata->addTag($skipTag);
+
+        $templateMapper = $this->createTemplateDataMapperInstance([$urlFieldMetadata]);
+        $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame(['title' => 'Test Title'], $localizedDimensionContent->getTemplateData());
+        $this->assertArrayNotHasKey('url', $localizedDimensionContent->getTemplateData());
+        $this->assertArrayNotHasKey('url', $unlocalizedDimensionContent->getTemplateData());
+    }
+
     /**
      * @param ItemMetadata[] $properties
      */
@@ -380,9 +415,11 @@ class TemplateDataMapperTest extends TestCase
 
         $unlocalizedPropertyMetadata = new FieldMetadata('unlocalizedField');
         $unlocalizedPropertyMetadata->setMultilingual(false);
+        $unlocalizedPropertyMetadata->setType('text_line');
 
         $localizedPropertyMetadata = new FieldMetadata('title');
         $localizedPropertyMetadata->setMultilingual(true);
+        $localizedPropertyMetadata->setType('text_line');
 
         $formMetadata->addItem($unlocalizedPropertyMetadata);
         $formMetadata->addItem($localizedPropertyMetadata);

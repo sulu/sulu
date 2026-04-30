@@ -54,7 +54,7 @@ class ContentLinkProviderTest extends WebsiteTestCase
                     'article' => null,
                 ],
             ],
-        ]);
+        ], ['create_route' => true]);
 
         // Example 2 (only en, published)
         $example2 = static::createExample([
@@ -63,7 +63,7 @@ class ContentLinkProviderTest extends WebsiteTestCase
                     'title' => 'example-2',
                 ],
             ],
-        ]);
+        ], ['create_route' => true]);
 
         // Example 3 (both locales, only en published)
         $example3 = static::createExample([
@@ -78,7 +78,7 @@ class ContentLinkProviderTest extends WebsiteTestCase
                     'title' => 'beispiel-3',
                 ],
             ],
-        ]);
+        ], ['create_route' => true]);
 
         // Example 4 (only de, published)
         $example4 = static::createExample([
@@ -88,7 +88,7 @@ class ContentLinkProviderTest extends WebsiteTestCase
                     'article' => '<p>Test article</p>',
                 ],
             ],
-        ]);
+        ], ['create_route' => true]);
 
         // Example 5 (only en, not published)
         $example5 = static::createExample([
