@@ -11,8 +11,7 @@ will become required.
 
 ### CKEditor upgrade to 47
 
-As in all Sulu updates you require to run `bin/adminconsole sulu:admin:update-build` command.
-For security reasons, the 2.6.22 version uses the `^47.0` CKEditor version.
+For security reasons, the new version uses the `^47.0` CKEditor version.
 
 Run:
 
