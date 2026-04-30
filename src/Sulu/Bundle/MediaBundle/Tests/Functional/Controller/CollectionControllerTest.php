@@ -339,6 +339,10 @@ class CollectionControllerTest extends SuluTestCase
 
     public function testCGet(): void
     {
+        $this->createCollection(
+            $this->collectionType1,
+            ['en-gb' => 'Z Last Test Collection', 'de' => 'Test Kollektion']
+        );
         for ($i = 1; $i <= 15; ++$i) {
             $this->createCollection(
                 $this->collectionType1,
@@ -359,7 +363,11 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertNotEmpty($response->_embedded->collections);
 
-        $this->assertCount(16, $response->_embedded->collections);
+        /** @var \stdClass[] $collections */
+        $collections = $response->_embedded->collections;
+
+        $this->assertCount(17, $collections);
+        $this->assertSame('Z Last Test Collection', $collections[array_key_last($collections)]->title);
     }
 
     public function testCGetPaginatedFlat(): void
