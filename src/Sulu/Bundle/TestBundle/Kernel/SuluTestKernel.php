@@ -82,6 +82,10 @@ class SuluTestKernel extends SuluKernel
             $bundles[] = new \Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle();
         }
 
+        if (\class_exists(\Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle::class)) {
+            $bundles[] = new \Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle();
+        }
+
         if (\class_exists(\Massive\Bundle\BuildBundle\MassiveBuildBundle::class)) {
             $bundles[] = new \Massive\Bundle\BuildBundle\MassiveBuildBundle();
         }

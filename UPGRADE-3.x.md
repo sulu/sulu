@@ -23,6 +23,21 @@ The `Sulu\Bundle\SecurityBundle\Controller\UserController` now takes an optional
 passing/injecting the `FieldDescriptorFactory` now to remain compatible with a future version where it
 will become required.
 
+### Introduce Doctrine Migrations Bundle
+
+Sulu now ships core migrations via Doctrine Migrations Bundle. If your project does not use it yet, install it with:
+
+```bash
+composer require doctrine/doctrine-migrations-bundle
+```
+
+Sulu provides a migration to convert existing persisted tag-name values to tag IDs for SmartContent tag filters and
+`tag_selection` fields. Before running the migration, create a database backup. Then execute:
+
+```bash
+bin/console doctrine:migrations:migrate
+```
+
 ### Consistent smart content params across article, page and snippet providers
 
 Several smart content `<param>` names for selecting templates were ambiguous between providers and have been deprecated:
