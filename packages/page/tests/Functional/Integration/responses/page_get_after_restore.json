@@ -27,7 +27,7 @@
         "more": "Excerpt More"
     },
     "excerptCategories" : [ ],
-    "excerptTags" : [ "Tag 1", "Tag 2" ],
+    "excerptTags" : [ "@integer@", "@integer@" ],
     "excerptAudienceTargetGroups": [
         "@integer@",
         "@integer@"

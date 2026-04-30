@@ -1,9 +1,13 @@
 // @flow
 import React from 'react';
+import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import MultiAutoCompleteComponent from '../../components/MultiAutoComplete';
 import SearchStore from '../../stores/SearchStore';
 import MultiSelectionStore from '../../stores/MultiSelectionStore';
+import ResourceRequester from '../../services/ResourceRequester';
+import snackbarStore from '../../stores/snackbarStore';
+import {translate} from '../../utils/Translator';
 import type {ElementRef} from 'react';
 
 type Props = {|
@@ -47,7 +51,35 @@ class MultiAutoComplete extends React.Component<Props> {
     }
 
     handleChange = (value: Array<Object>) => {
-        const {selectionStore} = this.props;
+        const {allowAdd, displayProperty, idProperty, selectionStore} = this.props;
+
+        if (allowAdd) {
+            const newlyTypedItem = value.find((item) => item[displayProperty] === undefined);
+
+            if (newlyTypedItem) {
+                const typedValue = newlyTypedItem[idProperty];
+                const itemsWithoutNew = value.filter((item) => item !== newlyTypedItem);
+
+                const tempItem = {[idProperty]: typedValue, [displayProperty]: typedValue};
+                selectionStore.set([...itemsWithoutNew, tempItem]);
+                this.searchStore.clearSearchResults();
+
+                ResourceRequester.post(selectionStore.resourceKey, {[displayProperty]: typedValue})
+                    .then(action((createdItem) => {
+                        selectionStore.set([...itemsWithoutNew, createdItem]);
+                    }))
+                    .catch(action(() => {
+                        selectionStore.set(itemsWithoutNew);
+                        snackbarStore.add(
+                            {text: translate('sulu_admin.multi_auto_complete_create_error'), type: 'error'},
+                            4000
+                        );
+                    }));
+
+                return;
+            }
+        }
+
         selectionStore.set(value);
         this.searchStore.clearSearchResults();
     };

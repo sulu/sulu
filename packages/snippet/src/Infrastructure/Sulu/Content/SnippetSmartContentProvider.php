@@ -31,7 +31,7 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoade
  *       categoryOperator: 'AND'|'OR',
  *       websiteCategories: string[],
  *       websiteCategoryOperator: 'AND'|'OR',
- *       tags: string[],
+ *       tags: int[],
  *       tagOperator: 'AND'|'OR',
  *       websiteTags: string[],
  *       websiteTagOperator: 'AND'|'OR',
@@ -53,7 +53,7 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoade
  *       categoryOperator: 'AND'|'OR',
  *       websiteCategories: string[],
  *       websiteCategoryOperator: 'AND'|'OR',
- *       tags: string[],
+ *       tags: int[],
  *       tagOperator: 'AND'|'OR',
  *       websiteTags: string[],
  *       websiteTagOperator: 'AND'|'OR',
@@ -253,7 +253,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         }
 
         if ($filters['tags']) {
-            $filters['tagNames'] = $filters['tags'];
+            $filters['tagIds'] = $filters['tags'];
             unset($filters['tags']);
         }
 

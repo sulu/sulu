@@ -44,7 +44,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *       categoryOperator: 'AND'|'OR',
  *       websiteCategories: string[],
  *       websiteCategoryOperator: 'AND'|'OR',
- *       tags: string[],
+ *       tags: int[],
  *       tagOperator: 'AND'|'OR',
  *       websiteTags: string[],
  *       websiteTagOperator: 'AND'|'OR',
@@ -67,7 +67,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *       categoryOperator: 'AND'|'OR',
  *       websiteCategories: string[],
  *       websiteCategoryOperator: 'AND'|'OR',
- *       tags: string[],
+ *       tags: int[],
  *       tagOperator: 'AND'|'OR',
  *       websiteTags: string[],
  *       websiteTagOperator: 'AND'|'OR',
@@ -278,7 +278,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
         }
 
         if ($filters['tags']) {
-            $filters['tagNames'] = $filters['tags'];
+            $filters['tagIds'] = $filters['tags'];
             unset($filters['tags']);
         }
 

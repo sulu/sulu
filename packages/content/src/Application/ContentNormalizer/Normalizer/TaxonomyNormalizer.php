@@ -24,7 +24,8 @@ class TaxonomyNormalizer implements NormalizerInterface
             return $normalizedData;
         }
 
-        $normalizedData['excerptTags'] = $normalizedData['excerptTagNames'];
+        $normalizedData['excerptTags'] = $normalizedData['excerptTagIds'];
+        unset($normalizedData['excerptTagIds']);
         unset($normalizedData['excerptTagNames']);
         $normalizedData['excerptCategories'] = $normalizedData['excerptCategoryIds'];
         unset($normalizedData['excerptCategoryIds']);

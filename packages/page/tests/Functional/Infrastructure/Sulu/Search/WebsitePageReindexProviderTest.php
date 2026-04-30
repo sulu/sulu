@@ -327,7 +327,7 @@ class WebsitePageReindexProviderTest extends SuluTestCase
                     'title' => 'Page With Taxonomy',
                     'url' => '/page-taxonomy',
                     'excerptCategories' => [$category1->getId(), $category2->getId()],
-                    'excerptTags' => [$tag1->getName(), $tag2->getName()],
+                    'excerptTags' => [$tag1->getId(), $tag2->getId()],
                 ],
             ],
         ], 'sulu-io');
@@ -405,7 +405,7 @@ class WebsitePageReindexProviderTest extends SuluTestCase
                     'template' => 'default',
                     'title' => 'Page With Tags',
                     'url' => '/page-tags',
-                    'excerptTags' => [$tag1->getName(), $tag2->getName()],
+                    'excerptTags' => [$tag1->getId(), $tag2->getId()],
                 ],
             ],
         ], 'sulu-io');
@@ -481,7 +481,7 @@ class WebsitePageReindexProviderTest extends SuluTestCase
                         'description' => '<p>Excerpt description</p>',
                     ],
                     'excerptCategories' => [$category->getId()],
-                    'excerptTags' => [$tag->getName()],
+                    'excerptTags' => [$tag->getId()],
                 ],
             ],
         ], 'sulu-io');

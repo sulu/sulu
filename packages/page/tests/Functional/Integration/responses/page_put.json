@@ -34,8 +34,8 @@
     },
     "excerptCategories": [],
     "excerptTags": [
-        "Tag 3",
-        "Tag 4"
+        "@integer@",
+        "@integer@"
     ],
     "excerptAudienceTargetGroups": [
         "@integer@",

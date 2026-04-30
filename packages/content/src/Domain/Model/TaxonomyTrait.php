@@ -106,6 +106,20 @@ trait TaxonomyTrait
     }
 
     /**
+     * @return int[]
+     */
+    public function getExcerptTagIds(): array
+    {
+        $this->initializeTags();
+        $tagIds = [];
+        foreach ($this->excerptTags as $excerptTag) {
+            $tagIds[] = $excerptTag->getId();
+        }
+
+        return $tagIds;
+    }
+
+    /**
      * @param TagInterface[] $excerptTags
      */
     public function setExcerptTags(array $excerptTags): void

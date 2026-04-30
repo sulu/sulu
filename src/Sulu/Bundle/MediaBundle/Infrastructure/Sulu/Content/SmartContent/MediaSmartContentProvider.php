@@ -38,7 +38,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *       categoryOperator: 'AND'|'OR',
  *       websiteCategories: string[],
  *       websiteCategoryOperator: 'AND'|'OR',
- *       tags: string[],
+ *       tags: int[],
  *       tagOperator: 'AND'|'OR',
  *       websiteTags: string[],
  *       websiteTagOperator: 'AND'|'OR',
@@ -62,7 +62,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *       categoryOperator: 'AND'|'OR',
  *       websiteCategories: string[],
  *       websiteCategoryOperator: 'AND'|'OR',
- *       tags: string[],
+ *       tags: int[],
  *       tagOperator: 'AND'|'OR',
  *       websiteTags: string[],
  *       websiteTagOperator: 'AND'|'OR',
@@ -275,15 +275,15 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
             }
         }
 
-        $tagNames = $filters['tags'];
-        if ([] !== $tagNames) {
+        $tagIds = $filters['tags'];
+        if ([] !== $tagIds) {
             $this->smartContentQueryEnhancer->addJoinFilter(
                 $queryBuilder,
                 'fileVersion.tags',
-                'filterTagName',
-                'name',
-                'tagNames',
-                $tagNames,
+                'filterTagId',
+                'id',
+                'tagIds',
+                $tagIds,
                 $filters['tagOperator'],
             );
         }

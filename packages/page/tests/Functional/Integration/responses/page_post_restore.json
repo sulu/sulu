@@ -40,8 +40,8 @@
         "sulu-io": "updated-segment"
     },
     "excerptTags": [
-        "Tag 3",
-        "Tag 4"
+        "@integer@",
+        "@integer@"
     ],
     "ghostLocale": "en",
     "hasSub": false,

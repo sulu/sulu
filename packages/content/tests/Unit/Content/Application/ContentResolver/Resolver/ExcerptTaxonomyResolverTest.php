@@ -126,8 +126,10 @@ class ExcerptTaxonomyResolverTest extends TestCase
         $dimensionContent->setLocale('en');
 
         $tag1 = $this->prophesize(TagInterface::class);
+        $tag1->getId()->willReturn(1);
         $tag1->getName()->willReturn('tag1');
         $tag2 = $this->prophesize(TagInterface::class);
+        $tag2->getId()->willReturn(2);
         $tag2->getName()->willReturn('tag2');
 
         $category1 = $this->prophesize(CategoryInterface::class);

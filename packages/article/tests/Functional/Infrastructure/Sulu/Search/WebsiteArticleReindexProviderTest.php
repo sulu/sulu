@@ -33,7 +33,7 @@ use Sulu\Content\Tests\Traits\CreateTagTrait;
  *     template?: string,
  *     locale?: string,
  *     excerptCategories?: int[],
- *     excerptTags?: string[],
+ *     excerptTags?: int[],
  *     author?: int|null,
  *     authored?: string|null,
  * }
@@ -535,7 +535,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                     'title' => 'Article With Taxonomy',
                     'url' => '/article-taxonomy',
                     'excerptCategories' => [$category1->getId(), $category2->getId()],
-                    'excerptTags' => [$tag1->getName(), $tag2->getName()],
+                    'excerptTags' => [$tag1->getId(), $tag2->getId()],
                 ],
             ],
         ]);
@@ -611,7 +611,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                     'template' => 'article',
                     'title' => 'Article With Tags',
                     'url' => '/article-tags',
-                    'excerptTags' => [$tag1->getName(), $tag2->getName()],
+                    'excerptTags' => [$tag1->getId(), $tag2->getId()],
                 ],
             ],
         ]);
@@ -685,7 +685,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                         'description' => '<p>Excerpt description</p>',
                     ],
                     'excerptCategories' => [$category->getId()],
-                    'excerptTags' => [$tag->getName()],
+                    'excerptTags' => [$tag->getId()],
                 ],
             ],
         ]);

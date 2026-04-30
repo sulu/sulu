@@ -32,7 +32,7 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
  *       categoryOperator: 'AND'|'OR',
  *       websiteCategories: string[],
  *       websiteCategoryOperator: 'AND'|'OR',
- *       tags: string[],
+ *       tags: int[],
  *       tagOperator: 'AND'|'OR',
  *       websiteTags: string[],
  *       websiteTagOperator: 'AND'|'OR',
@@ -56,7 +56,7 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
  *        categoryOperator: 'AND'|'OR',
  *        websiteCategories: string[],
  *        websiteCategoryOperator: 'AND'|'OR',
- *        tags: string[],
+ *        tags: int[],
  *        tagOperator: 'AND'|'OR',
  *        websiteTags: string[],
  *        websiteTagOperator: 'AND'|'OR',
@@ -273,7 +273,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         }
 
         if ($filters['tags']) {
-            $filters['tagNames'] = $filters['tags'];
+            $filters['tagIds'] = $filters['tags'];
             unset($filters['tags']);
         }
 

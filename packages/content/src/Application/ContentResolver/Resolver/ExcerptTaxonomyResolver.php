@@ -164,7 +164,7 @@ readonly class ExcerptTaxonomyResolver implements ResolverInterface
                     $dimensionContent->getExcerptCategories(),
                 ),
                 'excerptTags' => \array_map(
-                    fn (TagInterface $tag) => $tag->getName(),
+                    fn (TagInterface $tag) => $tag->getId(),
                     $dimensionContent->getExcerptTags(),
                 ),
                 'excerptAudienceTargetGroups' => \array_map(

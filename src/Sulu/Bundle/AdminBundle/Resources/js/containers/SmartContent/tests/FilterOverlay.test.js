@@ -343,7 +343,7 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     expect(filterOverlay.find('div[className="categories"]').find('SingleSelect').prop('value')).toEqual('and');
 
     filterOverlay.instance().tagSelectionStore.items.push({id: 1, name: 'Test 1'}, {id: 2, name: 'Test 3'});
-    expect(filterOverlay.instance().tags).toEqual(['Test 1', 'Test 3']);
+    expect(filterOverlay.instance().tags).toEqual([1, 2]);
 
     filterOverlay.find('div[className="tags"]').find('SingleSelect').prop('onChange')('or');
     filterOverlay.update();
@@ -392,7 +392,7 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     expect(smartContentStore.includeSubElements).toEqual(true);
     expect(smartContentStore.categories).toEqual([{id: 1, name: 'Test1'}, {id: 3, name: 'Test2'}]);
     expect(smartContentStore.categoryOperator).toEqual('and');
-    expect(smartContentStore.tags).toEqual(['Test 1', 'Test 3']);
+    expect(smartContentStore.tags).toEqual([1, 2]);
     expect(smartContentStore.tagOperator).toEqual('or');
     expect(smartContentStore.audienceTargeting).toEqual(false);
     expect(smartContentStore.sortBy).toEqual('changed');
@@ -477,7 +477,7 @@ test('Prefill all fields with correct values', () => {
         .toEqual([{id: 1, name: 'Test1'}, {id: 5, name: 'Test3'}]);
     expect(filterOverlay.find('div[className="categories"]').find('SingleSelect').prop('value')).toEqual('or');
 
-    expect(MultiSelectionStore).toBeCalledWith('tags', [1, 2], undefined, 'names');
+    expect(MultiSelectionStore).toBeCalledWith('tags', [1, 2], undefined, 'ids');
     expect(filterOverlay.find('div[className="tags"]').find('SingleSelect').prop('value')).toEqual('and');
 
     expect(filterOverlay.find('div[className="types"]').find('MultiSelect').prop('values')).toEqual(
