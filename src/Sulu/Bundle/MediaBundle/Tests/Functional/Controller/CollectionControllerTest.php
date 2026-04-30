@@ -367,7 +367,7 @@ class CollectionControllerTest extends SuluTestCase
         $collections = $response->_embedded->collections;
 
         $this->assertCount(17, $collections);
-        $this->assertSame('Z Last Test Collection', $collections[array_key_last($collections)]->title);
+        $this->assertSame('Z Last Test Collection', $collections[\array_key_last($collections)]->title);
     }
 
     public function testCGetPaginatedFlat(): void
