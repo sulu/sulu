@@ -7,6 +7,28 @@ import type {Schema, SchemaEntry} from '../types';
 
 export const SECTION_TYPE = 'section';
 
+function deepMerge(base: Object, override: Object): Object {
+    const result = {...base};
+    for (const key of Object.keys(override)) {
+        const overrideVal = override[key];
+        const baseVal = result[key];
+
+        if (
+            overrideVal !== null
+            && typeof overrideVal === 'object'
+            && !Array.isArray(overrideVal)
+            && baseVal !== null
+            && typeof baseVal === 'object'
+            && !Array.isArray(baseVal)
+        ) {
+            result[key] = deepMerge(baseVal, overrideVal);
+        } else {
+            result[key] = overrideVal;
+        }
+    }
+    return result;
+}
+
 function addSchemaProperties(data: Object, key: string, schema: Schema) {
     const type = schema[key].type;
 
@@ -208,7 +230,7 @@ export default class AbstractFormStore
     @action addMissingSchemaProperties() {
         const schemaFields = Object.keys(this.schema)
             .reduce((data, key) => addSchemaProperties(data, key, this.schema), {});
-        set(this.data, {...schemaFields, ...this.data});
+        set(this.data, deepMerge(schemaFields, this.data));
     }
 
     destroy() {}

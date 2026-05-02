@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 
 class SuluDocumentManagerExtension extends Extension implements PrependExtensionInterface
@@ -129,24 +129,24 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
 
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         $this->configureDocumentManager($config, $container);
         $this->configurePathSegmentRegistry($config, $container);
 
-        $loader->load('core.xml');
-        $loader->load('behaviors.xml');
-        $loader->load('serializer.xml');
-        $loader->load('command.xml');
-        $loader->load('data_fixtures.xml');
-        $loader->load('routing.xml');
+        $loader->load('core.php');
+        $loader->load('behaviors.php');
+        $loader->load('serializer.php');
+        $loader->load('command.php');
+        $loader->load('data_fixtures.php');
+        $loader->load('routing.php');
 
         if ($config['versioning']['enabled']) {
-            $loader->load('versioning.xml');
+            $loader->load('versioning.php');
         }
 
         if (\array_key_exists('SuluReferenceBundle', $bundles)) {
-            $loader->load('services_reference.xml');
+            $loader->load('services_reference.php');
         }
     }
 

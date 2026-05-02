@@ -122,6 +122,7 @@ class NodeRepositoryTest extends SuluTestCase
 
     public function testGetWebspaceNode(): void
     {
+        /** @var array<array-key,array<array-key,array<array-key,array<array-key,string>>>> $result */
         $result = $this->nodeRepository->getWebspaceNode('sulu_io', 'en');
 
         $this->assertEquals('Sulu CMF', $result['_embedded']['pages'][0]['title']);
@@ -129,11 +130,13 @@ class NodeRepositoryTest extends SuluTestCase
 
     public function testGetWebspaceNodes(): void
     {
+        /** @var array<array-key,array<array-key,array<array-key,array<array-key,string>>>> $result */
         $result = $this->nodeRepository->getWebspaceNodes('en');
 
         $this->assertEquals('Destination CMF', $result['_embedded']['pages'][0]['title']);
         $this->assertEquals('Sulu CMF', $result['_embedded']['pages'][1]['title']);
         $this->assertEquals('Test CMF', $result['_embedded']['pages'][2]['title']);
+        $this->assertEquals('ZZ Sorted', $result['_embedded']['pages'][3]['title']);
     }
 
     /**

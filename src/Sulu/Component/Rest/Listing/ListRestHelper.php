@@ -159,7 +159,7 @@ class ListRestHelper
      *
      * @param string $entityName
      *
-     * @return array
+     * @return array<int, string>
      */
     public function getAllFields($entityName)
     {
@@ -170,7 +170,7 @@ class ListRestHelper
      * Returns an array with all the fields, which should be contained in the response.
      * If null is returned every field should be contained.
      *
-     * @return array|null
+     * @return array<string>|null
      */
     public function getFields()
     {
@@ -190,7 +190,7 @@ class ListRestHelper
     /**
      * Returns an array with all the fields the search pattern should be executed on.
      *
-     * @return array|null
+     * @return array<string>
      */
     public function getSearchFields()
     {

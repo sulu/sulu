@@ -20,16 +20,18 @@ class WebspaceControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $client->jsonRequest('GET', '/api/webspaces?locale=en');
+        /** @var array{_embedded: array{webspaces: array<array{name: string, navigations: array<array{key: string}>, allLocalizations: array<array{name: string, localization: string}>, resourceLocatorStrategy: array{inputType: string}}>}} $response */
         $response = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $data = $response['_embedded']['webspaces'];
-        $this->assertCount(3, $data);
+        $this->assertCount(4, $data);
 
         $destinationWebspace = $data[0];
         $suluWebspace = $data[1];
         $testWebspace = $data[2];
+        $sortedWebspace = $data[3];
 
         $this->assertEquals('Destination CMF', $destinationWebspace['name']);
         $this->assertCount(2, $destinationWebspace['navigations']);
@@ -49,5 +51,9 @@ class WebspaceControllerTest extends SuluTestCase
         $this->assertEquals('main', $testWebspace['navigations'][0]['key']);
         $this->assertEquals('footer', $testWebspace['navigations'][1]['key']);
         $this->assertEquals('leaf', $testWebspace['resourceLocatorStrategy']['inputType']);
+        $this->assertEquals('ZZ Sorted', $sortedWebspace['name']);
+        $this->assertCount(2, $sortedWebspace['navigations']);
+        $this->assertEquals('main', $sortedWebspace['navigations'][0]['key']);
+        $this->assertEquals('footer', $sortedWebspace['navigations'][1]['key']);
     }
 }

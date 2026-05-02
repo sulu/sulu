@@ -32,7 +32,7 @@ class CsvHandler
     /**
      * Translates request value to real new-lines.
      *
-     * @var array
+     * @var array<string, string>
      */
     public static $newLineMap = [
         '\\n' => "\n",
@@ -43,7 +43,7 @@ class CsvHandler
     /**
      * Translates request value to real delimiter.
      *
-     * @var array
+     * @var array<string, string>
      */
     public static $delimiterMap = [
         '\\t' => "\t",
@@ -80,10 +80,10 @@ class CsvHandler
             $config->setColumnHeaders(\array_keys($row));
         }
 
-        $config->setDelimiter($this->convertValue($request->get('delimiter', ';'), self::$delimiterMap));
-        $config->setNewline($this->convertValue($request->get('newLine', '\\n'), self::$newLineMap));
-        $config->setEnclosure($request->get('enclosure', '"'));
-        $config->setEscape($request->get('escape', '\\'));
+        $config->setDelimiter($this->convertValue($this->getString($request, 'delimiter', ';'), self::$delimiterMap));
+        $config->setNewline($this->convertValue($this->getString($request, 'newLine', '\\n'), self::$newLineMap));
+        $config->setEnclosure($this->getString($request, 'enclosure', '"'));
+        $config->setEscape($this->getString($request, 'escape', '\\'));
 
         $response = new StreamedResponse();
         $disposition = $response->headers->makeDisposition(
@@ -100,6 +100,18 @@ class CsvHandler
         );
 
         return $response;
+    }
+
+    /**
+     * BC Layer: Symfony 5.4 doesn't have the getString function.
+     */
+    private function getString(Request $request, string $property, string $default): string
+    {
+        if (\method_exists($request->query, 'getString')) {
+            return $request->query->getString($property, $default);
+        }
+
+        return (string) $request->query->get($property, $default);
     }
 
     /**
@@ -133,11 +145,9 @@ class CsvHandler
     /**
      * Return mapped value or value itself.
      *
-     * @param string $value
-     *
-     * @return string
+     * @param array<string, string> $map
      */
-    private function convertValue($value, array $map)
+    private function convertValue(string $value, array $map): string
     {
         if (\array_key_exists($value, $map)) {
             return $map[$value];

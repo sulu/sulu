@@ -151,7 +151,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
      */
     public function __construct()
     {
-        $this->apiKey = \md5(\uniqid());
+        $this->apiKey = \bin2hex(\random_bytes(64));
 
         $this->userRoles = new ArrayCollection();
         $this->userGroups = new ArrayCollection();

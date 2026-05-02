@@ -2,10 +2,10 @@
 import React from 'react';
 import {Observer} from 'mobx-react';
 import {action, observable} from 'mobx';
-import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
-import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
-import ContextualBalloon from '@ckeditor/ckeditor5-ui/src/panel/balloon/contextualballoon';
-import ClickObserver from '@ckeditor/ckeditor5-engine/src/view/observer/clickobserver';
+import {Plugin} from '@ckeditor/ckeditor5-core/src/plugin';
+import {ButtonView} from '@ckeditor/ckeditor5-ui/src/button/buttonview';
+import {ContextualBalloon} from '@ckeditor/ckeditor5-ui/src/panel/balloon/contextualballoon';
+import {ClickObserver} from '@ckeditor/ckeditor5-engine/src/view/observer/clickobserver';
 import {render, unmountComponentAtNode} from 'react-dom';
 import linkTypeRegistry from '../../../Link/registries/linkTypeRegistry';
 import {translate} from '../../../../utils';

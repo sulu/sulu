@@ -1,6 +1,6 @@
 // @flow
-import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
-import View from '@ckeditor/ckeditor5-ui/src/view';
+import {ButtonView} from '@ckeditor/ckeditor5-ui/src/button/buttonview';
+import {View} from '@ckeditor/ckeditor5-ui/src/view';
 // $FlowFixMe
 import editIcon from '!!raw-loader!./edit.svg'; // eslint-disable-line import/no-webpack-loader-syntax
 // $FlowFixMe

@@ -86,7 +86,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $response = \json_decode($this->client->getResponse()->getContent());
-        $this->assertCount(2, $response->_embedded->pages);
+        $this->assertCount(3, $response->_embedded->pages);
 
         $titles = \array_map(function($page) {
             return $page->title;
@@ -94,6 +94,7 @@ class PageControllerTest extends SuluTestCase
 
         $this->assertContains('Sulu CMF', $titles);
         $this->assertContains('Test CMF', $titles);
+        $this->assertSame('ZZ Sorted', $titles[\array_key_last($titles)]);
     }
 
     public function testGetFlatResponseForWebspace(): void

@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<list xmlns="http://schemas.sulu.io/list-builder/list">
+    <key>users</key>
+
+    <properties>
+        <property
+            name="id"
+            visibility="yes"
+            searchability="never"
+            translation="sulu_admin.id"
+        >
+            <field-name>id</field-name>
+            <entity-name>%sulu.model.user.class%</entity-name>
+        </property>
+
+        <property
+            name="username"
+            visibility="yes"
+            searchability="never"
+            translation="sulu_admin.username"
+        >
+            <field-name>username</field-name>
+            <entity-name>%sulu.model.user.class%</entity-name>
+        </property>
+
+        <property
+            name="email"
+            visibility="yes"
+            searchability="never"
+            translation="sulu_admin.email"
+        >
+            <field-name>email</field-name>
+            <entity-name>%sulu.model.user.class%</entity-name>
+        </property>
+
+        <property
+            name="locale"
+            visibility="yes"
+            searchability="never"
+            translation="sulu_admin.locale"
+        >
+            <field-name>locale</field-name>
+            <entity-name>%sulu.model.user.class%</entity-name>
+        </property>
+    </properties>
+</list>

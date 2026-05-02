@@ -161,7 +161,7 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
         $languageCode,
         $segmentKey
     ) {
-        return $this->doWrite($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey, false);
+        $this->doWrite($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey, false);
     }
 
     /**
@@ -183,7 +183,7 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
         $languageCode,
         $segmentKey,
         $isImport = false
-    ) {
+    ): void {
         $data = $property->getValue();
 
         $imageId = $data['imageId'] ?? null;

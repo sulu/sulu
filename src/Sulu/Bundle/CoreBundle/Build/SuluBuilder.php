@@ -13,9 +13,12 @@ namespace Sulu\Bundle\CoreBundle\Build;
 
 use Massive\Bundle\BuildBundle\Build\BuilderContext;
 use Massive\Bundle\BuildBundle\Build\BuilderInterface;
+use Massive\Bundle\BuildBundle\Console\MassiveOutputFormatter;
 use Massive\Bundle\BuildBundle\ContainerAwareInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -25,8 +28,14 @@ abstract class SuluBuilder implements ContainerAwareInterface, BuilderInterface
 {
     protected $container;
 
+    /**
+     * @var OutputInterface
+     */
     protected $output;
 
+    /**
+     * @var InputInterface
+     */
     protected $input;
 
     protected $application;
@@ -50,7 +59,10 @@ abstract class SuluBuilder implements ContainerAwareInterface, BuilderInterface
      */
     protected function execCommand($description, $command, $args = [''])
     {
-        $this->output->getFormatter()->setIndentLevel(1);
+        /** @var MassiveOutputFormatter $formatter */
+        $formatter = $this->output->getFormatter();
+
+        $formatter->setIndentLevel(1);
 
         if (!empty($args)) {
             $this->output->writeln(\sprintf('<comment>%s </comment> (%s)', $command, \json_encode($args)));
@@ -64,7 +76,7 @@ abstract class SuluBuilder implements ContainerAwareInterface, BuilderInterface
         $input = new ArrayInput($args);
         $input->setInteractive(false);
 
-        $this->output->getFormatter()->setIndentLevel(2);
+        $formatter->setIndentLevel(2);
         $res = $command->run($input, $this->output);
         $this->output->writeln('');
 

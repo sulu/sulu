@@ -1,6 +1,33 @@
 # Upgrade
 
+For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upgrades/upgrade-2.x.html) steps.
+
+## 2.6.23
+
+### CKEditor upgrade to 47
+
+For security reasons, the new version uses the `^47.0` CKEditor version.
+
+Run:
+
+```bash
+bin/adminconsole sulu:admin:update-build
+```
+
+If you have any custom CKEditor plugins, you might need to adjust them to be compatible with CKEditor 47.
+
+Keep in mind that CKEditor also requires at least `Node 20` to create a custom admin build.
+
+### Additional Optional Parameter fieldDescriptorFactory for UserController
+
+The `Sulu\Bundle\SecurityBundle\Controller\UserController` now takes an optional argument for the
+`FieldDescriptorFactory`. However, omitting this argument is deprecated, so integrators should start
+passing/injecting the `FieldDescriptorFactory` now to remain compatible with a future version where it
+will become required.
+
 ## 2.6.22
+
+### Swiftmailer incompatibility can appear
 
 There might be issues updating a project which still requires `Swiftmailer`.
 As announced with `2.5.0` (2022-07-13) Sulu recommends replace `Swiftmailer`
