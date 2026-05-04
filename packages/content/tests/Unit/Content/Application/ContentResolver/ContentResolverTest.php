@@ -248,7 +248,8 @@ class ContentResolverTest extends TestCase
 
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['single-1' => [$singleResource->getMetadataIdentifier() => $singleResource]]],
-            'en'
+            'en',
+            []
         )->willReturn(
             ['example' => ['single-1' => [$singleResource->getMetadataIdentifier() => ['title' => 'Single Title']]]]
         );
@@ -292,7 +293,8 @@ class ContentResolverTest extends TestCase
 
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => $multiResource]]],
-            'en'
+            'en',
+            []
         )->willReturn(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => ['title' => 'Multi Title']]]]
         );

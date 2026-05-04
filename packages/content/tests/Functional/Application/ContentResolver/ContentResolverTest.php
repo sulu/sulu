@@ -1602,6 +1602,79 @@ class ContentResolverTest extends SuluTestCase
         self::assertSame($snippet->getUuid(), $singleSnippetView['id']);
     }
 
+    public function testResolveSingleAndMultiSnippetSelectionViewSymmetry(): void
+    {
+        // Regression guard for the asymmetry between single_snippet_selection and
+        // snippet_selection (multi). Nested link metadata is only reachable on the
+        // view side (LinkPropertyResolver flattens links to URL strings on the data
+        // side via its closure), so view.singleSnippet.link must expose the same
+        // {provider, href, title} payload as view.snippets.items[0].link.
+        $snippet = static::createSnippet([
+            'en' => [
+                'live' => [
+                    'template' => 'snippet-with-link',
+                    'title' => 'Symmetry Snippet',
+                    'link' => [
+                        'provider' => 'external',
+                        'href' => 'https://sulu.io',
+                        'title' => 'Sulu Website',
+                    ],
+                ],
+            ],
+        ]);
+
+        static::getEntityManager()->flush();
+
+        $page = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default-example-with-snippets',
+                    'title' => 'Symmetry Page',
+                    'url' => '/symmetry-page',
+                    'snippets' => [$snippet->getUuid()],
+                    'singleSnippet' => $snippet->getUuid(),
+                ],
+            ],
+        ]);
+
+        static::getEntityManager()->flush();
+
+        $dimensionContent = $this->contentAggregator->aggregate($page, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        /** @var array<string, mixed> $view */
+        $view = $result['view'];
+
+        /** @var array<string, mixed> $multiSnippetsView */
+        $multiSnippetsView = $view['snippets'];
+        /** @var list<array<string, mixed>> $multiItems */
+        $multiItems = $multiSnippetsView['items'];
+        $multiFirstItem = $multiItems[0];
+
+        /** @var array<string, mixed> $singleSnippetView */
+        $singleSnippetView = $view['singleSnippet'];
+
+        // Sanity check: the multi-select view exposes the snippet's link metadata.
+        self::assertArrayHasKey('link', $multiFirstItem);
+        /** @var array<string, mixed> $multiLink */
+        $multiLink = $multiFirstItem['link'];
+        self::assertSame('external', $multiLink['provider']);
+        self::assertSame('https://sulu.io', $multiLink['href']);
+        self::assertSame('Sulu Website', $multiLink['title']);
+
+        // Bug L: the same metadata must be reachable via view.singleSnippet.link.
+        self::assertArrayHasKey('link', $singleSnippetView, 'Bug L: view.singleSnippet must expose nested link view, symmetric with view.snippets.items[0].link');
+        /** @var array<string, mixed> $singleLink */
+        $singleLink = $singleSnippetView['link'];
+        self::assertSame('external', $singleLink['provider']);
+        self::assertSame('https://sulu.io', $singleLink['href']);
+        self::assertSame('Sulu Website', $singleLink['title']);
+
+        // Resource-level metadata must also be present and symmetric.
+        self::assertSame($multiFirstItem['uuid'], $singleSnippetView['uuid']);
+        self::assertSame($multiFirstItem['template'], $singleSnippetView['template']);
+    }
+
     public function testResolveSnippetAndExampleSelectionCombined(): void
     {
         $snippet = static::createSnippet([
