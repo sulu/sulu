@@ -94,6 +94,7 @@
         "symfony/mailer": "^6.4 || ^7.1 || ^8.0",
         "symfony/messenger": "^6.4 || ^7.1 || ^8.0",
         "symfony/mime": "^6.4 || ^7.1 || ^8.0",
+        "symfony/notifier": "^6.4 || ^7.1 || ^8.0",
         "symfony/password-hasher": "^6.4 || ^7.1 || ^8.0",
         "symfony/process": "^6.4 || ^7.1 || ^8.0",
         "symfony/property-access": "^6.4 || ^7.1 || ^8.0",
@@ -181,6 +182,7 @@
         "sulu/page-bundle": "self.version",
         "sulu/document-manager": "self.version",
         "sulu/media-bundle": "self.version",
+        "sulu/notifier-bundle": "self.version",
         "sulu/tag-bundle": "self.version",
         "sulu/category-bundle": "self.version",
         "sulu/test-bundle": "self.version",
@@ -215,7 +217,8 @@
             "Sulu\\Route\\": "packages/route/src",
             "Sulu\\Search\\": "packages/search/src",
             "Sulu\\Content\\": "packages/content/src",
-            "Sulu\\CustomUrl\\": "packages/custom-url/src"
+            "Sulu\\CustomUrl\\": "packages/custom-url/src",
+            "Sulu\\Notifier\\": "packages/notifier/src"
         },
         "exclude-from-classmap": [
             "src/Sulu/Component/*/Tests/",
@@ -235,7 +238,8 @@
             "Sulu\\Route\\Migrations\\": "packages/route/migrations",
             "Sulu\\Search\\Tests\\": "packages/search/tests",
             "Sulu\\Content\\Tests\\": "packages/content/tests",
-            "Sulu\\CustomUrl\\Tests\\": "packages/custom-url/tests"
+            "Sulu\\CustomUrl\\Tests\\": "packages/custom-url/tests",
+            "Sulu\\Notifier\\Tests\\": "packages/notifier/tests"
         }
     },
     "scripts": {
