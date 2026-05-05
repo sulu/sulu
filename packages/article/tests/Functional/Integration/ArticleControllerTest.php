@@ -433,6 +433,21 @@ class ArticleControllerTest extends SuluTestCase
     }
 
     #[Depends('testPost')]
+    public function testPutWithForceIgnoresHash(string $id): void
+    {
+        $this->client->request('PUT', '/admin/api/articles/' . $id . '?locale=en&force=true', [], [], [], \json_encode([
+            '_hash' => 'invalid-hash',
+            'template' => 'article',
+            'title' => 'Test Article 2',
+            'url' => '/my-article-2',
+        ]) ?: null);
+
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(200, $response);
+    }
+
+    #[Depends('testPost')]
     #[Depends('testPut')]
     public function testGetList(): void
     {

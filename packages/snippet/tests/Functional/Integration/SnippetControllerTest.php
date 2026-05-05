@@ -252,6 +252,20 @@ class SnippetControllerTest extends SuluTestCase
     }
 
     #[Depends('testPost')]
+    public function testPutWithForceIgnoresHash(string $id): void
+    {
+        $this->client->request('PUT', '/admin/api/snippets/' . $id . '?locale=en&force=true', [], [], [], \json_encode([
+            '_hash' => 'invalid-hash',
+            'template' => 'snippet',
+            'title' => 'Test Snippet 2',
+        ]) ?: null);
+
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(200, $response);
+    }
+
+    #[Depends('testPost')]
     #[Depends('testPut')]
     public function testGetList(): void
     {

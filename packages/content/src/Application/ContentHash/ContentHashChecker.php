@@ -37,6 +37,7 @@ class ContentHashChecker
     public function checkHash(array $data, ContentRichEntityInterface $contentRichEntity, array $dimensionAttributes, $identifier): void
     {
         $expectedHash = $data['_hash'] ?? null;
+        // No hash in the request means the check is skipped (e.g. when ?force=true strips _hash from data).
         if (!\is_string($expectedHash)) {
             return;
         }

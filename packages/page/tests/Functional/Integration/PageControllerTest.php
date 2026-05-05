@@ -633,6 +633,21 @@ class PageControllerTest extends SuluTestCase
     }
 
     #[Depends('testPost')]
+    public function testPutWithForceIgnoresHash(string $id): void
+    {
+        $this->client->request('PUT', '/admin/api/pages/' . $id . '?locale=en&force=true', [], [], [], \json_encode([
+            '_hash' => 'invalid-hash',
+            'template' => 'default',
+            'title' => 'Test Page 2',
+            'url' => '/my-page-2',
+        ]) ?: null);
+
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(200, $response);
+    }
+
+    #[Depends('testPost')]
     #[Depends('testPut')]
     public function testGetList(string $id): void
     {

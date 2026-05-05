@@ -16,6 +16,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Hash\AuditableHasher;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Content\Domain\Model\AuditableInterface as ContentAuditableInterface;
 
 class AuditableHasherTest extends TestCase
 {
@@ -89,5 +90,41 @@ class AuditableHasherTest extends TestCase
         $object->getChanged()->willReturn(new \DateTimeImmutable('2016-02-05'));
 
         $this->assertIsString($this->hasher->hash($object->reveal()));
+    }
+
+    public function testHashSameContentObject(): void
+    {
+        /** @var ContentAuditableInterface $object */
+        $object = $this->prophesize(ContentAuditableInterface::class);
+        /** @var UserInterface $user */
+        $user = $this->prophesize(UserInterface::class);
+        $user->getId()->willReturn(1);
+        $object->getChanger()->willReturn($user->reveal());
+        $object->getChanged()->willReturn(new \DateTimeImmutable('2016-02-05'));
+
+        $this->assertSame($this->hasher->hash($object->reveal()), $this->hasher->hash($object->reveal()));
+    }
+
+    public function testHashContentObjectProducesSameResultAsClassicObject(): void
+    {
+        $changed = new \DateTimeImmutable('2016-02-05');
+
+        /** @var AuditableInterface $classic */
+        $classic = $this->prophesize(AuditableInterface::class);
+        /** @var UserInterface $user1 */
+        $user1 = $this->prophesize(UserInterface::class);
+        $user1->getId()->willReturn(1);
+        $classic->getChanger()->willReturn($user1->reveal());
+        $classic->getChanged()->willReturn($changed);
+
+        /** @var ContentAuditableInterface $content */
+        $content = $this->prophesize(ContentAuditableInterface::class);
+        /** @var UserInterface $user2 */
+        $user2 = $this->prophesize(UserInterface::class);
+        $user2->getId()->willReturn(1);
+        $content->getChanger()->willReturn($user2->reveal());
+        $content->getChanged()->willReturn($changed);
+
+        $this->assertSame($this->hasher->hash($classic->reveal()), $this->hasher->hash($content->reveal()));
     }
 }
