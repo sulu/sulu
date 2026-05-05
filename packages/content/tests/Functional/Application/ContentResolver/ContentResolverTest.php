@@ -412,6 +412,10 @@ class ContentResolverTest extends SuluTestCase
         $teasersView = $view['teasers'];
         self::assertSame('two-columns', $teasersView['presentAs']);
         self::assertCount(2, $teasersView['items']);
+        self::assertSame((string) $example1->getId(), $teasersView['items'][0]['id']);
+        self::assertSame('examples', $teasersView['items'][0]['type']);
+        self::assertSame((string) $example2->getId(), $teasersView['items'][1]['id']);
+        self::assertSame('examples', $teasersView['items'][1]['type']);
     }
 
     public function testResolveCollections(): void
@@ -1150,6 +1154,22 @@ class ContentResolverTest extends SuluTestCase
         self::assertCount(1, $advancedMedia);
         self::assertInstanceOf(Media::class, $advancedMedia[0]);
         self::assertSame($media1->getId(), $advancedMedia[0]->getId());
+
+        /** @var array<string, mixed> $view */
+        $view = $result['view'];
+        self::assertArrayHasKey('image_map', $view);
+        /** @var array<string, mixed> $imageMapView */
+        $imageMapView = $view['image_map'];
+
+        // image view mirrors single_media_selection shape (Sulu 2.6 compatible)
+        self::assertSame(['id' => $mainMedia->getId(), 'displayOption' => null], $imageMapView['image']);
+
+        // hotspot field views
+        /** @var array<int|string, array<string, mixed>> $hotspotsView */
+        $hotspotsView = $imageMapView['hotspots'];
+        self::assertSame([], $hotspotsView[0]['title']);
+        self::assertSame([], $hotspotsView[0]['description']);
+        self::assertSame(['ids' => [$media1->getId()], 'displayOption' => null], $hotspotsView[1]['media']);
     }
 
     public function testResolveLinkExternal(): void
@@ -1183,6 +1203,15 @@ class ContentResolverTest extends SuluTestCase
 
         self::assertArrayHasKey('link', $content);
         self::assertSame('https://sulu.io', $content['link']);
+
+        /** @var array<string, mixed> $view */
+        $view = $result['view'];
+        self::assertArrayHasKey('link', $view);
+        /** @var array<string, mixed> $linkView */
+        $linkView = $view['link'];
+        self::assertSame('external', $linkView['provider']);
+        self::assertSame('https://sulu.io', $linkView['href']);
+        self::assertSame('Sulu Website', $linkView['title']);
     }
 
     public function testResolveLinkInternal(): void
@@ -1234,6 +1263,15 @@ class ContentResolverTest extends SuluTestCase
         self::assertArrayHasKey('link', $content);
         $link = $content['link'];
         self::assertSame('/linked-example', $link);
+
+        /** @var array<string, mixed> $view */
+        $view = $result['view'];
+        self::assertArrayHasKey('link', $view);
+        /** @var array<string, mixed> $linkView */
+        $linkView = $view['link'];
+        self::assertSame('examples', $linkView['provider']);
+        self::assertSame($linkedExample->getId(), $linkView['href']);
+        self::assertSame('Linked Example', $linkView['title']);
     }
 
     public function testResolveNestedContentWithDraftStage(): void

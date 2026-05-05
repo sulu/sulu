@@ -153,9 +153,12 @@ class ImageMapPropertyResolverTest extends TestCase
         if (null !== $imageId) {
             $imageId = (int) $imageId;
             $image = $content['image'] ?? null;
-            $this->assertInstanceOf(ResolvableResource::class, $image);
-            $this->assertSame($imageId, $image->getId());
-            $this->assertSame('media', $image->getResourceLoaderKey());
+            $this->assertInstanceOf(ContentView::class, $image);
+            $resolvable = $image->getContent();
+            $this->assertInstanceOf(ResolvableResource::class, $resolvable);
+            $this->assertSame($imageId, $resolvable->getId());
+            $this->assertSame('media', $resolvable->getResourceLoaderKey());
+            $this->assertSame(['id' => $imageId, 'displayOption' => null], $image->getView());
         }
 
         $hotspotsContentView = $content['hotspots'] ?? null;
@@ -181,9 +184,9 @@ class ImageMapPropertyResolverTest extends TestCase
             }
         }
 
-        $this->assertSame([
-            'imageId' => $imageId,
-        ], $contentView->getView());
+        // unresolvable (no imageId in data) still carries imageId: null in the view; resolvable emits []
+        $expectedView = null !== $imageId ? [] : ['imageId' => null];
+        $this->assertSame($expectedView, $contentView->getView());
 
         $this->assertCount(0, $this->logger->cleanLogs());
     }
@@ -237,9 +240,12 @@ class ImageMapPropertyResolverTest extends TestCase
         $content = $contentView->getContent();
         $this->assertIsArray($content);
         $image = $content['image'] ?? null;
-        $this->assertInstanceOf(ResolvableResource::class, $image);
-        $this->assertSame(1, $image->getId());
-        $this->assertSame('custom_media', $image->getResourceLoaderKey());
+        $this->assertInstanceOf(ContentView::class, $image);
+        $resolvable = $image->getContent();
+        $this->assertInstanceOf(ResolvableResource::class, $resolvable);
+        $this->assertSame(1, $resolvable->getId());
+        $this->assertSame('custom_media', $resolvable->getResourceLoaderKey());
+        $this->assertSame(['id' => 1, 'displayOption' => null], $image->getView());
 
         $this->assertInstanceOf(ContentView::class, $content['hotspots'] ?? null);
         $hotspotsContentView = $content['hotspots'];
@@ -260,10 +266,7 @@ class ImageMapPropertyResolverTest extends TestCase
             $this->assertSame([], $hotspotContent['title']->getView());
         }
 
-        $this->assertSame([
-            'imageId' => 1,
-            'resourceLoader' => 'custom_media',
-        ], $contentView->getView());
+        $this->assertSame(['resourceLoader' => 'custom_media'], $contentView->getView());
         $this->assertCount(0, $this->logger->cleanLogs());
     }
 
@@ -285,9 +288,12 @@ class ImageMapPropertyResolverTest extends TestCase
         $content = $contentView->getContent();
         $this->assertIsArray($content);
         $image = $content['image'] ?? null;
-        $this->assertInstanceOf(ResolvableResource::class, $image);
-        $this->assertSame(1, $image->getId());
-        $this->assertSame('media', $image->getResourceLoaderKey());
+        $this->assertInstanceOf(ContentView::class, $image);
+        $resolvable = $image->getContent();
+        $this->assertInstanceOf(ResolvableResource::class, $resolvable);
+        $this->assertSame(1, $resolvable->getId());
+        $this->assertSame('media', $resolvable->getResourceLoaderKey());
+        $this->assertSame(['id' => 1, 'displayOption' => null], $image->getView());
 
         $hotspotsContentView = $content['hotspots'] ?? null;
         $this->assertInstanceOf(ContentView::class, $hotspotsContentView);
@@ -310,7 +316,7 @@ class ImageMapPropertyResolverTest extends TestCase
 
         $this->assertCount($expectedCount, $hotspots);
 
-        $this->assertSame(['imageId' => 1], $contentView->getView());
+        $this->assertSame([], $contentView->getView());
         $logs = $this->logger->cleanLogs();
         $this->assertCount($expectedErrorLogs, $logs);
     }
@@ -357,8 +363,7 @@ class ImageMapPropertyResolverTest extends TestCase
 
         $content = $contentView->getContent();
         $this->assertIsArray($content);
-        $imageId = $data['imageId'];
-        $this->assertSame(['imageId' => $imageId], $contentView->getView());
+        $this->assertSame([], $contentView->getView());
 
         $hotspotsContentView = $content['hotspots'] ?? null;
         $this->assertInstanceOf(ContentView::class, $hotspotsContentView);
