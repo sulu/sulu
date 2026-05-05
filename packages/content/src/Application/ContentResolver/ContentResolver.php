@@ -228,7 +228,7 @@ readonly class ContentResolver implements ContentResolverInterface
 
         $this->contentViewDataNormalizer->replaceNestedContentViews(
             $normalizedContentData,
-            '[content]'
+            ['content']
         );
 
         $normalizedContentData = $this->mergeFieldViewDataIntoItems($normalizedContentData, $viewEnhancements);

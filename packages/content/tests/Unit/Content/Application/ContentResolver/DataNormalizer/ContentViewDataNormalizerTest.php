@@ -137,6 +137,7 @@ class ContentViewDataNormalizerTest extends TestCase
 
         self::assertSame(['title' => 'Snippet Title'], $formattedContentData['content']['snippet']);
 
+        /** @var array<string, mixed> $mergedSnippetView */
         $mergedSnippetView = $formattedContentData['view']['snippet'];
         self::assertSame('fromOuter', $mergedSnippetView['outerOnly']);
         self::assertSame('fromInner', $mergedSnippetView['innerOnly']);
@@ -201,7 +202,7 @@ class ContentViewDataNormalizerTest extends TestCase
         $result = $this->normalizer->normalizeContentViewData($content, $view, $resource);
 
         // Apply property mapping with non-root context
-        $this->normalizer->recursivelyMapProperties($result, $properties, '', 0, false);
+        $this->normalizer->recursivelyMapProperties($result, $properties, [], 0, false);
 
         // When not root, properties should be mapped under [content] path
         self::assertSame('Test Title', $result['content']['title']);

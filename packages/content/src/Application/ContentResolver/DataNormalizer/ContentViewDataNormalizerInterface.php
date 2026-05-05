@@ -51,8 +51,9 @@ interface ContentViewDataNormalizerInterface
      *     view: array<string, mixed>,
      *     extension: array<string, array<string, mixed>>
      * } $contentData
+     * @param list<int|string> $path
      */
-    public function replaceNestedContentViews(array &$contentData, string $path = '[content]'): void;
+    public function replaceNestedContentViews(array &$contentData, array $path = ['content']): void;
 
     /**
      * Recursively maps properties in the content data.
@@ -64,11 +65,12 @@ interface ContentViewDataNormalizerInterface
      *      extension: array<string, array<string, mixed>>,
      *  } $data
      * @param array<string, string> $properties
+     * @param list<int|string> $path
      */
     public function recursivelyMapProperties(
         array &$data,
         array $properties,
-        string $path = '',
+        array $path = [],
         int $depth = 0,
         bool $isRoot = true
     ): void;

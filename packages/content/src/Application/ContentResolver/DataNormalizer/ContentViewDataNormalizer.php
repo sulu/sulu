@@ -87,11 +87,12 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
      *     view: array<string, mixed>,
      *     extension: array<string, array<string, mixed>>
      * } $contentData
+     * @param list<int|string> $path
      */
-    public function replaceNestedContentViews(array &$contentData, string $path = '[content]'): void
+    public function replaceNestedContentViews(array &$contentData, array $path = ['content']): void
     {
         $pathValues = [];
-        $iterable = $this->propertyAccessor->getValue($contentData, $path) ?? [];
+        $iterable = $this->propertyAccessor->getValue($contentData, $this->buildPropertyPath($path)) ?? [];
         if (!\is_array($iterable)) {
             return;
         }
@@ -100,7 +101,7 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
         foreach ($iterable as $key => $entry) {
             if (\is_array($entry)) {
                 if ([] !== $entry) {
-                    $this->replaceNestedContentViews($contentData, $path . '[' . $key . ']');
+                    $this->replaceNestedContentViews($contentData, [...$path, $key]);
                 }
 
                 if (!$this->isExtractableIterable($iterable)) {
@@ -108,39 +109,39 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
                 }
 
                 if ('view' === $key) {
-                    // If there are more [content] positions, we need to remove them, only keep the first one from the root property resolver
-                    $contentLength = \strlen('[content]');
-                    // search for the next occurrence of '[content]' after the current position
-                    $nextContentPosition = \strpos($path, '[content]', $contentLength);
-                    $viewPath = (false !== $nextContentPosition) ? \substr($path, 0, $nextContentPosition) : $path;
+                    // truncate at the next nested 'content' segment so we keep only the outermost resolver wrapper
+                    $nextContentIdx = $this->findSegmentAfter($path, 'content', 1);
+                    $viewPath = null === $nextContentIdx ? $path : \array_slice($path, 0, $nextContentIdx);
 
                     $value = null;
-                    if ($this->propertyAccessor->isReadable($contentData, $viewPath . '[' . $key . ']')) {
-                        $value = $this->propertyAccessor->getValue($contentData, $viewPath . '[' . $key . ']');
+                    $viewLookupPathStr = $this->buildPropertyPath([...$viewPath, $key]);
+                    if ($this->propertyAccessor->isReadable($contentData, $viewLookupPathStr)) {
+                        $value = $this->propertyAccessor->getValue($contentData, $viewLookupPathStr);
                     }
 
                     if (null === $value || [] === $value) {
-                        $value = $this->propertyAccessor->getValue($contentData, $path . '[' . $key . ']');
+                        $value = $this->propertyAccessor->getValue($contentData, $this->buildPropertyPath([...$path, $key]));
                     }
 
-                    // Replace first 'content' with 'view' in the path
-                    $viewPath = \substr_replace($viewPath, '[view]', 0, $contentLength);
+                    // swap the leading 'content' segment for 'view'
+                    $viewPath[0] = 'view';
+                    $viewPathStr = $this->buildPropertyPath($viewPath);
 
-                    $existingViewData = $this->propertyAccessor->getValue($contentData, $viewPath) ?? [];
+                    $existingViewData = $this->propertyAccessor->getValue($contentData, $viewPathStr) ?? [];
                     if (\is_array($existingViewData) && \is_array($value)) {
-                        $pathValues[$viewPath] = [] === $existingViewData
+                        $pathValues[$viewPathStr] = [] === $existingViewData
                             ? $value
                             : \array_merge($value, $existingViewData);
                     }
                 } elseif ('content' === $key) {
-                    $value = $this->propertyAccessor->getValue($contentData, $path . '[' . $key . ']');
-                    $pathValues[$path] = $value;
+                    $value = $this->propertyAccessor->getValue($contentData, $this->buildPropertyPath([...$path, $key]));
+                    $pathValues[$this->buildPropertyPath($path)] = $value;
                 }
             }
         }
 
-        foreach ($pathValues as $path => $value) {
-            $this->propertyAccessor->setValue($contentData, $path, $value); // @phpstan-ignore-line
+        foreach ($pathValues as $pathStr => $value) {
+            $this->propertyAccessor->setValue($contentData, $pathStr, $value); // @phpstan-ignore-line
         }
     }
 
@@ -166,15 +167,16 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
      *     extension: array<string, array<string, mixed>>
      * } &$data
      * @param array<string, mixed> $properties
+     * @param list<int|string> $path
      */
     public function recursivelyMapProperties(
         array &$data,
         array $properties,
-        string $path = '',
+        array $path = [],
         int $depth = 0,
         bool $isRoot = true
     ): void {
-        $iterable = '' === $path ? $data : ($this->propertyAccessor->getValue($data, $path) ?? []);
+        $iterable = [] === $path ? $data : ($this->propertyAccessor->getValue($data, $this->buildPropertyPath($path)) ?? []);
         if (!\is_array($iterable)) {
             return;
         }
@@ -182,22 +184,24 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
         foreach ($iterable as $key => $value) {
             if (
                 ($properties[$key] ?? null)
-                && $depth === (\substr_count($path, '][') + 1)
+                && $depth === \max(1, \count($path))
             ) {
-                $parent = $this->propertyAccessor->getValue($data, $path);
+                $pathStr = $this->buildPropertyPath($path);
+                $parent = $this->propertyAccessor->getValue($data, $pathStr);
                 if (!\is_array($parent)) {
                     continue;
                 }
                 unset($parent[$key]);
                 // @phpstan-ignore-next-line
-                $this->propertyAccessor->setValue($data, $path, $parent);
+                $this->propertyAccessor->setValue($data, $pathStr, $parent);
 
                 if (!\is_string($key)) {
                     continue;
                 }
-                $rootPath = ($isRoot ? '' : '[content]') . '[' . \implode('][', \explode('.', $key)) . ']';
+                $rootSegments = \explode('.', $key);
+                $rootPath = $isRoot ? $rootSegments : ['content', ...$rootSegments];
                 // @phpstan-ignore-next-line
-                $this->propertyAccessor->setValue($data, $rootPath, $value);
+                $this->propertyAccessor->setValue($data, $this->buildPropertyPath($rootPath), $value);
             }
 
             // do not walk into 'view' as views cannot be mapped via properties
@@ -208,11 +212,34 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
                 $this->recursivelyMapProperties(
                     $data, // @phpstan-ignore-line
                     $properties,
-                    $path . '[' . $key . ']',
+                    [...$path, $key],
                     $depth + 1,
                     $isRoot
                 );
             }
         }
+    }
+
+    /**
+     * @param list<int|string> $segments
+     */
+    private function buildPropertyPath(array $segments): string
+    {
+        return '[' . \implode('][', $segments) . ']';
+    }
+
+    /**
+     * @param list<int|string> $path
+     */
+    private function findSegmentAfter(array $path, string $segment, int $startIndex): ?int
+    {
+        $count = \count($path);
+        for ($i = $startIndex; $i < $count; ++$i) {
+            if ($path[$i] === $segment) {
+                return $i;
+            }
+        }
+
+        return null;
     }
 }
