@@ -1376,29 +1376,18 @@ class ContentResolverTest extends SuluTestCase
         /** @var array<string, mixed> $view */
         $view = $result['view'];
         self::assertArrayHasKey('snippets', $view);
+        /** @var list<array<string, mixed>> $snippetsView */
         $snippetsView = $view['snippets'];
-        self::assertIsArray($snippetsView);
+        self::assertCount(3, $snippetsView);
 
-        self::assertArrayHasKey('items', $snippetsView);
-        $snippetItems = $snippetsView['items'];
-        self::assertIsArray($snippetItems);
-        self::assertCount(3, $snippetItems);
+        self::assertSame($snippet1->getUuid(), $snippetsView[0]['uuid']);
+        self::assertSame('snippet-1', $snippetsView[0]['template']);
 
-        /** @var array<string, mixed> $snippetView0 */
-        $snippetView0 = $snippetItems[0];
-        /** @var array<string, mixed> $snippetView1 */
-        $snippetView1 = $snippetItems[1];
-        /** @var array<string, mixed> $snippetView2 */
-        $snippetView2 = $snippetItems[2];
+        self::assertSame($snippet2->getUuid(), $snippetsView[1]['uuid']);
+        self::assertSame('snippet-2', $snippetsView[1]['template']);
 
-        self::assertSame($snippet1->getUuid(), $snippetView0['uuid']);
-        self::assertSame('snippet-1', $snippetView0['template']);
-
-        self::assertSame($snippet2->getUuid(), $snippetView1['uuid']);
-        self::assertSame('snippet-2', $snippetView1['template']);
-
-        self::assertSame($snippet3->getUuid(), $snippetView2['uuid']);
-        self::assertSame('snippet-1', $snippetView2['template']);
+        self::assertSame($snippet3->getUuid(), $snippetsView[2]['uuid']);
+        self::assertSame('snippet-1', $snippetsView[2]['template']);
     }
 
     public function testResolveSnippetSelectionWithSingleSnippet(): void
@@ -1434,18 +1423,12 @@ class ContentResolverTest extends SuluTestCase
         /** @var array<string, mixed> $view */
         $view = $result['view'];
         self::assertArrayHasKey('snippets', $view);
+        /** @var list<array<string, mixed>> $snippetsView */
         $snippetsView = $view['snippets'];
-        self::assertIsArray($snippetsView);
+        self::assertCount(1, $snippetsView);
 
-        self::assertArrayHasKey('items', $snippetsView);
-        $snippetItems = $snippetsView['items'];
-        self::assertIsArray($snippetItems);
-        self::assertCount(1, $snippetItems);
-
-        /** @var array<string, mixed> $snippetView0 */
-        $snippetView0 = $snippetItems[0];
-        self::assertSame($snippet->getUuid(), $snippetView0['uuid']);
-        self::assertSame('snippet-1', $snippetView0['template']);
+        self::assertSame($snippet->getUuid(), $snippetsView[0]['uuid']);
+        self::assertSame('snippet-1', $snippetsView[0]['template']);
     }
 
     public function testResolveSnippetSelectionEmpty(): void
@@ -1538,16 +1521,12 @@ class ContentResolverTest extends SuluTestCase
         self::assertArrayHasKey('examples', $view);
         $examplesView = $view['examples'];
         self::assertIsArray($examplesView);
-
-        self::assertArrayHasKey('items', $examplesView);
-        $exampleItems = $examplesView['items'];
-        self::assertIsArray($exampleItems);
-        self::assertCount(2, $exampleItems);
+        self::assertCount(2, $examplesView);
 
         /** @var array<string, mixed> $exampleView1 */
-        $exampleView1 = $exampleItems[0];
+        $exampleView1 = $examplesView[0];
         /** @var array<string, mixed> $exampleView2 */
-        $exampleView2 = $exampleItems[1];
+        $exampleView2 = $examplesView[1];
 
         self::assertSame('default', $exampleView1['template']);
         self::assertSame('example-2', $exampleView2['template']);
@@ -1642,11 +1621,9 @@ class ContentResolverTest extends SuluTestCase
         /** @var array<string, mixed> $view */
         $view = $result['view'];
 
-        /** @var array<string, mixed> $multiSnippetsView */
+        /** @var list<array<string, mixed>> $multiSnippetsView */
         $multiSnippetsView = $view['snippets'];
-        /** @var list<array<string, mixed>> $multiItems */
-        $multiItems = $multiSnippetsView['items'];
-        $multiFirstItem = $multiItems[0];
+        $multiFirstItem = $multiSnippetsView[0];
 
         /** @var array<string, mixed> $singleSnippetView */
         $singleSnippetView = $view['singleSnippet'];
@@ -1713,14 +1690,11 @@ class ContentResolverTest extends SuluTestCase
         /** @var array<string, mixed> $view */
         $view = $result['view'];
 
+        /** @var list<array<string, mixed>> $snippetsView */
         $snippetsView = $view['snippets'];
-        self::assertIsArray($snippetsView);
-        self::assertArrayHasKey('items', $snippetsView);
-        /** @var list<array<string, mixed>> $snippetItems */
-        $snippetItems = $snippetsView['items'];
-        self::assertCount(1, $snippetItems);
-        self::assertSame($snippet->getUuid(), $snippetItems[0]['uuid']);
-        self::assertSame('snippet-1', $snippetItems[0]['template']);
+        self::assertCount(1, $snippetsView);
+        self::assertSame($snippet->getUuid(), $snippetsView[0]['uuid']);
+        self::assertSame('snippet-1', $snippetsView[0]['template']);
 
         $singleSnippetView = $view['singleSnippet'];
         self::assertIsArray($singleSnippetView);

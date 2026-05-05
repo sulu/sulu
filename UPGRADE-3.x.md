@@ -1,5 +1,38 @@
 # Upgrade
 
+## 3.0.7
+
+### Selection view structure changed (snippet, page, article)
+
+The `view` data emitted by `*_selection` and `single_*_selection` property resolvers now exposes the loaded entity's metadata and field-level view directly, restoring the Sulu 2.6 shape for multi-selections.
+
+Multi-selection (`snippet_selection`, `page_selection`, `article_selection`) now returns a flat numeric list:
+
+```php
+// before
+view.snippets => ['ids' => [...], 'types' => 'snippet-1', 0 => [...], 1 => [...]]
+
+// after
+view.snippets => [
+    ['uuid' => 'uuid-a', 'template' => 'snippet-1', ...],
+    ['uuid' => 'uuid-b', 'template' => 'snippet-1', ...],
+]
+```
+
+Templates that iterated `view.<field>` already worked, templates that read `view.<field>.ids` must switch to `view.<field>` directly.
+
+Single-selection (`single_snippet_selection`, `single_page_selection`, `single_article_selection`) exposes the resolved entity's metadata and per-field view alongside the existing keys:
+
+```php
+view.bannerSnippet => [
+    'uuid' => 'uuid-a',
+    'template' => 'snippet-1',
+    'title' => [],
+    'textboxButtons' => [...],
+    // plus 'id' and any params the resolver was already exposing
+]
+```
+
 ## 3.0.6
 
 ### CKEditor upgrade to 47

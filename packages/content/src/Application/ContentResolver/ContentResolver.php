@@ -290,16 +290,21 @@ readonly class ContentResolver implements ContentResolverInterface
      */
     private function mergeViewEnhancement(array $existingView, array $items, ?string $itemsPropertyName): array
     {
+        // single resolvable: flat-merge the single item's view into the existing view
         if (null === $itemsPropertyName) {
             if (1 === \count($items) && \is_array($items[0])) {
                 return \array_merge($existingView, $items[0]);
             }
 
-            $existingView['items'] = $items;
-
             return $existingView;
         }
 
+        // multi resolvable without resolver-level view: emit a flat numeric list (Sulu 2.6-compatible shape)
+        if ([] === $existingView) {
+            return $items;
+        }
+
+        // multi resolvable with resolver-level view: wrap items under itemsPropertyName so both coexist
         $existingView[$itemsPropertyName] = $items;
 
         return $existingView;
