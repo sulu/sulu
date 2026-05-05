@@ -201,6 +201,7 @@ readonly class ContentResolver implements ContentResolverInterface
         );
 
         $finalContent = $replacerResult['content'];
+        /** @var array<string, array{path: list<int|string>, itemsPropertyName: ?string, items: list<mixed>}> $viewEnhancements */
         $viewEnhancements = $replacerResult['viewEnhancements'];
 
         foreach ($viewEnhancements as $path => $enhancement) {
@@ -302,27 +303,30 @@ readonly class ContentResolver implements ContentResolverInterface
     }
 
     /**
-     * After normalization, per-item field-level view data (e.g., title: [], url: []) lives at
-     * numeric indices alongside the 'items' array from viewEnhancements. This method merges
-     * those numeric entries into the corresponding 'items' entry for a clean structure.
+     * Folds per-item field-level view data sitting at numeric indices into the
+     * corresponding `items` entry produced by viewEnhancements.
      *
      * @param array{resource: object, content: array<string, mixed>, view: array<string, mixed>, extension: array<string, array<string, mixed>>} $normalizedContentData
-     * @param array<string, array{itemsPropertyName: ?string, items: list<mixed>}> $viewEnhancements
+     * @param array<string, array{path: list<int|string>, itemsPropertyName: ?string, items: list<mixed>}> $viewEnhancements
      *
      * @return array{resource: object, content: array<string, mixed>, view: array<string, mixed>, extension: array<string, array<string, mixed>>}
      */
     private function mergeFieldViewDataIntoItems(array $normalizedContentData, array $viewEnhancements): array
     {
-        foreach ($viewEnhancements as $path => $enhancement) {
+        foreach ($viewEnhancements as $enhancement) {
             $itemsPropertyName = $enhancement['itemsPropertyName'];
             if (null === $itemsPropertyName) {
                 continue;
             }
 
-            // Strip the first path segment (resolver key like 'template') since
-            // normalizeContentViewData flattens it to the root level
-            $normalizedPath = \preg_replace('/^\[[^\]]+\]/', '', $path);
-            $viewPath = '[view]' . $normalizedPath;
+            // strip the resolver-key segment that normalizeContentViewData flattens into [view]
+            $pathSegments = $enhancement['path'];
+            \array_shift($pathSegments);
+            if ([] === $pathSegments) {
+                continue;
+            }
+
+            $viewPath = '[view]' . $this->buildPropertyPath($pathSegments);
             if (!$this->propertyAccessor->isReadable($normalizedContentData, $viewPath)) {
                 continue;
             }
@@ -347,5 +351,13 @@ readonly class ContentResolver implements ContentResolverInterface
 
         /** @var array{resource: object, content: array<string, mixed>, view: array<string, mixed>, extension: array<string, array<string, mixed>>} $normalizedContentData */
         return $normalizedContentData;
+    }
+
+    /**
+     * @param list<int|string> $segments
+     */
+    private function buildPropertyPath(array $segments): string
+    {
+        return '[' . \implode('][', $segments) . ']';
     }
 }

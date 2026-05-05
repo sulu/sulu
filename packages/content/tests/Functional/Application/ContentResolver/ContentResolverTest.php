@@ -1604,11 +1604,8 @@ class ContentResolverTest extends SuluTestCase
 
     public function testResolveSingleAndMultiSnippetSelectionViewSymmetry(): void
     {
-        // Regression guard for the asymmetry between single_snippet_selection and
-        // snippet_selection (multi). Nested link metadata is only reachable on the
-        // view side (LinkPropertyResolver flattens links to URL strings on the data
-        // side via its closure), so view.singleSnippet.link must expose the same
-        // {provider, href, title} payload as view.snippets.items[0].link.
+        // view.singleSnippet.link must expose the same metadata as view.snippets.items[0].link
+        // (links get flattened to URL strings on the content side, view side is the only access)
         $snippet = static::createSnippet([
             'en' => [
                 'live' => [
@@ -1654,7 +1651,6 @@ class ContentResolverTest extends SuluTestCase
         /** @var array<string, mixed> $singleSnippetView */
         $singleSnippetView = $view['singleSnippet'];
 
-        // Sanity check: the multi-select view exposes the snippet's link metadata.
         self::assertArrayHasKey('link', $multiFirstItem);
         /** @var array<string, mixed> $multiLink */
         $multiLink = $multiFirstItem['link'];
@@ -1662,15 +1658,13 @@ class ContentResolverTest extends SuluTestCase
         self::assertSame('https://sulu.io', $multiLink['href']);
         self::assertSame('Sulu Website', $multiLink['title']);
 
-        // Bug L: the same metadata must be reachable via view.singleSnippet.link.
-        self::assertArrayHasKey('link', $singleSnippetView, 'Bug L: view.singleSnippet must expose nested link view, symmetric with view.snippets.items[0].link');
+        self::assertArrayHasKey('link', $singleSnippetView);
         /** @var array<string, mixed> $singleLink */
         $singleLink = $singleSnippetView['link'];
         self::assertSame('external', $singleLink['provider']);
         self::assertSame('https://sulu.io', $singleLink['href']);
         self::assertSame('Sulu Website', $singleLink['title']);
 
-        // Resource-level metadata must also be present and symmetric.
         self::assertSame($multiFirstItem['uuid'], $singleSnippetView['uuid']);
         self::assertSame($multiFirstItem['template'], $singleSnippetView['template']);
     }

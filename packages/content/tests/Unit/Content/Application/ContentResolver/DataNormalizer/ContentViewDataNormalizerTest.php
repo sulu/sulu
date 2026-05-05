@@ -110,6 +110,62 @@ class ContentViewDataNormalizerTest extends TestCase
         self::assertSame(['nested' => 'view data'], $formattedContentData['view']['items']);
     }
 
+    public function testReplaceNestedContentViewsMergesWithExistingViewData(): void
+    {
+        // existing outer view keys must win on collision; inner-only keys fill gaps
+        $formattedContentData = [
+            'resource' => new \stdClass(),
+            'content' => [
+                'snippet' => [
+                    'content' => ['title' => 'Snippet Title'],
+                    'view' => [
+                        'innerOnly' => 'fromInner',
+                        'shared' => 'innerLoses',
+                    ],
+                ],
+            ],
+            'view' => [
+                'snippet' => [
+                    'outerOnly' => 'fromOuter',
+                    'shared' => 'outerWins',
+                ],
+            ],
+            'extension' => [],
+        ];
+
+        $this->normalizer->replaceNestedContentViews($formattedContentData);
+
+        self::assertSame(['title' => 'Snippet Title'], $formattedContentData['content']['snippet']);
+
+        $mergedSnippetView = $formattedContentData['view']['snippet'];
+        self::assertSame('fromOuter', $mergedSnippetView['outerOnly']);
+        self::assertSame('fromInner', $mergedSnippetView['innerOnly']);
+        self::assertSame('outerWins', $mergedSnippetView['shared']);
+    }
+
+    public function testReplaceNestedContentViewsCopiesIntoEmptyView(): void
+    {
+        $formattedContentData = [
+            'resource' => new \stdClass(),
+            'content' => [
+                'snippet' => [
+                    'content' => ['title' => 'Snippet Title'],
+                    'view' => ['link' => ['provider' => 'page', 'href' => 'uuid-1']],
+                ],
+            ],
+            'view' => [],
+            'extension' => [],
+        ];
+
+        $this->normalizer->replaceNestedContentViews($formattedContentData);
+
+        self::assertSame(['title' => 'Snippet Title'], $formattedContentData['content']['snippet']);
+        self::assertSame(
+            ['link' => ['provider' => 'page', 'href' => 'uuid-1']],
+            $formattedContentData['view']['snippet']
+        );
+    }
+
     public function testFormatContentOutputWithEmptyTemplate(): void
     {
         // Use real Example entity instead of mock

@@ -27,7 +27,7 @@ interface ResolvableResourceReplacerInterface
      *
      * @return array{
      *     content: array<string, mixed>,
-     *     viewEnhancements: array<string, array{itemsPropertyName: ?string, items: list<mixed>}>,
+     *     viewEnhancements: array<string, array{path: list<int|string>, itemsPropertyName: ?string, items: list<mixed>}>,
      * }
      */
     public function replaceResolvableResourcesWithResolvedValues(
