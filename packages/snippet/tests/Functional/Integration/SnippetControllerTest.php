@@ -19,6 +19,7 @@ use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
+use Sulu\Component\Rest\Exception\RestExceptionInterface;
 use Sulu\Content\Tests\Traits\CreateTagTrait;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetController;
@@ -229,6 +230,25 @@ class SnippetControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
 
         $this->assertResponseSnapshot('snippet_put.json', $response, 200);
+    }
+
+    #[Depends('testPost')]
+    public function testPutWithInvalidHashReturnsConflict(string $id): void
+    {
+        $this->client->request('PUT', '/admin/api/snippets/' . $id . '?locale=en', [], [], [], \json_encode([
+            '_hash' => 'invalid-hash',
+            'template' => 'snippet',
+            'title' => 'Test Snippet 2',
+        ]) ?: null);
+
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(409, $response);
+
+        /** @var array{code: int, message: string} $responseData */
+        $responseData = \json_decode((string) $response->getContent(), true);
+
+        $this->assertEquals(RestExceptionInterface::EXCEPTION_CODE_INVALID_HASH, $responseData['code']);
     }
 
     #[Depends('testPost')]

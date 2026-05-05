@@ -283,12 +283,18 @@ final class SnippetController implements SecuredControllerInterface
      */
     private function getData(Request $request): array
     {
-        return \array_replace(
+        $data = \array_replace(
             $request->request->all(),
             [
                 'locale' => $this->getLocale($request),
             ]
         );
+
+        if ($request->query->getBoolean('force', false)) {
+            unset($data['_hash']);
+        }
+
+        return $data;
     }
 
     public function getLocale(Request $request): string

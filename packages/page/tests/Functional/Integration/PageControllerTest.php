@@ -19,6 +19,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
+use Sulu\Component\Rest\Exception\RestExceptionInterface;
 use Sulu\Content\Tests\Traits\CreateTagTrait;
 use Sulu\Page\Application\Message\CreatePageMessage;
 use Sulu\Page\Application\Message\ModifyPageMessage;
@@ -609,6 +610,26 @@ class PageControllerTest extends SuluTestCase
         $this->assertCount(4, $routeRepository->findBy([]));
 
         $this->assertResponseSnapshot('page_put.json', $response, 200);
+    }
+
+    #[Depends('testPost')]
+    public function testPutWithInvalidHashReturnsConflict(string $id): void
+    {
+        $this->client->request('PUT', '/admin/api/pages/' . $id . '?locale=en', [], [], [], \json_encode([
+            '_hash' => 'invalid-hash',
+            'template' => 'default',
+            'title' => 'Test Page 2',
+            'url' => '/my-page-2',
+        ]) ?: null);
+
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(409, $response);
+
+        /** @var array{code: int, message: string} $responseData */
+        $responseData = \json_decode((string) $response->getContent(), true);
+
+        $this->assertEquals(RestExceptionInterface::EXCEPTION_CODE_INVALID_HASH, $responseData['code']);
     }
 
     #[Depends('testPost')]

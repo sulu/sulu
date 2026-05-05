@@ -46,6 +46,12 @@
             <tag name="sulu_content.normalizer" priority="4"/>
         </service>
 
+        <service id="sulu_content.content_hash_normalizer" class="Sulu\Content\Application\ContentNormalizer\Normalizer\ContentHashNormalizer">
+            <argument type="service" id="sulu_hash.auditable_hasher"/>
+
+            <tag name="sulu_content.normalizer" priority="3"/>
+        </service>
+
         <service id="sulu_content.auditable_normalizer" class="Sulu\Content\Application\ContentNormalizer\Normalizer\AuditableNormalizer">
             <tag name="sulu_content.normalizer" priority="2"/>
         </service>

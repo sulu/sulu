@@ -12,6 +12,7 @@
 namespace Sulu\Snippet\Application\MessageHandler;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Content\Application\ContentHash\ContentHashChecker;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Snippet\Application\Mapper\SnippetMapperInterface;
@@ -30,7 +31,8 @@ final class ModifySnippetMessageHandler
         private SnippetRepositoryInterface $snippetRepository,
         /** @var iterable<SnippetMapperInterface> */
         private iterable $snippetMappers,
-        private DomainEventCollectorInterface $domainEventCollector
+        private DomainEventCollectorInterface $domainEventCollector,
+        private ContentHashChecker $contentHashChecker,
     ) {
     }
 
@@ -55,6 +57,13 @@ final class ModifySnippetMessageHandler
                     ],
                 ],
             ]
+        );
+
+        $this->contentHashChecker->checkHash(
+            $data,
+            $snippet,
+            ['locale' => $locale, 'stage' => DimensionContentInterface::STAGE_DRAFT],
+            $snippet->getId(),
         );
 
         foreach ($this->snippetMappers as $snippetMapper) {

@@ -181,6 +181,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_article.article_repository'),
                 tagged_iterator('sulu_article.article_mapper'),
                 new Reference('sulu_activity.domain_event_collector'),
+                new Reference('sulu_content.content_hash_checker'),
             ])
             ->tag('messenger.message_handler');
 
