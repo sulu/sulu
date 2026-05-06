@@ -401,7 +401,6 @@ readonly class ContentResolver implements ContentResolverInterface
             return \array_merge($existingView, $items);
         }
 
-        // A configured items property explicitly asks for nested collection view data.
         return \array_merge($existingView, [$itemsPropertyName => $items]);
     }
 

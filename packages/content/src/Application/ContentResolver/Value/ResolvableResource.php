@@ -18,7 +18,7 @@ namespace Sulu\Content\Application\ContentResolver\Value;
  */
 class ResolvableResource implements ResolvableInterface
 {
-    private \Closure $resourceCallback;
+    private \Closure $callback;
 
     /**
      * @param array<string, mixed>|null $metadata Optional metadata for additional context
@@ -32,7 +32,7 @@ class ResolvableResource implements ResolvableInterface
         private ?string $resourceKey = null,
         private ?string $itemsPropertyName = null,
     ) {
-        $this->resourceCallback = $resourceCallback ?? (static fn (mixed $resource) => $resource);
+        $this->callback = $resourceCallback ?? (static fn (mixed $resource) => $resource);
     }
 
     public function getId(): string|int
@@ -47,7 +47,7 @@ class ResolvableResource implements ResolvableInterface
 
     public function executeResourceCallback(mixed $resource): mixed
     {
-        return ($this->resourceCallback)($resource);
+        return ($this->callback)($resource);
     }
 
     public function getItemsPropertyName(): ?string
