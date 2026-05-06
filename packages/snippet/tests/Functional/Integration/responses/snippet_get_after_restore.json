@@ -1,11 +1,12 @@
 {
+    "_hash": "@string@",
+    "availableLocales": [
+        "en"
+    ],
     "changed": "@datetime@",
     "changer" : "@integer@",
     "created": "@datetime@",
     "creator" : "@integer@",
-    "availableLocales": [
-        "en"
-    ],
     "description": null,
     "excerptCategories": [],
     "excerptTags": [

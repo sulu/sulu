@@ -17,6 +17,7 @@ use Sulu\Article\Domain\Event\ArticleModifiedEvent;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Content\Application\ContentHash\ContentHashChecker;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 
@@ -30,7 +31,8 @@ final class ModifyArticleMessageHandler
         private ArticleRepositoryInterface $articleRepository,
         /** @var iterable<ArticleMapperInterface> */
         private iterable $articleMappers,
-        private DomainEventCollectorInterface $domainEventCollector
+        private DomainEventCollectorInterface $domainEventCollector,
+        private ContentHashChecker $contentHashChecker,
     ) {
     }
 
@@ -55,6 +57,13 @@ final class ModifyArticleMessageHandler
                     ],
                 ],
             ]
+        );
+
+        $this->contentHashChecker->checkHash(
+            $data,
+            $article,
+            ['locale' => $locale, 'stage' => DimensionContentInterface::STAGE_DRAFT],
+            $article->getId(),
         );
 
         foreach ($this->articleMappers as $articleMapper) {

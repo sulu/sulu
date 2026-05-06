@@ -145,6 +145,10 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
+        <service id="sulu_content.content_hash_checker" class="Sulu\Content\Application\ContentHash\ContentHashChecker">
+            <argument type="service" id="sulu_hash.auditable_hasher"/>
+        </service>
+
         <!-- Cache Tag Subscriber -->
         <service id="sulu_content.dimension_content_tag_subscriber" class="Sulu\Content\Infrastructure\Sulu\HttpCache\EventSubscriber\DimensionContentTagSubscriber">
             <argument type="service" id="sulu_http_cache.reference_store"/>
