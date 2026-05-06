@@ -185,6 +185,80 @@
                 }
             ]
         },
+        "sulu-segments-io": {
+            "name": "Sulu Segments",
+            "key": "sulu-segments-io",
+            "localizations": [
+                {
+                    "locale": "en",
+                    "language": "en",
+                    "country": "",
+                    "shadow": "",
+                    "children": [],
+                    "parent": null,
+                    "default": true
+                }
+            ],
+            "theme": null,
+            "security": null,
+            "defaultTemplates": {
+                "homepage": "homepage",
+                "home": "homepage",
+                "page": "default"
+            },
+            "portalInformation": [
+                [],
+                []
+            ],
+            "urls": [
+                {
+                    "language": "",
+                    "country": "",
+                    "segment": "",
+                    "redirect": "",
+                    "main": true,
+                    "url": "sulu-segments.io\/{localization}",
+                    "environment": "test"
+                }
+            ],
+            "customUrls": [],
+            "navigations": [
+                {
+                    "key": "main",
+                    "title": "Main Navigation"
+                }
+            ],
+            "segments": [
+                {
+                    "key": "business",
+                    "title": "Business",
+                    "default": true
+                },
+                {
+                    "key": "private",
+                    "title": "Private",
+                    "default": false
+                }
+            ],
+            "resourceLocatorStrategy": {
+                "inputType": "leaf"
+            },
+            "_permissions": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false,
+                "archive": false,
+                "live": false,
+                "security": false
+            },
+            "allLocalizations": [
+                {
+                    "localization": "en",
+                    "name": "en"
+                }
+            ]
+        },
         "sulu-test-secure": {
             "name": "Sulu Test Secure",
             "key": "sulu-test-secure",
