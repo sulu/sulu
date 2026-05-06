@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader;
 
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
-use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewInterface;
+use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewEnhancementInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
@@ -25,7 +25,7 @@ use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
  *
  * @final
  */
-class SnippetResourceLoader implements ResourceLoaderContentViewInterface
+class SnippetResourceLoader implements ResourceLoaderContentViewEnhancementInterface
 {
     public const RESOURCE_LOADER_KEY = 'snippet';
 
@@ -81,15 +81,15 @@ class SnippetResourceLoader implements ResourceLoaderContentViewInterface
         return $mappedResult;
     }
 
-    public function resolveContentView(mixed $source): ContentView
+    public function resolveContentViewEnhancement(mixed $resource): ContentView
     {
-        if (!$source instanceof SnippetDimensionContentInterface) {
+        if (!$resource instanceof SnippetDimensionContentInterface) {
             return ContentView::create([], []);
         }
 
         return ContentView::create([], [
-            'uuid' => $source->getResource()->getUuid(),
-            'template' => $source->getTemplateKey(),
+            'uuid' => $resource->getResource()->getUuid(),
+            'template' => $resource->getTemplateKey(),
         ]);
     }
 

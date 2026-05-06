@@ -17,7 +17,7 @@ use Symfony\Contracts\Service\ResetInterface;
 /**
  * @internal this class is internal and should not be used or extended in custom code
  */
-class CachedResourceLoader implements ResourceLoaderContentViewInterface, ResetInterface
+class CachedResourceLoader implements ResourceLoaderContentViewEnhancementInterface, ResetInterface
 {
     /**
      * @var array<string, mixed>
@@ -74,10 +74,10 @@ class CachedResourceLoader implements ResourceLoaderContentViewInterface, ResetI
         ]));
     }
 
-    public function resolveContentView(mixed $source): ContentView
+    public function resolveContentViewEnhancement(mixed $resource): ContentView
     {
-        if ($this->decoratedResourceLoader instanceof ResourceLoaderContentViewInterface) {
-            return $this->decoratedResourceLoader->resolveContentView($source);
+        if ($this->decoratedResourceLoader instanceof ResourceLoaderContentViewEnhancementInterface) {
+            return $this->decoratedResourceLoader->resolveContentViewEnhancement($resource);
         }
 
         return ContentView::create([], []);

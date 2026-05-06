@@ -14,7 +14,7 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ResourceLoader;
 use PHPUnit\Framework\TestCase;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ResourceLoader\Loader\CachedResourceLoader;
-use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewInterface;
+use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewEnhancementInterface;
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
 
 class CachedResourceLoaderTest extends TestCase
@@ -165,9 +165,9 @@ class CachedResourceLoaderTest extends TestCase
         CachedResourceLoader::getKey();
     }
 
-    public function testResolveContentViewForwardsToInnerLoader(): void
+    public function testResolveContentViewEnhancementForwardsToInnerLoader(): void
     {
-        $innerLoader = new class() implements ResourceLoaderContentViewInterface {
+        $innerLoader = new class() implements ResourceLoaderContentViewEnhancementInterface {
             public function load(array $ids, ?string $locale, array $params = []): array
             {
                 return [];
@@ -178,11 +178,11 @@ class CachedResourceLoaderTest extends TestCase
                 return 'test-content-view-loader';
             }
 
-            public function resolveContentView(mixed $source): ContentView
+            public function resolveContentViewEnhancement(mixed $resource): ContentView
             {
                 return ContentView::create(
-                    ['authored' => $source->getAuthored()], // @phpstan-ignore method.nonObject
-                    ['id' => $source->getId(), 'template' => 'forwarded-template'], // @phpstan-ignore method.nonObject
+                    ['authored' => $resource->getAuthored()], // @phpstan-ignore method.nonObject
+                    ['id' => $resource->getId(), 'template' => 'forwarded-template'], // @phpstan-ignore method.nonObject
                 );
             }
         };
@@ -200,13 +200,13 @@ class CachedResourceLoaderTest extends TestCase
             }
         };
 
-        $result = $cachedLoader->resolveContentView($dimensionContent);
+        $result = $cachedLoader->resolveContentViewEnhancement($dimensionContent);
 
         self::assertSame(['id' => '42', 'template' => 'forwarded-template'], $result->getView());
         self::assertSame(['authored' => '2024-01-01T00:00:00+00:00'], $result->getContent());
     }
 
-    public function testResolveContentViewReturnsEmptyWhenInnerDoesNotImplementInterface(): void
+    public function testResolveContentViewEnhancementReturnsEmptyWhenInnerDoesNotImplementInterface(): void
     {
         $innerLoader = new class() implements ResourceLoaderInterface {
             public function load(array $ids, ?string $locale, array $params = []): array
@@ -222,7 +222,7 @@ class CachedResourceLoaderTest extends TestCase
 
         $cachedLoader = new CachedResourceLoader($innerLoader);
 
-        $result = $cachedLoader->resolveContentView('some-dimension-content');
+        $result = $cachedLoader->resolveContentViewEnhancement('some-dimension-content');
 
         self::assertSame([], $result->getView());
         self::assertSame([], $result->getContent());

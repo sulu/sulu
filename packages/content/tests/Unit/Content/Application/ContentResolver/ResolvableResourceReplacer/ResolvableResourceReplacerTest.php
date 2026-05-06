@@ -36,13 +36,13 @@ class ResolvableResourceReplacerTest extends TestCase
      * @param array<string, mixed> $content
      * @param array<string, mixed> $view
      *
-     * @return array{resolved: mixed, contentView: ContentView}
+     * @return array{resolved: mixed, contentViewEnhancement: ContentView}
      */
     private function createResolvedEntry(mixed $resolved, array $view = [], array $content = []): array
     {
         return [
             'resolved' => $resolved,
-            'contentView' => ContentView::create($content, $view),
+            'contentViewEnhancement' => ContentView::create($content, $view),
         ];
     }
 

@@ -16,7 +16,7 @@ namespace Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
-use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewInterface;
+use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewEnhancementInterface;
 use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 
@@ -25,7 +25,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
  *
  * @final
  */
-class ArticleResourceLoader implements ResourceLoaderContentViewInterface
+class ArticleResourceLoader implements ResourceLoaderContentViewEnhancementInterface
 {
     public const RESOURCE_LOADER_KEY = 'article';
 
@@ -61,24 +61,24 @@ class ArticleResourceLoader implements ResourceLoaderContentViewInterface
         return $mappedResult;
     }
 
-    public function resolveContentView(mixed $source): ContentView
+    public function resolveContentViewEnhancement(mixed $resource): ContentView
     {
         $view = [];
         $content = [];
 
-        if ($source instanceof ArticleDimensionContentInterface) {
+        if ($resource instanceof ArticleDimensionContentInterface) {
             $view = [
-                'uuid' => $source->getResource()->getUuid(),
-                'template' => $source->getTemplateKey(),
-                'mainWebspace' => $source->getMainWebspace(),
-                'additionalWebspaces' => $source->getAdditionalWebspaces(),
+                'uuid' => $resource->getResource()->getUuid(),
+                'template' => $resource->getTemplateKey(),
+                'mainWebspace' => $resource->getMainWebspace(),
+                'additionalWebspaces' => $resource->getAdditionalWebspaces(),
             ];
         }
 
-        if ($source instanceof AuthorInterface) {
+        if ($resource instanceof AuthorInterface) {
             $content = [
-                'authored' => $source->getAuthored()?->format('c'),
-                'lastModified' => $source->getLastModified()?->format('c'),
+                'authored' => $resource->getAuthored()?->format('c'),
+                'lastModified' => $resource->getLastModified()?->format('c'),
             ];
         }
 

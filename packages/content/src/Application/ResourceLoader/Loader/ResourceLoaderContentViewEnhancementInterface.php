@@ -15,7 +15,7 @@ namespace Sulu\Content\Application\ResourceLoader\Loader;
 
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 
-interface ResourceLoaderContentViewInterface extends ResourceLoaderInterface
+interface ResourceLoaderContentViewEnhancementInterface extends ResourceLoaderInterface
 {
-    public function resolveContentView(mixed $source): ContentView;
+    public function resolveContentViewEnhancement(mixed $resource): ContentView;
 }

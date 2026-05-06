@@ -31,7 +31,7 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
 
     /**
      * @param array<int|string, mixed> $content
-     * @param array<string, array<string|int, array<string, array{resolved: mixed, contentView: ContentView}>>> $resolvedResources
+     * @param array<string, array<string|int, array<string, array{resolved: mixed, contentViewEnhancement: ContentView}>>> $resolvedResources
      *
      * @return array{
      *     content: array<int|string, mixed>,
@@ -64,7 +64,7 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
 
     /**
      * @param array<int|string, mixed> $content
-     * @param array<string, array<string|int, array<string, array{resolved: mixed, contentView: ContentView}>>> $resolvedResources
+     * @param array<string, array<string|int, array<string, array{resolved: mixed, contentViewEnhancement: ContentView}>>> $resolvedResources
      * @param list<int|string> $path Current path in the content structure
      * @param array<string, array{path: list<int|string>, itemsPropertyName: ?string, items: list<mixed>}> $viewEnhancements
      *
@@ -93,15 +93,15 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
             if ($value instanceof ResolvableInterface) {
                 $resolveResult = $this->resolveValue($value, $resolvedResources);
                 $resolved = $resolveResult['resolved'];
-                $contentView = $resolveResult['contentView'];
+                $contentViewEnhancement = $resolveResult['contentViewEnhancement'];
 
-                $contentData = $contentView->getContent();
+                $contentData = $contentViewEnhancement->getContent();
                 if (\is_array($contentData) && [] !== $contentData && \is_array($resolved)) {
                     $resolved = \array_merge($resolved, $contentData);
                 }
 
                 if ($value instanceof ResolvableResource) {
-                    $viewData = $contentView->getView();
+                    $viewData = $contentViewEnhancement->getView();
                     if ([] !== $viewData) {
                         // numeric keys share the parent bucket so multi-selection items aggregate
                         $viewPath = \is_int($key) ? $path : $currentPath;
@@ -172,9 +172,9 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
     }
 
     /**
-     * @param array<string, array<string|int, array<string, array{resolved: mixed, contentView: ContentView}>>> $resolvedResources
+     * @param array<string, array<string|int, array<string, array{resolved: mixed, contentViewEnhancement: ContentView}>>> $resolvedResources
      *
-     * @return array{contentView: ContentView, resolved: mixed}
+     * @return array{contentViewEnhancement: ContentView, resolved: mixed}
      */
     private function resolveValue(
         ResolvableInterface $value,
@@ -187,7 +187,7 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
         $entry = $resolvedResources[$loaderKey][$id][$metadataIdentifier] ?? null;
 
         if (null === $entry) {
-            return ['contentView' => ContentView::create([], []), 'resolved' => null];
+            return ['contentViewEnhancement' => ContentView::create([], []), 'resolved' => null];
         }
 
         if ($value instanceof ResolvableResource && $value->getResourceKey()) {
@@ -195,7 +195,7 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
         }
 
         return [
-            'contentView' => $entry['contentView'],
+            'contentViewEnhancement' => $entry['contentViewEnhancement'],
             'resolved' => $value->executeResourceCallback($entry['resolved']),
         ];
     }

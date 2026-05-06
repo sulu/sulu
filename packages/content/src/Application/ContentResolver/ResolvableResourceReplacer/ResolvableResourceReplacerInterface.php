@@ -22,11 +22,11 @@ use Sulu\Content\Application\ContentResolver\Value\ContentView;
 interface ResolvableResourceReplacerInterface
 {
     /**
-     * @param array<string, mixed> $content
-     * @param array<string, array<string|int, array<string, array{resolved: mixed, contentView: ContentView}>>> $resolvedResources
+     * @param array<int|string, mixed> $content
+     * @param array<string, array<string|int, array<string, array{resolved: mixed, contentViewEnhancement: ContentView}>>> $resolvedResources
      *
      * @return array{
-     *     content: array<string, mixed>,
+     *     content: array<int|string, mixed>,
      *     viewEnhancements: array<string, array{path: list<int|string>, itemsPropertyName: ?string, items: list<mixed>}>,
      * }
      */

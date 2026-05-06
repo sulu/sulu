@@ -15,7 +15,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
-use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewInterface;
+use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewEnhancementInterface;
 use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
@@ -27,7 +27,7 @@ use Symfony\Bundle\SecurityBundle\Security;
  *
  * @final
  */
-class PageResourceLoader implements ResourceLoaderContentViewInterface
+class PageResourceLoader implements ResourceLoaderContentViewEnhancementInterface
 {
     public const RESOURCE_LOADER_KEY = 'page';
 
@@ -88,25 +88,25 @@ class PageResourceLoader implements ResourceLoaderContentViewInterface
         return $mappedResult;
     }
 
-    public function resolveContentView(mixed $source): ContentView
+    public function resolveContentViewEnhancement(mixed $resource): ContentView
     {
         $view = [];
         $content = [];
 
-        if ($source instanceof PageDimensionContentInterface) {
-            $resource = $source->getResource();
+        if ($resource instanceof PageDimensionContentInterface) {
+            $page = $resource->getResource();
             $view = [
-                'uuid' => $resource->getUuid(),
-                'template' => $source->getTemplateKey(),
-                'webspaceKey' => $resource->getWebspaceKey(),
-                'parent' => $resource->getParent()?->getUuid(),
+                'uuid' => $page->getUuid(),
+                'template' => $resource->getTemplateKey(),
+                'webspaceKey' => $page->getWebspaceKey(),
+                'parent' => $page->getParent()?->getUuid(),
             ];
         }
 
-        if ($source instanceof AuthorInterface) {
+        if ($resource instanceof AuthorInterface) {
             $content = [
-                'authored' => $source->getAuthored()?->format('c'),
-                'lastModified' => $source->getLastModified()?->format('c'),
+                'authored' => $resource->getAuthored()?->format('c'),
+                'lastModified' => $resource->getLastModified()?->format('c'),
             ];
         }
 

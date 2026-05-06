@@ -12,14 +12,14 @@
 namespace Sulu\Content\Tests\Application\ExampleTestBundle\ResourceLoader;
 
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
-use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewInterface;
+use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewEnhancementInterface;
 use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Domain\Model\WebspaceInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Repository\ExampleRepository;
 
-class ExampleResourceLoader implements ResourceLoaderContentViewInterface
+class ExampleResourceLoader implements ResourceLoaderContentViewEnhancementInterface
 {
     public const RESOURCE_LOADER_KEY = 'example';
 
@@ -47,22 +47,22 @@ class ExampleResourceLoader implements ResourceLoaderContentViewInterface
         return $mappedResult;
     }
 
-    public function resolveContentView(mixed $source): ContentView
+    public function resolveContentViewEnhancement(mixed $resource): ContentView
     {
         $view = [];
         $content = [];
 
-        if ($source instanceof TemplateInterface) {
-            $view['template'] = $source->getTemplateKey();
+        if ($resource instanceof TemplateInterface) {
+            $view['template'] = $resource->getTemplateKey();
         }
 
-        if ($source instanceof WebspaceInterface) {
-            $view['mainWebspace'] = $source->getMainWebspace();
+        if ($resource instanceof WebspaceInterface) {
+            $view['mainWebspace'] = $resource->getMainWebspace();
         }
 
-        if ($source instanceof AuthorInterface) {
-            $content['authored'] = $source->getAuthored()?->format('c');
-            $content['lastModified'] = $source->getLastModified()?->format('c');
+        if ($resource instanceof AuthorInterface) {
+            $content['authored'] = $resource->getAuthored()?->format('c');
+            $content['lastModified'] = $resource->getLastModified()?->format('c');
         }
 
         return ContentView::create($content, $view);
