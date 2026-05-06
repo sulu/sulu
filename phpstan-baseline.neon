@@ -32343,19 +32343,25 @@ parameters:
 		-
 			message: '#^Call to an undefined method DateTimeImmutable\:\:willReturn\(\)\.$#'
 			identifier: method.notFound
-			count: 4
+			count: 7
 			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
 
 		-
 			message: '#^Call to an undefined method Sulu\\Component\\Persistence\\Model\\AuditableInterface\:\:reveal\(\)\.$#'
 			identifier: method.notFound
-			count: 5
+			count: 6
+			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
+
+		-
+			message: '#^Call to an undefined method Sulu\\Content\\Domain\\Model\\AuditableInterface\:\:reveal\(\)\.$#'
+			identifier: method.notFound
+			count: 3
 			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
 
 		-
 			message: '#^Call to an undefined method Sulu\\Component\\Security\\Authentication\\UserInterface\:\:reveal\(\)\.$#'
 			identifier: method.notFound
-			count: 3
+			count: 6
 			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
 
 		-
@@ -32367,13 +32373,13 @@ parameters:
 		-
 			message: '#^Cannot call method willReturn\(\) on Sulu\\Component\\Security\\Authentication\\UserInterface\|null\.$#'
 			identifier: method.nonObject
-			count: 4
+			count: 7
 			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
 
 		-
 			message: '#^Cannot call method willReturn\(\) on int\.$#'
 			identifier: method.nonObject
-			count: 3
+			count: 6
 			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
 
 		-
@@ -32409,19 +32415,25 @@ parameters:
 		-
 			message: '#^PHPDoc tag @var with type Sulu\\Component\\Persistence\\Model\\AuditableInterface is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
 			identifier: varTag.nativeType
-			count: 4
+			count: 5
 			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
 
 		-
 			message: '#^PHPDoc tag @var with type Sulu\\Component\\Security\\Authentication\\UserInterface is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
 			identifier: varTag.nativeType
-			count: 3
+			count: 6
+			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type Sulu\\Content\\Domain\\Model\\AuditableInterface is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
+			identifier: varTag.nativeType
+			count: 2
 			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
 
 		-
 			message: '#^Parameter \#1 \$object of method Sulu\\Component\\Hash\\AuditableHasher\:\:hash\(\) expects object, mixed given\.$#'
 			identifier: argument.type
-			count: 5
+			count: 9
 			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
 
 		-
