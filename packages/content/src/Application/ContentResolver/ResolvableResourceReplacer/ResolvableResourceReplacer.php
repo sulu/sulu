@@ -103,7 +103,7 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
                 if ($value instanceof ResolvableResource) {
                     $viewData = $contentViewEnhancement->getView();
                     if ([] !== $viewData) {
-                        // numeric keys share the parent bucket so multi-selection items aggregate
+                        // Numeric keys share the parent bucket so collection item views aggregate.
                         $viewPath = \is_int($key) ? $path : $currentPath;
                         if ([] !== $viewPath) {
                             $pathKey = $this->buildPropertyPath($viewPath);

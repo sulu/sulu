@@ -72,7 +72,6 @@ class SnippetSelectionPropertyResolver implements PropertyResolverInterface
             metadata: [
                 'properties' => $params['properties'] ?? null,
             ],
-            itemsPropertyName: 'items',
         );
     }
 

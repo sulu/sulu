@@ -65,7 +65,6 @@ class ArticleSelectionPropertyResolver implements PropertyResolverInterface
                     ],
                 ),
             ],
-            itemsPropertyName: 'items',
         );
     }
 

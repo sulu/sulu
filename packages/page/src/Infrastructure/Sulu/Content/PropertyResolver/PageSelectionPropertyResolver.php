@@ -59,7 +59,6 @@ class PageSelectionPropertyResolver implements PropertyResolverInterface
                     ],
                 ),
             ],
-            itemsPropertyName: 'items',
         );
     }
 

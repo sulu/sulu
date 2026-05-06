@@ -309,8 +309,15 @@ readonly class ContentResolver implements ContentResolverInterface
 
             $existing = $this->propertyAccessor->getValue($resolvedContent['view'], $path);
             $existingView = \is_array($existing) ? $existing : [];
+            $resolvedContentValue = $this->propertyAccessor->getValue($finalContent, $path);
+            $isCollection = \is_array($resolvedContentValue) && \array_is_list($resolvedContentValue);
 
-            $merged = $this->mergeViewEnhancement($existingView, $items, $enhancement['itemsPropertyName']);
+            $merged = $this->mergeViewEnhancement(
+                $existingView,
+                $items,
+                $enhancement['itemsPropertyName'],
+                $isCollection
+            );
             $this->propertyAccessor->setValue($resolvedContent['view'], $path, $merged);
         }
 
@@ -382,26 +389,20 @@ readonly class ContentResolver implements ContentResolverInterface
      *
      * @return array<string|int, mixed>
      */
-    private function mergeViewEnhancement(array $existingView, array $items, ?string $itemsPropertyName): array
+    private function mergeViewEnhancement(array $existingView, array $items, ?string $itemsPropertyName, bool $isCollection): array
     {
-        // single resolvable: flat-merge the single item's view into the existing view
         if (null === $itemsPropertyName) {
-            if (1 === \count($items) && \is_array($items[0])) {
+            // Single selections are object-like and flat-merge their one resolved view.
+            // Collections stay list-like even when they currently contain only one item.
+            if (!$isCollection && 1 === \count($items) && \is_array($items[0])) {
                 return \array_merge($existingView, $items[0]);
             }
 
-            return $existingView;
+            return \array_merge($existingView, $items);
         }
 
-        // multi resolvable without resolver-level view: emit a flat numeric list (Sulu 2.6-compatible shape)
-        if ([] === $existingView) {
-            return $items;
-        }
-
-        // multi resolvable with resolver-level view: wrap items under itemsPropertyName so both coexist
-        $existingView[$itemsPropertyName] = $items;
-
-        return $existingView;
+        // A configured items property explicitly asks for nested collection view data.
+        return \array_merge($existingView, [$itemsPropertyName => $items]);
     }
 
     /**
