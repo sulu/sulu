@@ -1,14 +1,14 @@
 sulu_tag.get_tag:
     path: /tags/{id}.{_format}
-    controller: sulu_tag.tag_controller::getAction
+    controller: sulu_tag.get_action
     methods: GET
     format: json
     requirements:
-       _format: json|csv
+        _format: json|csv
 
 sulu_tag.get_tags:
     path: /tags.{_format}
-    controller: sulu_tag.tag_controller::cgetAction
+    controller: sulu_tag.get_all_action
     methods: GET
     format: json
     requirements:
@@ -16,7 +16,7 @@ sulu_tag.get_tags:
 
 sulu_tag.post_tag:
     path: /tags.{_format}
-    controller: sulu_tag.tag_controller::postAction
+    controller: sulu_tag.create_action
     methods: POST
     format: json
     requirements:
@@ -24,7 +24,7 @@ sulu_tag.post_tag:
 
 sulu_tag.put_tag:
     path: /tags/{id}.{_format}
-    controller: sulu_tag.tag_controller::putAction
+    controller: sulu_tag.put_action
     methods: PUT
     format: json
     requirements:
@@ -32,7 +32,7 @@ sulu_tag.put_tag:
 
 sulu_tag.delete_tag:
     path: /tags/{id}.{_format}
-    controller: sulu_tag.tag_controller::deleteAction
+    controller: sulu_tag.delete_action
     methods: DELETE
     format: json
     requirements:
@@ -40,7 +40,7 @@ sulu_tag.delete_tag:
 
 sulu_tag.patch_tags:
     path: /tags.{_format}
-    controller: sulu_tag.tag_controller::cpatchAction
+    controller: sulu_tag.patch_action
     methods: PATCH
     format: json
     requirements:
