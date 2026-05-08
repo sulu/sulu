@@ -152,6 +152,11 @@ class PublishTransitionSubscriber implements EventSubscriberInterface
             }
         }
 
+        if ($dimensionContent instanceof WorkflowInterface) {
+            $workflowPublished = $dimensionContent->getWorkflowPublished();
+            $data['published'] = $workflowPublished?->format(\DateTimeInterface::ATOM);
+        }
+
         $this->contentCopier->copyFromDimensionContent(
             $sourceDimensionContent,
             $contentRichEntity,

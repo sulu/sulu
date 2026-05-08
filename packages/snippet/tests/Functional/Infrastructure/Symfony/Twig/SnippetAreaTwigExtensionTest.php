@@ -149,4 +149,33 @@ class SnippetAreaTwigExtensionTest extends SuluTestCase
         $result = $this->snippetAreaTwigExtension->loadSnippetByArea('hotel', [], 'sulu-io', 'de');
         $this->assertNull($result);
     }
+
+    public function testLoadSnippetByAreaWithShadowLocale(): void
+    {
+        $snippet = static::createSnippet([
+            'en' => [
+                'live' => [
+                    'template' => 'snippet',
+                    'title' => 'English Snippet',
+                ],
+            ],
+            'de' => [
+                'live' => [
+                    'template' => 'snippet',
+                    'title' => 'English Snippet',
+                    'shadowOn' => true,
+                    'shadowLocale' => 'en',
+                ],
+            ],
+        ]);
+        static::createSnippetArea('hotel', 'sulu-io', $snippet);
+        self::getEntityManager()->flush();
+        self::getEntityManager()->clear();
+
+        $result = $this->snippetAreaTwigExtension->loadSnippetByArea('hotel', ['title' => 'title'], 'sulu-io', 'de');
+
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('title', $result);
+        $this->assertSame('English Snippet', $result['title']);
+    }
 }
