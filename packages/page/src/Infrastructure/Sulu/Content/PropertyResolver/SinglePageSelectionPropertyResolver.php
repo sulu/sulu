@@ -55,7 +55,7 @@ class SinglePageSelectionPropertyResolver implements PropertyResolverInterface
                         'url' => 'url',
                     ],
                 ),
-            ]
+            ],
         );
     }
 

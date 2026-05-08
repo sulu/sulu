@@ -11,12 +11,13 @@
 
 namespace Sulu\Content\Application\ResourceLoader\Loader;
 
+use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * @internal this class is internal and should not be used or extended in custom code
  */
-class CachedResourceLoader implements ResourceLoaderInterface, ResetInterface
+class CachedResourceLoader implements ResourceLoaderContentViewEnhancementInterface, ResetInterface
 {
     /**
      * @var array<string, mixed>
@@ -71,6 +72,15 @@ class CachedResourceLoader implements ResourceLoaderInterface, ResetInterface
             'locale' => $locale,
             'params' => $params,
         ]));
+    }
+
+    public function resolveContentViewEnhancement(mixed $resource): ContentView
+    {
+        if ($this->decoratedResourceLoader instanceof ResourceLoaderContentViewEnhancementInterface) {
+            return $this->decoratedResourceLoader->resolveContentViewEnhancement($resource);
+        }
+
+        return ContentView::create([], []);
     }
 
     public function reset(): void

@@ -14,16 +14,14 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentResolver\ResolvableResourceReplacer;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore;
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Content\Application\ContentResolver\ResolvableResourceReplacer\ResolvableResourceReplacer;
+use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 
 class ResolvableResourceReplacerTest extends TestCase
 {
-    use ProphecyTrait;
-
     private ResolvableResourceReplacer $replacer;
 
     private ReferenceStoreInterface $referenceStore;
@@ -32,6 +30,20 @@ class ResolvableResourceReplacerTest extends TestCase
     {
         $this->referenceStore = new ReferenceStore();
         $this->replacer = new ResolvableResourceReplacer($this->referenceStore);
+    }
+
+    /**
+     * @param array<string, mixed> $content
+     * @param array<string, mixed> $view
+     *
+     * @return array{resolved: mixed, contentViewEnhancement: ContentView}
+     */
+    private function createResolvedEntry(mixed $resolved, array $view = [], array $content = []): array
+    {
+        return [
+            'resolved' => $resolved,
+            'contentViewEnhancement' => ContentView::create($content, $view),
+        ];
     }
 
     public function testReplaceResolvableResourcesWithResolvedValues(): void
@@ -55,12 +67,11 @@ class ResolvableResourceReplacerTest extends TestCase
             ],
         ];
 
-        // Use the actual metadata identifier from the resource
         $metadataId = $resolvableResource->getMetadataIdentifier();
         $resolvedResources = [
             'page' => [
                 '123' => [
-                    $metadataId => ['title' => 'Resolved Page Title'],
+                    $metadataId => $this->createResolvedEntry(['title' => 'Resolved Page Title']),
                 ],
             ],
         ];
@@ -72,13 +83,11 @@ class ResolvableResourceReplacerTest extends TestCase
             5
         );
 
-        self::assertSame('Test', $result['title']);
-        self::assertSame('Resolved Page Title', $result['page']);
-        self::assertIsArray($result['nested']);
-        self::assertArrayHasKey('page', $result['nested']);
-        self::assertSame('Resolved Page Title', $result['nested']['page']);
-
-        // Verify ReferenceStore was populated
+        self::assertSame('Test', $result['content']['title']);
+        self::assertSame('Resolved Page Title', $result['content']['page']);
+        self::assertIsArray($result['content']['nested']);
+        self::assertArrayHasKey('page', $result['content']['nested']);
+        self::assertSame('Resolved Page Title', $result['content']['nested']['page']);
         $tags = $this->referenceStore->getAll();
         self::assertContains('pages-123', $tags);
         self::assertCount(1, $tags);
@@ -118,12 +127,12 @@ class ResolvableResourceReplacerTest extends TestCase
         $resolvedResources = [
             'page' => [
                 '123' => [
-                    $firstMetadataId => ['nested_resolvable' => $nestedResource],
+                    $firstMetadataId => $this->createResolvedEntry(['nested_resolvable' => $nestedResource]),
                 ],
             ],
             'article' => [
                 '456' => [
-                    $nestedMetadataId => ['title' => 'Article Title'],
+                    $nestedMetadataId => $this->createResolvedEntry(['title' => 'Article Title']),
                 ],
             ],
         ];
@@ -135,9 +144,8 @@ class ResolvableResourceReplacerTest extends TestCase
             5
         );
 
-        self::assertSame(['nested_page' => 'Article Title'], $result['page']);
+        self::assertSame(['nested_page' => 'Article Title'], $result['content']['page']);
 
-        // Verify ReferenceStore was populated for both resources
         $tags = $this->referenceStore->getAll();
         self::assertContains('pages-123', $tags);
         self::assertContains('articles-456', $tags);
@@ -166,10 +174,8 @@ class ResolvableResourceReplacerTest extends TestCase
             2
         );
 
-        // Should replace with null when max depth exceeded
-        self::assertNull($result['page']);
+        self::assertNull($result['content']['page']);
 
-        // ReferenceStore should be empty when max depth exceeded
         $tags = $this->referenceStore->getAll();
         self::assertEmpty($tags);
     }
@@ -197,10 +203,8 @@ class ResolvableResourceReplacerTest extends TestCase
             5
         );
 
-        // Should remain unchanged when no resolved resources
-        self::assertSame($resolvableResource, $result['page']);
+        self::assertSame($resolvableResource, $result['content']['page']);
 
-        // ReferenceStore should be empty when no resources resolved
         $tags = $this->referenceStore->getAll();
         self::assertEmpty($tags);
     }
@@ -240,10 +244,10 @@ class ResolvableResourceReplacerTest extends TestCase
 
         $resolvedResources = [
             'page' => [
-                '123' => [$pageMetadataId => ['title' => 'Page Title', 'content' => 'Page Content']],
+                '123' => [$pageMetadataId => $this->createResolvedEntry(['title' => 'Page Title', 'content' => 'Page Content'])],
             ],
             'article' => [
-                '456' => [$articleMetadataId => ['title' => 'Article Title']],
+                '456' => [$articleMetadataId => $this->createResolvedEntry(['title' => 'Article Title'])],
             ],
         ];
 
@@ -262,9 +266,8 @@ class ResolvableResourceReplacerTest extends TestCase
             'featured' => ['title' => 'Page Title', 'content' => 'Page Content'],
         ];
 
-        self::assertSame($expected, $result);
+        self::assertSame($expected, $result['content']);
 
-        // Verify ReferenceStore was populated for both resources
         $tags = $this->referenceStore->getAll();
         self::assertContains('pages-123', $tags);
         self::assertContains('articles-456', $tags);
@@ -302,8 +305,8 @@ class ResolvableResourceReplacerTest extends TestCase
 
         $resolvedResources = [
             'page' => [
-                '123' => [$metadata1 => ['title' => 'First Page']],
-                '456' => [$metadata2 => ['title' => 'Second Page']],
+                '123' => [$metadata1 => $this->createResolvedEntry(['title' => 'First Page'])],
+                '456' => [$metadata2 => $this->createResolvedEntry(['title' => 'Second Page'])],
             ],
         ];
 
@@ -314,9 +317,8 @@ class ResolvableResourceReplacerTest extends TestCase
             5
         );
 
-        self::assertSame(['First Page', 'Second Page'], $result['pages']);
+        self::assertSame(['First Page', 'Second Page'], $result['content']['pages']);
 
-        // Verify ReferenceStore was populated for both pages
         $tags = $this->referenceStore->getAll();
         self::assertContains('pages-123', $tags);
         self::assertContains('pages-456', $tags);
@@ -325,7 +327,6 @@ class ResolvableResourceReplacerTest extends TestCase
 
     public function testReferenceStoreWithUuidResources(): void
     {
-        // Create a ResolvableResource with a UUID as ID
         $uuid = '550e8400-e29b-41d4-a716-446655440000';
         $resolvableResource = new ResolvableResource(
             $uuid,
@@ -344,7 +345,7 @@ class ResolvableResourceReplacerTest extends TestCase
         $resolvedResources = [
             'page' => [
                 $uuid => [
-                    $metadataId => ['title' => 'UUID Page Title'],
+                    $metadataId => $this->createResolvedEntry(['title' => 'UUID Page Title']),
                 ],
             ],
         ];
@@ -356,9 +357,8 @@ class ResolvableResourceReplacerTest extends TestCase
             5
         );
 
-        self::assertSame('UUID Page Title', $result['page']);
+        self::assertSame('UUID Page Title', $result['content']['page']);
 
-        // Verify ReferenceStore stores UUID directly without prefix
         $tags = $this->referenceStore->getAll();
         self::assertContains($uuid, $tags);
         self::assertCount(1, $tags);
@@ -366,7 +366,6 @@ class ResolvableResourceReplacerTest extends TestCase
 
     public function testReferenceStoreNotPopulatedWithoutResourceKey(): void
     {
-        // Create a ResolvableResource without resourceKey
         $resolvableResource = new ResolvableResource(
             '123',
             'page',
@@ -374,7 +373,6 @@ class ResolvableResourceReplacerTest extends TestCase
             function(array $resource) {
                 return $resource['title'] ?? 'Default Title';
             }
-            // No metadata and no resourceKey provided
         );
 
         $content = ['page' => $resolvableResource];
@@ -383,7 +381,7 @@ class ResolvableResourceReplacerTest extends TestCase
         $resolvedResources = [
             'page' => [
                 '123' => [
-                    $metadataId => ['title' => 'Page Without Key'],
+                    $metadataId => $this->createResolvedEntry(['title' => 'Page Without Key']),
                 ],
             ],
         ];
@@ -395,10 +393,535 @@ class ResolvableResourceReplacerTest extends TestCase
             5
         );
 
-        self::assertSame('Page Without Key', $result['page']);
+        self::assertSame('Page Without Key', $result['content']['page']);
 
-        // Verify ReferenceStore is empty when resourceKey is not provided
         $tags = $this->referenceStore->getAll();
         self::assertEmpty($tags);
+    }
+
+    public function testViewDataFromResolvedResources(): void
+    {
+        $resolvableResource = new ResolvableResource(
+            '123',
+            'snippet',
+            1,
+            function(array $resource) {
+                return $resource['title'];
+            },
+            null,
+            'snippets',
+            'items',
+        );
+
+        $content = [
+            'mySnippets' => [$resolvableResource],
+        ];
+
+        $metadataId = $resolvableResource->getMetadataIdentifier();
+
+        $resolvedResources = [
+            'snippet' => [
+                '123' => [
+                    $metadataId => $this->createResolvedEntry(
+                        ['title' => 'Snippet Title'],
+                        ['id' => '123', 'template' => 'test-template'],
+                    ),
+                ],
+            ],
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesWithResolvedValues(
+            $content,
+            $resolvedResources,
+            0,
+            5
+        );
+
+        self::assertSame(['Snippet Title'], $result['content']['mySnippets']);
+        self::assertArrayHasKey('[mySnippets]', $result['viewEnhancements']);
+        self::assertSame('items', $result['viewEnhancements']['[mySnippets]']['itemsPropertyName']);
+        self::assertCount(1, $result['viewEnhancements']['[mySnippets]']['items']);
+        self::assertSame(
+            ['id' => '123', 'template' => 'test-template'],
+            $result['viewEnhancements']['[mySnippets]']['items'][0]
+        );
+    }
+
+    public function testViewDataWithMultipleResources(): void
+    {
+        $resource1 = new ResolvableResource(
+            '123',
+            'snippet',
+            1,
+            function(array $resource) {
+                return $resource['title'];
+            },
+            null,
+            'snippets',
+            'items',
+        );
+
+        $resource2 = new ResolvableResource(
+            '456',
+            'snippet',
+            1,
+            function(array $resource) {
+                return $resource['title'];
+            },
+            null,
+            'snippets',
+            'items',
+        );
+
+        $content = [
+            'snippets' => [$resource1, $resource2],
+        ];
+
+        $metadata1 = $resource1->getMetadataIdentifier();
+        $metadata2 = $resource2->getMetadataIdentifier();
+
+        $resolvedResources = [
+            'snippet' => [
+                '123' => [
+                    $metadata1 => $this->createResolvedEntry(
+                        ['title' => 'First Snippet'],
+                        ['id' => '123', 'template' => 'template-a'],
+                    ),
+                ],
+                '456' => [
+                    $metadata2 => $this->createResolvedEntry(
+                        ['title' => 'Second Snippet'],
+                        ['id' => '456', 'template' => 'template-b'],
+                    ),
+                ],
+            ],
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesWithResolvedValues(
+            $content,
+            $resolvedResources,
+            0,
+            5
+        );
+
+        self::assertSame(['First Snippet', 'Second Snippet'], $result['content']['snippets']);
+        self::assertArrayHasKey('[snippets]', $result['viewEnhancements']);
+        self::assertSame('items', $result['viewEnhancements']['[snippets]']['itemsPropertyName']);
+        self::assertCount(2, $result['viewEnhancements']['[snippets]']['items']);
+        self::assertSame(['id' => '123', 'template' => 'template-a'], $result['viewEnhancements']['[snippets]']['items'][0]);
+        self::assertSame(['id' => '456', 'template' => 'template-b'], $result['viewEnhancements']['[snippets]']['items'][1]);
+    }
+
+    public function testViewDataEmptyWhenResourceNotResolved(): void
+    {
+        $resolvableResource = new ResolvableResource(
+            '123',
+            'snippet',
+            1,
+            function(array $resource) {
+                return $resource['title'];
+            },
+            null,
+            'snippets',
+            'items',
+        );
+
+        $content = [
+            'mySnippets' => [$resolvableResource],
+        ];
+
+        $resolvedResources = [];
+
+        $result = $this->replacer->replaceResolvableResourcesWithResolvedValues(
+            $content,
+            $resolvedResources,
+            0,
+            5
+        );
+
+        $mySnippets = $result['content']['mySnippets'];
+        self::assertIsArray($mySnippets);
+        self::assertSame($resolvableResource, $mySnippets[0]);
+        self::assertEmpty($result['viewEnhancements']);
+    }
+
+    public function testViewDataWithNestedPath(): void
+    {
+        $resolvableResource = new ResolvableResource(
+            '123',
+            'snippet',
+            1,
+            function(array $resource) {
+                return $resource['title'];
+            },
+            null,
+            'snippets',
+            'items',
+        );
+
+        $content = [
+            'template' => [
+                'snippets' => [$resolvableResource],
+            ],
+        ];
+
+        $metadataId = $resolvableResource->getMetadataIdentifier();
+
+        $resolvedResources = [
+            'snippet' => [
+                '123' => [
+                    $metadataId => $this->createResolvedEntry(
+                        ['title' => 'Snippet Title'],
+                        ['id' => '123', 'template' => 'default'],
+                    ),
+                ],
+            ],
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesWithResolvedValues(
+            $content,
+            $resolvedResources,
+            0,
+            5
+        );
+
+        $templateContent = $result['content']['template'];
+        self::assertIsArray($templateContent);
+        self::assertSame(['Snippet Title'], $templateContent['snippets']);
+        self::assertArrayHasKey('[template][snippets]', $result['viewEnhancements']);
+        self::assertSame('items', $result['viewEnhancements']['[template][snippets]']['itemsPropertyName']);
+        self::assertCount(1, $result['viewEnhancements']['[template][snippets]']['items']);
+        self::assertSame(
+            ['id' => '123', 'template' => 'default'],
+            $result['viewEnhancements']['[template][snippets]']['items'][0]
+        );
+    }
+
+    public function testViewDataWithIndexedNestedPath(): void
+    {
+        $resource1 = new ResolvableResource(
+            '123',
+            'snippet',
+            1,
+            static function(array $resource) {
+                return $resource['title'];
+            },
+            null,
+            'snippets',
+            'items',
+        );
+
+        $resource2 = new ResolvableResource(
+            '456',
+            'snippet',
+            1,
+            static function(array $resource) {
+                return $resource['title'];
+            },
+            null,
+            'snippets',
+            'items',
+        );
+
+        $content = [
+            'blocks' => [
+                ['snippets' => [$resource1]],
+                ['snippets' => [$resource2]],
+            ],
+        ];
+
+        $metadata1 = $resource1->getMetadataIdentifier();
+        $metadata2 = $resource2->getMetadataIdentifier();
+
+        $resolvedResources = [
+            'snippet' => [
+                '123' => [
+                    $metadata1 => $this->createResolvedEntry(
+                        ['title' => 'Snippet 1'],
+                        ['uuid' => 'u-123'],
+                    ),
+                ],
+                '456' => [
+                    $metadata2 => $this->createResolvedEntry(
+                        ['title' => 'Snippet 2'],
+                        ['uuid' => 'u-456'],
+                    ),
+                ],
+            ],
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesWithResolvedValues(
+            $content,
+            $resolvedResources,
+            0,
+            5
+        );
+
+        self::assertArrayHasKey('[blocks][0][snippets]', $result['viewEnhancements']);
+        self::assertArrayHasKey('[blocks][1][snippets]', $result['viewEnhancements']);
+        self::assertArrayNotHasKey('[blocks][snippets]', $result['viewEnhancements']);
+
+        self::assertSame('items', $result['viewEnhancements']['[blocks][0][snippets]']['itemsPropertyName']);
+        self::assertSame(
+            ['uuid' => 'u-123'],
+            $result['viewEnhancements']['[blocks][0][snippets]']['items'][0]
+        );
+
+        self::assertSame('items', $result['viewEnhancements']['[blocks][1][snippets]']['itemsPropertyName']);
+        self::assertSame(
+            ['uuid' => 'u-456'],
+            $result['viewEnhancements']['[blocks][1][snippets]']['items'][0]
+        );
+    }
+
+    public function testPreComputedViewDataAccumulated(): void
+    {
+        $resolvableResource = new ResolvableResource(
+            '123',
+            'snippet',
+            1,
+            function(array $resource) {
+                return [
+                    'content' => ['title' => $resource['rawTitle'], 'text' => $resource['rawText']],
+                    'view' => ['template' => $resource['template']],
+                    'id' => '123',
+                ];
+            },
+            null,
+            'snippets',
+            'items',
+        );
+
+        $content = [
+            'mySnippets' => [$resolvableResource],
+        ];
+
+        $metadataId = $resolvableResource->getMetadataIdentifier();
+
+        $resolvedResources = [
+            'snippet' => [
+                '123' => [
+                    $metadataId => $this->createResolvedEntry(
+                        [
+                            'rawTitle' => 'My Title',
+                            'rawText' => 'Some text',
+                            'template' => 'custom-template',
+                        ],
+                        ['id' => '123', 'template' => 'custom-template'],
+                    ),
+                ],
+            ],
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesWithResolvedValues(
+            $content,
+            $resolvedResources,
+            0,
+            5
+        );
+
+        self::assertArrayHasKey('[mySnippets]', $result['viewEnhancements']);
+        self::assertSame('items', $result['viewEnhancements']['[mySnippets]']['itemsPropertyName']);
+        self::assertSame(
+            ['id' => '123', 'template' => 'custom-template'],
+            $result['viewEnhancements']['[mySnippets]']['items'][0]
+        );
+    }
+
+    public function testViewDataWithNullItemsPropertyNameFlatMerge(): void
+    {
+        $resolvableResource = new ResolvableResource(
+            '123',
+            'snippet',
+            1,
+            function(array $resource) {
+                return $resource['title'];
+            },
+            null,
+            'snippets',
+        );
+
+        $content = [
+            'mySnippet' => $resolvableResource,
+        ];
+
+        $metadataId = $resolvableResource->getMetadataIdentifier();
+
+        $resolvedResources = [
+            'snippet' => [
+                '123' => [
+                    $metadataId => $this->createResolvedEntry(
+                        ['title' => 'Snippet Title'],
+                        ['id' => '123', 'template' => 'default'],
+                    ),
+                ],
+            ],
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesWithResolvedValues(
+            $content,
+            $resolvedResources,
+            0,
+            5
+        );
+
+        self::assertSame('Snippet Title', $result['content']['mySnippet']);
+        self::assertArrayHasKey('[mySnippet]', $result['viewEnhancements']);
+        self::assertNull($result['viewEnhancements']['[mySnippet]']['itemsPropertyName']);
+        self::assertCount(1, $result['viewEnhancements']['[mySnippet]']['items']);
+        self::assertSame(
+            ['id' => '123', 'template' => 'default'],
+            $result['viewEnhancements']['[mySnippet]']['items'][0]
+        );
+    }
+
+    public function testContentDataMergedIntoResolvedValue(): void
+    {
+        $resolvableResource = new ResolvableResource(
+            '123',
+            'page',
+            1,
+            null,
+            null,
+            'pages'
+        );
+
+        $content = [
+            'page' => $resolvableResource,
+        ];
+
+        $metadataId = $resolvableResource->getMetadataIdentifier();
+        $resolvedResources = [
+            'page' => [
+                '123' => [
+                    $metadataId => $this->createResolvedEntry(
+                        ['title' => 'Page Title', 'url' => '/page'],
+                        [],
+                        ['authored' => '2024-01-01T00:00:00+00:00', 'lastModified' => '2024-06-15T12:00:00+00:00'],
+                    ),
+                ],
+            ],
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesWithResolvedValues(
+            $content,
+            $resolvedResources,
+            0,
+            5
+        );
+
+        self::assertIsArray($result['content']['page']);
+        self::assertSame('Page Title', $result['content']['page']['title']);
+        self::assertSame('/page', $result['content']['page']['url']);
+        self::assertSame('2024-01-01T00:00:00+00:00', $result['content']['page']['authored']);
+        self::assertSame('2024-06-15T12:00:00+00:00', $result['content']['page']['lastModified']);
+    }
+
+    public function testContentDataNotMergedWhenResolvedIsNotArray(): void
+    {
+        $resolvableResource = new ResolvableResource(
+            '123',
+            'page',
+            1,
+            function(array $resource) {
+                return $resource['title'];
+            },
+            null,
+            'pages'
+        );
+
+        $content = [
+            'page' => $resolvableResource,
+        ];
+
+        $metadataId = $resolvableResource->getMetadataIdentifier();
+        $resolvedResources = [
+            'page' => [
+                '123' => [
+                    $metadataId => $this->createResolvedEntry(
+                        ['title' => 'Page Title'],
+                        [],
+                        ['authored' => '2024-01-01T00:00:00+00:00'],
+                    ),
+                ],
+            ],
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesWithResolvedValues(
+            $content,
+            $resolvedResources,
+            0,
+            5
+        );
+
+        self::assertSame('Page Title', $result['content']['page']);
+    }
+
+    public function testContentDataMergedIntoEachItemInMultiSelection(): void
+    {
+        $resource1 = new ResolvableResource(
+            '123',
+            'page',
+            1,
+            null,
+            null,
+            'pages'
+        );
+
+        $resource2 = new ResolvableResource(
+            '456',
+            'page',
+            1,
+            null,
+            null,
+            'pages'
+        );
+
+        $content = [
+            'pages' => [$resource1, $resource2],
+        ];
+
+        $metadata1 = $resource1->getMetadataIdentifier();
+        $metadata2 = $resource2->getMetadataIdentifier();
+
+        $resolvedResources = [
+            'page' => [
+                '123' => [
+                    $metadata1 => $this->createResolvedEntry(
+                        ['title' => 'First Page'],
+                        [],
+                        ['authored' => '2024-01-01T00:00:00+00:00', 'lastModified' => '2024-03-01T00:00:00+00:00'],
+                    ),
+                ],
+                '456' => [
+                    $metadata2 => $this->createResolvedEntry(
+                        ['title' => 'Second Page'],
+                        [],
+                        ['authored' => '2024-06-01T00:00:00+00:00', 'lastModified' => '2024-09-01T00:00:00+00:00'],
+                    ),
+                ],
+            ],
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesWithResolvedValues(
+            $content,
+            $resolvedResources,
+            0,
+            5
+        );
+
+        $pages = $result['content']['pages'];
+        self::assertIsArray($pages);
+        self::assertCount(2, $pages);
+
+        self::assertIsArray($pages[0]);
+        self::assertSame('First Page', $pages[0]['title']);
+        self::assertSame('2024-01-01T00:00:00+00:00', $pages[0]['authored']);
+        self::assertSame('2024-03-01T00:00:00+00:00', $pages[0]['lastModified']);
+
+        self::assertIsArray($pages[1]);
+        self::assertSame('Second Page', $pages[1]['title']);
+        self::assertSame('2024-06-01T00:00:00+00:00', $pages[1]['authored']);
+        self::assertSame('2024-09-01T00:00:00+00:00', $pages[1]['lastModified']);
     }
 }

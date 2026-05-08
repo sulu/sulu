@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -65,14 +67,11 @@ class SnippetSelectionPropertyResolver implements PropertyResolverInterface
             ids: $identifiers,
             resourceLoaderKey: $resourceLoaderKey,
             resourceKey: SnippetInterface::RESOURCE_KEY,
-            view: [
-                'ids' => $identifiers,
-                ...$params,
-            ],
+            view: [],
             priority: 100,
             metadata: [
                 'properties' => $params['properties'] ?? null,
-            ]
+            ],
         );
     }
 

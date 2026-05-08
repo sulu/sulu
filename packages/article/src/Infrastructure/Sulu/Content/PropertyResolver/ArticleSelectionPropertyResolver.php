@@ -54,10 +54,7 @@ class ArticleSelectionPropertyResolver implements PropertyResolverInterface
             ids: $identifiers,
             resourceLoaderKey: $resourceLoaderKey,
             resourceKey: ArticleInterface::RESOURCE_KEY,
-            view: [
-                'ids' => $identifiers,
-                ...$params,
-            ],
+            view: [],
             priority: 100,
             metadata: [
                 'properties' => \array_merge(
@@ -67,7 +64,7 @@ class ArticleSelectionPropertyResolver implements PropertyResolverInterface
                         'url' => 'url',
                     ],
                 ),
-            ]
+            ],
         );
     }
 

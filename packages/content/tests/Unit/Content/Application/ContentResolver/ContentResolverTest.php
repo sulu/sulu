@@ -29,6 +29,8 @@ use Sulu\Content\Application\ContentResolver\ResolvableResourceReplacer\Resolvab
 use Sulu\Content\Application\ContentResolver\Resolver\ResolverInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewEnhancementInterface;
+use Sulu\Content\Application\ResourceLoader\ResourceLoaderProvider;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityTrait;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -87,6 +89,10 @@ class ContentResolverTest extends TestCase
 
         $maxDepth = 5;
 
+        $resourceLoaderProvider = new ResourceLoaderProvider(new \ArrayIterator([
+            'example' => new TestResourceLoader(),
+        ]));
+
         $this->contentResolver = new ContentResolver(
             $this->contentViewResolver,
             $this->resolvableResourceLoader->reveal(),
@@ -95,7 +101,8 @@ class ContentResolverTest extends TestCase
             $this->contentViewDataNormalizer,
             $this->contentAggregator->reveal(),
             $maxDepth,
-            $this->contentEnhancer->reveal()
+            $this->contentEnhancer->reveal(),
+            $resourceLoaderProvider
         );
     }
 
@@ -214,6 +221,189 @@ class ContentResolverTest extends TestCase
         self::assertSame(['title' => 'Title Field', 'content' => 'Content Field'], $result['view']);
         self::assertSame([], $result['extension']);
     }
+
+    public function testResolveSingleSelectionWithNoViewData(): void
+    {
+        $example = new TestExample();
+        $example->id = 445;
+
+        $dimensionContent = new TestExampleDimensionContent($example);
+        $example->addDimensionContent($dimensionContent);
+        $dimensionContent->setStage('live');
+        $dimensionContent->setLocale('en');
+
+        $singleResource = new ResolvableResource(
+            'single-1',
+            'example',
+            10,
+            static function(array $resource) {
+                return $resource['title'];
+            },
+            null,
+            'examples',
+        );
+
+        $templateContentView = ContentView::create(
+            ['single_selection' => $singleResource],
+            ['single_selection' => ['id' => 'single-1']]
+        );
+        $this->templateResolver->setContentView($templateContentView);
+
+        $this->resolvableResourceLoader->loadResources(
+            ['example' => ['single-1' => [$singleResource->getMetadataIdentifier() => $singleResource]]],
+            'en',
+            []
+        )->willReturn(
+            ['example' => ['single-1' => [$singleResource->getMetadataIdentifier() => ['id' => 'single-1', 'title' => 'Single Title']]]]
+        );
+
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        self::assertSame('Single Title', $result['content']['single_selection']);
+        self::assertSame(
+            ['id' => 'single-1'],
+            $result['view']['single_selection']
+        );
+    }
+
+    public function testResolveMultiSelectionWithNoViewData(): void
+    {
+        $example = new TestExample();
+        $example->id = 446;
+
+        $dimensionContent = new TestExampleDimensionContent($example);
+        $example->addDimensionContent($dimensionContent);
+        $dimensionContent->setStage('live');
+        $dimensionContent->setLocale('en');
+
+        $multiResource = new ResolvableResource(
+            'multi-1',
+            'example',
+            10,
+            static function(array $resource) {
+                return $resource['title'];
+            },
+            null,
+            'examples',
+        );
+
+        $templateContentView = ContentView::create(
+            ['multi_selection' => ContentView::create([$multiResource], ['presentAs' => 'grid'])],
+            []
+        );
+        $this->templateResolver->setContentView($templateContentView);
+
+        $this->resolvableResourceLoader->loadResources(
+            ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => $multiResource]]],
+            'en',
+            []
+        )->willReturn(
+            ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => ['id' => 'multi-1', 'title' => 'Multi Title']]]]
+        );
+
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        self::assertSame(['Multi Title'], $result['content']['multi_selection']);
+        self::assertSame(
+            ['presentAs' => 'grid', 0 => ['id' => 'multi-1']],
+            $result['view']['multi_selection']
+        );
+    }
+
+    public function testResolveMultiSelectionWithOneItemKeepsCollectionViewShape(): void
+    {
+        $example = new TestExample();
+        $example->id = 447;
+
+        $dimensionContent = new TestExampleDimensionContent($example);
+        $example->addDimensionContent($dimensionContent);
+        $dimensionContent->setStage('live');
+        $dimensionContent->setLocale('en');
+
+        $multiResource = new ResolvableResource(
+            'multi-1',
+            'example',
+            10,
+            static function(array $resource) {
+                return $resource['title'];
+            },
+            null,
+            'examples',
+        );
+
+        $templateContentView = ContentView::create(
+            ['multi_selection' => ContentView::create([$multiResource], [])],
+            []
+        );
+        $this->templateResolver->setContentView($templateContentView);
+
+        $this->resolvableResourceLoader->loadResources(
+            ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => $multiResource]]],
+            'en',
+            []
+        )->willReturn(
+            ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => ['id' => 'multi-1', 'title' => 'Multi Title']]]]
+        );
+
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        self::assertSame(['Multi Title'], $result['content']['multi_selection']);
+        self::assertSame(
+            [
+                ['id' => 'multi-1'],
+            ],
+            $result['view']['multi_selection']
+        );
+    }
+
+    public function testResolveMultiSelectionWithItemsPropertyNameNestsViewShape(): void
+    {
+        $example = new TestExample();
+        $example->id = 448;
+
+        $dimensionContent = new TestExampleDimensionContent($example);
+        $example->addDimensionContent($dimensionContent);
+        $dimensionContent->setStage('live');
+        $dimensionContent->setLocale('en');
+
+        $multiResource = new ResolvableResource(
+            'multi-1',
+            'example',
+            10,
+            static function(array $resource) {
+                return $resource['title'];
+            },
+            null,
+            'examples',
+            'items',
+        );
+
+        $templateContentView = ContentView::create(
+            ['multi_selection' => ContentView::create([$multiResource], [])],
+            []
+        );
+        $this->templateResolver->setContentView($templateContentView);
+
+        $this->resolvableResourceLoader->loadResources(
+            ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => $multiResource]]],
+            'en',
+            []
+        )->willReturn(
+            ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => ['id' => 'multi-1', 'title' => 'Multi Title']]]]
+        );
+
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        self::assertSame(['Multi Title'], $result['content']['multi_selection']);
+        self::assertSame(
+            [
+                'items' => [
+                    ['id' => 'multi-1'],
+                ],
+            ],
+            $result['view']['multi_selection']
+        );
+    }
 }
 
 class TestTemplateResolver implements ResolverInterface
@@ -228,6 +418,28 @@ class TestTemplateResolver implements ResolverInterface
     public function resolve(DimensionContentInterface $dimensionContent, ?array $properties = null): ?ContentView
     {
         return $this->contentView;
+    }
+}
+
+class TestResourceLoader implements ResourceLoaderContentViewEnhancementInterface
+{
+    public function load(array $ids, ?string $locale, array $params = []): array
+    {
+        return [];
+    }
+
+    public static function getKey(): string
+    {
+        return 'example';
+    }
+
+    public function resolveContentViewEnhancement(mixed $resource): ContentView
+    {
+        if (!\is_array($resource) || !isset($resource['id'])) {
+            return ContentView::create([], []);
+        }
+
+        return ContentView::create([], ['id' => $resource['id']]);
     }
 }
 

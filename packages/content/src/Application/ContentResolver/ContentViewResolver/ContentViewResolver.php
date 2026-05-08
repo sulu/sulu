@@ -153,10 +153,8 @@ class ContentViewResolver implements ContentViewResolverInterface
                 }
             }
 
-            // If the view is not set for this name, we can use the root view
-            if (($result['view'][$name] ?? null) === null) {
-                $result['view'][$name] = $view;
-            }
+            // Root view provides the base; per-key sub-item views take precedence on collision
+            $result['view'][$name] = \array_merge($view, $result['view'][$name] ?? []);
 
             $result['resolvableResources'] = $resolvableResources;
 

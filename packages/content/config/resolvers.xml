@@ -42,6 +42,7 @@
             <argument type="service" id="sulu_content.content_aggregator" />
             <argument /> <!-- See via SuluContentBundle config for: sulu_content.content_resolver.max_depth -->
             <argument type="service" id="sulu_content.content_enhancer"/>
+            <argument type="service" id="sulu_content.resource_loader_provider"/>
         </service>
         <service id="Sulu\Content\Application\ContentResolver\ContentResolverInterface" alias="sulu_content.content_resolver"/>
 

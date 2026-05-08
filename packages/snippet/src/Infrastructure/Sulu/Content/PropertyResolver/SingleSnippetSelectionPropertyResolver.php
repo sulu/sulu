@@ -60,7 +60,7 @@ class SingleSnippetSelectionPropertyResolver implements PropertyResolverInterfac
             priority: 100,
             metadata: [
                 'properties' => $params['properties'] ?? null,
-            ]
+            ],
         );
     }
 
