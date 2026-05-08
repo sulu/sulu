@@ -21,6 +21,12 @@
     "locale": "en",
     "published": "@string@.isDateTime()",
     "publishedState": true,
+    "shadowLocale": null,
+    "shadowLocales": [],
+    "shadowOn": false,
+    "contentLocales": [
+        "en"
+    ],
     "stage": "draft",
     "template": "snippet",
     "version": 0,

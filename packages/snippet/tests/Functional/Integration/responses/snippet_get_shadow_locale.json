@@ -1,35 +1,35 @@
 {
-    "_hash": "@string@",
     "availableLocales": [
-        "en"
+        "en",
+        "de"
     ],
     "changed": "@datetime@",
-    "changer" : "@integer@",
-    "created": "@datetime@",
-    "creator" : "@integer@",
-    "description": null,
-    "excerptCategories": [],
-    "excerptTags": [
-        "@integer@",
-        "@integer@"
+    "changer": "@integer@",
+    "contentLocales": [
+        "en",
+        "de"
     ],
+    "created": "@datetime@",
+    "creator": "@integer@",
+    "description": null,
     "excerptAudienceTargetGroups": [],
+    "excerptCategories": [],
     "excerptSegment": null,
+    "excerptTags": [],
     "ghostLocale": "en",
     "id": "@string@",
     "image": null,
-    "locale": "en",
+    "locale": "de",
     "published": null,
     "publishedState": false,
-    "shadowLocale": null,
-    "shadowLocales": [],
-    "shadowOn": false,
-    "contentLocales": [
-        "en"
-    ],
+    "shadowLocale": "en",
+    "shadowLocales": {
+        "de": "en"
+    },
+    "shadowOn": true,
     "stage": "draft",
     "template": "snippet",
+    "title": "Test Snippet (DE)",
     "version": 0,
-    "title": "Test Snippet",
     "workflowPlace": "unpublished"
 }

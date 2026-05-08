@@ -14,6 +14,12 @@
     "locale": null,
     "published": null,
     "publishedState": false,
+    "shadowLocale": null,
+    "shadowLocales": [],
+    "shadowOn": false,
+    "contentLocales": [
+        "en"
+    ],
     "stage": "draft",
     "version": 0,
     "template": null,

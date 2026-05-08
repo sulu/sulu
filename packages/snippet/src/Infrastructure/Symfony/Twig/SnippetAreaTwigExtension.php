@@ -109,6 +109,10 @@ class SnippetAreaTwigExtension extends AbstractExtension
             ]
         );
 
+        if (null === $dimensionContent->getLocale()) {
+            return null;
+        }
+
         $resolvedContent = $this->contentResolver->resolve($dimensionContent, $properties);
 
         $this->referenceStore->add($snippet->getUuid(), SnippetInterface::RESOURCE_KEY);

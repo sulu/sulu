@@ -21,6 +21,12 @@
     "locale": "en",
     "published": "@dateTime@",
     "publishedState": false,
+    "shadowLocale": null,
+    "shadowLocales": [],
+    "shadowOn": false,
+    "contentLocales": [
+        "en"
+    ],
     "stage": "draft",
     "template": "snippet",
     "title": "Test Snippet",

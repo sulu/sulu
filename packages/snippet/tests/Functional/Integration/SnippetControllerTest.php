@@ -513,6 +513,38 @@ class SnippetControllerTest extends SuluTestCase
         }
     }
 
+    #[Depends('testPost')]
+    public function testPutShadowLocale(string $id): string
+    {
+        $this->client->request('PUT', '/admin/api/snippets/' . $id . '?locale=de', [], [], [], \json_encode([
+            'template' => 'snippet',
+            'title' => 'Test Snippet (DE)',
+            'shadowOn' => true,
+            'shadowLocale' => 'en',
+        ]) ?: null);
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        return $id;
+    }
+
+    #[Depends('testPutShadowLocale')]
+    public function testGetShadowLocale(string $id): void
+    {
+        $this->client->request('GET', '/admin/api/snippets/' . $id . '?locale=de');
+        $response = $this->client->getResponse();
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertTrue($content['shadowOn']);
+        $this->assertSame('en', $content['shadowLocale']);
+        $this->assertSame(['en', 'de'], $content['availableLocales']);
+        $this->assertSame(['en', 'de'], $content['contentLocales']);
+
+        $this->assertResponseSnapshot('snippet_get_shadow_locale.json', $response, 200);
+    }
+
     protected function getSnapshotFolder(): string
     {
         return 'responses';

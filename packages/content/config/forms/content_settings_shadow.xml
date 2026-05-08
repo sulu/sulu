@@ -10,20 +10,20 @@
     <properties>
         <section name="shadow" visibleCondition="linkOn != true">
             <meta>
-                <title>sulu_content.shadow_page</title>
+                <title>sulu_content.shadow</title>
             </meta>
 
             <properties>
                 <property name="shadowOn" type="checkbox" disabledCondition="shadowLocales and __locale in shadowLocales|values">
                     <meta>
-                        <info_text>sulu_content.enable_shadow_page_info_text</info_text>
+                        <info_text>sulu_content.enable_shadow_info_text</info_text>
                     </meta>
 
                     <params>
                         <param name="type" value="toggler" />
                         <param name="label">
                             <meta>
-                                <title>sulu_content.enable_shadow_page</title>
+                                <title>sulu_content.enable_shadow</title>
                             </meta>
                         </param>
                     </params>
