@@ -83,6 +83,7 @@ use Sulu\Page\Infrastructure\Sulu\Security\PageDescendantSecurityListener;
 use Sulu\Page\Infrastructure\Sulu\Security\PageSecurityListener;
 use Sulu\Page\Infrastructure\Sulu\Sitemap\PagesSitemapProvider;
 use Sulu\Page\Infrastructure\Sulu\Trash\PageTrashItemHandler;
+use Sulu\Page\Infrastructure\Sulu\Webspace\PageSegmentListener;
 use Sulu\Page\Infrastructure\Symfony\DependencyInjection\Compiler\OverrideTreeListenerPass;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\ContentPathTwigExtension;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension;
@@ -664,6 +665,13 @@ final class SuluPageBundle extends AbstractBundle
             ->class(PageSecurityListener::class)
             ->args([
                 new Reference('sulu_security.security_checker', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            ])
+            ->tag('kernel.event_subscriber');
+
+        $services->set('sulu_page.page_segment_listener')
+            ->class(PageSegmentListener::class)
+            ->args([
+                new Reference('sulu_core.webspace.request_analyzer'),
             ])
             ->tag('kernel.event_subscriber');
 
