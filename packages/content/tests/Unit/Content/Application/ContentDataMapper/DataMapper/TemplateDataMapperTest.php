@@ -127,6 +127,23 @@ class TemplateDataMapperTest extends TestCase
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
     }
 
+    public function testMapNullTemplate(): void
+    {
+        $data = [
+            'template' => null,
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+
+        $templateMapper = $this->createTemplateDataMapperInstance([], 'template-key');
+        $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertNull($localizedDimensionContent->getTemplateKey());
+    }
+
     public function testMapData(): void
     {
         $data = [
