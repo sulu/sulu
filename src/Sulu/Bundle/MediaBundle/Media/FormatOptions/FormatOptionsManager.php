@@ -33,6 +33,7 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
 {
     /**
      * @param array<string, mixed> $formats
+     * @param EntityRepository<FormatOptions> $formatOptionsRepository
      */
     public function __construct(
         private EntityManagerInterface $em,

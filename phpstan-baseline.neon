@@ -2107,32 +2107,8 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/MetadataProviderInterface.php
 
 		-
-			message: '#^Cannot access offset string on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/MetadataProviderRegistry.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\MetadataProviderRegistry\:\:addMetadataProvider\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/MetadataProviderRegistry.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\MetadataProviderRegistry\:\:getMetadataProvider\(\) should return Sulu\\Bundle\\AdminBundle\\Metadata\\MetadataProviderInterface but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/MetadataProviderRegistry.php
-
-		-
-			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/MetadataProviderRegistry.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\AdminBundle\\Metadata\\MetadataProviderRegistry\:\:\$metadataProviders has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/MetadataProviderRegistry.php
 
@@ -4251,12 +4227,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''uuid'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/DependencyInjection/SuluAudienceTargetingExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\DependencyInjection\\SuluAudienceTargetingExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/DependencyInjection/SuluAudienceTargetingExtension.php
 
@@ -7629,12 +7599,6 @@ parameters:
 		-
 			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/DependencyInjection/SuluCategoryExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\DependencyInjection\\SuluCategoryExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/DependencyInjection/SuluCategoryExtension.php
 
@@ -14973,12 +14937,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''contact'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/SuluContactExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\DependencyInjection\\SuluContactExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/SuluContactExtension.php
 
@@ -22555,12 +22513,6 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/Tests/Unit/Routing/Loader/VersionRouteLoaderTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\HashBundle\\DependencyInjection\\SuluHashExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/HashBundle/DependencyInjection/SuluHashExtension.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\Cache\\CacheManager\:\:invalidatePath\(\) has parameter \$headers with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -22773,12 +22725,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\DependencyInjection\\SuluHttpCacheExtension\:\:getConfiguration\(\) has parameter \$config with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/DependencyInjection/SuluHttpCacheExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\DependencyInjection\\SuluHttpCacheExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/DependencyInjection/SuluHttpCacheExtension.php
 
@@ -23661,12 +23607,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''provider_attribute'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/DependencyInjection/SuluMarkupExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MarkupBundle\\DependencyInjection\\SuluMarkupExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/DependencyInjection/SuluMarkupExtension.php
 
@@ -25013,12 +24953,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManagerInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Command\\FormatCacheCleanupCommand\:\:__construct\(\) has parameter \$mediaRepository with generic class Doctrine\\ORM\\EntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Command/FormatCacheCleanupCommand.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Command\\FormatCacheCleanupCommand\:\:mediaExists\(\) has no return type specified\.$#'
@@ -26629,12 +26563,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\DependencyInjection\\SuluMediaExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
-
-		-
 			message: '#^Parameter \#1 \$filename of function is_executable expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -28025,12 +27953,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManagerInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\FormatOptions\\FormatOptionsManager\:\:__construct\(\) has parameter \$formatOptionsRepository with generic class Doctrine\\ORM\\EntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatOptions/FormatOptionsManager.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\FormatOptions\\FormatOptionsManager\:\:getAll\(\) has no return type specified\.$#'
@@ -32725,12 +32647,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/FormatOptionsManager/FormatOptionsManagerTest.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Unit\\Media\\FormatOptionsManager\\FormatOptionsManagerTest\:\:\$formatOptionsRepository with generic class Doctrine\\ORM\\EntityRepository does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/FormatOptionsManager/FormatOptionsManagerTest.php
-
-		-
 			message: '#^Cannot call method create\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 8
@@ -36213,12 +36129,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\DependencyInjection\\SuluPageExtension\:\:appendDefaultAuthor\(\) has parameter \$config with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/DependencyInjection/SuluPageExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\DependencyInjection\\SuluPageExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/DependencyInjection/SuluPageExtension.php
 
@@ -46165,32 +46075,8 @@ parameters:
 			path: src/Sulu/Bundle/PersistenceBundle/Tests/Functional/EventSubscriber/ORM/UserBlameSubscriberIntegrationTest.php
 
 		-
-			message: '#^Method class@anonymous/src/Sulu/Bundle/PersistenceBundle/Tests/Unit/DependencyInjection/PersistenceExtensionTraitTest\.php\:79\:\:setAccessControlQueryEnhancer\(\) has parameter \$accessControlQueryEnhancer with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/DependencyInjection/PersistenceExtensionTraitTest.php
-
-		-
-			message: '#^Parameter \#1 \$interfaces of method Sulu\\Bundle\\PersistenceBundle\\Tests\\Unit\\Fixture\\Bundle\\UsingPersistenceBundleTrait\:\:buildPersistence\(\) expects array\<class\-string, string\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/Fixture/Bundle/UsingPersistenceBundleTrait.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PersistenceBundle\\Tests\\Unit\\Fixture\\Bundle\\UsingPersistenceBundleTrait\:\:\$modelInterfaces has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/Fixture/Bundle/UsingPersistenceBundleTrait.php
-
-		-
 			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/Fixture/DependencyInjection/UsingPersistenceExtensionTrait.php
-
-		-
-			message: '#^Parameter \#1 \$objects of method Sulu\\Bundle\\PersistenceBundle\\Tests\\Unit\\Fixture\\DependencyInjection\\UsingPersistenceExtensionTrait\:\:configurePersistence\(\) expects array\<string, array\{model\: class\-string, repository\?\: class\-string\}\>, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/Fixture/DependencyInjection/UsingPersistenceExtensionTrait.php
 
@@ -47425,12 +47311,6 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/DependencyInjection/SuluRouteExtension.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\RouteBundle\\DependencyInjection\\SuluRouteExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/DependencyInjection/SuluRouteExtension.php
-
-		-
 			message: '#^Parameter \#1 \$objects of method Sulu\\Bundle\\RouteBundle\\DependencyInjection\\SuluRouteExtension\:\:configurePersistence\(\) expects array\<string, array\{model\: class\-string, repository\?\: class\-string\}\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -48369,12 +48249,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''indexes'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/DependencyInjection/SuluSearchExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SearchBundle\\DependencyInjection\\SuluSearchExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/SearchBundle/DependencyInjection/SuluSearchExtension.php
 
@@ -49460,12 +49334,6 @@ parameters:
 
 		-
 			message: '#^Call to an undefined method Sulu\\Bundle\\AdminBundle\\UserManager\\UserManagerInterface\:\:save\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ProfileController.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setValue\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ProfileController.php
@@ -50789,12 +50657,6 @@ parameters:
 			identifier: doctrine.associationType
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Entity/UserRole.php
-
-		-
-			message: '#^Class Doctrine\\ORM\\EntityRepository specifies template type TEntityClass of interface Doctrine\\Persistence\\ObjectRepository as Sulu\\Bundle\\SecurityBundle\\Entity\\UserSetting but it''s already specified as object\.$#'
-			identifier: generics.interfaceConflict
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/UserSettingRepository.php
 
 		-
 			message: '#^Call to method getAuthenticationException\(\) on an unknown class Symfony\\Component\\Security\\Core\\Event\\AuthenticationFailureEvent\.$#'
@@ -54253,12 +54115,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/DependencyInjection/SuluSnippetExtension.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SnippetBundle\\DependencyInjection\\SuluSnippetExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/DependencyInjection/SuluSnippetExtension.php
-
-		-
 			message: '#^Parameter \#2 \$value of method Symfony\\Component\\DependencyInjection\\Container\:\:setParameter\(\) expects array\|bool\|float\|int\|string\|UnitEnum\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -56809,12 +56665,6 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/DependencyInjection/SuluTagExtension.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\TagBundle\\DependencyInjection\\SuluTagExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/DependencyInjection/SuluTagExtension.php
-
-		-
 			message: '#^Parameter \#1 \$objects of method Sulu\\Bundle\\TagBundle\\DependencyInjection\\SuluTagExtension\:\:configurePersistence\(\) expects array\<string, array\{model\: class\-string, repository\?\: class\-string\}\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -57371,12 +57221,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Twig/TagTwigExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\TestBundle\\DependencyInjection\\SuluTestExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/DependencyInjection/SuluTestExtension.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\TestBundle\\Kernel\\SuluKernelBrowser\:\:jsonRequest\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
@@ -58749,12 +58593,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''switch_url'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/DependencyInjection/SuluWebsiteExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\DependencyInjection\\SuluWebsiteExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/DependencyInjection/SuluWebsiteExtension.php
 
@@ -66127,12 +65965,6 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Subscriber/Compat/ContentMapperSubscriber.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Document\\Subscriber\\Compat\\ContentMapperSubscriber\:\:getDeleteEvent\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/Compat/ContentMapperSubscriber.php
-
-		-
 			message: '#^Method Sulu\\Component\\Content\\Document\\Subscriber\\Compat\\ContentMapperSubscriber\:\:getDeleteEvent\(\) has parameter \$document with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -66193,32 +66025,14 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Subscriber/Compat/ContentMapperSubscriber.php
 
 		-
-			message: '#^Parameter \#1 \$event of method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface\:\:dispatch\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/Compat/ContentMapperSubscriber.php
-
-		-
 			message: '#^Parameter \#2 \$structure of method Sulu\\Component\\Content\\Compat\\StructureManagerInterface\:\:wrapStructure\(\) expects Sulu\\Component\\Content\\Metadata\\StructureMetadata, Sulu\\Component\\Content\\Metadata\\StructureMetadata\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/Compat/ContentMapperSubscriber.php
 
 		-
-			message: '#^Property Sulu\\Component\\Content\\Document\\Subscriber\\Compat\\ContentMapperSubscriber\:\:\$deleteEvents \(array\<Sulu\\Component\\Content\\Mapper\\Event\\ContentNodeDeleteEvent\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/Compat/ContentMapperSubscriber.php
-
-		-
 			message: '#^Strict comparison using \=\=\= between null and Sulu\\Component\\Content\\Document\\Behavior\\StructureBehavior will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/Compat/ContentMapperSubscriber.php
-
-		-
-			message: '#^Unable to resolve the template type TEvent in call to method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface\:\:dispatch\(\)$#'
-			identifier: argument.templateType
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/Compat/ContentMapperSubscriber.php
 
@@ -67793,30 +67607,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: src/Sulu/Component/Content/Extension/ExtensionManager.php
-
-		-
-			message: '#^Class Sulu\\Component\\Content\\Form\\DataTransformer\\DocumentToUuidTransformer implements generic interface Symfony\\Component\\Form\\DataTransformerInterface but does not specify its types\: T, R$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Content/Form/DataTransformer/DocumentToUuidTransformer.php
-
-		-
-			message: '#^Parameter \#1 \$id of static method PHPCR\\Util\\UUIDHelper\:\:isUUID\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Form/DataTransformer/DocumentToUuidTransformer.php
-
-		-
-			message: '#^Parameter \#1 \$identifier of method Sulu\\Component\\DocumentManager\\DocumentManagerInterface\:\:find\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Form/DataTransformer/DocumentToUuidTransformer.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Component/Content/Form/DataTransformer/DocumentToUuidTransformer.php
 
 		-
 			message: '#^Strict comparison using \=\=\= between null and object will always evaluate to false\.$#'
@@ -81247,12 +81037,6 @@ parameters:
 			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
 
 		-
-			message: '#^PHPDoc tag @var for variable \$mediaTypeRepository contains generic interface Doctrine\\Persistence\\ObjectRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
-
-		-
 			message: '#^Parameter \#1 \$filters of method Sulu\\Component\\Media\\SmartContent\\MediaDataProvider\:\:resolveDataItems\(\) expects array\{dataSource\?\: int\|string\|null, sortMethod\?\: ''asc''\|''desc'', sortBy\?\: string, tags\?\: array\<string\>, tagOperator\?\: ''and''\|''or'', types\?\: array\<string\>, categories\?\: array\<int\>, categoryOperator\?\: ''and''\|''or'', \.\.\.\}, array\{dataSource\: 42, tags\: array\{1\}\} given\.$#'
 			identifier: argument.type
 			count: 1
@@ -84445,12 +84229,6 @@ parameters:
 			path: src/Sulu/Component/Rest/Listing/ListRepository.php
 
 		-
-			message: '#^Class Sulu\\Component\\Rest\\Listing\\ListRepository extends generic class Doctrine\\ORM\\EntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListRepository.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\Listing\\ListRepository\:\:find\(\) has parameter \$joinConditions with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -84655,7 +84433,7 @@ parameters:
 			path: src/Sulu/Component/Rest/Listing/ListRestHelper.php
 
 		-
-			message: '#^Parameter \#2 \$class of class Sulu\\Component\\Rest\\Listing\\ListRepository constructor expects Doctrine\\ORM\\Mapping\\ClassMetadata\<T of object\>, Doctrine\\Persistence\\Mapping\\ClassMetadata\<object\> given\.$#'
+			message: '#^Parameter \#2 \$class of class Sulu\\Component\\Rest\\Listing\\ListRepository constructor expects Doctrine\\ORM\\Mapping\\ClassMetadata\<object\>, Doctrine\\Persistence\\Mapping\\ClassMetadata\<object\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Rest/Listing/ListRestHelper.php
@@ -85823,12 +85601,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Security/Authentication/UserRepositoryInterface.php
-
-		-
-			message: '#^Interface Sulu\\Component\\Security\\Authentication\\UserSettingRepositoryInterface extends generic interface Doctrine\\Persistence\\ObjectRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Security/Authentication/UserSettingRepositoryInterface.php
 
 		-
 			message: '#^Method Sulu\\Component\\Security\\Authorization\\AbstractSecurityChecker\:\:checkPermission\(\) has parameter \$subject with no type specified\.$#'

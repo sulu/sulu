@@ -170,7 +170,7 @@ class MediaDataProviderTest extends TestCase
         /** @var ObjectProphecy<EntityManagerInterface> $entityManager */
         $entityManager = $this->prophesize(EntityManagerInterface::class);
 
-        /** @var ObjectProphecy<ObjectRepository> $mediaTypeRepository */
+        /** @var ObjectProphecy<ObjectRepository<MediaType>> $mediaTypeRepository */
         $mediaTypeRepository = $this->prophesize(ObjectRepository::class);
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);

@@ -21,7 +21,7 @@ class PersistenceBundleTraitTest extends AbstractContainerBuilderTestCase
     {
         $bundle = new UsingPersistenceBundleTrait();
         $bundle->modelInterfaces = [
-            'Sulu\Component\Persistence\Model\BarInterface' => '\stdClass',
+            FooModelInterface::class => '\stdClass',
         ];
         $bundle->build($this->container);
 
@@ -36,7 +36,7 @@ class PersistenceBundleTraitTest extends AbstractContainerBuilderTestCase
             'doctrine.orm.listeners.resolve_target_entity',
             'addResolveTargetEntity',
             [
-                'Sulu\Component\Persistence\Model\BarInterface',
+                FooModelInterface::class,
                 '\stdClass',
                 [],
             ]
@@ -47,7 +47,7 @@ class PersistenceBundleTraitTest extends AbstractContainerBuilderTestCase
     {
         $bundle = new UsingPersistenceBundleTrait();
         $bundle->modelInterfaces = [
-            'Sulu\Component\Persistence\Model\FooInterface' => 'sulu.model.foo.class',
+            FooModelInterface::class => 'sulu.model.foo.class',
         ];
         $bundle->build($this->container);
 
@@ -63,7 +63,7 @@ class PersistenceBundleTraitTest extends AbstractContainerBuilderTestCase
             'doctrine.orm.listeners.resolve_target_entity',
             'addResolveTargetEntity',
             [
-                'Sulu\Component\Persistence\Model\FooInterface',
+                FooModelInterface::class,
                 '\stdClass',
                 [],
             ]
@@ -75,7 +75,7 @@ class PersistenceBundleTraitTest extends AbstractContainerBuilderTestCase
         $this->expectException(\InvalidArgumentException::class);
         $bundle = new UsingPersistenceBundleTrait();
         $bundle->modelInterfaces = [
-            'Sulu\Component\Persistence\Model\FooInterface' => 'sulu.model.foo.class',
+            FooModelInterface::class => 'sulu.model.foo.class',
         ];
         $bundle->build($this->container);
 
@@ -86,4 +86,8 @@ class PersistenceBundleTraitTest extends AbstractContainerBuilderTestCase
 
         $this->compile();
     }
+}
+
+interface FooModelInterface
+{
 }
