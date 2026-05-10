@@ -72,6 +72,8 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Content\Infrastructure\Symfony\HttpKernel\SuluContentBundle(),
             new \Sulu\Page\Infrastructure\Symfony\HttpKernel\SuluPageBundle(),
             new \Sulu\Search\Infrastructure\Symfony\HttpKernel\SuluSearchBundle(),
+            new \Sulu\Snippet\Infrastructure\Symfony\HttpKernel\SuluSnippetBundle(),
+            new \Sulu\Article\Infrastructure\Symfony\HttpKernel\SuluArticleBundle(),
         ];
 
         if (\class_exists(\Symfony\Bundle\MonologBundle\MonologBundle::class)) {
