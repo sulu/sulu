@@ -70,32 +70,32 @@ return static function (ContainerConfigurator $container) {
     $services
         ->set('sulu_tag.create_action', \Sulu\Bundle\TagBundle\Controller\TagCreateAction::class)
         ->public()
-        ->args([service('fos_rest.view_handler'), service('sulu_tag.tag_manager')])
+        ->args([service('sulu_core.sulu_serializer'), service('sulu_tag.tag_manager')])
         ->tag('sulu.context', ['context' => 'admin']);
 
     $services
         ->set('sulu_tag.get_action', \Sulu\Bundle\TagBundle\Controller\TagGetAction::class)
         ->public()
-        ->args([service('fos_rest.view_handler'), service('sulu_tag.tag_manager')])
+        ->args([service('sulu_core.sulu_serializer'), service('sulu_tag.tag_manager')])
         ->tag('sulu_context', ['context' => 'admin']);
 
     $services
         ->set('sulu_tag.put_action', \Sulu\Bundle\TagBundle\Controller\TagPutAction::class)
         ->public()
-        ->args([service('fos_rest.view_handler'), service('sulu_tag.tag_manager')])
+        ->args([service('sulu_core.sulu_serializer'), service('sulu_tag.tag_manager')])
         ->tag('sulu_context', ['context' => 'admin']);
 
     $services
         ->set('sulu_tag.delete_action', \Sulu\Bundle\TagBundle\Controller\TagDeleteAction::class)
         ->public()
-        ->args([service('fos_rest.view_handler'), service('sulu_tag.tag_manager')])
+        ->args([service('sulu_core.sulu_serializer'), service('sulu_tag.tag_manager')])
         ->tag('sulu_context', ['context' => 'admin']);
 
     $services
         ->set('sulu_tag.get_all_action', \Sulu\Bundle\TagBundle\Controller\TagGetAllAction::class)
         ->public()
         ->args([
-            service('fos_rest.view_handler'),
+            service('sulu_core.sulu_serializer'),
             service('sulu_core.doctrine_rest_helper'),
             service('sulu_core.list_builder.field_descriptor_factory'),
             service('sulu_core.doctrine_list_builder_factory'),

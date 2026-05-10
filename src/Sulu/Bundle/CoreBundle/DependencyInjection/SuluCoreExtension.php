@@ -295,6 +295,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('serializer.php');
         $loader->load('request_analyzer.php');
         $loader->load('doctrine.php');
+        $loader->load('sulu_serializer.php');
     }
 
     /**

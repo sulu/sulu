@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\TagBundle\Controller;
 
-use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagNotFoundException;
 use Sulu\Bundle\TagBundle\Admin\TagAdmin;
 use Sulu\Bundle\TagBundle\Controller\Exception\ConstraintViolationException;
@@ -23,15 +21,16 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Security\SecuredControllerInterface;
+use Sulu\Component\Serializer\SuluSerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 final class TagPutAction extends AbstractRestController implements SecuredControllerInterface
 {
-    public function __construct(private ViewHandlerInterface $viewHandler, private TagManagerInterface $tagManager)
-    {
-        parent::__construct($viewHandler);
-    }
+    public function __construct(
+        private SuluSerializerInterface $suluSerializer,
+        private TagManagerInterface $tagManager,
+    ) {}
 
     public function __invoke(Request $request, int $id): Response
     {
@@ -43,24 +42,22 @@ final class TagPutAction extends AbstractRestController implements SecuredContro
 
             $tag = $this->tagManager->save($this->getData($request), $id);
 
-            $context = new Context();
-            $context->setGroups(['partialTag']);
-            $view = $this->view($tag)->setContext($context);
-        } catch (TagAlreadyExistsException $exc) {
+            return $this->suluSerializer->handleView($tag, ['partialTag']);
+        } catch (TagAlreadyExistsException $exception) {
             $cvExistsException = new ConstraintViolationException(
-                'A tag with the name "' . $exc->getName() . '"already exists!',
+                sprintf('A tag with the name "%s" already exists!', $exception->getName()),
                 'name',
                 ConstraintViolationException::EXCEPTION_CODE_NON_UNIQUE_NAME,
             );
-            $view = $this->view($cvExistsException->toArray(), 400);
-        } catch (TagNotFoundException $exc) {
-            $entityNotFoundException = new EntityNotFoundException(self::$entityName, $id);
-            $view = $this->view($entityNotFoundException->toArray(), 404);
-        } catch (RestException $exc) {
-            $view = $this->view($exc->toArray(), 400);
-        }
 
-        return $this->handleView($view);
+            return $this->suluSerializer->handleView($cvExistsException->toArray(), [], 400);
+        } catch (TagNotFoundException $exc) {
+            $exception = new EntityNotFoundException(self::$entityName, $id);
+
+            return $this->suluSerializer->handleView($exception->toArray(), [], 404);
+        } catch (RestException $restException) {
+            return $this->suluSerializer->handleView($restException->toArray, [], 400);
+        }
     }
 
     /**

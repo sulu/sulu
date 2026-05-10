@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest;
 
 use FOS\RestBundle\Controller\ControllerTrait;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Component\Serializer\SuluSerializerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -25,7 +26,8 @@ abstract class AbstractRestController
 
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        private ?TokenStorageInterface $tokenStorage = null
+        private ?TokenStorageInterface $tokenStorage = null,
+        private ?SuluSerializerInterface $suluSerializer = null,
     ) {
         $this->setViewHandler($viewHandler);
     }

@@ -11,34 +11,35 @@
 
 namespace Sulu\Bundle\TagBundle\Controller;
 
-use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\View\ViewHandler;
 use Sulu\Bundle\TagBundle\Admin\TagAdmin;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
-use Sulu\Component\Rest\AbstractRestController;
+use Sulu\Component\Rest\AbstractController;
 use Sulu\Component\Security\SecuredControllerInterface;
+use Sulu\Component\Serializer\SuluSerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-final class TagGetAction extends AbstractRestController implements SecuredControllerInterface
+final class TagGetAction extends AbstractController implements SecuredControllerInterface
 {
+    protected static $entityName = \Sulu\Bundle\TagBundle\Entity\Tag::class;
+
+    protected $unsortable = [];
+
+    protected $bundlePrefix = 'tags.';
+
     public function __construct(
-        private readonly ViewHandler $viewHandler,
+        private SuluSerializerInterface $suluSerializer,
         private readonly TagManagerInterface $tagManager,
     ) {
-        parent::__construct($viewHandler);
+        parent::__construct($suluSerializer);
     }
 
     public function __invoke(int $id): Response
     {
-        $view = $this->responseGetById($id, function ($id) {
+        $data = $this->responseGetById($id, function ($id) {
             return $this->tagManager->findById($id);
         });
 
-        $context = new Context();
-        $context->setGroups(['partialTag']);
-        $view->setContext($context);
-
-        return $this->handleView($view);
+        return $this->suluSerializer->handleView($data, ['partialTag']);
     }
 
     /**

@@ -12,30 +12,33 @@
 namespace Sulu\Bundle\TagBundle\Controller;
 
 use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
-use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Serializer\SuluSerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-final class TagGetAllAction extends AbstractRestController
+final class TagGetAllAction
 {
+    protected static $entityName = \Sulu\Bundle\TagBundle\Entity\Tag::class;
+
+    protected $unsortable = [];
+
+    protected $bundlePrefix = 'tags.';
+
     public function __construct(
-        private readonly ViewHandlerInterface $viewHandler,
+        private readonly SuluSerializerInterface $suluSerialiser,
         private readonly RestHelperInterface $restHelper,
         private readonly FieldDescriptorFactoryInterface $fieldDescriptor,
         private DoctrineListBuilderFactoryInterface $listBuilderFactory,
         private TagRepositoryInterface $tagRepository,
         private readonly string $tagClass,
-    ) {
-        parent::__construct(viewHandler: $viewHandler);
-    }
+    ) {}
 
     public function __invoke(Request $request): Response
     {
@@ -67,16 +70,12 @@ final class TagGetAllAction extends AbstractRestController
                 (int) $listBuilder->count(),
             );
 
-            $view = $this->view($list, 200);
-            return $this->handleView($view);
+            return $this->suluSerialiser->handleView($list, ['partialTag']);
         }
 
         $list = new CollectionRepresentation($this->tagRepository->findAll(), TagInterface::RESOURCE_KEY);
-
         $context = new Context();
         $context->setGroups(['partialTag']);
-        $view = $this->view($list, 200)->setContext($context);
-
-        return $this->handleView($view);
+        return $this->suluSerialiser->handleView($list, ['partialTag']);
     }
 }

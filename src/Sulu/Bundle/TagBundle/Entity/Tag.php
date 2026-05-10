@@ -12,9 +12,10 @@
 namespace Sulu\Bundle\TagBundle\Entity;
 
 use JMS\Serializer\Annotation\Expose;
-use JMS\Serializer\Annotation\Groups;
+// use JMS\Serializer\Annotation\Groups;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Persistence\Model\UserBlameTrait;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 /**
  * Represents single tag in the system.
