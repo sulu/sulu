@@ -11,9 +11,11 @@
 
 namespace Sulu\Bundle\TagBundle\Controller;
 
+use Sulu\Bundle\MarkupBundle\Tag\TagNotFoundException;
 use Sulu\Bundle\TagBundle\Admin\TagAdmin;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\AbstractController;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\Component\Serializer\SuluSerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,11 +37,19 @@ final class TagGetAction extends AbstractController implements SecuredController
 
     public function __invoke(int $id): Response
     {
-        $data = $this->responseGetById($id, function ($id) {
-            return $this->tagManager->findById($id);
-        });
+        try {
+            $tag = $this->tagManager->findById($id);
 
-        return $this->suluSerializer->handleView($data, ['partialTag']);
+            if (!$tag) {
+                throw new EntityNotFoundException(self::$entityName, $id);
+            }
+
+            return $this->suluSerializer->handleView($tag, ['partialTag']);
+        } catch (TagNotFoundException | EntityNotFoundException $exc) {
+            $exception = new EntityNotFoundException(self::$entityName, $id);
+
+            return $this->suluSerializer->handleView($exception->toArray(), [], 404);
+        }
     }
 
     /**
