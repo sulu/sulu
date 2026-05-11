@@ -25,7 +25,7 @@ use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 /**
@@ -57,17 +57,16 @@ final class SuluContentBundle extends AbstractBundle
      */
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        // TODO refactor to PHP based service definitions
-        $loader = new XmlFileLoader($builder, new FileLocator(\dirname(__DIR__, 4) . '/config'));
-        $loader->load('data-mapper.xml');
-        $loader->load('merger.xml');
-        $loader->load('normalizer.xml');
-        $loader->load('services.xml');
-        $loader->load('form-visitor.xml');
-        $loader->load('controller.xml');
-        $loader->load('resolvers.xml');
-        $loader->load('resource-loader.xml');
-        $loader->load('reference.xml');
+        $loader = new PhpFileLoader($builder, new FileLocator(\dirname(__DIR__, 4) . '/config'));
+        $loader->load('data-mapper.php');
+        $loader->load('merger.php');
+        $loader->load('normalizer.php');
+        $loader->load('services.php');
+        $loader->load('form-visitor.php');
+        $loader->load('controller.php');
+        $loader->load('resolvers.php');
+        $loader->load('resource-loader.php');
+        $loader->load('reference.php');
 
         $services = $container->services();
 
