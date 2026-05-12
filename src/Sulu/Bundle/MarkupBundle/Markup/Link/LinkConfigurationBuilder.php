@@ -49,7 +49,7 @@ class LinkConfigurationBuilder
     private $icon;
 
     /**
-     * @var ?array<string, string>
+     * @var list<string>|null
      */
     private $targets = null;
 
@@ -114,7 +114,7 @@ class LinkConfigurationBuilder
     }
 
     /**
-     * @param array<string, string> $targets
+     * @param list<string> $targets
      */
     public function setTargets(array $targets): self
     {
