@@ -222,4 +222,38 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
     {
         $this->referenceStore->add((string) $resourceId, $resourceKey);
     }
+
+    public function replaceResolvableResourcesInView(
+        array $view,
+        array $resolvedResources
+    ): array {
+        if (0 === \count($resolvedResources)) {
+            return $view;
+        }
+
+        return $this->replaceInViewRecursively($view, $resolvedResources);
+    }
+
+    /**
+     * @param array<int|string, mixed> $view
+     * @param array<string, array<string|int, array<string, array{resolved: mixed, contentViewEnhancement: ContentView}>>> $resolvedResources
+     *
+     * @return array<int|string, mixed>
+     */
+    private function replaceInViewRecursively(array $view, array $resolvedResources): array
+    {
+        foreach ($view as $key => $value) {
+            if ($value instanceof ResolvableInterface) {
+                $resolveResult = $this->resolveValue($value, $resolvedResources);
+                $view[$key] = $resolveResult['resolved'];
+                continue;
+            }
+
+            if (\is_array($value)) {
+                $view[$key] = $this->replaceInViewRecursively($value, $resolvedResources);
+            }
+        }
+
+        return $view;
+    }
 }

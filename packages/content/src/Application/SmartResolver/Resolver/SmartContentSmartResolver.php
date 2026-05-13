@@ -14,7 +14,12 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\SmartResolver\Resolver;
 
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Bundle\CategoryBundle\Infrastructure\Sulu\Content\ResourceLoader\CategoryResourceLoader;
+use Sulu\Bundle\TagBundle\Infrastructure\Sulu\Content\ResourceLoader\TagResourceLoader;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
@@ -117,9 +122,10 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $view = [
             'dataSource' => $filters['dataSource'],
             'includeSubFolders' => $filters['includeSubFolders'],
-            'categories' => $filters['categories'],
+            // match Sulu 2.6 shape: tags as plain name strings, categories as full CategoryWrapper API objects
+            'categories' => $this->buildCategoryResolvables($filters['categories'] ?? []),
             'categoryOperator' => $filters['categoryOperator'],
-            'tags' => $value['tags'] ?? [],
+            'tags' => $this->buildTagResolvables($value['tags'] ?? []),
             'tagOperator' => $filters['tagOperator'],
             'types' => $filters['types'],
             'templateKeys' => $filters['templateKeys'] ?? [],
@@ -166,5 +172,45 @@ class SmartContentSmartResolver implements SmartResolverInterface
     public static function getType(): string
     {
         return 'smart_content';
+    }
+
+    /**
+     * @param mixed[] $tagIds
+     *
+     * @return ResolvableResource[]
+     */
+    private function buildTagResolvables(array $tagIds): array
+    {
+        // TagResourceLoader returns the tag name string. We pass it through unchanged
+        // so view.tags is a list of name strings (Sulu 2.6 shape, ready for ?tags=<name> URLs).
+        return \array_map(
+            static fn (mixed $id): ResolvableResource => new ResolvableResource(
+                id: \is_int($id) || \is_string($id) ? $id : (string) $id,
+                resourceLoaderKey: TagResourceLoader::RESOURCE_LOADER_KEY,
+                priority: 0,
+                resourceKey: TagInterface::RESOURCE_KEY,
+            ),
+            $tagIds,
+        );
+    }
+
+    /**
+     * @param mixed[] $categoryIds
+     *
+     * @return ResolvableResource[]
+     */
+    private function buildCategoryResolvables(array $categoryIds): array
+    {
+        // CategoryResourceLoader returns the full CategoryWrapper API object (Sulu 2.6 shape).
+        // Templates access .id (for ?categories=<id> URLs) and .name, .key, etc. via the wrapper.
+        return \array_map(
+            static fn (mixed $id): ResolvableResource => new ResolvableResource(
+                id: \is_int($id) || \is_string($id) ? $id : (string) $id,
+                resourceLoaderKey: CategoryResourceLoader::RESOURCE_LOADER_KEY,
+                priority: 0,
+                resourceKey: CategoryInterface::RESOURCE_KEY,
+            ),
+            $categoryIds,
+        );
     }
 }

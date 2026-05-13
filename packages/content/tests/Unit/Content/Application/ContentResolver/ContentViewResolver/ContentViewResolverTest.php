@@ -277,4 +277,96 @@ class ContentViewResolverTest extends TestCase
         self::assertArrayHasKey('snippet-1', $result['resolvableResources'][$expectedPriority][$expectedLoaderKey][$initialDepth]);
         self::assertArrayHasKey('snippet-2', $result['resolvableResources'][$expectedPriority][$expectedLoaderKey][$initialDepth]);
     }
+
+    public function testResolveContentViewCollectsResolvablesFromView(): void
+    {
+        $tag = new ResolvableResource(3, 'tag', 0);
+        $contentView = ContentView::create(
+            ['title' => 'Article'],
+            ['tags' => [$tag]],
+        );
+
+        $priorityQueue = [];
+        $result = $this->contentViewResolver->resolveContentView($contentView, 'test', 0, $priorityQueue);
+
+        self::assertArrayHasKey(0, $result['resolvableResources']);
+        self::assertArrayHasKey('tag', $result['resolvableResources'][0]);
+        self::assertSame($tag, $result['resolvableResources'][0]['tag'][0][3][$tag->getMetadataIdentifier()]);
+        self::assertSame([$tag], $result['view']['test']['tags']);
+    }
+
+    public function testResolveContentViewCollectsResolvablesFromNestedView(): void
+    {
+        $tag = new ResolvableResource(7, 'tag', 0);
+        $contentView = ContentView::create(
+            ['something' => 'plain'],
+            ['filters' => ['nested' => ['tags' => [$tag]]]],
+        );
+
+        $priorityQueue = [];
+        $result = $this->contentViewResolver->resolveContentView($contentView, 'block', 0, $priorityQueue);
+
+        self::assertArrayHasKey(0, $result['resolvableResources']);
+        self::assertArrayHasKey('tag', $result['resolvableResources'][0]);
+        self::assertArrayHasKey(7, $result['resolvableResources'][0]['tag'][0]);
+    }
+
+    public function testResolveContentViewIgnoresNonResolvableViewValues(): void
+    {
+        $contentView = ContentView::create(
+            ['title' => 'plain'],
+            [
+                'tags' => ['Beach', 'City'],
+                'count' => 42,
+                'meta' => ['key' => 'value'],
+                'flag' => true,
+            ],
+        );
+
+        $priorityQueue = [];
+        $result = $this->contentViewResolver->resolveContentView($contentView, 'block', 0, $priorityQueue);
+
+        self::assertSame([], $result['resolvableResources']);
+        self::assertSame(['Beach', 'City'], $result['view']['block']['tags']);
+        self::assertSame(42, $result['view']['block']['count']);
+    }
+
+    public function testResolveContentViewPreservesPriorityAndDepthForViewResolvables(): void
+    {
+        $highPriorityTag = new ResolvableResource(1, 'tag', 5);
+        $lowPriorityTag = new ResolvableResource(2, 'tag', 1);
+        $contentView = ContentView::create(
+            ['title' => 'Article'],
+            ['tags' => [$highPriorityTag, $lowPriorityTag]],
+        );
+
+        $priorityQueue = [];
+        $depth = 3;
+        $result = $this->contentViewResolver->resolveContentView($contentView, 'test', $depth, $priorityQueue);
+
+        self::assertArrayHasKey(5, $result['resolvableResources']);
+        self::assertArrayHasKey(1, $result['resolvableResources']);
+        self::assertArrayHasKey($depth, $result['resolvableResources'][5]['tag']);
+        self::assertArrayHasKey($depth, $result['resolvableResources'][1]['tag']);
+    }
+
+    public function testResolveContentViewQueuesContentAndViewResolvablesUnderSameLoaderKey(): void
+    {
+        $contentTag = new ResolvableResource(10, 'tag', 0);
+        $viewTag = new ResolvableResource(20, 'tag', 0);
+
+        $contentView = ContentView::create(
+            ['selected_tag' => $contentTag],
+            ['tags' => [$viewTag]],
+        );
+
+        $priorityQueue = [];
+        $result = $this->contentViewResolver->resolveContentView($contentView, 'block', 0, $priorityQueue);
+
+        self::assertArrayHasKey(0, $result['resolvableResources']);
+        self::assertArrayHasKey('tag', $result['resolvableResources'][0]);
+        self::assertArrayHasKey(0, $result['resolvableResources'][0]['tag']);
+        self::assertArrayHasKey(10, $result['resolvableResources'][0]['tag'][0]);
+        self::assertArrayHasKey(20, $result['resolvableResources'][0]['tag'][0]);
+    }
 }

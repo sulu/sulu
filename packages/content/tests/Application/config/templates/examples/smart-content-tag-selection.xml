@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>smart-content-tag-selection</key>
+
+    <view>@ExampleTest/examples/default</view>
+    <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
+    <cacheLifetime>604800</cacheLifetime>
+
+    <meta>
+        <title lang="en">Smart Content with Tag Selection</title>
+        <title lang="de">Smart Content mit Tag Selection</title>
+    </meta>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title lang="en">Title</title>
+            </meta>
+
+            <tag name="sulu.rlp.part"/>
+        </property>
+
+        <property name="url" type="route">
+            <meta>
+                <title lang="en">Resourcelocator</title>
+            </meta>
+
+            <tag name="sulu.rlp"/>
+        </property>
+
+        <property name="examples" type="smart_content">
+            <meta>
+                <title lang="en">Examples</title>
+            </meta>
+
+            <params>
+                <param name="provider" value="examples"/>
+            </params>
+        </property>
+
+        <property name="featured_tags" type="tag_selection">
+            <meta>
+                <title lang="en">Featured Tags</title>
+            </meta>
+        </property>
+    </properties>
+</template>

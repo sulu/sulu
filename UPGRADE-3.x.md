@@ -2,6 +2,36 @@
 
 ## 3.0.7
 
+### Smart content view: tags and categories restored to Sulu 2.6 shape
+
+The `view.<smart_content_field>.tags` and `view.<smart_content_field>.categories` keys
+were regressed in 3.0.6 to expose raw ID arrays (reported as #8812). They are now
+restored to the Sulu 2.6 shape:
+
+- `view.<field>.tags` → list of plain tag name strings, e.g. `['Beach', 'City']`
+- `view.<field>.categories` → list of `Sulu\Bundle\CategoryBundle\Api\Category` API objects,
+  exposing `getId()`, `getKey()`, `getName()`, and the other 2.6 category fields
+
+```twig
+{# 3.0.6 (broken — printed ids, ?tags=<id> didn't match the name-based filter) #}
+{% for tagId in view.examples.tags %}
+    <a href="?tags={{ tagId }}">{{ tagId }}</a>
+{% endfor %}
+
+{# 3.0.7 — same code as 2.6 again #}
+{% for tag in view.examples.tags %}
+    <a href="?tags={{ tag }}">{{ tag }}</a>
+{% endfor %}
+
+{# 3.0.7 categories #}
+{% for category in view.examples.categories %}
+    <a href="?categories={{ category.id }}">{{ category.name }}</a>
+{% endfor %}
+```
+
+The URL filter handlers are unchanged: `?tags=<name>` matches tags by name and
+`?categories=<id>` matches categories by id.
+
 ### Article admin now gates the navigation and views on per-group permissions
 
 The `ArticleAdmin` previously gated its navigation item, per-group views, and toolbar actions (Add, Delete, Export) on the

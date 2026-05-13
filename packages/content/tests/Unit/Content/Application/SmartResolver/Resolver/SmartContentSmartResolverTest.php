@@ -50,7 +50,9 @@ class SmartContentSmartResolverTest extends TestCase
         $this->serviceLocator->has('test_provider')->willReturn(true);
         $this->serviceLocator->get('test_provider')->willReturn($this->smartContentProvider->reveal());
 
-        $this->resolver = new SmartContentSmartResolver($this->serviceLocator->reveal());
+        $this->resolver = new SmartContentSmartResolver(
+            $this->serviceLocator->reveal(),
+        );
     }
 
     public function testResolveUsingMaxPerPage(): void
@@ -258,7 +260,9 @@ class SmartContentSmartResolverTest extends TestCase
         $serviceLocator->getProvidedServices()->willReturn([]);
         $serviceLocator->has('invalid_provider')->willReturn(false);
 
-        $resolver = new SmartContentSmartResolver($serviceLocator->reveal());
+        $resolver = new SmartContentSmartResolver(
+            $serviceLocator->reveal(),
+        );
 
         $data = [
             'value' => ['presentAs' => 'grid'],

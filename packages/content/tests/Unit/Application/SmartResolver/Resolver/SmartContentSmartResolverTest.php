@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Application\SmartResolver\Resolver;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfiguration;
@@ -214,5 +215,62 @@ class SmartContentSmartResolverTest extends TestCase
         $view = $result->getView();
         $this->assertArrayHasKey('total', $view);
         $this->assertSame(3, $view['total']); // Since result count equals limit, total equals count
+    }
+
+    public function testResolveExposesTagsAndCategoriesAsResolvablesInView(): void
+    {
+        $smartResolvable = $this->prophesize(SmartResolvable::class);
+        $smartContentProvider = $this->prophesize(SmartContentProviderInterface::class);
+
+        $data = [
+            'value' => ['tags' => [3, 4]],
+            'filters' => [
+                'dataSource' => null,
+                'includeSubFolders' => false,
+                'categories' => [10, 11],
+                'categoryOperator' => 'OR',
+                'tagOperator' => 'OR',
+                'types' => [],
+                'typesOperator' => 'OR',
+                'websiteCategories' => [],
+                'websiteCategoryOperator' => 'OR',
+                'websiteTags' => [],
+                'websiteTagOperator' => 'OR',
+                'limit' => null,
+                'page' => 1,
+            ],
+            'sortBys' => [],
+            'parameters' => ['provider' => 'articles'],
+        ];
+
+        $smartResolvable->getData()->willReturn($data);
+
+        $this->serviceLocator->has('articles')->willReturn(true);
+        $this->serviceLocator->get('articles')->willReturn($smartContentProvider->reveal());
+
+        $smartContentProvider->findFlatBy(Argument::cetera())->willReturn([]);
+        $smartContentProvider->countBy(Argument::cetera())->willReturn(0);
+        $smartContentProvider->getResourceLoaderKey()->willReturn('articles');
+        $smartContentProvider->getConfiguration()->willReturn(new ProviderConfiguration());
+
+        $result = $this->smartResolver->resolve($smartResolvable->reveal(), 'en');
+
+        $view = $result->getView();
+
+        $this->assertCount(2, $view['tags']);
+        $this->assertInstanceOf(ResolvableResource::class, $view['tags'][0]);
+        $this->assertSame(3, $view['tags'][0]->getId());
+        $this->assertSame('tag', $view['tags'][0]->getResourceLoaderKey());
+        // no callback: the loader output (tag name string) is forwarded unchanged to the view
+        $this->assertSame('Beach', $view['tags'][0]->executeResourceCallback('Beach'));
+        $this->assertInstanceOf(ResolvableResource::class, $view['tags'][1]);
+        $this->assertSame(4, $view['tags'][1]->getId());
+
+        $this->assertCount(2, $view['categories']);
+        $this->assertInstanceOf(ResolvableResource::class, $view['categories'][0]);
+        $this->assertSame(10, $view['categories'][0]->getId());
+        $this->assertSame('category', $view['categories'][0]->getResourceLoaderKey());
+        $this->assertInstanceOf(ResolvableResource::class, $view['categories'][1]);
+        $this->assertSame(11, $view['categories'][1]->getId());
     }
 }

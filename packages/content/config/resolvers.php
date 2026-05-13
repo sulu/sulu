@@ -178,7 +178,6 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_content.smart_content_smart_resolver', SmartContentSmartResolver::class)
         ->args([
             tagged_locator('sulu_content.smart_content_provider', indexAttribute: 'type', defaultIndexMethod: 'getType'),
-            new Reference('sulu_audience_targeting.target_group_store', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
         ->tag('sulu_content.smart_resolver', ['type' => 'smart_content']);
 };

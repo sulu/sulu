@@ -924,4 +924,45 @@ class ResolvableResourceReplacerTest extends TestCase
         self::assertSame('2024-06-01T00:00:00+00:00', $pages[1]['authored']);
         self::assertSame('2024-09-01T00:00:00+00:00', $pages[1]['lastModified']);
     }
+
+    public function testReplaceResolvableResourcesInViewReplacesNestedResolvables(): void
+    {
+        $tagA = new ResolvableResource(3, 'tag', 0, null, null, 'tags');
+        $tagB = new ResolvableResource(4, 'tag', 0, null, null, 'tags');
+
+        $view = [
+            'tags' => [$tagA, $tagB],
+            'plain' => 'untouched',
+            'nested' => [
+                'tag' => $tagA,
+            ],
+        ];
+
+        $resolvedResources = [
+            'tag' => [
+                3 => [$tagA->getMetadataIdentifier() => $this->createResolvedEntry('Beach')],
+                4 => [$tagB->getMetadataIdentifier() => $this->createResolvedEntry('City')],
+            ],
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesInView($view, $resolvedResources);
+
+        self::assertSame(['Beach', 'City'], $result['tags']);
+        self::assertSame('untouched', $result['plain']);
+        self::assertSame('Beach', $result['nested']['tag']);
+
+        $refs = $this->referenceStore->getAll();
+        self::assertContains('tags-3', $refs);
+        self::assertContains('tags-4', $refs);
+    }
+
+    public function testReplaceResolvableResourcesInViewReturnsEarlyWithNoResolvedResources(): void
+    {
+        $tag = new ResolvableResource(3, 'tag', 0);
+        $view = ['tags' => [$tag]];
+
+        $result = $this->replacer->replaceResolvableResourcesInView($view, []);
+
+        self::assertSame($view, $result);
+    }
 }
