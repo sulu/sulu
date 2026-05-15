@@ -1,10 +1,12 @@
 // @flow
-import {render} from 'enzyme';
+import {render} from '@testing-library/react';
 import React from 'react';
 import {listAdapterDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
+import MediaCardAdapter from '../../adapters/MediaCardAdapter';
 import MediaCardOverviewAdapter from '../../adapters/MediaCardOverviewAdapter';
 
 jest.mock('sulu-admin-bundle/services/initializer', () => jest.fn());
+jest.mock('../../adapters/MediaCardAdapter', () => jest.fn(() => null));
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate(key) {
@@ -40,7 +42,7 @@ test('Render a basic Masonry view with the MediaCardOverviewAdapter', () => {
             thumbnails,
         },
     ];
-    const mediaCardAdapter = render(
+    render(
         <MediaCardOverviewAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -49,6 +51,10 @@ test('Render a basic Masonry view with the MediaCardOverviewAdapter', () => {
             pageCount={5}
         />
     );
+    const mediaCardAdapterProps = (MediaCardAdapter: any).mock.calls[0][0];
 
-    expect(mediaCardAdapter).toMatchSnapshot();
+    expect(mediaCardAdapterProps.icon).toEqual('su-pen');
+    expect(mediaCardAdapterProps.data).toEqual(data);
+    expect(mediaCardAdapterProps.page).toEqual(2);
+    expect(mediaCardAdapterProps.pageCount).toEqual(5);
 });

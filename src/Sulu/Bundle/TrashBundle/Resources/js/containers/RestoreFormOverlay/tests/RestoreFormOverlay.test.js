@@ -1,122 +1,116 @@
 // @flow
-import mockReact from 'react';
-import {shallow, mount} from 'enzyme';
+import {render, screen, waitFor} from '@testing-library/react';
+import React from 'react';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import SchemaFormStoreDecorator from 'sulu-admin-bundle/containers/Form/stores/SchemaFormStoreDecorator';
+import FormOverlay from 'sulu-admin-bundle/containers/FormOverlay';
 import RestoreFormOverlay from '../RestoreFormOverlay';
 
-const React = mockReact;
-
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
-jest.mock('sulu-admin-bundle/containers/Form/stores/SchemaFormStoreDecorator',
+jest.mock(
+    'sulu-admin-bundle/containers/Form/stores/SchemaFormStoreDecorator',
     () => jest.fn(function(initializer) {
         return initializer({}, {});
     })
 );
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/MemoryFormStore',
+jest.mock(
+    'sulu-admin-bundle/containers/Form/stores/MemoryFormStore',
     () => jest.fn(function() {
+        this.data = {};
         this.destroy = jest.fn();
         this.changeMultiple = jest.fn();
     })
 );
 
-jest.mock('sulu-admin-bundle/containers/Form/Form', () => class FormMock extends mockReact.Component<*> {
-    render() {
-        return <div>form container mock</div>;
-    }
-});
+jest.mock('sulu-admin-bundle/containers/FormOverlay', () => jest.fn(() => (
+    <div data-testid="form-overlay" />
+)));
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
-    get: jest.fn().mockReturnValue(Promise.resolve({})),
+    get: jest.fn().mockReturnValue(Promise.resolve({restoreData: {}})),
 }));
 
-test('Component should render', () => {
-    const restoreFormOverlay = mount(
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+function renderRestoreFormOverlay(props: Object = {}) {
+    return render(
         <RestoreFormOverlay
             formKey="test"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
             trashItemId="trash-item-123"
+            {...props}
         />
     );
+}
 
-    expect(restoreFormOverlay.render()).toMatchSnapshot();
+test('Component should render', async() => {
+    renderRestoreFormOverlay();
+    expect(await screen.findByTestId('form-overlay')).toBeInTheDocument();
+    expect(FormOverlay).toHaveBeenCalledTimes(1);
 });
 
 test('Component should not render without formKey', () => {
-    const restoreFormOverlay = mount(
-        <RestoreFormOverlay
-            formKey={null}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            trashItemId="trash-item-123"
-        />
-    );
-
-    expect(restoreFormOverlay.render()).toMatchSnapshot();
+    renderRestoreFormOverlay({formKey: null});
+    expect(screen.queryByTestId('form-overlay')).not.toBeInTheDocument();
+    expect(FormOverlay).not.toHaveBeenCalled();
 });
 
 test('Component should not render without trashItemId', () => {
-    const restoreFormOverlay = mount(
-        <RestoreFormOverlay
-            formKey="test"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            trashItemId={null}
-        />
-    );
-
-    expect(restoreFormOverlay.render()).toMatchSnapshot();
+    renderRestoreFormOverlay({trashItemId: null});
+    expect(screen.queryByTestId('form-overlay')).not.toBeInTheDocument();
+    expect(FormOverlay).not.toHaveBeenCalled();
 });
 
-test('Component should call close callback', () => {
+test('Component should call close callback', async() => {
     const onClose = jest.fn();
 
-    const restoreFormOverlay = shallow(
-        <RestoreFormOverlay
-            formKey="test"
-            onClose={onClose}
-            onConfirm={jest.fn()}
-            open={true}
-            trashItemId="trash-item-123"
-        />
-    );
+    renderRestoreFormOverlay({onClose});
+    expect(await screen.findByTestId('form-overlay')).toBeInTheDocument();
 
-    restoreFormOverlay.find('FormOverlay').prop('onClose')();
-
+    const [formOverlayProps] = (FormOverlay: any).mock.calls[0];
+    formOverlayProps.onClose();
     expect(onClose).toHaveBeenCalled();
 });
 
-test('Component should call confirm callback', () => {
+test('Component should call confirm callback', async() => {
     const onConfirm = jest.fn();
 
-    const restoreFormOverlay = shallow(
-        <RestoreFormOverlay
-            formKey="test"
-            onClose={jest.fn()}
-            onConfirm={onConfirm}
-            open={true}
-            trashItemId="trash-item-123"
-        />
-    );
+    renderRestoreFormOverlay({onConfirm});
+    expect(await screen.findByTestId('form-overlay')).toBeInTheDocument();
 
-    const data = {foo: 'bar'};
-    restoreFormOverlay.instance().formStore.data = data;
+    const [formOverlayProps] = (FormOverlay: any).mock.calls[0];
+    formOverlayProps.formStore.data = {foo: 'bar'};
 
-    restoreFormOverlay.find('FormOverlay').prop('onConfirm')();
-
-    expect(onConfirm).toHaveBeenCalledWith(data);
+    formOverlayProps.onConfirm();
+    expect(onConfirm).toHaveBeenCalledWith({foo: 'bar'});
 });
 
-test('Component should create formStore, load restore data and set it to the formstore', () => {
-    const trashItemPromise = Promise.resolve({
+test('Component should create formStore, load restore data and set it to the formstore', async() => {
+    let resolveTrashItemPromise;
+    const trashItemPromise = new Promise((resolve) => {
+        resolveTrashItemPromise = resolve;
+    });
+    ResourceRequester.get.mockReturnValue(trashItemPromise);
+
+    renderRestoreFormOverlay({formKey: 'test-form-key', open: false});
+    expect(await screen.findByTestId('form-overlay')).toBeInTheDocument();
+
+    expect(SchemaFormStoreDecorator).toBeCalledWith(expect.anything(), 'test-form-key');
+    expect(ResourceRequester.get).toBeCalledWith('trash_items', {id: 'trash-item-123'});
+
+    const [formOverlayProps] = (FormOverlay: any).mock.calls[0];
+    expect(formOverlayProps.formStore.changeMultiple).not.toBeCalled();
+    expect(formOverlayProps.formStore.loading).toBeTruthy();
+
+    if (!resolveTrashItemPromise) {
+        throw new Error('Expected restore data promise resolver');
+    }
+
+    resolveTrashItemPromise({
         id: 5,
         resourceKey: 'categories',
         resourceId: '33',
@@ -125,11 +119,27 @@ test('Component should create formStore, load restore data and set it to the for
             parentId: 32,
         },
     });
-    ResourceRequester.get.mockReturnValue(trashItemPromise);
+    await trashItemPromise;
+    await waitFor(() => expect(formOverlayProps.formStore.changeMultiple).toBeCalledWith(
+        {key: 'test-key', parentId: 32}, {isServerValue: true}
+    ));
+    expect(formOverlayProps.formStore.loading).toBeFalsy();
+});
 
-    const restoreFormOverlay = shallow(
+test('Component should update formStore on changing form key', async() => {
+    const {rerender} = renderRestoreFormOverlay({formKey: 'test', open: false});
+    expect(await screen.findByTestId('form-overlay')).toBeInTheDocument();
+
+    const [initialProps] = (FormOverlay: any).mock.calls[0];
+    const formStore = initialProps.formStore;
+
+    expect(SchemaFormStoreDecorator).toBeCalledTimes(1);
+    expect(SchemaFormStoreDecorator).toBeCalledWith(expect.anything(), 'test');
+    expect(formStore.destroy).not.toHaveBeenCalled();
+
+    rerender(
         <RestoreFormOverlay
-            formKey="test-form-key"
+            formKey="other"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={false}
@@ -137,87 +147,44 @@ test('Component should create formStore, load restore data and set it to the for
         />
     );
 
-    expect(SchemaFormStoreDecorator).toBeCalledWith(expect.anything(), 'test-form-key');
-    expect(ResourceRequester.get).toBeCalledWith('trash_items', {'id': 'trash-item-123'});
-    expect(restoreFormOverlay.instance().formStore.changeMultiple).not.toBeCalled();
-    expect(restoreFormOverlay.instance().formStore.loading).toBeTruthy();
-
-    return trashItemPromise.then(() => {
-        expect(restoreFormOverlay.instance().formStore.changeMultiple).toBeCalledWith(
-            {key: 'test-key', parentId: 32}, {isServerValue: true}
-        );
-        expect(restoreFormOverlay.instance().formStore.loading).toBeFalsy();
-    });
-});
-
-test('Component should update formStore on changing form key', () => {
-    const onConfirm = jest.fn();
-
-    const restoreFormOverlay = shallow(
-        <RestoreFormOverlay
-            formKey="test"
-            onClose={jest.fn()}
-            onConfirm={onConfirm}
-            open={false}
-            trashItemId="trash-item-123"
-        />
-    );
-
-    const formStore = restoreFormOverlay.instance().formStore;
-    expect(SchemaFormStoreDecorator).toBeCalledTimes(1);
-    expect(SchemaFormStoreDecorator).toBeCalledWith(expect.anything(), 'test');
-    expect(formStore.destroy).not.toHaveBeenCalled();
-
-    restoreFormOverlay.setProps({formKey: 'other'});
-
     expect(SchemaFormStoreDecorator).toBeCalledTimes(2);
     expect(SchemaFormStoreDecorator).toBeCalledWith(expect.anything(), 'other');
     expect(formStore.destroy).toHaveBeenCalled();
 
-    const newFormStore = restoreFormOverlay.instance().formStore;
-    expect(newFormStore).not.toBe(formStore);
-    expect(newFormStore.destroy).not.toHaveBeenCalled();
+    const [updatedProps] = (FormOverlay: any).mock.calls[(FormOverlay: any).mock.calls.length - 1];
+    expect(updatedProps.formStore.destroy).not.toHaveBeenCalled();
 });
 
-test('Component should update formStore on reopen', () => {
-    const onConfirm = jest.fn();
+test('Component should update formStore on reopen', async() => {
+    const {rerender} = renderRestoreFormOverlay({open: false});
+    expect(await screen.findByTestId('form-overlay')).toBeInTheDocument();
 
-    const restoreFormOverlay = shallow(
+    const [initialProps] = (FormOverlay: any).mock.calls[0];
+    const formStore = initialProps.formStore;
+
+    rerender(
         <RestoreFormOverlay
             formKey="test"
             onClose={jest.fn()}
-            onConfirm={onConfirm}
-            open={false}
+            onConfirm={jest.fn()}
+            open={true}
             trashItemId="trash-item-123"
         />
     );
 
-    const formStore = restoreFormOverlay.instance().formStore;
-
-    restoreFormOverlay.setProps({open: true});
     expect(formStore.destroy).toHaveBeenCalled();
 
-    const newFormStore = restoreFormOverlay.instance().formStore;
-    expect(newFormStore).not.toBe(formStore);
-    expect(newFormStore.destroy).not.toHaveBeenCalled();
+    const [updatedProps] = (FormOverlay: any).mock.calls[(FormOverlay: any).mock.calls.length - 1];
+    expect(updatedProps.formStore.destroy).not.toHaveBeenCalled();
 });
 
-test('Component should destroy formStore on unmount', () => {
-    const onConfirm = jest.fn();
+test('Component should destroy formStore on unmount', async() => {
+    const {unmount} = renderRestoreFormOverlay({open: false});
+    expect(await screen.findByTestId('form-overlay')).toBeInTheDocument();
 
-    const restoreFormOverlay = shallow(
-        <RestoreFormOverlay
-            formKey="test"
-            onClose={jest.fn()}
-            onConfirm={onConfirm}
-            open={false}
-            trashItemId="trash-item-123"
-        />
-    );
+    const [initialProps] = (FormOverlay: any).mock.calls[0];
+    const formStore = initialProps.formStore;
 
-    const formStore = restoreFormOverlay.instance().formStore;
-
-    restoreFormOverlay.unmount();
-
+    unmount();
     expect(formStore.destroy).toHaveBeenCalled();
 });

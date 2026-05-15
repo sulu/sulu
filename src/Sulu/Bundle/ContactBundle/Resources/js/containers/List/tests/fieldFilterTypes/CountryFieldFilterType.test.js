@@ -1,6 +1,33 @@
 // @flow
-import {mount, render} from 'enzyme';
+import React from 'react';
 import CountryFieldFilterType from '../../fieldFilterTypes/CountryFieldFilterType';
+
+function getFormChildren(fieldFilterType: CountryFieldFilterType) {
+    const formNode = fieldFilterType.getFormNode();
+    const children = React.Children.toArray(formNode.props.children);
+
+    return {
+        checkboxGroupNode: children[1],
+        inputNode: children[0],
+    };
+}
+
+function getCheckboxValues(fieldFilterType: CountryFieldFilterType) {
+    const {checkboxGroupNode} = getFormChildren(fieldFilterType);
+
+    if (!React.isValidElement(checkboxGroupNode)) {
+        throw new Error('Expected checkbox group node');
+    }
+
+    const checkboxes = React.Children.toArray(checkboxGroupNode.props.children);
+    return checkboxes.map((checkbox) => {
+        if (!React.isValidElement(checkbox)) {
+            throw new Error('Expected checkbox element');
+        }
+
+        return checkbox.props.value;
+    });
+}
 
 test('Render with value', () => {
     CountryFieldFilterType.countries = {
@@ -10,7 +37,7 @@ test('Render with value', () => {
     };
 
     const countryFieldFilterType = new CountryFieldFilterType(jest.fn(), {}, undefined);
-    expect(render(countryFieldFilterType.getFormNode())).toMatchSnapshot();
+    expect(getCheckboxValues(countryFieldFilterType)).toEqual(['AT', 'DE', 'NL']);
 });
 
 test('Filter countries using input field', () => {
@@ -21,12 +48,14 @@ test('Filter countries using input field', () => {
     };
 
     const countryFieldFilterType = new CountryFieldFilterType(jest.fn(), {}, undefined);
-    const countryFieldFilterTypeForm1 = mount(countryFieldFilterType.getFormNode());
-    countryFieldFilterTypeForm1.find('Input').prop('onChange')('Aus');
+    const {inputNode} = getFormChildren(countryFieldFilterType);
 
-    const countryFieldFilterTypeForm2 = mount(countryFieldFilterType.getFormNode());
-    expect(countryFieldFilterTypeForm2.find('Checkbox')).toHaveLength(1);
-    expect(countryFieldFilterTypeForm2.find('Checkbox').at(0).prop('value')).toEqual('AT');
+    if (!React.isValidElement(inputNode)) {
+        throw new Error('Expected input node');
+    }
+
+    inputNode.props.onChange('Aus');
+    expect(getCheckboxValues(countryFieldFilterType)).toEqual(['AT']);
 });
 
 test('Filter countries using input field with lowercase start', () => {
@@ -37,12 +66,14 @@ test('Filter countries using input field with lowercase start', () => {
     };
 
     const countryFieldFilterType = new CountryFieldFilterType(jest.fn(), {}, undefined);
-    const countryFieldFilterTypeForm1 = mount(countryFieldFilterType.getFormNode());
-    countryFieldFilterTypeForm1.find('Input').prop('onChange')('aus');
+    const {inputNode} = getFormChildren(countryFieldFilterType);
 
-    const countryFieldFilterTypeForm2 = mount(countryFieldFilterType.getFormNode());
-    expect(countryFieldFilterTypeForm2.find('Checkbox')).toHaveLength(1);
-    expect(countryFieldFilterTypeForm2.find('Checkbox').at(0).prop('value')).toEqual('AT');
+    if (!React.isValidElement(inputNode)) {
+        throw new Error('Expected input node');
+    }
+
+    inputNode.props.onChange('aus');
+    expect(getCheckboxValues(countryFieldFilterType)).toEqual(['AT']);
 });
 
 test.each([
@@ -50,7 +81,7 @@ test.each([
     [['DE', 'NL'], 'Germany, Netherlands'],
     [undefined, null],
     [null, null],
-])('Return value node for %s', (value, expectedValueNode) => {
+])('Return value node for %s', async(value, expectedValueNode) => {
     CountryFieldFilterType.countries = {
         AT: 'Austria',
         DE: 'Germany',
@@ -58,9 +89,7 @@ test.each([
     };
 
     const countryFieldFilterType = new CountryFieldFilterType(jest.fn(), {}, null);
-    const valueNodePromise = countryFieldFilterType.getValueNode(value);
+    const valueNode = await countryFieldFilterType.getValueNode(value);
 
-    return valueNodePromise.then((valueNode) => {
-        expect(valueNode).toEqual(expectedValueNode);
-    });
+    expect(valueNode).toEqual(expectedValueNode);
 });

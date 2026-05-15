@@ -5,10 +5,6 @@ import ResourceStore from '../../../stores/ResourceStore';
 import FormInspector from '../FormInspector';
 import ResourceFormStore from '../stores/ResourceFormStore';
 
-jest.mock('loglevel', () => ({
-    warn: jest.fn(),
-}));
-
 jest.mock('../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, options) {
     this.resourceKey = resourceKey;
     this.id = id;

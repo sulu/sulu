@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render based on current route 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="root visible"
   >
@@ -144,18 +144,18 @@ Array [
             />
           </div>
           <div
-            class="snackbar error"
+            class="snackbar warning"
             role="button"
           >
             <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
+              aria-label="su-bell"
+              class="su-bell icon"
             />
             <div
               class="text"
             >
               <strong>
-                sulu_admin.error
+                sulu_admin.warning
               </strong>
                - 
             </div>
@@ -183,15 +183,15 @@ Array [
         </header>
       </main>
     </div>
-  </div>,
+  </div>
   <div>
     ProfileFormOverlay Mock
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Render based on current route with app version 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="root visible"
   >
@@ -334,18 +334,18 @@ Array [
             />
           </div>
           <div
-            class="snackbar error"
+            class="snackbar warning"
             role="button"
           >
             <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
+              aria-label="su-bell"
+              class="su-bell icon"
             />
             <div
               class="text"
             >
               <strong>
-                sulu_admin.error
+                sulu_admin.warning
               </strong>
                - 
             </div>
@@ -373,15 +373,15 @@ Array [
         </header>
       </main>
     </div>
-  </div>,
+  </div>
   <div>
     ProfileFormOverlay Mock
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Render login screen to reset password 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="login"
   >
@@ -503,7 +503,7 @@ Array [
         </a>
       </div>
     </div>
-  </div>,
+  </div>
   <div
     class="loader"
   >
@@ -518,12 +518,12 @@ Array [
         class="doubleBounce2"
       />
     </div>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Render login when user is not logged in 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="login"
   >
@@ -645,7 +645,7 @@ Array [
         </a>
       </div>
     </div>
-  </div>,
+  </div>
   <div
     class="loader"
   >
@@ -660,12 +660,12 @@ Array [
         class="doubleBounce2"
       />
     </div>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Render login with loader 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="login"
   >
@@ -703,7 +703,7 @@ Array [
         class="backLinkContainer"
       />
     </div>
-  </div>,
+  </div>
   <div
     class="loader"
   >
@@ -718,12 +718,12 @@ Array [
         class="doubleBounce2"
       />
     </div>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Render opened navigation 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="root visible navigationVisible"
   >
@@ -910,15 +910,15 @@ Array [
         role="button"
       />
     </div>
-  </div>,
+  </div>
   <div>
     ProfileFormOverlay Mock
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Should not fail if current route does not exist 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="root visible"
   >
@@ -1052,18 +1052,18 @@ Array [
             />
           </div>
           <div
-            class="snackbar error"
+            class="snackbar warning"
             role="button"
           >
             <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
+              aria-label="su-bell"
+              class="su-bell icon"
             />
             <div
               class="text"
             >
               <strong>
-                sulu_admin.error
+                sulu_admin.warning
               </strong>
                - 
             </div>
@@ -1091,9 +1091,9 @@ Array [
         </header>
       </main>
     </div>
-  </div>,
+  </div>
   <div>
     ProfileFormOverlay Mock
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;

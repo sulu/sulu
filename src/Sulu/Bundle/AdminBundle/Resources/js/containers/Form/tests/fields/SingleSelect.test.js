@@ -1,19 +1,72 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import {observable} from 'mobx';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
-import ResourceStore from '../../../../stores/ResourceStore';
-import FormInspector from '../../FormInspector';
-import ResourceFormStore from '../../stores/ResourceFormStore';
+import SingleSelectComponent from '../../../../components/SingleSelect';
 import SingleSelect from '../../fields/SingleSelect';
 
-jest.mock('../../../../stores/ResourceStore', () => jest.fn());
-jest.mock('../../stores/ResourceFormStore', () => jest.fn());
-jest.mock('../../FormInspector', () => jest.fn());
+jest.mock('../../../../components/SingleSelect', () => {
+    const React = require('react');
+    const SingleSelect: any = jest.fn(function SingleSelect(props) {
+        return <div>{props.children}</div>;
+    });
+
+    SingleSelect.Option = jest.fn(() => null);
+
+    return SingleSelect;
+});
+
+function createFormInspector() {
+    return ({}: any);
+}
+
+function renderSingleSelect(props: Object = {}) {
+    return render(
+        <SingleSelect
+            {...fieldTypeDefaultProps}
+            formInspector={createFormInspector()}
+            schemaOptions={{
+                values: {
+                    name: 'values',
+                    value: [
+                        {
+                            name: 'mr',
+                            title: 'Mister',
+                        },
+                        {
+                            name: 'ms',
+                            title: 'Miss',
+                        },
+                    ],
+                },
+            }}
+            {...props}
+        />
+    );
+}
+
+function getLatestSingleSelectProps() {
+    const calls = ((SingleSelectComponent: any).mock.calls: any);
+    return calls[calls.length - 1][0];
+}
+
+function getOptionProps(index: number) {
+    const calls = (((SingleSelectComponent: any).Option: any).mock.calls: any);
+    return calls[index][0];
+}
+
+function expectRenderToThrow(renderFn: () => void, message: RegExp) {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    expect(renderFn).toThrow(message);
+    consoleErrorSpy.mockRestore();
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test('Pass props correctly to SingleSelect', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = observable({
         values: {
             name: 'values',
@@ -29,30 +82,26 @@ test('Pass props correctly to SingleSelect', () => {
             ],
         },
     });
-    const singleSelect = shallow(
-        <SingleSelect
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-            value="test"
-        />
-    );
 
-    expect(singleSelect.prop('value')).toBe('test');
-    expect(singleSelect.prop('disabled')).toBe(true);
-    expect(singleSelect.find('Option').at(0).props()).toEqual(expect.objectContaining({
+    renderSingleSelect({
+        disabled: true,
+        schemaOptions,
+        value: 'test',
+    });
+
+    expect(getLatestSingleSelectProps().value).toBe('test');
+    expect(getLatestSingleSelectProps().disabled).toBe(true);
+    expect(getOptionProps(0)).toEqual(expect.objectContaining({
         value: 'mr',
         children: 'Mister',
     }));
-    expect(singleSelect.find('Option').at(1).props()).toEqual(expect.objectContaining({
+    expect(getOptionProps(1)).toEqual(expect.objectContaining({
         value: 'ms',
         children: 'Miss',
     }));
 });
 
 test('Pass value if no title is given to SingleSelect', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = observable({
         values: {
             name: 'values',
@@ -66,26 +115,22 @@ test('Pass value if no title is given to SingleSelect', () => {
             ],
         },
     });
-    const singleSelect = shallow(
-        <SingleSelect
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-        />
-    );
 
-    expect(singleSelect.find('Option').at(0).props()).toEqual(expect.objectContaining({
+    renderSingleSelect({
+        schemaOptions,
+    });
+
+    expect(getOptionProps(0)).toEqual(expect.objectContaining({
         value: 'mr',
         children: 'mr',
     }));
-    expect(singleSelect.find('Option').at(1).props()).toEqual(expect.objectContaining({
+    expect(getOptionProps(1)).toEqual(expect.objectContaining({
         value: 'ms',
         children: 'ms',
     }));
 });
 
 test('Pass undefined as option-value if value with empty name is given to SingleSelect', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = observable({
         values: {
             name: 'values',
@@ -101,26 +146,22 @@ test('Pass undefined as option-value if value with empty name is given to Single
             ],
         },
     });
-    const singleSelect = shallow(
-        <SingleSelect
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-        />
-    );
 
-    expect(singleSelect.find('Option').at(0).props()).toEqual(expect.objectContaining({
+    renderSingleSelect({
+        schemaOptions,
+    });
+
+    expect(getOptionProps(0)).toEqual(expect.objectContaining({
         value: undefined,
         children: 'No Selection',
     }));
-    expect(singleSelect.find('Option').at(1).props()).toEqual(expect.objectContaining({
+    expect(getOptionProps(1)).toEqual(expect.objectContaining({
         value: 'ms',
         children: 'Miss',
     }));
 });
 
 test('Should throw an exception if defaultValue is of wrong type', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = {
         default_value: {
             name: 'default_value',
@@ -141,17 +182,15 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
         },
     };
 
-    expect(() => shallow(
-        <SingleSelect
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-        />
-    )).toThrow(/"default_value"/);
+    expectRenderToThrow(
+        () => renderSingleSelect({
+            schemaOptions,
+        }),
+        /"default_value"/
+    );
 });
 
 test('Should throw an exception if value is of wrong type', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = {
         values: {
             name: 'values',
@@ -168,50 +207,27 @@ test('Should throw an exception if value is of wrong type', () => {
         },
     };
 
-    expect(() => shallow(
-        <SingleSelect
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={(schemaOptions: any)}
-        />
-    )).toThrow(/"values"/);
+    expectRenderToThrow(
+        () => renderSingleSelect({
+            schemaOptions: (schemaOptions: any),
+        }),
+        /"values"/
+    );
 });
 
 test('Should call onFinish callback on every onChange', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const finishSpy = jest.fn();
-    const schemaOptions = {
-        values: {
-            name: 'values',
-            value: [
-                {
-                    name: 'mr',
-                    title: 'Mister',
-                },
-                {
-                    name: 'ms',
-                    title: 'Miss',
-                },
-            ],
-        },
-    };
 
-    const singleSelect = shallow(
-        <SingleSelect
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onFinish={finishSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
+    renderSingleSelect({
+        onFinish: finishSpy,
+    });
 
-    singleSelect.simulate('change');
+    getLatestSingleSelectProps().onChange('ms');
 
     expect(finishSpy).toBeCalledWith();
 });
 
 test('Default value of null should not call onChange', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const schemaOptions = {
         default_value: {
@@ -228,20 +244,16 @@ test('Default value of null should not call onChange', () => {
             ],
         },
     };
-    shallow(
-        <SingleSelect
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
+
+    renderSingleSelect({
+        onChange: changeSpy,
+        schemaOptions,
+    });
 
     expect(changeSpy).not.toBeCalled();
 });
 
 test('Default value of empty string should not call onChange', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const schemaOptions = {
         default_value: {
@@ -258,20 +270,16 @@ test('Default value of empty string should not call onChange', () => {
             ],
         },
     };
-    shallow(
-        <SingleSelect
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
+
+    renderSingleSelect({
+        onChange: changeSpy,
+        schemaOptions,
+    });
 
     expect(changeSpy).not.toBeCalled();
 });
 
 test('Set default value if no value is passed', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const schemaOptions = {
         default_value: {
@@ -292,20 +300,16 @@ test('Set default value if no value is passed', () => {
             ],
         },
     };
-    shallow(
-        <SingleSelect
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
+
+    renderSingleSelect({
+        onChange: changeSpy,
+        schemaOptions,
+    });
 
     expect(changeSpy).toBeCalledWith('mr', {'isDefaultValue': true});
 });
 
 test('Allow to pass one value for undefined', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const schemaOptions = {
         values: {
@@ -327,21 +331,16 @@ test('Allow to pass one value for undefined', () => {
         },
     };
 
-    const singleSelect = shallow(
-        <SingleSelect
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            // $FlowFixMe
-            schemaOptions={schemaOptions}
-        />
-    );
+    renderSingleSelect({
+        onChange: changeSpy,
+        // $FlowFixMe
+        schemaOptions,
+    });
 
-    expect(singleSelect.find('Option').at(0).prop('value')).toBeUndefined();
+    expect(getOptionProps(0).value).toBeUndefined();
 });
 
 test('Set default value to a number of 0 should work', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const schemaOptions = {
         default_value: {
@@ -362,35 +361,29 @@ test('Set default value to a number of 0 should work', () => {
             ],
         },
     };
-    shallow(
-        <SingleSelect
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
+
+    renderSingleSelect({
+        onChange: changeSpy,
+        schemaOptions,
+    });
 
     expect(changeSpy).toBeCalledWith(0, {'isDefaultValue': true});
 });
 
 test('Throw error if no values option is passed', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    expect(() => shallow(
-        <SingleSelect
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-        />)
-    ).toThrow(/"values"/);
+    expectRenderToThrow(
+        () => renderSingleSelect({
+            schemaOptions: ({}: any),
+        }),
+        /"values"/
+    );
 });
 
 test('Throw error if values option with wrong type is passed', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    expect(() => shallow(
-        <SingleSelect
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={{values: {name: 'values', value: true}}}
-        />)
-    ).toThrow(/"values"/);
+    expectRenderToThrow(
+        () => renderSingleSelect({
+            schemaOptions: {values: {name: 'values', value: true}},
+        }),
+        /"values"/
+    );
 });

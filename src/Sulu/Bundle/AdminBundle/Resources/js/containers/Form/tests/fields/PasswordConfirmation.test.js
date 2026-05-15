@@ -1,22 +1,22 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {act, render} from '@testing-library/react';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
-import ResourceStore from '../../../../stores/ResourceStore';
-import FormInspector from '../../FormInspector';
-import ResourceFormStore from '../../stores/ResourceFormStore';
 import PasswordConfirmation from '../../fields/PasswordConfirmation';
 import PasswordConfirmationComponent from '../../../../components/PasswordConfirmation';
 
-jest.mock('../../../../stores/ResourceStore', () => jest.fn());
-jest.mock('../../stores/ResourceFormStore', () => jest.fn());
-jest.mock('../../FormInspector', () => jest.fn());
+jest.mock('../../../../components/PasswordConfirmation', () => jest.fn(() => null));
+
+function getLatestPasswordConfirmationProps() {
+    const calls = (PasswordConfirmationComponent: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
 
 test('Pass error correctly to PasswordConfirmation component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = ({locale: undefined}: any);
     const error = {keyword: 'required', parameters: {}};
 
-    const passwordConfirmation = shallow(
+    render(
         <PasswordConfirmation
             {...fieldTypeDefaultProps}
             error={error}
@@ -24,14 +24,15 @@ test('Pass error correctly to PasswordConfirmation component', () => {
         />
     );
 
-    expect(passwordConfirmation.find(PasswordConfirmationComponent).prop('valid')).toBe(false);
+    expect(getLatestPasswordConfirmationProps().valid).toBe(false);
 });
 
 test('Pass props correctly to PasswordConfirmation component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = ({locale: undefined}: any);
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-    const passwordConfirmation = shallow(
+
+    render(
         <PasswordConfirmation
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -41,10 +42,13 @@ test('Pass props correctly to PasswordConfirmation component', () => {
         />
     );
 
-    expect(passwordConfirmation.find(PasswordConfirmationComponent).prop('valid')).toBe(true);
-    expect(passwordConfirmation.find(PasswordConfirmationComponent).prop('disabled')).toBe(true);
+    const componentProps = getLatestPasswordConfirmationProps();
+    expect(componentProps.valid).toBe(true);
+    expect(componentProps.disabled).toBe(true);
 
-    passwordConfirmation.find(PasswordConfirmationComponent).simulate('change', 'value');
+    act(() => {
+        componentProps.onChange('value');
+    });
 
     expect(changeSpy).toBeCalledWith('value');
     expect(finishSpy).toBeCalledWith();

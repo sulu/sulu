@@ -3,10 +3,6 @@ import {fireEvent, render, screen} from '@testing-library/react';
 import React from 'react';
 import ModifiableCircle from '../ModifiableCircle';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
 function dispatchMouseDown(element: HTMLElement, pageX: number, pageY: number) {
     const mouseDownEvent = new MouseEvent('mousedown', {
         bubbles: true,

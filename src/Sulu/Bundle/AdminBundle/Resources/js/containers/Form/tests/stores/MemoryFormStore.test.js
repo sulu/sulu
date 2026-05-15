@@ -3,11 +3,6 @@ import {observable} from 'mobx';
 import MemoryFormStore from '../../stores/MemoryFormStore';
 import conditionDataProviderRegistry from '../../registries/conditionDataProviderRegistry';
 
-jest.mock('loglevel', () => ({
-    warn: jest.fn(),
-    info: jest.fn(),
-}));
-
 beforeEach(() => {
     conditionDataProviderRegistry.clear();
 });

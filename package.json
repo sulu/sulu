@@ -110,9 +110,6 @@
         "setupFilesAfterEnv": [
             "./tests/js/testSetup.config.js"
         ],
-        "snapshotSerializers": [
-            "enzyme-to-json/serializer"
-        ],
         "snapshotFormat": {
             "escapeString": true,
             "printBasicPrototype": true

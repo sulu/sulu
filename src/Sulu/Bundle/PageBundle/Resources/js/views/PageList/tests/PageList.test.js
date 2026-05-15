@@ -1,64 +1,113 @@
 // @flow
 import React from 'react';
+import {act, render, screen} from '@testing-library/react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
-import {mount} from 'enzyme';
 import {Router} from 'sulu-admin-bundle/services';
-import {findWithHighOrderFunction, defaultWebspace} from 'sulu-admin-bundle/utils/TestHelper';
+import {defaultWebspace} from 'sulu-admin-bundle/utils/TestHelper';
 
-jest.mock('sulu-admin-bundle/containers', () => ({
-    FlatStructureStrategy: require(
-        'sulu-admin-bundle/containers/List/structureStrategies/FlatStructureStrategy'
-    ).default,
-    DefaultLoadingStrategy: require(
-        'sulu-admin-bundle/containers/List/loadingStrategies/DefaultLoadingStrategy'
-    ).default,
-    List: require('sulu-admin-bundle/containers/List/List').default,
-    ListStore: class {
-        static getActiveSetting = jest.fn();
+const mockInterceptDisposers: Array<any> = [];
+const mockListPropsCalls: Array<any> = [];
+const mockListStores: Array<any> = [];
+const mockToolbarConfigGetters: Array<() => any> = [];
 
-        constructor(resourceKey, listKey, userSettingsKey, observableOptions) {
-            this.resourceKey = resourceKey;
-            this.observableOptions = observableOptions;
+jest.mock('mobx', () => {
+    const actualMobx = jest.requireActual('mobx');
 
-            mockExtendObservable(this, {
-                data: [],
-            });
-        }
+    return {
+        ...actualMobx,
+        intercept: jest.fn((...args) => {
+            const disposer = jest.fn(actualMobx.intercept(...args));
+            mockInterceptDisposers.push(disposer);
 
-        resourceKey;
-        observableOptions;
-        activeItems = [];
-        filterOptions = {
-            get: jest.fn().mockReturnValue({}),
-        };
-        active = {
-            get: jest.fn(),
-            set: jest.fn(),
-        };
-        sortColumn = {
-            get: jest.fn(),
-        };
-        sortOrder = {
-            get: jest.fn(),
-        };
-        limit = {
-            get: jest.fn().mockReturnValue(10),
-        };
-        setLimit = jest.fn();
-        selections = [];
-        selectionIds = [];
-        getPage = jest.fn().mockReturnValue(1);
-        destroy = jest.fn();
-        sendRequest = jest.fn();
-        updateLoadingStrategy = jest.fn();
-        updateStructureStrategy = jest.fn();
-        clear = jest.fn();
-    },
-    formMetadataStore: {
-        getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve({types: {}})),
-    },
-    withToolbar: jest.fn((Component) => Component),
-}));
+            return disposer;
+        }),
+    };
+});
+
+jest.mock('sulu-admin-bundle/components', () => {
+    const React = require('react');
+    const actual = jest.requireActual('sulu-admin-bundle/components');
+
+    return {
+        ...actual,
+        Loader: jest.fn(() => <div data-testid="loader" />),
+    };
+});
+
+jest.mock('sulu-admin-bundle/containers', () => {
+    const React = require('react');
+    const ActualList = require('sulu-admin-bundle/containers/List/List').default;
+
+    return {
+        FlatStructureStrategy: require(
+            'sulu-admin-bundle/containers/List/structureStrategies/FlatStructureStrategy'
+        ).default,
+        DefaultLoadingStrategy: require(
+            'sulu-admin-bundle/containers/List/loadingStrategies/DefaultLoadingStrategy'
+        ).default,
+        List: jest.fn((props) => {
+            mockListPropsCalls.push(props);
+
+            return <ActualList {...props} />;
+        }),
+        ListStore: class {
+            static getActiveSetting = jest.fn();
+
+            constructor(resourceKey, listKey, userSettingsKey, observableOptions) {
+                this.resourceKey = resourceKey;
+                this.observableOptions = observableOptions;
+
+                mockExtendObservable(this, {
+                    data: [],
+                });
+
+                mockListStores.push(this);
+            }
+
+            resourceKey;
+            observableOptions;
+            activeItems = [];
+            filterOptions = {
+                get: jest.fn().mockReturnValue({}),
+            };
+            active = {
+                get: jest.fn(),
+                set: jest.fn(),
+            };
+            sortColumn = {
+                get: jest.fn(),
+            };
+            sortOrder = {
+                get: jest.fn(),
+            };
+            limit = {
+                get: jest.fn().mockReturnValue(10),
+            };
+            setLimit = jest.fn();
+            selections = [];
+            selectionIds = [];
+            data: Array<any>;
+            getPage = jest.fn().mockReturnValue(1);
+            destroy = jest.fn();
+            sendRequest = jest.fn();
+            updateLoadingStrategy = jest.fn();
+            updateStructureStrategy = jest.fn();
+            clear = jest.fn();
+        },
+        formMetadataStore: {
+            getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve({types: {}})),
+        },
+        withToolbar: jest.fn((Component, toolbar) => {
+            return class WithToolbarMock extends Component {
+                render() {
+                    mockToolbarConfigGetters.push(() => toolbar.call(this));
+
+                    return super.render();
+                }
+            };
+        }),
+    };
+});
 
 jest.mock('sulu-admin-bundle/containers/List/registries/listAdapterRegistry', () => ({
     get: jest.fn().mockReturnValue(require('sulu-admin-bundle/containers/List/adapters/ColumnListAdapter').default),
@@ -80,13 +129,10 @@ jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function() {
     this.bind = jest.fn();
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
-
 jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(function() {
     this.selections = [];
 }));
+
 jest.mock('sulu-admin-bundle/containers/ListOverlay', () => jest.fn().mockReturnValue(null));
 
 jest.mock('sulu-website-bundle/containers/CacheClearToolbarAction', () => jest.fn(function() {
@@ -94,11 +140,20 @@ jest.mock('sulu-website-bundle/containers/CacheClearToolbarAction', () => jest.f
     this.getToolbarItemConfig = jest.fn();
 }));
 
+const getLatestListProps = () => mockListPropsCalls[mockListPropsCalls.length - 1];
+const getLatestListStore = () => mockListStores[mockListStores.length - 1];
+const getLatestToolbarConfig = () => mockToolbarConfigGetters[mockToolbarConfigGetters.length - 1]();
+
 beforeEach(() => {
     jest.resetModules();
+    jest.clearAllMocks();
+    mockInterceptDisposers.splice(0, mockInterceptDisposers.length);
+    mockListPropsCalls.splice(0, mockListPropsCalls.length);
+    mockListStores.splice(0, mockListStores.length);
+    mockToolbarConfigGetters.splice(0, mockToolbarConfigGetters.length);
 });
 
-test('Render PageList', () => {
+test('Render PageList', async() => {
     const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
     const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
     formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
@@ -115,7 +170,7 @@ test('Render PageList', () => {
         webspace: 'sulu',
     };
 
-    const webspaceOverview = mount(
+    const {asFragment} = render(
         <PageList
             route={router.route}
             router={router}
@@ -125,25 +180,28 @@ test('Render PageList', () => {
         />
     );
 
-    webspaceOverview.instance().listStore.data.push(
+    const listStore = getLatestListStore();
+
+    listStore.data.push(
         [
             {id: 1, title: 'Homepage', template: 'homepage'},
         ]
     );
-    webspaceOverview.instance().listStore.data.push(
+    listStore.data.push(
         [
             {id: 2, title: 'Page 1', template: 'example'},
             {id: 3, title: 'Page 2', template: 'not-existing'},
         ]
     );
 
-    return metadataPromise.then(() => {
-        webspaceOverview.update();
-        expect(webspaceOverview.render()).toMatchSnapshot();
+    await act(async() => {
+        await metadataPromise;
     });
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Should show loader if available page types have not been loaded yet', () => {
+test('Should show loader if available page types have not been loaded yet', async() => {
     const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
     const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
     formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
@@ -160,7 +218,7 @@ test('Should show loader if available page types have not been loaded yet', () =
         webspace: 'sulu',
     };
 
-    const webspaceOverview = mount(
+    render(
         <PageList
             route={router.route}
             router={router}
@@ -170,18 +228,17 @@ test('Should show loader if available page types have not been loaded yet', () =
         />
     );
 
-    expect(webspaceOverview.find('Loader')).toHaveLength(1);
+    expect(screen.getByTestId('loader')).toBeInTheDocument();
 
-    return metadataPromise.then(() => {
-        webspaceOverview.update();
-        expect(webspaceOverview.find('Loader')).toHaveLength(0);
+    await act(async() => {
+        await metadataPromise;
     });
+
+    expect(screen.queryByTestId('loader')).not.toBeInTheDocument();
 });
 
 test('Should show the locales from the webspace configuration for the toolbar', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const PageList = require('../PageList').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, PageList);
 
     const webspaceKey = observable.box('sulu');
 
@@ -197,7 +254,7 @@ test('Should show the locales from the webspace configuration for the toolbar', 
         webspace: 'sulu',
     };
 
-    const webspaceOverview = mount(
+    render(
         <PageList
             route={router.route}
             router={router}
@@ -207,10 +264,11 @@ test('Should show the locales from the webspace configuration for the toolbar', 
         />
     );
 
-    webspaceOverview.instance().locale.set('en');
-    expect(webspaceOverview.instance().locale.get()).toBe('en');
+    act(() => {
+        getLatestToolbarConfig().locale.onChange('en');
+    });
 
-    const toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
+    const toolbarConfig = getLatestToolbarConfig();
     expect(toolbarConfig.locale.value).toBe('en');
     expect(toolbarConfig.locale.options).toEqual(
         expect.arrayContaining(
@@ -223,9 +281,7 @@ test('Should show the locales from the webspace configuration for the toolbar', 
 });
 
 test('Should change excludeGhostsAndShadows when value of toggler is changed', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const PageList = require('../PageList').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, PageList);
 
     const webspaceKey = observable.box('sulu');
 
@@ -241,7 +297,7 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
         webspace: 'sulu',
     };
 
-    const webspaceOverview = mount(
+    render(
         <PageList
             route={router.route}
             router={router}
@@ -251,31 +307,35 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
         />
     );
 
-    webspaceOverview.update();
+    const listStore = getLatestListStore();
+    const excludeGhostsAndShadows = listStore.observableOptions['exclude-ghosts'];
 
-    const excludeGhostsAndShadows = webspaceOverview.instance().excludeGhostsAndShadows;
     expect(excludeGhostsAndShadows.get()).toEqual(false);
-    expect(webspaceOverview.instance().listStore.observableOptions).toEqual(expect.objectContaining({
+    expect(listStore.observableOptions).toEqual(expect.objectContaining({
         'exclude-ghosts': excludeGhostsAndShadows,
         'exclude-shadows': excludeGhostsAndShadows,
     }));
 
-    let toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
+    let toolbarConfig = getLatestToolbarConfig();
     expect(toolbarConfig.items[0].value).toEqual(true);
 
-    toolbarConfig.items[0].onClick();
-    toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
+    act(() => {
+        toolbarConfig.items[0].onClick();
+    });
+    toolbarConfig = getLatestToolbarConfig();
     expect(toolbarConfig.items[0].value).toEqual(false);
-    expect(webspaceOverview.instance().listStore.clear).toBeCalledWith();
-    expect(webspaceOverview.instance().excludeGhostsAndShadows.get()).toEqual(true);
+    expect(listStore.clear).toHaveBeenCalledWith();
+    expect(excludeGhostsAndShadows.get()).toEqual(true);
 
-    toolbarConfig.items[0].onClick();
-    toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
+    act(() => {
+        toolbarConfig.items[0].onClick();
+    });
+    toolbarConfig = getLatestToolbarConfig();
     expect(toolbarConfig.items[0].value).toEqual(true);
-    expect(webspaceOverview.instance().excludeGhostsAndShadows.get()).toEqual(false);
+    expect(excludeGhostsAndShadows.get()).toEqual(false);
 });
 
-test('Should set webspace if copied page is in different webspace than the source', () => {
+test('Should set webspace if copied page is in different webspace than the source', async() => {
     const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
     const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
     formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
@@ -296,7 +356,7 @@ test('Should set webspace if copied page is in different webspace than the sourc
         webspace: 'sulu',
     };
 
-    const webspaceOverview = mount(
+    render(
         <PageList
             route={router.route}
             router={router}
@@ -306,17 +366,19 @@ test('Should set webspace if copied page is in different webspace than the sourc
         />
     );
 
-    return metadataPromise.then(() => {
-        webspaceOverview.update();
-        webspaceOverview.find('List').prop('onCopyFinished')({webspace: 'test'});
-        expect(webspaceKey.get()).toEqual('test');
+    await act(async() => {
+        await metadataPromise;
     });
+
+    act(() => {
+        getLatestListProps().onCopyFinished({webspace: 'test'});
+    });
+
+    expect(webspaceKey.get()).toEqual('test');
 });
 
 test('Should use CacheClearToolbarAction for cache clearing', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const PageList = require('../PageList').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, PageList);
     const CacheClearToolbarAction = require('sulu-website-bundle/containers').CacheClearToolbarAction;
 
     const webspaceKey = observable.box('sulu');
@@ -333,7 +395,7 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
         webspace: 'sulu',
     };
 
-    const pageList = mount(
+    render(
         <PageList
             route={router.route}
             router={router}
@@ -343,14 +405,14 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
         />
     );
 
-    const cacheClearToolbarAction: CacheClearToolbarAction = (CacheClearToolbarAction: any).mock.instances[0];
+    const cacheClearToolbarAction = (CacheClearToolbarAction: any).mock.instances[0];
 
-    expect(CacheClearToolbarAction).toBeCalledWith('sulu');
-    expect(cacheClearToolbarAction.getNode).toBeCalledWith();
-
-    expect(cacheClearToolbarAction.getToolbarItemConfig).not.toBeCalled();
-    toolbarFunction.call(pageList.instance());
-    expect(cacheClearToolbarAction.getToolbarItemConfig).toBeCalled();
+    expect(CacheClearToolbarAction).toHaveBeenCalledWith('sulu');
+    expect(cacheClearToolbarAction.getNode).toHaveBeenCalledWith();
+    expect(getLatestToolbarConfig().items).toContain(
+        cacheClearToolbarAction.getToolbarItemConfig.mock.results[0].value
+    );
+    expect(cacheClearToolbarAction.getToolbarItemConfig).toHaveBeenCalled();
 });
 
 test('Should load webspace and active route attribute from listStore and userStore', () => {
@@ -370,7 +432,7 @@ test('Should load webspace and active route attribute from listStore and userSto
     expect(PageList.getDerivedRouteAttributes(undefined, {webspace: 'abc'})).toEqual({
         active: 'some-uuid',
     });
-    expect(ListStore.getActiveSetting).toBeCalledWith('pages', 'page_list_abc');
+    expect(ListStore.getActiveSetting).toHaveBeenCalledWith('pages', 'page_list_abc');
 });
 
 test('Destroy ListStore to avoid many requests and reset active to be set on webspace change', () => {
@@ -390,7 +452,7 @@ test('Destroy ListStore to avoid many requests and reset active to be set on web
         webspace: 'sulu',
     };
 
-    const webspaceOverview = mount(
+    render(
         <PageList
             route={router.route}
             router={router}
@@ -400,10 +462,12 @@ test('Destroy ListStore to avoid many requests and reset active to be set on web
         />
     );
 
+    const listStore = getLatestListStore();
+
     webspaceKey.set('sulu_blog');
 
-    expect(webspaceOverview.instance().listStore.destroy).toBeCalledWith();
-    expect(webspaceOverview.instance().listStore.active.set).toBeCalledWith(undefined);
+    expect(listStore.destroy).toHaveBeenCalledWith();
+    expect(listStore.active.set).toHaveBeenCalledWith(undefined);
 });
 
 test('Should bind router', () => {
@@ -420,7 +484,7 @@ test('Should bind router', () => {
         webspace: 'sulu',
     };
 
-    const webspaceOverview = mount(
+    render(
         <PageList
             route={router.route}
             router={router}
@@ -429,14 +493,17 @@ test('Should bind router', () => {
             webspaceKey={webspaceKey}
         />
     );
-    const page = webspaceOverview.instance().page;
-    const locale = webspaceOverview.instance().locale;
-    const excludeGhostsAndShadows = webspaceOverview.instance().excludeGhostsAndShadows;
 
-    expect(router.bind).toBeCalledWith('page', page, 1);
-    expect(router.bind).toBeCalledWith('excludeGhostsAndShadows', excludeGhostsAndShadows, false);
-    expect(router.bind).toBeCalledWith('locale', locale);
-    expect(router.bind).toBeCalledWith('active', webspaceOverview.instance().listStore.active);
+    const listStore = getLatestListStore();
+
+    expect(router.bind).toHaveBeenCalledWith('page', listStore.observableOptions.page, 1);
+    expect(router.bind).toHaveBeenCalledWith(
+        'excludeGhostsAndShadows',
+        listStore.observableOptions['exclude-ghosts'],
+        false
+    );
+    expect(router.bind).toHaveBeenCalledWith('locale', listStore.observableOptions.locale);
+    expect(router.bind).toHaveBeenCalledWith('active', listStore.active);
 });
 
 test('Should call disposers on unmount', () => {
@@ -453,7 +520,7 @@ test('Should call disposers on unmount', () => {
         webspace: 'sulu',
     };
 
-    const webspaceOverview = mount(
+    const {unmount} = render(
         <PageList
             route={router.route}
             router={router}
@@ -463,12 +530,12 @@ test('Should call disposers on unmount', () => {
         />
     );
 
-    const listStore = webspaceOverview.instance().listStore;
+    const listStore = getLatestListStore();
 
-    const excludeGhostsAndShadowsDisposerSpy = jest.fn();
-    webspaceOverview.instance().excludeGhostsAndShadowsDisposer = excludeGhostsAndShadowsDisposerSpy;
-    webspaceOverview.unmount();
+    unmount();
 
-    expect(listStore.destroy).toBeCalledWith();
-    expect(excludeGhostsAndShadowsDisposerSpy).toBeCalledWith();
+    expect(listStore.destroy).toHaveBeenCalledWith();
+    expect(mockInterceptDisposers).toHaveLength(2);
+    expect(mockInterceptDisposers[0]).toHaveBeenCalledWith();
+    expect(mockInterceptDisposers[1]).toHaveBeenCalledWith();
 });

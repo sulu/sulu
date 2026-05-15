@@ -2,15 +2,21 @@
 import {observable} from 'mobx';
 import Requester from '../Requester';
 
+beforeEach(() => {
+    window.fetch = jest.fn();
+});
+
+function mockFetchResponse(response) {
+    window.fetch.mockReturnValue(Promise.resolve(response));
+}
+
 test('Should execute GET request and reject with response when the response contains error', () => {
     const response = {
         ok: false,
         statusText: 'An error occured!',
     };
-    const promise = new Promise((resolve) => resolve(response));
 
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
+    mockFetchResponse(response);
 
     expect(Requester.get('/some-url')).rejects.toEqual(response);
 
@@ -36,10 +42,7 @@ test('Should execute GET request and reject if array is returned', () => {
         },
     ]));
 
-    const promise = new Promise((resolve) => resolve(response));
-
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
+    mockFetchResponse(response);
 
     return expect(Requester.get('/some-url')).rejects.toThrow('array');
 });
@@ -64,10 +67,8 @@ test('Should execute GET request and replace null with undefined', () => {
         ],
         test7: ['test1', 'test2'],
     }));
-    const promise = new Promise((resolve) => resolve(response));
 
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
+    mockFetchResponse(response);
 
     const requestPromise = Requester.get('/some-url').then((data) => {
         expect(data).toEqual({
@@ -103,10 +104,8 @@ test('Should execute POST request and return JSON', () => {
         ok: true,
     };
     response.json.mockReturnValue(Promise.resolve({test: '', value: 'test'}));
-    const promise = new Promise((resolve) => resolve(response));
 
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
+    mockFetchResponse(response);
 
     const data = {
         title: 'Titel',
@@ -167,10 +166,8 @@ test('Should execute POST request and return JSON when value is observable', () 
         ok: true,
     };
     response.json.mockReturnValue(Promise.resolve({test: '', value: 'test'}));
-    const promise = new Promise((resolve) => resolve(response));
 
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
+    mockFetchResponse(response);
 
     const data = observable({id: 'test', name: 'Cool object'});
     const requestPromise = Requester.post('/some-url', data).then((response) => {
@@ -197,10 +194,8 @@ test('Should execute PUT request and return JSON', () => {
         ok: true,
     };
     response.json.mockReturnValue(Promise.resolve({test: '', value: 'test'}));
-    const promise = new Promise((resolve) => resolve(response));
 
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
+    mockFetchResponse(response);
 
     const data = {
         title: 'Titel',
@@ -232,10 +227,8 @@ test('Should execute PUT request without data and return JSON', () => {
         ok: true,
     };
     response.json.mockReturnValue(Promise.resolve({test: '', value: 'test'}));
-    const promise = new Promise((resolve) => resolve(response));
 
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
+    mockFetchResponse(response);
 
     const requestPromise = Requester.put('/some-url', null).then((response) => {
         expect(response).toEqual({test: '', value: 'test'});
@@ -257,10 +250,8 @@ test('Should execute PATCH request and return JSON', () => {
         ok: true,
     };
     response.json.mockReturnValue(Promise.resolve([{test: '', value: 'test'}]));
-    const promise = new Promise((resolve) => resolve(response));
 
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
+    mockFetchResponse(response);
 
     const data = [
         {
@@ -291,10 +282,8 @@ test('Should execute DELETE request and return JSON', () => {
         ok: true,
     };
     response.json.mockReturnValue(Promise.resolve({test: '', value: 'test'}));
-    const promise = new Promise((resolve) => resolve(response));
 
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
+    mockFetchResponse(response);
 
     const requestPromise = Requester.delete('/some-url').then((data) => {
         expect(data).toEqual({test: '', value: 'test'});
@@ -311,13 +300,10 @@ test('Should execute DELETE request and return JSON', () => {
 });
 
 test('Should execute DELETE request and return empty object if status code was 204', () => {
-    const promise = Promise.resolve({
+    mockFetchResponse({
         ok: true,
         status: 204,
     });
-
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
 
     return Requester.delete('/some-url').then((data) => {
         expect(data).toEqual({});
@@ -328,13 +314,10 @@ test('Shold call response hooks', () => {
     const handleResponseHook = jest.fn();
     Requester.handleResponseHooks.push(handleResponseHook);
 
-    const promise = Promise.resolve({
+    mockFetchResponse({
         ok: true,
         status: 204,
     });
-
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
 
     return Requester.get('/some-url').then(() => {
         expect(handleResponseHook).toHaveBeenCalledTimes(1);

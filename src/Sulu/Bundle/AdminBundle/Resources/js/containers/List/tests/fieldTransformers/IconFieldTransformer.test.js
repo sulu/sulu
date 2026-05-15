@@ -8,11 +8,6 @@ import iconFieldTransformerStyles from '../../fieldTransformers/iconFieldTransfo
 
 const iconFieldTransformer = new IconFieldTransformer();
 
-jest.mock('loglevel', () => ({
-    error: jest.fn(),
-    warn: jest.fn(),
-}));
-
 test('Test value undefined', () => {
     expect(iconFieldTransformer.transform(undefined, {})).toBe(undefined);
 });

@@ -1,38 +1,32 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
-import ResourceStore from '../../../../stores/ResourceStore';
-import FormInspector from '../../FormInspector';
-import ResourceFormStore from '../../stores/ResourceFormStore';
 import ColorPicker from '../../fields/ColorPicker';
 import ColorPickerComponent from '../../../../components/ColorPicker';
 
-jest.mock('../../../../stores/ResourceStore', () => jest.fn());
-jest.mock('../../stores/ResourceFormStore', () => jest.fn());
-jest.mock('../../FormInspector', () => jest.fn());
+jest.mock('../../../../components/ColorPicker', () => jest.fn(() => null));
+
+function getLatestColorPickerProps() {
+    const calls = (ColorPickerComponent: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
 
 test('Pass error correctly to component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = ({locale: undefined}: any);
     const error = {keyword: 'minLength', parameters: {}};
 
-    const field = shallow(
-        <ColorPicker
-            {...fieldTypeDefaultProps}
-            error={error}
-            formInspector={formInspector}
-        />
-    );
+    render(<ColorPicker {...fieldTypeDefaultProps} error={error} formInspector={formInspector} />);
 
-    expect(field.find(ColorPickerComponent).prop('valid')).toBe(false);
+    expect(getLatestColorPickerProps().valid).toBe(false);
 });
 
 test('Pass props correctly to component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = ({locale: undefined}: any);
     const onFinish = jest.fn();
     const onChange = jest.fn();
 
-    const field = shallow(
+    render(
         <ColorPicker
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -43,9 +37,9 @@ test('Pass props correctly to component', () => {
         />
     );
 
-    const component = field.find(ColorPickerComponent);
-    expect(component.prop('valid')).toBe(true);
-    expect(component.prop('onChange')).toBe(onChange);
-    expect(component.prop('onBlur')).toBe(onFinish);
-    expect(component.prop('disabled')).toBe(true);
+    const componentProps = getLatestColorPickerProps();
+    expect(componentProps.valid).toBe(true);
+    expect(componentProps.onChange).toBe(onChange);
+    expect(componentProps.onBlur).toBe(onFinish);
+    expect(componentProps.disabled).toBe(true);
 });

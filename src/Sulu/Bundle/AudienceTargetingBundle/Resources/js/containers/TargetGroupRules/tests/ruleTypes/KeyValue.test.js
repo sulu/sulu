@@ -1,7 +1,21 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {render} from '@testing-library/react';
+import {Input} from 'sulu-admin-bundle/components';
 import KeyValue from '../../ruleTypes/KeyValue';
+
+jest.mock('sulu-admin-bundle/components', () => ({
+    Input: jest.fn(() => null),
+}));
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+function getInputProps(index: number) {
+    const calls = (Input: any).mock.calls;
+    return calls[index][0];
+}
 
 test('Render a KeyValue RuleType', () => {
     const options = {
@@ -9,7 +23,11 @@ test('Render a KeyValue RuleType', () => {
         valuePlaceholder: 'value',
     };
 
-    expect(render(<KeyValue onChange={jest.fn()} options={options} value={{}} />)).toMatchSnapshot();
+    render(<KeyValue onChange={jest.fn()} options={options} value={{}} />);
+
+    expect((Input: any).mock.calls).toHaveLength(2);
+    expect(getInputProps(0).placeholder).toEqual('key');
+    expect(getInputProps(1).placeholder).toEqual('value');
 });
 
 test.each([
@@ -23,8 +41,8 @@ test.each([
         valueName,
     };
 
-    const keyValue = shallow(<KeyValue onChange={changeSpy} options={options} value={oldValue} />);
-    keyValue.find('Input').at(1).prop('onChange')(value);
+    render(<KeyValue onChange={changeSpy} options={options} value={oldValue} />);
+    getInputProps(1).onChange(value);
 
     expect(changeSpy).toBeCalledWith(result);
 });
@@ -40,8 +58,8 @@ test.each([
         keyName,
     };
 
-    const keyValue = shallow(<KeyValue onChange={changeSpy} options={options} value={oldValue} />);
-    keyValue.find('Input').at(0).prop('onChange')(key);
+    render(<KeyValue onChange={changeSpy} options={options} value={oldValue} />);
+    getInputProps(0).onChange(key);
 
     expect(changeSpy).toBeCalledWith(result);
 });

@@ -6,10 +6,6 @@ import colorFieldTransformerStyles from './colorFieldTransformer.scss';
 
 const colorTransformer = new ColorFieldTransformer();
 
-jest.mock('loglevel', () => ({
-    error: jest.fn(),
-}));
-
 test('Test invalid color null', () => {
     const value = null;
     expect(colorTransformer.transform(value)).toBe(value);

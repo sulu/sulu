@@ -5,10 +5,6 @@ import userEvent from '@testing-library/user-event';
 import TextArea from '../TextArea';
 import bindValueToOnChange from '../../../utils/TestHelper/bindValueToOnChange';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
 test('TextArea should render', () => {
     const {container} = render(<TextArea onChange={jest.fn()} value="My value" />);
     expect(container).toMatchSnapshot();

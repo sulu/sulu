@@ -14,10 +14,6 @@ jest.mock('../../../utils', () => ({
     translate: (key) => key,
 }));
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
 describe('PromptInput Component', () => {
     const defaultProps = {
         experts: {

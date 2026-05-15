@@ -1,15 +1,10 @@
 // @flow
 import mockReact from 'react';
-import {mount} from 'enzyme';
 import FormContainer, {ResourceFormStore} from '../../../../containers/Form';
 import Router from '../../../../services/Router';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Form from '../../../../views/Form';
 import SaveWithFormDialogToolbarAction from '../../toolbarActions/SaveWithFormDialogToolbarAction';
-
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
 
 jest.mock('../../../../containers/Form/Form', () => class extends mockReact.Component<*> {
     submit = jest.fn();
@@ -57,6 +52,14 @@ function createSaveWithFormDialogToolbarAction(options: {[string]: any}) {
     });
 
     return new SaveWithFormDialogToolbarAction(formStore, form, router, locales, options, resourceStore);
+}
+
+function getDialogProps(saveWithFormDialogToolbarAction: SaveWithFormDialogToolbarAction): any {
+    return ((saveWithFormDialogToolbarAction.getNode(): any).props: any);
+}
+
+function getDialogFormProps(saveWithFormDialogToolbarAction: SaveWithFormDialogToolbarAction): any {
+    return ((getDialogProps(saveWithFormDialogToolbarAction).children: any).props: any);
 }
 
 test('Return item config with correct disabled, loading, icon, type and value', () => {
@@ -116,29 +119,23 @@ test('Close dialog when cancel button of dialog is clicked', () => {
         throw new Error('A onClick callback should be registered on the copy locale option');
     }
 
-    let element = mount(saveWithFormDialogToolbarAction.getNode()).at(0);
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    expect(getDialogProps(saveWithFormDialogToolbarAction)).toEqual(expect.objectContaining({
         open: false,
     }));
 
     clickHandler();
-    element = mount(saveWithFormDialogToolbarAction.getNode()).at(0);
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    expect(getDialogProps(saveWithFormDialogToolbarAction)).toEqual(expect.objectContaining({
         open: true,
     }));
 
-    element.find('Dialog').prop('onCancel')();
-    element = mount(saveWithFormDialogToolbarAction.getNode()).at(0);
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    const dialogFormSubmit = jest.fn();
+    saveWithFormDialogToolbarAction.dialogForm = (({submit: dialogFormSubmit}: any): ?FormContainer);
+
+    getDialogProps(saveWithFormDialogToolbarAction).onCancel();
+    expect(getDialogProps(saveWithFormDialogToolbarAction)).toEqual(expect.objectContaining({
         open: false,
     }));
-
-    const dialogForm = saveWithFormDialogToolbarAction.dialogForm;
-    if (!dialogForm) {
-        throw new Error('The dialogForm should be defined');
-    }
-
-    expect(dialogForm.submit).not.toBeCalled();
+    expect(dialogFormSubmit).not.toBeCalled();
 });
 
 test('Submit form with passed form data dialog when confirm button of dialog is clicked', () => {
@@ -165,30 +162,22 @@ test('Submit form with passed form data dialog when confirm button of dialog is 
         throw new Error('A onClick callback should be registered on the copy locale option');
     }
 
-    let element = mount(saveWithFormDialogToolbarAction.getNode()).at(0);
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    expect(getDialogProps(saveWithFormDialogToolbarAction)).toEqual(expect.objectContaining({
         open: false,
     }));
 
     clickHandler();
-    element = mount(saveWithFormDialogToolbarAction.getNode()).at(0);
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    expect(getDialogProps(saveWithFormDialogToolbarAction)).toEqual(expect.objectContaining({
         open: true,
     }));
 
     // $FlowFixMe
     saveWithFormDialogToolbarAction.dialogFormStore.data = {test: 'Test'};
 
-    element.find(FormContainer).prop('onSubmit')();
-    element = mount(saveWithFormDialogToolbarAction.getNode()).at(0);
-
-    const dialogForm = saveWithFormDialogToolbarAction.dialogForm;
-    if (!dialogForm) {
-        throw new Error('The dialogForm should be defined');
-    }
+    getDialogFormProps(saveWithFormDialogToolbarAction).onSubmit();
 
     expect(saveWithFormDialogToolbarAction.form.submit).toBeCalledWith({test: 'Test'});
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    expect(getDialogProps(saveWithFormDialogToolbarAction)).toEqual(expect.objectContaining({
         open: false,
     }));
 });

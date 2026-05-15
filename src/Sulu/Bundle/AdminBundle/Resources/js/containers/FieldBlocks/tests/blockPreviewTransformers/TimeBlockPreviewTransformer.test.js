@@ -10,10 +10,6 @@ beforeEach(() => {
 
 const timeBlockPreviewTransformer = new TimeBlockPreviewTransformer();
 
-jest.mock('loglevel', () => ({
-    error: jest.fn(),
-}));
-
 test('Test undefined', () => {
     expect(timeBlockPreviewTransformer.transform(undefined)).toBe(null);
 });

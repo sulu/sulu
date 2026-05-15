@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
 import Sidebar from '../Sidebar';
 import sidebarStore from '../stores/sidebarStore';
 import sidebarRegistry from '../registries/sidebarRegistry';
@@ -16,10 +16,12 @@ jest.mock('../registries/sidebarRegistry', () => ({
 
 test('Render correct sidebar view', () => {
     sidebarStore.view = 'preview';
+    sidebarStore.props = {};
     sidebarRegistry.get.mockReturnValue(component);
     sidebarRegistry.isDisabled.mockReturnValue(false);
 
-    expect(render(<Sidebar />)).toMatchSnapshot();
+    expect(render(<Sidebar />).container).not.toBeEmptyDOMElement();
+    expect(screen.getByRole('heading', {level: 1})).toBeInTheDocument();
 });
 
 test('Render correct sidebar view with props', () => {
@@ -28,16 +30,15 @@ test('Render correct sidebar view with props', () => {
     sidebarRegistry.get.mockReturnValue(component);
     sidebarRegistry.isDisabled.mockReturnValue(false);
 
-    const view = render(<Sidebar />);
-    expect(view).toMatchSnapshot();
+    render(<Sidebar />);
+    expect(screen.getByRole('heading', {level: 1})).toHaveTextContent('Hello world');
 });
 
 test('Return null if view is not set', () => {
     sidebarStore.view = null;
     sidebarStore.props = {};
 
-    const view = render(<Sidebar />);
-    expect(view).toMatchSnapshot();
+    expect(render(<Sidebar />).container).toBeEmptyDOMElement();
 });
 
 test('Return null if view is disabled', () => {
@@ -45,5 +46,5 @@ test('Return null if view is disabled', () => {
     sidebarStore.props = {};
     sidebarRegistry.isDisabled.mockReturnValue(true);
 
-    expect(render(<Sidebar />)).toMatchSnapshot();
+    expect(render(<Sidebar />).container).toBeEmptyDOMElement();
 });

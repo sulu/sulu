@@ -5,10 +5,6 @@ import React from 'react';
 import RectangleSelection from '../../RectangleSelection';
 import {ImageRectangleSelection} from '../ImageRectangleSelection';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
 jest.mock('../../RectangleSelection', () => jest.fn((props) => (
     <div data-testid="rectangle-selection">
         {props.children}

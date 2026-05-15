@@ -1,164 +1,75 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Should render the active child with disabledTabGap option 1`] = `
-Array [
-  <div
-    class="tabsContainer nested disableGap"
-  >
-    <div
-      class="tabs nested"
-    >
-      <div
-        class="tabsContainerWrapper"
-      >
-        <ul
-          class="tabsContainer"
-        >
-          <li
-            class="tab nested selected"
-          >
-            <button
-              disabled=""
-              title="tabTitle1"
-              type="button"
-            >
-              tabTitle1
-            </button>
-          </li>
-          <li
-            class="tab nested"
-          >
-            <button
-              title="tabTitle2"
-              type="button"
-            >
-              tabTitle2
-            </button>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>,
-  <h1>
-    Child
-  </h1>,
-]
-`;
-
 exports[`Should render the children after the tabs 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="tabsContainer root"
   >
     <div
-      class="tabs root"
+      data-testid="tabs-component"
     >
       <div
-        class="tabsContainerWrapper"
+        data-testid="tabs-component-tab"
       >
-        <ul
-          class="tabsContainer"
-        >
-          <li
-            class="tab root"
-          >
-            <button
-              title="tabTitle1"
-              type="button"
-            >
-              tabTitle1
-            </button>
-          </li>
-          <li
-            class="tab root"
-          >
-            <button
-              title="tabTitle2"
-              type="button"
-            >
-              tabTitle2
-            </button>
-          </li>
-        </ul>
+        tabTitle1
+      </div>
+      <div
+        data-testid="tabs-component-tab"
+      >
+        tabTitle2
       </div>
     </div>
-  </div>,
+  </div>
   <div
     class="view"
   >
     <h1>
       Child
     </h1>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Should render the children with the passed props 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="tabsContainer root"
   >
     <div
-      class="tabs root"
+      data-testid="tabs-component"
     >
       <div
-        class="tabsContainerWrapper"
+        data-testid="tabs-component-tab"
       >
-        <ul
-          class="tabsContainer"
-        >
-          <li
-            class="tab root"
-          >
-            <button
-              title="tabTitle1"
-              type="button"
-            >
-              tabTitle1
-            </button>
-          </li>
-        </ul>
+        tabTitle1
       </div>
     </div>
-  </div>,
+  </div>
   <div
     class="view"
   >
     <h2>
       Value
     </h2>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Should render the header between children and tabs 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="tabsContainer root"
   >
     <div
-      class="tabs root"
+      data-testid="tabs-component"
     >
       <div
-        class="tabsContainerWrapper"
+        data-testid="tabs-component-tab"
       >
-        <ul
-          class="tabsContainer"
-        >
-          <li
-            class="tab root"
-          >
-            <button
-              title="tabTitle1"
-              type="button"
-            >
-              tabTitle1
-            </button>
-          </li>
-        </ul>
+        tabTitle1
       </div>
     </div>
-  </div>,
+  </div>
   <div
     class="view"
   >
@@ -168,6 +79,6 @@ Array [
     <h2>
       Child
     </h2>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;

@@ -1,57 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render with data 1`] = `
-<div>
-  <label
-    class="label"
-    tabindex="-1"
-  >
-    <span
-      class="switch checkbox dark"
-    >
+<DocumentFragment>
+  <div>
+    <label>
       <input
+        aria-label="Test ABC"
         type="checkbox"
-        value="2"
       />
-      <span />
-    </span>
-    <div>
       Test ABC
-    </div>
-  </label>
-  <label
-    class="label"
-    tabindex="-1"
-  >
-    <span
-      class="switch checkbox dark"
-    >
+    </label>
+    <label>
       <input
+        aria-label="Test DEF"
         type="checkbox"
-        value="5"
       />
-      <span />
-    </span>
-    <div>
       Test DEF
-    </div>
-  </label>
-  <label
-    class="label"
-    tabindex="-1"
-  >
-    <span
-      class="switch checkbox dark"
-    >
+    </label>
+    <label>
       <input
+        aria-label="Test XYZ"
         type="checkbox"
-        value="99"
       />
-      <span />
-    </span>
-    <div>
       Test XYZ
-    </div>
-  </label>
-</div>
+    </label>
+  </div>
+</DocumentFragment>
 `;

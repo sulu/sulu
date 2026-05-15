@@ -1,15 +1,80 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
+import copyToClipboard from 'copy-to-clipboard';
 import React from 'react';
+import {act, render, screen, waitFor, within} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {observable} from 'mobx';
-import {mount, render} from 'enzyme';
-import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
+import {ResourceStore} from 'sulu-admin-bundle/stores';
+import formatStore from '../../../stores/formatStore';
+import MediaFormats from '../MediaFormats';
 
-jest.useFakeTimers();
+const mockToolbarConfigGetters = [];
 
 jest.mock('copy-to-clipboard', () => jest.fn());
 
+jest.mock('sulu-admin-bundle/components', () => {
+    const React = require('react');
+
+    const Loader = jest.fn(function LoaderMock() {
+        return React.createElement('div', {'data-testid': 'loader'});
+    });
+
+    const Table = jest.fn(function TableMock({children}) {
+        return React.createElement('table', {'data-testid': 'media-formats-table'}, children);
+    });
+
+    Table.Header = jest.fn(function HeaderMock({children}) {
+        return React.createElement('thead', null, children);
+    });
+
+    Table.HeaderCell = jest.fn(function HeaderCellMock({children}) {
+        return React.createElement('th', null, children);
+    });
+
+    Table.Body = jest.fn(function BodyMock({children}) {
+        return React.createElement('tbody', null, children);
+    });
+
+    Table.Row = jest.fn(function RowMock({buttons = [], children, id}) {
+        return React.createElement(
+            'tr',
+            {'data-testid': 'row-' + id},
+            ...buttons.map((button, index) => React.createElement(
+                'td',
+                {key: index},
+                React.createElement(
+                    'button',
+                    {
+                        onClick: () => button.onClick && button.onClick(id),
+                        type: 'button',
+                    },
+                    button.icon
+                )
+            )),
+            children
+        );
+    });
+
+    Table.Cell = jest.fn(function CellMock({children}) {
+        return React.createElement('td', null, children);
+    });
+
+    return {
+        Loader,
+        Table,
+    };
+});
+
 jest.mock('sulu-admin-bundle/containers', () => ({
-    withToolbar: jest.fn((Component) => Component),
+    withToolbar: jest.fn((Component, toolbar) => {
+        return class WithToolbarMock extends Component {
+            render() {
+                mockToolbarConfigGetters.push(() => toolbar.call(this));
+
+                return super.render();
+            }
+        };
+    }),
 }));
 
 jest.mock('sulu-admin-bundle/stores', () => ({
@@ -18,62 +83,73 @@ jest.mock('sulu-admin-bundle/stores', () => ({
         this.data = {
             thumbnails: {},
         };
+        this.loading = false;
     }),
-}));
-
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
 }));
 
 jest.mock('../../../stores/formatStore', () => ({
     loadFormats: jest.fn(),
 }));
 
+function createRouter(locales = [], routeName = 'sulu_media.media_formats') {
+    return {
+        attributes: {},
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        restore: jest.fn(),
+        route: {
+            name: routeName,
+            options: {
+                locales,
+            },
+        },
+    };
+}
+
+function createResourceStore(locale = undefined) {
+    return new ResourceStore('media', '1', {locale: locale ? observable.box(locale) : observable.box()});
+}
+
+function getLatestToolbarConfig() {
+    return mockToolbarConfigGetters[mockToolbarConfigGetters.length - 1]();
+}
+
 beforeEach(() => {
-    jest.resetModules();
+    jest.clearAllMocks();
+    mockToolbarConfigGetters.splice(0, mockToolbarConfigGetters.length);
+    formatStore.loadFormats.mockReturnValue(new Promise(() => {}));
+});
+
+afterEach(() => {
+    jest.useRealTimers();
 });
 
 test('Render a loading MediaFormats view', () => {
-    const MediaFormats = require('../MediaFormats').default;
-    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const router = {
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: [],
-            },
-        },
-    };
-    const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
+    const router = createRouter([]);
+    const resourceStore = createResourceStore();
     resourceStore.loading = true;
 
-    expect(render(
+    const {asFragment} = render(
         <MediaFormats resourceStore={resourceStore} router={router} title="Test 1" />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a loading MediaFormats view if formats have not been loaded yet', () => {
-    const MediaFormats = require('../MediaFormats').default;
-    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const router = {
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: [],
-            },
-        },
-    };
-    const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
+    const router = createRouter([]);
+    const resourceStore = createResourceStore();
     resourceStore.loading = false;
 
-    expect(render(
+    const {asFragment} = render(
         <MediaFormats resourceStore={resourceStore} router={router} />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Render a MediaFormats view', () => {
-    const formatStore = require('../../../stores/formatStore');
-    const formatPromise = Promise.resolve([
+test('Render a MediaFormats view', async() => {
+    formatStore.loadFormats.mockReturnValue(Promise.resolve([
         {
             key: '400x400',
             title: 'Contact',
@@ -82,175 +158,130 @@ test('Render a MediaFormats view', () => {
             key: '800x800',
             title: 'Account',
         },
-    ]);
-    formatStore.loadFormats.mockReturnValue(formatPromise);
+    ]));
 
-    const MediaFormats = require('../MediaFormats').default;
-    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const router = {
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: [],
-            },
-        },
-    };
-    const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
+    const router = createRouter([]);
+    const resourceStore = createResourceStore();
     resourceStore.data.thumbnails = {
         '400x400': '/media/400x400/image.jpg',
         '800x800': '/media/800x800/image.jpg',
     };
 
-    const mediaFormats = mount(<MediaFormats resourceStore={resourceStore} router={router} title="Test 2" />);
+    const {asFragment} = render(<MediaFormats resourceStore={resourceStore} router={router} title="Test 2" />);
 
-    return formatPromise.then(() => {
-        expect(mediaFormats.render()).toMatchSnapshot();
-    });
+    expect(await screen.findByText('Contact')).toBeInTheDocument();
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Open the image in the given format when icon is clicked', () => {
-    const formatStore = require('../../../stores/formatStore');
-    const formatPromise = Promise.resolve([
+test('Open the image in the given format when icon is clicked', async() => {
+    formatStore.loadFormats.mockReturnValue(Promise.resolve([
         {
             key: '400x400',
         },
         {
             key: '800x800',
         },
-    ]);
-    formatStore.loadFormats.mockReturnValue(formatPromise);
+    ]));
 
     window.open = jest.fn();
 
-    const MediaFormats = require('../MediaFormats').default;
-    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const router = {
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: [],
-            },
-        },
-    };
-    const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
+    const router = createRouter([]);
+    const resourceStore = createResourceStore();
     resourceStore.data.thumbnails = {
         '400x400': '/media/400x400/image.jpg?v=1',
         '800x800': '/media/800x800/image.jpg?v=1',
     };
 
-    const mediaFormats = mount(<MediaFormats resourceStore={resourceStore} router={router} />);
+    const user = userEvent.setup();
 
-    return formatPromise.then(() => {
-        mediaFormats.update();
+    render(<MediaFormats resourceStore={resourceStore} router={router} />);
 
-        mediaFormats.find('Row').at(0).find('ButtonCell').at(0).prop('onClick')('400x400');
-        expect(window.open).toHaveBeenLastCalledWith('/media/400x400/image.jpg?v=1&inline=1');
-        mediaFormats.find('Row').at(1).find('ButtonCell').at(0).prop('onClick')('800x800');
-        expect(window.open).toHaveBeenLastCalledWith('/media/800x800/image.jpg?v=1&inline=1');
-    });
+    expect(await screen.findByTestId('row-400x400')).toBeInTheDocument();
+
+    await user.click(screen.getAllByRole('button', {name: 'su-eye'})[0]);
+    expect(window.open).toHaveBeenLastCalledWith('/media/400x400/image.jpg?v=1&inline=1');
+
+    await user.click(screen.getAllByRole('button', {name: 'su-eye'})[1]);
+    expect(window.open).toHaveBeenLastCalledWith('/media/800x800/image.jpg?v=1&inline=1');
 });
 
-test('Copy the image URL for the given format when icon is clicked and show a success message', () => {
-    const formatStore = require('../../../stores/formatStore');
-    const formatPromise = Promise.resolve([
+test('Copy the image URL for the given format when icon is clicked and show a success message', async() => {
+    jest.useFakeTimers();
+
+    formatStore.loadFormats.mockReturnValue(Promise.resolve([
         {
             key: '400x400',
         },
         {
             key: '800x800',
         },
-    ]);
-    formatStore.loadFormats.mockReturnValue(formatPromise);
+    ]));
 
-    const copyToClipboard = require('copy-to-clipboard');
-    const MediaFormats = require('../MediaFormats').default;
-    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const router = {
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: [],
-            },
-        },
-    };
-    const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
+    const router = createRouter([]);
+    const resourceStore = createResourceStore();
     resourceStore.data.thumbnails = {
         '400x400': '/media/400x400/image.jpg?v=1',
         '800x800': '/media/800x800/image.jpg?v=1',
     };
 
-    const mediaFormats = mount(<MediaFormats resourceStore={resourceStore} router={router} />);
+    const user = userEvent.setup({advanceTimers: jest.advanceTimersByTime});
 
-    return formatPromise.then(() => {
-        mediaFormats.update();
+    render(<MediaFormats resourceStore={resourceStore} router={router} />);
 
-        mediaFormats.find('Row').at(0).find('ButtonCell').at(1).prop('onClick')('400x400');
-        expect(copyToClipboard).toHaveBeenLastCalledWith('http://localhost/media/400x400/image.jpg?v=1');
-        mediaFormats.update();
-        expect(mediaFormats.find('Row').at(0).find('ButtonCell').at(1).prop('icon')).toEqual('su-check');
+    expect(await screen.findByTestId('row-400x400')).toBeInTheDocument();
+
+    await user.click(within(screen.getByTestId('row-400x400')).getByRole('button', {name: 'su-copy'}));
+    expect(copyToClipboard).toHaveBeenLastCalledWith('http://localhost/media/400x400/image.jpg?v=1');
+    expect(within(screen.getByTestId('row-400x400')).getByRole('button', {name: 'su-check'})).toBeInTheDocument();
+
+    act(() => {
         jest.runAllTimers();
-        mediaFormats.update();
-        expect(mediaFormats.find('Row').at(0).find('ButtonCell').at(1).prop('icon')).toEqual('su-copy');
+    });
 
-        mediaFormats.find('Row').at(1).find('ButtonCell').at(1).prop('onClick')('800x800');
-        expect(copyToClipboard).toHaveBeenLastCalledWith('http://localhost/media/800x800/image.jpg?v=1');
-        mediaFormats.update();
-        expect(mediaFormats.find('Row').at(1).find('ButtonCell').at(1).prop('icon')).toEqual('su-check');
+    await waitFor(() => {
+        expect(within(screen.getByTestId('row-400x400')).getByRole('button', {name: 'su-copy'})).toBeInTheDocument();
+    });
+
+    await user.click(within(screen.getByTestId('row-800x800')).getByRole('button', {name: 'su-copy'}));
+    expect(copyToClipboard).toHaveBeenLastCalledWith('http://localhost/media/800x800/image.jpg?v=1');
+    expect(within(screen.getByTestId('row-800x800')).getByRole('button', {name: 'su-check'})).toBeInTheDocument();
+
+    act(() => {
         jest.runAllTimers();
-        mediaFormats.update();
-        expect(mediaFormats.find('Row').at(0).find('ButtonCell').at(1).prop('icon')).toEqual('su-copy');
+    });
+
+    await waitFor(() => {
+        expect(within(screen.getByTestId('row-800x800')).getByRole('button', {name: 'su-copy'})).toBeInTheDocument();
     });
 });
 
 test('Should change locale via locale chooser', () => {
-    const formatStore = require('../../../stores/formatStore');
     formatStore.loadFormats.mockReturnValue(Promise.resolve());
 
-    const MediaFormats = require('../MediaFormats').default;
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaFormats);
-    const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
+    const resourceStore = createResourceStore('de');
 
-    const router = {
-        bind: jest.fn(),
-        navigate: jest.fn(),
-        route: {
-            name: 'sulu_media.media_formats',
-            options: {
-                locales: [],
-            },
-        },
-    };
-    const mediaFormats = mount(<MediaFormats resourceStore={resourceStore} router={router} />).get(0);
-    resourceStore.locale.set('de');
+    const router = createRouter([], 'sulu_media.media_formats');
 
-    const toolbarConfig = toolbarFunction.call(mediaFormats);
+    render(<MediaFormats resourceStore={resourceStore} router={router} />);
+
+    const toolbarConfig = getLatestToolbarConfig();
     toolbarConfig.locale.onChange('en');
+
     expect(router.navigate).toBeCalledWith('sulu_media.media_formats', {locale: 'en'});
 });
 
 test('Should show locales from router options in toolbar', () => {
-    const formatStore = require('../../../stores/formatStore');
     formatStore.loadFormats.mockReturnValue(Promise.resolve());
 
-    const MediaFormats = require('../MediaFormats').default;
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaFormats);
-    const resourceStore = new ResourceStore('media', 1, {locale: observable.box()});
+    const resourceStore = createResourceStore();
 
-    const router = {
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: ['en', 'de'],
-            },
-        },
-    };
-    const mediaFormats = mount(<MediaFormats resourceStore={resourceStore} router={router} />).get(0);
+    const router = createRouter(['en', 'de']);
 
-    const toolbarConfig = toolbarFunction.call(mediaFormats);
+    render(<MediaFormats resourceStore={resourceStore} router={router} />);
+
+    const toolbarConfig = getLatestToolbarConfig();
+
     expect(toolbarConfig.locale.options).toEqual([
         {value: 'en', label: 'en'},
         {value: 'de', label: 'de'},
@@ -258,27 +289,16 @@ test('Should show locales from router options in toolbar', () => {
 });
 
 test('Should navigate to defined route on back button click', () => {
-    const formatStore = require('../../../stores/formatStore');
     formatStore.loadFormats.mockReturnValue(Promise.resolve());
 
-    const MediaFormats = require('../MediaFormats').default;
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaFormats);
-    const resourceStore = new ResourceStore('media', '1', {locale: observable.box('de')});
+    const resourceStore = createResourceStore('de');
 
-    const router = {
-        restore: jest.fn(),
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: [],
-            },
-        },
-    };
-    const mediaFormats = mount(<MediaFormats resourceStore={resourceStore} router={router} />).get(0);
+    const router = createRouter([]);
 
-    const toolbarConfig = toolbarFunction.call(mediaFormats);
+    render(<MediaFormats resourceStore={resourceStore} router={router} />);
+
+    const toolbarConfig = getLatestToolbarConfig();
     toolbarConfig.backButton.onClick();
+
     expect(router.restore).toBeCalledWith('sulu_media.overview', {locale: 'de'});
 });

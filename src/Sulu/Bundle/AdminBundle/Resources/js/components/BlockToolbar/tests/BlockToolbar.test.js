@@ -5,6 +5,10 @@ import React from 'react';
 import BlockToolbar from '../BlockToolbar';
 import {setTranslations} from '../../../utils/Translator/Translator';
 
+jest.unmock('sulu-admin-bundle/utils/Translator');
+jest.unmock('../../../utils/Translator');
+jest.unmock('../../../utils/Translator/Translator');
+
 setTranslations({
     'sulu_admin.%count%_selected': '{count} selected',
     'sulu_admin.select_all': 'Select all',

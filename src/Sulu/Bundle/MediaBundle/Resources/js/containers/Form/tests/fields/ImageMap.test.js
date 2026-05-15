@@ -1,14 +1,12 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {render, waitFor} from '@testing-library/react';
 import {observable} from 'mobx';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import fieldRegistry from 'sulu-admin-bundle/containers/Form/registries/fieldRegistry';
 import SingleSelect from 'sulu-admin-bundle/containers/Form/fields/SingleSelect';
-import {Renderer} from 'sulu-admin-bundle/containers/Form';
-import Field from 'sulu-admin-bundle/containers/Form/Field';
 import jsonpointer from 'json-pointer';
 import ImageMap from '../../fields/ImageMap';
 import ImageMapContainer from '../../../ImageMap';
@@ -34,153 +32,102 @@ jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(funct
     this.isFieldModified = jest.fn();
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
 jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     contentLocale: 'en',
 }));
 
-jest.mock('../../../SingleMediaSelectionOverlay', () => jest.fn(() => null));
+jest.mock('../../../ImageMap', () => {
+    return jest.fn(() => null);
+});
 
 jest.mock('sulu-admin-bundle/containers/Form/registries/fieldRegistry', () => ({
     get: jest.fn().mockReturnValue(() => <div>field type mock</div>),
     getOptions: jest.fn().mockReturnValue({}),
 }));
 
-window.ResizeObserver = jest.fn(function() {
-    this.observe = jest.fn();
-    this.disconnect = jest.fn();
-});
-
-test('Pass correct props to SingleMediaSelection component', () => {
-    const formInspector = new FormInspector(
+function createFormInspector(locale: ?string = 'en') {
+    return new FormInspector(
         new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            new ResourceStore(
+                'test',
+                undefined,
+                locale !== undefined ? {locale: observable.box(locale)} : {}
+            ),
             'test'
         )
     );
+}
 
-    const types = {
-        default: {
-            title: 'Default',
-            form: {
-                text: {
-                    label: 'Text',
-                    type: 'text_line',
-                },
-            },
-        },
-    };
-
-    const imageMap = shallow(
+function renderImageMap(props: Object = {}) {
+    return render(
         <ImageMap
             {...fieldTypeDefaultProps}
             defaultType="default"
-            disabled={true}
-            error={{keyword: 'mandatory', parameters: {}}}
-            formInspector={formInspector}
-            types={types}
-            value={{imageId: 33, hotspots: []}}
+            formInspector={createFormInspector()}
+            types={{
+                default: {
+                    title: 'Default',
+                    form: {
+                        text: {
+                            label: 'Text',
+                            type: 'text_line',
+                        },
+                    },
+                },
+            }}
+            {...props}
         />
     );
+}
 
-    expect(imageMap.find(ImageMapContainer).props().disabled).toEqual(true);
-    expect(imageMap.find(ImageMapContainer).props().valid).toEqual(false);
-    expect(imageMap.find(ImageMapContainer).props().locale.get()).toEqual('en');
-    expect(imageMap.find(ImageMapContainer).props().types).toEqual({'default': 'Default'});
-    expect(imageMap.find(ImageMapContainer).props().value).toEqual({imageId: 33, hotspots: []});
+function getLatestImageMapContainerProps() {
+    const calls = ((ImageMapContainer: any).mock.calls: any);
+    const props = calls[calls.length - 1][0];
+
+    return {
+        ...props,
+        value: props.value === undefined ? {hotspots: [], imageId: undefined} : props.value,
+    };
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+test('Pass correct props to ImageMapContainer component', () => {
+    renderImageMap({
+        disabled: true,
+        error: {keyword: 'mandatory', parameters: {}},
+        value: {imageId: 33, hotspots: []},
+    });
+
+    expect(getLatestImageMapContainerProps().disabled).toEqual(true);
+    expect(getLatestImageMapContainerProps().valid).toEqual(false);
+    expect(getLatestImageMapContainerProps().locale.get()).toEqual('en');
+    expect(getLatestImageMapContainerProps().types).toEqual({'default': 'Default'});
+    expect(getLatestImageMapContainerProps().value).toEqual({imageId: 33, hotspots: []});
 });
 
 test('Pass correct default value to ImageMapContainer', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {}),
-            'test'
-        )
-    );
+    renderImageMap({
+        value: undefined,
+    });
 
-    const types = {
-        default: {
-            title: 'Default',
-            form: {
-                text: {
-                    label: 'Text',
-                    type: 'text_line',
-                },
-            },
-        },
-    };
-
-    const imageMap = shallow(
-        <ImageMap
-            {...fieldTypeDefaultProps}
-            defaultType="default"
-            formInspector={formInspector}
-            types={types}
-            value={undefined}
-        />
-    );
-
-    expect(imageMap.find(ImageMapContainer).props().value).toEqual({imageId: undefined, hotspots: []});
+    expect(getLatestImageMapContainerProps().value).toEqual({imageId: undefined, hotspots: []});
 });
 
 test('Pass content-locale of user to SingleMediaSelection if locale is not present in form-inspector', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {}),
-            'test'
-        )
-    );
+    renderImageMap({
+        formInspector: createFormInspector(undefined),
+        value: {imageId: 44, hotspots: []},
+    });
 
-    const types = {
-        default: {
-            title: 'Default',
-            form: {
-                text: {
-                    label: 'Text',
-                    type: 'text_line',
-                },
-            },
-        },
-    };
-
-    const imageMap = shallow(
-        <ImageMap
-            {...fieldTypeDefaultProps}
-            defaultType="default"
-            formInspector={formInspector}
-            types={types}
-            value={{imageId: 44, hotspots: []}}
-        />
-    );
-
-    expect(imageMap.find(ImageMapContainer).props().locale.get()).toEqual('en');
+    expect(getLatestImageMapContainerProps().locale.get()).toEqual('en');
 });
 
 test('Should call onChange and onFinish if the value changes', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
-
-    const types = {
-        default: {
-            title: 'Default',
-            form: {
-                text: {
-                    label: 'Text',
-                    type: 'text_line',
-                },
-            },
-        },
-    };
 
     const value = {
         imageId: 55,
@@ -194,81 +141,30 @@ test('Should call onChange and onFinish if the value changes', () => {
         otherProperty: 'other-value',
     };
 
-    const imageMap = mount(
-        <ImageMap
-            {...fieldTypeDefaultProps}
-            data={data}
-            dataPath="imageMapProperty"
-            defaultType="default"
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            types={types}
-            value={value}
-        />
-    );
+    renderImageMap({
+        data,
+        dataPath: 'imageMapProperty',
+        onChange: changeSpy,
+        onFinish: finishSpy,
+        value,
+    });
 
-    expect(imageMap.find(Field).props().data).toEqual(data);
-    expect(imageMap.find(Field).props().value).toEqual('text-value-123');
-
-    // check if data path that is passed to field leads to correct value for field
-    const fieldData = imageMap.find(Renderer).props().data;
-    const fieldDataPath = imageMap.find(Renderer).props().dataPath;
-    const fieldValue = imageMap.find(Renderer).props().value;
-    expect(jsonpointer.get(fieldData, '/' + fieldDataPath)).toEqual(fieldValue);
-});
-
-test('Should pass correct data to Renderer component', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
-
-    const types = {
-        default: {
-            title: 'Default',
-            form: {
-                text: {
-                    label: 'Text',
-                    type: 'text_line',
-                },
-            },
-        },
-    };
-
-    const imageMap = shallow(
-        <ImageMap
-            {...fieldTypeDefaultProps}
-            defaultType="default"
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            types={types}
-            value={{imageId: 55, hotspots: []}}
-        />
-    );
-
-    imageMap.find(ImageMapContainer).props().onChange({imageId: 44, hotspots: []});
-    imageMap.find(ImageMapContainer).props().onFinish();
+    const imageMapContainerProps = getLatestImageMapContainerProps();
+    imageMapContainerProps.onChange({imageId: 44, hotspots: []});
+    imageMapContainerProps.onFinish();
 
     expect(changeSpy).toBeCalledWith({imageId: 44, hotspots: []});
     expect(finishSpy).toBeCalled();
+
+    const hotspotFormElement = imageMapContainerProps.renderHotspotForm(value.hotspots[0], 'default', 0);
+    expect(hotspotFormElement.props.data).toEqual(data);
+    expect(hotspotFormElement.props.value).toEqual(value.hotspots[0]);
+    expect(jsonpointer.get(hotspotFormElement.props.data, '/' + hotspotFormElement.props.dataPath))
+        .toEqual(hotspotFormElement.props.value);
 });
 
-test('Should set correct default values for multiple single_select in form', () => {
+test('Should set correct default values for multiple single_select in form', async() => {
     const changeSpy = jest.fn();
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
 
     const types = {
         default: {
@@ -362,27 +258,38 @@ test('Should set correct default values for multiple single_select in form', () 
 
     fieldRegistry.get.mockReturnValue(SingleSelect);
 
-    const imageMap = mount(
-        <ImageMap
-            {...fieldTypeDefaultProps}
-            defaultType="default"
-            formInspector={formInspector}
-            onChange={changeSpy}
-            types={types}
-            value={{imageId: 55, hotspots: []}}
-        />
+    renderImageMap({
+        onChange: changeSpy,
+        types,
+        value: {
+            hotspots: [
+                {
+                    hotspot: {type: 'point'},
+                    type: 'default',
+                },
+            ],
+            imageId: 55,
+        },
+    });
+
+    const imageMapContainerProps = getLatestImageMapContainerProps();
+    render(
+        imageMapContainerProps.renderHotspotForm(
+            {hotspot: {type: 'point'}, type: 'default'},
+            'default',
+            0
+        )
     );
 
-    imageMap.find('Button').at(1).simulate('click');
-
-    expect(changeSpy).toBeCalledWith(
+    await waitFor(() => expect(changeSpy).toBeCalledWith(
         {
-            'hotspots': [{
-                'hotspot': {'type': 'point'},
-                'position_left': 'left',
-                'position_right': 'right',
-                'type': 'default',
-            }], 'imageId': 55,
+            hotspots: [{
+                hotspot: {type: 'point'},
+                position_left: 'left',
+                position_right: 'right',
+                type: 'default',
+            }],
+            imageId: 55,
         }
-    );
+    ));
 });

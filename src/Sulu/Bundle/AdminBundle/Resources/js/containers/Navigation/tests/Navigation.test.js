@@ -1,17 +1,21 @@
 // @flow
 import React from 'react';
-import {render, mount} from 'enzyme';
+import {render} from '@testing-library/react';
 import Navigation from '../Navigation';
 import Router, {Route} from '../../../services/Router';
+import NavigationComponent from '../../../components/Navigation';
 import type {NavigationItem} from '../types';
-
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
 
 jest.mock('../../../services/Router/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
 }));
+
+jest.mock('../../../components/Navigation', () => {
+    const NavigationMock: any = jest.fn(({children}) => <div>{children}</div>);
+    NavigationMock.Item = jest.fn(({children}) => <div>{children}</div>);
+
+    return NavigationMock;
+});
 
 jest.mock('../registries/navigationRegistry', () => ({
     get: jest.fn().mockReturnValue(
@@ -87,6 +91,15 @@ jest.mock('../registries/navigationRegistry', () => ({
     ]: Array<NavigationItem>)),
 }));
 
+function getLatestNavigationProps() {
+    const calls = (NavigationComponent: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
 test('Should render navigation', () => {
     const router = new Router({});
     router.route = new Route({
@@ -95,7 +108,7 @@ test('Should render navigation', () => {
         type: 'form_tab',
     });
 
-    const navigation = render(
+    render(
         <Navigation
             appVersion="666"
             onLogout={jest.fn()}
@@ -108,7 +121,16 @@ test('Should render navigation', () => {
         />
     );
 
-    expect(navigation).toMatchSnapshot();
+    expect(getLatestNavigationProps()).toEqual(expect.objectContaining({
+        appVersion: '666',
+        pinned: false,
+        suluVersion: '2.0.0-RC1',
+        suluVersionLink: 'https://github.com/sulu/sulu/releases',
+        title: 'Sulu',
+    }));
+    expect((NavigationComponent.Item: any).mock.calls.map(([props]) => props.value))
+        .toEqual(['111-111', '222-222', '333-333', '333-child1', '333-child2']);
+    expect((NavigationComponent.Item: any).mock.calls[0][0].active).toEqual(true);
 });
 
 test('Should render navigation without appVersion', () => {
@@ -119,7 +141,7 @@ test('Should render navigation without appVersion', () => {
         type: 'form_tab',
     });
 
-    const navigation = render(
+    render(
         <Navigation
             appVersion={null}
             onLogout={jest.fn()}
@@ -132,7 +154,7 @@ test('Should render navigation without appVersion', () => {
         />
     );
 
-    expect(navigation).toMatchSnapshot();
+    expect(getLatestNavigationProps().appVersion).toEqual(null);
 });
 
 test('Should call the navigation callback, pin callback and router navigate', () => {
@@ -145,7 +167,7 @@ test('Should call the navigation callback, pin callback and router navigate', ()
     const handleNavigate = jest.fn();
     const handlePin = jest.fn();
 
-    const navigation = mount(
+    render(
         <Navigation
             appVersion={null}
             onLogout={jest.fn()}
@@ -158,10 +180,10 @@ test('Should call the navigation callback, pin callback and router navigate', ()
         />
     );
 
-    navigation.find('Item').at(4).find('.title').simulate('click');
+    getLatestNavigationProps().onItemClick('111-111');
     expect(router.navigate).toHaveBeenCalledWith('returned_main_route');
     expect(handleNavigate).toHaveBeenCalledWith('returned_main_route');
 
-    navigation.find('.pin').simulate('click');
+    getLatestNavigationProps().onPinToggle();
     expect(handlePin).toBeCalled();
 });

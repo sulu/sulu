@@ -5,14 +5,6 @@ import React from 'react';
 import Badge from '../../Badge/Badge';
 import Tabs from '../Tabs.js';
 
-jest.mock('debounce', () => jest.fn((callback) => callback));
-
-window.ResizeObserver = jest.fn(function(callback) {
-    this.observe = jest.fn();
-    this.disconnect = jest.fn();
-    this.callback = callback;
-});
-
 Object.defineProperty(window, 'getComputedStyle', {
     value: () => ({
         paddingLeft: 20.0,

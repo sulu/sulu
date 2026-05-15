@@ -5,8 +5,6 @@ import InfiniteScroller from '../InfiniteScroller';
 
 window.getComputedStyle = jest.fn();
 
-jest.mock('debounce', () => jest.fn((callback) => callback));
-
 jest.mock('../../../utils/Translator', () => ({
     translate(key) {
         switch (key) {

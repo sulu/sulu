@@ -1,91 +1,86 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import userEvent from '@testing-library/user-event';
+import {render, screen} from '@testing-library/react';
 import ForgotPasswordForm from '../ForgotPasswordForm';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn(function(key) {
-        return key;
-    }),
-}));
-
 test('Should render the component', () => {
-    expect(render(
+    render(
         <ForgotPasswordForm
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
-        />)
-    ).toMatchSnapshot();
+        />
+    );
+
+    expect(screen.getByText('sulu_admin.forgot_password')).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'sulu_admin.reset'})).toBeDisabled();
 });
 
 test('Should render the component loading', () => {
-    expect(render(
+    render(
         <ForgotPasswordForm
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
-        />)
-    ).toMatchSnapshot();
+        />
+    );
+
+    expect(screen.getByText('sulu_admin.forgot_password')).toBeInTheDocument();
 });
 
 test('Should render the component with success', () => {
-    expect(render(
+    render(
         <ForgotPasswordForm
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
             success={true}
-        />)
-    ).toMatchSnapshot();
+        />
+    );
+
+    expect(screen.getByText('sulu_admin.forgot_password_success')).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'sulu_admin.reset_resend'})).toBeDisabled();
 });
 
-test('Should trigger onChangeForm correctly', () => {
+test('Should trigger onChangeForm correctly', async() => {
+    const user = userEvent.setup();
     const onChangeForm = jest.fn();
-    const resetForm = shallow(
+    render(
         <ForgotPasswordForm
             onChangeForm={onChangeForm}
             onSubmit={jest.fn()}
         />
     );
 
-    resetForm.find('Button').at(0).simulate('click');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.back_to_login'}));
 
     expect(onChangeForm).toBeCalled();
 });
 
-test('Should not trigger onSubmit if user is missing', () => {
+test('Should not trigger onSubmit if user is missing', async() => {
+    const user = userEvent.setup();
     const onSubmit = jest.fn();
-    const resetForm = shallow(
+    render(
         <ForgotPasswordForm
             onChangeForm={jest.fn()}
             onSubmit={onSubmit}
         />
     );
 
-    const event = {
-        preventDefault: jest.fn(),
-    };
-
-    resetForm.find('form').prop('onSubmit')(event);
-
-    expect(event.preventDefault).toBeCalledWith();
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.reset'}));
     expect(onSubmit).not.toBeCalled();
 });
 
-test('Should trigger onSubmit correctly', () => {
+test('Should trigger onSubmit correctly', async() => {
+    const user = userEvent.setup();
     const onSubmit = jest.fn();
-    const resetForm = shallow(
+    render(
         <ForgotPasswordForm
             onChangeForm={jest.fn()}
             onSubmit={onSubmit}
         />
     );
 
-    const event = {
-        preventDefault: jest.fn(),
-    };
+    await user.type(screen.getByRole('textbox'), 'testusername');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.reset'}));
 
-    resetForm.find('Input[icon="su-user"]').prop('onChange')('testusername');
-    resetForm.find('form').prop('onSubmit')(event);
-
-    expect(event.preventDefault).toBeCalledWith();
     expect(onSubmit).toBeCalledWith({user: 'testusername'});
 });

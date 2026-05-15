@@ -1,5 +1,5 @@
 // @flow
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import {observable} from 'mobx';
 import React from 'react';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers/Form';
@@ -18,6 +18,13 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
     get: jest.fn().mockReturnValue(Promise.resolve({})),
 }));
 
+jest.mock('../../../MediaVersionUpload/MediaVersionUpload', () => jest.fn(() => null));
+
+function getLatestMediaVersionUploadProps() {
+    const calls = (MediaVersionUploadComponent: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
+
 test('Pass ResourceStore from FormInspector to MediaVersionUpload component', () => {
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
     const successSpy = jest.fn();
@@ -27,12 +34,13 @@ test('Pass ResourceStore from FormInspector to MediaVersionUpload component', ()
         )
     );
 
-    const mediaVersionUpload = shallow(<MediaVersionUpload
+    render(<MediaVersionUpload
         {...fieldTypeDefaultProps}
         formInspector={formInspector}
         onSuccess={successSpy}
     />);
+    const mediaVersionUploadProps = getLatestMediaVersionUploadProps();
 
-    expect(mediaVersionUpload.find(MediaVersionUploadComponent).prop('resourceStore')).toEqual(resourceStore);
-    expect(mediaVersionUpload.find(MediaVersionUploadComponent).prop('onSuccess')).toEqual(successSpy);
+    expect(mediaVersionUploadProps.resourceStore).toEqual(resourceStore);
+    expect(mediaVersionUploadProps.onSuccess).toEqual(successSpy);
 });

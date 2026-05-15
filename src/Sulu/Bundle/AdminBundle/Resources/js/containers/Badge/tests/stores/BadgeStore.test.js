@@ -5,8 +5,6 @@ import BadgeStore from '../../stores/BadgeStore';
 import Router from '../../../../services/Router';
 import Requester from '../../../../services/Requester';
 
-jest.mock('debounce', () => jest.fn((callback) => callback));
-
 jest.mock('../../../../services/Requester', () => ({
     get: jest.fn(),
 }));

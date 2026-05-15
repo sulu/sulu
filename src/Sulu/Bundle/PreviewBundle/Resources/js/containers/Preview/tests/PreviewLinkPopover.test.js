@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import {observable} from 'mobx';
-import {shallow} from 'enzyme';
+import {render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import copyToClipboard from 'copy-to-clipboard';
 import ResourceRequester from 'sulu-admin-bundle/services/ResourceRequester';
 import PreviewStore from '../stores/PreviewStore';
@@ -25,18 +26,18 @@ jest.mock('sulu-admin-bundle/utils', () => ({
 }));
 
 beforeEach(() => {
-    jest.resetModules();
+    jest.clearAllMocks();
 
     PreviewStore.endpoints = {
         'preview-link': '/admin/p/:token',
     };
 });
 
-test('Render popover when preview link is available and copy link to clipboard', () => {
-    const promise = Promise.resolve({
+test('Render popover when preview link is available and copy link to clipboard', async() => {
+    const user = userEvent.setup();
+    ResourceRequester.get.mockResolvedValue({
         token: '123-123-123',
     });
-    ResourceRequester.get.mockReturnValue(promise);
 
     const previewStore = new PreviewStore(
         'pages',
@@ -45,28 +46,25 @@ test('Render popover when preview link is available and copy link to clipboard',
         'sulu_io',
         undefined
     );
-    const component = shallow(<PreviewLinkPopover previewStore={previewStore} />);
+    const {asFragment} = render(<PreviewLinkPopover previewStore={previewStore} />);
 
-    return promise.then(() => {
-        expect(component).toMatchSnapshot();
+    expect(await screen.findByRole('button', {name: 'sulu_preview.copy'})).toBeInTheDocument();
+    expect(asFragment()).toMatchSnapshot();
 
-        expect(ResourceRequester.get).toBeCalledWith('preview_links', {
-            resourceKey: 'pages',
-            resourceId: '123-123-123',
-            locale: 'de',
-        });
-
-        component.instance().handleCopyClick();
-
-        expect(copyToClipboard).toBeCalledWith('/admin/p/123-123-123');
+    expect(ResourceRequester.get).toBeCalledWith('preview_links', {
+        resourceKey: 'pages',
+        resourceId: '123-123-123',
+        locale: 'de',
     });
+
+    await user.click(screen.getByRole('button', {name: 'sulu_preview.copy'}));
+    expect(copyToClipboard).toBeCalledWith('/admin/p/123-123-123');
 });
 
-test('Render popover when no link is available', (done) => {
-    const promise = Promise.reject({
+test('Render popover when no link is available', async() => {
+    ResourceRequester.get.mockRejectedValue({
         status: 404,
     });
-    ResourceRequester.get.mockReturnValue(promise);
 
     const previewStore = new PreviewStore(
         'pages',
@@ -75,68 +73,26 @@ test('Render popover when no link is available', (done) => {
         'sulu_io',
         undefined
     );
-    const component = shallow(<PreviewLinkPopover previewStore={previewStore} />);
+    const {asFragment} = render(<PreviewLinkPopover previewStore={previewStore} />);
 
-    setTimeout(() => {
-        expect(component).toMatchSnapshot();
+    expect(await screen.findByRole('button', {name: 'sulu_preview.generate_link'})).toBeInTheDocument();
+    expect(asFragment()).toMatchSnapshot();
 
-        expect(ResourceRequester.get).toBeCalledWith('preview_links', {
-            resourceKey: 'pages',
-            resourceId: '123-123-123',
-            locale: 'de',
-        });
-
-        done();
+    expect(ResourceRequester.get).toBeCalledWith('preview_links', {
+        resourceKey: 'pages',
+        resourceId: '123-123-123',
+        locale: 'de',
     });
 });
 
-test('Generate link', (done) => {
-    const promise = Promise.reject({
+test('Generate link', async() => {
+    const user = userEvent.setup();
+    ResourceRequester.get.mockRejectedValue({
         status: 404,
     });
-    ResourceRequester.get.mockReturnValue(promise);
-
-    const previewStore = new PreviewStore(
-        'pages',
-        '123-123-123',
-        observable.box('de'),
-        'sulu_io',
-        undefined
-    );
-    const component = shallow(<PreviewLinkPopover previewStore={previewStore} />);
-
-    setTimeout(() => {
-        const promise = Promise.resolve({
-            token: '123-123-123',
-        });
-        ResourceRequester.post.mockReturnValue(promise);
-
-        component.instance().handleGenerateClick();
-
-        setTimeout(() => {
-            expect(component).toMatchSnapshot();
-
-            expect(ResourceRequester.post).toBeCalledWith('preview_links', {}, {
-                action: 'generate',
-                dateTime: undefined,
-                resourceKey: 'pages',
-                resourceId: '123-123-123',
-                locale: 'de',
-                segmentKey: undefined,
-                targetGroupId: undefined,
-                webspaceKey: undefined,
-            });
-
-            done();
-        });
-    });
-});
-
-test('Revoke Link', (done) => {
-    const promise = Promise.resolve({
+    ResourceRequester.post.mockResolvedValue({
         token: '123-123-123',
     });
-    ResourceRequester.get.mockReturnValue(promise);
 
     const previewStore = new PreviewStore(
         'pages',
@@ -145,23 +101,49 @@ test('Revoke Link', (done) => {
         'sulu_io',
         undefined
     );
-    const component = shallow(<PreviewLinkPopover previewStore={previewStore} />);
+    const {asFragment} = render(<PreviewLinkPopover previewStore={previewStore} />);
 
-    promise.then(() => {
-        const promise = Promise.resolve();
-        ResourceRequester.post.mockReturnValue(promise);
+    await user.click(await screen.findByRole('button', {name: 'sulu_preview.generate_link'}));
 
-        component.instance().handleRevokeClick({preventDefault: jest.fn()});
+    await waitFor(() => expect(ResourceRequester.post).toBeCalledWith('preview_links', {}, {
+        action: 'generate',
+        dateTime: undefined,
+        resourceKey: 'pages',
+        resourceId: '123-123-123',
+        locale: 'de',
+        segmentKey: undefined,
+        targetGroupId: undefined,
+        webspaceKey: undefined,
+    }));
 
-        expect(ResourceRequester.post.mock.calls[0][0]).toBe('preview_links');
-        expect(ResourceRequester.post.mock.calls[0][1]).toStrictEqual({});
-        expect(ResourceRequester.post.mock.calls[0][2]).toStrictEqual({
-            action: 'revoke',
-            resourceKey: 'pages',
-            resourceId: '123-123-123',
-            locale: 'de',
-        });
+    expect(await screen.findByRole('button', {name: 'sulu_preview.copy'})).toBeInTheDocument();
+    expect(asFragment()).toMatchSnapshot();
+});
 
-        done();
+test('Revoke Link', async() => {
+    const user = userEvent.setup();
+    ResourceRequester.get.mockResolvedValue({
+        token: '123-123-123',
+    });
+    ResourceRequester.post.mockResolvedValue();
+
+    const previewStore = new PreviewStore(
+        'pages',
+        '123-123-123',
+        observable.box('de'),
+        'sulu_io',
+        undefined
+    );
+    render(<PreviewLinkPopover previewStore={previewStore} />);
+
+    await user.click(await screen.findByRole('button', {name: 'sulu_preview.revoke'}));
+
+    expect(ResourceRequester.post.mock.calls[0][0]).toBe('preview_links');
+    expect(ResourceRequester.post.mock.calls[0][1]).toStrictEqual({});
+    expect(ResourceRequester.post.mock.calls[0][2]).toStrictEqual({
+        action: 'revoke',
+        resourceKey: 'pages',
+        resourceId: '123-123-123',
+        locale: 'de',
     });
 });

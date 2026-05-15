@@ -1,11 +1,19 @@
 // @flow
-import {mount, render, shallow} from 'enzyme';
+/* eslint-disable max-len, testing-library/prefer-explicit-assert */
 import React from 'react';
+import {act, render as rtlRender, screen} from '@testing-library/react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
+import Dialog from '../../../components/Dialog';
+import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
 import {translate} from '../../../utils/Translator';
 import userStore from '../../../stores/userStore';
+import DeleteDependantResourcesDialog from '../../DeleteDependantResourcesDialog';
+import DeleteReferencedResourceDialog from '../../DeleteReferencedResourceDialog';
 import SingleListOverlay from '../../SingleListOverlay';
 import List from '../List';
+import AdapterSwitch from '../AdapterSwitch';
+import FieldFilter from '../FieldFilter';
+import Search from '../Search';
 import ListStore from '../stores/ListStore';
 import listAdapterRegistry from '../registries/listAdapterRegistry';
 import listFieldFilterTypeRegistry from '../registries/listFieldFilterTypeRegistry';
@@ -18,6 +26,82 @@ import ColumnListAdapter from '../adapters/ColumnListAdapter';
 
 let mockStructureStrategyData;
 let mockStructureStrategyVisibleItems;
+
+const getMockCallPropsFromEnd = (mockComponent: Function, indexFromEnd: number = 0) => {
+    const calls = (mockComponent: any).mock.calls;
+    return calls[calls.length - 1 - indexFromEnd] && calls[calls.length - 1 - indexFromEnd][0];
+};
+
+const getMoveOverlayProps = () => getMockCallPropsFromEnd((SingleListOverlay: any), 1);
+const getCopyOverlayProps = () => getMockCallPropsFromEnd((SingleListOverlay: any));
+const getDialogPropsByTitle = (title: string, indexFromEnd: number = 0) => {
+    const matchingCalls = (Dialog: any).mock.calls.filter((args) => args[0].title === title);
+    const call = matchingCalls[matchingCalls.length - 1 - indexFromEnd];
+    return call && call[0];
+};
+const getDeleteSelectionDialogProps = () => getDialogPropsByTitle('sulu_admin.delete_warning_title', 1);
+const getDeleteItemDialogProps = () => getDialogPropsByTitle('sulu_admin.delete_warning_title');
+const getMovePermissionDialogProps = () => getDialogPropsByTitle('sulu_security.move_permission_title');
+const getOrderDialogProps = () => getDialogPropsByTitle('sulu_admin.order_warning_title');
+const getDeleteReferencedResourceDialogProps = () => getLatestMockProps((DeleteReferencedResourceDialog: any));
+const getDeleteDependantResourcesDialogProps = () => getLatestMockProps((DeleteDependantResourcesDialog: any));
+
+const renderList = (element: React$Element<any>): any => {
+    const view = rtlRender(element);
+
+    return {
+        ...view,
+        unmount: () => view.unmount(),
+        rerenderList: () => {
+            view.rerender(element);
+        },
+    };
+};
+
+const ListWithSelectionDeleteButton = ({allowConflictDeletion = true, ...props}: any) => {
+    let list;
+    const setList = (listInstance) => {
+        list = listInstance;
+    };
+    const handleSelectionDeleteClick = () => {
+        if (!list) {
+            throw new Error('Expected List ref to be set');
+        }
+
+        list.requestSelectionDelete(allowConflictDeletion);
+    };
+
+    return (
+        <>
+            <button
+                // eslint-disable-next-line react/jsx-no-bind
+                onClick={handleSelectionDeleteClick}
+                type="button"
+            >
+                delete selection
+            </button>
+            {/* eslint-disable-next-line react/jsx-no-bind */}
+            <List {...props} ref={setList} />
+        </>
+    );
+};
+
+const renderListWithSelectionDeleteButton = (props: Object, allowConflictDeletion?: boolean = true) => (
+    renderList(<ListWithSelectionDeleteButton {...props} allowConflictDeletion={allowConflictDeletion} />)
+);
+
+const requestSelectionDelete = () => {
+    act(() => {
+        screen.getByRole('button', {name: 'delete selection'}).click();
+    });
+};
+
+const renderOnce = (element: React$Element<any>) => {
+    const view = rtlRender(element);
+    const html = view.container.firstChild;
+    view.unmount();
+    return html;
+};
 
 jest.mock('../../../stores/userStore', () => ({
     setPersistentSetting: jest.fn(),
@@ -130,11 +214,56 @@ jest.mock('../registries/listFieldTransformerRegistry', () => ({
     has: jest.fn(),
 }));
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
+jest.mock('../../../components/Dialog', () => jest.fn(() => null));
+jest.mock('../../DeleteDependantResourcesDialog', () => jest.fn(() => {
+    const React = require('react');
+    return React.createElement('div', {'data-testid': 'delete-dependant-resources-dialog'});
 }));
-
+jest.mock('../../DeleteReferencedResourceDialog', () => jest.fn(() => {
+    const React = require('react');
+    return React.createElement('div', {'data-testid': 'delete-referenced-resource-dialog'});
+}));
 jest.mock('../../SingleListOverlay', () => jest.fn(() => null));
+jest.mock('../AdapterSwitch', () => jest.fn(() => null));
+jest.mock('../FieldFilter', () => jest.fn(() => null));
+jest.mock('../Search', () => jest.fn(() => null));
+
+jest.mock('../adapters/TableAdapter', () => {
+    const TableAdapter: any = jest.fn(() => null);
+    TableAdapter.LoadingStrategy = class {};
+    TableAdapter.StructureStrategy = class {};
+    TableAdapter.hasColumnOptions = true;
+    TableAdapter.icon = 'su-align-justify';
+    TableAdapter.paginatable = true;
+    TableAdapter.searchable = true;
+
+    return TableAdapter;
+});
+
+jest.mock('../adapters/FolderAdapter', () => {
+    const FolderAdapter: any = jest.fn(() => null);
+    FolderAdapter.LoadingStrategy = class {};
+    FolderAdapter.StructureStrategy = class {};
+    FolderAdapter.hasColumnOptions = false;
+    FolderAdapter.icon = 'su-folder';
+    FolderAdapter.paginatable = true;
+    FolderAdapter.searchable = true;
+
+    return FolderAdapter;
+});
+
+jest.mock('../adapters/ColumnListAdapter', () => {
+    const ColumnListAdapter: any = jest.fn(() => null);
+    ColumnListAdapter.LoadingStrategy = class {};
+    ColumnListAdapter.StructureStrategy = class {};
+    ColumnListAdapter.hasColumnOptions = false;
+    ColumnListAdapter.icon = 'su-columns';
+    ColumnListAdapter.paginatable = false;
+    ColumnListAdapter.searchable = false;
+
+    return ColumnListAdapter;
+});
+
 class LoadingStrategy {
     destroy = jest.fn();
     initialize = jest.fn();
@@ -154,22 +283,20 @@ class StructureStrategy {
     remove = jest.fn();
 }
 
-class TestAdapter extends AbstractAdapter {
-    static LoadingStrategy = LoadingStrategy;
-
-    static StructureStrategy = StructureStrategy;
-
-    static icon = 'su-th-large';
-
-    render() {
-        return (
-            <div>Test Adapter</div>
-        );
-    }
-}
+const TestAdapter: any = jest.fn(() => <div>Test Adapter</div>);
+TestAdapter.LoadingStrategy = LoadingStrategy;
+TestAdapter.StructureStrategy = StructureStrategy;
+TestAdapter.hasColumnOptions = false;
+TestAdapter.icon = 'su-th-large';
+TestAdapter.paginatable = true;
+TestAdapter.searchable = true;
 
 beforeEach(() => {
+    jest.clearAllMocks();
     mockStructureStrategyData = [];
+    TestAdapter.hasColumnOptions = false;
+    TestAdapter.paginatable = true;
+    TestAdapter.searchable = true;
     listAdapterRegistry.has.mockReturnValue(true);
     listAdapterRegistry.get.mockReturnValue(TestAdapter);
 
@@ -182,7 +309,7 @@ test('Render Loader instead of Adapter if nothing was loaded yet', () => {
     listStore.loading = true;
     listStore.pageCount = 0;
 
-    expect(render(<List adapters={['table']} store={listStore} />)).toMatchSnapshot();
+    expect(renderOnce(<List adapters={['table']} store={listStore} />)).toMatchSnapshot();
 });
 
 test('Render permission hint if permissions are missing', () => {
@@ -192,7 +319,7 @@ test('Render permission hint if permissions are missing', () => {
     listStore.pageCount = 0;
     listStore.forbidden = true;
 
-    expect(render(<List adapters={['table']} store={listStore} />)).toMatchSnapshot();
+    expect(renderOnce(<List adapters={['table']} store={listStore} />)).toMatchSnapshot();
 });
 
 test('Do not render Loader instead of Adapter if no page count is given', () => {
@@ -201,7 +328,7 @@ test('Do not render Loader instead of Adapter if no page count is given', () => 
     listStore.loading = true;
     listStore.pageCount = undefined;
 
-    expect(render(<List adapters={['table']} store={listStore} />)).toMatchSnapshot();
+    expect(renderOnce(<List adapters={['table']} store={listStore} />)).toMatchSnapshot();
 });
 
 test('Render toolbar with with search field and actions', () => {
@@ -221,7 +348,7 @@ test('Render toolbar with with search field and actions', () => {
         },
     ];
 
-    expect(render(<List actions={listActions} adapters={['table']} store={listStore} />)).toMatchSnapshot();
+    expect(renderOnce(<List actions={listActions} adapters={['table']} store={listStore} />)).toMatchSnapshot();
 });
 
 test('Render toolbar with given toolbar class', () => {
@@ -230,61 +357,50 @@ test('Render toolbar with given toolbar class', () => {
     listStore.loading = true;
     listStore.pageCount = undefined;
 
-    const list = shallow(<List adapters={['table']} store={listStore} toolbarClassName="test-class" />);
+    const list = renderList(<List adapters={['table']} store={listStore} toolbarClassName="test-class" />);
 
-    expect(list.find('.toolbar').prop('className')).toEqual(expect.stringContaining('test-class'));
+    const toolbar = list.container.querySelector('.toolbar');
+    expect(toolbar && toolbar.className).toEqual(expect.stringContaining('test-class'));
 });
 
 test('Do not render toolbar if list is not searchable and adapter has column options but List deactivated them', () => {
-    class NewTestAdapter extends TestAdapter {
-        static hasColumnOptions = true;
-    }
-    listAdapterRegistry.get.mockReturnValue(NewTestAdapter);
+    TestAdapter.hasColumnOptions = true;
 
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
 
-    const list = shallow(<List adapters={['table']} searchable={false} showColumnOptions={false} store={listStore} />);
+    const list = renderList(<List adapters={['table']} searchable={false} showColumnOptions={false} store={listStore} />);
 
-    expect(list.find('.toolbar').exists()).toBeFalsy();
+    expect(list.container.querySelector('.toolbar')).toEqual(null);
 });
 
 test('Do not render toolbar if list is not searchable and adapter has no column options', () => {
-    class NewTestAdapter extends TestAdapter {
-        static hasColumnOptions = false;
-    }
-    listAdapterRegistry.get.mockReturnValue(NewTestAdapter);
+    TestAdapter.hasColumnOptions = false;
 
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
 
-    const list = shallow(<List adapters={['table']} searchable={false} store={listStore} />);
+    const list = renderList(<List adapters={['table']} searchable={false} store={listStore} />);
 
-    expect(list.find('.toolbar').exists()).toBeFalsy();
+    expect(list.container.querySelector('.toolbar')).toEqual(null);
 });
 
 test('Render toolbar if list is not searchable but adapter has column options', () => {
-    class NewTestAdapter extends TestAdapter {
-        static hasColumnOptions = true;
-    }
-    listAdapterRegistry.get.mockReturnValue(NewTestAdapter);
+    TestAdapter.hasColumnOptions = true;
 
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
 
-    const list = shallow(<List adapters={['table']} searchable={false} store={listStore} />);
+    const list = renderList(<List adapters={['table']} searchable={false} store={listStore} />);
 
-    expect(list.find('.toolbar').exists()).toBeTruthy();
+    expect(list.container.querySelector('.toolbar')).not.toEqual(null);
 });
 
 test('Render toolbar with multiple adapters if list is not searchable and adapter has no column options', () => {
-    class NewTestAdapter extends TestAdapter {
-        static hasColumnOptions = false;
-    }
-    listAdapterRegistry.get.mockReturnValue(NewTestAdapter);
+    TestAdapter.hasColumnOptions = false;
 
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
 
-    const list = shallow(<List adapters={['table', 'other-table']} searchable={false} store={listStore} />);
+    const list = renderList(<List adapters={['table', 'other-table']} searchable={false} store={listStore} />);
 
-    expect(list.find('.toolbar').exists()).toBeTruthy();
+    expect(list.container.querySelector('.toolbar')).not.toEqual(null);
 });
 
 test('Render TableAdapter with correct values', () => {
@@ -301,18 +417,18 @@ test('Render TableAdapter with correct values', () => {
     listStore.selectionIds.push(1, 3);
     const editClickSpy = jest.fn();
 
-    const list = shallow(<List adapters={['table']} onItemClick={editClickSpy} store={listStore} />);
+    renderList(<List adapters={['table']} onItemClick={editClickSpy} store={listStore} />);
 
-    expect(list.find('Search')).not.toBeUndefined();
+    expect(Search).toBeCalled();
 
-    const tableAdapter = list.find('TableAdapter');
+    const tableAdapterProps = getLatestMockProps((TableAdapter: any));
 
-    expect(tableAdapter.prop('actions')).toEqual(undefined);
-    expect(tableAdapter.prop('data')).toEqual([{'id': 1, 'title': 'value'}]);
-    expect(tableAdapter.prop('active')).toEqual(3);
-    expect(tableAdapter.prop('activeItems')).toBe(listStore.activeItems);
-    expect(tableAdapter.prop('selections')).toEqual([1, 3]);
-    expect(tableAdapter.prop('schema')).toEqual({
+    expect(tableAdapterProps.actions).toEqual(undefined);
+    expect(tableAdapterProps.data).toEqual([{'id': 1, 'title': 'value'}]);
+    expect(tableAdapterProps.active).toEqual(3);
+    expect(tableAdapterProps.activeItems).toBe(listStore.activeItems);
+    expect(tableAdapterProps.selections).toEqual([1, 3]);
+    expect(tableAdapterProps.schema).toEqual({
         title: {
             type: 'string',
             sortable: true,
@@ -320,9 +436,9 @@ test('Render TableAdapter with correct values', () => {
             label: 'Title',
         },
     });
-    expect(tableAdapter.prop('onItemClick')).toBe(editClickSpy);
-    expect(tableAdapter.prop('onItemSelectionChange')).toBeInstanceOf(Function);
-    expect(tableAdapter.prop('onAllSelectionChange')).toBeInstanceOf(Function);
+    expect(tableAdapterProps.onItemClick).toBe(editClickSpy);
+    expect(tableAdapterProps.onItemSelectionChange).toBeInstanceOf(Function);
+    expect(tableAdapterProps.onAllSelectionChange).toBeInstanceOf(Function);
 });
 
 test('Render TableAdapter with itemActions', () => {
@@ -344,52 +460,51 @@ test('Render TableAdapter with itemActions', () => {
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
 
     // eslint-disable-next-line react/jsx-no-bind
-    const list = shallow(<List adapters={['table']} itemActionsProvider={actionsProvider} store={listStore} />);
+    renderList(<List adapters={['table']} itemActionsProvider={actionsProvider} store={listStore} />);
 
-    const tableAdapter = list.find('TableAdapter');
-    expect(tableAdapter.prop('itemActionsProvider')).toEqual(actionsProvider);
+    expect(getLatestMockProps((TableAdapter: any)).itemActionsProvider).toEqual(actionsProvider);
 });
 
 test('Render the adapter in non-selectable mode', () => {
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
-    const list = shallow(<List adapters={['test']} selectable={false} store={listStore} />);
+    renderList(<List adapters={['test']} selectable={false} store={listStore} />);
 
-    expect(list.find('TestAdapter').prop('onItemSelectionChange')).toEqual(undefined);
-    expect(list.find('TestAdapter').prop('onAllSelectionChange')).toEqual(undefined);
+    expect(getLatestMockProps(TestAdapter).onItemSelectionChange).toEqual(undefined);
+    expect(getLatestMockProps(TestAdapter).onAllSelectionChange).toEqual(undefined);
 });
 
 test('Render the adapter in non-deletable mode', () => {
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
-    const list = shallow(<List adapters={['test']} deletable={false} store={listStore} />);
+    renderList(<List adapters={['test']} deletable={false} store={listStore} />);
 
-    expect(list.find('TestAdapter').prop('onRequestItemDelete')).toEqual(undefined);
+    expect(getLatestMockProps(TestAdapter).onRequestItemDelete).toEqual(undefined);
 });
 
 test('Render the adapter in non-movable mode', () => {
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
-    const list = shallow(<List adapters={['test']} movable={false} store={listStore} />);
+    renderList(<List adapters={['test']} movable={false} store={listStore} />);
 
-    expect(list.find('TestAdapter').prop('onRequestItemMove')).toEqual(undefined);
+    expect(getLatestMockProps(TestAdapter).onRequestItemMove).toEqual(undefined);
 });
 
 test('Render the adapter in non-copyable mode', () => {
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
-    const list = shallow(<List adapters={['test']} copyable={false} store={listStore} />);
+    renderList(<List adapters={['test']} copyable={false} store={listStore} />);
 
-    expect(list.find('TestAdapter').prop('onRequestItemCopy')).toEqual(undefined);
+    expect(getLatestMockProps(TestAdapter).onRequestItemCopy).toEqual(undefined);
 });
 
 test('Render the adapter in non-orderable mode', () => {
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
-    const list = shallow(<List adapters={['test']} orderable={false} store={listStore} />);
+    renderList(<List adapters={['test']} orderable={false} store={listStore} />);
 
-    expect(list.find('TestAdapter').prop('onRequestOrderItem')).toEqual(undefined);
+    expect(getLatestMockProps(TestAdapter).onRequestOrderItem).toEqual(undefined);
 });
 
 test('Render the adapter in non-searchable mode', () => {
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
     expect(
-        render(<List adapters={['test']} header={<h1>Title</h1>} searchable={false} store={listStore} />)
+        renderOnce(<List adapters={['test']} header={<h1>Title</h1>} searchable={false} store={listStore} />)
     ).toMatchSnapshot();
 });
 
@@ -411,14 +526,14 @@ test('Render the adapter in non-searchable mode if searchable is set to true but
 
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
     expect(
-        render(<List adapters={['test']} header={<h1>Title</h1>} searchable={true} store={listStore} />)
+        renderOnce(<List adapters={['test']} header={<h1>Title</h1>} searchable={true} store={listStore} />)
     ).toMatchSnapshot();
 });
 
 test('Render the adapter in disabled state', () => {
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
     expect(
-        render(<List adapters={['test']} disabled={true} header={<h1>Title</h1>} store={listStore} />)
+        renderOnce(<List adapters={['test']} disabled={true} header={<h1>Title</h1>} store={listStore} />)
     ).toMatchSnapshot();
 });
 
@@ -445,6 +560,7 @@ test('Render the adapter with filters', () => {
             case 'datetime':
             case 'text':
                 return class {
+                    destroy = jest.fn();
                     getFormNode = jest.fn();
                     getValueNode = jest.fn();
                     setValue = jest.fn();
@@ -457,9 +573,10 @@ test('Render the adapter with filters', () => {
         created: undefined,
     });
 
-    expect(
-        mount(<List adapters={['test']} disabled={true} header={<h1>Title</h1>} store={listStore} />).render()
-    ).toMatchSnapshot();
+    const {container} = renderList(
+        <List adapters={['test']} disabled={true} header={<h1>Title</h1>} store={listStore} />
+    );
+    expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Render the adapter with filters but filterable disabled', () => {
@@ -485,6 +602,7 @@ test('Render the adapter with filters but filterable disabled', () => {
             case 'datetime':
             case 'text':
                 return class {
+                    destroy = jest.fn();
                     getFormNode = jest.fn();
                     getValueNode = jest.fn();
                     setValue = jest.fn();
@@ -497,19 +615,18 @@ test('Render the adapter with filters but filterable disabled', () => {
         created: undefined,
     });
 
-    expect(
-        mount(
-            <List adapters={['test']} disabled={true} filterable={false} header={<h1>Title</h1>} store={listStore} />
-        ).render()
-    ).toMatchSnapshot();
+    const {container} = renderList(
+        <List adapters={['test']} disabled={true} filterable={false} header={<h1>Title</h1>} store={listStore} />
+    );
+    expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Pass the given disabledIds to the adapter', () => {
     const disabledIds = [1, 3];
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
-    const list = shallow(<List adapters={['test']} disabledIds={disabledIds} store={listStore} />);
+    renderList(<List adapters={['test']} disabledIds={disabledIds} store={listStore} />);
 
-    expect(list.find('TestAdapter').prop('disabledIds')).toEqual(disabledIds);
+    expect(getLatestMockProps(TestAdapter).disabledIds).toEqual(disabledIds);
 });
 
 test('Pass given disabledIds and ids of items that fulfill given itemDisabledCondition to the adapter', () => {
@@ -533,7 +650,7 @@ test('Pass given disabledIds and ids of items that fulfill given itemDisabledCon
     ];
 
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
-    const list = shallow(
+    renderList(
         <List
             adapters={['test']}
             disabledIds={[1, 3]}
@@ -542,42 +659,42 @@ test('Pass given disabledIds and ids of items that fulfill given itemDisabledCon
         />
     );
 
-    expect(list.find('TestAdapter').prop('disabledIds')).toEqual([1, 3, 4]);
+    expect(getLatestMockProps(TestAdapter).disabledIds).toEqual([1, 3, 4]);
 });
 
 test('Pass adapterOptions to the adapter', () => {
     const adapterOptions = {table: {show_header: true}, test: {skin: 'light'}};
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
-    const list = shallow(<List adapterOptions={adapterOptions} adapters={['test']} store={listStore} />);
+    renderList(<List adapterOptions={adapterOptions} adapters={['test']} store={listStore} />);
 
-    expect(list.find('TestAdapter').prop('adapterOptions')).toEqual({skin: 'light'});
+    expect(getLatestMockProps(TestAdapter).adapterOptions).toEqual({skin: 'light'});
 });
 
 test('Pass undefined as adapterOptions to the adapter if no options for current adapter are passed', () => {
     const adapterOptions = {table: {skin: 'flat'}};
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
-    const list = shallow(<List adapterOptions={adapterOptions} adapters={['test']} store={listStore} />);
+    renderList(<List adapterOptions={adapterOptions} adapters={['test']} store={listStore} />);
 
-    expect(list.find('TestAdapter').prop('adapterOptions')).toEqual(undefined);
+    expect(getLatestMockProps(TestAdapter).adapterOptions).toEqual(undefined);
 });
 
 test('Call activate on store if item is activated', () => {
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
-    const list = shallow(<List adapters={['test']} store={listStore} />);
+    renderList(<List adapters={['test']} store={listStore} />);
 
-    list.find('TestAdapter').prop('onItemActivate')(5);
+    getLatestMockProps(TestAdapter).onItemActivate(5);
 
     expect(listStore.activate).toBeCalledWith(5);
 });
 
 test('Do not call activate if item is activated but disabled and allowActivateForDisabledItems is false', () => {
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
-    const list = shallow(
+    renderList(
         <List adapters={['test']} allowActivateForDisabledItems={false} disabledIds={[5]} store={listStore} />
     );
 
-    list.find('TestAdapter').prop('onItemActivate')(5);
-    list.find('TestAdapter').prop('onItemActivate')(7);
+    getLatestMockProps(TestAdapter).onItemActivate(5);
+    getLatestMockProps(TestAdapter).onItemActivate(7);
 
     expect(listStore.activate).not.toBeCalledWith(5);
     expect(listStore.activate).toBeCalledWith(7);
@@ -596,7 +713,7 @@ test('Do not call activate if item fulfills itemDisabledCondition and allowActiv
     ];
 
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
-    const list = shallow(
+    renderList(
         <List
             adapters={['test']}
             allowActivateForDisabledItems={false}
@@ -605,8 +722,8 @@ test('Do not call activate if item fulfills itemDisabledCondition and allowActiv
         />
     );
 
-    list.find('TestAdapter').prop('onItemActivate')(1);
-    list.find('TestAdapter').prop('onItemActivate')(2);
+    getLatestMockProps(TestAdapter).onItemActivate(1);
+    getLatestMockProps(TestAdapter).onItemActivate(2);
 
     expect(listStore.activate).toBeCalledWith(1);
     expect(listStore.activate).not.toBeCalledWith(2);
@@ -614,9 +731,9 @@ test('Do not call activate if item fulfills itemDisabledCondition and allowActiv
 
 test('Call deactivate on store if item is deactivated', () => {
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
-    const list = shallow(<List adapters={['test']} store={listStore} />);
+    renderList(<List adapters={['test']} store={listStore} />);
 
-    list.find('TestAdapter').prop('onItemDeactivate')(5);
+    getLatestMockProps(TestAdapter).onItemDeactivate(5);
 
     expect(listStore.deactivate).toBeCalledWith(5);
 });
@@ -625,9 +742,9 @@ test('Pass sortColumn and sortOrder to adapter', () => {
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
     listStore.sortColumn.get.mockReturnValue('title');
     listStore.sortOrder.get.mockReturnValue('asc');
-    const list = shallow(<List adapters={['test']} store={listStore} />);
+    renderList(<List adapters={['test']} store={listStore} />);
 
-    expect(list.find('TestAdapter').props()).toEqual(expect.objectContaining({
+    expect(getLatestMockProps(TestAdapter)).toEqual(expect.objectContaining({
         sortColumn: 'title',
         sortOrder: 'asc',
     }));
@@ -639,9 +756,9 @@ test('Pass options to adapter', () => {
     const listAdapterOptions = {test: 'value'};
     listAdapterRegistry.getOptions.mockReturnValue(listAdapterOptions);
 
-    const list = shallow(<List adapters={['test']} store={listStore} />);
+    renderList(<List adapters={['test']} store={listStore} />);
 
-    expect(list.find('TestAdapter').props()).toEqual(expect.objectContaining({
+    expect(getLatestMockProps(TestAdapter)).toEqual(expect.objectContaining({
         options: listAdapterOptions,
     }));
 });
@@ -649,13 +766,13 @@ test('Pass options to adapter', () => {
 test('Pass correct options and metadataOptions to SingleListOverlays', () => {
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)}, {}, {id: 1});
 
-    const list = shallow(<List adapters={['test']} store={listStore} />);
+    renderList(<List adapters={['test']} store={listStore} />);
 
-    expect(list.find(SingleListOverlay).at(0).prop('reloadOnOpen')).toEqual(true);
-    expect(list.find(SingleListOverlay).at(1).prop('reloadOnOpen')).toEqual(true);
+    expect(getMoveOverlayProps().reloadOnOpen).toEqual(true);
+    expect(getCopyOverlayProps().reloadOnOpen).toEqual(true);
 
-    expect(list.find(SingleListOverlay).at(0).prop('metadataOptions')).toEqual({id: 1});
-    expect(list.find(SingleListOverlay).at(1).prop('metadataOptions')).toEqual({id: 1});
+    expect(getMoveOverlayProps().metadataOptions).toEqual({id: 1});
+    expect(getCopyOverlayProps().metadataOptions).toEqual({id: 1});
 });
 
 test('Selecting and deselecting items should update store', () => {
@@ -670,19 +787,16 @@ test('Selecting and deselecting items should update store', () => {
 
     listStore.findById.mockReturnValueOnce({id: 1}).mockReturnValueOnce({id: 2}).mockReturnValueOnce({id: 1});
 
-    const list = mount(<List adapters={['table']} store={listStore} />);
+    renderList(<List adapters={['table']} store={listStore} />);
+    const tableAdapterProps = getLatestMockProps((TableAdapter: any));
 
-    const checkboxes = list.find('input[type="checkbox"]');
-    // TODO setting checked explicitly should not be necessary, see https://github.com/airbnb/enzyme/issues/1114
-    checkboxes.at(1).getDOMNode().checked = true;
-    checkboxes.at(2).getDOMNode().checked = true;
-    checkboxes.at(1).simulate('change', {currentTarget: {checked: true}});
+    tableAdapterProps.onItemSelectionChange(1, true);
     expect(listStore.findById).toBeCalledWith(1);
     expect(listStore.select).toBeCalledWith({id: 1});
-    checkboxes.at(2).simulate('change', {currentTarget: {checked: true}});
+    tableAdapterProps.onItemSelectionChange(2, true);
     expect(listStore.findById).toBeCalledWith(2);
     expect(listStore.select).toBeCalledWith({id: 2});
-    checkboxes.at(1).simulate('change', {currentTarget: {checked: false}});
+    tableAdapterProps.onItemSelectionChange(1, false);
     expect(listStore.findById).toBeCalledWith(1);
     expect(listStore.deselect).toBeCalledWith({id: 1});
 });
@@ -696,18 +810,15 @@ test('Selecting and unselecting all visible items should update store', () => {
 
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
-    const list = mount(<List adapters={['table']} store={listStore} />);
+    renderList(<List adapters={['table']} store={listStore} />);
+    const tableAdapterProps = getLatestMockProps((TableAdapter: any));
 
-    const headerCheckbox = list.find('input[type="checkbox"]').at(0);
-    // TODO setting checked explicitly should not be necessary, see https://github.com/airbnb/enzyme/issues/1114
-    headerCheckbox.getDOMNode().checked = true;
-
-    headerCheckbox.simulate('change', {currentTarget: {checked: true}});
+    tableAdapterProps.onAllSelectionChange(true);
     expect(listStore.select).toBeCalledWith({id: 1});
     expect(listStore.select).toBeCalledWith({id: 2});
     expect(listStore.select).toBeCalledWith({id: 3});
 
-    headerCheckbox.simulate('change', {currentTarget: {checked: false}});
+    tableAdapterProps.onAllSelectionChange(false);
     expect(listStore.deselect).toBeCalledWith({id: 1});
     expect(listStore.deselect).toBeCalledWith({id: 2});
     expect(listStore.deselect).toBeCalledWith({id: 3});
@@ -722,14 +833,15 @@ test('Should select and unselect all non-disabled items when adapter fires onAll
 
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
-    const list = mount(<List adapters={['table']} disabledIds={[2]} store={listStore} />);
+    renderList(<List adapters={['table']} disabledIds={[2]} store={listStore} />);
+    const tableAdapterProps = getLatestMockProps((TableAdapter: any));
 
-    list.find(TableAdapter).props().onAllSelectionChange(true);
+    tableAdapterProps.onAllSelectionChange(true);
     expect(listStore.select).toBeCalledWith({id: 1});
     expect(listStore.select).not.toBeCalledWith({id: 2});
     expect(listStore.select).toBeCalledWith({id: 3});
 
-    list.find(TableAdapter).props().onAllSelectionChange(false);
+    tableAdapterProps.onAllSelectionChange(false);
     expect(listStore.deselect).toBeCalledWith({id: 1});
     expect(listStore.deselect).not.toBeCalledWith({id: 2});
     expect(listStore.deselect).toBeCalledWith({id: 3});
@@ -743,10 +855,9 @@ test('Clicking a header cell should sort the table', () => {
         {id: 2},
         {id: 3},
     ];
-    const list = mount(<List adapters={['table']} store={listStore} />);
+    renderList(<List adapters={['table']} store={listStore} />);
 
-    const headerCell = list.find('th button').at(0);
-    headerCell.simulate('click');
+    getLatestMockProps((TableAdapter: any)).onSort('title', 'asc');
     expect(listStore.sort).toBeCalledWith('title', 'asc');
 });
 
@@ -758,9 +869,9 @@ test('Trigger a search should call search on the store', () => {
         {id: 2},
         {id: 3},
     ];
-    const list = mount(<List adapters={['table']} store={listStore} />);
+    renderList(<List adapters={['table']} store={listStore} />);
 
-    list.find('Search').prop('onSearch')('search-value');
+    getLatestMockProps((Search: any)).onSearch('search-value');
     expect(listStore.search).toBeCalledWith('search-value');
 });
 
@@ -781,9 +892,9 @@ test('Trigger a filter should call filter on the store', () => {
         {id: 3},
     ];
 
-    const list = mount(<List adapters={['table']} store={listStore} />);
+    renderList(<List adapters={['table']} store={listStore} />);
 
-    list.find('FieldFilter').prop('onChange')({title: undefined});
+    getLatestMockProps((FieldFilter: any)).onChange({title: undefined});
     expect(listStore.filter).toBeCalledWith({title: undefined});
 });
 
@@ -801,11 +912,11 @@ test('Should start with adapter from user settings', () => {
 
     userStore.getPersistentSetting.mockReturnValue('folder');
 
-    const list = mount(<List adapters={['table', 'folder']} store={listStore} />);
+    renderList(<List adapters={['table', 'folder']} store={listStore} />);
 
     expect(userStore.getPersistentSetting).toBeCalledWith('sulu_admin.list.test.list_test.adapter');
-    expect(list.find('AdapterSwitch').length).toBe(1);
-    expect(list.find('FolderAdapter').length).toBe(1);
+    expect(AdapterSwitch).toBeCalledTimes(1);
+    expect(FolderAdapter).toBeCalledTimes(1);
 });
 
 test('Switching the adapter should render the correct adapter', () => {
@@ -819,14 +930,17 @@ test('Switching the adapter should render the correct adapter', () => {
                 return FolderAdapter;
         }
     });
-    const list = mount(<List adapters={['table', 'folder']} store={listStore} />);
+    const list = renderList(<List adapters={['table', 'folder']} store={listStore} />);
 
-    expect(list.find('AdapterSwitch').length).toBe(1);
-    expect(list.find('TableAdapter').length).toBe(1);
+    expect(AdapterSwitch).toBeCalledTimes(1);
+    expect(TableAdapter).toBeCalledTimes(1);
 
-    list.find('AdapterSwitch Button').at(1).simulate('click');
-    expect(list.find('TableAdapter').length).toBe(0);
-    expect(list.find('FolderAdapter').length).toBe(1);
+    act(() => {
+        getLatestMockProps((AdapterSwitch: any)).onAdapterChange('folder');
+    });
+    list.rerenderList();
+    expect(TableAdapter).toBeCalledTimes(1);
+    expect(FolderAdapter).toBeCalledTimes(1);
     expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.list.test.list_test.adapter', 'folder');
 });
 
@@ -841,7 +955,7 @@ test('ListStore should be initialized correctly on init and update', () => {
                 return FolderAdapter;
         }
     });
-    mount(<List adapters={['table', 'folder']} store={listStore} />);
+    renderList(<List adapters={['table', 'folder']} store={listStore} />);
     expect(listStore.updateLoadingStrategy).toBeCalledWith(expect.any(TableAdapter.LoadingStrategy));
     expect(listStore.updateStructureStrategy).toBeCalledWith(expect.any(TableAdapter.StructureStrategy));
 });
@@ -859,7 +973,7 @@ test('Correct LoadingStrategyOptions should be passed to the LoadingStrategy if 
                 return FolderAdapter;
         }
     });
-    mount(<List adapters={['table', 'folder']} paginated={true} store={listStore} />);
+    renderList(<List adapters={['table', 'folder']} paginated={true} store={listStore} />);
     expect(TableAdapter.LoadingStrategy).toBeCalledWith({paginated: true});
 });
 
@@ -874,7 +988,7 @@ test('Correct LoadingStrategyOptions should not be passed to the LoadingStrategy
                 return ColumnListAdapter;
         }
     });
-    mount(<List adapters={['column_list']} paginated={true} store={listStore} />);
+    renderList(<List adapters={['column_list']} paginated={true} store={listStore} />);
     expect(ColumnListAdapter.LoadingStrategy).toBeCalledWith({paginated: false});
 });
 
@@ -915,7 +1029,7 @@ test('ListStore should be updated with current active element', () => {
     });
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
     expect(listStore.active.get()).toBe(undefined);
-    mount(<List adapters={['test']} store={listStore} />);
+    renderList(<List adapters={['test']} store={listStore} />);
 
     expect(listStore.activate).toBeCalledWith('some-uuid');
 });
@@ -928,20 +1042,25 @@ test('SingleListOverlay should disappear when onRequestItemCopy callback is call
         {id: 2},
         {id: 3},
     ];
-    const list = shallow(<List adapters={['table']} store={listStore} />);
+    const list = renderList(<List adapters={['table']} store={listStore} />);
 
-    const requestCopyPromise = list.find('TableAdapter').prop('onRequestItemCopy')(5);
-    list.update();
-    expect(list.find(SingleListOverlay).at(1).prop('open')).toEqual(true);
-    expect(list.find(SingleListOverlay).at(1).prop('clearSelectionOnClose')).toEqual(true);
-    expect(list.find(SingleListOverlay).at(1).prop('disabledIds')).toEqual(undefined);
-    expect(list.find(SingleListOverlay).at(1).prop('resourceKey')).toEqual('test');
-    expect(list.find(SingleListOverlay).at(1).prop('listKey')).toEqual('test_list');
+    let requestCopyPromise: Promise<any> = Promise.resolve();
+    act(() => {
+        requestCopyPromise = getLatestMockProps((TableAdapter: any)).onRequestItemCopy(5);
+    });
+    list.rerenderList();
+    expect(getCopyOverlayProps().open).toEqual(true);
+    expect(getCopyOverlayProps().clearSelectionOnClose).toEqual(true);
+    expect(getCopyOverlayProps().disabledIds).toEqual(undefined);
+    expect(getCopyOverlayProps().resourceKey).toEqual('test');
+    expect(getCopyOverlayProps().listKey).toEqual('test_list');
 
-    list.find(SingleListOverlay).at(1).prop('onClose')();
+    act(() => {
+        getCopyOverlayProps().onClose();
+    });
     return requestCopyPromise.then(() => {
-        list.update();
-        expect(list.find(SingleListOverlay).at(1).prop('open')).toEqual(false);
+        list.rerenderList();
+        expect(getCopyOverlayProps().open).toEqual(false);
 
         expect(listStore.copy).not.toBeCalled();
     });
@@ -960,20 +1079,25 @@ test('ListStore should copy item when onRequestItemCopy callback is called and o
         {id: 2},
         {id: 3},
     ];
-    const list = mount(<List adapters={['table']} onCopyFinished={copyFinishedSpy} store={listStore} />);
+    const list = renderList(<List adapters={['table']} onCopyFinished={copyFinishedSpy} store={listStore} />);
 
-    const requestCopyPromise = list.find('TableAdapter').prop('onRequestItemCopy')(5);
-    list.update();
-    expect(list.find(SingleListOverlay).at(1).prop('open')).toEqual(true);
-    expect(list.find(SingleListOverlay).at(1).prop('clearSelectionOnClose')).toEqual(true);
+    let requestCopyPromise: Promise<any> = Promise.resolve();
+    act(() => {
+        requestCopyPromise = getLatestMockProps((TableAdapter: any)).onRequestItemCopy(5);
+    });
+    list.rerenderList();
+    expect(getCopyOverlayProps().open).toEqual(true);
+    expect(getCopyOverlayProps().clearSelectionOnClose).toEqual(true);
 
-    list.find(SingleListOverlay).at(1).prop('onConfirm')({id: 8});
+    act(() => {
+        getCopyOverlayProps().onConfirm({id: 8});
+    });
     return requestCopyPromise.then(() => {
         expect(listStore.copy).toBeCalledWith(5, 8, copyFinishedSpy);
 
         return copyPromise.then(() => {
-            list.update();
-            expect(list.find(SingleListOverlay).at(1).prop('open')).toEqual(false);
+            list.rerenderList();
+            expect(getCopyOverlayProps().open).toEqual(false);
         });
     });
 });
@@ -986,20 +1110,25 @@ test('SingleListOverlay should disappear when onRequestItemMove callback is call
         {id: 2},
         {id: 3},
     ];
-    const list = shallow(<List adapters={['table']} store={listStore} />);
+    const list = renderList(<List adapters={['table']} store={listStore} />);
 
-    const requestMovePromise = list.find('TableAdapter').prop('onRequestItemMove')(5);
-    list.update();
-    expect(list.find(SingleListOverlay).at(0).prop('open')).toEqual(true);
-    expect(list.find(SingleListOverlay).at(0).prop('disabledIds')).toEqual([5]);
-    expect(list.find(SingleListOverlay).at(0).prop('resourceKey')).toEqual('test');
-    expect(list.find(SingleListOverlay).at(0).prop('listKey')).toEqual('test_list');
+    let requestMovePromise: Promise<any> = Promise.resolve();
+    act(() => {
+        requestMovePromise = getLatestMockProps((TableAdapter: any)).onRequestItemMove(5);
+    });
+    list.rerenderList();
+    expect(getMoveOverlayProps().open).toEqual(true);
+    expect(getMoveOverlayProps().disabledIds).toEqual([5]);
+    expect(getMoveOverlayProps().resourceKey).toEqual('test');
+    expect(getMoveOverlayProps().listKey).toEqual('test_list');
 
-    list.find(SingleListOverlay).at(0).prop('onClose')();
+    act(() => {
+        getMoveOverlayProps().onClose();
+    });
 
     return requestMovePromise.then(() => {
-        list.update();
-        expect(list.find(SingleListOverlay).at(0).prop('open')).toEqual(false);
+        list.rerenderList();
+        expect(getMoveOverlayProps().open).toEqual(false);
 
         expect(listStore.move).not.toBeCalled();
     });
@@ -1018,19 +1147,24 @@ test('ListStore should move item when onRequestItemMove callback is called and o
         {id: 2},
         {id: 3},
     ];
-    const list = mount(<List adapters={['table']} store={listStore} />);
+    const list = renderList(<List adapters={['table']} store={listStore} />);
 
-    const requestMovePromise = list.find('TableAdapter').prop('onRequestItemMove')(5);
-    list.update();
-    expect(list.find(SingleListOverlay).at(0).prop('open')).toEqual(true);
+    let requestMovePromise: Promise<any> = Promise.resolve();
+    act(() => {
+        requestMovePromise = getLatestMockProps((TableAdapter: any)).onRequestItemMove(5);
+    });
+    list.rerenderList();
+    expect(getMoveOverlayProps().open).toEqual(true);
 
-    list.find(SingleListOverlay).at(0).prop('onConfirm')({id: 8});
+    act(() => {
+        getMoveOverlayProps().onConfirm({id: 8});
+    });
     return requestMovePromise.then(() => {
         expect(listStore.move).toBeCalledWith(5, 8);
 
         return movePromise.then(() => {
-            list.update();
-            expect(list.find(SingleListOverlay).at(0).prop('open')).toEqual(false);
+            list.rerenderList();
+            expect(getMoveOverlayProps().open).toEqual(false);
         });
     });
 });
@@ -1048,23 +1182,30 @@ test('ListStore should move item when onRequestItemMove callback is called and p
         {id: 2},
         {id: 3},
     ];
-    const list = mount(<List adapters={['table']} store={listStore} />);
+    const list = renderList(<List adapters={['table']} store={listStore} />);
 
-    const requestMovePromise = list.find('TableAdapter').prop('onRequestItemMove')(5);
-    list.update();
-    expect(list.find(SingleListOverlay).at(0).prop('open')).toEqual(true);
+    let requestMovePromise: Promise<any> = Promise.resolve();
+    act(() => {
+        requestMovePromise = getLatestMockProps((TableAdapter: any)).onRequestItemMove(5);
+    });
+    list.rerenderList();
+    expect(getMoveOverlayProps().open).toEqual(true);
 
-    list.find(SingleListOverlay).at(0).prop('onConfirm')({id: 8});
+    act(() => {
+        getMoveOverlayProps().onConfirm({id: 8});
+    });
 
-    list.update();
-    expect(list.find('Dialog[title="sulu_security.move_permission_title"]').prop('open')).toEqual(true);
-    list.find('Dialog[title="sulu_security.move_permission_title"]').prop('onConfirm')();
+    list.rerenderList();
+    expect(getMovePermissionDialogProps().open).toEqual(true);
+    act(() => {
+        getMovePermissionDialogProps().onConfirm();
+    });
     return requestMovePromise.then(() => {
         expect(listStore.move).toBeCalledWith(5, 8);
 
         return movePromise.then(() => {
-            list.update();
-            expect(list.find(SingleListOverlay).at(0).prop('open')).toEqual(false);
+            list.rerenderList();
+            expect(getMoveOverlayProps().open).toEqual(false);
         });
     });
 });
@@ -1082,20 +1223,26 @@ test('ListStore should not move when onRequestItemMove callback is called and pe
         {id: 2},
         {id: 3},
     ];
-    const list = mount(<List adapters={['table']} store={listStore} />);
+    const list = renderList(<List adapters={['table']} store={listStore} />);
 
-    list.find('TableAdapter').prop('onRequestItemMove')(5);
-    list.update();
-    expect(list.find(SingleListOverlay).at(0).prop('open')).toEqual(true);
+    act(() => {
+        getLatestMockProps((TableAdapter: any)).onRequestItemMove(5);
+    });
+    list.rerenderList();
+    expect(getMoveOverlayProps().open).toEqual(true);
 
-    list.find(SingleListOverlay).at(0).prop('onConfirm')({id: 8, _hasPermissions: true});
+    act(() => {
+        getMoveOverlayProps().onConfirm({id: 8, _hasPermissions: true});
+    });
 
-    list.update();
-    expect(list.find('Dialog[title="sulu_security.move_permission_title"]').prop('open')).toEqual(true);
-    list.find('Dialog[title="sulu_security.move_permission_title"]').prop('onCancel')();
-    list.update();
-    expect(list.find('Dialog[title="sulu_security.move_permission_title"]').prop('open')).toEqual(false);
-    expect(list.find(SingleListOverlay).at(0).prop('open')).toEqual(true);
+    list.rerenderList();
+    expect(getMovePermissionDialogProps().open).toEqual(true);
+    act(() => {
+        getMovePermissionDialogProps().onCancel();
+    });
+    list.rerenderList();
+    expect(getMovePermissionDialogProps().open).toEqual(false);
+    expect(getMoveOverlayProps().open).toEqual(true);
     expect(listStore.move).not.toBeCalledWith(5, 8);
 });
 
@@ -1108,16 +1255,18 @@ test('Delete warning should disappear when deleting selection was requested and 
         {id: 2},
         {id: 3},
     ];
-    const list = shallow(<List adapters={['table']} store={listStore} />);
+    const list = renderListWithSelectionDeleteButton({adapters: ['table'], store: listStore});
 
-    list.instance().requestSelectionDelete();
-    list.update();
-    expect(list.find('Dialog').at(0).prop('open')).toEqual(true);
+    requestSelectionDelete();
+    list.rerenderList();
+    expect(getDeleteSelectionDialogProps().open).toEqual(true);
     expect(translate).toHaveBeenCalledWith('sulu_admin.delete_selection_warning_text', {count: 2});
 
-    list.find('Dialog').at(0).prop('onCancel')();
-    list.update();
-    expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
+    act(() => {
+        getDeleteSelectionDialogProps().onCancel();
+    });
+    list.rerenderList();
+    expect(getDeleteSelectionDialogProps().open).toEqual(false);
 });
 
 test('ListStore should delete selections when deleting selection was requested and overlay is confirmed', () => {
@@ -1132,20 +1281,22 @@ test('ListStore should delete selections when deleting selection was requested a
         {id: 2},
         {id: 3},
     ];
-    const list = shallow(<List adapters={['table']} store={listStore} />);
+    const list = renderListWithSelectionDeleteButton({adapters: ['table'], store: listStore});
 
-    list.instance().requestSelectionDelete();
-    list.update();
-    expect(list.find('Dialog').at(0).prop('open')).toEqual(true);
+    requestSelectionDelete();
+    list.rerenderList();
+    expect(getDeleteSelectionDialogProps().open).toEqual(true);
     expect(translate).toHaveBeenCalledWith('sulu_admin.delete_selection_warning_text', {count: 3});
 
-    list.find('Dialog').at(0).prop('onConfirm')();
+    act(() => {
+        getDeleteSelectionDialogProps().onConfirm();
+    });
 
     expect(listStore.deleteSelection).toBeCalledWith();
 
     return deleteSelectionPromise.then(() => {
-        list.update();
-        expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
+        list.rerenderList();
+        expect(getDeleteSelectionDialogProps().open).toEqual(false);
     });
 });
 
@@ -1157,16 +1308,21 @@ test('Delete warning should disappear when onRequestItemDelete callback is calle
         {id: 2},
         {id: 3},
     ];
-    const list = shallow(<List adapters={['table']} store={listStore} />);
+    const list = renderList(<List adapters={['table']} store={listStore} />);
 
-    const requestDeletePromise = list.find('TableAdapter').prop('onRequestItemDelete')(5);
-    list.update();
-    expect(list.find('Dialog').at(1).prop('open')).toEqual(true);
+    let requestDeletePromise: Promise<any> = Promise.resolve();
+    act(() => {
+        requestDeletePromise = getLatestMockProps((TableAdapter: any)).onRequestItemDelete(5);
+    });
+    list.rerenderList();
+    expect(getDeleteItemDialogProps().open).toEqual(true);
 
-    list.find('Dialog').at(1).prop('onCancel')();
+    act(() => {
+        getDeleteItemDialogProps().onCancel();
+    });
     return requestDeletePromise.then(() => {
-        list.update();
-        expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
+        list.rerenderList();
+        expect(getDeleteItemDialogProps().open).toEqual(false);
 
         expect(listStore.delete).not.toBeCalled();
     });
@@ -1184,20 +1340,25 @@ test('ListStore should delete item when onRequestItemDelete callback is called a
         {id: 2},
         {id: 3},
     ];
-    const list = mount(<List adapters={['table']} store={listStore} />);
+    const list = renderList(<List adapters={['table']} store={listStore} />);
 
-    const requestDeletePromise = list.find('TableAdapter').prop('onRequestItemDelete')(5);
-    list.update();
-    expect(list.find('Dialog').at(1).prop('open')).toEqual(true);
+    let requestDeletePromise: Promise<any> = Promise.resolve();
+    act(() => {
+        requestDeletePromise = getLatestMockProps((TableAdapter: any)).onRequestItemDelete(5);
+    });
+    list.rerenderList();
+    expect(getDeleteItemDialogProps().open).toEqual(true);
 
-    list.find('Dialog').at(1).prop('onConfirm')();
+    act(() => {
+        getDeleteItemDialogProps().onConfirm();
+    });
     return requestDeletePromise.then(() => {
         expect(listStore.delete).toBeCalledWith(5);
 
         return deletePromise.then(() => {
-            list.update();
-            expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-            expect(list.find('Dialog').at(2).prop('open')).toEqual(false);
+            list.rerenderList();
+            expect(getDeleteItemDialogProps().open).toEqual(false);
+            expect(getMovePermissionDialogProps().open).toEqual(false);
         });
     });
 });
@@ -1220,6 +1381,7 @@ test('ListStore should delete linked item when onRequestItemDelete callback is i
         json: jest.fn().mockReturnValue(jsonDeletePromise),
         status: 409,
     });
+    deletePromise.catch(() => {});
 
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
@@ -1230,31 +1392,38 @@ test('ListStore should delete linked item when onRequestItemDelete callback is i
         {id: 2},
         {id: 3},
     ];
-    const list = mount(<List adapters={['table']} store={listStore} />);
+    const list = renderList(<List adapters={['table']} store={listStore} />);
 
-    const requestDeletePromise = list.find('TableAdapter').prop('onRequestItemDelete')(5);
-    list.update();
-    expect(list.find('Dialog').at(1).prop('open')).toEqual(true);
+    let requestDeletePromise: Promise<any> = Promise.resolve();
+    act(() => {
+        requestDeletePromise = getLatestMockProps((TableAdapter: any)).onRequestItemDelete(5);
+    });
+    list.rerenderList();
+    expect(getDeleteItemDialogProps().open).toEqual(true);
 
-    list.find('Dialog').at(1).prop('onConfirm')();
+    act(() => {
+        getDeleteItemDialogProps().onConfirm();
+    });
     requestDeletePromise.then(() => {
         expect(listStore.delete).toBeCalledWith(5);
 
         setTimeout(() => {
-            list.update();
-            expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-            expect(list.contains('DeleteReferencedResourceDialog'));
+            list.rerenderList();
+            expect(getDeleteItemDialogProps().open).toEqual(false);
+            expect(screen.getByTestId('delete-referenced-resource-dialog')).toBeInTheDocument();
 
             const deletePromise = Promise.resolve();
             // $FlowFixMe
             listStore.delete.mockReturnValueOnce(deletePromise);
-            list.find('DeleteReferencedResourceDialog Dialog Button[skin="primary"]').simulate('click');
+            act(() => {
+                getDeleteReferencedResourceDialogProps().onConfirm();
+            });
 
             setTimeout(() => {
                 expect(listStore.delete).toBeCalledWith(5, {force: true});
-                list.update();
-                expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-                expect(list.contains('DeleteReferencedResourceDialog')).toBe(false);
+                list.rerenderList();
+                expect(getDeleteItemDialogProps().open).toEqual(false);
+                expect(screen.queryByTestId('delete-referenced-resource-dialog')).not.toBeInTheDocument();
                 done();
             });
         });
@@ -1279,6 +1448,7 @@ test('ListStore should not delete linked item when onRequestItemDelete callback 
         json: jest.fn().mockReturnValue(jsonDeletePromise),
         status: 409,
     });
+    deletePromise.catch(() => {});
 
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
@@ -1289,36 +1459,51 @@ test('ListStore should not delete linked item when onRequestItemDelete callback 
         {id: 2},
         {id: 3},
     ];
-    const list = mount(<List adapters={['table']} store={listStore} />);
+    const list = renderList(<List adapters={['table']} store={listStore} />);
 
-    const requestDeletePromise = list.find('TableAdapter').prop('onRequestItemDelete')(5);
-    list.update();
-    expect(list.find('Dialog').at(1).prop('open')).toEqual(true);
+    let requestDeletePromise: Promise<any> = Promise.resolve();
+    act(() => {
+        requestDeletePromise = getLatestMockProps((TableAdapter: any)).onRequestItemDelete(5);
+    });
+    list.rerenderList();
+    expect(getDeleteItemDialogProps().open).toEqual(true);
 
-    list.find('Dialog').at(1).prop('onConfirm')();
+    act(() => {
+        getDeleteItemDialogProps().onConfirm();
+    });
     requestDeletePromise.then(() => {
         expect(listStore.delete).toBeCalledWith(5);
         // $FlowFixMe
         listStore.delete.mockReset();
 
         setTimeout(() => {
-            list.update();
-            expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-            expect(list.contains('DeleteReferencedResourceDialog'));
-            expect(list.find('DeleteReferencedResourceDialog').find('li')).toHaveLength(2);
-            expect(list.find('DeleteReferencedResourceDialog').find('li').at(0).prop('children')).toEqual('Item 1');
-            expect(list.find('DeleteReferencedResourceDialog').find('li').at(1).prop('children')).toEqual('Item 2');
+            list.rerenderList();
+            expect(getDeleteItemDialogProps().open).toEqual(false);
+            expect(screen.getByTestId('delete-referenced-resource-dialog')).toBeInTheDocument();
+            expect(getDeleteReferencedResourceDialogProps().referencingResourcesData).toEqual({
+                resource: {
+                    id: 5,
+                    resourceKey: 'pages',
+                },
+                referencingResources: [
+                    {id: 7, resourceKey: 'pages', title: 'Item 1'},
+                    {id: 8, resourceKey: 'pages', title: 'Item 2'},
+                ],
+                referencingResourcesCount: 2,
+            });
 
             const deletePromise = Promise.resolve();
             // $FlowFixMe
             listStore.delete.mockReturnValueOnce(deletePromise);
-            list.find('DeleteReferencedResourceDialog').prop('onCancel')();
+            act(() => {
+                getDeleteReferencedResourceDialogProps().onCancel();
+            });
 
             setTimeout(() => {
                 expect(listStore.delete).not.toBeCalled();
-                list.update();
-                expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-                expect(list.contains('DeleteReferencedResourceDialog')).toBe(false);
+                list.rerenderList();
+                expect(getDeleteItemDialogProps().open).toEqual(false);
+                expect(screen.queryByTestId('delete-referenced-resource-dialog')).not.toBeInTheDocument();
                 done();
             });
         });
@@ -1343,6 +1528,7 @@ test('ListStore should delete linked item when called with allowConflictDeletion
         json: jest.fn().mockReturnValue(jsonDeletePromise),
         status: 409,
     });
+    deletePromise.catch(() => {});
 
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
@@ -1354,31 +1540,36 @@ test('ListStore should delete linked item when called with allowConflictDeletion
         {id: 2},
         {id: 3},
     ];
-    const list = mount(<List adapters={['table']} store={listStore} />);
+    const list = renderListWithSelectionDeleteButton({adapters: ['table'], store: listStore}, true);
 
-    list.instance().requestSelectionDelete(true);
-    list.update();
-    expect(list.find('Dialog').at(0).prop('open')).toEqual(true);
+    requestSelectionDelete();
+    list.rerenderList();
+    expect(getDeleteSelectionDialogProps().open).toEqual(true);
 
-    list.find('Dialog').at(0).prop('onConfirm')();
+    act(() => {
+        getDeleteSelectionDialogProps().onConfirm();
+    });
 
     setTimeout(() => {
-        list.update();
-        expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
-        expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-        expect(list.contains('DeleteReferencedResourceDialog'));
+        list.rerenderList();
+        expect(getDeleteSelectionDialogProps().open).toEqual(false);
+        expect(getDeleteItemDialogProps().open).toEqual(false);
+        expect(screen.getByTestId('delete-referenced-resource-dialog')).toBeInTheDocument();
+        expect(getDeleteReferencedResourceDialogProps().allowDeletion).toEqual(true);
 
         const deletePromise = Promise.resolve();
         // $FlowFixMe
         listStore.delete.mockReturnValueOnce(deletePromise);
-        list.find('DeleteReferencedResourceDialog Dialog Button[skin="primary"]').simulate('click');
+        act(() => {
+            getDeleteReferencedResourceDialogProps().onConfirm();
+        });
 
         setTimeout(() => {
             expect(listStore.delete).toBeCalledWith(5, {force: true});
-            list.update();
-            expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
-            expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-            expect(list.contains('DeleteReferencedResourceDialog')).toBe(false);
+            list.rerenderList();
+            expect(getDeleteSelectionDialogProps().open).toEqual(false);
+            expect(getDeleteItemDialogProps().open).toEqual(false);
+            expect(screen.queryByTestId('delete-referenced-resource-dialog')).not.toBeInTheDocument();
             done();
         });
     });
@@ -1402,6 +1593,7 @@ test('ListStore should not delete linked item when called with allowConflictDele
         json: jest.fn().mockReturnValue(jsonDeletePromise),
         status: 409,
     });
+    deletePromise.catch(() => {});
 
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
@@ -1413,28 +1605,33 @@ test('ListStore should not delete linked item when called with allowConflictDele
         {id: 2},
         {id: 3},
     ];
-    const list = mount(<List adapters={['table']} store={listStore} />);
+    const list = renderListWithSelectionDeleteButton({adapters: ['table'], store: listStore}, false);
 
-    list.instance().requestSelectionDelete(false);
-    list.update();
-    expect(list.find('Dialog').at(0).prop('open')).toEqual(true);
+    requestSelectionDelete();
+    list.rerenderList();
+    expect(getDeleteSelectionDialogProps().open).toEqual(true);
 
-    list.find('Dialog').at(0).prop('onConfirm')();
+    act(() => {
+        getDeleteSelectionDialogProps().onConfirm();
+    });
 
     setTimeout(() => {
-        list.update();
-        expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
-        expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-        expect(list.contains('DeleteReferencedResourceDialog'));
+        list.rerenderList();
+        expect(getDeleteSelectionDialogProps().open).toEqual(false);
+        expect(getDeleteItemDialogProps().open).toEqual(false);
+        expect(screen.getByTestId('delete-referenced-resource-dialog')).toBeInTheDocument();
+        expect(getDeleteReferencedResourceDialogProps().allowDeletion).toEqual(false);
 
-        list.find('DeleteReferencedResourceDialog Dialog Button[skin="primary"]').simulate('click');
+        act(() => {
+            getDeleteReferencedResourceDialogProps().onCancel();
+        });
 
         setTimeout(() => {
             expect(listStore.delete).not.toBeCalledWith(5, {force: true});
-            list.update();
-            expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
-            expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-            expect(list.contains('DeleteReferencedResourceDialog')).toBe(false);
+            list.rerenderList();
+            expect(getDeleteSelectionDialogProps().open).toEqual(false);
+            expect(getDeleteItemDialogProps().open).toEqual(false);
+            expect(screen.queryByTestId('delete-referenced-resource-dialog')).not.toBeInTheDocument();
             done();
         });
     });
@@ -1458,6 +1655,7 @@ test('ListStore should delete item with dependants when onFinish callback called
         json: jest.fn().mockReturnValue(jsonDeletePromise),
         status: 409,
     });
+    deletePromise.catch(() => {});
 
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
@@ -1468,32 +1666,48 @@ test('ListStore should delete item with dependants when onFinish callback called
         {id: 2},
         {id: 3},
     ];
-    const list = mount(<List adapters={['table']} store={listStore} />);
+    const list = renderList(<List adapters={['table']} store={listStore} />);
 
-    const requestDeletePromise = list.find('TableAdapter').prop('onRequestItemDelete')(5);
-    list.update();
-    expect(list.find('Dialog').at(1).prop('open')).toEqual(true);
+    let requestDeletePromise: Promise<any> = Promise.resolve();
+    act(() => {
+        requestDeletePromise = getLatestMockProps((TableAdapter: any)).onRequestItemDelete(5);
+    });
+    list.rerenderList();
+    expect(getDeleteItemDialogProps().open).toEqual(true);
 
-    list.find('Dialog').at(1).prop('onConfirm')();
+    act(() => {
+        getDeleteItemDialogProps().onConfirm();
+    });
     requestDeletePromise.then(() => {
         expect(listStore.delete).toHaveBeenCalledWith(5);
 
         setTimeout(() => {
-            list.update();
-            expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-            expect(list.contains('DeleteDependantResourcesDialog'));
+            list.rerenderList();
+            expect(getDeleteItemDialogProps().open).toEqual(false);
+            expect(screen.getByTestId('delete-dependant-resources-dialog')).toBeInTheDocument();
+            expect(getDeleteDependantResourcesDialogProps().dependantResourcesData).toEqual({
+                dependantResourceBatches: [
+                    {id: 7, resourceKey: 'pages'},
+                    {id: 8, resourceKey: 'pages'},
+                ],
+                dependantResourcesCount: 2,
+                detail: undefined,
+                title: undefined,
+            });
 
             const deletePromise = Promise.resolve();
             // $FlowFixMe
             listStore.delete.mockReturnValueOnce(deletePromise);
-            list.find('DeleteDependantResourcesDialog').prop('onFinish')();
+            act(() => {
+                getDeleteDependantResourcesDialogProps().onFinish();
+            });
 
             setTimeout(() => {
                 expect(listStore.delete).toHaveBeenCalledWith(5);
                 expect(listStore.delete).toHaveBeenCalledTimes(2);
-                list.update();
-                expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-                expect(list.contains('DeleteDependantResourcesDialog')).toBe(false);
+                list.rerenderList();
+                expect(getDeleteItemDialogProps().open).toEqual(false);
+                expect(screen.queryByTestId('delete-dependant-resources-dialog')).not.toBeInTheDocument();
                 done();
             });
         });
@@ -1518,6 +1732,7 @@ test('ListStore should not delete item with dependants when onCancel callback ca
         json: jest.fn().mockReturnValue(jsonDeletePromise),
         status: 409,
     });
+    deletePromise.catch(() => {});
 
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
@@ -1528,31 +1743,38 @@ test('ListStore should not delete item with dependants when onCancel callback ca
         {id: 2},
         {id: 3},
     ];
-    const list = mount(<List adapters={['table']} store={listStore} />);
+    const list = renderList(<List adapters={['table']} store={listStore} />);
 
-    const requestDeletePromise = list.find('TableAdapter').prop('onRequestItemDelete')(5);
-    list.update();
-    expect(list.find('Dialog').at(1).prop('open')).toEqual(true);
+    let requestDeletePromise: Promise<any> = Promise.resolve();
+    act(() => {
+        requestDeletePromise = getLatestMockProps((TableAdapter: any)).onRequestItemDelete(5);
+    });
+    list.rerenderList();
+    expect(getDeleteItemDialogProps().open).toEqual(true);
 
-    list.find('Dialog').at(1).prop('onConfirm')();
+    act(() => {
+        getDeleteItemDialogProps().onConfirm();
+    });
     requestDeletePromise.then(() => {
         expect(listStore.delete).toHaveBeenCalledWith(5);
 
         setTimeout(() => {
-            list.update();
-            expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-            expect(list.contains('DeleteDependantResourcesDialog'));
+            list.rerenderList();
+            expect(getDeleteItemDialogProps().open).toEqual(false);
+            expect(screen.getByTestId('delete-dependant-resources-dialog')).toBeInTheDocument();
 
             const deletePromise = Promise.resolve();
             // $FlowFixMe
             listStore.delete.mockReturnValueOnce(deletePromise);
-            list.find('DeleteDependantResourcesDialog').prop('onCancel')();
+            act(() => {
+                getDeleteDependantResourcesDialogProps().onCancel();
+            });
 
             setTimeout(() => {
                 expect(listStore.delete).toHaveBeenCalledTimes(1);
-                list.update();
-                expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-                expect(list.contains('DeleteDependantResourcesDialog')).toBe(false);
+                list.rerenderList();
+                expect(getDeleteItemDialogProps().open).toEqual(false);
+                expect(screen.queryByTestId('delete-dependant-resources-dialog')).not.toBeInTheDocument();
                 done();
             });
         });
@@ -1567,17 +1789,22 @@ test('Order warning should just disappear when onRequestItemOrder callback is ca
         {id: 2},
         {id: 3},
     ];
-    const list = mount(<List adapters={['table']} store={listStore} />);
+    const list = renderList(<List adapters={['table']} store={listStore} />);
 
-    const requestOrderPromise = list.find('TableAdapter').prop('onRequestItemOrder')(5);
-    list.update();
-    expect(list.find('Dialog[title="sulu_admin.order_warning_title"]').prop('open')).toEqual(true);
+    let requestOrderPromise: Promise<any> = Promise.resolve();
+    act(() => {
+        requestOrderPromise = getLatestMockProps((TableAdapter: any)).onRequestItemOrder(5);
+    });
+    list.rerenderList();
+    expect(getOrderDialogProps().open).toEqual(true);
 
-    list.find('Dialog[title="sulu_admin.order_warning_title"]').prop('onCancel')();
+    act(() => {
+        getOrderDialogProps().onCancel();
+    });
 
     return requestOrderPromise.then(() => {
-        list.update();
-        expect(list.find('Dialog[title="sulu_admin.order_warning_title"]').prop('open')).toEqual(false);
+        list.rerenderList();
+        expect(getOrderDialogProps().open).toEqual(false);
 
         expect(listStore.order).not.toBeCalled();
     });
@@ -1594,19 +1821,24 @@ test('ListStore should order item when onRequestItemOrder callback is called and
         {id: 2},
         {id: 3},
     ];
-    const list = mount(<List adapters={['table']} store={listStore} />);
+    const list = renderList(<List adapters={['table']} store={listStore} />);
 
-    const requestOrderPromise = list.find('TableAdapter').prop('onRequestItemOrder')(5, 8);
-    list.update();
-    expect(list.find('Dialog[title="sulu_admin.order_warning_title"]').prop('open')).toEqual(true);
-    list.find('Dialog[title="sulu_admin.order_warning_title"]').prop('onConfirm')();
+    let requestOrderPromise: Promise<any> = Promise.resolve();
+    act(() => {
+        requestOrderPromise = getLatestMockProps((TableAdapter: any)).onRequestItemOrder(5, 8);
+    });
+    list.rerenderList();
+    expect(getOrderDialogProps().open).toEqual(true);
+    act(() => {
+        getOrderDialogProps().onConfirm();
+    });
 
     return requestOrderPromise.then(() => {
         expect(listStore.order).toBeCalledWith(5, 8);
 
         return orderPromise.then(() => {
-            list.update();
-            expect(list.find('Dialog[title="sulu_admin.order_warning_title"]').prop('open')).toEqual(false);
+            list.rerenderList();
+            expect(getOrderDialogProps().open).toEqual(false);
         });
     });
 });

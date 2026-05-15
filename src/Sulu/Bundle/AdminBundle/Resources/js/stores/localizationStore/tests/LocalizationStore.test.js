@@ -2,10 +2,6 @@
 import log from 'loglevel';
 import localizationStore from '../localizationStore';
 
-jest.mock('loglevel', () => ({
-    warn: jest.fn(),
-}));
-
 test('Load localizations', () => {
     const localizations = [
         {

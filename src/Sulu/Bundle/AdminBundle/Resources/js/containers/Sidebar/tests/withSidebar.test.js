@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {extendObservable, observable} from 'mobx';
-import {mount, render} from 'enzyme';
+import {act, render, screen} from '@testing-library/react';
 import sidebarStore from '../stores/sidebarStore';
 import withSidebar from '../withSidebar';
 
@@ -9,6 +9,10 @@ jest.mock('../stores/sidebarStore', () => ({
     setConfig: jest.fn(),
     clearConfig: jest.fn(),
 }));
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test('Pass props to rendered component', () => {
     const Component = class Component extends React.Component<*> {
@@ -21,7 +25,14 @@ test('Pass props to rendered component', () => {
         return null;
     });
 
-    expect(render(<ComponentWithSidebar title="Test" />)).toMatchSnapshot();
+    render(
+        <ComponentWithSidebar
+            router={{addUpdateRouteHook: jest.fn().mockReturnValue(jest.fn())}}
+            title="Test"
+        />
+    );
+
+    expect(screen.getByText('Test')).toBeInTheDocument();
 });
 
 test('Bind sidebar method to component instance', () => {
@@ -40,19 +51,28 @@ test('Bind sidebar method to component instance', () => {
     });
 
     const router = {
-        addUpdateRouteHook: jest.fn(),
+        addUpdateRouteHook: jest.fn().mockReturnValue(jest.fn()),
     };
 
-    mount(<ComponentWithSidebar router={router} />);
+    render(<ComponentWithSidebar router={router} />);
     expect(sidebarStore.setConfig).toBeCalledWith({
         view: 'preview',
     });
 });
 
 test('Call life-cycle events of rendered component', () => {
+    const componentWillUnmount = jest.fn();
+    const componentRender = jest.fn();
+
     const Component = class Component extends React.Component<*> {
-        componentWillUnmount = jest.fn();
-        render = jest.fn();
+        componentWillUnmount() {
+            componentWillUnmount();
+        }
+
+        render() {
+            componentRender();
+            return <h1>Test</h1>;
+        }
     };
 
     const ComponentWithSidebar = withSidebar(Component, () => {
@@ -60,14 +80,13 @@ test('Call life-cycle events of rendered component', () => {
     });
 
     const router = {
-        addUpdateRouteHook: jest.fn(),
+        addUpdateRouteHook: jest.fn().mockReturnValue(jest.fn()),
     };
 
-    const component = mount(<ComponentWithSidebar router={router} />);
-    expect(component.instance().render).toBeCalled();
+    const {unmount} = render(<ComponentWithSidebar router={router} />);
+    expect(componentRender).toBeCalled();
 
-    const componentWillUnmount = component.instance().componentWillUnmount;
-    component.unmount();
+    unmount();
     expect(componentWillUnmount).toBeCalled();
 });
 
@@ -83,10 +102,10 @@ test('Reset config of toolbarStore when component is unmounted', () => {
         addUpdateRouteHook: jest.fn().mockReturnValue(updateRouteHookDisposer),
     };
 
-    const component = mount(<ComponentWithToolbar router={router} />);
+    const {unmount} = render(<ComponentWithToolbar router={router} />);
     expect(sidebarStore.setConfig).toBeCalledWith({view: 'test1'});
 
-    component.unmount();
+    unmount();
     expect(updateRouteHookDisposer).toBeCalledWith();
     expect(sidebarStore.clearConfig).toBeCalledWith();
 });
@@ -101,26 +120,39 @@ test('Dispose toolbar when a new view is rendered', () => {
     const ComponentWithSidebar = withSidebar(Component, () => ({view: config.view}));
 
     const router = {
-        addUpdateRouteHook: jest.fn(),
+        addUpdateRouteHook: jest.fn().mockReturnValue(jest.fn()),
         route: {
             name: 'route1',
         },
     };
 
-    mount(<ComponentWithSidebar router={router} />);
+    render(<ComponentWithSidebar router={router} />);
     expect(sidebarStore.setConfig).toHaveBeenLastCalledWith({view: 'test1'});
 
-    config.view = 'test2';
+    act(() => {
+        config.view = 'test2';
+    });
     expect(sidebarStore.setConfig).toHaveBeenLastCalledWith({view: 'test2'});
 
-    router.addUpdateRouteHook.mock.calls[0][0]();
-    config.view = 'test3';
+    act(() => {
+        router.addUpdateRouteHook.mock.calls[0][0]();
+    });
+    act(() => {
+        config.view = 'test3';
+    });
     expect(sidebarStore.setConfig).toHaveBeenLastCalledWith({view: 'test2'});
 });
 
 test('Recall sidebar-function when changing observable', () => {
+    let componentInstance: any;
+
     const Component = class Component extends React.Component<*> {
         @observable sidebarView = 'preview';
+
+        constructor(props) {
+            super(props);
+            componentInstance = this;
+        }
 
         render() {
             return <h1>Test</h1>;
@@ -132,16 +164,18 @@ test('Recall sidebar-function when changing observable', () => {
     });
 
     const router = {
-        addUpdateRouteHook: jest.fn(),
+        addUpdateRouteHook: jest.fn().mockReturnValue(jest.fn()),
     };
 
-    const component = mount(<ComponentWithSidebar router={router} />);
+    render(<ComponentWithSidebar router={router} />);
 
     expect(sidebarStore.setConfig).toBeCalledWith({
         view: 'preview',
     });
 
-    component.instance().sidebarView = 'test';
+    act(() => {
+        componentInstance.sidebarView = 'test';
+    });
     expect(sidebarStore.setConfig).toBeCalledWith({
         view: 'test',
     });

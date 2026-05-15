@@ -1,90 +1,94 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should render 1`] = `
-Array [
-  <div
-    class="backdrop visible fixed"
-    data-testid="backdrop"
-    role="button"
-  />,
-  <div
-    class="dialogContainer open"
-  >
+<body>
+  <div />
+  <div>
     <div
-      class="dialog"
+      class="backdrop visible fixed"
+      data-testid="backdrop"
+      role="button"
+    />
+    <div
+      class="dialogContainer open"
     >
-      <section
-        class="content"
+      <div
+        class="dialog"
       >
-        <div
-          class="snackbar"
+        <section
+          class="content"
         >
           <div
-            class="snackbar error"
-            role="button"
+            class="snackbar"
           >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
-            />
             <div
-              class="text"
-            >
-              <strong>
-                sulu_admin.error
-              </strong>
-               - 
-            </div>
-            <span
-              aria-label="su-times"
-              class="su-times clickable closeIcon"
+              class="snackbar error"
               role="button"
-              tabindex="0"
-            />
+            >
+              <span
+                aria-label="su-exclamation-triangle"
+                class="su-exclamation-triangle icon"
+              />
+              <div
+                class="text"
+              >
+                <strong>
+                  sulu_admin.error
+                </strong>
+                 - 
+                
+              </div>
+              <span
+                aria-label="su-times"
+                class="su-times clickable closeIcon"
+                role="button"
+                tabindex="0"
+              />
+            </div>
           </div>
-        </div>
-        <header
-          class="header"
-        >
-          <span
-            class="headerItem"
-          >
-            Title
-          </span>
-        </header>
-        <article
-          class="article center"
-        >
-          <p>
-            Detail
-          </p>
-        </article>
-        <footer
-          class="footer"
-        >
-          <button
-            class="button primary hasText"
-            type="button"
+          <header
+            class="header"
           >
             <span
-              class="buttonText"
+              class="headerItem"
             >
-              sulu_admin.delete
+              Title
             </span>
-          </button>
-          <button
-            class="button secondary hasText"
-            type="button"
+          </header>
+          <article
+            class="article center"
           >
-            <span
-              class="buttonText"
+            <p>
+              Detail
+            </p>
+          </article>
+          <footer
+            class="footer"
+          >
+            <button
+              class="button primary hasText"
+              type="button"
             >
-              sulu_admin.cancel
-            </span>
-          </button>
-        </footer>
-      </section>
+              <span
+                class="buttonText"
+              >
+                sulu_admin.delete
+              </span>
+            </button>
+            <button
+              class="button secondary hasText"
+              type="button"
+            >
+              <span
+                class="buttonText"
+              >
+                sulu_admin.cancel
+              </span>
+            </button>
+          </footer>
+        </section>
+      </div>
     </div>
-  </div>,
-]
+  </div>
+</body>
 `;

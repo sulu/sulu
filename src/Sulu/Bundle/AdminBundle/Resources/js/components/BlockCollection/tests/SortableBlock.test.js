@@ -5,18 +5,10 @@ import React from 'react';
 import log from 'loglevel';
 import SortableBlock from '../SortableBlock';
 
-jest.mock('loglevel', () => ({
-    warn: jest.fn(),
-}));
-
 jest.mock('react-sortable-hoc', () => ({
     SortableContainer: jest.fn().mockImplementation((component) => component),
     SortableElement: jest.fn().mockImplementation((component) => component),
     SortableHandle: jest.fn().mockImplementation((component) => component),
-}));
-
-jest.mock('../../../utils/Translator', () => ({
-    translate: (key) => key,
 }));
 
 test('Render collapsed sortable block', () => {

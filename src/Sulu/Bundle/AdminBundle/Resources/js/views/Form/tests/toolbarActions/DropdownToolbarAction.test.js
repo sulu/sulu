@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render} from 'enzyme';
+import {render} from '@testing-library/react';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
@@ -357,7 +357,9 @@ test('Return JSX for all child ToolbarActions', () => {
         ],
     });
 
-    expect(render(dropdownToolbarAction.getNode())).toMatchSnapshot();
+    const {asFragment} = render(dropdownToolbarAction.getNode());
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Throw error if toolbarActions are neither an object nor an array', () => {

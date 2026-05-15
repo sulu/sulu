@@ -2,10 +2,6 @@
 import log from 'loglevel';
 import securityContextStore from '../securityContextStore';
 
-jest.mock('loglevel', () => ({
-    warn: jest.fn(),
-}));
-
 jest.mock('sulu-admin-bundle/services/Requester', () => ({
     get: jest.fn(),
 }));

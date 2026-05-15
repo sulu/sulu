@@ -5,6 +5,8 @@ import React from 'react';
 import Select from '../Select';
 import Option from '../Option';
 
+jest.unmock('debounce');
+
 const Divider = Select.Divider;
 
 beforeEach(() => {

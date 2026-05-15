@@ -6,10 +6,6 @@ import CircleSelection from '../CircleSelection';
 
 const mockModifiableCircle = jest.fn();
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
 jest.mock('../../withContainerSize/withContainerSize');
 jest.mock('../ModifiableCircle', () => function MockModifiableCircle(props) {
     mockModifiableCircle(props);

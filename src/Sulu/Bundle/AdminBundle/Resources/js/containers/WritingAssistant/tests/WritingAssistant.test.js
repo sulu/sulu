@@ -14,10 +14,6 @@ jest.mock('../../../services', () => ({
     },
 }));
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
 const writeText = jest.fn();
 Object.assign(navigator, {
     // $FlowFixMe

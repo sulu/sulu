@@ -9,10 +9,6 @@ beforeEach(() => {
     moment.tz.setDefault('Europe/Vienna');
 });
 
-jest.mock('loglevel', () => ({
-    error: jest.fn(),
-}));
-
 test('Test undefined', () => {
     expect(timeFieldTransformer.transform(undefined)).toBe(null);
 });

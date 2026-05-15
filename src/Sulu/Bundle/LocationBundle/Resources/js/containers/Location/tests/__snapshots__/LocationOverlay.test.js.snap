@@ -1,987 +1,559 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Component should render with a given initial-value 1`] = `
-Array [
+<DocumentFragment>
   <div
-    class="backdrop visible fixed"
-    data-testid="backdrop"
-    role="button"
-  />,
-  <div
-    class="container isDown"
+    data-testid="overlay"
   >
     <div
-      class="overlay small"
+      class="container"
     >
-      <section
-        class="content"
+      <div
+        class="grid grid"
       >
-        <header
-          class="header"
-        >
-          <h2>
-            sulu_location.select_location
-          </h2>
-          <span
-            aria-label="su-times"
-            class="su-times clickable icon"
-            role="button"
-            tabindex="0"
-          />
-        </header>
-        <article
-          class="article"
+        <div
+          class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
         >
           <div
-            class="container"
+            class="field"
           >
             <div
-              class="grid grid"
+              class="errorLabel"
+            />
+          </div>
+        </div>
+        <div
+          class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+        >
+          <div
+            class="field"
+          >
+            <div
+              data-testid="map-container"
             >
               <div
-                class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-              >
-                <div
-                  class="field"
-                >
-                  <div
-                    class="singleAutoComplete"
-                  >
-                    <div
-                      class="input default left"
-                    >
-                      <div
-                        class="prependedContainer default"
-                      >
-                        <span
-                          aria-label="su-search"
-                          class="su-search icon default"
-                        />
-                      </div>
-                      <input
-                        autocomplete="off"
-                        class="mousetrap"
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="errorLabel"
-                  />
-                </div>
-              </div>
-              <div
-                class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-              >
-                <div
-                  class="field"
-                >
-                  <div
-                    class="map leaflet-container leaflet-touch leaflet-grab leaflet-touch-drag leaflet-touch-zoom"
-                    style="position: relative;"
-                    tabindex="0"
-                  >
-                    <div
-                      class="leaflet-pane leaflet-map-pane"
-                      style="left: 0px; top: 0px;"
-                    >
-                      <div
-                        class="leaflet-pane leaflet-tile-pane"
-                      >
-                        <div
-                          class="leaflet-layer "
-                          style="z-index: 1;"
-                        >
-                          <div
-                            class="leaflet-tile-container leaflet-zoom-animated"
-                            style="z-index: 18; left: 0px; top: 0px;"
-                          >
-                            <img
-                              alt=""
-                              class="leaflet-tile"
-                              src="https://b.tile.openstreetmap.org/5/18/13.png"
-                              style="width: 256px; height: 256px; left: -239px; top: -255px;"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        class="leaflet-pane leaflet-overlay-pane"
-                      />
-                      <div
-                        class="leaflet-pane leaflet-shadow-pane"
-                      >
-                        <img
-                          alt=""
-                          class="leaflet-marker-shadow leaflet-zoom-hide"
-                          src="marker-shadow.png"
-                          style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; left: 0px; top: 0px;"
-                        />
-                      </div>
-                      <div
-                        class="leaflet-pane leaflet-marker-pane"
-                      >
-                        <img
-                          alt="Marker"
-                          class="leaflet-marker-icon leaflet-zoom-hide leaflet-interactive leaflet-marker-draggable"
-                          role="button"
-                          src="marker-icon.png"
-                          style="margin-left: -12px; margin-top: -41px; width: 25px; height: 41px; left: 0px; top: 0px; z-index: 0;"
-                          tabindex="0"
-                        />
-                      </div>
-                      <div
-                        class="leaflet-pane leaflet-tooltip-pane"
-                      />
-                      <div
-                        class="leaflet-pane leaflet-popup-pane"
-                      />
-                    </div>
-                    <div
-                      class="leaflet-control-container"
-                    >
-                      <div
-                        class="leaflet-top leaflet-left"
-                      >
-                        <div
-                          class="leaflet-control-zoom leaflet-bar leaflet-control"
-                        >
-                          <a
-                            aria-disabled="false"
-                            aria-label="Zoom in"
-                            class="leaflet-control-zoom-in"
-                            href="#"
-                            role="button"
-                            title="Zoom in"
-                          >
-                            <span
-                              aria-hidden="true"
-                            >
-                              +
-                            </span>
-                          </a>
-                          <a
-                            aria-disabled="false"
-                            aria-label="Zoom out"
-                            class="leaflet-control-zoom-out"
-                            href="#"
-                            role="button"
-                            title="Zoom out"
-                          >
-                            <span
-                              aria-hidden="true"
-                            >
-                              −
-                            </span>
-                          </a>
-                        </div>
-                      </div>
-                      <div
-                        class="leaflet-top leaflet-right"
-                      />
-                      <div
-                        class="leaflet-bottom leaflet-left"
-                      />
-                      <div
-                        class="leaflet-bottom leaflet-right"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="errorLabel"
-                  />
-                </div>
-              </div>
-              <div
-                class="item gridItem colSpan colSpan-4 space-before-0 space-after-0"
-              >
-                <div
-                  class="field"
-                >
-                  <label
-                    class="label"
-                  >
-                    sulu_location.latitude *
-                  </label>
-                  <div
-                    class="input default left"
-                  >
-                    <input
-                      step="0.001"
-                      type="number"
-                      value="22"
-                    />
-                  </div>
-                  <div
-                    class="errorLabel"
-                  />
-                </div>
-              </div>
-              <div
-                class="item gridItem colSpan colSpan-4 space-before-0 space-after-0"
-              >
-                <div
-                  class="field"
-                >
-                  <label
-                    class="label"
-                  >
-                    sulu_location.longitude *
-                  </label>
-                  <div
-                    class="input default left"
-                  >
-                    <input
-                      step="0.001"
-                      type="number"
-                      value="33"
-                    />
-                  </div>
-                  <div
-                    class="errorLabel"
-                  />
-                </div>
-              </div>
-              <div
-                class="item gridItem colSpan colSpan-4 space-before-0 space-after-0"
-              >
-                <div
-                  class="field"
-                >
-                  <label
-                    class="label"
-                  >
-                    sulu_location.zoom *
-                  </label>
-                  <div
-                    class="input default left"
-                  >
-                    <input
-                      max="18"
-                      min="0"
-                      type="number"
-                      value="5"
-                    />
-                  </div>
-                  <div
-                    class="errorLabel"
-                  />
-                </div>
-              </div>
-              <div
-                class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
-              >
-                <div
-                  class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
-                >
-                  <div
-                    class="divider"
-                  >
-                    sulu_location.additional_information
-                  </div>
-                </div>
-                <div
-                  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-                >
-                  <div
-                    class="field"
-                  >
-                    <label
-                      class="label"
-                    >
-                      sulu_location.title
-                    </label>
-                    <div
-                      class="input default left"
-                    >
-                      <input
-                        type="text"
-                        value="title-123"
-                      />
-                    </div>
-                    <div
-                      class="errorLabel"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
-                >
-                  <div
-                    class="field"
-                  >
-                    <label
-                      class="label"
-                    >
-                      sulu_location.street
-                    </label>
-                    <div
-                      class="input default left"
-                    >
-                      <input
-                        type="text"
-                        value="street-123"
-                      />
-                    </div>
-                    <div
-                      class="errorLabel"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
-                >
-                  <div
-                    class="field"
-                  >
-                    <label
-                      class="label"
-                    >
-                      sulu_location.number
-                    </label>
-                    <div
-                      class="input default left"
-                    >
-                      <input
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                    <div
-                      class="errorLabel"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
-                >
-                  <div
-                    class="field"
-                  >
-                    <label
-                      class="label"
-                    >
-                      sulu_location.code
-                    </label>
-                    <div
-                      class="input default left"
-                    >
-                      <input
-                        type="text"
-                        value="code-123"
-                      />
-                    </div>
-                    <div
-                      class="errorLabel"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
-                >
-                  <div
-                    class="field"
-                  >
-                    <label
-                      class="label"
-                    >
-                      sulu_location.town
-                    </label>
-                    <div
-                      class="input default left"
-                    >
-                      <input
-                        type="text"
-                        value="town-123"
-                      />
-                    </div>
-                    <div
-                      class="errorLabel"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-                >
-                  <div
-                    class="field"
-                  >
-                    <label
-                      class="label"
-                    >
-                      sulu_location.country
-                    </label>
-                    <div
-                      class="input default left"
-                    >
-                      <input
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                    <div
-                      class="errorLabel"
-                    />
-                  </div>
-                </div>
-              </div>
+                data-testid="marker"
+              />
+            </div>
+            <div
+              class="errorLabel"
+            />
+          </div>
+        </div>
+        <div
+          class="item gridItem colSpan colSpan-4 space-before-0 space-after-0"
+        >
+          <div
+            class="field"
+          >
+            <label
+              class="label"
+            >
+              sulu_location.latitude *
+            </label>
+            <div
+              class="input default left"
+            >
+              <input
+                step="0.001"
+                type="number"
+                value="22"
+              />
+            </div>
+            <div
+              class="errorLabel"
+            />
+          </div>
+        </div>
+        <div
+          class="item gridItem colSpan colSpan-4 space-before-0 space-after-0"
+        >
+          <div
+            class="field"
+          >
+            <label
+              class="label"
+            >
+              sulu_location.longitude *
+            </label>
+            <div
+              class="input default left"
+            >
+              <input
+                step="0.001"
+                type="number"
+                value="33"
+              />
+            </div>
+            <div
+              class="errorLabel"
+            />
+          </div>
+        </div>
+        <div
+          class="item gridItem colSpan colSpan-4 space-before-0 space-after-0"
+        >
+          <div
+            class="field"
+          >
+            <label
+              class="label"
+            >
+              sulu_location.zoom *
+            </label>
+            <div
+              class="input default left"
+            >
+              <input
+                max="18"
+                min="0"
+                type="number"
+                value="5"
+              />
+            </div>
+            <div
+              class="errorLabel"
+            />
+          </div>
+        </div>
+        <div
+          class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
+        >
+          <div
+            class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
+          >
+            <div
+              class="divider"
+            >
+              sulu_location.additional_information
             </div>
           </div>
-        </article>
-        <footer
-          class="footer"
-        >
           <div
-            class="actions"
+            class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
           >
-            <button
-              class="button link hasText"
-              type="button"
-            >
-              <span
-                class="buttonText"
-              >
-                sulu_admin.reset
-              </span>
-            </button>
-          </div>
-          <button
-            class="button primary hasText"
-            type="button"
-          >
-            <span
-              class="buttonText"
-            >
-              sulu_admin.confirm
-            </span>
-          </button>
-        </footer>
-        <div
-          class="snackbar"
-        >
-          <div
-            class="snackbar error"
-            role="button"
-          >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
-            />
             <div
-              class="text"
+              class="field"
             >
-              <strong>
-                sulu_admin.error
-              </strong>
-               - 
+              <label
+                class="label"
+              >
+                sulu_location.title
+              </label>
+              <div
+                class="input default left"
+              >
+                <input
+                  type="text"
+                  value="title-123"
+                />
+              </div>
+              <div
+                class="errorLabel"
+              />
+            </div>
+          </div>
+          <div
+            class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
+          >
+            <div
+              class="field"
+            >
+              <label
+                class="label"
+              >
+                sulu_location.street
+              </label>
+              <div
+                class="input default left"
+              >
+                <input
+                  type="text"
+                  value="street-123"
+                />
+              </div>
+              <div
+                class="errorLabel"
+              />
+            </div>
+          </div>
+          <div
+            class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
+          >
+            <div
+              class="field"
+            >
+              <label
+                class="label"
+              >
+                sulu_location.number
+              </label>
+              <div
+                class="input default left"
+              >
+                <input
+                  type="text"
+                  value=""
+                />
+              </div>
+              <div
+                class="errorLabel"
+              />
+            </div>
+          </div>
+          <div
+            class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
+          >
+            <div
+              class="field"
+            >
+              <label
+                class="label"
+              >
+                sulu_location.code
+              </label>
+              <div
+                class="input default left"
+              >
+                <input
+                  type="text"
+                  value="code-123"
+                />
+              </div>
+              <div
+                class="errorLabel"
+              />
+            </div>
+          </div>
+          <div
+            class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
+          >
+            <div
+              class="field"
+            >
+              <label
+                class="label"
+              >
+                sulu_location.town
+              </label>
+              <div
+                class="input default left"
+              >
+                <input
+                  type="text"
+                  value="town-123"
+                />
+              </div>
+              <div
+                class="errorLabel"
+              />
+            </div>
+          </div>
+          <div
+            class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+          >
+            <div
+              class="field"
+            >
+              <label
+                class="label"
+              >
+                sulu_location.country
+              </label>
+              <div
+                class="input default left"
+              >
+                <input
+                  type="text"
+                  value=""
+                />
+              </div>
+              <div
+                class="errorLabel"
+              />
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </div>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Component should render without a given initial-value 1`] = `
-Array [
+<DocumentFragment>
   <div
-    class="backdrop visible fixed"
-    data-testid="backdrop"
-    role="button"
-  />,
-  <div
-    class="container isDown"
+    data-testid="overlay"
   >
     <div
-      class="overlay small"
+      class="container"
     >
-      <section
-        class="content"
+      <div
+        class="grid grid"
       >
-        <header
-          class="header"
-        >
-          <h2>
-            sulu_location.select_location
-          </h2>
-          <span
-            aria-label="su-times"
-            class="su-times clickable icon"
-            role="button"
-            tabindex="0"
-          />
-        </header>
-        <article
-          class="article"
+        <div
+          class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
         >
           <div
-            class="container"
+            class="field"
           >
             <div
-              class="grid grid"
+              class="errorLabel"
+            />
+          </div>
+        </div>
+        <div
+          class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+        >
+          <div
+            class="field"
+          >
+            <div
+              data-testid="map-container"
             >
               <div
-                class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-              >
-                <div
-                  class="field"
-                >
-                  <div
-                    class="singleAutoComplete"
-                  >
-                    <div
-                      class="input default left"
-                    >
-                      <div
-                        class="prependedContainer default"
-                      >
-                        <span
-                          aria-label="su-search"
-                          class="su-search icon default"
-                        />
-                      </div>
-                      <input
-                        autocomplete="off"
-                        class="mousetrap"
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="errorLabel"
-                  />
-                </div>
-              </div>
-              <div
-                class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-              >
-                <div
-                  class="field"
-                >
-                  <div
-                    class="map leaflet-container leaflet-touch leaflet-grab leaflet-touch-drag leaflet-touch-zoom"
-                    style="position: relative;"
-                    tabindex="0"
-                  >
-                    <div
-                      class="leaflet-pane leaflet-map-pane"
-                      style="left: 0px; top: 0px;"
-                    >
-                      <div
-                        class="leaflet-pane leaflet-tile-pane"
-                      >
-                        <div
-                          class="leaflet-layer "
-                          style="z-index: 1;"
-                        >
-                          <div
-                            class="leaflet-tile-container leaflet-zoom-animated"
-                            style="z-index: 18; left: 0px; top: 0px;"
-                          >
-                            <img
-                              alt=""
-                              class="leaflet-tile"
-                              src="https://a.tile.openstreetmap.org/1/0/0.png"
-                              style="width: 256px; height: 256px; left: -256px; top: -256px;"
-                            />
-                            <img
-                              alt=""
-                              class="leaflet-tile"
-                              src="https://b.tile.openstreetmap.org/1/1/0.png"
-                              style="width: 256px; height: 256px; left: 0px; top: -256px;"
-                            />
-                            <img
-                              alt=""
-                              class="leaflet-tile"
-                              src="https://b.tile.openstreetmap.org/1/0/1.png"
-                              style="width: 256px; height: 256px; left: -256px; top: 0px;"
-                            />
-                            <img
-                              alt=""
-                              class="leaflet-tile"
-                              src="https://c.tile.openstreetmap.org/1/1/1.png"
-                              style="width: 256px; height: 256px; left: 0px; top: 0px;"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        class="leaflet-pane leaflet-overlay-pane"
-                      />
-                      <div
-                        class="leaflet-pane leaflet-shadow-pane"
-                      >
-                        <img
-                          alt=""
-                          class="leaflet-marker-shadow leaflet-zoom-hide"
-                          src="marker-shadow.png"
-                          style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; left: 0px; top: 0px;"
-                        />
-                      </div>
-                      <div
-                        class="leaflet-pane leaflet-marker-pane"
-                      >
-                        <img
-                          alt="Marker"
-                          class="leaflet-marker-icon leaflet-zoom-hide leaflet-interactive leaflet-marker-draggable"
-                          role="button"
-                          src="marker-icon.png"
-                          style="margin-left: -12px; margin-top: -41px; width: 25px; height: 41px; left: 0px; top: 0px; z-index: 0;"
-                          tabindex="0"
-                        />
-                      </div>
-                      <div
-                        class="leaflet-pane leaflet-tooltip-pane"
-                      />
-                      <div
-                        class="leaflet-pane leaflet-popup-pane"
-                      />
-                    </div>
-                    <div
-                      class="leaflet-control-container"
-                    >
-                      <div
-                        class="leaflet-top leaflet-left"
-                      >
-                        <div
-                          class="leaflet-control-zoom leaflet-bar leaflet-control"
-                        >
-                          <a
-                            aria-disabled="false"
-                            aria-label="Zoom in"
-                            class="leaflet-control-zoom-in"
-                            href="#"
-                            role="button"
-                            title="Zoom in"
-                          >
-                            <span
-                              aria-hidden="true"
-                            >
-                              +
-                            </span>
-                          </a>
-                          <a
-                            aria-disabled="false"
-                            aria-label="Zoom out"
-                            class="leaflet-control-zoom-out"
-                            href="#"
-                            role="button"
-                            title="Zoom out"
-                          >
-                            <span
-                              aria-hidden="true"
-                            >
-                              −
-                            </span>
-                          </a>
-                        </div>
-                      </div>
-                      <div
-                        class="leaflet-top leaflet-right"
-                      />
-                      <div
-                        class="leaflet-bottom leaflet-left"
-                      />
-                      <div
-                        class="leaflet-bottom leaflet-right"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="errorLabel"
-                  />
-                </div>
-              </div>
-              <div
-                class="item gridItem colSpan colSpan-4 space-before-0 space-after-0"
-              >
-                <div
-                  class="field"
-                >
-                  <label
-                    class="label"
-                  >
-                    sulu_location.latitude *
-                  </label>
-                  <div
-                    class="input default left"
-                  >
-                    <input
-                      step="0.001"
-                      type="number"
-                      value=""
-                    />
-                  </div>
-                  <div
-                    class="errorLabel"
-                  />
-                </div>
-              </div>
-              <div
-                class="item gridItem colSpan colSpan-4 space-before-0 space-after-0"
-              >
-                <div
-                  class="field"
-                >
-                  <label
-                    class="label"
-                  >
-                    sulu_location.longitude *
-                  </label>
-                  <div
-                    class="input default left"
-                  >
-                    <input
-                      step="0.001"
-                      type="number"
-                      value=""
-                    />
-                  </div>
-                  <div
-                    class="errorLabel"
-                  />
-                </div>
-              </div>
-              <div
-                class="item gridItem colSpan colSpan-4 space-before-0 space-after-0"
-              >
-                <div
-                  class="field"
-                >
-                  <label
-                    class="label"
-                  >
-                    sulu_location.zoom *
-                  </label>
-                  <div
-                    class="input default left"
-                  >
-                    <input
-                      max="18"
-                      min="0"
-                      type="number"
-                      value="1"
-                    />
-                  </div>
-                  <div
-                    class="errorLabel"
-                  />
-                </div>
-              </div>
-              <div
-                class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
-              >
-                <div
-                  class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
-                >
-                  <div
-                    class="divider"
-                  >
-                    sulu_location.additional_information
-                  </div>
-                </div>
-                <div
-                  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-                >
-                  <div
-                    class="field"
-                  >
-                    <label
-                      class="label"
-                    >
-                      sulu_location.title
-                    </label>
-                    <div
-                      class="input default left"
-                    >
-                      <input
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                    <div
-                      class="errorLabel"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
-                >
-                  <div
-                    class="field"
-                  >
-                    <label
-                      class="label"
-                    >
-                      sulu_location.street
-                    </label>
-                    <div
-                      class="input default left"
-                    >
-                      <input
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                    <div
-                      class="errorLabel"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
-                >
-                  <div
-                    class="field"
-                  >
-                    <label
-                      class="label"
-                    >
-                      sulu_location.number
-                    </label>
-                    <div
-                      class="input default left"
-                    >
-                      <input
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                    <div
-                      class="errorLabel"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
-                >
-                  <div
-                    class="field"
-                  >
-                    <label
-                      class="label"
-                    >
-                      sulu_location.code
-                    </label>
-                    <div
-                      class="input default left"
-                    >
-                      <input
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                    <div
-                      class="errorLabel"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
-                >
-                  <div
-                    class="field"
-                  >
-                    <label
-                      class="label"
-                    >
-                      sulu_location.town
-                    </label>
-                    <div
-                      class="input default left"
-                    >
-                      <input
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                    <div
-                      class="errorLabel"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-                >
-                  <div
-                    class="field"
-                  >
-                    <label
-                      class="label"
-                    >
-                      sulu_location.country
-                    </label>
-                    <div
-                      class="input default left"
-                    >
-                      <input
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                    <div
-                      class="errorLabel"
-                    />
-                  </div>
-                </div>
-              </div>
+                data-testid="marker"
+              />
+            </div>
+            <div
+              class="errorLabel"
+            />
+          </div>
+        </div>
+        <div
+          class="item gridItem colSpan colSpan-4 space-before-0 space-after-0"
+        >
+          <div
+            class="field"
+          >
+            <label
+              class="label"
+            >
+              sulu_location.latitude *
+            </label>
+            <div
+              class="input default left"
+            >
+              <input
+                step="0.001"
+                type="number"
+                value=""
+              />
+            </div>
+            <div
+              class="errorLabel"
+            />
+          </div>
+        </div>
+        <div
+          class="item gridItem colSpan colSpan-4 space-before-0 space-after-0"
+        >
+          <div
+            class="field"
+          >
+            <label
+              class="label"
+            >
+              sulu_location.longitude *
+            </label>
+            <div
+              class="input default left"
+            >
+              <input
+                step="0.001"
+                type="number"
+                value=""
+              />
+            </div>
+            <div
+              class="errorLabel"
+            />
+          </div>
+        </div>
+        <div
+          class="item gridItem colSpan colSpan-4 space-before-0 space-after-0"
+        >
+          <div
+            class="field"
+          >
+            <label
+              class="label"
+            >
+              sulu_location.zoom *
+            </label>
+            <div
+              class="input default left"
+            >
+              <input
+                max="18"
+                min="0"
+                type="number"
+                value="1"
+              />
+            </div>
+            <div
+              class="errorLabel"
+            />
+          </div>
+        </div>
+        <div
+          class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
+        >
+          <div
+            class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
+          >
+            <div
+              class="divider"
+            >
+              sulu_location.additional_information
             </div>
           </div>
-        </article>
-        <footer
-          class="footer"
-        >
           <div
-            class="actions"
+            class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
           >
-            <button
-              class="button link hasText"
-              type="button"
-            >
-              <span
-                class="buttonText"
-              >
-                sulu_admin.reset
-              </span>
-            </button>
-          </div>
-          <button
-            class="button primary hasText"
-            type="button"
-          >
-            <span
-              class="buttonText"
-            >
-              sulu_admin.confirm
-            </span>
-          </button>
-        </footer>
-        <div
-          class="snackbar"
-        >
-          <div
-            class="snackbar error"
-            role="button"
-          >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
-            />
             <div
-              class="text"
+              class="field"
             >
-              <strong>
-                sulu_admin.error
-              </strong>
-               - 
+              <label
+                class="label"
+              >
+                sulu_location.title
+              </label>
+              <div
+                class="input default left"
+              >
+                <input
+                  type="text"
+                  value=""
+                />
+              </div>
+              <div
+                class="errorLabel"
+              />
+            </div>
+          </div>
+          <div
+            class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
+          >
+            <div
+              class="field"
+            >
+              <label
+                class="label"
+              >
+                sulu_location.street
+              </label>
+              <div
+                class="input default left"
+              >
+                <input
+                  type="text"
+                  value=""
+                />
+              </div>
+              <div
+                class="errorLabel"
+              />
+            </div>
+          </div>
+          <div
+            class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
+          >
+            <div
+              class="field"
+            >
+              <label
+                class="label"
+              >
+                sulu_location.number
+              </label>
+              <div
+                class="input default left"
+              >
+                <input
+                  type="text"
+                  value=""
+                />
+              </div>
+              <div
+                class="errorLabel"
+              />
+            </div>
+          </div>
+          <div
+            class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
+          >
+            <div
+              class="field"
+            >
+              <label
+                class="label"
+              >
+                sulu_location.code
+              </label>
+              <div
+                class="input default left"
+              >
+                <input
+                  type="text"
+                  value=""
+                />
+              </div>
+              <div
+                class="errorLabel"
+              />
+            </div>
+          </div>
+          <div
+            class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
+          >
+            <div
+              class="field"
+            >
+              <label
+                class="label"
+              >
+                sulu_location.town
+              </label>
+              <div
+                class="input default left"
+              >
+                <input
+                  type="text"
+                  value=""
+                />
+              </div>
+              <div
+                class="errorLabel"
+              />
+            </div>
+          </div>
+          <div
+            class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+          >
+            <div
+              class="field"
+            >
+              <label
+                class="label"
+              >
+                sulu_location.country
+              </label>
+              <div
+                class="input default left"
+              >
+                <input
+                  type="text"
+                  value=""
+                />
+              </div>
+              <div
+                class="errorLabel"
+              />
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </div>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;

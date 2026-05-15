@@ -13,7 +13,8 @@ exports[`Render overlay with a URL 1`] = `
       <label
         class="label"
       >
-        sulu_admin.link_url *
+        sulu_admin.link_url
+         *
       </label>
       <div
         class="url"
@@ -80,7 +81,8 @@ exports[`Render overlay with a URL 1`] = `
       <label
         class="label"
       >
-        sulu_admin.link_target *
+        sulu_admin.link_target
+         *
       </label>
       <div
         class="select"
@@ -194,7 +196,8 @@ exports[`Render overlay with an undefined URL 1`] = `
       <label
         class="label"
       >
-        sulu_admin.link_url *
+        sulu_admin.link_url
+         *
       </label>
       <div
         class="url"
@@ -261,7 +264,8 @@ exports[`Render overlay with an undefined URL 1`] = `
       <label
         class="label"
       >
-        sulu_admin.link_target *
+        sulu_admin.link_target
+         *
       </label>
       <div
         class="select"
@@ -375,7 +379,8 @@ exports[`Render overlay with mailto URL 1`] = `
       <label
         class="label"
       >
-        sulu_admin.link_url *
+        sulu_admin.link_url
+         *
       </label>
       <div
         class="url"

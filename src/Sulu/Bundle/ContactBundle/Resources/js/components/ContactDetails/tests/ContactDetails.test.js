@@ -10,10 +10,6 @@ import Phone from '../../ContactDetails/Phone';
 import SocialMedia from '../../ContactDetails/SocialMedia';
 import Website from '../../ContactDetails/Website';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
 beforeEach(() => {
     jest.clearAllMocks();
 

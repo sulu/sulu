@@ -2,14 +2,15 @@
 import loadResourceLocatorInputTypeByWebspace from '../loadResourceLocatorInputTypeByWebspace';
 import webspaceStore from '../../../stores/webspaceStore';
 
-jest.mock('../../../stores/webspaceStore', () => ({
-    getWebspace: jest.fn(),
-}));
+beforeEach(() => {
+    webspaceStore.setWebspaces([]);
+});
 
 test.each(['sulu', 'example'])('Load input type for resource locator by webspace', (webspaceKey) => {
-    webspaceStore.getWebspace.mockReturnValue({resourceLocatorStrategy: {inputType: 'leaf'}});
-    const inputType = loadResourceLocatorInputTypeByWebspace(webspaceKey);
+    webspaceStore.setWebspaces([({
+        key: webspaceKey,
+        resourceLocatorStrategy: {inputType: 'leaf'},
+    }: any)]);
 
-    expect(inputType).toEqual(inputType);
-    expect(webspaceStore.getWebspace).toBeCalledWith(webspaceKey);
+    return expect(loadResourceLocatorInputTypeByWebspace(webspaceKey)).resolves.toEqual('leaf');
 });
