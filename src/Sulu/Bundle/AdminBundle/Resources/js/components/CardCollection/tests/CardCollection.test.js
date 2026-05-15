@@ -4,10 +4,6 @@ import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CardCollection from '../CardCollection';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
 test('Render empty CardCollection', () => {
     const {container} = render(<CardCollection />);
     expect(container).toMatchSnapshot();

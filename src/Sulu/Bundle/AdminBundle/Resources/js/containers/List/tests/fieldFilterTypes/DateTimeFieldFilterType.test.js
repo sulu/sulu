@@ -1,15 +1,26 @@
 // @flow
-import React from 'react';
-import {mount} from 'enzyme';
+import {render} from '@testing-library/react';
+import DatePicker from '../../../../components/DatePicker';
 import DateFieldFilterType from '../../fieldFilterTypes/DateFieldFilterType';
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../../components/DatePicker', () => jest.fn(() => null));
+
+function getDatePickerProps(index: number) {
+    return (DatePicker: any).mock.calls[index][0];
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test('Render with value of undefined', () => {
     const dateFieldFilterType = new DateFieldFilterType(jest.fn(), {}, undefined, {timeFormat: true});
-    expect(mount(<div>{dateFieldFilterType.getFormNode()}</div>).render()).toMatchSnapshot();
+    render(dateFieldFilterType.getFormNode());
+
+    expect(getDatePickerProps(0).value).toEqual(undefined);
+    expect(getDatePickerProps(1).value).toEqual(undefined);
+    expect(getDatePickerProps(0).options).toEqual({dateFormat: true, timeFormat: true});
+    expect(getDatePickerProps(1).options).toEqual({dateFormat: true, timeFormat: true});
 });
 
 test.each([
@@ -24,7 +35,12 @@ test.each([
         {from, to},
         {timeFormat: timeFormatEnabled}
     );
-    expect(mount(<div>{dateFieldFilterType.getFormNode()}</div>).render()).toMatchSnapshot();
+    render(dateFieldFilterType.getFormNode());
+
+    expect(getDatePickerProps(0).value).toEqual(from);
+    expect(getDatePickerProps(1).value).toEqual(to);
+    expect(getDatePickerProps(0).options).toEqual({dateFormat: true, timeFormat: timeFormatEnabled});
+    expect(getDatePickerProps(1).options).toEqual({dateFormat: true, timeFormat: timeFormatEnabled});
 });
 
 test.each([
@@ -39,8 +55,10 @@ test.each([
     );
 
     dateFieldFilterType.setValue({from: new Date(from), to: new Date(to)});
+    render(dateFieldFilterType.getFormNode());
 
-    expect(mount(<div>{dateFieldFilterType.getFormNode()}</div>).render()).toMatchSnapshot();
+    expect(getDatePickerProps(0).value).toEqual(new Date(from));
+    expect(getDatePickerProps(1).value).toEqual(new Date(to));
 });
 
 test.each([
@@ -49,9 +67,9 @@ test.each([
 ])('Call onChange handler with only from value', (from, timeFormatEnabled) => {
     const changeSpy = jest.fn();
     const dateFieldFilterType = new DateFieldFilterType(changeSpy, {}, undefined, {timeFormat: timeFormatEnabled});
-    const dateFieldFilterTypeForm = mount(dateFieldFilterType.getFormNode());
+    render(dateFieldFilterType.getFormNode());
 
-    dateFieldFilterTypeForm.find('DatePicker').at(0).prop('onChange')(new Date(from));
+    getDatePickerProps(0).onChange(new Date(from));
 
     expect(changeSpy).toBeCalledWith({from: new Date(from)});
 });
@@ -62,9 +80,9 @@ test.each([
 ])('Call onChange handler with only to value', (to, timeFormatEnabled) => {
     const changeSpy = jest.fn();
     const dateFieldFilterType = new DateFieldFilterType(changeSpy, {}, undefined, {timeFormat: timeFormatEnabled});
-    const dateFieldFilterTypeForm = mount(dateFieldFilterType.getFormNode());
+    render(dateFieldFilterType.getFormNode());
 
-    dateFieldFilterTypeForm.find('DatePicker').at(1).prop('onChange')(new Date(to));
+    getDatePickerProps(1).onChange(new Date(to));
 
     expect(changeSpy).toBeCalledWith({to: new Date(to)});
 });
@@ -85,9 +103,9 @@ test.each([
         {from: new Date(fromActual), to: new Date(to)},
         {timeFormat: timeFormatEnabled}
     );
-    const dateFieldFilterTypeForm = mount(dateFieldFilterType.getFormNode());
+    render(dateFieldFilterType.getFormNode());
 
-    dateFieldFilterTypeForm.find('DatePicker').at(0).prop('onChange')(new Date(fromExpected));
+    getDatePickerProps(0).onChange(new Date(fromExpected));
 
     expect(changeSpy).toBeCalledWith({from: new Date(fromExpected), to: new Date(to)});
 });
@@ -108,9 +126,9 @@ test.each([
         {from: new Date(from), to: new Date(toActual)},
         {timeFormat: timeFormatEnabled}
     );
-    const dateFieldFilterTypeForm = mount(dateFieldFilterType.getFormNode());
+    render(dateFieldFilterType.getFormNode());
 
-    dateFieldFilterTypeForm.find('DatePicker').at(1).prop('onChange')(new Date(toExpected));
+    getDatePickerProps(1).onChange(new Date(toExpected));
 
     expect(changeSpy).toBeCalledWith({from: new Date(from), to: new Date(toExpected)});
 });

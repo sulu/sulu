@@ -5,10 +5,6 @@ import userEvent from '@testing-library/user-event';
 import log from 'loglevel';
 import Icon from '../Icon';
 
-jest.mock('loglevel', () => ({
-    warn: jest.fn(),
-}));
-
 test('Icon should render', () => {
     const {container} = render(<Icon name="su-save" />);
     expect(container).toMatchSnapshot();

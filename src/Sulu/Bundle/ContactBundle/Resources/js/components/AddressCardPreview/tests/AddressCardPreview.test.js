@@ -3,10 +3,6 @@ import React from 'react';
 import {render} from '@testing-library/react';
 import AddressCardPreview from '../AddressCardPreview';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
 test('Render AddressCardPreview with minimal information', () => {
     const {asFragment} = render(
         <AddressCardPreview

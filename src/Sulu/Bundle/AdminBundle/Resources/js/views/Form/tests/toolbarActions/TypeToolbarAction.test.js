@@ -1,14 +1,9 @@
 // @flow
-import {mount} from 'enzyme';
 import TypeToolbarAction from '../../toolbarActions/TypeToolbarAction';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
 import Form from '../../../../views/Form';
-
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 
@@ -57,6 +52,10 @@ function createTypeToolbarAction(options = {}) {
     });
 
     return new TypeToolbarAction(resourceFormStore, form, router, [], options, resourceStore);
+}
+
+function getDialogProps(typeToolbarAction: TypeToolbarAction): any {
+    return ((typeToolbarAction.getNode(): any).props: any);
 }
 
 test('Return item config with correct disabled, loading, options, icon, type and value ', () => {
@@ -193,7 +192,7 @@ test('Display warning dialog when FormStore is dirty and another type is selecte
         );
     }
 
-    expect(mount(typeToolbarAction.getNode()).instance().props).toEqual(expect.objectContaining({
+    expect(getDialogProps(typeToolbarAction)).toEqual(expect.objectContaining({
         title: 'sulu_admin.change_type_dirty_warning_dialog_title',
         children: 'sulu_admin.dirty_warning_dialog_text',
         open: false,
@@ -202,7 +201,7 @@ test('Display warning dialog when FormStore is dirty and another type is selecte
     toolbarItemConfig.onChange('homepage');
 
     expect(typeToolbarAction.resourceFormStore.changeType).not.toBeCalled();
-    expect(mount(typeToolbarAction.getNode()).instance().props).toEqual(expect.objectContaining({
+    expect(getDialogProps(typeToolbarAction)).toEqual(expect.objectContaining({
         title: 'sulu_admin.change_type_dirty_warning_dialog_title',
         children: 'sulu_admin.dirty_warning_dialog_text',
         open: true,
@@ -238,11 +237,11 @@ test('Change the type of the FormStore when warning dialog is confirmed', () => 
 
     toolbarItemConfig.onChange('homepage');
     expect(typeToolbarAction.resourceFormStore.changeType).not.toBeCalled();
-    expect(mount(typeToolbarAction.getNode()).instance().props.open).toBeTruthy();
+    expect(getDialogProps(typeToolbarAction).open).toBeTruthy();
 
-    mount(typeToolbarAction.getNode()).instance().props.onConfirm();
+    getDialogProps(typeToolbarAction).onConfirm();
     expect(typeToolbarAction.resourceFormStore.changeType).toBeCalledWith('homepage');
-    expect(mount(typeToolbarAction.getNode()).instance().props.open).toBeFalsy();
+    expect(getDialogProps(typeToolbarAction).open).toBeFalsy();
 });
 
 test('Do not change the type of the FormStore when warning dialog is canceled', () => {
@@ -274,11 +273,11 @@ test('Do not change the type of the FormStore when warning dialog is canceled', 
 
     toolbarItemConfig.onChange('homepage');
     expect(typeToolbarAction.resourceFormStore.changeType).not.toBeCalled();
-    expect(mount(typeToolbarAction.getNode()).instance().props.open).toBeTruthy();
+    expect(getDialogProps(typeToolbarAction).open).toBeTruthy();
 
-    mount(typeToolbarAction.getNode()).instance().props.onCancel();
+    getDialogProps(typeToolbarAction).onCancel();
     expect(typeToolbarAction.resourceFormStore.changeType).not.toBeCalled();
-    expect(mount(typeToolbarAction.getNode()).instance().props.open).toBeFalsy();
+    expect(getDialogProps(typeToolbarAction).open).toBeFalsy();
 });
 
 test('Throw error if no types are available in FormStore', () => {

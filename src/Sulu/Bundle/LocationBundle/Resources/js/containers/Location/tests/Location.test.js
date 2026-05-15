@@ -1,16 +1,56 @@
 // @flow
 import React from 'react';
-import {shallow, mount} from 'enzyme';
+import {act, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {MapContainer, Marker, Tooltip} from 'react-leaflet';
+import LocationOverlayComponent from '../LocationOverlay';
 import Location from '../Location';
-import LocationOverlay from '../LocationOverlay';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
+jest.mock('../LocationOverlay', () => jest.fn(() => null));
+
+jest.mock('react-leaflet', () => ({
+    MapContainer: jest.fn(function MapContainer(props) {
+        return <div data-testid="map-container">{props.children}</div>;
+    }),
+    Marker: jest.fn(function Marker(props) {
+        return <div data-testid="marker">{props.children}</div>;
+    }),
+    TileLayer: jest.fn(() => null),
+    Tooltip: jest.fn(function Tooltip(props) {
+        return <div data-testid="tooltip">{props.children}</div>;
+    }),
 }));
 
+function getLatestMapContainerProps() {
+    const calls = (MapContainer: any).mock.calls;
+
+    return calls[calls.length - 1][0];
+}
+
+function getLatestMarkerProps() {
+    const calls = (Marker: any).mock.calls;
+
+    return calls[calls.length - 1][0];
+}
+
+function getLatestTooltipProps() {
+    const calls = (Tooltip: any).mock.calls;
+
+    return calls[calls.length - 1][0];
+}
+
+function getLatestLocationOverlayProps() {
+    const calls = (LocationOverlayComponent: any).mock.calls;
+
+    return calls[calls.length - 1][0];
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
 test('Component should render without a value', () => {
-    const location = shallow(
+    const {asFragment} = render(
         <Location
             disabled={true}
             locale="en"
@@ -19,11 +59,11 @@ test('Component should render without a value', () => {
         />
     );
 
-    expect(location.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Component should render in disabled state', () => {
-    const location = shallow(
+    const {asFragment} = render(
         <Location
             disabled={true}
             locale="en"
@@ -32,7 +72,7 @@ test('Component should render in disabled state', () => {
         />
     );
 
-    expect(location.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Component should render with a given value', () => {
@@ -48,7 +88,7 @@ test('Component should render with a given value', () => {
         zoom: 5,
     };
 
-    const location = shallow(
+    const {asFragment} = render(
         <Location
             disabled={true}
             locale="en"
@@ -57,7 +97,7 @@ test('Component should render with a given value', () => {
         />
     );
 
-    expect(location.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Component should render a map, a marker and a tooltip with correct props and content', () => {
@@ -73,7 +113,7 @@ test('Component should render a map, a marker and a tooltip with correct props a
         zoom: 5,
     };
 
-    const location = mount(
+    render(
         <Location
             disabled={true}
             locale="en"
@@ -82,7 +122,7 @@ test('Component should render a map, a marker and a tooltip with correct props a
         />
     );
 
-    expect(location.find(MapContainer).props()).toEqual(expect.objectContaining({
+    expect(getLatestMapContainerProps()).toEqual(expect.objectContaining({
         attributionControl: false,
         center: [22, 33],
         doubleClickZoom: false,
@@ -94,19 +134,19 @@ test('Component should render a map, a marker and a tooltip with correct props a
         zoomControl: false,
     }));
 
-    expect(location.find(Marker).props()).toEqual(expect.objectContaining({
+    expect(getLatestMarkerProps()).toEqual(expect.objectContaining({
         interactive: false,
         position: [22, 33],
     }));
 
-    expect(location.find(Tooltip).props()).toEqual(expect.objectContaining({
+    expect(getLatestTooltipProps()).toEqual(expect.objectContaining({
         permanent: true,
     }));
 
-    expect(location.find(Tooltip).text()).toContain('title-123');
-    expect(location.find(Tooltip).text()).toContain('code-123');
-    expect(location.find(Tooltip).text()).toContain('street-123');
-    expect(location.find(Tooltip).text()).toContain('street-123');
+    expect(screen.getByTestId('tooltip')).toHaveTextContent('title-123');
+    expect(screen.getByTestId('tooltip')).toHaveTextContent('code-123');
+    expect(screen.getByTestId('tooltip')).toHaveTextContent('street-123');
+    expect(screen.getByTestId('tooltip')).toHaveTextContent('street-123');
 });
 
 test('Component should not render a tooltip if given value has no additional information', () => {
@@ -122,7 +162,7 @@ test('Component should not render a tooltip if given value has no additional inf
         zoom: 5,
     };
 
-    const location = mount(
+    render(
         <Location
             disabled={true}
             locale="en"
@@ -131,7 +171,7 @@ test('Component should not render a tooltip if given value has no additional inf
         />
     );
 
-    expect(location.find(Tooltip).exists()).toEqual(false);
+    expect(screen.queryByTestId('tooltip')).not.toBeInTheDocument();
 });
 
 test('Should pass correct props to the LocationOverlay', () => {
@@ -147,7 +187,7 @@ test('Should pass correct props to the LocationOverlay', () => {
         zoom: 5,
     };
 
-    const location = mount(
+    render(
         <Location
             disabled={true}
             locale="en"
@@ -156,14 +196,16 @@ test('Should pass correct props to the LocationOverlay', () => {
         />
     );
 
-    expect(location.find(LocationOverlay).props()).toEqual(expect.objectContaining({
+    expect(getLatestLocationOverlayProps()).toEqual(expect.objectContaining({
         open: false,
         value: locationData,
     }));
 });
 
-test('Should open a LocationOverlay when the edit button is clicked', () => {
-    const location = mount(
+test('Should open a LocationOverlay when the edit button is clicked', async() => {
+    const user = userEvent.setup();
+
+    render(
         <Location
             disabled={true}
             locale="en"
@@ -172,13 +214,15 @@ test('Should open a LocationOverlay when the edit button is clicked', () => {
         />
     );
 
-    expect(location.find(LocationOverlay).props().open).toEqual(false);
-    location.find('button').simulate('click');
-    expect(location.find(LocationOverlay).props().open).toEqual(true);
+    expect(getLatestLocationOverlayProps().open).toEqual(false);
+    await user.click(screen.getByRole('button'));
+    expect(getLatestLocationOverlayProps().open).toEqual(true);
 });
 
-test('Should close LocationOverlay when the onClose callback of the overlay is fired', () => {
-    const location = mount(
+test('Should close LocationOverlay when the onClose callback of the overlay is fired', async() => {
+    const user = userEvent.setup();
+
+    render(
         <Location
             disabled={true}
             locale="en"
@@ -187,15 +231,17 @@ test('Should close LocationOverlay when the onClose callback of the overlay is f
         />
     );
 
-    location.find('button').simulate('click');
-    expect(location.find(LocationOverlay).props().open).toEqual(true);
+    await user.click(screen.getByRole('button'));
+    expect(getLatestLocationOverlayProps().open).toEqual(true);
 
-    location.find(LocationOverlay).props().onClose();
-    location.update();
-    expect(location.find(LocationOverlay).props().open).toEqual(false);
+    act(() => {
+        getLatestLocationOverlayProps().onClose();
+    });
+    expect(getLatestLocationOverlayProps().open).toEqual(false);
 });
 
-test('Should close overlay and call callback with correct value when the LocationOverlay is confirmed', () => {
+test('Should close overlay and call callback with correct value when the LocationOverlay is confirmed', async() => {
+    const user = userEvent.setup();
     const newLocationData = {
         code: 'code-123',
         country: undefined,
@@ -209,7 +255,7 @@ test('Should close overlay and call callback with correct value when the Locatio
     };
     const changeSpy = jest.fn();
 
-    const location = mount(
+    render(
         <Location
             disabled={true}
             locale="en"
@@ -218,13 +264,13 @@ test('Should close overlay and call callback with correct value when the Locatio
         />
     );
 
-    location.find('button').simulate('click');
-    expect(location.find(LocationOverlay).props().open).toEqual(true);
+    await user.click(screen.getByRole('button'));
+    expect(getLatestLocationOverlayProps().open).toEqual(true);
 
-    location.find(LocationOverlay).props().onConfirm(newLocationData);
-    location.update();
-    expect(location.find(LocationOverlay).props().open).toEqual(false);
-
+    act(() => {
+        getLatestLocationOverlayProps().onConfirm(newLocationData);
+    });
+    expect(getLatestLocationOverlayProps().open).toEqual(false);
     expect(changeSpy).toBeCalledWith(newLocationData);
 });
 
@@ -241,7 +287,7 @@ test('Should update view of map when value prop is changed', () => {
         zoom: 5,
     };
 
-    const location = mount(
+    const {rerender} = render(
         <Location
             disabled={true}
             locale="en"
@@ -251,11 +297,30 @@ test('Should update view of map when value prop is changed', () => {
     );
 
     const mockedMap = {setView: jest.fn()};
-    location.find(MapContainer).props().whenCreated(mockedMap);
+    act(() => {
+        getLatestMapContainerProps().whenCreated(mockedMap);
+    });
 
     expect(mockedMap.setView).not.toBeCalled();
 
-    location.setProps({value: {lat: 44, long: 55, zoom: 2}});
+    rerender(
+        <Location
+            disabled={true}
+            locale="en"
+            onChange={jest.fn()}
+            value={{
+                code: undefined,
+                country: undefined,
+                lat: 44,
+                long: 55,
+                number: undefined,
+                street: undefined,
+                title: undefined,
+                town: undefined,
+                zoom: 2,
+            }}
+        />
+    );
 
     expect(mockedMap.setView).toBeCalledWith([44, 55], 2);
 });

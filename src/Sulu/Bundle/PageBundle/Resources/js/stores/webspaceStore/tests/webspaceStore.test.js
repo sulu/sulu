@@ -3,10 +3,6 @@ import log from 'loglevel';
 import {defaultWebspace} from 'sulu-admin-bundle/utils/TestHelper';
 import webspaceStore from '../webspaceStore';
 
-jest.mock('loglevel', () => ({
-    warn: jest.fn(),
-}));
-
 beforeEach(() => {
     webspaceStore.setWebspaces([]);
 });

@@ -1,137 +1,131 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {render} from '@testing-library/react';
+import {Form, Input} from 'sulu-admin-bundle/components';
+import SingleSelect from 'sulu-admin-bundle/components/SingleSelect';
+import SingleMediaSelection from '../../../SingleMediaSelection';
 import MediaLinkTypeOverlay from '../../overlays/MediaLinkTypeOverlay';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/components', () => {
+    const FormMock: any = jest.fn(({children}) => <div>{children}</div>);
+    FormMock.Field = jest.fn(({children}) => <div>{children}</div>);
 
-jest.mock('../../../SingleMediaSelectionOverlay', () => jest.fn(function() {
-    return <div>single media selection overlay</div>;
-}));
+    return {
+        Dialog: jest.fn(({children}) => <div>{children}</div>),
+        Form: FormMock,
+        Input: jest.fn(() => null),
+    };
+});
+
+jest.mock('sulu-admin-bundle/components/SingleSelect', () => {
+    const SingleSelectMock: any = jest.fn(({children}) => <div>{children}</div>);
+    SingleSelectMock.Option = jest.fn(() => null);
+
+    return SingleSelectMock;
+});
+
+jest.mock('../../../SingleMediaSelection', () => jest.fn(() => null));
+
+const options = {
+    resourceKey: 'media',
+    displayProperties: ['title'],
+};
+
+function createProps(overrides: Object = {}) {
+    return {
+        href: undefined,
+        onCancel: jest.fn(),
+        onConfirm: jest.fn(),
+        onHrefChange: jest.fn(),
+        open: true,
+        options,
+        ...overrides,
+    };
+}
+
+function getLatestSingleMediaSelectionProps() {
+    const calls = (SingleMediaSelection: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
+
+function getLatestInputProps() {
+    const calls = (Input: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
+
+function getLatestSingleSelectProps() {
+    const calls = (SingleSelect: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
+
+function getFormFieldProps(label: string) {
+    const fieldCalls = (Form.Field: any).mock.calls
+        .map(([props]) => props)
+        .reverse();
+
+    const fieldProps = fieldCalls.find((props) => props.label === label);
+    if (!fieldProps) {
+        throw new Error('Expected Form.Field with label "' + label + '"');
+    }
+
+    return fieldProps;
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test('Render overlay with minimal config', () => {
-    const mediaLinkTypeOverlay = mount(
-        <MediaLinkTypeOverlay
-            href={undefined}
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            onHrefChange={jest.fn()}
-            open={true}
-            options={
-                {
-                    resourceKey: 'media',
-                    displayProperties: ['title'],
-                }
-            }
-        />
-    );
+    render(<MediaLinkTypeOverlay {...createProps()} />);
 
-    expect(mediaLinkTypeOverlay.find('Form').render()).toMatchSnapshot();
+    expect(getFormFieldProps('sulu_admin.link_url').required).toEqual(true);
+    expect(getLatestSingleMediaSelectionProps()).toEqual(expect.objectContaining({
+        onChange: expect.any(Function),
+        value: {displayOption: undefined, id: undefined},
+    }));
 });
 
 test('Render overlay with invalid href type', () => {
-    expect(() => shallow(
-        <MediaLinkTypeOverlay
-            href="1234"
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            onHrefChange={jest.fn()}
-            open={true}
-            options={
-                {
-                    resourceKey: 'media',
-                    displayProperties: ['title'],
-                }
-            }
-        />
-    )).toThrow('The id of a media should always be a number!');
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    try {
+        expect(() => render(<MediaLinkTypeOverlay {...createProps({href: '1234'})} />))
+            .toThrow('The id of a media should always be a number!');
+    } finally {
+        consoleErrorSpy.mockRestore();
+    }
 });
 
 test('Render overlay with anchor enabled', () => {
-    const mediaLinkTypeOverlay = mount(
-        <MediaLinkTypeOverlay
-            href={undefined}
-            onAnchorChange={jest.fn()}
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            onHrefChange={jest.fn()}
-            open={true}
-            options={
-                {
-                    resourceKey: 'media',
-                    displayProperties: ['title'],
-                }
-            }
-        />
-    );
+    const onAnchorChange = jest.fn();
+    render(<MediaLinkTypeOverlay {...createProps({onAnchorChange})} />);
 
-    expect(mediaLinkTypeOverlay.find('Form').render()).toMatchSnapshot();
+    expect(getFormFieldProps('sulu_admin.link_anchor')).toBeDefined();
+    expect(getLatestInputProps().onChange).toBe(onAnchorChange);
 });
 
 test('Render overlay with target enabled', () => {
-    const mediaLinkTypeOverlay = mount(
-        <MediaLinkTypeOverlay
-            href={undefined}
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            onHrefChange={jest.fn()}
-            onTargetChange={jest.fn()}
-            open={true}
-            options={
-                {
-                    resourceKey: 'media',
-                    displayProperties: ['title'],
-                }
-            }
-        />
-    );
+    const onTargetChange = jest.fn();
+    render(<MediaLinkTypeOverlay {...createProps({onTargetChange})} />);
 
-    expect(mediaLinkTypeOverlay.find('Form').render()).toMatchSnapshot();
+    expect(getFormFieldProps('sulu_admin.link_target').required).toEqual(true);
+    expect(getLatestSingleSelectProps().onChange).toBe(onTargetChange);
+    expect((SingleSelect.Option: any).mock.calls.map(([props]) => props.value))
+        .toEqual(['_blank', '_self', '_parent', '_top']);
 });
 
 test('Render overlay with title enabled', () => {
-    const mediaLinkTypeOverlay = mount(
-        <MediaLinkTypeOverlay
-            href={undefined}
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            onHrefChange={jest.fn()}
-            onTitleChange={jest.fn()}
-            open={true}
-            options={
-                {
-                    resourceKey: 'media',
-                    displayProperties: ['title'],
-                }
-            }
-        />
-    );
+    const onTitleChange = jest.fn();
+    render(<MediaLinkTypeOverlay {...createProps({onTitleChange})} />);
 
-    expect(mediaLinkTypeOverlay.find('Form').render()).toMatchSnapshot();
+    expect(getFormFieldProps('sulu_admin.link_title')).toBeDefined();
+    expect(getLatestInputProps().onChange).toBe(onTitleChange);
 });
 
 test('Delegate only id to onHrefChange method', () => {
     const hrefChangeSpy = jest.fn();
+    render(<MediaLinkTypeOverlay {...createProps({onHrefChange: hrefChangeSpy, onTitleChange: jest.fn()})} />);
 
-    const mediaLinkTypeOverlay = mount(
-        <MediaLinkTypeOverlay
-            href={undefined}
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            onHrefChange={hrefChangeSpy}
-            onTitleChange={jest.fn()}
-            open={true}
-            options={
-                {
-                    resourceKey: 'media',
-                    displayProperties: ['title'],
-                }
-            }
-        />
-    );
-
-    mediaLinkTypeOverlay.find('SingleMediaSelection').get(0).props.onChange({id: 1}, undefined);
+    getLatestSingleMediaSelectionProps().onChange({id: 1}, undefined);
     expect(hrefChangeSpy).toBeCalledWith(1, undefined);
 });

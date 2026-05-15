@@ -1,7 +1,6 @@
 // @flow
-import {render} from 'enzyme';
+import {act, render} from '@testing-library/react';
 import {observable} from 'mobx';
-import {act} from 'react-dom/test-utils';
 import SymfonyRouting from 'fos-jsrouting/router';
 import log from 'loglevel';
 import ListStore from '../../../../containers/List/stores/ListStore';
@@ -10,14 +9,6 @@ import ResourceStore from '../../../../stores/ResourceStore';
 import List from '../../../../views/List';
 import UploadToolbarAction from '../../toolbarActions/UploadToolbarAction';
 import {Requester} from '../../../../services';
-
-jest.mock('loglevel', () => ({
-    warn: jest.fn(),
-}));
-
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
 
 jest.mock('../../../../containers/List/stores/ListStore', () => jest.fn(function() {
     this.reload = jest.fn();
@@ -69,7 +60,9 @@ test('Should correctly render node', () => {
         multiple: false,
     });
 
-    expect(render(uploadToolbarAction.getNode())).toMatchSnapshot();
+    const {container} = render(uploadToolbarAction.getNode());
+
+    expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Should return config for toolbar item', () => {

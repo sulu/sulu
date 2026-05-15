@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render Toggler component as heading 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="line"
   >
@@ -14,11 +14,11 @@ Array [
     >
       Hide block
     </div>
-  </div>,
+  </div>
   <div
     class="description"
   >
     Hides a block
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;

@@ -1,18 +1,33 @@
 // @flow
-import {mount} from 'enzyme';
 import React from 'react';
+import {act, render, screen} from '@testing-library/react';
+import {extendObservable as mockExtendObservable} from 'mobx';
 import Router from '../../../services/Router';
-import Requester from '../../../services/Requester';
 import Badge from '../Badge';
 import BadgeStore from '../stores/BadgeStore';
 
-jest.mock('../../../services/Requester', () => ({
-    get: jest.fn(),
-}));
-
-Requester.handleResponseHooks = [];
-
 const tabViewRoute: any = {};
+
+jest.mock('../stores/BadgeStore', () => jest.fn(function(
+    router,
+    routeName,
+    dataPath,
+    requestParameters,
+    routerAttributesToRequest,
+    tabViewRoute
+) {
+    this.router = router;
+    this.routeName = routeName;
+    this.dataPath = dataPath;
+    this.requestParameters = requestParameters;
+    this.routerAttributesToRequest = routerAttributesToRequest;
+    this.tabViewRoute = tabViewRoute;
+    this.destroy = jest.fn();
+
+    mockExtendObservable(this, {
+        value: null,
+    });
+}));
 
 jest.mock('../../../services/Router', () => jest.fn(function() {
     this.attributes = {
@@ -25,14 +40,25 @@ jest.mock('../../../services/Router', () => jest.fn(function() {
     };
 }));
 
+const BadgeStoreMock = (BadgeStore: any);
+
+const getBadgeStore = () => {
+    const stores = BadgeStoreMock.mock.instances;
+    if (stores.length === 0) {
+        throw new Error('Expected BadgeStore to be instantiated');
+    }
+
+    return stores[stores.length - 1];
+};
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
 test('Should create new BadgeStore', () => {
     const router = new Router({});
 
-    const promise = Promise.resolve({data: 'foo'});
-    Requester.get.mockReturnValue(promise);
-    Requester.handleResponseHooks = [];
-
-    const badge = mount(
+    render(
         <Badge
             dataPath="/data"
             requestParameters={{
@@ -49,33 +75,20 @@ test('Should create new BadgeStore', () => {
         />
     );
 
-    const store = badge.instance().store;
-
-    expect(store).toBeInstanceOf(BadgeStore);
-    expect(store.routeName).toBe('foo');
-    expect(store.dataPath).toBe('/data');
-    expect(store.requestParameters).toEqual({
-        limit: 0,
-    });
-    expect(store.routerAttributesToRequest).toEqual({
-        id: 'entityId',
-        locale: 'locale',
-    });
-    expect(store.tabViewRoute).toBe(tabViewRoute);
-
-    return promise.then(() => {
-        expect(store.value).toBe('foo');
-    });
+    expect(BadgeStore).toBeCalledWith(
+        router,
+        'foo',
+        '/data',
+        {limit: 0},
+        {id: 'entityId', locale: 'locale'},
+        tabViewRoute
+    );
 });
 
 test('Should pass correct props to badge component', () => {
     const router = new Router({});
 
-    const promise = Promise.resolve('hello');
-    Requester.get.mockReturnValue(promise);
-    Requester.handleResponseHooks = [];
-
-    const badge = mount(
+    render(
         <Badge
             dataPath={null}
             requestParameters={{
@@ -92,21 +105,17 @@ test('Should pass correct props to badge component', () => {
         />
     );
 
-    return promise.then(() => {
-        badge.update();
-        expect(badge.children().find('Badge').length).toBe(1);
-        expect(badge.children().find('Badge').text()).toBe('hello');
+    act(() => {
+        getBadgeStore().value = 'hello';
     });
+
+    expect(screen.getByText('hello')).toBeInTheDocument();
 });
 
 test('Should not render Badge component if visibleCondition fails', () => {
     const router = new Router({});
 
-    const promise = Promise.resolve({data: 0});
-    Requester.get.mockReturnValue(promise);
-    Requester.handleResponseHooks = [];
-
-    const badge = mount(
+    const {container} = render(
         <Badge
             dataPath="/data"
             requestParameters={{
@@ -123,8 +132,9 @@ test('Should not render Badge component if visibleCondition fails', () => {
         />
     );
 
-    return promise.then(() => {
-        badge.update();
-        expect(badge.children().find('Badge').length).toBe(0);
+    act(() => {
+        getBadgeStore().value = 0;
     });
+
+    expect(container).toBeEmptyDOMElement();
 });

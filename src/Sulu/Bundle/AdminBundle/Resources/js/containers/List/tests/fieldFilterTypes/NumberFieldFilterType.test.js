@@ -1,10 +1,27 @@
 // @flow
-import {mount, render} from 'enzyme';
+import {render} from '@testing-library/react';
+import Input from '../../../../components/Input';
+import SingleSelect from '../../../../components/SingleSelect';
 import NumberFieldFilterType from '../../fieldFilterTypes/NumberFieldFilterType';
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../../components/Input', () => jest.fn(() => null));
+
+jest.mock('../../../../components/SingleSelect', () => {
+    const SingleSelectMock = jest.fn(() => null);
+    (SingleSelectMock: any).Option = jest.fn(() => null);
+
+    return SingleSelectMock;
+});
+
+function getLatestInputProps() {
+    const calls = (Input: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
+
+function getLatestSingleSelectProps() {
+    const calls = (SingleSelect: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
 
 test.each([
     [undefined],
@@ -13,7 +30,13 @@ test.each([
     [{gt: 7}],
 ])('Render with value of "%s"', (value) => {
     const numberFieldFilterType = new NumberFieldFilterType(jest.fn(), {}, value);
-    expect(render(numberFieldFilterType.getFormNode())).toMatchSnapshot();
+    render(numberFieldFilterType.getFormNode());
+
+    const operator = value ? Object.keys(value)[0] : undefined;
+    const number = value && operator ? value[operator] : undefined;
+
+    expect(getLatestSingleSelectProps().value).toEqual(operator);
+    expect(getLatestInputProps().value).toEqual(number);
 });
 
 test('Call onChange handler with a default operator when undefined is passed', () => {
@@ -30,9 +53,9 @@ test.each([
 ])('Call onChange handler when the value was "%s" and the "%s" operator is chosen', (value, operator, newValue) => {
     const changeSpy = jest.fn();
     const numberFieldFilterType = new NumberFieldFilterType(changeSpy, {}, value);
-    const numberFieldFilterTypeForm = mount(numberFieldFilterType.getFormNode());
+    render(numberFieldFilterType.getFormNode());
 
-    numberFieldFilterTypeForm.find('SingleSelect').prop('onChange')(operator);
+    getLatestSingleSelectProps().onChange(operator);
 
     expect(changeSpy).toBeCalledWith(newValue);
 });
@@ -44,9 +67,9 @@ test.each([
 ])('Call onChange handler when the value was "%s" and the number was changed to "%s"', (value, number, newValue) => {
     const changeSpy = jest.fn();
     const numberFieldFilterType = new NumberFieldFilterType(changeSpy, {}, value);
-    const numberFieldFilterTypeForm = mount(numberFieldFilterType.getFormNode());
+    render(numberFieldFilterType.getFormNode());
 
-    numberFieldFilterTypeForm.find('Input').prop('onChange')(number);
+    getLatestInputProps().onChange(number);
 
     expect(changeSpy).toBeCalledWith(newValue);
 });

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observable} from 'mobx';
-import {render, shallow, mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
 import TextEditor from '../TextEditor';
 import textEditorRegistry from '../registries/textEditorRegistry';
 
@@ -12,31 +12,27 @@ jest.mock('../registries/textEditorRegistry', () => ({
 test('Render the TextEditor', () => {
     textEditorRegistry.get.mockReturnValue(() => (<textarea />));
 
-    expect(
-        render(
-            <TextEditor
-                adapter="test"
-                locale={undefined}
-                onBlur={jest.fn()}
-                onChange={jest.fn()}
-                options={{}}
-                value={undefined}
-            />
-        )
-    ).toMatchSnapshot();
+    render(
+        <TextEditor
+            adapter="test"
+            locale={undefined}
+            onBlur={jest.fn()}
+            onChange={jest.fn()}
+            options={{}}
+            value={undefined}
+        />
+    );
+
+    expect(screen.getByRole('textbox')).toBeInTheDocument();
 });
 
 test('Pass correct props to the given adapter', () => {
-    class TestAdapter extends React.Component<{}> {
-        render() {
-            return null;
-        }
-    }
+    const TestAdapter = jest.fn(() => null);
     textEditorRegistry.get.mockReturnValue(TestAdapter);
 
     const locale = observable.box('en');
 
-    const textEditor = mount(
+    render(
         <TextEditor
             adapter="test"
             disabled={true}
@@ -47,27 +43,33 @@ test('Pass correct props to the given adapter', () => {
             value="testValue"
         />
     );
+    const testAdapterProps = TestAdapter.mock.calls[0][0];
 
-    expect(textEditor.find('TestAdapter').prop('disabled')).toEqual(true);
-    expect(textEditor.find('TestAdapter').prop('locale')).toEqual(locale);
-    expect(textEditor.find('TestAdapter').prop('value')).toEqual('testValue');
+    expect(testAdapterProps.disabled).toEqual(true);
+    expect(testAdapterProps.locale).toEqual(locale);
+    expect(testAdapterProps.value).toEqual('testValue');
 });
 
 test('Throw an exception if a not existing adapter is used', () => {
     textEditorRegistry.get.mockImplementation((key) => {
         throw new Error(key);
     });
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined);
 
-    expect(
-        () => shallow(
-            <TextEditor
-                adapter="test"
-                locale={undefined}
-                onBlur={jest.fn()}
-                onChange={jest.fn()}
-                options={{}}
-                value={undefined}
-            />
-        )
-    ).toThrow(/test/);
+    try {
+        expect(
+            () => render(
+                <TextEditor
+                    adapter="test"
+                    locale={undefined}
+                    onBlur={jest.fn()}
+                    onChange={jest.fn()}
+                    options={{}}
+                    value={undefined}
+                />
+            )
+        ).toThrow(/test/);
+    } finally {
+        consoleErrorSpy.mockRestore();
+    }
 });

@@ -2,10 +2,6 @@
 import log from 'loglevel';
 import {clearTranslations, setTranslations, translate} from '../Translator';
 
-jest.mock('loglevel', () => ({
-    warn: jest.fn(),
-}));
-
 beforeEach(() => {
     clearTranslations();
 });

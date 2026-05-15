@@ -3,10 +3,6 @@ import 'url-search-params-polyfill';
 import PaginatedLoadingStrategy from '../../loadingStrategies/PaginatedLoadingStrategy';
 import ResourceRequester from '../../../../services/ResourceRequester';
 
-jest.mock('loglevel', () => ({
-    warn: jest.fn(),
-}));
-
 jest.mock('../../../../services/ResourceRequester', () => ({
     getList: jest.fn().mockReturnValue(Promise.resolve({
         _embedded: {

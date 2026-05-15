@@ -5,11 +5,6 @@ import ResourceStore from '../../../../stores/ResourceStore';
 import metadataStore from '../../stores/metadataStore';
 import conditionDataProviderRegistry from '../../registries/conditionDataProviderRegistry';
 
-jest.mock('loglevel', () => ({
-    warn: jest.fn(),
-    info: jest.fn(),
-}));
-
 beforeEach(() => {
     conditionDataProviderRegistry.clear();
 });

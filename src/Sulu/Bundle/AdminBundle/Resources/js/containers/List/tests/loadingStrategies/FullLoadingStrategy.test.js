@@ -3,10 +3,6 @@ import 'url-search-params-polyfill';
 import FullLoadingStrategy from '../../loadingStrategies/FullLoadingStrategy';
 import ResourceRequester from '../../../../services/ResourceRequester';
 
-jest.mock('loglevel', () => ({
-    warn: jest.fn(),
-}));
-
 jest.mock('../../../../services/ResourceRequester', () => ({
     getList: jest.fn().mockReturnValue(Promise.resolve({
         _embedded: {

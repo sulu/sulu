@@ -1,154 +1,99 @@
 // @flow
+import {fireEvent, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
-import {shallow} from 'enzyme';
-import {FormInspector, ResourceFormStore, ResourceLocatorHistory} from 'sulu-admin-bundle/containers';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
+import {ResourceLocatorHistory} from 'sulu-admin-bundle/containers';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import CustomUrl from '../../fields/CustomUrl';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
-    FormInspector: jest.fn(function(resourceFormStore) {
-        this.id = resourceFormStore.id;
-        this.options = resourceFormStore.options;
-        this.getValueByPath = jest.fn();
-    }),
-    ResourceFormStore: jest.fn(function(formStore, formKey, options = {}) {
-        this.id = formStore.id;
-        this.options = options;
-    }),
-    ResourceLocatorHistory: jest.fn(),
+    ResourceLocatorHistory: jest.fn(() => null),
 }));
 
-jest.mock('sulu-admin-bundle/stores', () => ({
-    ResourceStore: jest.fn(function(resourceKey, id) {
-        this.id = id;
-    }),
-}));
+function createFormInspector(id: ?number, baseDomain: string) {
+    return ({
+        getValueByPath: jest.fn().mockReturnValue(baseDomain),
+        id,
+        options: {webspace: 'sulu_io'},
+    }: any);
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test('Pass correct props to CustomUrl component', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test'),
-            'test',
-            {webspace: 'sulu_io'}
-        )
-    );
+    const formInspector = createFormInspector(undefined, '*.sulu.io/*');
 
-    formInspector.getValueByPath.mockImplementation((path) => {
-        switch (path) {
-            case '/baseDomain':
-                return '*.sulu.io/*';
-        }
-    });
+    render(<CustomUrl {...fieldTypeDefaultProps} formInspector={formInspector} value={['a', 'b']} />);
 
-    const customUrl = shallow(
-        <CustomUrl {...fieldTypeDefaultProps} formInspector={formInspector} value={['a', 'b']} />
-    );
-
-    expect(customUrl.find('CustomUrl').prop('baseDomain')).toEqual('*.sulu.io/*');
-    expect(customUrl.find('CustomUrl').prop('value')).toEqual(['a', 'b']);
-    expect(customUrl.find(ResourceLocatorHistory)).toHaveLength(0);
+    expect(formInspector.getValueByPath).toHaveBeenCalledWith('/baseDomain');
+    expect(screen.getByDisplayValue('a')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('b')).toBeInTheDocument();
+    expect(ResourceLocatorHistory).not.toHaveBeenCalled();
 });
 
 test('Pass correct props to ResourceLocatorHistory component if id an existing resource is loaded', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', 2),
-            'test',
-            {webspace: 'sulu_io'}
-        )
-    );
+    const formInspector = createFormInspector(2, '*.sulu.io/*');
 
-    formInspector.getValueByPath.mockImplementation((path) => {
-        switch (path) {
-            case '/baseDomain':
-                return '*.sulu.io/*';
-        }
-    });
+    render(<CustomUrl {...fieldTypeDefaultProps} formInspector={formInspector} value={['a', 'b']} />);
 
-    const customUrl = shallow(
-        <CustomUrl {...fieldTypeDefaultProps} formInspector={formInspector} value={['a', 'b']} />
-    );
-
-    expect(customUrl.find('CustomUrl').prop('baseDomain')).toEqual('*.sulu.io/*');
-    expect(customUrl.find('CustomUrl').prop('value')).toEqual(['a', 'b']);
-    expect(customUrl.find(ResourceLocatorHistory).prop('id')).toEqual(2);
-    expect(customUrl.find(ResourceLocatorHistory).prop('options')).toEqual({webspace: 'sulu_io'});
-    expect(customUrl.find(ResourceLocatorHistory).prop('resourceKey')).toEqual('custom_url_routes');
+    expect(formInspector.getValueByPath).toHaveBeenCalledWith('/baseDomain');
+    expect(screen.getByDisplayValue('a')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('b')).toBeInTheDocument();
+    expect(ResourceLocatorHistory).toHaveBeenCalledTimes(1);
+    const [resourceLocatorHistoryProps] = (ResourceLocatorHistory: any).mock.calls[0];
+    expect(resourceLocatorHistoryProps.id).toEqual(2);
+    expect(resourceLocatorHistoryProps.options).toEqual({webspace: 'sulu_io'});
+    expect(resourceLocatorHistoryProps.resourceKey).toEqual('custom_url_routes');
 });
 
 test('Pass correct props with empty value to CustomUrl component', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test'),
-            'test',
-            {webspace: 'sulu_io'}
-        )
-    );
+    const formInspector = createFormInspector(undefined, 'sulu.io/*');
 
-    formInspector.getValueByPath.mockImplementation((path) => {
-        switch (path) {
-            case '/baseDomain':
-                return 'sulu.io/*';
-        }
-    });
+    render(<CustomUrl {...fieldTypeDefaultProps} formInspector={formInspector} value={undefined} />);
 
-    const customUrl = shallow(
-        <CustomUrl {...fieldTypeDefaultProps} formInspector={formInspector} value={undefined} />
-    );
-
-    expect(customUrl.find('CustomUrl').prop('baseDomain')).toEqual('sulu.io/*');
-    expect(customUrl.find('CustomUrl').prop('value')).toEqual([]);
+    expect(formInspector.getValueByPath).toHaveBeenCalledWith('/baseDomain');
+    expect(screen.getByRole('textbox')).toHaveValue('');
 });
 
-test('Call onChange when if a value changes', () => {
+test('Call onChange when if a value changes', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test'),
-            'test',
-            {webspace: 'sulu_io'}
-        )
-    );
+    const formInspector = createFormInspector(undefined, 'sulu.io/*');
+    const CustomUrlTestWrapper = () => {
+        const [value, setValue] = React.useState(undefined);
+        const handleChange = React.useCallback((newValue) => {
+            setValue(newValue);
+            changeSpy(newValue);
+        }, []);
 
-    formInspector.getValueByPath.mockImplementation((path) => {
-        switch (path) {
-            case '/baseDomain':
-                return 'sulu.io/*';
-        }
-    });
+        return (
+            <CustomUrl
+                {...fieldTypeDefaultProps}
+                formInspector={formInspector}
+                onChange={handleChange}
+                value={value}
+            />
+        );
+    };
 
-    const customUrl = shallow(
-        <CustomUrl {...fieldTypeDefaultProps} formInspector={formInspector} onChange={changeSpy} value={undefined} />
-    );
+    render(<CustomUrlTestWrapper />);
 
-    customUrl.find('CustomUrl').prop('onChange')(['test']);
+    await user.type(screen.getByRole('textbox'), 'test');
 
     expect(changeSpy).toBeCalledWith(['test']);
 });
 
 test('Call onFinish when if the field is blurred', () => {
     const finishSpy = jest.fn();
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test'),
-            'test',
-            {webspace: 'sulu_io'}
-        )
-    );
+    const formInspector = createFormInspector(undefined, 'sulu.io/*');
 
-    formInspector.getValueByPath.mockImplementation((path) => {
-        switch (path) {
-            case '/baseDomain':
-                return 'sulu.io/*';
-        }
-    });
-
-    const customUrl = shallow(
+    render(
         <CustomUrl {...fieldTypeDefaultProps} formInspector={formInspector} onFinish={finishSpy} value={undefined} />
     );
 
-    customUrl.find('CustomUrl').prop('onBlur')();
+    fireEvent.blur(screen.getByRole('textbox'));
 
     expect(finishSpy).toBeCalledWith();
 });

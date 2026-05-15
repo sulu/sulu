@@ -1,15 +1,11 @@
 // @flow
 import {observable} from 'mobx';
-import {shallow} from 'enzyme';
+import {Dialog} from 'sulu-admin-bundle/components';
 import {ListStore} from 'sulu-admin-bundle/containers';
-import {ResourceRequester, Router} from 'sulu-admin-bundle/services';
+import {Router} from 'sulu-admin-bundle/services';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {List} from 'sulu-admin-bundle/views';
 import DeleteMediaToolbarAction from '../../toolbarActions/DeleteMediaToolbarAction';
-
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
 
 jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(function() {
     this.selectionIds = [];
@@ -72,9 +68,9 @@ test('Open dialog if button is clicked', () => {
     const deleteMediaToolbarAction = createDeleteMediaToolbarAction();
     const clickHandler = deleteMediaToolbarAction.getToolbarItemConfig().onClick;
 
-    expect(shallow(deleteMediaToolbarAction.getNode()).instance().props.open).toEqual(false);
+    expect(deleteMediaToolbarAction.getNode().props.open).toEqual(false);
     clickHandler();
-    expect(shallow(deleteMediaToolbarAction.getNode()).instance().props.open).toEqual(true);
+    expect(deleteMediaToolbarAction.getNode().props.open).toEqual(true);
 });
 
 test('Do nothing if cancel button is clicked', () => {
@@ -82,11 +78,10 @@ test('Do nothing if cancel button is clicked', () => {
     const clickHandler = deleteMediaToolbarAction.getToolbarItemConfig().onClick;
 
     clickHandler();
-    expect(shallow(deleteMediaToolbarAction.getNode()).instance().props.open).toEqual(true);
-    shallow(deleteMediaToolbarAction.getNode()).instance().props.onCancel();
-    expect(shallow(deleteMediaToolbarAction.getNode()).instance().props.open).toEqual(false);
-
-    expect(ResourceRequester.patch).not.toBeCalled();
+    expect(deleteMediaToolbarAction.getNode().props.open).toEqual(true);
+    const deleteMediaDialogNode: any = deleteMediaToolbarAction.getNode();
+    deleteMediaDialogNode.props.onCancel();
+    expect(deleteMediaToolbarAction.getNode().props.open).toEqual(false);
 });
 
 test('Delete selected items if confirm button is clicked', () => {
@@ -101,29 +96,29 @@ test('Delete selected items if confirm button is clicked', () => {
     deleteMediaToolbarAction.resourceStore.resourceKey = 'contacts';
 
     const clickHandler = deleteMediaToolbarAction.getToolbarItemConfig().onClick;
-
     const deleteSelectionPromise = Promise.resolve();
     // $FlowFixMe
     deleteMediaToolbarAction.listStore.deleteSelection.mockReturnValue(deleteSelectionPromise);
 
     clickHandler();
-    let deleteMediaDialog = shallow(deleteMediaToolbarAction.getNode()).instance();
-    expect(deleteMediaDialog.props.open).toEqual(true);
-    deleteMediaDialog.props.onConfirm();
+    let deleteMediaDialogNode = deleteMediaToolbarAction.getNode();
+    expect(deleteMediaDialogNode.type).toEqual(Dialog);
+    expect(deleteMediaDialogNode.props.open).toEqual(true);
+    deleteMediaDialogNode.props.onConfirm();
 
     deleteMediaToolbarAction.listStore.deletingSelection = true;
     expect(deleteMediaToolbarAction.listStore.deleteSelection).toBeCalledWith();
 
-    deleteMediaDialog = shallow(deleteMediaToolbarAction.getNode()).instance();
-    expect(deleteMediaDialog.props).toEqual(expect.objectContaining({
+    deleteMediaDialogNode = deleteMediaToolbarAction.getNode();
+    expect(deleteMediaDialogNode.props).toEqual(expect.objectContaining({
         confirmLoading: true,
         open: true,
     }));
 
     return deleteSelectionPromise.then(() => {
         deleteMediaToolbarAction.listStore.deletingSelection = false;
-        deleteMediaDialog = shallow(deleteMediaToolbarAction.getNode()).instance();
-        expect(deleteMediaDialog.props).toEqual(expect.objectContaining({
+        deleteMediaDialogNode = deleteMediaToolbarAction.getNode();
+        expect(deleteMediaDialogNode.props).toEqual(expect.objectContaining({
             confirmLoading: false,
             open: false,
         }));

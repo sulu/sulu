@@ -6,13 +6,6 @@ import Mousetrap from 'mousetrap';
 import React from 'react';
 import MultiAutoComplete from '../MultiAutoComplete';
 
-jest.mock('debounce', () => jest.fn((callback) => {
-    const debounced = (...args) => callback(...args);
-    debounced.clear = jest.fn();
-
-    return debounced;
-}));
-
 beforeEach(() => {
     Mousetrap.reset();
     jest.clearAllMocks();

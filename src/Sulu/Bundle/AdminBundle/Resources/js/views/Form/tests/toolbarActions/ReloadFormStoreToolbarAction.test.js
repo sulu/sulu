@@ -1,5 +1,4 @@
 // @flow
-import {mount} from 'enzyme';
 import symfonyRouting from 'fos-jsrouting/router';
 import ReloadFormStoreToolbarAction from '../../toolbarActions/ReloadFormStoreToolbarAction';
 import {ResourceFormStore} from '../../../../containers/Form';
@@ -14,10 +13,6 @@ jest.mock('../../../../services/Requester', () => ({
 
 jest.mock('fos-jsrouting/router', () => ({
     generate: jest.fn(),
-}));
-
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
 }));
 
 jest.mock('../../../../containers/Form/stores/metadataStore', () => ({
@@ -102,6 +97,10 @@ function createReloadFormStoreToolbarAction(options = {}) {
     );
 }
 
+function getDialogProps(action: ReloadFormStoreToolbarAction): any {
+    return ((action.getNode(): any).props: any);
+}
+
 test('Throw error if required options are missing', () => {
     expect(() => createReloadFormStoreToolbarAction({icon: undefined})).toThrow(/Missing required options/);
 });
@@ -131,8 +130,7 @@ test('Close dialog on cancel', () => {
     const action = createReloadFormStoreToolbarAction();
     action.showDialog = true;
 
-    const element = mount(action.getNode());
-    element.find('Button[skin="secondary"]').simulate('click');
+    getDialogProps(action).onCancel();
 
     expect(action.showDialog).toBe(false);
 });
@@ -148,8 +146,7 @@ test('Fetch data on confirm', async() => {
     symfonyRouting.generate.mockReturnValue('/test/5?locale=en');
     Requester.post.mockResolvedValue({});
 
-    const element = mount(action.getNode());
-    element.find('Button[skin="primary"]').simulate('click');
+    getDialogProps(action).onConfirm();
 
     expect(action.loading).toBe(true);
 
@@ -170,8 +167,7 @@ test('Handle error on fetch', async() => {
     error.json = jest.fn().mockResolvedValue({messageKey: 'error.message'});
     Requester.post.mockRejectedValue(error);
 
-    const element = mount(action.getNode());
-    element.find('Button[skin="primary"]').simulate('click');
+    getDialogProps(action).onConfirm();
 
     await new Promise((resolve) => setTimeout(resolve));
 
@@ -187,11 +183,10 @@ test('Render dialog with correct props', () => {
     });
     action.showDialog = true;
 
-    const element = mount(action.getNode());
-    const dialog = element.find('Dialog');
+    const dialog = getDialogProps(action);
 
-    expect(dialog.prop('cancelText')).toBe('Cancel Test');
-    expect(dialog.prop('confirmText')).toBe('OK Test');
-    expect(dialog.prop('title')).toBe('Test Dialog');
-    expect(dialog.prop('children')).toBe('Test Description');
+    expect(dialog.cancelText).toBe('Cancel Test');
+    expect(dialog.confirmText).toBe('OK Test');
+    expect(dialog.title).toBe('Test Dialog');
+    expect(dialog.children).toBe('Test Description');
 });

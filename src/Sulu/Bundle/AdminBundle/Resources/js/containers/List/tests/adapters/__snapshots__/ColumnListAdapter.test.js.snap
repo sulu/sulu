@@ -9,7 +9,7 @@ exports[`Render data with disabled items 1`] = `
   >
     <div
       class="toolbarContainer"
-      style="margin-left:0"
+      style="margin-left: 0px;"
     >
       <div
         class="toolbar"
@@ -163,7 +163,7 @@ exports[`Render data with loading column 1`] = `
   >
     <div
       class="toolbarContainer"
-      style="margin-left:0"
+      style="margin-left: 0px;"
     >
       <div
         class="toolbar"
@@ -288,7 +288,7 @@ exports[`Render data with loading column 1`] = `
           >
             <div
               class="spinner"
-              style="width:40px;height:40px"
+              style="width: 40px; height: 40px;"
             >
               <div
                 class="doubleBounce1"
@@ -378,7 +378,7 @@ exports[`Render data with selection 1`] = `
   >
     <div
       class="toolbarContainer"
-      style="margin-left:0"
+      style="margin-left: 0px;"
     >
       <div
         class="toolbar"
@@ -476,7 +476,7 @@ exports[`Render data without edit button 1`] = `
   >
     <div
       class="toolbarContainer"
-      style="margin-left:0"
+      style="margin-left: 0px;"
     >
       <div
         class="toolbar"
@@ -567,7 +567,7 @@ exports[`Render different kind of data with edit button 1`] = `
   >
     <div
       class="toolbarContainer"
-      style="margin-left:0"
+      style="margin-left: 0px;"
     >
       <div
         class="toolbar"
@@ -1264,7 +1264,7 @@ exports[`Render with add button in toolbar when onItemAdd callback is given 1`] 
   >
     <div
       class="toolbarContainer"
-      style="margin-left:0"
+      style="margin-left: 0px;"
     >
       <div
         class="toolbar"

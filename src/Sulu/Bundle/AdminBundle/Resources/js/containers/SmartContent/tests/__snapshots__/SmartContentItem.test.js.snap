@@ -1,260 +1,270 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render item with additional columns except for id 1`] = `
-<div
-  class="smartContentItem"
->
+<DocumentFragment>
   <div
-    class="title"
+    class="smartContentItem"
   >
     <div
-      aria-label="Title with URL"
-      class="croppedText"
-      title="Title with URL"
+      class="title"
     >
       <div
-        aria-hidden="true"
-        class="front"
+        aria-label="Title with URL"
+        class="croppedText"
+        title="Title with URL"
       >
-        Title w
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          Title w
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+            ith URL
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          Title with URL
+        </div>
       </div>
+    </div>
+    <div
+      class="column"
+    >
       <div
-        aria-hidden="true"
-        class="back"
+        aria-label="/url"
+        class="croppedText"
+        title="/url"
       >
-        <span>
-          ith URL
-        </span>
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          /u
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+            rl
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          /url
+        </div>
       </div>
+    </div>
+    <div
+      class="column"
+    >
       <div
-        class="whole"
+        aria-label="Test"
+        class="croppedText"
+        title="Test"
       >
-        Title with URL
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          Te
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+            st
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          Test
+        </div>
       </div>
     </div>
   </div>
-  <div
-    class="column"
-  >
-    <div
-      aria-label="/url"
-      class="croppedText"
-      title="/url"
-    >
-      <div
-        aria-hidden="true"
-        class="front"
-      >
-        /u
-      </div>
-      <div
-        aria-hidden="true"
-        class="back"
-      >
-        <span>
-          rl
-        </span>
-      </div>
-      <div
-        class="whole"
-      >
-        /url
-      </div>
-    </div>
-  </div>
-  <div
-    class="column"
-  >
-    <div
-      aria-label="Test"
-      class="croppedText"
-      title="Test"
-    >
-      <div
-        aria-hidden="true"
-        class="front"
-      >
-        Te
-      </div>
-      <div
-        aria-hidden="true"
-        class="back"
-      >
-        <span>
-          st
-        </span>
-      </div>
-      <div
-        class="whole"
-      >
-        Test
-      </div>
-    </div>
-  </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render item with only title 1`] = `
-<div
-  class="smartContentItem"
->
+<DocumentFragment>
   <div
-    class="title"
+    class="smartContentItem"
   >
     <div
-      aria-label="Only title"
-      class="croppedText"
-      title="Only title"
+      class="title"
     >
       <div
-        aria-hidden="true"
-        class="front"
+        aria-label="Only title"
+        class="croppedText"
+        title="Only title"
       >
-        Only 
-      </div>
-      <div
-        aria-hidden="true"
-        class="back"
-      >
-        <span>
-          title
-        </span>
-      </div>
-      <div
-        class="whole"
-      >
-        Only title
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          Only 
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+            title
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          Only title
+        </div>
       </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render item with title and draft with published state 1`] = `
-<div
-  class="smartContentItem"
->
+<DocumentFragment>
   <div
-    class="title"
+    class="smartContentItem"
   >
     <div
-      class="publishIndicator"
+      class="title"
     >
       <div
         class="publishIndicator"
       >
-        <span
-          class="published"
-        />
-        <span
-          class="draft"
-        />
-      </div>
-    </div>
-    <div
-      aria-label="Draft and published"
-      class="croppedText"
-      title="Draft and published"
-    >
-      <div
-        aria-hidden="true"
-        class="front"
-      >
-        Draft and 
+        <div
+          class="publishIndicator"
+        >
+          <span
+            class="published"
+          />
+          <span
+            class="draft"
+          />
+        </div>
       </div>
       <div
-        aria-hidden="true"
-        class="back"
+        aria-label="Draft and published"
+        class="croppedText"
+        title="Draft and published"
       >
-        <span>
-          published
-        </span>
-      </div>
-      <div
-        class="whole"
-      >
-        Draft and published
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          Draft and 
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+            published
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          Draft and published
+        </div>
       </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render item with title and image 1`] = `
-<div
-  class="smartContentItem"
->
+<DocumentFragment>
   <div
-    class="image"
-  >
-    <img
-      src="image.jpg"
-    />
-  </div>
-  <div
-    class="title"
+    class="smartContentItem"
   >
     <div
-      aria-label="Image"
-      class="croppedText"
-      title="Image"
+      class="image"
+    >
+      <img
+        src="image.jpg"
+      />
+    </div>
+    <div
+      class="title"
     >
       <div
-        aria-hidden="true"
-        class="front"
+        aria-label="Image"
+        class="croppedText"
+        title="Image"
       >
-        Ima
-      </div>
-      <div
-        aria-hidden="true"
-        class="back"
-      >
-        <span>
-          ge
-        </span>
-      </div>
-      <div
-        class="whole"
-      >
-        Image
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          Ima
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+            ge
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          Image
+        </div>
       </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render item with title and published state 1`] = `
-<div
-  class="smartContentItem"
->
+<DocumentFragment>
   <div
-    class="title"
+    class="smartContentItem"
   >
     <div
-      aria-label="Published"
-      class="croppedText"
-      title="Published"
+      class="title"
     >
       <div
-        aria-hidden="true"
-        class="front"
+        aria-label="Published"
+        class="croppedText"
+        title="Published"
       >
-        Publi
-      </div>
-      <div
-        aria-hidden="true"
-        class="back"
-      >
-        <span>
-          shed
-        </span>
-      </div>
-      <div
-        class="whole"
-      >
-        Published
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          Publi
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+            shed
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          Published
+        </div>
       </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;

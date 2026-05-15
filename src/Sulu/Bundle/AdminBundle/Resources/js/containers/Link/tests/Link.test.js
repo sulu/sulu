@@ -1,7 +1,9 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {observable} from 'mobx';
+import SingleSelectComponent from '../../../components/SingleSelect/SingleSelect';
 import {ResourceRequester} from '../../../services';
 import Link from '../Link';
 import linkTypeRegistry from '../registries/linkTypeRegistry';
@@ -13,18 +15,52 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
     get: jest.fn(),
 }));
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../components/SingleSelect/SingleSelect', () => {
+    const React = require('react');
+    const SingleSelect: any = jest.fn(function SingleSelect(props) {
+        return <div>{props.children}</div>;
+    });
+
+    SingleSelect.Option = jest.fn(function Option(props) {
+        return <div>{props.children}</div>;
+    });
+
+    return SingleSelect;
+});
+
+jest.mock('../overlays/LinkTypeOverlay', () => jest.fn(() => null));
+jest.mock('../overlays/ExternalLinkTypeOverlay', () => jest.fn(() => null));
 
 jest.mock('../registries/linkTypeRegistry', () => ({
     getKeys: jest.fn(),
     getOverlay: jest.fn(),
     getOptions: jest.fn(),
-    getTitle: jest.fn((key) => key.charAt(0).toUpperCase() + (key.slice(1))),
+    getTitle: jest.fn((key) => key.charAt(0).toUpperCase() + key.slice(1)),
 }));
 
-test('Render Link container incl. loading a selected value', () => {
+function getLatestSingleSelectProps() {
+    const calls = (SingleSelectComponent: any).mock.calls;
+
+    return calls[calls.length - 1][0];
+}
+
+function getLatestOverlayProps(OverlayComponent: any) {
+    const calls = OverlayComponent.mock.calls;
+
+    return calls[calls.length - 1][0];
+}
+
+function getRenderedOptionValues() {
+    const calls = ((SingleSelectComponent: any).Option: any).mock.calls;
+
+    return calls.map((call) => call[0].value);
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+test('Render Link container incl. loading a selected value', async() => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
@@ -47,18 +83,19 @@ test('Render Link container incl. loading a selected value', () => {
         locale: 'en',
     };
 
-    const link = shallow(
+    const {asFragment} = render(
         <Link locale={observable.box('en')} onChange={changeSpy} onFinish={finishSpy} value={value} />
     );
 
-    return getPromise
-        .then(() => new Promise((resolve) => setTimeout(resolve, 0)))
-        .then(() => {
-            expect(link).toMatchSnapshot();
-        });
+    await waitFor(() => {
+        expect(screen.getByText('Page 1')).toBeInTheDocument();
+    });
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Open overlay on input click', () => {
+test('Open overlay on input click', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
@@ -81,7 +118,7 @@ test('Open overlay on input click', () => {
         rel: 'TestRel',
     };
 
-    const link = shallow(
+    render(
         <Link
             enableAnchor={true}
             enableRel={true}
@@ -91,13 +128,12 @@ test('Open overlay on input click', () => {
             onChange={changeSpy}
             onFinish={finishSpy}
             value={value}
-        />);
+        />
+    );
 
-    const button = link.find('.item.clickable');
-
-    expect(link.find('LinkTypeOverlay').props().open).toEqual(false);
-    button.simulate('click');
-    expect(link.find('LinkTypeOverlay').props().open).toEqual(true);
+    expect(getLatestOverlayProps(LinkTypeOverlay).open).toEqual(false);
+    await user.click(screen.getByRole('button', {name: '…'}));
+    expect(getLatestOverlayProps(LinkTypeOverlay).open).toEqual(true);
 });
 
 test('Open overlay on provider change', () => {
@@ -123,7 +159,7 @@ test('Open overlay on provider change', () => {
         rel: 'TestRel',
     };
 
-    const link = shallow(
+    render(
         <Link
             enableAnchor={true}
             enableRel={true}
@@ -133,11 +169,12 @@ test('Open overlay on provider change', () => {
             onChange={changeSpy}
             onFinish={finishSpy}
             value={value}
-        />);
+        />
+    );
 
-    expect(link.find('LinkTypeOverlay').at(1).props().open).toEqual(false);
-    link.find('SingleSelect').props().onChange('media');
-    expect(link.find('LinkTypeOverlay').at(1).props().open).toEqual(true);
+    expect(getLatestOverlayProps(LinkTypeOverlay).open).toEqual(false);
+    getLatestSingleSelectProps().onChange('media');
+    expect(getLatestOverlayProps(LinkTypeOverlay).open).toEqual(true);
 });
 
 test('Update values on overlay confirm', () => {
@@ -163,7 +200,7 @@ test('Update values on overlay confirm', () => {
         target: 'TestTarget',
     };
 
-    const link = shallow(
+    render(
         <Link
             enableAnchor={true}
             enableQuery={true}
@@ -174,11 +211,12 @@ test('Update values on overlay confirm', () => {
             onChange={changeSpy}
             onFinish={finishSpy}
             value={value}
-        />);
+        />
+    );
 
-    link.find('SingleSelect').props().onChange('media');
+    getLatestSingleSelectProps().onChange('media');
 
-    const overlayProps = link.find('LinkTypeOverlay').at(1).props();
+    const overlayProps = getLatestOverlayProps(LinkTypeOverlay);
     overlayProps.onHrefChange('10');
     overlayProps.onQueryChange('newQuery');
     overlayProps.onAnchorChange('newAnchor');
@@ -187,17 +225,15 @@ test('Update values on overlay confirm', () => {
 
     overlayProps.onConfirm();
 
-    expect(changeSpy).toBeCalledWith(
-        {
-            title: 'newTitle',
-            href: '10',
-            provider: 'media',
-            locale: 'en',
-            query: 'newQuery',
-            anchor: 'newAnchor',
-            target: 'newTarget',
-        }
-    );
+    expect(changeSpy).toBeCalledWith({
+        title: 'newTitle',
+        href: '10',
+        provider: 'media',
+        locale: 'en',
+        query: 'newQuery',
+        anchor: 'newAnchor',
+        target: 'newTarget',
+    });
 });
 
 test('Update values on overlay confirm with ExternalLinkTypeOverlay', () => {
@@ -216,7 +252,7 @@ test('Update values on overlay confirm with ExternalLinkTypeOverlay', () => {
         target: 'TestTarget',
     };
 
-    const link = shallow(
+    render(
         <Link
             enableRel={true}
             enableTarget={true}
@@ -225,11 +261,12 @@ test('Update values on overlay confirm with ExternalLinkTypeOverlay', () => {
             onChange={changeSpy}
             onFinish={finishSpy}
             value={value}
-        />);
+        />
+    );
 
-    link.find('SingleSelect').props().onChange('external');
+    getLatestSingleSelectProps().onChange('external');
 
-    const overlayProps = link.find('ExternalLinkTypeOverlay').at(1).props();
+    const overlayProps = getLatestOverlayProps(ExternalLinkTypeOverlay);
     overlayProps.onHrefChange('https://example.org');
     overlayProps.onTargetChange('newTarget');
     overlayProps.onTitleChange('newTitle');
@@ -237,19 +274,18 @@ test('Update values on overlay confirm with ExternalLinkTypeOverlay', () => {
 
     overlayProps.onConfirm();
 
-    expect(changeSpy).toBeCalledWith(
-        {
-            title: 'newTitle',
-            href: 'https://example.org',
-            provider: 'external',
-            locale: 'en',
-            target: 'newTarget',
-            rel: 'newRel',
-        }
-    );
+    expect(changeSpy).toBeCalledWith({
+        title: 'newTitle',
+        href: 'https://example.org',
+        provider: 'external',
+        locale: 'en',
+        target: 'newTarget',
+        rel: 'newRel',
+    });
 });
 
-test('Invalidate values on RemoveButton click', () => {
+test('Invalidate values on RemoveButton click', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
@@ -275,39 +311,39 @@ test('Invalidate values on RemoveButton click', () => {
         rel: 'TestRel',
     };
 
-    const link = shallow(<Link
-        enableAnchor={true}
-        enableRel={true}
-        enableTarget={true}
-        enableTitle={true}
-        locale={observable.box('en')}
-        onChange={changeSpy}
-        onFinish={finishSpy}
-        value={value}
-    />);
+    render(
+        <Link
+            enableAnchor={true}
+            enableRel={true}
+            enableTarget={true}
+            enableTitle={true}
+            locale={observable.box('en')}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            value={value}
+        />
+    );
 
-    return getPromise
-        .then(() => new Promise((resolve) => setTimeout(resolve, 0)))
-        .then(() => {
-            const removeButton = link.find('.removeButton');
-            removeButton.simulate('click');
+    await waitFor(() => {
+        expect(screen.getByText('Page 1')).toBeInTheDocument();
+    });
 
-            expect(changeSpy).toBeCalledWith(
-                {
-                    title: undefined,
-                    href: undefined,
-                    provider: undefined,
-                    locale: 'en',
-                    query: undefined,
-                    anchor: undefined,
-                    target: undefined,
-                    rel: undefined,
-                }
-            );
-        });
+    await user.click(screen.getByRole('button', {name: 'su-trash-alt'}));
+
+    expect(changeSpy).toBeCalledWith({
+        title: undefined,
+        href: undefined,
+        provider: undefined,
+        locale: 'en',
+        query: undefined,
+        anchor: undefined,
+        target: undefined,
+        rel: undefined,
+    });
 });
 
-test('Display providers with "types" property', () => {
+test('Display providers with "types" property', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
@@ -320,7 +356,7 @@ test('Display providers with "types" property', () => {
     });
     linkTypeRegistry.getKeys.mockReturnValue(['page', 'media', 'article']);
 
-    const link = shallow(
+    render(
         <Link
             enableAnchor={true}
             enableRel={true}
@@ -331,11 +367,12 @@ test('Display providers with "types" property', () => {
             onFinish={finishSpy}
             types={['page', 'article']}
             value={undefined}
-        />);
+        />
+    );
 
-    const removeButton = link.find('.removeButton');
-    removeButton.simulate('click');
-    expect(link.find('Option').length).toEqual(2);
+    await user.click(screen.getByRole('button', {name: 'su-trash-alt'}));
+
+    expect(getRenderedOptionValues()).toEqual(['page', 'article']);
 });
 
 test('Display providers with "excluded_types" property', () => {
@@ -351,7 +388,7 @@ test('Display providers with "excluded_types" property', () => {
     });
     linkTypeRegistry.getKeys.mockReturnValue(['page', 'media', 'article']);
 
-    const link = shallow(
+    render(
         <Link
             enableAnchor={true}
             enableRel={true}
@@ -362,9 +399,10 @@ test('Display providers with "excluded_types" property', () => {
             onChange={changeSpy}
             onFinish={finishSpy}
             value={undefined}
-        />);
+        />
+    );
 
-    expect(link.find('Option').length).toEqual(1);
+    expect(getRenderedOptionValues()).toEqual(['media']);
 });
 
 test('Display providers with "excluded_types" and "types" property', () => {
@@ -380,7 +418,7 @@ test('Display providers with "excluded_types" and "types" property', () => {
     });
     linkTypeRegistry.getKeys.mockReturnValue(['page', 'media', 'article', 'account']);
 
-    const link = shallow(
+    render(
         <Link
             enableAnchor={true}
             enableRel={true}
@@ -392,7 +430,8 @@ test('Display providers with "excluded_types" and "types" property', () => {
             onFinish={finishSpy}
             types={['media', 'account']}
             value={undefined}
-        />);
+        />
+    );
 
-    expect(link.find('Option').length).toEqual(2);
+    expect(getRenderedOptionValues()).toEqual(['media', 'account']);
 });

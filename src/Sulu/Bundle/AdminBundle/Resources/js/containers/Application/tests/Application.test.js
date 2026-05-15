@@ -1,18 +1,15 @@
 //@flow
 import React from 'react';
-import {render, mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Router, {Route} from '../../../services/Router';
 import Application from '../Application';
-
-jest.mock('../../../utils/Translator', () => ({
-    translate: (key) => key,
-}));
 
 jest.mock('../../../services/Router/Router', () => jest.fn(function() {
     this.attributes = {};
 }));
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/MemoryFormStore', () => jest.fn((memoryStore) =>({memoryStore})));
+jest.mock('sulu-admin-bundle/containers/Form/stores/MemoryFormStore', () => jest.fn((memoryStore) => ({memoryStore})));
 
 const mockInitializerInitialized = jest.fn();
 const mockInitializerLoading = jest.fn();
@@ -55,6 +52,10 @@ jest.mock('../../../stores/userStore', () => {
             return mockUserStoreContact();
         }
 
+        get redirectUrl() {
+            return '';
+        }
+
         hasSingleSignOn() {
             return mockUserStoreHasSingleSignOn();
         }
@@ -84,10 +85,6 @@ jest.mock('../../ProfileFormOverlay', () => function Test() {
     );
 });
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: (key) => key,
-}));
-
 beforeEach(() => {
     mockInitializerInitialized.mockReturnValue(true);
     mockInitializerLoading.mockReturnValue(false);
@@ -110,8 +107,9 @@ test('Render login with loader', () => {
     mockUserStoreLoggedIn.mockReturnValue(false);
 
     const router = new Router({});
-    const application = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-    expect(application.render()).toMatchSnapshot();
+    const {asFragment} = render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render login screen to reset password', () => {
@@ -122,8 +120,9 @@ test('Render login screen to reset password', () => {
 
     const router = new Router({});
     router.attributes.forgotPasswordToken = 'some-uuid';
-    const application = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-    expect(application.render()).toMatchSnapshot();
+    const {asFragment} = render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render login when user is not logged in', () => {
@@ -133,16 +132,16 @@ test('Render login when user is not logged in', () => {
     mockUserStoreLoggedIn.mockReturnValue(false);
 
     const router = new Router({});
-    const application = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
+    const {asFragment} = render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
 
-    expect(application.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should not fail if current route does not exist', () => {
     const router = new Router({});
-    const view = render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
+    const {asFragment} = render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
 
-    expect(view).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render based on current route', () => {
@@ -153,9 +152,9 @@ test('Render based on current route', () => {
         type: 'test',
     });
 
-    const view = render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
+    const {asFragment} = render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
 
-    expect(view).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render based on current route with app version', () => {
@@ -166,12 +165,13 @@ test('Render based on current route with app version', () => {
         type: 'test',
     });
 
-    const view = render(<Application appVersion="666" router={router} suluVersion="2.0.0-RC1" />);
+    const {asFragment} = render(<Application appVersion="666" router={router} suluVersion="2.0.0-RC1" />);
 
-    expect(view).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Render opened navigation', () => {
+test('Render opened navigation', async() => {
+    const user = userEvent.setup();
     const router = new Router({});
     router.route = new Route({
         name: 'test',
@@ -179,13 +179,14 @@ test('Render opened navigation', () => {
         type: 'test',
     });
 
-    const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-    view.find('Button[icon="su-bars"]').simulate('click');
+    const {asFragment} = render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
+    await user.click(screen.getByRole('button', {name: 'su-bars'}));
 
-    expect(view.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Pin navigation', () => {
+test('Pin navigation', async() => {
+    const user = userEvent.setup();
     const router = new Router({});
     router.route = new Route({
         name: 'test',
@@ -193,11 +194,11 @@ test('Pin navigation', () => {
         type: 'test',
     });
 
-    const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-    view.find('Button[icon="su-bars"]').simulate('click');
-    view.find('.pin').simulate('click');
+    render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
+    await user.click(screen.getByRole('button', {name: 'su-bars'}));
+    await user.click(screen.getByRole('button', {name: 'su-stick-right'}));
 
-    expect(view.find('Navigation').at(0).prop('pinned')).toEqual(true);
+    expect(screen.queryByRole('button', {name: 'su-bars'})).not.toBeInTheDocument();
     expect(mockUserStoreSetPersistentSetting).toBeCalledWith('sulu_admin.application.navigation_pinned', true);
 });
 
@@ -211,14 +212,12 @@ test('Pin navigation from beginning', () => {
 
     mockUserStoreGetPersistentSetting.mockReturnValueOnce(true);
 
-    const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-    expect(view.find('Button[icon="su-bars"]')).toHaveLength(0);
-    expect(view.find('Button[icon="su-sulu-logo"]')).toHaveLength(0);
-    expect(view.find('.pin')).toHaveLength(1);
+    render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
+    expect(screen.queryByRole('button', {name: 'su-bars'})).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: 'su-sulu-logo'})).not.toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'su-stick-right'})).toBeInTheDocument();
 
     expect(mockUserStoreGetPersistentSetting).toBeCalledWith('sulu_admin.application.navigation_pinned');
-
-    expect(view.find('Navigation').at(0).prop('pinned')).toEqual(true);
 });
 
 test('Do not pin navigation from beginning', () => {
@@ -231,12 +230,10 @@ test('Do not pin navigation from beginning', () => {
 
     mockUserStoreGetPersistentSetting.mockReturnValueOnce(false);
 
-    const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-    expect(view.find('Button[icon="su-bars"]')).toHaveLength(1);
-    expect(view.find('Button[icon="su-sulu-logo"]')).toHaveLength(0);
-    expect(view.find('.pin')).toHaveLength(1);
+    render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
+    expect(screen.getByRole('button', {name: 'su-bars'})).toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: 'su-sulu-logo'})).not.toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'su-stick-right'})).toBeInTheDocument();
 
     expect(mockUserStoreGetPersistentSetting).toBeCalledWith('sulu_admin.application.navigation_pinned');
-
-    expect(view.find('Navigation').at(0).prop('pinned')).toEqual(false);
 });

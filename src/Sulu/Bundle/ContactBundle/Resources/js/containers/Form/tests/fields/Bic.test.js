@@ -1,30 +1,35 @@
 // @flow
+import {render} from '@testing-library/react';
 import React from 'react';
-import {shallow} from 'enzyme';
-import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import Bic from '../../fields/Bic';
+import BicComponent from '../../../../components/Bic';
 
-jest.mock('sulu-admin-bundle/containers', () => ({
-    FormInspector: jest.fn(),
-    ResourceFormStore: jest.fn(),
-}));
+jest.mock('../../../../components/Bic', () => jest.fn(() => null));
 
-jest.mock('sulu-admin-bundle/stores', () => ({
-    ResourceStore: jest.fn(),
-}));
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+function createFormInspector() {
+    return ({}: any);
+}
 
 test('Pass props correctly to Bic component', () => {
     const finishSpy = jest.fn();
     const changeSpy = jest.fn();
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
-    const bic = shallow(
-        <Bic {...fieldTypeDefaultProps} formInspector={formInspector} onChange={changeSpy} onFinish={finishSpy} />
+    render(
+        <Bic
+            {...fieldTypeDefaultProps}
+            formInspector={createFormInspector()}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+        />
     );
 
-    expect(bic.props()).toEqual(expect.objectContaining({
+    const [bicProps] = (BicComponent: any).mock.calls[0];
+    expect(bicProps).toEqual(expect.objectContaining({
         disabled: false,
         id: '/',
         onBlur: finishSpy,
@@ -35,41 +40,29 @@ test('Pass props correctly to Bic component', () => {
 });
 
 test('Pass disabled prop to Bic component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    render(<Bic {...fieldTypeDefaultProps} disabled={true} formInspector={createFormInspector()} />);
 
-    const bic = shallow(
-        <Bic {...fieldTypeDefaultProps} disabled={true} formInspector={formInspector} />
-    );
-
-    expect(bic.prop('disabled')).toEqual(true);
+    const [bicProps] = (BicComponent: any).mock.calls[0];
+    expect(bicProps.disabled).toEqual(true);
 });
 
 test('Pass id prop to Bic component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    render(<Bic {...fieldTypeDefaultProps} dataPath="/test" formInspector={createFormInspector()} />);
 
-    const bic = shallow(
-        <Bic {...fieldTypeDefaultProps} dataPath="/test" formInspector={formInspector} />
-    );
-
-    expect(bic.prop('id')).toEqual('/test');
+    const [bicProps] = (BicComponent: any).mock.calls[0];
+    expect(bicProps.id).toEqual('/test');
 });
 
 test('Pass error to Bic component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    render(<Bic {...fieldTypeDefaultProps} error={{}} formInspector={createFormInspector()} />);
 
-    const bic = shallow(
-        <Bic {...fieldTypeDefaultProps} error={{}} formInspector={formInspector} />
-    );
-
-    expect(bic.prop('valid')).toEqual(false);
+    const [bicProps] = (BicComponent: any).mock.calls[0];
+    expect(bicProps.valid).toEqual(false);
 });
 
 test('Pass value prop to Bic component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    render(<Bic {...fieldTypeDefaultProps} formInspector={createFormInspector()} value="Test" />);
 
-    const bic = shallow(
-        <Bic {...fieldTypeDefaultProps} formInspector={formInspector} value="Test" />
-    );
-
-    expect(bic.prop('value')).toEqual('Test');
+    const [bicProps] = (BicComponent: any).mock.calls[0];
+    expect(bicProps.value).toEqual('Test');
 });

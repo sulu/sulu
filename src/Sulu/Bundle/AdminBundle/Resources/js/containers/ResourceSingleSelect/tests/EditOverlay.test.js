@@ -1,8 +1,19 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import {autorun as mockAutorun} from 'mobx';
 import ResourceListStore from '../../../stores/ResourceListStore';
 import EditOverlay from '../EditOverlay';
+
+jest.mock('mobx', () => {
+    const actualMobx = jest.requireActual('mobx');
+
+    return {
+        ...actualMobx,
+        autorun: jest.fn((...args) => actualMobx.autorun(...args)),
+    };
+});
 
 jest.mock('../../../stores/ResourceListStore', () => jest.fn(function() {
     this.data = [];
@@ -10,9 +21,39 @@ jest.mock('../../../stores/ResourceListStore', () => jest.fn(function() {
     this.deleteList = jest.fn();
 }));
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: (key) => key,
-}));
+function getElement(selector: string) {
+    const body = document.body;
+    if (!body) {
+        throw new Error('Expected document.body to exist');
+    }
+
+    const element = body.querySelector(selector);
+    if (!element) {
+        throw new Error('Expected element "' + selector + '"');
+    }
+
+    return element;
+}
+
+function renderEditOverlay(props: Object = {}) {
+    return render(
+        <EditOverlay
+            displayProperty="title"
+            idProperty="id"
+            onClose={jest.fn()}
+            open={true}
+            resourceListStore={new ResourceListStore('accounts')}
+            title="Add something"
+            {...props}
+        />
+    );
+}
+
+beforeEach(() => {
+    const actualMobx = jest.requireActual('mobx');
+    (mockAutorun: any).mockImplementation((...args) => actualMobx.autorun(...args));
+    jest.clearAllMocks();
+});
 
 test('Render data in EditLines', () => {
     const resourceListStore = new ResourceListStore('accounts');
@@ -27,19 +68,12 @@ test('Render data in EditLines', () => {
         },
     ];
 
-    const editOverlay = mount(
-        <EditOverlay
-            displayProperty="title"
-            idProperty="id"
-            onClose={jest.fn()}
-            open={true}
-            resourceListStore={resourceListStore}
-            title="Add something"
-        />
-    );
+    renderEditOverlay({
+        resourceListStore,
+    });
 
-    expect(editOverlay.find('header').render()).toMatchSnapshot();
-    expect(editOverlay.find('article .overlay').render()).toMatchSnapshot();
+    expect(getElement('header')).toMatchSnapshot();
+    expect(getElement('article .overlay')).toMatchSnapshot();
 });
 
 test('Render data in EditLines with other properties', () => {
@@ -55,22 +89,18 @@ test('Render data in EditLines with other properties', () => {
         },
     ];
 
-    const editOverlay = mount(
-        <EditOverlay
-            displayProperty="position"
-            idProperty="uuid"
-            onClose={jest.fn()}
-            open={true}
-            resourceListStore={resourceListStore}
-            title="Add something"
-        />
-    );
+    renderEditOverlay({
+        displayProperty: 'position',
+        idProperty: 'uuid',
+        resourceListStore,
+    });
 
-    expect(editOverlay.find('header').render()).toMatchSnapshot();
-    expect(editOverlay.find('article .overlay').render()).toMatchSnapshot();
+    expect(getElement('header')).toMatchSnapshot();
+    expect(getElement('article .overlay')).toMatchSnapshot();
 });
 
-test('Should only delete items from  ResourceStoreList if data is only deleted', () => {
+test('Should only delete items from  ResourceStoreList if data is only deleted', async() => {
+    const user = userEvent.setup();
     const resourceListStore = new ResourceListStore('accounts');
     resourceListStore.data = [
         {
@@ -83,28 +113,21 @@ test('Should only delete items from  ResourceStoreList if data is only deleted',
         },
     ];
 
-    const closeSpy = jest.fn();
+    renderEditOverlay({
+        displayProperty: 'position',
+        idProperty: 'uuid',
+        resourceListStore,
+    });
 
-    const editOverlay = mount(
-        <EditOverlay
-            displayProperty="position"
-            idProperty="uuid"
-            onClose={closeSpy}
-            open={true}
-            resourceListStore={resourceListStore}
-            title="Add something"
-        />
-    );
-
-    editOverlay.find('EditLine Button').at(0).prop('onClick')();
-
-    editOverlay.find('Button[skin="primary"]').simulate('click');
+    await user.click(screen.getAllByRole('button', {name: 'su-trash-alt'})[0]);
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
 
     expect(resourceListStore.patchList).not.toBeCalled();
     expect(resourceListStore.deleteList).toBeCalledWith([1]);
 });
 
-test('Should only update ResourceStoreList if data is only changed and not deleted', () => {
+test('Should only update ResourceStoreList if data is only changed and not deleted', async() => {
+    const user = userEvent.setup();
     const resourceListStore = new ResourceListStore('accounts');
     resourceListStore.data = [
         {
@@ -117,29 +140,21 @@ test('Should only update ResourceStoreList if data is only changed and not delet
         },
     ];
 
-    const closeSpy = jest.fn();
+    renderEditOverlay({
+        displayProperty: 'position',
+        idProperty: 'uuid',
+        resourceListStore,
+    });
 
-    const editOverlay = mount(
-        <EditOverlay
-            displayProperty="position"
-            idProperty="uuid"
-            onClose={closeSpy}
-            open={true}
-            resourceListStore={resourceListStore}
-            title="Add something"
-        />
-    );
-
-    editOverlay.find('EditLine Button').at(0).prop('onClick')();
-
-    editOverlay.find('Button[skin="primary"]').simulate('click');
+    await user.click(screen.getAllByRole('button', {name: 'su-trash-alt'})[0]);
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
 
     expect(resourceListStore.patchList).not.toBeCalled();
-
     expect(resourceListStore.deleteList).toBeCalledWith([1]);
 });
 
-test('Should update ResourceStoreList if data is changed and confirm button is clicked', () => {
+test('Should update ResourceStoreList if data is changed and confirm button is clicked', async() => {
+    const user = userEvent.setup();
     const resourceListStore = new ResourceListStore('accounts');
     resourceListStore.data = [
         {
@@ -152,31 +167,25 @@ test('Should update ResourceStoreList if data is changed and confirm button is c
         },
     ];
 
-    const closeSpy = jest.fn();
+    renderEditOverlay({
+        displayProperty: 'position',
+        idProperty: 'uuid',
+        resourceListStore,
+    });
 
-    const editOverlay = mount(
-        <EditOverlay
-            displayProperty="position"
-            idProperty="uuid"
-            onClose={closeSpy}
-            open={true}
-            resourceListStore={resourceListStore}
-            title="Add something"
-        />
-    );
+    expect(screen.getAllByRole('textbox')).toHaveLength(2);
+    await user.click(screen.getByRole('button', {name: /sulu_admin.add/}));
+    await user.click(screen.getByRole('button', {name: /sulu_admin.add/}));
+    expect(screen.getAllByRole('textbox')).toHaveLength(4);
 
-    expect(editOverlay.find('EditLine')).toHaveLength(2);
-    editOverlay.find('Button[icon="su-plus"]').simulate('click');
-    editOverlay.find('Button[icon="su-plus"]').simulate('click');
-    expect(editOverlay.find('EditLine')).toHaveLength(4);
+    const inputs = screen.getAllByRole('textbox');
+    await user.clear(inputs[1]);
+    await user.type(inputs[1], 'Test 2 Update');
+    await user.type(inputs[2], 'Test 3');
+    await user.type(inputs[3], 'Test 4');
 
-    editOverlay.find('EditLine Input').at(1).prop('onChange')('Test 2 Update');
-    editOverlay.find('EditLine Input').at(2).prop('onChange')('Test 3');
-    editOverlay.find('EditLine Input').at(3).prop('onChange')('Test 4');
-
-    editOverlay.find('EditLine Button').at(0).prop('onClick')();
-
-    editOverlay.find('Button[skin="primary"]').simulate('click');
+    await user.click(screen.getAllByRole('button', {name: 'su-trash-alt'})[0]);
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
 
     expect(resourceListStore.patchList).toBeCalledWith([
         {position: 'Test 3'},
@@ -187,7 +196,8 @@ test('Should update ResourceStoreList if data is changed and confirm button is c
     expect(resourceListStore.deleteList).toBeCalledWith([1]);
 });
 
-test('An empty field should not be added', () => {
+test('An empty field should not be added', async() => {
+    const user = userEvent.setup();
     const resourceListStore = new ResourceListStore('accounts');
     resourceListStore.data = [
         {
@@ -200,29 +210,21 @@ test('An empty field should not be added', () => {
         },
     ];
 
-    const closeSpy = jest.fn();
+    renderEditOverlay({
+        displayProperty: 'position',
+        idProperty: 'uuid',
+        resourceListStore,
+    });
 
-    const editOverlay = mount(
-        <EditOverlay
-            displayProperty="position"
-            idProperty="uuid"
-            onClose={closeSpy}
-            open={true}
-            resourceListStore={resourceListStore}
-            title="Add something"
-        />
-    );
+    expect(screen.getAllByRole('textbox')).toHaveLength(2);
+    await user.click(screen.getByRole('button', {name: /sulu_admin.add/}));
+    await user.click(screen.getByRole('button', {name: /sulu_admin.add/}));
+    expect(screen.getAllByRole('textbox')).toHaveLength(4);
 
-    expect(editOverlay.find('EditLine')).toHaveLength(2);
-    editOverlay.find('Button[icon="su-plus"]').simulate('click');
-    editOverlay.find('Button[icon="su-plus"]').simulate('click');
-    expect(editOverlay.find('EditLine')).toHaveLength(4);
+    await user.type(screen.getAllByRole('textbox')[2], 'Test 3');
 
-    editOverlay.find('EditLine Input').at(2).prop('onChange')('Test 3');
-
-    editOverlay.find('EditLine Button').at(0).prop('onClick')();
-
-    editOverlay.find('Button[skin="primary"]').simulate('click');
+    await user.click(screen.getAllByRole('button', {name: 'su-trash-alt'})[0]);
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
 
     expect(resourceListStore.patchList).toBeCalledWith([
         {position: 'Test 3'},
@@ -231,7 +233,8 @@ test('An empty field should not be added', () => {
     expect(resourceListStore.deleteList).toBeCalledWith([1]);
 });
 
-test('Adding the same field as already existing should not add it', () => {
+test('Adding the same field as already existing should not add it', async() => {
+    const user = userEvent.setup();
     const resourceListStore = new ResourceListStore('accounts');
     resourceListStore.data = [
         {
@@ -244,28 +247,22 @@ test('Adding the same field as already existing should not add it', () => {
         },
     ];
 
-    const closeSpy = jest.fn();
+    renderEditOverlay({
+        displayProperty: 'position',
+        idProperty: 'uuid',
+        resourceListStore,
+    });
 
-    const editOverlay = mount(
-        <EditOverlay
-            displayProperty="position"
-            idProperty="uuid"
-            onClose={closeSpy}
-            open={true}
-            resourceListStore={resourceListStore}
-            title="Add something"
-        />
-    );
-
-    editOverlay.find('Button[icon="su-plus"]').simulate('click');
-    editOverlay.find('EditLine Input').at(2).prop('onChange')('Test 2');
-    editOverlay.find('EditLine Button').at(0).prop('onClick')();
-    editOverlay.find('Button[skin="primary"]').simulate('click');
+    await user.click(screen.getByRole('button', {name: /sulu_admin.add/}));
+    await user.type(screen.getAllByRole('textbox')[2], 'Test 2');
+    await user.click(screen.getAllByRole('button', {name: 'su-trash-alt'})[0]);
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
 
     expect(resourceListStore.patchList).not.toBeCalledWith();
 });
 
-test('Adding the same field twice should add it only once', () => {
+test('Adding the same field twice should add it only once', async() => {
+    const user = userEvent.setup();
     const resourceListStore = new ResourceListStore('accounts');
     resourceListStore.data = [
         {
@@ -278,30 +275,22 @@ test('Adding the same field twice should add it only once', () => {
         },
     ];
 
-    const closeSpy = jest.fn();
+    renderEditOverlay({
+        displayProperty: 'position',
+        idProperty: 'uuid',
+        resourceListStore,
+    });
 
-    const editOverlay = mount(
-        <EditOverlay
-            displayProperty="position"
-            idProperty="uuid"
-            onClose={closeSpy}
-            open={true}
-            resourceListStore={resourceListStore}
-            title="Add something"
-        />
-    );
+    expect(screen.getAllByRole('textbox')).toHaveLength(2);
+    await user.click(screen.getByRole('button', {name: /sulu_admin.add/}));
+    await user.click(screen.getByRole('button', {name: /sulu_admin.add/}));
+    expect(screen.getAllByRole('textbox')).toHaveLength(4);
 
-    expect(editOverlay.find('EditLine')).toHaveLength(2);
-    editOverlay.find('Button[icon="su-plus"]').simulate('click');
-    editOverlay.find('Button[icon="su-plus"]').simulate('click');
-    expect(editOverlay.find('EditLine')).toHaveLength(4);
+    await user.type(screen.getAllByRole('textbox')[2], 'Test 3');
+    await user.type(screen.getAllByRole('textbox')[3], 'Test 3');
 
-    editOverlay.find('EditLine Input').at(2).prop('onChange')('Test 3');
-    editOverlay.find('EditLine Input').at(3).prop('onChange')('Test 3');
-
-    editOverlay.find('EditLine Button').at(0).prop('onClick')();
-
-    editOverlay.find('Button[skin="primary"]').simulate('click');
+    await user.click(screen.getAllByRole('button', {name: 'su-trash-alt'})[0]);
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
 
     expect(resourceListStore.patchList).toBeCalledWith([
         {position: 'Test 3'},
@@ -312,22 +301,20 @@ test('Adding the same field twice should add it only once', () => {
 
 test('Call disposer when component unmounts', () => {
     const resourceListStore = new ResourceListStore('accounts');
-
-    const editOverlay = mount(
-        <EditOverlay
-            displayProperty="position"
-            idProperty="uuid"
-            onClose={jest.fn()}
-            open={true}
-            resourceListStore={resourceListStore}
-            title="Add something"
-        />
-    );
-
     const updateDataDisposerSpy = jest.fn();
-    editOverlay.instance().updateDataDisposer = updateDataDisposerSpy;
+    (mockAutorun: any).mockImplementation((callback) => {
+        callback();
 
-    editOverlay.unmount();
+        return updateDataDisposerSpy;
+    });
+
+    const {unmount} = renderEditOverlay({
+        displayProperty: 'position',
+        idProperty: 'uuid',
+        resourceListStore,
+    });
+
+    unmount();
 
     expect(updateDataDisposerSpy).toBeCalledWith();
 });

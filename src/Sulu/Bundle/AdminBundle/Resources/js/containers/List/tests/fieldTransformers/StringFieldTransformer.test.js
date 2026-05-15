@@ -4,10 +4,6 @@ import StringFieldTransformer from '../../fieldTransformers/StringFieldTransform
 
 const stringFieldTransformer = new StringFieldTransformer();
 
-jest.mock('loglevel', () => ({
-    error: jest.fn(),
-}));
-
 test('Test undefined', () => {
     expect(stringFieldTransformer.transform(undefined)).toBe(null);
 });

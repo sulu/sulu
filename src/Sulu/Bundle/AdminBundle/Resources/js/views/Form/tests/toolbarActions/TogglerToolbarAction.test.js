@@ -6,10 +6,6 @@ import {ResourceFormStore} from '../../../../containers/Form';
 import {ResourceRequester} from '../../../../services';
 import TogglerToolbarAction from '../../toolbarActions/TogglerToolbarAction';
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey) {
     this.resourceKey = resourceKey;
     this.data = {};

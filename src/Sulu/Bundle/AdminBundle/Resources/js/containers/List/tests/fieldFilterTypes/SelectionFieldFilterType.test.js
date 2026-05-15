@@ -1,12 +1,15 @@
 // @flow
+import {render} from '@testing-library/react';
 import {extendObservable as mockExtendObservable} from 'mobx';
-import {shallow} from 'enzyme';
+import MultiAutoComplete from '../../../MultiAutoComplete';
+import ResourceCheckboxGroup from '../../../ResourceCheckboxGroup';
 import SelectionFieldFilterType from '../../fieldFilterTypes/SelectionFieldFilterType';
 import MultiSelectionStore from '../../../../stores/MultiSelectionStore';
 import userStore from '../../../../stores/userStore';
 
 jest.mock('../../../../stores/MultiSelectionStore', () => jest.fn(function() {
     this.loadItems = jest.fn();
+    // eslint-disable-next-line testing-library/prefer-explicit-assert
     this.getById = jest.fn();
 
     mockExtendObservable(this, {
@@ -17,6 +20,22 @@ jest.mock('../../../../stores/MultiSelectionStore', () => jest.fn(function() {
 }));
 
 jest.mock('../../../../stores/userStore', () => ({}));
+jest.mock('../../../MultiAutoComplete', () => jest.fn(() => null));
+jest.mock('../../../ResourceCheckboxGroup', () => jest.fn(() => null));
+
+function getLatestMultiAutoCompleteProps() {
+    const calls = (MultiAutoComplete: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
+
+function getLatestResourceCheckboxGroupProps() {
+    const calls = (ResourceCheckboxGroup: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test.each([
     [undefined, 'parameters'],
@@ -40,9 +59,9 @@ test('Pass correct props to MultiAutoComplete', () => {
     // $FlowFixMe
     expect(MultiSelectionStore.mock.calls[0][2].get()).toEqual('ru');
 
-    const selectionFieldFilterTypeForm = shallow(selectionFieldFilterType.getFormNode());
+    render(selectionFieldFilterType.getFormNode());
 
-    expect(selectionFieldFilterTypeForm.find('MultiAutoComplete').props()).toEqual(expect.objectContaining({
+    expect(getLatestMultiAutoCompleteProps()).toEqual(expect.objectContaining({
         displayProperty: 'name',
         searchProperties: ['name'],
         selectionStore: selectionFieldFilterType.selectionStore,
@@ -56,9 +75,9 @@ test('Pass correct props to Select', () => {
         [4, 6]
     );
 
-    const selectionFieldFilterTypeForm = shallow(selectionFieldFilterType.getFormNode());
+    render(selectionFieldFilterType.getFormNode());
 
-    expect(selectionFieldFilterTypeForm.find('ResourceCheckboxGroup').props()).toEqual(expect.objectContaining({
+    expect(getLatestResourceCheckboxGroupProps()).toEqual(expect.objectContaining({
         displayProperty: 'name',
         resourceKey: 'accounts',
         values: [4, 6],
@@ -88,12 +107,12 @@ test('Setting a new value should update the select', () => {
         [4, 6]
     );
 
-    const selectionFieldFilterTypeForm1 = shallow(selectionFieldFilterType.getFormNode());
-    expect(selectionFieldFilterTypeForm1.find('ResourceCheckboxGroup').prop('values')).toEqual([4, 6]);
+    render(selectionFieldFilterType.getFormNode());
+    expect(getLatestResourceCheckboxGroupProps().values).toEqual([4, 6]);
 
     selectionFieldFilterType.setValue([4, 5]);
-    const selectionFieldFilterTypeForm2 = shallow(selectionFieldFilterType.getFormNode());
-    expect(selectionFieldFilterTypeForm2.find('ResourceCheckboxGroup').prop('values')).toEqual([4, 5]);
+    render(selectionFieldFilterType.getFormNode());
+    expect(getLatestResourceCheckboxGroupProps().values).toEqual([4, 5]);
 });
 
 test('Setting a new value should update the selectionStore', () => {
@@ -144,9 +163,9 @@ test('Call onChange handler when selection changes for select type after filter 
         undefined
     );
 
-    const selectionFieldFilterTypeForm = shallow(selectionFieldFilterType.getFormNode());
+    render(selectionFieldFilterType.getFormNode());
     changeSpy.mockReset();
-    selectionFieldFilterTypeForm.find('ResourceCheckboxGroup').prop('onChange')([4, 7]);
+    getLatestResourceCheckboxGroupProps().onChange([4, 7]);
 
     expect(changeSpy).not.toBeCalled();
     selectionFieldFilterType.confirm();

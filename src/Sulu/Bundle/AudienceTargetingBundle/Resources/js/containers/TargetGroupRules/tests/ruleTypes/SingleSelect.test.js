@@ -1,18 +1,44 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
+import {SingleSelect as SingleSelectComponent} from 'sulu-admin-bundle/components';
 import SingleSelect from '../../ruleTypes/SingleSelect';
+
+jest.mock('sulu-admin-bundle/components', () => {
+    const SingleSelectMock = jest.fn(() => null);
+    (SingleSelectMock: any).Option = jest.fn(() => null);
+
+    return {
+        SingleSelect: SingleSelectMock,
+    };
+});
+
+function getLatestSingleSelectProps() {
+    const calls = (SingleSelectComponent: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
+
+function getOptionProps(index: number) {
+    const singleSelectProps = getLatestSingleSelectProps();
+    const options = React.Children.toArray(singleSelectProps.children);
+    return options[index].props;
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test.each([
     [[{id: 'firefox', name: 'Firefox'}]],
     [[{id: 'firefox', name: 'Firefox'}, {id: 'chrome', name: 'Chrome'}]],
     [[{id: 'ie', name: 'Internet Explorer'}, {id: 'firefox', name: 'Firefox'}]],
 ])('Option should be listed in Select #%#', (options) => {
-    const singleSelect = shallow(<SingleSelect onChange={jest.fn()} options={{options}} value={{}} />);
+    render(<SingleSelect onChange={jest.fn()} options={{options}} value={{}} />);
 
     options.forEach((option, index) => {
-        expect(singleSelect.find('Option').at(index).prop('value')).toEqual(option.id);
-        expect(singleSelect.find('Option').at(index).prop('children')).toEqual(option.name);
+        const optionProps = getOptionProps(index);
+        expect(optionProps.value).toEqual(option.id);
+        expect(optionProps.children).toEqual(option.name);
     });
 });
 
@@ -22,8 +48,8 @@ test.each([
 ])('Call onChange for "%s" with a value of "%s"', (name, value) => {
     const changeSpy = jest.fn();
 
-    const singleSelect = shallow(<SingleSelect onChange={changeSpy} options={{name, options: []}} value={{}} />);
-    singleSelect.find('SingleSelect').prop('onChange')(value);
+    render(<SingleSelect onChange={changeSpy} options={{name, options: []}} value={{}} />);
+    getLatestSingleSelectProps().onChange(value);
 
     expect(changeSpy).toBeCalledWith({[name]: value});
 });
@@ -32,11 +58,7 @@ test.each([
     ['name1', 'value1'],
     ['name2', 'value2'],
 ])('Display correct value for "%s" with a value of "%s"', (name, value) => {
-    const changeSpy = jest.fn();
+    render(<SingleSelect onChange={jest.fn()} options={{name, options: []}} value={{[name]: value}} />);
 
-    const singleSelect = shallow(
-        <SingleSelect onChange={changeSpy} options={{name, options: []}} value={{[name]: value}} />
-    );
-
-    expect(singleSelect.find('SingleSelect').prop('value')).toEqual(value);
+    expect(getLatestSingleSelectProps().value).toEqual(value);
 });

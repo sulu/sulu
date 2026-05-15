@@ -2,23 +2,88 @@
 
 import React from 'react';
 import {render, fireEvent, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
 import symfonyRouting from 'fos-jsrouting/router';
 import {translate} from '../../../utils';
 import AiApplication from '../AiApplication';
+import WritingAssistant from '../../WritingAssistant';
+import Translator from '../../Translator';
 
 jest.mock('fos-jsrouting/router');
 jest.mock('../../../utils');
 jest.mock('../../../containers');
 jest.mock('../../TextEditor/adapters/CKEditor5');
-jest.mock('../../WritingAssistant');
-jest.mock('../../Translator');
+jest.mock('../../WritingAssistant', () => jest.fn(() => null));
+jest.mock('../../Translator', () => jest.fn(() => null));
 jest.mock('../ActionOverlay');
+
+const getLatestMockProps = (mockComponent: Function) => {
+    const calls = ((mockComponent: any).mock.calls: any);
+
+    return calls[calls.length - 1][0];
+};
+
+const createFocusTarget = () => {
+    const container = document.createElement('div');
+    const input = document.createElement('input');
+    Object.defineProperty((container: any), 'getBoundingClientRect', {
+        value: jest.fn().mockReturnValue({
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            width: 0,
+            height: 0,
+        }),
+    });
+    container.appendChild(input);
+    if (!document.body) {
+        throw new Error('Expected document body to exist');
+    }
+
+    document.body.appendChild(container);
+
+    return {container, input};
+};
+
+const dispatchSuluFocus = (target: HTMLElement, detail: Object = {}) => {
+    const event = new Event('sulu.focus');
+    Object.defineProperty(event, 'target', {value: target});
+    Object.defineProperty((event: any), 'detail', {
+        value: {
+            dataPath: 'dataPath',
+            formInspector: {
+                getSchemaEntryByPath: jest.fn(),
+                id: '1',
+                locale: {get: () => 'en'},
+                options: {webspace: 'sulu'},
+                resourceKey: 'pages',
+            },
+            getValue: jest.fn().mockReturnValue('text'),
+            schemaPath: 'schemaPath',
+            schemaType: 'text_line',
+            setValue: jest.fn(),
+            ...detail,
+        },
+    });
+    fireEvent(document, event);
+};
+
+const openWritingAssistant = async() => {
+    await userEvent.click(screen.getByTitle('sulu_admin.writing_assistant'));
+};
+
+const openTranslator = async() => {
+    await userEvent.click(screen.getByTitle('sulu_admin.translator'));
+};
 
 describe('AiApplication', () => {
     let props;
 
     beforeEach(() => {
+        jest.clearAllMocks();
+
         props = {
             feedback: {
                 enabled: true,
@@ -38,7 +103,7 @@ describe('AiApplication', () => {
             },
         };
 
-        symfonyRouting.generate.mockImplementation((route, params: {[string]: string}) => {
+        symfonyRouting.generate.mockImplementation((route, params: {[string]: string} = {}) => {
             // $FlowFixMe
             return `${route}?${Object.entries(params).map(([key, value: string]) => `${key}=${value}`).join('&')}`;
         });
@@ -55,135 +120,35 @@ describe('AiApplication', () => {
 
     test('renders FeatureBadge when hasFocus is true', () => {
         render(<AiApplication {...props} />);
+        const {input} = createFocusTarget();
 
-        // Create a mock HTMLElement
-        const mockElement = document.createElement('div');
-        Object.defineProperty(mockElement, 'parentElement', {
-            // $FlowFixMe
-            value: {
-                getBoundingClientRect: jest.fn().mockReturnValue({
-                    top: 0,
-                    right: 0,
-                    bottom: 0,
-                    left: 0,
-                    width: 0,
-                    height: 0,
-                }),
-            },
-        });
+        dispatchSuluFocus(input);
 
-        // Create a mock event object
-        const event = new Event('sulu.focus');
-        Object.defineProperty(event, 'target', {
-            value: mockElement,
-        });
-        // $FlowFixMe
-        Object.defineProperty(event, 'detail', {
-            value: {
-                formInspector: {locale: {get: () => 'en'}},
-                getValue: jest.fn(),
-                schemaPath: 'schemaPath',
-                schemaType: 'text_line',
-                setValue: jest.fn(),
-            },
-        });
-
-        // Simulate the sulu.focus event to set hasFocus to true
-        fireEvent(document, event);
-
-        // Now, hasFocus should be true and FeatureBadge should be rendered
         expect(screen.getByTitle('sulu_admin.translator')).toBeInTheDocument();
         expect(screen.getByTitle('sulu_admin.writing_assistant')).toBeInTheDocument();
     });
 
     test('handles scroll and resize events', () => {
         render(<AiApplication {...props} />);
+        const {container, input} = createFocusTarget();
 
-        // Create a mock HTMLElement
-        const mockElement = document.createElement('div');
-        Object.defineProperty(mockElement, 'parentElement', {
-            // $FlowFixMe
-            value: {
-                getBoundingClientRect: jest.fn().mockReturnValue({
-                    top: 0,
-                    right: 0,
-                    bottom: 0,
-                    left: 0,
-                    width: 0,
-                    height: 0,
-                }),
-            },
-        });
+        dispatchSuluFocus(input);
 
-        // Simulate the sulu.focus event to set hasFocus to true and select the element
-        const event = new Event('sulu.focus');
-        Object.defineProperty(event, 'target', {
-            value: mockElement,
-        });
-        // $FlowFixMe
-        Object.defineProperty(event, 'detail', {
-            value: {
-                formInspector: {locale: {get: () => 'en'}},
-                getValue: jest.fn(),
-                schemaPath: 'schemaPath',
-                schemaType: 'text_line',
-                setValue: jest.fn(),
-            },
-        });
-        fireEvent(document, event);
-
-        // Simulate scroll event
         fireEvent.scroll(window);
 
-        // Check if getBoundingClientRect was called
-        // $FlowFixMe
-        expect(mockElement.parentElement.getBoundingClientRect).toHaveBeenCalledTimes(2);
+        expect(container.getBoundingClientRect).toHaveBeenCalledTimes(2);
 
-        // Simulate resize event
         fireEvent.resize(window);
 
-        // Check if getBoundingClientRect was called again
-        // $FlowFixMe
-        expect(mockElement.parentElement.getBoundingClientRect).toHaveBeenCalledTimes(3);
+        expect(container.getBoundingClientRect).toHaveBeenCalledTimes(3);
     });
 
     test('handles global click event', () => {
         render(<AiApplication {...props} />);
+        const {input} = createFocusTarget();
 
-        // Create a mock HTMLElement
-        const mockElement = document.createElement('div');
-        Object.defineProperty(mockElement, 'parentElement', {
-            // $FlowFixMe
-            value: {
-                getBoundingClientRect: jest.fn().mockReturnValue({
-                    top: 0,
-                    right: 0,
-                    bottom: 0,
-                    left: 0,
-                    width: 0,
-                    height: 0,
-                }),
-            },
-        });
+        dispatchSuluFocus(input);
 
-        // Simulate the sulu.focus event to set hasFocus to true and select the element
-        const focusEvent = new Event('sulu.focus');
-        Object.defineProperty(focusEvent, 'target', {
-            value: mockElement,
-        });
-        // $FlowFixMe
-        Object.defineProperty(focusEvent, 'detail', {
-            value: {
-                formInspector: {locale: {get: () => 'en'}},
-                getValue: jest.fn(),
-                schemaPath: 'schemaPath',
-                schemaType: 'text_line',
-                setValue: jest.fn(),
-            },
-        });
-        fireEvent(document, focusEvent);
-
-        // Create a mock click event
         const clickEvent = new Event('click');
         Object.defineProperty(clickEvent, 'target', {
             // $FlowFixMe
@@ -193,200 +158,69 @@ describe('AiApplication', () => {
             },
         });
 
-        // Simulate the global click event
         fireEvent(document, clickEvent);
 
-        // Check if hasFocus is set to false
         expect(screen.getByTitle('sulu_admin.translator')).toBeInTheDocument();
         expect(screen.getByTitle('sulu_admin.writing_assistant')).toBeInTheDocument();
     });
 
-    test('handles writing assistant close', () => {
+    test('handles writing assistant close', async() => {
         render(<AiApplication {...props} />);
+        const {input} = createFocusTarget();
+        const getValue = jest.fn().mockReturnValue('text');
 
-        // Simulate the sulu.focus event to set hasFocus to true and select the element
-        const mockElement = document.createElement('div');
-        Object.defineProperty(mockElement, 'parentElement', {
-            // $FlowFixMe
-            value: {
-                getBoundingClientRect: jest.fn().mockReturnValue({
-                    top: 0,
-                    right: 0,
-                    bottom: 0,
-                    left: 0,
-                    width: 0,
-                    height: 0,
-                }),
-            },
-        });
+        dispatchSuluFocus(input, {getValue});
+        await openWritingAssistant();
+        getLatestMockProps(WritingAssistant).onDialogClose();
 
-        const focusEvent = new Event('sulu.focus');
-        Object.defineProperty(focusEvent, 'target', {
-            value: mockElement,
-        });
-        // $FlowFixMe
-        Object.defineProperty(focusEvent, 'detail', {
-            value: {
-                formInspector: {locale: {get: () => 'en'}},
-                getValue: jest.fn().mockReturnValue('text'),
-                schemaPath: 'schemaPath',
-                schemaType: 'text_line',
-                setValue: jest.fn(),
-            },
-        });
-        fireEvent(document, focusEvent);
-
-        // Simulate the writing assistant close action
-        const instance = new AiApplication(props);
-        // $FlowFixMe
-        instance.selectedComponent = {getValue: jest.fn().mockReturnValue('text')};
-        instance.handleWritingAssistantClose();
-
-        // Check the state changes
-        expect(instance.selectedText).toBe('text');
-        expect(instance.writingAssistantOpen).toBe(false);
-        expect(instance.hasFocus).toBe(false);
+        expect(getValue).toHaveBeenCalledTimes(3);
+        expect(screen.queryByTitle('sulu_admin.writing_assistant')).not.toBeInTheDocument();
     });
 
-    test('handles writing assistant confirm', () => {
+    test('handles writing assistant confirm', async() => {
         render(<AiApplication {...props} />);
+        const {input} = createFocusTarget();
+        const setValue = jest.fn();
 
-        // Simulate the sulu.focus event to set hasFocus to true and select the element
-        const mockElement = document.createElement('div');
-        Object.defineProperty(mockElement, 'parentElement', {
-            // $FlowFixMe
-            value: {
-                getBoundingClientRect: jest.fn().mockReturnValue({
-                    top: 0,
-                    right: 0,
-                    bottom: 0,
-                    left: 0,
-                    width: 0,
-                    height: 0,
-                }),
-            },
-        });
+        dispatchSuluFocus(input, {setValue});
+        await openWritingAssistant();
+        getLatestMockProps(WritingAssistant).onConfirm('optimizedText');
 
-        const focusEvent = new Event('sulu.focus');
-        Object.defineProperty(focusEvent, 'target', {
-            value: mockElement,
-        });
-        // $FlowFixMe
-        Object.defineProperty(focusEvent, 'detail', {
-            value: {
-                formInspector: {locale: {get: () => 'en'}},
-                getValue: jest.fn(),
-                schemaPath: 'schemaPath',
-                schemaType: 'text_line',
-                setValue: jest.fn(),
-            },
-        });
-        fireEvent(document, focusEvent);
-
-        // Simulate the writing assistant confirm action
-        const instance = new AiApplication(props);
-        // $FlowFixMe
-        instance.selectedComponent = {setValue: jest.fn()};
-        // $FlowFixMe
-        instance.selectedElement = {
-            focus: jest.fn(),
-            selectionStart: 0,
-            selectionEnd: 0,
-            value: {length: 0},
-        };
-        instance.handleWritingAssistantConfirm('optimizedText');
-
-        // Check the state changes
-        expect(instance.selectedComponent.setValue).toHaveBeenCalledWith('optimizedText');
-        expect(instance.writingAssistantOpen).toBe(false);
-        expect(instance.hasFocus).toBe(true);
+        expect(setValue).toHaveBeenCalledWith('optimizedText');
+        expect(screen.getByTitle('sulu_admin.writing_assistant')).toBeInTheDocument();
     });
 
-    test('handles translate close', () => {
+    test('handles translate close', async() => {
         render(<AiApplication {...props} />);
+        const {input} = createFocusTarget();
+        const getValue = jest.fn().mockReturnValue('text');
 
-        // Simulate the sulu.focus event to set hasFocus to true and select the element
-        const mockElement = document.createElement('div');
-        Object.defineProperty(mockElement, 'parentElement', {
-            // $FlowFixMe
-            value: {
-                getBoundingClientRect: jest.fn().mockReturnValue({
-                    top: 0,
-                    right: 0,
-                    bottom: 0,
-                    left: 0,
-                    width: 0,
-                    height: 0,
-                }),
-            },
-        });
+        dispatchSuluFocus(input, {getValue});
+        await openTranslator();
+        getLatestMockProps(Translator).onDialogClose();
 
-        const focusEvent = new Event('sulu.focus');
-        Object.defineProperty(focusEvent, 'target', {
-            value: mockElement,
-        });
-        // $FlowFixMe
-        Object.defineProperty(focusEvent, 'detail', {
-            value: {
-                formInspector: {locale: {get: () => 'en'}},
-                getValue: jest.fn().mockReturnValue('text'),
-                schemaPath: 'schemaPath',
-                schemaType: 'text_line',
-                setValue: jest.fn(),
-            },
-        });
-        fireEvent(document, focusEvent);
-
-        // Simulate the translate close action
-        const instance = new AiApplication(props);
-        // $FlowFixMe
-        instance.selectedComponent = {getValue: jest.fn().mockReturnValue('text')};
-        instance.handleTranslateClose();
-
-        // Check the state changes
-        expect(instance.selectedText).toBe('text');
-        expect(instance.translateOpen).toBe(false);
-        expect(instance.hasFocus).toBe(false);
+        expect(getValue).toHaveBeenCalledTimes(3);
+        expect(screen.queryByTitle('sulu_admin.translator')).not.toBeInTheDocument();
     });
 
-    test('captures dataPath from sulu.focus event', () => {
-        const instance = new AiApplication(props);
+    test('captures dataPath from sulu.focus event', async() => {
+        render(<AiApplication {...props} />);
+        const {input} = createFocusTarget();
 
-        const mockElement = document.createElement('div');
-        Object.defineProperty(mockElement, 'parentElement', {
-            // $FlowFixMe
-            value: {
-                getBoundingClientRect: jest.fn().mockReturnValue({
-                    top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 0,
-                }),
-            },
-        });
+        dispatchSuluFocus(input, {dataPath: '/block/0/text'});
+        await openWritingAssistant();
 
-        const event = new Event('sulu.focus');
-        Object.defineProperty(event, 'target', {value: mockElement});
-        // $FlowFixMe
-        Object.defineProperty(event, 'detail', {
-            value: {
-                dataPath: '/block/0/text',
-                formInspector: {locale: {get: () => 'en'}, getSchemaEntryByPath: jest.fn()},
-                getValue: jest.fn().mockReturnValue('some text'),
-                schemaPath: 'title',
-                schemaType: 'text_line',
-                setValue: jest.fn(),
-            },
-        });
-
-        instance.handleSuluFocus(event);
-
-        expect(instance.selectedComponent.dataPath).toBe('/block/0/text');
+        expect(getLatestMockProps(WritingAssistant).dataPath).toBe('/block/0/text');
     });
 
-    test('contentData computed returns form data filtered by schema', () => {
-        const instance = new AiApplication(props);
-        // $FlowFixMe
-        instance.selectedComponent = {
-            // $FlowFixMe
+    test('contentData computed returns form data filtered by schema', async() => {
+        render(<AiApplication {...props} />);
+        const {input} = createFocusTarget();
+
+        dispatchSuluFocus(input, {
             formInspector: {
+                getSchemaEntryByPath: jest.fn(),
+                locale: {get: () => 'en'},
                 formStore: {
                     schema: {
                         title: {type: 'text_line'},
@@ -399,22 +233,23 @@ describe('AiApplication', () => {
                     },
                 },
             },
-        };
+        });
+        await openWritingAssistant();
 
-        const result = instance.contentData;
-
-        expect(result).toEqual({
+        expect(getLatestMockProps(WritingAssistant).contentData).toEqual({
             title: 'My Page',
             description: 'A description',
         });
     });
 
-    test('contentData computed handles nested sections', () => {
-        const instance = new AiApplication(props);
-        // $FlowFixMe
-        instance.selectedComponent = {
-            // $FlowFixMe
+    test('contentData computed handles nested sections', async() => {
+        render(<AiApplication {...props} />);
+        const {input} = createFocusTarget();
+
+        dispatchSuluFocus(input, {
             formInspector: {
+                getSchemaEntryByPath: jest.fn(),
+                locale: {get: () => 'en'},
                 formStore: {
                     schema: {
                         details: {
@@ -438,34 +273,39 @@ describe('AiApplication', () => {
                     },
                 },
             },
-        };
+        });
+        await openWritingAssistant();
 
-        const result = instance.contentData;
-
-        expect(result).toEqual({
+        expect(getLatestMockProps(WritingAssistant).contentData).toEqual({
             title: 'Page Title',
             summary: 'Page Summary',
             author: 'John',
         });
     });
 
-    test('contentData computed returns undefined when no formStore', () => {
-        const instance = new AiApplication(props);
-        // $FlowFixMe
-        instance.selectedComponent = {
-            // $FlowFixMe
-            formInspector: {},
-        };
+    test('contentData computed returns undefined when no formStore', async() => {
+        render(<AiApplication {...props} />);
+        const {input} = createFocusTarget();
 
-        expect(instance.contentData).toBeUndefined();
+        dispatchSuluFocus(input, {
+            formInspector: {
+                getSchemaEntryByPath: jest.fn(),
+                locale: {get: () => 'en'},
+            },
+        });
+        await openWritingAssistant();
+
+        expect(getLatestMockProps(WritingAssistant).contentData).toBeUndefined();
     });
 
-    test('contentData computed returns undefined when data is empty', () => {
-        const instance = new AiApplication(props);
-        // $FlowFixMe
-        instance.selectedComponent = {
-            // $FlowFixMe
+    test('contentData computed returns undefined when data is empty', async() => {
+        render(<AiApplication {...props} />);
+        const {input} = createFocusTarget();
+
+        dispatchSuluFocus(input, {
             formInspector: {
+                getSchemaEntryByPath: jest.fn(),
+                locale: {get: () => 'en'},
                 formStore: {
                     schema: {
                         title: {type: 'text_line'},
@@ -473,62 +313,22 @@ describe('AiApplication', () => {
                     data: {},
                 },
             },
-        };
+        });
+        await openWritingAssistant();
 
-        expect(instance.contentData).toBeUndefined();
+        expect(getLatestMockProps(WritingAssistant).contentData).toBeUndefined();
     });
 
-    test('handles translate confirm', () => {
+    test('handles translate confirm', async() => {
         render(<AiApplication {...props} />);
+        const {input} = createFocusTarget();
+        const setValue = jest.fn();
 
-        // Simulate the sulu.focus event to set hasFocus to true and select the element
-        const mockElement = document.createElement('div');
-        Object.defineProperty(mockElement, 'parentElement', {
-            // $FlowFixMe
-            value: {
-                getBoundingClientRect: jest.fn().mockReturnValue({
-                    top: 0,
-                    right: 0,
-                    bottom: 0,
-                    left: 0,
-                    width: 0,
-                    height: 0,
-                }),
-            },
-        });
+        dispatchSuluFocus(input, {setValue});
+        await openTranslator();
+        getLatestMockProps(Translator).onConfirm('translatedText');
 
-        const focusEvent = new Event('sulu.focus');
-        Object.defineProperty(focusEvent, 'target', {
-            value: mockElement,
-        });
-        // $FlowFixMe
-        Object.defineProperty(focusEvent, 'detail', {
-            value: {
-                formInspector: {locale: {get: () => 'en'}},
-                getValue: jest.fn(),
-                schemaPath: 'schemaPath',
-                schemaType: 'text_line',
-                setValue: jest.fn(),
-            },
-        });
-        fireEvent(document, focusEvent);
-
-        // Simulate the translate confirm action
-        const instance = new AiApplication(props);
-        // $FlowFixMe
-        instance.selectedComponent = {setValue: jest.fn()};
-        // $FlowFixMe
-        instance.selectedElement = {
-            focus: jest.fn(),
-            selectionStart: 0,
-            selectionEnd: 0,
-            value: {length: 0},
-        };
-        instance.handleTranslateConfirm('translatedText');
-
-        // Check the state changes
-        expect(instance.selectedComponent.setValue).toHaveBeenCalledWith('translatedText');
-        expect(instance.translateOpen).toBe(false);
-        expect(instance.hasFocus).toBe(true);
+        expect(setValue).toHaveBeenCalledWith('translatedText');
+        expect(screen.getByTitle('sulu_admin.translator')).toBeInTheDocument();
     });
 });

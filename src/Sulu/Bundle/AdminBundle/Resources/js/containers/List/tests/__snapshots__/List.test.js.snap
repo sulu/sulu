@@ -9,31 +9,7 @@ exports[`Do not render Loader instead of Adapter if no page count is given 1`] =
   >
     <div
       class="toolbarLeft"
-    >
-      <label
-        aria-label="sulu_admin.list_search_placeholder"
-      >
-        <div
-          class="input dark left collapsed hasAppendIcon"
-        >
-          <div
-            class="prependedContainer dark collapsed"
-          >
-            <span
-              aria-label="su-search"
-              class="su-search clickable icon dark iconClickable collapsed"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <input
-            placeholder="sulu_admin.list_search_placeholder"
-            type="text"
-            value=""
-          />
-        </div>
-      </label>
-    </div>
+    />
     <div
       class="toolbarRight"
     />
@@ -57,31 +33,7 @@ exports[`Render Loader instead of Adapter if nothing was loaded yet 1`] = `
   >
     <div
       class="toolbarLeft"
-    >
-      <label
-        aria-label="sulu_admin.list_search_placeholder"
-      >
-        <div
-          class="input dark left collapsed hasAppendIcon"
-        >
-          <div
-            class="prependedContainer dark collapsed"
-          >
-            <span
-              aria-label="su-search"
-              class="su-search clickable icon dark iconClickable collapsed"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <input
-            placeholder="sulu_admin.list_search_placeholder"
-            type="text"
-            value=""
-          />
-        </div>
-      </label>
-    </div>
+    />
     <div
       class="toolbarRight"
     />
@@ -91,7 +43,7 @@ exports[`Render Loader instead of Adapter if nothing was loaded yet 1`] = `
   >
     <div
       class="spinner loader"
-      style="width:40px;height:40px"
+      style="width: 40px; height: 40px;"
     >
       <div
         class="doubleBounce1"
@@ -132,31 +84,7 @@ exports[`Render the adapter in disabled state 1`] = `
   >
     <div
       class="toolbarLeft"
-    >
-      <label
-        aria-label="sulu_admin.list_search_placeholder"
-      >
-        <div
-          class="input dark left collapsed hasAppendIcon"
-        >
-          <div
-            class="prependedContainer dark collapsed"
-          >
-            <span
-              aria-label="su-search"
-              class="su-search clickable icon dark iconClickable collapsed"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <input
-            placeholder="sulu_admin.list_search_placeholder"
-            type="text"
-            value=""
-          />
-        </div>
-      </label>
-    </div>
+    />
     <div
       class="toolbarRight"
     />
@@ -217,84 +145,7 @@ exports[`Render the adapter with filters 1`] = `
   >
     <div
       class="toolbarLeft"
-    >
-      <label
-        aria-label="sulu_admin.list_search_placeholder"
-      >
-        <div
-          class="input dark left collapsed hasAppendIcon"
-        >
-          <div
-            class="prependedContainer dark collapsed"
-          >
-            <span
-              aria-label="su-search"
-              class="su-search clickable icon dark iconClickable collapsed"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <input
-            placeholder="sulu_admin.list_search_placeholder"
-            type="text"
-            value=""
-          />
-        </div>
-      </label>
-      <div
-        class="fieldFilter"
-      >
-        <div
-          class="filterButton"
-        >
-          <button
-            class="button icon"
-            type="button"
-          >
-            <span
-              aria-label="su-filter"
-              class="su-filter buttonIcon"
-            />
-            <span
-              aria-label="su-angle-down"
-              class="su-angle-down dropdownIcon"
-            />
-          </button>
-        </div>
-        <span
-          class="fieldFilterItem"
-        >
-          <button
-            class="chip primary medium clickable"
-            type="button"
-          >
-            Title: 
-            <span
-              aria-label="su-times"
-              class="su-times clickable icon"
-              role="button"
-              tabindex="0"
-            />
-          </button>
-        </span>
-        <span
-          class="fieldFilterItem"
-        >
-          <button
-            class="chip primary medium clickable"
-            type="button"
-          >
-            Created at: 
-            <span
-              aria-label="su-times"
-              class="su-times clickable icon"
-              role="button"
-              tabindex="0"
-            />
-          </button>
-        </span>
-      </div>
-    </div>
+    />
     <div
       class="toolbarRight"
     />
@@ -321,31 +172,7 @@ exports[`Render the adapter with filters but filterable disabled 1`] = `
   >
     <div
       class="toolbarLeft"
-    >
-      <label
-        aria-label="sulu_admin.list_search_placeholder"
-      >
-        <div
-          class="input dark left collapsed hasAppendIcon"
-        >
-          <div
-            class="prependedContainer dark collapsed"
-          >
-            <span
-              aria-label="su-search"
-              class="su-search clickable icon dark iconClickable collapsed"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <input
-            placeholder="sulu_admin.list_search_placeholder"
-            type="text"
-            value=""
-          />
-        </div>
-      </label>
-    </div>
+    />
     <div
       class="toolbarRight"
     />
@@ -369,31 +196,7 @@ exports[`Render toolbar with with search field and actions 1`] = `
   >
     <div
       class="toolbarLeft"
-    >
-      <label
-        aria-label="sulu_admin.list_search_placeholder"
-      >
-        <div
-          class="input dark left collapsed hasAppendIcon"
-        >
-          <div
-            class="prependedContainer dark collapsed"
-          >
-            <span
-              aria-label="su-search"
-              class="su-search clickable icon dark iconClickable collapsed"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <input
-            placeholder="sulu_admin.list_search_placeholder"
-            type="text"
-            value=""
-          />
-        </div>
-      </label>
-    </div>
+    />
     <div
       class="toolbarRight"
     >

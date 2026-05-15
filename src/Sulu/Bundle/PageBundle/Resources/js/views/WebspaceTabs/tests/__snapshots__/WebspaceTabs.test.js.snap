@@ -1,52 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render webspace select with children when webspaces are not loaded yet 1`] = `
-Array [
-  <div
-    class="tabsContainer root"
-  >
-    <div
-      class="tabs root"
-    >
-      <div
-        class="tabsContainerWrapper"
-      >
-        <ul
-          class="tabsContainer"
-        />
-      </div>
-    </div>
-  </div>,
-  <div
-    class="view"
-  >
+<DocumentFragment>
+  <div>
     <div
       class="webspaceSelect"
     >
-      <div
-        class="webspaceSelect"
-      >
-        <button
-          class="button"
-          type="button"
-        >
-          <span
-            aria-label="su-webspace"
-            class="su-webspace buttonIcon"
-          />
-          <span
-            class="buttonValue"
-          />
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down buttonIcon"
-          />
-        </button>
-      </div>
+      <div />
     </div>
     <h1>
       sulu_blog
     </h1>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;

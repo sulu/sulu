@@ -1,169 +1,127 @@
 // @flow
+import {render, screen} from '@testing-library/react';
+import {observable} from 'mobx';
 import React from 'react';
-import {mount} from 'enzyme';
-import {FormInspector, ResourceFormStore, SingleSelection, ResourceLocator} from 'sulu-admin-bundle/containers';
+import {ResourceLocator, SingleSelection} from 'sulu-admin-bundle/containers';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
-import {ResourceStore, SingleSelectionStore} from 'sulu-admin-bundle/stores';
-import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import PageTreeRoute from '../../fields/PageTreeRoute';
-
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
 
 jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     contentLocale: 'de',
 }));
 
-jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(function() {
-    this.selections = [];
-    this.clearSelection = jest.fn();
-    this.select = jest.fn();
-    this.destroy = jest.fn();
+jest.mock('sulu-admin-bundle/containers', () => ({
+    SingleSelection: jest.fn(({value}) => {
+        return (
+            <div data-testid="single-selection">
+                {value || 'no-page-selected'}
+            </div>
+        );
+    }),
+    ResourceLocator: jest.fn(({value}) => {
+        return (
+            <div data-testid="resource-locator">
+                {value || 'no-suffix-selected'}
+            </div>
+        );
+    }),
 }));
 
-jest.mock(
-    'sulu-admin-bundle/stores/ResourceStore',
-    () => jest.fn(function(resourceKey, id, options) {
-        this.resourceKey = resourceKey;
-        this.id = id;
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
-        if (options) {
-            this.locale = options.locale;
-        }
-    })
-);
+function createFormInspector(locale: any = undefined) {
+    return ({locale}: any);
+}
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/MemoryFormStore', () => jest.fn(function(data, schema) {
-    this.data = data;
-    this.schema = schema;
-    this.change = jest.fn().mockImplementation((name, value) => {
-        this.data[name] = value;
-    });
-    this.validate = jest.fn().mockReturnValue(true);
-    this.destroy = jest.fn();
-}));
-
-jest.mock(
-    'sulu-admin-bundle/containers/Form/stores/ResourceFormStore',
-    () => jest.fn(function(resourceStore, formKey) {
-        this.resourceKey = resourceStore.resourceKey;
-        this.id = resourceStore.id;
-        this.locale = resourceStore.locale;
-
-        if (formKey) {
-            this.formKey = formKey;
-        }
-    })
-);
-
-jest.mock(
-    'sulu-admin-bundle/containers/Form/FormInspector',
-    () => jest.fn(function(resourceFormStore) {
-        this.id = resourceFormStore.id;
-        this.locale = resourceFormStore.locale;
-        this.isFieldModified = jest.fn();
-        this.options = {
-            webspace: 'webspace',
-        };
-        this.getPathsByTag = jest.fn().mockReturnValue([]);
-    })
-);
-
-jest.mock('sulu-admin-bundle/stores/SingleSelectionStore', () => jest.fn(function() {
-    this.set = jest.fn((item) => {
-        this.item = item;
-    });
-    this.loadItem = jest.fn((id) => {
-        this.item = {id, url: '/test/' + id};
-    });
-    this.clear = jest.fn();
-
-    mockExtendObservable(this, {
-        item: undefined,
-        loading: false,
-    });
-}));
-
-test('Render a PageTreeRoute', () => {
-    const modePromiseValue = 'leaf';
-    const modePromise = Promise.resolve(modePromiseValue);
-    const modeResolver = jest.fn().mockImplementation(() => modePromise);
-
-    const fieldTypeOptions = {
-        modeResolver,
-    };
-
+test('Render a PageTreeRoute', async() => {
+    const modeResolver = jest.fn(() => Promise.resolve('leaf'));
+    const onChange = jest.fn();
+    const onFinish = jest.fn();
     const value = {
         page: {
             uuid: 'uuid-uuid-uuid-uuid',
         },
         suffix: '/hello',
     };
-
     const locale = observable.box('de');
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 'diuu-diuu-diuu-diuu', {locale}),
-            'test'
-        )
-    );
 
-    const pageTreeRoute = mount(
+    render(
         <PageTreeRoute
             {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
+            fieldTypeOptions={{modeResolver}}
+            formInspector={createFormInspector(locale)}
+            onChange={onChange}
+            onFinish={onFinish}
             value={value}
         />
     );
 
     expect(modeResolver).toHaveBeenCalled();
+    expect(await screen.findByTestId('single-selection')).toBeInTheDocument();
 
-    return modePromise.then(() => {
-        pageTreeRoute.update();
-        expect(pageTreeRoute.render()).toMatchSnapshot();
-        expect(pageTreeRoute.find(SingleSelection).prop('value')).toBe(value.page.uuid);
-        expect(SingleSelectionStore).toHaveBeenCalledWith('pages', 'uuid-uuid-uuid-uuid', locale, undefined);
+    expect(SingleSelection).toHaveBeenCalledTimes(1);
+    expect(ResourceLocator).toHaveBeenCalledTimes(1);
 
-        const singleSelection = pageTreeRoute.find(SingleSelection);
+    const [singleSelectionProps] = (SingleSelection: any).mock.calls[0];
+    const [resourceLocatorProps] = (ResourceLocator: any).mock.calls[0];
 
-        singleSelection.instance().singleSelectionStore.item = {};
-        singleSelection.update();
+    expect(singleSelectionProps.value).toBe('uuid-uuid-uuid-uuid');
+    expect(singleSelectionProps.locale).toBe(locale);
+    expect(resourceLocatorProps.value).toBe('/hello');
 
-        expect(singleSelection.find('.item').text()).toBe('/test/uuid-uuid-uuid-uuid');
-        expect(singleSelection.render()).toMatchSnapshot();
+    singleSelectionProps.onChange('uuid-next', {url: '/next-path'});
+    expect(onChange).toHaveBeenCalledWith({
+        page: {
+            path: '/next-path',
+            uuid: 'uuid-next',
+        },
+        suffix: '/hello',
+    });
+    expect(onFinish).toHaveBeenCalled();
 
-        expect(pageTreeRoute.find(ResourceLocator).prop('value')).toBe(value.suffix);
+    resourceLocatorProps.onChange('/changed-suffix');
+    expect(onChange).toHaveBeenCalledWith({
+        page: {
+            uuid: 'uuid-uuid-uuid-uuid',
+        },
+        suffix: '/changed-suffix',
     });
 });
 
-test('Render a PageTreeRoute without value', () => {
-    const modePromiseValue = 'leaf';
-    const modePromise = Promise.resolve(modePromiseValue);
-    const modeResolver = jest.fn().mockImplementation(() => modePromise);
+test('Render a PageTreeRoute without value', async() => {
+    const modeResolver = jest.fn(() => Promise.resolve('leaf'));
+    const onChange = jest.fn();
+    const onFinish = jest.fn();
 
-    const fieldTypeOptions = {
-        modeResolver,
-    };
-
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('pages'), 'test'));
-
-    const pageTreeRoute = mount(
+    render(
         <PageTreeRoute
             {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
+            fieldTypeOptions={{modeResolver}}
+            formInspector={createFormInspector()}
+            onChange={onChange}
+            onFinish={onFinish}
             value={null}
         />
     );
 
     expect(modeResolver).toHaveBeenCalled();
+    expect(await screen.findByTestId('single-selection')).toBeInTheDocument();
 
-    return modePromise.then(() => {
-        pageTreeRoute.update();
-        expect(pageTreeRoute.render()).toMatchSnapshot();
-        expect(pageTreeRoute.find(SingleSelection).prop('value')).toBe(null);
-        expect(pageTreeRoute.find(ResourceLocator).prop('value')).toBe(null);
+    const [singleSelectionProps] = (SingleSelection: any).mock.calls[0];
+    const [resourceLocatorProps] = (ResourceLocator: any).mock.calls[0];
+
+    expect(singleSelectionProps.value).toBe(null);
+    expect(singleSelectionProps.locale.get()).toBe('de');
+    expect(resourceLocatorProps.value).toBe(null);
+
+    singleSelectionProps.onChange('uuid-next', {url: '/next-path'});
+    expect(onChange).toHaveBeenCalledWith({
+        page: {
+            path: '/next-path',
+            uuid: 'uuid-next',
+        },
     });
+    expect(onFinish).toHaveBeenCalled();
 });

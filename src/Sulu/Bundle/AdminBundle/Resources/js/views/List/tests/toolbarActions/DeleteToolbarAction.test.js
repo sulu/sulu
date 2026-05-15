@@ -6,10 +6,6 @@ import ResourceStore from '../../../../stores/ResourceStore';
 import List from '../../../../views/List';
 import DeleteToolbarAction from '../../toolbarActions/DeleteToolbarAction';
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
 jest.mock('../../../../containers/List/stores/ListStore', () => jest.fn(function() {
     this.selectionIds = [];
     this.selections = [];

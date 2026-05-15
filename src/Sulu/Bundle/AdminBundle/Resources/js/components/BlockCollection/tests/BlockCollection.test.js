@@ -6,20 +6,30 @@ import {observable} from 'mobx';
 import BlockCollection from '../BlockCollection';
 import clipboard from '../../../utils/clipboard/clipboard';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+let mockLastSortEnd;
+
+jest.mock('react-sortable-hoc', () => {
+    const React = require('react');
+
+    return {
+        SortableContainer: jest.fn().mockImplementation((Component) => function SortableContainerMock(props) {
+            mockLastSortEnd = props.onSortEnd;
+
+            return <Component {...props} />;
+        }),
+        SortableElement: jest.fn().mockImplementation((Component) => Component),
+        SortableHandle: jest.fn().mockImplementation((Component) => Component),
+    };
+});
 
 type RenderBlockCollectionResult = {
     container: HTMLElement,
     getCurrentProps: () => Object,
-    ref: {current: any},
     rerenderBlockCollection: (nextProps: Object) => void,
     user: any,
 };
 
 function renderBlockCollection(props: Object = {}): RenderBlockCollectionResult {
-    const ref: any = React.createRef();
     let currentProps = {
         defaultType: 'editor',
         onChange: jest.fn(),
@@ -31,20 +41,17 @@ function renderBlockCollection(props: Object = {}): RenderBlockCollectionResult 
     const {container, rerender} = render(
         <BlockCollection
             {...currentProps}
-            ref={ref}
         />
     );
 
     return {
         container,
-        ref,
         rerenderBlockCollection: (nextProps: Object) => {
             currentProps = {...currentProps, ...nextProps};
 
             rerender(
                 <BlockCollection
                     {...currentProps}
-                    ref={ref}
                 />
             );
         },
@@ -369,7 +376,7 @@ test('Should allow to reorder blocks by using drag and drop', async() => {
         {content: 'Test 2', type: 'editor'},
         {content: 'Test 3', type: 'editor'},
     ];
-    const {ref, user} = renderBlockCollection({
+    const {user} = renderBlockCollection({
         onChange: changeSpy,
         onSortEnd: sortEndSpy,
         value,
@@ -377,11 +384,12 @@ test('Should allow to reorder blocks by using drag and drop', async() => {
 
     await user.click(getBlock(0));
 
-    expect(Array.from(ref.current.expandedBlocks)).toEqual([true, false, false]);
-    expect(Array.from(ref.current.generatedBlockIds)).toEqual([1, 2, 3]);
+    expect(isBlockExpanded(0)).toEqual(true);
+    expect(isBlockExpanded(1)).toEqual(false);
+    expect(isBlockExpanded(2)).toEqual(false);
 
     act(() => {
-        ref.current.handleSortEnd({newIndex: 2, oldIndex: 0});
+        mockLastSortEnd({newIndex: 2, oldIndex: 0});
     });
     expect(changeSpy).toBeCalledWith([
         expect.objectContaining({content: 'Test 2'}),
@@ -390,8 +398,9 @@ test('Should allow to reorder blocks by using drag and drop', async() => {
     ]);
     expect(sortEndSpy).toBeCalledWith(0, 2);
 
-    expect(Array.from(ref.current.expandedBlocks)).toEqual([false, false, true]);
-    expect(Array.from(ref.current.generatedBlockIds)).toEqual([2, 3, 1]);
+    expect(isBlockExpanded(0)).toEqual(false);
+    expect(isBlockExpanded(1)).toEqual(false);
+    expect(isBlockExpanded(2)).toEqual(true);
 });
 
 test('Should add a new block between existing blocks', async() => {
@@ -425,17 +434,20 @@ test('Should add a new block at the end', async() => {
     expect(changeSpy).toBeCalledWith([...value, {type: 'editor'}]);
 });
 
-test('Should throw an exception if a new block is added and the maximum has already been reached', () => {
+test('Should not add a new block if the maximum has already been reached', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
 
-    const {ref} = renderBlockCollection({
+    renderBlockCollection({
         maxOccurs: 2,
         onChange: changeSpy,
         value,
     });
 
-    expect(() => ref.current.handleAddBlock()).toThrow(/maximum amount of blocks/);
+    await user.click(getButtonsByName('sulu_admin.add_block')[0]);
+
+    expect(changeSpy).not.toBeCalled();
 });
 
 test('Should paste block between existing blocks', async() => {
@@ -489,19 +501,22 @@ test('Should paste block with default type if type of block in clipboard block i
     expect(changeSpy).toBeCalledWith([...value, {content: 'Clipboard', type: 'editor'}]);
 });
 
-test('Should throw an exception if a block is pasted and the maximum has already been reached', () => {
+test('Should not paste a block if the maximum has already been reached', async() => {
+    const user = userEvent.setup();
     clipboard.set('blocks', [{content: 'Clipboard', type: 'editor'}]);
 
     const changeSpy = jest.fn();
     const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
 
-    const {ref} = renderBlockCollection({
+    renderBlockCollection({
         maxOccurs: 2,
         onChange: changeSpy,
         value,
     });
 
-    expect(() => ref.current.handlePasteBlocks()).toThrow(/maximum amount of blocks/);
+    await user.click(getButtonsByName('sulu_admin.paste_blocks')[0]);
+
+    expect(changeSpy).not.toBeCalled();
 });
 
 test('Should pass duplicate action that allows to duplicate an existing block', async() => {
@@ -541,17 +556,49 @@ test('Should not pass duplicate action to Block component if maxOccurs limit is 
     expect(queryButtonByName('sulu_admin.duplicate')).not.toBeInTheDocument();
 });
 
-test('Should throw an exception if a block is duplicated and maxOccurs limit is reached', () => {
+test('Should not duplicate a block if maxOccurs limit is reached', async() => {
     const changeSpy = jest.fn();
     const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
-
-    const {ref} = renderBlockCollection({
+    const {user} = renderBlockCollection({
         maxOccurs: 2,
         onChange: changeSpy,
         value,
     });
 
-    expect(() => ref.current.handleDuplicateBlock(0)).toThrow(/maximum amount of blocks/);
+    await openBlockActions(user, 0);
+
+    expect(queryButtonByName('sulu_admin.duplicate')).not.toBeInTheDocument();
+    expect(changeSpy).not.toBeCalled();
+});
+
+test('Should not remove a block if minOccurs limit is reached', async() => {
+    const changeSpy = jest.fn();
+    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
+    const {user} = renderBlockCollection({
+        minOccurs: 2,
+        onChange: changeSpy,
+        value,
+    });
+
+    await openBlockActions(user, 0);
+
+    expect(queryButtonByName('sulu_admin.delete')).not.toBeInTheDocument();
+    expect(changeSpy).not.toBeCalled();
+});
+
+test('Should not cut a block if minOccurs limit is reached', async() => {
+    const changeSpy = jest.fn();
+    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
+    const {user} = renderBlockCollection({
+        minOccurs: 2,
+        onChange: changeSpy,
+        value,
+    });
+
+    await openBlockActions(user, 0);
+
+    expect(queryButtonByName('sulu_admin.cut')).not.toBeInTheDocument();
+    expect(changeSpy).not.toBeCalled();
 });
 
 test('Should pass remove action that allows to remove an existing block', async() => {
@@ -585,19 +632,6 @@ test('Should not pass remove action to Block component if minOccurs limit is rea
     await openBlockActions(user, 0);
 
     expect(queryButtonByName('sulu_admin.delete')).not.toBeInTheDocument();
-});
-
-test('Should throw an exception if a block is removed and minOccurs limit is reached', () => {
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
-
-    const {ref} = renderBlockCollection({
-        minOccurs: 2,
-        onChange: changeSpy,
-        value,
-    });
-
-    expect(() => ref.current.handleRemoveBlock(0)).toThrow(/minimum amount of blocks/);
 });
 
 test('Should pass copy action that allows to cut an existing block into the clipboard', async() => {
@@ -660,19 +694,6 @@ test('Should not pass cut action to Block component if minOccurs limit is reache
     await openBlockActions(user, 0);
 
     expect(queryButtonByName('sulu_admin.cut')).not.toBeInTheDocument();
-});
-
-test('Should throw an exception if a block is removed and minOccurs limit is reached', () => {
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
-
-    const {ref} = renderBlockCollection({
-        minOccurs: 2,
-        onChange: changeSpy,
-        value,
-    });
-
-    expect(() => ref.current.handleCutBlock(0)).toThrow(/minimum amount of blocks/);
 });
 
 test('Should call onSettingsClick callback when settings icon is clicked', async() => {
@@ -745,7 +766,7 @@ test('Should apply renderBlockContent before rendering the block content includi
     expect(within(getBlock(1)).getByText(prefix + value[1].content + typePrefix + 'type1')).toBeInTheDocument();
 });
 
-test('Should adjust expandedBlocks and generatedBlockIds after updating the value variable with fewer entries', () => {
+test('Should keep rendered block state consistent after updating the value variable with fewer entries', async() => {
     const types = {
         type1: 'Type 1',
         type2: 'Type 2',
@@ -770,13 +791,11 @@ test('Should adjust expandedBlocks and generatedBlockIds after updating the valu
         types,
         value,
     });
-
-    blockCollection.ref.current.expandedBlocks[0] = true;
+    await blockCollection.user.click(getBlock(0));
 
     expect(blockCollection.getCurrentProps().value.length).toBe(3);
-    expect(blockCollection.ref.current.expandedBlocks.length).toBe(3);
-    expect(blockCollection.ref.current.generatedBlockIds.length).toBe(3);
-    expect(blockCollection.ref.current.expandedBlocks[0]).toBe(true);
+    expect(getBlocks()).toHaveLength(3);
+    expect(isBlockExpanded(0)).toBe(true);
 
     blockCollection.rerenderBlockCollection({
         value: [
@@ -788,12 +807,11 @@ test('Should adjust expandedBlocks and generatedBlockIds after updating the valu
     });
 
     expect(blockCollection.getCurrentProps().value.length).toBe(1);
-    expect(blockCollection.ref.current.expandedBlocks.length).toBe(1);
-    expect(blockCollection.ref.current.generatedBlockIds.length).toBe(1);
-    expect(blockCollection.ref.current.expandedBlocks[0]).toBe(true);
+    expect(getBlocks()).toHaveLength(1);
+    expect(isBlockExpanded(0)).toBe(true);
 });
 
-test('Should adjust expandedBlocks and generatedBlockIds after updating the value variable with more entries', () => {
+test('Should keep rendered block state consistent after updating the value variable with more entries', async() => {
     const types = {
         type1: 'Type 1',
         type2: 'Type 2',
@@ -810,13 +828,11 @@ test('Should adjust expandedBlocks and generatedBlockIds after updating the valu
         types,
         value,
     });
-
-    blockCollection.ref.current.expandedBlocks[0] = true;
+    await blockCollection.user.click(getBlock(0));
 
     expect(blockCollection.getCurrentProps().value.length).toBe(1);
-    expect(blockCollection.ref.current.expandedBlocks.length).toBe(1);
-    expect(blockCollection.ref.current.generatedBlockIds.length).toBe(1);
-    expect(blockCollection.ref.current.expandedBlocks[0]).toBe(true);
+    expect(getBlocks()).toHaveLength(1);
+    expect(isBlockExpanded(0)).toBe(true);
 
     blockCollection.rerenderBlockCollection({
         value: [
@@ -836,12 +852,11 @@ test('Should adjust expandedBlocks and generatedBlockIds after updating the valu
     });
 
     expect(blockCollection.getCurrentProps().value.length).toBe(3);
-    expect(blockCollection.ref.current.expandedBlocks.length).toBe(3);
-    expect(blockCollection.ref.current.generatedBlockIds.length).toBe(3);
-    expect(blockCollection.ref.current.expandedBlocks[0]).toBe(true);
+    expect(getBlocks()).toHaveLength(3);
+    expect(isBlockExpanded(0)).toBe(true);
 });
 
-test('Updating value with same length should not adjust expandedBlocks and generatedBlockIds', () => {
+test('Updating value with same length should keep rendered block state', async() => {
     const types = {
         type1: 'Type 1',
         type2: 'Type 2',
@@ -866,13 +881,11 @@ test('Updating value with same length should not adjust expandedBlocks and gener
         types,
         value,
     });
-
-    blockCollection.ref.current.expandedBlocks[0] = true;
+    await blockCollection.user.click(getBlock(0));
 
     expect(blockCollection.getCurrentProps().value.length).toBe(3);
-    expect(blockCollection.ref.current.expandedBlocks.length).toBe(3);
-    expect(blockCollection.ref.current.generatedBlockIds.length).toBe(3);
-    expect(blockCollection.ref.current.expandedBlocks[0]).toBe(true);
+    expect(getBlocks()).toHaveLength(3);
+    expect(isBlockExpanded(0)).toBe(true);
 
     blockCollection.rerenderBlockCollection({
         value: [
@@ -892,9 +905,8 @@ test('Updating value with same length should not adjust expandedBlocks and gener
     });
 
     expect(blockCollection.getCurrentProps().value.length).toBe(3);
-    expect(blockCollection.ref.current.expandedBlocks.length).toBe(3);
-    expect(blockCollection.ref.current.generatedBlockIds.length).toBe(3);
-    expect(blockCollection.ref.current.expandedBlocks[0]).toBe(true);
+    expect(getBlocks()).toHaveLength(3);
+    expect(isBlockExpanded(0)).toBe(true);
 });
 
 test('Should not show BlockToolbarButton when have no blocks', () => {

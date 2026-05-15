@@ -7,13 +7,6 @@ import Button from '../Button';
 
 const clickSpy = jest.fn();
 
-jest.mock('debounce', () => jest.fn((callback) => callback));
-
-window.ResizeObserver = jest.fn(function() {
-    this.observe = jest.fn();
-    this.disconnect = jest.fn();
-});
-
 test('Render items', () => {
     const {asFragment} = render(<Items />);
 

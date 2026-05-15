@@ -5,10 +5,6 @@ import ThumbnailFieldTransformer from '../../fieldTransformers/ThumbnailFieldTra
 
 const thumbnailTransformer = new ThumbnailFieldTransformer();
 
-jest.mock('loglevel', () => ({
-    error: jest.fn(),
-}));
-
 test('Test undefined', () => {
     expect(thumbnailTransformer.transform(undefined)).toBe(null);
 });

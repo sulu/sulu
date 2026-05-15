@@ -1,12 +1,62 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {fireEvent, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import listAdapterDefaultProps from '../../../../utils/TestHelper/listAdapterDefaultProps';
 import ColumnListAdapter from '../../adapters/ColumnListAdapter';
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: (key) => key,
-}));
+const renderColumnListAdapter = (customProps: Object = {}) => {
+    const props = {
+        ...listAdapterDefaultProps,
+        ...customProps,
+    };
+
+    return render(<ColumnListAdapter {...props} />);
+};
+
+const getIconButton = (name: string): HTMLElement => {
+    const button = screen.getByLabelText(name).closest('button');
+
+    if (!(button instanceof HTMLElement)) {
+        throw new Error('Expected button with icon "' + name + '"');
+    }
+
+    return button;
+};
+
+const getItemElement = (label: string): HTMLElement => {
+    const item = screen.getByLabelText(label).closest('.item');
+
+    if (!(item instanceof HTMLElement)) {
+        throw new Error('Expected item with label "' + label + '"');
+    }
+
+    return item;
+};
+
+const getItemIcon = (item: HTMLElement, icon: string): HTMLElement => {
+    const iconElement = item.querySelector('[aria-label="' + icon + '"]');
+
+    if (!(iconElement instanceof HTMLElement)) {
+        throw new Error('Expected item icon "' + icon + '"');
+    }
+
+    return iconElement;
+};
+
+const openToolbarDropdown = async(user: Object) => {
+    await user.click(getIconButton('su-cog'));
+};
+
+const hoverColumn = async(user: Object, index: number) => {
+    const column = document.querySelectorAll('.column')[index];
+
+    if (!(column instanceof HTMLElement)) {
+        throw new Error('Expected column with index "' + index + '"');
+    }
+
+    await user.hover(column);
+};
 
 test('Render different kind of data with edit button', () => {
     const data = [
@@ -98,7 +148,7 @@ test('Render different kind of data with edit button', () => {
         [],
     ];
 
-    const columnListAdapter = render(
+    const view = render(
         <ColumnListAdapter
             {...listAdapterDefaultProps}
             activeItems={[2, 4]}
@@ -110,7 +160,7 @@ test('Render different kind of data with edit button', () => {
         />
     );
 
-    expect(columnListAdapter).toMatchSnapshot();
+    expect(view.container.firstChild).toMatchSnapshot();
 });
 
 test('Render correct icon in edit button based on permissions', () => {
@@ -156,26 +206,16 @@ test('Render correct icon in edit button based on permissions', () => {
         [],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[]}
-            data={data}
-            onItemClick={jest.fn()}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [],
+        data,
+        onItemClick: jest.fn(),
+    });
 
-    expect(columnListAdapter.find('Item').at(0).find('ItemButton').props().icon).toEqual('su-pen');
-    expect(columnListAdapter.find('Item').at(0).find('ItemButton').props().visible).toEqual(false);
-
-    expect(columnListAdapter.find('Item').at(1).find('ItemButton').props().icon).toEqual('su-eye');
-    expect(columnListAdapter.find('Item').at(1).find('ItemButton').props().visible).toEqual(true);
-
-    expect(columnListAdapter.find('Item').at(2).find('ItemButton').props().icon).toEqual('su-pen');
-    expect(columnListAdapter.find('Item').at(2).find('ItemButton').props().visible).toEqual(true);
-
-    expect(columnListAdapter.find('Item').at(3).find('ItemButton').props().icon).toEqual('su-plus-circle');
-    expect(columnListAdapter.find('Item').at(3).find('ItemButton').props().visible).toEqual(true);
+    expect(getItemIcon(getItemElement('Missing view permission'), 'su-pen')).not.toHaveClass('visible');
+    expect(getItemIcon(getItemElement('Missing edit permission'), 'su-eye')).toHaveClass('visible');
+    expect(getItemIcon(getItemElement('Sufficient Permissions'), 'su-pen')).toHaveClass('visible');
+    expect(getItemIcon(getItemElement('Ghost Page'), 'su-plus-circle')).toHaveClass('visible');
 });
 
 test('Render data without edit button', () => {
@@ -189,7 +229,7 @@ test('Render data without edit button', () => {
         ],
     ];
 
-    const columnListAdapter = render(
+    const view = render(
         <ColumnListAdapter
             {...listAdapterDefaultProps}
             activeItems={[]}
@@ -198,7 +238,7 @@ test('Render data without edit button', () => {
         />
     );
 
-    expect(columnListAdapter).toMatchSnapshot();
+    expect(view.container.firstChild).toMatchSnapshot();
 });
 
 test('Render data with name as fallback for title', () => {
@@ -211,7 +251,7 @@ test('Render data with name as fallback for title', () => {
         ],
     ];
 
-    const columnListAdapter = render(
+    const view = render(
         <ColumnListAdapter
             {...listAdapterDefaultProps}
             activeItems={[]}
@@ -219,7 +259,7 @@ test('Render data with name as fallback for title', () => {
         />
     );
 
-    expect(columnListAdapter).toMatchSnapshot();
+    expect(view.container.firstChild).toMatchSnapshot();
 });
 
 test('Render data with selection', () => {
@@ -233,7 +273,7 @@ test('Render data with selection', () => {
         ],
     ];
 
-    const columnListAdapter = render(
+    const view = render(
         <ColumnListAdapter
             {...listAdapterDefaultProps}
             activeItems={[]}
@@ -244,7 +284,7 @@ test('Render data with selection', () => {
         />
     );
 
-    expect(columnListAdapter).toMatchSnapshot();
+    expect(view.container.firstChild).toMatchSnapshot();
 });
 
 test('Render data with disabled items', () => {
@@ -266,7 +306,7 @@ test('Render data with disabled items', () => {
         [],
     ];
 
-    const columnListAdapter = render(
+    const view = render(
         <ColumnListAdapter
             {...listAdapterDefaultProps}
             activeItems={[1, 3]}
@@ -278,7 +318,7 @@ test('Render data with disabled items', () => {
         />
     );
 
-    expect(columnListAdapter).toMatchSnapshot();
+    expect(view.container.firstChild).toMatchSnapshot();
 });
 
 test('Render with add button in toolbar when onItemAdd callback is given', () => {
@@ -286,7 +326,7 @@ test('Render with add button in toolbar when onItemAdd callback is given', () =>
         [],
     ];
 
-    const columnListAdapter = render(
+    const view = render(
         <ColumnListAdapter
             {...listAdapterDefaultProps}
             activeItems={[]}
@@ -296,10 +336,11 @@ test('Render with add button in toolbar when onItemAdd callback is given', () =>
         />
     );
 
-    expect(columnListAdapter).toMatchSnapshot();
+    expect(view.container.firstChild).toMatchSnapshot();
 });
 
-test('Render without add button in toolbar when onItemAdd callback is given but permission is not granted', () => {
+test('Render without add button in toolbar when onItemAdd callback is given but permission is not granted', async() => {
+    const user = userEvent.setup();
     const data = [
         [
             {
@@ -331,22 +372,19 @@ test('Render without add button in toolbar when onItemAdd callback is given but 
         [],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[undefined, 1, 4]}
-            data={data}
-            onItemAdd={jest.fn()}
-            onRequestItemDelete={jest.fn()}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [undefined, 1, 4],
+        data,
+        onItemAdd: jest.fn(),
+        onRequestItemDelete: jest.fn(),
+    });
+    await hoverColumn(user, 2);
 
-    columnListAdapter.find('Column').at(2).find('div').simulate('mouseEnter');
-    columnListAdapter.update();
-    expect(columnListAdapter.find('Toolbar ToolbarButton[icon="su-plus-circle"]')).toHaveLength(0);
+    expect(screen.queryByLabelText('su-plus-circle')).not.toBeInTheDocument();
 });
 
-test('Render without toolbar for first column if display_root_level_toolbar option is set', () => {
+test('Render without toolbar for first column if display_root_level_toolbar option is set', async() => {
+    const user = userEvent.setup();
     const data = [
         [
             {
@@ -378,24 +416,19 @@ test('Render without toolbar for first column if display_root_level_toolbar opti
         [],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[undefined, 1, 4]}
-            adapterOptions={{display_root_level_toolbar: false}}
-            data={data}
-            onItemAdd={jest.fn()}
-            onRequestItemDelete={jest.fn()}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [undefined, 1, 4],
+        adapterOptions: {display_root_level_toolbar: false},
+        data,
+        onItemAdd: jest.fn(),
+        onRequestItemDelete: jest.fn(),
+    });
 
-    columnListAdapter.find('Column').at(0).find('div').at(0).simulate('mouseEnter');
-    columnListAdapter.update();
-    expect(columnListAdapter.find('Toolbar').children()).toHaveLength(0);
+    expect(screen.queryByLabelText('su-cog')).not.toBeInTheDocument();
 
-    columnListAdapter.find('Column').at(1).find('div').at(0).simulate('mouseEnter');
-    columnListAdapter.update();
-    expect(columnListAdapter.find('Toolbar').children()).toHaveLength(1);
+    await hoverColumn(user, 2);
+
+    expect(screen.getByLabelText('su-cog')).toBeInTheDocument();
 });
 
 test('Render without toolbar when all actions would be deactivated', () => {
@@ -409,15 +442,12 @@ test('Render without toolbar when all actions would be deactivated', () => {
         ],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[undefined]}
-            data={data}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [undefined],
+        data,
+    });
 
-    expect(columnListAdapter.find('Toolbar')).toHaveLength(0);
+    expect(screen.queryByLabelText('su-cog')).not.toBeInTheDocument();
 });
 
 test('Render data with loading column', () => {
@@ -437,7 +467,7 @@ test('Render data with loading column', () => {
         [],
     ];
 
-    const columnListAdapter = render(
+    const view = render(
         <ColumnListAdapter
             {...listAdapterDefaultProps}
             activeItems={[1]}
@@ -447,10 +477,11 @@ test('Render data with loading column', () => {
         />
     );
 
-    expect(columnListAdapter).toMatchSnapshot();
+    expect(view.container.firstChild).toMatchSnapshot();
 });
 
-test('Execute onItemActivate callback when an item is clicked with the correct parameter', () => {
+test('Execute onItemActivate callback when an item is clicked with the correct parameter', async() => {
+    const user = userEvent.setup();
     const itemActivateSpy = jest.fn();
 
     const data = [
@@ -475,21 +506,19 @@ test('Execute onItemActivate callback when an item is clicked with the correct p
         ],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[1, 3]}
-            data={data}
-            onItemActivate={itemActivateSpy}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [1, 3],
+        data,
+        onItemActivate: itemActivateSpy,
+    });
 
-    columnListAdapter.find('Item').at(1).simulate('click');
+    await user.click(getItemElement('Page 2'));
 
     expect(itemActivateSpy).toBeCalledWith(2);
 });
 
-test('Execute onItemClick callback when an item is double-clicked', () => {
+test('Execute onItemClick callback when an item is double-clicked', async() => {
+    const user = userEvent.setup();
     const itemClickSpy = jest.fn();
 
     const data = [
@@ -514,21 +543,19 @@ test('Execute onItemClick callback when an item is double-clicked', () => {
         ],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[1, 3]}
-            data={data}
-            onItemClick={itemClickSpy}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [1, 3],
+        data,
+        onItemClick: itemClickSpy,
+    });
 
-    columnListAdapter.find('Item').at(1).simulate('dblclick');
+    await user.dblClick(getItemElement('Page 2'));
 
     expect(itemClickSpy).toBeCalledWith(2);
 });
 
-test('Do not execute onItemClick callback when an item without view permissions is double-clicked', () => {
+test('Do not execute onItemClick callback when an item without view permissions is double-clicked', async() => {
+    const user = userEvent.setup();
     const itemClickSpy = jest.fn();
 
     const data = [
@@ -562,21 +589,19 @@ test('Do not execute onItemClick callback when an item without view permissions 
         ],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[1, 3]}
-            data={data}
-            onItemClick={itemClickSpy}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [1, 3],
+        data,
+        onItemClick: itemClickSpy,
+    });
 
-    columnListAdapter.find('Item').at(1).simulate('dblclick');
+    await user.dblClick(getItemElement('Page 2'));
 
     expect(itemClickSpy).not.toBeCalled();
 });
 
-test('Show all setting buttons', () => {
+test('Show all setting buttons', async() => {
+    const user = userEvent.setup();
     const data = [
         [
             {
@@ -588,27 +613,25 @@ test('Show all setting buttons', () => {
         [],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[undefined, 1]}
-            data={data}
-            onRequestItemCopy={jest.fn()}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={jest.fn()}
-            onRequestItemOrder={jest.fn()}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [undefined, 1],
+        data,
+        onRequestItemCopy: jest.fn(),
+        onRequestItemDelete: jest.fn(),
+        onRequestItemMove: jest.fn(),
+        onRequestItemOrder: jest.fn(),
+    });
 
-    columnListAdapter.find('Toolbar ToolbarDropdown').simulate('click');
-    columnListAdapter.update();
-    expect(columnListAdapter.find('Toolbar Action').at(0).prop('disabled')).toEqual(false);
-    expect(columnListAdapter.find('Toolbar Action').at(1).prop('disabled')).toEqual(false);
-    expect(columnListAdapter.find('Toolbar Action').at(2).prop('disabled')).toEqual(false);
-    expect(columnListAdapter.find('Toolbar Action').at(3).prop('disabled')).toEqual(false);
+    await openToolbarDropdown(user);
+
+    expect(screen.getByRole('button', {name: 'sulu_admin.delete'})).toBeEnabled();
+    expect(screen.getByRole('button', {name: 'sulu_admin.move'})).toBeEnabled();
+    expect(screen.getByRole('button', {name: 'sulu_admin.copy'})).toBeEnabled();
+    expect(screen.getByRole('button', {name: 'sulu_admin.order'})).toBeEnabled();
 });
 
-test('Disable delete button if permission is missing', () => {
+test('Disable delete button if permission is missing', async() => {
+    const user = userEvent.setup();
     const data = [
         [
             {
@@ -623,27 +646,25 @@ test('Disable delete button if permission is missing', () => {
         [],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[undefined, 1]}
-            data={data}
-            onRequestItemCopy={jest.fn()}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={jest.fn()}
-            onRequestItemOrder={jest.fn()}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [undefined, 1],
+        data,
+        onRequestItemCopy: jest.fn(),
+        onRequestItemDelete: jest.fn(),
+        onRequestItemMove: jest.fn(),
+        onRequestItemOrder: jest.fn(),
+    });
 
-    columnListAdapter.find('Toolbar ToolbarDropdown').simulate('click');
-    columnListAdapter.update();
-    expect(columnListAdapter.find('Toolbar Action').at(0).prop('disabled')).toEqual(true);
-    expect(columnListAdapter.find('Toolbar Action').at(1).prop('disabled')).toEqual(false);
-    expect(columnListAdapter.find('Toolbar Action').at(2).prop('disabled')).toEqual(false);
-    expect(columnListAdapter.find('Toolbar Action').at(3).prop('disabled')).toEqual(false);
+    await openToolbarDropdown(user);
+
+    expect(screen.getByRole('button', {name: 'sulu_admin.delete'})).toBeDisabled();
+    expect(screen.getByRole('button', {name: 'sulu_admin.move'})).toBeEnabled();
+    expect(screen.getByRole('button', {name: 'sulu_admin.copy'})).toBeEnabled();
+    expect(screen.getByRole('button', {name: 'sulu_admin.order'})).toBeEnabled();
 });
 
-test('Disable move and copy button if permission is missing', () => {
+test('Disable move and copy button if permission is missing', async() => {
+    const user = userEvent.setup();
     const data = [
         [
             {
@@ -658,27 +679,25 @@ test('Disable move and copy button if permission is missing', () => {
         [],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[undefined, 1]}
-            data={data}
-            onRequestItemCopy={jest.fn()}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={jest.fn()}
-            onRequestItemOrder={jest.fn()}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [undefined, 1],
+        data,
+        onRequestItemCopy: jest.fn(),
+        onRequestItemDelete: jest.fn(),
+        onRequestItemMove: jest.fn(),
+        onRequestItemOrder: jest.fn(),
+    });
 
-    columnListAdapter.find('Toolbar ToolbarDropdown').simulate('click');
-    columnListAdapter.update();
-    expect(columnListAdapter.find('Toolbar Action').at(0).prop('disabled')).toEqual(false);
-    expect(columnListAdapter.find('Toolbar Action').at(1).prop('disabled')).toEqual(true);
-    expect(columnListAdapter.find('Toolbar Action').at(2).prop('disabled')).toEqual(true);
-    expect(columnListAdapter.find('Toolbar Action').at(3).prop('disabled')).toEqual(false);
+    await openToolbarDropdown(user);
+
+    expect(screen.getByRole('button', {name: 'sulu_admin.delete'})).toBeEnabled();
+    expect(screen.getByRole('button', {name: 'sulu_admin.move'})).toBeDisabled();
+    expect(screen.getByRole('button', {name: 'sulu_admin.copy'})).toBeDisabled();
+    expect(screen.getByRole('button', {name: 'sulu_admin.order'})).toBeEnabled();
 });
 
-test('Disable sort button if edit permission on parent is missing', () => {
+test('Disable sort button if edit permission on parent is missing', async() => {
+    const user = userEvent.setup();
     const data = [
         [
             {
@@ -700,29 +719,26 @@ test('Disable sort button if edit permission on parent is missing', () => {
         [],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[undefined, 1, 2]}
-            data={data}
-            onRequestItemCopy={jest.fn()}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={jest.fn()}
-            onRequestItemOrder={jest.fn()}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [undefined, 1, 2],
+        data,
+        onRequestItemCopy: jest.fn(),
+        onRequestItemDelete: jest.fn(),
+        onRequestItemMove: jest.fn(),
+        onRequestItemOrder: jest.fn(),
+    });
+    await hoverColumn(user, 1);
 
-    columnListAdapter.find('Column > div').at(1).simulate('mouseEnter');
-    columnListAdapter.find('Toolbar ToolbarDropdown').simulate('click');
-    columnListAdapter.update();
+    await openToolbarDropdown(user);
 
-    expect(columnListAdapter.find('Toolbar Action').at(0).prop('disabled')).toEqual(false);
-    expect(columnListAdapter.find('Toolbar Action').at(1).prop('disabled')).toEqual(false);
-    expect(columnListAdapter.find('Toolbar Action').at(2).prop('disabled')).toEqual(false);
-    expect(columnListAdapter.find('Toolbar Action').at(3).prop('disabled')).toEqual(true);
+    expect(screen.getByRole('button', {name: 'sulu_admin.delete'})).toBeEnabled();
+    expect(screen.getByRole('button', {name: 'sulu_admin.move'})).toBeEnabled();
+    expect(screen.getByRole('button', {name: 'sulu_admin.copy'})).toBeEnabled();
+    expect(screen.getByRole('button', {name: 'sulu_admin.order'})).toBeDisabled();
 });
 
-test('Do not show order button if onRequestItemOrder callback is undefined', () => {
+test('Do not show order button if onRequestItemOrder callback is undefined', async() => {
+    const user = userEvent.setup();
     const data = [
         [
             {
@@ -734,21 +750,20 @@ test('Do not show order button if onRequestItemOrder callback is undefined', () 
         [],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[1, 3]}
-            data={data}
-            onRequestItemMove={jest.fn()}
-            onRequestItemOrder={undefined}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [1, 3],
+        data,
+        onRequestItemMove: jest.fn(),
+        onRequestItemOrder: undefined,
+    });
 
-    columnListAdapter.find('Toolbar ToolbarDropdown').simulate('click');
-    expect(columnListAdapter.find('Toolbar button').find({children: 'sulu_admin.order'})).toHaveLength(0);
+    await openToolbarDropdown(user);
+
+    expect(screen.queryByRole('button', {name: 'sulu_admin.order'})).not.toBeInTheDocument();
 });
 
-test('Call onRequestItemOrder callback when an item ordering has been changed', () => {
+test('Call onRequestItemOrder callback when an item ordering has been changed', async() => {
+    const user = userEvent.setup();
     const requestItemOrderPromise = Promise.resolve({ordered: true});
     const requestItemOrderSpy = jest.fn().mockReturnValue(requestItemOrderPromise);
 
@@ -767,27 +782,25 @@ test('Call onRequestItemOrder callback when an item ordering has been changed', 
         ],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[1, 3]}
-            data={data}
-            onRequestItemOrder={requestItemOrderSpy}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [1, 3],
+        data,
+        onRequestItemOrder: requestItemOrderSpy,
+    });
 
-    columnListAdapter.find('Toolbar ToolbarDropdown button').simulate('click');
-    columnListAdapter.find('ToolbarDropdown').find('ArrowMenu Action[children="sulu_admin.order"]').prop('onClick')(0);
+    await openToolbarDropdown(user);
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.order'}));
 
-    columnListAdapter.update();
-
-    columnListAdapter.find('Item Input').at(0).prop('onChange')(5);
-    columnListAdapter.find('Item Input').at(0).prop('onBlur')();
+    const orderInput = screen.getByDisplayValue('1');
+    await user.clear(orderInput);
+    await user.type(orderInput, '5');
+    fireEvent.blur(orderInput);
 
     expect(requestItemOrderSpy).toBeCalledWith(1, 2);
 });
 
-test('Do not execute onItemActivate callback when a column is ordering', () => {
+test('Do not execute onItemActivate callback when a column is ordering', async() => {
+    const user = userEvent.setup();
     const itemActivateSpy = jest.fn();
 
     const data = [
@@ -812,26 +825,24 @@ test('Do not execute onItemActivate callback when a column is ordering', () => {
         ],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[1, 3]}
-            data={data}
-            onItemActivate={itemActivateSpy}
-            onRequestItemOrder={jest.fn()}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [1, 3],
+        data,
+        onItemActivate: itemActivateSpy,
+        onRequestItemOrder: jest.fn(),
+    });
 
-    columnListAdapter.find('Toolbar ToolbarDropdown button').simulate('click');
-    columnListAdapter.find('ToolbarDropdown').find('ArrowMenu Action[children="sulu_admin.order"]').prop('onClick')(0);
+    await openToolbarDropdown(user);
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.order'}));
 
-    columnListAdapter.find('Item').at(0).simulate('click');
-    columnListAdapter.find('Item').at(1).simulate('click');
+    await user.click(getItemElement('Page 1'));
+    await user.click(getItemElement('Page 2'));
 
     expect(itemActivateSpy).not.toBeCalled();
 });
 
-test('Execute onItemSelectionChange callback when an item is selected', () => {
+test('Execute onItemSelectionChange callback when an item is selected', async() => {
+    const user = userEvent.setup();
     const itemSelectionChangeSpy = jest.fn();
 
     const data = [
@@ -848,24 +859,23 @@ test('Execute onItemSelectionChange callback when an item is selected', () => {
         ],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[]}
-            data={data}
-            onItemSelectionChange={itemSelectionChangeSpy}
-            selections={[2]}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [],
+        data,
+        onItemSelectionChange: itemSelectionChangeSpy,
+        selections: [2],
+    });
+    const selectionButtons = screen.getAllByRole('button', {name: 'su-check'});
 
-    columnListAdapter.find('Item').at(1).find('.su-check').simulate('click');
+    await user.click(selectionButtons[1]);
     expect(itemSelectionChangeSpy).toHaveBeenLastCalledWith(2, false);
 
-    columnListAdapter.find('Item').at(0).find('.su-check').simulate('click');
+    await user.click(selectionButtons[0]);
     expect(itemSelectionChangeSpy).toHaveBeenLastCalledWith(1, true);
 });
 
-test('Execute onRequestItemCopy callback when an item is copied with the correct id', () => {
+test('Execute onRequestItemCopy callback when an item is copied with the correct id', async() => {
+    const user = userEvent.setup();
     const copyClickSpy = jest.fn();
 
     const data = [
@@ -890,22 +900,20 @@ test('Execute onRequestItemCopy callback when an item is copied with the correct
         ],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[1, 3]}
-            data={data}
-            onRequestItemCopy={copyClickSpy}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [1, 3],
+        data,
+        onRequestItemCopy: copyClickSpy,
+    });
 
-    columnListAdapter.find('ToolbarDropdown button').simulate('click');
-    columnListAdapter.find('ToolbarDropdown').find('ArrowMenu Action[children="sulu_admin.copy"]').simulate('click');
+    await openToolbarDropdown(user);
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.copy'}));
 
     expect(copyClickSpy).toBeCalledWith(3);
 });
 
-test('Execute onRequestItemMove callback when an item is moved with the correct id', () => {
+test('Execute onRequestItemMove callback when an item is moved with the correct id', async() => {
+    const user = userEvent.setup();
     const moveClickSpy = jest.fn();
 
     const data = [
@@ -930,22 +938,20 @@ test('Execute onRequestItemMove callback when an item is moved with the correct 
         ],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[1, 3]}
-            data={data}
-            onRequestItemMove={moveClickSpy}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [1, 3],
+        data,
+        onRequestItemMove: moveClickSpy,
+    });
 
-    columnListAdapter.find('ToolbarDropdown button').simulate('click');
-    columnListAdapter.find('ToolbarDropdown').find('ArrowMenu Action[children="sulu_admin.move"]').simulate('click');
+    await openToolbarDropdown(user);
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.move'}));
 
     expect(moveClickSpy).toBeCalledWith(3);
 });
 
-test('Execute onRequestItemDelete callback when an item is deleted with the correct id', () => {
+test('Execute onRequestItemDelete callback when an item is deleted with the correct id', async() => {
+    const user = userEvent.setup();
     const deleteClickSpy = jest.fn();
 
     const data = [
@@ -970,22 +976,20 @@ test('Execute onRequestItemDelete callback when an item is deleted with the corr
         ],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[1, 3]}
-            data={data}
-            onRequestItemDelete={deleteClickSpy}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [1, 3],
+        data,
+        onRequestItemDelete: deleteClickSpy,
+    });
 
-    columnListAdapter.find('ToolbarDropdown button').simulate('click');
-    columnListAdapter.find('ToolbarDropdown').find('ArrowMenu Action[children="sulu_admin.delete"]').simulate('click');
+    await openToolbarDropdown(user);
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.delete'}));
 
     expect(deleteClickSpy).toBeCalledWith(3);
 });
 
-test('Enable delete and move button if an item in this column has been activated', () => {
+test('Enable delete and move button if an item in this column has been activated', async() => {
+    const user = userEvent.setup();
     const data = [
         [
             {
@@ -1009,22 +1013,21 @@ test('Enable delete and move button if an item in this column has been activated
         [],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[1, 3]}
-            data={data}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={jest.fn()}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [1, 3],
+        data,
+        onRequestItemDelete: jest.fn(),
+        onRequestItemMove: jest.fn(),
+    });
 
-    columnListAdapter.find('Toolbar ToolbarDropdown button').simulate('click');
-    expect(columnListAdapter.find('Toolbar ToolbarDropdown Popover button').at(0).prop('disabled')).toEqual(false);
-    expect(columnListAdapter.find('Toolbar ToolbarDropdown Popover button').at(1).prop('disabled')).toEqual(false);
+    await openToolbarDropdown(user);
+
+    expect(screen.getByRole('button', {name: 'sulu_admin.delete'})).toBeEnabled();
+    expect(screen.getByRole('button', {name: 'sulu_admin.move'})).toBeEnabled();
 });
 
-test('Disable delete and move button if no item in this column has been activated', () => {
+test('Disable delete and move button if no item in this column has been activated', async() => {
+    const user = userEvent.setup();
     const data = [
         [
             {
@@ -1048,28 +1051,23 @@ test('Disable delete and move button if no item in this column has been activate
         [],
     ];
 
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[1]}
-            data={data}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={jest.fn()}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [1],
+        data,
+        onRequestItemDelete: jest.fn(),
+        onRequestItemMove: jest.fn(),
+    });
 
-    columnListAdapter.find('Toolbar ToolbarDropdown button').simulate('click');
-    expect(columnListAdapter.find('Toolbar ToolbarDropdown Popover button').at(0).prop('disabled')).toEqual(true);
-    expect(columnListAdapter.find('Toolbar ToolbarDropdown Popover button').at(1).prop('disabled')).toEqual(true);
+    await openToolbarDropdown(user);
+
+    expect(screen.getByRole('button', {name: 'sulu_admin.delete'})).toBeDisabled();
+    expect(screen.getByRole('button', {name: 'sulu_admin.move'})).toBeDisabled();
 });
 
 test('Do not show settings if no options are available', () => {
-    const columnListAdapter = mount(
-        <ColumnListAdapter
-            {...listAdapterDefaultProps}
-            activeItems={[1]}
-        />
-    );
+    renderColumnListAdapter({
+        activeItems: [1],
+    });
 
-    expect(columnListAdapter.find('Toolbar ToolbarDropdown')).toHaveLength(0);
+    expect(screen.queryByLabelText('su-cog')).not.toBeInTheDocument();
 });

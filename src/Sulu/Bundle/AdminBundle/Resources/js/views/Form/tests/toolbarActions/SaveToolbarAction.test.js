@@ -10,10 +10,6 @@ beforeEach(() => {
     conditionDataProviderRegistry.clear();
 });
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function() {
     this.data = {};
 }));

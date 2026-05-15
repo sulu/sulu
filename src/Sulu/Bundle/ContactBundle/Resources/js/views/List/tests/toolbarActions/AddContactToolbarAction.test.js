@@ -1,15 +1,12 @@
 // @flow
+import React from 'react';
 import {observable} from 'mobx';
-import {shallow} from 'enzyme';
-import {ListStore} from 'sulu-admin-bundle/containers';
+import {Overlay} from 'sulu-admin-bundle/components';
+import {ListStore, ResourceSingleSelect, SingleAutoComplete} from 'sulu-admin-bundle/containers';
 import {ResourceRequester, Router} from 'sulu-admin-bundle/services';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {List} from 'sulu-admin-bundle/views';
 import AddContactToolbarAction from '../../toolbarActions/AddContactToolbarAction';
-
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
 
 jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(function() {
     this.options = {};
@@ -42,6 +39,58 @@ function createAddContactToolbarAction() {
     return new AddContactToolbarAction(listStore, list, router, locales, resourceStore, {});
 }
 
+const findNode = (node, predicate) => {
+    if (!node || typeof node !== 'object') {
+        return undefined;
+    }
+
+    if (predicate(node)) {
+        return node;
+    }
+
+    const children = React.Children.toArray(node.props && node.props.children).filter(Boolean);
+
+    for (const child of children) {
+        const result = findNode(child, predicate);
+
+        if (result) {
+            return result;
+        }
+    }
+
+    return undefined;
+};
+
+const getOverlayNode = (addContactToolbarAction): any => {
+    const overlayNode = addContactToolbarAction.getNode();
+
+    if (overlayNode.type !== Overlay) {
+        throw new Error('Overlay node was not found');
+    }
+
+    return overlayNode;
+};
+
+const getSingleAutoCompleteNode = (overlayNode): any => {
+    const singleAutoCompleteNode = findNode(overlayNode, (node) => node.type === SingleAutoComplete);
+
+    if (!singleAutoCompleteNode) {
+        throw new Error('SingleAutoComplete node was not found');
+    }
+
+    return singleAutoCompleteNode;
+};
+
+const getResourceSingleSelectNode = (overlayNode): any => {
+    const resourceSingleSelectNode = findNode(overlayNode, (node) => node.type === ResourceSingleSelect);
+
+    if (!resourceSingleSelectNode) {
+        throw new Error('ResourceSingleSelect node was not found');
+    }
+
+    return resourceSingleSelectNode;
+};
+
 test('Return config for toolbar item', () => {
     const addContactToolbarAction = createAddContactToolbarAction();
 
@@ -56,9 +105,9 @@ test('Open dialog if button is clicked', () => {
     const addContactToolbarAction = createAddContactToolbarAction();
     const clickHandler = addContactToolbarAction.getToolbarItemConfig().onClick;
 
-    expect(shallow(addContactToolbarAction.getNode()).instance().props.open).toEqual(false);
+    expect(getOverlayNode(addContactToolbarAction).props.open).toEqual(false);
     clickHandler();
-    expect(shallow(addContactToolbarAction.getNode()).instance().props.open).toEqual(true);
+    expect(getOverlayNode(addContactToolbarAction).props.open).toEqual(true);
 });
 
 test('Pass correct options to components', () => {
@@ -68,9 +117,12 @@ test('Pass correct options to components', () => {
     const clickHandler = addContactToolbarAction.getToolbarItemConfig().onClick;
     clickHandler();
 
-    const node = shallow(addContactToolbarAction.getNode());
-    expect(node.find('ResourceSingleSelect').prop('editable')).toEqual(true);
-    expect(node.find('SingleAutoComplete').prop('options')).toEqual({excludedAccountId: 4, flat: false});
+    const overlayNode = getOverlayNode(addContactToolbarAction);
+    const singleAutoCompleteNode = getSingleAutoCompleteNode(overlayNode);
+    const resourceSingleSelectNode = getResourceSingleSelectNode(overlayNode);
+
+    expect(resourceSingleSelectNode.props.editable).toEqual(true);
+    expect(singleAutoCompleteNode.props.options).toEqual({excludedAccountId: 4, flat: false});
 });
 
 test('Reset fields if overlay is just closed', () => {
@@ -78,24 +130,24 @@ test('Reset fields if overlay is just closed', () => {
     const clickHandler = addContactToolbarAction.getToolbarItemConfig().onClick;
 
     clickHandler();
-    let addContactOverlay = shallow(addContactToolbarAction.getNode());
-    expect(addContactOverlay.instance().props.open).toEqual(true);
+    let overlayNode = getOverlayNode(addContactToolbarAction);
+    expect(overlayNode.props.open).toEqual(true);
 
-    addContactOverlay.find('SingleAutoComplete').prop('selectionStore').set({id: 3});
-    addContactOverlay.find('ResourceSingleSelect').prop('onChange')(5);
+    getSingleAutoCompleteNode(overlayNode).props.selectionStore.set({id: 3});
+    getResourceSingleSelectNode(overlayNode).props.onChange(5);
 
-    addContactOverlay = shallow(addContactToolbarAction.getNode());
-    expect(addContactOverlay.find('SingleAutoComplete').prop('selectionStore').item).toEqual({id: 3});
-    expect(addContactOverlay.find('ResourceSingleSelect').prop('value')).toEqual(5);
-    addContactOverlay.instance().props.onClose();
+    overlayNode = getOverlayNode(addContactToolbarAction);
+    expect(getSingleAutoCompleteNode(overlayNode).props.selectionStore.item).toEqual({id: 3});
+    expect(getResourceSingleSelectNode(overlayNode).props.value).toEqual(5);
+    overlayNode.props.onClose();
 
-    addContactOverlay = shallow(addContactToolbarAction.getNode());
-    expect(addContactOverlay.instance().props.open).toEqual(false);
+    overlayNode = getOverlayNode(addContactToolbarAction);
+    expect(overlayNode.props.open).toEqual(false);
 
     clickHandler();
-    addContactOverlay = shallow(addContactToolbarAction.getNode());
-    expect(addContactOverlay.find('SingleAutoComplete').prop('selectionStore').item).toEqual(undefined);
-    expect(addContactOverlay.find('ResourceSingleSelect').prop('value')).toEqual(undefined);
+    overlayNode = getOverlayNode(addContactToolbarAction);
+    expect(getSingleAutoCompleteNode(overlayNode).props.selectionStore.item).toEqual(undefined);
+    expect(getResourceSingleSelectNode(overlayNode).props.value).toEqual(undefined);
 
     expect(ResourceRequester.put).not.toBeCalled();
 });
@@ -105,23 +157,22 @@ test('Add selected contact to current account', () => {
     addContactToolbarAction.listStore.options.accountId = 4;
 
     const clickHandler = addContactToolbarAction.getToolbarItemConfig().onClick;
-
     const putPromise = Promise.resolve();
     ResourceRequester.put.mockReturnValue(putPromise);
 
     clickHandler();
-    let addContactOverlay = shallow(addContactToolbarAction.getNode());
-    expect(addContactOverlay.instance().props.open).toEqual(true);
-    expect(addContactOverlay.instance().props.confirmDisabled).toEqual(true);
-    addContactOverlay.find('SingleAutoComplete').prop('selectionStore').set({id: 3});
+    let overlayNode = getOverlayNode(addContactToolbarAction);
+    expect(overlayNode.props.open).toEqual(true);
+    expect(overlayNode.props.confirmDisabled).toEqual(true);
+    getSingleAutoCompleteNode(overlayNode).props.selectionStore.set({id: 3});
 
-    addContactOverlay = shallow(addContactToolbarAction.getNode());
-    expect(addContactOverlay.instance().props.confirmDisabled).toEqual(false);
+    overlayNode = getOverlayNode(addContactToolbarAction);
+    expect(overlayNode.props.confirmDisabled).toEqual(false);
 
-    addContactOverlay.instance().props.onConfirm();
+    overlayNode.props.onConfirm();
 
-    addContactOverlay = shallow(addContactToolbarAction.getNode()).instance();
-    expect(addContactOverlay.props).toEqual(expect.objectContaining({
+    overlayNode = getOverlayNode(addContactToolbarAction);
+    expect(overlayNode.props).toEqual(expect.objectContaining({
         confirmLoading: true,
         open: true,
     }));
@@ -129,14 +180,13 @@ test('Add selected contact to current account', () => {
     expect(ResourceRequester.put).toBeCalledWith('account_contacts', {position: undefined}, {accountId: 4, id: 3});
 
     return putPromise.then(() => {
-        addContactOverlay = shallow(addContactToolbarAction.getNode()).instance();
-        expect(addContactOverlay.props).toEqual(expect.objectContaining({
+        overlayNode = getOverlayNode(addContactToolbarAction);
+        expect(overlayNode.props).toEqual(expect.objectContaining({
             confirmLoading: false,
             open: false,
         }));
 
-        const resourceStore = addContactToolbarAction.resourceStore;
-        if (!resourceStore) {
+        if (!addContactToolbarAction.resourceStore) {
             throw new Error('The resourceStore must be set on the ToolbarAction!');
         }
 
@@ -149,20 +199,18 @@ test('Add selected contact to current account with position', () => {
     addContactToolbarAction.listStore.options.accountId = 4;
 
     const clickHandler = addContactToolbarAction.getToolbarItemConfig().onClick;
-
     const putPromise = Promise.resolve();
     ResourceRequester.put.mockReturnValue(putPromise);
 
     clickHandler();
-    let addContactOverlay = shallow(addContactToolbarAction.getNode());
-    expect(addContactOverlay.instance().props.open).toEqual(true);
-    addContactOverlay.find('SingleAutoComplete').prop('selectionStore').set({id: 3});
-    addContactOverlay.find('ResourceSingleSelect').prop('onChange')(5);
+    let overlayNode = getOverlayNode(addContactToolbarAction);
+    expect(overlayNode.props.open).toEqual(true);
+    getSingleAutoCompleteNode(overlayNode).props.selectionStore.set({id: 3});
+    getResourceSingleSelectNode(overlayNode).props.onChange(5);
 
-    addContactOverlay.instance().props.onConfirm();
-
-    addContactOverlay = shallow(addContactToolbarAction.getNode()).instance();
-    expect(addContactOverlay.props).toEqual(expect.objectContaining({
+    overlayNode.props.onConfirm();
+    overlayNode = getOverlayNode(addContactToolbarAction);
+    expect(overlayNode.props).toEqual(expect.objectContaining({
         confirmLoading: true,
         open: true,
     }));
@@ -170,14 +218,13 @@ test('Add selected contact to current account with position', () => {
     expect(ResourceRequester.put).toBeCalledWith('account_contacts', {position: 5}, {accountId: 4, id: 3});
 
     return putPromise.then(() => {
-        addContactOverlay = shallow(addContactToolbarAction.getNode()).instance();
-        expect(addContactOverlay.props).toEqual(expect.objectContaining({
+        overlayNode = getOverlayNode(addContactToolbarAction);
+        expect(overlayNode.props).toEqual(expect.objectContaining({
             confirmLoading: false,
             open: false,
         }));
 
-        const resourceStore = addContactToolbarAction.resourceStore;
-        if (!resourceStore) {
+        if (!addContactToolbarAction.resourceStore) {
             throw new Error('The resourceStore must be set on the ToolbarAction!');
         }
 

@@ -4,10 +4,6 @@ import NumberFieldTransformer from '../../fieldTransformers/NumberFieldTransform
 
 const numberFieldTransformer = new NumberFieldTransformer();
 
-jest.mock('loglevel', () => ({
-    error: jest.fn(),
-}));
-
 const mockUserStoreUser = jest.fn().mockReturnValue({
     locale: jest.fn(),
 });

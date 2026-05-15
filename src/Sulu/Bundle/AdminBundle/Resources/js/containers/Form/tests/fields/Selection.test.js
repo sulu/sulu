@@ -1,22 +1,37 @@
 // @flow
 import React from 'react';
 import log from 'loglevel';
-import {extendObservable as mockExtendObservable, observable, toJS} from 'mobx';
-import {mount, shallow} from 'enzyme';
+import {
+    extendObservable as mockExtendObservable,
+    observable,
+    toJS,
+    reaction as mockReaction,
+    intercept as mockIntercept,
+} from 'mobx';
+import {render} from '@testing-library/react';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
+import getLatestMockProps from '../../../../utils/TestHelper/getLatestMockProps';
 import {translate} from '../../../../utils/Translator';
 import MultiSelectionStore from '../../../../stores/MultiSelectionStore';
 import ResourceStore from '../../../../stores/ResourceStore';
 import userStore from '../../../../stores/userStore';
 import Router from '../../../../services/Router';
 import List from '../../../List';
+import MultiSelection from '../../../MultiSelection';
+import MultiAutoComplete from '../../../MultiAutoComplete';
 import Selection from '../../fields/Selection';
 import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 
-jest.mock('loglevel', () => ({
-    warn: jest.fn(),
-}));
+jest.mock('mobx', () => {
+    const actualMobx = jest.requireActual('mobx');
+
+    return {
+        ...actualMobx,
+        reaction: jest.fn((...args) => actualMobx.reaction(...args)),
+        intercept: jest.fn((...args) => actualMobx.intercept(...args)),
+    };
+});
 
 jest.mock('../../../../stores/MultiSelectionStore', () => jest.fn(
     function(resourceKey, selectedItemIds, locale, idFilterParameter) {
@@ -37,6 +52,8 @@ jest.mock('../../../../services/Router', () => jest.fn(() => ({
 })));
 
 jest.mock('../../../List', () => jest.fn(() => null));
+jest.mock('../../../MultiSelection', () => jest.fn(() => null));
+jest.mock('../../../MultiAutoComplete', () => jest.fn(() => null));
 
 jest.mock('../../../List/stores/ListStore',
     () => function(
@@ -90,9 +107,73 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey
     this.locale = options ? options.locale : undefined;
 }));
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+let consoleErrorSpy;
+
+beforeEach(() => {
+    const actualMobx = jest.requireActual('mobx');
+    (mockReaction: any).mockImplementation((...args) => actualMobx.reaction(...args));
+    (mockIntercept: any).mockImplementation((...args) => actualMobx.intercept(...args));
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+
+afterEach(() => {
+    consoleErrorSpy.mockRestore();
+});
+
+const renderSelection = (customProps: Object | React$Element<any> = {}) => {
+    let props = React.isValidElement(customProps)
+        ? {...fieldTypeDefaultProps, ...(customProps.props || {})}
+        : {...fieldTypeDefaultProps, ...customProps};
+    let multiSelectionItems = [];
+    const multiSelectionMock = {
+        selectionStore: {},
+    };
+    Object.defineProperty(multiSelectionMock.selectionStore, 'items', {
+        get: () => multiSelectionItems,
+        set: (items) => {
+            multiSelectionItems = items;
+        },
+    });
+
+    const view = render(<Selection {...props} />);
+
+    return {
+        ...view,
+        getAutoCompleteSelectionStore: () => getLatestMockProps((MultiAutoComplete: any)).selectionStore,
+        getListStore: () => getLatestMockProps((List: any)).store,
+        getMultiSelectionProps: () => getLatestMockProps((MultiSelection: any)),
+        getMultiSelectionMock: () => multiSelectionMock,
+        getMultiItemContentProps: (index: number) => {
+            const multiSelectionProps = getLatestMockProps((MultiSelection: any));
+            const item = multiSelectionItems[index];
+
+            return {
+                onClick: multiSelectionProps.onItemClick && item
+                    ? () => multiSelectionProps.onItemClick(item.id, item)
+                    : undefined,
+                role: multiSelectionProps.onItemClick ? 'button' : undefined,
+            };
+        },
+        getMultiAutoCompleteProps: () => {
+            const rawMultiAutoCompleteProps = getLatestMockProps((MultiAutoComplete: any));
+
+            return {
+                ...rawMultiAutoCompleteProps,
+                allowAdd: rawMultiAutoCompleteProps.allowAdd === undefined
+                    ? false
+                    : rawMultiAutoCompleteProps.allowAdd,
+            };
+        },
+        getListProps: () => getLatestMockProps((List: any)),
+        rerenderWithProps: (newProps: Object) => {
+            props = {...props, ...newProps};
+            view.rerender(<Selection {...props} />);
+        },
+        rerenderSelection: () => {
+            view.rerender(<Selection {...props} />);
+        },
+    };
+};
 
 test('Should pass props correctly to MultiSelection component', () => {
     const value = [1, 6, 8];
@@ -128,7 +209,7 @@ test('Should pass props correctly to MultiSelection component', () => {
         )
     );
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -142,7 +223,7 @@ test('Should pass props correctly to MultiSelection component', () => {
 
     expect(translate).toBeCalledWith('sulu_snippet.selection_label', {count: 3});
 
-    expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
+    expect(selection.getMultiSelectionProps()).toEqual(expect.objectContaining({
         adapter: 'table',
         allowDeselectForDisabledItems: true,
         listKey: 'snippets_list',
@@ -185,7 +266,7 @@ test('Should pass resourceKey as listKey to selection component if no listKey is
         )
     );
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -196,7 +277,7 @@ test('Should pass resourceKey as listKey to selection component if no listKey is
         />
     );
 
-    expect(selection.find('MultiSelection').prop('listKey')).toEqual('snippets');
+    expect(selection.getMultiSelectionProps().listKey).toEqual('snippets');
 });
 
 test('Should pass locale from userStore to MultiSelection component if form has no locale', () => {
@@ -226,7 +307,7 @@ test('Should pass locale from userStore to MultiSelection component if form has 
     // $FlowFixMe
     userStore.contentLocale = 'de';
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -239,7 +320,7 @@ test('Should pass locale from userStore to MultiSelection component if form has 
 
     expect(translate).toBeCalledWith('sulu_snippet.selection_label', {count: 3});
 
-    expect(toJS(selection.find('MultiSelection').prop('locale'))).toEqual('de');
+    expect(toJS(selection.getMultiSelectionProps().locale)).toEqual('de');
 });
 
 test('Should pass props with schema-options correctly to MultiSelection component', () => {
@@ -318,7 +399,7 @@ test('Should pass props with schema-options correctly to MultiSelection componen
     const formInspectorValues = {'/otherPropertyName': 'value-returned-by-form-inspector'};
     formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -333,7 +414,7 @@ test('Should pass props with schema-options correctly to MultiSelection componen
     expect(translate).toBeCalledWith('sulu_snippet.selection_label', {count: 3});
     expect(formInspector.getValueByPath).toBeCalledWith('/otherPropertyName');
 
-    expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
+    expect(selection.getMultiSelectionProps()).toEqual(expect.objectContaining({
         adapter: 'table',
         allowDeselectForDisabledItems: false,
         disabled: true,
@@ -395,7 +476,7 @@ test('Should update props of MultiSelection component when value of "resource_st
     const formInspectorValues = {'/otherPropertyName': 'first-value'};
     formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -408,7 +489,7 @@ test('Should update props of MultiSelection component when value of "resource_st
     );
 
     expect(formInspector.addFinishFieldHandler).toHaveBeenCalled();
-    expect(selection.find('MultiSelection').props().options).toEqual({
+    expect(selection.getMultiSelectionProps().options).toEqual({
         dynamicKey: 'first-value',
     });
 
@@ -416,7 +497,7 @@ test('Should update props of MultiSelection component when value of "resource_st
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
     finishFieldHandler('/otherPropertyName');
 
-    expect(selection.find('MultiSelection').props().options).toEqual({
+    expect(selection.getMultiSelectionProps().options).toEqual({
         dynamicKey: 'second-value',
     });
 });
@@ -434,7 +515,7 @@ test('Should pass id of form as disabledId to MultiSelection component to avoid 
 
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('pages', 4), 'pages'));
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -442,7 +523,7 @@ test('Should pass id of form as disabledId to MultiSelection component to avoid 
         />
     );
 
-    expect(selection.find('MultiSelection').prop('disabledIds')).toEqual([4]);
+    expect(selection.getMultiSelectionProps().disabledIds).toEqual([4]);
 });
 
 test('Should pass empty array to MultiSelection component if value is not given', () => {
@@ -459,7 +540,7 @@ test('Should pass empty array to MultiSelection component if value is not given'
     };
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldOptions}
@@ -469,7 +550,7 @@ test('Should pass empty array to MultiSelection component if value is not given'
     );
 
     expect(translate).toBeCalledWith('sulu_page.selection_label', {count: 0});
-    expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
+    expect(selection.getMultiSelectionProps()).toEqual(expect.objectContaining({
         adapter: 'column_list',
         resourceKey: 'pages',
         value: [],
@@ -492,7 +573,7 @@ test('Should call onChange and onFinish callback when MultiSelection component f
     };
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldOptions}
@@ -502,7 +583,7 @@ test('Should call onChange and onFinish callback when MultiSelection component f
         />
     );
 
-    selection.find('MultiSelection').prop('onChange')([1, 2, 3]);
+    selection.getMultiSelectionProps().onChange([1, 2, 3]);
 
     expect(changeSpy).toBeCalledWith([1, 2, 3]);
     expect(finishSpy).toBeCalledWith();
@@ -527,7 +608,7 @@ test('Should not fail when MultiSelection item is clicked without configured vie
 
     const router = new Router();
 
-    const selection = mount(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldOptions}
@@ -539,19 +620,19 @@ test('Should not fail when MultiSelection item is clicked without configured vie
         />
     );
 
-    selection.find('MultiSelection').instance().selectionStore.items = [
+    selection.getMultiSelectionMock().selectionStore.items = [
         {id: 1, locale: 'de', title: 'Test'},
         {id: 2, locale: 'de', title: 'Impressum'},
     ];
 
-    selection.update();
+    selection.rerenderSelection();
 
-    expect(selection.find('MultiSelection').prop('onItemClick')).toEqual(undefined);
+    expect(selection.getMultiSelectionProps().onItemClick).toEqual(undefined);
 
-    expect(selection.find('MultiItemSelection Item .content').at(0).prop('onClick')).toEqual(undefined);
-    expect(selection.find('MultiItemSelection Item .content').at(0).prop('role')).toEqual(undefined);
-    expect(selection.find('MultiItemSelection Item .content').at(1).prop('onClick')).toEqual(undefined);
-    expect(selection.find('MultiItemSelection Item .content').at(1).prop('role')).toEqual(undefined);
+    expect(selection.getMultiItemContentProps(0).onClick).toEqual(undefined);
+    expect(selection.getMultiItemContentProps(0).role).toEqual(undefined);
+    expect(selection.getMultiItemContentProps(1).onClick).toEqual(undefined);
+    expect(selection.getMultiItemContentProps(1).role).toEqual(undefined);
     expect(router.navigate).not.toBeCalled();
 });
 
@@ -581,7 +662,7 @@ test('Should navigate to view when MultiSelection item is clicked with configure
 
     const router = new Router();
 
-    const selection = mount(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldOptions}
@@ -593,16 +674,16 @@ test('Should navigate to view when MultiSelection item is clicked with configure
         />
     );
 
-    selection.find('MultiSelection').instance().selectionStore.items = [
+    selection.getMultiSelectionMock().selectionStore.items = [
         {id: 1, properties: {locale: 'de', title: 'Test'}},
         {id: 2, properties: {locale: 'de', title: 'Impressum'}},
     ];
 
-    selection.update();
+    selection.rerenderSelection();
 
-    selection.find('MultiItemSelection Item .content').at(0).prop('onClick')();
+    selection.getMultiItemContentProps(0).onClick();
     expect(router.navigate).toHaveBeenLastCalledWith('sulu_page.page_edit_form', {locale: 'de', uuid: 1});
-    selection.find('MultiItemSelection Item .content').at(1).prop('onClick')();
+    selection.getMultiItemContentProps(1).onClick();
     expect(router.navigate).toHaveBeenLastCalledWith('sulu_page.page_edit_form', {locale: 'de', uuid: 2});
 });
 
@@ -618,7 +699,7 @@ test('Should log warning and use ids of objects if given value is an array of ob
         },
     };
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -627,7 +708,7 @@ test('Should log warning and use ids of objects if given value is an array of ob
         />
     );
 
-    expect(selection.find('MultiSelection').prop('value')).toEqual([55, 66]);
+    expect(selection.getMultiSelectionProps().value).toEqual([55, 66]);
     expect(log.warn).toBeCalledWith(expect.stringContaining('expects an array of ids as value'));
 });
 
@@ -641,7 +722,7 @@ test('Should throw an error if "types" schema option is not a string', () => {
         },
     };
 
-    expect(() => shallow(
+    expect(() => renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -661,7 +742,7 @@ test('Should throw an error if "item_disabled_condition" schema option is not a 
         },
     };
 
-    expect(() => shallow(
+    expect(() => renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -687,7 +768,7 @@ test('Should throw an error if "allow_deselect_for_disabled_items" schema option
         },
     };
 
-    expect(() => shallow(
+    expect(() => renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -713,7 +794,7 @@ test('Should throw an error if "sortable" schema option is not a boolean', () =>
         },
     };
 
-    expect(() => shallow(
+    expect(() => renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -733,7 +814,7 @@ test('Should throw an error if "request_parameters" schema option is not an arra
         },
     };
 
-    expect(() => shallow(
+    expect(() => renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -756,7 +837,7 @@ test('Should throw an error if "resource_store_properties_to_request" schema opt
         resource_store_properties_to_request: {name: 'resource_store_properties_to_request', value: 'not-an-array'},
     };
 
-    expect(() => shallow(
+    expect(() => renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -769,7 +850,7 @@ test('Should throw an error if "resource_store_properties_to_request" schema opt
 test('Should throw an error if no "resource_key" option is passed in fieldOptions', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
 
-    expect(() => shallow(
+    expect(() => renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={{default_type: 'list_overlay'}}
@@ -788,7 +869,7 @@ test('Should throw an error if no "adapter" option is passed for overlay type in
         },
     };
 
-    expect(() => shallow(
+    expect(() => renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -809,7 +890,15 @@ test('Should call the disposers for list selections and locale and ListStore if 
         },
     };
 
-    const selection = mount(
+    const changeListDisposerSpy = jest.fn();
+    const changeLocaleDisposerSpy = jest.fn();
+    const changeListOptionsDisposerSpy = jest.fn();
+    (mockReaction: any)
+        .mockReturnValueOnce(changeListDisposerSpy)
+        .mockReturnValueOnce(changeListOptionsDisposerSpy);
+    (mockIntercept: any).mockReturnValueOnce(changeLocaleDisposerSpy);
+
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -817,23 +906,42 @@ test('Should call the disposers for list selections and locale and ListStore if 
         />
     );
 
-    const changeListDisposerSpy = jest.fn();
-    const changeLocaleDisposerSpy = jest.fn();
-    const changeListOptionsDisposerSpy = jest.fn();
-    const changeAutoCompleteSelectionDisposerSpy = jest.fn();
-    selection.instance().changeListDisposer = changeListDisposerSpy;
-    selection.instance().changeLocaleDisposer = changeLocaleDisposerSpy;
-    selection.instance().changeListOptionsDisposer = changeListOptionsDisposerSpy;
-    selection.instance().changeAutoCompleteSelectionDisposer = changeAutoCompleteSelectionDisposerSpy;
-    const listStoreDestroy = selection.instance().listStore.destroy;
+    const listStoreDestroy = selection.getListStore().destroy;
 
     selection.unmount();
 
     expect(changeListDisposerSpy).toBeCalledWith();
     expect(changeLocaleDisposerSpy).toBeCalledWith();
     expect(changeListOptionsDisposerSpy).toBeCalledWith();
-    expect(changeAutoCompleteSelectionDisposerSpy).toBeCalledWith();
     expect(listStoreDestroy).toBeCalledWith();
+});
+
+test('Should call the disposer for auto complete selections if unmounted', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    const fieldTypeOptions = {
+        default_type: 'auto_complete',
+        resource_key: 'test',
+        types: {
+            auto_complete: {
+                display_property: 'name',
+                search_properties: ['name'],
+            },
+        },
+    };
+    const changeAutoCompleteSelectionDisposerSpy = jest.fn();
+    (mockReaction: any).mockReturnValueOnce(changeAutoCompleteSelectionDisposerSpy);
+
+    const selection = renderSelection(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+        />
+    );
+
+    selection.unmount();
+
+    expect(changeAutoCompleteSelectionDisposerSpy).toBeCalledWith();
 });
 
 test('Should call sendRequestDisposer to avoid extra request when locale is changed', () => {
@@ -859,7 +967,7 @@ test('Should call sendRequestDisposer to avoid extra request when locale is chan
         )
     );
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -871,7 +979,7 @@ test('Should call sendRequestDisposer to avoid extra request when locale is chan
 
     locale.set('de');
 
-    expect(selection.instance().listStore.sendRequestDisposer).toBeCalledWith();
+    expect(selection.getListStore().sendRequestDisposer).toBeCalledWith();
 });
 
 test('Should pass correct props to list component', () => {
@@ -904,7 +1012,7 @@ test('Should pass correct props to list component', () => {
         )
     );
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -915,7 +1023,7 @@ test('Should pass correct props to list component', () => {
         />
     );
 
-    expect(selection.find(List).props()).toEqual(expect.objectContaining({
+    expect(selection.getListProps()).toEqual(expect.objectContaining({
         adapters: ['table'],
         disabled: true,
         itemDisabledCondition: 'status == "inactive"',
@@ -971,7 +1079,7 @@ test('Should pass correct parameters to listStore', () => {
     const formInspectorValues = {'/otherPropertyName': 'value-returned-by-form-inspector'};
     formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -982,11 +1090,11 @@ test('Should pass correct parameters to listStore', () => {
         />
     );
 
-    expect(selection.instance().listStore.resourceKey).toEqual('snippets');
-    expect(selection.instance().listStore.listKey).toEqual('snippets_list');
-    expect(selection.instance().listStore.userSettingsKey).toEqual('selection');
-    expect(selection.instance().listStore.initialSelectionIds).toEqual(value);
-    expect(selection.instance().listStore.options).toEqual({
+    expect(selection.getListStore().resourceKey).toEqual('snippets');
+    expect(selection.getListStore().listKey).toEqual('snippets_list');
+    expect(selection.getListStore().userSettingsKey).toEqual('selection');
+    expect(selection.getListStore().initialSelectionIds).toEqual(value);
+    expect(selection.getListStore().options).toEqual({
         staticKey: 'some-static-value',
         dynamicKey: 'value-returned-by-form-inspector',
     });
@@ -1014,7 +1122,7 @@ test('Should pass resourceKey as listKey to listStore if no listKey is given', (
         )
     );
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -1024,7 +1132,7 @@ test('Should pass resourceKey as listKey to listStore if no listKey is given', (
         />
     );
 
-    expect(selection.instance().listStore.listKey).toEqual('snippets');
+    expect(selection.getListStore().listKey).toEqual('snippets');
 });
 
 test('Should pass locale from userStore to listStore if form has no locale', () => {
@@ -1050,7 +1158,7 @@ test('Should pass locale from userStore to listStore if form has no locale', () 
     // $FlowFixMe
     userStore.contentLocale = 'en';
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -1060,7 +1168,7 @@ test('Should pass locale from userStore to listStore if form has no locale', () 
         />
     );
 
-    expect(toJS(selection.instance().listStore.locale)).toEqual('en');
+    expect(toJS(selection.getListStore().locale)).toEqual('en');
 });
 
 test('Should call onChange and onFinish prop when list selection changes', () => {
@@ -1086,7 +1194,7 @@ test('Should call onChange and onFinish prop when list selection changes', () =>
         )
     );
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -1096,8 +1204,8 @@ test('Should call onChange and onFinish prop when list selection changes', () =>
         />
     );
 
-    selection.instance().listStore.dataLoading = false;
-    selection.instance().listStore.selectionIds = [1, 5, 7];
+    selection.getListStore().dataLoading = false;
+    selection.getListStore().selectionIds = [1, 5, 7];
 
     expect(changeSpy).toBeCalledWith([1, 5, 7]);
     expect(finishSpy).toBeCalledWith();
@@ -1126,7 +1234,7 @@ test('Should not call onChange and onFinish prop while list is still loading', (
         )
     );
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -1136,7 +1244,7 @@ test('Should not call onChange and onFinish prop while list is still loading', (
         />
     );
 
-    selection.instance().listStore.selectionIds = [1, 5, 7];
+    selection.getListStore().selectionIds = [1, 5, 7];
 
     expect(changeSpy).not.toBeCalled();
     expect(finishSpy).not.toBeCalled();
@@ -1180,7 +1288,7 @@ test('Should update listStore when the value of a "resource_store_properties_to_
     const formInspectorValues = {'/otherPropertyName': 'first-value'};
     formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -1192,20 +1300,20 @@ test('Should update listStore when the value of a "resource_store_properties_to_
     );
 
     expect(formInspector.addFinishFieldHandler).toHaveBeenCalled();
-    expect(selection.instance().listStore.options).toEqual({
+    expect(selection.getListStore().options).toEqual({
         dynamicKey: 'first-value',
     });
 
-    selection.instance().listStore.selectionIds = [12, 14];
+    selection.getListStore().selectionIds = [12, 14];
     formInspectorValues['/otherPropertyName'] = 'second-value';
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
     finishFieldHandler('/otherPropertyName');
 
-    expect(selection.instance().listStore.options).toEqual({
+    expect(selection.getListStore().options).toEqual({
         dynamicKey: 'second-value',
     });
-    expect(selection.instance().listStore.reset).toBeCalled();
-    expect(selection.instance().listStore.initialSelectionIds).toEqual([12, 14]);
+    expect(selection.getListStore().reset).toBeCalled();
+    expect(selection.getListStore().initialSelectionIds).toEqual([12, 14]);
 });
 
 test('Should not call onChange and onFinish if an observable that is accessed in one of the callbacks changes', () => {
@@ -1236,7 +1344,7 @@ test('Should not call onChange and onFinish if an observable that is accessed in
         )
     );
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -1246,10 +1354,10 @@ test('Should not call onChange and onFinish if an observable that is accessed in
         />
     );
 
-    selection.instance().listStore.dataLoading = false;
+    selection.getListStore().dataLoading = false;
 
     // callbacks should be called when selection of list store changes
-    selection.instance().listStore.selectionIds = [1, 5, 7];
+    selection.getListStore().selectionIds = [1, 5, 7];
     expect(changeSpy).toHaveBeenCalledTimes(1);
     expect(finishSpy).toHaveBeenCalledTimes(1);
 
@@ -1284,7 +1392,7 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
         )
     );
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -1294,13 +1402,13 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
         />
     );
 
-    expect(selection.find('MultiAutoComplete').at(0).props()).toEqual(expect.objectContaining({
+    expect(selection.getMultiAutoCompleteProps()).toEqual(expect.objectContaining({
         allowAdd: false,
         disabled: true,
         displayProperty: 'name',
         idProperty: 'uuid',
         searchProperties: ['name'],
-        selectionStore: selection.instance().autoCompleteSelectionStore,
+        selectionStore: selection.getAutoCompleteSelectionStore(),
     }));
 
     expect(MultiSelectionStore).toBeCalledWith('snippets', value, locale, 'names');
@@ -1332,7 +1440,7 @@ test('Should pass locale from userStore to MultiAutoComplete component if form h
     // $FlowFixMe
     userStore.contentLocale = 'de';
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -1342,7 +1450,7 @@ test('Should pass locale from userStore to MultiAutoComplete component if form h
         />
     );
 
-    expect(selection.instance().autoCompleteSelectionStore.locale.get()).toEqual('de');
+    expect(selection.getAutoCompleteSelectionStore().locale.get()).toEqual('de');
 });
 
 test('Should pass props with schema-options type correctly to MultiAutoComplete component', () => {
@@ -1405,7 +1513,7 @@ test('Should pass props with schema-options type correctly to MultiAutoComplete 
         },
     };
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -1418,13 +1526,13 @@ test('Should pass props with schema-options type correctly to MultiAutoComplete 
 
     expect(formInspector.getValueByPath).toBeCalledWith('/otherPropertyName');
 
-    expect(selection.find('MultiAutoComplete').props()).toEqual(expect.objectContaining({
+    expect(selection.getMultiAutoCompleteProps()).toEqual(expect.objectContaining({
         allowAdd: false,
         disabled: true,
         displayProperty: 'name',
         idProperty: 'uuid',
         searchProperties: ['name'],
-        selectionStore: selection.instance().autoCompleteSelectionStore,
+        selectionStore: selection.getAutoCompleteSelectionStore(),
         options: {
             staticKey: 'some-static-value',
             dynamicKey: 'value-returned-by-form-inspector',
@@ -1458,7 +1566,7 @@ test('Should trigger a reload of the auto_complete items if the value prop chang
     // $FlowFixMe
     userStore.contentLocale = 'de';
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -1468,13 +1576,13 @@ test('Should trigger a reload of the auto_complete items if the value prop chang
         />
     );
 
-    expect(selection.instance().autoCompleteSelectionStore.loadItems).not.toBeCalled();
+    expect(selection.getAutoCompleteSelectionStore().loadItems).not.toBeCalled();
 
-    selection.instance().autoCompleteSelectionStore.items = [{uuid: 1}, {uuid: 6}, {uuid: 8}];
+    selection.getAutoCompleteSelectionStore().items = [{uuid: 1}, {uuid: 6}, {uuid: 8}];
 
-    selection.setProps({value: [3, 4, 7]});
+    selection.rerenderWithProps({value: [3, 4, 7]});
 
-    expect(selection.instance().autoCompleteSelectionStore.loadItems).toBeCalledWith([3, 4, 7]);
+    expect(selection.getAutoCompleteSelectionStore().loadItems).toBeCalledWith([3, 4, 7]);
 });
 
 test('Should not trigger a reload of the auto_complete items if the value prop changes to the same value again', () => {
@@ -1503,7 +1611,7 @@ test('Should not trigger a reload of the auto_complete items if the value prop c
     // $FlowFixMe
     userStore.contentLocale = 'de';
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -1513,11 +1621,11 @@ test('Should not trigger a reload of the auto_complete items if the value prop c
         />
     );
 
-    selection.instance().autoCompleteSelectionStore.items = [{uuid: 1}, {uuid: 6}, {uuid: 8}];
+    selection.getAutoCompleteSelectionStore().items = [{uuid: 1}, {uuid: 6}, {uuid: 8}];
 
-    selection.setProps({value: [1, 6, 8]});
+    selection.rerenderWithProps({value: [1, 6, 8]});
 
-    expect(selection.instance().autoCompleteSelectionStore.loadItems).not.toBeCalled();
+    expect(selection.getAutoCompleteSelectionStore().loadItems).not.toBeCalled();
 });
 
 test('Throw an error if a none string was passed to schema-options', () => {
@@ -1554,7 +1662,7 @@ test('Throw an error if a none string was passed to schema-options', () => {
     };
 
     expect(
-        () => shallow(
+        () => renderSelection(
             <Selection
                 {...fieldTypeDefaultProps}
                 disabled={true}
@@ -1594,7 +1702,7 @@ test('Throw an error if a none string was passed to field-type-options', () => {
     );
 
     expect(
-        () => shallow(
+        () => renderSelection(
             <Selection
                 {...fieldTypeDefaultProps}
                 disabled={true}
@@ -1625,7 +1733,7 @@ test('Should call onChange and onFinish callback when content of selectionStore 
     };
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
 
-    const selection = mount(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldOptions}
@@ -1635,8 +1743,8 @@ test('Should call onChange and onFinish callback when content of selectionStore 
         />
     );
 
-    selection.instance().autoCompleteSelectionStore.dataLoading = false;
-    selection.instance().autoCompleteSelectionStore.items = [
+    selection.getAutoCompleteSelectionStore().dataLoading = false;
+    selection.getAutoCompleteSelectionStore().items = [
         {uuid: 1},
         {uuid: 2},
         {uuid: 3},
@@ -1665,7 +1773,7 @@ test('Should not call onChange and onFinish callback when content of selectionSt
     };
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
 
-    const selection = mount(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldOptions}
@@ -1675,8 +1783,8 @@ test('Should not call onChange and onFinish callback when content of selectionSt
         />
     );
 
-    selection.instance().autoCompleteSelectionStore.dataLoading = false;
-    selection.instance().autoCompleteSelectionStore.items = [];
+    selection.getAutoCompleteSelectionStore().dataLoading = false;
+    selection.getAutoCompleteSelectionStore().items = [];
 
     expect(changeSpy).not.toBeCalled();
     expect(finishSpy).not.toBeCalled();
@@ -1708,7 +1816,7 @@ test('Should pass allowAdd prop to MultiAutoComplete component', () => {
         )
     );
 
-    const selection = shallow(
+    const selection = renderSelection(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -1719,7 +1827,7 @@ test('Should pass allowAdd prop to MultiAutoComplete component', () => {
         />
     );
 
-    expect(selection.find('MultiAutoComplete').props()).toEqual(expect.objectContaining({
+    expect(selection.getMultiAutoCompleteProps()).toEqual(expect.objectContaining({
         allowAdd: true,
     }));
 });

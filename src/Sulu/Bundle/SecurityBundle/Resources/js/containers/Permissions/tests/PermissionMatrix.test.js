@@ -1,17 +1,28 @@
 // @flow
+import {render, screen} from '@testing-library/react';
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {Matrix} from 'sulu-admin-bundle/components';
 import PermissionMatrix from '../PermissionMatrix';
 import type {MatrixValues} from 'sulu-admin-bundle/components/Matrix/types';
 import type {ContextPermission} from '../types';
 import type {SecurityContexts} from '../../../stores/securityContextStore/types';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('sulu-admin-bundle/components', () => {
+    const MatrixMock = jest.fn(() => null);
+    (MatrixMock: any).Row = jest.fn(() => null);
+    (MatrixMock: any).Item = jest.fn(() => null);
 
-test('Render with minimal', () => {
-    const contextPermissions: Array<ContextPermission> = [
+    return {
+        Matrix: MatrixMock,
+    };
+});
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+function createContextPermissions(): Array<ContextPermission> {
+    return [
         {
             id: 1,
             context: 'sulu.contact.people',
@@ -33,173 +44,91 @@ test('Render with minimal', () => {
             },
         },
     ];
+}
 
-    const securityContexts: SecurityContexts = {
+function createSecurityContexts(): SecurityContexts {
+    return {
         'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
         'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
     };
+}
 
-    expect(render(
+test('Render with minimal', () => {
+    render(
         <PermissionMatrix
-            contextPermissions={contextPermissions}
+            contextPermissions={createContextPermissions()}
             onChange={jest.fn()}
-            securityContexts={securityContexts}
+            securityContexts={createSecurityContexts()}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(Matrix).toHaveBeenCalledTimes(1);
+    const [matrixProps] = (Matrix: any).mock.calls[0];
+    expect(matrixProps.disabled).toEqual(false);
+    expect(matrixProps.values).toEqual({
+        'sulu.contact.people': {
+            'view': true,
+            'delete': true,
+            'add': true,
+            'edit': true,
+        },
+        'sulu.contact.organizations': {
+            'view': true,
+            'delete': true,
+            'add': true,
+            'edit': true,
+        },
+    });
 });
 
 test('Render in disabled state', () => {
-    const contextPermissions: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-    ];
-
-    const securityContexts: SecurityContexts = {
-        'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-        'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
-    };
-
-    expect(render(
+    render(
         <PermissionMatrix
-            contextPermissions={contextPermissions}
+            contextPermissions={createContextPermissions()}
             disabled={true}
             onChange={jest.fn()}
-            securityContexts={securityContexts}
+            securityContexts={createSecurityContexts()}
         />
-    )).toMatchSnapshot();
+    );
+
+    const [matrixProps] = (Matrix: any).mock.calls[0];
+    expect(matrixProps.disabled).toEqual(true);
 });
 
 test('Render with title', () => {
-    const contextPermissions: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-    ];
-
-    const securityContexts: SecurityContexts = {
-        'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-        'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
-    };
-
-    expect(render(
+    render(
         <PermissionMatrix
-            contextPermissions={contextPermissions}
+            contextPermissions={createContextPermissions()}
             onChange={jest.fn()}
-            securityContexts={securityContexts}
+            securityContexts={createSecurityContexts()}
             title="Contact"
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(screen.getByRole('heading', {level: 2, name: 'Contact'})).toBeInTheDocument();
 });
 
 test('Render with subTitle', () => {
-    const contextPermissions: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-    ];
-
-    const securityContexts: SecurityContexts = {
-        'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-        'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
-    };
-
-    expect(render(
+    render(
         <PermissionMatrix
-            contextPermissions={contextPermissions}
+            contextPermissions={createContextPermissions()}
             onChange={jest.fn()}
-            securityContexts={securityContexts}
+            securityContexts={createSecurityContexts()}
             subTitle="Contact"
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(screen.getByRole('heading', {level: 3, name: 'Contact'})).toBeInTheDocument();
 });
 
 test('Should trigger onChange correctly', () => {
     const onChange = jest.fn();
-    const contextPermissions: Array<ContextPermission> = [
-        {
-            id: 1,
-            context: 'sulu.contact.people',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-        {
-            id: 2,
-            context: 'sulu.contact.organizations',
-            permissions: {
-                'view': true,
-                'delete': true,
-                'add': true,
-                'edit': true,
-            },
-        },
-    ];
 
-    const securityContexts: SecurityContexts = {
-        'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-        'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
-    };
-
-    const permissionMatrix = mount(
+    render(
         <PermissionMatrix
-            contextPermissions={contextPermissions}
+            contextPermissions={createContextPermissions()}
             onChange={onChange}
-            securityContexts={securityContexts}
+            securityContexts={createSecurityContexts()}
         />
     );
 
@@ -211,9 +140,10 @@ test('Should trigger onChange correctly', () => {
             'edit': false,
         },
     };
-    permissionMatrix.find('Matrix').instance().props.onChange(matrixValues);
+    const [matrixProps] = (Matrix: any).mock.calls[0];
+    matrixProps.onChange(matrixValues);
 
-    const expectedContextPermissions: Array<ContextPermission> = [
+    expect(onChange).toBeCalledWith([
         {
             id: 1,
             context: 'sulu.contact.people',
@@ -234,6 +164,5 @@ test('Should trigger onChange correctly', () => {
                 'edit': true,
             },
         },
-    ];
-    expect(onChange).toBeCalledWith(expectedContextPermissions);
+    ]);
 });

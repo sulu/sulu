@@ -4,10 +4,6 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Dialog from '../Dialog';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
 test('The component should render in body when open', () => {
     const {baseElement} = render(<Dialog
         cancelText="Cancel"

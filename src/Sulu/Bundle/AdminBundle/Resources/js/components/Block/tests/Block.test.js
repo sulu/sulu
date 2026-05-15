@@ -5,14 +5,6 @@ import userEvent from '@testing-library/user-event';
 import log from 'loglevel';
 import Block from '../Block';
 
-jest.mock('loglevel', () => ({
-    warn: jest.fn(),
-}));
-
-jest.mock('../../../utils/Translator', () => ({
-    translate: (key) => key,
-}));
-
 test('Render an expanded block with multiple types', () => {
     const {container} = render(
         <Block

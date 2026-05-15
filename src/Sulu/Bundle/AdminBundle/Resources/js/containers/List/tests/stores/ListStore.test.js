@@ -7,11 +7,6 @@ import ListStore from '../../stores/ListStore';
 import metadataStore from '../../stores/metadataStore';
 import {userStore} from '../../../../stores';
 
-jest.mock('loglevel', () => ({
-    info: jest.fn(),
-    warn: jest.fn(),
-}));
-
 jest.mock('../../stores/metadataStore', () => ({
     getSchema: jest.fn(() => Promise.resolve()),
 }));

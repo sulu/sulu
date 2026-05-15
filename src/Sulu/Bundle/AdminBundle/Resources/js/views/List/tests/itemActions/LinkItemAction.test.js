@@ -6,10 +6,6 @@ import ResourceStore from '../../../../stores/ResourceStore';
 import List from '../../../../views/List';
 import LinkItemAction from '../../itemActions/LinkItemAction';
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
 jest.mock('../../../../containers/List/stores/ListStore', () => jest.fn(function() {
     this.selectionIds = [];
     this.selections = [];

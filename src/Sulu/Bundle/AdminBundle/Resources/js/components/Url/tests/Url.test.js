@@ -5,10 +5,6 @@ import userEvent from '@testing-library/user-event';
 import log from 'loglevel';
 import Url from '../Url';
 
-jest.mock('loglevel', () => ({
-    warn: jest.fn(),
-}));
-
 test('Render the component as disabled', () => {
     const {container} = render(
         <Url disabled={true} onChange={jest.fn()} protocols={['http://', 'https://']} value={undefined} />

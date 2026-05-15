@@ -5,13 +5,6 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import SingleAutoComplete from '../SingleAutoComplete';
 
-jest.mock('debounce', () => jest.fn((callback) => {
-    const debounced = (...args) => callback(...args);
-    debounced.clear = jest.fn();
-
-    return debounced;
-}));
-
 beforeEach(() => {
     jest.clearAllMocks();
 });

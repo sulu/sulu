@@ -1,19 +1,29 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {act, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import SingleSelectionStore from '../../../stores/SingleSelectionStore';
 import SingleListOverlay from '../../../containers/SingleListOverlay';
 import SingleSelection from '../SingleSelection';
 import SingleItemSelection from '../../../components/SingleItemSelection';
+import PublishIndicator from '../../../components/PublishIndicator';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../containers/SingleListOverlay', () => jest.fn(() => <div data-testid="single-list-overlay" />));
 
-jest.mock('../../../containers/SingleListOverlay', () => jest.fn(function() {
-    return <div />;
-}));
+jest.mock('../../../components/SingleItemSelection', () => {
+    const React = require('react');
+    const ActualSingleItemSelection = jest.requireActual('../../../components/SingleItemSelection').default;
+
+    return jest.fn((props) => <ActualSingleItemSelection {...props} />);
+});
+
+jest.mock('../../../components/PublishIndicator', () => {
+    const React = require('react');
+    const ActualPublishIndicator = jest.requireActual('../../../components/PublishIndicator').default;
+
+    return jest.fn((props) => <ActualPublishIndicator {...props} />);
+});
 
 jest.mock('../../../containers/List/stores/ListStore', () => jest.fn());
 
@@ -32,8 +42,41 @@ jest.mock('../../../stores/SingleSelectionStore', () => jest.fn(function() {
     });
 }));
 
+const getLastMockCallProps = (mockComponent) => {
+    const mockCalls = mockComponent.mock.calls;
+
+    if (mockCalls.length === 0) {
+        throw new Error('Expected mock component to be called');
+    }
+
+    return mockCalls[mockCalls.length - 1][0];
+};
+
+const SingleSelectionStoreMock = (SingleSelectionStore: any);
+const SingleListOverlayMock = (SingleListOverlay: any);
+const SingleItemSelectionMock = (SingleItemSelection: any);
+const PublishIndicatorMock = (PublishIndicator: any);
+
+const getSingleSelectionStore = () => {
+    const stores = SingleSelectionStoreMock.mock.instances;
+
+    if (stores.length === 0) {
+        throw new Error('Expected SingleSelectionStore to be instantiated');
+    }
+
+    return stores[stores.length - 1];
+};
+
+const getSingleListOverlayProps = () => getLastMockCallProps(SingleListOverlayMock);
+const getSingleItemSelectionProps = () => getLastMockCallProps(SingleItemSelectionMock);
+const getPublishIndicatorProps = () => getLastMockCallProps(PublishIndicatorMock);
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
 test('Show with passed emptyText and icon', () => {
-    expect(render(
+    const {asFragment} = render(
         <SingleSelection
             adapter="table"
             disabledIds={[]}
@@ -46,12 +89,14 @@ test('Show with passed emptyText and icon', () => {
             resourceKey="test"
             value={undefined}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render with selected item', () => {
     const locale = observable.box('en');
-    const singleSelection = mount(
+    const {asFragment} = render(
         <SingleSelection
             adapter="table"
             disabledIds={[]}
@@ -69,21 +114,21 @@ test('Render with selected item', () => {
 
     expect(SingleSelectionStore).toBeCalledWith('test', 3, locale, undefined);
 
-    singleSelection.instance().singleSelectionStore.item = {
-        id: 3,
-        name: 'Name',
-        value: 'Value',
-    };
+    act(() => {
+        getSingleSelectionStore().item = {
+            id: 3,
+            name: 'Name',
+            value: 'Value',
+        };
+    });
 
-    singleSelection.update();
-
-    expect(singleSelection.find(SingleListOverlay).prop('open')).toEqual(false);
-    expect(singleSelection.find('SingleItemSelection').render()).toMatchSnapshot();
+    expect(getSingleListOverlayProps().open).toEqual(false);
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render with selected item in disabled state', () => {
     const locale = observable.box('en');
-    const singleSelection = mount(
+    const {asFragment} = render(
         <SingleSelection
             adapter="table"
             disabled={true}
@@ -100,20 +145,21 @@ test('Render with selected item in disabled state', () => {
         />
     );
 
-    singleSelection.instance().singleSelectionStore.item = {
-        id: 3,
-        name: 'Name',
-        value: 'Value',
-    };
-    singleSelection.update();
+    act(() => {
+        getSingleSelectionStore().item = {
+            id: 3,
+            name: 'Name',
+            value: 'Value',
+        };
+    });
 
-    expect(singleSelection.find(SingleListOverlay).prop('open')).toEqual(false);
-    expect(singleSelection.find('SingleItemSelection').render()).toMatchSnapshot();
+    expect(getSingleListOverlayProps().open).toEqual(false);
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Pass resourceKey and locale to SingleListOverlay', () => {
     const locale = observable.box('en');
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             adapter="table"
             disabledIds={[]}
@@ -129,14 +175,14 @@ test('Pass resourceKey and locale to SingleListOverlay', () => {
         />
     );
 
-    expect(singleSelection.find(SingleListOverlay).prop('locale')).toEqual(locale);
-    expect(singleSelection.find(SingleListOverlay).prop('resourceKey')).toEqual('test');
-    expect(singleSelection.find(SingleListOverlay).prop('listKey')).toEqual('test_list');
-    expect(singleSelection.find(SingleListOverlay).prop('options')).toEqual(undefined);
+    expect(getSingleListOverlayProps().locale).toEqual(locale);
+    expect(getSingleListOverlayProps().resourceKey).toEqual('test');
+    expect(getSingleListOverlayProps().listKey).toEqual('test_list');
+    expect(getSingleListOverlayProps().options).toEqual(undefined);
 });
 
 test('Pass options to SingleListOverlay and SingleSelectionStore', () => {
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             adapter="table"
             detailOptions={{'ghost-content': true}}
@@ -155,11 +201,11 @@ test('Pass options to SingleListOverlay and SingleSelectionStore', () => {
 
     expect(SingleSelectionStore).toBeCalledWith('test', 3, undefined, {'ghost-content': true});
 
-    expect(singleSelection.find(SingleListOverlay).prop('options')).toEqual({value: 'Test'});
+    expect(getSingleListOverlayProps().options).toEqual({value: 'Test'});
 });
 
 test('Pass disabledIds to SingleListOverlay', () => {
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             adapter="table"
             disabledIds={[1, 2, 3]}
@@ -174,11 +220,11 @@ test('Pass disabledIds to SingleListOverlay', () => {
         />
     );
 
-    expect(singleSelection.find(SingleListOverlay).prop('disabledIds')).toEqual([1, 2, 3]);
+    expect(getSingleListOverlayProps().disabledIds).toEqual([1, 2, 3]);
 });
 
 test('Pass itemDisabledCondition to SingleListOverlay', () => {
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             adapter="table"
             displayProperties={['name', 'value']}
@@ -193,11 +239,11 @@ test('Pass itemDisabledCondition to SingleListOverlay', () => {
         />
     );
 
-    expect(singleSelection.find(SingleListOverlay).prop('itemDisabledCondition')).toEqual('status == "inactive"');
+    expect(getSingleListOverlayProps().itemDisabledCondition).toEqual('status == "inactive"');
 });
 
 test('Should open and close an overlay', () => {
-    const singleSelection = mount(
+    render(
         <SingleSelection
             adapter="table"
             disabledIds={[]}
@@ -212,17 +258,21 @@ test('Should open and close an overlay', () => {
         />
     );
 
-    singleSelection.find('.button').prop('onClick')();
-    singleSelection.update();
-    expect(singleSelection.find(SingleListOverlay).prop('open')).toEqual(true);
+    act(() => {
+        getSingleItemSelectionProps().leftButton.onClick();
+    });
+    expect(getSingleListOverlayProps().open).toEqual(true);
 
-    singleSelection.find(SingleListOverlay).prop('onClose')();
-    singleSelection.update();
-    expect(singleSelection.find(SingleListOverlay).prop('open')).toEqual(false);
+    act(() => {
+        getSingleListOverlayProps().onClose();
+    });
+    expect(getSingleListOverlayProps().open).toEqual(false);
 });
 
-test('Should not open an overlay on button-click when disabled', () => {
-    const singleSelection = mount(
+test('Should not open an overlay on button-click when disabled', async() => {
+    const user = userEvent.setup();
+
+    render(
         <SingleSelection
             adapter="table"
             disabled={true}
@@ -238,17 +288,17 @@ test('Should not open an overlay on button-click when disabled', () => {
         />
     );
 
-    expect(singleSelection.find(SingleListOverlay).prop('open')).toEqual(false);
+    expect(getSingleListOverlayProps().open).toEqual(false);
 
-    singleSelection.find('.button').simulate('click');
-    singleSelection.update();
-    expect(singleSelection.find(SingleListOverlay).prop('open')).toEqual(false);
+    await user.click(screen.getByRole('button', {name: 'su-test'}));
+
+    expect(getSingleListOverlayProps().open).toEqual(false);
 });
 
 test('Should call the onChange callback with null if the current item does not exist and set to null', () => {
     const changeSpy = jest.fn();
 
-    const singleSelection = mount(
+    render(
         <SingleSelection
             adapter="table"
             disabledIds={[]}
@@ -263,7 +313,9 @@ test('Should call the onChange callback with null if the current item does not e
         />
     );
 
-    singleSelection.instance().singleSelectionStore.item = null;
+    act(() => {
+        getSingleSelectionStore().item = null;
+    });
 
     expect(changeSpy).toBeCalledWith(null, null);
 });
@@ -271,7 +323,7 @@ test('Should call the onChange callback with null if the current item does not e
 test('Should call the onChange callback if a new item was selected', () => {
     const changeSpy = jest.fn();
 
-    const singleSelection = mount(
+    render(
         <SingleSelection
             adapter="table"
             disabledIds={[]}
@@ -286,15 +338,17 @@ test('Should call the onChange callback if a new item was selected', () => {
         />
     );
 
-    singleSelection.find('.button').prop('onClick')();
-    singleSelection.update();
-    expect(singleSelection.find(SingleListOverlay).prop('open')).toEqual(true);
+    act(() => {
+        getSingleItemSelectionProps().leftButton.onClick();
+    });
+    expect(getSingleListOverlayProps().open).toEqual(true);
 
-    singleSelection.find(SingleListOverlay).prop('onConfirm')({id: 6});
-    expect(singleSelection.instance().singleSelectionStore.loadItem).toBeCalledWith(6);
+    act(() => {
+        getSingleListOverlayProps().onConfirm({id: 6});
+    });
+    expect(getSingleSelectionStore().loadItem).toBeCalledWith(6);
     expect(changeSpy).toBeCalledWith(6, {id: 6});
-    singleSelection.update();
-    expect(singleSelection.find(SingleListOverlay).prop('open')).toEqual(false);
+    expect(getSingleListOverlayProps().open).toEqual(false);
 });
 
 test('Should not call onChange callback if an unrelated observable that is accessed in the callback changes', () => {
@@ -303,7 +357,7 @@ test('Should not call onChange callback if an unrelated observable that is acces
         jest.fn()(unrelatedObservable.get());
     });
 
-    const singleSelection = mount(
+    render(
         <SingleSelection
             adapter="table"
             disabledIds={[]}
@@ -319,10 +373,12 @@ test('Should not call onChange callback if an unrelated observable that is acces
     );
 
     // disable load-item mock that would overwrite the item property of the store mock
-    singleSelection.instance().singleSelectionStore.loadItem = jest.fn();
+    getSingleSelectionStore().loadItem = jest.fn();
 
     // change callback should be called when item of the store mock changes
-    singleSelection.instance().singleSelectionStore.item = {id: 7};
+    act(() => {
+        getSingleSelectionStore().item = {id: 7};
+    });
     expect(changeSpy).toBeCalledWith(7, {id: 7});
     expect(changeSpy).toHaveBeenCalledTimes(1);
 
@@ -334,7 +390,7 @@ test('Should not call onChange callback if an unrelated observable that is acces
 test('Should not call the onChange callback if the same item was selected', () => {
     const changeSpy = jest.fn();
 
-    const singleSelection = mount(
+    render(
         <SingleSelection
             adapter="table"
             disabledIds={[]}
@@ -349,32 +405,42 @@ test('Should not call the onChange callback if the same item was selected', () =
         />
     );
 
-    singleSelection.find(SingleListOverlay).prop('onConfirm')({id: 6});
+    getSingleListOverlayProps().onConfirm({id: 6});
     expect(changeSpy).not.toBeCalled();
 });
 
 test('Should load the item if value prop changes', () => {
-    const singleSelection = mount(
+    const props = {
+        adapter: 'table',
+        displayProperties: [],
+        emptyText: 'nothing',
+        listKey: 'snippets',
+        onChange: jest.fn(),
+        overlayTitle: 'Selection',
+        resourceKey: 'snippets',
+    };
+
+    const {rerender} = render(
         <SingleSelection
-            adapter="table"
-            displayProperties={[]}
-            emptyText="nothing"
-            listKey="snippets"
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="snippets"
+            {...props}
             value={1}
         />
     );
 
-    singleSelection.setProps({value: 3});
-    expect(singleSelection.instance().singleSelectionStore.loadItem).toBeCalledWith(3);
+    rerender(
+        <SingleSelection
+            {...props}
+            value={3}
+        />
+    );
+
+    expect(getSingleSelectionStore().loadItem).toBeCalledWith(3);
 });
 
 test('Should call the onItemClick callback when an item when the item is clicked', () => {
     const itemClickSpy = jest.fn();
 
-    const singleSelection = mount(
+    render(
         <SingleSelection
             adapter="table"
             displayProperties={[]}
@@ -388,14 +454,16 @@ test('Should call the onItemClick callback when an item when the item is clicked
         />
     );
 
-    singleSelection.instance().singleSelectionStore.item = {id: 1};
-    singleSelection.find('SingleItemSelection .item').simulate('click');
+    act(() => {
+        getSingleSelectionStore().item = {id: 1};
+    });
+    getSingleItemSelectionProps().onItemClick(1, {id: 1});
 
     expect(itemClickSpy).toBeCalledWith(1, {id: 1});
 });
 
 test('Should remove an item when the remove button is clicked', () => {
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             adapter="table"
             displayProperties={[]}
@@ -408,18 +476,20 @@ test('Should remove an item when the remove button is clicked', () => {
         />
     );
 
-    singleSelection.instance().singleSelectionStore.item = {
-        name: 'Name',
-        value: 'Value',
-    };
-    singleSelection.find('SingleItemSelection').prop('onRemove')();
-    expect(singleSelection.instance().singleSelectionStore.clear).toBeCalledWith();
+    act(() => {
+        getSingleSelectionStore().item = {
+            name: 'Name',
+            value: 'Value',
+        };
+    });
+    getSingleItemSelectionProps().onRemove();
+    expect(getSingleSelectionStore().clear).toBeCalledWith();
 });
 
 test('Should call the onChange callback if the value of the selection-store changes', () => {
     const changeSpy = jest.fn();
 
-    const singleSelection = mount(
+    render(
         <SingleSelection
             adapter="table"
             disabledIds={[]}
@@ -434,34 +504,45 @@ test('Should call the onChange callback if the value of the selection-store chan
         />
     );
 
-    singleSelection.instance().singleSelectionStore.item = {id: 6};
+    act(() => {
+        getSingleSelectionStore().item = {id: 6};
+    });
     expect(changeSpy).toBeCalledWith(6, {id: 6});
 });
 
 test('Should not call the onChange callback if the component props change', () => {
     const changeSpy = jest.fn();
+    const props = {
+        adapter: 'table',
+        disabledIds: [],
+        displayProperties: [],
+        icon: 'su-test',
+        listKey: 'test',
+        onChange: changeSpy,
+        overlayTitle: 'Test',
+        resourceKey: 'test',
+        value: 3,
+    };
 
-    const singleSelection = mount(
+    const {rerender} = render(
         <SingleSelection
-            adapter="table"
-            disabledIds={[]}
-            displayProperties={[]}
+            {...props}
             emptyText="Nothing"
-            icon="su-test"
-            listKey="test"
-            onChange={changeSpy}
-            overlayTitle="Test"
-            resourceKey="test"
-            value={3}
         />
     );
 
-    singleSelection.setProps({emptyText: 'New Empty Text'});
+    rerender(
+        <SingleSelection
+            {...props}
+            emptyText="New Empty Text"
+        />
+    );
+
     expect(changeSpy).not.toBeCalled();
 });
 
 test('Correct props should be passed to SingleItemSelection component', () => {
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             adapter="table"
             disabled={true}
@@ -475,12 +556,12 @@ test('Correct props should be passed to SingleItemSelection component', () => {
         />
     );
 
-    expect(singleSelection.find(SingleItemSelection).prop('disabled')).toEqual(true);
-    expect(singleSelection.find(SingleItemSelection).prop('emptyText')).toEqual('nothing');
+    expect(getSingleItemSelectionProps().disabled).toEqual(true);
+    expect(getSingleItemSelectionProps().emptyText).toEqual('nothing');
 });
 
 test('Pass correct itemDisabled prop to SingleItemSelection component when item fulfills itemDisabledCondition', () => {
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             adapter="table"
             displayProperties={[]}
@@ -494,18 +575,20 @@ test('Pass correct itemDisabled prop to SingleItemSelection component when item 
         />
     );
 
-    expect(singleSelection.find(SingleItemSelection).prop('itemDisabled')).toEqual(false);
+    expect(getSingleItemSelectionProps().itemDisabled).toEqual(false);
 
-    singleSelection.instance().singleSelectionStore.item = {
-        id: 3,
-        status: 'inactive',
-    };
+    act(() => {
+        getSingleSelectionStore().item = {
+            id: 1,
+            status: 'inactive',
+        };
+    });
 
-    expect(singleSelection.find(SingleItemSelection).prop('itemDisabled')).toEqual(true);
+    expect(getSingleItemSelectionProps().itemDisabled).toEqual(true);
 });
 
 test('Pass correct itemDisabled prop to SingleItemSelection component when disabledIds contains id of item', () => {
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             adapter="table"
             disabledIds={[1, 3, 5]}
@@ -519,18 +602,20 @@ test('Pass correct itemDisabled prop to SingleItemSelection component when disab
         />
     );
 
-    expect(singleSelection.find(SingleItemSelection).prop('itemDisabled')).toEqual(false);
+    expect(getSingleItemSelectionProps().itemDisabled).toEqual(false);
 
-    singleSelection.instance().singleSelectionStore.item = {
-        id: 3,
-        status: 'inactive',
-    };
+    act(() => {
+        getSingleSelectionStore().item = {
+            id: 3,
+            status: 'inactive',
+        };
+    });
 
-    expect(singleSelection.find(SingleItemSelection).prop('itemDisabled')).toEqual(true);
+    expect(getSingleItemSelectionProps().itemDisabled).toEqual(true);
 });
 
 test('Set loading prop of SingleItemSelection component if SingleSelectionStore is loading', () => {
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             adapter="table"
             disabled={true}
@@ -544,14 +629,16 @@ test('Set loading prop of SingleItemSelection component if SingleSelectionStore 
         />
     );
 
-    expect(singleSelection.find(SingleItemSelection).prop('loading')).toEqual(false);
-    singleSelection.instance().singleSelectionStore.loading = true;
-    expect(singleSelection.find(SingleItemSelection).prop('loading')).toEqual(true);
-    expect(singleSelection.find(SingleListOverlay)).toHaveLength(0);
+    expect(getSingleItemSelectionProps().loading).toEqual(false);
+    act(() => {
+        getSingleSelectionStore().loading = true;
+    });
+    expect(getSingleItemSelectionProps().loading).toEqual(true);
+    expect(screen.queryByTestId('single-list-overlay')).not.toBeInTheDocument();
 });
 
 test('Pass correct allowRemoveWhileItemDisabled prop to SingleItemSelection component', () => {
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             adapter="table"
             allowDeselectForDisabledItems={true}
@@ -566,12 +653,12 @@ test('Pass correct allowRemoveWhileItemDisabled prop to SingleItemSelection comp
         />
     );
 
-    expect(singleSelection.find(SingleItemSelection).prop('allowRemoveWhileItemDisabled')).toEqual(true);
+    expect(getSingleItemSelectionProps().allowRemoveWhileItemDisabled).toEqual(true);
 });
 
 test('PublishIndicator should not be rendered if not necessary', () => {
     const locale = observable.box('en');
-    const singleSelection = mount(
+    render(
         <SingleSelection
             adapter="table"
             disabledIds={[]}
@@ -587,21 +674,21 @@ test('PublishIndicator should not be rendered if not necessary', () => {
         />
     );
 
-    singleSelection.instance().singleSelectionStore.item = {
-        id: 1,
-        name: 'Name',
-        published: '2020-11-16',
-        publishedState: true,
-    };
+    act(() => {
+        getSingleSelectionStore().item = {
+            id: 1,
+            name: 'Name',
+            published: '2020-11-16',
+            publishedState: true,
+        };
+    });
 
-    singleSelection.update();
-
-    expect(singleSelection.contains('PublishIndicator')).toBe(false);
+    expect(PublishIndicatorMock).not.toBeCalled();
 });
 
 test('PublishIndicator should be rendered as draft if necessary', () => {
     const locale = observable.box('en');
-    const singleSelection = mount(
+    render(
         <SingleSelection
             adapter="table"
             disabledIds={[]}
@@ -617,22 +704,22 @@ test('PublishIndicator should be rendered as draft if necessary', () => {
         />
     );
 
-    singleSelection.instance().singleSelectionStore.item = {
-        id: 1,
-        name: 'Name',
-        published: '2020-11-16',
-        publishedState: false,
-    };
+    act(() => {
+        getSingleSelectionStore().item = {
+            id: 1,
+            name: 'Name',
+            published: '2020-11-16',
+            publishedState: false,
+        };
+    });
 
-    singleSelection.update();
-
-    expect(singleSelection.find('PublishIndicator').prop('draft')).toBe(true);
-    expect(singleSelection.find('PublishIndicator').prop('published')).toBe(true);
+    expect(getPublishIndicatorProps().draft).toBe(true);
+    expect(getPublishIndicatorProps().published).toBe(true);
 });
 
 test('PublishIndicator should be rendered as unpublished if necessary', () => {
     const locale = observable.box('en');
-    const singleSelection = mount(
+    render(
         <SingleSelection
             adapter="table"
             disabledIds={[]}
@@ -648,15 +735,15 @@ test('PublishIndicator should be rendered as unpublished if necessary', () => {
         />
     );
 
-    singleSelection.instance().singleSelectionStore.item = {
-        id: 1,
-        name: 'Name',
-        published: null,
-        publishedState: false,
-    };
+    act(() => {
+        getSingleSelectionStore().item = {
+            id: 1,
+            name: 'Name',
+            published: null,
+            publishedState: false,
+        };
+    });
 
-    singleSelection.update();
-
-    expect(singleSelection.find('PublishIndicator').prop('draft')).toBe(true);
-    expect(singleSelection.find('PublishIndicator').prop('published')).toBe(false);
+    expect(getPublishIndicatorProps().draft).toBe(true);
+    expect(getPublishIndicatorProps().published).toBe(false);
 });

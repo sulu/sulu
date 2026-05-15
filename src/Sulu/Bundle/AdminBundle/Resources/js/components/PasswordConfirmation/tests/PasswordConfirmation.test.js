@@ -5,8 +5,6 @@ import userEvent from '@testing-library/user-event';
 import debounce from 'debounce';
 import PasswordConfirmation from '../PasswordConfirmation';
 
-jest.mock('debounce', () => jest.fn((value) => value));
-
 test('Should render two password fields and add a debounced function', () => {
     const {container} = render(<PasswordConfirmation disabled={true} onChange={jest.fn()} />);
     expect(container).toMatchSnapshot();

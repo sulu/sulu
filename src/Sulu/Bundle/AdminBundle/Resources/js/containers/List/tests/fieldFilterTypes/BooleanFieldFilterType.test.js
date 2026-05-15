@@ -1,10 +1,14 @@
 // @flow
-import {mount, render} from 'enzyme';
+import {render} from '@testing-library/react';
+import Toggler from '../../../../components/Toggler';
 import BooleanFieldFilterType from '../../fieldFilterTypes/BooleanFieldFilterType';
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../../components/Toggler', () => jest.fn(() => null));
+
+function getLatestTogglerProps() {
+    const calls = (Toggler: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
 
 test.each([
     [true],
@@ -12,13 +16,15 @@ test.each([
     [undefined],
 ])('Render with a value of "%s"', (value) => {
     const booleanFieldFilterType = new BooleanFieldFilterType(jest.fn(), {}, value);
-    expect(render(booleanFieldFilterType.getFormNode())).toMatchSnapshot();
+    render(booleanFieldFilterType.getFormNode());
+    expect(getLatestTogglerProps().checked).toEqual(value || false);
 });
 
 test('Render with value set by setValue', () => {
     const booleanFieldFilterType = new BooleanFieldFilterType(jest.fn(), {}, false);
     booleanFieldFilterType.setValue(true);
-    expect(render(booleanFieldFilterType.getFormNode())).toMatchSnapshot();
+    render(booleanFieldFilterType.getFormNode());
+    expect(getLatestTogglerProps().checked).toEqual(true);
 });
 
 test('Call onChange handler with false as a default value if undefined is given', () => {
@@ -31,9 +37,9 @@ test('Call onChange handler with false as a default value if undefined is given'
 test('Call onChange handler with new value', () => {
     const changeSpy = jest.fn();
     const booleanFieldFilterType = new BooleanFieldFilterType(changeSpy, {}, false);
-    const booleanFieldFilterTypeForm = mount(booleanFieldFilterType.getFormNode());
+    render(booleanFieldFilterType.getFormNode());
 
-    booleanFieldFilterTypeForm.find('Toggler').prop('onChange')(true);
+    getLatestTogglerProps().onChange(true);
 
     expect(changeSpy).toBeCalledWith(true);
 });

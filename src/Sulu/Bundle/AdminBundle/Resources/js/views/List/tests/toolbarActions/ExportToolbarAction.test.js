@@ -1,16 +1,11 @@
 // @flow
 import {observable as mockObservable, observable} from 'mobx';
-import {mount} from 'enzyme';
 import ListStore from '../../../../containers/List/stores/ListStore';
 import Router from '../../../../services/Router';
 import ResourceStore from '../../../../stores/ResourceStore';
 import List from '../../../../views/List';
 import ExportToolbarAction from '../../toolbarActions/ExportToolbarAction';
 import resourceRouteRegistry from '../../../../services/ResourceRequester/registries/resourceRouteRegistry';
-
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
 
 jest.mock('../../../../containers/List/stores/ListStore', () => jest.fn(function(resourceKey) {
     this.data = [];
@@ -78,9 +73,8 @@ test('Export current result when button is clicked and dialog is confirmed', () 
     const toolbarItemConfig = exportToolbarAction.getToolbarItemConfig();
     toolbarItemConfig.onClick();
 
-    const element = mount(exportToolbarAction.getNode());
-
-    element.find('Button[skin="primary"]').simulate('click');
+    const overlayNode: any = exportToolbarAction.getNode();
+    overlayNode.props.onConfirm();
 
     expect(resourceRouteRegistry.getUrl).toBeCalledWith(
         'list',
@@ -116,9 +110,8 @@ test('Export current result with applied filter and search when button is clicke
     const toolbarItemConfig = exportToolbarAction.getToolbarItemConfig();
     toolbarItemConfig.onClick();
 
-    const element = mount(exportToolbarAction.getNode());
-
-    element.find('Button[skin="primary"]').simulate('click');
+    const overlayNode: any = exportToolbarAction.getNode();
+    overlayNode.props.onConfirm();
 
     expect(resourceRouteRegistry.getUrl).toBeCalledWith(
         'list',

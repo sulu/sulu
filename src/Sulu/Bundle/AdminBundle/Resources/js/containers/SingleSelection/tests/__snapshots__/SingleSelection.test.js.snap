@@ -1,107 +1,117 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render with selected item 1`] = `
-<div
-  class="singleItemSelection"
->
-  <button
-    class="button left"
-    type="button"
-  >
-    <span
-      aria-label="su-test"
-      class="su-test icon"
-    />
-  </button>
+<DocumentFragment>
   <div
-    class="itemContainer"
+    class="singleItemSelection"
   >
-    <div
-      class="item"
-      role="button"
-    >
-      <div
-        class="itemContainer"
-      >
-        <div
-          class="columnList"
-        >
-          <span
-            class="itemColumn"
-            style="width: 50%;"
-          >
-            Name
-          </span>
-          <span
-            class="itemColumn"
-            style="width: 50%;"
-          >
-            Value
-          </span>
-        </div>
-      </div>
-    </div>
     <button
-      class="removeButton"
+      class="button left"
       type="button"
     >
       <span
-        aria-label="su-trash-alt"
-        class="su-trash-alt"
+        aria-label="su-test"
+        class="su-test icon"
       />
     </button>
+    <div
+      class="itemContainer"
+    >
+      <div
+        class="item"
+        role="button"
+      >
+        <div
+          class="itemContainer"
+        >
+          <div
+            class="columnList"
+          >
+            <span
+              class="itemColumn"
+              style="width: 50%;"
+            >
+              Name
+            </span>
+            <span
+              class="itemColumn"
+              style="width: 50%;"
+            >
+              Value
+            </span>
+          </div>
+        </div>
+      </div>
+      <button
+        class="removeButton"
+        type="button"
+      >
+        <span
+          aria-label="su-trash-alt"
+          class="su-trash-alt"
+        />
+      </button>
+    </div>
   </div>
-</div>
+  <div
+    data-testid="single-list-overlay"
+  />
+</DocumentFragment>
 `;
 
 exports[`Render with selected item in disabled state 1`] = `
-<div
-  class="singleItemSelection disabled"
->
-  <button
-    class="button left"
-    disabled=""
-    type="button"
-  >
-    <span
-      aria-label="su-test"
-      class="su-test icon"
-    />
-  </button>
+<DocumentFragment>
   <div
-    class="itemContainer"
+    class="singleItemSelection disabled"
   >
+    <button
+      class="button left"
+      disabled=""
+      type="button"
+    >
+      <span
+        aria-label="su-test"
+        class="su-test icon"
+      />
+    </button>
     <div
-      class="item"
-      role="button"
+      class="itemContainer"
     >
       <div
-        class="itemContainer"
+        class="item"
+        role="button"
       >
         <div
-          class="columnList"
+          class="itemContainer"
         >
-          <span
-            class="itemColumn"
-            style="width: 50%;"
+          <div
+            class="columnList"
           >
-            Name
-          </span>
-          <span
-            class="itemColumn"
-            style="width: 50%;"
-          >
-            Value
-          </span>
+            <span
+              class="itemColumn"
+              style="width: 50%;"
+            >
+              Name
+            </span>
+            <span
+              class="itemColumn"
+              style="width: 50%;"
+            >
+              Value
+            </span>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+  <div
+    data-testid="single-list-overlay"
+  />
+</DocumentFragment>
 `;
 
 exports[`Show with passed emptyText and icon 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="singleItemSelection"
   >
@@ -128,7 +138,9 @@ Array [
         </div>
       </div>
     </div>
-  </div>,
-  <div />,
-]
+  </div>
+  <div
+    data-testid="single-list-overlay"
+  />
+</DocumentFragment>
 `;

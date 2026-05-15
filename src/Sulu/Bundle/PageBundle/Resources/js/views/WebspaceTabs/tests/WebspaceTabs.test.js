@@ -1,20 +1,13 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
+import {render, waitFor} from '@testing-library/react';
 import {Router, Route} from 'sulu-admin-bundle/services';
 import {userStore} from 'sulu-admin-bundle/stores';
 import WebspaceTabs from '../WebspaceTabs';
 import webspaceStore from '../../../stores/webspaceStore';
 
-jest.mock('debounce', () => jest.fn((callback) => callback));
-
-window.ResizeObserver = jest.fn(function() {
-    this.observe = jest.fn();
-    this.disconnect = jest.fn();
-});
-
 jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function() {
-    this.addUpdateRouteHook = jest.fn();
+    this.addUpdateRouteHook = jest.fn(() => jest.fn());
     this.bind = jest.fn();
 }));
 
@@ -28,14 +21,57 @@ jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     getPersistentSetting: jest.fn(),
 }));
 
+jest.mock('../../../components/WebspaceSelect', () => {
+    const WebspaceSelectMock: any = jest.fn(({children}) => <div>{children}</div>);
+    WebspaceSelectMock.Item = jest.fn(({children}) => <div>{children}</div>);
+
+    return WebspaceSelectMock;
+});
+
+jest.mock('sulu-admin-bundle/views', () => ({
+    Tabs: jest.fn(({children, childrenProps, header}) => (
+        <div>
+            {header}
+            {typeof children === 'function' ? children(childrenProps) : children}
+        </div>
+    )),
+}));
+
+const webspaceSelectModule = ((jest.requireMock('../../../components/WebspaceSelect'): any): {
+    mock: {calls: Array<[Object]>},
+    ...
+});
+
+const webspaceSelectMock: any = webspaceSelectModule;
+const tabsMock = ((jest.requireMock('sulu-admin-bundle/views'): any).Tabs: {
+    mock: {calls: Array<[Object]>},
+    ...
+});
+const mockedWebspaceStore: any = webspaceStore;
+
+function getLatestMockProps(mockFunction: any): any {
+    const calls = mockFunction.mock.calls;
+    return calls[calls.length - 1][0];
+}
+
+function getMockCallArg(mockFunction: any, callIndex: number, argIndex: number): any {
+    return mockFunction.mock.calls[callIndex][argIndex];
+}
+
+const createRoute = () => new Route({
+    name: 'webspace_tabs',
+    path: '/webspace_tabs',
+    type: 'webspace_tabs',
+});
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    mockedWebspaceStore.grantedWebspaces = [];
+});
+
 test('Render webspace select with children when webspaces are not loaded yet', () => {
     const router = new Router({});
-
-    const route = new Route({
-        name: 'webspace_tabs',
-        path: '/webspace_tabs',
-        type: 'webspace_tabs',
-    });
+    const route = createRoute();
 
     const webspace = {key: 'sulu_blog', localizations: [{locale: 'en', default: false}, {locale: 'de', default: true}]};
 
@@ -45,14 +81,21 @@ test('Render webspace select with children when webspaces are not loaded yet', (
         }
     });
 
-    const webspaceTabs = mount(
+    router.bind.mockImplementation((key, webspaceKey) => {
+        if (key === 'webspace') {
+            webspaceKey.set('sulu_blog');
+        }
+    });
+
+    const {asFragment} = render(
         <WebspaceTabs isRootView={true} route={route} router={router}>
             {(props) => <h1>{props && props.webspace && props.webspace.key}</h1>}
         </WebspaceTabs>
     );
 
-    webspaceTabs.instance().webspaceKey.set('sulu_blog');
-    expect(webspaceTabs.children().render()).toMatchSnapshot();
+    expect(webspaceSelectMock).toHaveBeenCalled();
+    expect(tabsMock).toHaveBeenCalled();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Load webspace userStore if no route attribute is given', () => {
@@ -79,38 +122,25 @@ test('Load webspace from route attributes', () => {
 
 test('Should bind and unbind router attributes and updateRouteHook', () => {
     const router = new Router({});
-
-    const route = new Route({
-        name: 'webspace_tabs',
-        path: '/webspace_tabs',
-        type: 'webspace_tabs',
-    });
+    const route = createRoute();
 
     const bindWebspaceToRouterDisposerSpy = jest.fn();
     router.addUpdateRouteHook.mockImplementationOnce(() => bindWebspaceToRouterDisposerSpy);
-    const webspaceTabs = mount(<WebspaceTabs route={route} router={router}>{() => null}</WebspaceTabs>);
 
-    expect(router.bind).toBeCalledWith('webspace', webspaceTabs.instance().webspaceKey);
-    expect(router.addUpdateRouteHook).toBeCalledWith(webspaceTabs.instance().bindWebspaceToRouter);
+    const {unmount} = render(<WebspaceTabs route={route} router={router}>{() => null}</WebspaceTabs>);
 
-    const webspaceDisposer = jest.fn();
+    expect(router.bind).toBeCalledWith('webspace', expect.any(Object));
+    expect(router.addUpdateRouteHook).toBeCalledWith(expect.any(Function));
 
-    webspaceTabs.instance().webspaceDisposer = webspaceDisposer;
-
-    webspaceTabs.unmount();
+    unmount();
     expect(bindWebspaceToRouterDisposerSpy).toBeCalledWith();
-    expect(webspaceDisposer).toBeCalledWith();
 });
 
-test('Save and update webspace when select value is changed', () => {
+test('Save and update webspace when select value is changed', async() => {
     const router = new Router({});
+    const route = createRoute();
 
-    const route = new Route({
-        name: 'webspace_tabs',
-        path: '/webspace_tabs',
-        type: 'webspace_tabs',
-    });
-
+    mockedWebspaceStore.grantedWebspaces = [{key: 'sulu', name: 'Sulu'}, {key: 'sulu_blog', name: 'Sulu Blog'}];
     const webspace1 = {key: 'sulu', localizations: [{locale: 'en', default: true}]};
     const webspace2 = {
         key: 'sulu_blog',
@@ -127,18 +157,29 @@ test('Save and update webspace when select value is changed', () => {
         }
     });
 
-    const webspaceTabs = mount(<WebspaceTabs route={route} router={router}>{() => null}</WebspaceTabs>);
-    webspaceTabs.instance().webspaceKey.set('sulu_blog');
+    render(<WebspaceTabs route={route} router={router}>{() => null}</WebspaceTabs>);
 
-    webspaceTabs.update();
-    expect(webspaceTabs.find('WebspaceSelect').prop('value')).toEqual('sulu_blog');
-    expect(webspaceTabs.find('Tabs').at(0).prop('childrenProps'))
-        .toEqual(expect.objectContaining({webspace: webspace2}));
-    webspaceTabs.find('WebspaceSelect').prop('onChange')('sulu');
+    expect(webspaceSelectMock).toHaveBeenCalled();
+    const {onChange} = getMockCallArg(webspaceSelectMock, 0, 0);
+    onChange('sulu_blog');
 
-    webspaceTabs.update();
+    await waitFor(() => {
+        const latestWebspaceSelectProps = getLatestMockProps(webspaceSelectMock);
+        expect(latestWebspaceSelectProps.value).toEqual('sulu_blog');
+    });
+
+    const latestTabsPropsWithBlog = getLatestMockProps(tabsMock);
+    expect(latestTabsPropsWithBlog.childrenProps).toEqual(expect.objectContaining({webspace: webspace2}));
+
+    const latestWebspaceSelectProps = getLatestMockProps(webspaceSelectMock);
+    latestWebspaceSelectProps.onChange('sulu');
+
+    await waitFor(() => {
+        const latestTabsProps = getLatestMockProps(tabsMock);
+        expect(latestTabsProps.childrenProps).toEqual(expect.objectContaining({webspace: webspace1}));
+    });
+
     expect(userStore.setPersistentSetting).toBeCalledWith('sulu_page.webspace_tabs.webspace', 'sulu');
-    expect(webspaceTabs.find('Tabs').at(0).prop('childrenProps'))
-        .toEqual(expect.objectContaining({webspace: webspace1}));
-    expect(webspaceTabs.find('WebspaceSelect').prop('value')).toEqual('sulu');
+    const finalWebspaceSelectProps = getLatestMockProps(webspaceSelectMock);
+    expect(finalWebspaceSelectProps.value).toEqual('sulu');
 });

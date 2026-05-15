@@ -1,16 +1,10 @@
 // @flow
-import {mount} from 'enzyme';
 import {observable} from 'mobx';
 import ListStore from 'sulu-admin-bundle/containers/List/stores/ListStore';
 import Router from 'sulu-admin-bundle/services/Router';
 import List from 'sulu-admin-bundle/views/List';
-import Dialog from 'sulu-admin-bundle/components/Dialog';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import RestoreVersionItemAction from '../../itemActions/RestoreVersionItemAction';
-
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
     post: jest.fn(),
@@ -43,6 +37,10 @@ function createItemAction(options = {}) {
     return new RestoreVersionItemAction(listStore, list, router, undefined, undefined, options);
 }
 
+function getDialogProps(itemAction: RestoreVersionItemAction): any {
+    return ((itemAction.getNode(): any).props: any);
+}
+
 test('Return disabled item action config without callback if no item is given', () => {
     const itemAction = createItemAction({success_view: 'sulu_page.page_edit_form'});
 
@@ -60,8 +58,7 @@ test('Return disabled item action config without callback if no item is given', 
 test('Display dialog if onClick callback is fired', () => {
     const itemAction = createItemAction({success_view: 'sulu_page.page_edit_form'});
 
-    let dialog = mount(itemAction.getNode()).find(Dialog);
-    expect(dialog.props()).toEqual(expect.objectContaining({
+    expect(getDialogProps(itemAction)).toEqual(expect.objectContaining({
         open: false,
         cancelText: 'sulu_admin.cancel',
         confirmText: 'sulu_admin.ok',
@@ -74,8 +71,7 @@ test('Display dialog if onClick callback is fired', () => {
     }
     onClick('version-id-1234', 1);
 
-    dialog = mount(itemAction.getNode()).find(Dialog);
-    expect(dialog.props()).toEqual(expect.objectContaining({
+    expect(getDialogProps(itemAction)).toEqual(expect.objectContaining({
         open: true,
     }));
 });
@@ -89,13 +85,11 @@ test('Close dialog if it is canceled', () => {
     }
     onClick('version-id-1234', 1);
 
-    let dialog = mount(itemAction.getNode()).find(Dialog);
-    expect(dialog.props().open).toBeTruthy();
+    expect(getDialogProps(itemAction).open).toBeTruthy();
 
-    dialog.props().onCancel();
+    getDialogProps(itemAction).onCancel();
 
-    dialog = mount(itemAction.getNode()).find(Dialog);
-    expect(dialog.props().open).toBeFalsy();
+    expect(getDialogProps(itemAction).open).toBeFalsy();
 });
 
 test('Send request and navigate to "success_view" if dialog is confirmed', () => {
@@ -110,20 +104,20 @@ test('Send request and navigate to "success_view" if dialog is confirmed', () =>
         throw new Error('The onClick callback should not be undefined in this case');
     }
     onClick('version-id-1234', 1);
-    mount(itemAction.getNode()).find(Dialog).props().onConfirm();
+    getDialogProps(itemAction).onConfirm();
 
     expect(ResourceRequester.post).toBeCalledWith(
         'list-resource-key',
         {},
         {action: 'restore', version: 'version-id-1234', id: 'page-id', locale: 'de', webspace: 'sulu'}
     );
-    expect(mount(itemAction.getNode()).find(Dialog).props()).toEqual(expect.objectContaining({
+    expect(getDialogProps(itemAction)).toEqual(expect.objectContaining({
         confirmLoading: true,
         open: true,
     }));
 
     return postPromise.then(() => {
-        expect(mount(itemAction.getNode()).find(Dialog).props()).toEqual(expect.objectContaining({
+        expect(getDialogProps(itemAction)).toEqual(expect.objectContaining({
             confirmLoading: false,
             open: false,
         }));
@@ -142,7 +136,5 @@ test('Throw error when dialog is confirmed if given "success_view" option is not
     }
     onClick('version-id-1234', 1);
 
-    const dialog = mount(itemAction.getNode()).find(Dialog);
-
-    expect(() => dialog.props().onConfirm()).toThrow(/success_view/);
+    expect(() => getDialogProps(itemAction).onConfirm()).toThrow(/success_view/);
 });

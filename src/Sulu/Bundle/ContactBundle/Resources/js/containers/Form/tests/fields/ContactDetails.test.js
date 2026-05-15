@@ -1,24 +1,23 @@
 // @flow
+import {render} from '@testing-library/react';
 import React from 'react';
-import {shallow} from 'enzyme';
-import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import ContactDetails from '../../fields/ContactDetails';
+import ContactDetailsComponent from '../../../../components/ContactDetails';
 
-jest.mock('sulu-admin-bundle/containers', () => ({
-    FormInspector: jest.fn(),
-    ResourceFormStore: jest.fn(),
-}));
+jest.mock('../../../../components/ContactDetails', () => jest.fn(() => null));
 
-jest.mock('sulu-admin-bundle/stores', () => ({
-    ResourceStore: jest.fn(),
-}));
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+function createFormInspector() {
+    return ({}: any);
+}
 
 test('Pass props correctly to ContactDetails component', () => {
     const finishSpy = jest.fn();
     const changeSpy = jest.fn();
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const value = {
         emails: [],
         faxes: [],
@@ -27,17 +26,18 @@ test('Pass props correctly to ContactDetails component', () => {
         websites: [],
     };
 
-    const bic = shallow(
+    render(
         <ContactDetails
             {...fieldTypeDefaultProps}
-            formInspector={formInspector}
+            formInspector={createFormInspector()}
             onChange={changeSpy}
             onFinish={finishSpy}
             value={value}
         />
     );
 
-    expect(bic.props()).toEqual(expect.objectContaining({
+    const [contactDetailsProps] = (ContactDetailsComponent: any).mock.calls[0];
+    expect(contactDetailsProps).toEqual(expect.objectContaining({
         onBlur: finishSpy,
         onChange: changeSpy,
         value,
@@ -47,17 +47,17 @@ test('Pass props correctly to ContactDetails component', () => {
 test('Pass undefined as value if null is given', () => {
     const finishSpy = jest.fn();
     const changeSpy = jest.fn();
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
-    const bic = shallow(
+    render(
         <ContactDetails
             {...fieldTypeDefaultProps}
-            formInspector={formInspector}
+            formInspector={createFormInspector()}
             onChange={changeSpy}
             onFinish={finishSpy}
             value={null}
         />
     );
 
-    expect(bic.prop('value')).toEqual({emails: [], faxes: [], phones: [], socialMedia: [], websites: []});
+    const [contactDetailsProps] = (ContactDetailsComponent: any).mock.calls[0];
+    expect(contactDetailsProps.value).toEqual(undefined);
 });

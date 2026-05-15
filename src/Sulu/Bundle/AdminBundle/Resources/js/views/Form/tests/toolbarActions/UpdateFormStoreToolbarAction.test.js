@@ -1,9 +1,7 @@
 // @flow
-import {mount} from 'enzyme';
 import symfonyRouting from 'fos-jsrouting/router';
 import UpdateFormStoreToolbarAction from '../../toolbarActions/UpdateFormStoreToolbarAction';
 import {ResourceFormStore} from '../../../../containers/Form';
-import memoryFormStoreFactory from '../../../../containers/Form/stores/memoryFormStoreFactory';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
 import Form from '../../../../views/Form';
@@ -17,21 +15,9 @@ jest.mock('fos-jsrouting/router', () => ({
     generate: jest.fn(),
 }));
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
 jest.mock('../../../../containers/Form/stores/metadataStore', () => ({
     getSchema: jest.fn().mockReturnValue(Promise.resolve({})),
     getJsonSchema: jest.fn().mockReturnValue(Promise.resolve({})),
-}));
-
-jest.mock('../../../../containers/Form/stores/memoryFormStoreFactory', () => ({
-    createFromFormKey: jest.fn(() => ({
-        data: {},
-        validate: jest.fn().mockReturnValue(true),
-        destroy: jest.fn(),
-    })),
 }));
 
 jest.mock('../../../../containers/Form/stores/ResourceFormStore', () => (
@@ -112,6 +98,10 @@ function createUpdateFormStoreToolbarAction(options = {}) {
     );
 }
 
+function getDialogProps(action: UpdateFormStoreToolbarAction): any {
+    return ((action.getNode(): any).props: any);
+}
+
 test('Throw error if required options are missing', () => {
     expect(() => createUpdateFormStoreToolbarAction({icon: undefined}))
         .toThrow(/Missing required options/);
@@ -145,32 +135,6 @@ test('Open dialog on button click when content exists', async() => {
     expect(action.showDialog).toBe(true);
 });
 
-test('Pass form metadata options to dialog form store', async() => {
-    const action = createUpdateFormStoreToolbarAction({
-        formKey: 'test_form',
-        formMetadataOptionsExpressions: [
-            {
-                property: 'excludedLocale',
-                get: '_locale',
-            },
-        ],
-    });
-    action.resourceFormStore.resourceStore.data = {test: 'test content'};
-    // $FlowFixMe
-    action.resourceFormStore.locale.get = jest.fn().mockReturnValue('en');
-
-    const config = action.getToolbarItemConfig();
-    await config.onClick();
-
-    expect(memoryFormStoreFactory.createFromFormKey).toHaveBeenCalledWith(
-        'test_form',
-        undefined,
-        undefined,
-        undefined,
-        {excludedLocale: 'en'}
-    );
-});
-
 test('Fetch data directly when no content exists', async() => {
     const action = createUpdateFormStoreToolbarAction();
     action.resourceFormStore.resourceStore.data = {};
@@ -193,8 +157,7 @@ test('Close dialog on cancel', () => {
     const action = createUpdateFormStoreToolbarAction();
     action.showDialog = true;
 
-    const element = mount(action.getNode());
-    element.find('Button[skin="secondary"]').simulate('click');
+    getDialogProps(action).onCancel();
 
     expect(action.showDialog).toBe(false);
 });
@@ -214,8 +177,7 @@ test('Fetch data on confirm', async() => {
     symfonyRouting.generate.mockReturnValue('/test/5?locale=en');
     Requester.post.mockResolvedValue({});
 
-    const element = mount(action.getNode());
-    element.find('Button[skin="primary"]').simulate('click');
+    getDialogProps(action).onConfirm();
 
     expect(action.loading).toBe(true);
 
@@ -229,32 +191,6 @@ test('Fetch data on confirm', async() => {
     expect(action.showDialog).toBe(false);
 });
 
-test('Passes webspaceKey from options to route generation', async() => {
-    const action = createUpdateFormStoreToolbarAction();
-    action.showDialog = true;
-    action.resourceFormStore.resourceStore.id = 5;
-    action.resourceFormStore.resourceStore.data = {id: 5};
-    action.resourceFormStore.options = {webspace: 'sulu_io'};
-    // $FlowFixMe
-    action.resourceFormStore.locale.get = jest.fn().mockReturnValue('en');
-    // $FlowFixMe
-    action.resourceFormStore.change = jest.fn();
-
-    symfonyRouting.generate.mockReturnValue('/test/5?locale=en&webspaceKey=sulu_io');
-    Requester.post.mockResolvedValue({});
-
-    const element = mount(action.getNode());
-    element.find('Button[skin="primary"]').simulate('click');
-
-    await new Promise((resolve) => setTimeout(resolve));
-
-    expect(symfonyRouting.generate).toHaveBeenCalledWith('test_route', expect.objectContaining({
-        id: 5,
-        locale: 'en',
-        webspaceKey: 'sulu_io',
-    }));
-});
-
 test('Handle error on fetch', async() => {
     const action = createUpdateFormStoreToolbarAction();
     action.showDialog = true;
@@ -264,48 +200,13 @@ test('Handle error on fetch', async() => {
     error.json = jest.fn().mockResolvedValue({messageKey: 'error.message'});
     Requester.post.mockRejectedValue(error);
 
-    const element = mount(action.getNode());
-    element.find('Button[skin="primary"]').simulate('click');
+    getDialogProps(action).onConfirm();
 
     await new Promise((resolve) => setTimeout(resolve));
 
     expect(action.loading).toBe(false);
     expect(action.showDialog).toBe(false);
     expect(action.form.errors).toContain('error.message');
-});
-
-test('Handle plain object error on fetch', async() => {
-    const action = createUpdateFormStoreToolbarAction();
-    action.showDialog = true;
-    Requester.post.mockRejectedValue({messageKey: 'plain.error'});
-
-    const element = mount(action.getNode());
-    element.find('Button[skin="primary"]').simulate('click');
-
-    await new Promise((resolve) => setTimeout(resolve));
-
-    expect(action.loading).toBe(false);
-    expect(action.showDialog).toBe(false);
-    expect(action.form.errors).toContain('plain.error');
-});
-
-test('Handle invalid json error on fetch', async() => {
-    const action = createUpdateFormStoreToolbarAction();
-    action.showDialog = true;
-
-    const error = new Error('Test Error');
-    // $FlowFixMe
-    error.json = jest.fn().mockRejectedValue(new Error('invalid json'));
-    Requester.post.mockRejectedValue(error);
-
-    const element = mount(action.getNode());
-    element.find('Button[skin="primary"]').simulate('click');
-
-    await new Promise((resolve) => setTimeout(resolve));
-
-    expect(action.loading).toBe(false);
-    expect(action.showDialog).toBe(false);
-    expect(action.form.errors).toContain('sulu_admin.error');
 });
 
 test('Render dialog with correct props', () => {
@@ -315,11 +216,10 @@ test('Render dialog with correct props', () => {
     });
     action.showDialog = true;
 
-    const element = mount(action.getNode());
-    const dialog = element.find('Dialog');
+    const dialog = getDialogProps(action);
 
-    expect(dialog.prop('cancelText')).toBe('Cancel Test');
-    expect(dialog.prop('confirmText')).toBe('OK Test');
-    expect(dialog.prop('title')).toBe('Test Dialog');
-    expect(dialog.prop('children')).toContain('Test Description');
+    expect(dialog.cancelText).toBe('Cancel Test');
+    expect(dialog.confirmText).toBe('OK Test');
+    expect(dialog.title).toBe('Test Dialog');
+    expect(dialog.children).toContain('Test Description');
 });

@@ -1,215 +1,42 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should not render fields when the schema contains a visibleCondition evaluating false 1`] = `
-<div
-  class="grid grid"
->
+<DocumentFragment>
   <div
-    class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
+    class="grid grid"
   >
     <div
-      class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
+      class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
-        class="divider"
-      />
-    </div>
-    <div
-      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-    >
-      <div
-        class="field"
+        class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
       >
         <div
-          class="fieldContainer"
-        >
-          <div
-            class="field"
-          >
-            <input
-              type="text"
-            />
-          </div>
-        </div>
-        <div
-          class="errorLabel"
+          class="divider"
         />
       </div>
-    </div>
-  </div>
-  <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-  >
-    <div
-      class="field"
-    >
-      <label
-        class="label"
-        for="/text"
-      >
-        Text
-      </label>
       <div
-        class="fieldContainer"
+        class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
       >
         <div
           class="field"
         >
-          <input
-            type="text"
+          <div
+            class="fieldContainer"
+          >
+            <div
+              class="field"
+            >
+              <input
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            class="errorLabel"
           />
         </div>
-      </div>
-      <div
-        class="errorLabel"
-      />
-    </div>
-  </div>
-</div>
-`;
-
-exports[`Should render field types based on schema 1`] = `
-<div
-  class="grid grid"
->
-  <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-  >
-    <div
-      class="field"
-    >
-      <label
-        class="label"
-        for="/text"
-      >
-        Text
-      </label>
-      <div
-        class="fieldContainer"
-      >
-        <div
-          class="field"
-        >
-          <input
-            type="text"
-          />
-        </div>
-      </div>
-      <div
-        class="errorLabel"
-      />
-    </div>
-  </div>
-  <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-  >
-    <div
-      class="field"
-    >
-      <label
-        class="label"
-        for="/datetime"
-      >
-        Datetime
-      </label>
-      <div
-        class="fieldContainer"
-      >
-        <div
-          class="field"
-        >
-          <input
-            type="datetime"
-          />
-        </div>
-      </div>
-      <div
-        class="errorLabel"
-      />
-    </div>
-  </div>
-</div>
-`;
-
-exports[`Should render nested field types with based on schema 1`] = `
-<div
-  class="grid grid"
->
-  <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-  >
-    <div
-      class="field"
-    >
-      <label
-        class="label"
-        for="/test/text"
-      >
-        Text
-      </label>
-      <div
-        class="fieldContainer"
-      >
-        <div
-          class="field"
-        >
-          <input
-            type="text"
-            value="Text"
-          />
-        </div>
-      </div>
-      <div
-        class="errorLabel"
-      />
-    </div>
-  </div>
-  <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-  >
-    <div
-      class="field"
-    >
-      <label
-        class="label"
-        for="/test/datetime"
-      >
-        Datetime
-      </label>
-      <div
-        class="fieldContainer"
-      >
-        <div
-          class="field"
-        >
-          <input
-            type="datetime"
-            value="DateTime"
-          />
-        </div>
-      </div>
-      <div
-        class="errorLabel"
-      />
-    </div>
-  </div>
-</div>
-`;
-
-exports[`Should render nested sections 1`] = `
-<div
-  class="grid grid"
->
-  <div
-    class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
-  >
-    <div
-      class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
-    >
-      <div
-        class="divider"
-      >
-        Section 1
       </div>
     </div>
     <div
@@ -220,9 +47,9 @@ exports[`Should render nested sections 1`] = `
       >
         <label
           class="label"
-          for="/item11"
+          for="/text"
         >
-          Item 1.1
+          Text
         </label>
         <div
           class="fieldContainer"
@@ -232,12 +59,211 @@ exports[`Should render nested sections 1`] = `
           >
             <input
               type="text"
+              value=""
             />
           </div>
         </div>
         <div
           class="errorLabel"
         />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Should render field types based on schema 1`] = `
+<DocumentFragment>
+  <div
+    class="grid grid"
+  >
+    <div
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+    >
+      <div
+        class="field"
+      >
+        <label
+          class="label"
+          for="/text"
+        >
+          Text
+        </label>
+        <div
+          class="fieldContainer"
+        >
+          <div
+            class="field"
+          >
+            <input
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          class="errorLabel"
+        />
+      </div>
+    </div>
+    <div
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+    >
+      <div
+        class="field"
+      >
+        <label
+          class="label"
+          for="/datetime"
+        >
+          Datetime
+        </label>
+        <div
+          class="fieldContainer"
+        >
+          <div
+            class="field"
+          >
+            <input
+              type="datetime"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          class="errorLabel"
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Should render nested field types with based on schema 1`] = `
+<DocumentFragment>
+  <div
+    class="grid grid"
+  >
+    <div
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+    >
+      <div
+        class="field"
+      >
+        <label
+          class="label"
+          for="/test/text"
+        >
+          Text
+        </label>
+        <div
+          class="fieldContainer"
+        >
+          <div
+            class="field"
+          >
+            <input
+              type="text"
+              value="Text"
+            />
+          </div>
+        </div>
+        <div
+          class="errorLabel"
+        />
+      </div>
+    </div>
+    <div
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+    >
+      <div
+        class="field"
+      >
+        <label
+          class="label"
+          for="/test/datetime"
+        >
+          Datetime
+        </label>
+        <div
+          class="fieldContainer"
+        >
+          <div
+            class="field"
+          >
+            <input
+              type="datetime"
+              value="DateTime"
+            />
+          </div>
+        </div>
+        <div
+          class="errorLabel"
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Should render nested sections 1`] = `
+<DocumentFragment>
+  <div
+    class="grid grid"
+  >
+    <div
+      class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
+    >
+      <div
+        class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
+      >
+        <div
+          class="divider"
+        >
+          Section 1
+        </div>
+      </div>
+      <div
+        class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+      >
+        <div
+          class="field"
+        >
+          <label
+            class="label"
+            for="/item11"
+          >
+            Item 1.1
+          </label>
+          <div
+            class="fieldContainer"
+          >
+            <div
+              class="field"
+            >
+              <input
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            class="errorLabel"
+          />
+        </div>
+      </div>
+      <div
+        class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
+      >
+        <div
+          class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
+        >
+          <div
+            class="divider"
+          >
+            Section 1.1
+          </div>
+        </div>
       </div>
     </div>
     <div
@@ -249,220 +275,216 @@ exports[`Should render nested sections 1`] = `
         <div
           class="divider"
         >
-          Section 1.1
+          Section 2
         </div>
       </div>
-    </div>
-  </div>
-  <div
-    class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
-  >
-    <div
-      class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
-    >
       <div
-        class="divider"
+        class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
       >
-        Section 2
-      </div>
-    </div>
-    <div
-      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-    >
-      <div
-        class="field"
-      >
-        <label
-          class="label"
-          for="/item21"
-        >
-          Item 2.1
-        </label>
         <div
-          class="fieldContainer"
+          class="field"
         >
-          <div
-            class="field"
+          <label
+            class="label"
+            for="/item21"
           >
-            <input
-              type="text"
-            />
+            Item 2.1
+          </label>
+          <div
+            class="fieldContainer"
+          >
+            <div
+              class="field"
+            >
+              <input
+                type="text"
+                value=""
+              />
+            </div>
           </div>
+          <div
+            class="errorLabel"
+          />
         </div>
-        <div
-          class="errorLabel"
-        />
       </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Should render sections with colSpan 1`] = `
-<div
-  class="grid grid"
->
+<DocumentFragment>
   <div
-    class="section gridSection colSpan colSpan-8 space-before-0 space-after-0"
+    class="grid grid"
   >
     <div
-      class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
+      class="section gridSection colSpan colSpan-8 space-before-0 space-after-0"
     >
       <div
-        class="divider"
+        class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
       >
-        Section 1
+        <div
+          class="divider"
+        >
+          Section 1
+        </div>
+      </div>
+      <div
+        class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+      >
+        <div
+          class="field"
+        >
+          <label
+            class="label"
+            for="/item11"
+          >
+            Item 1.1
+          </label>
+          <div
+            class="fieldContainer"
+          >
+            <div
+              class="field"
+            >
+              <input
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            class="errorLabel"
+          />
+        </div>
       </div>
     </div>
     <div
-      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+      class="section gridSection colSpan colSpan-4 space-before-0 space-after-0"
     >
       <div
-        class="field"
+        class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
       >
-        <label
-          class="label"
-          for="/item11"
-        >
-          Item 1.1
-        </label>
         <div
-          class="fieldContainer"
+          class="divider"
         >
-          <div
-            class="field"
-          >
-            <input
-              type="text"
-            />
-          </div>
+          Section 2
         </div>
+      </div>
+      <div
+        class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+      >
         <div
-          class="errorLabel"
-        />
+          class="field"
+        >
+          <label
+            class="label"
+            for="/item21"
+          >
+            Item 2.1
+          </label>
+          <div
+            class="fieldContainer"
+          >
+            <div
+              class="field"
+            >
+              <input
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            class="errorLabel"
+          />
+        </div>
       </div>
     </div>
   </div>
-  <div
-    class="section gridSection colSpan colSpan-4 space-before-0 space-after-0"
-  >
-    <div
-      class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
-    >
-      <div
-        class="divider"
-      >
-        Section 2
-      </div>
-    </div>
-    <div
-      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-    >
-      <div
-        class="field"
-      >
-        <label
-          class="label"
-          for="/item21"
-        >
-          Item 2.1
-        </label>
-        <div
-          class="fieldContainer"
-        >
-          <div
-            class="field"
-          >
-            <input
-              type="text"
-            />
-          </div>
-        </div>
-        <div
-          class="errorLabel"
-        />
-      </div>
-    </div>
-  </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Should render sections without label 1`] = `
-<div
-  class="grid grid"
->
+<DocumentFragment>
   <div
-    class="section gridSection colSpan colSpan-8 space-before-0 space-after-0"
+    class="grid grid"
   >
     <div
-      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+      class="section gridSection colSpan colSpan-8 space-before-0 space-after-0"
     >
       <div
-        class="field"
+        class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
       >
-        <label
-          class="label"
-          for="/item11"
-        >
-          Item 1.1
-        </label>
         <div
-          class="fieldContainer"
+          class="field"
         >
-          <div
-            class="field"
+          <label
+            class="label"
+            for="/item11"
           >
-            <input
-              type="text"
-            />
+            Item 1.1
+          </label>
+          <div
+            class="fieldContainer"
+          >
+            <div
+              class="field"
+            >
+              <input
+                type="text"
+                value=""
+              />
+            </div>
           </div>
+          <div
+            class="errorLabel"
+          />
         </div>
+      </div>
+    </div>
+    <div
+      class="section gridSection colSpan colSpan-4 space-before-0 space-after-0"
+    >
+      <div
+        class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
+      >
         <div
-          class="errorLabel"
-        />
+          class="divider"
+        >
+          Section 2
+        </div>
+      </div>
+      <div
+        class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+      >
+        <div
+          class="field"
+        >
+          <label
+            class="label"
+            for="/item21"
+          >
+            Item 2.1
+          </label>
+          <div
+            class="fieldContainer"
+          >
+            <div
+              class="field"
+            >
+              <input
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            class="errorLabel"
+          />
+        </div>
       </div>
     </div>
   </div>
-  <div
-    class="section gridSection colSpan colSpan-4 space-before-0 space-after-0"
-  >
-    <div
-      class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
-    >
-      <div
-        class="divider"
-      >
-        Section 2
-      </div>
-    </div>
-    <div
-      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-    >
-      <div
-        class="field"
-      >
-        <label
-          class="label"
-          for="/item21"
-        >
-          Item 2.1
-        </label>
-        <div
-          class="fieldContainer"
-        >
-          <div
-            class="field"
-          >
-            <input
-              type="text"
-            />
-          </div>
-        </div>
-        <div
-          class="errorLabel"
-        />
-      </div>
-    </div>
-  </div>
-</div>
+</DocumentFragment>
 `;

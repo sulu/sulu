@@ -1,79 +1,46 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render FieldFilterItem with a FieldFilterType 1`] = `
-Array [
-  <span
-    class="fieldFilterItem"
-  >
+<DocumentFragment>
+  <div>
+    <span
+      class="fieldFilterItem"
+    >
+      <div>
+        <button
+          type="button"
+        >
+          Salutation: 
+          <span>
+            loading
+          </span>
+        </button>
+        <button
+          type="button"
+        >
+          delete-chip
+        </button>
+      </div>
+    </span>
     <button
-      class="chip primary medium clickable"
       type="button"
     >
-      Salutation: 
-      <div
-        class="spinner"
-        style="width: 10px; height: 10px;"
-      >
-        <div
-          class="doubleBounce1"
-        />
-        <div
-          class="doubleBounce2"
-        />
-      </div>
-      <span
-        aria-label="su-times"
-        class="su-times clickable icon"
-        role="button"
-        tabindex="0"
-      />
+      close-menu
     </button>
-  </span>,
-  <div
-    class="backdrop fixed"
-    data-testid="backdrop"
-    role="button"
-  />,
-  <div
-    class="container"
-  >
-    <div
-      class="arrowMenuContainer"
-      style="top: 20px; left: 10px; position: fixed; pointer-events: auto;"
-    >
+    <div>
+      <div>
+        This is the form node
+      </div>
       <div
-        class="arrow top right"
-      />
-      <div
-        class="arrowMenu"
+        class="buttonContainer"
       >
-        <div
-          class="section"
+        <button
+          type="button"
         >
-          <div
-            class="children"
-          >
-            <div>
-              This is the form node
-            </div>
-            <div
-              class="buttonContainer"
-            >
-              <button
-                class="button link hasText"
-                type="button"
-              >
-                <span
-                  class="buttonText"
-                >
-                  sulu_admin.ok
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
+          sulu_admin.ok
+        </button>
       </div>
     </div>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;

@@ -608,7 +608,7 @@ exports[`Render data with skin 1`] = `
         >
           <div
             class="cellContent"
-            style="padding-left:25px"
+            style="padding-left: 25px;"
           >
             Test4
           </div>
@@ -817,7 +817,7 @@ exports[`Render data without header 1`] = `
         >
           <div
             class="cellContent"
-            style="padding-left:25px"
+            style="padding-left: 25px;"
           >
             Test4
           </div>
@@ -903,7 +903,7 @@ exports[`Render data without header 2`] = `
         >
           <div
             class="cellContent"
-            style="padding-left:25px"
+            style="padding-left: 25px;"
           >
             Test4
           </div>

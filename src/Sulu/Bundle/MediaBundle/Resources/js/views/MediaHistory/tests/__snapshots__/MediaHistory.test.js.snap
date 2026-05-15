@@ -1,190 +1,98 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render a MediaHistory view 1`] = `
-<div
-  class="mediaHistory"
->
-  <h1>
-    Test 2
-  </h1>
+<DocumentFragment>
   <div
-    class="tableContainer dark"
+    class="mediaHistory"
   >
+    <h1>
+      Test 2
+    </h1>
     <table
-      class="table"
+      data-testid="media-history-table"
     >
-      <thead
-        class="header"
-      >
+      <thead>
         <tr>
-          <th
-            class="headerButtonCell headerCell"
-          >
-            <span>
-              <span
-                aria-label="su-eye"
-                class="su-eye"
-              />
-            </span>
+          <th>
+            su-eye
           </th>
-          <th
-            class="headerButtonCell headerCell"
-          >
-            <span>
-              <span
-                aria-label="su-trash-alt"
-                class="su-trash-alt"
-              />
-            </span>
+          <th>
+            su-trash-alt
           </th>
-          <th
-            class="headerCell"
-          >
-            <span>
-              sulu_media.version
-            </span>
+          <th>
+            sulu_media.version
           </th>
-          <th
-            class="headerCell"
-          >
-            <span>
-              sulu_admin.created
-            </span>
+          <th>
+            sulu_admin.created
           </th>
         </tr>
       </thead>
       <tbody>
         <tr
-          class="row"
+          data-testid="row-2"
         >
-          <td
-            class="buttonCell cell"
-          >
-            <div
-              class="cellContent"
+          <td>
+            <button
+              type="button"
             >
-              <button
-                type="button"
-              >
-                <span
-                  aria-label="su-eye"
-                  class="su-eye"
-                />
-              </button>
-            </div>
+              su-eye
+            </button>
           </td>
-          <td
-            class="buttonCell cell"
-          >
-            <div
-              class="cellContent"
+          <td>
+            <button
+              type="button"
             >
-              <button
-                type="button"
-              >
-                <span
-                  aria-label="su-trash-alt"
-                  class="su-trash-alt"
-                />
-              </button>
-            </div>
+              su-trash-alt
+            </button>
           </td>
-          <td
-            class="cell"
-          >
-            <div
-              class="cellContent"
-            >
-              sulu_media.version 2
-            </div>
+          <td>
+            sulu_media.version 2
           </td>
-          <td
-            class="cell"
-          >
-            <div
-              class="cellContent"
-            >
-              10/23/2018, 10:25:00 AM
-            </div>
+          <td>
+            10/23/2018, 10:25:00 AM
           </td>
         </tr>
         <tr
-          class="row"
+          data-testid="row-1"
         >
-          <td
-            class="buttonCell cell"
-          >
-            <div
-              class="cellContent"
+          <td>
+            <button
+              type="button"
             >
-              <button
-                type="button"
-              >
-                <span
-                  aria-label="su-eye"
-                  class="su-eye"
-                />
-              </button>
-            </div>
+              su-eye
+            </button>
           </td>
-          <td
-            class="buttonCell cell"
-          >
-            <div
-              class="cellContent"
+          <td>
+            <button
+              type="button"
             >
-              <button
-                type="button"
-              >
-                <span
-                  aria-label="su-trash-alt"
-                  class="su-trash-alt"
-                />
-              </button>
-            </div>
+              su-trash-alt
+            </button>
           </td>
-          <td
-            class="cell"
-          >
-            <div
-              class="cellContent"
-            >
-              sulu_media.version 1
-            </div>
+          <td>
+            sulu_media.version 1
           </td>
-          <td
-            class="cell"
-          >
-            <div
-              class="cellContent"
-            >
-              10/23/2018, 10:18:00 AM
-            </div>
+          <td>
+            10/23/2018, 10:18:00 AM
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render a loading MediaHistory view 1`] = `
-<div
-  class="mediaHistory"
->
-  <h1>
-    Test 1
-  </h1>
+<DocumentFragment>
   <div
-    class="spinner"
-    style="width:40px;height:40px"
+    class="mediaHistory"
   >
+    <h1>
+      Test 1
+    </h1>
     <div
-      class="doubleBounce1"
-    />
-    <div
-      class="doubleBounce2"
+      data-testid="loader"
     />
   </div>
-</div>
+</DocumentFragment>
 `;

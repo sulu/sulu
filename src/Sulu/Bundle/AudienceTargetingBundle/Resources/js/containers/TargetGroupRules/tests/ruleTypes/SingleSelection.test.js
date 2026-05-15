@@ -1,7 +1,21 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
+import {SingleSelection as SingleSelectionComponent} from 'sulu-admin-bundle/containers';
 import SingleSelection from '../../ruleTypes/SingleSelection';
+
+jest.mock('sulu-admin-bundle/containers', () => ({
+    SingleSelection: jest.fn(() => null),
+}));
+
+function getLatestSingleSelectionProps() {
+    const calls = (SingleSelectionComponent: any).mock.calls;
+    return calls[calls.length - 1][0];
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test.each([
     [
@@ -38,15 +52,16 @@ test.each([
     result
 ) => {
     const options = {adapter, displayProperties, emptyText, icon, name, overlayTitle, resourceKey};
-    const singleSelection = shallow(<SingleSelection onChange={jest.fn()} options={options} value={value} />);
+    render(<SingleSelection onChange={jest.fn()} options={options} value={value} />);
+    const singleSelectionProps = getLatestSingleSelectionProps();
 
-    expect(singleSelection.find('SingleSelection').prop('value')).toEqual(result);
-    expect(singleSelection.find('SingleSelection').prop('adapter')).toEqual(adapter);
-    expect(singleSelection.find('SingleSelection').prop('displayProperties')).toEqual(displayProperties);
-    expect(singleSelection.find('SingleSelection').prop('emptyText')).toEqual(emptyText);
-    expect(singleSelection.find('SingleSelection').prop('icon')).toEqual(icon);
-    expect(singleSelection.find('SingleSelection').prop('overlayTitle')).toEqual(overlayTitle);
-    expect(singleSelection.find('SingleSelection').prop('resourceKey')).toEqual(resourceKey);
+    expect(singleSelectionProps.value).toEqual(result);
+    expect(singleSelectionProps.adapter).toEqual(adapter);
+    expect(singleSelectionProps.displayProperties).toEqual(displayProperties);
+    expect(singleSelectionProps.emptyText).toEqual(emptyText);
+    expect(singleSelectionProps.icon).toEqual(icon);
+    expect(singleSelectionProps.overlayTitle).toEqual(overlayTitle);
+    expect(singleSelectionProps.resourceKey).toEqual(resourceKey);
 });
 
 test.each([
@@ -64,8 +79,8 @@ test.each([
         resourceKey: 'snippets',
     };
 
-    const singleSelection = shallow(<SingleSelection onChange={changeSpy} options={options} value={{}} />);
-    singleSelection.find('SingleSelection').prop('onChange')(value);
+    render(<SingleSelection onChange={changeSpy} options={options} value={{}} />);
+    getLatestSingleSelectionProps().onChange(value);
 
     expect(changeSpy).toBeCalledWith({[name]: value});
 });

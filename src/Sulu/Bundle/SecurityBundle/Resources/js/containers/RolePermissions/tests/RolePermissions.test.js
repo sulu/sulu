@@ -1,12 +1,37 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
+import {act, render} from '@testing-library/react';
+import {Heading, Matrix, Toggler} from 'sulu-admin-bundle/components';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import securityContextStore from '../../../stores/securityContextStore';
 import RolePermissions from '../RolePermissions';
 
+jest.mock('sulu-admin-bundle/components', () => {
+    const React = require('react');
+
+    const Loader = jest.fn(() => <div>loader</div>);
+    const Heading = jest.fn(({label, children}) => (
+        <div>
+            <span>{label}</span>
+            {children}
+        </div>
+    ));
+    const Toggler = jest.fn(() => null);
+    const Matrix = jest.fn(({children}) => <div>{children}</div>);
+    const MatrixAny: any = Matrix;
+    MatrixAny.Row = jest.fn(({children}) => <div>{children}</div>);
+    MatrixAny.Item = jest.fn(() => null);
+
+    return {
+        Heading,
+        Loader,
+        Matrix,
+        Toggler,
+    };
+});
+
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
+    translate: jest.fn((key, options = {}) => options.system ? `${key}:${options.system}` : key),
 }));
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
@@ -23,7 +48,70 @@ jest.mock('../../../stores/securityContextStore', () => ({
 
 RolePermissions.suluSecuritySystem = 'Sulu';
 
-test('Render matrix with correct given values', () => {
+function renderRolePermissions(props: Object = {}) {
+    return render(
+        <RolePermissions
+            onChange={jest.fn()}
+            resourceKey="snippets"
+            value={{}}
+            {...props}
+        />
+    );
+}
+
+function getTogglerProps(index: number) {
+    const calls = ((Toggler: any).mock.calls: any);
+    return calls[index][0];
+}
+
+function getMatrixProps(index: number) {
+    const calls = ((Matrix: any).mock.calls: any);
+    return calls[index][0];
+}
+
+function getHeadingLabels() {
+    const calls = ((Heading: any).mock.calls: any);
+    return calls.map(([props]) => props.label);
+}
+
+function getLatestTogglerPropsForSystem(system: string) {
+    const headingCalls = ((Heading: any).mock.calls: any);
+    const togglerCalls = ((Toggler: any).mock.calls: any);
+
+    for (let i = headingCalls.length - 1; i >= 0; i--) {
+        if (headingCalls[i][0].label === `sulu_security.system_permission_heading:${system}`) {
+            return togglerCalls[i][0];
+        }
+    }
+
+    throw new Error(`Could not find toggler for system ${system}`);
+}
+
+function getLatestMatrixPropsForRole(roleId: string) {
+    const calls = ((Matrix: any).mock.calls: any);
+
+    for (let i = calls.length - 1; i >= 0; i--) {
+        const props = calls[i][0];
+
+        if (props.values && props.values[roleId] !== undefined) {
+            return props;
+        }
+    }
+
+    throw new Error(`Could not find matrix for role ${roleId}`);
+}
+
+async function resolveRoles(rolePromise: Promise<*>) {
+    await act(async() => {
+        await rolePromise;
+    });
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+test('Render matrix with correct given values', async() => {
     const rolePromise = Promise.resolve(
         {
             _embedded: {
@@ -53,17 +141,17 @@ test('Render matrix with correct given values', () => {
             delete: false,
         },
     };
-    const rolePermissions = mount(<RolePermissions onChange={jest.fn()} resourceKey="snippets" value={value} />);
 
-    expect(rolePermissions.render()).toMatchSnapshot();
+    const {container} = renderRolePermissions({value});
 
-    return Promise.all([rolePromise]).then(() => {
-        rolePermissions.update();
-        expect(rolePermissions.render()).toMatchSnapshot();
-    });
+    expect(container).toMatchSnapshot();
+
+    await resolveRoles(rolePromise);
+
+    expect(container).toMatchSnapshot();
 });
 
-test('Hide system if specific system is given', () => {
+test('Hide system if specific system is given', async() => {
     const rolePromise = Promise.resolve(
         {
             _embedded: {
@@ -80,47 +168,52 @@ test('Hide system if specific system is given', () => {
     securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'security']);
     securityContextStore.getSystems.mockReturnValue(['Sulu', 'Website', 'Blog']);
 
-    const rolePermissions = mount(
-        <RolePermissions onChange={jest.fn()} permissionCheck={true} resourceKey="snippets" system="Blog" value={{}} />
-    );
-
-    return Promise.all([rolePromise]).then(() => {
-        rolePermissions.update();
-        expect(rolePermissions.find('SystemRolePermissions')).toHaveLength(2);
-        expect(rolePermissions.find('SystemRolePermissions').at(0).prop('system')).toEqual('Sulu');
-        expect(rolePermissions.find('SystemRolePermissions').at(1).prop('system')).toEqual('Blog');
+    renderRolePermissions({
+        permissionCheck: true,
+        system: 'Blog',
     });
+
+    await resolveRoles(rolePromise);
+
+    expect(getHeadingLabels()).toEqual([
+        'sulu_security.system_permission_heading:Sulu',
+        'sulu_security.system_permission_heading:Blog',
+    ]);
 });
 
-test('Show only Sulu system if specific system is given and permissionCheck is set to false for that system', () => {
-    const rolePromise = Promise.resolve(
-        {
-            _embedded: {
-                roles: [
-                    {id: 1, name: 'Admin', system: 'Sulu'},
-                    {id: 2, name: 'Contact Manager', system: 'Website'},
-                    {id: 3, name: 'Blog Manager', system: 'Blog'},
-                ],
-            },
-        }
-    );
-    ResourceRequester.get.mockReturnValue(rolePromise);
+test(
+    'Show only Sulu system if specific system is given and permissionCheck is set to false for that system',
+    async() => {
+        const rolePromise = Promise.resolve(
+            {
+                _embedded: {
+                    roles: [
+                        {id: 1, name: 'Admin', system: 'Sulu'},
+                        {id: 2, name: 'Contact Manager', system: 'Website'},
+                        {id: 3, name: 'Blog Manager', system: 'Blog'},
+                    ],
+                },
+            }
+        );
+        ResourceRequester.get.mockReturnValue(rolePromise);
 
-    securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'security']);
-    securityContextStore.getSystems.mockReturnValue(['Sulu', 'Website', 'Blog']);
+        securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'security']);
+        securityContextStore.getSystems.mockReturnValue(['Sulu', 'Website', 'Blog']);
 
-    const rolePermissions = mount(
-        <RolePermissions onChange={jest.fn()} permissionCheck={false} resourceKey="snippets" system="Blog" value={{}} />
-    );
+        renderRolePermissions({
+            permissionCheck: false,
+            system: 'Blog',
+        });
 
-    return Promise.all([rolePromise]).then(() => {
-        rolePermissions.update();
-        expect(rolePermissions.find('SystemRolePermissions')).toHaveLength(1);
-        expect(rolePermissions.find('SystemRolePermissions').at(0).prop('system')).toEqual('Sulu');
-    });
-});
+        await resolveRoles(rolePromise);
 
-test('Hide system if no actions are given', () => {
+        expect(getHeadingLabels()).toEqual([
+            'sulu_security.system_permission_heading:Sulu',
+        ]);
+    }
+);
+
+test('Hide system if no actions are given', async() => {
     const rolePromise = Promise.resolve(
         {
             _embedded: {
@@ -141,18 +234,21 @@ test('Hide system if no actions are given', () => {
         if (system === 'Website') {
             return [];
         }
+
+        return [];
     });
     securityContextStore.getSystems.mockReturnValue(['Sulu', 'Website']);
 
-    const rolePermissions = mount(<RolePermissions onChange={jest.fn()} resourceKey="snippets" value={{}} />);
+    renderRolePermissions();
 
-    return Promise.all([rolePromise]).then(() => {
-        rolePermissions.update();
-        expect(rolePermissions.find('SystemRolePermissions')).toHaveLength(1);
-    });
+    await resolveRoles(rolePromise);
+
+    expect(getHeadingLabels()).toEqual([
+        'sulu_security.system_permission_heading:Sulu',
+    ]);
 });
 
-test('Call onChange callback when value changes', () => {
+test('Call onChange callback when value changes', async() => {
     const changeSpy = jest.fn();
 
     const rolePromise = Promise.resolve(
@@ -178,22 +274,19 @@ test('Call onChange callback when value changes', () => {
             delete: true,
         },
     };
-    const rolePermissions = mount(<RolePermissions onChange={changeSpy} resourceKey="snippets" value={value} />);
 
-    return Promise.all([rolePromise]).then(() => {
-        rolePermissions.update();
-        expect(securityContextStore.getAvailableActions).toBeCalledWith('snippets', 'Sulu');
-        expect(securityContextStore.getAvailableActions).toBeCalledWith('snippets', 'Website');
+    renderRolePermissions({
+        onChange: changeSpy,
+        value,
+    });
 
-        rolePermissions.find('Matrix').at(0).prop('onChange')({
-            '2': {
-                view: true,
-                add: true,
-                edit: true,
-                delete: false,
-            },
-        });
-        expect(changeSpy).toHaveBeenLastCalledWith({
+    await resolveRoles(rolePromise);
+
+    expect(securityContextStore.getAvailableActions).toBeCalledWith('snippets', 'Sulu');
+    expect(securityContextStore.getAvailableActions).toBeCalledWith('snippets', 'Website');
+
+    act(() => {
+        getMatrixProps(0).onChange({
             '2': {
                 view: true,
                 add: true,
@@ -202,9 +295,18 @@ test('Call onChange callback when value changes', () => {
             },
         });
     });
+
+    expect(changeSpy).toHaveBeenLastCalledWith({
+        '2': {
+            view: true,
+            add: true,
+            edit: true,
+            delete: false,
+        },
+    });
 });
 
-test('Call onChange callback when matrix for system is deactivated', () => {
+test('Call onChange callback when matrix for system is deactivated', async() => {
     const changeSpy = jest.fn();
 
     const rolePromise = Promise.resolve(
@@ -250,31 +352,35 @@ test('Call onChange callback when matrix for system is deactivated', () => {
             delete: false,
         },
     };
-    const rolePermissions = mount(<RolePermissions onChange={changeSpy} resourceKey="snippets" value={value} />);
 
-    return Promise.all([rolePromise]).then(() => {
-        rolePermissions.update();
+    renderRolePermissions({
+        onChange: changeSpy,
+        value,
+    });
 
-        rolePermissions.find('Toggler').at(0).prop('onChange')(false);
+    await resolveRoles(rolePromise);
 
-        expect(changeSpy).toHaveBeenLastCalledWith({
-            '1': {
-                view: true,
-                add: true,
-                edit: true,
-                delete: true,
-            },
-            '3': {
-                view: true,
-                add: true,
-                edit: true,
-                delete: false,
-            },
-        });
+    act(() => {
+        getTogglerProps(0).onChange(false);
+    });
+
+    expect(changeSpy).toHaveBeenLastCalledWith({
+        '1': {
+            view: true,
+            add: true,
+            edit: true,
+            delete: true,
+        },
+        '3': {
+            view: true,
+            add: true,
+            edit: true,
+            delete: false,
+        },
     });
 });
 
-test('Call onChange callback when new matrix for system is added', () => {
+test('Call onChange callback when new matrix for system is added', async() => {
     const changeSpy = jest.fn();
 
     const rolePromise = Promise.resolve(
@@ -308,39 +414,31 @@ test('Call onChange callback when new matrix for system is added', () => {
             delete: false,
         },
     };
-    const rolePermissions = mount(<RolePermissions onChange={changeSpy} resourceKey="snippets" value={value} />);
 
-    return Promise.all([rolePromise]).then(() => {
-        rolePermissions.update();
+    renderRolePermissions({
+        onChange: changeSpy,
+        value,
+    });
 
-        expect(rolePermissions.find('Toggler').at(0).prop('checked')).toEqual(false);
-        expect(rolePermissions.find('Toggler').at(1).prop('checked')).toEqual(true);
+    await resolveRoles(rolePromise);
 
-        rolePermissions.find('Toggler').at(0).prop('onChange')(true);
-        rolePermissions.update();
-        expect(rolePermissions.find('Matrix')).toHaveLength(2);
+    expect(getLatestTogglerPropsForSystem('Sulu').checked).toEqual(false);
+    expect(getLatestTogglerPropsForSystem('Website').checked).toEqual(true);
 
-        rolePermissions.find('Matrix').find('Row[name="2"] Item[icon="su-eye"] > button').simulate('click');
+    act(() => {
+        getLatestTogglerPropsForSystem('Sulu').onChange(true);
+    });
 
-        expect(changeSpy).toHaveBeenLastCalledWith({
-            '1': {
-                view: true,
-                add: true,
-                edit: true,
-                delete: true,
-            },
+    const suluMatrix = getLatestMatrixPropsForRole('2');
+
+    act(() => {
+        suluMatrix.onChange({
             '2': {
                 view: true,
                 add: false,
                 edit: false,
                 delete: false,
                 live: false,
-            },
-            '3': {
-                view: true,
-                add: true,
-                edit: true,
-                delete: false,
             },
             '4': {
                 view: false,
@@ -351,9 +449,38 @@ test('Call onChange callback when new matrix for system is added', () => {
             },
         });
     });
+
+    expect(changeSpy).toHaveBeenLastCalledWith({
+        '1': {
+            view: true,
+            add: true,
+            edit: true,
+            delete: true,
+        },
+        '2': {
+            view: true,
+            add: false,
+            edit: false,
+            delete: false,
+            live: false,
+        },
+        '3': {
+            view: true,
+            add: true,
+            edit: true,
+            delete: false,
+        },
+        '4': {
+            view: false,
+            add: false,
+            edit: false,
+            delete: false,
+            live: false,
+        },
+    });
 });
 
-test('Use context for getting default values', () => {
+test('Use context for getting default values', async() => {
     const changeSpy = jest.fn();
 
     const rolePromise = Promise.resolve(
@@ -381,32 +508,34 @@ test('Use context for getting default values', () => {
     securityContextStore.getSystems.mockReturnValue(['Sulu']);
     securityContextStore.getSecurityContextByResourceKey.mockReturnValue('sulu.pages.website');
 
-    const value = {};
-    const rolePermissions = mount(<RolePermissions onChange={changeSpy} resourceKey="pages" value={value} />);
+    renderRolePermissions({
+        onChange: changeSpy,
+        resourceKey: 'pages',
+        value: {},
+    });
 
-    return Promise.all([rolePromise]).then(() => {
-        rolePermissions.update();
+    await resolveRoles(rolePromise);
 
-        expect(rolePermissions.find('Toggler').at(0).prop('checked')).toEqual(false);
+    expect(getTogglerProps(0).checked).toEqual(false);
 
-        rolePermissions.find('Toggler').at(0).prop('onChange')(true);
-        rolePermissions.update();
-        expect(securityContextStore.getSecurityContextByResourceKey).toBeCalledWith('pages');
-        expect(rolePermissions.find('Matrix')).toHaveLength(1);
+    act(() => {
+        getTogglerProps(0).onChange(true);
+    });
 
-        expect(rolePermissions.find('Matrix').prop('values')).toEqual({
-            '1': {
-                add: true,
-                delete: false,
-                edit: true,
-                live: false,
-                view: true,
-            },
-        });
+    expect(securityContextStore.getSecurityContextByResourceKey).toBeCalledWith('pages');
+
+    expect(getLatestMatrixPropsForRole('1').values).toEqual({
+        '1': {
+            add: true,
+            delete: false,
+            edit: true,
+            live: false,
+            view: true,
+        },
     });
 });
 
-test('Use context with replaced webspace for getting default values', () => {
+test('Use context with replaced webspace for getting default values', async() => {
     const changeSpy = jest.fn();
 
     const rolePromise = Promise.resolve(
@@ -434,29 +563,30 @@ test('Use context with replaced webspace for getting default values', () => {
     securityContextStore.getSystems.mockReturnValue(['Sulu']);
     securityContextStore.getSecurityContextByResourceKey.mockReturnValue('sulu.pages.#webspace#');
 
-    const value = {};
-    const rolePermissions = mount(
-        <RolePermissions onChange={changeSpy} resourceKey="pages" value={value} webspaceKey="website" />
-    );
+    renderRolePermissions({
+        onChange: changeSpy,
+        resourceKey: 'pages',
+        value: {},
+        webspaceKey: 'website',
+    });
 
-    return Promise.all([rolePromise]).then(() => {
-        rolePermissions.update();
+    await resolveRoles(rolePromise);
 
-        expect(rolePermissions.find('Toggler').at(0).prop('checked')).toEqual(false);
+    expect(getTogglerProps(0).checked).toEqual(false);
 
-        rolePermissions.find('Toggler').at(0).prop('onChange')(true);
-        rolePermissions.update();
-        expect(securityContextStore.getSecurityContextByResourceKey).toBeCalledWith('pages');
-        expect(rolePermissions.find('Matrix')).toHaveLength(1);
+    act(() => {
+        getTogglerProps(0).onChange(true);
+    });
 
-        expect(rolePermissions.find('Matrix').prop('values')).toEqual({
-            '1': {
-                add: true,
-                delete: false,
-                edit: true,
-                live: false,
-                view: true,
-            },
-        });
+    expect(securityContextStore.getSecurityContextByResourceKey).toBeCalledWith('pages');
+
+    expect(getLatestMatrixPropsForRole('1').values).toEqual({
+        '1': {
+            add: true,
+            delete: false,
+            edit: true,
+            live: false,
+            view: true,
+        },
     });
 });

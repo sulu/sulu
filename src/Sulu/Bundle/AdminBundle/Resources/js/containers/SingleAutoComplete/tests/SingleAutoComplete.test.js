@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {mount, shallow, render} from 'enzyme';
+import {render} from '@testing-library/react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import SingleAutoComplete from '../SingleAutoComplete';
 import SingleAutoCompleteComponent from '../../../components/SingleAutoComplete';
@@ -8,6 +8,7 @@ import SearchStore from '../../../stores/SearchStore';
 import SingleSelectionStore from '../../../stores/SingleSelectionStore';
 
 jest.mock('../../../stores/SearchStore', () => jest.fn());
+jest.mock('../../../components/SingleAutoComplete', () => jest.fn(() => null));
 jest.mock('../../../stores/SingleSelectionStore', () => jest.fn(function(resourceKey, selectedItemId, locale) {
     this.resourceKey = resourceKey;
     this.locale = locale;
@@ -16,6 +17,20 @@ jest.mock('../../../stores/SingleSelectionStore', () => jest.fn(function(resourc
 
     mockExtendObservable(this, {item: selectedItemId ? {id: selectedItemId} : undefined});
 }));
+
+function getLatestSingleAutoCompleteProps() {
+    const calls = (SingleAutoCompleteComponent: any).mock.calls;
+
+    return calls[calls.length - 1][0];
+}
+
+function getFirstSearchStoreMockInstance() {
+    return (SearchStore: any).mock.instances[0];
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test('Render in loading state when SearchStore is loading', () => {
     // $FlowFixMe
@@ -26,7 +41,7 @@ test('Render in loading state when SearchStore is loading', () => {
 
     const selectionStore = new SingleSelectionStore('tags');
 
-    const singleAutoComplete = shallow(
+    render(
         <SingleAutoComplete
             displayProperty="name"
             searchProperties={[]}
@@ -34,7 +49,7 @@ test('Render in loading state when SearchStore is loading', () => {
         />
     );
 
-    expect(singleAutoComplete.find('SingleAutoComplete').prop('loading')).toBeTruthy();
+    expect(getLatestSingleAutoCompleteProps().loading).toBeTruthy();
 });
 
 test('Render in loading state when SingleSelectionStore is loading', () => {
@@ -47,7 +62,7 @@ test('Render in loading state when SingleSelectionStore is loading', () => {
     const selectionStore = new SingleSelectionStore('tags');
     selectionStore.loading = true;
 
-    const singleAutoComplete = shallow(
+    render(
         <SingleAutoComplete
             displayProperty="name"
             searchProperties={[]}
@@ -55,7 +70,7 @@ test('Render in loading state when SingleSelectionStore is loading', () => {
         />
     );
 
-    expect(singleAutoComplete.find('SingleAutoComplete').prop('loading')).toBeTruthy();
+    expect(getLatestSingleAutoCompleteProps().loading).toBeTruthy();
 });
 
 test('Render with loaded suggestions', () => {
@@ -72,7 +87,7 @@ test('Render with loaded suggestions', () => {
 
     const selectionStore = new SingleSelectionStore('tags');
 
-    const singleAutoComplete = mount(
+    render(
         <SingleAutoComplete
             displayProperty="name"
             searchProperties={['name', 'number']}
@@ -80,13 +95,7 @@ test('Render with loaded suggestions', () => {
         />
     );
 
-    singleAutoComplete.find(SingleAutoCompleteComponent).instance().displaySuggestions = true;
-    singleAutoComplete.update();
-
-    expect(singleAutoComplete.find('SingleAutoComplete').find('Suggestion').at(0).prop('value'))
-        .toEqual(suggestions[0]);
-    expect(singleAutoComplete.find('SingleAutoComplete').find('Suggestion').at(1).prop('value'))
-        .toEqual(suggestions[1]);
+    expect(getLatestSingleAutoCompleteProps().suggestions).toEqual(suggestions);
 });
 
 test('Render with value of given SingleSelectionStore', () => {
@@ -99,13 +108,15 @@ test('Render with value of given SingleSelectionStore', () => {
     const selectionStore = new SingleSelectionStore('tags');
     selectionStore.item = {id: 7, name: 'James Bond', number: '007'};
 
-    expect(render(
+    render(
         <SingleAutoComplete
             displayProperty="name"
             searchProperties={[]}
             selectionStore={selectionStore}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(getLatestSingleAutoCompleteProps().value).toEqual({id: 7, name: 'James Bond', number: '007'});
 });
 
 test('Render in disabled state', () => {
@@ -118,14 +129,17 @@ test('Render in disabled state', () => {
     const selectionStore = new SingleSelectionStore('tags');
     selectionStore.item = {id: 7, name: 'James Bond', number: '007'};
 
-    expect(render(
+    render(
         <SingleAutoComplete
             disabled={true}
             displayProperty="name"
             searchProperties={[]}
             selectionStore={selectionStore}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(getLatestSingleAutoCompleteProps().disabled).toEqual(true);
+    expect(getLatestSingleAutoCompleteProps().value).toEqual({id: 7, name: 'James Bond', number: '007'});
 });
 
 test('Search using store when new search value is retrieved from SingleAutoComplete component', () => {
@@ -138,7 +152,7 @@ test('Search using store when new search value is retrieved from SingleAutoCompl
 
     const selectionStore = new SingleSelectionStore('tags');
 
-    const singleAutoComplete = shallow(
+    render(
         <SingleAutoComplete
             displayProperty="name"
             searchProperties={[]}
@@ -146,9 +160,9 @@ test('Search using store when new search value is retrieved from SingleAutoCompl
         />
     );
 
-    singleAutoComplete.find('SingleAutoComplete').simulate('search', 'James');
+    getLatestSingleAutoCompleteProps().onSearch('James');
 
-    expect(singleAutoComplete.instance().searchStore.search).toBeCalledWith('James');
+    expect(getFirstSearchStoreMockInstance().search).toBeCalledWith('James');
 });
 
 test('Call set item to SingleSelectionStore and clear search result when chosen option has changed', () => {
@@ -167,7 +181,7 @@ test('Call set item to SingleSelectionStore and clear search result when chosen 
         number: '007',
     };
 
-    const singleAutoComplete = shallow(
+    render(
         <SingleAutoComplete
             displayProperty="name"
             searchProperties={[]}
@@ -175,10 +189,10 @@ test('Call set item to SingleSelectionStore and clear search result when chosen 
         />
     );
 
-    singleAutoComplete.find('SingleAutoComplete').simulate('change', data);
+    getLatestSingleAutoCompleteProps().onChange(data);
 
     expect(selectionStore.set).toBeCalledWith(data);
-    expect(singleAutoComplete.instance().searchStore.clearSearchResults).toBeCalledWith();
+    expect(getFirstSearchStoreMockInstance().clearSearchResults).toBeCalledWith();
 });
 
 test('Construct SearchStore with correct parameters on mount', () => {
@@ -192,7 +206,7 @@ test('Construct SearchStore with correct parameters on mount', () => {
     const locale = observable.box('cz');
     const selectionStore = new SingleSelectionStore('tags', undefined, locale);
 
-    shallow(
+    render(
         <SingleAutoComplete
             displayProperty="name"
             options={{country: 'US'}}

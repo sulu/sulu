@@ -1,51 +1,43 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
-import ResourceStore from '../../../../stores/ResourceStore';
+import {render, screen, waitFor} from '@testing-library/react';
 import ResourceRequester from '../../../../services/ResourceRequester';
 import ChangelogLine from '../../fields/ChangelogLine';
-import FormInspector from '../../FormInspector';
-import ResourceFormStore from '../../stores/ResourceFormStore';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import {translate} from '../../../../utils/Translator';
 
-jest.mock('../../../../stores/ResourceStore', () => jest.fn());
-jest.mock('../../stores/ResourceFormStore', () => jest.fn());
-jest.mock('../../FormInspector', () => jest.fn(function() {
-    this.getValueByPath = jest.fn();
-}));
-
 jest.mock('../../../../services/ResourceRequester', () => ({}));
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
 beforeEach(() => {
+    jest.clearAllMocks();
     // $FlowFixMe
     ResourceRequester.get = jest.fn();
 });
 
-test('Render loader if changer and creator are not loaded yet', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+function createFormInspector(values: Object = {}) {
+    return ({
+        getValueByPath: jest.fn((path) => values[path]),
+    }: any);
+}
 
-    expect(render(<ChangelogLine {...fieldTypeDefaultProps} formInspector={formInspector} />)).toMatchSnapshot();
+test('Render loader if changer and creator are not loaded yet', () => {
+    const formInspector = createFormInspector({
+        '/creator': 1,
+        '/changer': 2,
+    });
+
+    ResourceRequester.get.mockReturnValue(new Promise(() => {}));
+    const {asFragment} = render(<ChangelogLine {...fieldTypeDefaultProps} formInspector={formInspector} />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Render with loaded changer and creator', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-
-    formInspector.getValueByPath.mockImplementation((path) => {
-        switch (path) {
-            case '/creator':
-                return 1;
-            case '/changer':
-                return 2;
-            case '/created':
-                return '2018-09-27T08:22:00';
-            case '/changed':
-                return '2018-10-04T10:57:00';
-        }
+test('Render with loaded changer and creator', async() => {
+    const formInspector = createFormInspector({
+        '/creator': 1,
+        '/changer': 2,
+        '/created': '2018-09-27T08:22:00',
+        '/changed': '2018-10-04T10:57:00',
     });
 
     const creatorPromise = Promise.resolve({
@@ -65,48 +57,38 @@ test('Render with loaded changer and creator', () => {
         }
     });
 
-    const changelogLine = mount(<ChangelogLine {...fieldTypeDefaultProps} formInspector={formInspector} />);
+    render(<ChangelogLine {...fieldTypeDefaultProps} formInspector={formInspector} />);
 
     expect(ResourceRequester.get).toHaveBeenCalledTimes(2);
     expect(ResourceRequester.get).toBeCalledWith('users', {id: 1});
     expect(ResourceRequester.get).toBeCalledWith('users', {id: 2});
 
-    return Promise.all([creatorPromise, changerPromise]).then(() => {
-        changelogLine.update();
-        expect(changelogLine.find('p')).toHaveLength(2);
-        expect(changelogLine.find('p').at(0).text()).toEqual('sulu_admin.changelog_line_changer');
-        expect(changelogLine.find('p').at(1).text()).toEqual('sulu_admin.changelog_line_creator');
+    await Promise.all([creatorPromise, changerPromise]);
+    expect(await screen.findByText('sulu_admin.changelog_line_changer')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.changelog_line_creator')).toBeInTheDocument();
 
-        expect(translate).toBeCalledWith(
-            'sulu_admin.changelog_line_creator',
-            {created: '9/27/2018, 8:22:00 AM', creator: 'Max Mustermann'}
-        );
-        expect(translate).toBeCalledWith(
-            'sulu_admin.changelog_line_changer',
-            {changed: '10/4/2018, 10:57:00 AM', changer: 'Erika Mustermann'}
-        );
-    });
+    await waitFor(() => expect(translate).toBeCalledWith(
+        'sulu_admin.changelog_line_creator',
+        {created: '9/27/2018, 8:22:00 AM', creator: 'Max Mustermann'}
+    ));
+    expect(translate).toBeCalledWith(
+        'sulu_admin.changelog_line_changer',
+        {changed: '10/4/2018, 10:57:00 AM', changer: 'Erika Mustermann'}
+    );
 });
 
 test('Render with no changer and creator', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-
-    formInspector.getValueByPath.mockImplementation((path) => {
-        switch (path) {
-            case '/created':
-                return '2018-09-27T08:22:00';
-            case '/changed':
-                return '2018-10-04T10:57:00';
-        }
+    const formInspector = createFormInspector({
+        '/created': '2018-09-27T08:22:00',
+        '/changed': '2018-10-04T10:57:00',
     });
 
-    const changelogLine = mount(<ChangelogLine {...fieldTypeDefaultProps} formInspector={formInspector} />);
+    render(<ChangelogLine {...fieldTypeDefaultProps} formInspector={formInspector} />);
 
     expect(ResourceRequester.get).not.toBeCalled();
 
-    expect(changelogLine.find('p')).toHaveLength(2);
-    expect(changelogLine.find('p').at(0).text()).toEqual('sulu_admin.changelog_line_changer');
-    expect(changelogLine.find('p').at(1).text()).toEqual('sulu_admin.changelog_line_creator');
+    expect(screen.getByText('sulu_admin.changelog_line_changer')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.changelog_line_creator')).toBeInTheDocument();
 
     expect(translate).toBeCalledWith(
         'sulu_admin.changelog_line_creator',
@@ -118,20 +100,12 @@ test('Render with no changer and creator', () => {
     );
 });
 
-test('Render with deleted changer and existing creator', (done) => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-
-    formInspector.getValueByPath.mockImplementation((path) => {
-        switch (path) {
-            case '/creator':
-                return 1;
-            case '/changer':
-                return 2;
-            case '/created':
-                return '2018-09-27T08:22:00';
-            case '/changed':
-                return '2018-10-04T10:57:00';
-        }
+test('Render with deleted changer and existing creator', async() => {
+    const formInspector = createFormInspector({
+        '/creator': 1,
+        '/changer': 2,
+        '/created': '2018-09-27T08:22:00',
+        '/changed': '2018-10-04T10:57:00',
     });
 
     const creatorPromise = Promise.reject({
@@ -151,45 +125,32 @@ test('Render with deleted changer and existing creator', (done) => {
         }
     });
 
-    const changelogLine = mount(<ChangelogLine {...fieldTypeDefaultProps} formInspector={formInspector} />);
+    render(<ChangelogLine {...fieldTypeDefaultProps} formInspector={formInspector} />);
 
     expect(ResourceRequester.get).toHaveBeenCalledTimes(2);
     expect(ResourceRequester.get).toBeCalledWith('users', {id: 1});
     expect(ResourceRequester.get).toBeCalledWith('users', {id: 2});
 
-    setTimeout(() => {
-        changelogLine.update();
-        expect(changelogLine.find('p')).toHaveLength(2);
-        expect(changelogLine.find('p').at(0).text()).toEqual('sulu_admin.changelog_line_changer');
-        expect(changelogLine.find('p').at(1).text()).toEqual('sulu_admin.changelog_line_creator');
+    await Promise.allSettled([creatorPromise, changerPromise]);
+    expect(await screen.findByText('sulu_admin.changelog_line_changer')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.changelog_line_creator')).toBeInTheDocument();
 
-        expect(translate).toBeCalledWith(
-            'sulu_admin.changelog_line_creator',
-            {created: '9/27/2018, 8:22:00 AM', creator: 'undefined'}
-        );
-        expect(translate).toBeCalledWith(
-            'sulu_admin.changelog_line_changer',
-            {changed: '10/4/2018, 10:57:00 AM', changer: 'Erika Mustermann'}
-        );
-
-        done();
-    });
+    await waitFor(() => expect(translate).toBeCalledWith(
+        'sulu_admin.changelog_line_creator',
+        {created: '9/27/2018, 8:22:00 AM', creator: 'undefined'}
+    ));
+    expect(translate).toBeCalledWith(
+        'sulu_admin.changelog_line_changer',
+        {changed: '10/4/2018, 10:57:00 AM', changer: 'Erika Mustermann'}
+    );
 });
 
-test('Render with existing changer and deleted creator', (done) => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-
-    formInspector.getValueByPath.mockImplementation((path) => {
-        switch (path) {
-            case '/creator':
-                return 1;
-            case '/changer':
-                return 2;
-            case '/created':
-                return '2018-09-27T08:22:00';
-            case '/changed':
-                return '2018-10-04T10:57:00';
-        }
+test('Render with existing changer and deleted creator', async() => {
+    const formInspector = createFormInspector({
+        '/creator': 1,
+        '/changer': 2,
+        '/created': '2018-09-27T08:22:00',
+        '/changed': '2018-10-04T10:57:00',
     });
 
     const creatorPromise = Promise.resolve({
@@ -209,27 +170,22 @@ test('Render with existing changer and deleted creator', (done) => {
         }
     });
 
-    const changelogLine = mount(<ChangelogLine {...fieldTypeDefaultProps} formInspector={formInspector} />);
+    render(<ChangelogLine {...fieldTypeDefaultProps} formInspector={formInspector} />);
 
     expect(ResourceRequester.get).toHaveBeenCalledTimes(2);
     expect(ResourceRequester.get).toBeCalledWith('users', {id: 1});
     expect(ResourceRequester.get).toBeCalledWith('users', {id: 2});
 
-    setTimeout(() => {
-        changelogLine.update();
-        expect(changelogLine.find('p')).toHaveLength(2);
-        expect(changelogLine.find('p').at(0).text()).toEqual('sulu_admin.changelog_line_changer');
-        expect(changelogLine.find('p').at(1).text()).toEqual('sulu_admin.changelog_line_creator');
+    await Promise.allSettled([creatorPromise, changerPromise]);
+    expect(await screen.findByText('sulu_admin.changelog_line_changer')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.changelog_line_creator')).toBeInTheDocument();
 
-        expect(translate).toBeCalledWith(
-            'sulu_admin.changelog_line_creator',
-            {created: '9/27/2018, 8:22:00 AM', creator: 'Max Mustermann'}
-        );
-        expect(translate).toBeCalledWith(
-            'sulu_admin.changelog_line_changer',
-            {changed: '10/4/2018, 10:57:00 AM', changer: 'undefined'}
-        );
-
-        done();
-    });
+    await waitFor(() => expect(translate).toBeCalledWith(
+        'sulu_admin.changelog_line_creator',
+        {created: '9/27/2018, 8:22:00 AM', creator: 'Max Mustermann'}
+    ));
+    expect(translate).toBeCalledWith(
+        'sulu_admin.changelog_line_changer',
+        {changed: '10/4/2018, 10:57:00 AM', changer: 'undefined'}
+    );
 });

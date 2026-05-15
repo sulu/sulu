@@ -6,10 +6,6 @@ import {ResourceFormStore} from 'sulu-admin-bundle/containers/Form';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import EnableUserToolbarAction from '../../toolbarActions/EnableUserToolbarAction';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function() {
     this.data = {};
 }));

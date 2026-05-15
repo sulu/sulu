@@ -1,94 +1,92 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import userEvent from '@testing-library/user-event';
+import {render, screen} from '@testing-library/react';
 import LoginForm from '../LoginForm';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn(function(key) {
-        return key;
-    }),
-}));
-
 test('Should render the component', () => {
-    expect(render(
+    render(
         <LoginForm
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
-        />)
-    ).toMatchSnapshot();
+        />
+    );
+
+    expect(screen.getByText('sulu_admin.welcome')).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'sulu_admin.login'})).toBeDisabled();
 });
 
 test('Should render the component loading', () => {
-    expect(render(
+    render(
         <LoginForm
             loading={true}
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
-        />)
-    ).toMatchSnapshot();
+        />
+    );
+
+    expect(screen.getByText('sulu_admin.welcome')).toBeInTheDocument();
 });
 
 test('Should render the component with error', () => {
-    expect(render(
+    render(
         <LoginForm
             error={true}
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
-        />)
-    ).toMatchSnapshot();
+        />
+    );
+
+    expect(screen.getByText('sulu_admin.login_error')).toBeInTheDocument();
 });
 
-test('Should trigger onChangeForm correctly', () => {
+test('Should trigger onChangeForm correctly', async() => {
+    const user = userEvent.setup();
     const onChangeForm = jest.fn();
-    const loginForm = shallow(
+    render(
         <LoginForm
             onChangeForm={onChangeForm}
             onSubmit={jest.fn()}
         />
     );
 
-    loginForm.find('Button').at(0).simulate('click');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.forgot_password'}));
 
     expect(onChangeForm).toBeCalled();
 });
 
-test('Should not trigger onSubmit if password or user is missing', () => {
+test('Should not trigger onSubmit if password or user is missing', async() => {
+    const user = userEvent.setup();
     const onSubmit = jest.fn();
-    const loginForm = shallow(
+    render(
         <LoginForm
             onChangeForm={jest.fn()}
             onSubmit={onSubmit}
         />
     );
 
-    const event = {
-        preventDefault: jest.fn(),
-    };
+    const [usernameInput] = screen.getAllByRole('textbox');
+    await user.type(usernameInput, 'Max');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.login'}));
 
-    loginForm.find('Input[icon="su-user"]').prop('onChange')('Max');
-    loginForm.find('form').prop('onSubmit')(event);
-
-    expect(event.preventDefault).toBeCalledWith();
     expect(onSubmit).not.toBeCalled();
 });
 
-test('Should trigger onSubmit correctly', () => {
+test('Should trigger onSubmit correctly', async() => {
+    const user = userEvent.setup();
     const onSubmit = jest.fn();
-    const loginForm = shallow(
+    render(
         <LoginForm
             onChangeForm={jest.fn()}
             onSubmit={onSubmit}
         />
     );
 
-    const event = {
-        preventDefault: jest.fn(),
-    };
+    const [usernameInput] = screen.getAllByRole('textbox');
+    const passwordInput = screen.getByLabelText('sulu_admin.password');
+    await user.type(usernameInput, 'Max');
+    await user.type(passwordInput, 'max');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.login'}));
 
-    loginForm.find('Input[icon="su-user"]').prop('onChange')('Max');
-    loginForm.find('Input[icon="su-lock"]').prop('onChange')('max');
-    loginForm.find('form').prop('onSubmit')(event);
-
-    expect(event.preventDefault).toBeCalledWith();
     expect(onSubmit).toBeCalledWith({username: 'Max', password: 'max'});
 });

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import log from 'loglevel';
-import {mount, shallow} from 'enzyme';
+import {act, render} from '@testing-library/react';
 import {observable, extendObservable as mockExtendObservable} from 'mobx';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import Router from '../../../../services/Router';
@@ -12,12 +12,14 @@ import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import SingleSelection from '../../fields/SingleSelection';
 import SingleSelectionComponent from '../../../../containers/SingleSelection';
+import ResourceSingleSelect from '../../../../containers/ResourceSingleSelect';
+import SingleAutoComplete from '../../../../containers/SingleAutoComplete';
 
-jest.mock('loglevel', () => ({
-    warn: jest.fn(),
-}));
+jest.mock('../../../../containers/SingleSelection', () => jest.fn(() => null));
 
-jest.mock('../../../../containers/SingleListOverlay', () => jest.fn(() => null));
+jest.mock('../../../../containers/ResourceSingleSelect', () => jest.fn(() => null));
+
+jest.mock('../../../../containers/SingleAutoComplete', () => jest.fn(() => null));
 
 jest.mock('../../../../services/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
@@ -56,9 +58,46 @@ jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.addFinishFieldHandler = jest.fn();
 }));
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+const getLastMockCallProps = (mockComponent) => {
+    const mockCalls = mockComponent.mock.calls;
+
+    if (mockCalls.length === 0) {
+        throw new Error('Expected mock component to be called');
+    }
+
+    return mockCalls[mockCalls.length - 1][0];
+};
+
+const SingleAutoCompleteMock = (SingleAutoComplete: any);
+const ResourceSingleSelectMock = (ResourceSingleSelect: any);
+const SingleSelectionComponentMock = (SingleSelectionComponent: any);
+const SingleSelectionStoreMock = (SingleSelectionStore: any);
+
+const getSingleAutoCompleteProps = () => getLastMockCallProps(SingleAutoCompleteMock);
+const getResourceSingleSelectProps = () => getLastMockCallProps(ResourceSingleSelectMock);
+const getSingleSelectionProps = () => getLastMockCallProps(SingleSelectionComponentMock);
+const getSingleSelectionStore = () => {
+    const stores = SingleSelectionStoreMock.mock.instances;
+
+    if (stores.length === 0) {
+        throw new Error('Expected SingleSelectionStore to be instantiated');
+    }
+
+    return stores[stores.length - 1];
+};
+
+let consoleErrorSpy;
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    // $FlowFixMe[cannot-write]
+    userStore.contentLocale = undefined;
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+
+afterEach(() => {
+    consoleErrorSpy.mockRestore();
+});
 
 test('Pass correct props and SingleSelectionStore to SingleAutoComplete container', () => {
     const locale = observable.box('en');
@@ -80,7 +119,7 @@ test('Pass correct props and SingleSelectionStore to SingleAutoComplete containe
         },
     };
 
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -90,12 +129,12 @@ test('Pass correct props and SingleSelectionStore to SingleAutoComplete containe
         />
     );
 
-    expect(singleSelection.find('SingleAutoComplete').props()).toEqual(expect.objectContaining({
+    expect(getSingleAutoCompleteProps()).toEqual(expect.objectContaining({
         disabled: true,
         displayProperty: 'name',
         options: {},
         searchProperties: ['name', 'number'],
-        selectionStore: singleSelection.instance().autoCompleteSelectionStore,
+        selectionStore: getSingleSelectionStore(),
     }));
 
     expect(SingleSelectionStore).toBeCalledWith('accounts', 'entity-id', locale);
@@ -126,7 +165,7 @@ test('Pass correct options to SingleAutoComplete with deprecated data_path_to_au
 
     formInspector.getValueByPath.mockReturnValue(5);
 
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -138,7 +177,7 @@ test('Pass correct options to SingleAutoComplete with deprecated data_path_to_au
     );
 
     expect(formInspector.getValueByPath).toBeCalledWith('/id');
-    expect(singleSelection.find('SingleAutoComplete').props()).toEqual(expect.objectContaining({
+    expect(getSingleAutoCompleteProps()).toEqual(expect.objectContaining({
         options: {
             accountId: 5,
         },
@@ -182,7 +221,7 @@ test('Use locale from userStore and pass correct props with schema-options type 
         },
     };
 
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -193,17 +232,17 @@ test('Use locale from userStore and pass correct props with schema-options type 
         />
     );
 
-    expect(singleSelection.find('SingleAutoComplete').props()).toEqual(expect.objectContaining({
+    expect(getSingleAutoCompleteProps()).toEqual(expect.objectContaining({
         disabled: true,
         displayProperty: 'name',
         options: {},
         searchProperties: ['name', 'number'],
-        selectionStore: singleSelection.instance().autoCompleteSelectionStore,
+        selectionStore: getSingleSelectionStore(),
     }));
 
-    expect(singleSelection.find('SingleAutoComplete').props().selectionStore.resourceKey).toEqual('accounts');
-    expect(singleSelection.find('SingleAutoComplete').props().selectionStore.item).toEqual({id: 'entity-id'});
-    expect(singleSelection.find('SingleAutoComplete').props().selectionStore.locale.get()).toEqual('en');
+    expect(getSingleAutoCompleteProps().selectionStore.resourceKey).toEqual('accounts');
+    expect(getSingleAutoCompleteProps().selectionStore.item).toEqual({id: 'entity-id'});
+    expect(getSingleAutoCompleteProps().selectionStore.locale.get()).toEqual('en');
 });
 
 test('Call onChange and onFinish when item of auto_complete SingleSelectionStore changes', () => {
@@ -227,7 +266,7 @@ test('Call onChange and onFinish when item of auto_complete SingleSelectionStore
         },
     };
 
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -238,7 +277,9 @@ test('Call onChange and onFinish when item of auto_complete SingleSelectionStore
         />
     );
 
-    singleSelection.instance().autoCompleteSelectionStore.item = {id: 'new-entity-id'};
+    act(() => {
+        getSingleSelectionStore().item = {id: 'new-entity-id'};
+    });
 
     expect(changeSpy).toBeCalledWith('new-entity-id');
     expect(finishSpy).toBeCalledWith();
@@ -269,7 +310,7 @@ test('Handle object without warning when "use_deprecated_object_data_format" opt
         use_deprecated_object_data_format: {name: 'use_deprecated_object_data_format', value: true},
     };
 
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -281,11 +322,13 @@ test('Handle object without warning when "use_deprecated_object_data_format" opt
         />
     );
 
-    expect(singleSelection.find('SingleAutoComplete').props().selectionStore.item).toEqual({id: 'old-entity-id'});
+    expect(getSingleAutoCompleteProps().selectionStore.item).toEqual({id: 'old-entity-id'});
     expect(log.warn).toBeCalledWith(expect.stringContaining('"use_deprecated_object_data_format" param is deprecated'));
     expect(log.warn).not.toBeCalledWith(expect.stringContaining('expects an id as value but received an object'));
 
-    singleSelection.instance().autoCompleteSelectionStore.item = {id: 'new-entity-id'};
+    act(() => {
+        getSingleSelectionStore().item = {id: 'new-entity-id'};
+    });
 
     expect(changeSpy).toBeCalledWith({id: 'new-entity-id'});
     expect(finishSpy).toBeCalledWith();
@@ -300,7 +343,7 @@ test('Throw an error if the auto_complete configuration was omitted', () => {
     };
 
     expect(
-        () => shallow(
+        () => render(
             <SingleSelection
                 {...fieldTypeDefaultProps}
                 fieldTypeOptions={fieldTypeOptions}
@@ -326,7 +369,7 @@ test('Pass correct props to SingleSelect', () => {
         },
     };
 
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -337,7 +380,7 @@ test('Pass correct props to SingleSelect', () => {
         />
     );
 
-    expect(singleSelection.find('ResourceSingleSelect').props()).toEqual(expect.objectContaining({
+    expect(getResourceSingleSelectProps()).toEqual(expect.objectContaining({
         displayProperty: 'name',
         editable: true,
         idProperty: 'id',
@@ -363,7 +406,7 @@ test('Call onChange and onFinish when SingleSelect changes', () => {
         },
     };
 
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -374,7 +417,7 @@ test('Call onChange and onFinish when SingleSelect changes', () => {
         />
     );
 
-    singleSelection.find('ResourceSingleSelect').simulate('change', 2);
+    getResourceSingleSelectProps().onChange(2);
 
     expect(changeSpy).toBeCalledWith(2);
     expect(finishSpy).toBeCalledWith();
@@ -391,7 +434,7 @@ test('Throw an error if no display_property is passed to the the single_select',
     };
 
     expect(
-        () => shallow(
+        () => render(
             <SingleSelection
                 {...fieldTypeDefaultProps}
                 fieldTypeOptions={fieldTypeOptions}
@@ -414,7 +457,7 @@ test('Throw an error if no id_property is passed to the the single_select', () =
     };
 
     expect(
-        () => shallow(
+        () => render(
             <SingleSelection
                 {...fieldTypeDefaultProps}
                 fieldTypeOptions={fieldTypeOptions}
@@ -443,7 +486,7 @@ test('Pass correct props to SingleItemSelection', () => {
         },
     };
 
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -453,7 +496,7 @@ test('Pass correct props to SingleItemSelection', () => {
         />
     );
 
-    expect(singleSelection.find(SingleSelectionComponent).props()).toEqual(expect.objectContaining({
+    expect(getSingleSelectionProps()).toEqual(expect.objectContaining({
         adapter: 'table',
         allowDeselectForDisabledItems: true,
         listKey: 'accounts_list',
@@ -489,7 +532,7 @@ test('Pass resourceKey as listKey to SingleItemSelection if no listKey is given'
         },
     };
 
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -499,7 +542,7 @@ test('Pass resourceKey as listKey to SingleItemSelection if no listKey is given'
         />
     );
 
-    expect(singleSelection.find(SingleSelectionComponent).prop('listKey')).toEqual('accounts');
+    expect(getSingleSelectionProps().listKey).toEqual('accounts');
 });
 
 test('Pass null as value to SingleSelection for list_overlay', () => {
@@ -519,7 +562,7 @@ test('Pass null as value to SingleSelection for list_overlay', () => {
         },
     };
 
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -529,7 +572,7 @@ test('Pass null as value to SingleSelection for list_overlay', () => {
         />
     );
 
-    expect(singleSelection.find('SingleSelection').prop('value')).toEqual(null);
+    expect(getSingleSelectionProps().value).toEqual(null);
 });
 
 test('Should log warning and use id of object if given value is an object instead of an id', () => {
@@ -549,7 +592,7 @@ test('Should log warning and use id of object if given value is an object instea
         },
     };
 
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -559,7 +602,7 @@ test('Should log warning and use id of object if given value is an object instea
         />
     );
 
-    expect(singleSelection.find('SingleSelection').prop('value')).toEqual(125);
+    expect(getSingleSelectionProps().value).toEqual(125);
     expect(log.warn).toBeCalledWith(expect.stringContaining('expects an id as value but received an object'));
 });
 
@@ -589,7 +632,7 @@ test('Throw an error if form_options_to_list_options schema option is not an arr
         },
     };
 
-    expect(() => shallow(
+    expect(() => render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -626,7 +669,7 @@ test('Throw an error if request_parameters schema option is not an array', () =>
         },
     };
 
-    expect(() => shallow(
+    expect(() => render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -651,7 +694,7 @@ test('Should throw an error if "resource_store_properties_to_request" schema opt
         resource_store_properties_to_request: {name: 'resource_store_properties_to_request', value: 'not-an-array'},
     };
 
-    expect(() => shallow(
+    expect(() => render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -687,7 +730,7 @@ test('Throw an error if item_disabled_condition schema option is not a string', 
         },
     };
 
-    expect(() => shallow(
+    expect(() => render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -724,7 +767,7 @@ test('Throw an error if allow_deselect_for_disabled_items schema option is not a
         },
     };
 
-    expect(() => shallow(
+    expect(() => render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -755,7 +798,7 @@ test('Throw an error if detail_options has wrong value', () => {
         },
     };
 
-    expect(() => shallow(
+    expect(() => render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -839,7 +882,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
     const formInspectorValues = {'/otherPropertyName': 'value-returned-by-form-inspector'};
     formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
 
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -852,7 +895,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
 
     expect(formInspector.getValueByPath).toBeCalledWith('/otherPropertyName');
 
-    expect(singleSelection.find(SingleSelectionComponent).props()).toEqual(expect.objectContaining({
+    expect(getSingleSelectionProps()).toEqual(expect.objectContaining({
         adapter: 'table',
         allowDeselectForDisabledItems: false,
         detailOptions: {
@@ -914,7 +957,7 @@ test('Should update props of SingleItemSelection when value of "resource_store_p
     const formInspectorValues = {'/otherPropertyName': 'first-value'};
     formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
 
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -926,10 +969,10 @@ test('Should update props of SingleItemSelection when value of "resource_store_p
     );
 
     expect(formInspector.addFinishFieldHandler).toHaveBeenCalled();
-    expect(singleSelection.find(SingleSelectionComponent).props().detailOptions).toEqual({
+    expect(getSingleSelectionProps().detailOptions).toEqual({
         dynamicKey: 'first-value',
     });
-    expect(singleSelection.find(SingleSelectionComponent).props().listOptions).toEqual({
+    expect(getSingleSelectionProps().listOptions).toEqual({
         dynamicKey: 'first-value',
     });
 
@@ -937,10 +980,10 @@ test('Should update props of SingleItemSelection when value of "resource_store_p
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
     finishFieldHandler('/otherPropertyName');
 
-    expect(singleSelection.find(SingleSelectionComponent).props().detailOptions).toEqual({
+    expect(getSingleSelectionProps().detailOptions).toEqual({
         dynamicKey: 'second-value',
     });
-    expect(singleSelection.find(SingleSelectionComponent).props().listOptions).toEqual({
+    expect(getSingleSelectionProps().listOptions).toEqual({
         dynamicKey: 'second-value',
     });
 });
@@ -968,7 +1011,7 @@ test('Throw an error if "type" schema-options is not a string', () => {
     };
 
     expect(
-        () => shallow(
+        () => render(
             <SingleSelection
                 {...fieldTypeDefaultProps}
                 disabled={true}
@@ -997,7 +1040,7 @@ test('Throw an error if "default_type" field-type-option is not a string', () =>
     };
 
     expect(
-        () => shallow(
+        () => render(
             <SingleSelection
                 {...fieldTypeDefaultProps}
                 disabled={true}
@@ -1031,7 +1074,7 @@ test('Pass content locale from user to SingleItemSelection if form has no locale
         },
     };
 
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -1040,7 +1083,7 @@ test('Pass content locale from user to SingleItemSelection if form has no locale
         />
     );
 
-    expect(singleSelection.find(SingleSelectionComponent).prop('locale').get()).toEqual('en');
+    expect(getSingleSelectionProps().locale.get()).toEqual('en');
 });
 
 test('Pass correct locale and disabledIds to SingleItemSelection', () => {
@@ -1062,7 +1105,7 @@ test('Pass correct locale and disabledIds to SingleItemSelection', () => {
         },
     };
 
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -1071,7 +1114,7 @@ test('Pass correct locale and disabledIds to SingleItemSelection', () => {
         />
     );
 
-    expect(singleSelection.find(SingleSelectionComponent).props()).toEqual(expect.objectContaining({
+    expect(getSingleSelectionProps()).toEqual(expect.objectContaining({
         disabledIds: [5],
         locale,
     }));
@@ -1098,7 +1141,7 @@ test('Call onChange and onFinish when SingleSelection changes', () => {
         },
     };
 
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -1109,7 +1152,7 @@ test('Call onChange and onFinish when SingleSelection changes', () => {
         />
     );
 
-    singleSelection.find(SingleSelectionComponent).simulate('change', undefined);
+    getSingleSelectionProps().onChange(undefined);
 
     expect(changeSpy).toBeCalledWith(undefined);
     expect(finishSpy).toBeCalledWith();
@@ -1138,12 +1181,7 @@ test('Should not fail when SingleItemSelection item is clicked without configure
         },
     };
 
-    // $FlowFixMe
-    SingleSelectionStore.mockImplementation(function() {
-        this.item = {id: 6};
-    });
-
-    const singleSelection = mount(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -1155,7 +1193,7 @@ test('Should not fail when SingleItemSelection item is clicked without configure
         />
     );
 
-    singleSelection.find('SingleItemSelection .item').simulate('click');
+    expect(getSingleSelectionProps().onItemClick).toBeUndefined();
 
     expect(router.navigate).not.toBeCalled();
 });
@@ -1189,12 +1227,7 @@ test('Navigate when SingleItemSelection item is clicked with configured view', (
         },
     };
 
-    // $FlowFixMe
-    SingleSelectionStore.mockImplementation(function() {
-        this.item = {id: 6};
-    });
-
-    const singleSelection = mount(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -1206,7 +1239,7 @@ test('Navigate when SingleItemSelection item is clicked with configured view', (
         />
     );
 
-    singleSelection.find('SingleItemSelection .item').simulate('click');
+    getSingleSelectionProps().onItemClick(6, {id: 6});
 
     expect(router.navigate).toBeCalledWith('sulu_contact.account_edit_form', {id: 6});
 });
@@ -1221,7 +1254,7 @@ test('Should throw an error if "types" schema option is not a string', () => {
         },
     };
 
-    expect(() => shallow(
+    expect(() => render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -1234,7 +1267,7 @@ test('Should throw an error if "types" schema option is not a string', () => {
 test('Should throw an error if no "resource_key" option is passed in fieldOptions', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
 
-    expect(() => shallow(
+    expect(() => render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={{default_type: 'list_overlay'}}
@@ -1271,7 +1304,7 @@ test('Should pass request_parameters to auto_complete options', () => {
         },
     };
 
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -1280,7 +1313,7 @@ test('Should pass request_parameters to auto_complete options', () => {
         />
     );
 
-    expect(singleSelection.find('SingleAutoComplete').props()).toEqual(expect.objectContaining({
+    expect(getSingleAutoCompleteProps()).toEqual(expect.objectContaining({
         options: {
             ids: 1,
         },
@@ -1322,7 +1355,7 @@ test('Should pass request_parameters and dataPathToAutoComplete to auto_complete
 
     formInspector.getValueByPath.mockReturnValue(5);
 
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -1331,7 +1364,7 @@ test('Should pass request_parameters and dataPathToAutoComplete to auto_complete
         />
     );
 
-    expect(singleSelection.find('SingleAutoComplete').props()).toEqual(expect.objectContaining({
+    expect(getSingleAutoCompleteProps()).toEqual(expect.objectContaining({
         options: {
             ids: 1,
             accountId: 5,
@@ -1374,7 +1407,7 @@ test('Should pass same request_parameters and dataPathToAutoComplete options to 
 
     formInspector.getValueByPath.mockReturnValue(5);
 
-    const singleSelection = shallow(
+    render(
         <SingleSelection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -1383,7 +1416,7 @@ test('Should pass same request_parameters and dataPathToAutoComplete options to 
         />
     );
 
-    expect(singleSelection.find('SingleAutoComplete').props()).toEqual(expect.objectContaining({
+    expect(getSingleAutoCompleteProps()).toEqual(expect.objectContaining({
         options: {
             accountId: 1,
         },

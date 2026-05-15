@@ -4,8 +4,6 @@ import Requester from '../../../services/Requester';
 import initializer from '../../../services/initializer';
 import localizationStore from '../../../stores/localizationStore';
 
-jest.mock('debounce', () => jest.fn((callback) => callback));
-
 jest.mock('../../../services/Requester', () => ({
     get: jest.fn(),
     post: jest.fn(),

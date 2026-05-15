@@ -1,20 +1,31 @@
 // @flow
 import mockReact from 'react';
-import {mount} from 'enzyme';
+import {act, render} from '@testing-library/react';
 import {observable} from 'mobx';
 import FormOverlayList from '../FormOverlayList';
-import List from '../../List';
 import ResourceStore from '../../../stores/ResourceStore';
 import ResourceFormStore from '../../../containers/Form/stores/ResourceFormStore';
 import FormOverlay from '../../../containers/FormOverlay';
 import Router, {Route} from '../../../services/Router';
+import getLatestMockProps from '../../../utils/TestHelper/getLatestMockProps';
 
 const React = mockReact;
+const mockListPropsCalls: Array<any> = [];
+const mockListReloadFunctions: Array<any> = [];
 
-jest.mock('../../List', () => class ListMock extends mockReact.Component<*> {
-    render() {
+jest.mock('../../List', () => {
+    const React = require('react');
+    const ListMock = React.forwardRef(function ListMock(props, ref) {
+        const reload = jest.fn();
+        React.useImperativeHandle(ref, () => ({reload}));
+
+        mockListPropsCalls.push(props);
+        mockListReloadFunctions.push(reload);
+
         return <div>list view mock</div>;
-    }
+    });
+
+    return ListMock;
 });
 
 jest.mock('../../../containers/Form/Form', () => class FormMock extends mockReact.Component<*> {
@@ -23,8 +34,12 @@ jest.mock('../../../containers/Form/Form', () => class FormMock extends mockReac
     }
 });
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
+jest.mock('../../../containers/FormOverlay', () => jest.fn(function FormOverlayMock({open}) {
+    if (!open) {
+        return null;
+    }
+
+    return <div>form overlay mock</div>;
 }));
 
 jest.mock('../../../stores/ResourceStore', () => jest.fn(
@@ -34,14 +49,40 @@ jest.mock('../../../stores/ResourceStore', () => jest.fn(
         };
     }
 ));
+
 jest.mock('../../../containers/Form/stores/ResourceFormStore', () => jest.fn(
     (resourceStore, formKey, options, metadataOptions) => {
         return {
+            destroy: jest.fn(),
+            dirty: false,
             id: resourceStore.id,
             metadataOptions,
         };
     }
 ));
+
+function getLatestListProps() {
+    return mockListPropsCalls[mockListPropsCalls.length - 1];
+}
+
+function getLatestListReload() {
+    return mockListReloadFunctions[mockListReloadFunctions.length - 1];
+}
+
+function getLatestOverlayProps() {
+    return getLatestMockProps((FormOverlay: any));
+}
+
+function getLatestFormStore() {
+    const resourceFormStoreMock: any = ResourceFormStore;
+    return resourceFormStoreMock.mock.results[resourceFormStoreMock.mock.results.length - 1].value;
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    mockListPropsCalls.splice(0, mockListPropsCalls.length);
+    mockListReloadFunctions.splice(0, mockListReloadFunctions.length);
+});
 
 test('View should render with closed overlay', () => {
     const route: Route = ({}: any);
@@ -51,9 +92,9 @@ test('View should render with closed overlay', () => {
         },
     }: any);
 
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
+    const {asFragment} = render(<FormOverlayList route={route} router={router} />);
 
-    expect(formOverlayList.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('View should render with opened overlay', () => {
@@ -67,13 +108,13 @@ test('View should render with opened overlay', () => {
         },
     }: any);
 
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
+    const {asFragment} = render(<FormOverlayList route={route} router={router} />);
 
-    // open form overlay for new item
-    formOverlayList.find(List).props().onItemAdd();
-    formOverlayList.update();
+    act(() => {
+        getLatestListProps().onItemAdd();
+    });
 
-    expect(formOverlayList.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should pass correct props to List view', () => {
@@ -100,13 +141,13 @@ test('Should pass correct props to List view', () => {
         },
     }: any);
 
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-    const list = formOverlayList.find(List);
+    render(<FormOverlayList route={route} router={router} />);
+    const listProps = getLatestListProps();
 
-    expect(list.props()).toEqual(expect.objectContaining(formOverlayList.props()));
-    expect(list.props().locale).toBeDefined();
-    expect(list.props().onItemAdd).toBeDefined();
-    expect(list.props().onItemClick).toBeDefined();
+    expect(listProps).toEqual(expect.objectContaining({route, router}));
+    expect(listProps.locale).toBeDefined();
+    expect(listProps.onItemAdd).toBeDefined();
+    expect(listProps.onItemClick).toBeDefined();
 });
 
 test('Should construct ResourceStore and ResourceFormStore with correct parameters on item-add callback', () => {
@@ -132,16 +173,19 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
         dimension: 'test-dimension',
     };
 
-    const formOverlayList = mount(<FormOverlayList resourceStore={testResourceStore} route={route} router={router} />);
-    formOverlayList.find(List).props().onItemAdd();
+    render(<FormOverlayList resourceStore={testResourceStore} route={route} router={router} />);
 
-    expect(ResourceStore).toBeCalledWith('test-resource-key', undefined, {}, {
+    act(() => {
+        getLatestListProps().onItemAdd();
+    });
+
+    expect(ResourceStore).toHaveBeenLastCalledWith('test-resource-key', undefined, {}, {
         category: 'category-id',
         parentId: 'test-id',
         webspace: 'test-webspace',
         dimensionId: 'test-dimension',
     });
-    expect(ResourceFormStore).toBeCalledWith(expect.anything(), 'test-form-key', {
+    expect(ResourceFormStore).toHaveBeenLastCalledWith(expect.anything(), 'test-form-key', {
         category: 'category-id',
         parentId: 'test-id',
         webspace: 'test-webspace',
@@ -172,20 +216,26 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
         dimension: 'test-dimension',
     };
 
-    const formOverlayList = mount(<FormOverlayList resourceStore={testResourceStore} route={route} router={router} />);
+    render(<FormOverlayList resourceStore={testResourceStore} route={route} router={router} />);
 
     const locale = observable.box('en');
-    formOverlayList.instance().locale = locale;
-
-    formOverlayList.find(List).props().onItemClick('item-id');
-
-    expect(ResourceStore).toBeCalledWith('test-resource-key', 'item-id', {locale}, {
-        category: 'category-id',
-        parentId: 'test-id',
-        webspace: 'test-webspace',
-        dimensionId: 'test-dimension',
+    act(() => {
+        getLatestListProps().locale.set(locale.get());
+        getLatestListProps().onItemClick('item-id');
     });
-    expect(ResourceFormStore).toBeCalledWith(expect.anything(), 'test-form-key', {
+
+    expect(ResourceStore).toHaveBeenLastCalledWith(
+        'test-resource-key',
+        'item-id',
+        {locale: getLatestListProps().locale},
+        {
+            category: 'category-id',
+            parentId: 'test-id',
+            webspace: 'test-webspace',
+            dimensionId: 'test-dimension',
+        }
+    );
+    expect(ResourceFormStore).toHaveBeenLastCalledWith(expect.anything(), 'test-form-key', {
         category: 'category-id',
         parentId: 'test-id',
         webspace: 'test-webspace',
@@ -211,12 +261,14 @@ test('Should construct ResourceFormStore with correct metadataOptions on item-ad
         },
     }: any);
 
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
+    render(<FormOverlayList route={route} router={router} />);
 
-    formOverlayList.instance().locale = observable.box('en');
-    formOverlayList.find(List).props().onItemAdd();
+    act(() => {
+        getLatestListProps().locale.set('en');
+        getLatestListProps().onItemAdd();
+    });
 
-    expect(ResourceFormStore).toBeCalledWith(expect.anything(), 'test-form-key', {}, {
+    expect(ResourceFormStore).toHaveBeenLastCalledWith(expect.anything(), 'test-form-key', {}, {
         staticParam: 'staticValue',
         webspace: 'webspace-attribute-value',
         pageTemplate: 'template-attribute-value',
@@ -235,15 +287,17 @@ test('Should open FormOverlay with correct props when List fires the item-add ca
         },
     }: any);
 
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-    formOverlayList.find(List).props().onItemAdd();
+    render(<FormOverlayList route={route} router={router} />);
 
-    formOverlayList.update();
-    const overlay = formOverlayList.find(FormOverlay);
+    act(() => {
+        getLatestListProps().onItemAdd();
+    });
 
-    expect(overlay.props()).toEqual(expect.objectContaining({
+    const overlayProps = getLatestOverlayProps();
+
+    expect(overlayProps).toEqual(expect.objectContaining({
         confirmText: 'sulu_admin.save',
-        formStore: formOverlayList.instance().formStore,
+        formStore: getLatestFormStore(),
         open: true,
         size: 'large',
         title: 'app.add_overlay_title',
@@ -261,15 +315,17 @@ test('Should open FormOverlay with correct props when List fires the item-click 
         },
     }: any);
 
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-    formOverlayList.find(List).props().onItemClick('item-id');
+    render(<FormOverlayList route={route} router={router} />);
 
-    formOverlayList.update();
-    const overlay = formOverlayList.find(FormOverlay);
+    act(() => {
+        getLatestListProps().onItemClick('item-id');
+    });
 
-    expect(overlay.props()).toEqual(expect.objectContaining({
+    const overlayProps = getLatestOverlayProps();
+
+    expect(overlayProps).toEqual(expect.objectContaining({
         confirmText: 'sulu_admin.save',
-        formStore: formOverlayList.instance().formStore,
+        formStore: getLatestFormStore(),
         open: true,
         size: 'small',
         title: 'app.edit_overlay_title',
@@ -286,21 +342,21 @@ test('Should destroy ResourceFormStore without reloading List when FormOverlay i
         },
     }: any);
 
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
+    render(<FormOverlayList route={route} router={router} />);
 
-    // open form overlay for new item
-    formOverlayList.find(List).props().onItemAdd();
-    formOverlayList.update();
+    act(() => {
+        getLatestListProps().onItemAdd();
+    });
 
-    const destroySpy = jest.fn();
-    formOverlayList.instance().formStore.destroy = destroySpy;
+    const formStore = getLatestFormStore();
+    const listReload = getLatestListReload();
 
-    const reloadSpy = jest.fn();
-    formOverlayList.find(List).instance().reload = reloadSpy;
+    act(() => {
+        getLatestOverlayProps().onClose();
+    });
 
-    formOverlayList.find(FormOverlay).props().onClose();
-    expect(destroySpy).toBeCalled();
-    expect(reloadSpy).not.toBeCalled();
+    expect(formStore.destroy).toBeCalled();
+    expect(listReload).not.toBeCalled();
 });
 
 test('Should destroy ResourceFormStore and reload List view when FormOverlay is confirmed', () => {
@@ -313,21 +369,21 @@ test('Should destroy ResourceFormStore and reload List view when FormOverlay is 
         },
     }: any);
 
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
+    render(<FormOverlayList route={route} router={router} />);
 
-    // open form overlay for new item
-    formOverlayList.find(List).props().onItemAdd();
-    formOverlayList.update();
+    act(() => {
+        getLatestListProps().onItemAdd();
+    });
 
-    const destroySpy = jest.fn();
-    formOverlayList.instance().formStore.destroy = destroySpy;
+    const formStore = getLatestFormStore();
+    const listReload = getLatestListReload();
 
-    const reloadSpy = jest.fn();
-    formOverlayList.find(List).instance().reload = reloadSpy;
+    act(() => {
+        getLatestOverlayProps().onConfirm();
+    });
 
-    formOverlayList.find(FormOverlay).props().onConfirm();
-    expect(destroySpy).toBeCalled();
-    expect(reloadSpy).toBeCalled();
+    expect(formStore.destroy).toBeCalled();
+    expect(listReload).toBeCalled();
 });
 
 test('Should destroy ResourceFormStore when component is unmounted', () => {
@@ -340,15 +396,14 @@ test('Should destroy ResourceFormStore when component is unmounted', () => {
         },
     }: any);
 
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
+    const {unmount} = render(<FormOverlayList route={route} router={router} />);
 
-    // open form overlay for new item
-    formOverlayList.find(List).props().onItemAdd();
-    formOverlayList.update();
+    act(() => {
+        getLatestListProps().onItemAdd();
+    });
 
-    const destroySpy = jest.fn();
-    formOverlayList.instance().formStore.destroy = destroySpy;
+    const formStore = getLatestFormStore();
 
-    formOverlayList.unmount();
-    expect(destroySpy).toBeCalled();
+    unmount();
+    expect(formStore.destroy).toBeCalled();
 });
