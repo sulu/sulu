@@ -119,13 +119,15 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $fullTotal = $smartContentProvider->countBy($countByFilters, $params);
         $total = $limit ? \min($limit, $fullTotal) : $fullTotal;
 
+        /** @var array<int|string> $valueTags */
+        $valueTags = $value['tags'] ?? [];
+
         $view = [
             'dataSource' => $filters['dataSource'],
             'includeSubFolders' => $filters['includeSubFolders'],
-            // match Sulu 2.6 shape: tags as plain name strings, categories as full CategoryWrapper API objects
-            'categories' => $this->buildCategoryResolvables($filters['categories'] ?? []),
+            'categories' => $this->buildCategoryResolvables($filters['categories']),
             'categoryOperator' => $filters['categoryOperator'],
-            'tags' => $this->buildTagResolvables($value['tags'] ?? []),
+            'tags' => $this->buildTagResolvables($valueTags),
             'tagOperator' => $filters['tagOperator'],
             'types' => $filters['types'],
             'templateKeys' => $filters['templateKeys'] ?? [],
@@ -175,17 +177,15 @@ class SmartContentSmartResolver implements SmartResolverInterface
     }
 
     /**
-     * @param mixed[] $tagIds
+     * @param array<int|string> $tagIds
      *
      * @return ResolvableResource[]
      */
     private function buildTagResolvables(array $tagIds): array
     {
-        // TagResourceLoader returns the tag name string. We pass it through unchanged
-        // so view.tags is a list of name strings (Sulu 2.6 shape, ready for ?tags=<name> URLs).
         return \array_map(
-            static fn (mixed $id): ResolvableResource => new ResolvableResource(
-                id: \is_int($id) || \is_string($id) ? $id : (string) $id,
+            static fn (int|string $id): ResolvableResource => new ResolvableResource(
+                id: $id,
                 resourceLoaderKey: TagResourceLoader::RESOURCE_LOADER_KEY,
                 priority: 0,
                 resourceKey: TagInterface::RESOURCE_KEY,
@@ -195,17 +195,15 @@ class SmartContentSmartResolver implements SmartResolverInterface
     }
 
     /**
-     * @param mixed[] $categoryIds
+     * @param int[] $categoryIds
      *
      * @return ResolvableResource[]
      */
     private function buildCategoryResolvables(array $categoryIds): array
     {
-        // CategoryResourceLoader returns the full CategoryWrapper API object (Sulu 2.6 shape).
-        // Templates access .id (for ?categories=<id> URLs) and .name, .key, etc. via the wrapper.
         return \array_map(
-            static fn (mixed $id): ResolvableResource => new ResolvableResource(
-                id: \is_int($id) || \is_string($id) ? $id : (string) $id,
+            static fn (int $id): ResolvableResource => new ResolvableResource(
+                id: $id,
                 resourceLoaderKey: CategoryResourceLoader::RESOURCE_LOADER_KEY,
                 priority: 0,
                 resourceKey: CategoryInterface::RESOURCE_KEY,

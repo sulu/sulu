@@ -945,11 +945,13 @@ class ResolvableResourceReplacerTest extends TestCase
             ],
         ];
 
-        $result = $this->replacer->replaceResolvableResourcesInView($view, $resolvedResources);
+        $result = $this->replacer->replaceResolvableResourcesInView($view, $resolvedResources, 1, 10);
 
         self::assertSame(['Beach', 'City'], $result['tags']);
         self::assertSame('untouched', $result['plain']);
-        self::assertSame('Beach', $result['nested']['tag']);
+        /** @var array{tag: string} $nested */
+        $nested = $result['nested'];
+        self::assertSame('Beach', $nested['tag']);
 
         $refs = $this->referenceStore->getAll();
         self::assertContains('tags-3', $refs);
@@ -961,7 +963,7 @@ class ResolvableResourceReplacerTest extends TestCase
         $tag = new ResolvableResource(3, 'tag', 0);
         $view = ['tags' => [$tag]];
 
-        $result = $this->replacer->replaceResolvableResourcesInView($view, []);
+        $result = $this->replacer->replaceResolvableResourcesInView($view, [], 1, 10);
 
         self::assertSame($view, $result);
     }

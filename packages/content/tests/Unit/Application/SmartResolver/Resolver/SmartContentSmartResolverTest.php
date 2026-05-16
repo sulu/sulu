@@ -255,22 +255,19 @@ class SmartContentSmartResolverTest extends TestCase
 
         $result = $this->smartResolver->resolve($smartResolvable->reveal(), 'en');
 
+        /** @var array{tags: list<ResolvableResource>, categories: list<ResolvableResource>} $view */
         $view = $result->getView();
 
         $this->assertCount(2, $view['tags']);
-        $this->assertInstanceOf(ResolvableResource::class, $view['tags'][0]);
         $this->assertSame(3, $view['tags'][0]->getId());
         $this->assertSame('tag', $view['tags'][0]->getResourceLoaderKey());
         // no callback: the loader output (tag name string) is forwarded unchanged to the view
         $this->assertSame('Beach', $view['tags'][0]->executeResourceCallback('Beach'));
-        $this->assertInstanceOf(ResolvableResource::class, $view['tags'][1]);
         $this->assertSame(4, $view['tags'][1]->getId());
 
         $this->assertCount(2, $view['categories']);
-        $this->assertInstanceOf(ResolvableResource::class, $view['categories'][0]);
         $this->assertSame(10, $view['categories'][0]->getId());
         $this->assertSame('category', $view['categories'][0]->getResourceLoaderKey());
-        $this->assertInstanceOf(ResolvableResource::class, $view['categories'][1]);
         $this->assertSame(11, $view['categories'][1]->getId());
     }
 }

@@ -292,7 +292,9 @@ class ContentViewResolverTest extends TestCase
         self::assertArrayHasKey(0, $result['resolvableResources']);
         self::assertArrayHasKey('tag', $result['resolvableResources'][0]);
         self::assertSame($tag, $result['resolvableResources'][0]['tag'][0][3][$tag->getMetadataIdentifier()]);
-        self::assertSame([$tag], $result['view']['test']['tags']);
+        /** @var array{tags: list<ResolvableResource>} $testView */
+        $testView = $result['view']['test'];
+        self::assertSame([$tag], $testView['tags']);
     }
 
     public function testResolveContentViewCollectsResolvablesFromNestedView(): void
@@ -327,8 +329,10 @@ class ContentViewResolverTest extends TestCase
         $result = $this->contentViewResolver->resolveContentView($contentView, 'block', 0, $priorityQueue);
 
         self::assertSame([], $result['resolvableResources']);
-        self::assertSame(['Beach', 'City'], $result['view']['block']['tags']);
-        self::assertSame(42, $result['view']['block']['count']);
+        /** @var array{tags: list<string>, count: int} $blockView */
+        $blockView = $result['view']['block'];
+        self::assertSame(['Beach', 'City'], $blockView['tags']);
+        self::assertSame(42, $blockView['count']);
     }
 
     public function testResolveContentViewPreservesPriorityAndDepthForViewResolvables(): void

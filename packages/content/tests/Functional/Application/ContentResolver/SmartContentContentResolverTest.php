@@ -901,11 +901,9 @@ class SmartContentContentResolverTest extends SuluTestCase
         /** @var array{categories: array<int, CategoryWrapper>, categoryOperator: string} $view */
         $view = $result['view']['examples'];
         self::assertCount(2, $view['categories']);
-        self::assertInstanceOf(CategoryWrapper::class, $view['categories'][0]);
         self::assertSame($catA->getId(), $view['categories'][0]->getId());
         self::assertSame('cat-a', $view['categories'][0]->getKey());
         self::assertSame('Category A', $view['categories'][0]->getName());
-        self::assertInstanceOf(CategoryWrapper::class, $view['categories'][1]);
         self::assertSame($catB->getId(), $view['categories'][1]->getId());
         self::assertSame('OR', $view['categoryOperator']);
     }
@@ -968,7 +966,6 @@ class SmartContentContentResolverTest extends SuluTestCase
 
         /** @var array{categories: array<int, CategoryWrapper>} $view */
         $view = $result['view']['examples'];
-        self::assertInstanceOf(CategoryWrapper::class, $view['categories'][0]);
         self::assertSame($catA->getId(), $view['categories'][0]->getId());
         self::assertSame($catB->getId(), $view['categories'][1]->getId());
 

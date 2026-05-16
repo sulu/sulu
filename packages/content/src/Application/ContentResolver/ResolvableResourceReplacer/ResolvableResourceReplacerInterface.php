@@ -38,13 +38,15 @@ interface ResolvableResourceReplacerInterface
     ): array;
 
     /**
-     * @param array<int|string, mixed> $view
+     * @param array<string, mixed> $view
      * @param array<string, array<string|int, array<string, array{resolved: mixed, contentViewEnhancement: ContentView}>>> $resolvedResources
      *
-     * @return array<int|string, mixed>
+     * @return array<string, mixed>
      */
     public function replaceResolvableResourcesInView(
         array $view,
-        array $resolvedResources
+        array $resolvedResources,
+        int $depth,
+        int $maxDepth
     ): array;
 }

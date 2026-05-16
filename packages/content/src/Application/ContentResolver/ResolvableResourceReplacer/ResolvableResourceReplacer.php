@@ -225,13 +225,18 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
 
     public function replaceResolvableResourcesInView(
         array $view,
-        array $resolvedResources
+        array $resolvedResources,
+        int $depth,
+        int $maxDepth
     ): array {
         if (0 === \count($resolvedResources)) {
             return $view;
         }
 
-        return $this->replaceInViewRecursively($view, $resolvedResources);
+        /** @var array<string, mixed> $result */
+        $result = $this->replaceInViewRecursively($view, $resolvedResources, $depth, $maxDepth);
+
+        return $result;
     }
 
     /**
@@ -240,8 +245,16 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
      *
      * @return array<int|string, mixed>
      */
-    private function replaceInViewRecursively(array $view, array $resolvedResources): array
-    {
+    private function replaceInViewRecursively(
+        array $view,
+        array $resolvedResources,
+        int $depth,
+        int $maxDepth
+    ): array {
+        if ($depth > $maxDepth) {
+            return $this->replaceUnresolvedWithNull($view);
+        }
+
         foreach ($view as $key => $value) {
             if ($value instanceof ResolvableInterface) {
                 $resolveResult = $this->resolveValue($value, $resolvedResources);
@@ -250,7 +263,8 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
             }
 
             if (\is_array($value)) {
-                $view[$key] = $this->replaceInViewRecursively($value, $resolvedResources);
+                // only increase depth for ResolvableInterface, matching replaceRecursively
+                $view[$key] = $this->replaceInViewRecursively($value, $resolvedResources, $depth, $maxDepth);
             }
         }
 
