@@ -40,6 +40,8 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -921,6 +923,9 @@ class ContactControllerTest extends SuluTestCase
         $category2 = $this->createCategory('second-category-key', 'en', 'Second Category', 'Description of second Category');
         $category3 = $this->createCategory('third-category-key', 'en', 'Third Category', 'Description of third Category');
 
+        $tagA = $this->createTag('Tag A');
+        $tagB = $this->createTag('Tag B');
+
         $contact = $this->createContact(
             'Max',
             'Mustermann',
@@ -1025,7 +1030,10 @@ class ContactControllerTest extends SuluTestCase
             'categories' => [
                 $category3->getId(),
             ],
-            'tags' => ['Tag A', 'Tag B'],
+            'tags' => [
+                $tagA->getId(),
+                $tagB->getId(),
+            ],
         ];
 
         $this->client->jsonRequest(
@@ -2764,5 +2772,16 @@ class ContactControllerTest extends SuluTestCase
         $this->em->persist($category);
 
         return $category;
+    }
+
+    private function createTag(string $tagName): TagInterface
+    {
+        $tag = new Tag();
+        $tag->setName($tagName);
+
+        $this->em->persist($tag);
+        $this->em->flush();
+
+        return $tag;
     }
 }

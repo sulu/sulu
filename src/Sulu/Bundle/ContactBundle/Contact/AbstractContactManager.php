@@ -665,11 +665,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         // handle tags
-        $tags = $this->getProperty($data, 'tags');
-        if (!empty($tags)) {
-            foreach ($tags as $tag) {
-                $this->addTag($contact, $tag);
-            }
+        foreach ($this->getProperty($data, 'tags', []) as $tag) {
+            $this->addTag($contact, $tag);
         }
 
         // process details
@@ -1560,7 +1557,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * Adds a new tag to the given contact and persist it with the given object manager.
+     * Adds a new tag to the given contact.
      *
      * @param DoctrineEntity $contact
      * @param string $data
@@ -1569,11 +1566,14 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     protected function addTag($contact, $data)
     {
-        $success = true;
-        $resolvedTag = $this->getTagManager()->findOrCreateByName($data);
+        $resolvedTag = $this->getTagManager()->findById($data);
+
+        if (null === $resolvedTag) {
+            return false;
+        }
         $contact->addTag($resolvedTag);
 
-        return $success;
+        return true;
     }
 
     /**

@@ -87,13 +87,11 @@ trait RelationTrait
     {
         $matchedEntry = null;
         $matchedKey = null;
-        if (!empty($requestEntities)) {
-            foreach ($requestEntities as $key => $data) {
-                if ($compare($entity, $data)) {
-                    $matchedEntry = $data;
-                    $matchedKey = $key;
-                    break;
-                }
+        foreach ($requestEntities as $key => $data) {
+            if ($compare($entity, $data)) {
+                $matchedEntry = $data;
+                $matchedKey = $key;
+                break;
             }
         }
     }
@@ -115,29 +113,27 @@ trait RelationTrait
     ) {
         $success = true;
 
-        if (!empty($entities)) {
-            foreach ($entities as $entity) {
-                $matchedEntry = null;
-                $matchedKey = null;
+        foreach ($entities as $entity) {
+            $matchedEntry = null;
+            $matchedKey = null;
 
-                // find match callback
-                $compare($entity, $requestEntities, $matchedEntry, $matchedKey);
+            // find match callback
+            $compare($entity, $requestEntities, $matchedEntry, $matchedKey);
 
-                if (null == $matchedEntry && null != $delete) {
-                    // delete entity if it is not listed anymore
-                    $delete($entity);
-                } elseif (null != $update) {
-                    // update entity if it is matched
-                    $success = $update($entity, $matchedEntry);
-                    if (!$success) {
-                        break;
-                    }
+            if (null == $matchedEntry && null != $delete) {
+                // delete entity if it is not listed anymore
+                $delete($entity);
+            } elseif (null != $update) {
+                // update entity if it is matched
+                $success = $update($entity, $matchedEntry);
+                if (!$success) {
+                    break;
                 }
+            }
 
-                // Remove done element from array
-                if (null !== $matchedKey) {
-                    unset($requestEntities[$matchedKey]);
-                }
+            // Remove done element from array
+            if (null !== $matchedKey) {
+                unset($requestEntities[$matchedKey]);
             }
         }
 

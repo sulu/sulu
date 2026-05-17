@@ -22,7 +22,7 @@ interface TagManagerInterface
      *
      * @param $id number The id of the tag
      *
-     * @return TagInterface
+     * @return TagInterface|null
      */
     public function findById($id);
 

@@ -1209,6 +1209,10 @@ class MediaControllerTest extends SuluTestCase
     public function testPutWithoutFile(): void
     {
         $media = $this->createMedia('photo');
+        $tagIds = \array_map(
+            static fn (TagInterface $tag) => $tag->getId(),
+            [$this->tag1, $this->tag2]
+        );
 
         $this->client->jsonRequest(
             'PUT',
@@ -1222,7 +1226,7 @@ class MediaControllerTest extends SuluTestCase
                 'credits' => 'My credits',
                 'focusPointX' => 1,
                 'focusPointY' => 2,
-                'tags' => ['Tag 1', 'Tag 2'],
+                'tags' => $tagIds,
             ]
         );
 
@@ -1241,7 +1245,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(1, $response->focusPointX);
         $this->assertEquals(2, $response->focusPointY);
         $this->assertNotEmpty($response->url);
-        $this->assertEquals(['Tag 1', 'Tag 2'], $response->tags);
+        $this->assertEquals($tagIds, $response->tags);
 
         $this->assertNotEmpty($response->thumbnails);
     }
@@ -1263,7 +1267,7 @@ class MediaControllerTest extends SuluTestCase
 
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $this->assertEquals(['Tag 2'], $response->tags);
+        $this->assertEquals([$this->tag2->getId()], $response->tags);
     }
 
     public function testFileVersionUpdateWithoutDetails(): void

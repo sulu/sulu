@@ -568,19 +568,17 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @return string[]
+     * @return int[]
      */
     #[VirtualProperty]
     #[SerializedName('tags')]
     public function getTags()
     {
-        $tags = [];
-        foreach ($this->getFileVersion()->getTags() as $tag) {
-            /* @var TagInterface $tag */
-            \array_push($tags, $tag->getName());
-        }
-
-        return $tags;
+        return $this->getFileVersion()
+            ->getTags()
+            ->map(static fn (TagInterface $tag) => $tag->getId())
+            ->getValues()
+        ;
     }
 
     /**

@@ -427,13 +427,13 @@ class Account implements AccountInterface
     }
 
     /**
-     * @return string[]
+     * @return int[]
      */
     public function getTagNameArray(): array
     {
         $tags = [];
         foreach ($this->getTags() as $tag) {
-            $tags[] = $tag->getName();
+            $tags[] = $tag->getId();
         }
 
         return $tags;

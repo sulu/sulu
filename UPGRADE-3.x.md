@@ -1163,7 +1163,7 @@ sulu_core:
 ```yaml
 sulu_admin:
     templates:
-        snippet:
+        snippets:
             default_type: 'my_snippet_key'
             directories:
                 snippet_project_a: '%kernel.project_dir%/config/templates/snippets/projectA'
