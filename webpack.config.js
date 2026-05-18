@@ -134,6 +134,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                 {
                     // CKEditor plugins icons
                     test: /\.svg$/,
+                    issuer: /\.js$/, // avoid problems with .svg fonts in css/scss files
                     type: 'asset/source',
                 },
                 {
