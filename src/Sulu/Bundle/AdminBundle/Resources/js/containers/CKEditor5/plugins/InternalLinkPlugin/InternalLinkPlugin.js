@@ -12,7 +12,6 @@ import LinkCommand from '../../LinkCommand';
 import {addLinkConversion, findModelItemInSelection, findViewLinkItemInSelection} from '../../utils';
 import UnlinkCommand from '../../UnlinkCommand';
 import linkTypeRegistry from '../../../Link/registries/linkTypeRegistry';
-// $FlowFixMe
 import linkIcon from './link.svg';
 
 const DEFAULT_TARGET = '_self';
