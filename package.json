@@ -39,8 +39,6 @@
         "@babel/plugin-transform-flow-strip-types": "^7.4.4",
         "@babel/preset-env": "^7.5.5",
         "@babel/preset-react": "^7.0.0",
-        "@ckeditor/ckeditor5-dev-utils": "^48.0.0",
-        "@ckeditor/ckeditor5-theme-lark": "^48.0.0",
         "@testing-library/jest-dom": "^5.17.0",
         "@testing-library/react": "^12.1.5",
         "@testing-library/user-event": "^14.5.2",

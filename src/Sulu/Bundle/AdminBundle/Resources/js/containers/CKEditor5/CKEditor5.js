@@ -1,21 +1,23 @@
 // @flow
 import React from 'react';
 import log from 'loglevel';
-import {Alignment} from '@ckeditor/ckeditor5-alignment/src/alignment';
-import {Bold} from '@ckeditor/ckeditor5-basic-styles/src/bold';
-import {ClassicEditor} from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
-import {Essentials} from '@ckeditor/ckeditor5-essentials/src/essentials';
-import {Heading} from '@ckeditor/ckeditor5-heading/src/heading';
-import {Italic} from '@ckeditor/ckeditor5-basic-styles/src/italic';
-import {List} from '@ckeditor/ckeditor5-list/src/list';
-import {Paragraph} from '@ckeditor/ckeditor5-paragraph/src/paragraph';
-import {Strikethrough} from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
-import {Underline} from '@ckeditor/ckeditor5-basic-styles/src/underline';
-import {Subscript} from '@ckeditor/ckeditor5-basic-styles/src/subscript';
-import {Superscript} from '@ckeditor/ckeditor5-basic-styles/src/superscript';
-import {Code} from '@ckeditor/ckeditor5-basic-styles/src/code';
-import {Table} from '@ckeditor/ckeditor5-table/src/table';
-import {TableToolbar} from '@ckeditor/ckeditor5-table/src/tabletoolbar';
+import {
+    Alignment,
+    Bold,
+    ClassicEditor,
+    Code,
+    Essentials,
+    Heading,
+    Italic,
+    List,
+    Paragraph,
+    Strikethrough,
+    Subscript,
+    Superscript,
+    Table,
+    TableToolbar,
+    Underline,
+} from 'ckeditor5';
 import {translate} from '../../utils/Translator';
 import {addPTags, removePTags} from './utils';
 import ExternalLinkPlugin from './plugins/ExternalLinkPlugin';
@@ -24,6 +26,7 @@ import configRegistry from './registries/configRegistry';
 import pluginRegistry from './registries/pluginRegistry';
 import type {IObservableValue} from 'mobx/lib/mobx';
 import type {ElementRef} from 'react';
+import 'ckeditor5/ckeditor5.css';
 import './ckeditor5.scss';
 import type {SchemaOptions} from '../Form/types';
 
@@ -192,7 +195,8 @@ export default class CKEditor5 extends React.Component<Props> {
         };
 
         ClassicEditor
-            .create(this.containerRef, {
+            .create({
+                attachTo: this.containerRef,
                 plugins: [
                     Alignment,
                     Bold,
