@@ -1,23 +1,14 @@
 // @flow
 import React from 'react';
 import log from 'loglevel';
-import {
-    Alignment,
-    Bold,
-    ClassicEditor,
-    Code,
-    Essentials,
-    Heading,
-    Italic,
-    List,
-    Paragraph,
-    Strikethrough,
-    Subscript,
-    Superscript,
-    Table,
-    TableToolbar,
-    Underline,
-} from 'ckeditor5';
+import {Alignment} from '@ckeditor/ckeditor5-alignment';
+import {Bold, Code, Italic, Strikethrough, Subscript, Superscript, Underline} from '@ckeditor/ckeditor5-basic-styles';
+import {ClassicEditor} from '@ckeditor/ckeditor5-editor-classic';
+import {Essentials} from '@ckeditor/ckeditor5-essentials';
+import {Heading} from '@ckeditor/ckeditor5-heading';
+import {List} from '@ckeditor/ckeditor5-list';
+import {Paragraph} from '@ckeditor/ckeditor5-paragraph';
+import {Table, TableToolbar} from '@ckeditor/ckeditor5-table';
 import {translate} from '../../utils/Translator';
 import {addPTags, removePTags} from './utils';
 import ExternalLinkPlugin from './plugins/ExternalLinkPlugin';
@@ -26,7 +17,15 @@ import configRegistry from './registries/configRegistry';
 import pluginRegistry from './registries/pluginRegistry';
 import type {IObservableValue} from 'mobx/lib/mobx';
 import type {ElementRef} from 'react';
-import 'ckeditor5/ckeditor5.css';
+import '@ckeditor/ckeditor5-ui/dist/index.css';
+import '@ckeditor/ckeditor5-editor-classic/dist/index.css';
+import '@ckeditor/ckeditor5-alignment/dist/index.css';
+import '@ckeditor/ckeditor5-basic-styles/dist/index.css';
+import '@ckeditor/ckeditor5-essentials/dist/index.css';
+import '@ckeditor/ckeditor5-heading/dist/index.css';
+import '@ckeditor/ckeditor5-list/dist/index.css';
+import '@ckeditor/ckeditor5-paragraph/dist/index.css';
+import '@ckeditor/ckeditor5-table/dist/index.css';
 import './ckeditor5.scss';
 import type {SchemaOptions} from '../Form/types';
 

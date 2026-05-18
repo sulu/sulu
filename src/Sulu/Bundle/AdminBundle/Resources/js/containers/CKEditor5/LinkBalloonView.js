@@ -1,5 +1,5 @@
 // @flow
-import {ButtonView, View} from 'ckeditor5';
+import {ButtonView, View} from '@ckeditor/ckeditor5-ui';
 // $FlowFixMe
 import editIcon from './edit.svg';
 // $FlowFixMe

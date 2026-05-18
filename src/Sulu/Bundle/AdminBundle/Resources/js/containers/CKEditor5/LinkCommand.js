@@ -1,5 +1,5 @@
 // @flow
-import {Command} from 'ckeditor5';
+import {Command} from '@ckeditor/ckeditor5-core';
 import CKEditor5 from './CKEditor5';
 import type {AttributeMap} from './types';
 

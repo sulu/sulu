@@ -2,7 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount} from 'enzyme';
-import {ClassicEditor} from 'ckeditor5';
+import {ClassicEditor} from '@ckeditor/ckeditor5-editor-classic';
 import CKEditor5 from '../CKEditor5';
 import configRegistry from '../registries/configRegistry';
 import pluginRegistry from '../registries/pluginRegistry';
@@ -15,29 +15,11 @@ jest.mock('../registries/configRegistry', () => ({
     configs: [],
 }));
 
-jest.mock('ckeditor5', () => {
-    const createPlugin = () => class {};
-
-    return {
-        Alignment: createPlugin(),
-        Bold: createPlugin(),
-        ClassicEditor: {
-            create: jest.fn(),
-        },
-        Code: createPlugin(),
-        Essentials: createPlugin(),
-        Heading: createPlugin(),
-        Italic: createPlugin(),
-        List: createPlugin(),
-        Paragraph: createPlugin(),
-        Strikethrough: createPlugin(),
-        Subscript: createPlugin(),
-        Superscript: createPlugin(),
-        Table: createPlugin(),
-        TableToolbar: createPlugin(),
-        Underline: createPlugin(),
-    };
-});
+jest.mock('@ckeditor/ckeditor5-editor-classic', () => ({
+    ClassicEditor: {
+        create: jest.fn(),
+    },
+}));
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),

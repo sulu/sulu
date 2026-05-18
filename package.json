@@ -99,7 +99,6 @@
         "moduleNameMapper": {
             "\\.(scss|css)$": "identity-obj-proxy",
             "\\.svg$": "<rootDir>/tests/js/mocks/svg.js",
-            "^ckeditor5$": "<rootDir>/node_modules/ckeditor5/dist/ckeditor5.js",
             "fos-jsrouting/router": "<rootDir>/tests/js/mocks/fos-jsrouting-router.js"
         },
         "setupFiles": [
@@ -118,7 +117,7 @@
         },
         "clearMocks": true,
         "transformIgnorePatterns": [
-            "node_modules/(?!(@ckeditor|ckeditor5|array-move|lodash-es|vanilla-colorful|color-parse|color-name|color-convert)/)"
+            "node_modules/(?!(@ckeditor|array-move|lodash-es|vanilla-colorful|color-parse|color-name|color-convert)/)"
         ],
         "testPathIgnorePatterns": [
             "vendor/friendsofsymfony"

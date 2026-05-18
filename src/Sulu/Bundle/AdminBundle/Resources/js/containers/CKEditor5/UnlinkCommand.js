@@ -1,5 +1,5 @@
 // @flow
-import {Command} from 'ckeditor5';
+import {Command} from '@ckeditor/ckeditor5-core';
 
 export default class ExternalUnlinkCommand extends Command {
     attributesToRemove: Array<string>;

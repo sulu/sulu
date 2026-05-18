@@ -2,7 +2,9 @@
 import React from 'react';
 import {Observer} from 'mobx-react';
 import {action, observable} from 'mobx';
-import {ButtonView, ClickObserver, ContextualBalloon, Plugin} from 'ckeditor5';
+import {Plugin} from '@ckeditor/ckeditor5-core';
+import {ClickObserver} from '@ckeditor/ckeditor5-engine';
+import {ButtonView, ContextualBalloon} from '@ckeditor/ckeditor5-ui';
 import {render, unmountComponentAtNode} from 'react-dom';
 import linkTypeRegistry from '../../../Link/registries/linkTypeRegistry';
 import {translate} from '../../../../utils';

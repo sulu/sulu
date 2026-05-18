@@ -3,15 +3,9 @@ import React, {Fragment} from 'react';
 import {render, unmountComponentAtNode} from 'react-dom';
 import {action, computed, observable} from 'mobx';
 import {Observer} from 'mobx-react';
-import {
-    ButtonView,
-    ClickObserver,
-    ContextualBalloon,
-    createDropdown,
-    ListItemView,
-    ListView,
-    Plugin,
-} from 'ckeditor5';
+import {Plugin} from '@ckeditor/ckeditor5-core';
+import {ClickObserver} from '@ckeditor/ckeditor5-engine';
+import {ButtonView, ContextualBalloon, createDropdown, ListItemView, ListView} from '@ckeditor/ckeditor5-ui';
 import {translate} from '../../../../utils';
 import LinkBalloonView from '../../LinkBalloonView';
 import LinkCommand from '../../LinkCommand';
