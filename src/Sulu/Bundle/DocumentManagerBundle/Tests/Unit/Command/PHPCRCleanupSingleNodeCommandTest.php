@@ -23,6 +23,8 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Command\PHPCRCleanupSingleNodeCommand;
+use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -263,6 +265,158 @@ class PHPCRCleanupSingleNodeCommandTest extends TestCase
         $node->hasProperty('i18n:de-shadow-on')->willReturn(false);
 
         $result = $this->command->cleanInvalidShadowReferences($node->reveal(), ['en', 'de'], false);
+
+        $this->assertSame(0, $result);
+    }
+
+    public function testHasLocalizedPropertiesReturnsTrueWhenLocaleMatches(): void
+    {
+        $node = $this->prophesize(NodeInterface::class);
+
+        $matching = $this->prophesize(PropertyInterface::class);
+        $matching->getName()->willReturn('i18n:de-content-blocks#0-description#2');
+
+        $otherLocale = $this->prophesize(PropertyInterface::class);
+        $otherLocale->getName()->willReturn('i18n:en-template');
+
+        $node->getProperties()->willReturn([
+            $otherLocale->reveal(),
+            $matching->reveal(),
+        ]);
+
+        $this->assertTrue($this->command->hasLocalizedProperties($node->reveal(), 'de'));
+    }
+
+    public function testHasLocalizedPropertiesReturnsFalseWhenNoMatch(): void
+    {
+        $node = $this->prophesize(NodeInterface::class);
+
+        $otherLocale = $this->prophesize(PropertyInterface::class);
+        $otherLocale->getName()->willReturn('i18n:en-template');
+
+        $unlocalized = $this->prophesize(PropertyInterface::class);
+        $unlocalized->getName()->willReturn('sulu:order');
+
+        $node->getProperties()->willReturn([
+            $otherLocale->reveal(),
+            $unlocalized->reveal(),
+        ]);
+
+        $this->assertFalse($this->command->hasLocalizedProperties($node->reveal(), 'de'));
+    }
+
+    public function testHasLocalizedPropertiesReturnsFalseForEmptyNode(): void
+    {
+        $node = $this->prophesize(NodeInterface::class);
+        $node->getProperties()->willReturn([]);
+
+        $this->assertFalse($this->command->hasLocalizedProperties($node->reveal(), 'de'));
+    }
+
+    public function testExecuteCleansLiveWorkspaceForUnpublishedDocument(): void
+    {
+        $path = '/cmf/sulu_io/contents/page-1';
+
+        $defaultNode = $this->prophesize(NodeInterface::class);
+        $defaultNode->getPath()->willReturn($path);
+
+        $nodeType = $this->prophesize(NodeTypeInterface::class);
+        $nodeType->getName()->willReturn('sulu:page');
+        $defaultNode->getMixinNodeTypes()->willReturn([$nodeType->reveal()]);
+
+        $defaultTemplateProp = $this->prophesize(PropertyInterface::class);
+        $defaultTemplateProp->getName()->willReturn('i18n:en-template');
+        $defaultTemplateProp->remove()->shouldBeCalled();
+        $defaultNode->getProperties()->willReturn([$defaultTemplateProp->reveal()]);
+
+        $defaultWorkspace = $this->prophesize(WorkspaceInterface::class);
+        $defaultWorkspace->getName()->willReturn('default');
+        $this->session->getWorkspace()->willReturn($defaultWorkspace->reveal());
+        $defaultNode->getSession()->willReturn($this->session->reveal());
+
+        $liveNode = $this->prophesize(NodeInterface::class);
+        $liveNode->getPath()->willReturn($path);
+
+        $liveTemplateProp = $this->prophesize(PropertyInterface::class);
+        $liveTemplateProp->getName()->willReturn('i18n:en-template');
+        $liveTemplateProp->remove()->shouldBeCalled();
+
+        // Orphan from a previous schema; live sweep must remove it even though unpublished.
+        $liveOrphanProp = $this->prophesize(PropertyInterface::class);
+        $liveOrphanProp->getName()->willReturn('i18n:en-content-blocks#0-description#2');
+        $liveOrphanProp->remove()->shouldBeCalled();
+
+        $liveNode->getProperties()->willReturn([
+            $liveTemplateProp->reveal(),
+            $liveOrphanProp->reveal(),
+        ]);
+
+        $liveWorkspace = $this->prophesize(WorkspaceInterface::class);
+        $liveWorkspace->getName()->willReturn('default_live');
+        $this->liveSession->getWorkspace()->willReturn($liveWorkspace->reveal());
+        $liveNode->getSession()->willReturn($this->liveSession->reveal());
+
+        $this->session->getNodeByIdentifier('uuid-1')->willReturn($defaultNode->reveal());
+        $this->liveSession->getNode($path)->willReturn($liveNode->reveal());
+        $this->session->save()->shouldBeCalled();
+        $this->liveSession->save()->shouldBeCalled();
+
+        $this->structureMetadataFactory->hasStructuresFor('page')->willReturn(true);
+        $this->webspaceManager->getAllLocalesByWebspaces()->willReturn([
+            'sulu_io' => ['en' => new Localization('en')],
+        ]);
+
+        $document = new class() implements UuidBehavior, WorkflowStageBehavior {
+            public function getUuid()
+            {
+                return 'uuid-1';
+            }
+
+            public function getWorkflowStage()
+            {
+                return WorkflowStage::TEST;
+            }
+
+            public function setWorkflowStage($workflowStage)
+            {
+                return $this;
+            }
+
+            public function getPublished()
+            {
+                return null;
+            }
+        };
+        $this->documentManager->find('uuid-1', 'en')->willReturn($document);
+
+        $command = new class(
+            $this->liveSession->reveal(),
+            $this->session->reveal(),
+            $this->structureMetadataFactory->reveal(),
+            $this->namespaceRegistry->reveal(),
+            $this->eventDispatcher->reveal(),
+            $this->documentManager->reveal(),
+            [['phpcr_type' => 'sulu:page', 'alias' => 'page']],
+            $this->webspaceManager->reveal(),
+        ) extends PHPCRCleanupSingleNodeCommand {
+            // Stub out stale-locale and shadow handling; covered by their own tests.
+            public function removeStaleLocaleProperties(NodeInterface $node, array $staleLocales, bool $dryRun): int
+            {
+                return 0;
+            }
+
+            /**
+             * @param string[] $validLocales
+             */
+            public function cleanInvalidShadowReferences(NodeInterface $node, array $validLocales, bool $dryRun): int
+            {
+                return 0;
+            }
+        };
+
+        $result = $command->run(new ArrayInput([
+            'node' => ['uuid-1'],
+        ]), new BufferedOutput());
 
         $this->assertSame(0, $result);
     }

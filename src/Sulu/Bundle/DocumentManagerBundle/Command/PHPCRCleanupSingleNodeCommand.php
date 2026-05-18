@@ -296,11 +296,15 @@ class PHPCRCleanupSingleNodeCommand extends Command
                 $defaultSessionModified = false;
             }
 
-            if ($wasPublished) {
-                $liveNode = $this->liveSession->getNode($node->getPath());
+            // Sweep live workspace whenever it holds data for the locale, not only
+            // when currently published; otherwise schema leftovers survive in live.
+            $liveNodeForCleanup = $this->getLiveNodeByPathOrNull($node->getPath());
+            if (null !== $liveNodeForCleanup && $this->hasLocalizedProperties($liveNodeForCleanup, $locale)) {
                 /** @var string[] $writtenProperties */
-                $writtenProperties = $liveCleanupNode->getWrittenPropertyKeys();
-                foreach ($this->cleanupNode($liveNode, $locale, $writtenProperties, $dryRun) as $result) {
+                $writtenProperties = null !== $liveCleanupNode
+                    ? $liveCleanupNode->getWrittenPropertyKeys()
+                    : $defaultCleanupNode->getWrittenPropertyKeys();
+                foreach ($this->cleanupNode($liveNodeForCleanup, $locale, $writtenProperties, $dryRun) as $result) {
                     ++$stats['properties'];
                     $stats['removedProperties'] += $result ? 1 : 0;
                 }
@@ -518,6 +522,21 @@ class PHPCRCleanupSingleNodeCommand extends Command
         $this->cachedLocalesByWebspaces ??= $this->webspaceManager->getAllLocalesByWebspaces();
 
         return \array_keys($this->cachedLocalesByWebspaces[$key] ?? []);
+    }
+
+    /**
+     * Returns true if the node has at least one property localized for the given locale.
+     */
+    public function hasLocalizedProperties(NodeInterface $node, string $locale): bool
+    {
+        $prefix = $this->languagePrefix . ':' . $locale . '-';
+        foreach ($node->getProperties() as $property) {
+            if (\str_starts_with($property->getName(), $prefix)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
