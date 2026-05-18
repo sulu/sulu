@@ -13,7 +13,6 @@ import LinkBalloonView from '../../LinkBalloonView';
 import LinkCommand from '../../LinkCommand';
 import UnlinkCommand from '../../UnlinkCommand';
 import {ExternalLinkTypeOverlay} from '../../../Link';
-// $FlowFixMe
 import linkIcon from './link.svg';
 
 const DEFAULT_TARGET = '_self';

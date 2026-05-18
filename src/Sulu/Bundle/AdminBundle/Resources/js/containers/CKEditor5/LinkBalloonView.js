@@ -1,8 +1,6 @@
 // @flow
 import {ButtonView, View} from '@ckeditor/ckeditor5-ui';
-// $FlowFixMe
 import editIcon from './edit.svg';
-// $FlowFixMe
 import unlinkIcon from './unlink.svg';
 
 export default class LinkBalloonView extends View {
