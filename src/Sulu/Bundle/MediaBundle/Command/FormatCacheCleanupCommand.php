@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Command;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,6 +27,9 @@ use Symfony\Component\Finder\SplFileInfo;
 #[AsCommand(name: 'sulu:media:format:cache:cleanup', description: 'Remove media formats which medias not longer exist in the database')]
 class FormatCacheCleanupCommand extends Command
 {
+    /**
+     * @param EntityRepository<MediaInterface> $mediaRepository
+     */
     public function __construct(
         private EntityRepository $mediaRepository,
         private Filesystem $filesystem,

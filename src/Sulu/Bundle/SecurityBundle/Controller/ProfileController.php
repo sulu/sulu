@@ -143,7 +143,7 @@ class ProfileController
                 }
 
                 // persist setting
-                $setting->setValue(\json_encode($settingValue));
+                $setting->setValue(\json_encode($settingValue, flags: \JSON_THROW_ON_ERROR));
             }
             $this->objectManager->flush();
 
