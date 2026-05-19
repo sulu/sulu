@@ -149,6 +149,29 @@ class RoutableNormalizerTest extends TestCase
         );
     }
 
+    public function testEnhanceFillsPageTreeRouteUrlWhenParentIsHomepage(): void
+    {
+        $parentRoute = new Route('pages', 'homepage-uuid', 'en', '/');
+        $route = new Route('pages', 'child-uuid', 'en', '/test123', null, $parentRoute);
+        $object = $this->createDimensionContent('en', 'default', $route);
+
+        $this->primeFormMetadata('example', 'en', 'default', [
+            'url' => $this->createField('url', 'page_tree_route'),
+        ]);
+
+        $result = $this->normalizer->enhance($object, []);
+
+        $this->assertSame(
+            [
+                'url' => [
+                    'page' => ['uuid' => 'homepage-uuid', 'path' => '/'],
+                    'suffix' => '/test123',
+                ],
+            ],
+            $result
+        );
+    }
+
     public function testEnhanceLeavesNonRouteFieldsUntouched(): void
     {
         $route = new Route('examples', '1', 'en', '/my-page');
