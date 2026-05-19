@@ -49,6 +49,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
      */
     protected static $entityKey = 'roles';
 
+    /** @var class-string */
     public const ENTITY_NAME_PERMISSION = Permission::class;
 
     protected $bundlePrefix = 'security.roles.';
