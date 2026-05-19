@@ -19,6 +19,8 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 
 /**
  * @final
+ *
+ * @implements DataTransformerInterface<mixed, string>
  */
 class DocumentToUuidTransformer implements DataTransformerInterface
 {

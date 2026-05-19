@@ -19,6 +19,7 @@ class UsingPersistenceBundleTrait extends Bundle
 {
     use PersistenceBundleTrait;
 
+    /** @var array<class-string, string> */
     public $modelInterfaces = [];
 
     public function build(ContainerBuilder $container): void

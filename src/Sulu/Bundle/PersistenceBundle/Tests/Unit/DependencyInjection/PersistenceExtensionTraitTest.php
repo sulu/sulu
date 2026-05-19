@@ -13,24 +13,24 @@ namespace Sulu\Bundle\PersistenceBundle\Tests\Unit\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractContainerBuilderTestCase;
 use Sulu\Bundle\PersistenceBundle\Tests\Unit\Fixture\DependencyInjection\UsingPersistenceExtensionTrait;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
 class PersistenceExtensionTraitTest extends AbstractContainerBuilderTestCase
 {
     public function testPersistenceExtensionTrait(): void
     {
-        $repository = new class() {
-        };
+        $repository = new class() {};
 
         $extension = new UsingPersistenceExtensionTrait();
         $extension->load(
             [
                 'objects' => [
                     'foo' => [
-                        'model' => 'Sulu\Component\Persistence\Model\Foo',
+                        'model' => ModelFoo::class,
                     ],
                     'bar' => [
-                        'model' => 'Sulu\Component\Persistence\Model\Bar',
+                        'model' => ModelBar::class,
                         'repository' => \get_class($repository),
                     ],
                 ],
@@ -40,12 +40,12 @@ class PersistenceExtensionTraitTest extends AbstractContainerBuilderTestCase
 
         $this->assertContainerBuilderHasParameter(
             'sulu.model.foo.class',
-            'Sulu\Component\Persistence\Model\Foo'
+            ModelFoo::class
         );
 
         $this->assertContainerBuilderHasParameter(
             'sulu.model.bar.class',
-            'Sulu\Component\Persistence\Model\Bar'
+            ModelBar::class
         );
 
         $this->assertContainerBuilderHasParameter(
@@ -58,10 +58,10 @@ class PersistenceExtensionTraitTest extends AbstractContainerBuilderTestCase
             [
                 'sulu' => [
                     'foo' => [
-                        'model' => 'Sulu\Component\Persistence\Model\Foo',
+                        'model' => ModelFoo::class,
                     ],
                     'bar' => [
-                        'model' => 'Sulu\Component\Persistence\Model\Bar',
+                        'model' => ModelBar::class,
                         'repository' => \get_class($repository),
                     ],
                 ],
@@ -77,6 +77,7 @@ class PersistenceExtensionTraitTest extends AbstractContainerBuilderTestCase
     public function testPersistenceExtensionTraitWithAccessControlQueryEnhancer(): void
     {
         $repository = new class() {
+            /** @param AccessControlQueryEnhancerInterface $accessControlQueryEnhancer */
             public function setAccessControlQueryEnhancer($accessControlQueryEnhancer): void
             {
             }
@@ -87,10 +88,10 @@ class PersistenceExtensionTraitTest extends AbstractContainerBuilderTestCase
             [
                 'objects' => [
                     'foo' => [
-                        'model' => 'Sulu\Component\Persistence\Model\Foo',
+                        'model' => ModelFoo::class,
                     ],
                     'bar' => [
-                        'model' => 'Sulu\Component\Persistence\Model\Bar',
+                        'model' => ModelBar::class,
                         'repository' => \get_class($repository),
                     ],
                 ],
@@ -100,12 +101,12 @@ class PersistenceExtensionTraitTest extends AbstractContainerBuilderTestCase
 
         $this->assertContainerBuilderHasParameter(
             'sulu.model.foo.class',
-            'Sulu\Component\Persistence\Model\Foo'
+            ModelFoo::class
         );
 
         $this->assertContainerBuilderHasParameter(
             'sulu.model.bar.class',
-            'Sulu\Component\Persistence\Model\Bar'
+            ModelBar::class
         );
 
         $this->assertContainerBuilderHasParameter(
@@ -118,10 +119,10 @@ class PersistenceExtensionTraitTest extends AbstractContainerBuilderTestCase
             [
                 'sulu' => [
                     'foo' => [
-                        'model' => 'Sulu\Component\Persistence\Model\Foo',
+                        'model' => ModelFoo::class,
                     ],
                     'bar' => [
-                        'model' => 'Sulu\Component\Persistence\Model\Bar',
+                        'model' => ModelBar::class,
                         'repository' => \get_class($repository),
                     ],
                 ],
@@ -139,4 +140,11 @@ class PersistenceExtensionTraitTest extends AbstractContainerBuilderTestCase
             [new Reference('sulu_security.access_control_query_enhancer')]
         );
     }
+}
+
+class ModelFoo
+{
+}
+class ModelBar
+{
 }
