@@ -18,6 +18,9 @@ use Sulu\Page\Domain\Event\PageMovedEvent;
 use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
+use Sulu\Route\Application\ResourceLocator\ResourceLocatorGeneratorInterface;
+use Sulu\Route\Application\ResourceLocator\ResourceLocatorRequest;
+use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 
 /**
  * @internal This class should not be instantiated by a project.
@@ -27,6 +30,8 @@ class MovePageMessageHandler
 {
     public function __construct(
         private PageRepositoryInterface $pageRepository,
+        private RouteRepositoryInterface $routeRepository,
+        private ResourceLocatorGeneratorInterface $resourceLocatorGenerator,
         private DomainEventCollectorInterface $domainEventCollector,
     ) {
     }
@@ -37,6 +42,11 @@ class MovePageMessageHandler
         $previousParent = $page->getParent();
 
         $this->pageRepository->moveOneBy($message->getIdentifier(), $message->getTargetParentIdentifier());
+
+        $newParent = $page->getParent();
+        if (null !== $newParent && $newParent !== $previousParent) {
+            $this->moveRoutes($page, $previousParent, $newParent);
+        }
 
         if (null === $previousParent) {
             $this->domainEventCollector->collect(new PageMovedEvent(
@@ -63,5 +73,71 @@ class MovePageMessageHandler
         ));
 
         return $page;
+    }
+
+    /**
+     * Re-anchors the page's route(s) under the new parent; the RouteChangedUpdater cascades
+     * descendants and history on flush.
+     */
+    private function moveRoutes(PageInterface $page, ?PageInterface $previousParent, PageInterface $newParent): void
+    {
+        $routes = $this->routeRepository->findBy([
+            'resourceKey' => PageInterface::RESOURCE_KEY,
+            'resourceId' => $page->getUuid(),
+        ]);
+
+        foreach ($routes as $route) {
+            $locale = $route->getLocale();
+
+            $newParentRoute = $this->routeRepository->findOneBy([
+                'resourceKey' => PageInterface::RESOURCE_KEY,
+                'resourceId' => $newParent->getUuid(),
+                'locale' => $locale,
+            ]);
+
+            if (null === $newParentRoute) {
+                continue;
+            }
+
+            $oldSlug = $route->getSlug();
+            $newSlug = $this->resourceLocatorGenerator->generate(new ResourceLocatorRequest(
+                parts: [],
+                locale: $locale,
+                webspace: $route->getWebspace(),
+                resourceKey: PageInterface::RESOURCE_KEY,
+                resourceId: $page->getUuid(),
+                parentResourceId: $newParent->getUuid(),
+                parentResourceKey: PageInterface::RESOURCE_KEY,
+                routeSchema: $this->relativeSlug($oldSlug, $previousParent, $locale),
+            ));
+
+            if ($oldSlug !== $newSlug) {
+                $route->setSlug($newSlug);
+            }
+        }
+    }
+
+    /**
+     * Slug relative to the old parent, or the full slug when there is no old parent route.
+     */
+    private function relativeSlug(string $slug, ?PageInterface $previousParent, string $locale): string
+    {
+        if (null === $previousParent) {
+            return $slug;
+        }
+
+        $previousParentRoute = $this->routeRepository->findOneBy([
+            'resourceKey' => PageInterface::RESOURCE_KEY,
+            'resourceId' => $previousParent->getUuid(),
+            'locale' => $locale,
+        ]);
+
+        $previousParentPath = \rtrim($previousParentRoute?->getSlug() ?? '', '/');
+
+        if ('' !== $previousParentPath && \str_starts_with($slug, $previousParentPath)) {
+            return \substr($slug, \strlen($previousParentPath));
+        }
+
+        return $slug;
     }
 }

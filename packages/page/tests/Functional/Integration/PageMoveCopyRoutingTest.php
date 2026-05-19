@@ -1,0 +1,294 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Page\Tests\Functional\Integration;
+
+use PHPUnit\Framework\Attributes\CoversNothing;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Page\Application\Message\CopyPageMessage;
+use Sulu\Page\Application\Message\CreatePageMessage;
+use Sulu\Page\Application\Message\MovePageMessage;
+use Sulu\Page\Application\MessageHandler\CopyPageMessageHandler;
+use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
+use Sulu\Page\Application\MessageHandler\MovePageMessageHandler;
+use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Page\Domain\Repository\PageRepositoryInterface;
+use Sulu\Route\Domain\Model\Route;
+use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\HttpKernel\KernelInterface;
+
+#[CoversNothing]
+class PageMoveCopyRoutingTest extends SuluTestCase
+{
+    private PageRepositoryInterface $pageRepository;
+
+    private RouteRepositoryInterface $routeRepository;
+
+    protected function setUp(): void
+    {
+        self::purgeDatabase();
+
+        self::assertInstanceOf(KernelInterface::class, self::$kernel);
+        $application = new Application(self::$kernel);
+        $command = $application->find('sulu:page:initialize');
+        (new CommandTester($command))->execute([]);
+
+        $this->pageRepository = $this->getContainer()->get('sulu_page.page_repository');
+        $this->routeRepository = $this->getContainer()->get(RouteRepositoryInterface::class);
+    }
+
+    public function testMoveUpdatesUrlToNewParentPath(): void
+    {
+        $homepage = $this->getHomepage();
+        $parentA = $this->createPage($homepage->getUuid(), ['title' => 'Parent A', 'url' => '/parent-a']);
+        $parentB = $this->createPage($homepage->getUuid(), ['title' => 'Parent B', 'url' => '/parent-b']);
+        $child = $this->createPage($parentA->getUuid(), ['title' => 'Child', 'url' => '/parent-a/child']);
+
+        $this->move($child->getUuid(), $parentB->getUuid());
+
+        $this->assertRouteSlug('/parent-b/child', $child->getUuid(), 'en');
+    }
+
+    public function testMoveToRootUsesHomepageSlug(): void
+    {
+        $homepage = $this->getHomepage();
+        $parentA = $this->createPage($homepage->getUuid(), ['title' => 'Parent A', 'url' => '/parent-a']);
+        $child = $this->createPage($parentA->getUuid(), ['title' => 'Child', 'url' => '/parent-a/child']);
+
+        $this->move($child->getUuid(), $homepage->getUuid());
+
+        $this->assertRouteSlug('/child', $child->getUuid(), 'en');
+    }
+
+    public function testMoveCascadesDescendantSlugs(): void
+    {
+        $homepage = $this->getHomepage();
+        $parentA = $this->createPage($homepage->getUuid(), ['title' => 'Parent A', 'url' => '/parent-a']);
+        $parentB = $this->createPage($homepage->getUuid(), ['title' => 'Parent B', 'url' => '/parent-b']);
+        $child = $this->createPage($parentA->getUuid(), ['title' => 'Child', 'url' => '/parent-a/child']);
+        $grandchild = $this->createPage($child->getUuid(), ['title' => 'Grandchild', 'url' => '/parent-a/child/grandchild']);
+
+        $this->move($child->getUuid(), $parentB->getUuid());
+
+        $this->assertRouteSlug('/parent-b/child', $child->getUuid(), 'en');
+        $this->assertRouteSlug('/parent-b/child/grandchild', $grandchild->getUuid(), 'en');
+    }
+
+    public function testMoveAppendsSuffixWhenDestinationSlugIsTaken(): void
+    {
+        $homepage = $this->getHomepage();
+        $parentA = $this->createPage($homepage->getUuid(), ['title' => 'Parent A', 'url' => '/parent-a']);
+        $parentB = $this->createPage($homepage->getUuid(), ['title' => 'Parent B', 'url' => '/parent-b']);
+        $this->createPage($parentB->getUuid(), ['title' => 'Existing', 'url' => '/parent-b/child']);
+        $child = $this->createPage($parentA->getUuid(), ['title' => 'Child', 'url' => '/parent-a/child']);
+
+        $this->move($child->getUuid(), $parentB->getUuid());
+
+        $this->assertRouteSlug('/parent-b/child-1', $child->getUuid(), 'en');
+    }
+
+    public function testMoveCreatesHistoryRoute(): void
+    {
+        $homepage = $this->getHomepage();
+        $parentA = $this->createPage($homepage->getUuid(), ['title' => 'Parent A', 'url' => '/parent-a']);
+        $parentB = $this->createPage($homepage->getUuid(), ['title' => 'Parent B', 'url' => '/parent-b']);
+        $child = $this->createPage($parentA->getUuid(), ['title' => 'Child', 'url' => '/parent-a/child']);
+
+        $this->move($child->getUuid(), $parentB->getUuid());
+
+        $historyRoute = $this->routeRepository->findOneBy([
+            'webspace' => 'sulu-io',
+            'locale' => 'en',
+            'slug' => '/parent-a/child',
+        ]);
+
+        self::assertNotNull($historyRoute, 'A history route should be created at the old slug.');
+        self::assertTrue($historyRoute->isHistory());
+    }
+
+    public function testMoveDoesNothingWhenParentIsUnchanged(): void
+    {
+        $homepage = $this->getHomepage();
+        $parentA = $this->createPage($homepage->getUuid(), ['title' => 'Parent A', 'url' => '/parent-a']);
+        $child = $this->createPage($parentA->getUuid(), ['title' => 'Child', 'url' => '/parent-a/child']);
+
+        $this->move($child->getUuid(), $parentA->getUuid());
+
+        $this->assertRouteSlug('/parent-a/child', $child->getUuid(), 'en');
+        self::assertNull($this->routeRepository->findOneBy([
+            'webspace' => 'sulu-io',
+            'locale' => 'en',
+            'slug' => '/parent-a/child',
+            'resourceKey' => Route::HISTORY_RESOURCE_KEY,
+        ]));
+    }
+
+    public function testMoveReanchorsRouteSoLaterParentRenameCascades(): void
+    {
+        $homepage = $this->getHomepage();
+        $parentA = $this->createPage($homepage->getUuid(), ['title' => 'Parent A', 'url' => '/parent-a']);
+        $parentB = $this->createPage($homepage->getUuid(), ['title' => 'Parent B', 'url' => '/parent-b']);
+        $child = $this->createPage($parentA->getUuid(), ['title' => 'Child', 'url' => '/parent-a/child']);
+
+        $this->move($child->getUuid(), $parentB->getUuid());
+        $this->assertRouteSlug('/parent-b/child', $child->getUuid(), 'en');
+
+        // Renaming the new parent must cascade to the moved child, which only works if the moved
+        // route's parent_id FK was re-pointed at parent B.
+        $this->renameRoute($parentB->getUuid(), 'en', '/parent-b-renamed');
+
+        $this->assertRouteSlug('/parent-b-renamed/child', $child->getUuid(), 'en');
+    }
+
+    public function testCopyCreatesRouteSoLaterParentRenameCascades(): void
+    {
+        $homepage = $this->getHomepage();
+        $parentA = $this->createPage($homepage->getUuid(), ['title' => 'Parent A', 'url' => '/parent-a']);
+        $parentB = $this->createPage($homepage->getUuid(), ['title' => 'Parent B', 'url' => '/parent-b']);
+        $source = $this->createPage($parentA->getUuid(), ['title' => 'Source', 'url' => '/parent-a/source']);
+
+        $target = $this->copy($source->getUuid(), $parentB->getUuid());
+        $this->assertRouteSlug('/parent-b/source', $target->getUuid(), 'en');
+
+        // Renaming the parent must cascade to the copied route, which only works if the copied
+        // route's parent_id FK was set to parent B.
+        $this->renameRoute($parentB->getUuid(), 'en', '/parent-b-renamed');
+
+        $this->assertRouteSlug('/parent-b-renamed/source', $target->getUuid(), 'en');
+    }
+
+    public function testCopyCreatesRouteWithUniqueSlug(): void
+    {
+        $homepage = $this->getHomepage();
+        $parentA = $this->createPage($homepage->getUuid(), ['title' => 'Parent A', 'url' => '/parent-a']);
+        $parentB = $this->createPage($homepage->getUuid(), ['title' => 'Parent B', 'url' => '/parent-b']);
+        $source = $this->createPage($parentA->getUuid(), ['title' => 'Source', 'url' => '/parent-a/source']);
+
+        $target = $this->copy($source->getUuid(), $parentB->getUuid());
+
+        $this->assertRouteSlug('/parent-b/source', $target->getUuid(), 'en');
+    }
+
+    public function testCopyToSameParentAppendsSuffix(): void
+    {
+        $homepage = $this->getHomepage();
+        $parentA = $this->createPage($homepage->getUuid(), ['title' => 'Parent A', 'url' => '/parent-a']);
+        $source = $this->createPage($parentA->getUuid(), ['title' => 'Source', 'url' => '/parent-a/source']);
+
+        $target = $this->copy($source->getUuid(), $parentA->getUuid());
+
+        $this->assertRouteSlug('/parent-a/source-1', $target->getUuid(), 'en');
+    }
+
+    public function testCopyIncrementsSuffixWhenFirstCandidateIsTaken(): void
+    {
+        $homepage = $this->getHomepage();
+        $parentA = $this->createPage($homepage->getUuid(), ['title' => 'Parent A', 'url' => '/parent-a']);
+        $this->createPage($parentA->getUuid(), ['title' => 'Existing', 'url' => '/parent-a/source-1']);
+        $source = $this->createPage($parentA->getUuid(), ['title' => 'Source', 'url' => '/parent-a/source']);
+
+        $target = $this->copy($source->getUuid(), $parentA->getUuid());
+
+        $this->assertRouteSlug('/parent-a/source-2', $target->getUuid(), 'en');
+    }
+
+    public function testCopyUnderHomepageCollapsesParentSlash(): void
+    {
+        $homepage = $this->getHomepage();
+        $parentA = $this->createPage($homepage->getUuid(), ['title' => 'Parent A', 'url' => '/parent-a']);
+        $source = $this->createPage($parentA->getUuid(), ['title' => 'Source', 'url' => '/parent-a/source']);
+
+        $target = $this->copy($source->getUuid(), $homepage->getUuid());
+
+        $this->assertRouteSlug('/source', $target->getUuid(), 'en');
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function createPage(string $parentId, array $data): PageInterface
+    {
+        $data = \array_merge(['locale' => 'en', 'template' => 'default'], $data);
+
+        /** @var CreatePageMessageHandler $handler */
+        $handler = self::getContainer()->get('sulu_page.create_page_handler');
+        $page = $handler(new CreatePageMessage('sulu-io', $parentId, $data));
+        self::getEntityManager()->flush();
+        self::getEntityManager()->clear();
+
+        return $this->pageRepository->getOneBy(['uuid' => $page->getUuid()]);
+    }
+
+    private function move(string $uuid, string $destinationParentUuid): void
+    {
+        /** @var MovePageMessageHandler $handler */
+        $handler = self::getContainer()->get('sulu_page.move_page_handler');
+        $handler(new MovePageMessage(['uuid' => $uuid], ['uuid' => $destinationParentUuid], 'en'));
+        self::getEntityManager()->flush();
+        self::getEntityManager()->clear();
+    }
+
+    private function copy(string $sourceUuid, string $destinationParentUuid): PageInterface
+    {
+        /** @var CopyPageMessageHandler $handler */
+        $handler = self::getContainer()->get('sulu_page.copy_page_handler');
+        $target = $handler(new CopyPageMessage(['uuid' => $sourceUuid], ['uuid' => $destinationParentUuid], 'en'));
+        $targetUuid = $target->getUuid();
+        self::getEntityManager()->flush();
+        self::getEntityManager()->clear();
+
+        return $this->pageRepository->getOneBy(['uuid' => $targetUuid]);
+    }
+
+    private function renameRoute(string $resourceId, string $locale, string $newSlug): void
+    {
+        $route = $this->routeRepository->findOneBy([
+            'resourceKey' => PageInterface::RESOURCE_KEY,
+            'resourceId' => $resourceId,
+            'locale' => $locale,
+        ]);
+        self::assertNotNull($route, \sprintf('Expected a route for page %s in locale %s.', $resourceId, $locale));
+
+        $route->setSlug($newSlug);
+        self::getEntityManager()->flush();
+        self::getEntityManager()->clear();
+    }
+
+    private function getHomepage(): PageInterface
+    {
+        $homepage = $this->pageRepository->findOneBy([
+            'webspaceKey' => 'sulu-io',
+            'parentId' => null,
+            'locale' => 'en',
+            'stage' => DimensionContentInterface::STAGE_DRAFT,
+        ]);
+        self::assertNotNull($homepage, 'Homepage should be initialized in setUp.');
+
+        return $homepage;
+    }
+
+    private function assertRouteSlug(string $expectedSlug, string $resourceId, string $locale): void
+    {
+        $route = $this->routeRepository->findOneBy([
+            'resourceKey' => PageInterface::RESOURCE_KEY,
+            'resourceId' => $resourceId,
+            'locale' => $locale,
+        ]);
+
+        self::assertNotNull($route, \sprintf('Expected a route for page %s in locale %s.', $resourceId, $locale));
+        self::assertSame($expectedSlug, $route->getSlug());
+    }
+}

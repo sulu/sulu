@@ -22,6 +22,10 @@ use Sulu\Page\Domain\Event\PageCopiedEvent;
 use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
+use Sulu\Route\Application\ResourceLocator\ResourceLocatorGeneratorInterface;
+use Sulu\Route\Application\ResourceLocator\ResourceLocatorRequest;
+use Sulu\Route\Domain\Model\Route;
+use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 
 /**
  * @internal This class should not be instantiated by a project.
@@ -33,6 +37,8 @@ final class CopyPageMessageHandler
         private PageRepositoryInterface $pageRepository,
         private ContentCopierInterface $contentCopier,
         private LocalizationManagerInterface $localizationManager,
+        private RouteRepositoryInterface $routeRepository,
+        private ResourceLocatorGeneratorInterface $resourceLocatorGenerator,
         private DomainEventCollectorInterface $domainEventCollector,
     ) {
     }
@@ -80,6 +86,7 @@ final class CopyPageMessageHandler
             PageDimensionContent::class
         );
 
+        $copiedLocales = [];
         foreach ($allLocales as $locale) {
             $sourceDimensionContent = $dimensionContentCollection->getDimensionContent([
                 'locale' => $locale,
@@ -103,12 +110,20 @@ final class CopyPageMessageHandler
                     'locale' => $locale,
                 ],
                 [
-                    'ignoredAttributes' => [
-                        'url', // TODO remove this once the route resolving is implemented on duplicates
-                    ],
+                    // url is re-resolved per-locale below against the new parent
+                    'ignoredAttributes' => ['url'],
                 ]
             );
+
+            $copiedLocales[] = $locale;
         }
+
+        $this->createRoutesForCopiedPage(
+            $sourcePage,
+            $targetPage,
+            $targetParentPage,
+            $copiedLocales,
+        );
 
         /** @var PageDimensionContent $localizedDimensionContent */
         $localizedDimensionContent = $dimensionContentCollection->getDimensionContent([
@@ -119,5 +134,110 @@ final class CopyPageMessageHandler
         $this->domainEventCollector->collect(new PageCopiedEvent($sourcePage, $sourcePage->getId(), $sourcePage->getWebspaceKey(), $localizedDimensionContent->getTitle(), $message->getLocale()));
 
         return $targetPage;
+    }
+
+    /**
+     * Creates the copied page's route(s) under the target parent, reusing the source slug
+     * relative to its old parent.
+     *
+     * @param array<string> $copiedLocales
+     */
+    private function createRoutesForCopiedPage(
+        PageInterface $sourcePage,
+        PageInterface $targetPage,
+        PageInterface $targetParentPage,
+        array $copiedLocales,
+    ): void {
+        if ([] === $copiedLocales) {
+            return;
+        }
+
+        $sourceParent = $sourcePage->getParent();
+
+        $targetCollection = new DimensionContentCollection(
+            $targetPage->getDimensionContents(),
+            [],
+            PageDimensionContent::class
+        );
+
+        foreach ($copiedLocales as $locale) {
+            /** @var PageDimensionContent|null $targetDimensionContent */
+            $targetDimensionContent = $targetCollection->getDimensionContent([
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_DRAFT,
+            ]);
+
+            if (null === $targetDimensionContent || $targetDimensionContent->getLocale() !== $locale) {
+                continue;
+            }
+
+            $sourceRoute = $this->routeRepository->findOneBy([
+                'resourceKey' => PageInterface::RESOURCE_KEY,
+                'resourceId' => $sourcePage->getUuid(),
+                'locale' => $locale,
+            ]);
+
+            if (null === $sourceRoute || $sourceRoute->isHistory()) {
+                continue;
+            }
+
+            $targetParentRoute = $this->routeRepository->findOneBy([
+                'resourceKey' => PageInterface::RESOURCE_KEY,
+                'resourceId' => $targetParentPage->getUuid(),
+                'locale' => $locale,
+            ]);
+
+            if (null === $targetParentRoute) {
+                // target parent not routable in this locale → copy keeps no route
+                continue;
+            }
+
+            $slug = $this->resourceLocatorGenerator->generate(new ResourceLocatorRequest(
+                parts: [],
+                locale: $locale,
+                webspace: $targetPage->getWebspaceKey(),
+                resourceKey: PageInterface::RESOURCE_KEY,
+                resourceId: $targetPage->getUuid(),
+                parentResourceId: $targetParentPage->getUuid(),
+                parentResourceKey: PageInterface::RESOURCE_KEY,
+                routeSchema: $this->relativeSlug($sourceRoute->getSlug(), $sourceParent, $locale),
+            ));
+
+            // parent_id stays null like normal page routes; cascade is slug-based
+            $route = new Route(
+                PageInterface::RESOURCE_KEY,
+                $targetPage->getUuid(),
+                $locale,
+                $slug,
+                $targetPage->getWebspaceKey(),
+            );
+            $this->routeRepository->add($route);
+
+            $targetDimensionContent->setRoute($route);
+        }
+    }
+
+    /**
+     * Slug relative to the old parent, or the full slug when there is no old parent route.
+     */
+    private function relativeSlug(string $slug, ?PageInterface $parent, string $locale): string
+    {
+        if (null === $parent) {
+            return $slug;
+        }
+
+        $parentRoute = $this->routeRepository->findOneBy([
+            'resourceKey' => PageInterface::RESOURCE_KEY,
+            'resourceId' => $parent->getUuid(),
+            'locale' => $locale,
+        ]);
+
+        $parentPath = \rtrim($parentRoute?->getSlug() ?? '', '/');
+
+        if ('' !== $parentPath && \str_starts_with($slug, $parentPath)) {
+            return \substr($slug, \strlen($parentPath));
+        }
+
+        return $slug;
     }
 }

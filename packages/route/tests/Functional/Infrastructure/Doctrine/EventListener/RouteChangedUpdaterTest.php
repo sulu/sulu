@@ -825,7 +825,9 @@ class RouteChangedUpdaterTest extends KernelTestCase
             'expectedChangedRoutes' => 2,
         ];
 
-        yield 'tree_full_edit_disconnected_unrelated_child_not_updated' => [
+        // The cascade matches by slug prefix, so a child sharing the slug path is updated even
+        // without a parent_id link (e.g. plain "route" page fields never set parent_id).
+        yield 'tree_full_edit_disconnected_child_updated_by_slug' => [
             'routes' => [
                 [
                     'resourceId' => '1',
@@ -849,13 +851,13 @@ class RouteChangedUpdaterTest extends KernelTestCase
                 ],
                 [
                     'resourceId' => '2',
-                    'slug' => '/test/child-a',
+                    'slug' => '/test-article/child-a',
                     'webspace' => 'website',
                     'parentSlug' => null,
                     'parentWebspace' => null,
                 ],
             ],
-            'expectedChangedRoutes' => 1,
+            'expectedChangedRoutes' => 2,
         ];
 
         yield 'tree_full_edit_update_child_not_directly_connected' => [
