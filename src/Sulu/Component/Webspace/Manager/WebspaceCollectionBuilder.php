@@ -107,15 +107,16 @@ class WebspaceCollectionBuilder
         );
 
         // sort all portal informations by length
-        foreach ($this->portalInformations as $environment => $environmentPortalInformations) {
+        $environmentPortalInformations = [];
+        foreach ($this->portalInformations as &$environmentPortalInformations) {
             \uksort(
                 $environmentPortalInformations,
                 function(string $a, string $b) {
                     return \strlen($a) < \strlen($b) ? 1 : -1;
                 }
             );
-            $this->portalInformations[$environment] = $environmentPortalInformations;
         }
+        unset($environmentPortalInformations);
 
         $collection->setWebspaces($this->webspaces);
         $collection->setPortals($this->portals);
