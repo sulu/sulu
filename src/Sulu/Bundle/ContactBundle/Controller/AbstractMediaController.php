@@ -14,6 +14,8 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory;
@@ -87,7 +89,7 @@ abstract class AbstractMediaController extends AbstractRestController
     /**
      * Adds a relation between a media and the entity.
      *
-     * @param string $entityName
+     * @param class-string<ContactInterface|AccountInterface> $entityName
      * @param string $id
      * @param string $mediaId
      * @param callable|null $dispatchDomainEventCallback
@@ -143,7 +145,7 @@ abstract class AbstractMediaController extends AbstractRestController
     /**
      * Removes a media from the relation with an entity.
      *
-     * @param string $entityName
+     * @param class-string<ContactInterface|AccountInterface> $entityName
      * @param string $id
      * @param string $mediaId
      * @param callable|null $dispatchDomainEventCallback
