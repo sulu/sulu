@@ -66,7 +66,7 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
     {
         $articles = $this->loadArticles($reindexConfig->getIdentifiers());
         /** @var FormGroup[] $groups */
-        $groups = $this->groupProvider->getGroups();
+        $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
 
         /** @var Article $article */
         foreach ($articles as $article) {
@@ -77,6 +77,11 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
                     $groupIdentifier = $group->identifier;
                     break;
                 }
+            }
+
+            $securityContext = ArticleAdmin::getArticleSecurityContext($groupIdentifier ?? GroupProviderInterface::DEFAULT_GROUP);
+            if (1 === \count($groups)) {
+                $securityContext = ArticleAdmin::SECURITY_CONTEXT;
             }
 
             $data = [
@@ -90,7 +95,7 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
                 'metadata' => [
                     'group' => $groupIdentifier,
                 ],
-                'securityContext' => ArticleAdmin::getArticleSecurityContext($groupIdentifier ?? 'default'),
+                'securityContext' => $securityContext,
             ];
 
             foreach ($this->enhancers as $enhancer) {
