@@ -11043,7 +11043,7 @@ parameters:
 		-
 			message: '#^Argument of an invalid type string supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
-			count: 6
+			count: 7
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
@@ -12304,6 +12304,12 @@ parameters:
 			message: '#^Unable to resolve the template type T in call to method Doctrine\\Persistence\\ObjectManager\:\:getRepository\(\)$#'
 			identifier: argument.templateType
 			count: 19
+			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
+
+		-
+			message: '#^Variable \$entities in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
@@ -29167,6 +29173,12 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
+			message: '#^Variable \$entities in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
+
+		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Util\\TokenGenerator\:\:getRandomNumber\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -35295,6 +35307,12 @@ parameters:
 		-
 			message: '#^Trying to invoke \(callable\(\)\: mixed\)\|null but it might not be a callable\.$#'
 			identifier: callable.nonCallable
+			count: 1
+			path: src/Sulu/Component/Rest/RestHelper.php
+
+		-
+			message: '#^Variable \$entities in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
 			count: 1
 			path: src/Sulu/Component/Rest/RestHelper.php
 
