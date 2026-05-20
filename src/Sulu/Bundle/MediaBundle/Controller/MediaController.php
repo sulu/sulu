@@ -409,7 +409,7 @@ class MediaController extends AbstractMediaController implements
      */
     public function postTriggerAction($id, Request $request)
     {
-        $action = $this->getRequestParameter($request, 'action', true);
+        $action = $request->query->get('action') ?: throw new MissingParameterException(self::class, 'action');
 
         try {
             return match ($action) {
