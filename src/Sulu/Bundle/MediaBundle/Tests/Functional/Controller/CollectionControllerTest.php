@@ -395,10 +395,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?page=1&limit=4&flat=true',
-            [
-                'locale' => 'de',
-            ]
+            '/api/collections?page=1&limit=4&flat=true&locale=de'
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -434,10 +431,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?page=1&limit=4&flat=true&sortBy=title&sortOrder=DESC',
-            [
-                'locale' => 'de',
-            ]
+            '/api/collections?page=1&limit=4&flat=true&sortBy=title&sortOrder=DESC&locale=de'
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
