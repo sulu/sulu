@@ -2,6 +2,16 @@
 
 For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upgrades/upgrade-2.x.html) steps.
 
+## 2.6.24
+
+### Disallow function calls in sort columns
+
+Sulu no longer allows arbitrary strings in the `sortBy` query parameters. The allowed pattern is word characters
+(letters, digits, and `_`) plus `.`. If you need to change this behavior, replace or decorate the
+`sulu_core.list_rest_helper` service (aliased to `Sulu\Component\Rest\ListBuilder\ListRestHelperInterface`) instead of
+overriding `Sulu\Component\Rest\ListBuilder\ListRestHelper::getSortColumn` directly.
+change this override the `Sulu\Component\Rest\ListBuilder\ListRestHelper::getSortColumn` function.
+
 ## 2.6.23
 
 ### CKEditor upgrade to 47
