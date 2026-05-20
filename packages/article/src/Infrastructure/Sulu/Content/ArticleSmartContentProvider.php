@@ -132,7 +132,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
                         'type' => $group->identifier,
                     ];
                 },
-                $this->groupProvider->getGroups(),
+                $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE),
             )))
             ->enableProperties([
                 'title' => 'title',
@@ -326,7 +326,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
     private function expandGroupsToTemplates(array $identifiers): array
     {
         $templates = [];
-        foreach ($this->groupProvider->getGroups() as $group) {
+        foreach ($this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE) as $group) {
             if (\in_array($group->identifier, $identifiers, true)) {
                 $templates = \array_merge($templates, \array_filter($group->templates, 'is_string'));
             }

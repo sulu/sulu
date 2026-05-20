@@ -2,6 +2,30 @@
 
 ## 3.0.7
 
+### Article admin now gates the navigation and views on per-group permissions
+
+The `ArticleAdmin` previously gated its navigation item, per-group views, and toolbar actions (Add, Delete, Export) on the
+umbrella `sulu.article.articles` EDIT permission, with per-group `sulu.article.articles_<group>` checks layered on top. The
+umbrella check has been removed from those code paths, and the per-group permission is now the sole gate for the admin UI
+(see #8830).
+
+The umbrella `sulu.article.articles` permission is still required: `ArticleController` reports it as its security context, so
+every article REST endpoint (list, get, create, update, delete, workflow) continues to check it. Roles need both the umbrella
+permission for API access and the per-group permission for the matching navigation item and views to render.
+
+After upgrading, re-run the reindex command for both kernels so the admin search index reflects the current security contexts:
+
+```bash
+bin/console cmsig:seal:reindex
+```
+
+#### Role updates
+
+After upgrading, review every role with article permissions and adjust the grants accordingly:
+
+- `sulu.article.articles`: always required, because the article REST controllers depend on it.
+- `sulu.article.articles_<group>`: required for each group the role should manage.
+
 ### Selection view structure changed (snippet, page, article)
 
 The `view` data emitted by `*_selection` and `single_*_selection` property resolvers now exposes the loaded entity's metadata and field-level view directly, restoring the Sulu 2.6 shape for multi-selections.

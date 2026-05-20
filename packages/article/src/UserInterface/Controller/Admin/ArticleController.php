@@ -73,7 +73,7 @@ final class ArticleController implements SecuredControllerInterface
         $types = \array_filter(\explode(',', \is_string($typesParam) ? $typesParam : ''));
 
         $groupTemplates = [];
-        $groups = $this->groupProvider->getGroups();
+        $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
         foreach ($groups as $group) {
             if (\in_array($group->identifier, $types)) {
                 $groupTemplates = \array_merge($groupTemplates, $group->templates);
