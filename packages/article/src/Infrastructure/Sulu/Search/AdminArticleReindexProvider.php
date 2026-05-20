@@ -79,6 +79,11 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
                 }
             }
 
+            $securityContext = ArticleAdmin::getArticleSecurityContext($groupIdentifier ?? GroupProviderInterface::DEFAULT_GROUP);
+            if (1 === \count($groups)) {
+                $securityContext = ArticleAdmin::SECURITY_CONTEXT;
+            }
+
             $data = [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . ((string) $article['articleId']) . '__' . $article['locale'],
                 'resourceKey' => ArticleInterface::RESOURCE_KEY,
@@ -90,7 +95,7 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
                 'metadata' => [
                     'group' => $groupIdentifier,
                 ],
-                'securityContext' => ArticleAdmin::getArticleSecurityContext($groupIdentifier ?? GroupProviderInterface::DEFAULT_GROUP),
+                'securityContext' => $securityContext,
             ];
 
             foreach ($this->enhancers as $enhancer) {
