@@ -74,7 +74,7 @@ class ListRestHelper implements ListRestHelperInterface
         }
 
         // Only allow sort columns like id, otherEntity.id and no function calls (empty strings are also invalid)
-        if (!\preg_match('#^(\w|\.)+$#', $sortColumn)) {
+        if (!\preg_match('#^\w+(\.\w+)*$#', $sortColumn)) {
             return null;
         }
 
