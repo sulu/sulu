@@ -240,8 +240,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     public function getMainAccountContact($contact)
     {
-        foreach ($contact->getAccountContacts() as $accountContact) {
-            /** @var AccountContact $accountContact */
+        /** @var Collection<array-key, AccountContact> $accountContacts */
+        $accountContacts = $contact->getAccountContacts();
+        foreach ($accountContacts as $accountContact) {
             if ($accountContact->getMain()) {
                 return $accountContact;
             }
@@ -657,15 +658,12 @@ abstract class AbstractContactManager implements ContactManagerInterface
         $this->setMainForCollection($this->getAddressRelations($contact));
 
         // notes
-        $notes = $this->getProperty($data, 'notes');
-        if (!empty($notes)) {
-            foreach ($notes as $noteData) {
-                $this->addNote($contact, $noteData);
-            }
+        foreach ($data['notes'] ?? [] as $noteData) {
+            $this->addNote($contact, $noteData);
         }
 
         // handle tags
-        foreach ($this->getProperty($data, 'tags', []) as $tag) {
+        foreach ($data['tags'] ?? [] as $tag) {
             $this->addTag($contact, $tag);
         }
 
@@ -844,11 +842,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     {
         $contact->getCategories()->clear();
 
-        if (!$categoryIds) {
-            return true;
-        }
-
-        foreach ($categoryIds as $categoryId) {
+        foreach ($categoryIds ?? [] as $categoryId) {
             $category = $this->em->getRepository(self::$categoryEntityName)->find($categoryId);
 
             if (!$category) {

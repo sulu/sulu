@@ -36,8 +36,6 @@ use Sulu\Component\Rest\ApiWrapper;
 
 /**
  * The Account class which will be exported to the API.
- *
- * @property AccountInterface $entity
  */
 #[ExclusionPolicy('all')]
 class Account extends ApiWrapper

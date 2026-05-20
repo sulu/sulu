@@ -502,9 +502,6 @@ class Contact extends ApiEntity implements ContactInterface
         return $this->tags;
     }
 
-    /**
-     * @return int[]
-     */
     public function getTagNameArray(): array
     {
         $tags = [];
