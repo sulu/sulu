@@ -1803,7 +1803,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''name'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 6
+			count: 5
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
 
 		-
@@ -7521,19 +7521,19 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 63
+			count: 22
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
 			message: '#^Cannot access offset 1 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 19
+			count: 2
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
 			message: '#^Cannot access offset 2 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 7
+			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -7707,7 +7707,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
-			count: 19
+			count: 11
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -7744,18 +7744,6 @@ parameters:
 			message: '#^Cannot access offset ''locale'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 11
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/KeywordControllerTest.php
-
-		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/KeywordControllerTest.php
-
-		-
-			message: '#^Cannot access offset 1 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/KeywordControllerTest.php
 
 		-
@@ -12721,30 +12709,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManagerInterface.php
 
 		-
-			message: '#^Call to an undefined method object\:\:addMedia\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Call to an undefined method object\:\:getMedias\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Call to an undefined method object\:\:removeMedia\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Cannot call method contains\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
 			message: '#^Cannot call method getLocale\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -12766,12 +12730,6 @@ parameters:
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:getMultipleView\(\) has parameter \$contactManager with generic class Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager but does not specify its types\: DoctrineEntity, ApiEntity, AddressRelationEntity$#'
 			identifier: missingType.generics
 			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Parameter \#1 \$className of method Doctrine\\ORM\\EntityManagerInterface\:\:getRepository\(\) expects class\-string\<object\>, string given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
 
 		-
@@ -14277,19 +14235,13 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 132
+			count: 130
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
 			message: '#^Cannot access offset 1 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 42
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Cannot access offset 2 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 40
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -15171,19 +15123,19 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 139
+			count: 138
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
 			message: '#^Cannot access offset 1 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 21
+			count: 20
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
 			message: '#^Cannot access offset 2 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
+			count: 4
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -19801,12 +19753,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManagerInterface.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Command\\FormatCacheCleanupCommand\:\:__construct\(\) has parameter \$mediaRepository with generic class Doctrine\\ORM\\EntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Command/FormatCacheCleanupCommand.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Command\\FormatCacheCleanupCommand\:\:mediaExists\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -21577,12 +21523,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManagerInterface.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\FormatOptions\\FormatOptionsManager\:\:__construct\(\) has parameter \$formatOptionsRepository with generic class Doctrine\\ORM\\EntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatOptions/FormatOptionsManager.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\FormatOptions\\FormatOptionsManager\:\:getAll\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -23175,7 +23115,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
-			count: 19
+			count: 18
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
@@ -24961,12 +24901,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/FormatOptionsManager/FormatOptionsManagerTest.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Unit\\Media\\FormatOptionsManager\\FormatOptionsManagerTest\:\:\$formatOptionsRepository with generic class Doctrine\\ORM\\EntityRepository does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/FormatOptionsManager/FormatOptionsManagerTest.php
-
-		-
 			message: '#^Cannot call method create\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 8
@@ -25727,30 +25661,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/PersistenceBundle/Tests/Functional/EventSubscriber/ORM/UserBlameSubscriberIntegrationTest.php
-
-		-
-			message: '#^Method class@anonymous/src/Sulu/Bundle/PersistenceBundle/Tests/Unit/DependencyInjection/PersistenceExtensionTraitTest\.php\:79\:\:setAccessControlQueryEnhancer\(\) has parameter \$accessControlQueryEnhancer with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/DependencyInjection/PersistenceExtensionTraitTest.php
-
-		-
-			message: '#^Parameter \#1 \$interfaces of method Sulu\\Bundle\\PersistenceBundle\\Tests\\Unit\\Fixture\\Bundle\\UsingPersistenceBundleTrait\:\:buildPersistence\(\) expects array\<class\-string, string\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/Fixture/Bundle/UsingPersistenceBundleTrait.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PersistenceBundle\\Tests\\Unit\\Fixture\\Bundle\\UsingPersistenceBundleTrait\:\:\$modelInterfaces has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/Fixture/Bundle/UsingPersistenceBundleTrait.php
-
-		-
-			message: '#^Parameter \#1 \$objects of method Sulu\\Bundle\\PersistenceBundle\\Tests\\Unit\\Fixture\\DependencyInjection\\UsingPersistenceExtensionTrait\:\:configurePersistence\(\) expects array\<string, array\{model\: class\-string, repository\?\: class\-string\}\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/Fixture/DependencyInjection/UsingPersistenceExtensionTrait.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Admin\\PreviewAdmin\:\:__construct\(\) has parameter \$bundles with no value type specified in iterable type array\.$#'
@@ -26617,12 +26527,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ProfileController.php
 
 		-
-			message: '#^Call to an undefined method object\:\:setValue\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ProfileController.php
-
-		-
 			message: '#^Cannot call method getUser\(\) on Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 4
@@ -26905,21 +26809,9 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
 
 		-
-			message: '#^Parameter \#1 \$className of method Doctrine\\ORM\\EntityManagerInterface\:\:getRepository\(\) expects class\-string\<object\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
 			message: '#^Parameter \#1 \$context of method Sulu\\Bundle\\SecurityBundle\\Entity\\Permission\:\:setContext\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: '#^Parameter \#1 \$entity of class Sulu\\Component\\Rest\\Exception\\EntityNotFoundException constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
 
 		-
@@ -27401,12 +27293,6 @@ parameters:
 			identifier: doctrine.associationType
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Entity/UserRole.php
-
-		-
-			message: '#^Class Doctrine\\ORM\\EntityRepository specifies template type TEntityClass of interface Doctrine\\Persistence\\ObjectRepository as Sulu\\Bundle\\SecurityBundle\\Entity\\UserSetting but it''s already specified as object\.$#'
-			identifier: generics.interfaceConflict
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/UserSettingRepository.php
 
 		-
 			message: '#^Parameter \#1 \$user of method Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactoryInterface\:\:getPasswordHasher\(\) expects string\|Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherAwareInterface\|Symfony\\Component\\Security\\Core\\User\\PasswordAuthenticatedUserInterface, Sulu\\Component\\Security\\Authentication\\UserInterface given\.$#'
@@ -29487,7 +29373,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/TagBundle/Controller/TagController.php
 
 		-
@@ -32353,15 +32239,15 @@ parameters:
 			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
 
 		-
-			message: '#^Call to an undefined method Sulu\\Content\\Domain\\Model\\AuditableInterface\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
-
-		-
 			message: '#^Call to an undefined method Sulu\\Component\\Security\\Authentication\\UserInterface\:\:reveal\(\)\.$#'
 			identifier: method.notFound
 			count: 6
+			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
+
+		-
+			message: '#^Call to an undefined method Sulu\\Content\\Domain\\Model\\AuditableInterface\:\:reveal\(\)\.$#'
+			identifier: method.notFound
+			count: 3
 			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
 
 		-
@@ -33589,18 +33475,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ApiWrapper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Csv\\CsvHandler\:\:convertValue\(\) has parameter \$map with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/Csv/CsvHandler.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\Csv\\CsvHandler\:\:convertValue\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Rest/Csv/CsvHandler.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\Csv\\CsvHandler\:\:prepareData\(\) has parameter \$row with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -33621,36 +33495,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$array of function array_keys expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Rest/Csv/CsvHandler.php
-
-		-
-			message: '#^Parameter \#1 \$enclosure of method Goodby\\CSV\\Export\\Standard\\ExporterConfig\:\:setEnclosure\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Rest/Csv/CsvHandler.php
-
-		-
-			message: '#^Parameter \#1 \$escape of method Goodby\\CSV\\Export\\Standard\\ExporterConfig\:\:setEscape\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Rest/Csv/CsvHandler.php
-
-		-
-			message: '#^Parameter \#1 \$value of method Sulu\\Component\\Rest\\Csv\\CsvHandler\:\:convertValue\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Component/Rest/Csv/CsvHandler.php
-
-		-
-			message: '#^Property Sulu\\Component\\Rest\\Csv\\CsvHandler\:\:\$delimiterMap type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/Csv/CsvHandler.php
-
-		-
-			message: '#^Property Sulu\\Component\\Rest\\Csv\\CsvHandler\:\:\$newLineMap type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Rest/Csv/CsvHandler.php
 
@@ -34562,12 +34406,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getSearchPattern\(\) should return string\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getSortColumn\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
@@ -35607,7 +35445,7 @@ parameters:
 		-
 			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, string\|null given\.$#'
 			identifier: argument.type
-			count: 5
+			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/Csv/CsvHandlerTest.php
 
 		-
@@ -36193,12 +36031,6 @@ parameters:
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/ListRestHelperTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\ListRestHelperTest\:\:dataFieldsProvider\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/ListRestHelperTest.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\ListRestHelperTest\:\:testGetFields\(\) has parameter \$expected with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -36443,12 +36275,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Security/Authentication/UserRepositoryInterface.php
-
-		-
-			message: '#^Interface Sulu\\Component\\Security\\Authentication\\UserSettingRepositoryInterface extends generic interface Doctrine\\Persistence\\ObjectRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Security/Authentication/UserSettingRepositoryInterface.php
 
 		-
 			message: '#^Method Sulu\\Component\\Security\\Authorization\\AbstractSecurityChecker\:\:checkPermission\(\) has parameter \$subject with no type specified\.$#'

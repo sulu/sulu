@@ -58,7 +58,7 @@ class LinkConfiguration
     private $icon;
 
     /**
-     * @var string[]
+     * @var list<string>
      */
     #[Groups(['frontend'])]
     private $targets = [
@@ -69,7 +69,7 @@ class LinkConfiguration
     ];
 
     /**
-     * @param array<string>|null $targets
+     * @param list<string>|null $targets
      */
     public function __construct(
         string $title,
