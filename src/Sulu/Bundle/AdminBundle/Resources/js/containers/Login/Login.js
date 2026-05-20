@@ -86,7 +86,7 @@ class Login extends React.Component<Props> {
 
     handleLoginFormSubmit = (data: LoginFormData) => {
         userStore.login(data).then(() => {
-            if (userStore.loginMethod === 'json_login') {
+            if (userStore.loginMethod === 'json_login' && !userStore.hasSingleSignOn()) {
                 return;
             }
 
