@@ -12,6 +12,7 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Sulu\Content\Application\ResourceLoader\Loader\LinkResourceLoader;
+use Sulu\Content\Application\ResourceLoader\Loader\RawResourceLoader;
 use Sulu\Content\Application\ResourceLoader\Loader\TeaserResourceLoader;
 use Sulu\Content\Application\ResourceLoader\ResourceLoaderProvider;
 use Symfony\Component\DependencyInjection\Reference;
@@ -29,4 +30,7 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_content.teaser_resource_loader', TeaserResourceLoader::class)
         ->args([new Reference('sulu_admin.teaser_manager')])
         ->tag('sulu_content.resource_loader', ['key' => 'teaser']);
+
+    $services->set('sulu_content.raw_resource_loader', RawResourceLoader::class)
+        ->tag('sulu_content.resource_loader', ['key' => RawResourceLoader::RESOURCE_LOADER_KEY]);
 };

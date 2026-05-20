@@ -15,12 +15,11 @@ namespace Sulu\Content\Application\SmartResolver\Resolver;
 
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\CategoryBundle\Infrastructure\Sulu\Content\ResourceLoader\CategoryResourceLoader;
-use Sulu\Bundle\TagBundle\Infrastructure\Sulu\Content\ResourceLoader\TagResourceLoader;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
+use Sulu\Content\Application\ResourceLoader\Loader\RawResourceLoader;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
 /**
@@ -125,9 +124,9 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $view = [
             'dataSource' => $filters['dataSource'],
             'includeSubFolders' => $filters['includeSubFolders'],
-            'categories' => $this->buildCategoryResolvables($filters['categories']),
+            'categories' => $this->buildCategoryResolvables($filters['categories'], $parameters['categoryResourceLoader'] ?? null),
             'categoryOperator' => $filters['categoryOperator'],
-            'tags' => $this->buildTagResolvables($valueTags),
+            'tags' => $this->buildTagResolvables($valueTags, $parameters['tagResourceLoader'] ?? null),
             'tagOperator' => $filters['tagOperator'],
             'types' => $filters['types'],
             'templateKeys' => $filters['templateKeys'] ?? [],
@@ -181,12 +180,14 @@ class SmartContentSmartResolver implements SmartResolverInterface
      *
      * @return ResolvableResource[]
      */
-    private function buildTagResolvables(array $tagIds): array
+    private function buildTagResolvables(array $tagIds, mixed $resourceLoaderKey): array
     {
+        $resourceLoaderKey = \is_string($resourceLoaderKey) ? $resourceLoaderKey : RawResourceLoader::RESOURCE_LOADER_KEY;
+
         return \array_map(
             static fn (int|string $id): ResolvableResource => new ResolvableResource(
                 id: $id,
-                resourceLoaderKey: TagResourceLoader::RESOURCE_LOADER_KEY,
+                resourceLoaderKey: $resourceLoaderKey,
                 priority: 0,
                 resourceKey: TagInterface::RESOURCE_KEY,
             ),
@@ -199,12 +200,14 @@ class SmartContentSmartResolver implements SmartResolverInterface
      *
      * @return ResolvableResource[]
      */
-    private function buildCategoryResolvables(array $categoryIds): array
+    private function buildCategoryResolvables(array $categoryIds, mixed $resourceLoaderKey): array
     {
+        $resourceLoaderKey = \is_string($resourceLoaderKey) ? $resourceLoaderKey : RawResourceLoader::RESOURCE_LOADER_KEY;
+
         return \array_map(
             static fn (int $id): ResolvableResource => new ResolvableResource(
                 id: $id,
-                resourceLoaderKey: CategoryResourceLoader::RESOURCE_LOADER_KEY,
+                resourceLoaderKey: $resourceLoaderKey,
                 priority: 0,
                 resourceKey: CategoryInterface::RESOURCE_KEY,
             ),

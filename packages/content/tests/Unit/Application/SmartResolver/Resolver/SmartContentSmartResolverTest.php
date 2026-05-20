@@ -260,14 +260,69 @@ class SmartContentSmartResolverTest extends TestCase
 
         $this->assertCount(2, $view['tags']);
         $this->assertSame(3, $view['tags'][0]->getId());
-        $this->assertSame('tag', $view['tags'][0]->getResourceLoaderKey());
-        // no callback: the loader output (tag name string) is forwarded unchanged to the view
-        $this->assertSame('Beach', $view['tags'][0]->executeResourceCallback('Beach'));
+        $this->assertSame('raw', $view['tags'][0]->getResourceLoaderKey());
+        // default raw loader returns ids unchanged; resourceKey stays set for cache invalidation
+        $this->assertSame('tags', $view['tags'][0]->getResourceKey());
         $this->assertSame(4, $view['tags'][1]->getId());
 
         $this->assertCount(2, $view['categories']);
         $this->assertSame(10, $view['categories'][0]->getId());
-        $this->assertSame('category', $view['categories'][0]->getResourceLoaderKey());
+        $this->assertSame('raw', $view['categories'][0]->getResourceLoaderKey());
+        $this->assertSame('categories', $view['categories'][0]->getResourceKey());
         $this->assertSame(11, $view['categories'][1]->getId());
+    }
+
+    public function testResolveUsesExplicitTagAndCategoryResourceLoadersFromParameters(): void
+    {
+        $smartResolvable = $this->prophesize(SmartResolvable::class);
+        $smartContentProvider = $this->prophesize(SmartContentProviderInterface::class);
+
+        $data = [
+            'value' => ['tags' => [3, 4]],
+            'filters' => [
+                'dataSource' => null,
+                'includeSubFolders' => false,
+                'categories' => [10, 11],
+                'categoryOperator' => 'OR',
+                'tagOperator' => 'OR',
+                'types' => [],
+                'typesOperator' => 'OR',
+                'websiteCategories' => [],
+                'websiteCategoryOperator' => 'OR',
+                'websiteTags' => [],
+                'websiteTagOperator' => 'OR',
+                'limit' => null,
+                'page' => 1,
+            ],
+            'sortBys' => [],
+            'parameters' => [
+                'provider' => 'articles',
+                'tagResourceLoader' => 'tag',
+                'categoryResourceLoader' => 'category',
+            ],
+        ];
+
+        $smartResolvable->getData()->willReturn($data);
+
+        $this->serviceLocator->has('articles')->willReturn(true);
+        $this->serviceLocator->get('articles')->willReturn($smartContentProvider->reveal());
+
+        $smartContentProvider->findFlatBy(Argument::cetera())->willReturn([]);
+        $smartContentProvider->countBy(Argument::cetera())->willReturn(0);
+        $smartContentProvider->getResourceLoaderKey()->willReturn('articles');
+        $smartContentProvider->getConfiguration()->willReturn(new ProviderConfiguration());
+
+        $result = $this->smartResolver->resolve($smartResolvable->reveal(), 'en');
+
+        /** @var array{tags: list<ResolvableResource>, categories: list<ResolvableResource>} $view */
+        $view = $result->getView();
+
+        $this->assertCount(2, $view['tags']);
+        $this->assertSame('tag', $view['tags'][0]->getResourceLoaderKey());
+        $this->assertSame('tag', $view['tags'][1]->getResourceLoaderKey());
+
+        $this->assertCount(2, $view['categories']);
+        $this->assertSame('category', $view['categories'][0]->getResourceLoaderKey());
+        $this->assertSame('category', $view['categories'][1]->getResourceLoaderKey());
     }
 }
