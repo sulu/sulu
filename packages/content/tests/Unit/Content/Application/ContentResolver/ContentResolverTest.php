@@ -181,13 +181,13 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['333' => [$highPriorityResource->getMetadataIdentifier() => $highPriorityResource]]],
             'en',
-            []
+            Argument::type('array')
         )->willReturn(['example' => ['333' => [$highPriorityResource->getMetadataIdentifier() => 'High Priority Result']]]);
 
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['444' => [$lowPriorityResource->getMetadataIdentifier() => $lowPriorityResource]]],
             'en',
-            []
+            Argument::type('array')
         )->willReturn(['example' => ['444' => [$lowPriorityResource->getMetadataIdentifier() => 'Low Priority Result']]]);
 
         $result = $this->contentResolver->resolve($dimensionContent);
@@ -252,7 +252,7 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['single-1' => [$singleResource->getMetadataIdentifier() => $singleResource]]],
             'en',
-            []
+            Argument::type('array')
         )->willReturn(
             ['example' => ['single-1' => [$singleResource->getMetadataIdentifier() => ['id' => 'single-1', 'title' => 'Single Title']]]]
         );
@@ -296,7 +296,7 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => $multiResource]]],
             'en',
-            []
+            Argument::type('array')
         )->willReturn(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => ['id' => 'multi-1', 'title' => 'Multi Title']]]]
         );
@@ -340,7 +340,7 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => $multiResource]]],
             'en',
-            []
+            Argument::type('array')
         )->willReturn(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => ['id' => 'multi-1', 'title' => 'Multi Title']]]]
         );
@@ -387,7 +387,7 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => $multiResource]]],
             'en',
-            []
+            Argument::type('array')
         )->willReturn(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => ['id' => 'multi-1', 'title' => 'Multi Title']]]]
         );

@@ -85,7 +85,7 @@ class DimensionContentQueryEnhancer
      *     tagOperator?: 'AND'|'OR',
      *     templateKeys?: string[],
      *     loadGhost?: bool,
-     *     excludedIds?: string[],
+     *     excluded?: string[],
      *     includeSubFolders?: bool,
      *     audienceTargeting?: bool,
      *     targetGroupId?: int,
@@ -217,6 +217,12 @@ class DimensionContentQueryEnhancer
                 $queryBuilder->andWhere('filterDimensionContent.templateKey IN (:templateKeys)')
                     ->setParameter('templateKeys', $templateKeys);
             }
+        }
+
+        $excluded = $filters['excluded'] ?? null;
+        if (\is_array($excluded) && [] !== $excluded) {
+            $queryBuilder->andWhere($contentRichEntityAlias . '.uuid NOT IN (:excluded)')
+                ->setParameter('excluded', $excluded);
         }
 
         if (($filters['audienceTargeting'] ?? false) && ($filters['targetGroupId'] ?? null)) {

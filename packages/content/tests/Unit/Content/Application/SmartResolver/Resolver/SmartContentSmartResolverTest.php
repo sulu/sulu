@@ -43,6 +43,7 @@ class SmartContentSmartResolverTest extends TestCase
     {
         $this->smartContentProvider = $this->prophesize(SmartContentProviderInterface::class);
         $this->smartContentProvider->getResourceLoaderKey()->willReturn('test_resource_loader');
+        $this->smartContentProvider->getType()->willReturn('test_provider');
         $this->smartContentProvider->getConfiguration()->willReturn(new ProviderConfiguration());
 
         $this->serviceLocator = $this->prophesize(ServiceLocator::class); // @phpstan-ignore assign.propertyType

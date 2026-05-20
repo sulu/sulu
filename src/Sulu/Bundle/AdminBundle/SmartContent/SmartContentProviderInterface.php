@@ -34,6 +34,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInte
  *      offset: int,
  *      includeSubFolders: bool,
  *      excludeDuplicates: bool,
+ *      excluded?: list<string>,
  *      webspaceKey?: string|null,
  *  }
  * @phpstan-type SmartContentCountBaseFilters array{
@@ -53,6 +54,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInte
  *       limit: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: list<string>,
  *   }
  */
 interface SmartContentProviderInterface

@@ -141,7 +141,7 @@ readonly class ContentResolver implements ContentResolverInterface
         private ContentAggregatorInterface $contentAggregator,
         private int $maxDepth,
         private ContentEnhancerInterface $contentEnhancer,
-        private ResourceLoaderProvider $resourceLoaderProvider
+        private ResourceLoaderProvider $resourceLoaderProvider,
     ) {
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
     }
@@ -151,8 +151,9 @@ readonly class ContentResolver implements ContentResolverInterface
         $locale = $dimensionContent->getLocale();
         Assert::string($locale, 'Locale must be a string');
 
-        // Pass shadow base locale as context for resource loader fallback.
-        $context = [];
+        $context = [
+            '_sourceDimensionContent' => $dimensionContent,
+        ];
         if ($dimensionContent instanceof ShadowInterface && null !== $dimensionContent->getShadowLocale()) {
             $context['_shadowLocale'] = $dimensionContent->getShadowLocale();
         }
@@ -163,6 +164,8 @@ readonly class ContentResolver implements ContentResolverInterface
         $resolvedResources = [];
 
         $resolvedContent = $this->resolveInternal($dimensionContent, 0, $priorityQueue, $properties);
+
+        $context['_renderReferences'] = $resolvedContent['references'];
 
         // Process the priority queue until it's empty
         while (!empty($priorityQueue)) {
@@ -361,6 +364,7 @@ readonly class ContentResolver implements ContentResolverInterface
      *     content: array<string, mixed>,
      *     view: array<string, mixed>,
      *     resolvableResources: array<int, array<string, array<int, array<string|int, array<string, ResolvableInterface>>>>>,
+     *     references: list<\Sulu\Content\Application\ContentResolver\Value\Reference>,
      * }
      */
     private function resolveInternal(
@@ -374,13 +378,27 @@ readonly class ContentResolver implements ContentResolverInterface
         $contentViews = $this->contentViewResolver->getContentViews($dimensionContent, $properties);
         $resolvedContent = $this->contentViewResolver->resolveContentViews($contentViews, $depth, $priorityQueue);
 
+        // resolveContentViews does not mutate $contentViews, so Reference objects attached
+        // by property resolvers are still readable here.
+        $references = [];
+        foreach ($contentViews as $contentView) {
+            foreach ($contentView->getAllReferencesRecursively() as $reference) {
+                $references[] = $reference;
+            }
+        }
+
         // Add resolvable resources to priority queue
         $priorityQueue = $this->resolvableResourceQueueProcessor->mergeResolvableResources(
             $resolvedContent['resolvableResources'],
             $priorityQueue,
         );
 
-        return $resolvedContent;
+        return [
+            'content' => $resolvedContent['content'],
+            'view' => $resolvedContent['view'],
+            'resolvableResources' => $resolvedContent['resolvableResources'],
+            'references' => $references,
+        ];
     }
 
     /**

@@ -15,7 +15,9 @@ namespace Sulu\Content\Application\SmartResolver\Resolver;
 
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\ContentResolver\Value\Reference;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
 /**
@@ -38,6 +40,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
  *       maxPerPage: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: list<string>,
  *       audienceTargeting?: bool,
  *       targetGroupId?: string,
  *       offset?: int,
@@ -53,7 +56,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
     ) {
     }
 
-    public function resolve(SmartResolvable $resolvable, ?string $locale = null): ContentView
+    public function resolve(SmartResolvable $resolvable, ?string $locale = null, array $context = []): ContentView
     {
         /** @var array{
          *     value: array<string, mixed>,
@@ -105,6 +108,11 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $filters['offset'] = $maxPerPage ? (($page - 1) * $maxPerPage) : 0;
         $filters['limit'] = $maxPerPage ?? $limit;
 
+        $excluded = $this->resolveExcluded($filters, $smartContentProvider->getType(), $context);
+        if ([] !== $excluded) {
+            $filters['excluded'] = $excluded;
+        }
+
         $countByFilters = $filters;
         unset($countByFilters['offset']);
 
@@ -141,8 +149,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
             'limit' => $limit,
             'maxPerPage' => $maxPerPage,
 
-            // TODO duplicates
-            'excluded' => [],
+            'excluded' => $filters['excluded'] ?? [],
         ];
 
         $configuration = $smartContentProvider->getConfiguration();
@@ -166,5 +173,33 @@ class SmartContentSmartResolver implements SmartResolverInterface
     public static function getType(): string
     {
         return 'smart_content';
+    }
+
+    /**
+     * @param array{excluded?: list<string>, excludeDuplicates?: bool} $filters
+     * @param array<string, mixed> $context
+     *
+     * @return list<string>
+     */
+    private function resolveExcluded(array $filters, string $providerResourceKey, array $context): array
+    {
+        $excluded = $filters['excluded'] ?? [];
+
+        $source = $context['_sourceDimensionContent'] ?? null;
+        if ($source instanceof DimensionContentInterface && $source::getResourceKey() === $providerResourceKey) {
+            $excluded[] = (string) $source->getResource()->getId();
+        }
+
+        if (true === ($filters['excludeDuplicates'] ?? false)) {
+            /** @var iterable<Reference> $references */
+            $references = $context['_renderReferences'] ?? [];
+            foreach ($references as $reference) {
+                if ($reference->getResourceKey() === $providerResourceKey) {
+                    $excluded[] = (string) $reference->getResourceId();
+                }
+            }
+        }
+
+        return \array_values(\array_unique($excluded));
     }
 }
