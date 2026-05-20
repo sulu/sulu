@@ -38,7 +38,7 @@ class ContactMediaController extends AbstractMediaController implements SecuredC
     protected static $mediaEntityKey = 'contact_media';
 
     /**
-     * @param class-string $contactClass
+     * @param class-string<ContactInterface> $contactClass
      */
     public function __construct(
         ViewHandlerInterface $viewHandler,

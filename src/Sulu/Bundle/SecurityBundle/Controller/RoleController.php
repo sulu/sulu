@@ -43,6 +43,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class RoleController extends AbstractRestController implements SecuredControllerInterface
 {
+    /** @var class-string */
     public const ENTITY_NAME_PERMISSION = Permission::class;
 
     protected $bundlePrefix = 'security.roles.';
