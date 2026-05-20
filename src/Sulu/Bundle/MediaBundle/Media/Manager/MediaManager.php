@@ -44,7 +44,8 @@ use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\MediaPropertiesProviderInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
-use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
@@ -82,7 +83,7 @@ class MediaManager implements MediaManagerInterface
         protected StorageInterface $storage,
         private FileValidatorInterface $validator,
         private FormatManagerInterface $formatManager,
-        private TagRepositoryInterface $tagRepository,
+        private TagManagerInterface $tagManager,
         protected TypeManagerInterface $typeManager,
         private PathCleanupInterface $pathCleanup,
         private DomainEventCollectorInterface $domainEventCollector,
@@ -491,10 +492,13 @@ class MediaManager implements MediaManagerInterface
                         $media->setStorageOptions($value);
                         break;
                     case 'tags':
-                        $tagEntities = $this->tagRepository->findBy(['id' => $value]);
                         $media->removeTags();
-                        foreach ($tagEntities as $tag) {
-                            $media->addTag($tag);
+                        /** @var array<int> $value */
+                        foreach ($value as $id) {
+                            $tag = $this->tagManager->findById($id);
+                            if ($tag instanceof TagInterface) {
+                                $media->addTag($tag);
+                            }
                         }
                         break;
                     case 'properties':

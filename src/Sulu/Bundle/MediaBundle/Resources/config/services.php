@@ -311,7 +311,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_media.storage'),
             new Reference('sulu_media.file_validator'),
             new Reference('sulu_media.format_manager'),
-            new Reference('sulu.repository.tag'),
+            new Reference('sulu_tag.tag_manager'),
             new Reference('sulu_media.type_manager'),
             new Reference('sulu_route.path_cleanup'),
             new Reference('sulu_activity.domain_event_collector'),

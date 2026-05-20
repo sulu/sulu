@@ -122,7 +122,7 @@ class Account implements AccountInterface
     /**
      * @var Collection<int, TagInterface>
      */
-    #[Accessor(getter: 'getTagNameArray')]
+    #[Accessor(getter: 'getTagIds')]
     #[Type('array')]
     protected $tags;
 
@@ -427,16 +427,27 @@ class Account implements AccountInterface
     }
 
     /**
-     * @return int[]
+     * @return string[]
      */
     public function getTagNameArray(): array
     {
         $tags = [];
         foreach ($this->getTags() as $tag) {
-            $tags[] = $tag->getId();
+            $tags[] = $tag->getName();
         }
 
         return $tags;
+    }
+
+    /**
+     * @return array<int>
+     */
+    public function getTagIds(): array
+    {
+        return $this->getTags()
+            ->map(fn (TagInterface $tag) => $tag->getId())
+            ->getValues()
+        ;
     }
 
     public function addAccountContact(AccountContact $accountContact): static

@@ -97,7 +97,7 @@ class Contact extends ApiEntity implements ContactInterface
     /**
      * @var Collection<int, TagInterface>
      */
-    #[Accessor(getter: 'getTagNameArray')]
+    #[Accessor(getter: 'getTagIds')]
     #[Groups(['fullContact'])]
     #[Type('array')]
     protected $tags;
@@ -507,10 +507,21 @@ class Contact extends ApiEntity implements ContactInterface
         $tags = [];
 
         foreach ($this->getTags() as $tag) {
-            $tags[] = $tag->getId();
+            $tags[] = $tag->getName();
         }
 
         return $tags;
+    }
+
+    /**
+     * @return array<int>
+     */
+    public function getTagIds(): array
+    {
+        return $this->getTags()
+            ->map(fn (TagInterface $tag) => $tag->getId())
+            ->getValues()
+        ;
     }
 
     public function addAccountContact(AccountContact $accountContact): static

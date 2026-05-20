@@ -611,7 +611,7 @@ class Account extends ApiWrapper
     #[Groups(['fullAccount'])]
     public function getTags()
     {
-        return $this->entity->getTagNameArray();
+        return $this->entity->getTagIds();
     }
 
     /**

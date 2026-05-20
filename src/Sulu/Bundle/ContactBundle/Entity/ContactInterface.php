@@ -124,7 +124,7 @@ interface ContactInterface extends AuditableInterface
     public function getTags(): Collection;
 
     /**
-     * @return int[]
+     * @return string[]
      */
     public function getTagNameArray(): array;
 
