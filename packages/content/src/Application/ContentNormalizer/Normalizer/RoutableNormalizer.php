@@ -110,8 +110,9 @@ class RoutableNormalizer implements NormalizerInterface
 
         $parentSlug = $parentRoute->getSlug();
         $slug = $route->getSlug();
-        $suffix = \str_starts_with($slug, $parentSlug)
-            ? \substr($slug, \strlen($parentSlug))
+        $parentSlugTrimmed = \rtrim($parentSlug, '/');
+        $suffix = \str_starts_with($slug, $parentSlugTrimmed)
+            ? \substr($slug, \strlen($parentSlugTrimmed))
             : '';
 
         return [
