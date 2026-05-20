@@ -4,6 +4,66 @@ For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upg
 
 ## 2.6.24
 
+### CKEditor upgrade to 48
+
+Due to the license changes and incompatibilities introduced with CKEditor `47.7`, Sulu now requires
+CKEditor `^48.1`.
+
+If you do not have custom admin JavaScript, it is enough to run:
+
+```bash
+bin/adminconsole sulu:admin:update-build
+```
+
+to update the admin build.
+
+### Custom CKEditor plugins
+
+If you have any custom CKEditor plugins, you might need to adjust them to be compatible with CKEditor 48.
+
+For example, if you previously added a plugin, you should migrate it like this:
+
+```diff
+// assets/admin/app.js
+ import {ckeditorPluginRegistry, ckeditorConfigRegistry} from 'sulu-admin-bundle/containers';
+-import Font from '@ckeditor/ckeditor5-font/src/font';
++import {Font} from '@ckeditor/ckeditor5-font';
+ 
+ ckeditorPluginRegistry.add(Font);
+ ckeditorConfigRegistry.add((config) => ({
+     toolbar: [...config.toolbar, 'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'],
+ }));
+```
+
+With the new version, the deprecated `src/...` import paths need to be replaced with package root imports.
+The previously required `@ckeditor/ckeditor5-dev-utils` and `@ckeditor/ckeditor5-theme-lark` dependencies
+can be removed.
+
+Unlike the official CKEditor migration guide, Sulu continues to install the required CKEditor packages
+explicitly via the package manager instead of relying on the aggregate `ckeditor5` package. This keeps the
+dependency surface explicit and avoids pulling in unnecessary CKEditor packages.
+
+```diff
+{
+    "dependencies": {
+-        "@ckeditor/ckeditor5-dev-utils": "^39.6.3",
+-        "@ckeditor/ckeditor5-font": "47.6.*",
++        "@ckeditor/ckeditor5-font": "^48.1.0",
+-        "@ckeditor/ckeditor5-theme-lark": "^41.2.1"
+    }
+}
+```
+
+Please also review the official CKEditor upgrade guides:
+
+* [Update to CKEditor 5 v48.x](https://ckeditor.com/docs/ckeditor5/latest/updating/guides/update-to-48.html)
+* [Migrating from customized builds to new installation methods](https://ckeditor.com/docs/ckeditor5/latest/updating/nim-migration/customized-builds.html)
+* [Migrating from the legacy Online Builder to new installation methods](https://ckeditor.com/docs/ckeditor5/latest/updating/nim-migration/online-builder.html)
+
+Or have a look at [Sulu CKEditor 48 Upgrade Pull Request](https://github.com/sulu/sulu/pull/8833).
+
+Keep in mind that CKEditor also requires at least `Node 20` to create a custom admin build.
+
 ### Disallow function calls in sort columns
 
 Sulu no longer allows arbitrary strings in the `sortBy` query parameters. The allowed pattern is word characters
