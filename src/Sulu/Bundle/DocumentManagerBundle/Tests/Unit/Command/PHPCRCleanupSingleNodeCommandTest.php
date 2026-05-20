@@ -274,15 +274,8 @@ class PHPCRCleanupSingleNodeCommandTest extends TestCase
         $node = $this->prophesize(NodeInterface::class);
 
         $matching = $this->prophesize(PropertyInterface::class);
-        $matching->getName()->willReturn('i18n:de-content-blocks#0-description#2');
 
-        $otherLocale = $this->prophesize(PropertyInterface::class);
-        $otherLocale->getName()->willReturn('i18n:en-template');
-
-        $node->getProperties()->willReturn([
-            $otherLocale->reveal(),
-            $matching->reveal(),
-        ]);
+        $node->getProperties('i18n:de-*')->willReturn([$matching->reveal()]);
 
         $this->assertTrue($this->command->hasLocalizedProperties($node->reveal(), 'de'));
     }
@@ -290,17 +283,7 @@ class PHPCRCleanupSingleNodeCommandTest extends TestCase
     public function testHasLocalizedPropertiesReturnsFalseWhenNoMatch(): void
     {
         $node = $this->prophesize(NodeInterface::class);
-
-        $otherLocale = $this->prophesize(PropertyInterface::class);
-        $otherLocale->getName()->willReturn('i18n:en-template');
-
-        $unlocalized = $this->prophesize(PropertyInterface::class);
-        $unlocalized->getName()->willReturn('sulu:order');
-
-        $node->getProperties()->willReturn([
-            $otherLocale->reveal(),
-            $unlocalized->reveal(),
-        ]);
+        $node->getProperties('i18n:de-*')->willReturn([]);
 
         $this->assertFalse($this->command->hasLocalizedProperties($node->reveal(), 'de'));
     }
@@ -308,7 +291,7 @@ class PHPCRCleanupSingleNodeCommandTest extends TestCase
     public function testHasLocalizedPropertiesReturnsFalseForEmptyNode(): void
     {
         $node = $this->prophesize(NodeInterface::class);
-        $node->getProperties()->willReturn([]);
+        $node->getProperties('i18n:de-*')->willReturn([]);
 
         $this->assertFalse($this->command->hasLocalizedProperties($node->reveal(), 'de'));
     }
@@ -350,6 +333,10 @@ class PHPCRCleanupSingleNodeCommandTest extends TestCase
             $liveTemplateProp->reveal(),
             $liveOrphanProp->reveal(),
         ]);
+        $liveNode->getProperties('i18n:en-*')->willReturn([
+            $liveTemplateProp->reveal(),
+            $liveOrphanProp->reveal(),
+        ]);
 
         $liveWorkspace = $this->prophesize(WorkspaceInterface::class);
         $liveWorkspace->getName()->willReturn('default_live');
@@ -372,12 +359,12 @@ class PHPCRCleanupSingleNodeCommandTest extends TestCase
                 return 'uuid-1';
             }
 
-            public function getWorkflowStage()
+            public function getWorkflowStage(): int
             {
                 return WorkflowStage::TEST;
             }
 
-            public function setWorkflowStage($workflowStage)
+            public function setWorkflowStage($workflowStage): self
             {
                 return $this;
             }

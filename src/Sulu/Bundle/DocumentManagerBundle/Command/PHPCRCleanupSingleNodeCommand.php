@@ -529,11 +529,8 @@ class PHPCRCleanupSingleNodeCommand extends Command
      */
     public function hasLocalizedProperties(NodeInterface $node, string $locale): bool
     {
-        $prefix = $this->languagePrefix . ':' . $locale . '-';
-        foreach ($node->getProperties() as $property) {
-            if (\str_starts_with($property->getName(), $prefix)) {
-                return true;
-            }
+        foreach ($node->getProperties($this->languagePrefix . ':' . $locale . '-*') as $property) {
+            return true;
         }
 
         return false;
