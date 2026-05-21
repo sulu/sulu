@@ -762,7 +762,6 @@ class Contact extends ApiWrapper
      *
      * @return array
      */
-    #[Groups(['fullContact'])]
     public function getTags()
     {
         return $this->entity->getTagNameArray();
