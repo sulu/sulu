@@ -163,6 +163,11 @@ interface AccountInterface extends AuditableInterface
      */
     public function getTags(): Collection;
 
+    /**
+     * @return array<int>
+     */
+    public function getTagIds(): array;
+
     public function addAccountContact(AccountContact $accountContact): static;
 
     public function removeAccountContact(AccountContact $accountContact): static;
