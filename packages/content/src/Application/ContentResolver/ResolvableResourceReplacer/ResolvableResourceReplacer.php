@@ -255,16 +255,26 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
             return $this->replaceUnresolvedWithNull($view);
         }
 
+        $onlyResolvableResources = true;
         foreach ($view as $key => $value) {
             if ($value instanceof ResolvableInterface) {
                 $resolveResult = $this->resolveValue($value, $resolvedResources);
                 $view[$key] = $resolveResult['resolved'];
                 continue;
             }
+            $onlyResolvableResources = false;
 
             if (\is_array($value)) {
                 // only increase depth for ResolvableInterface, matching replaceRecursively
                 $view[$key] = $this->replaceInViewRecursively($value, $resolvedResources, $depth, $maxDepth);
+            }
+        }
+
+        if ($onlyResolvableResources) {
+            $isList = \array_is_list($view);
+            $view = \array_filter($view, static fn ($value) => null !== $value);
+            if ($isList) {
+                $view = \array_values($view);
             }
         }
 
