@@ -8587,6 +8587,18 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
 		-
+			message: '#^Call to an undefined method object\:\:getTagIds\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Account\:\:getTagIds\(\) should return array\<int\> but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
+
+		-
 			message: '#^Call to an undefined method object\:\:getTagNameArray\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -9982,6 +9994,18 @@ parameters:
 			message: '#^Call to an undefined method object\:\:getSocialMediaProfiles\(\)\.$#'
 			identifier: method.notFound
 			count: 2
+			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
+
+		-
+			message: '#^Call to an undefined method object\:\:getTagIds\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Contact\:\:getTagIds\(\) should return array\<int\> but returns mixed\.$#'
+			identifier: return.type
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
 
 		-

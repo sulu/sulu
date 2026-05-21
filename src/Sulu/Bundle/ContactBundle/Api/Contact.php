@@ -762,10 +762,19 @@ class Contact extends ApiWrapper
      *
      * @return array
      */
+    #[Groups(['fullContact'])]
+    public function getTags()
+    {
+        return $this->entity->getTagNameArray();
+    }
+
+    /**
+     * @return array<int>
+     */
     #[VirtualProperty]
     #[SerializedName('tags')]
     #[Groups(['fullContact'])]
-    public function getTags()
+    public function getTagIds(): array
     {
         return $this->entity->getTagIds();
     }

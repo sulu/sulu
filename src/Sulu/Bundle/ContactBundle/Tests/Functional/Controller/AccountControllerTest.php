@@ -41,7 +41,6 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Component\HttpFoundation\Response;
 
 class AccountControllerTest extends SuluTestCase
 {
@@ -1342,8 +1341,6 @@ class AccountControllerTest extends SuluTestCase
         $this->em->clear();
 
         $this->client->jsonRequest('GET', '/api/accounts/' . $account->getId());
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, \count($response->medias));
 

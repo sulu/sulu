@@ -43,7 +43,7 @@ use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\MediaPropertiesProviderInte
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
-use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface as SuluUserInterface;
@@ -114,9 +114,9 @@ class MediaManagerTest extends TestCase
     private $formatManager;
 
     /**
-     * @var ObjectProphecy<TagRepositoryInterface>
+     * @var ObjectProphecy<TagManagerInterface>
      */
-    private $tagRepository;
+    private $tagManager;
 
     /**
      * @var ObjectProphecy<TypeManagerInterface>
@@ -166,7 +166,7 @@ class MediaManagerTest extends TestCase
         $this->storage = $this->prophesize(StorageInterface::class);
         $this->validator = $this->prophesize(FileValidatorInterface::class);
         $this->formatManager = $this->prophesize(FormatManagerInterface::class);
-        $this->tagRepository = $this->prophesize(TagRepositoryInterface::class);
+        $this->tagManager = $this->prophesize(TagManagerInterface::class);
         $this->categoryManager = $this->prophesize(CategoryManagerInterface::class);
         $this->typeManager = $this->prophesize(TypeManagerInterface::class);
         $this->pathCleanup = new PathCleanup(new AsciiSlugger(), []);
@@ -184,7 +184,7 @@ class MediaManagerTest extends TestCase
             $this->storage->reveal(),
             $this->validator->reveal(),
             $this->formatManager->reveal(),
-            $this->tagRepository->reveal(),
+            $this->tagManager->reveal(),
             $this->typeManager->reveal(),
             $this->pathCleanup,
             $this->domainEventCollector->reveal(),
@@ -364,7 +364,7 @@ class MediaManagerTest extends TestCase
             $this->storage->reveal(),
             $this->validator->reveal(),
             $this->formatManager->reveal(),
-            $this->tagRepository->reveal(),
+            $this->tagManager->reveal(),
             $this->typeManager->reveal(),
             $this->pathCleanup,
             $this->domainEventCollector->reveal(),
@@ -445,7 +445,7 @@ class MediaManagerTest extends TestCase
             $this->storage->reveal(),
             $this->validator->reveal(),
             $this->formatManager->reveal(),
-            $this->tagRepository->reveal(),
+            $this->tagManager->reveal(),
             $this->typeManager->reveal(),
             $this->pathCleanup,
             $this->domainEventCollector->reveal(),

@@ -606,10 +606,19 @@ class Account extends ApiWrapper
      *
      * @return TagInterface[]
      */
+    #[Groups(['fullAccount'])]
+    public function getTags()
+    {
+        return $this->entity->getTagNameArray();
+    }
+
+    /**
+     * @return array<int>
+     */
     #[VirtualProperty]
     #[SerializedName('tags')]
     #[Groups(['fullAccount'])]
-    public function getTags()
+    public function getTagIds(): array
     {
         return $this->entity->getTagIds();
     }
