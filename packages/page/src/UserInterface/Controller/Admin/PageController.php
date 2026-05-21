@@ -85,7 +85,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
 
     public function cgetAction(Request $request): Response
     {
-        $locale = $request->query->get('locale');
+        $locale = $this->getLocale($request);
         $parentId = $request->query->get('parentId');
         $webspaceKey = $request->query->get('webspace');
         $excludeGhosts = $request->query->getBoolean('exclude-ghosts', false);
@@ -135,7 +135,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
 
     public function getVersionsAction(Request $request, string $id): JsonResponse
     {
-        $locale = $request->query->get('locale');
+        $locale = $this->getLocale($request);
 
         /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('pages_versions');
