@@ -81,7 +81,7 @@ class GroupProviderTest extends TestCase
         $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
             ->willReturnArgument(0);
 
-        $groups = $this->groupProvider->getGroups();
+        $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
 
         $this->assertCount(1, $groups);
         $this->assertArrayHasKey('content', $groups);
@@ -120,7 +120,7 @@ class GroupProviderTest extends TestCase
         $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
             ->willReturnArgument(0);
 
-        $groups = $this->groupProvider->getGroups();
+        $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
 
         $this->assertCount(3, $groups);
         $this->assertArrayHasKey('content', $groups);
@@ -159,7 +159,7 @@ class GroupProviderTest extends TestCase
         $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
             ->willReturnArgument(0);
 
-        $groups = $this->groupProvider->getGroups();
+        $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
 
         $this->assertCount(1, $groups);
         $this->assertArrayHasKey('default', $groups);
@@ -179,7 +179,7 @@ class GroupProviderTest extends TestCase
             ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', [])
             ->willReturn($typedFormMetadata);
 
-        $groups = $this->groupProvider->getGroups();
+        $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
 
         $this->assertCount(0, $groups);
         $this->assertEmpty($groups);
@@ -214,7 +214,7 @@ class GroupProviderTest extends TestCase
         $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
             ->willReturnArgument(0);
 
-        $groups = $this->groupProvider->getGroups();
+        $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
 
         $this->assertCount(2, $groups);
         $this->assertArrayHasKey('content', $groups);

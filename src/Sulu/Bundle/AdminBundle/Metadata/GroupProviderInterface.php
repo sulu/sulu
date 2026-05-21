@@ -15,8 +15,10 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormGroup;
 
 interface GroupProviderInterface
 {
+    public const DEFAULT_GROUP = 'default';
+
     /**
      * @return array<string, FormGroup>
      */
-    public function getGroups(): array;
+    public function getGroups(string $key): array;
 }

@@ -55,7 +55,7 @@ class SingleArticleSelectionPropertyResolver implements PropertyResolverInterfac
                         'url' => 'url',
                     ],
                 ),
-            ]
+            ],
         );
     }
 

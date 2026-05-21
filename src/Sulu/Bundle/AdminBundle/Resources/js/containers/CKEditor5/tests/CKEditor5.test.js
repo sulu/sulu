@@ -2,7 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount} from 'enzyme';
-import {ClassicEditor} from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
+import {ClassicEditor} from '@ckeditor/ckeditor5-editor-classic';
 import CKEditor5 from '../CKEditor5';
 import configRegistry from '../registries/configRegistry';
 import pluginRegistry from '../registries/pluginRegistry';
@@ -15,7 +15,7 @@ jest.mock('../registries/configRegistry', () => ({
     configs: [],
 }));
 
-jest.mock('@ckeditor/ckeditor5-editor-classic/src/classiceditor', () => ({
+jest.mock('@ckeditor/ckeditor5-editor-classic', () => ({
     ClassicEditor: {
         create: jest.fn(),
     },
@@ -65,7 +65,8 @@ test('Create a CKEditor5 instance', () => {
 
     mount(<CKEditor5 locale={locale} onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
 
-    expect(ClassicEditor.create).toBeCalledWith(expect.anything(), expect.objectContaining({
+    expect(ClassicEditor.create).toBeCalledWith(expect.objectContaining({
+        attachTo: expect.anything(),
         heading: {
             options: [
                 {
@@ -127,7 +128,8 @@ test('Create a CKEditor5 instance with an additional plugin', () => {
 
     mount(<CKEditor5 onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
 
-    expect(ClassicEditor.create).toBeCalledWith(expect.anything(), expect.objectContaining({
+    expect(ClassicEditor.create).toBeCalledWith(expect.objectContaining({
+        attachTo: expect.anything(),
         plugins: expect.arrayContaining([Plugin]),
         toolbar: expect.arrayContaining(['bold', 'italic', 'underline', 'plugin1', 'plugin2']),
     }));
@@ -141,7 +143,8 @@ test('Create a CKEditor5 instance with given formats', () => {
 
     mount(<CKEditor5 formats={['h1', 'h2', 'h3']} onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
 
-    expect(ClassicEditor.create).toBeCalledWith(expect.anything(), expect.objectContaining({
+    expect(ClassicEditor.create).toBeCalledWith(expect.objectContaining({
+        attachTo: expect.anything(),
         heading: {
             options: [
                 {

@@ -1,5 +1,78 @@
 # Upgrade
 
+## 3.0.7
+
+### Smart content tag and category resolving is opt-in
+
+`view.<smart_content_field>.tags` and `view.<smart_content_field>.categories` now expose the raw filter ids by default. To resolve the ids through a resource loader (for example to receive tag names or `Sulu\Bundle\CategoryBundle\Api\Category` API objects, as in Sulu 2.6), opt in via the new `tagResourceLoader` and `categoryResourceLoader` smart content `<param>` entries:
+
+```xml
+<property name="my_smart_content" type="smart_content">
+    <params>
+        <param name="provider" value="pages"/>
+        <param name="tagResourceLoader" value="tag"/>
+        <param name="categoryResourceLoader" value="category"/>
+    </params>
+</property>
+```
+
+Without these params, the new `raw` resource loader is used, which keeps the ids unchanged. The HTTP cache reference store is still populated for the tag and category ids regardless of the loader choice, so renaming or removing a referenced tag or category continues to invalidate the affected pages.
+
+### Article admin now gates the navigation and views on per-group permissions
+
+The `ArticleAdmin` previously gated its navigation item, per-group views, and toolbar actions (Add, Delete, Export) on the
+umbrella `sulu.article.articles` EDIT permission, with per-group `sulu.article.articles_<group>` checks layered on top. The
+umbrella check has been removed from those code paths, and the per-group permission is now the sole gate for the admin UI
+(see #8830).
+
+The umbrella `sulu.article.articles` permission is still required: `ArticleController` reports it as its security context, so
+every article REST endpoint (list, get, create, update, delete, workflow) continues to check it. Roles need both the umbrella
+permission for API access and the per-group permission for the matching navigation item and views to render.
+
+After upgrading, re-run the reindex command for both kernels so the admin search index reflects the current security contexts:
+
+```bash
+bin/console cmsig:seal:reindex
+```
+
+#### Role updates
+
+After upgrading, review every role with article permissions and adjust the grants accordingly:
+
+- `sulu.article.articles`: always required, because the article REST controllers depend on it.
+- `sulu.article.articles_<group>`: required for each group the role should manage.
+
+### Selection view structure changed (snippet, page, article)
+
+The `view` data emitted by `*_selection` and `single_*_selection` property resolvers now exposes the loaded entity's metadata and field-level view directly, restoring the Sulu 2.6 shape for multi-selections.
+
+Multi-selection (`snippet_selection`, `page_selection`, `article_selection`) now returns a flat numeric list:
+
+```php
+// before
+view.snippets => ['ids' => [...], 'types' => 'snippet-1', 0 => [...], 1 => [...]]
+
+// after
+view.snippets => [
+    ['uuid' => 'uuid-a', 'template' => 'snippet-1', ...],
+    ['uuid' => 'uuid-b', 'template' => 'snippet-1', ...],
+]
+```
+
+Templates that iterated `view.<field>` already worked, templates that read `view.<field>.ids` must switch to `view.<field>` directly.
+
+Single-selection (`single_snippet_selection`, `single_page_selection`, `single_article_selection`) exposes the resolved entity's metadata and per-field view alongside the existing keys:
+
+```php
+view.bannerSnippet => [
+    'uuid' => 'uuid-a',
+    'template' => 'snippet-1',
+    'title' => [],
+    'textboxButtons' => [...],
+    // plus 'id' and any params the resolver was already exposing
+]
+```
+
 ## 3.0.6
 
 ### CKEditor upgrade to 47
@@ -1090,7 +1163,7 @@ sulu_core:
 ```yaml
 sulu_admin:
     templates:
-        snippets:
+        snippet:
             default_type: 'my_snippet_key'
             directories:
                 snippet_project_a: '%kernel.project_dir%/config/templates/snippets/projectA'

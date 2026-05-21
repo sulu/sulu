@@ -323,6 +323,10 @@ class CollectionControllerTest extends SuluTestCase
 
     public function testCGet(): void
     {
+        $this->createCollection(
+            $this->collectionType1,
+            ['en-gb' => 'Z Last Test Collection', 'de' => 'Test Kollektion']
+        );
         for ($i = 1; $i <= 15; ++$i) {
             $this->createCollection(
                 $this->collectionType1,
@@ -343,7 +347,11 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertNotEmpty($response->_embedded->collections);
 
-        $this->assertCount(16, $response->_embedded->collections);
+        /** @var \stdClass[] $collections */
+        $collections = $response->_embedded->collections;
+
+        $this->assertCount(17, $collections);
+        $this->assertSame('Z Last Test Collection', $collections[\array_key_last($collections)]->title);
     }
 
     public function testCGetPaginatedFlat(): void
@@ -367,6 +375,79 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertSame(8, $response->total);
         $this->assertSame(3, $response->page);
         $this->assertSame(3, $response->pages);
+    }
+
+    public function testCGetPaginatedFlatSortsSystemCollectionToBottom(): void
+    {
+        $this->createCollection(
+            $this->collectionType1,
+            ['en-gb' => 'Test Collection 1', 'de' => 'Test Kollektion 1']
+        );
+
+        $this->createCollection(
+            $this->collectionType2,
+            ['en-gb' => 'A Test Collection', 'de' => 'A Test Kollektion']
+        );
+        $this->createCollection(
+            $this->collectionType2,
+            ['en-gb' => 'Z Test Collection', 'de' => 'Z Test Kollektion']
+        );
+
+        $this->client->jsonRequest(
+            'GET',
+            '/api/collections?page=1&limit=4&flat=true&locale=de'
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        /** @var string $content */
+        $content = $this->client->getResponse()->getContent();
+        $response = \json_decode($content);
+
+        $this->assertInstanceOf(\stdClass::class, $response);
+        $this->assertInstanceOf(\stdClass::class, $response->_embedded);
+        /** @var \stdClass[] $collections */
+        $collections = $response->_embedded->collections;
+        $this->assertSame('Test Kollektion', $collections[0]->title);
+        $this->assertSame('Test Kollektion 1', $collections[1]->title);
+        $this->assertSame('A Test Kollektion', $collections[2]->title);
+        $this->assertSame('Z Test Kollektion', $collections[3]->title);
+    }
+
+    public function testCGetPaginatedFlatSortsSystemCollectionToBottomWithTitleSortedDESC(): void
+    {
+        $this->createCollection(
+            $this->collectionType1,
+            ['en-gb' => 'Test Collection 1', 'de' => 'Test Kollektion 1']
+        );
+
+        $this->createCollection(
+            $this->collectionType2,
+            ['en-gb' => 'A Test Collection', 'de' => 'A Test Kollektion']
+        );
+        $this->createCollection(
+            $this->collectionType2,
+            ['en-gb' => 'Z Test Collection', 'de' => 'Z Test Kollektion']
+        );
+
+        $this->client->jsonRequest(
+            'GET',
+            '/api/collections?page=1&limit=4&flat=true&sortBy=title&sortOrder=DESC&locale=de'
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        /** @var string $content */
+        $content = $this->client->getResponse()->getContent();
+        $response = \json_decode($content);
+
+        $this->assertInstanceOf(\stdClass::class, $response);
+        $this->assertInstanceOf(\stdClass::class, $response->_embedded);
+
+        /** @var \stdClass[] $collections */
+        $collections = $response->_embedded->collections;
+        $this->assertSame('Test Kollektion 1', $collections[0]->title);
+        $this->assertSame('Test Kollektion', $collections[1]->title);
+        $this->assertSame('Z Test Kollektion', $collections[2]->title);
+        $this->assertSame('A Test Kollektion', $collections[3]->title);
     }
 
     public function testCGetFlatWithRootParent(): void

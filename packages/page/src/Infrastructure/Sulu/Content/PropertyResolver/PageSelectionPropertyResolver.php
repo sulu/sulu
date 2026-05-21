@@ -48,10 +48,7 @@ class PageSelectionPropertyResolver implements PropertyResolverInterface
             ids: $ids,
             resourceLoaderKey: $resourceLoaderKey,
             resourceKey: PageInterface::RESOURCE_KEY,
-            view: [
-                'ids' => $ids,
-                ...$params,
-            ],
+            view: [],
             priority: 150,
             metadata: [
                 'properties' => \array_merge(
@@ -61,7 +58,7 @@ class PageSelectionPropertyResolver implements PropertyResolverInterface
                         'url' => 'url',
                     ],
                 ),
-            ]
+            ],
         );
     }
 

@@ -12,7 +12,9 @@
 namespace Sulu\Content\Tests\Unit\Content\Application\ResourceLoader;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ResourceLoader\Loader\CachedResourceLoader;
+use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewEnhancementInterface;
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
 
 class CachedResourceLoaderTest extends TestCase
@@ -161,6 +163,69 @@ class CachedResourceLoaderTest extends TestCase
     {
         $this->expectException(\LogicException::class);
         CachedResourceLoader::getKey();
+    }
+
+    public function testResolveContentViewEnhancementForwardsToInnerLoader(): void
+    {
+        $innerLoader = new class() implements ResourceLoaderContentViewEnhancementInterface {
+            public function load(array $ids, ?string $locale, array $params = []): array
+            {
+                return [];
+            }
+
+            public static function getKey(): string
+            {
+                return 'test-content-view-loader';
+            }
+
+            public function resolveContentViewEnhancement(mixed $resource): ContentView
+            {
+                return ContentView::create(
+                    ['authored' => $resource->getAuthored()], // @phpstan-ignore method.nonObject
+                    ['id' => $resource->getId(), 'template' => 'forwarded-template'], // @phpstan-ignore method.nonObject
+                );
+            }
+        };
+
+        $cachedLoader = new CachedResourceLoader($innerLoader);
+        $dimensionContent = new class() {
+            public function getId(): string
+            {
+                return '42';
+            }
+
+            public function getAuthored(): string
+            {
+                return '2024-01-01T00:00:00+00:00';
+            }
+        };
+
+        $result = $cachedLoader->resolveContentViewEnhancement($dimensionContent);
+
+        self::assertSame(['id' => '42', 'template' => 'forwarded-template'], $result->getView());
+        self::assertSame(['authored' => '2024-01-01T00:00:00+00:00'], $result->getContent());
+    }
+
+    public function testResolveContentViewEnhancementReturnsEmptyWhenInnerDoesNotImplementInterface(): void
+    {
+        $innerLoader = new class() implements ResourceLoaderInterface {
+            public function load(array $ids, ?string $locale, array $params = []): array
+            {
+                return [];
+            }
+
+            public static function getKey(): string
+            {
+                return 'test-basic-loader';
+            }
+        };
+
+        $cachedLoader = new CachedResourceLoader($innerLoader);
+
+        $result = $cachedLoader->resolveContentViewEnhancement('some-dimension-content');
+
+        self::assertSame([], $result->getView());
+        self::assertSame([], $result->getContent());
     }
 
     /**

@@ -22,14 +22,116 @@ use Sulu\Content\Application\ContentResolver\ResolvableResourceQueue\ResolvableR
 use Sulu\Content\Application\ContentResolver\ResolvableResourceReplacer\ResolvableResourceReplacerInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableInterface;
+use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewEnhancementInterface;
+use Sulu\Content\Application\ResourceLoader\ResourceLoaderProvider;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Webmozart\Assert\Assert;
 
+/**
+ * Resolves a DimensionContent into the API response data shape.
+ *
+ * Data flow:
+ *
+ *  +------------------+
+ *  | DimensionContent |
+ *  +------------------+
+ *           |
+ *           v
+ *  +--------------------------+
+ *  | ContentEnhancer::enhance |
+ *  +--------------------------+
+ *           |
+ *           | enriches DimensionContent before resolver extraction
+ *           v
+ *  +---------------------+
+ *  | ContentViewResolver |
+ *  +---------------------+
+ *           |
+ *           | calls content/property resolvers
+ *           | returns content + view + ResolvableResource queue
+ *           v
+ *  +----------------+
+ *  | priority queue |
+ *  +----------------+
+ *           |
+ *           | repeat: extract highest priority resources until empty
+ *           v
+ *  +----------------------+
+ *  | loadResources        |       uses ResourceLoader::load()
+ *  +----------------------+       hook: ResourceLoaderContentViewEnhancementInterface
+ *                                 adds metadata available only after loading
+ *           |
+ *           v
+ *  +------------------+
+ *  | loaded resource  |
+ *  +------------------+
+ *           |
+ *           +-- ContentRichEntityInterface ----------------------------+
+ *           |      |                                                   |
+ *           |      v                                                   |
+ *           |  aggregate child DimensionContent                        |
+ *           |      |                                                   |
+ *           |      v                                                   |
+ *           |  resolve child content recursively                       |
+ *           |      |                                                   |
+ *           |      v                                                   |
+ *           |  normalize child content/view with child resource        |
+ *           |      |                                                   |
+ *           |      v                                                   |
+ *           |  apply requested property mapping                        |
+ *           |      |                                                   |
+ *           |      +-- content enhancement: merge immediately          |
+ *           |      |   so loader-level metadata is always present      |
+ *           |      |                                                   |
+ *           |      +-- view enhancement: defer until parent path exists|
+ *           |                                                          |
+ *           +-- ContentView ------------------------------------------+
+ *           |      resolve nested ContentView content/view             |
+ *           |      merge newly queued ResolvableResource values        |
+ *           |      store resolved value + ContentView enhancement      |
+ *           |                                                          |
+ *           +-- raw resource -----------------------------------------+
+ *           |      store resource value + ContentView enhancement
+ *           |
+ *           v
+ *  +----------------------------+
+ *  | ResolvableResourceReplacer |
+ *  +----------------------------+
+ *           |
+ *           | replace content placeholders
+ *           | merge deferred content enhancements when possible
+ *           | collect view enhancements by original parent path
+ *           v
+ *  +--------------------------------------+
+ *  | apply viewEnhancements to root view  |
+ *  | via mergeViewEnhancement()           |
+ *  +--------------------------------------+
+ *           |
+ *           | resolvedContent['view']
+ *           v
+ *  +---------------------------+
+ *  | ContentViewDataNormalizer |
+ *  +---------------------------+
+ *           |
+ *           | normalize final content + view
+ *           | replace nested ContentView instances in content
+ *           | merge field-level item view data into items
+ *           | apply optional root property mapping
+ *           |
+ *           v
+ *  array{resource: object, content: array, view: array, extension: array}
+ *
+ * @final
+ */
 readonly class ContentResolver implements ContentResolverInterface
 {
+    private PropertyAccessorInterface $propertyAccessor;
+
     public function __construct(
         private ContentViewResolverInterface $contentViewResolver,
         private ResolvableResourceLoaderInterface $resolvableResourceLoader,
@@ -38,8 +140,10 @@ readonly class ContentResolver implements ContentResolverInterface
         private ContentViewDataNormalizerInterface $contentViewDataNormalizer,
         private ContentAggregatorInterface $contentAggregator,
         private int $maxDepth,
-        private ContentEnhancerInterface $contentEnhancer
+        private ContentEnhancerInterface $contentEnhancer,
+        private ResourceLoaderProvider $resourceLoaderProvider
     ) {
+        $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
     }
 
     public function resolve(DimensionContentInterface $dimensionContent, ?array $properties = null): array
@@ -76,6 +180,9 @@ readonly class ContentResolver implements ContentResolverInterface
 
             // Process loaded resources
             foreach ($loadedResources as $loaderKey => $resources) {
+                $resourceLoader = $this->resourceLoaderProvider->getResourceLoader($loaderKey);
+                $supportsContentViewEnhancement = $resourceLoader instanceof ResourceLoaderContentViewEnhancementInterface;
+
                 foreach ($resources as $id => $resourcePerMetadataIdentifier) {
                     $depth = $loaderIdDepths[$loaderKey][$id];
                     foreach ($resourcePerMetadataIdentifier as $metadataIdentifier => $resource) {
@@ -100,6 +207,7 @@ readonly class ContentResolver implements ContentResolverInterface
 
                             /** @var ResolvableInterface $resolvableResource */
                             $resolvableResource = $resourcesToLoad[$loaderKey][$id][$metadataIdentifier];
+
                             $metadata = $resolvableResource->getMetadata();
                             /** @var array<string, string>|null $internalProperties */
                             $internalProperties = $metadata['properties'] ?? null;
@@ -119,6 +227,29 @@ readonly class ContentResolver implements ContentResolverInterface
                                     isRoot: false
                                 );
                             }
+
+                            // Content enhancements must be merged into normalized content after property mapping,
+                            // otherwise loader-level metadata could be filtered out or merged at the wrapper level later.
+                            // View enhancements depend on the parent property path and are applied after replacement.
+                            $deferredViewData = [];
+                            if ($supportsContentViewEnhancement) {
+                                $contentViewEnhancement = $resourceLoader->resolveContentViewEnhancement($childContent);
+                                $contentEnhancement = $contentViewEnhancement->getContent();
+
+                                if (\is_array($contentEnhancement) && [] !== $contentEnhancement) {
+                                    /** @var array<string, mixed> $existingContent */
+                                    $existingContent = $resolvedValue['content'];
+                                    $resolvedValue['content'] = \array_merge($existingContent, $contentEnhancement);
+                                }
+
+                                $deferredViewData = $contentViewEnhancement->getView();
+                            }
+
+                            $resolvedResources[$loaderKey][$id][$metadataIdentifier] = [
+                                'contentViewEnhancement' => ContentView::create([], $deferredViewData),
+                                'resolved' => $resolvedValue,
+                            ];
+                            continue;
                         } elseif ($resource instanceof ContentView) {
                             /** @var array{
                              *     content: array{'0': array<string, mixed>},
@@ -138,35 +269,81 @@ readonly class ContentResolver implements ContentResolverInterface
                                 $normalizedContentData['resolvableResources'],
                                 $priorityQueue,
                             );
+
+                            $sourceValue = $resolvedValue;
                         } else {
-                            // For non-entity resources, just store the resource directly
                             $resolvedValue = $resource;
+                            $sourceValue = $resource;
                         }
 
-                        $resolvedResources[$loaderKey][$id][$metadataIdentifier] = $resolvedValue;
+                        $contentViewEnhancement = $supportsContentViewEnhancement
+                            ? $resourceLoader->resolveContentViewEnhancement($sourceValue)
+                            : ContentView::create([], []);
+
+                        $resolvedResources[$loaderKey][$id][$metadataIdentifier] = [
+                            'contentViewEnhancement' => $contentViewEnhancement,
+                            'resolved' => $resolvedValue,
+                        ];
                     }
                 }
             }
         }
 
-        // Replace all ResolvableResource references with their actual resolved values
-        $finalContent = $this->resolvableResourceReplacer->replaceResolvableResourcesWithResolvedValues(
+        $replacerResult = $this->resolvableResourceReplacer->replaceResolvableResourcesWithResolvedValues(
             $resolvedContent['content'],
             $resolvedResources,
             1, // Start at depth 1 since the initial resolution was at depth 0
             $this->maxDepth,
         );
 
+        /** @var array<string, mixed> $finalContent */
+        $finalContent = $replacerResult['content'];
+        /** @var array<string, array{path: list<int|string>, itemsPropertyName: ?string, items: list<mixed>}> $viewEnhancements */
+        $viewEnhancements = $replacerResult['viewEnhancements'];
+
+        foreach ($viewEnhancements as $path => $enhancement) {
+            $items = $enhancement['items'];
+            if ([] === $items) {
+                continue;
+            }
+
+            $existing = $this->propertyAccessor->getValue($resolvedContent['view'], $path);
+            $existingView = \is_array($existing) ? $existing : [];
+            $resolvedContentValue = $this->propertyAccessor->getValue($finalContent, $path);
+            $isCollection = \is_array($resolvedContentValue) && \array_is_list($resolvedContentValue);
+
+            $merged = $this->mergeViewEnhancement(
+                $existingView,
+                $items,
+                $enhancement['itemsPropertyName'],
+                $isCollection
+            );
+            $this->propertyAccessor->setValue($resolvedContent['view'], $path, $merged);
+        }
+
+        /** @var array<string, mixed> $viewData */
+        $viewData = $resolvedContent['view'];
+
+        // view resolvables run after viewEnhancements so enhancement merges can layer on top of resolved view values
+        $viewData = $this->resolvableResourceReplacer->replaceResolvableResourcesInView(
+            $viewData,
+            $resolvedResources,
+            1,
+            $this->maxDepth,
+        );
+
         $normalizedContentData = $this->contentViewDataNormalizer->normalizeContentViewData(
             $finalContent,
-            $resolvedContent['view'],
+            $viewData,
             $dimensionContent->getResource(),
         );
 
         $this->contentViewDataNormalizer->replaceNestedContentViews(
             $normalizedContentData,
-            '[content]'
+            ['content']
         );
+
+        $normalizedContentData = $this->mergeFieldViewDataIntoItems($normalizedContentData, $viewEnhancements);
 
         if (null !== $properties && [] !== $properties) {
             $this->contentViewDataNormalizer->recursivelyMapProperties(
@@ -212,5 +389,85 @@ readonly class ContentResolver implements ContentResolverInterface
         );
 
         return $resolvedContent;
+    }
+
+    /**
+     * @param array<string|int, mixed> $existingView
+     * @param list<mixed> $items
+     *
+     * @return array<string|int, mixed>
+     */
+    private function mergeViewEnhancement(array $existingView, array $items, ?string $itemsPropertyName, bool $isCollection): array
+    {
+        if (null === $itemsPropertyName) {
+            // Single selections are object-like and flat-merge their one resolved view.
+            // Collections stay list-like even when they currently contain only one item.
+            if (!$isCollection && 1 === \count($items) && \is_array($items[0])) {
+                return \array_merge($existingView, $items[0]);
+            }
+
+            return \array_merge($existingView, $items);
+        }
+
+        return \array_merge($existingView, [$itemsPropertyName => $items]);
+    }
+
+    /**
+     * Folds per-item field-level view data sitting at numeric indices into the
+     * corresponding `items` entry produced by viewEnhancements.
+     *
+     * @param array{resource: object, content: array<string, mixed>, view: array<string, mixed>, extension: array<string, array<string, mixed>>} $normalizedContentData
+     * @param array<string, array{path: list<int|string>, itemsPropertyName: ?string, items: list<mixed>}> $viewEnhancements
+     *
+     * @return array{resource: object, content: array<string, mixed>, view: array<string, mixed>, extension: array<string, array<string, mixed>>}
+     */
+    private function mergeFieldViewDataIntoItems(array $normalizedContentData, array $viewEnhancements): array
+    {
+        foreach ($viewEnhancements as $enhancement) {
+            $itemsPropertyName = $enhancement['itemsPropertyName'];
+            if (null === $itemsPropertyName) {
+                continue;
+            }
+
+            // strip the resolver-key segment that normalizeContentViewData flattens into [view]
+            $pathSegments = $enhancement['path'];
+            \array_shift($pathSegments);
+            if ([] === $pathSegments) {
+                continue;
+            }
+
+            $viewPath = '[view]' . $this->buildPropertyPath($pathSegments);
+            if (!$this->propertyAccessor->isReadable($normalizedContentData, $viewPath)) {
+                continue;
+            }
+
+            $viewValue = $this->propertyAccessor->getValue($normalizedContentData, $viewPath);
+            if (!\is_array($viewValue) || !isset($viewValue[$itemsPropertyName])) {
+                continue;
+            }
+
+            /** @var list<array<string, mixed>> $items */
+            $items = $viewValue[$itemsPropertyName];
+            foreach ($items as $index => $item) {
+                if (isset($viewValue[$index]) && \is_array($viewValue[$index])) {
+                    $items[$index] = \array_merge($item, $viewValue[$index]);
+                    unset($viewValue[$index]);
+                }
+            }
+
+            $viewValue[$itemsPropertyName] = $items;
+            $this->propertyAccessor->setValue($normalizedContentData, $viewPath, $viewValue);
+        }
+
+        /** @var array{resource: object, content: array<string, mixed>, view: array<string, mixed>, extension: array<string, array<string, mixed>>} $normalizedContentData */
+        return $normalizedContentData;
+    }
+
+    /**
+     * @param list<int|string> $segments
+     */
+    private function buildPropertyPath(array $segments): string
+    {
+        return '[' . \implode('][', $segments) . ']';
     }
 }

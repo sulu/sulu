@@ -12,6 +12,7 @@
 namespace Sulu\Component\Hash;
 
 use Sulu\Component\Persistence\Model\AuditableInterface;
+use Sulu\Content\Domain\Model\AuditableInterface as ContentAuditableInterface;
 
 /**
  * Hashes objects by serializing and hashing them using the internal PHP functions.
@@ -20,7 +21,7 @@ class AuditableHasher implements HasherInterface
 {
     public function hash($object)
     {
-        if ($object instanceof AuditableInterface) {
+        if ($object instanceof AuditableInterface || $object instanceof ContentAuditableInterface) {
             return \md5(
                 ($object->getChanger() ? $object->getChanger()->getId() : '')
                 . ($object->getChanged() ? $object->getChanged()->getTimestamp() : '')

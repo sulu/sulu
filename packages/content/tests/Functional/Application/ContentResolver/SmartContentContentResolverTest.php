@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Functional\Application\ContentResolver;
 
+use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
@@ -301,6 +302,36 @@ class SmartContentContentResolverTest extends SuluTestCase
         self::assertNull($view['maxPage']);
         self::assertSame(2, $view['limit']);
         self::assertNull($view['maxPerPage']);
+    }
+
+    public function testResolveSmartContentExposesTagNamesInView(): void
+    {
+        $beach = self::createTag(['name' => 'Beach']);
+        $city = self::createTag(['name' => 'City']);
+        static::getEntityManager()->flush();
+
+        $page = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default-example-smart-content',
+                    'title' => 'Listing',
+                    'url' => '/listing',
+                    'examples' => [
+                        'tags' => [$beach->getId(), $city->getId()],
+                        'tagOperator' => 'OR',
+                    ],
+                ],
+            ],
+        ]);
+        static::getEntityManager()->flush();
+
+        $this->pushWebsiteRequest();
+        $dimensionContent = $this->contentAggregator->aggregate($page, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        /** @var array{tags: array<int, string>} $view */
+        $view = $result['view']['examples'];
+        self::assertSame(['Beach', 'City'], $view['tags']);
     }
 
     public function testResolveExampleSmartContentFilterByCategoriesAndTagsWithOperators(): void
@@ -712,5 +743,262 @@ class SmartContentContentResolverTest extends SuluTestCase
         $finalNext = $current['examples'] ?? null;
         $first = \is_array($finalNext) ? ($finalNext[0] ?? null) : null;
         self::assertNull($first);
+    }
+
+    public function testSmartContentViewTagsAreUsableAsUrlFilterParameter(): void
+    {
+        $beach = self::createTag(['name' => 'Beach']);
+        $city = self::createTag(['name' => 'City']);
+        static::getEntityManager()->flush();
+
+        static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Beach Article',
+                    'url' => '/beach-article',
+                    'excerptTags' => [$beach->getId()],
+                ],
+            ],
+        ]);
+        static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'City Article',
+                    'url' => '/city-article',
+                    'excerptTags' => [$city->getId()],
+                ],
+            ],
+        ]);
+        static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Untagged Article',
+                    'url' => '/untagged',
+                ],
+            ],
+        ]);
+        static::getEntityManager()->flush();
+
+        $listing = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default-example-smart-content',
+                    'title' => 'Listing',
+                    'url' => '/listing',
+                    'examples' => [
+                        'tags' => [$beach->getId(), $city->getId()],
+                        'tagOperator' => 'OR',
+                    ],
+                ],
+            ],
+        ]);
+        static::getEntityManager()->flush();
+
+        $this->pushWebsiteRequest();
+        $dimensionContent = $this->contentAggregator->aggregate($listing, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        /** @var array{tags: array<int, string>} $view */
+        $view = $result['view']['examples'];
+        self::assertSame(['Beach', 'City'], $view['tags']);
+
+        $tagParam = \implode(',', $view['tags']);
+
+        $detailPage = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default-example-smart-content',
+                    'title' => 'Detail',
+                    'url' => '/detail',
+                    'examples' => [
+                        'types' => ['default'],
+                    ],
+                ],
+            ],
+        ]);
+        static::getEntityManager()->flush();
+
+        self::getContainer()->get('request_stack')->pop();
+        $this->pushWebsiteRequest(['tags' => $tagParam]);
+        $detailDimension = $this->contentAggregator->aggregate($detailPage, ['locale' => 'en', 'stage' => 'live']);
+        $filtered = $this->contentResolver->resolve($detailDimension);
+
+        /** @var array<int, array<string, mixed>> $items */
+        $items = $filtered['content']['examples'];
+        $titles = \array_map(static fn (array $item) => $item['title'], $items);
+        self::assertContains('Beach Article', $titles);
+        self::assertContains('City Article', $titles);
+        self::assertNotContains('Untagged Article', $titles);
+    }
+
+    public function testViewTagsAndTagSelectionContentResolveTogether(): void
+    {
+        $beach = self::createTag(['name' => 'Beach']);
+        $city = self::createTag(['name' => 'City']);
+        $mountain = self::createTag(['name' => 'Mountain']);
+        static::getEntityManager()->flush();
+
+        $page = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'smart-content-tag-selection',
+                    'title' => 'Combo',
+                    'url' => '/combo',
+                    'examples' => [
+                        'tags' => [$beach->getId(), $city->getId()],
+                    ],
+                    'featured_tags' => [$mountain->getId(), $beach->getId()],
+                ],
+            ],
+        ]);
+        static::getEntityManager()->flush();
+
+        $this->pushWebsiteRequest();
+        $dimensionContent = $this->contentAggregator->aggregate($page, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        // smart_content view.tags exposes plain name strings (Sulu 2.6 shape)
+        /** @var array{tags: array<int, string>} $view */
+        $view = $result['view']['examples'];
+        self::assertSame(['Beach', 'City'], $view['tags']);
+
+        // tag_selection also resolves to plain name strings
+        /** @var array<int, string> $featured */
+        $featured = $result['content']['featured_tags'];
+        self::assertEqualsCanonicalizing(['Mountain', 'Beach'], \array_values($featured));
+    }
+
+    public function testResolveSmartContentExposesCategoryWrappersInView(): void
+    {
+        $catA = self::createCategory(['key' => 'cat-a']);
+        self::createCategoryTranslation($catA, ['title' => 'Category A']);
+        $catB = self::createCategory(['key' => 'cat-b']);
+        self::createCategoryTranslation($catB, ['title' => 'Category B']);
+        static::getEntityManager()->flush();
+
+        $page = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default-example-smart-content',
+                    'title' => 'Listing',
+                    'url' => '/listing',
+                    'examples' => [
+                        'categories' => [$catA->getId(), $catB->getId()],
+                        'categoryOperator' => 'OR',
+                    ],
+                ],
+            ],
+        ]);
+        static::getEntityManager()->flush();
+
+        $this->pushWebsiteRequest();
+        $dimensionContent = $this->contentAggregator->aggregate($page, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        /** @var array{categories: array<int, CategoryWrapper>, categoryOperator: string} $view */
+        $view = $result['view']['examples'];
+        self::assertCount(2, $view['categories']);
+        self::assertSame($catA->getId(), $view['categories'][0]->getId());
+        self::assertSame('cat-a', $view['categories'][0]->getKey());
+        self::assertSame('Category A', $view['categories'][0]->getName());
+        self::assertSame($catB->getId(), $view['categories'][1]->getId());
+        self::assertSame('OR', $view['categoryOperator']);
+    }
+
+    public function testSmartContentViewCategoriesAreUsableAsUrlFilterParameter(): void
+    {
+        $catA = self::createCategory(['key' => 'cat-a']);
+        $catB = self::createCategory(['key' => 'cat-b']);
+        static::getEntityManager()->flush();
+
+        static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Cat A Article',
+                    'url' => '/cat-a-article',
+                    'excerptCategories' => [$catA->getId()],
+                ],
+            ],
+        ]);
+        static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Cat B Article',
+                    'url' => '/cat-b-article',
+                    'excerptCategories' => [$catB->getId()],
+                ],
+            ],
+        ]);
+        static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Uncategorized Article',
+                    'url' => '/uncategorized',
+                ],
+            ],
+        ]);
+        static::getEntityManager()->flush();
+
+        $listing = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default-example-smart-content',
+                    'title' => 'Listing',
+                    'url' => '/listing',
+                    'examples' => [
+                        'categories' => [$catA->getId(), $catB->getId()],
+                        'categoryOperator' => 'OR',
+                    ],
+                ],
+            ],
+        ]);
+        static::getEntityManager()->flush();
+
+        $this->pushWebsiteRequest();
+        $dimensionContent = $this->contentAggregator->aggregate($listing, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        /** @var array{categories: array<int, CategoryWrapper>} $view */
+        $view = $result['view']['examples'];
+        self::assertSame($catA->getId(), $view['categories'][0]->getId());
+        self::assertSame($catB->getId(), $view['categories'][1]->getId());
+
+        // mimic the typical template pattern: build ?categories=... from the resolved wrappers
+        $categoryParam = \implode(',', \array_map(
+            static fn (CategoryWrapper $cat) => (string) $cat->getId(),
+            $view['categories'],
+        ));
+
+        $detailPage = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default-example-smart-content',
+                    'title' => 'Detail',
+                    'url' => '/detail',
+                    'examples' => [
+                        'types' => ['default'],
+                    ],
+                ],
+            ],
+        ]);
+        static::getEntityManager()->flush();
+
+        self::getContainer()->get('request_stack')->pop();
+        $this->pushWebsiteRequest(['categories' => $categoryParam]);
+        $detailDimension = $this->contentAggregator->aggregate($detailPage, ['locale' => 'en', 'stage' => 'live']);
+        $filtered = $this->contentResolver->resolve($detailDimension);
+
+        /** @var array<int, array<string, mixed>> $items */
+        $items = $filtered['content']['examples'];
+        $titles = \array_map(static fn (array $item) => $item['title'], $items);
+        self::assertContains('Cat A Article', $titles);
+        self::assertContains('Cat B Article', $titles);
+        self::assertNotContains('Uncategorized Article', $titles);
     }
 }

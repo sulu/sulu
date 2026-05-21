@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata;
 
-use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormGroup;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -24,21 +23,21 @@ final readonly class GroupProvider implements GroupProviderInterface
     ) {
     }
 
-    public function getGroups(): array
+    public function getGroups(string $key): array
     {
         /** @var TypedFormMetadata $metadata */
         $metadata = $this->metadataProviderRegistry->getMetadataProvider('form')
-            ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', []);
+            ->getMetadata($key, '', []);
 
         $groups = [];
 
-        foreach ($metadata->getForms() as $articleForm) {
-            $group = $articleForm->getGroup() ?: 'default';
+        foreach ($metadata->getForms() as $form) {
+            $group = $form->getGroup() ?: GroupProviderInterface::DEFAULT_GROUP;
 
             if (!\array_key_exists($group, $groups)) {
                 $groups[$group] = new FormGroup($group, $this->getGroupTitle($group));
             }
-            $groups[$group] = $groups[$group]->withTemplate($articleForm->getKey());
+            $groups[$group] = $groups[$group]->withTemplate($form->getKey());
         }
 
         return $groups;

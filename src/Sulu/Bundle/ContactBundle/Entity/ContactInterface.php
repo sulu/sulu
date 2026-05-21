@@ -128,6 +128,11 @@ interface ContactInterface extends AuditableInterface
      */
     public function getTagNameArray(): array;
 
+    /**
+     * @return array<int>
+     */
+    public function getTagIds(): array;
+
     public function setSalutation(?string $salutation): static;
 
     public function getSalutation(): ?string;

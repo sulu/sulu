@@ -55,7 +55,7 @@ class UserBuilder extends SuluBuilder
 
         // Running after the admin user check, otherwise we don't need the password.
         $helper = new QuestionHelper();
-        $question = new Question("Please provide an admin password (default: admin)\n");
+        $question = new Question('Please provide an admin password (default: admin): ');
 
         /** @var string $password */
         $password = $helper->ask($this->input, $this->output, $question) ?: 'admin';

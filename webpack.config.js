@@ -33,7 +33,6 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
     const ManifestPlugin = require(path.resolve(nodeModulesPath, 'webpack-manifest-plugin')).WebpackManifestPlugin;
     const MiniCssExtractPlugin = require(path.resolve(nodeModulesPath, 'mini-css-extract-plugin'));
     const CssMinimizerPlugin = require(path.resolve(nodeModulesPath, 'css-minimizer-webpack-plugin'));
-    const {styles} = require(path.resolve(nodeModulesPath, '@ckeditor/ckeditor5-dev-utils'));
 
     return {
         entry: [path.resolve(__dirname, 'index.js')], // eslint-disable-line no-undef
@@ -41,6 +40,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
             clean: true,
             path: path.resolve(projectRootPath, publicDir, outputPath),
             filename: '[name].[chunkhash].js',
+            assetModuleFilename: '[name].[contenthash][ext]',
         },
         stats: 'minimal',
         performance: {
@@ -91,7 +91,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                     test: /\.js$/,
                     exclude: [
                         // eslint-disable-next-line max-len
-                        /node_modules[/\\](?!(sulu-(.*)-bundle|@ckeditor|ckeditor5|array-move|lodash-es|vanilla-colorful)[/\\])/,
+                        /node_modules[/\\](?!(sulu-(.*)-bundle|@ckeditor|array-move|lodash-es|vanilla-colorful)[/\\])/,
                         /friendsofsymfony[/\\]jsrouting-bundle/,
                     ],
                     use: {
@@ -104,14 +104,12 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                 },
                 {
                     test: /\.css/,
-                    exclude: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
                     use: [
                         {
                             loader: MiniCssExtractPlugin.loader,
                         },
                         // style loader not required: https://github.com/webpack-contrib/css-loader#recommend
                         // eslint-disable-next-line max-len
-                        // https://ckeditor.com/docs/ckeditor5/latest/installation/advanced/alternative-setups/integrating-from-source.html#option-extracting-css
                         'css-loader',
                     ],
                 },
@@ -135,40 +133,10 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                     ],
                 },
                 {
-                    test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
+                    // CKEditor plugins icons
+                    test: /\.svg$/,
+                    issuer: /\.js$/, // avoid problems with .svg fonts in css/scss files
                     type: 'asset/source',
-                },
-                {
-                    test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
-                    use: [
-                        {
-                            loader: MiniCssExtractPlugin.loader,
-                        },
-                        {
-                            loader: 'css-loader',
-                        },
-                        {
-                            loader: 'postcss-loader',
-                            options: {
-                                postcssOptions: styles.getPostCssConfig({
-                                    themeImporter: {
-                                        themePath: require.resolve(
-                                            path.resolve(nodeModulesPath, '@ckeditor/ckeditor5-theme-lark')
-                                        ),
-                                    },
-                                    minify: true,
-                                }),
-                            },
-                        },
-                    ],
-                },
-                {
-                    test: /\.(svg|ttf|woff|woff2|eot)(\?.*$|$)/,
-                    exclude: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
-                    type: 'asset/resource',
-                    generator: {
-                        filename: '[name].[contenthash][ext]',
-                    },
                 },
                 {
                     test: /\.(jpg|gif|png)(\?.*$|$)/,

@@ -42,7 +42,7 @@ class AdminConfigControllerTest extends SuluTestCase
         $this->assertSnapshot('sulu_page_admin_config.json', \json_encode($suluPageData, \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT));
 
         $this->assertSame(
-            ['blog', 'sulu-io', 'sulu-test-secure', 'aaa-sorted-io'],
+            ['blog', 'sulu-io', 'sulu-segments-io', 'sulu-test-secure', 'aaa-sorted-io'],
             \array_keys($suluPageData['webspaces']),
         );
     }

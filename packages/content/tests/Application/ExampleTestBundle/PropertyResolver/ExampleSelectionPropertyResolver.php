@@ -43,14 +43,11 @@ class ExampleSelectionPropertyResolver implements PropertyResolverInterface
             ids: $ids,
             resourceLoaderKey: $resourceLoaderKey,
             resourceKey: Example::RESOURCE_KEY,
-            view: [
-                'ids' => $ids,
-                ...$params,
-            ],
+            view: [],
             priority: 150,
             metadata: [
                 'properties' => $params['properties'] ?? null,
-            ]
+            ],
         );
     }
 

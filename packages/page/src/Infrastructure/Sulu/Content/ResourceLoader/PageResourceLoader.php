@@ -14,8 +14,11 @@ namespace Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
+use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewEnhancementInterface;
+use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -24,7 +27,7 @@ use Symfony\Bundle\SecurityBundle\Security;
  *
  * @final
  */
-class PageResourceLoader implements ResourceLoaderInterface
+class PageResourceLoader implements ResourceLoaderContentViewEnhancementInterface
 {
     public const RESOURCE_LOADER_KEY = 'page';
 
@@ -83,6 +86,31 @@ class PageResourceLoader implements ResourceLoaderInterface
         }
 
         return $mappedResult;
+    }
+
+    public function resolveContentViewEnhancement(mixed $resource): ContentView
+    {
+        $view = [];
+        $content = [];
+
+        if ($resource instanceof PageDimensionContentInterface) {
+            $page = $resource->getResource();
+            $view = [
+                'uuid' => $page->getUuid(),
+                'template' => $resource->getTemplateKey(),
+                'webspaceKey' => $page->getWebspaceKey(),
+                'parent' => $page->getParent()?->getUuid(),
+            ];
+        }
+
+        if ($resource instanceof AuthorInterface) {
+            $content = [
+                'authored' => $resource->getAuthored()?->format('c'),
+                'lastModified' => $resource->getLastModified()?->format('c'),
+            ];
+        }
+
+        return ContentView::create($content, $view);
     }
 
     public static function getKey(): string

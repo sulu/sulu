@@ -19,6 +19,7 @@ use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleReindexProvider;
 use Sulu\Article\Tests\Traits\CreateArticleTrait;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormGroup;
 use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -165,6 +166,40 @@ class AdminArticleReindexProviderTest extends SuluTestCase
             $expectedResult,
             $results,
         );
+    }
+
+    public function testProvideEmitsBroadSecurityContextWithSingleGroup(): void
+    {
+        $singleGroupProvider = new class() implements GroupProviderInterface {
+            public function getGroups(string $key): array
+            {
+                return [GroupProviderInterface::DEFAULT_GROUP => new FormGroup(GroupProviderInterface::DEFAULT_GROUP, 'Default', ['article'])];
+            }
+        };
+
+        $provider = new AdminArticleReindexProvider($this->entityManager, $singleGroupProvider);
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Admin search regression',
+                    'url' => '/admin-search-regression',
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()
+            ->withIndex('admin')
+            ->withIdentifiers([
+                ArticleInterface::RESOURCE_KEY . '__' . $article->getUuid() . '__en',
+            ]);
+
+        /** @var array<array{securityContext: string}> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+        $this->assertSame(ArticleAdmin::SECURITY_CONTEXT, $results[0]['securityContext']);
     }
 
     public function testProvideWithSpecificIdentifiers(): void

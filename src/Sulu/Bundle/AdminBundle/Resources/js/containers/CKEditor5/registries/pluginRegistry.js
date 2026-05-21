@@ -1,5 +1,5 @@
 // @flow
-import {Plugin} from '@ckeditor/ckeditor5-core/src/plugin';
+import {Plugin} from '@ckeditor/ckeditor5-core';
 
 class PluginRegistry {
     plugins: Array<Class<typeof Plugin>>;

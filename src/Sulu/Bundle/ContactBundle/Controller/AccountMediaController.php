@@ -38,7 +38,7 @@ class AccountMediaController extends AbstractMediaController implements SecuredC
     protected static $mediaEntityKey = 'account_media';
 
     /**
-     * @param class-string $accountClass
+     * @param class-string<AccountInterface> $accountClass
      */
     public function __construct(
         ViewHandlerInterface $viewHandler,

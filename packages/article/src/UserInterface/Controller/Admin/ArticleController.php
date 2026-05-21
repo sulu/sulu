@@ -73,7 +73,7 @@ final class ArticleController implements SecuredControllerInterface
         $types = \array_filter(\explode(',', \is_string($typesParam) ? $typesParam : ''));
 
         $groupTemplates = [];
-        $groups = $this->groupProvider->getGroups();
+        $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
         foreach ($groups as $group) {
             if (\in_array($group->identifier, $types)) {
                 $groupTemplates = \array_merge($groupTemplates, $group->templates);
@@ -269,12 +269,18 @@ final class ArticleController implements SecuredControllerInterface
      */
     private function getData(Request $request): array
     {
-        return \array_replace(
+        $data = \array_replace(
             $request->request->all(),
             [
                 'locale' => $this->getLocale($request),
             ],
         );
+
+        if ($request->query->getBoolean('force', false)) {
+            unset($data['_hash']);
+        }
+
+        return $data;
     }
 
     public function getLocale(Request $request): string

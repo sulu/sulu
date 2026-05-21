@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<webspace xmlns="http://schemas.sulu.io/webspace/webspace"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
+
+    <name>Sulu Segments</name>
+    <key>sulu-segments-io</key>
+
+    <localizations>
+        <localization language="en" default="true"/>
+    </localizations>
+
+    <segments>
+        <segment key="business" default="true">
+            <meta>
+                <title lang="en">Business</title>
+            </meta>
+        </segment>
+        <segment key="private">
+            <meta>
+                <title lang="en">Private</title>
+            </meta>
+        </segment>
+    </segments>
+
+    <default-templates>
+        <default-template type="homepage">homepage</default-template>
+        <default-template type="page">default</default-template>
+    </default-templates>
+
+    <templates>
+        <template type="search">search/search</template>
+    </templates>
+
+    <navigation>
+        <contexts>
+            <context key="main">
+                <meta>
+                    <title lang="en">Main Navigation</title>
+                </meta>
+            </context>
+        </contexts>
+    </navigation>
+
+    <portals>
+        <portal>
+            <name>Sulu Segments Portal</name>
+            <key>sulu_segments_portal</key>
+
+            <environments>
+                <environment type="prod">
+                    <urls>
+                        <url>{host}/{localization}</url>
+                    </urls>
+                </environment>
+                <environment type="stage">
+                    <urls>
+                        <url>{host}/{localization}</url>
+                    </urls>
+                </environment>
+                <environment type="test">
+                    <urls>
+                        <url>sulu-segments.io/{localization}</url>
+                    </urls>
+                </environment>
+                <environment type="dev">
+                    <urls>
+                        <url>sulu-segments.io/{localization}</url>
+                    </urls>
+                </environment>
+            </environments>
+        </portal>
+    </portals>
+</webspace>

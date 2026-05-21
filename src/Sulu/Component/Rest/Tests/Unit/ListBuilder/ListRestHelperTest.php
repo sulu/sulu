@@ -27,11 +27,17 @@ class ListRestHelperTest extends TestCase
      */
     protected $requestStack;
 
+    protected ListRestHelper $helper;
+
     public function setUp(): void
     {
         $this->requestStack = $this->prophesize(RequestStack::class);
+        $this->helper = new ListRestHelper($this->requestStack->reveal());
     }
 
+    /**
+     * @return array<int,array<int,mixed>>
+     */
     public static function dataFieldsProvider()
     {
         return [
@@ -149,17 +155,65 @@ class ListRestHelperTest extends TestCase
     public function testGetFields($request, $expected): void
     {
         $this->requestStack->getCurrentRequest()->willReturn($request);
-        $helper = new ListRestHelper($this->requestStack->reveal());
 
-        $this->assertEquals($expected['fields'], $helper->getFields());
-        $this->assertEquals($expected['sortColumn'], $helper->getSortColumn());
-        $this->assertEquals($expected['sortOrder'], $helper->getSortOrder());
-        $this->assertEquals($expected['searchPattern'], $helper->getSearchPattern());
-        $this->assertEquals($expected['searchFields'], $helper->getSearchFields());
-        $this->assertEquals($expected['limit'], $helper->getLimit());
-        $this->assertEquals($expected['offset'], $helper->getOffset());
-        $this->assertEquals($expected['ids'], $helper->getIds());
-        $this->assertEquals($expected['excludedIds'], $helper->getExcludedIds());
-        $this->assertEquals($expected['filters'], $helper->getFilter());
+        $this->assertEquals($expected['fields'], $this->helper->getFields());
+        $this->assertEquals($expected['sortColumn'], $this->helper->getSortColumn());
+        $this->assertEquals($expected['sortOrder'], $this->helper->getSortOrder());
+        $this->assertEquals($expected['searchPattern'], $this->helper->getSearchPattern());
+        $this->assertEquals($expected['searchFields'], $this->helper->getSearchFields());
+        $this->assertEquals($expected['limit'], $this->helper->getLimit());
+        $this->assertEquals($expected['offset'], $this->helper->getOffset());
+        $this->assertEquals($expected['ids'], $this->helper->getIds());
+        $this->assertEquals($expected['excludedIds'], $this->helper->getExcludedIds());
+        $this->assertEquals($expected['filters'], $this->helper->getFilter());
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataSortColumn')]
+    public function testGetSortColumn(Request $request, ?string $expected): void
+    {
+        $this->requestStack->getCurrentRequest()->willReturn($request);
+
+        $this->assertSame($expected, $this->helper->getSortColumn());
+    }
+
+    /**
+     * @return \Generator<string,array{Request,string|null}>
+     */
+    public static function dataSortColumn(): \Generator
+    {
+        yield 'no column name' => [
+            new Request([]),
+            null,
+        ];
+
+        yield 'empty column name' => [
+            new Request(['sortBy' => '']),
+            null,
+        ];
+
+        yield 'invalid column name' => [
+            new Request(['sortBy' => 'length(somefield)']),
+            null,
+        ];
+
+        yield 'valid column name' => [
+            new Request(['sortBy' => 'somefield']),
+            'somefield',
+        ];
+
+        yield 'valid doctrine column name' => [
+            new Request(['sortBy' => 'some_field']),
+            'some_field',
+        ];
+
+        yield 'valid column name with subentity' => [
+            new Request(['sortBy' => 'someEntity.someField']),
+            'someEntity.someField',
+        ];
+
+        yield 'valid column can contain numbers' => [
+            new Request(['sortBy' => 'someEntity.field3']),
+            'someEntity.field3',
+        ];
     }
 }

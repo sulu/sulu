@@ -12,6 +12,7 @@
 namespace Sulu\Page\Application\MessageHandler;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Content\Application\ContentHash\ContentHashChecker;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Application\Mapper\PageMapperInterface;
@@ -34,6 +35,7 @@ final class ModifyPageMessageHandler
         /** @var iterable<PageMapperInterface> */
         private iterable $pageMappers,
         private DomainEventCollectorInterface $domainEventCollector,
+        private ContentHashChecker $contentHashChecker,
     ) {
     }
 
@@ -58,6 +60,13 @@ final class ModifyPageMessageHandler
                     ],
                 ],
             ]
+        );
+
+        $this->contentHashChecker->checkHash(
+            $data,
+            $page,
+            ['locale' => $locale, 'stage' => DimensionContentInterface::STAGE_DRAFT],
+            $page->getId(),
         );
 
         foreach ($this->pageMappers as $pageMapper) {

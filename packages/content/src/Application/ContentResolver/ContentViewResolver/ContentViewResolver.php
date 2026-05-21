@@ -119,6 +119,19 @@ class ContentViewResolver implements ContentViewResolverInterface
                 // resolve array of content views
                 $resolvedContentViews = $this->resolveContentViews($content, $depth, $priorityQueue);
                 $result['content'][$name] = $resolvedContentViews['content'];
+
+                // when content is empty (e.g. smart content with zero matches) keep the outer
+                // view so filter metadata such as tags/categories/total stays exposed; otherwise
+                // the per-item resolved views take over (selection lists)
+                if ([] === $content) {
+                    $result['view'][$name] = $view;
+                    $resolvableResources = $resolvedContentViews['resolvableResources'];
+                    $this->collectViewResolvables($result['view'][$name], $depth, $resolvableResources);
+                    $result['resolvableResources'] = $resolvableResources;
+
+                    return $result;
+                }
+
                 $result['view'][$name] = $resolvedContentViews['view'];
                 $result['resolvableResources'] = $this->resolvableResourceQueueProcessor->mergeResolvableResources(
                     $result['resolvableResources'],
@@ -153,10 +166,10 @@ class ContentViewResolver implements ContentViewResolverInterface
                 }
             }
 
-            // If the view is not set for this name, we can use the root view
-            if (($result['view'][$name] ?? null) === null) {
-                $result['view'][$name] = $view;
-            }
+            // Root view provides the base; per-key sub-item views take precedence on collision
+            $result['view'][$name] = \array_merge($view, $result['view'][$name] ?? []);
+
+            $this->collectViewResolvables($result['view'][$name], $depth, $resolvableResources);
 
             $result['resolvableResources'] = $resolvableResources;
 
@@ -171,6 +184,29 @@ class ContentViewResolver implements ContentViewResolverInterface
         $result['content'][$name] = $content;
         $result['view'][$name] = $view;
 
+        $this->collectViewResolvables($result['view'][$name], $depth, $result['resolvableResources']);
+
         return $result;
+    }
+
+    /**
+     * @param array<int, array<string, array<int, array<string|int, array<string, ResolvableInterface>>>>> &$resolvableResources
+     */
+    private function collectViewResolvables(mixed $view, int $depth, array &$resolvableResources): void
+    {
+        if (!\is_array($view)) {
+            return;
+        }
+
+        foreach ($view as $entry) {
+            if ($entry instanceof ResolvableInterface) {
+                $resolvableResources[$entry->getPriority()][$entry->getResourceLoaderKey()][$depth][$entry->getId()][$entry->getMetadataIdentifier()] = $entry;
+                continue;
+            }
+
+            if (\is_array($entry)) {
+                $this->collectViewResolvables($entry, $depth, $resolvableResources);
+            }
+        }
     }
 }

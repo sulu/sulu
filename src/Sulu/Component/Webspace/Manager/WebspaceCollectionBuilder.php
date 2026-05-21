@@ -101,17 +101,17 @@ class WebspaceCollectionBuilder
             }
         );
 
-        $environments = \array_keys($this->portalInformations);
-
-        foreach ($environments as $environment) {
-            // sort all portal informations by length
+        // sort all portal informations by length
+        $environmentPortalInformations = [];
+        foreach ($this->portalInformations as &$environmentPortalInformations) {
             \uksort(
-                $this->portalInformations[$environment],
-                function($a, $b) {
+                $environmentPortalInformations,
+                function(string $a, string $b) {
                     return \strlen($a) < \strlen($b) ? 1 : -1;
                 }
             );
         }
+        unset($environmentPortalInformations);
 
         $collection->setWebspaces($this->webspaces);
         $collection->setPortals($this->portals);

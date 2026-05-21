@@ -20,7 +20,6 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\ResourceLoader\MediaResourceLoader;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
-use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverMetadataAwareInterface;
 
@@ -86,13 +85,15 @@ class ImageMapPropertyResolver implements PropertyResolverMetadataAwareInterface
 
         return ContentView::create(
             [
-                'image' => new ResolvableResource($imageId, $resourceLoaderKey, -50),
+                'image' => ContentView::createResolvable(
+                    id: $imageId,
+                    resourceLoaderKey: $resourceLoaderKey,
+                    view: ['id' => $imageId, 'displayOption' => null],
+                    priority: -50,
+                ),
                 'hotspots' => $hotspots,
             ],
-            [
-                'imageId' => $imageId,
-                ...$returnedParams,
-            ],
+            [...$returnedParams],
         );
     }
 
