@@ -924,4 +924,92 @@ class ResolvableResourceReplacerTest extends TestCase
         self::assertSame('2024-06-01T00:00:00+00:00', $pages[1]['authored']);
         self::assertSame('2024-09-01T00:00:00+00:00', $pages[1]['lastModified']);
     }
+
+    public function testReplaceResolvableResourcesInViewReplacesNestedResolvables(): void
+    {
+        $tagA = new ResolvableResource(3, 'tag', 0, null, null, 'tags');
+        $tagB = new ResolvableResource(4, 'tag', 0, null, null, 'tags');
+
+        $view = [
+            'tags' => [$tagA, $tagB],
+            'plain' => 'untouched',
+            'nested' => [
+                'tag' => $tagA,
+            ],
+        ];
+
+        $resolvedResources = [
+            'tag' => [
+                3 => [$tagA->getMetadataIdentifier() => $this->createResolvedEntry('Beach')],
+                4 => [$tagB->getMetadataIdentifier() => $this->createResolvedEntry('City')],
+            ],
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesInView($view, $resolvedResources, 1, 10);
+
+        self::assertSame(['Beach', 'City'], $result['tags']);
+        self::assertSame('untouched', $result['plain']);
+        /** @var array{tag: string} $nested */
+        $nested = $result['nested'];
+        self::assertSame('Beach', $nested['tag']);
+
+        $refs = $this->referenceStore->getAll();
+        self::assertContains('tags-3', $refs);
+        self::assertContains('tags-4', $refs);
+    }
+
+    public function testReplaceResolvableResourcesInViewReturnsEarlyWithNoResolvedResources(): void
+    {
+        $tag = new ResolvableResource(3, 'tag', 0);
+        $view = ['tags' => [$tag]];
+
+        $result = $this->replacer->replaceResolvableResourcesInView($view, [], 1, 10);
+
+        self::assertSame($view, $result);
+    }
+
+    public function testReplaceResolvableResourcesInViewFiltersUnresolvedListEntries(): void
+    {
+        $tagA = new ResolvableResource(3, 'tag', 0, null, null, 'tags');
+        $tagMissing = new ResolvableResource(4, 'tag', 0, null, null, 'tags');
+        $tagC = new ResolvableResource(5, 'tag', 0, null, null, 'tags');
+
+        $view = [
+            'tags' => [$tagA, $tagMissing, $tagC],
+        ];
+
+        $resolvedResources = [
+            'tag' => [
+                3 => [$tagA->getMetadataIdentifier() => $this->createResolvedEntry('Beach')],
+                5 => [$tagC->getMetadataIdentifier() => $this->createResolvedEntry('Mountain')],
+            ],
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesInView($view, $resolvedResources, 1, 10);
+
+        self::assertSame(['Beach', 'Mountain'], $result['tags']);
+    }
+
+    public function testReplaceResolvableResourcesInViewKeepsAssociativeKeysWhenFiltering(): void
+    {
+        $tagA = new ResolvableResource(3, 'tag', 0, null, null, 'tags');
+        $tagMissing = new ResolvableResource(4, 'tag', 0, null, null, 'tags');
+
+        $view = [
+            'tags' => [
+                'first' => $tagA,
+                'second' => $tagMissing,
+            ],
+        ];
+
+        $resolvedResources = [
+            'tag' => [
+                3 => [$tagA->getMetadataIdentifier() => $this->createResolvedEntry('Beach')],
+            ],
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesInView($view, $resolvedResources, 1, 10);
+
+        self::assertSame(['first' => 'Beach'], $result['tags']);
+    }
 }

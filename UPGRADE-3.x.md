@@ -2,6 +2,22 @@
 
 ## 3.0.7
 
+### Smart content tag and category resolving is opt-in
+
+`view.<smart_content_field>.tags` and `view.<smart_content_field>.categories` now expose the raw filter ids by default. To resolve the ids through a resource loader (for example to receive tag names or `Sulu\Bundle\CategoryBundle\Api\Category` API objects, as in Sulu 2.6), opt in via the new `tagResourceLoader` and `categoryResourceLoader` smart content `<param>` entries:
+
+```xml
+<property name="my_smart_content" type="smart_content">
+    <params>
+        <param name="provider" value="pages"/>
+        <param name="tagResourceLoader" value="tag"/>
+        <param name="categoryResourceLoader" value="category"/>
+    </params>
+</property>
+```
+
+Without these params, the new `raw` resource loader is used, which keeps the ids unchanged. The HTTP cache reference store is still populated for the tag and category ids regardless of the loader choice, so renaming or removing a referenced tag or category continues to invalidate the affected pages.
+
 ### Article admin now gates the navigation and views on per-group permissions
 
 The `ArticleAdmin` previously gated its navigation item, per-group views, and toolbar actions (Add, Delete, Export) on the

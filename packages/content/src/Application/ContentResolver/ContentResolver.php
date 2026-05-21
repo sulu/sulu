@@ -324,6 +324,14 @@ readonly class ContentResolver implements ContentResolverInterface
         /** @var array<string, mixed> $viewData */
         $viewData = $resolvedContent['view'];
 
+        // view resolvables run after viewEnhancements so enhancement merges can layer on top of resolved view values
+        $viewData = $this->resolvableResourceReplacer->replaceResolvableResourcesInView(
+            $viewData,
+            $resolvedResources,
+            1,
+            $this->maxDepth,
+        );
+
         $normalizedContentData = $this->contentViewDataNormalizer->normalizeContentViewData(
             $finalContent,
             $viewData,

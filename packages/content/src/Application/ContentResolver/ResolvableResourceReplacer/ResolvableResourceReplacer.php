@@ -222,4 +222,62 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
     {
         $this->referenceStore->add((string) $resourceId, $resourceKey);
     }
+
+    public function replaceResolvableResourcesInView(
+        array $view,
+        array $resolvedResources,
+        int $depth,
+        int $maxDepth
+    ): array {
+        if (0 === \count($resolvedResources)) {
+            return $view;
+        }
+
+        /** @var array<string, mixed> $result */
+        $result = $this->replaceInViewRecursively($view, $resolvedResources, $depth, $maxDepth);
+
+        return $result;
+    }
+
+    /**
+     * @param array<int|string, mixed> $view
+     * @param array<string, array<string|int, array<string, array{resolved: mixed, contentViewEnhancement: ContentView}>>> $resolvedResources
+     *
+     * @return array<int|string, mixed>
+     */
+    private function replaceInViewRecursively(
+        array $view,
+        array $resolvedResources,
+        int $depth,
+        int $maxDepth
+    ): array {
+        if ($depth > $maxDepth) {
+            return $this->replaceUnresolvedWithNull($view);
+        }
+
+        $onlyResolvableResources = true;
+        foreach ($view as $key => $value) {
+            if ($value instanceof ResolvableInterface) {
+                $resolveResult = $this->resolveValue($value, $resolvedResources);
+                $view[$key] = $resolveResult['resolved'];
+                continue;
+            }
+            $onlyResolvableResources = false;
+
+            if (\is_array($value)) {
+                // only increase depth for ResolvableInterface, matching replaceRecursively
+                $view[$key] = $this->replaceInViewRecursively($value, $resolvedResources, $depth, $maxDepth);
+            }
+        }
+
+        if ($onlyResolvableResources) {
+            $isList = \array_is_list($view);
+            $view = \array_filter($view, static fn ($value) => null !== $value);
+            if ($isList) {
+                $view = \array_values($view);
+            }
+        }
+
+        return $view;
+    }
 }
