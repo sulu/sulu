@@ -132,14 +132,6 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                         'postcss-loader',
                     ],
                 },
-               {
-                    test: /\.(svg|ttf|woff|woff2|eot)(\?.*$|$)/,
-                    issuer: /\.css$/,
-                    type: 'asset/resource',
-                    generator: {
-                        filename: '[name].[contenthash][ext]',
-                    },
-                },
                 {
                     // CKEditor plugins icons
                     test: /\.svg$/,
