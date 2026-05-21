@@ -178,7 +178,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
             return 0;
         }
         $filters['templateKeys'] = $templateKeys;
-        $filters = $this->mapFilters($filters);
+        $filters = $this->mapFilters($filters, $params);
 
         $alias = 'page';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
@@ -224,7 +224,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
             return [];
         }
         $filters['templateKeys'] = $templateKeys;
-        $filters = $this->mapFilters($filters);
+        $filters = $this->mapFilters($filters, $params);
 
         $sortBys = $this->mapSortBys($sortBys);
 
@@ -259,6 +259,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
 
     /**
      * @param PageSmartContentFilters|PageSmartContentCountFilters $filters
+     * @param array<string, mixed> $params
      *
      * @return array{
      *        categoryIds?: int[],
@@ -282,7 +283,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
      *        segmentKey?: string,
      *    }
      */
-    protected function mapFilters(array $filters): array
+    protected function mapFilters(array $filters, array $params = []): array
     {
         unset($filters['types']);
 

@@ -138,7 +138,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
             return 0;
         }
         $filters['templateKeys'] = $templateKeys;
-        $filters = $this->mapFilters($filters);
+        $filters = $this->mapFilters($filters, $params);
 
         $alias = 'snippet';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
@@ -181,7 +181,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
             return [];
         }
         $filters['templateKeys'] = $templateKeys;
-        $filters = $this->mapFilters($filters);
+        $filters = $this->mapFilters($filters, $params);
 
         $sortBys = $this->mapSortBys($sortBys);
 
@@ -237,6 +237,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
 
     /**
      * @param SnippetSmartContentFilters|SnippetSmartContentCountFilters $filters
+     * @param array<string, mixed> $params
      *
      * @return array{
      *         categoryIds?: int[],
@@ -258,7 +259,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
      *         audienceTargeting?: bool
      *     }
      */
-    protected function mapFilters(array $filters): array
+    protected function mapFilters(array $filters, array $params = []): array
     {
         unset($filters['types']);
 
