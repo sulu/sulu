@@ -170,7 +170,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
         $filters = $this->mapFilters($filters, $params);
-        if (null === $filters['templateKeys']) {
+        if (null === $filters['templateKeys']) { // means admin or website requested templates and they do not match together so we can early return with zero results
             return 0;
         }
 
@@ -210,7 +210,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
         $filters = $this->mapFilters($filters, $params);
-        if (null === $filters['templateKeys']) {
+        if (null === $filters['templateKeys']) { // means admin or website requested templates and they do not match together so we can early return with no results
             return [];
         }
 
