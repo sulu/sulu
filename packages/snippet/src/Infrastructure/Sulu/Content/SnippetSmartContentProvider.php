@@ -129,16 +129,10 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         /** @var SnippetSmartContentCountFilters $filters */
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
-        $templateKeys = $this->resolveTemplateKeys(
-            $filters['templateKeys'] ?? [],
-            $filters['types'],
-            $params,
-        );
-        if (null === $templateKeys) {
+        $filters = $this->mapFilters($filters, $params);
+        if (null === $filters['templateKeys']) {
             return 0;
         }
-        $filters['templateKeys'] = $templateKeys;
-        $filters = $this->mapFilters($filters, $params);
 
         $alias = 'snippet';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
@@ -172,16 +166,10 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         /** @var SnippetSmartContentFilters $filters */
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
-        $templateKeys = $this->resolveTemplateKeys(
-            $filters['templateKeys'] ?? [],
-            $filters['types'],
-            $params,
-        );
-        if (null === $templateKeys) {
+        $filters = $this->mapFilters($filters, $params);
+        if (null === $filters['templateKeys']) {
             return [];
         }
-        $filters['templateKeys'] = $templateKeys;
-        $filters = $this->mapFilters($filters, $params);
 
         $sortBys = $this->mapSortBys($sortBys);
 
@@ -248,7 +236,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
      *         tagOperator: 'AND'|'OR',
      *         websiteTags: string[],
      *         websiteTagOperator: 'AND'|'OR',
-     *         templateKeys: string[],
+     *         templateKeys: string[]|null,
      *         typesOperator: 'OR',
      *         locale: string,
      *         dataSource: string|null,
@@ -261,6 +249,11 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
      */
     protected function mapFilters(array $filters, array $params = []): array
     {
+        $filters['templateKeys'] = $this->resolveTemplateKeys(
+            $filters['templateKeys'] ?? [],
+            $filters['types'],
+            $params,
+        );
         unset($filters['types']);
 
         if ($filters['categories']) {

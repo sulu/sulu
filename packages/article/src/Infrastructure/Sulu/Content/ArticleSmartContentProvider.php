@@ -155,16 +155,10 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         /** @var ArticleSmartContentCountFilters $filters */
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
-        $templateKeys = $this->resolveTemplateKeys(
-            $filters['templateKeys'] ?? [],
-            $filters['types'],
-            $params,
-        );
-        if (null === $templateKeys) {
+        $filters = $this->mapFilters($filters, $params);
+        if (null === $filters['templateKeys']) {
             return 0;
         }
-        $filters['templateKeys'] = $templateKeys;
-        $filters = $this->mapFilters($filters, $params);
 
         $alias = 'article';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
@@ -200,16 +194,10 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         /** @var ArticleSmartContentFilters $filters */
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
-        $templateKeys = $this->resolveTemplateKeys(
-            $filters['templateKeys'] ?? [],
-            $filters['types'],
-            $params,
-        );
-        if (null === $templateKeys) {
+        $filters = $this->mapFilters($filters, $params);
+        if (null === $filters['templateKeys']) {
             return [];
         }
-        $filters['templateKeys'] = $templateKeys;
-        $filters = $this->mapFilters($filters, $params);
 
         $sortBys = $this->mapSortBys($sortBys);
 
@@ -266,7 +254,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      *         tagOperator: 'AND'|'OR',
      *         websiteTags: string[],
      *         websiteTagOperator: 'AND'|'OR',
-     *         templateKeys: string[],
+     *         templateKeys: string[]|null,
      *         typesOperator: 'OR',
      *         locale: string,
      *         dataSource: string|null,
@@ -280,6 +268,11 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      */
     protected function mapFilters(array $filters, array $params = []): array
     {
+        $filters['templateKeys'] = $this->resolveTemplateKeys(
+            $filters['templateKeys'] ?? [],
+            $filters['types'],
+            $params,
+        );
         unset($filters['types']);
 
         if ($filters['categories']) {
