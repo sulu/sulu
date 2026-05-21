@@ -770,6 +770,64 @@ class ArticleSmartContentProviderTest extends SuluTestCase
         $this->assertContains(self::$articles['entertainment2']->getUuid(), $resultIds);
     }
 
+    public function testFindFlatByXmlGroupsIntersectsWithUiTypes(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy([
+            ...$this->getDefaultFilters(),
+            ...['locale' => 'en', 'types' => ['blog-group']],
+        ], [], ['groups' => 'blog-group,news-group']);
+
+        $this->assertCount(2, $result);
+
+        $resultIds = \array_map(fn ($article) => $article['id'], $result);
+        $this->assertContains(self::$articles['tech2']->getUuid(), $resultIds);
+        $this->assertContains(self::$articles['business2']->getUuid(), $resultIds);
+
+        $this->assertSame(
+            2,
+            $this->smartContentProvider->countBy([
+                ...$this->getDefaultFilters(),
+                ...['locale' => 'en', 'types' => ['blog-group']],
+            ], ['groups' => 'blog-group,news-group']),
+        );
+    }
+
+    public function testFindFlatByUiTypeOutsideXmlGroupsReturnsZero(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy([
+            ...$this->getDefaultFilters(),
+            ...['locale' => 'en', 'types' => ['default']],
+        ], [], ['groups' => 'blog-group,news-group']);
+
+        $this->assertCount(0, $result);
+
+        $this->assertSame(
+            0,
+            $this->smartContentProvider->countBy([
+                ...$this->getDefaultFilters(),
+                ...['locale' => 'en', 'types' => ['default']],
+            ], ['groups' => 'blog-group,news-group']),
+        );
+    }
+
+    public function testFindFlatByUnknownXmlGroupReturnsZero(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy([
+            ...$this->getDefaultFilters(),
+            ...['locale' => 'en'],
+        ], [], ['groups' => 'this-group-does-not-exist']);
+
+        $this->assertCount(0, $result);
+
+        $this->assertSame(
+            0,
+            $this->smartContentProvider->countBy([
+                ...$this->getDefaultFilters(),
+                ...['locale' => 'en'],
+            ], ['groups' => 'this-group-does-not-exist']),
+        );
+    }
+
     public function testFindFlatByWebspace(): void
     {
         $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), ...['locale' => 'en', 'webspaceKey' => 'blog']], []);
