@@ -40,6 +40,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
             clean: true,
             path: path.resolve(projectRootPath, publicDir, outputPath),
             filename: '[name].[chunkhash].js',
+            assetModuleFilename: '[name].[contenthash][ext]',
         },
         stats: 'minimal',
         performance: {
