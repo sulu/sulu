@@ -254,7 +254,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
      *        categoryOperator: 'AND'|'OR',
      *        websiteCategories: string[],
      *        websiteCategoryOperator: 'AND'|'OR',
-     *        tagNames?: string[],
+     *        tagIds?: int[],
      *        tagOperator: 'AND'|'OR',
      *        websiteTags: string[],
      *        websiteTagOperator: 'AND'|'OR',

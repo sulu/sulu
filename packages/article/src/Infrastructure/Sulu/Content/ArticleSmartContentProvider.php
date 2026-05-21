@@ -250,7 +250,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      *         categoryOperator: 'AND'|'OR',
      *         websiteCategories: string[],
      *         websiteCategoryOperator: 'AND'|'OR',
-     *         tagNames?: string[],
+     *         tagIds?: int[],
      *         tagOperator: 'AND'|'OR',
      *         websiteTags: string[],
      *         websiteTagOperator: 'AND'|'OR',
