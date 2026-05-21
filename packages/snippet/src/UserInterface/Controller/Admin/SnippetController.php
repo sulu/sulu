@@ -101,7 +101,7 @@ final class SnippetController implements SecuredControllerInterface
         if (isset($fieldDescriptors['ghostLocale'])) {
             $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);
         }
-        $listBuilder->setParameter('locale', $request->query->get('locale'));
+        $listBuilder->setParameter('locale', $this->getLocale($request));
 
         $typesParam = $request->query->get('types');
         $types = \array_filter(\explode(',', \is_string($typesParam) ? $typesParam : ''));
@@ -154,7 +154,7 @@ final class SnippetController implements SecuredControllerInterface
 
     public function getVersionsAction(Request $request, string $id): JsonResponse
     {
-        $locale = $request->query->get('locale');
+        $locale = $this->getLocale($request);
 
         /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('snippets_versions');
