@@ -8587,6 +8587,18 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
 		-
+			message: '#^Call to an undefined method object\:\:getTagIds\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Account\:\:getTagIds\(\) should return array\<int\> but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
+
+		-
 			message: '#^Call to an undefined method object\:\:getTagNameArray\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -9985,6 +9997,18 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
 
 		-
+			message: '#^Call to an undefined method object\:\:getTagIds\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Contact\:\:getTagIds\(\) should return array\<int\> but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
+
+		-
 			message: '#^Call to an undefined method object\:\:getTagNameArray\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -11037,13 +11061,13 @@ parameters:
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
-			count: 3
+			count: 4
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
 			message: '#^Argument of an invalid type string supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
-			count: 8
+			count: 7
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
@@ -22177,12 +22201,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/ListRepresentationFactory/MediaListRepresentationFactory.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
-
-		-
 			message: '#^Binary operation "\." between ''File was not found…'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -22435,12 +22453,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\TagBundle\\Tag\\TagManagerInterface\:\:findOrCreateByName\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
-
-		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -22480,12 +22492,6 @@ parameters:
 			message: '#^Parameter \#1 \$userId of method Sulu\\Bundle\\MediaBundle\\Media\\Manager\\MediaManager\:\:getUser\(\) expects int, int\|null given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
-
-		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
 
 		-

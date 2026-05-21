@@ -44,6 +44,7 @@ use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\MediaPropertiesProviderInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -492,10 +493,11 @@ class MediaManager implements MediaManagerInterface
                         break;
                     case 'tags':
                         $media->removeTags();
-                        if (\count($value)) {
-                            foreach ($value as $tag) {
-                                $tagEntity = $this->tagManager->findOrCreateByName($tag);
-                                $media->addTag($tagEntity);
+                        /** @var array<int> $value */
+                        foreach ($value as $id) {
+                            $tag = $this->tagManager->findById($id);
+                            if ($tag instanceof TagInterface) {
+                                $media->addTag($tag);
                             }
                         }
                         break;

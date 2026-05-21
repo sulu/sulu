@@ -122,9 +122,9 @@ class ContactManagerTest extends TestCase
 
         $contact->getContactAddresses()->willReturn(new ArrayCollection());
         $contact->getTags()->willReturn(new ArrayCollection());
-        $this->tagManager->findOrCreateByName('testtag')->willReturn($tag->reveal());
+        $this->tagManager->findById(10)->willReturn($tag->reveal());
         $contact->addTag($tag->reveal())->willReturn($contact->reveal())->shouldBeCalled();
 
-        $this->contactManager->addNewContactRelations($contact->reveal(), ['tags' => ['testtag']]);
+        $this->contactManager->addNewContactRelations($contact->reveal(), ['tags' => [10]]);
     }
 }

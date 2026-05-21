@@ -570,8 +570,6 @@ class Media extends ApiWrapper
     /**
      * @return string[]
      */
-    #[VirtualProperty]
-    #[SerializedName('tags')]
     public function getTags()
     {
         $tags = [];
@@ -581,6 +579,20 @@ class Media extends ApiWrapper
         }
 
         return $tags;
+    }
+
+    /**
+     * @return array<int>
+     */
+    #[VirtualProperty]
+    #[SerializedName('tags')]
+    public function getTagIds(): array
+    {
+        return $this->getFileVersion()
+            ->getTags()
+            ->map(static fn (TagInterface $tag) => $tag->getId())
+            ->getValues()
+        ;
     }
 
     /**
