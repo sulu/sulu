@@ -155,10 +155,20 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         /** @var ArticleSmartContentCountFilters $filters */
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
+        $templateKeys = $this->resolveTemplateKeys(
+            $filters['templateKeys'] ?? [],
+            $filters['types'],
+            $params,
+        );
+        if (null === $templateKeys) {
+            return 0;
+        }
+        $filters['templateKeys'] = $templateKeys;
+        $filters = $this->mapFilters($filters);
+
         $alias = 'article';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
 
-        $filters = $this->mapFilters($filters, $params);
         $this->dimensionContentQueryEnhancer->addFilters(
             $queryBuilder,
             $alias,
@@ -190,12 +200,22 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         /** @var ArticleSmartContentFilters $filters */
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
+        $templateKeys = $this->resolveTemplateKeys(
+            $filters['templateKeys'] ?? [],
+            $filters['types'],
+            $params,
+        );
+        if (null === $templateKeys) {
+            return [];
+        }
+        $filters['templateKeys'] = $templateKeys;
+        $filters = $this->mapFilters($filters);
+
         $sortBys = $this->mapSortBys($sortBys);
 
         $alias = 'article';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
 
-        $filters = $this->mapFilters($filters, $params);
         $this->dimensionContentQueryEnhancer->addFilters(
             $queryBuilder,
             $alias,
@@ -235,7 +255,6 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
 
     /**
      * @param ArticleSmartContentFilters|ArticleSmartContentCountFilters $filters
-     * @param array<string, mixed> $params
      *
      * @return array{
      *         categoryIds?: int[],
@@ -246,7 +265,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      *         tagOperator: 'AND'|'OR',
      *         websiteTags: string[],
      *         websiteTagOperator: 'AND'|'OR',
-     *         templateKeys?: string[],
+     *         templateKeys: string[],
      *         typesOperator: 'OR',
      *         locale: string,
      *         dataSource: string|null,
@@ -258,13 +277,8 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      *         webspaceKey?: string
      *     }
      */
-    protected function mapFilters(array $filters, array $params = []): array
+    protected function mapFilters(array $filters): array
     {
-        $filters['templateKeys'] = $this->resolveTemplateKeys(
-            $filters['templateKeys'] ?? [],
-            $filters['types'],
-            $params,
-        );
         unset($filters['types']);
 
         if ($filters['categories']) {
@@ -285,16 +299,19 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      * @param array<string> $filterGroupIdentifiers
      * @param array<string, mixed> $params
      *
-     * @return list<string>
+     * @return list<string>|null null = no overlap with the requested filters
      */
-    private function resolveTemplateKeys(array $existingTemplateKeys, array $filterGroupIdentifiers, array $params): array
+    private function resolveTemplateKeys(array $existingTemplateKeys, array $filterGroupIdentifiers, array $params): ?array
     {
-        $groupIdentifiers = $filterGroupIdentifiers;
-        if ([] === $groupIdentifiers) {
-            $groupsParam = $params['groups'] ?? null;
-            if (\is_string($groupsParam)) {
-                $groupIdentifiers = \array_values(\array_filter(\array_map('trim', \explode(',', $groupsParam))));
+        $xmlGroupIdentifiers = $this->parseListParameter($params['groups'] ?? null);
+
+        if ([] !== $xmlGroupIdentifiers && [] !== $filterGroupIdentifiers) {
+            $groupIdentifiers = \array_values(\array_intersect($filterGroupIdentifiers, $xmlGroupIdentifiers));
+            if ([] === $groupIdentifiers) {
+                return null;
             }
+        } else {
+            $groupIdentifiers = $filterGroupIdentifiers ?: $xmlGroupIdentifiers;
         }
 
         $templateKeys = \array_values($existingTemplateKeys);
@@ -303,19 +320,34 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
             $templateKeys = [] !== $templateKeys
                 ? \array_values(\array_intersect($templateKeys, $templatesFromGroups))
                 : $templatesFromGroups;
+            if ([] === $templateKeys) {
+                return null;
+            }
         }
 
-        $templateParam = $params['templateKeys'] ?? null;
-        if (\is_string($templateParam)) {
-            $templateKeysParam = \array_values(\array_filter(\array_map('trim', \explode(',', $templateParam))));
-            if ([] !== $templateKeysParam) {
-                $templateKeys = [] !== $templateKeys
-                    ? \array_values(\array_intersect($templateKeys, $templateKeysParam))
-                    : $templateKeysParam;
+        $xmlTemplateKeys = $this->parseListParameter($params['templateKeys'] ?? null);
+        if ([] !== $xmlTemplateKeys) {
+            $templateKeys = [] !== $templateKeys
+                ? \array_values(\array_intersect($templateKeys, $xmlTemplateKeys))
+                : $xmlTemplateKeys;
+            if ([] === $templateKeys) {
+                return null;
             }
         }
 
         return $templateKeys;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function parseListParameter(mixed $value): array
+    {
+        if (!\is_string($value)) {
+            return [];
+        }
+
+        return \array_values(\array_filter(\array_map('trim', \explode(',', $value))));
     }
 
     /**
