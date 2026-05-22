@@ -129,10 +129,14 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         /** @var SnippetSmartContentCountFilters $filters */
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
+        $filters = $this->mapFilters($filters, $params);
+        if (null === $filters['templateKeys']) { // means admin or website requested templates and they do not match together so we can early return with zero results
+            return 0;
+        }
+
         $alias = 'snippet';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
 
-        $filters = $this->mapFilters($filters, $params);
         $this->dimensionContentQueryEnhancer->addFilters(
             $queryBuilder,
             $alias,
@@ -159,14 +163,19 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
      */
     public function findFlatBy(array $filters, array $sortBys, array $params = []): array
     {
+        /** @var SnippetSmartContentFilters $filters */
+        $filters = $this->enhanceWithDimensionAttributes($filters);
+
+        $filters = $this->mapFilters($filters, $params);
+        if (null === $filters['templateKeys']) { // means admin or website requested templates and they do not match together so we can early return with no results
+            return [];
+        }
+
         $sortBys = $this->mapSortBys($sortBys);
 
         $alias = 'snippet';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
 
-        /** @var SnippetSmartContentFilters $filters */
-        $filters = $this->enhanceWithDimensionAttributes($filters);
-        $filters = $this->mapFilters($filters, $params);
         $this->dimensionContentQueryEnhancer->addFilters(
             $queryBuilder,
             $alias,
@@ -223,11 +232,11 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
      *         categoryOperator: 'AND'|'OR',
      *         websiteCategories: string[],
      *         websiteCategoryOperator: 'AND'|'OR',
-     *         tagNames?: string[],
+     *         tagIds?: int[],
      *         tagOperator: 'AND'|'OR',
      *         websiteTags: string[],
      *         websiteTagOperator: 'AND'|'OR',
-     *         templateKeys?: string[],
+     *         templateKeys: string[]|null,
      *         typesOperator: 'OR',
      *         locale: string,
      *         dataSource: string|null,
@@ -265,23 +274,35 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
      * @param array<string> $filterTemplateKeys
      * @param array<string, mixed> $params
      *
-     * @return list<string>
+     * @return list<string>|null null = no overlap with the requested filters
      */
-    private function resolveTemplateKeys(array $existingTemplateKeys, array $filterTemplateKeys, array $params): array
+    private function resolveTemplateKeys(array $existingTemplateKeys, array $filterTemplateKeys, array $params): ?array
     {
         $templateKeys = \array_values(\array_unique(\array_merge($existingTemplateKeys, $filterTemplateKeys)));
 
-        $templateParam = $params['templateKeys'] ?? null;
-        if (\is_string($templateParam)) {
-            $templateKeysParam = \array_values(\array_filter(\array_map('trim', \explode(',', $templateParam))));
-            if ([] !== $templateKeysParam) {
-                $templateKeys = [] !== $templateKeys
-                    ? \array_values(\array_intersect($templateKeys, $templateKeysParam))
-                    : $templateKeysParam;
+        $xmlTemplateKeys = $this->parseListParameter($params['templateKeys'] ?? null);
+        if ([] !== $xmlTemplateKeys) {
+            $templateKeys = [] !== $templateKeys
+                ? \array_values(\array_intersect($templateKeys, $xmlTemplateKeys))
+                : $xmlTemplateKeys;
+            if ([] === $templateKeys) {
+                return null;
             }
         }
 
         return $templateKeys;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function parseListParameter(mixed $value): array
+    {
+        if (!\is_string($value)) {
+            return [];
+        }
+
+        return \array_values(\array_filter(\array_map('trim', \explode(',', $value))));
     }
 
     /**

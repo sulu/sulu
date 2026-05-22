@@ -155,10 +155,14 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         /** @var ArticleSmartContentCountFilters $filters */
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
+        $filters = $this->mapFilters($filters, $params);
+        if (null === $filters['templateKeys']) { // means admin or website requested templates and defined groups or templates do not match together so we can early return with zero results
+            return 0;
+        }
+
         $alias = 'article';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
 
-        $filters = $this->mapFilters($filters, $params);
         $this->dimensionContentQueryEnhancer->addFilters(
             $queryBuilder,
             $alias,
@@ -190,12 +194,16 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         /** @var ArticleSmartContentFilters $filters */
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
+        $filters = $this->mapFilters($filters, $params);
+        if (null === $filters['templateKeys']) { // means admin or website requested templates and defined groups or templates do not match together so we can early return with no results
+            return [];
+        }
+
         $sortBys = $this->mapSortBys($sortBys);
 
         $alias = 'article';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
 
-        $filters = $this->mapFilters($filters, $params);
         $this->dimensionContentQueryEnhancer->addFilters(
             $queryBuilder,
             $alias,
@@ -242,11 +250,11 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      *         categoryOperator: 'AND'|'OR',
      *         websiteCategories: string[],
      *         websiteCategoryOperator: 'AND'|'OR',
-     *         tagNames?: string[],
+     *         tagIds?: int[],
      *         tagOperator: 'AND'|'OR',
      *         websiteTags: string[],
      *         websiteTagOperator: 'AND'|'OR',
-     *         templateKeys?: string[],
+     *         templateKeys: string[]|null,
      *         typesOperator: 'OR',
      *         locale: string,
      *         dataSource: string|null,
@@ -285,16 +293,19 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      * @param array<string> $filterGroupIdentifiers
      * @param array<string, mixed> $params
      *
-     * @return list<string>
+     * @return list<string>|null null = no overlap with the requested filters
      */
-    private function resolveTemplateKeys(array $existingTemplateKeys, array $filterGroupIdentifiers, array $params): array
+    private function resolveTemplateKeys(array $existingTemplateKeys, array $filterGroupIdentifiers, array $params): ?array
     {
-        $groupIdentifiers = $filterGroupIdentifiers;
-        if ([] === $groupIdentifiers) {
-            $groupsParam = $params['groups'] ?? null;
-            if (\is_string($groupsParam)) {
-                $groupIdentifiers = \array_values(\array_filter(\array_map('trim', \explode(',', $groupsParam))));
+        $xmlGroupIdentifiers = $this->parseListParameter($params['groups'] ?? null);
+
+        if ([] !== $xmlGroupIdentifiers && [] !== $filterGroupIdentifiers) {
+            $groupIdentifiers = \array_values(\array_intersect($filterGroupIdentifiers, $xmlGroupIdentifiers));
+            if ([] === $groupIdentifiers) {
+                return null;
             }
+        } else {
+            $groupIdentifiers = $filterGroupIdentifiers ?: $xmlGroupIdentifiers;
         }
 
         $templateKeys = \array_values($existingTemplateKeys);
@@ -303,19 +314,34 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
             $templateKeys = [] !== $templateKeys
                 ? \array_values(\array_intersect($templateKeys, $templatesFromGroups))
                 : $templatesFromGroups;
+            if ([] === $templateKeys) {
+                return null;
+            }
         }
 
-        $templateParam = $params['templateKeys'] ?? null;
-        if (\is_string($templateParam)) {
-            $templateKeysParam = \array_values(\array_filter(\array_map('trim', \explode(',', $templateParam))));
-            if ([] !== $templateKeysParam) {
-                $templateKeys = [] !== $templateKeys
-                    ? \array_values(\array_intersect($templateKeys, $templateKeysParam))
-                    : $templateKeysParam;
+        $xmlTemplateKeys = $this->parseListParameter($params['templateKeys'] ?? null);
+        if ([] !== $xmlTemplateKeys) {
+            $templateKeys = [] !== $templateKeys
+                ? \array_values(\array_intersect($templateKeys, $xmlTemplateKeys))
+                : $xmlTemplateKeys;
+            if ([] === $templateKeys) {
+                return null;
             }
         }
 
         return $templateKeys;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function parseListParameter(mixed $value): array
+    {
+        if (!\is_string($value)) {
+            return [];
+        }
+
+        return \array_values(\array_filter(\array_map('trim', \explode(',', $value))));
     }
 
     /**

@@ -27,7 +27,7 @@
     "sulu_activity.description.articles.workflow_transition.unpublish": "{userFullName} hat den Artikel \"{resourceTitle}\" nicht mehr veröffentlicht",
     "sulu_activity.description.articles.workflow_transition.remove_draft": "{userFullName} hat den Entwurf des Artikels \"{resourceTitle}\" verworfen",
     "sulu_activity.description.articles.copied": "{userFullName} hat den Artikel \"{resourceTitle}\" kopiert",
-    "sulu_activity.description.pages.restored": "{userFullName} hat den Artikel \"{resourceTitle}\" wiederhergestellt",
+    "sulu_activity.description.articles.restored": "{userFullName} hat den Artikel \"{resourceTitle}\" wiederhergestellt",
     "sulu_activity.description.articles.translation_added": "{userFullName} hat eine neue Sprachvariante für \"{resourceLocale}\" zum Artikel \"{resourceTitle}\" hinzugefügt",
     "sulu_activity.description.articles.translation_copied": "{userFullName} hat die Sprachvariante für \"{context_sourceLocale}\" des Artikels \"{resourceTitle}\" nach \"{resourceLocale}\" kopiert",
     "sulu_activity.description.articles.translation_removed": "{userFullName} hat die Sprachvariante für \"{resourceLocale}\" des Artikels \"{resourceTitle}\" gelöscht",

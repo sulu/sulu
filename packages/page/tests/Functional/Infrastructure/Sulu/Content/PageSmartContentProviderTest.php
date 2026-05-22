@@ -1157,6 +1157,57 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertNotContains(self::$pages['entertainment_business']->getUuid(), $resultIds, "Page 'entertainment_business' should not be in the homepage template result");
     }
 
+    public function testFindFlatByXmlTemplateKeysIntersectsWithUiTypes(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy(
+            [
+                ...$this->getDefaultFilters(),
+                ...['locale' => 'en', 'types' => ['blog']],
+            ],
+            [],
+            ['templateKeys' => 'blog,landing_page'],
+        );
+
+        $this->assertCount(1, $result);
+        $this->assertSame(
+            1,
+            $this->smartContentProvider->countBy(
+                [
+                    ...$this->getDefaultFilters(),
+                    ...['locale' => 'en', 'types' => ['blog']],
+                ],
+                ['templateKeys' => 'blog,landing_page'],
+            ),
+        );
+
+        $resultIds = \array_map(fn ($page) => $page['id'], $result);
+        $this->assertContains(self::$pages['entertainment1']->getUuid(), $resultIds);
+    }
+
+    public function testFindFlatByUiTypeOutsideXmlTemplateKeysReturnsZero(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy(
+            [
+                ...$this->getDefaultFilters(),
+                ...['locale' => 'en', 'types' => ['default']],
+            ],
+            [],
+            ['templateKeys' => 'blog,landing_page'],
+        );
+
+        $this->assertCount(0, $result);
+        $this->assertSame(
+            0,
+            $this->smartContentProvider->countBy(
+                [
+                    ...$this->getDefaultFilters(),
+                    ...['locale' => 'en', 'types' => ['default']],
+                ],
+                ['templateKeys' => 'blog,landing_page'],
+            ),
+        );
+    }
+
     public function testFindFlatByDataSourceFilter(): void
     {
         // Test filtering by sulu-io parent page (dataSource)
