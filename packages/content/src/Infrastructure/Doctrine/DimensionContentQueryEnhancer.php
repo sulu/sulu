@@ -18,7 +18,6 @@ use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\ExcerptInterface;
 use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\TaxonomyInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
@@ -147,7 +146,7 @@ class DimensionContentQueryEnhancer
                 ->setParameter('version', $version);
         }
 
-        if (\is_subclass_of($dimensionContentClassName, ExcerptInterface::class)) {
+        if (\is_subclass_of($dimensionContentClassName, TaxonomyInterface::class)) {
             $categoryIds = $filters['categoryIds'] ?? null;
             if ($categoryIds) {
                 Assert::isArray($categoryIds); // @phpstan-ignore staticMethod.alreadyNarrowedType
@@ -403,7 +402,7 @@ class DimensionContentQueryEnhancer
             return true;
         }
 
-        if (\is_subclass_of($dimensionContentClassName, ExcerptInterface::class)) {
+        if (\is_subclass_of($dimensionContentClassName, TaxonomyInterface::class)) {
             if (!empty($filters['categoryIds'] ?? null)
                 || !empty($filters['categoryKeys'] ?? null)
                 || !empty($filters['tagIds'] ?? null)
