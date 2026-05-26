@@ -62,7 +62,7 @@ class ArticleAdmin extends Admin
         $hasArticleTypeWithEditPermissions = false;
         $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
         foreach ($groups as $group) {
-            $securityContext = static::getArticleSecurityContext($group->identifier);
+            $securityContext = 1 === \count($groups) ? static::SECURITY_CONTEXT : static::getArticleSecurityContext($group->identifier);
             if (!$this->securityChecker->hasPermission($securityContext, PermissionTypes::EDIT)) {
                 continue;
             }
