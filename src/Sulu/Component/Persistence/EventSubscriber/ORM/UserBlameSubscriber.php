@@ -16,6 +16,7 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
 use Sulu\Component\Persistence\Model\UserBlameInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -32,8 +33,10 @@ class UserBlameSubscriber
 
     public const CREATOR_FIELD = 'creator';
 
-    public function __construct(private ?TokenStorageInterface $tokenStorage = null)
-    {
+    public function __construct(
+        private ?TokenStorageInterface $tokenStorage = null,
+        private ?RequestStack $requestStack = null
+    ) {
     }
 
     /**
@@ -81,6 +84,11 @@ class UserBlameSubscriber
     public function onFlush(OnFlushEventArgs $event)
     {
         if (null === $this->tokenStorage) {
+            return;
+        }
+
+        $request = $this->requestStack?->getCurrentRequest();
+        if (null !== $request && !$request->hasPreviousSession()) {
             return;
         }
 
