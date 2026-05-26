@@ -79,8 +79,9 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
                 }
             }
 
-            $securityContext = ArticleAdmin::getArticleSecurityContext($groupIdentifier ?? GroupProviderInterface::DEFAULT_GROUP);
-            if (1 === \count($groups) || null === $groupIdentifier || GroupProviderInterface::DEFAULT_GROUP === $groupIdentifier) {
+            $groupIdentifier ??= GroupProviderInterface::DEFAULT_GROUP;
+            $securityContext = ArticleAdmin::getArticleSecurityContext($groupIdentifier);
+            if (1 === \count($groups) || GroupProviderInterface::DEFAULT_GROUP === $groupIdentifier) {
                 $securityContext = ArticleAdmin::SECURITY_CONTEXT;
             }
 
@@ -93,7 +94,7 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
                 'title' => $article['title'],
                 'locale' => $article['locale'],
                 'metadata' => [
-                    'group' => $groupIdentifier ?? GroupProviderInterface::DEFAULT_GROUP,
+                    'group' => $groupIdentifier,
                 ],
                 'securityContext' => $securityContext,
             ];

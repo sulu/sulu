@@ -59,16 +59,14 @@ class ArticleAdmin extends Admin
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
-        $hasArticleTypeWithEditPermissions = false;
         $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
+        $hasArticleTypeWithEditPermissions = false;
         foreach ($groups as $group) {
             $securityContext = $this->resolveSecurityContext($groups, $group);
-            if (!$this->securityChecker->hasPermission($securityContext, PermissionTypes::EDIT)) {
-                continue;
+            if ($this->securityChecker->hasPermission($securityContext, PermissionTypes::EDIT)) {
+                $hasArticleTypeWithEditPermissions = true;
+                break;
             }
-
-            $hasArticleTypeWithEditPermissions = true;
-            break;
         }
 
         if (!$hasArticleTypeWithEditPermissions) {
