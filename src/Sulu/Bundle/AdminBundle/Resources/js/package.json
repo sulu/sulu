@@ -16,6 +16,7 @@
         "@ckeditor/ckeditor5-paragraph": "^48.1.0",
         "@ckeditor/ckeditor5-table": "^48.1.0",
         "@ckeditor/ckeditor5-ui": "^48.1.0",
+        "@ckeditor/ckeditor5-widget": "^48.1.0",
         "@fortawesome/fontawesome-free": "^5.15.4",
         "ajv": "^8.2.0",
         "ajv-formats": "^2.1.0",
