@@ -26,6 +26,7 @@ import '@ckeditor/ckeditor5-heading/dist/index.css';
 import '@ckeditor/ckeditor5-list/dist/index.css';
 import '@ckeditor/ckeditor5-paragraph/dist/index.css';
 import '@ckeditor/ckeditor5-table/dist/index.css';
+import '@ckeditor/ckeditor5-widget/dist/index.css';
 import './ckeditor5.scss';
 import type {SchemaOptions} from '../Form/types';
 
