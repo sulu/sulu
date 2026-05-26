@@ -62,7 +62,7 @@ class ArticleAdmin extends Admin
         $hasArticleTypeWithEditPermissions = false;
         $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
         foreach ($groups as $group) {
-            $securityContext = 1 === \count($groups) ? static::SECURITY_CONTEXT : static::getArticleSecurityContext($group->identifier);
+            $securityContext = $this->resolveSecurityContext($groups, $group);
             if (!$this->securityChecker->hasPermission($securityContext, PermissionTypes::EDIT)) {
                 continue;
             }
@@ -95,9 +95,19 @@ class ArticleAdmin extends Admin
 
         $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
         foreach ($groups as $group) {
-            $securityContext = 1 === \count($groups) ? static::SECURITY_CONTEXT : static::getArticleSecurityContext($group->identifier);
+            $securityContext = $this->resolveSecurityContext($groups, $group);
             $this->configureGroupViews($group, $locales, $resourceKey, $viewCollection, $securityContext);
         }
+    }
+
+    /**
+     * @param array<string, FormGroup> $groups
+     */
+    private function resolveSecurityContext(array $groups, FormGroup $group): string
+    {
+        return 1 === \count($groups)
+            ? static::SECURITY_CONTEXT
+            : static::getArticleSecurityContext($group->identifier);
     }
 
     /**

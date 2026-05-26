@@ -195,6 +195,17 @@ class ArticleAdminTest extends TestCase
         $this->securityChecker->hasPermission(Argument::not(ArticleAdmin::SECURITY_CONTEXT), Argument::any())
             ->willReturn(false);
 
+        $this->contentViewBuilderFactory
+            ->createViews(
+                ArticleInterface::class,
+                ArticleAdmin::EDIT_TABS_VIEW . '_default',
+                ArticleAdmin::ADD_TABS_VIEW . '_default',
+                ArticleAdmin::SECURITY_CONTEXT,
+                Argument::cetera()
+            )
+            ->shouldBeCalled()
+            ->willReturn([]);
+
         $viewCollection = new ViewCollection();
         $this->articleAdmin->configureViews($viewCollection);
 
@@ -255,6 +266,17 @@ class ArticleAdminTest extends TestCase
         $this->securityChecker->hasPermission($blogContext, PermissionTypes::EDIT)->willReturn(true);
         $this->securityChecker->hasPermission($newsContext, PermissionTypes::EDIT)->willReturn(false);
         $this->securityChecker->hasPermission(Argument::cetera())->willReturn(false);
+
+        $this->contentViewBuilderFactory
+            ->createViews(
+                ArticleInterface::class,
+                ArticleAdmin::EDIT_TABS_VIEW . '_blog-group',
+                ArticleAdmin::ADD_TABS_VIEW . '_blog-group',
+                $blogContext,
+                Argument::cetera()
+            )
+            ->shouldBeCalled()
+            ->willReturn([]);
 
         $viewCollection = new ViewCollection();
         $this->articleAdmin->configureViews($viewCollection);
