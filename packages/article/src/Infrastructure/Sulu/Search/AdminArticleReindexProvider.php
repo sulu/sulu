@@ -93,7 +93,7 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
                 'title' => $article['title'],
                 'locale' => $article['locale'],
                 'metadata' => [
-                    'group' => $groupIdentifier,
+                    'group' => $groupIdentifier ?? GroupProviderInterface::DEFAULT_GROUP,
                 ],
                 'securityContext' => $securityContext,
             ];
