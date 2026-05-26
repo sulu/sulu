@@ -95,18 +95,9 @@ class ArticleAdmin extends Admin
 
         $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
         foreach ($groups as $group) {
-            $securityContext = static::getArticleSecurityContext($group->identifier);
-            if (1 === \count($groups)) {
-                $securityContext = static::SECURITY_CONTEXT;
-            }
-
+            $securityContext = 1 === \count($groups) ? static::SECURITY_CONTEXT : static::getArticleSecurityContext($group->identifier);
             $this->configureGroupViews($group, $locales, $resourceKey, $viewCollection, $securityContext);
         }
-    }
-
-    private function hasPermission(string $groupIdentifier, string $permission, bool $checkGroup): bool
-    {
-        return $this->securityChecker->hasPermission(static::getArticleSecurityContext($groupIdentifier), $permission);
     }
 
     /**
@@ -122,15 +113,15 @@ class ArticleAdmin extends Admin
 
         $listToolbarActions = [];
 
-        if ($this->securityChecker->hasPermission(static::getArticleSecurityContext($groupIdentifier), PermissionTypes::ADD)) {
+        if ($this->securityChecker->hasPermission($securityContext, PermissionTypes::ADD)) {
             $listToolbarActions[] = new ToolbarAction('sulu_admin.add');
         }
 
-        if ($this->securityChecker->hasPermission(static::getArticleSecurityContext($groupIdentifier), PermissionTypes::DELETE)) {
+        if ($this->securityChecker->hasPermission($securityContext, PermissionTypes::DELETE)) {
             $listToolbarActions[] = new ToolbarAction('sulu_admin.delete');
         }
 
-        if ($this->securityChecker->hasPermission(static::getArticleSecurityContext($groupIdentifier), PermissionTypes::VIEW)) {
+        if ($this->securityChecker->hasPermission($securityContext, PermissionTypes::VIEW)) {
             $listToolbarActions[] = new ToolbarAction('sulu_admin.export');
         }
 
