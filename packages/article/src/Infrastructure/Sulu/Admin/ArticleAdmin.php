@@ -105,9 +105,11 @@ class ArticleAdmin extends Admin
      */
     private function resolveSecurityContext(array $groups, FormGroup $group): string
     {
-        return 1 === \count($groups)
-            ? static::SECURITY_CONTEXT
-            : static::getArticleSecurityContext($group->identifier);
+        if (1 === \count($groups) || GroupProviderInterface::DEFAULT_GROUP === $group->identifier) {
+            return static::SECURITY_CONTEXT;
+        }
+
+        return static::getArticleSecurityContext($group->identifier);
     }
 
     /**
@@ -252,6 +254,10 @@ class ArticleAdmin extends Admin
         $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
         if (1 !== \count($groups)) {
             foreach ($groups as $group) {
+                if (GroupProviderInterface::DEFAULT_GROUP === $group->identifier) {
+                    continue;
+                }
+
                 $securityContext[static::getArticleSecurityContext($group->identifier)] = [
                     PermissionTypes::VIEW,
                     PermissionTypes::ADD,

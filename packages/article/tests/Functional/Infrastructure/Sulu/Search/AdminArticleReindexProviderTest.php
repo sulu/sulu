@@ -129,7 +129,7 @@ class AdminArticleReindexProviderTest extends SuluTestCase
                 'metadata' => [
                     'group' => 'default',
                 ],
-                'securityContext' => ArticleAdmin::getArticleSecurityContext('default'),
+                'securityContext' => ArticleAdmin::SECURITY_CONTEXT,
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__en',
@@ -142,7 +142,7 @@ class AdminArticleReindexProviderTest extends SuluTestCase
                 'metadata' => [
                     'group' => 'default',
                 ],
-                'securityContext' => ArticleAdmin::getArticleSecurityContext('default'),
+                'securityContext' => ArticleAdmin::SECURITY_CONTEXT,
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__de',
@@ -155,7 +155,7 @@ class AdminArticleReindexProviderTest extends SuluTestCase
                 'metadata' => [
                     'group' => 'default',
                 ],
-                'securityContext' => ArticleAdmin::getArticleSecurityContext('default'),
+                'securityContext' => ArticleAdmin::SECURITY_CONTEXT,
             ],
         ];
 

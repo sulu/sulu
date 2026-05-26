@@ -20,14 +20,19 @@ Without these params, the new `raw` resource loader is used, which keeps the ids
 
 ### Article admin permission gating updated for multi-group setups
 
-When multiple article template groups exist, the `ArticleAdmin` now gates each group's navigation entry, list view, and
-toolbar actions (Add, Delete, Export) on the per-group `sulu.article.articles_<group>` EDIT permission instead of the
+When multiple article template groups exist, the `ArticleAdmin` now gates each custom group's navigation entry, list view,
+and toolbar actions (Add, Delete, Export) on the per-group `sulu.article.articles_<group>` EDIT permission instead of the
 umbrella `sulu.article.articles` EDIT permission (see #8830).
 
-Single-group setups continue to use the umbrella `sulu.article.articles` permission as the sole gate, because per-group
-contexts are not registered when only one group exists.
+The umbrella `sulu.article.articles` permission still gates the admin UI in two cases:
 
-The umbrella `sulu.article.articles` permission is still required in all setups: `ArticleController` reports it as its
+- Single-group setups, because per-group contexts are not registered when only one group exists.
+- The implicit `default` group, which is the catch-all bucket for articles that do not belong to any custom group. Its
+  per-group context (`sulu.article.articles_default`) is intentionally never registered, so the default group remains
+  reachable through the umbrella permission. This means adding a custom group does not strip existing roles of their
+  default-group access; only the new custom group requires an additional grant.
+
+The umbrella `sulu.article.articles` permission is also still required in all setups: `ArticleController` reports it as its
 security context, so every article REST endpoint (list, get, create, update, delete, workflow) continues to check it.
 
 After upgrading, re-run the reindex command for both kernels so the admin search index reflects the current security contexts:
@@ -40,9 +45,10 @@ bin/console cmsig:seal:reindex
 
 After upgrading, review every role with article permissions and adjust the grants accordingly:
 
-- `sulu.article.articles`: always required, because the article REST controllers depend on it. In single-group setups this
-  is also the only permission gating the admin UI.
-- `sulu.article.articles_<group>`: required for each group the role should manage, in multi-group setups only.
+- `sulu.article.articles`: always required, because the article REST controllers depend on it. Also gates the admin UI in
+  single-group setups and for the `default` group in multi-group setups.
+- `sulu.article.articles_<group>`: required for each custom group the role should manage; never registered for the
+  `default` group.
 
 ### Selection view structure changed (snippet, page, article)
 

@@ -352,6 +352,87 @@ class ArticleAdminTest extends TestCase
         );
     }
 
+    public function testGetSecurityContextsWithDefaultAndCustomGroupSkipsDefaultContext(): void
+    {
+        // The "default" group is the catch-all bucket; it must stay reachable through the
+        // umbrella context so that adding a custom group does not strip existing roles of
+        // their default-group access.
+        $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE)->willReturn([
+            GroupProviderInterface::DEFAULT_GROUP => new FormGroup(GroupProviderInterface::DEFAULT_GROUP, 'Default'),
+            'custom' => new FormGroup('custom', 'Custom'),
+        ]);
+
+        $securityContexts = $this->articleAdmin->getSecurityContexts();
+
+        $this->assertArrayHasKey(ArticleAdmin::SECURITY_CONTEXT, $securityContexts['Sulu']['Article']);
+        $this->assertArrayHasKey(
+            ArticleAdmin::getArticleSecurityContext('custom'),
+            $securityContexts['Sulu']['Article']
+        );
+        $this->assertArrayNotHasKey(
+            ArticleAdmin::getArticleSecurityContext(GroupProviderInterface::DEFAULT_GROUP),
+            $securityContexts['Sulu']['Article']
+        );
+    }
+
+    public function testConfigureViewsWithDefaultAndCustomGroupGatesDefaultViaUmbrella(): void
+    {
+        $this->localizationManager->getLocales()->willReturn(['en']);
+        $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE)->willReturn([
+            GroupProviderInterface::DEFAULT_GROUP => (new FormGroup(GroupProviderInterface::DEFAULT_GROUP, 'Default'))->withTemplate('article'),
+            'custom' => (new FormGroup('custom', 'Custom'))->withTemplate('custom'),
+        ]);
+
+        $customContext = ArticleAdmin::getArticleSecurityContext('custom');
+
+        $this->securityChecker->hasPermission(ArticleAdmin::SECURITY_CONTEXT, Argument::any())->willReturn(true);
+        $this->securityChecker->hasPermission($customContext, Argument::any())->willReturn(false);
+        $this->securityChecker->hasPermission(
+            ArticleAdmin::getArticleSecurityContext(GroupProviderInterface::DEFAULT_GROUP),
+            Argument::any()
+        )->willReturn(false);
+
+        $this->contentViewBuilderFactory
+            ->createViews(
+                ArticleInterface::class,
+                ArticleAdmin::EDIT_TABS_VIEW . '_' . GroupProviderInterface::DEFAULT_GROUP,
+                ArticleAdmin::ADD_TABS_VIEW . '_' . GroupProviderInterface::DEFAULT_GROUP,
+                ArticleAdmin::SECURITY_CONTEXT,
+                Argument::cetera()
+            )
+            ->shouldBeCalled()
+            ->willReturn([]);
+
+        $viewCollection = new ViewCollection();
+        $this->articleAdmin->configureViews($viewCollection);
+
+        $this->assertTrue($viewCollection->has(ArticleAdmin::LIST_VIEW . '_' . GroupProviderInterface::DEFAULT_GROUP));
+        $this->assertFalse($viewCollection->has(ArticleAdmin::LIST_VIEW . '_custom'));
+        $this->assertToolbarActions(
+            ['sulu_admin.add', 'sulu_admin.delete', 'sulu_admin.export'],
+            $viewCollection,
+            ArticleAdmin::LIST_VIEW . '_' . GroupProviderInterface::DEFAULT_GROUP,
+        );
+    }
+
+    public function testConfigureNavigationItemsWithDefaultAndCustomGroupVisibleViaUmbrella(): void
+    {
+        $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE)->willReturn([
+            GroupProviderInterface::DEFAULT_GROUP => new FormGroup(GroupProviderInterface::DEFAULT_GROUP, 'Default'),
+            'custom' => new FormGroup('custom', 'Custom'),
+        ]);
+
+        $this->securityChecker->hasPermission(ArticleAdmin::SECURITY_CONTEXT, PermissionTypes::EDIT)
+            ->willReturn(true);
+        $this->securityChecker->hasPermission(Argument::not(ArticleAdmin::SECURITY_CONTEXT), Argument::any())
+            ->willReturn(false);
+
+        $navigationItemCollection = new NavigationItemCollection();
+        $this->articleAdmin->configureNavigationItems($navigationItemCollection);
+
+        $this->assertTrue($navigationItemCollection->has('sulu_article.articles'));
+    }
+
     public function testGetArticleSecurityContext(): void
     {
         $this->assertSame(
