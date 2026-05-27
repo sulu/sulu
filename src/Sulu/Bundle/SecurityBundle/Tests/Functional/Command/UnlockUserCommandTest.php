@@ -13,14 +13,14 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\SecurityBundle\Command\LockUserCommand;
+use Sulu\Bundle\SecurityBundle\Command\UnlockUserCommand;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class LockUserCommandTest extends SuluTestCase
+class UnlockUserCommandTest extends SuluTestCase
 {
     /**
      * @var CommandTester
@@ -38,7 +38,7 @@ class LockUserCommandTest extends SuluTestCase
         $this->em = $this->getEntityManager();
 
         $application = new Application($this->getContainer()->get('kernel'));
-        $command = new LockUserCommand(
+        $command = new UnlockUserCommand(
             $this->getContainer()->get('sulu.repository.user'),
             $this->getContainer()->get('sulu_security.user_manager')
         );
@@ -46,40 +46,40 @@ class LockUserCommandTest extends SuluTestCase
         $this->tester = new CommandTester($command);
     }
 
-    public function testLockUser(): void
-    {
-        $this->createUser('john');
-
-        $this->tester->execute(['identifier' => 'john'], ['interactive' => false]);
-
-        $this->tester->assertCommandIsSuccessful();
-        $this->assertStringContainsString('User "john" has been locked.', $this->tester->getDisplay());
-        $this->assertTrue($this->findUser('john')->getLocked());
-    }
-
-    public function testLockUserByEmail(): void
-    {
-        $this->createUser('john');
-
-        $this->tester->execute(['identifier' => 'john@example.com'], ['interactive' => false]);
-
-        $this->tester->assertCommandIsSuccessful();
-        $this->assertStringContainsString('User "john@example.com" has been locked.', $this->tester->getDisplay());
-        $this->assertTrue($this->findUser('john')->getLocked());
-    }
-
-    public function testLockAlreadyLockedUser(): void
+    public function testUnlockUser(): void
     {
         $this->createUser('john', true);
 
         $this->tester->execute(['identifier' => 'john'], ['interactive' => false]);
 
         $this->tester->assertCommandIsSuccessful();
-        $this->assertStringContainsString('User "john" is already locked.', $this->tester->getDisplay());
-        $this->assertTrue($this->findUser('john')->getLocked());
+        $this->assertStringContainsString('User "john" has been unlocked.', $this->tester->getDisplay());
+        $this->assertFalse($this->findUser('john')->getLocked());
     }
 
-    public function testLockNonExistingUser(): void
+    public function testUnlockUserByEmail(): void
+    {
+        $this->createUser('john', true);
+
+        $this->tester->execute(['identifier' => 'john@example.com'], ['interactive' => false]);
+
+        $this->tester->assertCommandIsSuccessful();
+        $this->assertStringContainsString('User "john@example.com" has been unlocked.', $this->tester->getDisplay());
+        $this->assertFalse($this->findUser('john')->getLocked());
+    }
+
+    public function testUnlockAlreadyUnlockedUser(): void
+    {
+        $this->createUser('john');
+
+        $this->tester->execute(['identifier' => 'john'], ['interactive' => false]);
+
+        $this->tester->assertCommandIsSuccessful();
+        $this->assertStringContainsString('User "john" is already unlocked.', $this->tester->getDisplay());
+        $this->assertFalse($this->findUser('john')->getLocked());
+    }
+
+    public function testUnlockNonExistingUser(): void
     {
         $this->tester->execute(['identifier' => 'ghost'], ['interactive' => false]);
 

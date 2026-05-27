@@ -22,8 +22,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(name: 'sulu:security:user:lock', description: 'Lock a user.')]
-class LockUserCommand extends Command
+#[AsCommand(name: 'sulu:security:user:unlock', description: 'Unlock a user.')]
+class UnlockUserCommand extends Command
 {
     public function __construct(
         private UserRepository $userRepository,
@@ -35,7 +35,7 @@ class LockUserCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('identifier', InputArgument::REQUIRED, 'The username or email of the user to lock');
+            ->addArgument('identifier', InputArgument::REQUIRED, 'The username or email of the user to unlock');
     }
 
     protected function interact(InputInterface $input, OutputInterface $output): void
@@ -69,15 +69,15 @@ class LockUserCommand extends Command
             return Command::FAILURE;
         }
 
-        if ($user->getLocked()) {
-            $io->warning(\sprintf('User "%s" is already locked.', $identifier));
+        if (!$user->getLocked()) {
+            $io->warning(\sprintf('User "%s" is already unlocked.', $identifier));
 
             return Command::SUCCESS;
         }
 
-        $this->userManager->lockUser($user->getId());
+        $this->userManager->unlockUser($user->getId());
 
-        $io->success(\sprintf('User "%s" has been locked.', $identifier));
+        $io->success(\sprintf('User "%s" has been unlocked.', $identifier));
 
         return Command::SUCCESS;
     }
