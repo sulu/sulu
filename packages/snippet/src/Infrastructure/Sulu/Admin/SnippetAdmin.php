@@ -130,6 +130,36 @@ class SnippetAdmin extends Admin
                     ),
                 ]
             );
+            $formToolbarActions['edit'] = new DropdownToolbarAction(
+                'sulu_admin.edit',
+                'su-pen',
+                [
+                    new ToolbarAction(
+                        'sulu_admin.copy',
+                        [
+                            'visible_condition' => '(!_permissions || _permissions.edit)',
+                        ]
+                    ),
+                    new ToolbarAction(
+                        'sulu_admin.copy_locale',
+                        [
+                            'visible_condition' => '(!_permissions || _permissions.edit)',
+                        ]
+                    ),
+                    new ToolbarAction(
+                        'sulu_admin.delete_draft',
+                        [
+                            'visible_condition' => '(!_permissions || _permissions.live)',
+                        ]
+                    ),
+                    new ToolbarAction(
+                        'sulu_admin.set_unpublished',
+                        [
+                            'visible_condition' => '(!_permissions || _permissions.live)',
+                        ]
+                    ),
+                ]
+            );
 
             $viewBuilders = $this->contentViewBuilderFactory->createViews(
                 SnippetInterface::class,

@@ -25,6 +25,7 @@ use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
 use Sulu\Snippet\Application\Message\ApplyWorkflowTransitionSnippetMessage;
 use Sulu\Snippet\Application\Message\CopyLocaleSnippetMessage;
+use Sulu\Snippet\Application\Message\CopySnippetMessage;
 use Sulu\Snippet\Application\Message\CreateSnippetMessage;
 use Sulu\Snippet\Application\Message\ModifySnippetMessage;
 use Sulu\Snippet\Application\Message\RemoveSnippetMessage;
@@ -253,9 +254,9 @@ final class SnippetController implements SecuredControllerInterface
 
     public function postTriggerAction(Request $request, string $id): Response
     {
-        $this->handleAction($request, $id);
+        $result = $this->handleAction($request, $id);
 
-        return $this->getAction($request, $id);
+        return $this->getAction($request, $result?->getUuid() ?? $id);
     }
 
     public function deleteAction(Request $request, string $id): Response // TODO route should be a uuid
@@ -313,12 +314,21 @@ final class SnippetController implements SecuredControllerInterface
         if ('copy_locale' === $action) {
             $message = new CopyLocaleSnippetMessage(
                 ['uuid' => $uuid],
-                (string) $request->query->get('src'),
+                (string) ($request->query->get('src') ?: $request->query->get('locale')),
                 (string) $request->query->get('dest')
             );
 
             /** @see \Sulu\Snippet\Application\MessageHandler\CopyLocaleSnippetMessageHandler */
             /** @var null */
+            return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+        } elseif ('copy' === $action) {
+            $message = new CopySnippetMessage(
+                ['uuid' => $uuid],
+                $this->getLocale($request),
+            );
+
+            /** @see \Sulu\Snippet\Application\MessageHandler\CopySnippetMessageHandler */
+            /** @var SnippetInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('restore' === $action) {
             $version = \intval($request->query->get('version'));

@@ -20,6 +20,7 @@ use Sulu\Snippet\Application\Mapper\SnippetContentMapper;
 use Sulu\Snippet\Application\Mapper\SnippetMapperInterface;
 use Sulu\Snippet\Application\MessageHandler\ApplyWorkflowTransitionSnippetMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\CopyLocaleSnippetMessageHandler;
+use Sulu\Snippet\Application\MessageHandler\CopySnippetMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\CreateSnippetMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\ModifySnippetAreaMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\ModifySnippetMessageHandler;
@@ -184,6 +185,16 @@ final class SuluSnippetBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_snippet.snippet_repository'),
                 new Reference('sulu_content.content_copier'),
+                new Reference('sulu_activity.domain_event_collector'),
+            ])
+            ->tag('messenger.message_handler');
+
+        $services->set('sulu_snippet.copy_snippet_handler')
+            ->class(CopySnippetMessageHandler::class)
+            ->args([
+                new Reference('sulu_snippet.snippet_repository'),
+                new Reference('sulu_content.content_copier'),
+                new Reference('sulu.core.localization_manager'),
                 new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
