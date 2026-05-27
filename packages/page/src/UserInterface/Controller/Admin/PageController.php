@@ -411,7 +411,9 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         if ($webspaceKey) {
             $webspaces = [$this->getWebspaceKey($webspaceKey)];
         } else {
-            $webspaces = $this->getWebspaceKeys();
+            /** @var string|null $localeFilter */
+            $localeFilter = $parameters['locale'] ?? null;
+            $webspaces = $this->getWebspaceKeys($localeFilter);
         }
 
         $listBuilder->in($fieldDescriptors['webspaceKey'], $webspaces);
@@ -625,11 +627,15 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
     /**
      * @return string[]
      */
-    private function getWebspaceKeys(): array
+    private function getWebspaceKeys(?string $locale = null): array
     {
         $webspaceKeys = [];
 
         foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
+            if (null !== $locale && null === $webspace->getLocalization($locale)) {
+                continue;
+            }
+
             if ($this->securityChecker->hasPermission(
                 PageAdmin::getPageSecurityContext($webspace->getKey()),
                 PermissionTypes::VIEW,
