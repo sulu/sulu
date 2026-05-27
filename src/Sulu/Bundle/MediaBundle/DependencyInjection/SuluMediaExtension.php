@@ -54,6 +54,17 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
 
     public function prepend(ContainerBuilder $container): void
     {
+        if ($container->hasExtension('doctrine_migrations')) {
+            $container->prependExtensionConfig(
+                'doctrine_migrations',
+                [
+                    'migrations_paths' => [
+                        'Sulu\\Bundle\\MediaBundle\\Migrations' => __DIR__ . '/../Migrations',
+                    ],
+                ],
+            );
+        }
+
         if ($container->hasExtension('sulu_media')) {
             $container->prependExtensionConfig(
                 'sulu_media',

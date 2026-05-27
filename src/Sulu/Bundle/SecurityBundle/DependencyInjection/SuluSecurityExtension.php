@@ -131,6 +131,17 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
 
     public function prepend(ContainerBuilder $container): void
     {
+        if ($container->hasExtension('doctrine_migrations')) {
+            $container->prependExtensionConfig(
+                'doctrine_migrations',
+                [
+                    'migrations_paths' => [
+                        'Sulu\\Bundle\\SecurityBundle\\Migrations' => __DIR__ . '/../Migrations',
+                    ],
+                ],
+            );
+        }
+
         if ($container->hasExtension('scheb_two_factor') && \interface_exists(AuthCodeMailerInterface::class)) {
             $container->prependExtensionConfig(
                 'scheb_two_factor',
