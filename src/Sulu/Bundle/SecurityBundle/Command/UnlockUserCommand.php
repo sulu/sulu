@@ -22,8 +22,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(name: 'sulu:security:user:unlock', description: 'Unlock a user.')]
-class UnlockUserCommand extends Command
+/**
+ * @internal this class should not be instated by a project
+ *           Use instead a command event listener to
+ *           extend or change the commands behaviours
+ */
+#[AsCommand(name: 'sulu:security:user-unlock', description: 'Unlock a user.')]
+final class UnlockUserCommand extends Command
 {
     public function __construct(
         private readonly UserRepository $userRepository,
