@@ -22,6 +22,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
@@ -127,7 +128,7 @@ class ArticleCacheInvalidationSubscriber implements EventSubscriberInterface
             /** @var ArticleDimensionContentInterface $dimensionContent */
             $dimensionContent = $this->contentAggregator->aggregate($article, [
                 'locale' => $locale,
-                'stage' => 'live',
+                'stage' => DimensionContentInterface::STAGE_LIVE,
             ]);
         } catch (ContentNotFoundException) {
             return;
