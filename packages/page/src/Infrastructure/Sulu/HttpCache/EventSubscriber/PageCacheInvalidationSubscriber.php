@@ -16,6 +16,7 @@ namespace Sulu\Page\Infrastructure\Sulu\HttpCache\EventSubscriber;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Page\Domain\Event\PageRemovedEvent;
 use Sulu\Page\Domain\Event\PageWorkflowTransitionAppliedEvent;
@@ -116,7 +117,7 @@ class PageCacheInvalidationSubscriber implements EventSubscriberInterface
             /** @var PageDimensionContentInterface $dimensionContent */
             $dimensionContent = $this->contentAggregator->aggregate($page, [
                 'locale' => $locale,
-                'stage' => 'live',
+                'stage' => DimensionContentInterface::STAGE_LIVE,
             ]);
         } catch (ContentNotFoundException) {
             return;
