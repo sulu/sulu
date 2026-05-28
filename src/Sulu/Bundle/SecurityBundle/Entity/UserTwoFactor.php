@@ -79,7 +79,7 @@ class UserTwoFactor
          *     googleAuthenticatorSecret?: string,
          * }
          */
-        return \json_decode($this->options, true, \JSON_THROW_ON_ERROR);
+        return \json_decode($this->options, true, flags: \JSON_THROW_ON_ERROR);
     }
 
     /**
