@@ -79,8 +79,9 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
                 }
             }
 
-            $securityContext = ArticleAdmin::getArticleSecurityContext($groupIdentifier ?? GroupProviderInterface::DEFAULT_GROUP);
-            if (1 === \count($groups)) {
+            $groupIdentifier ??= GroupProviderInterface::DEFAULT_GROUP;
+            $securityContext = ArticleAdmin::getArticleSecurityContext($groupIdentifier);
+            if (1 === \count($groups) || GroupProviderInterface::DEFAULT_GROUP === $groupIdentifier) {
                 $securityContext = ArticleAdmin::SECURITY_CONTEXT;
             }
 

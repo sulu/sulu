@@ -99,6 +99,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                         options: {
                             cacheDirectory: true,
                             cacheCompression: false,
+                            compact: argv.mode === 'production',
                         },
                     },
                 },

@@ -129,7 +129,7 @@ class AdminArticleReindexProviderTest extends SuluTestCase
                 'metadata' => [
                     'group' => 'default',
                 ],
-                'securityContext' => ArticleAdmin::getArticleSecurityContext('default'),
+                'securityContext' => ArticleAdmin::SECURITY_CONTEXT,
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__en',
@@ -142,7 +142,7 @@ class AdminArticleReindexProviderTest extends SuluTestCase
                 'metadata' => [
                     'group' => 'default',
                 ],
-                'securityContext' => ArticleAdmin::getArticleSecurityContext('default'),
+                'securityContext' => ArticleAdmin::SECURITY_CONTEXT,
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__de',
@@ -155,7 +155,7 @@ class AdminArticleReindexProviderTest extends SuluTestCase
                 'metadata' => [
                     'group' => 'default',
                 ],
-                'securityContext' => ArticleAdmin::getArticleSecurityContext('default'),
+                'securityContext' => ArticleAdmin::SECURITY_CONTEXT,
             ],
         ];
 
@@ -200,6 +200,44 @@ class AdminArticleReindexProviderTest extends SuluTestCase
 
         $this->assertCount(1, $results);
         $this->assertSame(ArticleAdmin::SECURITY_CONTEXT, $results[0]['securityContext']);
+    }
+
+    public function testProvideEmitsBroadSecurityContextForDefaultGroupInMultiGroupSetup(): void
+    {
+        $multiGroupProvider = new class() implements GroupProviderInterface {
+            public function getGroups(string $key): array
+            {
+                return [
+                    GroupProviderInterface::DEFAULT_GROUP => new FormGroup(GroupProviderInterface::DEFAULT_GROUP, 'Default', ['article']),
+                    'custom-group' => new FormGroup('custom-group', 'Custom', ['custom-template']),
+                ];
+            }
+        };
+
+        $provider = new AdminArticleReindexProvider($this->entityManager, $multiGroupProvider);
+
+        $article = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Default group article in multi-group setup',
+                    'url' => '/default-group-multi-group',
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()
+            ->withIndex('admin')
+            ->withIdentifiers([
+                ArticleInterface::RESOURCE_KEY . '__' . $article->getUuid() . '__en',
+            ]);
+
+        /** @var array<array{securityContext: string, metadata: array{group: string}}> $results */
+        $results = \iterator_to_array($provider->provide($config));
+
+        $this->assertCount(1, $results);
+        $this->assertSame(ArticleAdmin::SECURITY_CONTEXT, $results[0]['securityContext']);
+        $this->assertSame(GroupProviderInterface::DEFAULT_GROUP, $results[0]['metadata']['group']);
     }
 
     public function testProvideWithSpecificIdentifiers(): void

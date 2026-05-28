@@ -59,16 +59,14 @@ class ArticleAdmin extends Admin
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
-        $hasArticleTypeWithEditPermissions = false;
         $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
+        $hasArticleTypeWithEditPermissions = false;
         foreach ($groups as $group) {
-            $securityContext = static::getArticleSecurityContext($group->identifier);
-            if (!$this->securityChecker->hasPermission($securityContext, PermissionTypes::EDIT)) {
-                continue;
+            $securityContext = $this->resolveSecurityContext($groups, $group);
+            if ($this->securityChecker->hasPermission($securityContext, PermissionTypes::EDIT)) {
+                $hasArticleTypeWithEditPermissions = true;
+                break;
             }
-
-            $hasArticleTypeWithEditPermissions = true;
-            break;
         }
 
         if (!$hasArticleTypeWithEditPermissions) {
@@ -95,18 +93,21 @@ class ArticleAdmin extends Admin
 
         $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
         foreach ($groups as $group) {
-            $securityContext = static::getArticleSecurityContext($group->identifier);
-            if (1 === \count($groups)) {
-                $securityContext = static::SECURITY_CONTEXT;
-            }
-
+            $securityContext = $this->resolveSecurityContext($groups, $group);
             $this->configureGroupViews($group, $locales, $resourceKey, $viewCollection, $securityContext);
         }
     }
 
-    private function hasPermission(string $groupIdentifier, string $permission, bool $checkGroup): bool
+    /**
+     * @param array<string, FormGroup> $groups
+     */
+    private function resolveSecurityContext(array $groups, FormGroup $group): string
     {
-        return $this->securityChecker->hasPermission(static::getArticleSecurityContext($groupIdentifier), $permission);
+        if (1 === \count($groups) || GroupProviderInterface::DEFAULT_GROUP === $group->identifier) {
+            return static::SECURITY_CONTEXT;
+        }
+
+        return static::getArticleSecurityContext($group->identifier);
     }
 
     /**
@@ -122,15 +123,15 @@ class ArticleAdmin extends Admin
 
         $listToolbarActions = [];
 
-        if ($this->securityChecker->hasPermission(static::getArticleSecurityContext($groupIdentifier), PermissionTypes::ADD)) {
+        if ($this->securityChecker->hasPermission($securityContext, PermissionTypes::ADD)) {
             $listToolbarActions[] = new ToolbarAction('sulu_admin.add');
         }
 
-        if ($this->securityChecker->hasPermission(static::getArticleSecurityContext($groupIdentifier), PermissionTypes::DELETE)) {
+        if ($this->securityChecker->hasPermission($securityContext, PermissionTypes::DELETE)) {
             $listToolbarActions[] = new ToolbarAction('sulu_admin.delete');
         }
 
-        if ($this->securityChecker->hasPermission(static::getArticleSecurityContext($groupIdentifier), PermissionTypes::VIEW)) {
+        if ($this->securityChecker->hasPermission($securityContext, PermissionTypes::VIEW)) {
             $listToolbarActions[] = new ToolbarAction('sulu_admin.export');
         }
 
@@ -251,6 +252,10 @@ class ArticleAdmin extends Admin
         $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
         if (1 !== \count($groups)) {
             foreach ($groups as $group) {
+                if (GroupProviderInterface::DEFAULT_GROUP === $group->identifier) {
+                    continue;
+                }
+
                 $securityContext[static::getArticleSecurityContext($group->identifier)] = [
                     PermissionTypes::VIEW,
                     PermissionTypes::ADD,
