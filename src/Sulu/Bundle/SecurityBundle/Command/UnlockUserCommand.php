@@ -26,8 +26,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class UnlockUserCommand extends Command
 {
     public function __construct(
-        private UserRepository $userRepository,
-        private UserManager $userManager,
+        private readonly UserRepository $userRepository,
+        private readonly UserManager $userManager,
     ) {
         parent::__construct();
     }
@@ -70,7 +70,7 @@ class UnlockUserCommand extends Command
         }
 
         if (!$user->getLocked()) {
-            $io->warning(\sprintf('User "%s" is already unlocked.', $identifier));
+            $io->info(\sprintf('User "%s" is already unlocked, doing nothing.', $identifier));
 
             return Command::SUCCESS;
         }

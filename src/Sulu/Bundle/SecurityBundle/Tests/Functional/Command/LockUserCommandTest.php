@@ -13,7 +13,6 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\SecurityBundle\Command\LockUserCommand;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -22,15 +21,9 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class LockUserCommandTest extends SuluTestCase
 {
-    /**
-     * @var CommandTester
-     */
-    private $tester;
+    private CommandTester $tester;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private EntityManagerInterface $em;
 
     public function setUp(): void
     {
@@ -38,10 +31,7 @@ class LockUserCommandTest extends SuluTestCase
         $this->em = $this->getEntityManager();
 
         $application = new Application($this->getContainer()->get('kernel'));
-        $command = new LockUserCommand(
-            $this->getContainer()->get('sulu.repository.user'),
-            $this->getContainer()->get('sulu_security.user_manager')
-        );
+        $command = $this->getContainer()->get('sulu_security.command.lock_user');
         $command->setApplication($application);
         $this->tester = new CommandTester($command);
     }
@@ -75,7 +65,7 @@ class LockUserCommandTest extends SuluTestCase
         $this->tester->execute(['identifier' => 'john'], ['interactive' => false]);
 
         $this->tester->assertCommandIsSuccessful();
-        $this->assertStringContainsString('User "john" is already locked.', $this->tester->getDisplay());
+        $this->assertStringContainsString('User "john" is already locked, doing nothing.', $this->tester->getDisplay());
         $this->assertTrue($this->findUser('john')->getLocked());
     }
 
