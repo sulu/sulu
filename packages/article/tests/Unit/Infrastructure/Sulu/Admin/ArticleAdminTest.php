@@ -21,6 +21,7 @@ use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
+use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
@@ -213,6 +214,52 @@ class ArticleAdminTest extends TestCase
         $this->assertTrue($viewCollection->has(ArticleAdmin::LIST_VIEW . '_default'));
         $this->assertTrue($viewCollection->has(ArticleAdmin::ADD_TABS_VIEW . '_default'));
         $this->assertTrue($viewCollection->has(ArticleAdmin::EDIT_TABS_VIEW . '_default'));
+    }
+
+    public function testConfigureViewsEditToolbarContainsCopyAndCopyLocaleActions(): void
+    {
+        $this->localizationManager->getLocales()->willReturn(['en', 'de']);
+        $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE)
+            ->willReturn(['default' => (new FormGroup('default', 'Default'))->withTemplate('article')]);
+
+        $this->securityChecker->hasPermission(ArticleAdmin::SECURITY_CONTEXT, PermissionTypes::EDIT)
+            ->willReturn(true);
+        $this->securityChecker->hasPermission(ArticleAdmin::SECURITY_CONTEXT, Argument::not(PermissionTypes::EDIT))
+            ->willReturn(false);
+        $this->securityChecker->hasPermission(Argument::not(ArticleAdmin::SECURITY_CONTEXT), Argument::any())
+            ->willReturn(false);
+
+        /** @var array<string, mixed>|null $capturedToolbarActions */
+        $capturedToolbarActions = null;
+        $this->contentViewBuilderFactory
+            ->createViews(Argument::cetera())
+            ->will(function(array $args) use (&$capturedToolbarActions) {
+                $toolbarActions = $args[4] ?? null;
+                $capturedToolbarActions = \is_array($toolbarActions) ? $toolbarActions : null;
+
+                return [];
+            });
+
+        $viewCollection = new ViewCollection();
+        $this->articleAdmin->configureViews($viewCollection);
+
+        $this->assertIsArray($capturedToolbarActions);
+        $this->assertArrayHasKey('edit', $capturedToolbarActions);
+
+        $editAction = $capturedToolbarActions['edit'];
+        $this->assertInstanceOf(DropdownToolbarAction::class, $editAction);
+
+        $subActions = $editAction->getOptions()['toolbarActions'] ?? [];
+        $this->assertIsArray($subActions);
+
+        $subActionTypes = [];
+        foreach ($subActions as $subAction) {
+            $this->assertInstanceOf(ToolbarAction::class, $subAction);
+            $subActionTypes[] = $subAction->getType();
+        }
+
+        $this->assertContains('sulu_admin.copy', $subActionTypes);
+        $this->assertContains('sulu_admin.copy_locale', $subActionTypes);
     }
 
     public function testConfigureViewsWithSingleGroupAndNoPermission(): void
