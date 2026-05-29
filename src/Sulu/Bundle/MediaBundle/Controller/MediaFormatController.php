@@ -15,16 +15,18 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\RequestParametersTrait;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @RouteResource("Format")
  */
-class MediaFormatController extends AbstractRestController implements ClassResourceInterface
+class MediaFormatController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
     use RequestParametersTrait;
 
@@ -94,5 +96,10 @@ class MediaFormatController extends AbstractRestController implements ClassResou
         $this->entityManager->flush();
 
         return $this->handleView($this->view($formatOptions));
+    }
+
+    public function getSecurityContext(): string
+    {
+        return MediaAdmin::SECURITY_CONTEXT;
     }
 }

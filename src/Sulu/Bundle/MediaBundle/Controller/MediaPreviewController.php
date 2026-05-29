@@ -23,6 +23,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -32,7 +33,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *
  * @RouteResource("Preview")
  */
-class MediaPreviewController extends AbstractMediaController implements ClassResourceInterface
+class MediaPreviewController extends AbstractMediaController implements ClassResourceInterface, SecuredControllerInterface
 {
     public function __construct(
         ViewHandlerInterface $viewHandler,
@@ -137,5 +138,10 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
         }
 
         return $this->handleView($view);
+    }
+
+    public function getSecurityContext(): string
+    {
+        return MediaAdmin::SECURITY_CONTEXT;
     }
 }
