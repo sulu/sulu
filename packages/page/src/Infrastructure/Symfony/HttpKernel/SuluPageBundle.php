@@ -807,7 +807,7 @@ final class SuluPageBundle extends AbstractBundle
                 'doctrine_migrations',
                 [
                     'migrations_paths' => [
-                        'Sulu\\Page\\Migrations' => \dirname(__DIR__, 4) . '/src/Migrations',
+                        'Sulu\\Page\\Migrations' => \dirname(__DIR__, 4) . '/migrations',
                     ],
                 ],
             );

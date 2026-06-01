@@ -1042,7 +1042,7 @@ class ContactControllerTest extends SuluTestCase
             $putData,
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
+        $response = \json_decode($this->client->getResponse()->getContent(), true, flags: \JSON_THROW_ON_ERROR);
         $this->assertIsArray($response);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         unset($response['_hash']);

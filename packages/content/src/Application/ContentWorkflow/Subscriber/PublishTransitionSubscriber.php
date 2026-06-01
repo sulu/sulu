@@ -75,14 +75,6 @@ class PublishTransitionSubscriber implements EventSubscriberInterface
             }
         }
 
-        // Create a new version of the content before it is published
-        $this->contentCopier->copyFromDimensionContentCollection(
-            $dimensionContentCollection,
-            $contentRichEntity,
-            \array_merge($dimensionAttributes, ['locale' => $locale, 'version' => \time()]),
-            ['ignoredAttributes' => ['url']] // ignore url, because we cannot restore it from a version
-        );
-
         $shadowLocale = $dimensionContent instanceof ShadowInterface
             ? $dimensionContent->getShadowLocale()
             : null;
@@ -95,6 +87,8 @@ class PublishTransitionSubscriber implements EventSubscriberInterface
             );
 
             if (!$publishedDimensionContent instanceof ShadowInterface) {
+                $this->createVersion($dimensionContentCollection, $contentRichEntity, $dimensionAttributes, $locale);
+
                 return;
             }
 
@@ -116,6 +110,8 @@ class PublishTransitionSubscriber implements EventSubscriberInterface
                     ]
                 );
             }
+
+            $this->createVersion($dimensionContentCollection, $contentRichEntity, $dimensionAttributes, $locale);
 
             return;
         }
@@ -144,6 +140,29 @@ class PublishTransitionSubscriber implements EventSubscriberInterface
             $contentRichEntity,
             $targetDimensionAttributes,
             ['data' => $data]
+        );
+
+        $this->createVersion($dimensionContentCollection, $contentRichEntity, $dimensionAttributes, $locale);
+    }
+
+    /**
+     * @template T of DimensionContentInterface
+     *
+     * @param DimensionContentCollectionInterface<T> $dimensionContentCollection
+     * @param ContentRichEntityInterface<T> $contentRichEntity
+     * @param mixed[] $dimensionAttributes
+     */
+    private function createVersion(
+        DimensionContentCollectionInterface $dimensionContentCollection,
+        ContentRichEntityInterface $contentRichEntity,
+        array $dimensionAttributes,
+        string $locale,
+    ): void {
+        $this->contentCopier->copyFromDimensionContentCollection(
+            $dimensionContentCollection,
+            $contentRichEntity,
+            \array_merge($dimensionAttributes, ['locale' => $locale, 'version' => \time()]),
+            ['ignoredAttributes' => ['url']] // ignore url, because we cannot restore it from a version
         );
     }
 

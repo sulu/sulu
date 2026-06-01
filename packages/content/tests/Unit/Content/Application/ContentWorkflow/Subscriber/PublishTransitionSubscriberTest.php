@@ -373,4 +373,57 @@ class PublishTransitionSubscriberTest extends TestCase
 
         $contentPublishSubscriber->onPublish($event);
     }
+
+    public function testOnPublishFailedPublishDoesNotCreateVersion(): void
+    {
+        // The new version must only be created when the publish-side copy succeeds,
+        // otherwise a failed publish (e.g. duplicate route) leaves an orphan version.
+        $dimensionContent = $this->prophesize(DimensionContentInterface::class);
+        $dimensionContent->willImplement(WorkflowInterface::class);
+        $dimensionContentCollection = $this->prophesize(DimensionContentCollectionInterface::class);
+        $contentRichEntity = $this->prophesize(ContentRichEntityInterface::class);
+        $dimensionAttributes = ['locale' => 'en', 'stage' => 'draft'];
+
+        $dimensionContent->getLocale()->willReturn('en');
+        $dimensionContent->getWorkflowPublished()->willReturn(null);
+        $dimensionContent->setWorkflowPublished(Argument::cetera())->shouldBeCalled();
+
+        $event = new TransitionEvent(
+            $dimensionContent->reveal(),
+            new Marking()
+        );
+        $event->setContext([
+            ContentWorkflowInterface::DIMENSION_CONTENT_COLLECTION_CONTEXT_KEY => $dimensionContentCollection->reveal(),
+            ContentWorkflowInterface::DIMENSION_ATTRIBUTES_CONTEXT_KEY => $dimensionAttributes,
+            ContentWorkflowInterface::CONTENT_RICH_ENTITY_CONTEXT_KEY => $contentRichEntity->reveal(),
+        ]);
+
+        $contentCopier = $this->prophesize(ContentCopierInterface::class);
+        $targetDimensionAttributes = $dimensionAttributes;
+        $targetDimensionAttributes['stage'] = 'live';
+
+        $contentCopier->copyFromDimensionContentCollection(
+            $dimensionContentCollection->reveal(),
+            $contentRichEntity->reveal(),
+            $targetDimensionAttributes
+        )
+            ->willThrow(new \RuntimeException('Duplicate entry'));
+
+        $contentCopier->copyFromDimensionContentCollection(
+            $dimensionContentCollection->reveal(),
+            $contentRichEntity->reveal(),
+            Argument::that(static fn (array $attrs) => isset($attrs['version']) && $attrs['version'] > 0),
+            Argument::any()
+        )
+            ->shouldNotBeCalled();
+
+        $contentPublishSubscriber = $this->createContentPublisherSubscriberInstance($contentCopier->reveal());
+
+        try {
+            $contentPublishSubscriber->onPublish($event);
+            $this->fail('Expected the publish failure to bubble up.');
+        } catch (\RuntimeException $e) {
+            $this->assertSame('Duplicate entry', $e->getMessage());
+        }
+    }
 }

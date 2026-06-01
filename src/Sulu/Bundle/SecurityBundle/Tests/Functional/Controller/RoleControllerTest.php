@@ -309,7 +309,7 @@ class RoleControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
+        $response = \json_decode($this->client->getResponse()->getContent(), true, flags: \JSON_THROW_ON_ERROR);
         $this->assertIsArray($response);
         unset($response['id']);
         $this->assertSame('ROLE_SULU_PORTAL_MANAGER', $response['identifier']);
@@ -328,7 +328,7 @@ class RoleControllerTest extends SuluTestCase
             '/api/roles/' . $this->role1->getId()
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
+        $response = \json_decode($this->client->getResponse()->getContent(), true, flags: \JSON_THROW_ON_ERROR);
         $this->assertIsArray($response);
         unset($response['id']);
         $this->assertSame('ROLE_SULU_PORTAL_MANAGER', $response['identifier']);

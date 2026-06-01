@@ -576,7 +576,7 @@ final class SuluSnippetBundle extends AbstractBundle
                 'doctrine_migrations',
                 [
                     'migrations_paths' => [
-                        'Sulu\\Snippet\\Migrations' => \dirname(__DIR__, 4) . '/src/Migrations',
+                        'Sulu\\Snippet\\Migrations' => \dirname(__DIR__, 4) . '/migrations',
                     ],
                 ],
             );

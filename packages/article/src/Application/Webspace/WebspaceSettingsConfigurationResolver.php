@@ -43,7 +43,7 @@ class WebspaceSettingsConfigurationResolver
             return \reset($webspaces)->getKey();
         }
 
-        throw new \Exception('No configured default main webspace for locale "' . $searchedLocale . '" not found.');
+        throw new \RuntimeException('No configured default main webspace for locale "' . $searchedLocale . '".');
     }
 
     /**

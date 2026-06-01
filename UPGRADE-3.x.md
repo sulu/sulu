@@ -1,5 +1,15 @@
 # Upgrade
 
+## 3.0.8
+
+### AbstractTagNameToIdMigration moved to Infrastructure Layer
+
+If somebody already created their own Entities with they may also need to migrate the tag names to tag ids.
+
+We refactored the Migrations the abstract class is now under the Infrastructure Layer, so the namespace of the `AbstractTagNameToIdMigration` has changed:
+
+ - `Sulu\Content\Migrations\AbstractTagNameToIdMigration` -> `Sulu\Content\Infrastructure\Doctrine\Migrations\AbstractTagNameToIdMigration`
+
 ## 3.0.7
 
 ### Smart content tag and category resolving is opt-in
