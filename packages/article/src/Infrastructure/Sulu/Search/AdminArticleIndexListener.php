@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Article\Infrastructure\Sulu\Search;
 
 use CmsIg\Seal\Reindex\ReindexConfig;
+use Sulu\Article\Domain\Event\ArticleCopiedEvent;
 use Sulu\Article\Domain\Event\ArticleCreatedEvent;
 use Sulu\Article\Domain\Event\ArticleModifiedEvent;
 use Sulu\Article\Domain\Event\ArticleRemovedEvent;
@@ -36,7 +37,7 @@ final class AdminArticleIndexListener
     ) {
     }
 
-    public function onArticleChanged(ArticleCreatedEvent|ArticleModifiedEvent|ArticleRemovedEvent|ArticleRestoredEvent|ArticleTranslationRestoredEvent|ArticleTranslationAddedEvent|ArticleTranslationRemovedEvent|ArticleTranslationCopiedEvent $event): void
+    public function onArticleChanged(ArticleCreatedEvent|ArticleCopiedEvent|ArticleModifiedEvent|ArticleRemovedEvent|ArticleRestoredEvent|ArticleTranslationRestoredEvent|ArticleTranslationAddedEvent|ArticleTranslationRemovedEvent|ArticleTranslationCopiedEvent $event): void
     {
         $locale = $event->getResourceLocale();
         $identifiers = [];

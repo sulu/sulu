@@ -12,6 +12,7 @@
 namespace Sulu\Article\UserInterface\Controller\Admin;
 
 use Sulu\Article\Application\Message\ApplyWorkflowTransitionArticleMessage;
+use Sulu\Article\Application\Message\CopyArticleMessage;
 use Sulu\Article\Application\Message\CopyLocaleArticleMessage;
 use Sulu\Article\Application\Message\CreateArticleMessage;
 use Sulu\Article\Application\Message\ModifyArticleMessage;
@@ -239,9 +240,9 @@ final class ArticleController implements SecuredControllerInterface
 
     public function postTriggerAction(Request $request, string $id): Response
     {
-        $this->handleAction($request, $id);
+        $result = $this->handleAction($request, $id);
 
-        return $this->getAction($request, $id);
+        return $this->getAction($request, $result?->getUuid() ?? $id);
     }
 
     public function deleteAction(Request $request, string $id): Response // TODO route should be a uuid
@@ -299,11 +300,20 @@ final class ArticleController implements SecuredControllerInterface
         if ('copy_locale' === $action) {
             $message = new CopyLocaleArticleMessage(
                 ['uuid' => $uuid],
-                (string) $request->query->get('src'),
+                (string) ($request->query->get('src') ?: $request->query->get('locale')),
                 (string) $request->query->get('dest'),
             );
 
             /** @see \Sulu\Article\Application\MessageHandler\CopyLocaleArticleMessageHandler */
+            /** @var ArticleInterface|null */
+            return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+        } elseif ('copy' === $action) {
+            $message = new CopyArticleMessage(
+                ['uuid' => $uuid],
+                $this->getLocale($request),
+            );
+
+            /** @see \Sulu\Article\Application\MessageHandler\CopyArticleMessageHandler */
             /** @var ArticleInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('restore' === $action) {
