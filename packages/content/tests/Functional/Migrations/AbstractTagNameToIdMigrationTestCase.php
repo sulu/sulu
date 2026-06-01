@@ -17,7 +17,7 @@ use Doctrine\DBAL\Connection;
 use Psr\Log\NullLogger;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Content\Migrations\AbstractTagNameToIdMigration;
+use Sulu\Content\Infrastructure\Doctrine\Migrations\AbstractTagNameToIdMigration;
 
 abstract class AbstractTagNameToIdMigrationTestCase extends SuluTestCase
 {

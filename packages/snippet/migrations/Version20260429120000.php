@@ -11,14 +11,14 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Page\Migrations;
+namespace Sulu\Snippet\Migrations;
 
-use Sulu\Content\Migrations\AbstractTagNameToIdMigration;
+use Sulu\Content\Infrastructure\Doctrine\Migrations\AbstractTagNameToIdMigration;
 
 final class Version20260429120000 extends AbstractTagNameToIdMigration
 {
     protected function getTable(): string
     {
-        return 'pa_page_dimension_contents';
+        return 'sn_snippet_dimension_contents';
     }
 }
