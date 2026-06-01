@@ -240,16 +240,19 @@ class SnippetControllerTest extends SuluTestCase
         $copyId = $data['id'];
         $this->assertNotSame($id, $copyId);
 
-        $this->client->request('GET', '/admin/api/snippets/' . $copyId . '?locale=en');
-        $copyResponse = $this->client->getResponse();
-        $this->assertSame(200, $copyResponse->getStatusCode());
+        try {
+            $this->client->request('GET', '/admin/api/snippets/' . $copyId . '?locale=en');
+            $copyResponse = $this->client->getResponse();
+            $this->assertSame(200, $copyResponse->getStatusCode());
 
-        /** @var array<string, mixed> $copyData */
-        $copyData = \json_decode((string) $copyResponse->getContent(), true);
-        $this->assertSame('Test Snippet', $copyData['title'] ?? null);
-
-        // Clean up so the duplicate does not pollute snapshot-based list tests that run after this one.
-        $this->client->request('DELETE', '/admin/api/snippets/' . $copyId . '?locale=en');
+            /** @var array<string, mixed> $copyData */
+            $copyData = \json_decode((string) $copyResponse->getContent(), true);
+            $this->assertSame('Test Snippet', $copyData['title'] ?? null);
+        } finally {
+            // Clean up so the duplicate does not pollute snapshot-based list tests that run after this one.
+            $this->client->request('DELETE', '/admin/api/snippets/' . $copyId . '?locale=en');
+            $this->assertSame(204, $this->client->getResponse()->getStatusCode());
+        }
     }
 
     #[Depends('testPost')]

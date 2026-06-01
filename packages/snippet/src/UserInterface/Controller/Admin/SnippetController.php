@@ -319,7 +319,7 @@ final class SnippetController implements SecuredControllerInterface
             );
 
             /** @see \Sulu\Snippet\Application\MessageHandler\CopyLocaleSnippetMessageHandler */
-            /** @var null */
+            /** @var SnippetInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('copy' === $action) {
             $message = new CopySnippetMessage(
