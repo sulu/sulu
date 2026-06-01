@@ -416,7 +416,8 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             $webspaces = $this->getWebspaceKeys($localeFilter);
         }
 
-        $listBuilder->in($fieldDescriptors['webspaceKey'], $webspaces);
+        // Fall back to a non-matching value for an empty set to avoid an invalid `andWhere('()')`.
+        $listBuilder->in($fieldDescriptors['webspaceKey'], !empty($webspaces) ? $webspaces : [null]);
 
         foreach ($filters as $key => $value) {
             if (isset($fieldDescriptors[$key])) {

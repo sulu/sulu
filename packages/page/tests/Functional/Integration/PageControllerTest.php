@@ -1733,6 +1733,13 @@ class PageControllerTest extends SuluTestCase
             'url' => '/aaa-sorted-page',
         ], 'aaa-sorted-io');
 
+        $segmentsHomepage = $this->createHomepage('home-sulu-segments-io', 'sulu-segments-io');
+        $this->createPage($segmentsHomepage->getId(), [
+            'title' => 'sulu-segments page',
+            'template' => 'default',
+            'url' => '/sulu-segments-page',
+        ], 'sulu-segments-io');
+
         self::ensureKernelShutdown();
 
         $this->client->request('GET', '/admin/api/pages?locale=en');
@@ -1753,5 +1760,37 @@ class PageControllerTest extends SuluTestCase
 
         $this->assertArrayHasKey('sulu-io', $observedWebspaces);
         $this->assertArrayHasKey('aaa-sorted-io', $observedWebspaces);
+        $this->assertArrayHasKey('sulu-segments-io', $observedWebspaces);
+    }
+
+    /**
+     * When no webspace the user may view configures the requested locale, the filtered
+     * webspace set is empty. The endpoint must return an empty list with a 200 status
+     * instead of producing an invalid `andWhere('()')` clause and a 500 error.
+     */
+    public function testCgetActionReturnsEmptyListForLocaleWithoutAnyWebspace(): void
+    {
+        self::purgeDatabase();
+
+        // No test webspace configures locale `fr`, so the locale filter removes every webspace.
+        $suluHomepage = $this->createHomepage('home-sulu-io', 'sulu-io');
+        $this->createPage($suluHomepage->getId(), [
+            'title' => 'sulu-io page',
+            'template' => 'default',
+            'url' => '/sulu-io-page',
+        ], 'sulu-io');
+
+        self::ensureKernelShutdown();
+
+        $this->client->request('GET', '/admin/api/pages?locale=fr');
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{_embedded: array{pages?: array<int, array{webspaceKey?: string}>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $pages = $content['_embedded']['pages'] ?? [];
+
+        $this->assertSame([], $pages, 'A locale configured in no viewable webspace must yield an empty page list.');
     }
 }
