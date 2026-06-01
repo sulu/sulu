@@ -14,6 +14,8 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use Sulu\Bundle\SecurityBundle\Command\CreateRoleCommand;
 use Sulu\Bundle\SecurityBundle\Command\CreateUserCommand;
 use Sulu\Bundle\SecurityBundle\Command\InitCommand;
+use Sulu\Bundle\SecurityBundle\Command\LockUserCommand;
+use Sulu\Bundle\SecurityBundle\Command\UnlockUserCommand;
 use Symfony\Component\DependencyInjection\Reference;
 
 return static function(ContainerConfigurator $container) {
@@ -47,6 +49,22 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_security.salt_generator'),
             new Reference('security.password_hasher_factory'),
             '%sulu_core.locales%',
+        ])
+        ->tag('console.command')
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_security.command.lock_user', LockUserCommand::class)
+        ->args([
+            new Reference('sulu.repository.user'),
+            new Reference('sulu_security.user_manager'),
+        ])
+        ->tag('console.command')
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_security.command.unlock_user', UnlockUserCommand::class)
+        ->args([
+            new Reference('sulu.repository.user'),
+            new Reference('sulu_security.user_manager'),
         ])
         ->tag('console.command')
         ->tag('sulu.context', ['context' => 'admin']);
