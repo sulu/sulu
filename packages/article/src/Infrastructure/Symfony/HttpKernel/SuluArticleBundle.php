@@ -614,7 +614,7 @@ final class SuluArticleBundle extends AbstractBundle
                 'doctrine_migrations',
                 [
                     'migrations_paths' => [
-                        'Sulu\\Article\\Migrations' => \dirname(__DIR__, 4) . '/src/Migrations',
+                        'Sulu\\Article\\Migrations' => \dirname(__DIR__, 4) . '/migrations',
                     ],
                 ],
             );
