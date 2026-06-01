@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Migrations;
 
-use Sulu\Content\Migrations\AbstractTagNameToIdMigration;
+use Sulu\Content\Infrastructure\Doctrine\Migrations\AbstractTagNameToIdMigration;
 
 final class Version20260429120000 extends AbstractTagNameToIdMigration
 {
