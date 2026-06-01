@@ -100,6 +100,7 @@ class PageControllerTest extends SuluTestCase
     private function createPage(
         string $parentId,
         array $data = [],
+        string $webspaceKey = 'sulu-io',
     ): PageInterface {
         $data = \array_merge(
             [
@@ -110,7 +111,7 @@ class PageControllerTest extends SuluTestCase
             ],
             $data,
         );
-        $message = new CreatePageMessage('sulu-io', $parentId, $data);
+        $message = new CreatePageMessage($webspaceKey, $parentId, $data);
 
         /** @var CreatePageMessageHandler $messageHandler */
         $messageHandler = self::getContainer()->get('sulu_page.create_page_handler');
@@ -1644,5 +1645,152 @@ class PageControllerTest extends SuluTestCase
 
         $this->assertCount(1, $pages);
         $this->assertTrue($pages[0]['hasChildren'], 'Parent page should have hasChildren=true');
+    }
+
+    /**
+     * The cgetAction filters webspaces by the requested locale when no `webspace`
+     * query parameter is supplied (the article URL picker case). A webspace whose
+     * localizations do not list the locale must not appear, otherwise selecting one
+     * of its pages yields an empty URL and breaks downstream resolvers.
+     */
+    public function testCgetActionExcludesWebspacesWithoutRequestedLocale(): void
+    {
+        self::purgeDatabase();
+
+        // sulu-io supports `de` and `en`; aaa-sorted-io and sulu-segments-io support only `en`.
+        $suluHomepage = $this->createHomepage('home-sulu-io', 'sulu-io');
+        $this->createPage($suluHomepage->getId(), [
+            'title' => 'sulu-io page',
+            'template' => 'default',
+            'url' => '/sulu-io-page',
+        ], 'sulu-io');
+
+        $aaaSortedHomepage = $this->createHomepage('home-aaa-sorted-io', 'aaa-sorted-io');
+        $this->createPage($aaaSortedHomepage->getId(), [
+            'title' => 'aaa-sorted page',
+            'template' => 'default',
+            'url' => '/aaa-sorted-page',
+        ], 'aaa-sorted-io');
+
+        $segmentsHomepage = $this->createHomepage('home-sulu-segments-io', 'sulu-segments-io');
+        $this->createPage($segmentsHomepage->getId(), [
+            'title' => 'sulu-segments page',
+            'template' => 'default',
+            'url' => '/sulu-segments-page',
+        ], 'sulu-segments-io');
+
+        self::ensureKernelShutdown();
+
+        $this->client->request('GET', '/admin/api/pages?locale=de');
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{_embedded: array{pages?: array<int, array{webspaceKey?: string}>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $pages = $content['_embedded']['pages'] ?? [];
+
+        $observedWebspaces = [];
+        foreach ($pages as $page) {
+            if (isset($page['webspaceKey'])) {
+                $observedWebspaces[$page['webspaceKey']] = true;
+            }
+        }
+
+        $this->assertArrayHasKey(
+            'sulu-io',
+            $observedWebspaces,
+            'Webspace sulu-io configures locale "de" and must remain in the list - guards against the filter excluding everything.',
+        );
+        $this->assertArrayNotHasKey(
+            'aaa-sorted-io',
+            $observedWebspaces,
+            'Webspace aaa-sorted-io does not configure locale "de" - it must not appear in a locale=de page list.',
+        );
+        $this->assertArrayNotHasKey(
+            'sulu-segments-io',
+            $observedWebspaces,
+            'Webspace sulu-segments-io does not configure locale "de" - it must not appear in a locale=de page list.',
+        );
+    }
+
+    public function testCgetActionIncludesAllWebspacesForRequestedLocaleEn(): void
+    {
+        self::purgeDatabase();
+
+        // locale=en is supported by every test webspace, so none may be filtered out.
+        $suluHomepage = $this->createHomepage('home-sulu-io', 'sulu-io');
+        $this->createPage($suluHomepage->getId(), [
+            'title' => 'sulu-io page',
+            'template' => 'default',
+            'url' => '/sulu-io-page',
+        ], 'sulu-io');
+
+        $aaaSortedHomepage = $this->createHomepage('home-aaa-sorted-io', 'aaa-sorted-io');
+        $this->createPage($aaaSortedHomepage->getId(), [
+            'title' => 'aaa-sorted page',
+            'template' => 'default',
+            'url' => '/aaa-sorted-page',
+        ], 'aaa-sorted-io');
+
+        $segmentsHomepage = $this->createHomepage('home-sulu-segments-io', 'sulu-segments-io');
+        $this->createPage($segmentsHomepage->getId(), [
+            'title' => 'sulu-segments page',
+            'template' => 'default',
+            'url' => '/sulu-segments-page',
+        ], 'sulu-segments-io');
+
+        self::ensureKernelShutdown();
+
+        $this->client->request('GET', '/admin/api/pages?locale=en');
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{_embedded: array{pages?: array<int, array{webspaceKey?: string}>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $pages = $content['_embedded']['pages'] ?? [];
+
+        $observedWebspaces = [];
+        foreach ($pages as $page) {
+            if (isset($page['webspaceKey'])) {
+                $observedWebspaces[$page['webspaceKey']] = true;
+            }
+        }
+
+        $this->assertArrayHasKey('sulu-io', $observedWebspaces);
+        $this->assertArrayHasKey('aaa-sorted-io', $observedWebspaces);
+        $this->assertArrayHasKey('sulu-segments-io', $observedWebspaces);
+    }
+
+    /**
+     * When no webspace the user may view configures the requested locale, the filtered
+     * webspace set is empty. The endpoint must return an empty list with a 200 status
+     * instead of producing an invalid `andWhere('()')` clause and a 500 error.
+     */
+    public function testCgetActionReturnsEmptyListForLocaleWithoutAnyWebspace(): void
+    {
+        self::purgeDatabase();
+
+        // No test webspace configures locale `fr`, so the locale filter removes every webspace.
+        $suluHomepage = $this->createHomepage('home-sulu-io', 'sulu-io');
+        $this->createPage($suluHomepage->getId(), [
+            'title' => 'sulu-io page',
+            'template' => 'default',
+            'url' => '/sulu-io-page',
+        ], 'sulu-io');
+
+        self::ensureKernelShutdown();
+
+        $this->client->request('GET', '/admin/api/pages?locale=fr');
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{_embedded: array{pages?: array<int, array{webspaceKey?: string}>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $pages = $content['_embedded']['pages'] ?? [];
+
+        $this->assertSame([], $pages, 'A locale configured in no viewable webspace must yield an empty page list.');
     }
 }
