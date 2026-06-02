@@ -1,0 +1,3 @@
+sulu_article:
+    # Required when more than one webspace exists: defines the main webspace new articles are assigned to.
+    default_main_webspace: 'sulu-test'

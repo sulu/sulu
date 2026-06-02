@@ -43,7 +43,12 @@ class WebspaceSettingsConfigurationResolver
             return \reset($webspaces)->getKey();
         }
 
-        throw new \RuntimeException('No configured default main webspace for locale "' . $searchedLocale . '".');
+        throw new \RuntimeException(\sprintf(
+            'No default main webspace configured for locale "%s". When more than one webspace exists, the '
+            . '"sulu_article.default_main_webspace" option must be set to one of your webspace keys '
+            . '(optionally per locale).',
+            $searchedLocale,
+        ));
     }
 
     /**

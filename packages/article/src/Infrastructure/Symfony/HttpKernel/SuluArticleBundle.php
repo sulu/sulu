@@ -64,6 +64,7 @@ use Sulu\Article\Infrastructure\Sulu\Search\WebsiteArticleIndexListener;
 use Sulu\Article\Infrastructure\Sulu\Search\WebsiteArticleReindexProvider;
 use Sulu\Article\Infrastructure\Sulu\Sitemap\ArticlesSitemapProvider;
 use Sulu\Article\Infrastructure\Sulu\Trash\ArticleTrashItemHandler;
+use Sulu\Article\Infrastructure\Symfony\HttpKernel\Compiler\ValidateDefaultMainWebspacePass;
 use Sulu\Article\Infrastructure\Symfony\Twig\ArticleTwigExtension;
 use Sulu\Article\UserInterface\Controller\Admin\ArticleController;
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore;
@@ -697,5 +698,7 @@ final class SuluArticleBundle extends AbstractBundle
             ArticleInterface::class => 'sulu.model.article.class',
             ArticleDimensionContentInterface::class => 'sulu.model.article_content.class',
         ], $container);
+
+        $container->addCompilerPass(new ValidateDefaultMainWebspacePass());
     }
 }
