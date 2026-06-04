@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ErrorController as SymfonyErrorController;
 use Twig\Environment;
+use Psr\Cache\CacheItemPoolInterface;
 
 class ErrorController
 {
@@ -42,15 +43,19 @@ class ErrorController
      */
     private $twig;
 
+    private CacheItemPoolInterface $cache;
+
     public function __construct(
         SymfonyErrorController $symfonyErrorController,
         TemplateAttributeResolverInterface $templateAttributeResolver,
         Environment $twig,
-        bool $debug = false
+        CacheItemPoolInterface $cache,
+        bool $debug = false,
     ) {
         $this->symfonyErrorController = $symfonyErrorController;
         $this->templateAttributeResolver = $templateAttributeResolver;
         $this->twig = $twig;
+        $this->cache = $cache;
         $this->debug = $debug;
     }
 
@@ -69,17 +74,31 @@ class ErrorController
             return $this->symfonyErrorController->__invoke($exception);
         }
 
-        return new Response(
-            $this->twig->render(
-                $errorTemplate,
-                $this->templateAttributeResolver->resolve([
-                    'exception' => $flattenException,
-                    'status_code' => $flattenException->getStatusCode(),
-                    'status_text' => $flattenException->getStatusText(),
-                ])
-            ),
-            $code
+        $webspaceAttributes = $request->attributes->get("_sulu");
+        $locale = $webspaceAttributes->getAttribute('locale');
+        $webspaceKey = $webspaceAttributes->getAttribute('webspace')->getKey();
+
+        $cacheKey = sprintf('%s-%s-%s', $webspaceKey, $locale, $code);
+
+        $item = $this->cache->getItem($cacheKey);
+
+        if ($item->isHit()) {
+            return new Response($item->get(), $code);
+        }
+
+        $htmlResponse = $this->twig->render(
+            $errorTemplate,
+            $this->templateAttributeResolver->resolve([
+                'exception' => $flattenException,
+                'status_code' => $flattenException->getStatusCode(),
+                'status_text' => $flattenException->getStatusText(),
+            ])
         );
+
+        $item->set($htmlResponse);
+        $this->cache->save($item);
+
+        return new Response($htmlResponse, $code);
     }
 
     private function getErrorTemplate(Request $request, int $code): ?string
