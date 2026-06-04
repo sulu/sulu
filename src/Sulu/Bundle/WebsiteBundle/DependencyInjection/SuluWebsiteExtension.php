@@ -163,5 +163,12 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
                 AnalyticsRepositoryInterface::class => 'sulu.repository.analytics',
             ]
         );
+
+        $cacheEnabled = $config['error_pages']['cache'];
+        if (null === $cacheEnabled) {
+            $cacheEnabled = !$container->getParameter('kernel.debug');
+        }
+
+        $container->setParameter('sulu_website.error_pages.cache', $cacheEnabled);
     }
 }
