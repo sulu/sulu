@@ -32,6 +32,8 @@ use Sulu\Bundle\WebsiteBundle\Twig\Core\UtilTwigExtension;
 use Sulu\Component\Webspace\EventSubscriber\WebspaceTagSubscriber;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Sulu\Bundle\WebsiteBundle\EventListener\CacheClearListener;
 
 return static function(ContainerConfigurator $container) {
     $services = $container->services();
@@ -111,12 +113,20 @@ return static function(ContainerConfigurator $container) {
         ])
         ->tag('kernel.event_subscriber');
 
+    $services->set('sulu_website.error_page_cache', FilesystemAdapter::class)
+        ->args([
+            'error_pages_cache',
+            0,
+            '%kernel.cache_dir%/pools'
+        ]);
+
     $services->set('sulu_website.error_controller', ErrorController::class)
         ->decorate('error_controller')
         ->args([
             new Reference('sulu_website.error_controller.inner'),
             new Reference('sulu_website.resolver.template_attribute'),
             new Reference('twig'),
+            new Reference('sulu_website.error_page_cache'),
             '%kernel.debug%',
         ])
         ->tag('sulu.context', ['context' => 'website']);
@@ -173,5 +183,11 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_core.webspace.request_analyzer'),
         ])
         ->tag('sulu.context', ['context' => 'website'])
+        ->tag('kernel.event_subscriber');
+
+    $services->set('sulu_website.event_listener.cache_clear', CacheClearListener::class)
+        ->args([
+            new Reference('sulu_website.error_page_cache'),
+        ])
         ->tag('kernel.event_subscriber');
 };
