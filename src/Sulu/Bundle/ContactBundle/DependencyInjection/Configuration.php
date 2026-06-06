@@ -15,6 +15,7 @@ use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
+use Sulu\Bundle\ContactBundle\Provider\FormOfAddressProviderInterface;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -63,6 +64,11 @@ final class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('form_of_address')
+                    ->setDeprecated(
+                        'sulu/sulu',
+                        '2.6',
+                        'This property is deprecated. Use the ' . FormOfAddressProviderInterface::class . ' instead',
+                    )
                     ->useAttributeAsKey('title')
                     ->prototype('array')
                         ->addDefaultsIfNotSet()
