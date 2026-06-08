@@ -734,8 +734,8 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
             name: 'item_disabled_condition',
             value: 'status == "inactive"',
         },
-        types: {
-            name: 'types',
+        templateKeys: {
+            name: 'templateKeys',
             value: 'test',
         },
         request_parameters: {
@@ -793,7 +793,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
         listOptions: {
             segment: 'developer',
             webspace: 'sulu',
-            types: 'test',
+            templateKeys: 'test',
             rootKey: 'testRootKey',
             dynamicKey: 'value-returned-by-form-inspector',
         },
@@ -1155,6 +1155,26 @@ test('Should throw an error if "types" schema option is not a string', () => {
     )).toThrow(/"types"/);
 });
 
+test('Should throw an error if "templateKeys" schema option is not a string', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'test',
+        types: {
+            list_overlay: {},
+        },
+    };
+
+    expect(() => shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={{templateKeys: {name: 'templateKeys', value: []}}}
+        />
+    )).toThrowError(/"templateKeys"/);
+});
+
 test('Should throw an error if no "resource_key" option is passed in fieldOptions', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
 
@@ -1163,7 +1183,7 @@ test('Should throw an error if no "resource_key" option is passed in fieldOption
             {...fieldTypeDefaultProps}
             fieldTypeOptions={{default_type: 'list_overlay'}}
             formInspector={formInspector}
-            schemaOptions={{types: {name: 'types', value: []}}}
+            schemaOptions={{templateKeys: {name: 'templateKeys', value: []}}}
         />
     )).toThrow(/"resource_key"/);
 });

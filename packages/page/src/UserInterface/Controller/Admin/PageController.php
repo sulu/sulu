@@ -94,6 +94,8 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         $excludeShadows = $request->query->getBoolean('exclude-shadows', false);
         $expandedIds = \array_filter(\explode(',', (string) $request->query->get('expandedIds')));
         $ids = $request->query->get('ids');
+        $templateKeysParam = $request->query->getString('templateKeys');
+        $templateKeys = \array_filter(\explode(',', $templateKeysParam));
 
         $filters = [];
 
@@ -107,6 +109,10 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
 
         if ($excludeShadows) {
             $filters['shadowLocale'] = null;
+        }
+
+        if (!empty($templateKeys)) {
+            $filters['templateKeys'] = $templateKeys;
         }
 
         $includedFields = ['locale', 'ghostLocale', 'shadowLocale', 'webspaceKey', 'template', 'publishedState', 'linkProvider'];
@@ -364,7 +370,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
     }
 
     /**
-     * @param array<string, bool|float|int|string|null> $filters
+     * @param array<string, array<int, string>|bool|float|int|string|null> $filters
      * @param array<string, mixed> $parameters
      * @param string[] $expandedIds
      * @param string[] $includedFields
@@ -418,6 +424,14 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
 
         // Fall back to a non-matching value for an empty set to avoid an invalid `andWhere('()')`.
         $listBuilder->in($fieldDescriptors['webspaceKey'], !empty($webspaces) ? $webspaces : [null]);
+
+        /** @var string[] $templateKeys */
+        $templateKeys = $filters['templateKeys'] ?? [];
+        unset($filters['templateKeys']);
+
+        if (!empty($templateKeys) && isset($fieldDescriptors['templateKey'])) {
+            $listBuilder->in($fieldDescriptors['templateKey'], $templateKeys);
+        }
 
         foreach ($filters as $key => $value) {
             if (isset($fieldDescriptors[$key])) {

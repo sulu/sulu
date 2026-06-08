@@ -664,7 +664,7 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(201, $response3);
 
         // Test single template filter
-        $this->client->request('GET', '/admin/api/articles?locale=en&templates=article');
+        $this->client->request('GET', '/admin/api/articles?locale=en&templateKeys=article');
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
         $content = \json_decode((string) $response->getContent(), true);
@@ -677,7 +677,7 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertSame('Article Template Test', $content['_embedded']['articles'][0]['title']);
 
         // Test multiple template filter
-        $this->client->request('GET', '/admin/api/articles?locale=en&templates=article,blog');
+        $this->client->request('GET', '/admin/api/articles?locale=en&templateKeys=article,blog');
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
         $content = \json_decode((string) $response->getContent(), true);
@@ -691,7 +691,7 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertContains('Blog Template Test', $titles);
 
         // Test template filter with empty values (should be filtered out)
-        $this->client->request('GET', '/admin/api/articles?locale=en&templates=article,,blog,');
+        $this->client->request('GET', '/admin/api/articles?locale=en&templateKeys=article,,blog,');
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
         $content = \json_decode((string) $response->getContent(), true);
@@ -714,7 +714,7 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertSame(3, $content['total']);
 
         // Test empty template filter (should return all)
-        $this->client->request('GET', '/admin/api/articles?locale=en&templates=');
+        $this->client->request('GET', '/admin/api/articles?locale=en&templateKeys=');
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
         $content = \json_decode((string) $response->getContent(), true);
@@ -723,7 +723,7 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertSame(3, $content['total']);
 
         // Test non-existent template (should return no results)
-        $this->client->request('GET', '/admin/api/articles?locale=en&templates=nonexistent');
+        $this->client->request('GET', '/admin/api/articles?locale=en&templateKeys=nonexistent');
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
         $content = \json_decode((string) $response->getContent(), true);
@@ -881,7 +881,7 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(201, $response3);
 
         // Test type filter
-        $this->client->request('GET', '/admin/api/articles?locale=en&types=blog-group');
+        $this->client->request('GET', '/admin/api/articles?locale=en&groups=blog-group');
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
         $content = \json_decode((string) $response->getContent(), true);

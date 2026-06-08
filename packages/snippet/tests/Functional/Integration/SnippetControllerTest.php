@@ -323,17 +323,17 @@ class SnippetControllerTest extends SuluTestCase
     public function testGetListWithTypesFilter(): void
     {
         // Test filtering by existing type - should return the snippet
-        $this->client->request('GET', '/admin/api/snippets?locale=en&types=snippet');
+        $this->client->request('GET', '/admin/api/snippets?locale=en&templateKeys=snippet');
         $response = $this->client->getResponse();
         $this->assertResponseSnapshot('snippet_cget_types_filter_snippet.json', $response, 200);
 
         // Test filtering by non-existent type - should return no results
-        $this->client->request('GET', '/admin/api/snippets?locale=en&types=non-existent-type');
+        $this->client->request('GET', '/admin/api/snippets?locale=en&templateKeys=non-existent-type');
         $response = $this->client->getResponse();
         $this->assertResponseSnapshot('snippet_cget_types_filter_nonexistent.json', $response, 200);
 
         // Test filtering by multiple types - should return snippets of the existing type
-        $this->client->request('GET', '/admin/api/snippets?locale=en&types=snippet,other-template');
+        $this->client->request('GET', '/admin/api/snippets?locale=en&templateKeys=snippet,other-template');
         $response = $this->client->getResponse();
         $this->assertResponseSnapshot('snippet_cget_types_filter_multiple.json', $response, 200);
     }
