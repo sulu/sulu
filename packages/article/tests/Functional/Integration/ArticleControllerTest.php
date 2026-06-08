@@ -367,6 +367,47 @@ class ArticleControllerTest extends SuluTestCase
     }
 
     #[Depends('testPost')]
+    public function testPostTriggerCopyLocaleWithoutSrcParam(string $id): void
+    {
+        $this->client->request('POST', '/admin/api/articles/' . $id . '?locale=en&action=copy_locale&dest=de');
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode(), (string) $response->getContent());
+
+        /** @var array{availableLocales?: string[]} $data */
+        $data = \json_decode((string) $response->getContent(), true);
+        $availableLocales = $data['availableLocales'] ?? [];
+        $this->assertContains('de', $availableLocales);
+        $this->assertContains('en', $availableLocales);
+    }
+
+    #[Depends('testPost')]
+    public function testPostTriggerCopy(string $id): void
+    {
+        $this->client->request('POST', '/admin/api/articles/' . $id . '?locale=en&action=copy');
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode(), (string) $response->getContent());
+
+        /** @var array{id?: string} $data */
+        $data = \json_decode((string) $response->getContent(), true);
+        $this->assertArrayHasKey('id', $data);
+        $copyId = $data['id'];
+        $this->assertNotSame($id, $copyId);
+
+        $this->client->request('GET', '/admin/api/articles/' . $copyId . '?locale=en');
+        $copyResponse = $this->client->getResponse();
+        $this->assertSame(200, $copyResponse->getStatusCode());
+
+        /** @var array<string, mixed> $copyData */
+        $copyData = \json_decode((string) $copyResponse->getContent(), true);
+        $this->assertSame('Test Article', $copyData['title'] ?? null);
+
+        // Clean up so the duplicate does not pollute snapshot-based list tests that run after this one.
+        $this->client->request('DELETE', '/admin/api/articles/' . $copyId . '?locale=en');
+    }
+
+    #[Depends('testPost')]
     #[Depends('testGet')]
     #[Depends('testPutShadowLocale')]
     public function testPut(string $id): void

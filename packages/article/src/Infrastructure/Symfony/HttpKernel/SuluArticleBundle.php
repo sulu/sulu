@@ -16,6 +16,7 @@ namespace Sulu\Article\Infrastructure\Symfony\HttpKernel;
 use Sulu\Article\Application\Mapper\ArticleContentMapper;
 use Sulu\Article\Application\Mapper\ArticleMapperInterface;
 use Sulu\Article\Application\MessageHandler\ApplyWorkflowTransitionArticleMessageHandler;
+use Sulu\Article\Application\MessageHandler\CopyArticleMessageHandler;
 use Sulu\Article\Application\MessageHandler\CopyLocaleArticleMessageHandler;
 use Sulu\Article\Application\MessageHandler\CreateArticleMessageHandler;
 use Sulu\Article\Application\MessageHandler\ModifyArticleMessageHandler;
@@ -23,6 +24,7 @@ use Sulu\Article\Application\MessageHandler\RemoveArticleMessageHandler;
 use Sulu\Article\Application\MessageHandler\RemoveArticleTranslationMessageHandler;
 use Sulu\Article\Application\MessageHandler\RestoreArticleVersionMessageHandler;
 use Sulu\Article\Application\Webspace\WebspaceSettingsConfigurationResolver;
+use Sulu\Article\Domain\Event\ArticleCopiedEvent;
 use Sulu\Article\Domain\Event\ArticleCreatedEvent;
 use Sulu\Article\Domain\Event\ArticleModifiedEvent;
 use Sulu\Article\Domain\Event\ArticleRemovedEvent;
@@ -62,6 +64,7 @@ use Sulu\Article\Infrastructure\Sulu\Search\WebsiteArticleIndexListener;
 use Sulu\Article\Infrastructure\Sulu\Search\WebsiteArticleReindexProvider;
 use Sulu\Article\Infrastructure\Sulu\Sitemap\ArticlesSitemapProvider;
 use Sulu\Article\Infrastructure\Sulu\Trash\ArticleTrashItemHandler;
+use Sulu\Article\Infrastructure\Symfony\HttpKernel\Compiler\ValidateDefaultMainWebspacePass;
 use Sulu\Article\Infrastructure\Symfony\Twig\ArticleTwigExtension;
 use Sulu\Article\UserInterface\Controller\Admin\ArticleController;
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore;
@@ -217,6 +220,16 @@ final class SuluArticleBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_article.article_repository'),
                 new Reference('sulu_content.content_copier'),
+                new Reference('sulu_activity.domain_event_collector'),
+            ])
+            ->tag('messenger.message_handler');
+
+        $services->set('sulu_article.copy_article_handler')
+            ->class(CopyArticleMessageHandler::class)
+            ->args([
+                new Reference('sulu_article.article_repository'),
+                new Reference('sulu_content.content_copier'),
+                new Reference('sulu.core.localization_manager'),
                 new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
@@ -454,6 +467,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_message_bus'),
             ])
             ->tag('kernel.event_listener', ['event' => ArticleCreatedEvent::class, 'method' => 'onArticleChanged'])
+            ->tag('kernel.event_listener', ['event' => ArticleCopiedEvent::class, 'method' => 'onArticleChanged'])
             ->tag('kernel.event_listener', ['event' => ArticleModifiedEvent::class, 'method' => 'onArticleChanged'])
             ->tag('kernel.event_listener', ['event' => ArticleRemovedEvent::class, 'method' => 'onArticleChanged'])
             ->tag('kernel.event_listener', ['event' => ArticleRestoredEvent::class, 'method' => 'onArticleChanged'])
@@ -684,5 +698,7 @@ final class SuluArticleBundle extends AbstractBundle
             ArticleInterface::class => 'sulu.model.article.class',
             ArticleDimensionContentInterface::class => 'sulu.model.article_content.class',
         ], $container);
+
+        $container->addCompilerPass(new ValidateDefaultMainWebspacePass());
     }
 }
