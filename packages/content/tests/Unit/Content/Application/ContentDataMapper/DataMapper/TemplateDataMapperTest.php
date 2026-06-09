@@ -137,6 +137,7 @@ class TemplateDataMapperTest extends TestCase
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent->setLocale('en');
+        $localizedDimensionContent->setTemplateKey('some-existing-template');
 
         $templateMapper = $this->createTemplateDataMapperInstance([], 'template-key');
         $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
