@@ -52,22 +52,22 @@ class AdminController
         private Environment $engine,
         private TranslatorBagInterface $translatorBag,
         private MetadataProviderRegistry $metadataProviderRegistry,
-        private ViewRegistry $viewRegistry, // deprecated
-        private NavigationRegistry $navigationRegistry, // deprecated
-        private FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry, // deprecated
-        private ContactManagerInterface $contactManager, // deprecated
-        private iterable $smartContentProviders, // deprecated
-        private LinkProviderPoolInterface $linkProviderPool, // deprecated
-        private LocalizationManagerInterface $localizationManager, // deprecated
+        private ?ViewRegistry $viewRegistry, // deprecated
+        private ?NavigationRegistry $navigationRegistry, // deprecated
+        private ?FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry, // deprecated
+        private ?ContactManagerInterface $contactManager, // deprecated
+        private ?iterable $smartContentProviders, // deprecated
+        private ?LinkProviderPoolInterface $linkProviderPool, // deprecated
+        private ?LocalizationManagerInterface $localizationManager, // deprecated
         private string $environment,
         private string $suluVersion,
         private ?string $appVersion,
-        private array $resources, //deprecated
+        private ?array $resources, //deprecated
         private array $locales,
         private array $translations,
         private string $fallbackLocale,
-        private int $collaborationInterval, //deprecated
-        private bool $collaborationEnabled, //deprecated
+        private ?int $collaborationInterval, //deprecated
+        private ?bool $collaborationEnabled, //deprecated
         private ?string $passwordPattern = null,
         private ?string $passwordInfoTranslationKey = null,
         private bool $hasSingleSignOnProvider = false,
