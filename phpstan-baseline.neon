@@ -487,18 +487,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationRegistry.php
 
 		-
-			message: '#^Cannot call method getId\(\) on Sulu\\Bundle\\ContactBundle\\Entity\\ContactInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/SuluAdmin.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\SuluAdmin\:\:__construct\(\) has parameter \$contactManager with generic interface Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface but does not specify its types\: DoctrineEntity, ApiEntity, AddressRelationEntity$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/SuluAdmin.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\Badge\:\:getRouterAttributesToRequest\(\) should return array\<int\|string, string\> but returns array\<string, mixed\>\.$#'
 			identifier: return.type
 			count: 1
@@ -3445,84 +3433,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Admin/View/ViewRegistryTest.php
 
 		-
-			message: '#^Cannot access offset ''admin1'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''admin2'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''collaborationEnabled'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''collaborationInterval'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''fieldTypeOptions'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''navigation'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''resources'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''routes'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''smartContent'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''sulu_admin'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 8
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''title'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access offset 1 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Controller\\AdminControllerTest\:\:provideTranslationsAction\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -3559,12 +3469,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
 
 		-
-			message: '#^Parameter \#19 \$resources of class Sulu\\Bundle\\AdminBundle\\Controller\\AdminController constructor expects array\<mixed\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
-
-		-
 			message: '#^Parameter \#20 \$locales of class Sulu\\Bundle\\AdminBundle\\Controller\\AdminController constructor expects array\<string\>, array given\.$#'
 			identifier: argument.type
 			count: 1
@@ -3577,20 +3481,8 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Controller\\AdminControllerTest\:\:\$contactManager with generic interface Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface does not specify its types\: DoctrineEntity, ApiEntity, AddressRelationEntity$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Controller\\AdminControllerTest\:\:\$locales type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Controller\\AdminControllerTest\:\:\$resources has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
 
