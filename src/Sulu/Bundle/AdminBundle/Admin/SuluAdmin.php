@@ -118,6 +118,6 @@ final class SuluAdmin extends Admin
 
     public static function getPriority(): int
     {
-        return \PHP_INT_MAX - 1;
+        return 10_000;
     }
 }
