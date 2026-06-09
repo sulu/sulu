@@ -52,6 +52,8 @@ class TemplateDataMapper implements DataMapperInterface
         }
 
         if (\array_key_exists('template', $data) && null === $data['template']) {
+            $localizedDimensionContent->setTemplateKey(null);
+
             return;
         }
 
