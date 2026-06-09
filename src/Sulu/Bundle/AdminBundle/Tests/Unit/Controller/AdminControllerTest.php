@@ -20,19 +20,12 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
-use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
-use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
-use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
-use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
-use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPool;
-use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
-use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -96,28 +89,6 @@ class AdminControllerTest extends TestCase
     private ContainerInterface $metadataProviderContainer;
 
     /**
-     * @var ObjectProphecy<NavigationRegistry>
-     */
-    private $navigationRegistry;
-
-    /**
-     * @var ObjectProphecy<FieldTypeOptionRegistryInterface>
-     */
-    private $fieldTypeOptionRegistry;
-
-    /**
-     * @var ObjectProphecy<ContactManagerInterface>
-     */
-    private $contactManager;
-
-    private LinkProviderPoolInterface $linkProviderPool;
-
-    /**
-     * @var ObjectProphecy<LocalizationManagerInterface>
-     */
-    private $localizationManager;
-
-    /**
      * @var string
      */
     private $environment = 'prod';
@@ -131,15 +102,6 @@ class AdminControllerTest extends TestCase
      * @var string
      */
     private $appVersion = '666';
-
-    private $resources = [
-        'tags' => [
-            'endpoint' => [
-                'list' => 'sulu_tag.get_tags',
-                'detail' => 'sulu_tag.get_tag',
-            ],
-        ],
-    ];
 
     /**
      * @var array
@@ -177,15 +139,6 @@ class AdminControllerTest extends TestCase
 
         $this->metadataProviderContainer = new Container();
         $metadataProviderRegistry = new MetadataProviderRegistry($this->metadataProviderContainer);
-        $viewRegistry = $this->prophesize(ViewRegistry::class);
-        $this->navigationRegistry = $this->prophesize(NavigationRegistry::class);
-        $this->fieldTypeOptionRegistry = $this->prophesize(FieldTypeOptionRegistryInterface::class);
-        $this->contactManager = $this->prophesize(ContactManagerInterface::class);
-        $smartContentProviders = new \ArrayIterator([]);
-        $this->linkProviderPool = new LinkProviderPool([]);
-        $this->localizationManager = $this->prophesize(LocalizationManagerInterface::class);
-
-        $this->localizationManager->getLocalizations()->willReturn([]);
         $this->tokenStorage->getToken()->willReturn($this->token->reveal());
         $this->token->getUser()->willReturn($this->user->reveal());
 
@@ -198,22 +151,22 @@ class AdminControllerTest extends TestCase
             $this->engine->reveal(),
             $this->translatorBag->reveal(),
             $metadataProviderRegistry,
-            $viewRegistry->reveal(),
-            $this->navigationRegistry->reveal(),
-            $this->fieldTypeOptionRegistry->reveal(),
-            $this->contactManager->reveal(),
-            $smartContentProviders,
-            $this->linkProviderPool,
-            $this->localizationManager->reveal(),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
             $this->environment,
             $this->suluVersion,
             $this->appVersion,
-            $this->resources,
+            null,
             $this->locales,
             $this->translations,
             $this->fallbackLocale,
-            10,
-            true
+            null,
+            null,
         );
     }
 
