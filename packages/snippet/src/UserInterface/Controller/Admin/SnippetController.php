@@ -86,6 +86,8 @@ final class SnippetController implements SecuredControllerInterface
         /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetInterface::RESOURCE_KEY);
 
+        $excludeShadows = $request->query->getBoolean('exclude-shadows', false);
+
         if ($hasFilterOrSearch || $this->isSingleLocale) {
             foreach ($fieldDescriptors as $name => $fieldDescriptor) {
                 $fieldDescriptors[$name] = $this->fieldDescriptorFactory->excludeCaseFieldDescriptor($fieldDescriptor, 'ghostDimensionContent');
@@ -106,6 +108,15 @@ final class SnippetController implements SecuredControllerInterface
         if (isset($fieldDescriptors['ghostLocale'])) {
             $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);
         }
+
+        if (isset($fieldDescriptors['shadowLocale'])) {
+            $listBuilder->addSelectField($fieldDescriptors['shadowLocale']);
+        }
+
+        if ($excludeShadows) {
+            $listBuilder->where($fieldDescriptors['shadowLocale'], null);
+        }
+
         $listBuilder->setParameter('locale', $this->getLocale($request));
 
         $groupsParam = $request->query->getString('groups');

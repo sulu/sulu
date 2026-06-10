@@ -99,6 +99,10 @@ class SnippetReferenceRefresher implements ReferenceRefresherInterface
      */
     private function processSnippetDimensionContent(SnippetDimensionContentInterface $snippetDimensionContent): void
     {
+        if (null !== $snippetDimensionContent->getShadowLocale()) {
+            return;
+        }
+
         $referenceCollector = new ReferenceCollector(
             referenceRepository: $this->referenceRepository,
             referenceResourceKey: $snippetDimensionContent->getResourceKey(),

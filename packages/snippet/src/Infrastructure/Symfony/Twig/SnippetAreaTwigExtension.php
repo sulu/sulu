@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Infrastructure\Symfony\Twig;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
@@ -35,6 +36,7 @@ class SnippetAreaTwigExtension extends AbstractExtension
         private RequestAnalyzerInterface $requestAnalyzer,
         private ReferenceStoreInterface $referenceStore,
         private ContentResolverInterface $contentResolver,
+        private EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -111,6 +113,16 @@ class SnippetAreaTwigExtension extends AbstractExtension
 
         if (null === $dimensionContent->getLocale()) {
             return null;
+        }
+
+        if ($shadowLocale = $dimensionContent->getShadowLocale()) {
+            // Detach the entity so the recursive findOneBy() creates a fresh instance whose
+            // dimensionContents collection is populated for the source locale, not the shadow
+            // locale. Without detach the identity map would return this same entity and
+            // aggregate() would never find the source locale's live dimension content.
+            $this->entityManager->detach($snippet);
+
+            return $this->loadSnippetByArea($areaKey, $properties, $webspaceKey, $shadowLocale);
         }
 
         $resolvedContent = $this->contentResolver->resolve($dimensionContent, $properties);
