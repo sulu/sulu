@@ -52,13 +52,25 @@ class TemplateDataMapper implements DataMapperInterface
         }
 
         if (\array_key_exists('template', $data) && null === $data['template']) {
-            $localizedDimensionContent->setTemplateKey(null);
-
             return;
         }
 
-        /** @var string $template */
-        $template = $data['template'] ?? $typedMetadata->getDefaultType();
+        if (\array_key_exists('template', $data)) {
+            $template = $data['template'];
+            if (!\is_string($template)) {
+                throw new \InvalidArgumentException(\sprintf('Expected "template" to be a string, got "%s".', \get_debug_type($template)));
+            }
+        } else {
+            try {
+                $template = $typedMetadata->getDefaultType();
+            } catch (\TypeError) {
+                $template = null;
+            }
+        }
+
+        if (!$template) {
+            return;
+        }
 
         $metadata = $typedMetadata->getForms()[$template] ?? null;
 

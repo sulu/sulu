@@ -50,6 +50,15 @@
         </join>
     </joins>
 
+    <joins name="shadowDimensionContent" ref="dimensionContent">
+        <join>
+            <entity-name>shadowDimensionContent</entity-name>
+            <field-name>Sulu\Snippet\Domain\Model\SnippetInterface.dimensionContents</field-name>
+            <method>LEFT</method>
+            <condition>shadowDimensionContent.locale = dimensionContent.shadowLocale AND shadowDimensionContent.stage = 'draft' AND shadowDimensionContent.version = 0</condition>
+        </join>
+    </joins>
+
     <properties>
         <!-- TODO should be uuid not id -->
         <property name="id" translation="sulu_admin.uuid">
@@ -127,6 +136,13 @@
         <property name="locale" translation="sulu_admin.locale" visibility="never">
             <field-name>locale</field-name>
             <entity-name>dimensionContent</entity-name>
+        </property>
+
+        <property name="shadowLocale" translation="sulu_admin.shadow_locale" visibility="never">
+            <field-name>locale</field-name>
+            <entity-name>shadowDimensionContent</entity-name>
+
+            <joins ref="shadowDimensionContent"/>
         </property>
 
         <property name="ghostLocale" translation="sulu_admin.ghost_locale" visibility="never">
