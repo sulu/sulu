@@ -116,10 +116,8 @@ class SnippetAreaTwigExtension extends AbstractExtension
         }
 
         if ($shadowLocale = $dimensionContent->getShadowLocale()) {
-            // Detach the entity so the recursive findOneBy() creates a fresh instance whose
-            // dimensionContents collection is populated for the source locale, not the shadow
-            // locale. Without detach the identity map would return this same entity and
-            // aggregate() would never find the source locale's live dimension content.
+            // Detach to bypass identity map: recursive call must load a fresh Snippet whose
+            // dimensionContents collection is for the source locale, not this shadow locale.
             $this->entityManager->detach($snippet);
 
             return $this->loadSnippetByArea($areaKey, $properties, $webspaceKey, $shadowLocale);
