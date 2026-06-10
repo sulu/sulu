@@ -161,8 +161,6 @@ class SnippetAreaTwigExtensionTest extends SuluTestCase
             ],
             'de' => [
                 'live' => [
-                    'template' => 'snippet',
-                    'title' => 'English Snippet',
                     'shadowOn' => true,
                     'shadowLocale' => 'en',
                 ],

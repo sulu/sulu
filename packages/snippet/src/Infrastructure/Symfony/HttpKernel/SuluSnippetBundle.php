@@ -281,6 +281,7 @@ final class SuluSnippetBundle extends AbstractBundle
                 new Reference('sulu_core.webspace.request_analyzer'),
                 new Reference('sulu_snippet.snippet_reference_store'),
                 new Reference('sulu_content.content_resolver'),
+                new Reference('doctrine.orm.entity_manager'),
             ])
             ->tag('twig.extension');
 
