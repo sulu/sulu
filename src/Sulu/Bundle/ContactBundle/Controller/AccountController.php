@@ -313,7 +313,7 @@ class AccountController extends AbstractRestController implements SecuredControl
             $account = $accountContact->getAccount();
 
             // Remove main contact when relation with main was removed.
-            if ($account->getMainContact() && \strval($account->getMainContact()->getId()) === $id) {
+            if ($account->getMainContact() && $account->getMainContact()->getId() === $id) {
                 $account->setMainContact(null);
             }
 

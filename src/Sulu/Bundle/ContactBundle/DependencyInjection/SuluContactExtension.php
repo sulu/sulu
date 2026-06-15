@@ -309,7 +309,6 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
             $config['defaults']
         );
 
-        $this->setDefaultForFormOfAddress($config);
         $container->setParameter(
             'sulu_contact.form_of_address',
             $config['form_of_address']
@@ -330,28 +329,5 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                 AccountRepositoryInterface::class => 'sulu.repository.account',
             ]
         );
-    }
-
-    /**
-     * Sets default values for form of address if not defined in config.
-     *
-     * @param array $config
-     */
-    private function setDefaultForFormOfAddress($config)
-    {
-        if (!\array_key_exists('form_of_address', $config) || 0 == \count($config['form_of_address'])) {
-            $config['form_of_address'] = [
-                'male' => [
-                    'id' => 0,
-                    'name' => 'male',
-                    'translation' => 'contact.contacts.formOfAddress.male',
-                ],
-                'female' => [
-                    'id' => 1,
-                    'name' => 'female',
-                    'translation' => 'contact.contacts.formOfAddress.female',
-                ],
-            ];
-        }
     }
 }
