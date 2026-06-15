@@ -21,16 +21,8 @@ use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
-/**
- * Regression test for https://github.com/sulu/sulu/issues/8883
- * "Shadow Locale Fails to Publish".
- *
- * Publishing a shadow locale must copy the live content of its source locale. The workflow
- * handler therefore has to load the source locale's dimension contents, not only the locale
- * being published.
- */
 #[CoversNothing]
-class PageShadowPublishReproTest extends SuluTestCase
+class PageShadowPublishTest extends SuluTestCase
 {
     /**
      * @var KernelBrowser
@@ -63,7 +55,6 @@ class PageShadowPublishReproTest extends SuluTestCase
         self::purgeDatabase();
         $homepage = $this->createHomepage('0199ee04-c220-784e-a6fa-ac985870f2d5', 'sulu-io');
 
-        // 1. Create and publish the source page in EN.
         $this->client->request(
             'POST',
             \sprintf('/admin/api/pages?locale=en&action=publish&parentId=%s&webspace=sulu-io', $homepage->getId()),
@@ -79,7 +70,6 @@ class PageShadowPublishReproTest extends SuluTestCase
         $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
         $id = $content['id'];
 
-        // 2. Save DE as a shadow of EN.
         $this->client->request(
             'PUT',
             '/admin/api/pages/' . $id . '?locale=de&webspace=sulu-io',
@@ -94,9 +84,7 @@ class PageShadowPublishReproTest extends SuluTestCase
         );
         self::assertSame(200, $this->client->getResponse()->getStatusCode(), (string) $this->client->getResponse()->getContent());
 
-        // 3. Publish the DE shadow locale - this used to fail with
-        //    "TypedFormMetadata::getDefaultType() null returned" and then
-        //    "Expected \"published\" to be set in the data array.".
+        // Publishing the shadow used to fail because the source locale's content was not loaded.
         $this->client->request(
             'PUT',
             '/admin/api/pages/' . $id . '?locale=de&action=publish&webspace=sulu-io',
@@ -111,7 +99,6 @@ class PageShadowPublishReproTest extends SuluTestCase
         );
         self::assertSame(200, $this->client->getResponse()->getStatusCode(), (string) $this->client->getResponse()->getContent());
 
-        // The DE live dimension content exists, shadows EN and carries EN's published template/content.
         $liveDe = $this->getLiveDimensionContent($id, 'de');
         self::assertNotNull($liveDe, 'Expected a published (live) DE dimension content.');
         self::assertSame('en', $liveDe['shadowLocale']);
@@ -122,15 +109,11 @@ class PageShadowPublishReproTest extends SuluTestCase
         self::assertSame('Source EN', $templateData['title'] ?? null);
     }
 
-    /**
-     * Republishing a source locale must update (not duplicate) the live content of locales shadowing it.
-     */
     public function testRepublishingSourceUpdatesLiveShadowDependent(): void
     {
         self::purgeDatabase();
         $homepage = $this->createHomepage('0199ee04-c220-784e-a6fa-ac985870f2d5', 'sulu-io');
 
-        // Create and publish EN.
         $this->client->request(
             'POST',
             \sprintf('/admin/api/pages?locale=en&action=publish&parentId=%s&webspace=sulu-io', $homepage->getId()),
@@ -142,7 +125,6 @@ class PageShadowPublishReproTest extends SuluTestCase
         $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
         $id = $content['id'];
 
-        // Save DE as a shadow of EN and publish it.
         $shadowData = ['template' => 'default', 'title' => 'Source EN', 'url' => '/source-en', 'shadowOn' => true, 'shadowLocale' => 'en'];
         $this->client->request('PUT', '/admin/api/pages/' . $id . '?locale=de&webspace=sulu-io', [], [], [], \json_encode($shadowData) ?: null);
         self::assertSame(200, $this->client->getResponse()->getStatusCode(), (string) $this->client->getResponse()->getContent());
@@ -155,7 +137,7 @@ class PageShadowPublishReproTest extends SuluTestCase
         $templateData = $liveDe['templateData'];
         self::assertSame('Source EN', $templateData['title'] ?? null);
 
-        // Republish EN with new content; the DE shadow dependent's live content must update too.
+        // Republishing the source must update the shadow dependent's live content, not duplicate it.
         $this->client->request(
             'PUT',
             '/admin/api/pages/' . $id . '?locale=en&action=publish&webspace=sulu-io',
@@ -177,18 +159,25 @@ class PageShadowPublishReproTest extends SuluTestCase
      */
     private function getLiveDimensionContent(string $pageId, string $locale): ?array
     {
-        /** @var EntityManagerInterface $em */
-        $em = self::getContainer()->get(EntityManagerInterface::class);
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
 
         /** @var array<string, mixed>|null $row */
-        $row = $em->createQueryBuilder()
-            ->from(PageDimensionContent::class, 'd')
-            ->select('d.stage', 'd.locale', 'd.templateKey', 'd.workflowPublished', 'd.shadowLocale', 'd.templateData')
-            ->where('IDENTITY(d.page) = :id')
-            ->andWhere('d.stage = :stage')
-            ->andWhere('d.locale = :locale')
-            ->andWhere('d.version = 0')
-            ->setParameter('id', $pageId)
+        $row = $entityManager->createQueryBuilder()
+            ->from(PageDimensionContent::class, 'dimensionContent')
+            ->select(
+                'dimensionContent.stage',
+                'dimensionContent.locale',
+                'dimensionContent.templateKey',
+                'dimensionContent.workflowPublished',
+                'dimensionContent.shadowLocale',
+                'dimensionContent.templateData',
+            )
+            ->where('IDENTITY(dimensionContent.page) = :pageId')
+            ->andWhere('dimensionContent.stage = :stage')
+            ->andWhere('dimensionContent.locale = :locale')
+            ->andWhere('dimensionContent.version = 0')
+            ->setParameter('pageId', $pageId)
             ->setParameter('stage', 'live')
             ->setParameter('locale', $locale)
             ->getQuery()
