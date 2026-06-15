@@ -108,6 +108,124 @@ class ValidateDefaultMainWebspacePassTest extends TestCase
         (new ValidateDefaultMainWebspacePass())->process($container);
     }
 
+    public function testThrowsWhenDefaultWebspaceDoesNotSupportLocale(): void
+    {
+        $dir = $this->createWebspaceDirWithLocales([
+            'website' => ['en', 'de'],
+            'magazine' => ['en'],
+        ]);
+        $container = $this->createContainer($dir, ['default' => 'magazine']);
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('locale "de"');
+
+        (new ValidateDefaultMainWebspacePass())->process($container);
+    }
+
+    public function testThrowsWhenLocaleSpecificWebspaceDoesNotSupportItsLocale(): void
+    {
+        $dir = $this->createWebspaceDirWithLocales([
+            'website' => ['en', 'de'],
+            'magazine' => ['en'],
+        ]);
+        $container = $this->createContainer($dir, ['en' => 'website', 'de' => 'magazine']);
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('maps locale "de" to webspace "magazine"');
+
+        (new ValidateDefaultMainWebspacePass())->process($container);
+    }
+
+    public function testThrowsWhenAuthorableLocaleHasNoMapping(): void
+    {
+        // "de" is authorable but has neither a per-locale nor a "default" mapping.
+        $dir = $this->createWebspaceDirWithLocales([
+            'website' => ['en'],
+            'magazine' => ['de'],
+        ]);
+        $container = $this->createContainer($dir, ['en' => 'website']);
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('locale "de" has no');
+
+        (new ValidateDefaultMainWebspacePass())->process($container);
+    }
+
+    public function testDoesNotThrowWhenPerLocaleMappingsCoverDisjointLocales(): void
+    {
+        $dir = $this->createWebspaceDirWithLocales([
+            'website' => ['en'],
+            'magazine' => ['de'],
+        ]);
+        $container = $this->createContainer($dir, ['en' => 'website', 'de' => 'magazine']);
+
+        (new ValidateDefaultMainWebspacePass())->process($container);
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function testDoesNotThrowWhenDefaultCoversLocalesNotOverriddenPerLocale(): void
+    {
+        $dir = $this->createWebspaceDirWithLocales([
+            'website' => ['en', 'de'],
+            'magazine' => ['fr'],
+        ]);
+        $container = $this->createContainer($dir, ['default' => 'website', 'fr' => 'magazine']);
+
+        (new ValidateDefaultMainWebspacePass())->process($container);
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function testValidatesCountryLocales(): void
+    {
+        // Mixed granularity: language_country locales alongside bare-language ones.
+        $dir = $this->createWebspaceDirWithLocales([
+            'bwt_country' => ['de_de', 'de_at'],
+            'bwt_pharma' => ['de', 'en'],
+        ]);
+        $container = $this->createContainer($dir, [
+            'de_de' => 'bwt_country',
+            'de_at' => 'bwt_country',
+            'de' => 'bwt_pharma',
+            'en' => 'bwt_pharma',
+        ]);
+
+        (new ValidateDefaultMainWebspacePass())->process($container);
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function testThrowsWhenDefaultDoesNotSupportCountryLocale(): void
+    {
+        // "default" => bwt_country covers de_de/de_at but not the bare "de" from bwt_pharma.
+        $dir = $this->createWebspaceDirWithLocales([
+            'bwt_country' => ['de_de', 'de_at'],
+            'bwt_pharma' => ['de'],
+        ]);
+        $container = $this->createContainer($dir, ['default' => 'bwt_country']);
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('locale "de"');
+
+        (new ValidateDefaultMainWebspacePass())->process($container);
+    }
+
+    public function testNormalizesCountryLocaleCaseToMatchRuntime(): void
+    {
+        // Uppercase ISO country codes in the XML must resolve like Localization::getLocale(),
+        // which lowercases them, so a lowercase per-locale config entry still matches.
+        $dir = $this->createWebspaceDirWithLocales([
+            'website' => ['de_AT'],
+            'magazine' => ['en'],
+        ]);
+        $container = $this->createContainer($dir, ['de_at' => 'website', 'en' => 'magazine']);
+
+        (new ValidateDefaultMainWebspacePass())->process($container);
+
+        $this->addToAssertionCount(1);
+    }
+
     public function testRegistersConfigDirAsContainerResource(): void
     {
         $dir = $this->createWebspaceDir(['sulu-io']);
@@ -189,15 +307,39 @@ class ValidateDefaultMainWebspacePassTest extends TestCase
         return $dir;
     }
 
-    private function webspaceXml(string $key): string
+    /**
+     * @param array<string, list<string>> $webspaces webspace key => supported locales
+     */
+    private function createWebspaceDirWithLocales(array $webspaces): string
     {
-        return <<<XML
-            <?xml version="1.0" encoding="utf-8"?>
-            <webspace xmlns="http://schemas.sulu.io/webspace/webspace">
-                <name>{$key}</name>
-                <key>{$key}</key>
-            </webspace>
-            XML;
+        $dir = $this->createTempDir();
+        foreach ($webspaces as $key => $locales) {
+            \file_put_contents($dir . '/' . $key . '.xml', $this->webspaceXml($key, $locales));
+        }
+
+        return $dir;
+    }
+
+    /**
+     * @param list<string> $locales
+     */
+    private function webspaceXml(string $key, array $locales = ['en', 'de']): string
+    {
+        $localizations = '';
+        foreach ($locales as $locale) {
+            $parts = \explode('_', $locale, 2);
+            $country = isset($parts[1]) ? \sprintf(' country="%s"', $parts[1]) : '';
+            $localizations .= \sprintf('        <localization language="%s"%s/>', $parts[0], $country) . "\n";
+        }
+
+        return '<?xml version="1.0" encoding="utf-8"?>' . "\n"
+            . '<webspace xmlns="http://schemas.sulu.io/webspace/webspace">' . "\n"
+            . '    <name>' . $key . '</name>' . "\n"
+            . '    <key>' . $key . '</key>' . "\n"
+            . '    <localizations>' . "\n"
+            . $localizations
+            . '    </localizations>' . "\n"
+            . '</webspace>' . "\n";
     }
 
     private function createTempDir(): string

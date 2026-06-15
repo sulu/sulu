@@ -36,6 +36,8 @@
     "sulu_content.webspace": "Webspace",
     "sulu_content.main_webspace": "Main Webspace",
     "sulu_content.additional_webspaces": "Additional Webspaces",
+    "sulu_content.webspace_does_not_support_locale": "The webspace \"{webspace}\" does not support the locale \"{locale}\".",
+    "sulu_content.webspace_not_found": "The webspace \"{webspace}\" could not be found.",
     "sulu_content.page_settings": "Page settings",
     "sulu_content.hide_block_label": "Don't display on public website",
     "sulu_content.hide_block_description": "This block will not be published, but remains editable in the admin.",

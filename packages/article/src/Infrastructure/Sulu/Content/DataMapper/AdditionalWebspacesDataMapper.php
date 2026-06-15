@@ -18,6 +18,8 @@ use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\DataMapperInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Sulu\Webspace\Exception\WebspaceLocaleNotSupportedException;
+use Sulu\Content\Infrastructure\Sulu\Webspace\Exception\WebspaceNotFoundException;
 use Webmozart\Assert\Assert;
 
 class AdditionalWebspacesDataMapper implements DataMapperInterface
@@ -65,6 +67,15 @@ class AdditionalWebspacesDataMapper implements DataMapperInterface
             return;
         }
 
+        // Only process mainWebspace if customize is activated
+        if (\array_key_exists('mainWebspace', $data)) {
+            Assert::nullOrString($data['mainWebspace']);
+
+            if ($data['mainWebspace']) {
+                $this->validateWebspaceSupportsLocale($data['mainWebspace'], $dimensionContent->getLocale());
+            }
+        }
+
         // Only process additionalWebspaces if customize is activated
         if (\array_key_exists('additionalWebspaces', $data)) {
             Assert::nullOrIsArray($data['additionalWebspaces']);
@@ -94,13 +105,11 @@ class AdditionalWebspacesDataMapper implements DataMapperInterface
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
 
         if (!$webspace) {
-            throw new \InvalidArgumentException(\sprintf('Webspace "%s" not found', $webspaceKey));
+            throw new WebspaceNotFoundException($webspaceKey);
         }
 
         if (!$webspace->getLocalization($locale)) {
-            throw new \InvalidArgumentException(
-                \sprintf('Webspace "%s" does not support locale "%s"', $webspaceKey, $locale)
-            );
+            throw new WebspaceLocaleNotSupportedException($webspaceKey, $locale);
         }
     }
 }

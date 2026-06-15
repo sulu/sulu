@@ -36,6 +36,8 @@
     "sulu_content.webspace": "Webspace",
     "sulu_content.main_webspace": "Hauptwebspace",
     "sulu_content.additional_webspaces": "Weitere Webspaces",
+    "sulu_content.webspace_does_not_support_locale": "Der Webspace \"{webspace}\" unterstützt die Sprache \"{locale}\" nicht.",
+    "sulu_content.webspace_not_found": "Der Webspace \"{webspace}\" konnte nicht gefunden werden.",
     "sulu_content.page_settings": "Seiteneinstellungen",
     "sulu_content.hide_block_label": "Nicht auf publizierter Website darstellen",
     "sulu_content.hide_block_description": "Dieser Block wird nicht veröffentlicht, kann aber weiterhin im Admin bearbeitet werden.",
