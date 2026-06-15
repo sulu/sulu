@@ -15,7 +15,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage;
 use Sulu\Page\Domain\Event\PageWorkflowTransitionAppliedEvent;
@@ -91,7 +90,6 @@ final class ApplyWorkflowTransitionPageMessageHandler
         foreach ($page->getDimensionContents() as $dimensionContent) {
             if (DimensionContentInterface::STAGE_DRAFT !== $dimensionContent->getStage()
                 || null !== $dimensionContent->getLocale()
-                || !$dimensionContent instanceof ShadowInterface
             ) {
                 continue;
             }
