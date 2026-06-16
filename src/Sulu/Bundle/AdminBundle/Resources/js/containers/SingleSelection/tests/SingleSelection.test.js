@@ -67,7 +67,7 @@ test('Render with selected item', () => {
         />
     );
 
-    expect(SingleSelectionStore).toBeCalledWith('test', 3, locale, undefined);
+    expect(SingleSelectionStore).toHaveBeenCalledWith('test', 3, locale, undefined);
 
     singleSelection.instance().singleSelectionStore.item = {
         id: 3,
@@ -153,7 +153,7 @@ test('Pass options to SingleListOverlay and SingleSelectionStore', () => {
         />
     );
 
-    expect(SingleSelectionStore).toBeCalledWith('test', 3, undefined, {'ghost-content': true});
+    expect(SingleSelectionStore).toHaveBeenCalledWith('test', 3, undefined, {'ghost-content': true});
 
     expect(singleSelection.find(SingleListOverlay).prop('options')).toEqual({value: 'Test'});
 });
@@ -265,7 +265,7 @@ test('Should call the onChange callback with null if the current item does not e
 
     singleSelection.instance().singleSelectionStore.item = null;
 
-    expect(changeSpy).toBeCalledWith(null, null);
+    expect(changeSpy).toHaveBeenCalledWith(null, null);
 });
 
 test('Should call the onChange callback if a new item was selected', () => {
@@ -291,8 +291,8 @@ test('Should call the onChange callback if a new item was selected', () => {
     expect(singleSelection.find(SingleListOverlay).prop('open')).toEqual(true);
 
     singleSelection.find(SingleListOverlay).prop('onConfirm')({id: 6});
-    expect(singleSelection.instance().singleSelectionStore.loadItem).toBeCalledWith(6);
-    expect(changeSpy).toBeCalledWith(6, {id: 6});
+    expect(singleSelection.instance().singleSelectionStore.loadItem).toHaveBeenCalledWith(6);
+    expect(changeSpy).toHaveBeenCalledWith(6, {id: 6});
     singleSelection.update();
     expect(singleSelection.find(SingleListOverlay).prop('open')).toEqual(false);
 });
@@ -323,7 +323,7 @@ test('Should not call onChange callback if an unrelated observable that is acces
 
     // change callback should be called when item of the store mock changes
     singleSelection.instance().singleSelectionStore.item = {id: 7};
-    expect(changeSpy).toBeCalledWith(7, {id: 7});
+    expect(changeSpy).toHaveBeenCalledWith(7, {id: 7});
     expect(changeSpy).toHaveBeenCalledTimes(1);
 
     // change callback should not be called when the unrelated observable changes
@@ -350,7 +350,7 @@ test('Should not call the onChange callback if the same item was selected', () =
     );
 
     singleSelection.find(SingleListOverlay).prop('onConfirm')({id: 6});
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Should load the item if value prop changes', () => {
@@ -368,7 +368,7 @@ test('Should load the item if value prop changes', () => {
     );
 
     singleSelection.setProps({value: 3});
-    expect(singleSelection.instance().singleSelectionStore.loadItem).toBeCalledWith(3);
+    expect(singleSelection.instance().singleSelectionStore.loadItem).toHaveBeenCalledWith(3);
 });
 
 test('Should call the onItemClick callback when an item when the item is clicked', () => {
@@ -391,7 +391,7 @@ test('Should call the onItemClick callback when an item when the item is clicked
     singleSelection.instance().singleSelectionStore.item = {id: 1};
     singleSelection.find('SingleItemSelection .item').simulate('click');
 
-    expect(itemClickSpy).toBeCalledWith(1, {id: 1});
+    expect(itemClickSpy).toHaveBeenCalledWith(1, {id: 1});
 });
 
 test('Should remove an item when the remove button is clicked', () => {
@@ -413,7 +413,7 @@ test('Should remove an item when the remove button is clicked', () => {
         value: 'Value',
     };
     singleSelection.find('SingleItemSelection').prop('onRemove')();
-    expect(singleSelection.instance().singleSelectionStore.clear).toBeCalledWith();
+    expect(singleSelection.instance().singleSelectionStore.clear).toHaveBeenCalledWith();
 });
 
 test('Should call the onChange callback if the value of the selection-store changes', () => {
@@ -435,7 +435,7 @@ test('Should call the onChange callback if the value of the selection-store chan
     );
 
     singleSelection.instance().singleSelectionStore.item = {id: 6};
-    expect(changeSpy).toBeCalledWith(6, {id: 6});
+    expect(changeSpy).toHaveBeenCalledWith(6, {id: 6});
 });
 
 test('Should not call the onChange callback if the component props change', () => {
@@ -457,7 +457,7 @@ test('Should not call the onChange callback if the component props change', () =
     );
 
     singleSelection.setProps({emptyText: 'New Empty Text'});
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Correct props should be passed to SingleItemSelection component', () => {

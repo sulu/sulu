@@ -171,7 +171,7 @@ test('Should call the submit handler of the login view', () => {
 
     login.find('form').prop('onSubmit')(eventMock);
 
-    expect(mockUserStoreLogin).toBeCalledWith({username: 'testUser', password: 'testPassword'});
+    expect(mockUserStoreLogin).toHaveBeenCalledWith({username: 'testUser', password: 'testPassword'});
 });
 
 test('Should call the submit handler of the forgot password view', () => {
@@ -188,7 +188,7 @@ test('Should call the submit handler of the forgot password view', () => {
     login.find('Input[icon="su-user"]').prop('onChange')('testUser');
     login.find('form').prop('onSubmit')(eventMock);
 
-    expect(mockUserStoreForgotPassword).toBeCalledWith({user: 'testUser'});
+    expect(mockUserStoreForgotPassword).toHaveBeenCalledWith({user: 'testUser'});
 });
 
 test('Should call the submit handler of the reset password view', () => {
@@ -207,13 +207,13 @@ test('Should call the submit handler of the reset password view', () => {
     login.find('Input[icon="su-lock"]').at(1).prop('onChange')('testpassword');
     login.find('form').prop('onSubmit')(eventMock);
 
-    expect(mockUserStoreResetPassword).toBeCalledWith({
+    expect(mockUserStoreResetPassword).toHaveBeenCalledWith({
         password: 'testpassword',
         token: 'some-uuid',
     });
 
     return promise.then(() => {
-        expect(router.reset).toBeCalled();
+        expect(router.reset).toHaveBeenCalled();
     });
 });
 
@@ -233,10 +233,10 @@ test('Should not call the submit handler of the reset password view with an inva
     login.find('Input[icon="su-lock"]').at(1).prop('onChange')('test');
     login.find('form').prop('onSubmit')(eventMock);
 
-    expect(mockUserStoreResetPassword).not.toBeCalled();
+    expect(mockUserStoreResetPassword).not.toHaveBeenCalled();
 
     return promise.then(() => {
-        expect(router.reset).not.toBeCalled();
+        expect(router.reset).not.toHaveBeenCalled();
     });
 });
 
@@ -256,10 +256,10 @@ test('Should not call the submit handler of the reset password view with not mat
     login.find('Input[icon="su-lock"]').at(1).prop('onChange')('testpassword');
     login.find('form').prop('onSubmit')(eventMock);
 
-    expect(mockUserStoreResetPassword).not.toBeCalled();
+    expect(mockUserStoreResetPassword).not.toHaveBeenCalled();
 
     return promise.then(() => {
-        expect(router.reset).not.toBeCalled();
+        expect(router.reset).not.toHaveBeenCalled();
     });
 });
 

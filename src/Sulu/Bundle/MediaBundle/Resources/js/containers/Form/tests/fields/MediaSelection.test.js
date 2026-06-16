@@ -126,7 +126,7 @@ test('Set default display option if no value is passed', () => {
         />
     );
 
-    expect(changeSpy).toBeCalledWith({displayOption: 'left', ids: []}, {'isDefaultValue': true});
+    expect(changeSpy).toHaveBeenCalledWith({displayOption: 'left', ids: []}, {'isDefaultValue': true});
 });
 
 test('Pass correct props for given schema-options to MultiMediaSelection component', () => {
@@ -192,7 +192,7 @@ test('Do not set default display option if value is passed', () => {
         />
     );
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Should call onChange and onFinish if the selection changes', () => {
@@ -219,8 +219,8 @@ test('Should call onChange and onFinish if the selection changes', () => {
 
     mediaSelection.find(MultiMediaSelection).props().onChange({ids: [33, 44]});
 
-    expect(changeSpy).toBeCalledWith({ids: [33, 44]});
-    expect(finishSpy).toBeCalled();
+    expect(changeSpy).toHaveBeenCalledWith({ids: [33, 44]});
+    expect(finishSpy).toHaveBeenCalled();
 });
 
 test('Should navigate to media if a media is clicked', () => {
@@ -296,7 +296,7 @@ test('Should log warning and use ids of objects if given value is an array of ob
     );
 
     expect(mediaSelection.find(MultiMediaSelection).props().value).toEqual({ids: [55, 66, 77]});
-    expect(log.warn).toBeCalledWith(expect.stringContaining('expects an object with an "ids" property as value'));
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('expects an object with an "ids" property as value'));
 });
 
 test('Should throw an error if displayOptions schemaOption is given but not an array', () => {

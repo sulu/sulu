@@ -21,7 +21,7 @@ test('Call onEdit callback when edit icon is clicked', async() => {
 
     await userEvent.click(icon);
 
-    expect(editSpy).toBeCalledWith(6);
+    expect(editSpy).toHaveBeenCalledWith(6);
 });
 
 test('Call onRemove callback when remove icon is clicked', async() => {
@@ -31,5 +31,5 @@ test('Call onRemove callback when remove icon is clicked', async() => {
 
     await userEvent.click(icon);
 
-    expect(removeSpy).toBeCalledWith(2);
+    expect(removeSpy).toHaveBeenCalledWith(2);
 });

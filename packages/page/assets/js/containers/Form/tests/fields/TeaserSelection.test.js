@@ -218,9 +218,9 @@ test('Should call onChange and onFinish callback when TeaserSelection container 
         items: [],
     });
 
-    expect(changeSpy).toBeCalledWith({
+    expect(changeSpy).toHaveBeenCalledWith({
         presentAs: undefined,
         items: [],
     });
-    expect(finishSpy).toBeCalledWith();
+    expect(finishSpy).toHaveBeenCalledWith();
 });

@@ -20,7 +20,7 @@ test('Test undefined', () => {
 
 test('Test invalid format', () => {
     expect(timeBlockPreviewTransformer.transform('xxx')).toBe(null);
-    expect(log.error).toBeCalledWith('Invalid time given: "xxx". Format needs to be "HH:mm:ss"');
+    expect(log.error).toHaveBeenCalledWith('Invalid time given: "xxx". Format needs to be "HH:mm:ss"');
 });
 
 test('Test valid example', () => {

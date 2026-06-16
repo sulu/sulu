@@ -77,7 +77,7 @@ test('Call delete when dialog is confirmed', () => {
 
     expect(element.instance().props.confirmLoading).toEqual(false);
     element.find('Button[skin="primary"]').simulate('click');
-    expect(Requester.delete).toBeCalledWith('/cache');
+    expect(Requester.delete).toHaveBeenCalledWith('/cache');
 
     element = shallow(cacheClearToolbarAction.getNode());
     expect(element.instance().props.confirmLoading).toEqual(true);
@@ -108,7 +108,7 @@ test('Call delete when dialog is confirmed with query parameter', () => {
 
     expect(element.instance().props.confirmLoading).toEqual(false);
     element.find('Button[skin="primary"]').simulate('click');
-    expect(Requester.delete).toBeCalledWith('/cache?webspaceKey=sulu-io');
+    expect(Requester.delete).toHaveBeenCalledWith('/cache?webspaceKey=sulu-io');
 
     element = shallow(cacheClearToolbarAction.getNode());
     expect(element.instance().props.confirmLoading).toEqual(true);

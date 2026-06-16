@@ -133,5 +133,5 @@ test('Delegate only id to onHrefChange method', () => {
     );
 
     mediaLinkTypeOverlay.find('SingleMediaSelection').get(0).props.onChange({id: 1}, undefined);
-    expect(hrefChangeSpy).toBeCalledWith(1, undefined);
+    expect(hrefChangeSpy).toHaveBeenCalledWith(1, undefined);
 });

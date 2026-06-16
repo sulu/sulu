@@ -26,7 +26,7 @@ test('Should load items with correct paramters when being constructed', () => {
         {additionalKey: 'some-value'}
     );
 
-    expect(ResourceRequester.getList).toBeCalledWith(
+    expect(ResourceRequester.getList).toHaveBeenCalledWith(
         'snippets',
         {
             ids: '1,3,4',
@@ -50,7 +50,7 @@ test('Should not load items but replace current selection with empty array when 
 
     selectionStore.loadItems(undefined);
 
-    expect(ResourceRequester.getList).not.toBeCalled();
+    expect(ResourceRequester.getList).not.toHaveBeenCalled();
 
     expect(toJS(selectionStore.items)).toEqual([]);
 });
@@ -100,7 +100,7 @@ test('Should sort items to match order of given ids after loading items when bei
         'ids'
     );
 
-    expect(ResourceRequester.getList).toBeCalledWith(
+    expect(ResourceRequester.getList).toHaveBeenCalledWith(
         'snippets',
         {
             ids: '3,1,2',
@@ -132,7 +132,7 @@ test('Should load items with different filterParameter when being constructed', 
 
     const selectionStore = new MultiSelectionStore('snippets', [1, 3, 4], observable.box('en'), 'names');
 
-    expect(ResourceRequester.getList).toBeCalledWith(
+    expect(ResourceRequester.getList).toHaveBeenCalledWith(
         'snippets',
         {
             names: '1,3,4',
@@ -162,7 +162,7 @@ test('Should load items when being constructed in the given locale', () => {
 
     const selectionStore = new MultiSelectionStore('snippets', [1, 3, 4], observable.box('de'));
 
-    expect(ResourceRequester.getList).toBeCalledWith(
+    expect(ResourceRequester.getList).toHaveBeenCalledWith(
         'snippets',
         {
             ids: '1,3,4',
@@ -192,7 +192,7 @@ test('Should load items when being constructed without a locale', () => {
 
     const selectionStore = new MultiSelectionStore('snippets', [1, 3, 4]);
 
-    expect(ResourceRequester.getList).toBeCalledWith(
+    expect(ResourceRequester.getList).toHaveBeenCalledWith(
         'snippets',
         {
             ids: '1,3,4',
@@ -228,7 +228,7 @@ test('Should load items with requestParameters that are set via setRequestParame
         {oldKey: 'old-value'}
     );
 
-    expect(ResourceRequester.getList).toBeCalledWith(
+    expect(ResourceRequester.getList).toHaveBeenCalledWith(
         'snippets',
         {
             ids: '1,3,4',
@@ -242,7 +242,7 @@ test('Should load items with requestParameters that are set via setRequestParame
     selectionStore.setRequestParameters({newKey: 'new-value'});
     selectionStore.loadItems([1, 3, 4]);
 
-    expect(ResourceRequester.getList).toBeCalledWith(
+    expect(ResourceRequester.getList).toHaveBeenCalledWith(
         'snippets',
         {
             ids: '1,3,4',
@@ -274,7 +274,7 @@ test('Should remove an item from the store', () => {
 
     const selectionStore = new MultiSelectionStore('snippets', [1, 3], observable.box('en'));
 
-    expect(ResourceRequester.getList).toBeCalledWith(
+    expect(ResourceRequester.getList).toHaveBeenCalledWith(
         'snippets',
         {
             ids: '1,3',
@@ -310,7 +310,7 @@ test('Should move the items in a store', () => {
 
     const selectionStore = new MultiSelectionStore('snippets', [1, 2], observable.box('en'));
 
-    expect(ResourceRequester.getList).toBeCalledWith(
+    expect(ResourceRequester.getList).toHaveBeenCalledWith(
         'snippets',
         {
             ids: '1,2',
@@ -346,7 +346,7 @@ test('Should set all items on the store', () => {
 
     const selectionStore = new MultiSelectionStore('snippets', [1, 2], observable.box('en'));
 
-    expect(ResourceRequester.getList).toBeCalledWith(
+    expect(ResourceRequester.getList).toHaveBeenCalledWith(
         'snippets',
         {
             ids: '1,2',

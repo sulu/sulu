@@ -67,6 +67,6 @@ test('Call onChange and onFinish when onChange callback of Location component is
     );
 
     location.find(LocationComponent).props().onChange(newLocation);
-    expect(changeSpy).toBeCalledWith(newLocation);
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith(newLocation);
+    expect(finishSpy).toHaveBeenCalledWith();
 });

@@ -127,13 +127,13 @@ test('Should clear media ListStore if the excludedIds prop is changed', () => {
         />
     );
 
-    expect(multiMediaSelectionOverlay.instance().mediaListStore.clear).not.toBeCalled();
+    expect(multiMediaSelectionOverlay.instance().mediaListStore.clear).not.toHaveBeenCalled();
 
     multiMediaSelectionOverlay.setProps({
         excludedIds: [33],
     });
 
-    expect(multiMediaSelectionOverlay.instance().mediaListStore.clear).toBeCalled();
+    expect(multiMediaSelectionOverlay.instance().mediaListStore.clear).toHaveBeenCalled();
 });
 
 test('Should not clear media ListStore if new value of excludedIds prop is equal to old value', () => {
@@ -147,13 +147,13 @@ test('Should not clear media ListStore if new value of excludedIds prop is equal
         />
     );
 
-    expect(multiMediaSelectionOverlay.instance().mediaListStore.clear).not.toBeCalled();
+    expect(multiMediaSelectionOverlay.instance().mediaListStore.clear).not.toHaveBeenCalled();
 
     multiMediaSelectionOverlay.setProps({
         excludedIds: [11, 22],
     });
 
-    expect(multiMediaSelectionOverlay.instance().mediaListStore.clear).not.toBeCalled();
+    expect(multiMediaSelectionOverlay.instance().mediaListStore.clear).not.toHaveBeenCalled();
 });
 
 test('Should destroy list-stores on unmount', () => {

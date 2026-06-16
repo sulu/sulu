@@ -102,7 +102,7 @@ test('Call onClose when Popover is closed', async() => {
 
     const user = userEvent.setup();
     await user.click(screen.getByTestId('backdrop'));
-    expect(closeSpy).toBeCalledWith();
+    expect(closeSpy).toHaveBeenCalledWith();
 });
 
 test('Call onSelect with clicked suggestion', async() => {
@@ -128,7 +128,7 @@ test('Call onSelect with clicked suggestion', async() => {
 
     const user = userEvent.setup();
     await user.click(screen.getByText(/selector-2/));
-    expect(selectSpy).toBeCalledWith(suggestions[1]);
+    expect(selectSpy).toHaveBeenCalledWith(suggestions[1]);
 });
 
 test('Should focus suggestions when pressing up and down key', () => {

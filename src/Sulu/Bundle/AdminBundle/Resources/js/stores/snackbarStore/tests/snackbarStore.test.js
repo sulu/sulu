@@ -51,5 +51,5 @@ test('Add with message should create a setTimeout', () => {
 
     snackbarStore.add(message, 10);
 
-    expect(timeoutSpy).toBeCalled();
+    expect(timeoutSpy).toHaveBeenCalled();
 });

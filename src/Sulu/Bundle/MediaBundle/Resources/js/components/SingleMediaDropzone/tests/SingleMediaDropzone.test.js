@@ -259,5 +259,5 @@ test('Dropping a file on the area will hide the upload indicator and call the "o
     });
 
     expect(getMediaContainer(container).className).not.toContain('showUploadIndicator');
-    expect(dropSpy).toBeCalledWith(testFileData);
+    expect(dropSpy).toHaveBeenCalledWith(testFileData);
 });

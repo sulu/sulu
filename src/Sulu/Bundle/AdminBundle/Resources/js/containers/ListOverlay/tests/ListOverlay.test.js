@@ -217,7 +217,7 @@ test('Should call onConfirm when the confirm button is clicked', () => {
         confirmButton.click();
     }
 
-    expect(confirmSpy).toBeCalledWith();
+    expect(confirmSpy).toHaveBeenCalledWith();
 });
 
 test('Should instantiate the list with the passed adapter', () => {
@@ -267,15 +267,15 @@ test('Should reload on open if reloadOnOpen is set to true', () => {
     listStore.reset.mockReset();
     listStore.reload.mockReset();
 
-    expect(listStore.reset).not.toBeCalled();
-    expect(listStore.reload).not.toBeCalled();
+    expect(listStore.reset).not.toHaveBeenCalled();
+    expect(listStore.reload).not.toHaveBeenCalled();
 
     listOverlay.setProps({
         open: true,
     });
 
-    expect(listStore.reset).toBeCalledWith();
-    expect(listStore.reload).toBeCalledWith();
+    expect(listStore.reset).toHaveBeenCalledWith();
+    expect(listStore.reload).toHaveBeenCalledWith();
 });
 
 test('Should not reload on open if reloadOnOpen is set to true but listStore is still loading', () => {
@@ -298,15 +298,15 @@ test('Should not reload on open if reloadOnOpen is set to true but listStore is 
     listStore.reset.mockReset();
     listStore.reload.mockReset();
 
-    expect(listStore.reset).not.toBeCalled();
-    expect(listStore.reload).not.toBeCalled();
+    expect(listStore.reset).not.toHaveBeenCalled();
+    expect(listStore.reload).not.toHaveBeenCalled();
 
     listOverlay.setProps({
         open: true,
     });
 
-    expect(listStore.reset).not.toBeCalled();
-    expect(listStore.reload).not.toBeCalled();
+    expect(listStore.reset).not.toHaveBeenCalled();
+    expect(listStore.reload).not.toHaveBeenCalled();
 });
 
 test('Should not reload on open if reloadOnOpen is not set', () => {
@@ -327,15 +327,15 @@ test('Should not reload on open if reloadOnOpen is not set', () => {
     listStore.reset.mockReset();
     listStore.reload.mockReset();
 
-    expect(listStore.reset).not.toBeCalled();
-    expect(listStore.reload).not.toBeCalled();
+    expect(listStore.reset).not.toHaveBeenCalled();
+    expect(listStore.reload).not.toHaveBeenCalled();
 
     listOverlay.setProps({
         open: true,
     });
 
-    expect(listStore.reset).not.toBeCalled();
-    expect(listStore.reload).not.toBeCalled();
+    expect(listStore.reset).not.toHaveBeenCalled();
+    expect(listStore.reload).not.toHaveBeenCalled();
 });
 
 test('Should not clear selection on close if clearSelectionOnClose prop is not set', () => {
@@ -357,14 +357,14 @@ test('Should not clear selection on close if clearSelectionOnClose prop is not s
     listStore.clearSelection.mockReset();
     listStore.select.mockReset();
 
-    expect(listStore.clearSelection).not.toBeCalled();
-    expect(listStore.select).not.toBeCalled();
+    expect(listStore.clearSelection).not.toHaveBeenCalled();
+    expect(listStore.select).not.toHaveBeenCalled();
 
     listOverlay.setProps({
         open: false,
     });
 
-    expect(listStore.clearSelection).not.toBeCalled();
+    expect(listStore.clearSelection).not.toHaveBeenCalled();
 });
 
 test('Should clear selection on close if clearSelectionOnClose prop is set', () => {
@@ -386,14 +386,14 @@ test('Should clear selection on close if clearSelectionOnClose prop is set', () 
     listStore.clearSelection.mockReset();
     listStore.select.mockReset();
 
-    expect(listStore.clearSelection).not.toBeCalled();
-    expect(listStore.select).not.toBeCalled();
+    expect(listStore.clearSelection).not.toHaveBeenCalled();
+    expect(listStore.select).not.toHaveBeenCalled();
 
     listOverlay.setProps({
         open: false,
     });
 
-    expect(listStore.clearSelection).toBeCalledWith();
+    expect(listStore.clearSelection).toHaveBeenCalledWith();
 });
 
 test('Should update selection if passed preSelectedItems prop changes', () => {
@@ -418,13 +418,13 @@ test('Should update selection if passed preSelectedItems prop changes', () => {
         title: 'bla',
     });
 
-    expect(listStore.clearSelection).not.toBeCalled();
-    expect(listStore.select).not.toBeCalled();
+    expect(listStore.clearSelection).not.toHaveBeenCalled();
+    expect(listStore.select).not.toHaveBeenCalled();
 
     listOverlay.setProps({
         preSelectedItems: [{id: 2}],
     });
 
-    expect(listStore.clearSelection).toBeCalledWith();
-    expect(listStore.select).toBeCalledWith({id: 2});
+    expect(listStore.clearSelection).toHaveBeenCalledWith();
+    expect(listStore.select).toHaveBeenCalledWith({id: 2});
 });

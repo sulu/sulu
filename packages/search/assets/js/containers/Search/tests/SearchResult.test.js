@@ -81,5 +81,5 @@ test('Call callback with index when result is clicked', () => {
 
     searchResult.find('div').at(0).simulate('click');
 
-    expect(clickSpy).toBeCalledWith(5);
+    expect(clickSpy).toHaveBeenCalledWith(5);
 });

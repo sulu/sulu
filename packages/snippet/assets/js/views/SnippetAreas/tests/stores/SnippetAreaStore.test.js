@@ -35,7 +35,7 @@ test('Load snippet areas when constructing the store', () => {
 
     const snippetAreaStore = new SnippetAreaStore('sulu');
 
-    expect(ResourceRequester.getList).toBeCalledWith('snippet_areas', {webspaceKey: 'sulu'});
+    expect(ResourceRequester.getList).toHaveBeenCalledWith('snippet_areas', {webspaceKey: 'sulu'});
 
     expect(snippetAreaStore.loading).toEqual(true);
     expect(snippetAreaStore.snippetAreas).toEqual({});
@@ -97,7 +97,7 @@ test('Save snippet area when save is calld', () => {
     snippetAreaStore.save('footer', 'some-uuid-3');
 
     expect(ResourceRequester.put)
-        .toBeCalledWith('snippet_areas', {snippetUuid: 'some-uuid-3'}, {key: 'footer', webspaceKey: 'sulu'});
+        .toHaveBeenCalledWith('snippet_areas', {snippetUuid: 'some-uuid-3'}, {key: 'footer', webspaceKey: 'sulu'});
 
     expect(snippetAreaStore.saving).toEqual(true);
 
@@ -158,7 +158,7 @@ test('Delete snippet area when delete is calld', () => {
     snippetAreaStore.delete('footer');
 
     expect(ResourceRequester.delete)
-        .toBeCalledWith('snippet_areas', {key: 'footer', webspaceKey: 'sulu'});
+        .toHaveBeenCalledWith('snippet_areas', {key: 'footer', webspaceKey: 'sulu'});
 
     expect(snippetAreaStore.deleting).toEqual(true);
 

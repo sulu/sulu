@@ -43,5 +43,5 @@ test('Should update userStore with attribute locale', () => {
         locale: 'de',
     });
 
-    expect(userStore.updateContentLocale).toBeCalledWith('de');
+    expect(userStore.updateContentLocale).toHaveBeenCalledWith('de');
 });

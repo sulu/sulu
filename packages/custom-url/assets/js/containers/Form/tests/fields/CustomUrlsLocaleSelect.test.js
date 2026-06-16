@@ -56,7 +56,7 @@ test('Pass correct props to MultiSelect', () => {
         />
     );
 
-    expect(webspaceStore.getWebspace).toBeCalledWith('sulu_io');
+    expect(webspaceStore.getWebspace).toHaveBeenCalledWith('sulu_io');
 
     expect(customUrlsDomainSelect.find('SingleSelect').prop('disabled')).toEqual(true);
     expect(customUrlsDomainSelect.find('SingleSelect').prop('value')).toEqual('en');
@@ -96,9 +96,9 @@ test('Call onChange and onBlur if the value is changed', () => {
         />
     );
 
-    expect(webspaceStore.getWebspace).toBeCalledWith('sulu_io');
+    expect(webspaceStore.getWebspace).toHaveBeenCalledWith('sulu_io');
 
     customUrlsDomainSelect.find('SingleSelect').prop('onChange')('en');
-    expect(changeSpy).toBeCalledWith('en');
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith('en');
+    expect(finishSpy).toHaveBeenCalledWith();
 });

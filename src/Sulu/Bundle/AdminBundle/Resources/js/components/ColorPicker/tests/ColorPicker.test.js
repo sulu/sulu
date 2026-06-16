@@ -59,20 +59,20 @@ test('ColorPicker should trigger callbacks correctly', async() => {
     // provide invalid value
     await userEvent.clear(input);
     await userEvent.type(input, 'xxx');
-    expect(onChange).toBeCalledWith(undefined);
+    expect(onChange).toHaveBeenCalledWith(undefined);
 
     // provide one more invalid value
     await userEvent.clear(input);
     await userEvent.type(input, 'abc');
-    expect(onChange).toBeCalledWith(undefined);
+    expect(onChange).toHaveBeenCalledWith(undefined);
 
     // now add a valid value
     await userEvent.clear(input);
     await userEvent.type(input, '#abc');
-    expect(onChange).toBeCalledWith('#abc');
+    expect(onChange).toHaveBeenCalledWith('#abc');
 
     await userEvent.tab(); // tab away from input
-    expect(onBlur).toBeCalled();
+    expect(onBlur).toHaveBeenCalled();
 });
 
 test('ColorPicker should call the correct callbacks when value from overlay was selected', async() => {
@@ -91,5 +91,5 @@ test('ColorPicker should call the correct callbacks when value from overlay was 
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     expect(overlayInput).toHaveValue('cccccc');
-    expect(onChange).toBeCalledWith('#cccccc');
+    expect(onChange).toHaveBeenCalledWith('#cccccc');
 });

@@ -20,7 +20,7 @@ test('Call onChange handler with a default operator when undefined is passed', (
     const changeSpy = jest.fn();
     new NumberFieldFilterType(changeSpy, {}, undefined);
 
-    expect(changeSpy).toBeCalledWith({eq: undefined});
+    expect(changeSpy).toHaveBeenCalledWith({eq: undefined});
 });
 
 test.each([
@@ -34,7 +34,7 @@ test.each([
 
     numberFieldFilterTypeForm.find('SingleSelect').prop('onChange')(operator);
 
-    expect(changeSpy).toBeCalledWith(newValue);
+    expect(changeSpy).toHaveBeenCalledWith(newValue);
 });
 
 test.each([
@@ -48,7 +48,7 @@ test.each([
 
     numberFieldFilterTypeForm.find('Input').prop('onChange')(number);
 
-    expect(changeSpy).toBeCalledWith(newValue);
+    expect(changeSpy).toHaveBeenCalledWith(newValue);
 });
 
 test.each([

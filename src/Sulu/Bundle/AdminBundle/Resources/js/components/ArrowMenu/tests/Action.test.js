@@ -29,7 +29,7 @@ test('Clicking the Action should call the right handler', async() => {
     const user = userEvent.setup();
     await user.click(screen.getByText('My Action'));
 
-    expect(clickHandler).toBeCalledWith(undefined);
+    expect(clickHandler).toHaveBeenCalledWith(undefined);
 });
 
 test('Clicking the Action should call the right handler with the passed value', async() => {
@@ -39,7 +39,7 @@ test('Clicking the Action should call the right handler with the passed value', 
     const user = userEvent.setup();
     await user.click(screen.getByText('My Action'));
 
-    expect(clickHandler).toBeCalledWith('test');
+    expect(clickHandler).toHaveBeenCalledWith('test');
 });
 
 test('Clicking the disabled Action should not call a handler', async() => {
@@ -49,5 +49,5 @@ test('Clicking the disabled Action should not call a handler', async() => {
     const user = userEvent.setup();
     await user.click(screen.getByText('My Action'));
 
-    expect(clickHandler).not.toBeCalled();
+    expect(clickHandler).not.toHaveBeenCalled();
 });

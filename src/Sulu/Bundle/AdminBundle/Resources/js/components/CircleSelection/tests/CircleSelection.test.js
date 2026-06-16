@@ -66,7 +66,7 @@ test('The component should center and maximize the selection if no value is give
         value: undefined,
     });
 
-    expect(changeSpy).toBeCalledWith({left: 320, radius: 180, top: 180});
+    expect(changeSpy).toHaveBeenCalledWith({left: 320, radius: 180, top: 180});
 });
 
 test('The component should reset the value if modifiable circle is doubleclicked', async() => {
@@ -81,7 +81,7 @@ test('The component should reset the value if modifiable circle is doubleclicked
     });
 
     await user.click(screen.getByRole('button', {name: 'Double click'}));
-    expect(changeSpy).toBeCalledWith({left: 320, radius: 180, top: 180});
+    expect(changeSpy).toHaveBeenCalledWith({left: 320, radius: 180, top: 180});
 });
 
 test('The component should center and maximize the selection when a minRadius and maxRadius is given', () => {
@@ -94,7 +94,7 @@ test('The component should center and maximize the selection when a minRadius an
         value: undefined,
     });
 
-    expect(changeSpy).toBeCalledWith({left: 320, radius: 180, top: 180});
+    expect(changeSpy).toHaveBeenCalledWith({left: 320, radius: 180, top: 180});
 });
 
 test('The component should not allow the selection to move over the borders', () => {
@@ -108,7 +108,7 @@ test('The component should not allow the selection to move over the borders', ()
     act(() => {
         getLatestModifiableCircleProps().onChange({radius: 0, left: -10, top: -20});
     });
-    expect(changeSpy).toBeCalledWith({radius: 50, top: 0, left: 0});
+    expect(changeSpy).toHaveBeenCalledWith({radius: 50, top: 0, left: 0});
 });
 
 test('The component should not allow the selection to be bigger than the container', () => {
@@ -122,7 +122,7 @@ test('The component should not allow the selection to be bigger than the contain
     act(() => {
         getLatestModifiableCircleProps().onChange({radius: 5000, left: 0, top: 0});
     });
-    expect(changeSpy).toBeCalledWith({radius: 734, top: 0, left: 0});
+    expect(changeSpy).toHaveBeenCalledWith({radius: 734, top: 0, left: 0});
 });
 
 test('The component should not round if told by the properties', () => {
@@ -150,7 +150,7 @@ test('The component should work with percentage values if told by the properties
         value: undefined,
     });
 
-    expect(changeSpy).toBeCalledWith({top: 0.5, left: 0.5, radius: 0.28125});
+    expect(changeSpy).toHaveBeenCalledWith({top: 0.5, left: 0.5, radius: 0.28125});
 });
 
 test('The component should call onFinish', async() => {
@@ -164,5 +164,5 @@ test('The component should call onFinish', async() => {
     });
 
     await user.click(screen.getByRole('button', {name: 'Finish'}));
-    expect(finishSpy).toBeCalled();
+    expect(finishSpy).toHaveBeenCalled();
 });

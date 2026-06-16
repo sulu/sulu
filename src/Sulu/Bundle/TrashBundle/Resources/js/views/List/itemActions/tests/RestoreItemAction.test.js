@@ -127,7 +127,7 @@ test('Send request and reload list store if dialog is confirmed', () => {
     onClick('id-1234', 1);
     mount(itemAction.getNode()).find(Dialog).props().onConfirm();
 
-    expect(ResourceRequester.post).toBeCalledWith(
+    expect(ResourceRequester.post).toHaveBeenCalledWith(
         'list-resource-key',
         {},
         {action: 'restore', id: 'id-1234'}
@@ -142,7 +142,7 @@ test('Send request and reload list store if dialog is confirmed', () => {
             confirmLoading: false,
             open: false,
         }));
-        expect(itemAction.listStore.reload).toBeCalledWith();
+        expect(itemAction.listStore.reload).toHaveBeenCalledWith();
     });
 });
 
@@ -164,7 +164,7 @@ test('Send request and navigate to view if dialog is confirmed and view is confi
     onClick('id-1234', 1);
     mount(itemAction.getNode()).find(Dialog).props().onConfirm();
 
-    expect(ResourceRequester.post).toBeCalledWith(
+    expect(ResourceRequester.post).toHaveBeenCalledWith(
         'list-resource-key',
         {},
         {action: 'restore', id: 'id-1234'}
@@ -241,7 +241,7 @@ test('Send request and reload list store if dialog is confirmed', () => {
     const data = {foo: 'bar'};
     mount(itemAction.getNode()).find('RestoreFormOverlay').props().onConfirm(data);
 
-    expect(ResourceRequester.post).toBeCalledWith(
+    expect(ResourceRequester.post).toHaveBeenCalledWith(
         'list-resource-key',
         data,
         {action: 'restore', id: 'id-1234'}
@@ -256,6 +256,6 @@ test('Send request and reload list store if dialog is confirmed', () => {
             confirmLoading: false,
             open: false,
         }));
-        expect(itemAction.listStore.reload).toBeCalledWith();
+        expect(itemAction.listStore.reload).toHaveBeenCalledWith();
     });
 });

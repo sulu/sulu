@@ -51,7 +51,7 @@ test('Should assign input as ref to inputRef', () => {
         />
     );
 
-    expect(inputRefSpy).toBeCalledWith(multiAutoComplete.find('input').instance());
+    expect(inputRefSpy).toHaveBeenCalledWith(multiAutoComplete.find('input').instance());
 });
 
 test('Pass loading flag if MultiSelectionStore and SearchStore is loading', () => {
@@ -240,7 +240,7 @@ test('Search using store when new search value is retrieved from MultiAutoComple
 
     multiAutoComplete.find('MultiAutoComplete').simulate('search', 'James');
 
-    expect(multiAutoComplete.instance().searchStore.search).toBeCalledWith('James', []);
+    expect(multiAutoComplete.instance().searchStore.search).toHaveBeenCalledWith('James', []);
 });
 
 test('Search using store with excluded-ids when new search value is retrieved from MultiAutoComplete component', () => {
@@ -265,7 +265,7 @@ test('Search using store with excluded-ids when new search value is retrieved fr
     selectionStore.ids = [1, 3];
     multiAutoComplete.find('MultiAutoComplete').simulate('search', 'James');
 
-    expect(multiAutoComplete.instance().searchStore.search).toBeCalledWith('James', [1, 3]);
+    expect(multiAutoComplete.instance().searchStore.search).toHaveBeenCalledWith('James', [1, 3]);
 });
 
 test('Clear search result when chosen option has been selected with idProperty', () => {
@@ -294,9 +294,9 @@ test('Clear search result when chosen option has been selected with idProperty',
     );
 
     multiAutoComplete.find('MultiAutoComplete > MultiAutoComplete').prop('onChange')(data);
-    expect(selectionStore.set).toBeCalledWith(data);
+    expect(selectionStore.set).toHaveBeenCalledWith(data);
 
-    expect(multiAutoComplete.instance().searchStore.clearSearchResults).toBeCalledWith();
+    expect(multiAutoComplete.instance().searchStore.clearSearchResults).toHaveBeenCalledWith();
 });
 
 test('Construct SearchStore with correct parameters on mount', () => {
@@ -317,5 +317,5 @@ test('Construct SearchStore with correct parameters on mount', () => {
         />
     );
 
-    expect(SearchStore).toBeCalledWith('contact', ['firstName', 'lastName'], {country: 'US'}, locale);
+    expect(SearchStore).toHaveBeenCalledWith('contact', ['firstName', 'lastName'], {country: 'US'}, locale);
 });

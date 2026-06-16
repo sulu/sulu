@@ -30,8 +30,8 @@ test('Should generate single block ID by calling the backend API', () => {
     }));
 
     return blockIdGenerator.generateBlockIds(1).then((ids) => {
-        expect(symfonyRouting.generate).toBeCalledWith('sulu_admin.post_block_ids');
-        expect(Requester.post).toBeCalledWith(mockUrl + '?length=1');
+        expect(symfonyRouting.generate).toHaveBeenCalledWith('sulu_admin.post_block_ids');
+        expect(Requester.post).toHaveBeenCalledWith(mockUrl + '?length=1');
         expect(ids).toEqual([mockId]);
     });
 });
@@ -54,8 +54,8 @@ test('Should generate multiple block IDs in a single request', () => {
     }));
 
     return blockIdGenerator.generateBlockIds(3).then((ids) => {
-        expect(symfonyRouting.generate).toBeCalledWith('sulu_admin.post_block_ids');
-        expect(Requester.post).toBeCalledWith(mockUrl + '?length=3');
+        expect(symfonyRouting.generate).toHaveBeenCalledWith('sulu_admin.post_block_ids');
+        expect(Requester.post).toHaveBeenCalledWith(mockUrl + '?length=3');
         expect(ids).toEqual([mockId1, mockId2, mockId3]);
     });
 });

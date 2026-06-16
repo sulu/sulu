@@ -52,12 +52,12 @@ test('Calling the "update" method should make a "POST" request to the media upda
     const fileData = new File([''], 'fileName');
 
     mediaUploadStore.update(fileData);
-    expect(resourceRouteRegistry.getUrl).toBeCalledWith(
+    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith(
         'detail',
         'media',
         {action: 'new-version', id: 1, locale: 'en'}
     );
-    expect(openSpy).toBeCalledWith('POST', '/media/1?action=new-version&locale=en');
+    expect(openSpy).toHaveBeenCalledWith('POST', '/media/1?action=new-version&locale=en');
 });
 
 test('Promise returned by "update" method should be resolved if request is successful', () => {
@@ -192,8 +192,8 @@ test('Calling the "create" method should make a "POST" request to the media upda
 
     const createPromise = mediaUploadStore.create(1, fileData);
 
-    expect(resourceRouteRegistry.getUrl).toBeCalledWith('detail', 'media', {collection: 1, locale: 'en'});
-    expect(openSpy).toBeCalledWith('POST', '/media?locale=en&collection=1');
+    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('detail', 'media', {collection: 1, locale: 'en'});
+    expect(openSpy).toHaveBeenCalledWith('POST', '/media?locale=en&collection=1');
 
     window.XMLHttpRequest.mock.instances[0].onload({target: {status: 200, response: '{"title": "test1"}'}});
 
@@ -219,7 +219,7 @@ test('Calling "delete" method should call the "delete" method of the ResourceReq
     ResourceRequester.delete.mockReturnValue(Promise.resolve());
 
     const deletePromise = mediaUploadStore.delete();
-    expect(ResourceRequester.delete).toBeCalledWith('media', {id: 2});
+    expect(ResourceRequester.delete).toHaveBeenCalledWith('media', {id: 2});
 
     return deletePromise.then(() => {
         expect(mediaUploadStore.media).toEqual(undefined);
@@ -252,7 +252,7 @@ test('Calling "deletePreviewImage" method should call the "delete" method of the
     ResourceRequester.delete.mockReturnValue(Promise.resolve(media));
 
     const deletePromise = mediaUploadStore.deletePreviewImage();
-    expect(ResourceRequester.delete).toBeCalledWith('media_preview', {id: 2});
+    expect(ResourceRequester.delete).toHaveBeenCalledWith('media_preview', {id: 2});
 
     return deletePromise.then(() => {
         expect(mediaUploadStore.media).toEqual(media);
@@ -287,12 +287,12 @@ test('Calling the "updatePreviewImage" method should make a "POST" request to th
     const fileData = new File([''], 'fileName');
 
     mediaUploadStore.updatePreviewImage(fileData);
-    expect(resourceRouteRegistry.getUrl).toBeCalledWith(
+    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith(
         'detail',
         'media_preview',
         {id: 2, locale: 'en'}
     );
-    expect(openSpy).toBeCalledWith('POST', '/media/1/preview?locale=en');
+    expect(openSpy).toHaveBeenCalledWith('POST', '/media/1/preview?locale=en');
 });
 
 test('After the "update" call request was successful the progress will be reset', () => {

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`The component should center and maximize the selection when a minHeight and minWidth is given 1`] = `
 <DocumentFragment>

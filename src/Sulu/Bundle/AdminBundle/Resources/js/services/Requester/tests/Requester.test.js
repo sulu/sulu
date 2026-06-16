@@ -14,7 +14,7 @@ test('Should execute GET request and reject with response when the response cont
 
     expect(Requester.get('/some-url')).rejects.toEqual(response);
 
-    expect(window.fetch).toBeCalledWith('/some-url', {
+    expect(window.fetch).toHaveBeenCalledWith('/some-url', {
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
         method: 'GET',
@@ -87,7 +87,7 @@ test('Should execute GET request and replace null with undefined', () => {
         });
     });
 
-    expect(window.fetch).toBeCalledWith('/some-url', {
+    expect(window.fetch).toHaveBeenCalledWith('/some-url', {
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
         method: 'GET',
@@ -130,7 +130,7 @@ test('Should execute POST request and return JSON', () => {
         expect(response).toEqual({test: '', value: 'test'});
     });
 
-    expect(window.fetch).toBeCalledWith('/some-url', {
+    expect(window.fetch).toHaveBeenCalledWith('/some-url', {
         method: 'POST',
         body: JSON.stringify({
             title: 'Titel',
@@ -177,7 +177,7 @@ test('Should execute POST request and return JSON when value is observable', () 
         expect(response).toEqual({test: '', value: 'test'});
     });
 
-    expect(window.fetch).toBeCalledWith('/some-url', {
+    expect(window.fetch).toHaveBeenCalledWith('/some-url', {
         method: 'POST',
         body: JSON.stringify({
             id: 'test',
@@ -211,7 +211,7 @@ test('Should execute PUT request and return JSON', () => {
         expect(response).toEqual({test: '', value: 'test'});
     });
 
-    expect(window.fetch).toBeCalledWith('/some-url', {
+    expect(window.fetch).toHaveBeenCalledWith('/some-url', {
         method: 'PUT',
         body: JSON.stringify({
             title: 'Titel',
@@ -241,7 +241,7 @@ test('Should execute PUT request without data and return JSON', () => {
         expect(response).toEqual({test: '', value: 'test'});
     });
 
-    expect(window.fetch).toBeCalledWith('/some-url', {
+    expect(window.fetch).toHaveBeenCalledWith('/some-url', {
         method: 'PUT',
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
@@ -274,7 +274,7 @@ test('Should execute PATCH request and return JSON', () => {
         expect(response).toEqual([{test: '', value: 'test'}]);
     });
 
-    expect(window.fetch).toBeCalledWith('/some-url', {
+    expect(window.fetch).toHaveBeenCalledWith('/some-url', {
         method: 'PATCH',
         body: JSON.stringify([{title: 'Titel', description: 'Description', test: null}]),
         credentials: 'same-origin',
@@ -300,7 +300,7 @@ test('Should execute DELETE request and return JSON', () => {
         expect(data).toEqual({test: '', value: 'test'});
     });
 
-    expect(window.fetch).toBeCalledWith('/some-url', {
+    expect(window.fetch).toHaveBeenCalledWith('/some-url', {
         method: 'DELETE',
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},

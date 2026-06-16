@@ -256,8 +256,8 @@ test('Should pass correct data to Renderer component', () => {
     imageMap.find(ImageMapContainer).props().onChange({imageId: 44, hotspots: []});
     imageMap.find(ImageMapContainer).props().onFinish();
 
-    expect(changeSpy).toBeCalledWith({imageId: 44, hotspots: []});
-    expect(finishSpy).toBeCalled();
+    expect(changeSpy).toHaveBeenCalledWith({imageId: 44, hotspots: []});
+    expect(finishSpy).toHaveBeenCalled();
 });
 
 test('Should set correct default values for multiple single_select in form', () => {
@@ -375,7 +375,7 @@ test('Should set correct default values for multiple single_select in form', () 
 
     imageMap.find('Button').at(1).simulate('click');
 
-    expect(changeSpy).toBeCalledWith(
+    expect(changeSpy).toHaveBeenCalledWith(
         {
             'hotspots': [{
                 'hotspot': {'type': 'point'},

@@ -31,7 +31,7 @@ test('Load searchResources', () => {
     ResourceRequester.getList.mockReturnValue(promise);
     const searchResourcesPromise = searchResourcesStores.loadSearchResources();
 
-    expect(ResourceRequester.getList).toBeCalledWith('search_resources');
+    expect(ResourceRequester.getList).toHaveBeenCalledWith('search_resources');
 
     return searchResourcesPromise.then((webspaces) => {
         // check if promise have been cached

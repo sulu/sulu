@@ -401,7 +401,7 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     expect(smartContentStore.limit).toEqual(7);
     expect(smartContentStore.types).toEqual(['default']);
 
-    expect(closeSpy).toBeCalledWith();
+    expect(closeSpy).toHaveBeenCalledWith();
 });
 
 test('Prefill all fields with correct values', () => {
@@ -477,7 +477,7 @@ test('Prefill all fields with correct values', () => {
         .toEqual([{id: 1, name: 'Test1'}, {id: 5, name: 'Test3'}]);
     expect(filterOverlay.find('div[className="categories"]').find('SingleSelect').prop('value')).toEqual('or');
 
-    expect(MultiSelectionStore).toBeCalledWith('tags', [1, 2], undefined, 'ids');
+    expect(MultiSelectionStore).toHaveBeenCalledWith('tags', [1, 2], undefined, 'ids');
     expect(filterOverlay.find('div[className="tags"]').find('SingleSelect').prop('value')).toEqual('and');
 
     expect(filterOverlay.find('div[className="types"]').find('MultiSelect').prop('values')).toEqual(

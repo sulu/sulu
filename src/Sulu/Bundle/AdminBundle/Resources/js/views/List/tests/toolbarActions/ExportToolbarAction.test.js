@@ -67,8 +67,7 @@ test('Return config for non-empty toolbar item', () => {
 });
 
 test('Export current result when button is clicked and dialog is confirmed', () => {
-    delete window.location;
-    window.location = {assign: jest.fn()};
+    window.location.assign = jest.fn();
 
     const exportToolbarAction = createExportToolbarAction();
     exportToolbarAction.listStore.data.push({});
@@ -82,7 +81,7 @@ test('Export current result when button is clicked and dialog is confirmed', () 
 
     element.find('Button[skin="primary"]').simulate('click');
 
-    expect(resourceRouteRegistry.getUrl).toBeCalledWith(
+    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith(
         'list',
         'test',
         {
@@ -98,12 +97,11 @@ test('Export current result when button is clicked and dialog is confirmed', () 
         }
     );
 
-    expect(window.location.assign).toBeCalledWith('/list');
+    expect(window.location.assign).toHaveBeenCalledWith('/list');
 });
 
 test('Export current result with applied filter and search when button is clicked and dialog is confirmed', () => {
-    delete window.location;
-    window.location = {assign: jest.fn()};
+    window.location.assign = jest.fn();
 
     const exportToolbarAction = createExportToolbarAction();
     exportToolbarAction.listStore.data.push({});
@@ -120,7 +118,7 @@ test('Export current result with applied filter and search when button is clicke
 
     element.find('Button[skin="primary"]').simulate('click');
 
-    expect(resourceRouteRegistry.getUrl).toBeCalledWith(
+    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith(
         'list',
         'test',
         {
@@ -136,5 +134,5 @@ test('Export current result with applied filter and search when button is clicke
         }
     );
 
-    expect(window.location.assign).toBeCalledWith('/list');
+    expect(window.location.assign).toHaveBeenCalledWith('/list');
 });

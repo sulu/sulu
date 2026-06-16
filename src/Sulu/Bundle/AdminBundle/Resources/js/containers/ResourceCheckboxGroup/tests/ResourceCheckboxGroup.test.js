@@ -42,7 +42,7 @@ test('Render with data', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', {});
+    expect(ResourceListStore).toHaveBeenCalledWith('test', {});
     expect(resourceCheckboxGroup.render()).toMatchSnapshot();
 });
 
@@ -74,7 +74,7 @@ test('Render in disabled state', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', {});
+    expect(ResourceListStore).toHaveBeenCalledWith('test', {});
     expect(resourceCheckboxGroup.find('CheckboxGroup').prop('disabled')).toEqual(true);
 });
 
@@ -132,7 +132,7 @@ test('Pass requestParameters', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', requestParameters);
+    expect(ResourceListStore).toHaveBeenCalledWith('test', requestParameters);
 });
 
 test('Pass requestParameters when requestParameters props changed', () => {

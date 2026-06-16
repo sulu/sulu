@@ -112,5 +112,5 @@ test('Destroy should call the autorun disposer', () => {
     teaserStore.teaserDisposer = disposerSpy;
 
     teaserStore.destroy();
-    expect(disposerSpy).toBeCalledWith();
+    expect(disposerSpy).toHaveBeenCalledWith();
 });

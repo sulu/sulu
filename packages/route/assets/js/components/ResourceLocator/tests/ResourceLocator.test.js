@@ -169,7 +169,7 @@ test('ResourceLocator should call the onChange callback and replace a typed slas
     );
 
     replaceInputValue('child/');
-    expect(onChange).toBeCalledWith('/parent/child-');
+    expect(onChange).toHaveBeenCalledWith('/parent/child-');
 });
 
 test('ResourceLocator should call the onChange callback and replace a typed space with a dash in leaf mode', () => {
@@ -187,7 +187,7 @@ test('ResourceLocator should call the onChange callback and replace a typed spac
     );
 
     replaceInputValue('child test child');
-    expect(onChange).toBeCalledWith('/parent/child-test-child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child-test-child');
 });
 
 test('ResourceLocator should call the onChange callback and replace a typed space with a dash in full mode', () => {
@@ -205,7 +205,7 @@ test('ResourceLocator should call the onChange callback and replace a typed spac
     );
 
     replaceInputValue('parent/child test child');
-    expect(onChange).toBeCalledWith('/parent/child-test-child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child-test-child');
 });
 
 test('ResourceLocator should call the onChange callback and replace multiple slashes with one in full mode', () => {
@@ -223,7 +223,7 @@ test('ResourceLocator should call the onChange callback and replace multiple sla
     );
 
     replaceInputValue('parent///child//test/child');
-    expect(onChange).toBeCalledWith('/parent/child/test/child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child/test/child');
 });
 
 test('ResourceLocator should call the onChange callback and replace multiple dashes with one in leaf mode', () => {
@@ -241,7 +241,7 @@ test('ResourceLocator should call the onChange callback and replace multiple das
     );
 
     replaceInputValue('child--- a /// test');
-    expect(onChange).toBeCalledWith('/parent/child-a-test');
+    expect(onChange).toHaveBeenCalledWith('/parent/child-a-test');
 });
 
 test('ResourceLocator should call the onChange callback and replace multiple dashes with one in full mode', () => {
@@ -259,7 +259,7 @@ test('ResourceLocator should call the onChange callback and replace multiple das
     );
 
     replaceInputValue('parent/child---child--test-child');
-    expect(onChange).toBeCalledWith('/parent/child-child-test-child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child-child-test-child');
 });
 
 test('ResourceLocator should call the onChange callback and replace dash before and after slash in full mode', () => {
@@ -277,7 +277,7 @@ test('ResourceLocator should call the onChange callback and replace dash before 
     );
 
     replaceInputValue('parent/-child-/-test-/-child');
-    expect(onChange).toBeCalledWith('/parent/child/test/child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child/test/child');
 });
 
 test('ResourceLocator should call the onChange callback and remove dash at the beginning in leaf mode', () => {
@@ -295,7 +295,7 @@ test('ResourceLocator should call the onChange callback and remove dash at the b
     );
 
     replaceInputValue('-child');
-    expect(onChange).toBeCalledWith('/parent/child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child');
 });
 
 test('ResourceLocator should call the onChange callback and remove dash at the beginning in full mode', () => {
@@ -313,7 +313,7 @@ test('ResourceLocator should call the onChange callback and remove dash at the b
     );
 
     replaceInputValue('-parent/child');
-    expect(onChange).toBeCalledWith('/parent/child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child');
 });
 
 test('ResourceLocator should call the onChange callback and remove special characters in leaf mode', () => {
@@ -331,7 +331,7 @@ test('ResourceLocator should call the onChange callback and remove special chara
     );
 
     replaceInputValue('c!h"i$&()=$%`l`#+.,d%');
-    expect(onChange).toBeCalledWith('/parent/child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child');
 });
 
 test('ResourceLocator should call the onChange callback and remove special characters in full mode', () => {
@@ -349,7 +349,7 @@ test('ResourceLocator should call the onChange callback and remove special chara
     );
 
     replaceInputValue('parent/chi!ld/te"§st/ch;:il%§d%');
-    expect(onChange).toBeCalledWith('/parent/child/test/child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child/test/child');
 });
 
 test('ResourceLocator should replace capital letters with lower case in leaf mode before calling onChange', () => {
@@ -367,7 +367,7 @@ test('ResourceLocator should replace capital letters with lower case in leaf mod
     );
 
     replaceInputValue('CHILD');
-    expect(onChange).toBeCalledWith('/parent/child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child');
 });
 
 test('ResourceLocator should replace capital letters with lower case in full mode before calling onChange', () => {
@@ -385,7 +385,7 @@ test('ResourceLocator should replace capital letters with lower case in full mod
     );
 
     replaceInputValue('parent/CHILD');
-    expect(onChange).toBeCalledWith('/parent/child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child');
 });
 
 test('ResourceLocator should replace capital letters even when given locale is not a valid BCP 47 code', () => {
@@ -403,7 +403,7 @@ test('ResourceLocator should replace capital letters even when given locale is n
     );
 
     replaceInputValue('CHILD');
-    expect(onChange).toBeCalledWith('/parent/child');
+    expect(onChange).toHaveBeenCalledWith('/parent/child');
 });
 
 test('ResourceLocator should call the onChange callback when a slash is typed in full mode', () => {
@@ -421,7 +421,7 @@ test('ResourceLocator should call the onChange callback when a slash is typed in
     );
 
     replaceInputValue('parent/child/');
-    expect(onChange).toBeCalledWith('/parent/child/');
+    expect(onChange).toHaveBeenCalledWith('/parent/child/');
 });
 
 test('ResourceLocator should call the onChange callback with undefined if no input is given', () => {
@@ -448,7 +448,7 @@ test('ResourceLocator should call the onChange callback and replace "/" with "-"
     );
 
     replaceInputValue('parent/child/');
-    expect(onChange).toBeCalledWith('/parent/child/');
+    expect(onChange).toHaveBeenCalledWith('/parent/child/');
 });
 
 test('ResourceLocator should call the onBlur callback when the Input finishes editing', () => {
@@ -465,5 +465,5 @@ test('ResourceLocator should call the onBlur callback when the Input finishes ed
     );
 
     fireEvent.blur(getInput());
-    expect(finishSpy).toBeCalledWith();
+    expect(finishSpy).toHaveBeenCalledWith();
 });
