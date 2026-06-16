@@ -85,6 +85,7 @@ const originalLocationRef = {current: null};
         href: 'http://localhost',
         replace: jest.fn(),
         reload: jest.fn(),
+        origin: 'http://localhost',
     };
 
     jest.spyOn(locationMock, 'assign').mockName('window.location.assign');

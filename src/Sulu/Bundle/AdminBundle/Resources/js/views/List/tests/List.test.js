@@ -1902,8 +1902,7 @@ test('Export method should be called when the export-button is pressed', () => {
         return toolbarFunction.call(list.instance()).items.find((item) => item.label === 'Export');
     }
 
-    delete window.location;
-    window.location = {assign: jest.fn()};
+    window.location.assign = jest.fn();
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;

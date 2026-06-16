@@ -232,8 +232,8 @@ test('Call create with passed collectionId if id is not given and drop event occ
 });
 
 test('Download the image when the download button is clicked', () => {
-    delete window.location;
-    window.location = {assign: jest.fn()};
+    const assignSpy = jest.fn();
+    window.location.assign = assignSpy;
 
     const mediaUploadStore = new MediaUploadStore(
         {
@@ -256,7 +256,7 @@ test('Download the image when the download button is clicked', () => {
     );
 
     singleMediaUpload.find('Button[icon="su-download"]').simulate('click');
-    expect(window.location.assign).toHaveBeenCalledWith('test.jpg');
+    expect(assignSpy).toHaveBeenCalledWith('test.jpg');
 });
 
 test('Delete the image when the delete button is clicked and the overlay is confirmed', () => {

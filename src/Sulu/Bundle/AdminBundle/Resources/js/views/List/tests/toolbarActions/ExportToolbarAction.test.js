@@ -67,8 +67,7 @@ test('Return config for non-empty toolbar item', () => {
 });
 
 test('Export current result when button is clicked and dialog is confirmed', () => {
-    delete window.location;
-    window.location = {assign: jest.fn()};
+    window.location.assign = jest.fn();
 
     const exportToolbarAction = createExportToolbarAction();
     exportToolbarAction.listStore.data.push({});
@@ -102,8 +101,7 @@ test('Export current result when button is clicked and dialog is confirmed', () 
 });
 
 test('Export current result with applied filter and search when button is clicked and dialog is confirmed', () => {
-    delete window.location;
-    window.location = {assign: jest.fn()};
+    window.location.assign = jest.fn();
 
     const exportToolbarAction = createExportToolbarAction();
     exportToolbarAction.listStore.data.push({});

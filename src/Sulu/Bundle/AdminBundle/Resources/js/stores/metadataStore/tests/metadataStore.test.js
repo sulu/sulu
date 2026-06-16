@@ -34,9 +34,6 @@ test('Load metadata for given type and key', () => {
         },
     };
 
-    const snippetMetadataPromise = Promise.resolve(snippetMetadata);
-    const tagMetadataPromise = Promise.resolve(tagMetadata);
-
     const snippetResponse = {
         json: jest.fn(),
         ok: true,
@@ -74,8 +71,8 @@ test('Load metadata for given type and key', () => {
         }
     });
 
-    expect(metadataStore.loadMetadata('form', 'snippets')).toEqual(snippetMetadataPromise);
-    expect(metadataStore.loadMetadata('list', 'tags')).toEqual(tagMetadataPromise);
+    const snippetMetadataPromise = metadataStore.loadMetadata('form', 'snippets');
+    const tagMetadataPromise = metadataStore.loadMetadata('list', 'tags');
 
     return Promise.all([snippetMetadataPromise, tagMetadataPromise])
         .then(([snippetMetadataFromPromise, tagMetadataFromPromise]) => {
