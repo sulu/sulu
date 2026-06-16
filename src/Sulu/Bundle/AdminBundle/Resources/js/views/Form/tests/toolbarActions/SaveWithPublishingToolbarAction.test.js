@@ -168,7 +168,9 @@ test('Return item config without publish specific options if deprecated publish_
             label: 'sulu_admin.save_draft',
         }),
     ]);
-    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "publish_display_condition" option is deprecated'));
+    expect(log.warn).toHaveBeenCalledWith(
+        expect.stringContaining('The "publish_display_condition" option is deprecated')
+    );
 });
 
 test('Return item config without publish specific options if passed publish_visible_condition is not met', () => {
@@ -202,7 +204,9 @@ test('Return item config without saving specific options if deprecated save_disp
             label: 'sulu_admin.publish',
         }),
     ]);
-    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "save_display_condition" option is deprecated'));
+    expect(log.warn).toHaveBeenCalledWith(
+        expect.stringContaining('The "save_display_condition" option is deprecated')
+    );
 });
 
 test('Return item config without saving specific options if passed save_visible_condition is not met', () => {
@@ -218,7 +222,9 @@ test('Return item config without saving specific options if passed save_visible_
             label: 'sulu_admin.publish',
         }),
     ]);
-    expect(log.warn).not.toHaveBeenCalledWith(expect.stringContaining('The "save_display_condition" option is deprecated'));
+    expect(log.warn).not.toHaveBeenCalledWith(
+        expect.stringContaining('The "save_display_condition" option is deprecated')
+    );
 });
 
 test('Return item config with publish specific options if passed publish_visible_condition is met', () => {

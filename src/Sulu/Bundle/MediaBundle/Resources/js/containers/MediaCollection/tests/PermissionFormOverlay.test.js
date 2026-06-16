@@ -124,7 +124,10 @@ test('Confirming dialog should save the current value and inherit it', () => {
     permissionFormOverlay.instance().inheritDialogFormStore.data.inherit = true;
     permissionFormOverlay.find('Dialog').prop('onConfirm')();
 
-    expect(permissionFormOverlay.instance().resourceStore.save).toHaveBeenCalledWith({inherit: true, resourceKey: 'media'});
+    expect(permissionFormOverlay.instance().resourceStore.save).toHaveBeenCalledWith({
+        inherit: true,
+        resourceKey: 'media',
+    });
 
     expect(confirmSpy).not.toHaveBeenCalled();
     return savePromise.then(() => {

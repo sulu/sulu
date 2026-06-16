@@ -100,5 +100,9 @@ test('Should load items with correct options', () => {
         }
     );
 
-    expect(ResourceRequester.getList).toHaveBeenCalledWith('snippets', {limit: undefined, page: undefined, locale: 'en'});
+    expect(ResourceRequester.getList).toHaveBeenCalledWith('snippets', {
+        limit: undefined,
+        page: undefined,
+        locale: 'en',
+    });
 });

@@ -126,7 +126,10 @@ test('Add selected contact to current account', () => {
         open: true,
     }));
 
-    expect(ResourceRequester.put).toHaveBeenCalledWith('account_contacts', {position: undefined}, {accountId: 4, id: 3});
+    expect(ResourceRequester.put).toHaveBeenCalledWith('account_contacts', {position: undefined}, {
+        accountId: 4,
+        id: 3,
+    });
 
     return putPromise.then(() => {
         addContactOverlay = shallow(addContactToolbarAction.getNode()).instance();

@@ -1704,7 +1704,11 @@ test('Should clear errors if form has been saved', () => {
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         return jsonSchemaPromise.then(() => {
             form.find('Form').at(1).instance().submit().then(() => {
-                expect(ResourceRequester.put).toHaveBeenCalledWith('snippets', {}, {action: undefined, id: 8, locale: 'en'});
+                expect(ResourceRequester.put).toHaveBeenCalledWith('snippets', {}, {
+                    action: undefined,
+                    id: 8,
+                    locale: 'en',
+                });
                 expect(form.instance().errors).toHaveLength(0);
             });
         });

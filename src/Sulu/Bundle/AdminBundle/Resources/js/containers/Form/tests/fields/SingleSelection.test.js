@@ -143,7 +143,9 @@ test('Pass correct options to SingleAutoComplete with deprecated data_path_to_au
             accountId: 5,
         },
     }));
-    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "data_path_to_auto_complete" option is deprecated'));
+    expect(log.warn).toHaveBeenCalledWith(
+        expect.stringContaining('The "data_path_to_auto_complete" option is deprecated')
+    );
 });
 
 test('Use locale from userStore and pass correct props with schema-options type to SingleAutoComplete', () => {
@@ -281,8 +283,11 @@ test('Handle object without warning when "use_deprecated_object_data_format" opt
         />
     );
 
-    expect(singleSelection.find('SingleAutoComplete').props().selectionStore.item).toEqual({id: 'old-entity-id'});
-    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('"use_deprecated_object_data_format" param is deprecated'));
+    expect(singleSelection.find('SingleAutoComplete').props().selectionStore.item)
+        .toEqual({id: 'old-entity-id'});
+    expect(log.warn).toHaveBeenCalledWith(
+        expect.stringContaining('"use_deprecated_object_data_format" param is deprecated')
+    );
     expect(log.warn).not.toHaveBeenCalledWith(expect.stringContaining('expects an id as value but received an object'));
 
     singleSelection.instance().autoCompleteSelectionStore.item = {id: 'new-entity-id'};

@@ -241,7 +241,10 @@ test('Delete draft when dialog is confirmed', () => {
         element = mount(deleteDraftToolbarAction.getNode());
         expect(deleteDraftToolbarAction.form.showSuccessSnackbar).toHaveBeenCalledWith();
         expect(element.prop('confirmLoading')).toEqual(false);
-        expect(deleteDraftToolbarAction.resourceFormStore.changeMultiple).toHaveBeenCalledWith(data, {isServerValue: true});
+        expect(deleteDraftToolbarAction.resourceFormStore.changeMultiple).toHaveBeenCalledWith(
+            data,
+            {isServerValue: true}
+        );
         expect(deleteDraftToolbarAction.resourceFormStore.dirty).toEqual(false);
     });
 });

@@ -37,7 +37,10 @@ test('Edit an existing Condition', () => {
     const conditionList = shallow(<ConditionList onChange={changeSpy} value={value} />);
     conditionList.find('Condition').at(1).prop('onChange')({condition: {test: 'value'}, type: 'test'}, 1);
 
-    expect(changeSpy).toHaveBeenCalledWith([{condition: {}, type: 'browser'}, {condition: {test: 'value'}, type: 'test'}]);
+    expect(changeSpy).toHaveBeenCalledWith([
+        {condition: {}, type: 'browser'},
+        {condition: {test: 'value'}, type: 'test'},
+    ]);
 });
 
 test('Remove an existing Condition', () => {

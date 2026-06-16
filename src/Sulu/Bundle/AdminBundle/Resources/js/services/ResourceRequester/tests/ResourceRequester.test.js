@@ -99,7 +99,11 @@ test('Should send a put request with passed options as query parameters', () => 
     const options = {action: 'publish', id: 5, locale: 'en'};
     Requester.put.mockReturnValue({});
     ResourceRequester.put('snippets', data, options);
-    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('detail', 'snippets', {action: 'publish', id: 5, locale: 'en'});
+    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('detail', 'snippets', {
+        action: 'publish',
+        id: 5,
+        locale: 'en',
+    });
     expect(Requester.put).toHaveBeenCalledWith('/snippets/5?locale=en&action=publish', data);
 });
 
@@ -120,7 +124,11 @@ test('Should send a patch request with passed options as query parameters', () =
     const options = {action: 'publish', id: 5, locale: 'en'};
     Requester.patch.mockReturnValue({});
     ResourceRequester.patch('snippets', data, options);
-    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('detail', 'snippets', {action: 'publish', id: 5, locale: 'en'});
+    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('detail', 'snippets', {
+        action: 'publish',
+        id: 5,
+        locale: 'en',
+    });
     expect(Requester.patch).toHaveBeenCalledWith('/snippets/5?locale=en&action=publish', data);
 });
 
@@ -147,7 +155,11 @@ test('Should send a delete request with passed options as query parameters', () 
     const options = {id: 5, locale: 'en', webspace: 'sulu'};
     Requester.delete.mockReturnValue({});
     ResourceRequester.delete('snippets', options);
-    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('detail', 'snippets', {id: 5, locale: 'en', webspace: 'sulu'});
+    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('detail', 'snippets', {
+        id: 5,
+        locale: 'en',
+        webspace: 'sulu',
+    });
     expect(Requester.delete).toHaveBeenCalledWith('/snippets/5?locale=en&webspace=sulu');
 });
 

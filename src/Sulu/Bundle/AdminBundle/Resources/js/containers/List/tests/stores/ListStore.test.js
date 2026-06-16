@@ -120,7 +120,10 @@ test('The sort column value should be updated when set from the outside', () => 
     expect(listStore.sortColumn.get()).toEqual();
 
     listStore.sortColumn.set('title');
-    expect(userStore.setPersistentSetting).toHaveBeenCalledWith('sulu_admin.list_store.tests.list_test.sort_column', 'title');
+    expect(userStore.setPersistentSetting).toHaveBeenCalledWith(
+        'sulu_admin.list_store.tests.list_test.sort_column',
+        'title'
+    );
 });
 
 test('The sort order value should be updated when set from the outside', () => {
@@ -128,7 +131,10 @@ test('The sort order value should be updated when set from the outside', () => {
     expect(listStore.sortOrder.get()).toEqual();
 
     listStore.sortOrder.set('asc');
-    expect(userStore.setPersistentSetting).toHaveBeenCalledWith('sulu_admin.list_store.tests.list_test.sort_order', 'asc');
+    expect(userStore.setPersistentSetting).toHaveBeenCalledWith(
+        'sulu_admin.list_store.tests.list_test.sort_order',
+        'asc'
+    );
 });
 
 test('The loading strategy should get passed the structure strategy', () => {
@@ -2107,7 +2113,12 @@ test('Should delete the item with the given ID and options', () => {
 
     listStore.delete(5, {force: true});
 
-    expect(ResourceRequester.delete).toHaveBeenCalledWith('snippets', {force: true, id: 5, locale: 'en', webspace: 'sulu'});
+    expect(ResourceRequester.delete).toHaveBeenCalledWith('snippets', {
+        force: true,
+        id: 5,
+        locale: 'en',
+        webspace: 'sulu',
+    });
 
     return deletePromise.then(() => {
         expect(structureStrategy.remove).toHaveBeenCalledWith(5);

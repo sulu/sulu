@@ -175,7 +175,11 @@ test('Should pass the tab title from the resourceStore as configured in the prop
         </ResourceTabs>
     );
 
-    expect(children).toHaveBeenCalledWith({locales: undefined, resourceStore: expect.any(ResourceStore), title: 'value2'});
+    expect(children).toHaveBeenCalledWith({
+        locales: undefined,
+        resourceStore: expect.any(ResourceStore),
+        title: 'value2',
+    });
 });
 
 test('Should not render the tab title on the first tab when tabOrder is defined', (done) => {

@@ -406,7 +406,9 @@ test('Should log warnings for deprecated options', () => {
 
     expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "routeName" option is deprecated'));
     expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "requestParameters" option is deprecated'));
-    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "routerAttributesToRequest" option is deprecated'));
+    expect(log.warn).toHaveBeenCalledWith(
+        expect.stringContaining('The "routerAttributesToRequest" option is deprecated')
+    );
     expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "minSize" option is deprecated'));
     expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "maxSize" option is deprecated'));
 });

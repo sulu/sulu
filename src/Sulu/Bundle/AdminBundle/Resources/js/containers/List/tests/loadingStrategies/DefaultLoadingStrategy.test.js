@@ -98,7 +98,11 @@ test('Should load items with correct options when not paginated', () => {
         }
     );
 
-    expect(ResourceRequester.getList).toHaveBeenCalledWith('snippets', {limit: undefined, page: undefined, locale: 'en'});
+    expect(ResourceRequester.getList).toHaveBeenCalledWith('snippets', {
+        limit: undefined,
+        page: undefined,
+        locale: 'en',
+    });
 });
 
 test('Should load items with correct options when paginated', () => {

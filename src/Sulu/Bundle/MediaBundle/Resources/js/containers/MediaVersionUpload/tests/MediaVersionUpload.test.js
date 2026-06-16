@@ -221,11 +221,10 @@ test('Should save crop overlay and call onSuccess', () => {
             .mockReturnValue(putPromise);
         mediaVersionUpload.find('CropOverlay').find('Overlay').prop('onConfirm')();
 
-        expect(mediaVersionUpload.find('CropOverlay').instance().mediaFormatStore.updateFormatOptions).toHaveBeenCalledWith(
-            {
+        expect(mediaVersionUpload.find('CropOverlay').instance().mediaFormatStore.updateFormatOptions)
+            .toHaveBeenCalledWith({
                 test: {cropHeight: 60, cropWidth: 20, cropX: 200, cropY: 20},
-            }
-        );
+            });
 
         return putPromise.then(() => {
             mediaVersionUpload.find('CropOverlay').update();
