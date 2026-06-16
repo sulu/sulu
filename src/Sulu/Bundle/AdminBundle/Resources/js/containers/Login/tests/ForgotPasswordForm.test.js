@@ -48,7 +48,7 @@ test('Should trigger onChangeForm correctly', () => {
 
     resetForm.find('Button').at(0).simulate('click');
 
-    expect(onChangeForm).toBeCalled();
+    expect(onChangeForm).toHaveBeenCalled();
 });
 
 test('Should not trigger onSubmit if user is missing', () => {
@@ -66,8 +66,8 @@ test('Should not trigger onSubmit if user is missing', () => {
 
     resetForm.find('form').prop('onSubmit')(event);
 
-    expect(event.preventDefault).toBeCalledWith();
-    expect(onSubmit).not.toBeCalled();
+    expect(event.preventDefault).toHaveBeenCalledWith();
+    expect(onSubmit).not.toHaveBeenCalled();
 });
 
 test('Should trigger onSubmit correctly', () => {
@@ -86,6 +86,6 @@ test('Should trigger onSubmit correctly', () => {
     resetForm.find('Input[icon="su-user"]').prop('onChange')('testusername');
     resetForm.find('form').prop('onSubmit')(event);
 
-    expect(event.preventDefault).toBeCalledWith();
-    expect(onSubmit).toBeCalledWith({user: 'testusername'});
+    expect(event.preventDefault).toHaveBeenCalledWith();
+    expect(onSubmit).toHaveBeenCalledWith({user: 'testusername'});
 });

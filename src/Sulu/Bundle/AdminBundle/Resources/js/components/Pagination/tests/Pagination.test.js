@@ -93,7 +93,7 @@ test('Should call callback with updated page when initialized with an invalid pa
         </Pagination>
     );
 
-    expect(changeSpy).toBeCalledWith(10);
+    expect(changeSpy).toHaveBeenCalledWith(10);
 });
 
 test('Should call callback with updated page when changing page to invalid value', () => {
@@ -122,7 +122,7 @@ test('Should call callback with updated page when changing page to invalid value
             <p>Test</p>
         </Pagination>
     );
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 
     rerender(
         <Pagination
@@ -135,7 +135,7 @@ test('Should call callback with updated page when changing page to invalid value
             <p>Test</p>
         </Pagination>
     );
-    expect(changeSpy).toBeCalledWith(10);
+    expect(changeSpy).toHaveBeenCalledWith(10);
 });
 
 test('Should call callback with updated page when changing total number of pages to lower value', () => {
@@ -164,7 +164,7 @@ test('Should call callback with updated page when changing total number of pages
             <p>Test</p>
         </Pagination>
     );
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 
     rerender(
         <Pagination
@@ -177,7 +177,7 @@ test('Should call callback with updated page when changing total number of pages
             <p>Test</p>
         </Pagination>
     );
-    expect(changeSpy).toBeCalledWith(3);
+    expect(changeSpy).toHaveBeenCalledWith(3);
 });
 
 test('Click previous link should call callback', async() => {
@@ -195,7 +195,7 @@ test('Click previous link should call callback', async() => {
     );
 
     await userEvent.click(screen.getByLabelText('su-angle-left'));
-    expect(clickSpy).toBeCalledWith(4);
+    expect(clickSpy).toHaveBeenCalledWith(4);
 });
 
 test('Click next link should call callback', async() => {
@@ -213,7 +213,7 @@ test('Click next link should call callback', async() => {
     );
 
     await userEvent.click(screen.getByLabelText('su-angle-right'));
-    expect(clickSpy).toBeCalledWith(7);
+    expect(clickSpy).toHaveBeenCalledWith(7);
 });
 
 test('Click previous link on first page should not call callback', async() => {
@@ -231,7 +231,7 @@ test('Click previous link on first page should not call callback', async() => {
     );
 
     await userEvent.click(screen.getByLabelText('su-angle-left'));
-    expect(clickSpy).not.toBeCalled();
+    expect(clickSpy).not.toHaveBeenCalled();
 });
 
 test('Click next link on last page should not call callback', async() => {
@@ -249,7 +249,7 @@ test('Click next link on last page should not call callback', async() => {
     );
 
     await userEvent.click(screen.getByLabelText('su-angle-right'));
-    expect(clickSpy).not.toBeCalled();
+    expect(clickSpy).not.toHaveBeenCalled();
 });
 
 test('Change limit should call callback', async() => {
@@ -268,7 +268,7 @@ test('Change limit should call callback', async() => {
 
     await userEvent.click(screen.getByLabelText('su-angle-down'));
     await userEvent.click(screen.getByText('20'));
-    expect(changeSpy).toBeCalledWith(20);
+    expect(changeSpy).toHaveBeenCalledWith(20);
 });
 
 test('Change limit to current limit should not call callback', async() => {
@@ -287,7 +287,7 @@ test('Change limit to current limit should not call callback', async() => {
 
     await userEvent.click(screen.getByLabelText('su-angle-down'));
     await userEvent.click(screen.getAllByText('10')[1]);
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Change callback should be called on blur when input was changed', async() => {
@@ -306,10 +306,10 @@ test('Change callback should be called on blur when input was changed', async() 
 
     const input = screen.getByDisplayValue('2');
     await userEvent.type(input, '5');
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 
     await userEvent.tab(); // tab away from input
-    expect(changeSpy).toBeCalledWith(25);
+    expect(changeSpy).toHaveBeenCalledWith(25);
 });
 
 test('Change callback should be called on enter when input was changed', async() => {
@@ -328,13 +328,13 @@ test('Change callback should be called on enter when input was changed', async()
 
     const input = screen.getByDisplayValue('2');
     await userEvent.type(input, '[Enter]');
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 
     await userEvent.type(input, '5');
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 
     await userEvent.type(input, '[Enter]');
-    expect(changeSpy).toBeCalledWith(25);
+    expect(changeSpy).toHaveBeenCalledWith(25);
 });
 
 test('Change callback should be called with 1 if input value is lower than 1', async() => {
@@ -354,10 +354,10 @@ test('Change callback should be called with 1 if input value is lower than 1', a
     const input = screen.getByDisplayValue('6');
     await userEvent.clear(input);
     await userEvent.type(input, '0');
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 
     await userEvent.type(input, '[Enter]');
-    expect(changeSpy).toBeCalledWith(1);
+    expect(changeSpy).toHaveBeenCalledWith(1);
 });
 
 test('Change callback should be called with value of totalPages if input value is higher than total pages', async() => {
@@ -377,10 +377,10 @@ test('Change callback should be called with value of totalPages if input value i
     const input = screen.getByDisplayValue('6');
     await userEvent.clear(input);
     await userEvent.type(input, '12');
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 
     await userEvent.type(input, '[Enter]');
-    expect(changeSpy).toBeCalledWith(10);
+    expect(changeSpy).toHaveBeenCalledWith(10);
 });
 
 test('Change callback should not be called if input value is equal to currentPage', async() => {
@@ -400,8 +400,8 @@ test('Change callback should not be called if input value is equal to currentPag
     const input = screen.getByDisplayValue('6');
     await userEvent.clear(input);
     await userEvent.type(input, '6');
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 
     await userEvent.type(input, '[Enter]');
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });

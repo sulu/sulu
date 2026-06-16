@@ -126,7 +126,7 @@ test('Should make xhr request on confirm', () => {
 
     uploadToolbarAction.handleConfirm([new File(['foo'], 'foo.jpg')]);
 
-    expect(Requester.fetch).toBeCalledWith('foo?locale=en&locale2=en&foo=bar&baz=foo', expect.objectContaining({
+    expect(Requester.fetch).toHaveBeenCalledWith('foo?locale=en&locale2=en&foo=bar&baz=foo', expect.objectContaining({
         method: 'POST',
         body: expect.any(FormData),
         credentials: 'same-origin',
@@ -136,7 +136,7 @@ test('Should make xhr request on confirm', () => {
     }));
 
     return promise.then(() => {
-        expect(uploadToolbarAction.listStore.reload).toBeCalled();
+        expect(uploadToolbarAction.listStore.reload).toHaveBeenCalled();
     });
 });
 
@@ -256,7 +256,7 @@ test('Should display error if server error occurs', () => {
 
     uploadToolbarAction.handleConfirm([new File(['foo'], 'foo.jpg')]);
 
-    expect(Requester.fetch).toBeCalledWith('foo?', expect.objectContaining({
+    expect(Requester.fetch).toHaveBeenCalledWith('foo?', expect.objectContaining({
         method: 'POST',
         body: expect.any(FormData),
         credentials: 'same-origin',
@@ -307,7 +307,7 @@ test('Should display error message returned by server if server error occurs', (
 
     uploadToolbarAction.handleConfirm([new File(['foo'], 'foo.jpg')]);
 
-    expect(Requester.fetch).toBeCalledWith('foo?', expect.objectContaining({
+    expect(Requester.fetch).toHaveBeenCalledWith('foo?', expect.objectContaining({
         method: 'POST',
         body: expect.any(FormData),
         credentials: 'same-origin',
@@ -361,9 +361,9 @@ test('Should display error message from deprecated errorCodeMapping option if se
 
     uploadToolbarAction.handleConfirm([new File(['foo'], 'foo.jpg')]);
 
-    expect(log.warn).toBeCalledWith(expect.stringContaining('The "errorCodeMapping" option is deprecated'));
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "errorCodeMapping" option is deprecated'));
 
-    expect(Requester.fetch).toBeCalledWith('foo?', expect.objectContaining({
+    expect(Requester.fetch).toHaveBeenCalledWith('foo?', expect.objectContaining({
         method: 'POST',
         body: expect.any(FormData),
         credentials: 'same-origin',
@@ -404,9 +404,11 @@ test('Should log warnings for deprecated options', () => {
         maxSize: 9999,
     });
 
-    expect(log.warn).toBeCalledWith(expect.stringContaining('The "routeName" option is deprecated'));
-    expect(log.warn).toBeCalledWith(expect.stringContaining('The "requestParameters" option is deprecated'));
-    expect(log.warn).toBeCalledWith(expect.stringContaining('The "routerAttributesToRequest" option is deprecated'));
-    expect(log.warn).toBeCalledWith(expect.stringContaining('The "minSize" option is deprecated'));
-    expect(log.warn).toBeCalledWith(expect.stringContaining('The "maxSize" option is deprecated'));
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "routeName" option is deprecated'));
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "requestParameters" option is deprecated'));
+    expect(log.warn).toHaveBeenCalledWith(
+        expect.stringContaining('The "routerAttributesToRequest" option is deprecated')
+    );
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "minSize" option is deprecated'));
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "maxSize" option is deprecated'));
 });

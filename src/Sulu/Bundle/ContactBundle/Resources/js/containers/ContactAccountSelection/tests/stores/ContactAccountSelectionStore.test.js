@@ -31,8 +31,8 @@ test('Load accounts and contacts', () => {
     contactAccountSelectionStore.loadItems(['c1', 'a1', 'c3', 'a5']);
     expect(contactAccountSelectionStore.loading).toEqual(true);
 
-    expect(ResourceRequester.getList).toBeCalledWith('contacts', {ids: '1,3', limit: undefined, page: 1});
-    expect(ResourceRequester.getList).toBeCalledWith('accounts', {ids: '1,5', limit: undefined, page: 1});
+    expect(ResourceRequester.getList).toHaveBeenCalledWith('contacts', {ids: '1,3', limit: undefined, page: 1});
+    expect(ResourceRequester.getList).toHaveBeenCalledWith('accounts', {ids: '1,5', limit: undefined, page: 1});
 
     return Promise.all([contactsPromise, accountsPromise]).then(() => {
         expect(contactAccountSelectionStore.loading).toEqual(false);
@@ -57,7 +57,7 @@ test('Do not send any requests if nothing has to be loaded', (done) => {
     contactAccountSelectionStore.loadItems([]);
     expect(contactAccountSelectionStore.loading).toEqual(true);
 
-    expect(ResourceRequester.getList).not.toBeCalled();
+    expect(ResourceRequester.getList).not.toHaveBeenCalled();
 
     setTimeout(() => {
         expect(contactAccountSelectionStore.loading).toEqual(false);
@@ -84,7 +84,7 @@ test('Send only contact request if nothing has to be loaded', (done) => {
     expect(contactAccountSelectionStore.loading).toEqual(true);
 
     expect(ResourceRequester.getList).toHaveBeenCalledTimes(1);
-    expect(ResourceRequester.getList).toBeCalledWith('contacts', {ids: '1,3', limit: undefined, page: 1});
+    expect(ResourceRequester.getList).toHaveBeenCalledWith('contacts', {ids: '1,3', limit: undefined, page: 1});
 
     setTimeout(() => {
         expect(contactAccountSelectionStore.loading).toEqual(false);
@@ -111,7 +111,7 @@ test('Send only accounts request if nothing has to be loaded', (done) => {
     expect(contactAccountSelectionStore.loading).toEqual(true);
 
     expect(ResourceRequester.getList).toHaveBeenCalledTimes(1);
-    expect(ResourceRequester.getList).toBeCalledWith('accounts', {ids: '1,5', limit: undefined, page: 1});
+    expect(ResourceRequester.getList).toHaveBeenCalledWith('accounts', {ids: '1,5', limit: undefined, page: 1});
 
     setTimeout(() => {
         expect(contactAccountSelectionStore.loading).toEqual(false);

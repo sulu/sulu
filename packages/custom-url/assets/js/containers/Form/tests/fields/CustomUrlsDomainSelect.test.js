@@ -56,7 +56,7 @@ test('Pass correct props to MultiSelect', () => {
         />
     );
 
-    expect(webspaceStore.getWebspace).toBeCalledWith('sulu_io');
+    expect(webspaceStore.getWebspace).toHaveBeenCalledWith('sulu_io');
 
     expect(customUrlsDomainSelect.find('SingleSelect').prop('disabled')).toEqual(true);
     expect(customUrlsDomainSelect.find('SingleSelect').prop('value')).toEqual('www.sulu.io/*');
@@ -97,6 +97,6 @@ test('Call onChange and onBlur if the value is changed', () => {
     );
 
     customUrlsDomainSelect.find('SingleSelect').prop('onChange')('*.sulu.io');
-    expect(changeSpy).toBeCalledWith('*.sulu.io');
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith('*.sulu.io');
+    expect(finishSpy).toHaveBeenCalledWith();
 });

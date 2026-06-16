@@ -31,7 +31,7 @@ test('Send a request using the ResourceRequester when something is being searche
     expect(searchStore.loading).toEqual(true);
 
     return autoCompletePromise.then(() => {
-        expect(ResourceRequester.getList).toBeCalledWith('accounts', {
+        expect(ResourceRequester.getList).toHaveBeenCalledWith('accounts', {
             locale: undefined,
             limit: 10,
             page: 1,
@@ -58,7 +58,7 @@ test('Send a request using the ResourceRequester with given locale when somethin
     expect(searchStore.loading).toEqual(true);
 
     return autoCompletePromise.then(() => {
-        expect(ResourceRequester.getList).toBeCalledWith('accounts', {
+        expect(ResourceRequester.getList).toHaveBeenCalledWith('accounts', {
             locale: 'en',
             limit: 10,
             page: 1,
@@ -85,7 +85,7 @@ test('Send a request using the ResourceRequester when query is an empty string',
     expect(searchStore.loading).toEqual(true);
 
     return autoCompletePromise.then(() => {
-        expect(ResourceRequester.getList).toBeCalledWith('accounts', {
+        expect(ResourceRequester.getList).toHaveBeenCalledWith('accounts', {
             limit: 10,
             page: 1,
             search: '',
@@ -111,7 +111,7 @@ test('Send a request using the ResourceRequester with given options when somethi
     expect(searchStore.loading).toEqual(true);
 
     return autoCompletePromise.then(() => {
-        expect(ResourceRequester.getList).toBeCalledWith('accounts', {
+        expect(ResourceRequester.getList).toHaveBeenCalledWith('accounts', {
             country: 'US',
             locale: undefined,
             limit: 10,
@@ -139,7 +139,7 @@ test('Send a request using the ResourceRequester with excludedIds when something
     expect(searchStore.loading).toEqual(true);
 
     return autoCompletePromise.then(() => {
-        expect(ResourceRequester.getList).toBeCalledWith('accounts', {
+        expect(ResourceRequester.getList).toHaveBeenCalledWith('accounts', {
             excludedIds: [1, 4],
             locale: undefined,
             limit: 10,

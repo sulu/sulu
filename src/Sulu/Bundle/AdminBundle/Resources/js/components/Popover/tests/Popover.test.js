@@ -94,7 +94,7 @@ test('The popover should request to be closed when the backdrop is clicked', asy
     renderPopover({onClose: onCloseSpy});
 
     await user.click(screen.getByTestId('backdrop'));
-    expect(onCloseSpy).toBeCalled();
+    expect(onCloseSpy).toHaveBeenCalled();
 });
 
 test('The popover should not request to be closed if it is already closed', () => {
@@ -102,7 +102,7 @@ test('The popover should not request to be closed if it is already closed', () =
     renderPopover({onClose: onCloseSpy, open: false});
 
     fireEvent(window, new Event('blur'));
-    expect(onCloseSpy).not.toBeCalled();
+    expect(onCloseSpy).not.toHaveBeenCalled();
 });
 
 test('The popover should request to be closed when the window is blurred', () => {
@@ -110,25 +110,25 @@ test('The popover should request to be closed when the window is blurred', () =>
     renderPopover({onClose: onCloseSpy, open: true});
 
     fireEvent(window, new Event('blur'));
-    expect(onCloseSpy).toBeCalled();
+    expect(onCloseSpy).toHaveBeenCalled();
 });
 
 test('The popover should request to be closed when the esc key is pressed', () => {
     const closeSpy = jest.fn();
     renderPopover({onClose: closeSpy, open: true});
 
-    expect(closeSpy).not.toBeCalled();
+    expect(closeSpy).not.toHaveBeenCalled();
     Mousetrap.trigger('esc');
-    expect(closeSpy).toBeCalled();
+    expect(closeSpy).toHaveBeenCalled();
 });
 
 test('The popover should bind and unbind the esc key when overlay is opened and closed', () => {
     const closeSpy = jest.fn();
     const {rerender} = renderPopover({onClose: closeSpy, open: true});
 
-    expect(closeSpy).not.toBeCalled();
+    expect(closeSpy).not.toHaveBeenCalled();
     Mousetrap.trigger('esc');
-    expect(closeSpy).toBeCalled();
+    expect(closeSpy).toHaveBeenCalled();
     closeSpy.mockReset();
 
     rerender(
@@ -145,7 +145,7 @@ test('The popover should bind and unbind the esc key when overlay is opened and 
         </Popover>
     );
     Mousetrap.trigger('esc');
-    expect(closeSpy).not.toBeCalled();
+    expect(closeSpy).not.toHaveBeenCalled();
     closeSpy.mockReset();
 
     rerender(
@@ -162,7 +162,7 @@ test('The popover should bind and unbind the esc key when overlay is opened and 
         </Popover>
     );
     Mousetrap.trigger('esc');
-    expect(closeSpy).toBeCalled();
+    expect(closeSpy).toHaveBeenCalled();
 });
 
 test('The popover should pass its child ref to the parent', () => {

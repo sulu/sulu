@@ -187,7 +187,7 @@ test('Update values on overlay confirm', () => {
 
     overlayProps.onConfirm();
 
-    expect(changeSpy).toBeCalledWith(
+    expect(changeSpy).toHaveBeenCalledWith(
         {
             title: 'newTitle',
             href: '10',
@@ -237,7 +237,7 @@ test('Update values on overlay confirm with ExternalLinkTypeOverlay', () => {
 
     overlayProps.onConfirm();
 
-    expect(changeSpy).toBeCalledWith(
+    expect(changeSpy).toHaveBeenCalledWith(
         {
             title: 'newTitle',
             href: 'https://example.org',
@@ -292,7 +292,7 @@ test('Invalidate values on RemoveButton click', () => {
             const removeButton = link.find('.removeButton');
             removeButton.simulate('click');
 
-            expect(changeSpy).toBeCalledWith(
+            expect(changeSpy).toHaveBeenCalledWith(
                 {
                     title: undefined,
                     href: undefined,

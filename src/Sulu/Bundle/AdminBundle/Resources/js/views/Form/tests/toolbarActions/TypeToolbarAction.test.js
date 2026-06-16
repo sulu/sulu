@@ -163,7 +163,7 @@ test('Change the type of the FormStore when FormStore is not dirty and another t
 
     toolbarItemConfig.onChange('homepage');
 
-    expect(typeToolbarAction.resourceFormStore.changeType).toBeCalledWith('homepage');
+    expect(typeToolbarAction.resourceFormStore.changeType).toHaveBeenCalledWith('homepage');
 });
 
 test('Display warning dialog when FormStore is dirty and another type is selected', () => {
@@ -201,7 +201,7 @@ test('Display warning dialog when FormStore is dirty and another type is selecte
 
     toolbarItemConfig.onChange('homepage');
 
-    expect(typeToolbarAction.resourceFormStore.changeType).not.toBeCalled();
+    expect(typeToolbarAction.resourceFormStore.changeType).not.toHaveBeenCalled();
     expect(mount(typeToolbarAction.getNode()).instance().props).toEqual(expect.objectContaining({
         title: 'sulu_admin.change_type_dirty_warning_dialog_title',
         children: 'sulu_admin.dirty_warning_dialog_text',
@@ -237,11 +237,11 @@ test('Change the type of the FormStore when warning dialog is confirmed', () => 
     }
 
     toolbarItemConfig.onChange('homepage');
-    expect(typeToolbarAction.resourceFormStore.changeType).not.toBeCalled();
+    expect(typeToolbarAction.resourceFormStore.changeType).not.toHaveBeenCalled();
     expect(mount(typeToolbarAction.getNode()).instance().props.open).toBeTruthy();
 
     mount(typeToolbarAction.getNode()).instance().props.onConfirm();
-    expect(typeToolbarAction.resourceFormStore.changeType).toBeCalledWith('homepage');
+    expect(typeToolbarAction.resourceFormStore.changeType).toHaveBeenCalledWith('homepage');
     expect(mount(typeToolbarAction.getNode()).instance().props.open).toBeFalsy();
 });
 
@@ -273,11 +273,11 @@ test('Do not change the type of the FormStore when warning dialog is canceled', 
     }
 
     toolbarItemConfig.onChange('homepage');
-    expect(typeToolbarAction.resourceFormStore.changeType).not.toBeCalled();
+    expect(typeToolbarAction.resourceFormStore.changeType).not.toHaveBeenCalled();
     expect(mount(typeToolbarAction.getNode()).instance().props.open).toBeTruthy();
 
     mount(typeToolbarAction.getNode()).instance().props.onCancel();
-    expect(typeToolbarAction.resourceFormStore.changeType).not.toBeCalled();
+    expect(typeToolbarAction.resourceFormStore.changeType).not.toHaveBeenCalled();
     expect(mount(typeToolbarAction.getNode()).instance().props.open).toBeFalsy();
 });
 

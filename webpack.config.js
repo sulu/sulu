@@ -90,7 +90,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                 {
                     test: /\.js$/,
                     exclude: [
-                        // eslint-disable-next-line max-len
+
                         /node_modules[/\\](?!(sulu-(.*)-bundle|@ckeditor|array-move|lodash-es|vanilla-colorful)[/\\])/,
                         /friendsofsymfony[/\\]jsrouting-bundle/,
                     ],
@@ -110,7 +110,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                             loader: MiniCssExtractPlugin.loader,
                         },
                         // style loader not required: https://github.com/webpack-contrib/css-loader#recommend
-                        // eslint-disable-next-line max-len
+
                         'css-loader',
                     ],
                 },

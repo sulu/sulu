@@ -83,7 +83,7 @@ test('Should initialize preview sidebar per default when previewCondition is not
 
     // check if evalSync was called with correct parameters during function call
     const jexl = require('jexl');
-    expect(jexl.evalSync).not.toBeCalled();
+    expect(jexl.evalSync).not.toHaveBeenCalled();
 });
 
 test('Should initialize preview sidebar when previewCondition evaluates to true', () => {
@@ -116,7 +116,7 @@ test('Should initialize preview sidebar when previewCondition evaluates to true'
 
     // check if evalSync was called with correct parameters during function call
     const jexl = require('jexl');
-    expect(jexl.evalSync).toBeCalledWith( 'nodeType == 1', {testKey: 'test-value'});
+    expect(jexl.evalSync).toHaveBeenCalledWith( 'nodeType == 1', {testKey: 'test-value'});
 });
 
 test('Should not initialize preview sidebar when previewCondition evaluates to true', () => {
@@ -146,5 +146,5 @@ test('Should not initialize preview sidebar when previewCondition evaluates to t
 
     // check if evalSync was called with correct parameters during function call
     const jexl = require('jexl');
-    expect(jexl.evalSync).toBeCalledWith( 'nodeType == 2', {testKey: 'test-value'});
+    expect(jexl.evalSync).toHaveBeenCalledWith( 'nodeType == 2', {testKey: 'test-value'});
 });

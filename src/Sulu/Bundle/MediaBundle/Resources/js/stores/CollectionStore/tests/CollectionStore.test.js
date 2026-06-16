@@ -11,7 +11,7 @@ test('Do not send request without defined collectionId', () => {
     const locale = observable.box();
     new CollectionStore(undefined, locale);
 
-    expect(ResourceRequester.get).not.toBeCalled();
+    expect(ResourceRequester.get).not.toHaveBeenCalled();
 });
 
 test('After loading the collection info should be set', (done) => {
@@ -99,7 +99,7 @@ test('Should return an empty permission object if no permissions are given', (do
 test('Should return an empty permission object if no id was given', () => {
     const collectionStore = new CollectionStore(undefined, observable.box('en'));
 
-    expect(ResourceRequester.get).not.toBeCalled();
+    expect(ResourceRequester.get).not.toHaveBeenCalled();
     expect(collectionStore.loading).toEqual(false);
     expect(collectionStore.permissions).toEqual({});
 });

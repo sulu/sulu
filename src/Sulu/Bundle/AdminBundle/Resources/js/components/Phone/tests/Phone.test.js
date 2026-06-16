@@ -53,14 +53,13 @@ test('Phone should trigger callbacks correctly', async() => {
     expect(onChange).toHaveBeenLastCalledWith('+123', expect.anything());
 
     await userEvent.tab();
-    expect(onBlur).toBeCalled();
+    expect(onBlur).toHaveBeenCalled();
     expect(onBlur).toHaveBeenCalledTimes(1);
 });
 
 test('Phone should not set onIconClick when value is not set', async() => {
     const redirectSpy = jest.fn();
-    delete window.location;
-    window.location = {assign: redirectSpy};
+    window.location.assign = redirectSpy;
 
     const onChange = jest.fn();
     const onBlur = jest.fn();
@@ -74,8 +73,7 @@ test('Phone should not set onIconClick when value is not set', async() => {
 
 test('Phone should set onIconClick when value is set', async() => {
     const redirectSpy = jest.fn();
-    delete window.location;
-    window.location = {assign: redirectSpy};
+    window.location.assign = redirectSpy;
 
     const onChange = jest.fn();
     const onBlur = jest.fn();
@@ -89,8 +87,7 @@ test('Phone should set onIconClick when value is set', async() => {
 
 test('Phone should set onIconClick when value is valid and window should be opened', async() => {
     const redirectSpy = jest.fn();
-    delete window.location;
-    window.location = {assign: redirectSpy};
+    window.location.assign = redirectSpy;
 
     const onChange = jest.fn();
     const onBlur = jest.fn();

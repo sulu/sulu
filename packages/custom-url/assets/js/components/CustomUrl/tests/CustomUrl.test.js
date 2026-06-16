@@ -27,7 +27,7 @@ test('Call onBlur for every input field', () => {
     render(<CustomUrl baseDomain="*.sulu.io/*" onBlur={blurSpy} onChange={jest.fn()} value={[]} />);
     const inputs = screen.getAllByRole('textbox');
 
-    expect(blurSpy).not.toBeCalled();
+    expect(blurSpy).not.toHaveBeenCalled();
 
     fireEvent.blur(inputs[0]);
     expect(blurSpy).toHaveBeenCalledTimes(1);
@@ -42,7 +42,7 @@ test('Call onChange after change of every input field', () => {
     render(<CustomUrl baseDomain="*.sulu.io/*" onChange={changeSpy} value={[]} />);
     const inputs = screen.getAllByRole('textbox');
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 
     // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(inputs[0], {target: {value: 'test1'}});

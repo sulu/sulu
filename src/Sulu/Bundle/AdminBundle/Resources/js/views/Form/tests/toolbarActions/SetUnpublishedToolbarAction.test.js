@@ -113,7 +113,7 @@ test('Return empty item config if deprecated display_condition is not met', () =
     const toolbarItemConfig = setUnpublishedToolbarAction.getToolbarItemConfig();
 
     expect(toolbarItemConfig).toEqual(undefined);
-    expect(log.warn).toBeCalledWith(expect.stringContaining('The "display_condition" option is deprecated'));
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "display_condition" option is deprecated'));
 });
 
 test('Return empty item config if passed visible_condition is not met', () => {
@@ -122,7 +122,7 @@ test('Return empty item config if passed visible_condition is not met', () => {
     const toolbarItemConfig = setUnpublishedToolbarAction.getToolbarItemConfig();
 
     expect(toolbarItemConfig).toEqual(undefined);
-    expect(log.warn).not.toBeCalled();
+    expect(log.warn).not.toHaveBeenCalled();
 });
 
 test('Return disabled delete draft and unpublish items when page is not published', () => {
@@ -244,7 +244,7 @@ test('Unpublish page when dialog is confirmed', () => {
     element.prop('onConfirm')();
     element = mount(setUnpublishedToolbarAction.getNode());
     expect(element.prop('confirmLoading')).toEqual(true);
-    expect(ResourceRequester.post).toBeCalledWith(
+    expect(ResourceRequester.post).toHaveBeenCalledWith(
         'pages',
         undefined,
         {action: 'unpublish', id: 3, locale: setUnpublishedToolbarAction.resourceFormStore.locale, webspace: 'sulu_io'}
@@ -252,9 +252,9 @@ test('Unpublish page when dialog is confirmed', () => {
 
     return unpublishPromise.then(() => {
         element = mount(setUnpublishedToolbarAction.getNode());
-        expect(setUnpublishedToolbarAction.form.showSuccessSnackbar).toBeCalledWith();
+        expect(setUnpublishedToolbarAction.form.showSuccessSnackbar).toHaveBeenCalledWith();
         expect(element.prop('confirmLoading')).toEqual(false);
-        expect(setUnpublishedToolbarAction.resourceFormStore.changeMultiple).toBeCalledWith(
+        expect(setUnpublishedToolbarAction.resourceFormStore.changeMultiple).toHaveBeenCalledWith(
             data,
             {isServerValue: true}
         );

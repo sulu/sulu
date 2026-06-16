@@ -102,7 +102,7 @@ test('Component correctly logs deprecated warning for max_characters', () => {
         />
     );
 
-    expect(log.warn).toBeCalledWith(expect.stringContaining('The "max_characters" schema option is deprecated'));
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "max_characters" schema option is deprecated'));
 
     expect(inputValid.find(InputComponent).prop('maxCharacters')).toBe(70);
     expect(inputValid.find(InputComponent).prop('valid')).toBe(true);
@@ -128,7 +128,7 @@ test('Component correctly chooses soft_max_length over max_characters', () => {
         />
     );
 
-    expect(log.warn).toBeCalledWith(expect.stringContaining('The "max_characters" schema option is deprecated'));
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "max_characters" schema option is deprecated'));
 
     expect(inputValid.find(InputComponent).prop('maxCharacters')).toBe(70);
     expect(inputValid.find(InputComponent).prop('valid')).toBe(true);
@@ -178,7 +178,7 @@ test('Should not pass any arguments to onFinish callback', () => {
 
     input.find('Input').prop('onBlur')('Test');
 
-    expect(finishSpy).toBeCalledWith();
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('TextArea should call onFocus when the TextArea gets focus', () => {
@@ -197,5 +197,5 @@ test('TextArea should call onFocus when the TextArea gets focus', () => {
         target,
     });
 
-    expect(focusSpy).toBeCalledWith(target);
+    expect(focusSpy).toHaveBeenCalledWith(target);
 });

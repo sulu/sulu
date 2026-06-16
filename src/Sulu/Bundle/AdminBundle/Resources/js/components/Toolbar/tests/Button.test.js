@@ -51,7 +51,7 @@ test('Click on button fires onClick callback', async() => {
 
     await userEvent.click(button);
 
-    expect(clickSpy).toBeCalled();
+    expect(clickSpy).toHaveBeenCalled();
 });
 
 test('Render button with dropdown indicator', () => {

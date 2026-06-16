@@ -12,7 +12,7 @@ test('Call setLoggedIn in userStore to false when response has status 401', () =
 
     logoutOnUnauthorizedResponse(response);
 
-    expect(userStore.setLoggedIn).toBeCalledWith(false);
+    expect(userStore.setLoggedIn).toHaveBeenCalledWith(false);
 });
 
 test('Do not call setLoggedIn in userStore when response has not status 401', () => {
@@ -21,5 +21,5 @@ test('Do not call setLoggedIn in userStore when response has not status 401', ()
 
     logoutOnUnauthorizedResponse(response);
 
-    expect(userStore.setLoggedIn).not.toBeCalled();
+    expect(userStore.setLoggedIn).not.toHaveBeenCalled();
 });

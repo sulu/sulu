@@ -199,12 +199,12 @@ test('Deleting version should happen when confirmed', () => {
     expect(mediaHistory.find('Dialog').prop('open')).toEqual(true);
     mediaHistory.find('Dialog').prop('onConfirm')();
 
-    expect(ResourceRequester.delete).toBeCalledWith('media_versions', {id: 1, locale, version: 1});
+    expect(ResourceRequester.delete).toHaveBeenCalledWith('media_versions', {id: 1, locale, version: 1});
 
     return deletePromise.then(() => {
         mediaHistory.update();
         expect(mediaHistory.find('Dialog').prop('open')).toEqual(false);
-        expect(resourceStore.reload).toBeCalledWith();
+        expect(resourceStore.reload).toHaveBeenCalledWith();
     });
 });
 
@@ -270,7 +270,7 @@ test('Should change locale via locale chooser', () => {
 
     const toolbarConfig = toolbarFunction.call(mediaHistory);
     toolbarConfig.locale.onChange('en');
-    expect(router.navigate).toBeCalledWith('sulu_media.media_history', {locale: 'en'});
+    expect(router.navigate).toHaveBeenCalledWith('sulu_media.media_history', {locale: 'en'});
 });
 
 test('Should show locales from router options in toolbar', () => {
@@ -318,5 +318,5 @@ test('Should navigate to defined route on back button click', () => {
 
     const toolbarConfig = toolbarFunction.call(mediaHistory);
     toolbarConfig.backButton.onClick();
-    expect(router.restore).toBeCalledWith('sulu_media.overview', {locale: 'de'});
+    expect(router.restore).toHaveBeenCalledWith('sulu_media.overview', {locale: 'de'});
 });

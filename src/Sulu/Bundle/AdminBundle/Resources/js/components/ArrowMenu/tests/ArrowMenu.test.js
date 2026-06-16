@@ -203,15 +203,15 @@ test('Events should be called correctly', async() => {
 
     const user = userEvent.setup();
     await user.click(screen.getByText('Sulu Blog'));
-    expect(handleChangeSection1).toBeCalledWith('sulu_blog');
+    expect(handleChangeSection1).toHaveBeenCalledWith('sulu_blog');
 
     await user.click(screen.getByText('Test Action 2'));
-    expect(handleActionClick2).toBeCalled();
-    expect(handleClose).toBeCalledTimes(1);
+    expect(handleActionClick2).toHaveBeenCalled();
+    expect(handleClose).toHaveBeenCalledTimes(1);
 
     await user.click(screen.getByText('Title'));
-    expect(handleChangeSection2).toBeCalledWith('title');
+    expect(handleChangeSection2).toHaveBeenCalledWith('title');
 
     await user.click(screen.getByTestId('backdrop'));
-    expect(handleClose).toBeCalledTimes(2);
+    expect(handleClose).toHaveBeenCalledTimes(2);
 });

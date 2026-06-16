@@ -486,7 +486,7 @@ test('Execute onItemActivate callback when an item is clicked with the correct p
 
     columnListAdapter.find('Item').at(1).simulate('click');
 
-    expect(itemActivateSpy).toBeCalledWith(2);
+    expect(itemActivateSpy).toHaveBeenCalledWith(2);
 });
 
 test('Execute onItemClick callback when an item is double-clicked', () => {
@@ -525,7 +525,7 @@ test('Execute onItemClick callback when an item is double-clicked', () => {
 
     columnListAdapter.find('Item').at(1).simulate('dblclick');
 
-    expect(itemClickSpy).toBeCalledWith(2);
+    expect(itemClickSpy).toHaveBeenCalledWith(2);
 });
 
 test('Do not execute onItemClick callback when an item without view permissions is double-clicked', () => {
@@ -573,7 +573,7 @@ test('Do not execute onItemClick callback when an item without view permissions 
 
     columnListAdapter.find('Item').at(1).simulate('dblclick');
 
-    expect(itemClickSpy).not.toBeCalled();
+    expect(itemClickSpy).not.toHaveBeenCalled();
 });
 
 test('Show all setting buttons', () => {
@@ -784,7 +784,7 @@ test('Call onRequestItemOrder callback when an item ordering has been changed', 
     columnListAdapter.find('Item Input').at(0).prop('onChange')(5);
     columnListAdapter.find('Item Input').at(0).prop('onBlur')();
 
-    expect(requestItemOrderSpy).toBeCalledWith(1, 2);
+    expect(requestItemOrderSpy).toHaveBeenCalledWith(1, 2);
 });
 
 test('Do not execute onItemActivate callback when a column is ordering', () => {
@@ -828,7 +828,7 @@ test('Do not execute onItemActivate callback when a column is ordering', () => {
     columnListAdapter.find('Item').at(0).simulate('click');
     columnListAdapter.find('Item').at(1).simulate('click');
 
-    expect(itemActivateSpy).not.toBeCalled();
+    expect(itemActivateSpy).not.toHaveBeenCalled();
 });
 
 test('Execute onItemSelectionChange callback when an item is selected', () => {
@@ -902,7 +902,7 @@ test('Execute onRequestItemCopy callback when an item is copied with the correct
     columnListAdapter.find('ToolbarDropdown button').simulate('click');
     columnListAdapter.find('ToolbarDropdown').find('ArrowMenu Action[children="sulu_admin.copy"]').simulate('click');
 
-    expect(copyClickSpy).toBeCalledWith(3);
+    expect(copyClickSpy).toHaveBeenCalledWith(3);
 });
 
 test('Execute onRequestItemMove callback when an item is moved with the correct id', () => {
@@ -942,7 +942,7 @@ test('Execute onRequestItemMove callback when an item is moved with the correct 
     columnListAdapter.find('ToolbarDropdown button').simulate('click');
     columnListAdapter.find('ToolbarDropdown').find('ArrowMenu Action[children="sulu_admin.move"]').simulate('click');
 
-    expect(moveClickSpy).toBeCalledWith(3);
+    expect(moveClickSpy).toHaveBeenCalledWith(3);
 });
 
 test('Execute onRequestItemDelete callback when an item is deleted with the correct id', () => {
@@ -982,7 +982,7 @@ test('Execute onRequestItemDelete callback when an item is deleted with the corr
     columnListAdapter.find('ToolbarDropdown button').simulate('click');
     columnListAdapter.find('ToolbarDropdown').find('ArrowMenu Action[children="sulu_admin.delete"]').simulate('click');
 
-    expect(deleteClickSpy).toBeCalledWith(3);
+    expect(deleteClickSpy).toHaveBeenCalledWith(3);
 });
 
 test('Enable delete and move button if an item in this column has been activated', () => {

@@ -16,7 +16,7 @@ test('Should load item when being constructed', () => {
 
     const singleSelectionStore = new SingleSelectionStore('snippets', 1, observable.box('en'));
 
-    expect(ResourceRequester.get).toBeCalledWith(
+    expect(ResourceRequester.get).toHaveBeenCalledWith(
         'snippets',
         {
             id: 1,
@@ -38,7 +38,7 @@ test('Should set item to null when 404 is returned', (done) => {
 
     const singleSelectionStore = new SingleSelectionStore('snippets', 1, observable.box('en'));
 
-    expect(ResourceRequester.get).toBeCalledWith(
+    expect(ResourceRequester.get).toHaveBeenCalledWith(
         'snippets',
         {
             id: 1,
@@ -64,7 +64,7 @@ test('Should load item when being constructed with additional options', () => {
 
     const singleSelectionStore = new SingleSelectionStore('snippets', 1, observable.box('en'), {test: 'value'});
 
-    expect(ResourceRequester.get).toBeCalledWith(
+    expect(ResourceRequester.get).toHaveBeenCalledWith(
         'snippets',
         {
             id: 1,
@@ -84,7 +84,7 @@ test('Should not load item but replace current selection with undefined if no it
 
     selectionStore.loadItem(undefined);
 
-    expect(ResourceRequester.get).not.toBeCalled();
+    expect(ResourceRequester.get).not.toHaveBeenCalled();
 
     expect(toJS(selectionStore.item)).toEqual(undefined);
 });
@@ -98,7 +98,7 @@ test('Should load items when being constructed without a locale', () => {
 
     const singleSelectionStore = new SingleSelectionStore('snippets', 2);
 
-    expect(ResourceRequester.get).toBeCalledWith(
+    expect(ResourceRequester.get).toHaveBeenCalledWith(
         'snippets',
         {
             id: 2,

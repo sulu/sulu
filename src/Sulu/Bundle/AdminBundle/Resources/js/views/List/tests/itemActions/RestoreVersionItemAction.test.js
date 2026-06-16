@@ -112,7 +112,7 @@ test('Send request and navigate to "success_view" if dialog is confirmed', () =>
     onClick(1234567, 1);
     mount(itemAction.getNode()).find(Dialog).props().onConfirm();
 
-    expect(ResourceRequester.post).toBeCalledWith(
+    expect(ResourceRequester.post).toHaveBeenCalledWith(
         'list-resource-key',
         {},
         {action: 'restore', version: 1234567, id: 'page-id', locale: 'de', webspace: 'sulu'}
@@ -127,7 +127,7 @@ test('Send request and navigate to "success_view" if dialog is confirmed', () =>
             confirmLoading: false,
             open: false,
         }));
-        expect(itemAction.router.navigate).toBeCalledWith(
+        expect(itemAction.router.navigate).toHaveBeenCalledWith(
             'sulu_page.page_edit_form',
             {id: 'page-id', locale: 'de', webspace: 'sulu'}
         );

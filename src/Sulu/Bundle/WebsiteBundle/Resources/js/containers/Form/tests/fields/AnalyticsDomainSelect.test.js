@@ -56,7 +56,7 @@ test('Pass correct props to MultiSelect', () => {
         />
     );
 
-    expect(webspaceStore.getWebspace).toBeCalledWith('sulu_io');
+    expect(webspaceStore.getWebspace).toHaveBeenCalledWith('sulu_io');
 
     expect(analyticsDomainSelect.find('MultiSelect').prop('disabled')).toEqual(true);
     expect(analyticsDomainSelect.find('MultiSelect').prop('values')).toEqual(['{host}']);
@@ -97,6 +97,6 @@ test('Call onChange and onBlur if the value is changed', () => {
     );
 
     analyticsDomainSelect.find('MultiSelect').prop('onChange')(['{host}', '{host}/{localization}']);
-    expect(changeSpy).toBeCalledWith(['{host}', '{host}/{localization}']);
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith(['{host}', '{host}/{localization}']);
+    expect(finishSpy).toHaveBeenCalledWith();
 });

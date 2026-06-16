@@ -98,5 +98,5 @@ test.each([
 
     deleteToolbarAction.getToolbarItemConfig().onClick();
 
-    expect(deleteToolbarAction.list.requestSelectionDelete).toBeCalledWith(allowConflictDeletion);
+    expect(deleteToolbarAction.list.requestSelectionDelete).toHaveBeenCalledWith(allowConflictDeletion);
 });

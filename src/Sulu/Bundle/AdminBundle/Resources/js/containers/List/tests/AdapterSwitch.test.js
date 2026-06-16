@@ -93,9 +93,9 @@ test('The component should handle adapter change correctly', () => {
 
     // click on the active adapter shouldn't trigger the event
     view.find('Button').at(0).simulate('click');
-    expect(handleAdapterChange).not.toBeCalled();
+    expect(handleAdapterChange).not.toHaveBeenCalled();
 
     // click on not active should trigger the event correctly
     view.find('Button').at(1).simulate('click');
-    expect(handleAdapterChange).toBeCalledWith('folder');
+    expect(handleAdapterChange).toHaveBeenCalledWith('folder');
 });

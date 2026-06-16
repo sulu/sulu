@@ -182,8 +182,8 @@ test('Call onChange callback when value changes', () => {
 
     return Promise.all([rolePromise]).then(() => {
         rolePermissions.update();
-        expect(securityContextStore.getAvailableActions).toBeCalledWith('snippets', 'Sulu');
-        expect(securityContextStore.getAvailableActions).toBeCalledWith('snippets', 'Website');
+        expect(securityContextStore.getAvailableActions).toHaveBeenCalledWith('snippets', 'Sulu');
+        expect(securityContextStore.getAvailableActions).toHaveBeenCalledWith('snippets', 'Website');
 
         rolePermissions.find('Matrix').at(0).prop('onChange')({
             '2': {
@@ -391,7 +391,7 @@ test('Use context for getting default values', () => {
 
         rolePermissions.find('Toggler').at(0).prop('onChange')(true);
         rolePermissions.update();
-        expect(securityContextStore.getSecurityContextByResourceKey).toBeCalledWith('pages');
+        expect(securityContextStore.getSecurityContextByResourceKey).toHaveBeenCalledWith('pages');
         expect(rolePermissions.find('Matrix')).toHaveLength(1);
 
         expect(rolePermissions.find('Matrix').prop('values')).toEqual({
@@ -446,7 +446,7 @@ test('Use context with replaced webspace for getting default values', () => {
 
         rolePermissions.find('Toggler').at(0).prop('onChange')(true);
         rolePermissions.update();
-        expect(securityContextStore.getSecurityContextByResourceKey).toBeCalledWith('pages');
+        expect(securityContextStore.getSecurityContextByResourceKey).toHaveBeenCalledWith('pages');
         expect(rolePermissions.find('Matrix')).toHaveLength(1);
 
         expect(rolePermissions.find('Matrix').prop('values')).toEqual({

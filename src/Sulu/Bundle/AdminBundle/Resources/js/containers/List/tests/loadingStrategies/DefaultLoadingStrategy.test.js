@@ -47,9 +47,9 @@ test('Should load items and add to empty array', () => {
     );
 
     return promise.then(() => {
-        expect(structureStrategy.clear).toBeCalledWith(undefined);
-        expect(structureStrategy.addItem).toBeCalledWith({id: 1}, undefined);
-        expect(structureStrategy.addItem).toBeCalledWith({id: 2}, undefined);
+        expect(structureStrategy.clear).toHaveBeenCalledWith(undefined);
+        expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 1}, undefined);
+        expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 2}, undefined);
     });
 });
 
@@ -78,9 +78,9 @@ test('Should load items and replace existing entries in array', () => {
     );
 
     return promise.then(() => {
-        expect(structureStrategy.clear).toBeCalledWith(parentId);
-        expect(structureStrategy.addItem).toBeCalledWith({id: 1}, parentId);
-        expect(structureStrategy.addItem).toBeCalledWith({id: 2}, parentId);
+        expect(structureStrategy.clear).toHaveBeenCalledWith(parentId);
+        expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 1}, parentId);
+        expect(structureStrategy.addItem).toHaveBeenCalledWith({id: 2}, parentId);
     });
 });
 
@@ -98,7 +98,11 @@ test('Should load items with correct options when not paginated', () => {
         }
     );
 
-    expect(ResourceRequester.getList).toBeCalledWith('snippets', {limit: undefined, page: undefined, locale: 'en'});
+    expect(ResourceRequester.getList).toHaveBeenCalledWith('snippets', {
+        limit: undefined,
+        page: undefined,
+        locale: 'en',
+    });
 });
 
 test('Should load items with correct options when paginated', () => {
@@ -116,5 +120,5 @@ test('Should load items with correct options when paginated', () => {
         undefined
     );
 
-    expect(ResourceRequester.getList).toBeCalledWith('snippets', {limit: 10, page: 2, locale: 'en'});
+    expect(ResourceRequester.getList).toHaveBeenCalledWith('snippets', {limit: 10, page: 2, locale: 'en'});
 });

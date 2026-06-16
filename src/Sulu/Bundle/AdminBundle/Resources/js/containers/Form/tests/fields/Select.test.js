@@ -140,8 +140,8 @@ test('Should call onChange with undefined if value is changed to an empty array'
 
     select.simulate('change', []);
 
-    expect(changeSpy).toBeCalledWith(undefined);
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith(undefined);
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Should call onChange with allowed values only if value contains old values', () => {
@@ -176,8 +176,8 @@ test('Should call onChange with allowed values only if value contains old values
 
     select.simulate('change', ['mr', 'removed-value']);
 
-    expect(changeSpy).toBeCalledWith(['mr']);
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith(['mr']);
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Should call onFinish callback on every onChange', () => {
@@ -210,7 +210,7 @@ test('Should call onFinish callback on every onChange', () => {
 
     select.simulate('change', []);
 
-    expect(finishSpy).toBeCalledWith();
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Set default value of null should not call onChange', () => {
@@ -243,7 +243,7 @@ test('Set default value of null should not call onChange', () => {
         />
     );
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Set default value if no value is passed', () => {
@@ -277,7 +277,7 @@ test('Set default value if no value is passed', () => {
         />
     );
 
-    expect(changeSpy).toBeCalledWith(['mr'], {'isDefaultValue': true});
+    expect(changeSpy).toHaveBeenCalledWith(['mr'], {'isDefaultValue': true});
 });
 
 test('Set default value to a number of 0 should work', () => {
@@ -311,7 +311,7 @@ test('Set default value to a number of 0 should work', () => {
         />
     );
 
-    expect(changeSpy).toBeCalledWith([0], {'isDefaultValue': true});
+    expect(changeSpy).toHaveBeenCalledWith([0], {'isDefaultValue': true});
 });
 
 test('Throw error if no value option is passed', () => {

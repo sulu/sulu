@@ -78,8 +78,7 @@ test('Open correct link for given item if onClick callback is fired', () => {
     };
     const itemActionConfig = linkItemAction.getItemActionConfig(item);
 
-    delete window.location;
-    window.location = {};
+    window.location.assign = jest.fn();
 
     const clickCallback = itemActionConfig.onClick;
     if (!clickCallback) {
@@ -88,7 +87,7 @@ test('Open correct link for given item if onClick callback is fired', () => {
 
     clickCallback('row-id', 1);
 
-    expect(window.location.href).toEqual('www.sulu.io');
+    expect(window.location.assign).toHaveBeenCalledWith('www.sulu.io');
 });
 
 test('Throw error if "link_property" option is not set', () => {

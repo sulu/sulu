@@ -240,7 +240,7 @@ test('Search when the search button is clicked', () => {
         search.update();
         search.find('SearchField input').prop('onChange')({currentTarget: {value: 'Test'}});
         search.find('Icon[name="su-search"]').prop('onClick')();
-        expect(searchStore.search).toBeCalledWith('Test', undefined);
+        expect(searchStore.search).toHaveBeenCalledWith('Test', undefined);
     });
 });
 

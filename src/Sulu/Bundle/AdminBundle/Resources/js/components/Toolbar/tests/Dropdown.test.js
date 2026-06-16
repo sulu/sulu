@@ -106,7 +106,7 @@ test('Click on option fires onClick', async() => {
     await userEvent.click(screen.getByText('Click to open'));
     await userEvent.click(screen.getByText('An option'));
 
-    expect(clickSpy).toBeCalled();
+    expect(clickSpy).toHaveBeenCalled();
 });
 
 test('Click on disabled option will not fire onClick', async() => {
@@ -132,7 +132,7 @@ test('Click on disabled option will not fire onClick', async() => {
     await userEvent.click(screen.getByText('Click to open'));
     await userEvent.click(screen.getByText('An option'));
 
-    expect(clickSpy).not.toBeCalled();
+    expect(clickSpy).not.toHaveBeenCalled();
 });
 
 test('No active options should disable dropdown', async() => {

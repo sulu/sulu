@@ -200,7 +200,7 @@ test('Should submit Form container when Overlay is confirmed', () => {
 
     formOverlay.find(Overlay).props().onConfirm();
 
-    expect(submitSpy).toBeCalled();
+    expect(submitSpy).toHaveBeenCalled();
 });
 
 test('Should save ResourceFormStore and call onConfirm callback on submit of Form', () => {
@@ -225,8 +225,8 @@ test('Should save ResourceFormStore and call onConfirm callback on submit of For
     formOverlay.find(Form).props().onSubmit();
 
     return savePromise.finally(() => {
-        expect(formStore.save).toBeCalled();
-        expect(confirmSpy).toBeCalled();
+        expect(formStore.save).toHaveBeenCalled();
+        expect(confirmSpy).toHaveBeenCalled();
     });
 });
 
@@ -248,7 +248,7 @@ test('Should call onConfirm callback directly in case of MemoryFormStore on subm
 
     formOverlay.find(Form).props().onSubmit();
 
-    expect(confirmSpy).toBeCalled();
+    expect(confirmSpy).toHaveBeenCalled();
 });
 
 test('Should display Snackbar with generic message if an error happens while saving ResourceFormStore', (done) => {
@@ -274,8 +274,8 @@ test('Should display Snackbar with generic message if an error happens while sav
 
     // wait until rejection of savePromise was handled by component with setTimeout
     setTimeout(() => {
-        expect(formStore.save).toBeCalled();
-        expect(confirmSpy).not.toBeCalled();
+        expect(formStore.save).toHaveBeenCalled();
+        expect(confirmSpy).not.toHaveBeenCalled();
 
         formOverlay.update();
         expect(formOverlay.find(Snackbar).prop('visible')).toBeTruthy();
@@ -308,8 +308,8 @@ test('Should display Snackbar with message from server if an error happens while
 
     // wait until rejection of savePromise was handled by component with setTimeout
     setTimeout(() => {
-        expect(formStore.save).toBeCalled();
-        expect(confirmSpy).not.toBeCalled();
+        expect(formStore.save).toHaveBeenCalled();
+        expect(confirmSpy).not.toHaveBeenCalled();
 
         formOverlay.update();
         expect(formOverlay.find(Snackbar).prop('visible')).toBeTruthy();

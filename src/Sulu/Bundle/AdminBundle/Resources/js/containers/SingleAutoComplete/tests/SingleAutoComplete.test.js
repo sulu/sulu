@@ -148,7 +148,7 @@ test('Search using store when new search value is retrieved from SingleAutoCompl
 
     singleAutoComplete.find('SingleAutoComplete').simulate('search', 'James');
 
-    expect(singleAutoComplete.instance().searchStore.search).toBeCalledWith('James');
+    expect(singleAutoComplete.instance().searchStore.search).toHaveBeenCalledWith('James');
 });
 
 test('Call set item to SingleSelectionStore and clear search result when chosen option has changed', () => {
@@ -177,8 +177,8 @@ test('Call set item to SingleSelectionStore and clear search result when chosen 
 
     singleAutoComplete.find('SingleAutoComplete').simulate('change', data);
 
-    expect(selectionStore.set).toBeCalledWith(data);
-    expect(singleAutoComplete.instance().searchStore.clearSearchResults).toBeCalledWith();
+    expect(selectionStore.set).toHaveBeenCalledWith(data);
+    expect(singleAutoComplete.instance().searchStore.clearSearchResults).toHaveBeenCalledWith();
 });
 
 test('Construct SearchStore with correct parameters on mount', () => {
@@ -201,5 +201,5 @@ test('Construct SearchStore with correct parameters on mount', () => {
         />
     );
 
-    expect(SearchStore).toBeCalledWith('tags', ['firstName', 'lastName'], {country: 'US'}, locale);
+    expect(SearchStore).toHaveBeenCalledWith('tags', ['firstName', 'lastName'], {country: 'US'}, locale);
 });

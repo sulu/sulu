@@ -142,7 +142,7 @@ test('Render only one label and SingleSelect if options contain a webspace', () 
         />
     );
 
-    expect(webspaceStore.getWebspace).toBeCalledWith('webspace-1');
+    expect(webspaceStore.getWebspace).toHaveBeenCalledWith('webspace-1');
     expect(segmentSelect.find('SingleSelect')).toHaveLength(1);
 });
 
@@ -239,7 +239,7 @@ test('Call onChange if the value is changed', () => {
     );
 
     segmentSelect.find('SingleSelect').at(1).prop('onChange')('a');
-    expect(changeSpy).toBeCalledWith({
+    expect(changeSpy).toHaveBeenCalledWith({
         'webspace-1': 's',
         'webspace-3': 'a',
     });

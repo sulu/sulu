@@ -25,7 +25,7 @@ test('Call onChange handler with false as a default value if undefined is given'
     const changeSpy = jest.fn();
     new BooleanFieldFilterType(changeSpy, {}, undefined);
 
-    expect(changeSpy).toBeCalledWith(false);
+    expect(changeSpy).toHaveBeenCalledWith(false);
 });
 
 test('Call onChange handler with new value', () => {
@@ -35,7 +35,7 @@ test('Call onChange handler with new value', () => {
 
     booleanFieldFilterTypeForm.find('Toggler').prop('onChange')(true);
 
-    expect(changeSpy).toBeCalledWith(true);
+    expect(changeSpy).toHaveBeenCalledWith(true);
 });
 
 test.each([

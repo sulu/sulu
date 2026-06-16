@@ -1134,7 +1134,7 @@ test('Binding should not be set to initial passed value from URL if values alrea
     const router = new Router(history);
     router.bind('page', value, 1);
 
-    expect(value.set).not.toBeCalled();
+    expect(value.set).not.toHaveBeenCalled();
 });
 
 test('Binding should not be updated if only data type changes', () => {
@@ -1636,12 +1636,12 @@ test('Cancel navigation if an updateRouteHook returns false', () => {
 
     router.navigate('webspace_overview', {locale: 'en'});
 
-    expect(updateRouteHook1).toBeCalledWith(
+    expect(updateRouteHook1).toHaveBeenCalledWith(
         webspaceOverviewRoute,
         {locale: 'en', sortOrder: 'desc', webspace: 'webspace1'},
         router.navigate
     );
-    expect(updateRouteHook2).not.toBeCalled();
+    expect(updateRouteHook2).not.toHaveBeenCalled();
 
     expect(router.route).toBe(undefined);
     expect(router.attributes).toEqual({});
@@ -1674,12 +1674,12 @@ test('Consider priority when cancelling a navigation', () => {
 
     router.navigate('webspace_overview', {locale: 'en'});
 
-    expect(updateRouteHook2).toBeCalledWith(
+    expect(updateRouteHook2).toHaveBeenCalledWith(
         webspaceOverviewRoute,
         {locale: 'en', sortOrder: 'desc', webspace: 'webspace1'},
         router.navigate
     );
-    expect(updateRouteHook1).not.toBeCalled();
+    expect(updateRouteHook1).not.toHaveBeenCalled();
 
     expect(router.route).toBe(undefined);
     expect(router.attributes).toEqual({});
@@ -1712,12 +1712,12 @@ test('Navigate if all updateRouteHooks return true', () => {
 
     router.navigate('webspace_overview', {locale: 'en'});
 
-    expect(updateRouteHook1).toBeCalledWith(
+    expect(updateRouteHook1).toHaveBeenCalledWith(
         webspaceOverviewRoute,
         {locale: 'en', sortOrder: 'desc', webspace: 'webspace1'},
         router.navigate
     );
-    expect(updateRouteHook2).toBeCalledWith(
+    expect(updateRouteHook2).toHaveBeenCalledWith(
         webspaceOverviewRoute,
         {locale: 'en', sortOrder: 'desc', webspace: 'webspace1'},
         router.navigate
@@ -1754,12 +1754,12 @@ test('Redirect if all updateRouteHooks return true', () => {
 
     router.redirect('webspace_overview', {locale: 'en'});
 
-    expect(updateRouteHook1).toBeCalledWith(
+    expect(updateRouteHook1).toHaveBeenCalledWith(
         webspaceOverviewRoute,
         {locale: 'en', sortOrder: 'desc', webspace: 'webspace1'},
         router.redirect
     );
-    expect(updateRouteHook2).toBeCalledWith(
+    expect(updateRouteHook2).toHaveBeenCalledWith(
         webspaceOverviewRoute,
         {locale: 'en', sortOrder: 'desc', webspace: 'webspace1'},
         router.redirect
@@ -1796,12 +1796,12 @@ test('Restore if all updateRouteHooks return true', () => {
 
     router.restore('webspace_overview', {locale: 'en'});
 
-    expect(updateRouteHook1).toBeCalledWith(
+    expect(updateRouteHook1).toHaveBeenCalledWith(
         webspaceOverviewRoute,
         {locale: 'en', sortOrder: 'desc', webspace: 'webspace1'},
         router.restore
     );
-    expect(updateRouteHook2).toBeCalledWith(
+    expect(updateRouteHook2).toHaveBeenCalledWith(
         webspaceOverviewRoute,
         {locale: 'en', sortOrder: 'desc', webspace: 'webspace1'},
         router.restore
@@ -1816,7 +1816,7 @@ test('Ask for confirmation to close window if a updateRouteHooks prevents it', (
     const history = createMemoryHistory();
     const router = new Router(history);
 
-    expect(window.addEventListener).toBeCalledWith('beforeunload', expect.anything());
+    expect(window.addEventListener).toHaveBeenCalledWith('beforeunload', expect.anything());
 
     const updateRouteHook1 = jest.fn().mockReturnValue(true);
     const updateRouteHook2 = jest.fn().mockReturnValue(false);
@@ -1831,7 +1831,7 @@ test('Ask for confirmation to close window if a updateRouteHooks prevents it', (
 
     window.addEventListener.mock.calls[0][1](event);
 
-    expect(event.preventDefault).toBeCalledWith();
+    expect(event.preventDefault).toHaveBeenCalledWith();
     expect(event.returnValue).toEqual(true);
 });
 
@@ -1839,7 +1839,7 @@ test('Do not ask for confirmation to close window if no updateRouteHooks prevent
     const history = createMemoryHistory();
     const router = new Router(history);
 
-    expect(window.addEventListener).toBeCalledWith('beforeunload', expect.anything());
+    expect(window.addEventListener).toHaveBeenCalledWith('beforeunload', expect.anything());
 
     const updateRouteHook1 = jest.fn().mockReturnValue(true);
     const updateRouteHook2 = jest.fn().mockReturnValue(true);
@@ -1854,6 +1854,6 @@ test('Do not ask for confirmation to close window if no updateRouteHooks prevent
 
     window.addEventListener.mock.calls[0][1](event);
 
-    expect(event.preventDefault).not.toBeCalled();
+    expect(event.preventDefault).not.toHaveBeenCalled();
     expect(event.returnValue).toEqual(undefined);
 });

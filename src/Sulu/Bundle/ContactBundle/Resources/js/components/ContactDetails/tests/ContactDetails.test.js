@@ -167,7 +167,7 @@ test('Add data should call onChange and onBlur callbacks', async() => {
         websites: [],
     });
 
-    expect(blurSpy).toBeCalledTimes(5);
+    expect(blurSpy).toHaveBeenCalledTimes(5);
 });
 
 test('Add data should also work with predefined email and phone fields', () => {
@@ -180,7 +180,7 @@ test('Add data should also work with predefined email and phone fields', () => {
     fireEvent.change(textboxes[0], {
         target: {value: 'test@example.org'},
     });
-    expect(changeSpy).toBeCalledWith({
+    expect(changeSpy).toHaveBeenCalledWith({
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [],
         phones: [],
@@ -191,7 +191,7 @@ test('Add data should also work with predefined email and phone fields', () => {
     fireEvent.change(textboxes[1], {
         target: {value: '1098509'},
     });
-    expect(changeSpy).toBeCalledWith({
+    expect(changeSpy).toHaveBeenCalledWith({
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [],
         phones: [{phone: '1098509', phoneType: 1}],
@@ -259,7 +259,7 @@ test('Remove data should call the onChange and onBlur callbacks', () => {
         websites: [],
     });
 
-    expect(blurSpy).toBeCalledTimes(5);
+    expect(blurSpy).toHaveBeenCalledTimes(5);
 });
 
 test('Edit data should call the onChange and onBlur callbacks', () => {
@@ -332,7 +332,7 @@ test('Edit data should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://example.org', websiteType: 1}],
     });
 
-    expect(blurSpy).toBeCalledTimes(5);
+    expect(blurSpy).toHaveBeenCalledTimes(5);
 });
 
 test('Changing the types should call the onChange and onBlur callbacks', async() => {
@@ -395,5 +395,5 @@ test('Changing the types should call the onChange and onBlur callbacks', async()
         websites: [{website: 'http://www.example.org', websiteType: 2}],
     });
 
-    expect(blurSpy).toBeCalledTimes(5);
+    expect(blurSpy).toHaveBeenCalledTimes(5);
 });

@@ -31,8 +31,8 @@ test('Clicking dropdown items should call the corresponding callback', async() =
     const option1 = screen.queryByText('Option 1');
     await userEvent.click(option1);
 
-    expect(option1ClickSpy).toBeCalled();
-    expect(option2ClickSpy).not.toBeCalled();
+    expect(option1ClickSpy).toHaveBeenCalled();
+    expect(option2ClickSpy).not.toHaveBeenCalled();
 
     option1ClickSpy.mockReset();
     option2ClickSpy.mockReset();
@@ -41,6 +41,6 @@ test('Clicking dropdown items should call the corresponding callback', async() =
     const option2 = screen.queryByText('Option 2');
     await userEvent.click(option2);
 
-    expect(option1ClickSpy).not.toBeCalled();
-    expect(option2ClickSpy).toBeCalled();
+    expect(option1ClickSpy).not.toHaveBeenCalled();
+    expect(option2ClickSpy).toHaveBeenCalled();
 });

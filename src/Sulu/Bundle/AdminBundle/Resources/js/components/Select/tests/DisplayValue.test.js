@@ -44,7 +44,7 @@ test('A click on the component should fire the callback and prevent the default'
     // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent(display, event);
 
-    expect(clickSpy).toBeCalled();
+    expect(clickSpy).toHaveBeenCalled();
     expect(event.defaultPrevented).toBe(true);
 });
 
@@ -55,7 +55,7 @@ test('A click on the component should not fire the callback when disabled', () =
     const display = screen.queryByRole('button');
 
     return userEvent.click(display).then(() => {
-        expect(clickSpy).not.toBeCalled();
+        expect(clickSpy).not.toHaveBeenCalled();
     });
 });
 

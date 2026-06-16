@@ -103,8 +103,8 @@ test('Should update selections of media-list-store to only contain a single item
     expect(singleMediaSelectionOverlay.instance().mediaListStore.selections).toEqual([{id: 3}]);
 
     singleMediaSelectionOverlay.instance().mediaListStore.selections.push({id: 5});
-    expect(singleMediaSelectionOverlay.instance().mediaListStore.clearSelection).toBeCalledWith();
-    expect(singleMediaSelectionOverlay.instance().mediaListStore.select).toBeCalledWith({id: 5});
+    expect(singleMediaSelectionOverlay.instance().mediaListStore.clearSelection).toHaveBeenCalledWith();
+    expect(singleMediaSelectionOverlay.instance().mediaListStore.select).toHaveBeenCalledWith({id: 5});
 });
 
 test('Should pass correct props to media-selection-overlay', () => {
@@ -145,13 +145,13 @@ test('Should clear media ListStore if the excludedIds prop is changed', () => {
         />
     );
 
-    expect(singleMediaSelectionOverlay.instance().mediaListStore.clear).not.toBeCalled();
+    expect(singleMediaSelectionOverlay.instance().mediaListStore.clear).not.toHaveBeenCalled();
 
     singleMediaSelectionOverlay.setProps({
         excludedIds: [33],
     });
 
-    expect(singleMediaSelectionOverlay.instance().mediaListStore.clear).toBeCalled();
+    expect(singleMediaSelectionOverlay.instance().mediaListStore.clear).toHaveBeenCalled();
 });
 
 test('Should not clear media ListStore if new value of excludedIds prop is equal to old value', () => {
@@ -165,13 +165,13 @@ test('Should not clear media ListStore if new value of excludedIds prop is equal
         />
     );
 
-    expect(singleMediaSelectionOverlay.instance().mediaListStore.clear).not.toBeCalled();
+    expect(singleMediaSelectionOverlay.instance().mediaListStore.clear).not.toHaveBeenCalled();
 
     singleMediaSelectionOverlay.setProps({
         excludedIds: [11, 22],
     });
 
-    expect(singleMediaSelectionOverlay.instance().mediaListStore.clear).not.toBeCalled();
+    expect(singleMediaSelectionOverlay.instance().mediaListStore.clear).not.toHaveBeenCalled();
 });
 
 test('Should destroy list-stores on unmount', () => {

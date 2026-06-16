@@ -112,7 +112,7 @@ test('The component should pass a value of undefined', () => {
         getLatestRectangleSelectionProps().onChange(undefined);
     });
 
-    expect(changeSpy).toBeCalledWith(undefined);
+    expect(changeSpy).toHaveBeenCalledWith(undefined);
 });
 
 test('The component should scale the value based on the image height and container height', () => {
@@ -127,7 +127,7 @@ test('The component should scale the value based on the image height and contain
         getLatestRectangleSelectionProps().onChange({width: 320, height: 180, top: 0, left: 320});
     });
 
-    expect(changeSpy).toBeCalledWith({width: 960, height: 540, top: 0, left: 960});
+    expect(changeSpy).toHaveBeenCalledWith({width: 960, height: 540, top: 0, left: 960});
 });
 
 test('The component should not scale the value to exceed the natural image width', () => {
@@ -147,7 +147,7 @@ test('The component should not scale the value to exceed the natural image width
         getLatestRectangleSelectionProps().onChange({width: 554, height: 200, top: 0, left: 0});
     });
 
-    expect(changeSpy).toBeCalledWith({width: 4896, height: 1769.1056910569105, top: 0, left: 0});
+    expect(changeSpy).toHaveBeenCalledWith({width: 4896, height: 1769.1056910569105, top: 0, left: 0});
 });
 
 test.each([

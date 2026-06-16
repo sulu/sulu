@@ -35,8 +35,8 @@ test('Closing the overlay should call the onClose callback', () => {
 
     cropOverlay.find('Overlay').prop('onClose')();
 
-    expect(MediaFormatStore).toBeCalledWith(4, 'de');
-    expect(closeSpy).toBeCalledWith();
+    expect(MediaFormatStore).toHaveBeenCalledWith(4, 'de');
+    expect(closeSpy).toHaveBeenCalledWith();
 });
 
 test('Convert selection to format options with edge-based integer coordinates', () => {
@@ -351,17 +351,17 @@ test('Save changes of formats', () => {
         cropOverlay.instance().mediaFormatStore.updateFormatOptions.mockReturnValue(putPromise);
         cropOverlay.find('Overlay').prop('onConfirm')();
 
-        expect(cropOverlay.instance().mediaFormatStore.updateFormatOptions).toBeCalledWith(
+        expect(cropOverlay.instance().mediaFormatStore.updateFormatOptions).toHaveBeenCalledWith(
             {
                 test1: {cropHeight: 60, cropWidth: 20, cropX: 200, cropY: 20},
                 test2: {cropHeight: 120, cropWidth: 30, cropX: 100, cropY: 70},
             }
         );
-        expect(confirmSpy).not.toBeCalled();
+        expect(confirmSpy).not.toHaveBeenCalled();
 
         return putPromise.then(() => {
             cropOverlay.update();
-            expect(confirmSpy).toBeCalledWith();
+            expect(confirmSpy).toHaveBeenCalledWith();
             expect(cropOverlay.find('Overlay').prop('confirmDisabled')).toEqual(true);
         });
     });

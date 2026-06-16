@@ -184,7 +184,7 @@ test('Open and closes the FilterOverlay when the icon is clicked', () => {
     expect(smartContent.find('FilterOverlay').prop('open')).toEqual(false);
     expect(smartContent.find('FilterOverlay').prop('title')).toEqual('sulu_admin.filter_overlay_title');
     expect(smartContent.find('FilterOverlay').prop('sortings')).toEqual([{name: 'title', value: 'Title'}]);
-    expect(translate).toBeCalledWith('sulu_admin.filter_overlay_title', {fieldLabel: 'Test'});
+    expect(translate).toHaveBeenCalledWith('sulu_admin.filter_overlay_title', {fieldLabel: 'Test'});
 });
 
 test('Show items in a SmartContentItem', () => {

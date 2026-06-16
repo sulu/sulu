@@ -188,7 +188,7 @@ test('Do not add an addFinishFieldHandler for URL generation if used on the home
         />
     );
 
-    expect(formInspector.addFinishFieldHandler).not.toBeCalled();
+    expect(formInspector.addFinishFieldHandler).not.toHaveBeenCalled();
 });
 
 test('Do not add an addFinishFieldHandler for URL generation if no generationUrl was passed', () => {
@@ -204,7 +204,7 @@ test('Do not add an addFinishFieldHandler for URL generation if no generationUrl
         />
     );
 
-    expect(formInspector.addFinishFieldHandler).not.toBeCalled();
+    expect(formInspector.addFinishFieldHandler).not.toHaveBeenCalled();
 });
 
 test.each(['tree_leaf_edit', 'tree_full_edit'])('Set mode correctly from fieldTypeOptions', (mode) => {
@@ -271,7 +271,7 @@ test('Should fire onFinish callback without argument when ResourceLocatorCompone
     resourceLocator.update();
     resourceLocator.find(ResourceLocatorComponent).prop('onBlur')('Test');
 
-    expect(finishSpy).toBeCalledWith();
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Should automatically request new URL when part field is finished on add form', () => {
@@ -319,9 +319,9 @@ test('Should automatically request new URL when part field is finished on add fo
 
     finishFieldHandler('/block/0/title', '/title');
 
-    expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/title');
-    expect(formInspector.getPathsByTag).toBeCalledWith('sulu.rlp.part');
-    expect(Requester.post).toBeCalledWith(
+    expect(formInspector.getSchemaEntryByPath).toHaveBeenCalledWith('/title');
+    expect(formInspector.getPathsByTag).toHaveBeenCalledWith('sulu.rlp.part');
+    expect(Requester.post).toHaveBeenCalledWith(
         '/admin/api/resource-locators',
         {
             locale: 'en',
@@ -331,7 +331,7 @@ test('Should automatically request new URL when part field is finished on add fo
     );
 
     return resourceLocatorPromise.then(() => {
-        expect(changeSpy).toBeCalledWith('/test');
+        expect(changeSpy).toHaveBeenCalledWith('/test');
     });
 });
 
@@ -388,9 +388,9 @@ test('Should request URL with parameters from FormInspector options, fieldTypeOp
 
     finishFieldHandler('/block/0/title', '/title');
 
-    expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/title');
-    expect(formInspector.getPathsByTag).toBeCalledWith('sulu.rlp.part');
-    expect(Requester.post).toBeCalledWith(
+    expect(formInspector.getSchemaEntryByPath).toHaveBeenCalledWith('/title');
+    expect(formInspector.getPathsByTag).toHaveBeenCalledWith('sulu.rlp.part');
+    expect(Requester.post).toHaveBeenCalledWith(
         '/admin/api/resource-locators',
         {
             locale: 'en',
@@ -403,7 +403,7 @@ test('Should request URL with parameters from FormInspector options, fieldTypeOp
     );
 
     return resourceLocatorPromise.then(() => {
-        expect(changeSpy).toBeCalledWith('/test');
+        expect(changeSpy).toHaveBeenCalledWith('/test');
     });
 });
 
@@ -445,7 +445,7 @@ test('Should not request new URL when part field is finished on edit form', () =
     });
 
     finishFieldHandler('/block/0/title', '/title');
-    expect(Requester.post).not.toBeCalled();
+    expect(Requester.post).not.toHaveBeenCalled();
 });
 
 test('Should not request new URL when part field is finished if all parts are empty', () => {
@@ -491,9 +491,9 @@ test('Should not request new URL when part field is finished if all parts are em
 
     finishFieldHandler('/block/0/title', '/title');
 
-    expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/title');
-    expect(formInspector.getPathsByTag).toBeCalledWith('sulu.rlp.part');
-    expect(Requester.post).not.toBeCalled();
+    expect(formInspector.getSchemaEntryByPath).toHaveBeenCalledWith('/title');
+    expect(formInspector.getPathsByTag).toHaveBeenCalledWith('sulu.rlp.part');
+    expect(Requester.post).not.toHaveBeenCalled();
 });
 
 test('Should not request new URL when part field is finished if input was already changed manually', () => {
@@ -536,9 +536,9 @@ test('Should not request new URL when part field is finished if input was alread
 
     finishFieldHandler('/block/0/title', '/title');
 
-    expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/title');
-    expect(formInspector.getPathsByTag).toBeCalledWith('sulu.rlp.part');
-    expect(Requester.post).not.toBeCalled();
+    expect(formInspector.getSchemaEntryByPath).toHaveBeenCalledWith('/title');
+    expect(formInspector.getPathsByTag).toHaveBeenCalledWith('sulu.rlp.part');
+    expect(Requester.post).not.toHaveBeenCalled();
 });
 
 test('Should not request new URL when field without the "sulu.rlp.part" tag is finished', () => {
@@ -579,8 +579,8 @@ test('Should not request new URL when field without the "sulu.rlp.part" tag is f
 
     finishFieldHandler('/block/0/title', '/title');
 
-    expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/title');
-    expect(Requester.post).not.toBeCalled();
+    expect(formInspector.getSchemaEntryByPath).toHaveBeenCalledWith('/title');
+    expect(Requester.post).not.toHaveBeenCalled();
 });
 
 test('Should not request new URL when field without any tags has finished editing', () => {
@@ -617,8 +617,8 @@ test('Should not request new URL when field without any tags has finished editin
 
     finishFieldHandler('/block/0/title', '/title');
 
-    expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/title');
-    expect(Requester.post).not.toBeCalled();
+    expect(formInspector.getSchemaEntryByPath).toHaveBeenCalledWith('/title');
+    expect(Requester.post).not.toHaveBeenCalled();
 });
 
 test('Should enable refresh button when value of part field changes on edit form', () => {
@@ -853,8 +853,8 @@ test('Should request new URL with correct options and disable button when refres
     resourceLocator.find('Button').props().onClick();
 
     expect(resourceLocator.find('Button').props().disabled).toBeTruthy();
-    expect(formInspector.getPathsByTag).toBeCalledWith('sulu.rlp.part');
-    expect(Requester.post).toBeCalledWith(
+    expect(formInspector.getPathsByTag).toHaveBeenCalledWith('sulu.rlp.part');
+    expect(Requester.post).toHaveBeenCalledWith(
         '/admin/api/resource-locators',
         {
             resourceId: 5,
@@ -867,6 +867,6 @@ test('Should request new URL with correct options and disable button when refres
     );
 
     return resourceLocatorPromise.then(() => {
-        expect(changeSpy).toBeCalledWith('/test');
+        expect(changeSpy).toHaveBeenCalledWith('/test');
     });
 });

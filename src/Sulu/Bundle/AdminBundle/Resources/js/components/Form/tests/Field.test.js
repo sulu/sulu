@@ -94,6 +94,6 @@ test('Change type of field', async() => {
 
     const changeItem = screen.queryByText('Private');
     await userEvent.click(changeItem);
-    expect(typeChangeSpy).toBeCalledWith(2);
+    expect(typeChangeSpy).toHaveBeenCalledWith(2);
     expect(screen.queryByTestId('backdrop')).not.toBeInTheDocument();
 });

@@ -3,7 +3,7 @@ import AbstractListItemAction from './AbstractListItemAction';
 
 export default class LinkItemAction extends AbstractListItemAction {
     handleDownloadClick = (linkUrl: string) => {
-        window.location.href = linkUrl;
+        window.location.assign(linkUrl);
     };
 
     getItemActionConfig(item: ?Object) {

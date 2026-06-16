@@ -12,6 +12,6 @@ test('Should call the callback on click', () => {
     const onClick = jest.fn();
     const button = shallow(<Button icon="su-plus-circle" onClick={onClick} />);
     button.find('button').simulate('click', {preventDefault: preventDefaultSpy});
-    expect(preventDefaultSpy).toBeCalled();
-    expect(onClick).toBeCalled();
+    expect(preventDefaultSpy).toHaveBeenCalled();
+    expect(onClick).toHaveBeenCalled();
 });

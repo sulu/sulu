@@ -67,7 +67,7 @@ test('The active item should be updated when set from the outside', () => {
     expect(listStore.active.get()).toEqual();
 
     listStore.active.set('123');
-    expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.list_store.tests.list_test.active', '123');
+    expect(userStore.setPersistentSetting).toHaveBeenCalledWith('sulu_admin.list_store.tests.list_test.active', '123');
 });
 
 test('The filter value should be updated when set from the outside', () => {
@@ -76,7 +76,7 @@ test('The filter value should be updated when set from the outside', () => {
 
     listStore.filterOptions.set({test: {eq: 'Test'}});
     expect(userStore.setPersistentSetting)
-        .toBeCalledWith('sulu_admin.list_store.tests.list_test.filter', {test: {eq: 'Test'}});
+        .toHaveBeenCalledWith('sulu_admin.list_store.tests.list_test.filter', {test: {eq: 'Test'}});
 });
 
 test('The filter value should be updated when set from the outside and only an undefined value was added', () => {
@@ -85,7 +85,7 @@ test('The filter value should be updated when set from the outside and only an u
 
     listStore.filterOptions.set({test: undefined});
     expect(userStore.setPersistentSetting)
-        .toBeCalledWith('sulu_admin.list_store.tests.list_test.filter', {test: undefined});
+        .toHaveBeenCalledWith('sulu_admin.list_store.tests.list_test.filter', {test: undefined});
 });
 
 test('The filter value should be updated when set from the outside and only a single false value was added', () => {
@@ -94,7 +94,7 @@ test('The filter value should be updated when set from the outside and only a si
 
     listStore.filterOptions.set({test: false});
     expect(userStore.setPersistentSetting)
-        .toBeCalledWith('sulu_admin.list_store.tests.list_test.filter', {test: false});
+        .toHaveBeenCalledWith('sulu_admin.list_store.tests.list_test.filter', {test: false});
 });
 
 test('The filter value should be updated when set from the outside and only a single false value was removed', () => {
@@ -104,7 +104,7 @@ test('The filter value should be updated when set from the outside and only a si
 
     listStore.filterOptions.set({});
     expect(userStore.setPersistentSetting)
-        .toBeCalledWith('sulu_admin.list_store.tests.list_test.filter', {});
+        .toHaveBeenCalledWith('sulu_admin.list_store.tests.list_test.filter', {});
 });
 
 test('The limit value should be updated when set from the outside', () => {
@@ -112,7 +112,7 @@ test('The limit value should be updated when set from the outside', () => {
     expect(listStore.limit.get()).toEqual(10);
 
     listStore.limit.set(20);
-    expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.list_store.tests.list_test.limit', 20);
+    expect(userStore.setPersistentSetting).toHaveBeenCalledWith('sulu_admin.list_store.tests.list_test.limit', 20);
 });
 
 test('The sort column value should be updated when set from the outside', () => {
@@ -120,7 +120,10 @@ test('The sort column value should be updated when set from the outside', () => 
     expect(listStore.sortColumn.get()).toEqual();
 
     listStore.sortColumn.set('title');
-    expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.list_store.tests.list_test.sort_column', 'title');
+    expect(userStore.setPersistentSetting).toHaveBeenCalledWith(
+        'sulu_admin.list_store.tests.list_test.sort_column',
+        'title'
+    );
 });
 
 test('The sort order value should be updated when set from the outside', () => {
@@ -128,7 +131,10 @@ test('The sort order value should be updated when set from the outside', () => {
     expect(listStore.sortOrder.get()).toEqual();
 
     listStore.sortOrder.set('asc');
-    expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.list_store.tests.list_test.sort_order', 'asc');
+    expect(userStore.setPersistentSetting).toHaveBeenCalledWith(
+        'sulu_admin.list_store.tests.list_test.sort_order',
+        'asc'
+    );
 });
 
 test('The loading strategy should get passed the structure strategy', () => {
@@ -138,7 +144,7 @@ test('The loading strategy should get passed the structure strategy', () => {
     const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
     listStore.updateLoadingStrategy(loadingStrategy);
     listStore.updateStructureStrategy(structureStrategy);
-    expect(loadingStrategy.setStructureStrategy).toBeCalledWith(structureStrategy);
+    expect(loadingStrategy.setStructureStrategy).toHaveBeenCalledWith(structureStrategy);
 });
 
 test('The loading strategy should be called when a request is sent', () => {
@@ -166,7 +172,7 @@ test('The loading strategy should be called when a request is sent', () => {
     listStore.updateLoadingStrategy(loadingStrategy);
     listStore.updateStructureStrategy(structureStrategy);
 
-    expect(loadingStrategy.load).toBeCalledWith(
+    expect(loadingStrategy.load).toHaveBeenCalledWith(
         'tests',
         {
             additionalValue: 5,
@@ -240,7 +246,7 @@ test('The user store should be called correctly when changing the schema', () =>
         }
     );
 
-    expect((metadataStore).getSchema).toBeCalledWith('tests', {id: 1});
+    expect((metadataStore).getSchema).toHaveBeenCalledWith('tests', {id: 1});
 
     return schemaPromise.then(() => {
         const newSchema = {
@@ -287,7 +293,7 @@ test('The user store should be called correctly when changing the schema', () =>
         };
         listStore.changeUserSchema(newSchema);
 
-        expect(userStore.setPersistentSetting).toBeCalledWith(
+        expect(userStore.setPersistentSetting).toHaveBeenCalledWith(
             'sulu_admin.list_store.tests.list_test.schema',
             [
                 {
@@ -414,7 +420,7 @@ test('The userSchema should include schema properties that are not present in th
             },
         }
     );
-    expect((userStore).getPersistentSetting).toBeCalledWith('sulu_admin.list_store.tests.list_test.schema');
+    expect((userStore).getPersistentSetting).toHaveBeenCalledWith('sulu_admin.list_store.tests.list_test.schema');
 
     listStore.destroy();
 });
@@ -477,7 +483,7 @@ test('The userSchema should reflect the order of the schemaSetting of the user',
     };
 
     expect(Object.keys(listStore.userSchema)).toEqual(['title', 'id']);
-    expect((userStore).getPersistentSetting).toBeCalledWith('sulu_admin.list_store.tests.list_test.schema');
+    expect((userStore).getPersistentSetting).toHaveBeenCalledWith('sulu_admin.list_store.tests.list_test.schema');
 
     listStore.destroy();
 });
@@ -505,7 +511,7 @@ test('The loading strategy should be called with a different resourceKey when a 
     listStore.updateLoadingStrategy(loadingStrategy);
     listStore.updateStructureStrategy(structureStrategy);
 
-    expect(loadingStrategy.load).toBeCalledWith(
+    expect(loadingStrategy.load).toHaveBeenCalledWith(
         'snippets',
         {
             fields: [
@@ -545,7 +551,7 @@ test('The loading strategy should be called with a different page when a request
     listStore.updateLoadingStrategy(loadingStrategy);
     listStore.updateStructureStrategy(structureStrategy);
 
-    expect(loadingStrategy.load).toBeCalledWith(
+    expect(loadingStrategy.load).toHaveBeenCalledWith(
         'snippets',
         {
             fields: [
@@ -562,7 +568,7 @@ test('The loading strategy should be called with a different page when a request
     );
 
     page.set(3);
-    expect(loadingStrategy.load).toBeCalledWith(
+    expect(loadingStrategy.load).toHaveBeenCalledWith(
         'snippets',
         {
             fields: [
@@ -602,7 +608,7 @@ test('The loading strategy should be called with a different page when a request
     listStore.updateLoadingStrategy(loadingStrategy);
     listStore.updateStructureStrategy(structureStrategy);
 
-    expect(loadingStrategy.load).toBeCalledWith(
+    expect(loadingStrategy.load).toHaveBeenCalledWith(
         'snippets',
         {
             fields: [
@@ -619,7 +625,7 @@ test('The loading strategy should be called with a different page when a request
     );
 
     page.set(3);
-    expect(loadingStrategy.load).toBeCalledWith(
+    expect(loadingStrategy.load).toHaveBeenCalledWith(
         'snippets',
         {
             fields: [
@@ -659,7 +665,7 @@ test('The loading strategy should be called with a different locale when a reque
     listStore.updateLoadingStrategy(loadingStrategy);
     listStore.updateStructureStrategy(structureStrategy);
 
-    expect(loadingStrategy.load).toBeCalledWith(
+    expect(loadingStrategy.load).toHaveBeenCalledWith(
         'snippets',
         {
             fields: [
@@ -676,7 +682,7 @@ test('The loading strategy should be called with a different locale when a reque
     );
 
     locale.set('de');
-    expect(loadingStrategy.load).toBeCalledWith(
+    expect(loadingStrategy.load).toHaveBeenCalledWith(
         'snippets',
         {
             fields: [
@@ -712,7 +718,7 @@ test('The loading strategy should be called with the defined sortings', () => {
     listStore.updateLoadingStrategy(loadingStrategy);
     listStore.updateStructureStrategy(structureStrategy);
 
-    expect(loadingStrategy.load).toBeCalledWith(
+    expect(loadingStrategy.load).toHaveBeenCalledWith(
         'snippets',
         {
             fields: [
@@ -749,7 +755,7 @@ test('The loading strategy should be called with the defined search', () => {
 
     listStore.search('search-value');
 
-    expect(loadingStrategy.load).toBeCalledWith(
+    expect(loadingStrategy.load).toHaveBeenCalledWith(
         'snippets',
         {
             fields: [
@@ -764,7 +770,7 @@ test('The loading strategy should be called with the defined search', () => {
         undefined
     );
 
-    expect(structureStrategy.clear).toBeCalled();
+    expect(structureStrategy.clear).toHaveBeenCalled();
 
     listStore.destroy();
 });
@@ -788,7 +794,7 @@ test('The loading strategy should be called with the defined filter', () => {
 
     listStore.filter({title: 'Test Title', template: 'test'});
 
-    expect(loadingStrategy.load).toBeCalledWith(
+    expect(loadingStrategy.load).toHaveBeenCalledWith(
         'snippets',
         {
             fields: [
@@ -826,8 +832,8 @@ test('The loading strategy should be called with the active item as parentId', (
     listStore.updateLoadingStrategy(loadingStrategy);
     listStore.updateStructureStrategy(structureStrategy);
 
-    expect(structureStrategy.findById).toBeCalledWith('some-uuid');
-    expect(loadingStrategy.load).toBeCalledWith(
+    expect(structureStrategy.findById).toHaveBeenCalledWith('some-uuid');
+    expect(loadingStrategy.load).toHaveBeenCalledWith(
         'snippets',
         {
             fields: [
@@ -863,9 +869,9 @@ test('The loading strategy should be called with expandedIds if the active item 
     listStore.updateLoadingStrategy(loadingStrategy);
     listStore.updateStructureStrategy(structureStrategy);
 
-    expect(structureStrategy.findById).toBeCalledWith('some-uuid');
-    expect(structureStrategy.clear).toBeCalledWith();
-    expect(loadingStrategy.load).toBeCalledWith(
+    expect(structureStrategy.findById).toHaveBeenCalledWith('some-uuid');
+    expect(structureStrategy.clear).toHaveBeenCalledWith();
+    expect(loadingStrategy.load).toHaveBeenCalledWith(
         'snippets',
         {
             fields: [
@@ -920,7 +926,7 @@ test('The loading strategy should be called with expandedIds if some items are a
     listStore.updateLoadingStrategy(loadingStrategy);
     listStore.updateStructureStrategy(structureStrategy);
 
-    expect(loadingStrategy.load).toBeCalledWith(
+    expect(loadingStrategy.load).toHaveBeenCalledWith(
         'categories',
         {
             fields: [
@@ -936,9 +942,9 @@ test('The loading strategy should be called with expandedIds if some items are a
     );
 
     return promise.then(() => {
-        expect(structureStrategy.findById).toBeCalledWith(1);
-        expect(structureStrategy.findById).toBeCalledWith(5);
-        expect(structureStrategy.findById).toBeCalledWith(10);
+        expect(structureStrategy.findById).toHaveBeenCalledWith(1);
+        expect(structureStrategy.findById).toHaveBeenCalledWith(5);
+        expect(structureStrategy.findById).toHaveBeenCalledWith(10);
 
         expect(listStore.selectionIds).toEqual([1, 5, 10]);
         expect(listStore.initialSelectionIds).toEqual(undefined);
@@ -966,7 +972,7 @@ test('The loading strategy should be called only once even if the data changes a
     listStore.updateStructureStrategy(structureStrategy);
     listStore.updateLoadingStrategy(loadingStrategy);
 
-    expect(structureStrategy.findById).toBeCalledWith('some-uuid');
+    expect(structureStrategy.findById).toHaveBeenCalledWith('some-uuid');
     expect(loadingStrategy.load).toHaveBeenCalledTimes(1);
     structureStrategy.data.push({});
     expect(loadingStrategy.load).toHaveBeenCalledTimes(1);
@@ -993,7 +999,7 @@ test('The active item should not be passed as parent if undefined', () => {
     listStore.updateLoadingStrategy(loadingStrategy);
     listStore.updateStructureStrategy(structureStrategy);
 
-    expect(loadingStrategy.load).toBeCalledWith(
+    expect(loadingStrategy.load).toHaveBeenCalledWith(
         'snippets',
         {
             fields: [
@@ -1134,9 +1140,9 @@ test('Cancel request when a second one is started before finishing the first one
     const requestPromise2 = listStore.pendingRequest;
 
     // $FlowFixMe
-    expect(requestPromise1.abort).toBeCalledWith();
+    expect(requestPromise1.abort).toHaveBeenCalledWith();
     // $FlowFixMe
-    expect(requestPromise2.abort).not.toBeCalledWith();
+    expect(requestPromise2.abort).not.toHaveBeenCalledWith();
 });
 
 test('Set active to undefined if the response returned a 404', (done) => {
@@ -1163,7 +1169,7 @@ test('Set active to undefined if the response returned a 404', (done) => {
         });
         loadingStrategy.load.mockReturnValue(promise);
         expect(listStore.active.get()).toEqual(undefined);
-        expect(userStore.setPersistentSetting).toBeCalledWith(
+        expect(userStore.setPersistentSetting).toHaveBeenCalledWith(
             'sulu_admin.list_store.tests.list_test.active',
             undefined
         );
@@ -1211,7 +1217,7 @@ test('Get schema from MetadataStore for correct resourceKey', () => {
     });
     listStore.updateLoadingStrategy(new LoadingStrategy());
     listStore.updateStructureStrategy(new StructureStrategy());
-    expect(metadataStore.getSchema).toBeCalledWith('tests', undefined);
+    expect(metadataStore.getSchema).toHaveBeenCalledWith('tests', undefined);
     return schemaPromise.then(() => {
         expect(listStore.schema).toEqual(schema);
         listStore.destroy();
@@ -1273,7 +1279,7 @@ test('Select all visible items', () => {
     listStore.selectVisibleItems();
 
     expect(toJS(listStore.selectionIds)).toEqual([1, 7, 2, 3]);
-    expect(log.warn).toBeCalledWith(expect.stringContaining('The "selectVisibleItems" method'));
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "selectVisibleItems" method'));
 
     listStore.destroy();
 });
@@ -1295,7 +1301,7 @@ test('Deselect all visible items', () => {
     listStore.deselectVisibleItems();
 
     expect(toJS(listStore.selectionIds)).toEqual([7]);
-    expect(log.warn).toBeCalledWith(expect.stringContaining('The "deselectVisibleItems" method'));
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "deselectVisibleItems" method'));
 
     listStore.destroy();
 });
@@ -1343,7 +1349,7 @@ test('Clear the data', () => {
     listStore.updateStructureStrategy(structureStrategy);
 
     listStore.clear();
-    expect(structureStrategy.clear).toBeCalled();
+    expect(structureStrategy.clear).toHaveBeenCalled();
 });
 
 test('Should reload data but not change the page or the active item when the reload method is called', (done) => {
@@ -1376,7 +1382,7 @@ test('Should reload data but not change the page or the active item when the rel
     // $FlowFixMe
     structureStrategy.findById.mockReturnValue({});
     listStore.setActive(1);
-    expect(structureStrategy.findById).toBeCalledWith(1);
+    expect(structureStrategy.findById).toHaveBeenCalledWith(1);
 
     when(
         () => !listStore.loading,
@@ -1387,7 +1393,7 @@ test('Should reload data but not change the page or the active item when the rel
 
             expect(listStore.active.get()).toBe(1);
             expect(page.get()).toBe(3);
-            expect(loadingStrategy.load).toBeCalled();
+            expect(loadingStrategy.load).toHaveBeenCalled();
 
             listStore.destroy();
             done();
@@ -1410,7 +1416,7 @@ test('Should reset page count to 0 and page to 1 when locale is changed', () => 
     listStore.pageCount = 7;
     locale.set('de');
 
-    expect(structureStrategy.clear).toBeCalled();
+    expect(structureStrategy.clear).toHaveBeenCalled();
     expect(page.get()).toEqual(1);
     expect(listStore.pageCount).toEqual(0);
     listStore.destroy();
@@ -1466,7 +1472,7 @@ test('Should reset page count to 0 and page to 1 when search is changed', () => 
     listStore.pageCount = 7;
     listStore.searchTerm.set('test');
 
-    expect(structureStrategy.clear).toBeCalled();
+    expect(structureStrategy.clear).toHaveBeenCalled();
     expect(page.get()).toEqual(1);
     expect(listStore.pageCount).toEqual(0);
     listStore.destroy();
@@ -1503,7 +1509,7 @@ test('Should not reset page count to 0 and page to 1 when search stays the same'
     listStore.pageCount = 7;
     listStore.searchTerm.set('test');
 
-    expect(structureStrategy.clear).not.toBeCalled();
+    expect(structureStrategy.clear).not.toHaveBeenCalled();
     expect(page.get()).toEqual(2);
     expect(listStore.pageCount).toEqual(7);
     listStore.destroy();
@@ -1524,7 +1530,7 @@ test('Should reset page count to 0 and page to 1 when filter is changed', () => 
     listStore.pageCount = 7;
     listStore.filter({test: {eq: 'Test'}});
 
-    expect(structureStrategy.clear).toBeCalled();
+    expect(structureStrategy.clear).toHaveBeenCalled();
     expect(page.get()).toEqual(1);
     expect(listStore.pageCount).toEqual(0);
     listStore.destroy();
@@ -1546,7 +1552,7 @@ test('Should not reset page count to 0 and page to 1 when filter stays the same'
     listStore.pageCount = 7;
     listStore.filter({test: {eq: 'Test'}});
 
-    expect(structureStrategy.clear).not.toBeCalled();
+    expect(structureStrategy.clear).not.toHaveBeenCalled();
     expect(page.get()).toEqual(2);
     expect(listStore.pageCount).toEqual(7);
     listStore.destroy();
@@ -1568,7 +1574,7 @@ test('Should not reset page count to 0 and page to 1 when filter stays the same 
     listStore.pageCount = 7;
     listStore.filter({test: {eq: 'Test'}, test2: undefined});
 
-    expect(structureStrategy.clear).not.toBeCalled();
+    expect(structureStrategy.clear).not.toHaveBeenCalled();
     expect(page.get()).toEqual(2);
     expect(listStore.pageCount).toEqual(7);
     listStore.destroy();
@@ -1589,7 +1595,7 @@ test('Should reset page count to 0 and page to 1 when sort column is changed', (
     listStore.pageCount = 7;
     listStore.sortColumn.set('test');
 
-    expect(structureStrategy.clear).toBeCalled();
+    expect(structureStrategy.clear).toHaveBeenCalled();
     expect(page.get()).toEqual(1);
     expect(listStore.pageCount).toEqual(0);
     listStore.destroy();
@@ -1626,7 +1632,7 @@ test('Should not reset page count to 0 and page to 1 when sort column stays the 
     listStore.pageCount = 7;
     listStore.sortColumn.set('test');
 
-    expect(structureStrategy.clear).not.toBeCalled();
+    expect(structureStrategy.clear).not.toHaveBeenCalled();
     expect(page.get()).toEqual(2);
     expect(listStore.pageCount).toEqual(7);
     listStore.destroy();
@@ -1647,7 +1653,7 @@ test('Should reset page count to 0 and page to 1 when sort order is changed', ()
     listStore.pageCount = 7;
     listStore.sortOrder.set('asc');
 
-    expect(structureStrategy.clear).toBeCalled();
+    expect(structureStrategy.clear).toHaveBeenCalled();
     expect(page.get()).toEqual(1);
     expect(listStore.pageCount).toEqual(0);
     listStore.destroy();
@@ -1684,7 +1690,7 @@ test('Should not reset page count to 0 and page to 1 when sort order stays the s
     listStore.pageCount = 7;
     listStore.sortOrder.set('asc');
 
-    expect(structureStrategy.clear).not.toBeCalled();
+    expect(structureStrategy.clear).not.toHaveBeenCalled();
     expect(page.get()).toEqual(2);
     expect(listStore.pageCount).toEqual(7);
     listStore.destroy();
@@ -1705,7 +1711,7 @@ test('Should reset page count to 0 and page to 1 when limit is changed', () => {
     listStore.pageCount = 7;
     listStore.limit.set(50);
 
-    expect(structureStrategy.clear).toBeCalled();
+    expect(structureStrategy.clear).toHaveBeenCalled();
     expect(page.get()).toEqual(1);
     expect(listStore.pageCount).toEqual(0);
     listStore.destroy();
@@ -1727,7 +1733,7 @@ test('Should not reset page count to 0 and page to 1 when limit stays the same',
     listStore.pageCount = 7;
     listStore.limit.set(20);
 
-    expect(structureStrategy.clear).not.toBeCalled();
+    expect(structureStrategy.clear).not.toHaveBeenCalled();
     expect(page.get()).toEqual(2);
     expect(listStore.pageCount).toEqual(7);
     listStore.destroy();
@@ -1759,12 +1765,12 @@ test('Should clear the StructureStrategy when the clear method is called', () =>
     listStore.schema = {};
     const structureStrategy = new StructureStrategy();
     listStore.clear();
-    expect(structureStrategy.clear).not.toBeCalledWith();
+    expect(structureStrategy.clear).not.toHaveBeenCalledWith();
 
     listStore.updateStructureStrategy(structureStrategy);
     listStore.clear();
 
-    expect(structureStrategy.clear).toBeCalledWith();
+    expect(structureStrategy.clear).toHaveBeenCalledWith();
 });
 
 test('Should trigger a mobx autorun if activate is called with the same id', () => {
@@ -1808,7 +1814,7 @@ test('Should call the reload method if structure strategy is changed', () => {
 
     const otherStructureStrategy = new StructureStrategy();
     listStore.updateStructureStrategy(otherStructureStrategy);
-    expect(reloadSpy).toBeCalled();
+    expect(reloadSpy).toHaveBeenCalled();
 });
 
 test('Should call the activate method of the structure strategy if an item gets activated', () => {
@@ -1824,7 +1830,7 @@ test('Should call the activate method of the structure strategy if an item gets 
 
     listStore.activate(3);
 
-    expect(structureStrategy.activate).toBeCalledWith(3);
+    expect(structureStrategy.activate).toHaveBeenCalledWith(3);
 });
 
 test('Should call the deactivate method of the structure strategy if an item gets deactivated', () => {
@@ -1838,7 +1844,7 @@ test('Should call the deactivate method of the structure strategy if an item get
 
     listStore.deactivate(2);
 
-    expect(structureStrategy.deactivate).toBeCalledWith(2);
+    expect(structureStrategy.deactivate).toHaveBeenCalledWith(2);
 });
 
 test('Should call the remove method of the structure strategy if an item gets removed', () => {
@@ -1852,7 +1858,7 @@ test('Should call the remove method of the structure strategy if an item gets re
 
     listStore.remove(2);
 
-    expect(structureStrategy.remove).toBeCalledWith(2);
+    expect(structureStrategy.remove).toHaveBeenCalledWith(2);
 });
 
 test('Should move the item with the given ID to the new given parent and reload the list', () => {
@@ -1895,14 +1901,14 @@ test('Should move the item with the given ID to the new given parent and reload 
 
         listStore.move(3, 8);
 
-        expect(ResourceRequester.post).toBeCalledWith(
+        expect(ResourceRequester.post).toHaveBeenCalledWith(
             'snippets',
             undefined,
             {action: 'move', destination: 8, id: 3, locale: 'de', webspace: 'sulu'}
         );
 
         return postWithIdPromise.then(() => {
-            expect(structureStrategy.clear).toBeCalledWith();
+            expect(structureStrategy.clear).toHaveBeenCalledWith();
             expect(loadingStrategy.load).toHaveBeenLastCalledWith(
                 'snippets',
                 {
@@ -1972,17 +1978,17 @@ test('Should move all selected items to the new given parent and reload the list
 
         expect(listStore.movingSelection).toEqual(true);
 
-        expect(ResourceRequester.post).toBeCalledWith(
+        expect(ResourceRequester.post).toHaveBeenCalledWith(
             'snippets',
             undefined,
             {action: 'move', destination: 3, id: 1, locale: 'de', webspace: 'sulu'}
         );
-        expect(ResourceRequester.post).toBeCalledWith(
+        expect(ResourceRequester.post).toHaveBeenCalledWith(
             'snippets',
             undefined,
             {action: 'move', destination: 3, id: 2, locale: 'de', webspace: 'sulu'}
         );
-        expect(ResourceRequester.post).toBeCalledWith(
+        expect(ResourceRequester.post).toHaveBeenCalledWith(
             'snippets',
             undefined,
             {action: 'move', destination: 3, id: 4, locale: 'de', webspace: 'sulu'}
@@ -1990,7 +1996,7 @@ test('Should move all selected items to the new given parent and reload the list
 
         return moveSelectionPromise.then(() => {
             expect(listStore.movingSelection).toEqual(false);
-            expect(structureStrategy.clear).toBeCalledWith();
+            expect(structureStrategy.clear).toHaveBeenCalledWith();
             expect(loadingStrategy.load).toHaveBeenLastCalledWith(
                 'snippets',
                 {
@@ -2054,17 +2060,17 @@ test('Should copy the item with the given ID to the new given parent and reload 
 
         listStore.copy(3, 8, callbackSpy);
 
-        expect(ResourceRequester.post).toBeCalledWith(
+        expect(ResourceRequester.post).toHaveBeenCalledWith(
             'snippets',
             undefined,
             {action: 'copy', destination: 8, id: 3, locale: 'de', webspace: 'sulu'}
         );
 
-        expect(callbackSpy).not.toBeCalled();
+        expect(callbackSpy).not.toHaveBeenCalled();
 
         return postWithIdPromise.then(() => {
-            expect(callbackSpy).toBeCalledWith({id: 9});
-            expect(structureStrategy.clear).toBeCalledWith();
+            expect(callbackSpy).toHaveBeenCalledWith({id: 9});
+            expect(structureStrategy.clear).toHaveBeenCalledWith();
             expect(loadingStrategy.load).toHaveBeenLastCalledWith(
                 'snippets',
                 {
@@ -2107,10 +2113,15 @@ test('Should delete the item with the given ID and options', () => {
 
     listStore.delete(5, {force: true});
 
-    expect(ResourceRequester.delete).toBeCalledWith('snippets', {force: true, id: 5, locale: 'en', webspace: 'sulu'});
+    expect(ResourceRequester.delete).toHaveBeenCalledWith('snippets', {
+        force: true,
+        id: 5,
+        locale: 'en',
+        webspace: 'sulu',
+    });
 
     return deletePromise.then(() => {
-        expect(structureStrategy.remove).toBeCalledWith(5);
+        expect(structureStrategy.remove).toHaveBeenCalledWith(5);
     });
 });
 
@@ -2131,11 +2142,11 @@ test('Should delete the item with the given ID and remove it from the selection 
     expect(toJS(listStore.selections)).toEqual([{id: 5}]);
     listStore.delete(5);
 
-    expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 5, locale: 'en'});
+    expect(ResourceRequester.delete).toHaveBeenCalledWith('snippets', {id: 5, locale: 'en'});
 
     return deletePromise.then(() => {
         expect(toJS(listStore.selections)).toEqual([]);
-        expect(structureStrategy.remove).toBeCalledWith(5);
+        expect(structureStrategy.remove).toHaveBeenCalledWith(5);
     });
 });
 
@@ -2153,10 +2164,10 @@ test('Should delete the item with the given ID without locale', () => {
 
     listStore.delete(5);
 
-    expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 5, webspace: 'sulu'});
+    expect(ResourceRequester.delete).toHaveBeenCalledWith('snippets', {id: 5, webspace: 'sulu'});
 
     return deletePromise.then(() => {
-        expect(structureStrategy.remove).toBeCalledWith(5);
+        expect(structureStrategy.remove).toHaveBeenCalledWith(5);
     });
 });
 
@@ -2179,22 +2190,22 @@ test('Should delete all selected items and reload the list afterwards', () => {
         listStore.select({id: 2});
 
         expect(listStore.deletingSelection).toEqual(false);
-        expect(loadingStrategy.load).toBeCalledTimes(1);
+        expect(loadingStrategy.load).toHaveBeenCalledTimes(1);
 
         const deletePromise = listStore.deleteSelection();
 
         expect(listStore.deletingSelection).toEqual(true);
-        expect(loadingStrategy.load).toBeCalledTimes(1);
+        expect(loadingStrategy.load).toHaveBeenCalledTimes(1);
 
         return deletePromise.then(() => {
             expect(ResourceRequester.delete).toHaveBeenCalledTimes(2);
-            expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 1});
-            expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 2});
-            expect(structureStrategy.remove).toBeCalledWith(1);
-            expect(structureStrategy.remove).toBeCalledWith(2);
+            expect(ResourceRequester.delete).toHaveBeenCalledWith('snippets', {id: 1});
+            expect(ResourceRequester.delete).toHaveBeenCalledWith('snippets', {id: 2});
+            expect(structureStrategy.remove).toHaveBeenCalledWith(1);
+            expect(structureStrategy.remove).toHaveBeenCalledWith(2);
             expect(listStore.selections).toEqual([]);
             expect(listStore.deletingSelection).toEqual(false);
-            expect(loadingStrategy.load).toBeCalledTimes(2);
+            expect(loadingStrategy.load).toHaveBeenCalledTimes(2);
         });
     });
 });
@@ -2215,10 +2226,10 @@ test('Should delete all selected items and succeed even if one of them returns a
 
     return deletePromise.then(() => {
         expect(ResourceRequester.delete).toHaveBeenCalledTimes(2);
-        expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 1});
-        expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 2});
-        expect(structureStrategy.remove).toBeCalledWith(1);
-        expect(structureStrategy.remove).toBeCalledWith(2);
+        expect(ResourceRequester.delete).toHaveBeenCalledWith('snippets', {id: 1});
+        expect(ResourceRequester.delete).toHaveBeenCalledWith('snippets', {id: 2});
+        expect(structureStrategy.remove).toHaveBeenCalledWith(1);
+        expect(structureStrategy.remove).toHaveBeenCalledWith(2);
         expect(listStore.selections).toEqual([]);
     });
 });
@@ -2270,10 +2281,10 @@ test('Should order the item with the given ID and options to the given position'
     listStore.order(5, 1);
 
     expect(ResourceRequester.post)
-        .toBeCalledWith('snippets', {position: 1}, {action: 'order', id: 5, locale: 'en', webspace: 'sulu'});
+        .toHaveBeenCalledWith('snippets', {position: 1}, {action: 'order', id: 5, locale: 'en', webspace: 'sulu'});
 
     return orderPromise.then(() => {
-        expect(structureStrategy.order).toBeCalledWith(5, 1);
+        expect(structureStrategy.order).toHaveBeenCalledWith(5, 1);
     });
 });
 
@@ -2290,12 +2301,12 @@ test('Should call all disposers if destroy is called', () => {
 
     listStore.destroy();
 
-    expect(listStore.sendRequestDisposer).toBeCalledWith();
-    expect(listStore.localeDisposer).toBeCalledWith();
-    expect(listStore.searchDisposer).toBeCalledWith();
-    expect(listStore.filterDisposer).toBeCalledWith();
-    expect(listStore.sortColumnDisposer).toBeCalledWith();
-    expect(listStore.sortOrderDisposer).toBeCalledWith();
-    expect(listStore.limitDisposer).toBeCalledWith();
-    expect(listStore.activeSettingDisposer).toBeCalledWith();
+    expect(listStore.sendRequestDisposer).toHaveBeenCalledWith();
+    expect(listStore.localeDisposer).toHaveBeenCalledWith();
+    expect(listStore.searchDisposer).toHaveBeenCalledWith();
+    expect(listStore.filterDisposer).toHaveBeenCalledWith();
+    expect(listStore.sortColumnDisposer).toHaveBeenCalledWith();
+    expect(listStore.sortOrderDisposer).toHaveBeenCalledWith();
+    expect(listStore.limitDisposer).toHaveBeenCalledWith();
+    expect(listStore.activeSettingDisposer).toHaveBeenCalledWith();
 });

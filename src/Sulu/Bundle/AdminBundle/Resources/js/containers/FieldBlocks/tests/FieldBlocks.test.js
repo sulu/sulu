@@ -710,7 +710,7 @@ test('Call not onChange on componentDidUpdate when new types are the same', () =
         },
     });
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Call onChange on componentDidUpdate when type not longer exist', () => {
@@ -786,7 +786,7 @@ test('Call onChange on componentDidUpdate when type not longer exist', () => {
         },
     });
 
-    expect(changeSpy).toBeCalledWith([
+    expect(changeSpy).toHaveBeenCalledWith([
         {
             text1: 'Test 1',
             text2: 'Test 2',
@@ -1192,7 +1192,7 @@ test('Should call onFinish when a field from the child renderer has finished edi
     fieldBlocks.find('Block').simulate('click');
     fieldBlocks.find('FieldRenderer').prop('onFieldFinish')();
 
-    expect(finishSpy).toBeCalledWith();
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test ('Should set nested properties in handleBlockChange and call onChange with new values', () => {
@@ -1231,11 +1231,11 @@ test ('Should set nested properties in handleBlockChange and call onChange with 
     fieldBlocks.find('FieldRenderer').prop('onChange')(0, 'options/test1', 'value1');
 
     const expectedArray1 = [{type: 'default', options: {test1: 'value1'}}];
-    expect(changeSpy).toBeCalledWith(expectedArray1, undefined);
+    expect(changeSpy).toHaveBeenCalledWith(expectedArray1, undefined);
 
     fieldBlocks.find('FieldRenderer').prop('onChange')(0, 'options/test2/test3', 'value2');
     const expectedArray2 = [{type: 'default', options: {test1: 'value1', test2: {test3: 'value2'}}}];
-    expect(changeSpy).toBeCalledWith(expectedArray2, undefined);
+    expect(changeSpy).toHaveBeenCalledWith(expectedArray2, undefined);
 });
 
 test('Should pass context through handleBlockChange to onChange', () => {
@@ -1273,7 +1273,7 @@ test('Should pass context through handleBlockChange to onChange', () => {
     fieldBlocks.find('Block').simulate('click');
     fieldBlocks.find('FieldRenderer').prop('onChange')(0, 'alignment', 'left', {isDefaultValue: true});
 
-    expect(changeSpy).toBeCalledWith(
+    expect(changeSpy).toHaveBeenCalledWith(
         [{type: 'default', alignment: 'left'}],
         {isDefaultValue: true}
     );
@@ -1309,7 +1309,7 @@ test('Should call onFinish when the order of the blocks has changed', () => {
 
     fieldBlocks.find('BlockCollection').prop('onSortEnd')(0, 2);
 
-    expect(finishSpy).toBeCalledWith();
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Should open and close block settings overlay close button is clicked', () => {
@@ -1391,8 +1391,8 @@ test('Should open and close block settings overlay when confirm button is clicke
         />
     );
 
-    expect(metadataStore.getSchema).toBeCalledWith('content_block_settings', undefined, undefined);
-    expect(metadataStore.getJsonSchema).toBeCalledWith('content_block_settings', undefined, undefined);
+    expect(metadataStore.getSchema).toHaveBeenCalledWith('content_block_settings', undefined, undefined);
+    expect(metadataStore.getJsonSchema).toHaveBeenCalledWith('content_block_settings', undefined, undefined);
     expect(fieldBlocks.exists('FormOverlay')).toEqual(false);
 
     fieldBlocks.find('Block').at(1).simulate('click');
@@ -1401,17 +1401,17 @@ test('Should open and close block settings overlay when confirm button is clicke
 
     return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
         fieldBlocks.update();
-        expect(changeSpy).not.toBeCalled();
+        expect(changeSpy).not.toHaveBeenCalled();
         expect(fieldBlocks.exists('FormOverlay')).toEqual(true);
 
         fieldBlocks.find('Checkbox[dataPath="/setting"]').prop('onChange')(true);
         // should not change value of fieldBlocks until overlay is confirmed
-        expect(changeSpy).not.toBeCalled();
+        expect(changeSpy).not.toHaveBeenCalled();
         expect(fieldBlocks.instance().value[1].settings.setting).toEqual(false);
 
         fieldBlocks.find('FormOverlay Button[children="sulu_admin.apply"]').simulate('click');
         expect(fieldBlocks.exists('FormOverlay')).toEqual(false);
-        expect(changeSpy).toBeCalledWith(
+        expect(changeSpy).toHaveBeenCalledWith(
             [{type: 'default', settings: {setting: false}}, {type: 'default', settings: {setting: true}}]
         );
         expect(fieldBlocks.instance().value[1].settings.setting).toEqual(true);
@@ -1508,8 +1508,8 @@ test('Should not close block settings overlay when confirm button is clicked wit
         />
     );
 
-    expect(metadataStore.getSchema).toBeCalledWith('content_block_settings', undefined, undefined);
-    expect(metadataStore.getJsonSchema).toBeCalledWith('content_block_settings', undefined, undefined);
+    expect(metadataStore.getSchema).toHaveBeenCalledWith('content_block_settings', undefined, undefined);
+    expect(metadataStore.getJsonSchema).toHaveBeenCalledWith('content_block_settings', undefined, undefined);
     expect(fieldBlocks.exists('FormOverlay')).toEqual(false);
 
     fieldBlocks.find('Block').at(1).simulate('click');
@@ -1521,7 +1521,7 @@ test('Should not close block settings overlay when confirm button is clicked wit
 
         fieldBlocks.find('Overlay Button[children="sulu_admin.apply"]').simulate('click');
         expect(fieldBlocks.find('FormOverlay').prop('open')).toEqual(true);
-        expect(changeSpy).not.toBeCalled();
+        expect(changeSpy).not.toHaveBeenCalled();
     });
 });
 
@@ -1806,7 +1806,7 @@ test('Should destroy the block settings form-store on unmount', () => {
 
     fieldBlocks.unmount();
 
-    expect(destroySpy).toBeCalledWith();
+    expect(destroySpy).toHaveBeenCalledWith();
 });
 
 test('Should show correct value in type select after type is changed', () => {
@@ -1964,7 +1964,7 @@ test('Should set correct default values for multiple single_select in blocks', (
 
     fieldBlocks.find('Block').at(0).simulate('click');
 
-    expect(changeSpy).toBeCalledWith(
+    expect(changeSpy).toHaveBeenCalledWith(
         [
             {
                 'position_left': 'left',

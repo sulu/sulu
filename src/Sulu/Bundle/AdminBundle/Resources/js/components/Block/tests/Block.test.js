@@ -117,7 +117,7 @@ test('Clicking on a expanded block should not call the onExpand callback', async
 
     await userEvent.click(screen.queryByRole('switch'));
 
-    expect(expandSpy).not.toBeCalled();
+    expect(expandSpy).not.toHaveBeenCalled();
 });
 
 test('Clicking the close icon in an expanded block should collapse it', async() => {
@@ -187,10 +187,10 @@ test('Clicking an action in the action popover should fire the respective callba
     const icon = screen.queryByLabelText('su-more-circle');
 
     await userEvent.click(icon);
-    expect(onActionClickSpy).not.toBeCalled();
+    expect(onActionClickSpy).not.toHaveBeenCalled();
 
     await userEvent.click(screen.queryByText('Test Action 1'));
-    expect(onActionClickSpy).toBeCalledWith();
+    expect(onActionClickSpy).toHaveBeenCalledWith();
 });
 
 test('Render remove action if deprecated onRemove prop is set', async() => {
@@ -198,7 +198,7 @@ test('Render remove action if deprecated onRemove prop is set', async() => {
     render(
         <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} onRemove={removeSpy}>Block content</Block>
     );
-    expect(log.warn).toBeCalledWith(
+    expect(log.warn).toHaveBeenCalledWith(
         expect.stringContaining('The "onRemove" prop of the "Block" component is deprecated')
     );
 
@@ -239,6 +239,6 @@ test('Changing the type should call the onTypeChange callback', async() => {
     const typeButton = screen.queryByText('Type 2');
     await userEvent.click(typeButton);
 
-    expect(typeChangeSpy).toBeCalledWith('type2');
+    expect(typeChangeSpy).toHaveBeenCalledWith('type2');
     expect(typeChangeSpy).toHaveBeenCalledTimes(1);
 });
