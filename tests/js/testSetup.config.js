@@ -64,3 +64,49 @@ Object.defineProperty(window, 'matchMedia', { // see https://github.com/ckeditor
         dispatchEvent: jest.fn(),
     })),
 });
+
+// copied from: https://github.com/evelynhathaway/jest-location-mock
+const originalLocationRef = {current: null};
+
+(function() {
+    if (typeof window === 'undefined') {
+        return;
+    }
+
+    if (!(window._globalProxy)) {
+        // eslint-disable-next-line max-len
+        throw new Error('window._globalProxy is not defined. This mock relies on an internal JSDOM property that may have changed. Please report this issue to the jest-location-mock.');
+    }
+
+    originalLocationRef.current = window.location;
+
+    const locationMock = {
+        assign: jest.fn(),
+        href: 'http://localhost',
+        replace: jest.fn(),
+        reload: jest.fn(),
+    };
+
+    jest.spyOn(locationMock, 'assign').mockName('window.location.assign');
+    jest.spyOn(locationMock, 'reload').mockName('window.location.reload');
+    jest.spyOn(locationMock, 'replace').mockName('window.location.replace');
+
+    // I am unsure how long this internal property will work, but I cannot find any other way to shadow the
+    // unconfigurable `window.location` property in JSDOM v21+
+    // https://github.com/jsdom/jsdom/blob/57bbf9a5c2bd32d3c811068480dee3cc8da3dd34/lib/jsdom/browser/Window.js#L54-L60
+    window._globalProxy = new Proxy(window, {
+        get(target, property, receiver) {
+            if (property === 'location') {
+                return locationMock;
+            }
+            return Reflect.get(target, property, receiver);
+        },
+        set(target, property, value) {
+            if (property === 'location') {
+                locationMock.href = value;
+                return true;
+            }
+            return Reflect.set(target, property, value);
+        },
+    });
+})();
