@@ -100,5 +100,5 @@ test('Call destroy of ResourceFormStore when unmounted', () => {
 
     collectionFormOverlay.unmount();
 
-    expect(resourceFormStore.destroy).toBeCalledWith();
+    expect(resourceFormStore.destroy).toHaveBeenCalledWith();
 });

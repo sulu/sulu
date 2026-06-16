@@ -29,8 +29,8 @@ test('Create a MemoryFormStore with schema', () => {
     const memoryFormStore = memoryFormStoreFactory.createFromFormKey('test', {}, undefined, 'type', metadataOptions);
 
     expect(memoryFormStore).toBeInstanceOf(SchemaFormStoreDecorator);
-    expect(metadataStore.getSchema).toBeCalledWith('test', 'type', {test: 'value'});
-    expect(metadataStore.getJsonSchema).toBeCalledWith('test', 'type', {test: 'value'});
+    expect(metadataStore.getSchema).toHaveBeenCalledWith('test', 'type', {test: 'value'});
+    expect(metadataStore.getJsonSchema).toHaveBeenCalledWith('test', 'type', {test: 'value'});
     return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
         expect(memoryFormStore.innerFormStore).toBeInstanceOf(MemoryFormStore);
         expect(memoryFormStore.schema).toEqual(schema);

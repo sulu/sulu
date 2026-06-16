@@ -68,7 +68,7 @@ test('Render snippet areas with data as table', () => {
     });
 
     expect(render(<SnippetAreas route={router.route} router={router} />)).toMatchSnapshot();
-    expect(SnippetAreaStore).toBeCalledWith('sulu');
+    expect(SnippetAreaStore).toHaveBeenCalledWith('sulu');
 });
 
 test('Close after clicking add without choosing a snippet', () => {
@@ -105,7 +105,7 @@ test('Close after clicking add without choosing a snippet', () => {
     snippetAreas.update();
     expect(snippetAreas.find(SingleListOverlay).prop('open')).toEqual(false);
 
-    expect(snippetAreaStore.save).not.toBeCalled();
+    expect(snippetAreaStore.save).not.toHaveBeenCalled();
 });
 
 test('Save after adding a new snippet area', () => {
@@ -141,7 +141,7 @@ test('Save after adding a new snippet area', () => {
     snippetAreas.find(SingleListOverlay).prop('onConfirm')({id: 'some-uuid'});
     expect(snippetAreas.find(SingleListOverlay).prop('open')).toEqual(true);
 
-    expect(snippetAreaStore.save).toBeCalledWith('default', 'some-uuid');
+    expect(snippetAreaStore.save).toHaveBeenCalledWith('default', 'some-uuid');
 
     return savePromise.then(() => {
         snippetAreas.update();
@@ -181,7 +181,7 @@ test('Close after clicking delete and cancel dialog', () => {
     snippetAreas.update();
     expect(snippetAreas.find('Dialog').prop('open')).toEqual(false);
 
-    expect(snippetAreaStore.save).not.toBeCalled();
+    expect(snippetAreaStore.save).not.toHaveBeenCalled();
 });
 
 test('Delete after confirming the confirmation dialog', () => {
@@ -216,7 +216,7 @@ test('Delete after confirming the confirmation dialog', () => {
     snippetAreas.find('Dialog').prop('onConfirm')();
     expect(snippetAreas.find('Dialog').prop('open')).toEqual(true);
 
-    expect(snippetAreaStore.delete).toBeCalledWith('default');
+    expect(snippetAreaStore.delete).toHaveBeenCalledWith('default');
 
     return deletePromise.then(() => {
         snippetAreas.update();
@@ -255,7 +255,7 @@ test('Navigate when selected default snippet is clicked', () => {
     const snippetAreas = mount(<SnippetAreas route={route} router={router} />);
     snippetAreas.find('Button[className="titleButton"] button').simulate('click');
 
-    expect(router.navigate).toBeCalledWith('sulu_snippet.edit_form', {id: 'some-uuid'});
+    expect(router.navigate).toHaveBeenCalledWith('sulu_snippet.edit_form', {id: 'some-uuid'});
 });
 
 test('Should use CacheClearToolbarAction for cache clearing', () => {
@@ -285,11 +285,11 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
 
     const cacheClearToolbarAction: CacheClearToolbarAction = (CacheClearToolbarAction: any).mock.instances[0];
 
-    expect(cacheClearToolbarAction.getNode).toBeCalledWith();
+    expect(cacheClearToolbarAction.getNode).toHaveBeenCalledWith();
 
-    expect(cacheClearToolbarAction.getToolbarItemConfig).not.toBeCalled();
+    expect(cacheClearToolbarAction.getToolbarItemConfig).not.toHaveBeenCalled();
     toolbarFunction.call(snippetAreas.instance());
-    expect(cacheClearToolbarAction.getToolbarItemConfig).toBeCalled();
+    expect(cacheClearToolbarAction.getToolbarItemConfig).toHaveBeenCalled();
 });
 
 test('Show forbidden hint when user has no permission', () => {

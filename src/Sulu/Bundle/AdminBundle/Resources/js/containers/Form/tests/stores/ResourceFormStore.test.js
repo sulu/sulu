@@ -81,7 +81,7 @@ test('Create data object for schema', (done) => {
 
     setTimeout(() => {
         expect(resourceFormStore.schemaLoading).toEqual(false);
-        expect(resourceStore.set).not.toBeCalledWith('template', expect.anything());
+        expect(resourceStore.set).not.toHaveBeenCalledWith('template', expect.anything());
         expect(resourceFormStore.data).toEqual({
             title: undefined,
             description: undefined,
@@ -1108,11 +1108,11 @@ test('Changing type should set the appropriate property in the ResourceStore', (
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
 
     return metadataPromise.then(() => {
-        expect(resourceStore.change).not.toBeCalled();
+        expect(resourceStore.change).not.toHaveBeenCalled();
 
         resourceFormStore.changeType('footer');
 
-        expect(resourceStore.change).toBeCalledWith('template', 'footer');
+        expect(resourceStore.change).toHaveBeenCalledWith('template', 'footer');
         expect(resourceFormStore.type).toEqual('footer');
     });
 });
@@ -1203,7 +1203,7 @@ test('Save the store should call the resourceStore save function', () => {
     );
 
     resourceFormStore.save();
-    expect(resourceFormStore.resourceStore.save).toBeCalledWith({});
+    expect(resourceFormStore.resourceStore.save).toHaveBeenCalledWith({});
     resourceFormStore.destroy();
 });
 
@@ -1216,7 +1216,7 @@ test('Save the store should call the resourceStore save function with the passed
 
     resourceFormStore.save({option: 'value'});
     expect(resourceFormStore.resourceStore.save)
-        .toBeCalledWith({option: 'value', option1: 'value1', option2: 'value2'});
+        .toHaveBeenCalledWith({option: 'value', option1: 'value1', option2: 'value2'});
     resourceFormStore.destroy();
 });
 
@@ -1605,7 +1605,7 @@ test('Delete should delegate the call to resourceStore', () => {
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
     const returnedDeletePromise = resourceFormStore.delete();
 
-    expect(resourceStore.delete).toBeCalledWith({});
+    expect(resourceStore.delete).toHaveBeenCalledWith({});
     expect(returnedDeletePromise).toBe(deletePromise);
 });
 
@@ -1617,7 +1617,7 @@ test('Delete should delegate the call to resourceStore with options', () => {
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets', {webspace: 'sulu_io'});
     const returnedDeletePromise = resourceFormStore.delete({force: true});
 
-    expect(resourceStore.delete).toBeCalledWith({force: true, webspace: 'sulu_io'});
+    expect(resourceStore.delete).toHaveBeenCalledWith({force: true, webspace: 'sulu_io'});
     expect(returnedDeletePromise).toBe(deletePromise);
 });
 
@@ -1635,7 +1635,7 @@ test('Set should be passed to resourceStore', () => {
     const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '3'), 'snippets');
     resourceFormStore.set('title', 'Title');
 
-    expect(resourceFormStore.resourceStore.set).toBeCalledWith('title', 'Title');
+    expect(resourceFormStore.resourceStore.set).toHaveBeenCalledWith('title', 'Title');
     resourceFormStore.destroy();
 });
 
@@ -1647,7 +1647,7 @@ test('SetMultiple should be passed to resourceStore', () => {
     };
     resourceFormStore.setMultiple(data);
 
-    expect(resourceFormStore.resourceStore.setMultiple).toBeCalledWith(data);
+    expect(resourceFormStore.resourceStore.setMultiple).toHaveBeenCalledWith(data);
     resourceFormStore.destroy();
 });
 
@@ -1655,7 +1655,7 @@ test('Should call change method of ResourceStore', () => {
     const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '3'), 'snippets');
     resourceFormStore.change('title', 'Title');
 
-    expect(resourceFormStore.resourceStore.change).toBeCalledWith('title', 'Title');
+    expect(resourceFormStore.resourceStore.change).toHaveBeenCalledWith('title', 'Title');
     resourceFormStore.destroy();
 });
 
@@ -1663,7 +1663,7 @@ test('Should call set method of ResourceStore for server data', () => {
     const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '3'), 'snippets');
     resourceFormStore.change('title', 'Title', {isDefaultValue: true});
 
-    expect(resourceFormStore.resourceStore.set).toBeCalledWith('title', 'Title');
+    expect(resourceFormStore.resourceStore.set).toHaveBeenCalledWith('title', 'Title');
     resourceFormStore.destroy();
 });
 
@@ -1671,7 +1671,7 @@ test('Should call set method of ResourceStore for default data', () => {
     const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '3'), 'snippets');
     resourceFormStore.change('title', 'Title', {isDefaultValue: true});
 
-    expect(resourceFormStore.resourceStore.set).toBeCalledWith('title', 'Title');
+    expect(resourceFormStore.resourceStore.set).toHaveBeenCalledWith('title', 'Title');
     resourceFormStore.destroy();
 });
 
@@ -1679,7 +1679,7 @@ test('Should call changeMultiple method of ResourceStore', () => {
     const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '3'), 'snippets');
     resourceFormStore.changeMultiple({title: 'test1', description: 'test2'});
 
-    expect(resourceFormStore.resourceStore.changeMultiple).toBeCalledWith({title: 'test1', description: 'test2'});
+    expect(resourceFormStore.resourceStore.changeMultiple).toHaveBeenCalledWith({title: 'test1', description: 'test2'});
     resourceFormStore.destroy();
 });
 
@@ -1687,7 +1687,7 @@ test('Should call setMultiple method of ResourceStore for server data', () => {
     const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '3'), 'snippets');
     resourceFormStore.changeMultiple({title: 'test1', description: 'test2'}, {isDefaultValue: true});
 
-    expect(resourceFormStore.resourceStore.setMultiple).toBeCalledWith({title: 'test1', description: 'test2'});
+    expect(resourceFormStore.resourceStore.setMultiple).toHaveBeenCalledWith({title: 'test1', description: 'test2'});
     resourceFormStore.destroy();
 });
 
@@ -1695,7 +1695,7 @@ test('Should call setMultiple method of ResourceStore for default data', () => {
     const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '3'), 'snippets');
     resourceFormStore.changeMultiple({title: 'test1', description: 'test2'}, {isDefaultValue: true});
 
-    expect(resourceFormStore.resourceStore.setMultiple).toBeCalledWith({title: 'test1', description: 'test2'});
+    expect(resourceFormStore.resourceStore.setMultiple).toHaveBeenCalledWith({title: 'test1', description: 'test2'});
     resourceFormStore.destroy();
 });
 
@@ -1705,7 +1705,7 @@ test('Destroying the store should call all the disposers', () => {
 
     resourceFormStore.destroy();
 
-    expect(resourceFormStore.schemaDisposer).toBeCalled();
+    expect(resourceFormStore.schemaDisposer).toHaveBeenCalled();
 });
 
 test('Destroying the store should not fail if no disposers are available', () => {

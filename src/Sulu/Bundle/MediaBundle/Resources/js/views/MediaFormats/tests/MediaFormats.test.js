@@ -227,7 +227,7 @@ test('Should change locale via locale chooser', () => {
 
     const toolbarConfig = toolbarFunction.call(mediaFormats);
     toolbarConfig.locale.onChange('en');
-    expect(router.navigate).toBeCalledWith('sulu_media.media_formats', {locale: 'en'});
+    expect(router.navigate).toHaveBeenCalledWith('sulu_media.media_formats', {locale: 'en'});
 });
 
 test('Should show locales from router options in toolbar', () => {
@@ -280,5 +280,5 @@ test('Should navigate to defined route on back button click', () => {
 
     const toolbarConfig = toolbarFunction.call(mediaFormats);
     toolbarConfig.backButton.onClick();
-    expect(router.restore).toBeCalledWith('sulu_media.overview', {locale: 'de'});
+    expect(router.restore).toHaveBeenCalledWith('sulu_media.overview', {locale: 'de'});
 });

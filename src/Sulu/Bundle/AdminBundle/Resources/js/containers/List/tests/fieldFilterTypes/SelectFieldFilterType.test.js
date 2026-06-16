@@ -62,7 +62,7 @@ test('Call onChange handler with new value', () => {
 
     selectFieldFilterTypeForm.find('CheckboxGroup').prop('onChange')(['test']);
 
-    expect(changeSpy).toBeCalledWith(['test']);
+    expect(changeSpy).toHaveBeenCalledWith(['test']);
 });
 
 test('Call onChange handler with undefined if the new selection is empty', () => {
@@ -72,7 +72,7 @@ test('Call onChange handler with undefined if the new selection is empty', () =>
 
     selectFieldFilterTypeForm.find('CheckboxGroup').prop('onChange')([]);
 
-    expect(changeSpy).toBeCalledWith(undefined);
+    expect(changeSpy).toHaveBeenCalledWith(undefined);
 });
 
 test.each([

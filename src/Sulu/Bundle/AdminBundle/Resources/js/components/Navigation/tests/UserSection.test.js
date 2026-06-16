@@ -26,8 +26,8 @@ test('The component should render with all available props and handle clicks cor
     expect(container).toMatchSnapshot();
 
     await userEvent.click(screen.queryByText(/sulu_admin.edit_profile/));
-    expect(handleProfileClick).toBeCalled();
+    expect(handleProfileClick).toHaveBeenCalled();
 
     await userEvent.click(screen.queryByText(/sulu_admin.logout/));
-    expect(handleLogoutClick).toBeCalled();
+    expect(handleLogoutClick).toHaveBeenCalled();
 });

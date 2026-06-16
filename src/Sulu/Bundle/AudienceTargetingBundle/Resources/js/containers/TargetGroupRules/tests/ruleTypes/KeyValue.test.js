@@ -26,7 +26,7 @@ test.each([
     const keyValue = shallow(<KeyValue onChange={changeSpy} options={options} value={oldValue} />);
     keyValue.find('Input').at(1).prop('onChange')(value);
 
-    expect(changeSpy).toBeCalledWith(result);
+    expect(changeSpy).toHaveBeenCalledWith(result);
 });
 
 test.each([
@@ -43,5 +43,5 @@ test.each([
     const keyValue = shallow(<KeyValue onChange={changeSpy} options={options} value={oldValue} />);
     keyValue.find('Input').at(0).prop('onChange')(key);
 
-    expect(changeSpy).toBeCalledWith(result);
+    expect(changeSpy).toHaveBeenCalledWith(result);
 });

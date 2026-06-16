@@ -401,7 +401,7 @@ test('Should mark currently active tab as selected according to prop', (done) =>
     );
 
     setTimeout(() => {
-        expect(router.redirect).not.toBeCalled();
+        expect(router.redirect).not.toHaveBeenCalled();
         expect(tabs.find('Tab').at(0).prop('selected')).toEqual(true);
         expect(tabs.find('Tab').at(1).prop('selected')).toEqual(false);
         done();
@@ -459,7 +459,7 @@ test('Should mark currently active tab as selected', (done) => {
     );
 
     setTimeout(() => {
-        expect(router.redirect).not.toBeCalled();
+        expect(router.redirect).not.toHaveBeenCalled();
         expect(tabs.find('Tab').at(0).prop('selected')).toEqual(false);
         expect(tabs.find('Tab').at(1).prop('selected')).toEqual(true);
         done();
@@ -514,7 +514,7 @@ test('Should redirect to child route with highest priority if no tab is active b
     mount(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>);
 
     setTimeout(() => {
-        expect(router.redirect).toBeCalledWith('route2', attributes);
+        expect(router.redirect).toHaveBeenCalledWith('route2', attributes);
         done();
     });
 });
@@ -569,7 +569,7 @@ test('Should redirect to child route from props with highest priority if no tab 
     mount(<Tabs route={route} routeChildren={childRoutes} router={router}>{() => (<Child />)}</Tabs>);
 
     setTimeout(() => {
-        expect(router.redirect).toBeCalledWith('route2', attributes);
+        expect(router.redirect).toHaveBeenCalledWith('route2', attributes);
         done();
     });
 });
@@ -622,7 +622,7 @@ test('Navigate to tab if it was clicked', () => {
     const tabs = mount(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>);
 
     tabs.find('Tab button').at(1).simulate('click');
-    expect(router.navigate).toBeCalledWith('route2', attributes);
+    expect(router.navigate).toHaveBeenCalledWith('route2', attributes);
 });
 
 test('Navigate to tab if it was clicked', () => {
@@ -676,5 +676,5 @@ test('Navigate to tab if it was clicked', () => {
     const tabs = mount(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>);
 
     tabs.find('Tab button').at(1).simulate('click');
-    expect(router.navigate).toBeCalledWith('route2', {id: 1});
+    expect(router.navigate).toHaveBeenCalledWith('route2', {id: 1});
 });

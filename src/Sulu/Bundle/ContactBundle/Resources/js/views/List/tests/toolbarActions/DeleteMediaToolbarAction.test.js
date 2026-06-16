@@ -86,7 +86,7 @@ test('Do nothing if cancel button is clicked', () => {
     shallow(deleteMediaToolbarAction.getNode()).instance().props.onCancel();
     expect(shallow(deleteMediaToolbarAction.getNode()).instance().props.open).toEqual(false);
 
-    expect(ResourceRequester.patch).not.toBeCalled();
+    expect(ResourceRequester.patch).not.toHaveBeenCalled();
 });
 
 test('Delete selected items if confirm button is clicked', () => {
@@ -112,7 +112,7 @@ test('Delete selected items if confirm button is clicked', () => {
     deleteMediaDialog.props.onConfirm();
 
     deleteMediaToolbarAction.listStore.deletingSelection = true;
-    expect(deleteMediaToolbarAction.listStore.deleteSelection).toBeCalledWith();
+    expect(deleteMediaToolbarAction.listStore.deleteSelection).toHaveBeenCalledWith();
 
     deleteMediaDialog = shallow(deleteMediaToolbarAction.getNode()).instance();
     expect(deleteMediaDialog.props).toEqual(expect.objectContaining({
@@ -133,6 +133,6 @@ test('Delete selected items if confirm button is clicked', () => {
             throw new Error('The resourceStore must be set on the ToolbarAction!');
         }
 
-        expect(resourceStore.set).toBeCalledWith('medias', [1, 2, 5]);
+        expect(resourceStore.set).toHaveBeenCalledWith('medias', [1, 2, 5]);
     });
 });

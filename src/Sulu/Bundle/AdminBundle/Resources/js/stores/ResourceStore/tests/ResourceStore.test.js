@@ -155,7 +155,7 @@ test('Should load the data with the ResourceRequester', () => {
     const promise = Promise.resolve({value: 'Value'});
     ResourceRequester.get.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '3', {locale: observable.box('en')}, {test: 10});
-    expect(ResourceRequester.get).toBeCalledWith('snippets', {id: '3', locale: 'en', test: 10});
+    expect(ResourceRequester.get).toHaveBeenCalledWith('snippets', {id: '3', locale: 'en', test: 10});
     return promise.then(() => {
         expect(resourceStore.data).toEqual({value: 'Value'});
     });
@@ -166,7 +166,7 @@ test('Should load without locale the data with the ResourceRequester', () => {
     ResourceRequester.get.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '3');
     const oldData = resourceStore.data;
-    expect(ResourceRequester.get).toBeCalledWith('snippets', {id: '3'});
+    expect(ResourceRequester.get).toHaveBeenCalledWith('snippets', {id: '3'});
     return promise.then(() => {
         expect(resourceStore.data).toEqual({value: 'Value'});
         expect(resourceStore.data).toBe(oldData);
@@ -179,7 +179,7 @@ test('Should load with the idQueryParameter and reset after successful load', ()
     const resourceStore = new ResourceStore('users', 2, {}, {}, 'contactId');
     const oldData = resourceStore.data;
     expect(resourceStore.idQueryParameter).toEqual('contactId');
-    expect(ResourceRequester.get).toBeCalledWith('users', {contactId: 2});
+    expect(ResourceRequester.get).toHaveBeenCalledWith('users', {contactId: 2});
 
     return promise.then(() => {
         expect(resourceStore.data).toEqual({id: 5, value: 'test'});
@@ -193,21 +193,21 @@ test('Should not load the data with the ResourceRequester if no resource-id is p
     const promise = Promise.resolve({value: 'Value'});
     ResourceRequester.get.mockReturnValue(promise);
     new ResourceStore('snippets', null, {locale: observable.box()});
-    expect(ResourceRequester.get).not.toBeCalled();
+    expect(ResourceRequester.get).not.toHaveBeenCalled();
 });
 
 test('Should not load the data with the ResourceRequester if locale should be provided but is not', () => {
     const promise = Promise.resolve({value: 'Value'});
     ResourceRequester.get.mockReturnValue(promise);
     new ResourceStore('snippets', '3', {locale: observable.box()});
-    expect(ResourceRequester.get).not.toBeCalled();
+    expect(ResourceRequester.get).not.toHaveBeenCalled();
 });
 
 test('Should load the data with the ResourceRequester if a reload is requested', () => {
     const promise1 = Promise.resolve({value: 'Value'});
     ResourceRequester.get.mockReturnValue(promise1);
     const resourceStore = new ResourceStore('snippets', '3', {locale: observable.box('en')}, {test: 10});
-    expect(ResourceRequester.get).toBeCalledWith('snippets', {id: '3', locale: 'en', test: 10});
+    expect(ResourceRequester.get).toHaveBeenCalledWith('snippets', {id: '3', locale: 'en', test: 10});
     return promise1.then(() => {
         expect(resourceStore.data).toEqual({value: 'Value'});
 
@@ -215,7 +215,7 @@ test('Should load the data with the ResourceRequester if a reload is requested',
         ResourceRequester.get.mockReturnValue(promise2);
         resourceStore.reload();
 
-        expect(ResourceRequester.get).toBeCalledWith('snippets', {id: '3', locale: 'en', test: 10});
+        expect(ResourceRequester.get).toHaveBeenCalledWith('snippets', {id: '3', locale: 'en', test: 10});
         expect(ResourceRequester.get).toHaveBeenCalledTimes(2);
 
         return promise2.then(() => {
@@ -281,7 +281,7 @@ test('Save the store should send a PUT request', () => {
     resourceStore.dirty = false;
 
     resourceStore.save({test: 10});
-    expect(ResourceRequester.put).toBeCalledWith('snippets', {title: 'Title'}, {id: '3', locale: 'de', test: 10});
+    expect(ResourceRequester.put).toHaveBeenCalledWith('snippets', {title: 'Title'}, {id: '3', locale: 'de', test: 10});
 });
 
 test('Save the store should send a PUT request without a locale', () => {
@@ -297,7 +297,7 @@ test('Save the store should send a PUT request without a locale', () => {
     resourceStore.dirty = false;
 
     resourceStore.save({test: 10});
-    expect(ResourceRequester.post).toBeCalledWith('snippets', {title: 'Title'}, {locale: 'de', test: 10});
+    expect(ResourceRequester.post).toHaveBeenCalledWith('snippets', {title: 'Title'}, {locale: 'de', test: 10});
 });
 
 test('Save the store without an id should send a POST request', () => {
@@ -313,7 +313,7 @@ test('Save the store without an id should send a POST request', () => {
     resourceStore.dirty = false;
 
     resourceStore.save({test: 10});
-    expect(ResourceRequester.post).toBeCalledWith('snippets', {title: 'Title'}, {locale: 'de', test: 10});
+    expect(ResourceRequester.post).toHaveBeenCalledWith('snippets', {title: 'Title'}, {locale: 'de', test: 10});
 });
 
 test('Save the store without an id should send a POST request without a locale', () => {
@@ -323,7 +323,7 @@ test('Save the store without an id should send a POST request without a locale',
     resourceStore.dirty = false;
 
     resourceStore.save({test: 10});
-    expect(ResourceRequester.post).toBeCalledWith('snippets', {title: 'Title'}, {test: 10});
+    expect(ResourceRequester.post).toHaveBeenCalledWith('snippets', {title: 'Title'}, {test: 10});
 });
 
 test('Saving and dirty flag should be set to false when creating has failed', (done) => {
@@ -420,7 +420,7 @@ test('Calling the delete method should send a DELETE request', () => {
     resourceStore.dirty = false;
 
     resourceStore.delete();
-    expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 3});
+    expect(ResourceRequester.delete).toHaveBeenCalledWith('snippets', {id: 3});
 });
 
 test('Calling the delete method with options should send a DELETE request', () => {
@@ -430,7 +430,7 @@ test('Calling the delete method with options should send a DELETE request', () =
     resourceStore.dirty = false;
 
     resourceStore.delete({test: 'value'});
-    expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 3, test: 'value'});
+    expect(ResourceRequester.delete).toHaveBeenCalledWith('snippets', {id: 3, test: 'value'});
 });
 
 test('Moving flag should be set to true when moving', () => {
@@ -457,7 +457,7 @@ test('Moving flag and id should be reset to false when moving has finished', () 
 
     return promise.then(() => {
         expect(resourceStore.moving).toBe(false);
-        expect(ResourceRequester.get).toBeCalledWith('snippets', {id: 1, locale: 'en'});
+        expect(ResourceRequester.get).toHaveBeenCalledWith('snippets', {id: 1, locale: 'en'});
         expect(resourceStore.data).toBe(oldData);
     });
 });
@@ -468,7 +468,7 @@ test('Calling the move method should send a POST request', () => {
     resourceStore.data = {id: 3, title: 'Title'};
 
     resourceStore.move(9);
-    expect(ResourceRequester.post).toBeCalledWith(
+    expect(ResourceRequester.post).toHaveBeenCalledWith(
         'snippets',
         undefined,
         {action: 'move', destination: 9, id: 3, locale: undefined}
@@ -481,7 +481,7 @@ test('Calling the move method should send a POST request with locale', () => {
     resourceStore.data = {id: 3, title: 'Title'};
 
     resourceStore.move(9);
-    expect(ResourceRequester.post).toBeCalledWith(
+    expect(ResourceRequester.post).toHaveBeenCalledWith(
         'snippets',
         undefined,
         {action: 'move', destination: 9, id: 3, locale: 'de'}
@@ -585,7 +585,7 @@ test('Saving should consider the passed idQueryParameter flag and reset it after
     const resourceStore = new ResourceStore('users', 2, {}, {}, 'contactId');
     const oldData = resourceStore.data;
     expect(resourceStore.idQueryParameter).toEqual('contactId');
-    expect(ResourceRequester.get).toBeCalledWith('users', {contactId: 2});
+    expect(ResourceRequester.get).toHaveBeenCalledWith('users', {contactId: 2});
 
     resourceStore.save();
 
@@ -610,7 +610,7 @@ test('Copy the content from different locale', () => {
     resourceStore.copyFromLocale('de');
 
     expect(ResourceRequester.post)
-        .toBeCalledWith('pages', {}, {action: 'copy-locale', id: 4, locale: 'en', dest: 'en', src: 'de'});
+        .toHaveBeenCalledWith('pages', {}, {action: 'copy-locale', id: 4, locale: 'en', dest: 'en', src: 'de'});
 
     return promise.then(() => {
         expect(resourceStore.data).toEqual(germanContent);

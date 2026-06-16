@@ -69,7 +69,7 @@ test('Load granted webspaces', () => {
     const webspacePromise = webspaceStore.loadWebspaces();
 
     return webspacePromise.then((webspaces) => {
-        expect(log.warn).toBeCalled();
+        expect(log.warn).toHaveBeenCalled();
         expect(webspaces).toEqual([webspace1]);
     });
 });
@@ -102,7 +102,7 @@ test('Load webspace with given key', () => {
     const webspacePromise = webspaceStore.loadWebspace('sulu');
 
     return webspacePromise.then((webspace) => {
-        expect(log.warn).toBeCalled();
+        expect(log.warn).toHaveBeenCalled();
         expect(webspace).toEqual(webspace1);
     });
 });
@@ -133,7 +133,7 @@ test('Get granted webspaces', () => {
     webspaceStore.setWebspaces(webspaces);
 
     expect(webspaceStore.grantedWebspaces).toEqual([webspace1]);
-    expect(log.warn).not.toBeCalled();
+    expect(log.warn).not.toHaveBeenCalled();
 });
 
 test('Get webspace with given key', () => {
@@ -162,5 +162,5 @@ test('Get webspace with given key', () => {
     webspaceStore.setWebspaces(webspaces);
 
     expect(webspaceStore.getWebspace('sulu')).toEqual(webspace1);
-    expect(log.warn).not.toBeCalled();
+    expect(log.warn).not.toHaveBeenCalled();
 });

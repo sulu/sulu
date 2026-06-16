@@ -38,7 +38,7 @@ test('Call onClick handler when item was clicked', async() => {
 
     await userEvent.click(screen.queryByRole('button'));
 
-    expect(clickSpy).toBeCalled();
+    expect(clickSpy).toHaveBeenCalled();
 });
 
 test('Call onClick handler when toggler was changed', async() => {
@@ -47,5 +47,5 @@ test('Call onClick handler when toggler was changed', async() => {
 
     await userEvent.click(screen.queryByRole('checkbox'));
 
-    expect(clickSpy).toBeCalled();
+    expect(clickSpy).toHaveBeenCalled();
 });

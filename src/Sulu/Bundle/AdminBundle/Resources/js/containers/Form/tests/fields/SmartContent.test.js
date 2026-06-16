@@ -103,15 +103,15 @@ test('Should correctly initialize SmartContentStore', () => {
 
     const smartContentStore = smartContent.instance().smartContentStore;
 
-    expect(smartContentStore.start).toBeCalledWith();
+    expect(smartContentStore.start).toHaveBeenCalledWith();
 
-    expect(smartContentStorePool.add).toBeCalledWith(smartContentStore, false);
-    expect(smartContentConfigStore.getConfig).toBeCalledWith('media');
+    expect(smartContentStorePool.add).toHaveBeenCalledWith(smartContentStore, false);
+    expect(smartContentConfigStore.getConfig).toHaveBeenCalledWith('media');
     expect(SmartContentStore)
-        .toBeCalledWith('media', value, undefined, 'collections', undefined, schemaOptions, 'sulu_io');
+        .toHaveBeenCalledWith('media', value, undefined, 'collections', undefined, schemaOptions, 'sulu_io');
 
     smartContent.unmount();
-    expect(smartContentStorePool.remove).toBeCalledWith(smartContentStore);
+    expect(smartContentStorePool.remove).toHaveBeenCalledWith(smartContentStore);
 });
 
 test('Should correctly initialize SmartContentStore with a exclude_duplicates value of false', () => {
@@ -135,8 +135,8 @@ test('Should correctly initialize SmartContentStore with a exclude_duplicates va
 
     const smartContentStore = smartContent.instance().smartContentStore;
 
-    expect(smartContentStore.start).toBeCalledWith();
-    expect(smartContentStorePool.add).toBeCalledWith(smartContentStore, true);
+    expect(smartContentStore.start).toHaveBeenCalledWith();
+    expect(smartContentStorePool.add).toHaveBeenCalledWith(smartContentStore, true);
 });
 
 test('Defer start of smartContentStore until all previous stores have loaded their items', () => {
@@ -164,16 +164,16 @@ test('Defer start of smartContentStore until all previous stores have loaded the
 
     const smartContentStore = smartContent.instance().smartContentStore;
 
-    expect(smartContentStorePool.updateExcludedIds).not.toBeCalled();
-    expect(smartContentStore.start).not.toBeCalled();
+    expect(smartContentStorePool.updateExcludedIds).not.toHaveBeenCalled();
+    expect(smartContentStore.start).not.toHaveBeenCalled();
 
     smartContentStore1.itemsLoading = false;
-    expect(smartContentStorePool.updateExcludedIds).not.toBeCalled();
-    expect(smartContentStore.start).not.toBeCalled();
+    expect(smartContentStorePool.updateExcludedIds).not.toHaveBeenCalled();
+    expect(smartContentStore.start).not.toHaveBeenCalled();
 
     smartContentStore2.itemsLoading = false;
-    expect(smartContentStorePool.updateExcludedIds).toBeCalledWith();
-    expect(smartContentStore.start).toBeCalledWith();
+    expect(smartContentStorePool.updateExcludedIds).toHaveBeenCalledWith();
+    expect(smartContentStore.start).toHaveBeenCalledWith();
 });
 
 test('Should pass id to SmartContentStore if resourceKeys match', () => {
@@ -211,8 +211,8 @@ test('Should pass id to SmartContentStore if resourceKeys match', () => {
         />
     );
 
-    expect(smartContentConfigStore.getConfig).toBeCalledWith('pages');
-    expect(SmartContentStore).toBeCalledWith('pages', value, undefined, 'pages', 4, schemaOptions, undefined);
+    expect(smartContentConfigStore.getConfig).toHaveBeenCalledWith('pages');
+    expect(SmartContentStore).toHaveBeenCalledWith('pages', value, undefined, 'pages', 4, schemaOptions, undefined);
 });
 
 test('Pass correct props to SmartContent component', () => {
@@ -286,8 +286,8 @@ test('Should not call the onChange and onFinish callbacks if SmartContentStore i
         audienceTargeting: true,
     };
 
-    expect(changeSpy).not.toBeCalled();
-    expect(finishSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
+    expect(finishSpy).not.toHaveBeenCalled();
 });
 
 test('Should call the onChange and onFinish callbacks if SmartContentStore changes', () => {
@@ -318,8 +318,8 @@ test('Should call the onChange and onFinish callbacks if SmartContentStore chang
     };
     smartContent.instance().handleFilterCriteriaChange();
 
-    expect(changeSpy).toBeCalledWith({audienceTargeting: true});
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith({audienceTargeting: true});
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Should not call the onChange and onFinish callbacks if categories only differ in order', () => {
@@ -369,8 +369,8 @@ test('Should not call the onChange and onFinish callbacks if categories only dif
         categories: [2, 1],
     };
 
-    expect(changeSpy).not.toBeCalled();
-    expect(finishSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
+    expect(finishSpy).not.toHaveBeenCalled();
 });
 
 test('Should not call the onChange and onFinish callbacks if tags only differ in order', () => {
@@ -420,8 +420,8 @@ test('Should not call the onChange and onFinish callbacks if tags only differ in
         tags: ['Programming', 'Design'],
     };
 
-    expect(changeSpy).not.toBeCalled();
-    expect(finishSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
+    expect(finishSpy).not.toHaveBeenCalled();
 });
 
 test('Should navigate to view if item is clicked', () => {
@@ -480,5 +480,5 @@ test('Should call destroy on SmartContentStore when unmounted', () => {
 
     const smartContentStore = smartContent.instance().smartContentStore;
     smartContent.unmount();
-    expect(smartContentStore.destroy).toBeCalledWith();
+    expect(smartContentStore.destroy).toHaveBeenCalledWith();
 });

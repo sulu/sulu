@@ -44,12 +44,12 @@ test('A click on the checkbox should trigger the change callback', async() => {
     const {rerender} = render(<Switch checked={false} onChange={onChangeSpy} />);
 
     await userEvent.click(screen.queryByRole('checkbox'));
-    expect(onChangeSpy).toBeCalledWith(true, undefined);
+    expect(onChangeSpy).toHaveBeenCalledWith(true, undefined);
 
     rerender(<Switch checked={true} onChange={onChangeSpy} />);
 
     await userEvent.click(screen.queryByRole('checkbox'));
-    expect(onChangeSpy).toBeCalledWith(false, undefined);
+    expect(onChangeSpy).toHaveBeenCalledWith(false, undefined);
 });
 
 test('A click on the checkbox should trigger the change callback with the value', async() => {

@@ -77,14 +77,14 @@ test('Should initialize when everything works', () => {
 
     return initPromise
         .then(() => {
-            expect(resourceRouteRegistry.setRoutingData).toBeCalledWith(routeData);
-            expect(setTranslations).toBeCalledWith(translationData, 'en');
+            expect(resourceRouteRegistry.setRoutingData).toHaveBeenCalledWith(routeData);
+            expect(setTranslations).toHaveBeenCalledWith(translationData, 'en');
             expect(initializer.initializedTranslationsLocale).toBe('en');
 
             expect(initializer.initialized).toBe(true);
             expect(initializer.loading).toBe(false);
 
-            expect(hook).toBeCalledWith(configData['sulu_admin'], false);
+            expect(hook).toHaveBeenCalledWith(configData['sulu_admin'], false);
         });
 });
 
@@ -147,14 +147,14 @@ test('Should only initialize translations if no user is logged in', () => {
 
     return initPromise
         .then(() => {
-            expect(resourceRouteRegistry.setRoutingData).not.toBeCalled();
-            expect(setTranslations).toBeCalledWith(translationData, 'en');
+            expect(resourceRouteRegistry.setRoutingData).not.toHaveBeenCalled();
+            expect(setTranslations).toHaveBeenCalledWith(translationData, 'en');
             expect(initializer.initializedTranslationsLocale).toBe('en');
 
             expect(initializer.initialized).toBe(false);
             expect(initializer.loading).toBe(false);
 
-            expect(hook).not.toBeCalled();
+            expect(hook).not.toHaveBeenCalled();
         });
 });
 
@@ -198,8 +198,8 @@ test('Should not reinitialize everything when it was already initialized', () =>
 
     return initPromise
         .then(() => {
-            expect(resourceRouteRegistry.setRoutingData).toBeCalledWith(routeData);
-            expect(setTranslations).not.toBeCalled();
+            expect(resourceRouteRegistry.setRoutingData).toHaveBeenCalledWith(routeData);
+            expect(setTranslations).not.toHaveBeenCalled();
 
             expect(initializer.initialized).toBe(true);
             expect(initializer.loading).toBe(false);
@@ -231,7 +231,7 @@ test('Should not crash when the config request throws an 401 error', () => {
 
     return initPromise
         .catch(() => {
-            expect(setTranslations).toBeCalledWith(translationData);
+            expect(setTranslations).toHaveBeenCalledWith(translationData);
             expect(initializer.initializedTranslationsLocale).toBe('en');
             expect(initializer.initialized).toBe(false);
             expect(initializer.loading).toBe(false);

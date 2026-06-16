@@ -41,9 +41,9 @@ test('Render FieldFilterItem with a FieldFilterType', () => {
     );
 
     expect(fieldFilterItem.render()).toMatchSnapshot();
-    expect(listFieldFilterTypeRegistry.get).toBeCalledWith('text');
-    expect(listFieldFilterType).toBeCalledWith(expect.any(Function), {value: 'Test'}, 'Test', {});
-    expect(setValueSpy).toBeCalledWith('Test');
+    expect(listFieldFilterTypeRegistry.get).toHaveBeenCalledWith('text');
+    expect(listFieldFilterType).toHaveBeenCalledWith(expect.any(Function), {value: 'Test'}, 'Test', {});
+    expect(setValueSpy).toHaveBeenCalledWith('Test');
 });
 
 test('Close when esc button is pressed', () => {
@@ -64,9 +64,9 @@ test('Close when esc button is pressed', () => {
         />
     );
 
-    expect(closeSpy).not.toBeCalled();
+    expect(closeSpy).not.toHaveBeenCalled();
     Mousetrap.trigger('esc');
-    expect(closeSpy).toBeCalled();
+    expect(closeSpy).toHaveBeenCalled();
 });
 
 test('Do not close when esc button is pressed if was not opened', () => {
@@ -88,7 +88,7 @@ test('Do not close when esc button is pressed if was not opened', () => {
     );
 
     Mousetrap.trigger('esc');
-    expect(closeSpy).not.toBeCalled();
+    expect(closeSpy).not.toHaveBeenCalled();
 });
 
 test('Close when esc button is pressed if initially was closed but has been opened in the mean time', () => {
@@ -112,7 +112,7 @@ test('Close when esc button is pressed if initially was closed but has been open
     fieldFilterItem.setProps({open: true});
 
     Mousetrap.trigger('esc');
-    expect(closeSpy).toBeCalled();
+    expect(closeSpy).toHaveBeenCalled();
 });
 
 test('Do not close when esc button is pressed if initially was opened but has been closed already', () => {
@@ -136,7 +136,7 @@ test('Do not close when esc button is pressed if initially was opened but has be
     fieldFilterItem.setProps({open: false});
 
     Mousetrap.trigger('esc');
-    expect(closeSpy).not.toBeCalled();
+    expect(closeSpy).not.toHaveBeenCalled();
 });
 
 test('Change when enter button is pressed', () => {
@@ -166,9 +166,9 @@ test('Change when enter button is pressed', () => {
         />
     );
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
     Mousetrap.trigger('enter');
-    expect(changeSpy).toBeCalled();
+    expect(changeSpy).toHaveBeenCalled();
 });
 
 test('Do not change when enter button is pressed if was not opened', () => {
@@ -199,7 +199,7 @@ test('Do not change when enter button is pressed if was not opened', () => {
     );
 
     Mousetrap.trigger('enter');
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Change when enter button is pressed if initially was closed but has been opened in the mean time', () => {
@@ -232,7 +232,7 @@ test('Change when enter button is pressed if initially was closed but has been o
     fieldFilterItem.setProps({open: true});
 
     Mousetrap.trigger('enter');
-    expect(changeSpy).toBeCalled();
+    expect(changeSpy).toHaveBeenCalled();
 });
 
 test('Do not change when enter button is pressed if initially was opened but has been closed already', () => {
@@ -256,7 +256,7 @@ test('Do not change when enter button is pressed if initially was opened but has
     fieldFilterItem.setProps({open: false});
 
     Mousetrap.trigger('enter');
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Pass callbacks to correct props', () => {
@@ -280,13 +280,13 @@ test('Pass callbacks to correct props', () => {
     );
 
     fieldFilterItem.find('Chip Icon[name="su-times"]').simulate('click');
-    expect(deleteSpy).toBeCalledWith('salutation');
+    expect(deleteSpy).toHaveBeenCalledWith('salutation');
 
     fieldFilterItem.find('Backdrop').prop('onClick')();
-    expect(closeSpy).toBeCalledWith();
+    expect(closeSpy).toHaveBeenCalledWith();
 
     fieldFilterItem.find('Chip button').simulate('click');
-    expect(clickSpy).toBeCalledWith('salutation');
+    expect(clickSpy).toHaveBeenCalledWith('salutation');
 });
 
 test('Update value and reset when FieldFilterItem is closed without confirming', () => {
@@ -318,14 +318,14 @@ test('Update value and reset when FieldFilterItem is closed without confirming',
     );
 
     fieldFilterItem.find('#test-input').prop('onChange')('test-value');
-    expect(setValueSpy).toBeCalledWith('test-value');
+    expect(setValueSpy).toHaveBeenCalledWith('test-value');
 
     setValueSpy.mockReset();
     fieldFilterItem.setProps({open: false});
     fieldFilterItem.setProps({open: true});
 
-    expect(changeSpy).not.toBeCalledWith('salutation', 'test-value');
-    expect(setValueSpy).toBeCalledWith('Test');
+    expect(changeSpy).not.toHaveBeenCalledWith('salutation', 'test-value');
+    expect(setValueSpy).toHaveBeenCalledWith('Test');
 });
 
 test('Update value and call onChange when FieldFilterItem is confirmed', () => {
@@ -362,9 +362,9 @@ test('Update value and call onChange when FieldFilterItem is confirmed', () => {
 
     fieldFilterItem.find('Button').prop('onClick')();
 
-    expect(changeSpy).toBeCalledWith('salutation', 'test-value');
-    expect(confirmSpy).toBeCalledWith();
-    expect(setValueSpy).toBeCalledWith('test-value');
+    expect(changeSpy).toHaveBeenCalledWith('salutation', 'test-value');
+    expect(confirmSpy).toHaveBeenCalledWith();
+    expect(setValueSpy).toHaveBeenCalledWith('test-value');
 });
 
 test('Return correct value node when value changes', () => {
@@ -434,7 +434,7 @@ test('Call disposers when unmounted', () => {
 
     fieldFilterItem.unmount();
 
-    expect(valueNodeDisposer).toBeCalledWith();
-    expect(valueDisposer).toBeCalledWith();
-    expect(fieldFilterTypeDestroyer).toBeCalled();
+    expect(valueNodeDisposer).toHaveBeenCalledWith();
+    expect(valueDisposer).toHaveBeenCalledWith();
+    expect(fieldFilterTypeDestroyer).toHaveBeenCalled();
 });

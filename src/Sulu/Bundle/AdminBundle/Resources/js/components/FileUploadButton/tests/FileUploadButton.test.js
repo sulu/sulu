@@ -49,8 +49,8 @@ test('Call onUpload callback when a file is uploaded', async() => {
     const input = container.querySelector('input');
     await userEvent.upload(input, file);
 
-    expect(uploadSpy).toBeCalledTimes(1);
-    expect(uploadSpy).toBeCalledWith(file);
+    expect(uploadSpy).toHaveBeenCalledTimes(1);
+    expect(uploadSpy).toHaveBeenCalledWith(file);
 });
 
 test('Filter dropped files by accept prop', async() => {
@@ -67,9 +67,9 @@ test('Filter dropped files by accept prop', async() => {
     // eslint-disable-next-line testing-library/no-container
     const input = container.querySelector('input');
     await userEvent.upload(input, rejectedFile);
-    expect(uploadSpy).toBeCalledTimes(0);
+    expect(uploadSpy).toHaveBeenCalledTimes(0);
 
     await userEvent.upload(input, acceptedFile);
-    expect(uploadSpy).toBeCalledWith(acceptedFile);
-    expect(uploadSpy).toBeCalledTimes(1);
+    expect(uploadSpy).toHaveBeenCalledWith(acceptedFile);
+    expect(uploadSpy).toHaveBeenCalledTimes(1);
 });

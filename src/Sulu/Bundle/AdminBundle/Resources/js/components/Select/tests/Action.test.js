@@ -22,8 +22,8 @@ test('The component should call the callbacks after a click', async() => {
     const button = screen.queryByText('My action');
     await userEvent.click(button);
 
-    expect(onClick).toBeCalled();
-    expect(afterAction).toBeCalled();
+    expect(onClick).toHaveBeenCalled();
+    expect(afterAction).toHaveBeenCalled();
 });
 
 test('The component should call the onClick callbacks without a value', async() => {
@@ -33,7 +33,7 @@ test('The component should call the onClick callbacks without a value', async() 
     const button = screen.queryByText('My action');
     await userEvent.click(button);
 
-    expect(onClick).toBeCalledWith(undefined);
+    expect(onClick).toHaveBeenCalledWith(undefined);
 });
 
 test('The component should call the onClick callbacks with its value', async() => {
@@ -43,7 +43,7 @@ test('The component should call the onClick callbacks with its value', async() =
     const button = screen.queryByText('My action');
     await userEvent.click(button);
 
-    expect(onClick).toBeCalledWith('my-value');
+    expect(onClick).toHaveBeenCalledWith('my-value');
 });
 
 test('A hover on the component should fire the callback', async() => {
@@ -56,5 +56,5 @@ test('A hover on the component should fire the callback', async() => {
     const item = screen.queryByRole('listitem');
     await userEvent.hover(item);
 
-    expect(requestFocusSpy).toBeCalled();
+    expect(requestFocusSpy).toHaveBeenCalled();
 });

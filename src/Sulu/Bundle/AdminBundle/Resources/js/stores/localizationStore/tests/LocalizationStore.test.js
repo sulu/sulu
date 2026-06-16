@@ -31,7 +31,7 @@ test('Load localizations', () => {
     localizationStore.setLocalizations(localizations);
 
     return localizationStore.loadLocalizations().then((localizations) => {
-        expect(log.warn).toBeCalled();
+        expect(log.warn).toHaveBeenCalled();
         expect(localizations).toBe(localizations);
     });
 });

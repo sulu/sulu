@@ -66,10 +66,13 @@ test('Load localizations', () => {
     ResourceRequester.getList.mockReturnValue(promise);
 
     const formatPromise = formatStore.loadFormats();
+    const cachedFormatPromise = formatStore.loadFormats();
 
-    return formatPromise.then((formats) => {
-        // check if promise has been cached
-        expect(formatStore.formatPromise).toEqual(formatPromise);
+    expect(ResourceRequester.getList).toHaveBeenCalledTimes(1);
+
+    return Promise.all([formatPromise, cachedFormatPromise]).then(([formats, cachedFormats]) => {
+        expect(formatStore.formatPromise).toBe(promise);
         expect(formats).toBe(response._embedded.formats);
+        expect(cachedFormats).toBe(response._embedded.formats);
     });
 });

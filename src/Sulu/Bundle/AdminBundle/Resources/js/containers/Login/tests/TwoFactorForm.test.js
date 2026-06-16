@@ -42,7 +42,7 @@ test('Should trigger onChangeForm correctly', () => {
 
     form.find('Button').at(0).simulate('click');
 
-    expect(onChangeForm).toBeCalled();
+    expect(onChangeForm).toHaveBeenCalled();
 });
 
 test('Should not trigger onSubmit if autCode is missing', () => {
@@ -61,8 +61,8 @@ test('Should not trigger onSubmit if autCode is missing', () => {
 
     form.find('form').prop('onSubmit')(event);
 
-    expect(event.preventDefault).toBeCalledWith();
-    expect(onSubmit).not.toBeCalled();
+    expect(event.preventDefault).toHaveBeenCalledWith();
+    expect(onSubmit).not.toHaveBeenCalled();
 });
 
 test('Should trigger onSubmit correctly', () => {
@@ -82,8 +82,8 @@ test('Should trigger onSubmit correctly', () => {
     form.find('Input[icon="su-lock"]').at(0).prop('onChange')('authcode');
     form.find('form').prop('onSubmit')(event);
 
-    expect(event.preventDefault).toBeCalledWith();
-    expect(onSubmit).toBeCalledWith({_auth_code: 'authcode', _trusted: false});
+    expect(event.preventDefault).toHaveBeenCalledWith();
+    expect(onSubmit).toHaveBeenCalledWith({_auth_code: 'authcode', _trusted: false});
 });
 
 test('Should trigger onSubmit correctly with trusted device', () => {
@@ -104,6 +104,6 @@ test('Should trigger onSubmit correctly with trusted device', () => {
     form.find('Checkbox').at(0).prop('onChange')(true);
     form.find('form').prop('onSubmit')(event);
 
-    expect(event.preventDefault).toBeCalledWith();
-    expect(onSubmit).toBeCalledWith({_auth_code: 'authcode', _trusted: true});
+    expect(event.preventDefault).toHaveBeenCalledWith();
+    expect(onSubmit).toHaveBeenCalledWith({_auth_code: 'authcode', _trusted: true});
 });

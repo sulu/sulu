@@ -74,7 +74,7 @@ test('Load items when being constructed', () => {
         <ContactAccountSelection onChange={jest.fn()} value={['a1', 'c2']} />
     );
 
-    expect(contactAccountSelection.instance().store.loadItems).toBeCalledWith(['a1', 'c2']);
+    expect(contactAccountSelection.instance().store.loadItems).toHaveBeenCalledWith(['a1', 'c2']);
 });
 
 test('Load items when being updated', () => {
@@ -84,7 +84,7 @@ test('Load items when being updated', () => {
 
     contactAccountSelection.setProps({value: ['a1', 'c2']});
 
-    expect(contactAccountSelection.instance().store.loadItems).toBeCalledWith(['a1', 'c2']);
+    expect(contactAccountSelection.instance().store.loadItems).toHaveBeenCalledWith(['a1', 'c2']);
 });
 
 test('Load items when being updated without infinite loop', () => {
@@ -147,7 +147,7 @@ test('Confirm contact overlay if close button is clicked', () => {
     contactAccountSelection.update();
     expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="contacts"]').prop('open')).toEqual(false);
 
-    expect(changeSpy).toBeCalledWith(['a1', 'c1', 'c4']);
+    expect(changeSpy).toHaveBeenCalledWith(['a1', 'c1', 'c4']);
 });
 
 test('Close contact overlay if close button is clicked', () => {
@@ -188,8 +188,8 @@ test('Remove contact if delete button is clicked', () => {
 
     contactAccountSelection.find('MultiItemSelection Item[index=1]').prop('onRemove')('c2');
 
-    expect(contactAccountSelection.instance().store.remove).toBeCalledWith('c2');
-    expect(changeSpy).toBeCalledWith(['a3', 'c3']);
+    expect(contactAccountSelection.instance().store.remove).toHaveBeenCalledWith('c2');
+    expect(changeSpy).toHaveBeenCalledWith(['a3', 'c3']);
 });
 
 test('Confirm account overlay if confirm button is clicked', () => {
@@ -212,7 +212,7 @@ test('Confirm account overlay if confirm button is clicked', () => {
     contactAccountSelection.update();
     expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="accounts"]').prop('open')).toEqual(false);
 
-    expect(changeSpy).toBeCalledWith(['a1', 'c1', 'a4']);
+    expect(changeSpy).toHaveBeenCalledWith(['a1', 'c1', 'a4']);
 });
 
 test('Close account overlay if close button is clicked', () => {
@@ -281,5 +281,5 @@ test('Change order of items', () => {
 
     contactAccountSelection.find('MultiItemSelection').prop('onItemsSorted')(2, 1);
 
-    expect(changeSpy).toBeCalledWith(['c2', 'c3', 'a3']);
+    expect(changeSpy).toHaveBeenCalledWith(['c2', 'c3', 'a3']);
 });

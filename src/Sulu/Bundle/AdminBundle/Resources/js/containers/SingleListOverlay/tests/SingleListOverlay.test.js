@@ -87,7 +87,7 @@ test('Should update options of ListStore if the options prop is changed', () => 
     );
     singleListOverlay.instance().listStore.selectionIds = [12, 14];
 
-    expect(singleListOverlay.instance().listStore.reset).not.toBeCalled();
+    expect(singleListOverlay.instance().listStore.reset).not.toHaveBeenCalled();
     expect(singleListOverlay.instance().listStore.options).toEqual(oldOptions);
 
     const newOptions = {key: 'value-2'};
@@ -95,7 +95,7 @@ test('Should update options of ListStore if the options prop is changed', () => 
         options: newOptions,
     });
 
-    expect(singleListOverlay.instance().listStore.reset).toBeCalled();
+    expect(singleListOverlay.instance().listStore.reset).toHaveBeenCalled();
     expect(singleListOverlay.instance().listStore.initialSelectionIds).toEqual([12, 14]);
     expect(singleListOverlay.instance().listStore.options).toEqual(newOptions);
 });
@@ -118,14 +118,14 @@ test('Should not update options of ListStore if new value of options prop is equ
         />
     );
 
-    expect(singleListOverlay.instance().listStore.reset).not.toBeCalled();
+    expect(singleListOverlay.instance().listStore.reset).not.toHaveBeenCalled();
 
     const newOldOptions = {key: 'value-1'};
     singleListOverlay.setProps({
         options: newOldOptions,
     });
 
-    expect(singleListOverlay.instance().listStore.reset).not.toBeCalled();
+    expect(singleListOverlay.instance().listStore.reset).not.toHaveBeenCalled();
 });
 
 test('Should instantiate the ListStore without locale, excluded-ids, options and metadataOptions', () => {
@@ -311,10 +311,10 @@ test('Should call onConfirm with the current selection', () => {
     const listStore = singleListOverlay.instance().listStore;
     listStore.selections = [{id: 1}];
 
-    expect(confirmSpy).not.toBeCalled();
+    expect(confirmSpy).not.toHaveBeenCalled();
     singleListOverlay.find(ListOverlay).prop('onConfirm')();
 
-    expect(confirmSpy).toBeCalledWith({id: 1});
+    expect(confirmSpy).toHaveBeenCalledWith({id: 1});
 });
 
 test('Should pass the id from the preSelectedItems to the ListStore', () => {
@@ -332,7 +332,7 @@ test('Should pass the id from the preSelectedItems to the ListStore', () => {
         />
     );
 
-    expect(ListStore).toBeCalledWith(
+    expect(ListStore).toHaveBeenCalledWith(
         'snippets',
         'snippets',
         'single_list_overlay',
@@ -358,7 +358,7 @@ test('Should not fail when preSelectedItem is undefined', () => {
 
     const listStore = singleListOverlay.instance().listStore;
 
-    expect(listStore.select).not.toBeCalled();
+    expect(listStore.select).not.toHaveBeenCalled();
 });
 
 test('Should instantiate the list with the passed adapter', () => {
@@ -407,8 +407,8 @@ test('Should only select a single item at a time', () => {
     expect(singleListOverlay.instance().listStore.selections).toEqual([{id: 3}]);
 
     singleListOverlay.instance().listStore.selections.push({id: 5});
-    expect(singleListOverlay.instance().listStore.clearSelection).toBeCalledWith();
-    expect(singleListOverlay.instance().listStore.select).toBeCalledWith({id: 5});
+    expect(singleListOverlay.instance().listStore.clearSelection).toHaveBeenCalledWith();
+    expect(singleListOverlay.instance().listStore.select).toHaveBeenCalledWith({id: 5});
 });
 
 test('Should clear ListStore if the excludedIds prop is changed', () => {
@@ -425,13 +425,13 @@ test('Should clear ListStore if the excludedIds prop is changed', () => {
         />
     );
 
-    expect(singleListOverlay.instance().listStore.clear).not.toBeCalled();
+    expect(singleListOverlay.instance().listStore.clear).not.toHaveBeenCalled();
 
     singleListOverlay.setProps({
         excludedIds: ['id-3'],
     });
 
-    expect(singleListOverlay.instance().listStore.clear).toBeCalled();
+    expect(singleListOverlay.instance().listStore.clear).toHaveBeenCalled();
 });
 
 test('Should not clear ListStore if new value of excludedIds prop is equal to old value', () => {
@@ -448,13 +448,13 @@ test('Should not clear ListStore if new value of excludedIds prop is equal to ol
         />
     );
 
-    expect(singleListOverlay.instance().listStore.clear).not.toBeCalled();
+    expect(singleListOverlay.instance().listStore.clear).not.toHaveBeenCalled();
 
     singleListOverlay.setProps({
         excludedIds: ['id-1', 'id-2'],
     });
 
-    expect(singleListOverlay.instance().listStore.clear).not.toBeCalled();
+    expect(singleListOverlay.instance().listStore.clear).not.toHaveBeenCalled();
 });
 
 test('Should destroy listStore and autorun when unmounted', () => {
@@ -476,6 +476,6 @@ test('Should destroy listStore and autorun when unmounted', () => {
     singleListOverlay.instance().selectionDisposer = selectionDisposerSpy;
     singleListOverlay.unmount();
 
-    expect(listStore.destroy).toBeCalledWith();
-    expect(selectionDisposerSpy).toBeCalledWith();
+    expect(listStore.destroy).toHaveBeenCalledWith();
+    expect(selectionDisposerSpy).toHaveBeenCalledWith();
 });

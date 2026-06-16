@@ -44,7 +44,7 @@ test('Bind sidebar method to component instance', () => {
     };
 
     mount(<ComponentWithSidebar router={router} />);
-    expect(sidebarStore.setConfig).toBeCalledWith({
+    expect(sidebarStore.setConfig).toHaveBeenCalledWith({
         view: 'preview',
     });
 });
@@ -64,11 +64,11 @@ test('Call life-cycle events of rendered component', () => {
     };
 
     const component = mount(<ComponentWithSidebar router={router} />);
-    expect(component.instance().render).toBeCalled();
+    expect(component.instance().render).toHaveBeenCalled();
 
     const componentWillUnmount = component.instance().componentWillUnmount;
     component.unmount();
-    expect(componentWillUnmount).toBeCalled();
+    expect(componentWillUnmount).toHaveBeenCalled();
 });
 
 test('Reset config of toolbarStore when component is unmounted', () => {
@@ -84,11 +84,11 @@ test('Reset config of toolbarStore when component is unmounted', () => {
     };
 
     const component = mount(<ComponentWithToolbar router={router} />);
-    expect(sidebarStore.setConfig).toBeCalledWith({view: 'test1'});
+    expect(sidebarStore.setConfig).toHaveBeenCalledWith({view: 'test1'});
 
     component.unmount();
-    expect(updateRouteHookDisposer).toBeCalledWith();
-    expect(sidebarStore.clearConfig).toBeCalledWith();
+    expect(updateRouteHookDisposer).toHaveBeenCalledWith();
+    expect(sidebarStore.clearConfig).toHaveBeenCalledWith();
 });
 
 test('Dispose toolbar when a new view is rendered', () => {
@@ -137,12 +137,12 @@ test('Recall sidebar-function when changing observable', () => {
 
     const component = mount(<ComponentWithSidebar router={router} />);
 
-    expect(sidebarStore.setConfig).toBeCalledWith({
+    expect(sidebarStore.setConfig).toHaveBeenCalledWith({
         view: 'preview',
     });
 
     component.instance().sidebarView = 'test';
-    expect(sidebarStore.setConfig).toBeCalledWith({
+    expect(sidebarStore.setConfig).toHaveBeenCalledWith({
         view: 'test',
     });
 });

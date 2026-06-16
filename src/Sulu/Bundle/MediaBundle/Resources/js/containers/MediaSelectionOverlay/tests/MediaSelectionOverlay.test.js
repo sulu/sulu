@@ -210,7 +210,7 @@ test('Should call onConfirm callback with selected medias from media list', () =
     mediaListStoreMock.selections = selections;
     mediaSelectionOverlay.find('Overlay').simulate('confirm');
 
-    expect(confirmSpy).toBeCalledWith(selections);
+    expect(confirmSpy).toHaveBeenCalledWith(selections);
 });
 
 test('Should reset the selection of the media list when the reset-button is clicked', () => {
@@ -228,7 +228,7 @@ test('Should reset the selection of the media list when the reset-button is clic
     ).instance();
 
     mediaSelectionOverlayInstance.handleSelectionReset();
-    expect(mediaListStoreMock.clearSelection).toBeCalled();
+    expect(mediaListStoreMock.clearSelection).toHaveBeenCalled();
 });
 
 test('Should reset the selection of the media list when the overlay is closed', () => {
@@ -246,7 +246,7 @@ test('Should reset the selection of the media list when the overlay is closed', 
     );
 
     mediaSelectionOverlay.setProps({open: false});
-    expect(mediaListStoreMock.clearSelection).toBeCalled();
+    expect(mediaListStoreMock.clearSelection).toHaveBeenCalled();
 });
 
 test('Should change the current collection id and reset the page of the lists on collection-change', () => {
@@ -272,5 +272,5 @@ test('Should change the current collection id and reset the page of the lists on
     expect(collectionListStoreMock.setPage).toHaveBeenCalledWith(1);
     expect(mediaListStoreMock.setPage).toHaveBeenCalledWith(1);
     expect(collectionId.get()).toEqual(1);
-    expect(mediaListStoreMock.clearSelection).not.toBeCalled();
+    expect(mediaListStoreMock.clearSelection).not.toHaveBeenCalled();
 });

@@ -93,7 +93,7 @@ test('Call callback when index changes', () => {
     searchField.find('Item[value="contact"] button').simulate('click');
     expect(searchField.find('ArrowMenu').prop('open')).toEqual(false);
 
-    expect(indexChangeSpy).toBeCalledWith('contact');
+    expect(indexChangeSpy).toHaveBeenCalledWith('contact');
 });
 
 test('Call callback when query changes', () => {
@@ -111,7 +111,7 @@ test('Call callback when query changes', () => {
 
     searchField.find('input.input').prop('onChange')({currentTarget: {value: 'test'}});
 
-    expect(queryChangeSpy).toBeCalledWith('test');
+    expect(queryChangeSpy).toHaveBeenCalledWith('test');
 });
 
 test('Call search with query when enter is pressed', () => {
@@ -130,7 +130,7 @@ test('Call search with query when enter is pressed', () => {
 
     searchField.find('input.input').prop('onKeyPress')({key: 'Enter'});
 
-    expect(searchSpy).toBeCalledWith();
+    expect(searchSpy).toHaveBeenCalledWith();
 });
 
 test('Do not call search when other key than enter is pressed', () => {
@@ -149,7 +149,7 @@ test('Do not call search when other key than enter is pressed', () => {
 
     searchField.find('input.input').prop('onKeyPress')({key: 'a'});
 
-    expect(searchSpy).not.toBeCalledWith();
+    expect(searchSpy).not.toHaveBeenCalledWith();
 });
 
 test('Call search with query when search icon is clicked', () => {
@@ -168,7 +168,7 @@ test('Call search with query when search icon is clicked', () => {
 
     searchField.find('Icon[name="su-search"]').prop('onClick')();
 
-    expect(searchSpy).toBeCalledWith();
+    expect(searchSpy).toHaveBeenCalledWith();
 });
 
 test('Remove query when clear icon is clicked', () => {
@@ -188,6 +188,6 @@ test('Remove query when clear icon is clicked', () => {
 
     searchField.find('Icon[name="su-times"]').prop('onClick')();
 
-    expect(searchSpy).toBeCalledWith();
-    expect(queryChangeSpy).toBeCalledWith(undefined);
+    expect(searchSpy).toHaveBeenCalledWith();
+    expect(queryChangeSpy).toHaveBeenCalledWith(undefined);
 });

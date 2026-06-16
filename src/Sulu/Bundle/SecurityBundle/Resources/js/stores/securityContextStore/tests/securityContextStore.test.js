@@ -32,7 +32,7 @@ test('Load available actions for permissions with given keys', () => {
     });
 
     return securityContextStore.loadAvailableActions('test').then((actions) => {
-        expect(log.warn).toBeCalled();
+        expect(log.warn).toHaveBeenCalled();
         expect(actions).toEqual(['view', 'add', 'edit']);
     });
 });
@@ -54,7 +54,7 @@ test('Load security contexts for entire system', () => {
     securityContextStore.setSecurityContexts({Sulu: suluSecurityContexts});
 
     return securityContextStore.loadSecurityContextGroups('Sulu').then((securityContexts) => {
-        expect(log.warn).toBeCalled();
+        expect(log.warn).toHaveBeenCalled();
         expect(securityContexts).toEqual(suluSecurityContexts);
     });
 });
@@ -76,7 +76,7 @@ test('Get available actions for permissions with given keys', () => {
     });
 
     expect(securityContextStore.getAvailableActions('test')).toEqual(['view', 'add', 'edit']);
-    expect(log.warn).not.toBeCalled();
+    expect(log.warn).not.toHaveBeenCalled();
 });
 
 test('Get available actions for permissions with given keys and system', () => {
@@ -106,7 +106,7 @@ test('Get available actions for permissions with given keys and system', () => {
     expect(securityContextStore.getAvailableActions('test')).toEqual(['view', 'add', 'edit']);
     expect(securityContextStore.getAvailableActions('test', 'Sulu')).toEqual(['view', 'add', 'edit']);
     expect(securityContextStore.getAvailableActions('test', 'Website')).toEqual(['view']);
-    expect(log.warn).not.toBeCalled();
+    expect(log.warn).not.toHaveBeenCalled();
 });
 
 test('Get security contexts for entire system', () => {
@@ -126,7 +126,7 @@ test('Get security contexts for entire system', () => {
     securityContextStore.setSecurityContexts({Sulu: suluSecurityContexts});
 
     expect(securityContextStore.getSecurityContextGroups('Sulu')).toEqual(suluSecurityContexts);
-    expect(log.warn).not.toBeCalled();
+    expect(log.warn).not.toHaveBeenCalled();
 });
 
 test('Get systems from entire system', () => {

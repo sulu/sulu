@@ -523,7 +523,7 @@ test('Call onChange callback when value of Field changes', () => {
 
     field.find('Text').props().onChange('test value', {isDefaultValue: true});
 
-    expect(changeSpy).toBeCalledWith('test', 'test value', {isDefaultValue: true});
+    expect(changeSpy).toHaveBeenCalledWith('test', 'test value', {isDefaultValue: true});
 });
 
 test('Do not call onChange callback when value of disabled Field changes', () => {
@@ -551,7 +551,7 @@ test('Do not call onChange callback when value of disabled Field changes', () =>
 
     field.find('Text').props().onChange('test value');
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Call onFinish callback after editing the field has finished', () => {
@@ -579,7 +579,7 @@ test('Call onFinish callback after editing the field has finished', () => {
 
     field.find('Text').simulate('finish');
 
-    expect(finishSpy).toBeCalledWith('/block/0/test', '/test');
+    expect(finishSpy).toHaveBeenCalledWith('/block/0/test', '/test');
 });
 
 test('Call onSuccess callback when field calls onSuccess', () => {
@@ -607,7 +607,7 @@ test('Call onSuccess callback when field calls onSuccess', () => {
 
     field.find('Text').simulate('success');
 
-    expect(successSpy).toBeCalled();
+    expect(successSpy).toHaveBeenCalled();
 });
 
 test('Do not render anything if field does not exist and onInvalid is set to ignore', () => {

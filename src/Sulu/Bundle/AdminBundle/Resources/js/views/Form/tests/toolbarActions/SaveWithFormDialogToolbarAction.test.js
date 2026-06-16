@@ -98,7 +98,7 @@ test('Destroy store when being destroyed', () => {
     const saveWithFormDialogToolbarAction = createSaveWithFormDialogToolbarAction({formKey: 'test'});
     saveWithFormDialogToolbarAction.destroy();
 
-    expect(saveWithFormDialogToolbarAction.dialogFormStore.destroy).toBeCalledWith();
+    expect(saveWithFormDialogToolbarAction.dialogFormStore.destroy).toHaveBeenCalledWith();
 });
 
 test('Close dialog when cancel button of dialog is clicked', () => {
@@ -138,7 +138,7 @@ test('Close dialog when cancel button of dialog is clicked', () => {
         throw new Error('The dialogForm should be defined');
     }
 
-    expect(dialogForm.submit).not.toBeCalled();
+    expect(dialogForm.submit).not.toHaveBeenCalled();
 });
 
 test('Submit form with passed form data dialog when confirm button of dialog is clicked', () => {
@@ -187,7 +187,7 @@ test('Submit form with passed form data dialog when confirm button of dialog is 
         throw new Error('The dialogForm should be defined');
     }
 
-    expect(saveWithFormDialogToolbarAction.form.submit).toBeCalledWith({test: 'Test'});
+    expect(saveWithFormDialogToolbarAction.form.submit).toHaveBeenCalledWith({test: 'Test'});
     expect(element.instance().props).toEqual(expect.objectContaining({
         open: false,
     }));
@@ -210,5 +210,5 @@ test('Submit form without form data dialog when condition does not evaluate to t
 
     clickHandler();
 
-    expect(saveWithFormDialogToolbarAction.form.submit).toBeCalledWith();
+    expect(saveWithFormDialogToolbarAction.form.submit).toHaveBeenCalledWith();
 });

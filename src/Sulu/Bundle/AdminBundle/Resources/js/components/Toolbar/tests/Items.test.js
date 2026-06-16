@@ -36,10 +36,10 @@ test('Resize div should call callback', () => {
         </Items>
     );
 
-    expect(ResizeObserver).toBeCalledWith(resizeFunction);
+    expect(ResizeObserver).toHaveBeenCalledWith(resizeFunction);
     const childRef = screen.getByRole('list');
     const parentRef = childRef.parentElement;
-    expect(ResizeObserver.mock.instances[0].observe).toBeCalledWith(parentRef);
+    expect(ResizeObserver.mock.instances[0].observe).toHaveBeenCalledWith(parentRef);
 
     if (!(parentRef instanceof HTMLElement) || !(childRef instanceof HTMLElement)) {
         throw new Error('Expected toolbar items refs');
@@ -68,5 +68,5 @@ test('ResizeObserver.disconnect should be called before component unmount', () =
 
     unmount();
 
-    expect(ResizeObserver.mock.instances[0].disconnect).toBeCalled();
+    expect(ResizeObserver.mock.instances[0].disconnect).toHaveBeenCalled();
 });

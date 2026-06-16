@@ -52,7 +52,7 @@ test('Bind toolbar method to component instance', () => {
     };
 
     mount(<ComponentWithToolbar router={router} />);
-    expect(toolbarStorePool.setToolbarConfig).toBeCalledWith(storeKey, {
+    expect(toolbarStorePool.setToolbarConfig).toHaveBeenCalledWith(storeKey, {
         items: [
             {
                 label: 'Save',
@@ -79,11 +79,11 @@ test('Call life-cycle events of rendered component', () => {
     };
 
     const component = mount(<ComponentWithToolbar router={router} />);
-    expect(component.instance().render).toBeCalled();
+    expect(component.instance().render).toHaveBeenCalled();
 
     const componentWillUnmount = component.instance().componentWillUnmount;
     component.unmount();
-    expect(componentWillUnmount).toBeCalled();
+    expect(componentWillUnmount).toHaveBeenCalled();
 });
 
 test('Reset config of toolbarStore when component is unmounted', () => {
@@ -102,10 +102,10 @@ test('Reset config of toolbarStore when component is unmounted', () => {
     };
 
     const component = mount(<ComponentWithToolbar router={router} />);
-    expect(toolbarStorePool.setToolbarConfig).toBeCalledWith('default', config);
+    expect(toolbarStorePool.setToolbarConfig).toHaveBeenCalledWith('default', config);
 
     component.unmount();
-    expect(updateRouteHookDisposer).toBeCalledWith();
+    expect(updateRouteHookDisposer).toHaveBeenCalledWith();
     expect(toolbarStorePool.setToolbarConfig).toHaveBeenLastCalledWith('default', {});
 });
 
@@ -155,12 +155,12 @@ test('Recall toolbar-function when changing observable', () => {
 
     const component = mount(<ComponentWithToolbar router={router} />);
 
-    expect(toolbarStorePool.setToolbarConfig).toBeCalledWith(DEFAULT_STORE_KEY, {
+    expect(toolbarStorePool.setToolbarConfig).toHaveBeenCalledWith(DEFAULT_STORE_KEY, {
         disableAll: true,
     });
 
     component.instance().test = false;
-    expect(toolbarStorePool.setToolbarConfig).toBeCalledWith(DEFAULT_STORE_KEY, {
+    expect(toolbarStorePool.setToolbarConfig).toHaveBeenCalledWith(DEFAULT_STORE_KEY, {
         disableAll: false,
     });
 });

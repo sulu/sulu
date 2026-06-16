@@ -20,7 +20,7 @@ test('Test undefined', () => {
 
 test('Test invalid format', () => {
     expect(dateTimeBlockPreviewTransformer.transform('xxx')).toBe(null);
-    expect(log.error).toBeCalledWith('Invalid date given: "xxx". Format needs to be "YYYY-MM-DD"');
+    expect(log.error).toHaveBeenCalledWith('Invalid date given: "xxx". Format needs to be "YYYY-MM-DD"');
 });
 
 test('Test valid example', () => {

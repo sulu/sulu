@@ -99,7 +99,7 @@ test('Return no item config if deprecated display_condition is not met', () => {
 
     const toolbarItemConfig = deleteDraftToolbarAction.getToolbarItemConfig();
     expect(toolbarItemConfig).toEqual(undefined);
-    expect(log.warn).toBeCalledWith(expect.stringContaining('The "display_condition" option is deprecated'));
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "display_condition" option is deprecated'));
 });
 
 test('Return no item config if passed visible_condition is not met', () => {
@@ -107,7 +107,7 @@ test('Return no item config if passed visible_condition is not met', () => {
 
     const toolbarItemConfig = deleteDraftToolbarAction.getToolbarItemConfig();
     expect(toolbarItemConfig).toEqual(undefined);
-    expect(log.warn).not.toBeCalled();
+    expect(log.warn).not.toHaveBeenCalled();
 });
 
 test('Return item config if passed visible_condition is met', () => {
@@ -231,7 +231,7 @@ test('Delete draft when dialog is confirmed', () => {
     element.prop('onConfirm')();
     element = mount(deleteDraftToolbarAction.getNode());
     expect(element.prop('confirmLoading')).toEqual(true);
-    expect(ResourceRequester.post).toBeCalledWith(
+    expect(ResourceRequester.post).toHaveBeenCalledWith(
         'snippets',
         undefined,
         {action: 'remove-draft', id: 3, locale: deleteDraftToolbarAction.resourceFormStore.locale, webspace: 'sulu_io'}
@@ -239,9 +239,12 @@ test('Delete draft when dialog is confirmed', () => {
 
     return deleteDraftPromise.then(() => {
         element = mount(deleteDraftToolbarAction.getNode());
-        expect(deleteDraftToolbarAction.form.showSuccessSnackbar).toBeCalledWith();
+        expect(deleteDraftToolbarAction.form.showSuccessSnackbar).toHaveBeenCalledWith();
         expect(element.prop('confirmLoading')).toEqual(false);
-        expect(deleteDraftToolbarAction.resourceFormStore.changeMultiple).toBeCalledWith(data, {isServerValue: true});
+        expect(deleteDraftToolbarAction.resourceFormStore.changeMultiple).toHaveBeenCalledWith(
+            data,
+            {isServerValue: true}
+        );
         expect(deleteDraftToolbarAction.resourceFormStore.dirty).toEqual(false);
     });
 });

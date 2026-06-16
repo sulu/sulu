@@ -78,27 +78,27 @@ test('The component should request to be closed when the close icon is clicked',
 
     renderOverlay({onClose: closeSpy});
 
-    expect(closeSpy).not.toBeCalled();
+    expect(closeSpy).not.toHaveBeenCalled();
     await user.click(screen.getByRole('button', {name: 'su-times'}));
-    expect(closeSpy).toBeCalled();
+    expect(closeSpy).toHaveBeenCalled();
 });
 
 test('The component should request to be closed when the esc key is pressed', () => {
     const closeSpy = jest.fn();
     renderOverlay({onClose: closeSpy});
 
-    expect(closeSpy).not.toBeCalled();
+    expect(closeSpy).not.toHaveBeenCalled();
     Mousetrap.trigger('esc');
-    expect(closeSpy).toBeCalled();
+    expect(closeSpy).toHaveBeenCalled();
 });
 
 test('The component should bind and unbind the esc key when overlay is opened and closed', () => {
     const closeSpy = jest.fn();
     const {rerender} = renderOverlay({onClose: closeSpy});
 
-    expect(closeSpy).not.toBeCalled();
+    expect(closeSpy).not.toHaveBeenCalled();
     Mousetrap.trigger('esc');
-    expect(closeSpy).toBeCalled();
+    expect(closeSpy).toHaveBeenCalled();
     closeSpy.mockReset();
 
     rerender(
@@ -113,7 +113,7 @@ test('The component should bind and unbind the esc key when overlay is opened an
         </Overlay>
     );
     Mousetrap.trigger('esc');
-    expect(closeSpy).not.toBeCalled();
+    expect(closeSpy).not.toHaveBeenCalled();
     closeSpy.mockReset();
 
     rerender(
@@ -128,7 +128,7 @@ test('The component should bind and unbind the esc key when overlay is opened an
         </Overlay>
     );
     Mousetrap.trigger('esc');
-    expect(closeSpy).toBeCalled();
+    expect(closeSpy).toHaveBeenCalled();
 });
 
 test('The component should call the callback when the confirm button is clicked', async() => {
@@ -141,9 +141,9 @@ test('The component should call the callback when the confirm button is clicked'
         title: 'My title',
     });
 
-    expect(onConfirm).not.toBeCalled();
+    expect(onConfirm).not.toHaveBeenCalled();
     await user.click(screen.getByRole('button', {name: 'Alright mate!'}));
-    expect(onConfirm).toBeCalled();
+    expect(onConfirm).toHaveBeenCalled();
 });
 
 test('The component should render with a warning', () => {
@@ -196,10 +196,10 @@ test('The component should call the callback when the snackbar close button is c
         title: 'My title',
     });
 
-    expect(onSnackbarCloseClick).not.toBeCalled();
+    expect(onSnackbarCloseClick).not.toHaveBeenCalled();
     await user.click(within(screen.getByRole('button', {name: /sulu_admin.error/i}))
         .getByRole('button', {name: 'su-times'}));
-    expect(onSnackbarCloseClick).toBeCalled();
+    expect(onSnackbarCloseClick).toHaveBeenCalled();
 });
 
 test('The component should call the callback when the snackbar is clicked', async() => {
@@ -214,7 +214,7 @@ test('The component should call the callback when the snackbar is clicked', asyn
         title: 'My title',
     });
 
-    expect(onSnackbarClick).not.toBeCalled();
+    expect(onSnackbarClick).not.toHaveBeenCalled();
     await user.click(screen.getByRole('button', {name: /sulu_admin.warning/i}));
-    expect(onSnackbarClick).toBeCalled();
+    expect(onSnackbarClick).toHaveBeenCalled();
 });

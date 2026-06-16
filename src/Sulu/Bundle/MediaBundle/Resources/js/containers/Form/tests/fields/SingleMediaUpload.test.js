@@ -232,8 +232,8 @@ test('Call onChange and onFinish when upload has completed', () => {
 
     singleMediaUpload.find(SingleMediaUploadComponent).simulate('uploadComplete', media);
 
-    expect(changeSpy).toBeCalledWith(media);
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith(media);
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Create a MediaUploadStore when constructed', () => {

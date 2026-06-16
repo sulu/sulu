@@ -98,7 +98,7 @@ test('Pass correct props and SingleSelectionStore to SingleAutoComplete containe
         selectionStore: singleSelection.instance().autoCompleteSelectionStore,
     }));
 
-    expect(SingleSelectionStore).toBeCalledWith('accounts', 'entity-id', locale);
+    expect(SingleSelectionStore).toHaveBeenCalledWith('accounts', 'entity-id', locale);
 });
 
 test('Pass correct options to SingleAutoComplete with deprecated data_path_to_auto_complete schema option', () => {
@@ -137,13 +137,15 @@ test('Pass correct options to SingleAutoComplete with deprecated data_path_to_au
         />
     );
 
-    expect(formInspector.getValueByPath).toBeCalledWith('/id');
+    expect(formInspector.getValueByPath).toHaveBeenCalledWith('/id');
     expect(singleSelection.find('SingleAutoComplete').props()).toEqual(expect.objectContaining({
         options: {
             accountId: 5,
         },
     }));
-    expect(log.warn).toBeCalledWith(expect.stringContaining('The "data_path_to_auto_complete" option is deprecated'));
+    expect(log.warn).toHaveBeenCalledWith(
+        expect.stringContaining('The "data_path_to_auto_complete" option is deprecated')
+    );
 });
 
 test('Use locale from userStore and pass correct props with schema-options type to SingleAutoComplete', () => {
@@ -240,8 +242,8 @@ test('Call onChange and onFinish when item of auto_complete SingleSelectionStore
 
     singleSelection.instance().autoCompleteSelectionStore.item = {id: 'new-entity-id'};
 
-    expect(changeSpy).toBeCalledWith('new-entity-id');
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith('new-entity-id');
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Handle object without warning when "use_deprecated_object_data_format" option of auto_complete is set', () => {
@@ -281,14 +283,17 @@ test('Handle object without warning when "use_deprecated_object_data_format" opt
         />
     );
 
-    expect(singleSelection.find('SingleAutoComplete').props().selectionStore.item).toEqual({id: 'old-entity-id'});
-    expect(log.warn).toBeCalledWith(expect.stringContaining('"use_deprecated_object_data_format" param is deprecated'));
-    expect(log.warn).not.toBeCalledWith(expect.stringContaining('expects an id as value but received an object'));
+    expect(singleSelection.find('SingleAutoComplete').props().selectionStore.item)
+        .toEqual({id: 'old-entity-id'});
+    expect(log.warn).toHaveBeenCalledWith(
+        expect.stringContaining('"use_deprecated_object_data_format" param is deprecated')
+    );
+    expect(log.warn).not.toHaveBeenCalledWith(expect.stringContaining('expects an id as value but received an object'));
 
     singleSelection.instance().autoCompleteSelectionStore.item = {id: 'new-entity-id'};
 
-    expect(changeSpy).toBeCalledWith({id: 'new-entity-id'});
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith({id: 'new-entity-id'});
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Throw an error if the auto_complete configuration was omitted', () => {
@@ -376,8 +381,8 @@ test('Call onChange and onFinish when SingleSelect changes', () => {
 
     singleSelection.find('ResourceSingleSelect').simulate('change', 2);
 
-    expect(changeSpy).toBeCalledWith(2);
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith(2);
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Throw an error if no display_property is passed to the the single_select', () => {
@@ -560,7 +565,7 @@ test('Should log warning and use id of object if given value is an object instea
     );
 
     expect(singleSelection.find('SingleSelection').prop('value')).toEqual(125);
-    expect(log.warn).toBeCalledWith(expect.stringContaining('expects an id as value but received an object'));
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('expects an id as value but received an object'));
 });
 
 test('Throw an error if form_options_to_list_options schema option is not an array', () => {
@@ -850,7 +855,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
         />
     );
 
-    expect(formInspector.getValueByPath).toBeCalledWith('/otherPropertyName');
+    expect(formInspector.getValueByPath).toHaveBeenCalledWith('/otherPropertyName');
 
     expect(singleSelection.find(SingleSelectionComponent).props()).toEqual(expect.objectContaining({
         adapter: 'table',
@@ -1111,8 +1116,8 @@ test('Call onChange and onFinish when SingleSelection changes', () => {
 
     singleSelection.find(SingleSelectionComponent).simulate('change', undefined);
 
-    expect(changeSpy).toBeCalledWith(undefined);
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith(undefined);
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Should not fail when SingleItemSelection item is clicked without configured view', () => {
@@ -1157,7 +1162,7 @@ test('Should not fail when SingleItemSelection item is clicked without configure
 
     singleSelection.find('SingleItemSelection .item').simulate('click');
 
-    expect(router.navigate).not.toBeCalled();
+    expect(router.navigate).not.toHaveBeenCalled();
 });
 
 test('Navigate when SingleItemSelection item is clicked with configured view', () => {
@@ -1208,7 +1213,7 @@ test('Navigate when SingleItemSelection item is clicked with configured view', (
 
     singleSelection.find('SingleItemSelection .item').simulate('click');
 
-    expect(router.navigate).toBeCalledWith('sulu_contact.account_edit_form', {id: 6});
+    expect(router.navigate).toHaveBeenCalledWith('sulu_contact.account_edit_form', {id: 6});
 });
 
 test('Should throw an error if "types" schema option is not a string', () => {
@@ -1228,7 +1233,7 @@ test('Should throw an error if "types" schema option is not a string', () => {
             formInspector={formInspector}
             schemaOptions={{types: {name: 'types', value: []}}}
         />
-    )).toThrowError(/"types"/);
+    )).toThrow(/"types"/);
 });
 
 test('Should throw an error if no "resource_key" option is passed in fieldOptions', () => {
@@ -1241,7 +1246,7 @@ test('Should throw an error if no "resource_key" option is passed in fieldOption
             formInspector={formInspector}
             schemaOptions={{types: {name: 'types', value: []}}}
         />
-    )).toThrowError(/"resource_key"/);
+    )).toThrow(/"resource_key"/);
 });
 
 test('Should pass request_parameters to auto_complete options', () => {

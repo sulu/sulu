@@ -30,7 +30,7 @@ test('Change checkbox should trigger onChange', async() => {
 
     await user.click(screen.getByRole('checkbox'));
 
-    expect(changeSpy).toBeCalled();
+    expect(changeSpy).toHaveBeenCalled();
 });
 
 test('Click on container should trigger onChange', async() => {
@@ -47,5 +47,5 @@ test('Click on container should trigger onChange', async() => {
 
     await user.click(handle);
 
-    expect(changeSpy).toBeCalled();
+    expect(changeSpy).toHaveBeenCalled();
 });
