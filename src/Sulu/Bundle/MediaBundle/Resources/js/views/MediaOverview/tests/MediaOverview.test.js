@@ -211,23 +211,23 @@ test('Destroy all stores on unmount', () => {
     const mediaSortColumn = router.bind.mock.calls[8][1];
     const mediaSortOrder = router.bind.mock.calls[9][1];
 
-    expect(mediaOverviewInstance.collectionListStore.sort).toBeCalledWith('title', 'asc');
+    expect(mediaOverviewInstance.collectionListStore.sort).toHaveBeenCalledWith('title', 'asc');
     expect(collectionPage.get()).toBe(undefined);
     expect(mediaPage.get()).toBe(1);
     expect(locale.get()).toBe(undefined);
-    expect(router.bind).toBeCalledWith('collectionPage', collectionPage, 1);
-    expect(router.bind).toBeCalledWith('mediaPage', mediaPage, 1);
-    expect(router.bind).toBeCalledWith('locale', locale);
-    expect(router.bind).toBeCalledWith('collectionLimit', collectionLimit, 10);
-    expect(router.bind).toBeCalledWith('mediaFilter', mediaFilter, {});
-    expect(router.bind).toBeCalledWith('mediaLimit', mediaLimit, 10);
-    expect(router.bind).toBeCalledWith('mediaSortColumn', mediaSortColumn);
-    expect(router.bind).toBeCalledWith('mediaSortOrder', mediaSortOrder);
+    expect(router.bind).toHaveBeenCalledWith('collectionPage', collectionPage, 1);
+    expect(router.bind).toHaveBeenCalledWith('mediaPage', mediaPage, 1);
+    expect(router.bind).toHaveBeenCalledWith('locale', locale);
+    expect(router.bind).toHaveBeenCalledWith('collectionLimit', collectionLimit, 10);
+    expect(router.bind).toHaveBeenCalledWith('mediaFilter', mediaFilter, {});
+    expect(router.bind).toHaveBeenCalledWith('mediaLimit', mediaLimit, 10);
+    expect(router.bind).toHaveBeenCalledWith('mediaSortColumn', mediaSortColumn);
+    expect(router.bind).toHaveBeenCalledWith('mediaSortOrder', mediaSortOrder);
 
     mediaOverview.unmount();
-    expect(mediaOverviewInstance.mediaListStore.destroy).toBeCalled();
-    expect(mediaOverviewInstance.collectionListStore.destroy).toBeCalled();
-    expect(mediaOverviewInstance.collectionStore.resourceStore.destroy).toBeCalled();
+    expect(mediaOverviewInstance.mediaListStore.destroy).toHaveBeenCalled();
+    expect(mediaOverviewInstance.collectionListStore.destroy).toHaveBeenCalled();
+    expect(mediaOverviewInstance.collectionStore.resourceStore.destroy).toHaveBeenCalled();
 });
 
 test('Should navigate to defined route on back button click', () => {
@@ -258,11 +258,11 @@ test('Should navigate to defined route on back button click', () => {
 
     const toolbarConfig = toolbarFunction.call(mediaOverview);
     toolbarConfig.backButton.onClick();
-    expect(mediaOverview.mediaListStore.clear).toBeCalled();
-    expect(mediaOverview.mediaListStore.clearSelection).toBeCalled();
-    expect(mediaOverview.collectionListStore.clear).toBeCalled();
-    expect(mediaOverview.collectionListStore.clearSelection).toBeCalled();
-    expect(router.restore).toBeCalledWith('sulu_media.overview', {
+    expect(mediaOverview.mediaListStore.clear).toHaveBeenCalled();
+    expect(mediaOverview.mediaListStore.clearSelection).toHaveBeenCalled();
+    expect(mediaOverview.collectionListStore.clear).toHaveBeenCalled();
+    expect(mediaOverview.collectionListStore.clearSelection).toHaveBeenCalled();
+    expect(router.restore).toHaveBeenCalledWith('sulu_media.overview', {
         'collectionPage': '1',
         'id': 1,
         'locale': 'de',
@@ -294,7 +294,7 @@ test('Router navigate should be called when a media was clicked', () => {
     mediaOverview.instance().locale.set(locale);
 
     mediaOverview.find('.media').at(0).simulate('click');
-    expect(router.navigate).toBeCalledWith(
+    expect(router.navigate).toHaveBeenCalledWith(
         'sulu_media.form.details',
         {'id': 1, locale}
     );
@@ -332,10 +332,10 @@ test('The collectionId should be update along with the content when a collection
     expect(mediaOverview.instance().collectionId.get()).toEqual(1);
     expect(mediaOverview.instance().collectionPage.get()).toEqual(1);
     expect(mediaOverview.instance().mediaPage.get()).toEqual(1);
-    expect(mediaOverview.instance().mediaListStore.clearSelection).toBeCalled();
-    expect(mediaOverview.instance().mediaListStore.clear).toBeCalled();
-    expect(mediaOverview.instance().collectionListStore.clearSelection).toBeCalled();
-    expect(mediaOverview.instance().collectionListStore.clear).toBeCalled();
+    expect(mediaOverview.instance().mediaListStore.clearSelection).toHaveBeenCalled();
+    expect(mediaOverview.instance().mediaListStore.clear).toHaveBeenCalled();
+    expect(mediaOverview.instance().collectionListStore.clearSelection).toHaveBeenCalled();
+    expect(mediaOverview.instance().collectionListStore.clear).toHaveBeenCalled();
 });
 
 test('Delete overlay should be shown when delete button is clicked', () => {
@@ -657,7 +657,7 @@ test('Media should be moved when overlay is confirmed', () => {
     expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('confirmLoading'))
         .toEqual(true);
 
-    expect(mediaOverview.instance().mediaListStore.moveSelection).toBeCalledWith(8);
+    expect(mediaOverview.instance().mediaListStore.moveSelection).toHaveBeenCalledWith(8);
 
     return movePromise.then(() => {
         mediaOverview.update();
@@ -666,7 +666,7 @@ test('Media should be moved when overlay is confirmed', () => {
             .toEqual(false);
         expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('confirmLoading'))
             .toEqual(false);
-        expect(mediaOverview.instance().mediaListStore.clearSelection).toBeCalled();
+        expect(mediaOverview.instance().mediaListStore.clearSelection).toHaveBeenCalled();
     });
 });
 

@@ -164,7 +164,7 @@ test('Return no item config if deprecated display_condition is not met', () => {
 
     const toolbarItemConfig = copyLocaleToolbarAction.getToolbarItemConfig();
     expect(toolbarItemConfig).toEqual(undefined);
-    expect(log.warn).toBeCalledWith(expect.stringContaining('The "display_condition" option is deprecated'));
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "display_condition" option is deprecated'));
 });
 
 test('Return no item config if passed visible_condition is not met', () => {
@@ -175,7 +175,7 @@ test('Return no item config if passed visible_condition is not met', () => {
 
     const toolbarItemConfig = copyLocaleToolbarAction.getToolbarItemConfig();
     expect(toolbarItemConfig).toEqual(undefined);
-    expect(log.warn).not.toBeCalled();
+    expect(log.warn).not.toHaveBeenCalled();
 });
 
 test('Return item config if passed visible_condition is met', () => {
@@ -261,7 +261,7 @@ test('Close dialog when cancel button of dialog is clicked', () => {
     }));
 
     element.find('Dialog').prop('onCancel')();
-    expect(copyLocaleToolbarAction.form.showSuccessSnackbar).not.toBeCalledWith();
+    expect(copyLocaleToolbarAction.form.showSuccessSnackbar).not.toHaveBeenCalledWith();
     element = mount(copyLocaleToolbarAction.getNode()).at(0);
     expect(element.instance().props).toEqual(expect.objectContaining({
         open: false,
@@ -306,14 +306,14 @@ test('Close dialog and show success message when onClose from CopyLocaleDialog i
 
         element.find('Select').at(0).prop('onChange')(['de', 'fr']);
         element.prop('onConfirm')();
-        expect(ResourceRequester.post).toBeCalledWith(
+        expect(ResourceRequester.post).toHaveBeenCalledWith(
             'snippets',
             undefined,
             {action: 'copy_locale', dest: ['de', 'fr'], id: 3, locale, webspace: 'sulu_io'}
         );
 
         postPromise.then(() => {
-            expect(copyLocaleToolbarAction.form.showSuccessSnackbar).toBeCalledWith();
+            expect(copyLocaleToolbarAction.form.showSuccessSnackbar).toHaveBeenCalledWith();
             element = mount(copyLocaleToolbarAction.getNode()).at(0);
             expect(element.instance().props).toEqual(expect.objectContaining({
                 open: false,
@@ -375,14 +375,14 @@ test('Close dialog and show success message when onClose from CopyLocaleDialog i
         element.find('Input').at(0).prop('onChange')('Test 123');
         element.find('Select').at(0).prop('onChange')(['de', 'fr']);
         element.prop('onConfirm')();
-        expect(ResourceRequester.post).toBeCalledWith(
+        expect(ResourceRequester.post).toHaveBeenCalledWith(
             'snippets',
             undefined,
             {action: 'copy_locale', dest: ['de', 'fr'], id: 3, locale, webspace: 'sulu_io', title: 'Test 123'}
         );
 
         postPromise.then(() => {
-            expect(copyLocaleToolbarAction.form.showSuccessSnackbar).toBeCalledWith();
+            expect(copyLocaleToolbarAction.form.showSuccessSnackbar).toHaveBeenCalledWith();
             element = mount(copyLocaleToolbarAction.getNode()).at(0);
             expect(element.instance().props).toEqual(expect.objectContaining({
                 open: false,

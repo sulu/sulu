@@ -54,7 +54,7 @@ test('Should load data using the Requester', () => {
         mockTabViewRoute
     );
 
-    expect(Requester.get).toBeCalledWith('foo?resourceId=5&locale=en&limit=0&resourceKey=Foo');
+    expect(Requester.get).toHaveBeenCalledWith('foo?resourceId=5&locale=en&limit=0&resourceKey=Foo');
 
     return promise.then(() => {
         expect(badgeStore.value).toEqual('2');
@@ -86,7 +86,7 @@ test('Should load data without datapath', () => {
         mockTabViewRoute
     );
 
-    expect(Requester.get).toBeCalledWith('foo?resourceId=5&locale=en&limit=0&resourceKey=Foo');
+    expect(Requester.get).toHaveBeenCalledWith('foo?resourceId=5&locale=en&limit=0&resourceKey=Foo');
 
     return promise.then(() => {
         expect(badgeStore.value).toEqual('hello');

@@ -85,8 +85,8 @@ test('Call onChange and onFinish calbacks', () => {
 
     contactAccountSelection.prop('onChange')(['a1', 'c6']);
 
-    expect(changeSpy).toBeCalledWith(['a1', 'c6']);
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith(['a1', 'c6']);
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Call onItemClick callback', () => {

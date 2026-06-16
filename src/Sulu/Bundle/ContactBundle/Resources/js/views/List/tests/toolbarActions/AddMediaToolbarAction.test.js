@@ -71,7 +71,7 @@ test('Do nothing if overlay is just closed', () => {
     shallow(addMediaToolbarAction.getNode()).instance().props.onClose();
     expect(shallow(addMediaToolbarAction.getNode()).instance().props.open).toEqual(false);
 
-    expect(ResourceRequester.patch).not.toBeCalled();
+    expect(ResourceRequester.patch).not.toHaveBeenCalled();
 });
 
 test('Delete selected items if confirm button is clicked', () => {
@@ -101,7 +101,7 @@ test('Delete selected items if confirm button is clicked', () => {
         open: true,
     }));
 
-    expect(ResourceRequester.patch).toBeCalledWith('contacts', {medias: [1, 2, 3, 4]}, {id: 4});
+    expect(ResourceRequester.patch).toHaveBeenCalledWith('contacts', {medias: [1, 2, 3, 4]}, {id: 4});
 
     return patchPromise.then(() => {
         mediaOverlay = shallow(addMediaToolbarAction.getNode()).instance();
@@ -115,7 +115,7 @@ test('Delete selected items if confirm button is clicked', () => {
             throw new Error('The resourceStore must be set on the ToolbarAction!');
         }
 
-        expect(addMediaToolbarAction.listStore.reload).toBeCalledWith();
-        expect(resourceStore.setMultiple).toBeCalledWith(patchResponse);
+        expect(addMediaToolbarAction.listStore.reload).toHaveBeenCalledWith();
+        expect(resourceStore.setMultiple).toHaveBeenCalledWith(patchResponse);
     });
 });

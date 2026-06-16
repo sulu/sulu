@@ -186,7 +186,7 @@ test('Should display overlay for selecting collection when file is dropped and n
     ];
     multiMediaDropzone.find('Dropzone').props().onDrop(files);
 
-    expect(MediaUploadStore).not.toBeCalled();
+    expect(MediaUploadStore).not.toHaveBeenCalled();
     expect(multiMediaDropzone.find(SingleListOverlay).prop('open')).toBeTruthy();
 });
 
@@ -217,15 +217,15 @@ test('Should upload media after selecting collection in overlay when file is dro
 
     // $FlowFixMe
     const mediaUploadStore1 = MediaUploadStore.mock.instances[0];
-    expect(mediaUploadStore1.create).toBeCalledWith(1234, files[0]);
+    expect(mediaUploadStore1.create).toHaveBeenCalledWith(1234, files[0]);
     expect(multiMediaDropzone.instance().mediaUploadStores.length).toBe(1);
 
     return Promise.allSettled(mockedMediaUploadStorePromises).then(() => {
         jest.runAllTimers();
 
-        expect(uploadSpy).toBeCalledWith([{id: 123}]);
+        expect(uploadSpy).toHaveBeenCalledWith([{id: 123}]);
         expect(multiMediaDropzone.instance().mediaUploadStores.length).toBe(0);
-        expect(closeSpy).toBeCalled();
+        expect(closeSpy).toHaveBeenCalled();
     });
 });
 
@@ -253,12 +253,12 @@ test('Should not upload media when closing overlay for selecting collection afte
     ];
     multiMediaDropzone.find('Dropzone').props().onDrop(files);
 
-    expect(MediaUploadStore).not.toBeCalled();
+    expect(MediaUploadStore).not.toHaveBeenCalled();
     expect(multiMediaDropzone.find(SingleListOverlay).prop('open')).toBeTruthy();
 
     multiMediaDropzone.find(SingleListOverlay).prop('onClose')();
 
-    expect(MediaUploadStore).not.toBeCalled();
+    expect(MediaUploadStore).not.toHaveBeenCalled();
     expect(multiMediaDropzone.find(SingleListOverlay).prop('open')).toBeFalsy();
 });
 
@@ -291,21 +291,21 @@ test('Should upload media when collectionId is set and file is dropped into the 
     // $FlowFixMe
     const mediaUploadStore2 = MediaUploadStore.mock.instances[1];
 
-    expect(mediaUploadStore1.create).toBeCalledWith(3, files[0]);
-    expect(mediaUploadStore2.create).toBeCalledWith(3, files[1]);
+    expect(mediaUploadStore1.create).toHaveBeenCalledWith(3, files[0]);
+    expect(mediaUploadStore2.create).toHaveBeenCalledWith(3, files[1]);
     expect(multiMediaDropzone.instance().mediaUploadStores.length).toBe(2);
 
-    expect(closeSpy).not.toBeCalled();
+    expect(closeSpy).not.toHaveBeenCalled();
 
     return Promise.allSettled(mockedMediaUploadStorePromises).then(() => {
         jest.runAllTimers();
 
-        expect(uploadSpy).toBeCalledWith([
+        expect(uploadSpy).toHaveBeenCalledWith([
             {id: 123},
             {id: 123},
         ]);
         expect(multiMediaDropzone.instance().mediaUploadStores.length).toBe(0);
-        expect(closeSpy).toBeCalledWith();
+        expect(closeSpy).toHaveBeenCalledWith();
     });
 });
 
@@ -334,14 +334,14 @@ test('Should fire onClose and onUploadError callback if an error happens when up
         new File([''], 'invalid-file'),
     ]);
 
-    expect(closeSpy).not.toBeCalled();
+    expect(closeSpy).not.toHaveBeenCalled();
 
     return Promise.allSettled(mockedMediaUploadStorePromises).then(() => {
         jest.runAllTimers();
 
-        expect(closeSpy).toBeCalledWith();
+        expect(closeSpy).toHaveBeenCalledWith();
         expect(multiMediaDropzone.instance().mediaUploadStores.length).toBe(0);
-        expect(uploadErrorSpy).toBeCalledWith(
+        expect(uploadErrorSpy).toHaveBeenCalledWith(
             [
                 {
                     'code': 5003,
@@ -374,7 +374,7 @@ test('Should fire close callback when escape button is pressed', () => {
         </MultiMediaDropzone>
     );
 
-    expect(closeSpy).not.toBeCalled();
+    expect(closeSpy).not.toHaveBeenCalled();
     Mousetrap.trigger('esc');
-    expect(closeSpy).toBeCalledWith();
+    expect(closeSpy).toHaveBeenCalledWith();
 });

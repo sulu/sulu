@@ -54,7 +54,7 @@ test('Pass correct props to MultiSelect', () => {
         />
     );
 
-    expect(webspaceStore.getWebspace).toBeCalledWith('sulu_io');
+    expect(webspaceStore.getWebspace).toHaveBeenCalledWith('sulu_io');
 
     expect(pageSettingsNavigationSelect.find('MultiSelect').prop('disabled')).toEqual(true);
     expect(pageSettingsNavigationSelect.find('MultiSelect').prop('values')).toEqual(['footer']);
@@ -95,6 +95,6 @@ test('Call onChange and onBlur if the value is changed', () => {
     );
 
     pageSettingsNavigationSelect.find('MultiSelect').prop('onChange')(['footer', 'main']);
-    expect(changeSpy).toBeCalledWith(['footer', 'main']);
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith(['footer', 'main']);
+    expect(finishSpy).toHaveBeenCalledWith();
 });

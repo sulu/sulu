@@ -112,6 +112,6 @@ test('Call onChange and onFinish if the value is changed', () => {
     );
 
     pageSettingsShadowSelect.find('SingleSelect').prop('onChange')('en');
-    expect(changeSpy).toBeCalledWith('en');
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith('en');
+    expect(finishSpy).toHaveBeenCalledWith();
 });

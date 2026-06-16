@@ -51,10 +51,10 @@ test('TextArea should call onBlur when it loses focus', async() => {
     const textarea = screen.queryByRole('textbox');
 
     await userEvent.click(textarea);
-    expect(blurSpy).not.toBeCalledWith();
+    expect(blurSpy).not.toHaveBeenCalledWith();
 
     await userEvent.tab();
-    expect(blurSpy).toBeCalledWith();
+    expect(blurSpy).toHaveBeenCalledWith();
 });
 
 test('TextArea should call onChange when the TextArea changes', async() => {

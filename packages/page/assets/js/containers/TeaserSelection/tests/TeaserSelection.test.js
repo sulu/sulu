@@ -183,7 +183,7 @@ test('Call onChange when presentation is changed', () => {
     teaserSelection.find('Button[icon="su-eye"]').simulate('click');
     teaserSelection.find('Action[value="test-2"]').simulate('click');
 
-    expect(changeSpy).toBeCalledWith({
+    expect(changeSpy).toHaveBeenCalledWith({
         presentAs: 'test-2',
         items: [],
     });
@@ -216,9 +216,9 @@ test('Add passed data to TeaserStore', () => {
 
     const teaserSelection = mount(<TeaserSelection locale={observable.box('en')} onChange={jest.fn()} value={value} />);
 
-    expect(teaserSelection.instance().teaserStore.add).toBeCalledTimes(2);
-    expect(teaserSelection.instance().teaserStore.add).toBeCalledWith('pages', 2);
-    expect(teaserSelection.instance().teaserStore.add).toBeCalledWith('contacts', 3);
+    expect(teaserSelection.instance().teaserStore.add).toHaveBeenCalledTimes(2);
+    expect(teaserSelection.instance().teaserStore.add).toHaveBeenCalledWith('pages', 2);
+    expect(teaserSelection.instance().teaserStore.add).toHaveBeenCalledWith('contacts', 3);
 });
 
 test('Load combined data from TeaserStore and props', () => {
@@ -336,13 +336,13 @@ test('Adding a teaser element', () => {
     teaserSelection.update();
     expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(false);
 
-    expect(changeSpy).toBeCalledWith({
+    expect(changeSpy).toHaveBeenCalledWith({
         presentAs: undefined,
         items: [{id: 6, type: 'pages'}, {id: 5, type: 'pages'}],
     });
 
-    expect(teaserSelection.instance().teaserStore.add).toBeCalledWith('pages', 6);
-    expect(teaserSelection.instance().teaserStore.add).toBeCalledWith('pages', 5);
+    expect(teaserSelection.instance().teaserStore.add).toHaveBeenCalledWith('pages', 6);
+    expect(teaserSelection.instance().teaserStore.add).toHaveBeenCalledWith('pages', 5);
 });
 
 test('Adding two different kind of teasers', () => {
@@ -376,7 +376,7 @@ test('Adding two different kind of teasers', () => {
     teaserSelection.update();
     expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="articles"]').prop('open')).toEqual(false);
 
-    expect(changeSpy).toBeCalledWith({
+    expect(changeSpy).toHaveBeenCalledWith({
         presentAs: undefined,
         items: [
             {id: 5, type: 'pages'},
@@ -385,7 +385,7 @@ test('Adding two different kind of teasers', () => {
         ],
     });
 
-    expect(teaserSelection.instance().teaserStore.add).toBeCalledWith('articles', 6);
+    expect(teaserSelection.instance().teaserStore.add).toHaveBeenCalledWith('articles', 6);
 });
 
 test('Adding a teaser item along with other teaser items which has already been added', () => {
@@ -418,7 +418,7 @@ test('Adding a teaser item along with other teaser items which has already been 
     teaserSelection.update();
     expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(false);
 
-    expect(changeSpy).toBeCalledWith({
+    expect(changeSpy).toHaveBeenCalledWith({
         presentAs: undefined,
         items: [
             {id: 5, type: 'pages'},
@@ -426,7 +426,7 @@ test('Adding a teaser item along with other teaser items which has already been 
         ],
     });
 
-    expect(teaserSelection.instance().teaserStore.add).toBeCalledWith('pages', 6);
+    expect(teaserSelection.instance().teaserStore.add).toHaveBeenCalledWith('pages', 6);
 });
 
 test('Removing by unselecting element in teaser selection', () => {
@@ -461,13 +461,13 @@ test('Removing by unselecting element in teaser selection', () => {
     teaserSelection.update();
     expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(false);
 
-    expect(changeSpy).toBeCalledWith({
+    expect(changeSpy).toHaveBeenCalledWith({
         presentAs: undefined,
         items: [{id: 5, type: 'articles'}, {id: 6, type: 'pages'}],
     });
 
-    expect(teaserSelection.instance().teaserStore.add).toBeCalledWith('pages', 6);
-    expect(teaserSelection.instance().teaserStore.add).toBeCalledWith('pages', 5);
+    expect(teaserSelection.instance().teaserStore.add).toHaveBeenCalledWith('pages', 6);
+    expect(teaserSelection.instance().teaserStore.add).toHaveBeenCalledWith('pages', 5);
 });
 
 test('Preselecting correct items', () => {
@@ -593,7 +593,7 @@ test('Call onChange with new values when apply button is clicked', () => {
 
     teaserSelection.find('Button[children="sulu_admin.apply"]').prop('onClick')();
 
-    expect(changeSpy).toBeCalledWith(
+    expect(changeSpy).toHaveBeenCalledWith(
         {
             presentAs: '',
             items: [
@@ -657,7 +657,7 @@ test('Call onChange with new values after one item is removed', () => {
 
     teaserSelection.find('Icon[name="su-trash-alt"]').at(1).parent().prop('onClick')();
 
-    expect(changeSpy).toBeCalledWith(
+    expect(changeSpy).toHaveBeenCalledWith(
         {
             presentAs: '',
             items: [
@@ -715,7 +715,7 @@ test('Call onChange with new values after items are sorted', () => {
 
     teaserSelection.find('MultiItemSelection').prop('onItemsSorted')(2, 1);
 
-    expect(changeSpy).toBeCalledWith(
+    expect(changeSpy).toHaveBeenCalledWith(
         {
             presentAs: '',
             items: [
@@ -842,5 +842,5 @@ test('Call destroy of TeaserStore when unmounted', () => {
     const teaserStore = teaserSelection.instance().teaserStore;
     teaserSelection.unmount();
 
-    expect(teaserStore.destroy).toBeCalledWith();
+    expect(teaserStore.destroy).toHaveBeenCalledWith();
 });

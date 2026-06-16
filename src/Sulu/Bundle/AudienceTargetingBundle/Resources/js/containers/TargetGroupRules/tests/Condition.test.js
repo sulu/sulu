@@ -44,7 +44,7 @@ test('Call onRemove callback if remove icon is clicked', () => {
     const condition = shallow(<Condition index={5} onChange={jest.fn()} onRemove={removeSpy} value={value} />);
     condition.find('Button[icon="su-trash-alt"]').prop('onClick')();
 
-    expect(removeSpy).toBeCalledWith(5);
+    expect(removeSpy).toHaveBeenCalledWith(5);
 });
 
 test('Call onChange callback if rule type changes', () => {
@@ -54,7 +54,7 @@ test('Call onChange callback if rule type changes', () => {
     const condition = shallow(<Condition index={5} onChange={changeSpy} onRemove={jest.fn()} value={value} />);
     condition.find('SingleSelect').prop('onChange')('browser');
 
-    expect(changeSpy).toBeCalledWith({condition: {test: 'value'}, type: 'browser'}, 5);
+    expect(changeSpy).toHaveBeenCalledWith({condition: {test: 'value'}, type: 'browser'}, 5);
 });
 
 test('Call onChange callback if condition changes', () => {
@@ -82,5 +82,5 @@ test('Call onChange callback if condition changes', () => {
     const condition = shallow(<Condition index={5} onChange={changeSpy} onRemove={jest.fn()} value={value} />);
     condition.find(RuleType).prop('onChange')({test: 'value'});
 
-    expect(changeSpy).toBeCalledWith({condition: {test: 'value'}, type: 'browser'}, 5);
+    expect(changeSpy).toHaveBeenCalledWith({condition: {test: 'value'}, type: 'browser'}, 5);
 });

@@ -98,7 +98,7 @@ test('Should call onCancel callback if user chooses not to copy content', () => 
 
     ghostDialog.find('Button[skin="secondary"]').simulate('click');
 
-    expect(cancelSpy).toBeCalledWith();
+    expect(cancelSpy).toHaveBeenCalledWith();
 });
 
 test('Should call onConfirm callback with chosen locale if user chooses to copy content', (resolve) => {
@@ -113,7 +113,7 @@ test('Should call onConfirm callback with chosen locale if user chooses to copy 
         ghostDialog.find('SingleSelect').at(0).prop('onChange')('de');
         ghostDialog.find('Button[skin="primary"]').at(0).simulate('click');
 
-        expect(confirmSpy).toBeCalledWith('de', {});
+        expect(confirmSpy).toHaveBeenCalledWith('de', {});
 
         resolve();
     }, 1);
@@ -145,7 +145,7 @@ test('Should call onConfirm callback with chosen locale if user chooses to copy 
         ghostDialog.find('SingleSelect').at(0).prop('onChange')('de');
         ghostDialog.find('Button[skin="primary"]').at(0).simulate('click');
 
-        expect(confirmSpy).toBeCalledWith('de', {
+        expect(confirmSpy).toHaveBeenCalledWith('de', {
             title: 'Test 123',
         });
 

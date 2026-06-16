@@ -622,7 +622,7 @@ test('Reload medias and fire onUploadError callback if an error happens while up
         />
     );
 
-    expect(onUploadErrorSpy).not.toBeCalled();
+    expect(onUploadErrorSpy).not.toHaveBeenCalled();
 
     mediaCollection.find('MultiMediaDropzone').props().onUploadError(
         [
@@ -633,7 +633,7 @@ test('Reload medias and fire onUploadError callback if an error happens while up
         ]
     );
 
-    expect(onUploadErrorSpy).toBeCalledWith(
+    expect(onUploadErrorSpy).toHaveBeenCalledWith(
         [
             {
                 'code': 5003,
@@ -641,7 +641,7 @@ test('Reload medias and fire onUploadError callback if an error happens while up
             },
         ]
     );
-    expect(mediaListStore.reload).toBeCalled();
+    expect(mediaListStore.reload).toHaveBeenCalled();
 });
 
 test('Render the MediaCollection for all media', () => {
@@ -1135,7 +1135,7 @@ test('Should send a request to add a new collection via the overlay', () => {
 
     mediaCollection.find('Button[icon="su-plus"]').simulate('click');
 
-    expect(collectionStore.resourceStore.clone).not.toBeCalled();
+    expect(collectionStore.resourceStore.clone).not.toHaveBeenCalled();
     expect(field.mock.calls[0][0].value).toEqual(undefined);
 
     expect(mediaCollection.find('Dialog[title="sulu_media.remove_collection"]').prop('open')).toEqual(false);
@@ -1164,8 +1164,8 @@ test('Should send a request to add a new collection via the overlay', () => {
             breadcrumb: true,
         });
         expect(newResourceStore.set).toHaveBeenCalledWith('parent', 1);
-        expect(collectionNavigateSpy).toBeCalled();
-        expect(collectionStore.resourceStore.setMultiple).not.toBeCalled();
+        expect(collectionNavigateSpy).toHaveBeenCalled();
+        expect(collectionStore.resourceStore.setMultiple).not.toHaveBeenCalled();
     });
 });
 
@@ -1226,7 +1226,7 @@ test('Should send a request to update the collection via the overlay', () => {
     const resourceStoreInstances = ResourceStore.mock.instances;
     const newResourceStore = resourceStoreInstances[resourceStoreInstances.length - 1];
     newResourceStore.save.mockReturnValue(promise);
-    expect(collectionStore.resourceStore.clone).toBeCalled();
+    expect(collectionStore.resourceStore.clone).toHaveBeenCalled();
     expect(field.mock.calls[0][0].value).toEqual('Title');
 
     expect(mediaCollection.find('Dialog[title="sulu_media.remove_collection"]').prop('open')).toEqual(false);
@@ -1249,9 +1249,9 @@ test('Should send a request to update the collection via the overlay', () => {
     return promise.then(() => {
         mediaCollection.update();
         expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(false);
-        expect(newResourceStore.save).toBeCalledWith({breadcrumb: true});
-        expect(collectionNavigateSpy).not.toBeCalled();
-        expect(collectionStore.resourceStore.setMultiple).toBeCalled();
+        expect(newResourceStore.save).toHaveBeenCalledWith({breadcrumb: true});
+        expect(collectionNavigateSpy).not.toHaveBeenCalled();
+        expect(collectionStore.resourceStore.setMultiple).toHaveBeenCalled();
     });
 });
 
@@ -1308,13 +1308,13 @@ test('Confirming the delete dialog should delete the item', () => {
     collectionStore.resourceStore.deleting = true;
     mediaCollection.update();
 
-    expect(collectionStore.resourceStore.delete).toBeCalled();
+    expect(collectionStore.resourceStore.delete).toHaveBeenCalled();
     expect(mediaCollection.find('Dialog[title="sulu_media.remove_collection"]').prop('open')).toEqual(true);
     expect(mediaCollection.find('Dialog[title="sulu_media.remove_collection"]').prop('confirmLoading')).toEqual(true);
 
     return promise.then(() => {
         collectionStore.resourceStore.deleting = false;
-        expect(collectionNavigateSpy).toBeCalledWith(undefined);
+        expect(collectionNavigateSpy).toHaveBeenCalledWith(undefined);
         mediaCollection.update();
         expect(mediaCollection.find('Dialog[title="sulu_media.remove_collection"]').prop('open')).toEqual(false);
         expect(mediaCollection.find('Dialog[title="sulu_media.remove_collection"]').prop('confirmLoading'))
@@ -1383,7 +1383,7 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
     mediaCollection.find('Dialog Button[skin="primary"]').simulate('click');
 
     return promise.then(() => {
-        expect(collectionNavigateSpy).toBeCalledWith(3);
+        expect(collectionNavigateSpy).toHaveBeenCalledWith(3);
     });
 });
 
@@ -1445,7 +1445,7 @@ test('Confirming the move dialog should move the item', () => {
     collectionStore.resourceStore.moving = true;
     mediaCollection.update();
 
-    expect(collectionStore.resourceStore.move).toBeCalledWith(7);
+    expect(collectionStore.resourceStore.move).toHaveBeenCalledWith(7);
     expect(getMoveCollectionOverlay().prop('open')).toEqual(true);
     expect(getMoveCollectionOverlay().prop('options')).toEqual({includeRoot: true});
     expect(getMoveCollectionOverlay().prop('confirmLoading')).toEqual(true);
@@ -1455,7 +1455,7 @@ test('Confirming the move dialog should move the item', () => {
         mediaCollection.update();
         expect(getMoveCollectionOverlay().prop('open')).toEqual(false);
         expect(getMoveCollectionOverlay().prop('confirmLoading')).toEqual(false);
-        expect(collectionStore.resourceStore.reload).toBeCalledWith();
+        expect(collectionStore.resourceStore.reload).toHaveBeenCalledWith();
     });
 });
 
@@ -1530,7 +1530,7 @@ test('Confirming the move dialog should move the item after confirming the permi
     collectionStore.resourceStore.moving = true;
     mediaCollection.update();
 
-    expect(collectionStore.resourceStore.move).toBeCalledWith(7);
+    expect(collectionStore.resourceStore.move).toHaveBeenCalledWith(7);
     expect(getMoveCollectionOverlay().prop('open')).toEqual(true);
     expect(getMoveCollectionOverlay().prop('options')).toEqual({includeRoot: true});
     expect(getMoveCollectionOverlay().prop('confirmLoading')).toEqual(true);
@@ -1540,7 +1540,7 @@ test('Confirming the move dialog should move the item after confirming the permi
         mediaCollection.update();
         expect(getMoveCollectionOverlay().prop('open')).toEqual(false);
         expect(getMoveCollectionOverlay().prop('confirmLoading')).toEqual(false);
-        expect(collectionStore.resourceStore.reload).toBeCalledWith();
+        expect(collectionStore.resourceStore.reload).toHaveBeenCalledWith();
     });
 });
 
@@ -1676,10 +1676,10 @@ test('Confirming the permission overlay should save the permissions', () => {
     mediaCollection.find('PermissionFormOverlay Form').at(0).prop('onSubmit')();
 
     expect(mediaCollection.find('PermissionFormOverlay').instance().resourceStore.save)
-        .toBeCalledWith({resourceKey: 'media'});
+        .toHaveBeenCalledWith({resourceKey: 'media'});
 
     return savePromise.then(() => {
-        expect(collectionStore.resourceStore.reload).toBeCalledWith();
+        expect(collectionStore.resourceStore.reload).toHaveBeenCalledWith();
         mediaCollection.update();
         expect(mediaCollection.find('PermissionFormOverlay').prop('open')).toEqual(false);
     });

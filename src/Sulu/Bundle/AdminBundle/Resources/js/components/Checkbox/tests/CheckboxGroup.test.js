@@ -40,7 +40,7 @@ test('The component should call onChange handler when checkboxes are clicked', a
         </CheckboxGroup>
     );
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 
     const checkbox1 = screen.getByDisplayValue('value-1');
     const checkbox3 = screen.getByDisplayValue('value-3');

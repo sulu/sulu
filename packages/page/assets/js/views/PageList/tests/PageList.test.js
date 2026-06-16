@@ -266,7 +266,7 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
     toolbarConfig.items[0].onClick();
     toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
     expect(toolbarConfig.items[0].value).toEqual(false);
-    expect(webspaceOverview.instance().listStore.clear).toBeCalledWith();
+    expect(webspaceOverview.instance().listStore.clear).toHaveBeenCalledWith();
     expect(webspaceOverview.instance().excludeGhostsAndShadows.get()).toEqual(true);
 
     toolbarConfig.items[0].onClick();
@@ -345,12 +345,12 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
 
     const cacheClearToolbarAction: CacheClearToolbarAction = (CacheClearToolbarAction: any).mock.instances[0];
 
-    expect(CacheClearToolbarAction).toBeCalledWith('sulu');
-    expect(cacheClearToolbarAction.getNode).toBeCalledWith();
+    expect(CacheClearToolbarAction).toHaveBeenCalledWith('sulu');
+    expect(cacheClearToolbarAction.getNode).toHaveBeenCalledWith();
 
-    expect(cacheClearToolbarAction.getToolbarItemConfig).not.toBeCalled();
+    expect(cacheClearToolbarAction.getToolbarItemConfig).not.toHaveBeenCalled();
     toolbarFunction.call(pageList.instance());
-    expect(cacheClearToolbarAction.getToolbarItemConfig).toBeCalled();
+    expect(cacheClearToolbarAction.getToolbarItemConfig).toHaveBeenCalled();
 });
 
 test('Should load webspace and active route attribute from listStore and userStore', () => {
@@ -370,7 +370,7 @@ test('Should load webspace and active route attribute from listStore and userSto
     expect(PageList.getDerivedRouteAttributes(undefined, {webspace: 'abc'})).toEqual({
         active: 'some-uuid',
     });
-    expect(ListStore.getActiveSetting).toBeCalledWith('pages', 'page_list_abc');
+    expect(ListStore.getActiveSetting).toHaveBeenCalledWith('pages', 'page_list_abc');
 });
 
 test('Destroy ListStore to avoid many requests and reset active to be set on webspace change', () => {
@@ -402,8 +402,8 @@ test('Destroy ListStore to avoid many requests and reset active to be set on web
 
     webspaceKey.set('sulu_blog');
 
-    expect(webspaceOverview.instance().listStore.destroy).toBeCalledWith();
-    expect(webspaceOverview.instance().listStore.active.set).toBeCalledWith(undefined);
+    expect(webspaceOverview.instance().listStore.destroy).toHaveBeenCalledWith();
+    expect(webspaceOverview.instance().listStore.active.set).toHaveBeenCalledWith(undefined);
 });
 
 test('Should bind router', () => {
@@ -433,10 +433,10 @@ test('Should bind router', () => {
     const locale = webspaceOverview.instance().locale;
     const excludeGhostsAndShadows = webspaceOverview.instance().excludeGhostsAndShadows;
 
-    expect(router.bind).toBeCalledWith('page', page, 1);
-    expect(router.bind).toBeCalledWith('excludeGhostsAndShadows', excludeGhostsAndShadows, false);
-    expect(router.bind).toBeCalledWith('locale', locale);
-    expect(router.bind).toBeCalledWith('active', webspaceOverview.instance().listStore.active);
+    expect(router.bind).toHaveBeenCalledWith('page', page, 1);
+    expect(router.bind).toHaveBeenCalledWith('excludeGhostsAndShadows', excludeGhostsAndShadows, false);
+    expect(router.bind).toHaveBeenCalledWith('locale', locale);
+    expect(router.bind).toHaveBeenCalledWith('active', webspaceOverview.instance().listStore.active);
 });
 
 test('Should call disposers on unmount', () => {
@@ -469,6 +469,6 @@ test('Should call disposers on unmount', () => {
     webspaceOverview.instance().excludeGhostsAndShadowsDisposer = excludeGhostsAndShadowsDisposerSpy;
     webspaceOverview.unmount();
 
-    expect(listStore.destroy).toBeCalledWith();
-    expect(excludeGhostsAndShadowsDisposerSpy).toBeCalledWith();
+    expect(listStore.destroy).toHaveBeenCalledWith();
+    expect(excludeGhostsAndShadowsDisposerSpy).toHaveBeenCalledWith();
 });

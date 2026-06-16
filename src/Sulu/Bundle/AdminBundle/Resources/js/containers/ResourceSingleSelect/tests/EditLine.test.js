@@ -13,7 +13,7 @@ test('Call onChange callback if input changes', () => {
 
     editLine.find('Input').simulate('change', 'new');
 
-    expect(changeSpy).toBeCalledWith(3, 'new');
+    expect(changeSpy).toHaveBeenCalledWith(3, 'new');
 });
 
 test('Call onRemove callback if line is removed', () => {
@@ -22,5 +22,5 @@ test('Call onRemove callback if line is removed', () => {
 
     editLine.find('Button').simulate('click');
 
-    expect(removeSpy).toBeCalledWith(3);
+    expect(removeSpy).toHaveBeenCalledWith(3);
 });

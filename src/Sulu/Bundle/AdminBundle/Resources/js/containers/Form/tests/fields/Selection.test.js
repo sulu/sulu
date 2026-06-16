@@ -140,7 +140,7 @@ test('Should pass props correctly to MultiSelection component', () => {
         />
     );
 
-    expect(translate).toBeCalledWith('sulu_snippet.selection_label', {count: 3});
+    expect(translate).toHaveBeenCalledWith('sulu_snippet.selection_label', {count: 3});
 
     expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'table',
@@ -237,7 +237,7 @@ test('Should pass locale from userStore to MultiSelection component if form has 
         />
     );
 
-    expect(translate).toBeCalledWith('sulu_snippet.selection_label', {count: 3});
+    expect(translate).toHaveBeenCalledWith('sulu_snippet.selection_label', {count: 3});
 
     expect(toJS(selection.find('MultiSelection').prop('locale'))).toEqual('de');
 });
@@ -330,8 +330,8 @@ test('Should pass props with schema-options correctly to MultiSelection componen
         />
     );
 
-    expect(translate).toBeCalledWith('sulu_snippet.selection_label', {count: 3});
-    expect(formInspector.getValueByPath).toBeCalledWith('/otherPropertyName');
+    expect(translate).toHaveBeenCalledWith('sulu_snippet.selection_label', {count: 3});
+    expect(formInspector.getValueByPath).toHaveBeenCalledWith('/otherPropertyName');
 
     expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'table',
@@ -468,7 +468,7 @@ test('Should pass empty array to MultiSelection component if value is not given'
         />
     );
 
-    expect(translate).toBeCalledWith('sulu_page.selection_label', {count: 0});
+    expect(translate).toHaveBeenCalledWith('sulu_page.selection_label', {count: 0});
     expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'column_list',
         resourceKey: 'pages',
@@ -504,8 +504,8 @@ test('Should call onChange and onFinish callback when MultiSelection component f
 
     selection.find('MultiSelection').prop('onChange')([1, 2, 3]);
 
-    expect(changeSpy).toBeCalledWith([1, 2, 3]);
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith([1, 2, 3]);
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Should not fail when MultiSelection item is clicked without configured view', () => {
@@ -552,7 +552,7 @@ test('Should not fail when MultiSelection item is clicked without configured vie
     expect(selection.find('MultiItemSelection Item .content').at(0).prop('role')).toEqual(undefined);
     expect(selection.find('MultiItemSelection Item .content').at(1).prop('onClick')).toEqual(undefined);
     expect(selection.find('MultiItemSelection Item .content').at(1).prop('role')).toEqual(undefined);
-    expect(router.navigate).not.toBeCalled();
+    expect(router.navigate).not.toHaveBeenCalled();
 });
 
 test('Should navigate to view when MultiSelection item is clicked with configured view', () => {
@@ -628,7 +628,7 @@ test('Should log warning and use ids of objects if given value is an array of ob
     );
 
     expect(selection.find('MultiSelection').prop('value')).toEqual([55, 66]);
-    expect(log.warn).toBeCalledWith(expect.stringContaining('expects an array of ids as value'));
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('expects an array of ids as value'));
 });
 
 test('Should throw an error if "types" schema option is not a string', () => {
@@ -648,7 +648,7 @@ test('Should throw an error if "types" schema option is not a string', () => {
             formInspector={formInspector}
             schemaOptions={{types: {name: 'type', value: []}}}
         />
-    )).toThrowError(/"types"/);
+    )).toThrow(/"types"/);
 });
 
 test('Should throw an error if "item_disabled_condition" schema option is not a string', () => {
@@ -668,7 +668,7 @@ test('Should throw an error if "item_disabled_condition" schema option is not a 
             formInspector={formInspector}
             schemaOptions={{item_disabled_condition: {name: 'item_disabled_condition', value: []}}}
         />
-    )).toThrowError(/"item_disabled_condition"/);
+    )).toThrow(/"item_disabled_condition"/);
 });
 
 test('Should throw an error if "allow_deselect_for_disabled_items" schema option is not a boolean', () => {
@@ -694,7 +694,7 @@ test('Should throw an error if "allow_deselect_for_disabled_items" schema option
             formInspector={formInspector}
             schemaOptions={schemaOptions}
         />
-    )).toThrowError(/"allow_deselect_for_disabled_items"/);
+    )).toThrow(/"allow_deselect_for_disabled_items"/);
 });
 
 test('Should throw an error if "sortable" schema option is not a boolean', () => {
@@ -720,7 +720,7 @@ test('Should throw an error if "sortable" schema option is not a boolean', () =>
             formInspector={formInspector}
             schemaOptions={schemaOptions}
         />
-    )).toThrowError(/"sortable"/);
+    )).toThrow(/"sortable"/);
 });
 
 test('Should throw an error if "request_parameters" schema option is not an array', () => {
@@ -740,7 +740,7 @@ test('Should throw an error if "request_parameters" schema option is not an arra
             formInspector={formInspector}
             schemaOptions={{request_parameters: {name: 'request_parameters', value: 'not-an-array'}}}
         />
-    )).toThrowError(/"request_parameters"/);
+    )).toThrow(/"request_parameters"/);
 });
 
 test('Should throw an error if "resource_store_properties_to_request" schema option is not an array', () => {
@@ -763,7 +763,7 @@ test('Should throw an error if "resource_store_properties_to_request" schema opt
             formInspector={formInspector}
             schemaOptions={schemaOptions}
         />
-    )).toThrowError(/"resource_store_properties_to_request"/);
+    )).toThrow(/"resource_store_properties_to_request"/);
 });
 
 test('Should throw an error if no "resource_key" option is passed in fieldOptions', () => {
@@ -775,7 +775,7 @@ test('Should throw an error if no "resource_key" option is passed in fieldOption
             fieldTypeOptions={{default_type: 'list_overlay'}}
             formInspector={formInspector}
         />
-    )).toThrowError(/"resource_key"/);
+    )).toThrow(/"resource_key"/);
 });
 
 test('Should throw an error if no "adapter" option is passed for overlay type in fieldTypeOptions', () => {
@@ -794,7 +794,7 @@ test('Should throw an error if no "adapter" option is passed for overlay type in
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
         />
-    )).toThrowError(/"adapter"/);
+    )).toThrow(/"adapter"/);
 });
 
 test('Should call the disposers for list selections and locale and ListStore if unmounted', () => {
@@ -829,11 +829,11 @@ test('Should call the disposers for list selections and locale and ListStore if 
 
     selection.unmount();
 
-    expect(changeListDisposerSpy).toBeCalledWith();
-    expect(changeLocaleDisposerSpy).toBeCalledWith();
-    expect(changeListOptionsDisposerSpy).toBeCalledWith();
-    expect(changeAutoCompleteSelectionDisposerSpy).toBeCalledWith();
-    expect(listStoreDestroy).toBeCalledWith();
+    expect(changeListDisposerSpy).toHaveBeenCalledWith();
+    expect(changeLocaleDisposerSpy).toHaveBeenCalledWith();
+    expect(changeListOptionsDisposerSpy).toHaveBeenCalledWith();
+    expect(changeAutoCompleteSelectionDisposerSpy).toHaveBeenCalledWith();
+    expect(listStoreDestroy).toHaveBeenCalledWith();
 });
 
 test('Should call sendRequestDisposer to avoid extra request when locale is changed', () => {
@@ -871,7 +871,7 @@ test('Should call sendRequestDisposer to avoid extra request when locale is chan
 
     locale.set('de');
 
-    expect(selection.instance().listStore.sendRequestDisposer).toBeCalledWith();
+    expect(selection.instance().listStore.sendRequestDisposer).toHaveBeenCalledWith();
 });
 
 test('Should pass correct props to list component', () => {
@@ -1099,8 +1099,8 @@ test('Should call onChange and onFinish prop when list selection changes', () =>
     selection.instance().listStore.dataLoading = false;
     selection.instance().listStore.selectionIds = [1, 5, 7];
 
-    expect(changeSpy).toBeCalledWith([1, 5, 7]);
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith([1, 5, 7]);
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Should not call onChange and onFinish prop while list is still loading', () => {
@@ -1138,8 +1138,8 @@ test('Should not call onChange and onFinish prop while list is still loading', (
 
     selection.instance().listStore.selectionIds = [1, 5, 7];
 
-    expect(changeSpy).not.toBeCalled();
-    expect(finishSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
+    expect(finishSpy).not.toHaveBeenCalled();
 });
 
 test('Should update listStore when the value of a "resource_store_properties_to_request" property is changed', () => {
@@ -1204,7 +1204,7 @@ test('Should update listStore when the value of a "resource_store_properties_to_
     expect(selection.instance().listStore.options).toEqual({
         dynamicKey: 'second-value',
     });
-    expect(selection.instance().listStore.reset).toBeCalled();
+    expect(selection.instance().listStore.reset).toHaveBeenCalled();
     expect(selection.instance().listStore.initialSelectionIds).toEqual([12, 14]);
 });
 
@@ -1303,7 +1303,7 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
         selectionStore: selection.instance().autoCompleteSelectionStore,
     }));
 
-    expect(MultiSelectionStore).toBeCalledWith('snippets', value, locale, 'names');
+    expect(MultiSelectionStore).toHaveBeenCalledWith('snippets', value, locale, 'names');
 });
 
 test('Should pass locale from userStore to MultiAutoComplete component if form has no locale', () => {
@@ -1416,7 +1416,7 @@ test('Should pass props with schema-options type correctly to MultiAutoComplete 
         />
     );
 
-    expect(formInspector.getValueByPath).toBeCalledWith('/otherPropertyName');
+    expect(formInspector.getValueByPath).toHaveBeenCalledWith('/otherPropertyName');
 
     expect(selection.find('MultiAutoComplete').props()).toEqual(expect.objectContaining({
         allowAdd: false,
@@ -1468,13 +1468,13 @@ test('Should trigger a reload of the auto_complete items if the value prop chang
         />
     );
 
-    expect(selection.instance().autoCompleteSelectionStore.loadItems).not.toBeCalled();
+    expect(selection.instance().autoCompleteSelectionStore.loadItems).not.toHaveBeenCalled();
 
     selection.instance().autoCompleteSelectionStore.items = [{uuid: 1}, {uuid: 6}, {uuid: 8}];
 
     selection.setProps({value: [3, 4, 7]});
 
-    expect(selection.instance().autoCompleteSelectionStore.loadItems).toBeCalledWith([3, 4, 7]);
+    expect(selection.instance().autoCompleteSelectionStore.loadItems).toHaveBeenCalledWith([3, 4, 7]);
 });
 
 test('Should not trigger a reload of the auto_complete items if the value prop changes to the same value again', () => {
@@ -1517,7 +1517,7 @@ test('Should not trigger a reload of the auto_complete items if the value prop c
 
     selection.setProps({value: [1, 6, 8]});
 
-    expect(selection.instance().autoCompleteSelectionStore.loadItems).not.toBeCalled();
+    expect(selection.instance().autoCompleteSelectionStore.loadItems).not.toHaveBeenCalled();
 });
 
 test('Throw an error if a none string was passed to schema-options', () => {
@@ -1642,8 +1642,8 @@ test('Should call onChange and onFinish callback when content of selectionStore 
         {uuid: 3},
     ];
 
-    expect(changeSpy).toBeCalledWith([1, 2, 3]);
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith([1, 2, 3]);
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Should not call onChange and onFinish callback when content of selectionStore is empty and undefined', () => {
@@ -1678,8 +1678,8 @@ test('Should not call onChange and onFinish callback when content of selectionSt
     selection.instance().autoCompleteSelectionStore.dataLoading = false;
     selection.instance().autoCompleteSelectionStore.items = [];
 
-    expect(changeSpy).not.toBeCalled();
-    expect(finishSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
+    expect(finishSpy).not.toHaveBeenCalled();
 });
 
 test('Should pass allowAdd prop to MultiAutoComplete component', () => {

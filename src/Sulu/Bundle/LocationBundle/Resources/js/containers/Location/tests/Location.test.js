@@ -225,7 +225,7 @@ test('Should close overlay and call callback with correct value when the Locatio
     location.update();
     expect(location.find(LocationOverlay).props().open).toEqual(false);
 
-    expect(changeSpy).toBeCalledWith(newLocationData);
+    expect(changeSpy).toHaveBeenCalledWith(newLocationData);
 });
 
 test('Should update view of map when value prop is changed', () => {
@@ -253,9 +253,9 @@ test('Should update view of map when value prop is changed', () => {
     const mockedMap = {setView: jest.fn()};
     location.find(MapContainer).props().whenCreated(mockedMap);
 
-    expect(mockedMap.setView).not.toBeCalled();
+    expect(mockedMap.setView).not.toHaveBeenCalled();
 
     location.setProps({value: {lat: 44, long: 55, zoom: 2}});
 
-    expect(mockedMap.setView).toBeCalledWith([44, 55], 2);
+    expect(mockedMap.setView).toHaveBeenCalledWith([44, 55], 2);
 });

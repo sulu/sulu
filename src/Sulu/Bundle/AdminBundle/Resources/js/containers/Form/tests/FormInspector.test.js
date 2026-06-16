@@ -97,7 +97,7 @@ test('Should return the value for a path by using the ResourceFormStore', () => 
     const formInspector = new FormInspector(formStore);
 
     expect(formInspector.getValueByPath('/test')).toBe(data);
-    expect(formStore.getValueByPath).toBeCalledWith('/test');
+    expect(formStore.getValueByPath).toHaveBeenCalledWith('/test');
 });
 
 test('Should return the values for a given tag by using the ResourceFormStore', () => {
@@ -107,7 +107,7 @@ test('Should return the values for a given tag by using the ResourceFormStore', 
     const formInspector = new FormInspector(formStore);
 
     expect(formInspector.getValuesByTag('/test')).toBe(data);
-    expect(formStore.getValuesByTag).toBeCalledWith('/test');
+    expect(formStore.getValuesByTag).toHaveBeenCalledWith('/test');
 });
 
 test('Should call finishField method from formStore', () => {
@@ -116,7 +116,7 @@ test('Should call finishField method from formStore', () => {
 
     formInspector.finishField('/block/0/test', '/test');
 
-    expect(formStore.finishField).toBeCalledWith('/block/0/test');
+    expect(formStore.finishField).toHaveBeenCalledWith('/block/0/test');
 });
 
 test('Should call registered onFinishField handlers', () => {
@@ -127,8 +127,8 @@ test('Should call registered onFinishField handlers', () => {
     formInspector.addFinishFieldHandler(finishFieldHandler2);
 
     formInspector.finishField('/block/0/test', '/test');
-    expect(finishFieldHandler1).toBeCalledWith('/block/0/test', '/test');
-    expect(finishFieldHandler2).toBeCalledWith('/block/0/test', '/test');
+    expect(finishFieldHandler1).toHaveBeenCalledWith('/block/0/test', '/test');
+    expect(finishFieldHandler2).toHaveBeenCalledWith('/block/0/test', '/test');
 });
 
 test.each([
@@ -142,9 +142,9 @@ test.each([
     formInspector.addSaveHandler(saveHandler2);
 
     formInspector.triggerSaveHandler(action);
-    expect(saveHandler1).toBeCalledWith(action);
-    expect(saveHandler2).toBeCalledWith(action);
-    expect(log.warn).toBeCalled();
+    expect(saveHandler1).toHaveBeenCalledWith(action);
+    expect(saveHandler2).toHaveBeenCalledWith(action);
+    expect(log.warn).toHaveBeenCalled();
 });
 
 test.each([
@@ -159,9 +159,9 @@ test.each([
     formInspector.addSaveHandler(saveHandler2);
 
     formInspector.triggerSaveHandler(options);
-    expect(saveHandler1).toBeCalledWith(options);
-    expect(saveHandler2).toBeCalledWith(options);
-    expect(log.warn).not.toBeCalled();
+    expect(saveHandler1).toHaveBeenCalledWith(options);
+    expect(saveHandler2).toHaveBeenCalledWith(options);
+    expect(log.warn).not.toHaveBeenCalled();
 });
 
 test('Should return the SchemaEntry for a given path by using the ResourceFormStore', () => {
@@ -173,7 +173,7 @@ test('Should return the SchemaEntry for a given path by using the ResourceFormSt
     const formInspector = new FormInspector(formStore);
 
     expect(formInspector.getSchemaEntryByPath('/test')).toBe(schemaEntry);
-    expect(formStore.getSchemaEntryByPath).toBeCalledWith('/test');
+    expect(formStore.getSchemaEntryByPath).toHaveBeenCalledWith('/test');
 });
 
 test('Should return if a field is modified by using the ResourceFormStore', () => {
@@ -182,5 +182,5 @@ test('Should return if a field is modified by using the ResourceFormStore', () =
     const formInspector = new FormInspector(formStore);
 
     expect(formInspector.isFieldModified('/test')).toBe(true);
-    expect(formStore.isFieldModified).toBeCalledWith('/test');
+    expect(formStore.isFieldModified).toHaveBeenCalledWith('/test');
 });

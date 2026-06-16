@@ -22,7 +22,7 @@ test('Component should render without selected media', () => {
         <SingleMediaSelection locale={observable.box('en')} onChange={jest.fn()} value={undefined} />
     );
 
-    expect(SingleSelectionStore).toBeCalledWith('media', undefined, expect.anything());
+    expect(SingleSelectionStore).toHaveBeenCalledWith('media', undefined, expect.anything());
     expect(singleMediaSelection.render()).toMatchSnapshot();
 });
 
@@ -73,7 +73,7 @@ test('Component should render with selected media', () => {
         />
     );
 
-    expect(SingleSelectionStore).toBeCalledWith('media', 33, expect.anything());
+    expect(SingleSelectionStore).toHaveBeenCalledWith('media', 33, expect.anything());
     expect(singleMediaSelection.render()).toMatchSnapshot();
 });
 
@@ -95,7 +95,7 @@ test('Component should render with selected media without thumbnails with MimeTy
         />
     );
 
-    expect(SingleSelectionStore).toBeCalledWith('media', 33, expect.anything());
+    expect(SingleSelectionStore).toHaveBeenCalledWith('media', 33, expect.anything());
     expect(singleMediaSelection.render()).toMatchSnapshot();
 });
 
@@ -158,7 +158,7 @@ test('Click on remove-button should clear the selection store', () => {
     );
 
     singleMediaSelection.find('.removeButton').simulate('click');
-    expect(singleMediaSelection.instance().singleMediaSelectionStore.clear).toBeCalled();
+    expect(singleMediaSelection.instance().singleMediaSelectionStore.clear).toHaveBeenCalled();
 });
 
 test('Media that is selected in the overlay should be set to the selection store on confirm', () => {
@@ -180,7 +180,7 @@ test('Media that is selected in the overlay should be set to the selection store
         },
     });
 
-    expect(singleMediaSelection.instance().singleMediaSelectionStore.set).toBeCalledWith(expect.objectContaining({
+    expect(singleMediaSelection.instance().singleMediaSelectionStore.set).toHaveBeenCalledWith(expect.objectContaining({
         id: 22,
         title: 'test media',
         mimeType: 'image/jpeg',
@@ -205,7 +205,7 @@ test('Should call the onChange handler if the displayOption changes', () => {
     singleMediaSelection.find('Button[icon="su-display-default"]').simulate('click');
     singleMediaSelection.find('Action[value="left"]').simulate('click');
 
-    expect(changeSpy).toBeCalledWith({displayOption: 'left', id: undefined});
+    expect(changeSpy).toHaveBeenCalledWith({displayOption: 'left', id: undefined});
 });
 
 test('Should call given onChange handler if value of selection store changes', () => {
@@ -223,14 +223,14 @@ test('Should call given onChange handler if value of selection store changes', (
         <SingleMediaSelection locale={observable.box('en')} onChange={changeSpy} value={undefined} />
     ).instance();
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
     singleMediaSelectionInstance.singleMediaSelectionStore.item = {
         id: 77,
         title: 'test media',
         mimeType: 'image/jpeg',
         thumbnails: {},
     };
-    expect(changeSpy).toBeCalledWith({id: 77}, singleMediaSelectionInstance.singleMediaSelectionStore.item);
+    expect(changeSpy).toHaveBeenCalledWith({id: 77}, singleMediaSelectionInstance.singleMediaSelectionStore.item);
 });
 
 test('Should not call onChange callback if an unrelated observable that is accessed in the callback changes', () => {
@@ -253,7 +253,7 @@ test('Should not call onChange callback if an unrelated observable that is acces
 
     // change callback should be called when item of the store mock changes
     singleMediaSelectionInstance.singleMediaSelectionStore.item = {id: 77, thumbnails: {}};
-    expect(changeSpy).toBeCalledWith({id: 77}, singleMediaSelectionInstance.singleMediaSelectionStore.item);
+    expect(changeSpy).toHaveBeenCalledWith({id: 77}, singleMediaSelectionInstance.singleMediaSelectionStore.item);
     expect(changeSpy).toHaveBeenCalledTimes(1);
 
     // change callback should not be called when the unrelated observable changes
@@ -278,7 +278,7 @@ test('Should not call the onChange callback if the component props change', () =
     );
 
     singleMediaSelection.setProps({disabled: true});
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Should not call the onItemClick callback if no item is available', () => {
@@ -299,7 +299,7 @@ test('Should not call the onItemClick callback if no item is available', () => {
     );
 
     singleMediaSelection.find('SingleItemSelection .item').simulate('click');
-    expect(itemClickSpy).not.toBeCalled();
+    expect(itemClickSpy).not.toHaveBeenCalled();
 });
 
 test('Should call the onItemClick callback if the item is clicked', () => {
@@ -320,7 +320,7 @@ test('Should call the onItemClick callback if the item is clicked', () => {
     );
 
     singleMediaSelection.find('SingleItemSelection .item').simulate('click');
-    expect(itemClickSpy).toBeCalledWith(6, {id: 6, mimeType: 'image/jpeg'});
+    expect(itemClickSpy).toHaveBeenCalledWith(6, {id: 6, mimeType: 'image/jpeg'});
 });
 
 test('Should not call the loadItem callback if the component props id change to same value', () => {
@@ -340,7 +340,7 @@ test('Should not call the loadItem callback if the component props id change to 
     );
 
     singleMediaSelection.setProps({value: {id: 5}});
-    expect(singleMediaSelection.instance().singleMediaSelectionStore.loadItem).not.toBeCalled();
+    expect(singleMediaSelection.instance().singleMediaSelectionStore.loadItem).not.toHaveBeenCalled();
 });
 
 test('Correct props should be passed to SingleItemSelection component', () => {

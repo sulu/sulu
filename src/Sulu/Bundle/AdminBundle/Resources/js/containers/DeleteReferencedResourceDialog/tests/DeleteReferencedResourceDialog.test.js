@@ -89,9 +89,9 @@ test('The component should call the confirm callback when the confirm button is 
         />
     );
 
-    expect(onConfirm).not.toBeCalled();
+    expect(onConfirm).not.toHaveBeenCalled();
     view.find('Button[skin="primary"]').simulate('click');
-    expect(onConfirm).toBeCalled();
+    expect(onConfirm).toHaveBeenCalled();
 });
 
 test('The component should call the cancel callback when the cancel button is clicked', () => {
@@ -119,9 +119,9 @@ test('The component should call the cancel callback when the cancel button is cl
         />
     );
 
-    expect(onCancel).not.toBeCalled();
+    expect(onCancel).not.toHaveBeenCalled();
     view.find('Button[skin="secondary"]').simulate('click');
-    expect(onCancel).toBeCalled();
+    expect(onCancel).toHaveBeenCalled();
 });
 
 test(
@@ -151,8 +151,8 @@ test(
             />
         );
 
-        expect(onCancel).not.toBeCalled();
+        expect(onCancel).not.toHaveBeenCalled();
         view.find('Button[skin="primary"]').simulate('click');
-        expect(onCancel).toBeCalled();
+        expect(onCancel).toHaveBeenCalled();
     }
 );

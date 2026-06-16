@@ -50,7 +50,7 @@ test('Render popover when preview link is available and copy link to clipboard',
     return promise.then(() => {
         expect(component).toMatchSnapshot();
 
-        expect(ResourceRequester.get).toBeCalledWith('preview_links', {
+        expect(ResourceRequester.get).toHaveBeenCalledWith('preview_links', {
             resourceKey: 'pages',
             resourceId: '123-123-123',
             locale: 'de',
@@ -58,7 +58,7 @@ test('Render popover when preview link is available and copy link to clipboard',
 
         component.instance().handleCopyClick();
 
-        expect(copyToClipboard).toBeCalledWith('/admin/p/123-123-123');
+        expect(copyToClipboard).toHaveBeenCalledWith('/admin/p/123-123-123');
     });
 });
 
@@ -80,7 +80,7 @@ test('Render popover when no link is available', (done) => {
     setTimeout(() => {
         expect(component).toMatchSnapshot();
 
-        expect(ResourceRequester.get).toBeCalledWith('preview_links', {
+        expect(ResourceRequester.get).toHaveBeenCalledWith('preview_links', {
             resourceKey: 'pages',
             resourceId: '123-123-123',
             locale: 'de',
@@ -116,7 +116,7 @@ test('Generate link', (done) => {
         setTimeout(() => {
             expect(component).toMatchSnapshot();
 
-            expect(ResourceRequester.post).toBeCalledWith('preview_links', {}, {
+            expect(ResourceRequester.post).toHaveBeenCalledWith('preview_links', {}, {
                 action: 'generate',
                 dateTime: undefined,
                 resourceKey: 'pages',

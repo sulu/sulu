@@ -84,7 +84,7 @@ test('Call confirm with the current values', () => {
 
     ruleOverlay.find('Overlay').prop('onConfirm')();
 
-    expect(confirmSpy).toBeCalledWith({
+    expect(confirmSpy).toHaveBeenCalledWith({
         conditions: [
             {
                 condition: {
@@ -115,7 +115,7 @@ test('Show error if empty fields are confirmed', () => {
     expect(ruleOverlay.find('Field[label="sulu_audience_targeting.assigned_at"]').prop('error'))
         .toEqual('sulu_admin.error_required');
 
-    expect(confirmSpy).not.toBeCalled();
+    expect(confirmSpy).not.toHaveBeenCalled();
 });
 
 test('Call onClose callback when overlay is closed', () => {
@@ -124,5 +124,5 @@ test('Call onClose callback when overlay is closed', () => {
     const ruleOverlay = shallow(<RuleOverlay onClose={closeSpy} onConfirm={jest.fn()} open={true} value={undefined} />);
     ruleOverlay.find('Overlay').prop('onClose')();
 
-    expect(closeSpy).toBeCalledWith();
+    expect(closeSpy).toHaveBeenCalledWith();
 });

@@ -112,7 +112,7 @@ test('Close the overlay when its close button is clicked', () => {
     cardCollection.find('Icon[name="su-times"]').simulate('click');
     expect(cardCollection.find('Overlay').prop('open')).toEqual(false);
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Add a new card using the overlay', () => {
@@ -166,7 +166,7 @@ test('Add a new card using the overlay', () => {
     cardCollection.update();
     expect(cardCollection.find('Overlay').prop('open')).toEqual(false);
 
-    expect(changeSpy).toBeCalledWith([...value, {firstName: 'John', lastName: 'Doe'}]);
+    expect(changeSpy).toHaveBeenCalledWith([...value, {firstName: 'John', lastName: 'Doe'}]);
 });
 
 test('Do not add a new card if validation fails', () => {
@@ -215,7 +215,7 @@ test('Do not add a new card if validation fails', () => {
     cardCollection.update();
     expect(cardCollection.find('Overlay').prop('open')).toEqual(true);
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Edit an existing card using the overlay', () => {
@@ -269,7 +269,7 @@ test('Edit an existing card using the overlay', () => {
     cardCollection.update();
     expect(cardCollection.find('Overlay').prop('open')).toEqual(false);
 
-    expect(changeSpy).toBeCalledWith([{firstName: 'John', lastName: 'Doe'}, value[1]]);
+    expect(changeSpy).toHaveBeenCalledWith([{firstName: 'John', lastName: 'Doe'}, value[1]]);
 });
 
 test('Edit an existing card using the overlay', () => {
@@ -314,7 +314,7 @@ test('Edit an existing card using the overlay', () => {
 
     cardCollection.find('Icon[name="su-trash-alt"]').at(1).simulate('click');
 
-    expect(changeSpy).toBeCalledWith([value[0]]);
+    expect(changeSpy).toHaveBeenCalledWith([value[0]]);
 });
 
 test('Throw error when no renderCardContent function is passed', () => {

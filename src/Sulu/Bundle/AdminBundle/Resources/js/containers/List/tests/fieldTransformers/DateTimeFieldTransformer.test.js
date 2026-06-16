@@ -25,7 +25,7 @@ test('Test undefined', () => {
 
 test('Test invalid format', () => {
     expect(dateTimeFieldTransformer.transform('xxx', {})).toBe(null);
-    expect(log.error).toBeCalledWith(
+    expect(log.error).toHaveBeenCalledWith(
         'Invalid date given: "xxx". Format needs to be in "ISO 8601" or a valid timestamp.'
     );
 });
@@ -45,7 +45,7 @@ test('Test light skin example', () => {
 test('Test invalid skin type', () => {
     dateTimeFieldTransformer.transform('2018-03-10T14:09:04+01:00', {'skin': 123});
 
-    expect(log.error).toBeCalledWith('Transformer parameter "skin" needs to be of type string, number given.');
+    expect(log.error).toHaveBeenCalledWith('Transformer parameter "skin" needs to be of type string, number given.');
 });
 
 test('Test relative format sameDay example', () => {
@@ -162,7 +162,7 @@ test('Test timestamp with relative format - current timestamp', () => {
 
 test('Test invalid timestamp (non-numeric string)', () => {
     expect(dateTimeFieldTransformer.transform('not-a-timestamp', {})).toBe(null);
-    expect(log.error).toBeCalledWith(
+    expect(log.error).toHaveBeenCalledWith(
         'Invalid date given: "not-a-timestamp". Format needs to be in "ISO 8601" or a valid timestamp.'
     );
 });

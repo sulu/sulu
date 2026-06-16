@@ -176,7 +176,7 @@ test('Call onClick callback if left button is clicked', async() => {
     const button = screen.queryByLabelText('su-document');
     await userEvent.click(button);
 
-    expect(leftButton.onClick).toBeCalledWith();
+    expect(leftButton.onClick).toHaveBeenCalledWith();
 });
 
 test('Call onClick callback with option value', async() => {
@@ -203,7 +203,7 @@ test('Call onClick callback with option value', async() => {
     const action = screen.queryByText(/Test1/);
     await userEvent.click(action);
 
-    expect(rightButton.onClick).toBeCalledWith('test1');
+    expect(rightButton.onClick).toHaveBeenCalledWith('test1');
 });
 
 test('Call onClick callback if right button is clicked', async() => {
@@ -222,7 +222,7 @@ test('Call onClick callback if right button is clicked', async() => {
     const icon = screen.queryByLabelText('su-display-default');
     await userEvent.click(icon);
 
-    expect(rightButton.onClick).toBeCalledWith();
+    expect(rightButton.onClick).toHaveBeenCalledWith();
 });
 
 test('Call onItemClick callback should not be called if item is clicked but no id is given', async() => {
@@ -237,7 +237,7 @@ test('Call onItemClick callback should not be called if item is clicked but no i
     const item = screen.queryByText('item title');
     await userEvent.click(item);
 
-    expect(itemClickSpy).not.toBeCalled();
+    expect(itemClickSpy).not.toHaveBeenCalled();
 });
 
 test('Call onItemClick callback should be called if item is clicked', async() => {
@@ -258,7 +258,7 @@ test('Call onItemClick callback should be called if item is clicked', async() =>
     const item = screen.queryByText('item title');
     await userEvent.click(item);
 
-    expect(itemClickSpy).toBeCalledWith(5, value);
+    expect(itemClickSpy).toHaveBeenCalledWith(5, value);
 });
 
 test('Call onRemove callback if remove button is clicked', async() => {
@@ -273,5 +273,5 @@ test('Call onRemove callback if remove button is clicked', async() => {
     const icon = screen.queryByLabelText('su-trash-alt');
     await userEvent.click(icon);
 
-    expect(removeSpy).toBeCalled();
+    expect(removeSpy).toHaveBeenCalled();
 });

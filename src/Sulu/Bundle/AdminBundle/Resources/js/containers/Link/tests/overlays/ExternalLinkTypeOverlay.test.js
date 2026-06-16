@@ -170,7 +170,7 @@ test('Do not call onHrefChange handler if input did not loose focus', () => {
     );
 
     externalLinkOverlay.find('Url').prop('onChange')('http://www.sulu.io');
-    expect(urlChangeSpy).not.toBeCalled();
+    expect(urlChangeSpy).not.toHaveBeenCalled();
 });
 
 test('Fields should change immediately after protocol was changed', () => {
@@ -239,22 +239,22 @@ test('Call onHrefChange with URL that includes mail subject and mail body for ma
 
     externalLinkOverlay.find('Url').prop('onChange')('mailto:test@example.org');
     externalLinkOverlay.find('Url').prop('onProtocolChange')('mailto:');
-    expect(urlChangeSpy).not.toBeCalledWith('mailto:test@example.org');
+    expect(urlChangeSpy).not.toHaveBeenCalledWith('mailto:test@example.org');
     externalLinkOverlay.find('Url').prop('onBlur')();
-    expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org');
-    expect(targetChangeSpy).toBeCalledWith('_self');
+    expect(urlChangeSpy).toHaveBeenCalledWith('mailto:test@example.org');
+    expect(targetChangeSpy).toHaveBeenCalledWith('_self');
 
     externalLinkOverlay.update();
     externalLinkOverlay.find('Field[label="sulu_admin.mail_subject"] Input').prop('onChange')('Subject Line');
-    expect(urlChangeSpy).not.toBeCalledWith('mailto:test@example.org?subject=Subject%20Line');
+    expect(urlChangeSpy).not.toHaveBeenCalledWith('mailto:test@example.org?subject=Subject%20Line');
     externalLinkOverlay.find('Field[label="sulu_admin.mail_subject"] Input').prop('onBlur')();
-    expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org?subject=Subject%20Line');
+    expect(urlChangeSpy).toHaveBeenCalledWith('mailto:test@example.org?subject=Subject%20Line');
 
     externalLinkOverlay.update();
     externalLinkOverlay.find('Field[label="sulu_admin.mail_body"] TextArea').prop('onChange')('Body Text');
-    expect(urlChangeSpy).not.toBeCalledWith('mailto:test@example.org?subject=Subject%20Line&body=Body%20Text');
+    expect(urlChangeSpy).not.toHaveBeenCalledWith('mailto:test@example.org?subject=Subject%20Line&body=Body%20Text');
     externalLinkOverlay.find('Field[label="sulu_admin.mail_body"] TextArea').prop('onBlur')();
-    expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org?subject=Subject%20Line&body=Body%20Text');
+    expect(urlChangeSpy).toHaveBeenCalledWith('mailto:test@example.org?subject=Subject%20Line&body=Body%20Text');
 });
 
 test('Should not include mail subject and body in URL after switching to another protocol', () => {
@@ -315,8 +315,8 @@ test('Reset target to self when a mailto link is entered', () => {
 
     externalLinkOverlay.find('Url').prop('onChange')('mailto:test@example.org');
     externalLinkOverlay.find('Url').prop('onBlur')();
-    expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org');
-    expect(targetChangeSpy).toBeCalledWith('_self');
+    expect(urlChangeSpy).toHaveBeenCalledWith('mailto:test@example.org');
+    expect(targetChangeSpy).toHaveBeenCalledWith('_self');
 });
 
 test('Should not reset target to self when a non-mail URL is entered', () => {
@@ -347,8 +347,8 @@ test('Should not reset target to self when a non-mail URL is entered', () => {
 
     externalLinkOverlay.find('Url').prop('onChange')('http://sulu.io');
     externalLinkOverlay.find('Url').prop('onBlur')();
-    expect(urlChangeSpy).toBeCalledWith('http://sulu.io');
-    expect(targetChangeSpy).not.toBeCalled();
+    expect(urlChangeSpy).toHaveBeenCalledWith('http://sulu.io');
+    expect(targetChangeSpy).not.toHaveBeenCalled();
 });
 
 test('Rel value should be transformed correctly', () => {
@@ -379,9 +379,9 @@ test('Rel value should be transformed correctly', () => {
 
     externalLinkOverlay.find('Toggler').prop('onChange')(true);
     externalLinkOverlay.update();
-    expect(relChangeSpy).toBeCalledWith('noopener noreferrer nofollow');
+    expect(relChangeSpy).toHaveBeenCalledWith('noopener noreferrer nofollow');
 
     externalLinkOverlay.find('Toggler').prop('onChange')(false);
     externalLinkOverlay.update();
-    expect(relChangeSpy).toBeCalledWith('noopener noreferrer');
+    expect(relChangeSpy).toHaveBeenCalledWith('noopener noreferrer');
 });

@@ -30,7 +30,7 @@ test.each([
 
     expect(searchStore.loading).toEqual(false);
     searchStore.search(query, resourceKey);
-    expect(ResourceRequester.getList).toBeCalledWith('search', {q: query, resourceKey, page, limit});
+    expect(ResourceRequester.getList).toHaveBeenCalledWith('search', {q: query, resourceKey, page, limit});
     expect(searchStore.loading).toEqual(true);
 
     await searchPromise; // Wait for the promise to resolve
@@ -42,6 +42,6 @@ test.each([
 
 test('Do not send search request when no search term is given', () => {
     searchStore.search(undefined);
-    expect(ResourceRequester.getList).not.toBeCalled();
+    expect(ResourceRequester.getList).not.toHaveBeenCalled();
     expect(searchStore.result).toEqual([{id: 1}]);
 });

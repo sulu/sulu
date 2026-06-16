@@ -53,7 +53,7 @@ test.each([
 
     dateFieldFilterTypeForm.find('DatePicker').at(0).prop('onChange')(new Date(from));
 
-    expect(changeSpy).toBeCalledWith({from: new Date(from)});
+    expect(changeSpy).toHaveBeenCalledWith({from: new Date(from)});
 });
 
 test.each([
@@ -66,7 +66,7 @@ test.each([
 
     dateFieldFilterTypeForm.find('DatePicker').at(1).prop('onChange')(new Date(to));
 
-    expect(changeSpy).toBeCalledWith({to: new Date(to)});
+    expect(changeSpy).toHaveBeenCalledWith({to: new Date(to)});
 });
 
 test.each([
@@ -89,7 +89,7 @@ test.each([
 
     dateFieldFilterTypeForm.find('DatePicker').at(0).prop('onChange')(new Date(fromExpected));
 
-    expect(changeSpy).toBeCalledWith({from: new Date(fromExpected), to: new Date(to)});
+    expect(changeSpy).toHaveBeenCalledWith({from: new Date(fromExpected), to: new Date(to)});
 });
 
 test.each([
@@ -112,7 +112,7 @@ test.each([
 
     dateFieldFilterTypeForm.find('DatePicker').at(1).prop('onChange')(new Date(toExpected));
 
-    expect(changeSpy).toBeCalledWith({from: new Date(from), to: new Date(toExpected)});
+    expect(changeSpy).toHaveBeenCalledWith({from: new Date(from), to: new Date(toExpected)});
 });
 
 test.each([

@@ -172,7 +172,7 @@ test('Render data as icons', () => {
 
     expect(tableAdapter.find('Row').at(1).find('Cell').text()).toEqual('running');
     expect(tableAdapter.find('Row').at(1).find('Icon')).toHaveLength(0);
-    expect(log.warn).toBeCalledWith(
+    expect(log.warn).toHaveBeenCalledWith(
         'There was no icon specified in the "mapping" transformer parameter for the value "running".'
     );
 
@@ -894,7 +894,7 @@ test('Click on pencil should execute onItemClick callback', () => {
     expect(buttons[0].icon).toBe('su-pen');
 
     buttons[0].onClick(1);
-    expect(rowEditClickSpy).toBeCalledWith(1);
+    expect(rowEditClickSpy).toHaveBeenCalledWith(1);
 });
 
 test('Click on itemAction should execute its callback', () => {
@@ -949,15 +949,15 @@ test('Click on itemAction should execute its callback', () => {
         />
     );
 
-    expect(actionsProvider).toBeCalledWith(item1);
-    expect(actionsProvider).toBeCalledWith(item2);
+    expect(actionsProvider).toHaveBeenCalledWith(item1);
+    expect(actionsProvider).toHaveBeenCalledWith(item2);
 
     const buttons = tableAdapter.find('Table').prop('buttons');
     expect(buttons).toHaveLength(2);
     expect(buttons[1].icon).toBe('su-process');
 
     buttons[1].onClick(1);
-    expect(actionClickSpy).toBeCalledWith(1);
+    expect(actionClickSpy).toHaveBeenCalledWith(1);
 });
 
 test('Click on checkbox should call onItemSelectionChange callback', () => {

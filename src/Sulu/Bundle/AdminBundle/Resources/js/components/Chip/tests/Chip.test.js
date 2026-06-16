@@ -36,7 +36,7 @@ test('Should call onClick callback when the button is clicked', async() => {
 
     await userEvent.click(screen.queryByText('Test'));
 
-    expect(clickSpy).toBeCalledWith(value);
+    expect(clickSpy).toHaveBeenCalledWith(value);
 });
 
 test('Should call onDelete callback when the times icon is clicked', async() => {
@@ -46,5 +46,5 @@ test('Should call onDelete callback when the times icon is clicked', async() => 
 
     await userEvent.click(screen.queryByLabelText('su-times'));
 
-    expect(deleteSpy).toBeCalledWith(value);
+    expect(deleteSpy).toHaveBeenCalledWith(value);
 });

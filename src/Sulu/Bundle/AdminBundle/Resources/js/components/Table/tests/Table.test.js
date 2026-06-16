@@ -249,8 +249,8 @@ test('Table buttons should implement an onClick handler', () => {
     expect(clickSpy).toHaveBeenCalledTimes(0);
     fireEvent.click(rowButtons[0]);
     fireEvent.click(rowButtons[1]);
-    expect(clickSpy).toBeCalledWith(19, 0);
-    expect(clickSpy).toBeCalledWith(25, 1);
+    expect(clickSpy).toHaveBeenCalledWith(19, 0);
+    expect(clickSpy).toHaveBeenCalledWith(25, 1);
     expect(clickSpy).toHaveBeenCalledTimes(2);
 });
 
@@ -288,7 +288,7 @@ test('Table buttons should not call onClick handler if button is disabled', () =
     expect(clickSpy).toHaveBeenCalledTimes(0);
     fireEvent.click(rowButtons[0]);
     fireEvent.click(rowButtons[1]);
-    expect(clickSpy).not.toBeCalled();
+    expect(clickSpy).not.toHaveBeenCalled();
 });
 
 test('Render the Table component in single selection mode', () => {
@@ -562,13 +562,13 @@ test('Header cells with an attached name should call the onClick callback with t
 
     const headerButtons = screen.getAllByRole('button');
     fireEvent.click(headerButtons[0]);
-    expect(clickSpy).lastCalledWith('column1', 'asc');
+    expect(clickSpy).toHaveBeenLastCalledWith('column1', 'asc');
 
     fireEvent.click(headerButtons[1]);
-    expect(clickSpy).lastCalledWith('column2', 'desc');
+    expect(clickSpy).toHaveBeenLastCalledWith('column2', 'desc');
 
     fireEvent.click(headerButtons[2]);
-    expect(clickSpy).lastCalledWith('column3', 'asc');
+    expect(clickSpy).toHaveBeenLastCalledWith('column3', 'asc');
 });
 
 test('Collapse should be called correctly', () => {

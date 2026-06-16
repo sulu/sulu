@@ -31,7 +31,7 @@ test('Should render with active', async() => {
     const {baseElement} = render(<Toolbar toolbarItems={toolbarItems} />);
 
     await user.click(screen.getByRole('button', {name: 'fa-plus'}));
-    expect(toolbarItems[0].onClick).toBeCalledWith();
+    expect(toolbarItems[0].onClick).toHaveBeenCalledWith();
 
     // check for opened dropdown in body
     await user.click(screen.getByRole('button', {name: 'fa-gear su-angle-down'}));
