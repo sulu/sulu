@@ -87,6 +87,12 @@ class MovePageMessageHandler
         ]);
 
         foreach ($routes as $route) {
+            if (null !== $route->getParentRoute()) {
+                // route is anchored to an external page (e.g. via a page_tree_route field),
+                // not to the page tree, so moving the page must not re-anchor it
+                continue;
+            }
+
             $locale = $route->getLocale();
 
             $newParentRoute = $this->routeRepository->findOneBy([
@@ -118,7 +124,9 @@ class MovePageMessageHandler
     }
 
     /**
-     * Slug relative to the old parent, or the full slug when there is no old parent route.
+     * Slug relative to the old parent, or the full slug when there is no old parent route. The
+     * parent path must be followed by a "/" to count as a prefix, so a sibling slug that merely
+     * shares a string prefix is not stripped.
      */
     private function relativeSlug(string $slug, ?PageInterface $previousParent, string $locale): string
     {
@@ -134,7 +142,7 @@ class MovePageMessageHandler
 
         $previousParentPath = \rtrim($previousParentRoute?->getSlug() ?? '', '/');
 
-        if ('' !== $previousParentPath && \str_starts_with($slug, $previousParentPath)) {
+        if ('' !== $previousParentPath && \str_starts_with($slug, $previousParentPath . '/')) {
             return \substr($slug, \strlen($previousParentPath));
         }
 

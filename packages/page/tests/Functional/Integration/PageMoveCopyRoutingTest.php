@@ -147,7 +147,7 @@ class PageMoveCopyRoutingTest extends SuluTestCase
         $this->assertRouteSlug('/parent-b/child', $child->getUuid(), 'en');
 
         // Renaming the new parent must cascade to the moved child, which only works if the moved
-        // route's parent_id FK was re-pointed at parent B.
+        // route's slug now sits under parent B's slug (the cascade matches by slug prefix).
         $this->renameRoute($parentB->getUuid(), 'en', '/parent-b-renamed');
 
         $this->assertRouteSlug('/parent-b-renamed/child', $child->getUuid(), 'en');
@@ -164,7 +164,7 @@ class PageMoveCopyRoutingTest extends SuluTestCase
         $this->assertRouteSlug('/parent-b/source', $target->getUuid(), 'en');
 
         // Renaming the parent must cascade to the copied route, which only works if the copied
-        // route's parent_id FK was set to parent B.
+        // route's slug sits under parent B's slug (the cascade matches by slug prefix).
         $this->renameRoute($parentB->getUuid(), 'en', '/parent-b-renamed');
 
         $this->assertRouteSlug('/parent-b-renamed/source', $target->getUuid(), 'en');
@@ -216,6 +216,49 @@ class PageMoveCopyRoutingTest extends SuluTestCase
         $this->assertRouteSlug('/source', $target->getUuid(), 'en');
     }
 
+    public function testMoveKeepsSlugWhenChildSlugSharesParentPrefixWithoutBoundary(): void
+    {
+        // The child's slug ("/sportswear") shares a string prefix with the parent ("/sport") but
+        // is not actually nested under it. Re-anchoring must not strip a partial segment.
+        $homepage = $this->getHomepage();
+        $sport = $this->createPage($homepage->getUuid(), ['title' => 'Sport', 'url' => '/sport']);
+        $leisure = $this->createPage($homepage->getUuid(), ['title' => 'Leisure', 'url' => '/leisure']);
+        $child = $this->createPage($sport->getUuid(), ['title' => 'Sportswear', 'url' => '/sportswear']);
+
+        $this->move($child->getUuid(), $leisure->getUuid());
+
+        $this->assertRouteSlug('/leisure/sportswear', $child->getUuid(), 'en');
+    }
+
+    public function testCopyKeepsSlugWhenSourceSlugSharesParentPrefixWithoutBoundary(): void
+    {
+        $homepage = $this->getHomepage();
+        $sport = $this->createPage($homepage->getUuid(), ['title' => 'Sport', 'url' => '/sport']);
+        $leisure = $this->createPage($homepage->getUuid(), ['title' => 'Leisure', 'url' => '/leisure']);
+        $source = $this->createPage($sport->getUuid(), ['title' => 'Sportswear', 'url' => '/sportswear']);
+
+        $target = $this->copy($source->getUuid(), $leisure->getUuid());
+
+        $this->assertRouteSlug('/leisure/sportswear', $target->getUuid(), 'en');
+    }
+
+    public function testMoveDoesNotReanchorRouteAnchoredToExternalParentRoute(): void
+    {
+        // A route with a parentRoute (e.g. from a page_tree_route field) is anchored to an external
+        // page, not to the page tree, so moving the page in the tree must leave its slug untouched.
+        $homepage = $this->getHomepage();
+        $parentA = $this->createPage($homepage->getUuid(), ['title' => 'Parent A', 'url' => '/parent-a']);
+        $parentB = $this->createPage($homepage->getUuid(), ['title' => 'Parent B', 'url' => '/parent-b']);
+        $anchor = $this->createPage($homepage->getUuid(), ['title' => 'Anchor', 'url' => '/anchor']);
+        $child = $this->createPage($parentA->getUuid(), ['title' => 'Child', 'url' => '/parent-a/child']);
+
+        $this->anchorRouteToParent($child->getUuid(), $anchor->getUuid(), 'en');
+
+        $this->move($child->getUuid(), $parentB->getUuid());
+
+        $this->assertRouteSlug('/parent-a/child', $child->getUuid(), 'en');
+    }
+
     /**
      * @param array<string, mixed> $data
      */
@@ -263,6 +306,27 @@ class PageMoveCopyRoutingTest extends SuluTestCase
         self::assertNotNull($route, \sprintf('Expected a route for page %s in locale %s.', $resourceId, $locale));
 
         $route->setSlug($newSlug);
+        self::getEntityManager()->flush();
+        self::getEntityManager()->clear();
+    }
+
+    private function anchorRouteToParent(string $resourceId, string $parentResourceId, string $locale): void
+    {
+        $route = $this->routeRepository->findOneBy([
+            'resourceKey' => PageInterface::RESOURCE_KEY,
+            'resourceId' => $resourceId,
+            'locale' => $locale,
+        ]);
+        self::assertNotNull($route, \sprintf('Expected a route for page %s in locale %s.', $resourceId, $locale));
+
+        $parentRoute = $this->routeRepository->findOneBy([
+            'resourceKey' => PageInterface::RESOURCE_KEY,
+            'resourceId' => $parentResourceId,
+            'locale' => $locale,
+        ]);
+        self::assertNotNull($parentRoute, \sprintf('Expected a route for page %s in locale %s.', $parentResourceId, $locale));
+
+        $route->setParentRoute($parentRoute);
         self::getEntityManager()->flush();
         self::getEntityManager()->clear();
     }
