@@ -57,7 +57,7 @@ class LinkTag implements TagInterface
                 $item = $contents[$provider . '-' . $uuid];
 
                 $url = $item->getUrl();
-                if ($this->urlHelper) {
+                if ($this->urlHelper && !preg_match('/^[a-z][a-z0-9+-.]*:/i', $url)) {
                     $url = $this->urlHelper->getAbsoluteUrl($url);
                 }
 
