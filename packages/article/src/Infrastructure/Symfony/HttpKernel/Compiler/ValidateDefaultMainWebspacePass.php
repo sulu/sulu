@@ -95,7 +95,7 @@ final class ValidateDefaultMainWebspacePass implements CompilerPassInterface
     }
 
     /**
-     * Mirrors WebspaceSettingsConfigurationResolver precedence
+     * Mirrors WebspaceSettingsConfigurationResolver precedence.
      *
      * @param array<string, string> $defaultMainWebspace
      * @param list<string> $webspaceKeys
