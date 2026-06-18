@@ -2,7 +2,7 @@
 import {action, autorun, computed, get, set, isArrayLike, observable, toJS, when} from 'mobx';
 import jsonpointer from 'json-pointer';
 import log from 'loglevel';
-import {createAjv} from '../../../utils/Ajv';
+import {createValidator} from '../../../utils/JsonSchema';
 import ResourceStore from '../../../stores/ResourceStore';
 import AbstractFormStore, {SECTION_TYPE} from './AbstractFormStore';
 import metadataStore from './metadataStore';
@@ -12,7 +12,7 @@ import type {IObservableValue} from 'mobx/lib/mobx';
 // TODO do not hardcode "template", use some kind of metadata instead
 const TYPE_PROPERTY = 'template';
 
-const ajv = createAjv();
+const jsonSchemaValidator = createValidator();
 
 function mergeData(
     localSchema: Schema,
@@ -178,7 +178,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     };
 
     handleSchemaResponse = ([schema, jsonSchema]: [Schema, Object]) => {
-        this.validator = jsonSchema ? ajv.compile(jsonSchema) : undefined;
+        this.validator = jsonSchema ? jsonSchemaValidator.compile(jsonSchema) : undefined;
         this.pathsByTag = {};
 
         return this.loadAndMergeRemoteData(this.schema, schema).then(action(() => {
