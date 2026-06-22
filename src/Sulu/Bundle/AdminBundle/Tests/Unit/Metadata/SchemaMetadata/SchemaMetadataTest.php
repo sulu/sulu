@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\SchemaMetadata;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NumberMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 
@@ -119,6 +120,39 @@ class SchemaMetadataTest extends TestCase
                     ],
                     [
                         'required' => ['article'],
+                        'type' => 'object',
+                    ],
+                ],
+                'type' => 'object',
+            ],
+            $schema->toJsonSchema()
+        );
+    }
+
+    public function testNestedPropertyNames(): void
+    {
+        $schema = new SchemaMetadata(
+            [
+                new PropertyMetadata('attributes/1', false, new NumberMetadata(null, 10.0)),
+                new PropertyMetadata('attributes/2', true, new NumberMetadata(0.0)),
+            ]
+        );
+
+        $this->assertEquals(
+            [
+                'properties' => [
+                    'attributes' => [
+                        'properties' => [
+                            '1' => [
+                                'maximum' => 10.0,
+                                'type' => 'number',
+                            ],
+                            '2' => [
+                                'minimum' => 0.0,
+                                'type' => 'number',
+                            ],
+                        ],
+                        'required' => ['2'],
                         'type' => 'object',
                     ],
                 ],

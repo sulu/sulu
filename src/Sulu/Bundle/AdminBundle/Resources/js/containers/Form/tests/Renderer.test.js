@@ -498,6 +498,49 @@ test('Should pass all errors to fields if showAllErrors is set to true', () => {
     expect(fields.at(1).prop('error')).toBe(datetimeError);
 });
 
+test('Should pass nested errors to fields with slashes in schema keys', () => {
+    const schema = {
+        'attributes/1': {
+            label: 'Attribute',
+            type: 'text_line',
+        },
+    };
+
+    const attributeError = {
+        keyword: 'maximum',
+        parameters: {
+            limit: 10,
+        },
+    };
+    const errors = {
+        attributes: [
+            undefined,
+            attributeError,
+        ],
+    };
+
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    formInspector.isFieldModified.mockImplementation((dataPath) => dataPath === '/attributes/1');
+
+    const renderer = shallow(
+        <Renderer
+            data={{}}
+            dataPath=""
+            errors={errors}
+            formInspector={formInspector}
+            onChange={jest.fn()}
+            onFieldFinish={jest.fn()}
+            onSuccess={undefined}
+            router={undefined}
+            schema={schema}
+            schemaPath=""
+            value={{}}
+        />
+    );
+
+    expect(renderer.find(Field).at(0).prop('error')).toBe(attributeError);
+});
+
 test('Should render nested sections', () => {
     const changeSpy = jest.fn();
 
