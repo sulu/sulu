@@ -169,7 +169,7 @@ class CollectionController extends AbstractRestController implements ClassResour
     {
         $depth = $request->query->getInt('depth');
         $parentId = $request->query->get('parentId', null);
-        $limit = $request->query->getInt('limit', 1000);
+        $limit = $this->listRestHelper->getLimit();
 
         /** @var int $offset */
         $offset = $this->listRestHelper->getOffset();
@@ -320,8 +320,7 @@ class CollectionController extends AbstractRestController implements ClassResour
      */
     protected function moveEntity($id, Request $request)
     {
-        /** @var int|null $destinationId */
-        $destinationId = $request->query->get('destination');
+        $destinationId = (int) $request->query->get('destination');
         $locale = $request->query->get('locale') ?: throw new MissingParameterException(self::class, 'locale');
 
         $collection = $this->collectionManager->move($id, $locale, $destinationId);
@@ -348,7 +347,7 @@ class CollectionController extends AbstractRestController implements ClassResour
             'title' => $request->request->get('title'),
             'description' => $request->request->get('description'),
 
-            // These will be overriden in the CollectionManager::save function anyways
+            // These will be overridden in the CollectionManager::save function anyways
             'changer' => $request->request->get('changer'),
             'creator' => $request->request->get('creator'),
             'changed' => $request->request->get('changed'),
@@ -423,6 +422,6 @@ class CollectionController extends AbstractRestController implements ClassResour
 
     public function getSecuredObjectId(Request $request)
     {
-        return $request->attributes->get('id') ?: $request->query->get('parent');
+        return $request->attributes->get('id') ?: $request->request->get('parent') ?: $request->query->get('parent');
     }
 }
