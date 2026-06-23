@@ -169,7 +169,7 @@ class CollectionController extends AbstractRestController implements ClassResour
     {
         $depth = $request->query->getInt('depth');
         $parentId = $request->query->get('parentId', null);
-        $limit = $this->listRestHelper->getLimit();
+        $limit = $request->query->getInt('limit', 1000);
 
         /** @var int $offset */
         $offset = $this->listRestHelper->getOffset();
