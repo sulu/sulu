@@ -174,10 +174,13 @@ class RouteGeneratorTest extends TestCase
 
     public function testGenerateRestoresMissingWebspaceParameter(): void
     {
+        // the webspace parameter is absent before generation and must stay absent afterwards
+        $this->assertFalse($this->requestContext->hasParameter('webspace'));
+
         $result = $this->routeGenerator->generate('/test', 'en', 'webspace-b');
 
         $this->assertSame('https://example.org/webspace-b/en/test', $result);
-        $this->assertNull($this->requestContext->getParameter('webspace'));
+        $this->assertFalse($this->requestContext->hasParameter('webspace'));
     }
 
     public function testGenerateRequestContextLocaleMissing(): void
