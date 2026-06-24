@@ -172,6 +172,42 @@ class RoutableNormalizerTest extends TestCase
         );
     }
 
+    public function testEnhanceDoesNotAddUrlWhenRouteIsNull(): void
+    {
+        $example = new Example();
+        $dimensionContent = new ExampleDimensionContent($example);
+        $example->addDimensionContent($dimensionContent);
+        $dimensionContent->setLocale('en');
+        $dimensionContent->setTemplateKey('default');
+        // no setRoute call — route remains null
+
+        $this->primeFormMetadata('example', 'en', 'default', [
+            'url' => $this->createField('url', 'route'),
+            'title' => $this->createField('title', 'text_line'),
+        ]);
+
+        $result = $this->normalizer->enhance($dimensionContent, ['title' => 'Page title']);
+
+        $this->assertSame(['title' => 'Page title'], $result);
+        $this->assertArrayNotHasKey('url', $result);
+    }
+
+    public function testEnhanceDoesNotAddPageTreeRouteUrlWhenNoParentRoute(): void
+    {
+        $route = new Route('examples', '1', 'en', '/my-page');
+        // route has no parent — resolvePageTreeRoute returns null
+        $object = $this->createDimensionContent('en', 'default', $route);
+
+        $this->primeFormMetadata('example', 'en', 'default', [
+            'url' => $this->createField('url', 'page_tree_route'),
+        ]);
+
+        $result = $this->normalizer->enhance($object, []);
+
+        $this->assertSame([], $result);
+        $this->assertArrayNotHasKey('url', $result);
+    }
+
     public function testEnhanceLeavesNonRouteFieldsUntouched(): void
     {
         $route = new Route('examples', '1', 'en', '/my-page');

@@ -92,7 +92,7 @@ class RoutableDataMapper implements DataMapperInterface
             )); // TODO move this validation to a compiler pass see also direct access of 'url' in PublishTransitionSubscriber class.
         }
 
-        if (!\array_key_exists($name, $data)) {
+        if (!\array_key_exists($name, $data) || null === $data[$name]) {
             return;
         }
 

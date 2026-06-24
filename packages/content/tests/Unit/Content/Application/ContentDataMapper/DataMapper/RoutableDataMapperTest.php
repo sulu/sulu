@@ -203,6 +203,26 @@ class RoutableDataMapperTest extends TestCase
         $this->assertNull($localizedDimensionContent->getRoute());
     }
 
+    public function testMapNullRoutePropertyValue(): void
+    {
+        $data = ['url' => null];
+
+        $example = new Example();
+        static::setPrivateProperty($example, 'id', 1);
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setTemplateKey('default');
+        $localizedDimensionContent->setLocale('en');
+
+        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
+
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithRoute());
+        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame([], $localizedDimensionContent->getTemplateData());
+        $this->assertNull($localizedDimensionContent->getRoute());
+    }
+
     public function testMapRouteProperty(): void
     {
         $data = [

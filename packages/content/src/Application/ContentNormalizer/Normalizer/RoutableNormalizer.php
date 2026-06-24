@@ -63,7 +63,11 @@ class RoutableNormalizer implements NormalizerInterface
             if ('route' !== $type && 'page_tree_route' !== $type) {
                 continue;
             }
-            $normalizedData[$field->getName()] = $this->resolveRouteFieldUrl($object, $type);
+            $url = $this->resolveRouteFieldUrl($object, $type);
+
+            if ($url) {
+                $normalizedData[$field->getName()] = $url;
+            }
         }
 
         return $normalizedData;
