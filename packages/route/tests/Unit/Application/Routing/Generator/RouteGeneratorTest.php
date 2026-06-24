@@ -63,6 +63,23 @@ class RouteGeneratorTest extends TestCase
             }
         });
 
+        // mirrors the real PageWebspaceRouteGenerator which resolves the webspace from the
+        // request context, so the target webspace becomes observable in the generated url
+        $container->set('.default', new class() implements WebspaceRouteGeneratorInterface {
+            public function generate(RequestContext $requestContext, string $slug, string $locale): string
+            {
+                $webspace = $requestContext->getParameter('webspace');
+                \assert(\is_string($webspace));
+
+                return \sprintf(
+                    'https://example.org/%s/%s%s',
+                    $webspace,
+                    $locale,
+                    $slug,
+                );
+            }
+        });
+
         $this->requestContext = new RequestContext();
         $this->routeGenerator = new RouteGenerator($container, $this->requestContext, new RequestStack(), new LocaleSwitcher('en', [], $this->requestContext));
     }
@@ -139,6 +156,28 @@ class RouteGeneratorTest extends TestCase
 
         $result = $this->routeGenerator->generate('/test', 'en', null);
         $this->assertSame('/en/test', $result);
+    }
+
+    public function testGenerateUsesTargetWebspaceForDefaultGenerator(): void
+    {
+        // simulate a request handled in the context of "webspace-a"
+        $this->requestContext->setParameter('webspace', 'webspace-a');
+
+        // generate a route for a resource of a different target webspace "webspace-b"
+        $result = $this->routeGenerator->generate('/test', 'en', 'webspace-b');
+
+        $this->assertSame('https://example.org/webspace-b/en/test', $result);
+
+        // the current request's webspace must be restored after generation
+        $this->assertSame('webspace-a', $this->requestContext->getParameter('webspace'));
+    }
+
+    public function testGenerateRestoresMissingWebspaceParameter(): void
+    {
+        $result = $this->routeGenerator->generate('/test', 'en', 'webspace-b');
+
+        $this->assertSame('https://example.org/webspace-b/en/test', $result);
+        $this->assertNull($this->requestContext->getParameter('webspace'));
     }
 
     public function testGenerateRequestContextLocaleMissing(): void
