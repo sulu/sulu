@@ -12,10 +12,6 @@
 namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-use Sulu\Article\Domain\Model\ArticleDimensionContentAdditionalWebspace;
-use Sulu\Page\Domain\Model\Page;
-use Sulu\Page\Domain\Model\PageDimensionContentNavigationContext;
-use Sulu\Route\Domain\Model\Route;
 
 /**
  * Restores legacy field lengths for installations that still run the older database schema.
@@ -25,13 +21,13 @@ use Sulu\Route\Domain\Model\Route;
 class LegacyLengthSubscriber
 {
     /**
-     * @var array<class-string, array<string, int>>
+     * @var array<string, array<string, int>>
      */
     private const LEGACY_FIELD_LENGTHS = [
-        Route::class => ['webspace' => 32],
-        Page::class => ['webspaceKey' => 64],
-        PageDimensionContentNavigationContext::class => ['navigationContext' => 64],
-        ArticleDimensionContentAdditionalWebspace::class => ['additionalWebspace' => 64],
+        'Sulu\Route\Domain\Model\Route' => ['webspace' => 32],
+        'Sulu\Page\Domain\Model\Page' => ['webspaceKey' => 64],
+        'Sulu\Page\Domain\Model\PageDimensionContentNavigationContext' => ['navigationContext' => 64],
+        'Sulu\Article\Domain\Model\ArticleDimensionContentAdditionalWebspace' => ['additionalWebspace' => 64],
     ];
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $event): void
