@@ -47,10 +47,9 @@ class TemplateXmlLoader extends AbstractLoader
         private MetaXmlParser $metaXmlParser,
         private TemplateXmlParser $templateXmlParser,
         private SchemaMetadataProvider $schemaMetadataProvider,
-        string $schemaPath = self::SCHEMA_PATH,
     ) {
         parent::__construct(
-            $schemaPath,
+            self::SCHEMA_PATH,
             self::SCHEMA_NAMESPACE_URI
         );
     }

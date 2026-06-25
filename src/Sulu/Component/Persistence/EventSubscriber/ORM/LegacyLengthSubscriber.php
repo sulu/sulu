@@ -12,12 +12,13 @@
 namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Sulu\Article\Domain\Model\ArticleDimensionContentAdditionalWebspace;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContentNavigationContext;
 use Sulu\Route\Domain\Model\Route;
 
 /**
- * Restores legacy (pre-3.0) field lengths for webspace, template and navigation context keys.
+ * Restores legacy field lengths for installations that still run the older database schema.
  *
  * @internal
  */
@@ -30,6 +31,7 @@ class LegacyLengthSubscriber
         Route::class => ['webspace' => 32],
         Page::class => ['webspaceKey' => 64],
         PageDimensionContentNavigationContext::class => ['navigationContext' => 64],
+        ArticleDimensionContentAdditionalWebspace::class => ['additionalWebspace' => 64],
     ];
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $event): void
@@ -37,11 +39,13 @@ class LegacyLengthSubscriber
         $metadata = $event->getClassMetadata();
         $className = $metadata->getName();
 
-        if (!isset(self::LEGACY_FIELD_LENGTHS[$className])) {
-            return;
+        $fieldLengths = self::LEGACY_FIELD_LENGTHS[$className] ?? [];
+
+        if ($metadata->hasField('templateKey')) {
+            $fieldLengths['templateKey'] = 64;
         }
 
-        foreach (self::LEGACY_FIELD_LENGTHS[$className] as $fieldName => $length) {
+        foreach ($fieldLengths as $fieldName => $length) {
             if (!$metadata->hasField($fieldName)) {
                 continue;
             }
