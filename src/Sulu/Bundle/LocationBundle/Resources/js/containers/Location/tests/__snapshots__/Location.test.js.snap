@@ -1,151 +1,193 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Component should render in disabled state 1`] = `
-<div
-  class="locationContainer disabled"
->
+<DocumentFragment>
   <div
-    class="locationHeader"
+    class="locationContainer disabled"
   >
-    <button
-      class="locationHeaderButton"
-      type="button"
-    >
-      <span
-        aria-label="su-map-pin"
-        class="su-map-pin"
-      />
-    </button>
     <div
-      class="locationHeaderLabel"
+      class="locationHeader"
     >
+      <button
+        class="locationHeaderButton"
+        type="button"
+      >
+        <span
+          aria-label="su-map-pin"
+          class="su-map-pin"
+        />
+      </button>
       <div
-        aria-label="sulu_location.select_location"
-        class="croppedText"
-        title="sulu_location.select_location"
+        class="locationHeaderLabel"
       >
         <div
-          aria-hidden="true"
-          class="front"
+          aria-label="sulu_location.select_location"
+          class="croppedText"
+          title="sulu_location.select_location"
         >
-          sulu_location.s
-        </div>
-        <div
-          aria-hidden="true"
-          class="back"
-        >
-          <span>
-            elect_location
-          </span>
-        </div>
-        <div
-          class="whole"
-        >
-          sulu_location.select_location
+          <div
+            aria-hidden="true"
+            class="front"
+          >
+            sulu_location.s
+          </div>
+          <div
+            aria-hidden="true"
+            class="back"
+          >
+            <span>
+              elect_location
+            </span>
+          </div>
+          <div
+            class="whole"
+          >
+            sulu_location.select_location
+          </div>
         </div>
       </div>
     </div>
+    <div
+      data-open="false"
+      data-testid="location-overlay"
+    />
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Component should render with a given value 1`] = `
-<div
-  class="locationContainer disabled"
->
+<DocumentFragment>
   <div
-    class="locationHeader"
+    class="locationContainer disabled"
   >
-    <button
-      class="locationHeaderButton"
-      type="button"
-    >
-      <span
-        aria-label="su-map-pin"
-        class="su-map-pin"
-      />
-    </button>
     <div
-      class="locationHeaderLabel"
+      class="locationHeader"
     >
+      <button
+        class="locationHeaderButton"
+        type="button"
+      >
+        <span
+          aria-label="su-map-pin"
+          class="su-map-pin"
+        />
+      </button>
       <div
-        aria-label="sulu_location.latitude: 22, sulu_location.longitude: 33, sulu_location.zoom: 5"
-        class="croppedText"
-        title="sulu_location.latitude: 22, sulu_location.longitude: 33, sulu_location.zoom: 5"
+        class="locationHeaderLabel"
       >
         <div
-          aria-hidden="true"
-          class="front"
+          aria-label="sulu_location.latitude: 22, sulu_location.longitude: 33, sulu_location.zoom: 5"
+          class="croppedText"
+          title="sulu_location.latitude: 22, sulu_location.longitude: 33, sulu_location.zoom: 5"
         >
-          sulu_location.latitude: 22, sulu_locati
-        </div>
-        <div
-          aria-hidden="true"
-          class="back"
-        >
-          <span>
-            on.longitude: 33, sulu_location.zoom: 5
-          </span>
-        </div>
-        <div
-          class="whole"
-        >
-          sulu_location.latitude: 22, sulu_location.longitude: 33, sulu_location.zoom: 5
+          <div
+            aria-hidden="true"
+            class="front"
+          >
+            sulu_location.latitude: 22, sulu_locati
+          </div>
+          <div
+            aria-hidden="true"
+            class="back"
+          >
+            <span>
+              on.longitude: 33, sulu_location.zoom: 5
+            </span>
+          </div>
+          <div
+            class="whole"
+          >
+            sulu_location.latitude: 22, sulu_location.longitude: 33, sulu_location.zoom: 5
+          </div>
         </div>
       </div>
     </div>
+    <div
+      data-testid="map-container"
+    >
+      <div
+        data-testid="tile-layer"
+      />
+      <div
+        data-testid="marker"
+      >
+        <div
+          data-testid="tooltip"
+        >
+          <div>
+            <b>
+              title-123
+            </b>
+          </div>
+          <div>
+            street-123 
+          </div>
+          <div>
+            code-123 street-123
+          </div>
+          <div />
+        </div>
+      </div>
+    </div>
+    <div
+      data-open="false"
+      data-testid="location-overlay"
+    />
   </div>
-  <div
-    class="locationMap"
-  />
-</div>
+</DocumentFragment>
 `;
 
 exports[`Component should render without a value 1`] = `
-<div
-  class="locationContainer disabled"
->
+<DocumentFragment>
   <div
-    class="locationHeader"
+    class="locationContainer disabled"
   >
-    <button
-      class="locationHeaderButton"
-      type="button"
-    >
-      <span
-        aria-label="su-map-pin"
-        class="su-map-pin"
-      />
-    </button>
     <div
-      class="locationHeaderLabel"
+      class="locationHeader"
     >
+      <button
+        class="locationHeaderButton"
+        type="button"
+      >
+        <span
+          aria-label="su-map-pin"
+          class="su-map-pin"
+        />
+      </button>
       <div
-        aria-label="sulu_location.select_location"
-        class="croppedText"
-        title="sulu_location.select_location"
+        class="locationHeaderLabel"
       >
         <div
-          aria-hidden="true"
-          class="front"
+          aria-label="sulu_location.select_location"
+          class="croppedText"
+          title="sulu_location.select_location"
         >
-          sulu_location.s
-        </div>
-        <div
-          aria-hidden="true"
-          class="back"
-        >
-          <span>
-            elect_location
-          </span>
-        </div>
-        <div
-          class="whole"
-        >
-          sulu_location.select_location
+          <div
+            aria-hidden="true"
+            class="front"
+          >
+            sulu_location.s
+          </div>
+          <div
+            aria-hidden="true"
+            class="back"
+          >
+            <span>
+              elect_location
+            </span>
+          </div>
+          <div
+            class="whole"
+          >
+            sulu_location.select_location
+          </div>
         </div>
       </div>
     </div>
+    <div
+      data-open="false"
+      data-testid="location-overlay"
+    />
   </div>
-</div>
+</DocumentFragment>
 `;

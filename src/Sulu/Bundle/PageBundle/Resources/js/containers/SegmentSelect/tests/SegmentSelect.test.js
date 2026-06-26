@@ -1,18 +1,17 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import webspaceStore from '../../../stores/webspaceStore';
 import SegmentSelect from '../../SegmentSelect';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('../../../stores/webspaceStore', () => ({
     getWebspace: jest.fn(),
 }));
 
-test('Render a label and a SingleSelect for each granted webspace that has segments', () => {
+test('Render a label and a SingleSelect snapshot for each granted webspace that has segments', () => {
     // $FlowFixMe
     webspaceStore.grantedWebspaces = [
         {
@@ -38,7 +37,7 @@ test('Render a label and a SingleSelect for each granted webspace that has segme
         },
     ];
 
-    const segmentSelect = mount(
+    const {asFragment} = render(
         <SegmentSelect
             disabled={false}
             onChange={jest.fn()}
@@ -49,8 +48,8 @@ test('Render a label and a SingleSelect for each granted webspace that has segme
         />
     );
 
-    expect(segmentSelect.find('SingleSelect')).toHaveLength(2);
-    expect(segmentSelect.render()).toMatchSnapshot();
+    expect(screen.getAllByLabelText('su-angle-down')).toHaveLength(2);
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render a label without webspace name if only one webspace has segments', () => {
@@ -66,7 +65,7 @@ test('Render a label without webspace name if only one webspace has segments', (
         },
     ];
 
-    const segmentSelect = mount(
+    render(
         <SegmentSelect
             disabled={false}
             onChange={jest.fn()}
@@ -77,8 +76,8 @@ test('Render a label without webspace name if only one webspace has segments', (
         />
     );
 
-    expect(segmentSelect.find('label')).toHaveLength(1);
-    expect(segmentSelect.find('label').text()).toEqual('sulu_admin.segment');
+    expect(screen.getByText('sulu_admin.segment')).toBeInTheDocument();
+    expect(screen.queryByText('Webspace One - sulu_admin.segment')).not.toBeInTheDocument();
 });
 
 test('Render a label and a SingleSelect for each granted webspace that has segments', () => {
@@ -107,7 +106,7 @@ test('Render a label and a SingleSelect for each granted webspace that has segme
         },
     ];
 
-    const segmentSelect = mount(
+    const {asFragment} = render(
         <SegmentSelect
             disabled={false}
             onChange={jest.fn()}
@@ -118,8 +117,8 @@ test('Render a label and a SingleSelect for each granted webspace that has segme
         />
     );
 
-    expect(segmentSelect.find('SingleSelect')).toHaveLength(2);
-    expect(segmentSelect.render()).toMatchSnapshot();
+    expect(screen.getAllByLabelText('su-angle-down')).toHaveLength(2);
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render only one label and SingleSelect if options contain a webspace', () => {
@@ -133,7 +132,7 @@ test('Render only one label and SingleSelect if options contain a webspace', () 
     };
     webspaceStore.getWebspace.mockReturnValue(webspace);
 
-    const segmentSelect = mount(
+    render(
         <SegmentSelect
             disabled={false}
             onChange={jest.fn()}
@@ -143,10 +142,12 @@ test('Render only one label and SingleSelect if options contain a webspace', () 
     );
 
     expect(webspaceStore.getWebspace).toHaveBeenCalledWith('webspace-1');
-    expect(segmentSelect.find('SingleSelect')).toHaveLength(1);
+    expect(screen.getAllByLabelText('su-angle-down')).toHaveLength(1);
 });
 
-test('Pass correct props to SingleSelect', () => {
+test('Pass correct props to SingleSelect', async() => {
+    const user = userEvent.setup();
+
     // $FlowFixMe
     webspaceStore.grantedWebspaces = [
         {
@@ -172,7 +173,7 @@ test('Pass correct props to SingleSelect', () => {
         },
     ];
 
-    const segmentSelect = mount(
+    const {rerender} = render(
         <SegmentSelect
             disabled={true}
             onChange={jest.fn()}
@@ -183,23 +184,29 @@ test('Pass correct props to SingleSelect', () => {
         />
     );
 
-    segmentSelect.find('Select').at(0).instance().openOptionList();
-    segmentSelect.update();
+    expect(screen.getByRole('button', {name: /Summer/})).toBeDisabled();
+    expect(screen.getByRole('button', {name: /sulu_admin.none_selected/})).toBeDisabled();
 
-    expect(segmentSelect.find('SingleSelect').at(0).prop('disabled')).toEqual(true);
-    expect(segmentSelect.find('SingleSelect').at(0).prop('value')).toEqual('s');
-    expect(segmentSelect.find('SingleSelect').at(1).prop('disabled')).toEqual(true);
-    expect(segmentSelect.find('SingleSelect').at(1).prop('value')).toEqual(undefined);
+    rerender(
+        <SegmentSelect
+            disabled={false}
+            onChange={jest.fn()}
+            value={{
+                'webspace-1': 's',
+            }}
+            webspace={undefined}
+        />
+    );
 
-    expect(segmentSelect.find('Option').at(0).prop('children')).toEqual('sulu_admin.none_selected');
-    expect(segmentSelect.find('Option').at(0).prop('value')).toEqual(undefined);
-    expect(segmentSelect.find('Option').at(1).prop('children')).toEqual('Winter');
-    expect(segmentSelect.find('Option').at(1).prop('value')).toEqual('w');
-    expect(segmentSelect.find('Option').at(2).prop('children')).toEqual('Summer');
-    expect(segmentSelect.find('Option').at(2).prop('value')).toEqual('s');
+    await user.click(screen.getAllByLabelText('su-angle-down')[0]);
+
+    expect(screen.getByRole('button', {name: 'Winter'})).toBeInTheDocument();
+    expect(screen.getAllByRole('button', {name: /Summer/})).toHaveLength(2);
+    expect(screen.getAllByRole('button', {name: /sulu_admin.none_selected/})).toHaveLength(2);
 });
 
-test('Call onChange if the value is changed', () => {
+test('Call onChange if the value is changed', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
     // $FlowFixMe
@@ -227,9 +234,9 @@ test('Call onChange if the value is changed', () => {
         },
     ];
 
-    const segmentSelect = mount(
+    render(
         <SegmentSelect
-            disabled={true}
+            disabled={false}
             onChange={changeSpy}
             value={{
                 'webspace-1': 's',
@@ -238,7 +245,9 @@ test('Call onChange if the value is changed', () => {
         />
     );
 
-    segmentSelect.find('SingleSelect').at(1).prop('onChange')('a');
+    await user.click(screen.getAllByLabelText('su-angle-down')[1]);
+    await user.click(screen.getByRole('button', {name: 'Autumn'}));
+
     expect(changeSpy).toHaveBeenCalledWith({
         'webspace-1': 's',
         'webspace-3': 'a',

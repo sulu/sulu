@@ -1,5 +1,4 @@
 // @flow
-import {mount} from 'enzyme';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceRequester from '../../../../services/ResourceRequester';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -8,9 +7,7 @@ import Form from '../../../../views/Form';
 import CopyToolbarAction from '../../toolbarActions/CopyToolbarAction';
 import conditionDataProviderRegistry from '../../../../containers/Form/registries/conditionDataProviderRegistry';
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../../utils/Translator');
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions) {
     this.id = id;
@@ -77,6 +74,16 @@ function createCopyToolbarAction(options = {}) {
     return new CopyToolbarAction(formStore, form, router, [], options, resourceStore);
 }
 
+function getDialogProps(copyToolbarAction: any): Object {
+    const node = copyToolbarAction.getNode();
+
+    if (!node) {
+        throw new Error('The copy dialog node should be rendered.');
+    }
+
+    return node.props;
+}
+
 test('Return item config with correct disabled, type and label', () => {
     const copyToolbarAction = createCopyToolbarAction();
 
@@ -141,18 +148,20 @@ test('Display confirmation dialog when button is clicked', () => {
         throw new Error('A onClick callback should be registered on the unpublish option');
     }
 
-    let element = mount(copyToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    let dialogProps = getDialogProps(copyToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
         open: false,
     }));
 
     onClickCallback();
-    element = mount(copyToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    dialogProps = getDialogProps(copyToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
+        cancelText: 'sulu_admin.cancel',
+        children: 'sulu_admin.copy_dialog_description',
+        confirmText: 'sulu_admin.ok',
         open: true,
+        title: 'sulu_admin.create_copy',
     }));
-
-    expect(element.render()).toMatchSnapshot();
 });
 
 test('Close confirmation dialog when onCancel callback is fired', () => {
@@ -172,20 +181,20 @@ test('Close confirmation dialog when onCancel callback is fired', () => {
         throw new Error('A onClick callback should be registered on the unpublish option');
     }
 
-    let element = mount(copyToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    let dialogProps = getDialogProps(copyToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
         open: false,
     }));
 
     onClickCallback();
-    element = mount(copyToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    dialogProps = getDialogProps(copyToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
         open: true,
     }));
 
-    element.prop('onCancel')();
-    element = mount(copyToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    dialogProps.onCancel();
+    dialogProps = getDialogProps(copyToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
         open: false,
     }));
 });
@@ -212,13 +221,13 @@ test('Copy resource when confirmation dialog is confirmed', () => {
         throw new Error('A onClick callback should be registered on the unpublish option');
     }
 
-    let element = mount(copyToolbarAction.getNode());
+    let dialogProps = getDialogProps(copyToolbarAction);
     clickHandler();
 
-    expect(element.prop('confirmLoading')).toEqual(false);
-    element.prop('onConfirm')();
-    element = mount(copyToolbarAction.getNode());
-    expect(element.prop('confirmLoading')).toEqual(true);
+    expect(dialogProps.confirmLoading).toEqual(false);
+    dialogProps.onConfirm();
+    dialogProps = getDialogProps(copyToolbarAction);
+    expect(dialogProps.confirmLoading).toEqual(true);
     expect(ResourceRequester.post).toHaveBeenCalledWith(
         'pages',
         undefined,
@@ -226,9 +235,9 @@ test('Copy resource when confirmation dialog is confirmed', () => {
     );
 
     return copyPromise.then(() => {
-        element = mount(copyToolbarAction.getNode());
+        dialogProps = getDialogProps(copyToolbarAction);
         expect(copyToolbarAction.form.showSuccessSnackbar).toHaveBeenCalledWith();
-        expect(element.prop('confirmLoading')).toEqual(false);
+        expect(dialogProps.confirmLoading).toEqual(false);
         expect(copyToolbarAction.router.navigate).toHaveBeenCalledWith(
             'current_route_name',
             {id: 'copied-id', webspace: 'copied-webspace'}

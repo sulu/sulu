@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Router, {Route} from '../../../services/Router';
 import Tabs from '../Tabs';
 import Requester from '../../../services/Requester';
@@ -19,9 +20,7 @@ window.ResizeObserver = jest.fn(function() {
 
 jest.mock('../../../services/Router/Router', () => jest.fn());
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 test('Should render the children after the tabs', () => {
     const childRoute1 = new Route({
@@ -67,10 +66,14 @@ test('Should render the children after the tabs', () => {
     const router = new Router({});
 
     const Child = () => (<h1>Child</h1>);
-    expect(render(<Tabs isRootView={true} route={route} router={router}>{() => (<Child />)}</Tabs>)).toMatchSnapshot();
+    render(<Tabs isRootView={true} route={route} router={router}>{() => (<Child />)}</Tabs>);
+
+    expect(screen.getByRole('button', {name: 'tabTitle1'})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'tabTitle2'})).toBeInTheDocument();
+    expect(screen.getByRole('heading', {name: 'Child'})).toBeInTheDocument();
 });
 
-test('Should render the tab badges', () => {
+test('Should render the tab badges', async() => {
     const promise = Promise.resolve({count: 2});
     Requester.get.mockReturnValue(promise);
     Requester.handleResponseHooks = [];
@@ -124,15 +127,11 @@ test('Should render the tab badges', () => {
     const router = new Router({});
 
     const Child = () => (<h1>Child</h1>);
-    const tabs = mount(<Tabs isRootView={true} route={route} router={router}>{() => (<Child />)}</Tabs>);
+    render(<Tabs isRootView={true} route={route} router={router}>{() => (<Child />)}</Tabs>);
 
-    return promise.then(() => {
-        tabs.update();
+    await promise;
 
-        const badgeContainer = tabs.children().find('Badge');
-        expect(badgeContainer.children().find('Badge').length).toBe(1);
-        expect(badgeContainer.children().find('Badge').text()).toBe('2');
-    });
+    expect(await screen.findByText('2')).toBeInTheDocument();
 });
 
 test('Should render the header between children and tabs', () => {
@@ -170,7 +169,7 @@ test('Should render the header between children and tabs', () => {
     const router = new Router({});
 
     const Child = () => (<h2>Child</h2>);
-    expect(render(
+    render(
         <Tabs
             header={<h1>Header</h1>}
             isRootView={true}
@@ -179,7 +178,10 @@ test('Should render the header between children and tabs', () => {
         >
             {() => (<Child />)}
         </Tabs>
-    )).toMatchSnapshot();
+    );
+
+    expect(screen.getByRole('heading', {name: 'Header'})).toBeInTheDocument();
+    expect(screen.getByRole('heading', {name: 'Child'})).toBeInTheDocument();
 });
 
 test('Should render the children with the passed props', () => {
@@ -217,7 +219,7 @@ test('Should render the children with the passed props', () => {
     const router = new Router({});
 
     const Child = ({test}) => (<h2>{test}</h2>);
-    expect(render(
+    render(
         <Tabs
             childrenProps={{test: 'Value'}}
             isRootView={true}
@@ -226,7 +228,9 @@ test('Should render the children with the passed props', () => {
         >
             {(props) => (<Child {...props} />)}
         </Tabs>
-    )).toMatchSnapshot();
+    );
+
+    expect(screen.getByRole('heading', {name: 'Value'})).toBeInTheDocument();
 });
 
 test('Should render the active child with disabledTabGap option', () => {
@@ -276,7 +280,7 @@ test('Should render the active child with disabledTabGap option', () => {
     const router = new Router({});
 
     const Child = () => (<h1>Child</h1>);
-    expect(render(
+    render(
         <Tabs
             route={route}
             router={router}
@@ -284,7 +288,11 @@ test('Should render the active child with disabledTabGap option', () => {
         >
             {() => (<Child route={activeRoute} />)}
         </Tabs>
-    )).toMatchSnapshot();
+    );
+
+    expect(screen.getByRole('button', {name: 'tabTitle1'})).toBeDisabled();
+    expect(screen.getByRole('button', {name: 'tabTitle2'})).toBeInTheDocument();
+    expect(screen.getByRole('heading', {name: 'Child'})).toBeInTheDocument();
 });
 
 test('Should consider the tabOrder when rendering the tabs', () => {
@@ -343,14 +351,16 @@ test('Should consider the tabOrder when rendering the tabs', () => {
     const router = new Router({});
 
     const Child = () => (<h1>Child</h1>);
-    const tabs = mount(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>);
+    render(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>);
 
-    expect(tabs.find('Tab').at(0).text()).toEqual('tabTitle2');
-    expect(tabs.find('Tab').at(1).text()).toEqual('tabTitle1');
-    expect(tabs.find('Tab').at(2).text()).toEqual('tabTitle3');
+    expect(screen.getAllByRole('button').map((button) => button.textContent)).toEqual([
+        'tabTitle2',
+        'tabTitle1',
+        'tabTitle3',
+    ]);
 });
 
-test('Should mark currently active tab as selected according to prop', (done) => {
+test('Should mark currently active tab as selected according to prop', async() => {
     const childRoute1 = new Route({
         name: 'route1',
         options: {
@@ -396,19 +406,16 @@ test('Should mark currently active tab as selected according to prop', (done) =>
     const router = new Router({});
 
     const Child = () => (<h1>Child</h1>);
-    const tabs = mount(
+    render(
         <Tabs route={route} router={router} selectedIndex={0}>{() => (<Child route={activeRoute} />)}</Tabs>
     );
 
-    setTimeout(() => {
-        expect(router.redirect).not.toHaveBeenCalled();
-        expect(tabs.find('Tab').at(0).prop('selected')).toEqual(true);
-        expect(tabs.find('Tab').at(1).prop('selected')).toEqual(false);
-        done();
-    });
+    await waitFor(() => expect(router.redirect).not.toHaveBeenCalled());
+    expect(screen.getByRole('button', {name: 'tabTitle1'})).toBeDisabled();
+    expect(screen.getByRole('button', {name: 'tabTitle2'})).toBeEnabled();
 });
 
-test('Should mark currently active tab as selected', (done) => {
+test('Should mark currently active tab as selected', async() => {
     const childRoute1 = new Route({
         name: 'route1',
         options: {
@@ -454,19 +461,16 @@ test('Should mark currently active tab as selected', (done) => {
     const router = new Router({});
 
     const Child = () => (<h1>Child</h1>);
-    const tabs = mount(
+    render(
         <Tabs route={route} router={router}>{() => (<Child route={activeRoute} />)}</Tabs>
     );
 
-    setTimeout(() => {
-        expect(router.redirect).not.toHaveBeenCalled();
-        expect(tabs.find('Tab').at(0).prop('selected')).toEqual(false);
-        expect(tabs.find('Tab').at(1).prop('selected')).toEqual(true);
-        done();
-    });
+    await waitFor(() => expect(router.redirect).not.toHaveBeenCalled());
+    expect(screen.getByRole('button', {name: 'tabTitle1'})).toBeEnabled();
+    expect(screen.getByRole('button', {name: 'tabTitle2'})).toBeDisabled();
 });
 
-test('Should redirect to child route with highest priority if no tab is active by default', (done) => {
+test('Should redirect to child route with highest priority if no tab is active by default', async() => {
     const childRoute1 = new Route({
         name: 'route1',
         options: {
@@ -511,15 +515,12 @@ test('Should redirect to child route with highest priority if no tab is active b
     const router = new Router({});
 
     const Child = () => (<h1>Child</h1>);
-    mount(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>);
+    render(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>);
 
-    setTimeout(() => {
-        expect(router.redirect).toHaveBeenCalledWith('route2', attributes);
-        done();
-    });
+    await waitFor(() => expect(router.redirect).toHaveBeenCalledWith('route2', attributes));
 });
 
-test('Should redirect to child route from props with highest priority if no tab is active by default', (done) => {
+test('Should redirect to child route from props with highest priority if no tab is active by default', async() => {
     const childRoute1 = new Route({
         name: 'route1',
         options: {
@@ -566,15 +567,13 @@ test('Should redirect to child route from props with highest priority if no tab 
     const router = new Router({});
 
     const Child = () => (<h1>Child</h1>);
-    mount(<Tabs route={route} routeChildren={childRoutes} router={router}>{() => (<Child />)}</Tabs>);
+    render(<Tabs route={route} routeChildren={childRoutes} router={router}>{() => (<Child />)}</Tabs>);
 
-    setTimeout(() => {
-        expect(router.redirect).toHaveBeenCalledWith('route2', attributes);
-        done();
-    });
+    await waitFor(() => expect(router.redirect).toHaveBeenCalledWith('route2', attributes));
 });
 
-test('Navigate to tab if it was clicked', () => {
+test('Navigate to tab with filtered attributes if it was clicked', async() => {
+    const user = userEvent.setup();
     const childRoute1 = new Route({
         name: 'route1',
         options: {
@@ -619,13 +618,14 @@ test('Navigate to tab if it was clicked', () => {
     const router = new Router({});
 
     const Child = () => (<h1>Child</h1>);
-    const tabs = mount(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>);
+    render(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>);
 
-    tabs.find('Tab button').at(1).simulate('click');
+    await user.click(screen.getByRole('button', {name: 'tabTitle2'}));
     expect(router.navigate).toHaveBeenCalledWith('route2', attributes);
 });
 
-test('Navigate to tab if it was clicked', () => {
+test('Navigate to tab if it was clicked', async() => {
+    const user = userEvent.setup();
     const childRoute1 = new Route({
         name: 'route1',
         options: {
@@ -673,8 +673,8 @@ test('Navigate to tab if it was clicked', () => {
     const router = new Router({});
 
     const Child = () => (<h1>Child</h1>);
-    const tabs = mount(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>);
+    render(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>);
 
-    tabs.find('Tab button').at(1).simulate('click');
+    await user.click(screen.getByRole('button', {name: 'tabTitle2'}));
     expect(router.navigate).toHaveBeenCalledWith('route2', {id: 1});
 });

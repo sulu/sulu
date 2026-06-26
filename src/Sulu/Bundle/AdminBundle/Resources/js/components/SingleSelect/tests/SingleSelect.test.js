@@ -7,9 +7,7 @@ import SingleSelect from '../../SingleSelect';
 const Option = SingleSelect.Option;
 const Divider = SingleSelect.Divider;
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 test('The component should render a generic select', () => {
     const {container} = render(

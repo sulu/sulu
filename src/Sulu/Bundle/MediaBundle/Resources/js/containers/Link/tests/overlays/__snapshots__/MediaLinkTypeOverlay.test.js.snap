@@ -1,315 +1,328 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Render overlay with anchor enabled 1`] = `
-<div
-  class="grid grid"
->
+<div>
   <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+    class="grid grid"
   >
     <div
-      class="field"
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
     >
-      <label
-        class="label"
-      >
-        sulu_admin.link_url *
-      </label>
       <div
-        class="singleItemSelection"
+        class="field"
       >
-        <button
-          class="button left"
-          type="button"
+        <label
+          class="label"
         >
-          <span
-            aria-label="su-image"
-            class="su-image icon"
-          />
-        </button>
+          sulu_admin.link_url
+           *
+        </label>
         <div
-          class="itemContainer"
+          class="singleItemSelection"
         >
+          <button
+            class="button left"
+            type="button"
+          >
+            <span
+              aria-label="su-image"
+              class="su-image icon"
+            />
+          </button>
           <div
-            class="item clickable"
-            role="button"
+            class="itemContainer"
           >
             <div
-              class="empty"
+              class="item clickable"
+              role="button"
             >
-              sulu_media.select_media_singular
+              <div
+                class="empty"
+              >
+                sulu_media.select_media_singular
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div>
-        single media selection overlay
-      </div>
-      <div
-        class="errorLabel"
-      />
-    </div>
-  </div>
-  <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-  >
-    <div
-      class="field"
-    >
-      <label
-        class="label"
-      >
-        sulu_admin.link_anchor
-      </label>
-      <div
-        class="input default left"
-      >
-        <input
-          type="text"
-          value=""
+        <div>
+          single media selection overlay
+        </div>
+        <div
+          class="errorLabel"
         />
       </div>
+    </div>
+    <div
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+    >
       <div
-        class="errorLabel"
-      />
+        class="field"
+      >
+        <label
+          class="label"
+        >
+          sulu_admin.link_anchor
+        </label>
+        <div
+          class="input default left"
+        >
+          <input
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="errorLabel"
+        />
+      </div>
     </div>
   </div>
 </div>
 `;
 
 exports[`Render overlay with minimal config 1`] = `
-<div
-  class="grid grid"
->
+<div>
   <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+    class="grid grid"
   >
     <div
-      class="field"
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
     >
-      <label
-        class="label"
-      >
-        sulu_admin.link_url *
-      </label>
       <div
-        class="singleItemSelection"
+        class="field"
       >
-        <button
-          class="button left"
-          type="button"
+        <label
+          class="label"
         >
-          <span
-            aria-label="su-image"
-            class="su-image icon"
-          />
-        </button>
+          sulu_admin.link_url
+           *
+        </label>
         <div
-          class="itemContainer"
+          class="singleItemSelection"
         >
+          <button
+            class="button left"
+            type="button"
+          >
+            <span
+              aria-label="su-image"
+              class="su-image icon"
+            />
+          </button>
           <div
-            class="item clickable"
-            role="button"
+            class="itemContainer"
           >
             <div
-              class="empty"
+              class="item clickable"
+              role="button"
             >
-              sulu_media.select_media_singular
+              <div
+                class="empty"
+              >
+                sulu_media.select_media_singular
+              </div>
             </div>
           </div>
         </div>
+        <div>
+          single media selection overlay
+        </div>
+        <div
+          class="errorLabel"
+        />
       </div>
-      <div>
-        single media selection overlay
-      </div>
-      <div
-        class="errorLabel"
-      />
     </div>
   </div>
 </div>
 `;
 
 exports[`Render overlay with target enabled 1`] = `
-<div
-  class="grid grid"
->
+<div>
   <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+    class="grid grid"
   >
     <div
-      class="field"
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
     >
-      <label
-        class="label"
-      >
-        sulu_admin.link_url *
-      </label>
       <div
-        class="singleItemSelection"
+        class="field"
       >
-        <button
-          class="button left"
-          type="button"
+        <label
+          class="label"
         >
-          <span
-            aria-label="su-image"
-            class="su-image icon"
-          />
-        </button>
+          sulu_admin.link_url
+           *
+        </label>
         <div
-          class="itemContainer"
+          class="singleItemSelection"
         >
+          <button
+            class="button left"
+            type="button"
+          >
+            <span
+              aria-label="su-image"
+              class="su-image icon"
+            />
+          </button>
           <div
-            class="item clickable"
-            role="button"
+            class="itemContainer"
           >
             <div
-              class="empty"
+              class="item clickable"
+              role="button"
             >
-              sulu_media.select_media_singular
+              <div
+                class="empty"
+              >
+                sulu_media.select_media_singular
+              </div>
             </div>
           </div>
         </div>
+        <div>
+          single media selection overlay
+        </div>
+        <div
+          class="errorLabel"
+        />
       </div>
-      <div>
-        single media selection overlay
-      </div>
-      <div
-        class="errorLabel"
-      />
     </div>
-  </div>
-  <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-  >
     <div
-      class="field"
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
     >
-      <label
-        class="label"
-      >
-        sulu_admin.link_target *
-      </label>
       <div
-        class="select"
-        role="none"
+        class="field"
       >
-        <button
-          class="displayValue default"
-          type="button"
+        <label
+          class="label"
         >
-          <div
-            aria-label="sulu_admin.please_choose"
-            class="croppedText"
-            title="sulu_admin.please_choose"
+          sulu_admin.link_target
+           *
+        </label>
+        <div
+          class="select"
+          role="none"
+        >
+          <button
+            class="displayValue default"
+            type="button"
           >
             <div
-              aria-hidden="true"
-              class="front"
+              aria-label="sulu_admin.please_choose"
+              class="croppedText"
+              title="sulu_admin.please_choose"
             >
-              sulu_admin.p
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                sulu_admin.p
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  lease_choose
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                sulu_admin.please_choose
+              </div>
             </div>
-            <div
-              aria-hidden="true"
-              class="back"
-            >
-              <span>
-                lease_choose
-              </span>
-            </div>
-            <div
-              class="whole"
-            >
-              sulu_admin.please_choose
-            </div>
-          </div>
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down toggle"
-          />
-        </button>
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down toggle"
+            />
+          </button>
+        </div>
+        <div
+          class="errorLabel"
+        />
       </div>
-      <div
-        class="errorLabel"
-      />
     </div>
   </div>
 </div>
 `;
 
 exports[`Render overlay with title enabled 1`] = `
-<div
-  class="grid grid"
->
+<div>
   <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+    class="grid grid"
   >
     <div
-      class="field"
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
     >
-      <label
-        class="label"
-      >
-        sulu_admin.link_url *
-      </label>
       <div
-        class="singleItemSelection"
+        class="field"
       >
-        <button
-          class="button left"
-          type="button"
+        <label
+          class="label"
         >
-          <span
-            aria-label="su-image"
-            class="su-image icon"
-          />
-        </button>
+          sulu_admin.link_url
+           *
+        </label>
         <div
-          class="itemContainer"
+          class="singleItemSelection"
         >
+          <button
+            class="button left"
+            type="button"
+          >
+            <span
+              aria-label="su-image"
+              class="su-image icon"
+            />
+          </button>
           <div
-            class="item clickable"
-            role="button"
+            class="itemContainer"
           >
             <div
-              class="empty"
+              class="item clickable"
+              role="button"
             >
-              sulu_media.select_media_singular
+              <div
+                class="empty"
+              >
+                sulu_media.select_media_singular
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div>
-        single media selection overlay
-      </div>
-      <div
-        class="errorLabel"
-      />
-    </div>
-  </div>
-  <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-  >
-    <div
-      class="field"
-    >
-      <label
-        class="label"
-      >
-        sulu_admin.link_title
-      </label>
-      <div
-        class="input default left"
-      >
-        <input
-          type="text"
-          value=""
+        <div>
+          single media selection overlay
+        </div>
+        <div
+          class="errorLabel"
         />
       </div>
+    </div>
+    <div
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+    >
       <div
-        class="errorLabel"
-      />
+        class="field"
+      >
+        <label
+          class="label"
+        >
+          sulu_admin.link_title
+        </label>
+        <div
+          class="input default left"
+        >
+          <input
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="errorLabel"
+        />
+      </div>
     </div>
   </div>
 </div>

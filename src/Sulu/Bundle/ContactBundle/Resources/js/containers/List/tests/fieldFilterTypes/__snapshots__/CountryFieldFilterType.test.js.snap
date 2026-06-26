@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Render with value 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="input default left"
   >
@@ -17,7 +17,7 @@ Array [
       type="text"
       value=""
     />
-  </div>,
+  </div>
   <div
     class="checkboxGroup"
   >
@@ -72,6 +72,6 @@ Array [
         Netherlands
       </div>
     </label>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;

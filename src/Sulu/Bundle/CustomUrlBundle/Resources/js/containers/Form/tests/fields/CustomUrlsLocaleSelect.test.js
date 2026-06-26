@@ -1,28 +1,12 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
-import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import {webspaceStore} from 'sulu-page-bundle/stores';
 import CustomUrlsLocaleSelect from '../../fields/CustomUrlsLocaleSelect';
 
-jest.mock('sulu-admin-bundle/containers', () => ({
-    FormInspector: jest.fn(function(formStore) {
-        this.options = formStore.options;
-    }),
-    ResourceFormStore: jest.fn(function(resourceStore, formKey, options) {
-        this.options = options;
-    }),
-}));
-
-jest.mock('sulu-admin-bundle/stores', () => ({
-    ResourceStore: jest.fn(),
-}));
-
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('sulu-page-bundle/stores', () => ({
     webspaceStore: {
@@ -30,15 +14,13 @@ jest.mock('sulu-page-bundle/stores', () => ({
     },
 }));
 
-test('Pass correct props to MultiSelect', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test'),
-            'test',
-            {webspace: 'sulu_io'}
-        )
-    );
+function createFormInspector(): any {
+    return {
+        options: {webspace: 'sulu_io'},
+    };
+}
 
+beforeEach(() => {
     const webspace = {
         allLocalizations: [
             {localization: 'de'},
@@ -46,8 +28,13 @@ test('Pass correct props to MultiSelect', () => {
         ],
     };
     webspaceStore.getWebspace.mockReturnValue(webspace);
+});
 
-    const customUrlsDomainSelect = shallow(
+test('Pass correct props to MultiSelect', async() => {
+    const user = userEvent.setup();
+    const formInspector = createFormInspector();
+
+    const {unmount} = render(
         <CustomUrlsLocaleSelect
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -57,36 +44,35 @@ test('Pass correct props to MultiSelect', () => {
     );
 
     expect(webspaceStore.getWebspace).toHaveBeenCalledWith('sulu_io');
+    expect(screen.getByRole('button', {name: /en/})).toBeDisabled();
 
-    expect(customUrlsDomainSelect.find('SingleSelect').prop('disabled')).toEqual(true);
-    expect(customUrlsDomainSelect.find('SingleSelect').prop('value')).toEqual('en');
-    expect(customUrlsDomainSelect.find('Option').at(0).prop('children')).toEqual('de');
-    expect(customUrlsDomainSelect.find('Option').at(0).prop('value')).toEqual('de');
-    expect(customUrlsDomainSelect.find('Option').at(1).prop('children')).toEqual('en');
-    expect(customUrlsDomainSelect.find('Option').at(1).prop('value')).toEqual('en');
-});
+    unmount();
 
-test('Call onChange and onBlur if the value is changed', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test'),
-            'test',
-            {webspace: 'sulu_io'}
-        )
+    render(
+        <CustomUrlsLocaleSelect
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            value="en"
+        />
     );
 
-    const webspace = {
-        allLocalizations: [
-            {localization: 'de'},
-            {localization: 'en'},
-        ],
-    };
-    webspaceStore.getWebspace.mockReturnValue(webspace);
+    await user.click(screen.getByLabelText('su-angle-down'));
 
-    const customUrlsDomainSelect = shallow(
+    const optionButtons = screen.getAllByRole('button')
+        .filter((button) => button.classList.contains('option'));
+
+    expect(optionButtons).toHaveLength(2);
+    expect(optionButtons[0]).toHaveTextContent('de');
+    expect(optionButtons[1]).toHaveTextContent('en');
+});
+
+test('Call onChange and onBlur if the value is changed', async() => {
+    const user = userEvent.setup();
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+    const formInspector = createFormInspector();
+
+    render(
         <CustomUrlsLocaleSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -98,7 +84,9 @@ test('Call onChange and onBlur if the value is changed', () => {
 
     expect(webspaceStore.getWebspace).toHaveBeenCalledWith('sulu_io');
 
-    customUrlsDomainSelect.find('SingleSelect').prop('onChange')('en');
+    await user.click(screen.getByLabelText('su-angle-down'));
+    await user.click(screen.getByRole('button', {name: 'en'}));
+
     expect(changeSpy).toHaveBeenCalledWith('en');
     expect(finishSpy).toHaveBeenCalledWith();
 });

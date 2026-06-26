@@ -15,9 +15,7 @@ jest.mock('react-sortable-hoc', () => ({
     SortableHandle: jest.fn().mockImplementation((component) => component),
 }));
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('../../../utils/Translator');
 
 test('Render collapsed sortable block', () => {
     const {asFragment} = render(

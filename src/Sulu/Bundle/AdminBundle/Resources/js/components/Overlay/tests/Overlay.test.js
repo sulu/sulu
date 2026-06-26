@@ -5,9 +5,7 @@ import Mousetrap from 'mousetrap';
 import React from 'react';
 import Overlay from '../Overlay';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 afterEach(() => {
     if (Mousetrap.reset) {

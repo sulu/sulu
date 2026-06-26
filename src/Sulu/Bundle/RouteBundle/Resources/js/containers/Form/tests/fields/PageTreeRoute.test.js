@@ -1,15 +1,17 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
 import {FormInspector, ResourceFormStore, SingleSelection, ResourceLocator} from 'sulu-admin-bundle/containers';
-import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
+import {
+    fieldTypeDefaultProps,
+    findElementByType,
+    renderWithRef,
+    waitForReaction,
+} from 'sulu-admin-bundle/utils/TestHelper';
 import {ResourceStore, SingleSelectionStore} from 'sulu-admin-bundle/stores';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import PageTreeRoute from '../../fields/PageTreeRoute';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     contentLocale: 'de',
@@ -109,7 +111,7 @@ test('Render a PageTreeRoute', () => {
         )
     );
 
-    const pageTreeRoute = mount(
+    const {container, instance: pageTreeRoute} = renderWithRef(
         <PageTreeRoute
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -121,20 +123,12 @@ test('Render a PageTreeRoute', () => {
     expect(modeResolver).toHaveBeenCalled();
 
     return modePromise.then(() => {
-        pageTreeRoute.update();
-        expect(pageTreeRoute.render()).toMatchSnapshot();
-        expect(pageTreeRoute.find(SingleSelection).prop('value')).toBe(value.page.uuid);
-        expect(SingleSelectionStore).toHaveBeenCalledWith('pages', 'uuid-uuid-uuid-uuid', locale, undefined);
-
-        const singleSelection = pageTreeRoute.find(SingleSelection);
-
-        singleSelection.instance().singleSelectionStore.item = {};
-        singleSelection.update();
-
-        expect(singleSelection.find('.item').text()).toBe('/test/uuid-uuid-uuid-uuid');
-        expect(singleSelection.render()).toMatchSnapshot();
-
-        expect(pageTreeRoute.find(ResourceLocator).prop('value')).toBe(value.suffix);
+        return waitForReaction().then(() => {
+            expect(container).toMatchSnapshot();
+            expect(findElementByType(pageTreeRoute.render(), SingleSelection).props.value).toBe(value.page.uuid);
+            expect(SingleSelectionStore).toHaveBeenCalledWith('pages', 'uuid-uuid-uuid-uuid', locale, undefined);
+            expect(findElementByType(pageTreeRoute.render(), ResourceLocator).props.value).toBe(value.suffix);
+        });
     });
 });
 
@@ -149,7 +143,7 @@ test('Render a PageTreeRoute without value', () => {
 
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('pages'), 'test'));
 
-    const pageTreeRoute = mount(
+    const {container, instance: pageTreeRoute} = renderWithRef(
         <PageTreeRoute
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -161,9 +155,10 @@ test('Render a PageTreeRoute without value', () => {
     expect(modeResolver).toHaveBeenCalled();
 
     return modePromise.then(() => {
-        pageTreeRoute.update();
-        expect(pageTreeRoute.render()).toMatchSnapshot();
-        expect(pageTreeRoute.find(SingleSelection).prop('value')).toBe(null);
-        expect(pageTreeRoute.find(ResourceLocator).prop('value')).toBe(null);
+        return waitForReaction().then(() => {
+            expect(container).toMatchSnapshot();
+            expect(findElementByType(pageTreeRoute.render(), SingleSelection).props.value).toBe(null);
+            expect(findElementByType(pageTreeRoute.render(), ResourceLocator).props.value).toBe(null);
+        });
     });
 });

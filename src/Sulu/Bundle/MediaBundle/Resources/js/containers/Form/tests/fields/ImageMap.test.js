@@ -1,14 +1,18 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import userEvent from '@testing-library/user-event';
 import {observable} from 'mobx';
-import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
+import {
+    fieldTypeDefaultProps,
+    findElementByType,
+    mockResizeObserver,
+    renderWithRef,
+} from 'sulu-admin-bundle/utils/TestHelper';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import fieldRegistry from 'sulu-admin-bundle/containers/Form/registries/fieldRegistry';
 import SingleSelect from 'sulu-admin-bundle/containers/Form/fields/SingleSelect';
 import {Renderer} from 'sulu-admin-bundle/containers/Form';
-import Field from 'sulu-admin-bundle/containers/Form/Field';
 import jsonpointer from 'json-pointer';
 import ImageMap from '../../fields/ImageMap';
 import ImageMapContainer from '../../../ImageMap';
@@ -34,9 +38,7 @@ jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(funct
     this.isFieldModified = jest.fn();
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     contentLocale: 'en',
@@ -49,10 +51,7 @@ jest.mock('sulu-admin-bundle/containers/Form/registries/fieldRegistry', () => ({
     getOptions: jest.fn().mockReturnValue({}),
 }));
 
-window.ResizeObserver = jest.fn(function() {
-    this.observe = jest.fn();
-    this.disconnect = jest.fn();
-});
+mockResizeObserver();
 
 test('Pass correct props to SingleMediaSelection component', () => {
     const formInspector = new FormInspector(
@@ -74,7 +73,7 @@ test('Pass correct props to SingleMediaSelection component', () => {
         },
     };
 
-    const imageMap = shallow(
+    const {instance: imageMap} = renderWithRef(
         <ImageMap
             {...fieldTypeDefaultProps}
             defaultType="default"
@@ -85,12 +84,13 @@ test('Pass correct props to SingleMediaSelection component', () => {
             value={{imageId: 33, hotspots: []}}
         />
     );
+    const imageMapContainerProps = findElementByType(imageMap.render(), ImageMapContainer).props;
 
-    expect(imageMap.find(ImageMapContainer).props().disabled).toEqual(true);
-    expect(imageMap.find(ImageMapContainer).props().valid).toEqual(false);
-    expect(imageMap.find(ImageMapContainer).props().locale.get()).toEqual('en');
-    expect(imageMap.find(ImageMapContainer).props().types).toEqual({'default': 'Default'});
-    expect(imageMap.find(ImageMapContainer).props().value).toEqual({imageId: 33, hotspots: []});
+    expect(imageMapContainerProps.disabled).toEqual(true);
+    expect(imageMapContainerProps.valid).toEqual(false);
+    expect(imageMapContainerProps.locale.get()).toEqual('en');
+    expect(imageMapContainerProps.types).toEqual({'default': 'Default'});
+    expect(imageMapContainerProps.value).toEqual({imageId: 33, hotspots: []});
 });
 
 test('Pass correct default value to ImageMapContainer', () => {
@@ -113,7 +113,7 @@ test('Pass correct default value to ImageMapContainer', () => {
         },
     };
 
-    const imageMap = shallow(
+    const {instance: imageMap} = renderWithRef(
         <ImageMap
             {...fieldTypeDefaultProps}
             defaultType="default"
@@ -123,7 +123,8 @@ test('Pass correct default value to ImageMapContainer', () => {
         />
     );
 
-    expect(imageMap.find(ImageMapContainer).props().value).toEqual({imageId: undefined, hotspots: []});
+    expect(findElementByType(imageMap.render(), ImageMapContainer).props.value)
+        .toEqual({imageId: undefined, hotspots: []});
 });
 
 test('Pass content-locale of user to SingleMediaSelection if locale is not present in form-inspector', () => {
@@ -146,7 +147,7 @@ test('Pass content-locale of user to SingleMediaSelection if locale is not prese
         },
     };
 
-    const imageMap = shallow(
+    const {instance: imageMap} = renderWithRef(
         <ImageMap
             {...fieldTypeDefaultProps}
             defaultType="default"
@@ -156,7 +157,7 @@ test('Pass content-locale of user to SingleMediaSelection if locale is not prese
         />
     );
 
-    expect(imageMap.find(ImageMapContainer).props().locale.get()).toEqual('en');
+    expect(findElementByType(imageMap.render(), ImageMapContainer).props.locale.get()).toEqual('en');
 });
 
 test('Should call onChange and onFinish if the value changes', () => {
@@ -194,7 +195,7 @@ test('Should call onChange and onFinish if the value changes', () => {
         otherProperty: 'other-value',
     };
 
-    const imageMap = mount(
+    const {instance: imageMap} = renderWithRef(
         <ImageMap
             {...fieldTypeDefaultProps}
             data={data}
@@ -208,13 +209,15 @@ test('Should call onChange and onFinish if the value changes', () => {
         />
     );
 
-    expect(imageMap.find(Field).props().data).toEqual(data);
-    expect(imageMap.find(Field).props().value).toEqual('text-value-123');
+    const fieldRenderer = findElementByType(imageMap.render(), ImageMapContainer)
+        .props.renderHotspotForm(value.hotspots[0], 'default', 0);
+    const {instance: renderedField} = renderWithRef(fieldRenderer);
 
     // check if data path that is passed to field leads to correct value for field
-    const fieldData = imageMap.find(Renderer).props().data;
-    const fieldDataPath = imageMap.find(Renderer).props().dataPath;
-    const fieldValue = imageMap.find(Renderer).props().value;
+    const rendererProps = findElementByType(renderedField.render(), Renderer).props;
+    const fieldData = rendererProps.data;
+    const fieldDataPath = rendererProps.dataPath;
+    const fieldValue = rendererProps.value;
     expect(jsonpointer.get(fieldData, '/' + fieldDataPath)).toEqual(fieldValue);
 });
 
@@ -241,7 +244,7 @@ test('Should pass correct data to Renderer component', () => {
         },
     };
 
-    const imageMap = shallow(
+    const {instance: imageMap} = renderWithRef(
         <ImageMap
             {...fieldTypeDefaultProps}
             defaultType="default"
@@ -253,14 +256,15 @@ test('Should pass correct data to Renderer component', () => {
         />
     );
 
-    imageMap.find(ImageMapContainer).props().onChange({imageId: 44, hotspots: []});
-    imageMap.find(ImageMapContainer).props().onFinish();
+    findElementByType(imageMap.render(), ImageMapContainer).props.onChange({imageId: 44, hotspots: []});
+    findElementByType(imageMap.render(), ImageMapContainer).props.onFinish();
 
     expect(changeSpy).toHaveBeenCalledWith({imageId: 44, hotspots: []});
     expect(finishSpy).toHaveBeenCalled();
 });
 
-test('Should set correct default values for multiple single_select in form', () => {
+test('Should set correct default values for multiple single_select in form', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
     const formInspector = new FormInspector(
@@ -362,7 +366,7 @@ test('Should set correct default values for multiple single_select in form', () 
 
     fieldRegistry.get.mockReturnValue(SingleSelect);
 
-    const imageMap = mount(
+    const {container} = renderWithRef(
         <ImageMap
             {...fieldTypeDefaultProps}
             defaultType="default"
@@ -373,7 +377,7 @@ test('Should set correct default values for multiple single_select in form', () 
         />
     );
 
-    imageMap.find('Button').at(1).simulate('click');
+    await user.click(container.querySelectorAll('button')[1]);
 
     expect(changeSpy).toHaveBeenCalledWith(
         {

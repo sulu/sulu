@@ -1,17 +1,66 @@
 // @flow
 import React from 'react';
-import {render, mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Navigation from '../Navigation';
 import Router, {Route} from '../../../services/Router';
 import type {NavigationItem} from '../types';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+let mockNavigationProps: Object = {};
+let mockNavigationItemProps: Array<Object> = [];
+
+const mockReact = require('react');
+
+jest.mock('../../../utils/Translator');
 
 jest.mock('../../../services/Router/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
 }));
+
+jest.mock('../../../components/Navigation', () => {
+    const NavigationMock: any = jest.fn((props) => {
+        mockNavigationProps = props;
+
+        return mockReact.createElement(
+            'nav',
+            {},
+            mockReact.createElement(
+                'button',
+                {
+                    'aria-label': 'pin',
+                    onClick: props.onPinToggle,
+                    type: 'button',
+                },
+                'Pin'
+            ),
+            props.children
+        );
+    });
+
+    NavigationMock.Item = jest.fn((props) => {
+        mockNavigationItemProps.push(props);
+
+        return mockReact.createElement(
+            'div',
+            {
+                'data-active': props.active ? 'true' : 'false',
+                'data-testid': 'navigation-item',
+            },
+            mockReact.createElement(
+                'button',
+                {
+                    'aria-label': 'item-' + props.value,
+                    onClick: () => mockNavigationProps.onItemClick(props.value),
+                    type: 'button',
+                },
+                props.value
+            ),
+            props.children
+        );
+    });
+
+    return NavigationMock;
+});
 
 jest.mock('../registries/navigationRegistry', () => ({
     get: jest.fn().mockReturnValue(
@@ -87,7 +136,13 @@ jest.mock('../registries/navigationRegistry', () => ({
     ]: Array<NavigationItem>)),
 }));
 
-test('Should render navigation', () => {
+beforeEach(() => {
+    jest.clearAllMocks();
+    mockNavigationProps = {};
+    mockNavigationItemProps = [];
+});
+
+function createRouter() {
     const router = new Router({});
     router.route = new Route({
         name: 'sulu_admin.form_tab',
@@ -95,7 +150,11 @@ test('Should render navigation', () => {
         type: 'form_tab',
     });
 
-    const navigation = render(
+    return router;
+}
+
+function renderNavigation(props: Object = {}) {
+    return render(
         <Navigation
             appVersion="666"
             onLogout={jest.fn()}
@@ -103,65 +162,68 @@ test('Should render navigation', () => {
             onPinToggle={jest.fn()}
             onProfileClick={jest.fn()}
             pinned={false}
-            router={router}
+            router={createRouter()}
             suluVersion="2.0.0-RC1"
+            {...props}
         />
     );
+}
 
-    expect(navigation).toMatchSnapshot();
+function getNavigationItemProps(value) {
+    const itemProps = mockNavigationItemProps.find((item) => item.value === value);
+
+    if (!itemProps) {
+        throw new Error('Navigation item "' + value + '" was not rendered.');
+    }
+
+    return itemProps;
+}
+
+test('Should render navigation', () => {
+    renderNavigation();
+
+    expect(mockNavigationProps).toEqual(expect.objectContaining({
+        appVersion: '666',
+        pinned: false,
+        suluVersion: '2.0.0-RC1',
+        suluVersionLink: 'https://github.com/sulu/sulu/releases',
+        title: 'Sulu',
+    }));
+    expect(mockNavigationItemProps.map((item) => item.value)).toEqual([
+        '111-111',
+        '222-222',
+        '333-333',
+        '333-child1',
+        '333-child2',
+    ]);
+    expect(getNavigationItemProps('111-111').active).toEqual(true);
+    expect(getNavigationItemProps('333-child1').active).toEqual(true);
 });
 
 test('Should render navigation without appVersion', () => {
-    const router = new Router({});
-    router.route = new Route({
-        name: 'sulu_admin.form_tab',
-        path: '/form',
-        type: 'form_tab',
-    });
+    renderNavigation({appVersion: null});
 
-    const navigation = render(
-        <Navigation
-            appVersion={null}
-            onLogout={jest.fn()}
-            onNavigate={jest.fn()}
-            onPinToggle={jest.fn()}
-            onProfileClick={jest.fn()}
-            pinned={false}
-            router={router}
-            suluVersion="2.0.0-RC1"
-        />
-    );
-
-    expect(navigation).toMatchSnapshot();
+    expect(mockNavigationProps.appVersion).toBeNull();
 });
 
-test('Should call the navigation callback, pin callback and router navigate', () => {
-    const router = new Router({});
-    router.route = new Route({
-        name: 'sulu_admin.form_tab',
-        path: '/form',
-        type: 'form_tab',
-    });
+test('Should call the navigation callback, pin callback and router navigate', async() => {
+    const router = createRouter();
     const handleNavigate = jest.fn();
     const handlePin = jest.fn();
 
-    const navigation = mount(
-        <Navigation
-            appVersion={null}
-            onLogout={jest.fn()}
-            onNavigate={handleNavigate}
-            onPinToggle={handlePin}
-            onProfileClick={jest.fn()}
-            pinned={false}
-            router={router}
-            suluVersion="2.0.0-RC1"
-        />
-    );
+    renderNavigation({
+        appVersion: null,
+        onNavigate: handleNavigate,
+        onPinToggle: handlePin,
+        router,
+    });
 
-    navigation.find('Item').at(4).find('.title').simulate('click');
+    await userEvent.click(screen.getByLabelText('item-111-111'));
+
     expect(router.navigate).toHaveBeenCalledWith('returned_main_route');
     expect(handleNavigate).toHaveBeenCalledWith('returned_main_route');
 
-    navigation.find('.pin').simulate('click');
+    await userEvent.click(screen.getByLabelText('pin'));
+
     expect(handlePin).toHaveBeenCalled();
 });

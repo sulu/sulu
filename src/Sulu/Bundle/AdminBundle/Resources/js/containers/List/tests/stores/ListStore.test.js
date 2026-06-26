@@ -587,7 +587,7 @@ test('The loading strategy should be called with a different page when a request
     listStore.destroy();
 });
 
-test('The loading strategy should be called with a different page when a request is sent ', () => {
+test('The loading strategy should be called again with a different page when a request is sent', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
     const page = observable.box(1);

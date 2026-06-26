@@ -1,167 +1,72 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Render hint that nothing was found 1`] = `
-<div
-  class="search"
->
+<DocumentFragment>
   <div
-    class="searchField"
+    class="search"
   >
-    <button
-      class="indexButton"
-      type="button"
+    <div
+      class="searchField"
     >
-      <span
-        class="index"
+      <button
+        class="indexButton"
+        type="button"
       >
-        sulu_search.everything
-      </span>
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
-      />
-    </button>
-    <div
-      class="inputContainer"
+        <span
+          class="index"
+        >
+          sulu_search.everything
+        </span>
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down"
+        />
+      </button>
+      <div
+        class="inputContainer"
+      >
+        <input
+          class="input"
+          value="something"
+        />
+        <span
+          aria-label="su-times"
+          class="su-times clickable clearIcon"
+          role="button"
+          tabindex="0"
+        />
+        <span
+          aria-label="su-search"
+          class="su-search clickable searchIcon"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+    </div>
+    <p
+      class="hint"
     >
-      <input
-        class="input"
-        value="something"
-      />
-      <span
-        aria-label="su-times"
-        class="su-times clickable clearIcon"
-        role="button"
-        tabindex="0"
-      />
-      <span
-        aria-label="su-search"
-        class="su-search clickable searchIcon"
-        role="button"
-        tabindex="0"
-      />
+      sulu_search.search_hint
+    </p>
+    <div
+      class="nothingHint"
+    >
+      <div
+        class="nothingIcon"
+      >
+        <span
+          aria-label="su-battery-low"
+          class="su-battery-low"
+        />
+      </div>
+      sulu_search.nothing_found
     </div>
   </div>
-  <p
-    class="hint"
-  >
-    sulu_search.search_hint
-  </p>
-  <div
-    class="nothingHint"
-  >
-    <div
-      class="nothingIcon"
-    >
-      <span
-        aria-label="su-battery-low"
-        class="su-battery-low"
-      />
-    </div>
-    sulu_search.nothing_found
-  </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render loader while loading indexes and show SearchField afterwards 1`] = `
-<div
-  class="spinner"
-  style="width: 40px; height: 40px;"
->
-  <div
-    class="doubleBounce1"
-  />
-  <div
-    class="doubleBounce2"
-  />
-</div>
-`;
-
-exports[`Render loader while loading indexes and show SearchField afterwards 2`] = `
-<div
-  class="search"
->
-  <div
-    class="searchField"
-  >
-    <button
-      class="indexButton"
-      type="button"
-    >
-      <span
-        class="index"
-      >
-        sulu_search.everything
-      </span>
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
-      />
-    </button>
-    <div
-      class="inputContainer"
-    >
-      <input
-        class="input"
-        value=""
-      />
-      <span
-        aria-label="su-search"
-        class="su-search clickable searchIcon"
-        role="button"
-        tabindex="0"
-      />
-    </div>
-  </div>
-  <p
-    class="hint"
-  >
-    sulu_search.search_hint
-  </p>
-</div>
-`;
-
-exports[`Render loader while loading search results 1`] = `
-<div
-  class="search"
->
-  <div
-    class="searchField"
-  >
-    <button
-      class="indexButton"
-      type="button"
-    >
-      <span
-        class="index"
-      >
-        sulu_search.everything
-      </span>
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
-      />
-    </button>
-    <div
-      class="inputContainer"
-    >
-      <input
-        class="input"
-        value=""
-      />
-      <span
-        aria-label="su-search"
-        class="su-search clickable searchIcon"
-        role="button"
-        tabindex="0"
-      />
-    </div>
-  </div>
-  <p
-    class="hint"
-  >
-    sulu_search.search_hint
-  </p>
+<DocumentFragment>
   <div
     class="spinner"
     style="width: 40px; height: 40px;"
@@ -173,242 +78,347 @@ exports[`Render loader while loading search results 1`] = `
       class="doubleBounce2"
     />
   </div>
-</div>
+</DocumentFragment>
 `;
 
-exports[`Render search results 1`] = `
-<div
-  class="search"
->
+exports[`Render loader while loading indexes and show SearchField afterwards 2`] = `
+<DocumentFragment>
   <div
-    class="searchField"
+    class="search"
   >
-    <button
-      class="indexButton"
-      type="button"
-    >
-      <span
-        class="index"
-      >
-        sulu_search.everything
-      </span>
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
-      />
-    </button>
     <div
-      class="inputContainer"
+      class="searchField"
     >
-      <input
-        class="input"
-        value="something"
+      <button
+        class="indexButton"
+        type="button"
+      >
+        <span
+          class="index"
+        >
+          sulu_search.everything
+        </span>
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down"
+        />
+      </button>
+      <div
+        class="inputContainer"
+      >
+        <input
+          class="input"
+          value=""
+        />
+        <span
+          aria-label="su-search"
+          class="su-search clickable searchIcon"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+    </div>
+    <p
+      class="hint"
+    >
+      sulu_search.search_hint
+    </p>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Render loader while loading search results 1`] = `
+<DocumentFragment>
+  <div
+    class="search"
+  >
+    <div
+      class="searchField"
+    >
+      <button
+        class="indexButton"
+        type="button"
+      >
+        <span
+          class="index"
+        >
+          sulu_search.everything
+        </span>
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down"
+        />
+      </button>
+      <div
+        class="inputContainer"
+      >
+        <input
+          class="input"
+          value=""
+        />
+        <span
+          aria-label="su-search"
+          class="su-search clickable searchIcon"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+    </div>
+    <p
+      class="hint"
+    >
+      sulu_search.search_hint
+    </p>
+    <div
+      class="spinner"
+      style="width: 40px; height: 40px;"
+    >
+      <div
+        class="doubleBounce1"
       />
-      <span
-        aria-label="su-times"
-        class="su-times clickable clearIcon"
-        role="button"
-        tabindex="0"
-      />
-      <span
-        aria-label="su-search"
-        class="su-search clickable searchIcon"
-        role="button"
-        tabindex="0"
+      <div
+        class="doubleBounce2"
       />
     </div>
   </div>
-  <p
-    class="hint"
-  >
-    sulu_search.search_hint
-  </p>
+</DocumentFragment>
+`;
+
+exports[`Render search results 1`] = `
+<DocumentFragment>
   <div
-    class="searchResultsOuterContainer"
+    class="search"
   >
-    <section>
-      <div
-        class="searchResult"
-        role="button"
-      >
-        <div
-          class="imageContainer"
-        >
-          <img
-            class="image"
-            src="/image.jgp"
-          />
-        </div>
-        <div
-          class="resultContainer"
-        >
-          <div
-            class="resource"
-          >
-            Page
-          </div>
-          <div
-            class="titleContainer"
-          >
-            <div
-              class="title"
-            >
-              Test1
-            </div>
-            <div
-              class="locale"
-            >
-               (de)
-            </div>
-          </div>
-          <div
-            class="description"
-          >
-            something
-
-          </div>
-        </div>
-      </div>
-      <div
-        class="searchResult"
-        role="button"
-      >
-        <div
-          class="imageContainer"
-        >
-          <div
-            class="icon"
-          >
-            <span
-              aria-label="su-contact"
-              class="su-contact"
-            />
-          </div>
-        </div>
-        <div
-          class="resultContainer"
-        >
-          <div
-            class="resource"
-          >
-            Contact
-          </div>
-          <div
-            class="titleContainer"
-          >
-            <div
-              class="title"
-            >
-              Max Mustermann
-            </div>
-          </div>
-          <div
-            class="description"
-          >
-            something 2
-
-          </div>
-        </div>
-      </div>
-      <nav
-        class="pagination"
+    <div
+      class="searchField"
+    >
+      <button
+        class="indexButton"
+        type="button"
       >
         <span
-          class="display"
+          class="index"
         >
-          sulu_admin.per_page:
+          sulu_search.everything
         </span>
-        <span>
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down"
+        />
+      </button>
+      <div
+        class="inputContainer"
+      >
+        <input
+          class="input"
+          value="something"
+        />
+        <span
+          aria-label="su-times"
+          class="su-times clickable clearIcon"
+          role="button"
+          tabindex="0"
+        />
+        <span
+          aria-label="su-search"
+          class="su-search clickable searchIcon"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+    </div>
+    <p
+      class="hint"
+    >
+      sulu_search.search_hint
+    </p>
+    <div
+      class="searchResultsOuterContainer"
+    >
+      <section>
+        <div
+          class="searchResult"
+          role="button"
+        >
           <div
-            class="select"
-            role="none"
+            class="imageContainer"
           >
-            <button
-              class="displayValue dark"
-              type="button"
+            <img
+              class="image"
+              src="/image.jgp"
+            />
+          </div>
+          <div
+            class="resultContainer"
+          >
+            <div
+              class="resource"
+            >
+              Page
+            </div>
+            <div
+              class="titleContainer"
             >
               <div
-                aria-label="sulu_admin.please_choose"
-                class="croppedText"
-                title="sulu_admin.please_choose"
+                class="title"
+              >
+                Test1
+              </div>
+              <div
+                class="locale"
+              >
+                 (de)
+              </div>
+            </div>
+            <div
+              class="description"
+            >
+              something
+
+            </div>
+          </div>
+        </div>
+        <div
+          class="searchResult"
+          role="button"
+        >
+          <div
+            class="imageContainer"
+          >
+            <div
+              class="icon"
+            >
+              <span
+                aria-label="su-contact"
+                class="su-contact"
+              />
+            </div>
+          </div>
+          <div
+            class="resultContainer"
+          >
+            <div
+              class="resource"
+            >
+              Contact
+            </div>
+            <div
+              class="titleContainer"
+            >
+              <div
+                class="title"
+              >
+                Max Mustermann
+              </div>
+            </div>
+            <div
+              class="description"
+            >
+              something 2
+
+            </div>
+          </div>
+        </div>
+        <nav
+          class="pagination"
+        >
+          <span
+            class="display"
+          >
+            sulu_admin.per_page:
+          </span>
+          <span>
+            <div
+              class="select"
+              role="none"
+            >
+              <button
+                class="displayValue dark"
+                type="button"
               >
                 <div
-                  aria-hidden="true"
-                  class="front"
+                  aria-label="sulu_admin.please_choose"
+                  class="croppedText"
+                  title="sulu_admin.please_choose"
                 >
-                  sulu_admin.p
+                  <div
+                    aria-hidden="true"
+                    class="front"
+                  >
+                    sulu_admin.p
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="back"
+                  >
+                    <span>
+                      lease_choose
+                    </span>
+                  </div>
+                  <div
+                    class="whole"
+                  >
+                    sulu_admin.please_choose
+                  </div>
                 </div>
-                <div
-                  aria-hidden="true"
-                  class="back"
-                >
-                  <span>
-                    lease_choose
-                  </span>
-                </div>
-                <div
-                  class="whole"
-                >
-                  sulu_admin.please_choose
-                </div>
-              </div>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down toggle"
+                />
+              </button>
+            </div>
+          </span>
+          <div
+            class="loader"
+          />
+          <span>
+            sulu_admin.page:
+          </span>
+          <span
+            class="inputContainer"
+          >
+            <div
+              class="input dark center"
+            >
+              <input
+                inputmode="numeric"
+                type="text"
+                value=""
+              />
+            </div>
+          </span>
+          <span
+            class="display"
+          >
+            sulu_admin.of 
+          </span>
+          <div
+            class="buttonGroup"
+          >
+            <button
+              class="button icon button"
+              disabled=""
+              type="button"
+            >
               <span
-                aria-label="su-angle-down"
-                class="su-angle-down toggle"
+                aria-label="su-angle-left"
+                class="su-angle-left buttonIcon"
+              />
+            </button>
+            <button
+              class="button icon button"
+              disabled=""
+              type="button"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right buttonIcon"
               />
             </button>
           </div>
-        </span>
-        <div
-          class="loader"
-        />
-        <span>
-          sulu_admin.page:
-        </span>
-        <span
-          class="inputContainer"
-        >
-          <div
-            class="input dark center"
-          >
-            <input
-              inputmode="numeric"
-              type="text"
-              value=""
-            />
-          </div>
-        </span>
-        <span
-          class="display"
-        >
-          sulu_admin.of 
-        </span>
-        <div
-          class="buttonGroup"
-        >
-          <button
-            class="button icon button"
-            disabled=""
-            type="button"
-          >
-            <span
-              aria-label="su-angle-left"
-              class="su-angle-left buttonIcon"
-            />
-          </button>
-          <button
-            class="button icon button"
-            disabled=""
-            type="button"
-          >
-            <span
-              aria-label="su-angle-right"
-              class="su-angle-right buttonIcon"
-            />
-          </button>
-        </div>
-      </nav>
-    </section>
+        </nav>
+      </section>
+    </div>
   </div>
-</div>
+</DocumentFragment>
 `;

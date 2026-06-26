@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {act, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {observable} from 'mobx';
 import {FormInspector, ListStore, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceRequester, Route, Router} from 'sulu-admin-bundle/services';
@@ -8,75 +9,147 @@ import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import SettingsVersions from '../../fields/SettingsVersions';
 
+let mockDialogProps: Object = {};
+let mockListProps: Object = {};
+
+const mockReact = require('react');
+
 jest.mock('loglevel', () => ({
     warn: jest.fn(),
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
+jest.mock('sulu-admin-bundle/utils/Translator');
+
+jest.mock('sulu-admin-bundle/components', () => ({
+    Dialog: jest.fn((props) => {
+        mockDialogProps = props;
+
+        return mockReact.createElement(
+            'div',
+            {
+                'data-open': String(props.open),
+                'data-testid': 'dialog',
+            },
+            props.open && mockReact.createElement(
+                mockReact.Fragment,
+                {},
+                mockReact.createElement('h1', {}, props.title),
+                mockReact.createElement('div', {}, props.children),
+                mockReact.createElement(
+                    'button',
+                    {onClick: () => props.onConfirm(), type: 'button'},
+                    props.confirmText
+                ),
+                mockReact.createElement('button', {onClick: () => props.onCancel(), type: 'button'}, props.cancelText)
+            )
+        );
+    }),
 }));
 
-jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
-    post: jest.fn(),
+jest.mock('sulu-admin-bundle/containers', () => ({
+    FormInspector: jest.fn(function(resourceFormStore) {
+        this.options = resourceFormStore.options;
+        this.locale = resourceFormStore.locale;
+        this.id = resourceFormStore.id;
+        this.addSaveHandler = jest.fn();
+    }),
+    List: jest.fn((props) => {
+        mockListProps = props;
+
+        const itemActions = props.itemActionsProvider ? props.itemActionsProvider() : [];
+
+        return mockReact.createElement(
+            'div',
+            {'data-testid': 'list'},
+            itemActions.map((itemAction) => mockReact.createElement(
+                'button',
+                {
+                    key: itemAction.icon,
+                    onClick: () => itemAction.onClick(3),
+                    type: 'button',
+                },
+                itemAction.icon
+            ))
+        );
+    }),
+    ListStore: jest.fn(function() {
+        this.reload = jest.fn();
+    }),
+    ResourceFormStore: jest.fn(function(resourceStore) {
+        this.options = resourceStore.options;
+        this.locale = resourceStore.locale;
+        this.id = resourceStore.id;
+    }),
 }));
 
-jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function() {
-    this.navigate = jest.fn();
-}));
+jest.mock('sulu-admin-bundle/services', () => {
+    const actual = jest.requireActual('sulu-admin-bundle/services');
 
-jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(function() {
-    this.reload = jest.fn();
-}));
+    return {
+        ...actual,
+        ResourceRequester: {
+            post: jest.fn(),
+        },
+        Router: jest.fn(function() {
+            this.navigate = jest.fn();
+        }),
+    };
+});
 
-jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(function(resourceFormStore) {
-    this.options = resourceFormStore.options;
-    this.locale = resourceFormStore.locale;
-    this.id = resourceFormStore.id;
-    this.addSaveHandler = jest.fn();
-}));
-
-jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
-    this.options = resourceStore.options;
-    this.locale = resourceStore.locale;
-    this.id = resourceStore.id;
-}));
-
-jest.mock(
-    'sulu-admin-bundle/stores/ResourceStore',
-    () => jest.fn(function(resourceKey, id, observableOptions, options) {
+jest.mock('sulu-admin-bundle/stores', () => ({
+    ResourceStore: jest.fn(function(resourceKey, id, observableOptions = {}, options = {}) {
         this.options = options;
         this.locale = observableOptions.locale;
         this.id = id;
-    })
-);
+    }),
+}));
 
-test('Initialize the list correctly', () => {
-    const locale = observable.box('en');
-    const formInspector = new FormInspector(
+const schemaOptions = {
+    resource_key: {
+        name: 'resource_key',
+        value: 'page_versions',
+    },
+    list_key: {
+        name: 'list_key',
+        value: 'page_versions',
+    },
+    user_settings_key: {
+        name: 'user_settings_key',
+        value: 'page_versions',
+    },
+};
+
+function createFormInspector(locale = observable.box('en')) {
+    return new FormInspector(
         new ResourceFormStore(
             new ResourceStore('pages', 3, {locale}, {webspace: 'sulu'}),
             'test'
         )
     );
+}
 
-    const schemaOptions = {
-        resource_key: {
-            name: 'resource_key',
-            value: 'page_versions',
-        },
-        list_key: {
-            name: 'list_key',
-            value: 'page_versions',
-        },
-        user_settings_key: {
-            name: 'user_settings_key',
-            value: 'page_versions',
-        },
-    };
+function createSettingsVersions(props: Object = {}) {
+    return new SettingsVersions({
+        ...fieldTypeDefaultProps,
+        formInspector: createFormInspector(),
+        schemaOptions,
+        ...props,
+    });
+}
 
-    const pageSettingsVersions = shallow(
-        <SettingsVersions {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />
-    );
+beforeEach(() => {
+    mockDialogProps = {};
+    mockListProps = {};
+
+    (ListStore: any).mockClear();
+    ResourceRequester.post.mockReset();
+});
+
+test('Initialize the list correctly', () => {
+    const locale = observable.box('en');
+    const formInspector = createFormInspector(locale);
+
+    render(<SettingsVersions {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />);
 
     expect(ListStore).toHaveBeenCalledWith(
         'page_versions',
@@ -86,45 +159,20 @@ test('Initialize the list correctly', () => {
         {id: 3, webspace: 'sulu'}
     );
 
-    expect(pageSettingsVersions.find('List').props()).toEqual(expect.objectContaining({
+    expect(mockListProps).toEqual(expect.objectContaining({
         adapters: ['table'],
         searchable: false,
         selectable: false,
-        // $FlowFixMe
-        store: ListStore.mock.instances[0],
+        store: (ListStore: any).mock.instances[0],
     }));
 });
 
 test('Reload the ListStore if a new version was published', () => {
-    const locale = observable.box('en');
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 3, {locale}, {webspace: 'sulu'}),
-            'test'
-        )
-    );
+    const formInspector = createFormInspector();
 
-    const schemaOptions = {
-        resource_key: {
-            name: 'resource_key',
-            value: 'page_versions',
-        },
-        list_key: {
-            name: 'list_key',
-            value: 'page_versions',
-        },
-        user_settings_key: {
-            name: 'user_settings_key',
-            value: 'page_versions',
-        },
-    };
+    render(<SettingsVersions {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />);
 
-    shallow(
-        <SettingsVersions {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />
-    );
-
-    // $FlowFixMe
-    const listStore = ListStore.mock.instances[0];
+    const listStore = (ListStore: any).mock.instances[0];
     const saveHandler = formInspector.addSaveHandler.mock.calls[0][0];
     saveHandler('publish');
 
@@ -132,100 +180,38 @@ test('Reload the ListStore if a new version was published', () => {
 });
 
 test('Do not reload the ListStore if page was saved without being published', () => {
-    const locale = observable.box('en');
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 3, {locale}, {webspace: 'sulu'}),
-            'test'
-        )
-    );
+    const formInspector = createFormInspector();
 
-    const schemaOptions = {
-        resource_key: {
-            name: 'resource_key',
-            value: 'page_versions',
-        },
-        list_key: {
-            name: 'list_key',
-            value: 'page_versions',
-        },
-        user_settings_key: {
-            name: 'user_settings_key',
-            value: 'page_versions',
-        },
-    };
+    render(<SettingsVersions {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />);
 
-    shallow(
-        <SettingsVersions {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />
-    );
-
-    // $FlowFixMe
-    const listStore = ListStore.mock.instances[0];
+    const listStore = (ListStore: any).mock.instances[0];
     const saveHandler = formInspector.addSaveHandler.mock.calls[0][0];
     saveHandler('draft');
 
     expect(listStore.reload).not.toHaveBeenCalled();
 });
 
-test('Open and cancel restore overlay', () => {
-    const locale = observable.box('en');
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 3, {locale}, {webspace: 'sulu'}),
-            'test'
-        )
-    );
+test('Open and cancel restore overlay', async() => {
+    const user = userEvent.setup();
+    const formInspector = createFormInspector();
 
-    const schemaOptions = {
-        resource_key: {
-            name: 'resource_key',
-            value: 'page_versions',
-        },
-        list_key: {
-            name: 'list_key',
-            value: 'page_versions',
-        },
-        user_settings_key: {
-            name: 'user_settings_key',
-            value: 'page_versions',
-        },
-    };
+    render(<SettingsVersions {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />);
 
-    const pageSettingsVersions = shallow(
-        <SettingsVersions {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />
-    );
+    expect(screen.getByTestId('dialog')).toHaveAttribute('data-open', 'false');
 
-    expect(pageSettingsVersions.find('Dialog').prop('open')).toEqual(false);
-    pageSettingsVersions.find('List').prop('itemActionsProvider')()[0].onClick(3);
-    pageSettingsVersions.update();
-    expect(pageSettingsVersions.find('Dialog').prop('open')).toEqual(true);
-    pageSettingsVersions.find('Dialog').prop('onCancel')();
-    expect(pageSettingsVersions.find('Dialog').prop('open')).toEqual(false);
+    await user.click(screen.getByRole('button', {name: 'su-process'}));
+
+    expect(screen.getByTestId('dialog')).toHaveAttribute('data-open', 'true');
+
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.cancel'}));
+
+    expect(screen.getByTestId('dialog')).toHaveAttribute('data-open', 'false');
 });
 
-test('Open and confirm restore overlay', () => {
+test('Open and confirm restore overlay', async() => {
+    const user = userEvent.setup();
     const locale = observable.box('en');
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 3, {locale}, {webspace: 'sulu'}),
-            'test'
-        )
-    );
-
-    const schemaOptions = {
-        resource_key: {
-            name: 'resource_key',
-            value: 'page_versions',
-        },
-        list_key: {
-            name: 'list_key',
-            value: 'page_versions',
-        },
-        user_settings_key: {
-            name: 'user_settings_key',
-            value: 'page_versions',
-        },
-    };
+    const formInspector = createFormInspector(locale);
 
     const route = new Route({
         name: 'sulu_page.page_edit_form.settings',
@@ -242,10 +228,13 @@ test('Open and confirm restore overlay', () => {
     const router = new Router();
     router.route = route;
 
-    const postPromise = Promise.resolve();
+    let resolvePost;
+    const postPromise = new Promise((resolve) => {
+        resolvePost = resolve;
+    });
     ResourceRequester.post.mockReturnValue(postPromise);
 
-    const pageSettingsVersions = shallow(
+    render(
         <SettingsVersions
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -254,233 +243,154 @@ test('Open and confirm restore overlay', () => {
         />
     );
 
-    expect(pageSettingsVersions.find('Dialog').prop('open')).toEqual(false);
-    pageSettingsVersions.find('List').prop('itemActionsProvider')()[0].onClick(3);
-    pageSettingsVersions.update();
-    expect(pageSettingsVersions.find('Dialog').prop('open')).toEqual(true);
-    pageSettingsVersions.find('Dialog').prop('onConfirm')();
+    expect(screen.getByTestId('dialog')).toHaveAttribute('data-open', 'false');
 
-    expect(pageSettingsVersions.find('Dialog').prop('confirmLoading')).toEqual(true);
-    return postPromise.then(() => {
-        expect(pageSettingsVersions.find('Dialog').prop('open')).toEqual(false);
-        expect(pageSettingsVersions.find('Dialog').prop('confirmLoading')).toEqual(false);
-        expect(router.navigate).toHaveBeenCalledWith('sulu_page.page_edit_form', {id: 3, locale, webspace: 'sulu'});
+    await user.click(screen.getByRole('button', {name: 'su-process'}));
+
+    expect(screen.getByTestId('dialog')).toHaveAttribute('data-open', 'true');
+
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
+
+    expect(ResourceRequester.post).toHaveBeenCalledWith(
+        'page_versions',
+        {},
+        {action: 'restore', id: 3, version: 3, locale, webspace: 'sulu'}
+    );
+    expect(mockDialogProps.confirmLoading).toEqual(true);
+
+    await act(async() => {
+        resolvePost();
+        await postPromise;
     });
+
+    expect(mockDialogProps.open).toEqual(false);
+    expect(mockDialogProps.confirmLoading).toEqual(false);
+    expect(router.navigate).toHaveBeenCalledWith('sulu_page.page_edit_form', {id: 3, locale, webspace: 'sulu'});
 });
 
 test('Throw error when resource_key parameter is undefined', () => {
-    const locale = observable.box('en');
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 3, {locale}, {webspace: 'sulu'}),
-            'test'
-        )
-    );
-
-    const schemaOptions = {
-        list_key: {
-            name: 'list_key',
-            value: 'page_versions',
+    expect(() => createSettingsVersions({
+        schemaOptions: {
+            list_key: {
+                name: 'list_key',
+                value: 'page_versions',
+            },
+            user_settings_key: {
+                name: 'user_settings_key',
+                value: 'page_versions',
+            },
         },
-        user_settings_key: {
-            name: 'user_settings_key',
-            value: 'page_versions',
-        },
-    };
-
-    expect(() => shallow(
-        <SettingsVersions {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />
-    )).toThrow('The "resource_key" schemaOption is mandatory and must be a string, but received undefined!');
+    })).toThrow('The "resource_key" schemaOption is mandatory and must be a string, but received undefined!');
 });
 
 test('Throw error when resource_key parameter is not a string', () => {
-    const locale = observable.box('en');
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 3, {locale}, {webspace: 'sulu'}),
-            'test'
-        )
-    );
-
-    const schemaOptions = {
-        resource_key: {
-            name: 'resource_key',
-            value: 123,
+    expect(() => createSettingsVersions({
+        schemaOptions: {
+            resource_key: {
+                name: 'resource_key',
+                value: 123,
+            },
+            list_key: {
+                name: 'list_key',
+                value: 'page_versions',
+            },
+            user_settings_key: {
+                name: 'user_settings_key',
+                value: 'page_versions',
+            },
         },
-        list_key: {
-            name: 'list_key',
-            value: 'page_versions',
-        },
-        user_settings_key: {
-            name: 'user_settings_key',
-            value: 'page_versions',
-        },
-    };
-
-    expect(() => shallow(
-        <SettingsVersions {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />
-    )).toThrow('The "resource_key" schemaOption is mandatory and must be a string, but received number!');
+    })).toThrow('The "resource_key" schemaOption is mandatory and must be a string, but received number!');
 });
 
 test('Use resource_key as a fallback, if list_key parameter is undefined', () => {
-    const locale = observable.box('en');
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 3, {locale}, {webspace: 'sulu'}),
-            'test'
-        )
-    );
-
-    const schemaOptions = {
-        resource_key: {
-            name: 'resource_key',
-            value: 'page_versions_resource_key',
+    createSettingsVersions({
+        schemaOptions: {
+            resource_key: {
+                name: 'resource_key',
+                value: 'page_versions_resource_key',
+            },
+            user_settings_key: {
+                name: 'user_settings_key',
+                value: 'page_versions',
+            },
         },
-        user_settings_key: {
-            name: 'user_settings_key',
-            value: 'page_versions',
-        },
-    };
+    });
 
-    const pageSettingsVersions = shallow(
-        <SettingsVersions
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-        />
+    expect(ListStore).toHaveBeenCalledWith(
+        'page_versions_resource_key',
+        'page_versions_resource_key',
+        'page_versions',
+        expect.any(Object),
+        {id: 3, webspace: 'sulu'}
     );
-
-    expect(pageSettingsVersions.instance().listKey).toBe('page_versions_resource_key');
 });
 
 test('Throw error when list_key parameter is not a string', () => {
-    const locale = observable.box('en');
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 3, {locale}, {webspace: 'sulu'}),
-            'test'
-        )
-    );
-
-    const schemaOptions = {
-        resource_key: {
-            name: 'resource_key',
-            value: 'page_versions',
+    expect(() => createSettingsVersions({
+        schemaOptions: {
+            resource_key: {
+                name: 'resource_key',
+                value: 'page_versions',
+            },
+            list_key: {
+                name: 'list_key',
+                value: 123,
+            },
+            user_settings_key: {
+                name: 'user_settings_key',
+                value: 'page_versions',
+            },
         },
-        list_key: {
-            name: 'list_key',
-            value: 123,
-        },
-        user_settings_key: {
-            name: 'user_settings_key',
-            value: 'page_versions',
-        },
-    };
-
-    expect(() => shallow(
-        <SettingsVersions {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />
-    )).toThrow('The "list_key" schemaOption must be a string, but received number!');
+    })).toThrow('The "list_key" schemaOption must be a string, but received number!');
 });
 
 test('Use list_key as a fallback, if user_settings_key parameter is undefined', () => {
-    const locale = observable.box('en');
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 3, {locale}, {webspace: 'sulu'}),
-            'test'
-        )
-    );
-
-    const schemaOptions = {
-        resource_key: {
-            name: 'resource_key',
-            value: 'page_versions',
+    createSettingsVersions({
+        schemaOptions: {
+            resource_key: {
+                name: 'resource_key',
+                value: 'page_versions',
+            },
+            list_key: {
+                name: 'list_key',
+                value: 'page_versions_list_key',
+            },
         },
-        list_key: {
-            name: 'list_key',
-            value: 'page_versions_list_key',
-        },
-    };
+    });
 
-    const pageSettingsVersions = shallow(
-        <SettingsVersions
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-        />
+    expect(ListStore).toHaveBeenCalledWith(
+        'page_versions',
+        'page_versions_list_key',
+        'page_versions_list_key',
+        expect.any(Object),
+        {id: 3, webspace: 'sulu'}
     );
-
-    expect(pageSettingsVersions.instance().userSettingsKey).toBe('page_versions_list_key');
 });
 
 test('Throw error when user_settings_key parameter is not a string.', () => {
-    const locale = observable.box('en');
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 3, {locale}, {webspace: 'sulu'}),
-            'test'
-        )
-    );
-
-    const schemaOptions = {
-        resource_key: {
-            name: 'resource_key',
-            value: 'page_versions',
+    expect(() => createSettingsVersions({
+        schemaOptions: {
+            resource_key: {
+                name: 'resource_key',
+                value: 'page_versions',
+            },
+            list_key: {
+                name: 'list_key',
+                value: 'page_versions',
+            },
+            user_settings_key: {
+                name: 'user_settings_key',
+                value: 123,
+            },
         },
-        list_key: {
-            name: 'list_key',
-            value: 'page_versions',
-        },
-        user_settings_key: {
-            name: 'user_settings_key',
-            value: 123,
-        },
-    };
-
-    expect(() => shallow(
-        <SettingsVersions {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />
-    )).toThrow('The "user_settings_key" schemaOption must be a string, but received number!');
+    })).toThrow('The "user_settings_key" schemaOption must be a string, but received number!');
 });
 
 test('Throw error when no parent route is set', () => {
-    const locale = observable.box('en');
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('pages', 3, {locale}, {webspace: 'sulu'}),
-            'test'
-        )
-    );
-
-    const schemaOptions = {
-        resource_key: {
-            name: 'resource_key',
-            value: 'page_versions',
-        },
-        list_key: {
-            name: 'list_key',
-            value: 'page_versions',
-        },
-        user_settings_key: {
-            name: 'user_settings_key',
-            value: 'page_versions',
-        },
-    };
-
     const router = new Router();
-
-    const postPromise = Promise.resolve();
-    ResourceRequester.post.mockReturnValue(postPromise);
-
-    const pageSettingsVersions = shallow(
-        <SettingsVersions
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            router={router}
-            schemaOptions={schemaOptions}
-        />
-    );
+    const pageSettingsVersions = createSettingsVersions({router});
 
     expect(
-        () => pageSettingsVersions.instance().parentRoute
+        () => pageSettingsVersions.parentRoute
     ).toThrow('A route with a valid parent route is required for this field type to work properly!');
 });

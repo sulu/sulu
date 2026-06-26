@@ -1,9 +1,10 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import fieldTypeDefaultProps from 'sulu-admin-bundle/utils/TestHelper/fieldTypeDefaultProps';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
+import RoleAssignmentsContainer from '../../../RoleAssignments';
 import RoleAssignments from '../../fields/RoleAssignments';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
@@ -22,17 +23,21 @@ jest.mock('sulu-admin-bundle/stores', () => ({
     }),
 }));
 
+jest.mock('../../../RoleAssignments', () => jest.fn(() => null));
+
+const RoleAssignmentsContainerMock = (RoleAssignmentsContainer: any);
+
 test('Pass props correctly to RoleAssignments', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
-    const roleAssignments = shallow(
+    render(
         <RoleAssignments
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
         />
     );
 
-    expect(roleAssignments.prop('value')).toEqual([]);
+    expect(RoleAssignmentsContainerMock.mock.calls[0][0].value).toEqual([]);
 });
 
 test('Pass props with value correctly to RoleAssignments', () => {
@@ -59,7 +64,7 @@ test('Pass props with value correctly to RoleAssignments', () => {
         },
     ];
 
-    const roleAssignments = shallow(
+    render(
         <RoleAssignments
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -68,6 +73,6 @@ test('Pass props with value correctly to RoleAssignments', () => {
         />
     );
 
-    expect(roleAssignments.prop('disabled')).toEqual(true);
-    expect(roleAssignments.prop('value')).toEqual(value);
+    expect(RoleAssignmentsContainerMock.mock.calls[0][0].disabled).toEqual(true);
+    expect(RoleAssignmentsContainerMock.mock.calls[0][0].value).toEqual(value);
 });

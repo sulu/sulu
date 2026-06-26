@@ -4,9 +4,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import UserSection from '../UserSection';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 test('The component should render with all available props and handle clicks correctly', async() => {
     const handleLogoutClick = jest.fn();

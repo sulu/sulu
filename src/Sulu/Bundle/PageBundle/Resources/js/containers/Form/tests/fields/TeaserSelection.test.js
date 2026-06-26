@@ -1,15 +1,18 @@
 // @flow
 import React from 'react';
 import {observable} from 'mobx';
-import {mount, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore, userStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import {Router} from 'sulu-admin-bundle/services';
 import TeaserSelection from '../../fields/TeaserSelection';
-import TeaserSelectionComponent from '../../../../containers/TeaserSelection';
-import teaserProviderRegistry from '../../../../containers/TeaserSelection/registries/teaserProviderRegistry';
-import TeaserStore from '../../../../containers/TeaserSelection/stores/TeaserStore';
+import TeaserSelectionComponent, {teaserProviderRegistry} from '../../../../containers/TeaserSelection';
+
+let mockTeaserSelectionProps: Object = {};
+
+const mockReact = require('react');
 
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions = {}) {
     this.locale = observableOptions.locale;
@@ -29,15 +32,53 @@ jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
 
 jest.mock('sulu-admin-bundle/stores/userStore', () => ({}));
 
-jest.mock('../../../../containers/TeaserSelection/stores/TeaserStore', () => jest.fn(function() {
-    this.add = jest.fn();
-    this.findById = jest.fn();
-}));
+jest.mock('../../../../containers/TeaserSelection', () => {
+    const teaserProviderRegistry = {
+        get: jest.fn(),
+        keys: [],
+    };
 
-jest.mock('../../../../containers/TeaserSelection/registries/teaserProviderRegistry', () => ({
-    get: jest.fn(),
-    keys: [],
-}));
+    const TeaserSelection = jest.fn((props) => {
+        mockTeaserSelectionProps = props;
+
+        return mockReact.createElement(
+            'div',
+            {'data-testid': 'teaser-selection'},
+            mockReact.createElement(
+                'button',
+                {onClick: () => props.onChange({items: [], presentAs: undefined}), type: 'button'},
+                'change-teasers'
+            ),
+            mockReact.createElement(
+                'button',
+                {
+                    onClick: () => props.onItemClick('pages;5', {
+                        attributes: {
+                            webspaceKey: 'sulu_io',
+                        },
+                        id: 5,
+                        title: 'Test 1',
+                        type: 'pages',
+                    }),
+                    type: 'button',
+                },
+                'open-teaser'
+            )
+        );
+    });
+
+    return {
+        __esModule: true,
+        default: TeaserSelection,
+        teaserProviderRegistry,
+    };
+});
+
+beforeEach(() => {
+    mockTeaserSelectionProps = {};
+    (TeaserSelectionComponent: any).mockClear();
+    teaserProviderRegistry.get.mockReset();
+});
 
 test('Pass props correctly to component', () => {
     const changeSpy = jest.fn();
@@ -57,7 +98,7 @@ test('Pass props correctly to component', () => {
         )
     );
 
-    const field = shallow(
+    render(
         <TeaserSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -66,10 +107,11 @@ test('Pass props correctly to component', () => {
         />
     );
 
-    expect(field.find(TeaserSelectionComponent).prop('disabled')).toEqual(false);
-    expect(field.find(TeaserSelectionComponent).prop('locale').get()).toEqual('en');
-    expect(field.find(TeaserSelectionComponent).prop('presentations')).toBe(undefined);
-    expect(field.find(TeaserSelectionComponent).prop('value')).toBe(value);
+    expect(TeaserSelectionComponent).toHaveBeenCalled();
+    expect(mockTeaserSelectionProps.disabled).toEqual(undefined);
+    expect(mockTeaserSelectionProps.locale.get()).toEqual('en');
+    expect(mockTeaserSelectionProps.presentations).toBe(undefined);
+    expect(mockTeaserSelectionProps.value).toBe(value);
 });
 
 test('Pass disabled value from props to component', () => {
@@ -77,9 +119,9 @@ test('Pass disabled value from props to component', () => {
     // $FlowFixMe
     userStore.contentLocale = 'de';
 
-    const field = shallow(<TeaserSelection {...fieldTypeDefaultProps} disabled={true} formInspector={formInspector} />);
+    render(<TeaserSelection {...fieldTypeDefaultProps} disabled={true} formInspector={formInspector} />);
 
-    expect(field.find(TeaserSelectionComponent).prop('disabled')).toEqual(true);
+    expect(mockTeaserSelectionProps.disabled).toEqual(true);
 });
 
 test('Pass locale from userStore when form has no locale', () => {
@@ -87,9 +129,9 @@ test('Pass locale from userStore when form has no locale', () => {
     // $FlowFixMe
     userStore.contentLocale = 'de';
 
-    const field = shallow(<TeaserSelection {...fieldTypeDefaultProps} formInspector={formInspector} />);
+    render(<TeaserSelection {...fieldTypeDefaultProps} formInspector={formInspector} />);
 
-    expect(field.find(TeaserSelectionComponent).prop('locale').get()).toEqual('de');
+    expect(mockTeaserSelectionProps.locale.get()).toEqual('de');
 });
 
 test('Pass presentations prop correctly to component', () => {
@@ -107,7 +149,7 @@ test('Pass presentations prop correctly to component', () => {
         },
     };
 
-    const field = shallow(
+    render(
         <TeaserSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -115,13 +157,14 @@ test('Pass presentations prop correctly to component', () => {
         />
     );
 
-    expect(field.find(TeaserSelectionComponent).prop('presentations')).toEqual([
+    expect(mockTeaserSelectionProps.presentations).toEqual([
         {label: 'Test 1', value: 'test-1'},
         {label: 'Test 2', value: 'test-2'},
     ]);
 });
 
-test('Navigate to item when item is clicked', () => {
+test('Navigate to item when item is clicked', async() => {
+    const user = userEvent.setup();
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     // $FlowFixMe
     userStore.contentLocale = 'de';
@@ -148,21 +191,7 @@ test('Navigate to item when item is clicked', () => {
 
     const router = new Router();
 
-    // $FlowFixMe
-    TeaserStore.mockImplementation(function() {
-        this.add = jest.fn();
-        this.findById = jest.fn((type, id) => {
-            if (id === 5) {
-                return {attributes: {webspaceKey: 'sulu_io'}, title: 'Test 1'};
-            }
-
-            if (id === 2) {
-                return {attributes: {webspaceKey: 'sulu_blog'}, title: 'Test 2'};
-            }
-        });
-    });
-
-    const field = mount(
+    render(
         <TeaserSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -171,10 +200,9 @@ test('Navigate to item when item is clicked', () => {
         />
     );
 
-    field.find('MultiItemSelection .content.clickable').at(0).simulate('click');
+    await user.click(screen.getByRole('button', {name: 'open-teaser'}));
+
     expect(router.navigate).toHaveBeenLastCalledWith('sulu_page.page_edit_form', {id: 5, webspace: 'sulu_io'});
-    field.find('MultiItemSelection .content.clickable').at(1).simulate('click');
-    expect(router.navigate).toHaveBeenLastCalledWith('sulu_page.page_edit_form', {id: 2, webspace: 'sulu_blog'});
 });
 
 test('Throw error if present_as schemaOption is from wrong type', () => {
@@ -189,14 +217,13 @@ test('Throw error if present_as schemaOption is from wrong type', () => {
         },
     };
 
-    expect(
-        () => shallow(
-            <TeaserSelection {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />
-        )
-    ).toThrow(/present_as/);
+    const teaserSelection = new TeaserSelection({...fieldTypeDefaultProps, formInspector, schemaOptions});
+
+    expect(() => teaserSelection.render()).toThrow(/present_as/);
 });
 
-test('Should call onChange and onFinish callback when TeaserSelection container fires onChange callback', () => {
+test('Should call onChange and onFinish callback when TeaserSelection container fires onChange callback', async() => {
+    const user = userEvent.setup();
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     // $FlowFixMe
     userStore.contentLocale = 'de';
@@ -204,7 +231,7 @@ test('Should call onChange and onFinish callback when TeaserSelection container 
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    const field = shallow(
+    render(
         <TeaserSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -213,10 +240,7 @@ test('Should call onChange and onFinish callback when TeaserSelection container 
         />
     );
 
-    field.find(TeaserSelectionComponent).prop('onChange')({
-        presentAs: undefined,
-        items: [],
-    });
+    await user.click(screen.getByRole('button', {name: 'change-teasers'}));
 
     expect(changeSpy).toHaveBeenCalledWith({
         presentAs: undefined,

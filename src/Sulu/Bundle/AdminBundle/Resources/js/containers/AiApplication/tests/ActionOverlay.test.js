@@ -45,9 +45,7 @@ jest.mock('../../Form/stores/memoryFormStoreFactory', () => ({
     })),
 }));
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('../../../utils/Translator');
 
 jest.mock('../../Form/registries/fieldRegistry', () => ({
     get: jest.fn((type) => {

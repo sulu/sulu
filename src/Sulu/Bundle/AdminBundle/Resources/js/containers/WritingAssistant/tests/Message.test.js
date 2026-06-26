@@ -10,9 +10,7 @@ jest.mock('../../../containers', () => ({
     TextEditor: jest.fn(({value}) => <div data-testid="text-editor">{value}</div>),
 }));
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 describe('Message Component', () => {
     const defaultProps = {

@@ -1,9 +1,10 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import fieldTypeDefaultProps from 'sulu-admin-bundle/utils/TestHelper/fieldTypeDefaultProps';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
+import PermissionsContainer from '../../../Permissions';
 import Permissions from '../../fields/Permissions';
 import type {ContextPermission} from '../../../Permissions';
 
@@ -23,6 +24,10 @@ jest.mock('sulu-admin-bundle/stores', () => ({
     }),
 }));
 
+jest.mock('../../../Permissions', () => jest.fn(() => null));
+
+const PermissionsContainerMock = (PermissionsContainer: any);
+
 test('Pass props correctly to Permissions', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     formInspector.getValueByPath.mockImplementation((path) => {
@@ -32,7 +37,7 @@ test('Pass props correctly to Permissions', () => {
         }
     });
 
-    const permissions = shallow(
+    render(
         <Permissions
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -40,9 +45,9 @@ test('Pass props correctly to Permissions', () => {
         />
     );
 
-    expect(permissions.prop('system')).toEqual('Sulu');
-    expect(permissions.prop('value')).toEqual([]);
-    expect(permissions.prop('disabled')).toEqual(true);
+    expect(PermissionsContainerMock.mock.calls[0][0].system).toEqual('Sulu');
+    expect(PermissionsContainerMock.mock.calls[0][0].value).toEqual([]);
+    expect(PermissionsContainerMock.mock.calls[0][0].disabled).toEqual(true);
 });
 
 test('Pass props with value correctly to Permissions', () => {
@@ -77,7 +82,7 @@ test('Pass props with value correctly to Permissions', () => {
         },
     ];
 
-    const permissions = shallow(
+    render(
         <Permissions
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -85,6 +90,6 @@ test('Pass props with value correctly to Permissions', () => {
         />
     );
 
-    expect(permissions.prop('system')).toEqual('Sulu');
-    expect(permissions.prop('value')).toEqual(value);
+    expect(PermissionsContainerMock.mock.calls[0][0].system).toEqual('Sulu');
+    expect(PermissionsContainerMock.mock.calls[0][0].value).toEqual(value);
 });

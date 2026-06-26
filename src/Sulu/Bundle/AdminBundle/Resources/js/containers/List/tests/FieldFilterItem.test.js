@@ -1,31 +1,59 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
+import {autorun} from 'mobx';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Mousetrap from 'mousetrap';
 import FieldFilterItem from '../FieldFilterItem';
 import listFieldFilterTypeRegistry from '../registries/listFieldFilterTypeRegistry';
+
+jest.mock('mobx', () => {
+    const actualMobx = jest.requireActual('mobx');
+
+    return {
+        ...actualMobx,
+        autorun: jest.fn(actualMobx.autorun),
+    };
+});
 
 jest.mock('../registries/listFieldFilterTypeRegistry', () => ({
     get: jest.fn(),
     getOptions: jest.fn().mockReturnValue({}),
 }));
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
-test('Render FieldFilterItem with a FieldFilterType', () => {
-    const setValueSpy = jest.fn();
+class FilterInput extends React.Component<Object> {
+    handleChange = (event) => {
+        this.props.onChange(event.currentTarget.value);
+    };
 
-    const listFieldFilterType = jest.fn(() => ({
-        getValueNode: jest.fn((value) => Promise.resolve('The value is ' + value)),
-        getFormNode: jest.fn(() => <div>This is the form node</div>),
-        setValue: setValueSpy,
+    render() {
+        return <input aria-label="filter-input" onChange={this.handleChange} />;
+    }
+}
+
+function createFilterType(overrides: Object = {}) {
+    const setValue = overrides.setValue || jest.fn();
+    const confirm = overrides.confirm || jest.fn();
+    const destroy = overrides.destroy || jest.fn();
+    const getValueNode = overrides.getValueNode || jest.fn((value) => Promise.resolve('The value is ' + value));
+    const getFormNodeFactory = overrides.getFormNode || jest.fn(() => <div>This is the form node</div>);
+
+    return jest.fn((onChange, filterTypeParameters, value, options) => ({
+        confirm,
+        destroy,
+        getFormNode: jest.fn(() => getFormNodeFactory(onChange)),
+        getValueNode,
+        onChange,
+        options,
+        setValue,
+        value,
     }));
+}
 
-    listFieldFilterTypeRegistry.get.mockReturnValue(listFieldFilterType);
-
-    const fieldFilterItem = mount(
+function renderFieldFilterItem(props: Object = {}) {
+    return render(
         <FieldFilterItem
             column="salutation"
             filterType="text"
@@ -37,32 +65,37 @@ test('Render FieldFilterItem with a FieldFilterType', () => {
             onDelete={jest.fn()}
             open={true}
             value="Test"
+            {...props}
         />
     );
+}
 
-    expect(fieldFilterItem.render()).toMatchSnapshot();
+beforeEach(() => {
+    jest.clearAllMocks();
+    (autorun: any).mockImplementation(jest.requireActual('mobx').autorun);
+    listFieldFilterTypeRegistry.get.mockReturnValue(createFilterType());
+    listFieldFilterTypeRegistry.getOptions.mockReturnValue({});
+});
+
+test('Render FieldFilterItem with a FieldFilterType', async() => {
+    const setValueSpy = jest.fn();
+    const listFieldFilterType = createFilterType({setValue: setValueSpy});
+    listFieldFilterTypeRegistry.get.mockReturnValue(listFieldFilterType);
+
+    renderFieldFilterItem();
+
+    expect(screen.getByText('This is the form node')).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: /Salutation:/})).toBeInTheDocument();
     expect(listFieldFilterTypeRegistry.get).toHaveBeenCalledWith('text');
     expect(listFieldFilterType).toHaveBeenCalledWith(expect.any(Function), {value: 'Test'}, 'Test', {});
     expect(setValueSpy).toHaveBeenCalledWith('Test');
+    expect(await screen.findByText(/The value is Test/)).toBeInTheDocument();
 });
 
 test('Close when esc button is pressed', () => {
     const closeSpy = jest.fn();
 
-    mount(
-        <FieldFilterItem
-            column="salutation"
-            filterType="text"
-            filterTypeParameters={{value: 'Test'}}
-            label="Salutation"
-            onChange={jest.fn()}
-            onClick={jest.fn()}
-            onClose={closeSpy}
-            onDelete={jest.fn()}
-            open={true}
-            value="Test"
-        />
-    );
+    renderFieldFilterItem({onClose: closeSpy});
 
     expect(closeSpy).not.toHaveBeenCalled();
     Mousetrap.trigger('esc');
@@ -72,20 +105,7 @@ test('Close when esc button is pressed', () => {
 test('Do not close when esc button is pressed if was not opened', () => {
     const closeSpy = jest.fn();
 
-    mount(
-        <FieldFilterItem
-            column="salutation"
-            filterType="text"
-            filterTypeParameters={{value: 'Test'}}
-            label="Salutation"
-            onChange={jest.fn()}
-            onClick={jest.fn()}
-            onClose={closeSpy}
-            onDelete={jest.fn()}
-            open={false}
-            value="Test"
-        />
-    );
+    renderFieldFilterItem({onClose: closeSpy, open: false});
 
     Mousetrap.trigger('esc');
     expect(closeSpy).not.toHaveBeenCalled();
@@ -93,8 +113,32 @@ test('Do not close when esc button is pressed if was not opened', () => {
 
 test('Close when esc button is pressed if initially was closed but has been opened in the mean time', () => {
     const closeSpy = jest.fn();
+    const {rerender} = renderFieldFilterItem({onClose: closeSpy, open: false});
 
-    const fieldFilterItem = mount(
+    rerender(
+        <FieldFilterItem
+            column="salutation"
+            filterType="text"
+            filterTypeParameters={{value: 'Test'}}
+            label="Salutation"
+            onChange={jest.fn()}
+            onClick={jest.fn()}
+            onClose={closeSpy}
+            onDelete={jest.fn()}
+            open={true}
+            value="Test"
+        />
+    );
+
+    Mousetrap.trigger('esc');
+    expect(closeSpy).toHaveBeenCalled();
+});
+
+test('Do not close when esc button is pressed if initially was opened but has been closed already', () => {
+    const closeSpy = jest.fn();
+    const {rerender} = renderFieldFilterItem({onClose: closeSpy, open: true});
+
+    rerender(
         <FieldFilterItem
             column="salutation"
             filterType="text"
@@ -109,62 +153,16 @@ test('Close when esc button is pressed if initially was closed but has been open
         />
     );
 
-    fieldFilterItem.setProps({open: true});
-
-    Mousetrap.trigger('esc');
-    expect(closeSpy).toHaveBeenCalled();
-});
-
-test('Do not close when esc button is pressed if initially was opened but has been closed already', () => {
-    const closeSpy = jest.fn();
-
-    const fieldFilterItem = mount(
-        <FieldFilterItem
-            column="salutation"
-            filterType="text"
-            filterTypeParameters={{value: 'Test'}}
-            label="Salutation"
-            onChange={jest.fn()}
-            onClick={jest.fn()}
-            onClose={closeSpy}
-            onDelete={jest.fn()}
-            open={true}
-            value="Test"
-        />
-    );
-
-    fieldFilterItem.setProps({open: false});
-
     Mousetrap.trigger('esc');
     expect(closeSpy).not.toHaveBeenCalled();
 });
 
 test('Change when enter button is pressed', () => {
     const changeSpy = jest.fn();
-
-    const listFieldFilterType = jest.fn(() => ({
-        confirm: jest.fn(),
-        getValueNode: jest.fn((value) => Promise.resolve('The value is ' + value)),
-        getFormNode: jest.fn(() => <div>This is the form node</div>),
-        setValue: jest.fn(),
-    }));
-
+    const listFieldFilterType = createFilterType();
     listFieldFilterTypeRegistry.get.mockReturnValue(listFieldFilterType);
 
-    mount(
-        <FieldFilterItem
-            column="salutation"
-            filterType="text"
-            filterTypeParameters={{value: 'Test'}}
-            label="Salutation"
-            onChange={changeSpy}
-            onClick={jest.fn()}
-            onClose={jest.fn()}
-            onDelete={jest.fn()}
-            open={true}
-            value="Test"
-        />
-    );
+    renderFieldFilterItem({onChange: changeSpy});
 
     expect(changeSpy).not.toHaveBeenCalled();
     Mousetrap.trigger('enter');
@@ -174,29 +172,7 @@ test('Change when enter button is pressed', () => {
 test('Do not change when enter button is pressed if was not opened', () => {
     const changeSpy = jest.fn();
 
-    const listFieldFilterType = jest.fn(() => ({
-        confirm: jest.fn(),
-        getValueNode: jest.fn((value) => Promise.resolve('The value is ' + value)),
-        getFormNode: jest.fn(() => <div>This is the form node</div>),
-        setValue: jest.fn(),
-    }));
-
-    listFieldFilterTypeRegistry.get.mockReturnValue(listFieldFilterType);
-
-    mount(
-        <FieldFilterItem
-            column="salutation"
-            filterType="text"
-            filterTypeParameters={{value: 'Test'}}
-            label="Salutation"
-            onChange={changeSpy}
-            onClick={jest.fn()}
-            onClose={jest.fn()}
-            onDelete={jest.fn()}
-            open={false}
-            value="Test"
-        />
-    );
+    renderFieldFilterItem({onChange: changeSpy, open: false});
 
     Mousetrap.trigger('enter');
     expect(changeSpy).not.toHaveBeenCalled();
@@ -204,17 +180,32 @@ test('Do not change when enter button is pressed if was not opened', () => {
 
 test('Change when enter button is pressed if initially was closed but has been opened in the mean time', () => {
     const changeSpy = jest.fn();
+    const {rerender} = renderFieldFilterItem({onChange: changeSpy, open: false});
 
-    const listFieldFilterType = jest.fn(() => ({
-        confirm: jest.fn(),
-        getValueNode: jest.fn((value) => Promise.resolve('The value is ' + value)),
-        getFormNode: jest.fn(() => <div>This is the form node</div>),
-        setValue: jest.fn(),
-    }));
+    rerender(
+        <FieldFilterItem
+            column="salutation"
+            filterType="text"
+            filterTypeParameters={{value: 'Test'}}
+            label="Salutation"
+            onChange={changeSpy}
+            onClick={jest.fn()}
+            onClose={jest.fn()}
+            onDelete={jest.fn()}
+            open={true}
+            value="Test"
+        />
+    );
 
-    listFieldFilterTypeRegistry.get.mockReturnValue(listFieldFilterType);
+    Mousetrap.trigger('enter');
+    expect(changeSpy).toHaveBeenCalled();
+});
 
-    const fieldFilterItem = mount(
+test('Do not change when enter button is pressed if initially was opened but has been closed already', () => {
+    const changeSpy = jest.fn();
+    const {rerender} = renderFieldFilterItem({onChange: changeSpy, open: true});
+
+    rerender(
         <FieldFilterItem
             column="salutation"
             filterType="text"
@@ -229,80 +220,66 @@ test('Change when enter button is pressed if initially was closed but has been o
         />
     );
 
-    fieldFilterItem.setProps({open: true});
-
-    Mousetrap.trigger('enter');
-    expect(changeSpy).toHaveBeenCalled();
-});
-
-test('Do not change when enter button is pressed if initially was opened but has been closed already', () => {
-    const changeSpy = jest.fn();
-
-    const fieldFilterItem = mount(
-        <FieldFilterItem
-            column="salutation"
-            filterType="text"
-            filterTypeParameters={{value: 'Test'}}
-            label="Salutation"
-            onChange={changeSpy}
-            onClick={jest.fn()}
-            onClose={jest.fn()}
-            onDelete={jest.fn()}
-            open={true}
-            value="Test"
-        />
-    );
-
-    fieldFilterItem.setProps({open: false});
-
     Mousetrap.trigger('enter');
     expect(changeSpy).not.toHaveBeenCalled();
 });
 
-test('Pass callbacks to correct props', () => {
+test('Pass callbacks to correct props', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
     const closeSpy = jest.fn();
     const deleteSpy = jest.fn();
 
-    const fieldFilterItem = mount(
+    renderFieldFilterItem({
+        onClick: clickSpy,
+        onClose: closeSpy,
+        onDelete: deleteSpy,
+    });
+
+    await user.click(screen.getByLabelText('su-times'));
+    expect(deleteSpy).toHaveBeenCalledWith('salutation');
+
+    await user.click(screen.getByTestId('backdrop'));
+    expect(closeSpy).toHaveBeenCalledWith();
+
+    await user.click(screen.getByRole('button', {name: /Salutation:/}));
+    expect(clickSpy).toHaveBeenCalledWith('salutation');
+});
+
+test('Update value and reset when FieldFilterItem is closed without confirming', async() => {
+    const user = userEvent.setup();
+    const changeSpy = jest.fn();
+    const setValueSpy = jest.fn();
+
+    const listFieldFilterType = createFilterType({
+        getFormNode: jest.fn((onChange) => <FilterInput onChange={onChange} />),
+        setValue: setValueSpy,
+    });
+
+    listFieldFilterTypeRegistry.get.mockReturnValue(listFieldFilterType);
+
+    const {rerender} = renderFieldFilterItem({onChange: changeSpy, open: true, value: 'Test'});
+
+    await user.type(screen.getByLabelText('filter-input'), 'test-value');
+    expect(setValueSpy).toHaveBeenCalledWith('test-value');
+
+    setValueSpy.mockReset();
+
+    rerender(
         <FieldFilterItem
             column="salutation"
             filterType="text"
             filterTypeParameters={{value: 'Test'}}
             label="Salutation"
-            onChange={jest.fn()}
-            onClick={clickSpy}
-            onClose={closeSpy}
-            onDelete={deleteSpy}
-            open={true}
+            onChange={changeSpy}
+            onClick={jest.fn()}
+            onClose={jest.fn()}
+            onDelete={jest.fn()}
+            open={false}
             value="Test"
         />
     );
-
-    fieldFilterItem.find('Chip Icon[name="su-times"]').simulate('click');
-    expect(deleteSpy).toHaveBeenCalledWith('salutation');
-
-    fieldFilterItem.find('Backdrop').prop('onClick')();
-    expect(closeSpy).toHaveBeenCalledWith();
-
-    fieldFilterItem.find('Chip button').simulate('click');
-    expect(clickSpy).toHaveBeenCalledWith('salutation');
-});
-
-test('Update value and reset when FieldFilterItem is closed without confirming', () => {
-    const changeSpy = jest.fn();
-    const setValueSpy = jest.fn();
-
-    const listFieldFilterType = jest.fn((onChange) => ({
-        onChange,
-        getValueNode: jest.fn((value) => Promise.resolve('The value is ' + value)),
-        getFormNode: jest.fn(() => <input id="test-input" onChange={onChange} />),
-        setValue: setValueSpy,
-    }));
-
-    listFieldFilterTypeRegistry.get.mockReturnValue(listFieldFilterType);
-
-    const fieldFilterItem = mount(
+    rerender(
         <FieldFilterItem
             column="salutation"
             filterType="text"
@@ -316,67 +293,53 @@ test('Update value and reset when FieldFilterItem is closed without confirming',
             value="Test"
         />
     );
-
-    fieldFilterItem.find('#test-input').prop('onChange')('test-value');
-    expect(setValueSpy).toHaveBeenCalledWith('test-value');
-
-    setValueSpy.mockReset();
-    fieldFilterItem.setProps({open: false});
-    fieldFilterItem.setProps({open: true});
 
     expect(changeSpy).not.toHaveBeenCalledWith('salutation', 'test-value');
     expect(setValueSpy).toHaveBeenCalledWith('Test');
 });
 
-test('Update value and call onChange when FieldFilterItem is confirmed', () => {
+test('Update value and call onChange when FieldFilterItem is confirmed', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const confirmSpy = jest.fn();
     const setValueSpy = jest.fn();
 
-    const listFieldFilterType = jest.fn((onChange) => ({
-        onChange,
+    const listFieldFilterType = createFilterType({
         confirm: confirmSpy,
-        getValueNode: jest.fn((value) => Promise.resolve('The value is ' + value)),
-        getFormNode: jest.fn(() => <input id="test-input" onChange={onChange} />),
+        getFormNode: jest.fn((onChange) => <FilterInput onChange={onChange} />),
         setValue: setValueSpy,
-    }));
+    });
 
     listFieldFilterTypeRegistry.get.mockReturnValue(listFieldFilterType);
 
-    const fieldFilterItem = mount(
-        <FieldFilterItem
-            column="salutation"
-            filterType="text"
-            filterTypeParameters={{value: 'Test'}}
-            label="Salutation"
-            onChange={changeSpy}
-            onClick={jest.fn()}
-            onClose={jest.fn()}
-            onDelete={jest.fn()}
-            open={true}
-            value="Test"
-        />
-    );
+    renderFieldFilterItem({onChange: changeSpy, value: 'Test'});
 
-    fieldFilterItem.find('#test-input').prop('onChange')('test-value');
+    await user.type(screen.getByLabelText('filter-input'), 'test-value');
 
-    fieldFilterItem.find('Button').prop('onClick')();
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
 
     expect(changeSpy).toHaveBeenCalledWith('salutation', 'test-value');
     expect(confirmSpy).toHaveBeenCalledWith();
     expect(setValueSpy).toHaveBeenCalledWith('test-value');
 });
 
-test('Return correct value node when value changes', () => {
+test('Return correct value node when value changes', async() => {
     const promise1 = Promise.resolve('First promise');
     const promise2 = Promise.resolve('Second promise');
-    listFieldFilterTypeRegistry.get.mockReturnValue(class {
-        getValueNode = jest.fn().mockReturnValueOnce(promise1).mockReturnValueOnce(promise2);
-        getFormNode = jest.fn(() => <div>This is the form node</div>);
-        setValue = jest.fn();
+    const getValueNode = jest.fn().mockReturnValueOnce(promise1).mockReturnValueOnce(promise2);
+    const listFieldFilterType = createFilterType({
+        getValueNode,
+    });
+    listFieldFilterTypeRegistry.get.mockReturnValue(listFieldFilterType);
+
+    const {rerender} = renderFieldFilterItem({
+        filterTypeParameters: null,
+        value: 'Test',
     });
 
-    const fieldFilterItem = mount(
+    expect(await screen.findByText(/First promise/)).toBeInTheDocument();
+
+    rerender(
         <FieldFilterItem
             column="salutation"
             filterType="text"
@@ -387,52 +350,39 @@ test('Return correct value node when value changes', () => {
             onClose={jest.fn()}
             onDelete={jest.fn()}
             open={true}
-            value="Test"
+            value="Test 2"
         />
     );
 
-    return promise1.then(() => {
-        expect(fieldFilterItem.find('Chip').text()).toEqual('Salutation: First promise');
-
-        fieldFilterItem.setProps({value: 'Test 2'});
-
-        return promise2.then(() => {
-            expect(fieldFilterItem.find('Chip').text()).toEqual('Salutation: Second promise');
-        });
-    });
+    expect(await screen.findByText(/Second promise/)).toBeInTheDocument();
 });
 
 test('Call disposers when unmounted', () => {
-    listFieldFilterTypeRegistry.get.mockReturnValue(class {
-        getValueNode = jest.fn((value) => Promise.resolve('The value is ' + value));
-        getFormNode = jest.fn(() => <div>This is the form node</div>);
-        setValue = jest.fn();
-        destroy = jest.fn();
-    });
-
-    const fieldFilterItem = mount(
-        <FieldFilterItem
-            column="salutation"
-            filterType="text"
-            filterTypeParameters={null}
-            label="Salutation"
-            onChange={jest.fn()}
-            onClick={jest.fn()}
-            onClose={jest.fn()}
-            onDelete={jest.fn()}
-            open={true}
-            value={undefined}
-        />
-    );
-
     const valueNodeDisposer = jest.fn();
     const valueDisposer = jest.fn();
     const fieldFilterTypeDestroyer = jest.fn();
-    fieldFilterItem.instance().valueNodeDisposer = valueNodeDisposer;
-    fieldFilterItem.instance().valueDisposer = valueDisposer;
-    fieldFilterItem.instance().fieldFilterType.destroy = fieldFilterTypeDestroyer;
+    (autorun: any)
+        .mockImplementationOnce((callback) => {
+            callback();
+            return valueDisposer;
+        })
+        .mockImplementationOnce((callback) => {
+            callback();
+            return valueNodeDisposer;
+        });
 
-    fieldFilterItem.unmount();
+    const listFieldFilterType = createFilterType({
+        destroy: fieldFilterTypeDestroyer,
+        getValueNode: jest.fn((value) => Promise.resolve('The value is ' + value)),
+    });
+    listFieldFilterTypeRegistry.get.mockReturnValue(listFieldFilterType);
+
+    const {unmount} = renderFieldFilterItem({
+        filterTypeParameters: null,
+        value: undefined,
+    });
+
+    unmount();
 
     expect(valueNodeDisposer).toHaveBeenCalledWith();
     expect(valueDisposer).toHaveBeenCalledWith();

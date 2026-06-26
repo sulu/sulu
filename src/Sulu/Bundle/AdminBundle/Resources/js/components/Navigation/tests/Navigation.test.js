@@ -4,9 +4,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Navigation from '../Navigation';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 test('The component should render and handle clicks correctly', async() => {
     const handleNavigationClick = jest.fn();

@@ -1,13 +1,11 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {findAllElementsByType, findElementByType, renderWithRef} from 'sulu-admin-bundle/utils/TestHelper';
 import formatStore from '../../../stores/formatStore';
 import MediaFormatStore from '../../../stores/MediaFormatStore';
 import CropOverlay from '../CropOverlay';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('../../../stores/formatStore', () => ({
     loadFormats: jest.fn().mockReturnValue(Promise.resolve([{key: 'test', scale: {}}])),
@@ -22,7 +20,7 @@ jest.mock('../../../stores/MediaFormatStore', () => jest.fn(function() {
 test('Closing the overlay should call the onClose callback', () => {
     const closeSpy = jest.fn();
 
-    const cropOverlay = shallow(
+    const {instance: cropOverlay} = renderWithRef(
         <CropOverlay
             id={4}
             image="test.jpg"
@@ -33,14 +31,14 @@ test('Closing the overlay should call the onClose callback', () => {
         />
     );
 
-    cropOverlay.find('Overlay').prop('onClose')();
+    findElementByType(cropOverlay.render(), 'Overlay').props.onClose();
 
     expect(MediaFormatStore).toHaveBeenCalledWith(4, 'de');
     expect(closeSpy).toHaveBeenCalledWith();
 });
 
 test('Convert selection to format options with edge-based integer coordinates', () => {
-    const cropOverlay = shallow(
+    const {instance: cropOverlay} = renderWithRef(
         <CropOverlay
             id={4}
             image="test.jpg"
@@ -51,7 +49,7 @@ test('Convert selection to format options with edge-based integer coordinates', 
         />
     );
 
-    expect(cropOverlay.instance().convertSelectionToFormatOptions({
+    expect(cropOverlay.convertSelectionToFormatOptions({
         left: 100.6,
         top: 74.63,
         width: 152.4,
@@ -96,7 +94,7 @@ test('Reset format croppings when closing overlay', () => {
     const formatsPromise = Promise.resolve(formats);
     formatStore.loadFormats.mockReturnValue(formatsPromise);
 
-    const cropOverlay = shallow(
+    const {instance: cropOverlay} = renderWithRef(
         <CropOverlay
             id={7}
             image="test.jpg"
@@ -122,31 +120,34 @@ test('Reset format croppings when closing overlay', () => {
         },
     };
 
-    cropOverlay.instance().mediaFormatStore.getFormatOptions.mockImplementation((formatKey) => {
+    cropOverlay.mediaFormatStore.getFormatOptions.mockImplementation((formatKey) => {
         return cropData[formatKey];
     });
 
     return formatsPromise.then(() => {
-        cropOverlay.update();
+        const getOverlayProps = () => findElementByType(cropOverlay.render(), 'Overlay').props;
+        const getRectangleProps = () => findElementByType(
+            cropOverlay.render(),
+            'withContainerSize(ImageRectangleSelection)'
+        ).props;
+        const getSingleSelectProps = () => findElementByType(cropOverlay.render(), 'SingleSelect').props;
 
-        expect(cropOverlay.find('Overlay').prop('confirmDisabled')).toEqual(true);
+        expect(getOverlayProps().confirmDisabled).toEqual(true);
 
-        cropOverlay.find('withContainerSize(ImageRectangleSelection)').prop('onChange')(
+        getRectangleProps().onChange(
             {height: 60, left: 200, top: 20, width: 20}
         );
 
-        expect(cropOverlay.find('Overlay').prop('confirmDisabled')).toEqual(false);
+        expect(getOverlayProps().confirmDisabled).toEqual(false);
 
-        cropOverlay.find('SingleSelect').prop('onChange')('test3');
-        cropOverlay.update();
-        expect(cropOverlay.find('Overlay').prop('confirmDisabled')).toEqual(false);
+        getSingleSelectProps().onChange('test3');
+        expect(getOverlayProps().confirmDisabled).toEqual(false);
 
-        cropOverlay.find('SingleSelect').prop('onChange')('test4');
+        getSingleSelectProps().onChange('test4');
 
-        cropOverlay.find('Overlay').prop('onClose')();
+        getOverlayProps().onClose();
 
-        cropOverlay.update();
-        expect(cropOverlay.find('Overlay').prop('confirmDisabled')).toEqual(true);
+        expect(getOverlayProps().confirmDisabled).toEqual(true);
     });
 });
 
@@ -182,7 +183,7 @@ test('Select first non-internal image format as default and change dimensions of
     const formatsPromise = Promise.resolve(formats);
     formatStore.loadFormats.mockReturnValue(formatsPromise);
 
-    const cropOverlay = shallow(
+    const {instance: cropOverlay} = renderWithRef(
         <CropOverlay
             id={7}
             image="test.jpg"
@@ -208,13 +209,19 @@ test('Select first non-internal image format as default and change dimensions of
         },
     };
 
-    cropOverlay.instance().mediaFormatStore.getFormatOptions.mockImplementation((formatKey) => {
+    cropOverlay.mediaFormatStore.getFormatOptions.mockImplementation((formatKey) => {
         return cropData[formatKey];
     });
 
     return formatsPromise.then(() => {
-        cropOverlay.update();
-        expect(cropOverlay.find('withContainerSize(ImageRectangleSelection)').props()).toEqual(expect.objectContaining({
+        const getRectangleProps = () => findElementByType(
+            cropOverlay.render(),
+            'withContainerSize(ImageRectangleSelection)'
+        ).props;
+        const getOverlayProps = () => findElementByType(cropOverlay.render(), 'Overlay').props;
+        const getSingleSelectProps = () => findElementByType(cropOverlay.render(), 'SingleSelect').props;
+
+        expect(getRectangleProps()).toEqual(expect.objectContaining({
             minHeight: 500,
             minWidth: 400,
             value: {
@@ -225,15 +232,14 @@ test('Select first non-internal image format as default and change dimensions of
             },
         }));
 
-        cropOverlay.find('withContainerSize(ImageRectangleSelection)').prop('onChange')(
+        getRectangleProps().onChange(
             {height: 60, left: 200, top: 20, width: 20}
         );
 
-        expect(cropOverlay.find('Overlay').prop('confirmDisabled')).toEqual(false);
+        expect(getOverlayProps().confirmDisabled).toEqual(false);
 
-        cropOverlay.find('SingleSelect').prop('onChange')('test3');
-        cropOverlay.update();
-        expect(cropOverlay.find('withContainerSize(ImageRectangleSelection)').props()).toEqual(expect.objectContaining({
+        getSingleSelectProps().onChange('test3');
+        expect(getRectangleProps()).toEqual(expect.objectContaining({
             minHeight: 300,
             minWidth: 700,
             value: {
@@ -244,11 +250,10 @@ test('Select first non-internal image format as default and change dimensions of
             },
         }));
 
-        expect(cropOverlay.find('Overlay').prop('confirmDisabled')).toEqual(false);
+        expect(getOverlayProps().confirmDisabled).toEqual(false);
 
-        cropOverlay.find('SingleSelect').prop('onChange')('test4');
-        cropOverlay.update();
-        expect(cropOverlay.find('withContainerSize(ImageRectangleSelection)').props()).toEqual(expect.objectContaining({
+        getSingleSelectProps().onChange('test4');
+        expect(getRectangleProps()).toEqual(expect.objectContaining({
             minHeight: 300,
             minWidth: 500,
             value: undefined,
@@ -286,7 +291,7 @@ test('Save changes of formats', () => {
     const formatsPromise = Promise.resolve(formats);
     formatStore.loadFormats.mockReturnValue(formatsPromise);
 
-    const cropOverlay = shallow(
+    const {instance: cropOverlay} = renderWithRef(
         <CropOverlay
             id={7}
             image="test.jpg"
@@ -306,13 +311,19 @@ test('Save changes of formats', () => {
         },
     };
 
-    cropOverlay.instance().mediaFormatStore.getFormatOptions.mockImplementation((formatKey) => {
+    cropOverlay.mediaFormatStore.getFormatOptions.mockImplementation((formatKey) => {
         return cropData[formatKey];
     });
 
     return formatsPromise.then(() => {
-        cropOverlay.update();
-        expect(cropOverlay.find('withContainerSize(ImageRectangleSelection)').props()).toEqual(expect.objectContaining({
+        const getRectangleProps = () => findElementByType(
+            cropOverlay.render(),
+            'withContainerSize(ImageRectangleSelection)'
+        ).props;
+        const getOverlayProps = () => findElementByType(cropOverlay.render(), 'Overlay').props;
+        const getSingleSelectProps = () => findElementByType(cropOverlay.render(), 'SingleSelect').props;
+
+        expect(getRectangleProps()).toEqual(expect.objectContaining({
             minHeight: 500,
             minWidth: 400,
             value: {
@@ -323,15 +334,15 @@ test('Save changes of formats', () => {
             },
         }));
 
-        expect(cropOverlay.find('Overlay').prop('confirmDisabled')).toEqual(true);
+        expect(getOverlayProps().confirmDisabled).toEqual(true);
 
-        cropOverlay.find('withContainerSize(ImageRectangleSelection)').prop('onChange')(
+        getRectangleProps().onChange(
             {height: 60, left: 200, top: 20, width: 20}
         );
 
-        expect(cropOverlay.find('Overlay').prop('confirmDisabled')).toEqual(false);
+        expect(getOverlayProps().confirmDisabled).toEqual(false);
 
-        expect(cropOverlay.find('withContainerSize(ImageRectangleSelection)').props()).toEqual(expect.objectContaining({
+        expect(getRectangleProps()).toEqual(expect.objectContaining({
             minHeight: 500,
             minWidth: 400,
             value: {
@@ -342,16 +353,16 @@ test('Save changes of formats', () => {
             },
         }));
 
-        cropOverlay.find('SingleSelect').prop('onChange')('test2');
-        cropOverlay.find('withContainerSize(ImageRectangleSelection)').prop('onChange')(
+        getSingleSelectProps().onChange('test2');
+        getRectangleProps().onChange(
             {height: 120, left: 100, top: 70, width: 30}
         );
 
         const putPromise = Promise.resolve({});
-        cropOverlay.instance().mediaFormatStore.updateFormatOptions.mockReturnValue(putPromise);
-        cropOverlay.find('Overlay').prop('onConfirm')();
+        cropOverlay.mediaFormatStore.updateFormatOptions.mockReturnValue(putPromise);
+        getOverlayProps().onConfirm();
 
-        expect(cropOverlay.instance().mediaFormatStore.updateFormatOptions).toHaveBeenCalledWith(
+        expect(cropOverlay.mediaFormatStore.updateFormatOptions).toHaveBeenCalledWith(
             {
                 test1: {cropHeight: 60, cropWidth: 20, cropX: 200, cropY: 20},
                 test2: {cropHeight: 120, cropWidth: 30, cropX: 100, cropY: 70},
@@ -360,9 +371,8 @@ test('Save changes of formats', () => {
         expect(confirmSpy).not.toHaveBeenCalled();
 
         return putPromise.then(() => {
-            cropOverlay.update();
             expect(confirmSpy).toHaveBeenCalledWith();
-            expect(cropOverlay.find('Overlay').prop('confirmDisabled')).toEqual(true);
+            expect(getOverlayProps().confirmDisabled).toEqual(true);
         });
     });
 });
@@ -400,7 +410,7 @@ test('Show which formats have already been cropped', () => {
     const formatsPromise = Promise.resolve(formats);
     formatStore.loadFormats.mockReturnValue(formatsPromise);
 
-    const cropOverlay = shallow(
+    const {instance: cropOverlay} = renderWithRef(
         <CropOverlay
             id={7}
             image="test.jpg"
@@ -420,14 +430,15 @@ test('Show which formats have already been cropped', () => {
         },
     };
 
-    cropOverlay.instance().mediaFormatStore.getFormatOptions.mockImplementation((formatKey) => {
+    cropOverlay.mediaFormatStore.getFormatOptions.mockImplementation((formatKey) => {
         return cropData[formatKey];
     });
 
     return formatsPromise.then(() => {
-        cropOverlay.update();
-        expect(cropOverlay.find('Option[value="test1"]').prop('children')).toEqual('Test 1 (sulu_media.cropped)');
-        expect(cropOverlay.find('Option[value="test2"]').prop('children')).toEqual('Test 2');
-        expect(cropOverlay.find('Option[value="test3"]').prop('children')).toEqual('Test 3');
+        const options = findAllElementsByType(cropOverlay.render(), 'Option');
+
+        expect(options[0].props.children).toEqual('Test 1 (sulu_media.cropped)');
+        expect(options[1].props.children).toEqual('Test 2');
+        expect(options[2].props.children).toEqual('Test 3');
     });
 });

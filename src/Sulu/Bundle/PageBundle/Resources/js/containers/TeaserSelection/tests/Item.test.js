@@ -1,18 +1,43 @@
 // @flow
 import React from 'react';
 import {observable} from 'mobx';
-import {mount, shallow} from 'enzyme';
-import {SingleMediaSelectionOverlay} from 'sulu-media-bundle/containers';
-import {TextEditor} from 'sulu-admin-bundle/containers';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Item from '../Item';
 
-jest.mock('sulu-media-bundle/containers/SingleMediaSelectionOverlay', () => jest.fn(() => null));
+let mockSingleMediaSelectionOverlayProps: Object = {};
+let mockTextEditorProps: Object = {};
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
+const mockReact = require('react');
+
+jest.mock('sulu-media-bundle/containers/SingleMediaSelectionOverlay', () => jest.fn((props) => {
+    mockSingleMediaSelectionOverlayProps = props;
+
+    return mockReact.createElement(
+        'div',
+        {
+            'data-open': String(props.open),
+            'data-testid': 'single-media-selection-overlay',
+        },
+        props.open && mockReact.createElement(
+            'button',
+            {onClick: () => props.onConfirm({id: 8}), type: 'button'},
+            'confirm-media'
+        )
+    );
 }));
 
-jest.mock('sulu-admin-bundle/containers/TextEditor', () => jest.fn(({value}) => (<textarea value={value} />)));
+jest.mock('sulu-admin-bundle/utils/Translator');
+
+jest.mock('sulu-admin-bundle/containers/TextEditor', () => jest.fn((props) => {
+    mockTextEditorProps = props;
+
+    return mockReact.createElement('textarea', {
+        'aria-label': 'text-editor',
+        onChange: (event) => props.onChange(event.currentTarget.value),
+        value: props.value || '',
+    });
+}));
 
 jest.mock('../registries/teaserProviderRegistry', () => ({
     keys: ['pages', 'articles'],
@@ -27,7 +52,7 @@ jest.mock('../registries/teaserProviderRegistry', () => ({
 test('Render Item with data but without image', () => {
     Item.mediaUrl = '/admin/media/:id';
 
-    const item = mount(
+    const {asFragment} = render(
         <Item
             description="<p>Description</p>"
             edited={false}
@@ -42,13 +67,13 @@ test('Render Item with data but without image', () => {
         />
     );
 
-    expect(item.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render Item with data and image', () => {
     Item.mediaUrl = '/admin/image/:id';
 
-    const item = mount(
+    const {asFragment} = render(
         <Item
             description="<p>Description</p>"
             edited={true}
@@ -63,11 +88,11 @@ test('Render Item with data and image', () => {
         />
     );
 
-    expect(item.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render Item without data', () => {
-    const item = mount(
+    const {asFragment} = render(
         <Item
             description={undefined}
             edited={false}
@@ -82,11 +107,11 @@ test('Render Item without data', () => {
         />
     );
 
-    expect(item.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render Item with data as form', () => {
-    const item = mount(
+    const {asFragment} = render(
         <Item
             description="Description"
             edited={false}
@@ -101,11 +126,11 @@ test('Render Item with data as form', () => {
         />
     );
 
-    expect(item.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Pass correct props to text editor', () => {
-    const item = mount(
+    render(
         <Item
             description="Description"
             edited={false}
@@ -120,14 +145,15 @@ test('Pass correct props to text editor', () => {
         />
     );
 
-    expect(item.find(TextEditor).prop('adapter')).toEqual('ckeditor5');
-    expect(item.find(TextEditor).prop('locale').get()).toEqual('en');
+    expect(mockTextEditorProps.adapter).toEqual('ckeditor5');
+    expect(mockTextEditorProps.locale.get()).toEqual('en');
 });
 
-test('Cancelling the item while editing should call the onClose callback', () => {
+test('Cancelling the item while editing should call the onClose callback', async() => {
+    const user = userEvent.setup();
     const cancelSpy = jest.fn();
 
-    const item = shallow(
+    render(
         <Item
             description="Description"
             edited={false}
@@ -143,12 +169,13 @@ test('Cancelling the item while editing should call the onClose callback', () =>
     );
 
     expect(cancelSpy).not.toHaveBeenCalled();
-    item.find('Button[children="sulu_admin.cancel"]').simulate('click');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.cancel'}));
     expect(cancelSpy).toHaveBeenCalledWith('page', 5);
 });
 
-test('Reset the current field when the edit form is closed', () => {
-    const item = shallow(
+test('Reset the current field when the edit form is closed', async() => {
+    const user = userEvent.setup();
+    const {rerender} = render(
         <Item
             description="Edited description"
             edited={false}
@@ -163,18 +190,47 @@ test('Reset the current field when the edit form is closed', () => {
         />
     );
 
-    item.find(TextEditor).prop('onChange')('Edited description');
-    item.find('Input').prop('onChange')('Edited title');
+    await user.clear(screen.getByLabelText('text-editor'));
+    await user.type(screen.getByLabelText('text-editor'), 'Changed description');
+    await user.clear(screen.getByDisplayValue('Edited title'));
+    await user.type(screen.getByRole('textbox', {name: ''}), 'Changed title');
 
-    item.setProps({description: 'Description', editing: false, title: 'Title'});
-    item.setProps({editing: true});
+    rerender(
+        <Item
+            description="Description"
+            edited={false}
+            editing={false}
+            id={5}
+            locale={observable.box('en')}
+            mediaId={undefined}
+            onApply={jest.fn()}
+            onCancel={jest.fn()}
+            title="Title"
+            type="page"
+        />
+    );
+    rerender(
+        <Item
+            description="Description"
+            edited={false}
+            editing={true}
+            id={5}
+            locale={observable.box('en')}
+            mediaId={undefined}
+            onApply={jest.fn()}
+            onCancel={jest.fn()}
+            title="Title"
+            type="page"
+        />
+    );
 
-    expect(item.find(TextEditor).prop('value')).toEqual('Description');
-    expect(item.find('Input').prop('value')).toEqual('Title');
+    expect(screen.getByLabelText('text-editor')).toHaveValue('Description');
+    expect(screen.getByDisplayValue('Title')).toBeInTheDocument();
 });
 
-test('Reset the current field when the title or description props change', () => {
-    const item = shallow(
+test('Reset the current field when the title or description props change', async() => {
+    const user = userEvent.setup();
+    const {rerender} = render(
         <Item
             description="Edited description"
             edited={false}
@@ -189,19 +245,35 @@ test('Reset the current field when the title or description props change', () =>
         />
     );
 
-    item.find(TextEditor).prop('onChange')('Edited description');
-    item.find('Input').prop('onChange')('Edited title');
+    await user.clear(screen.getByLabelText('text-editor'));
+    await user.type(screen.getByLabelText('text-editor'), 'Changed description');
+    await user.clear(screen.getByDisplayValue('Edited title'));
+    await user.type(screen.getByRole('textbox', {name: ''}), 'Changed title');
 
-    item.setProps({description: 'Description', title: 'Title'});
+    rerender(
+        <Item
+            description="Description"
+            edited={false}
+            editing={true}
+            id={5}
+            locale={observable.box('en')}
+            mediaId={undefined}
+            onApply={jest.fn()}
+            onCancel={jest.fn()}
+            title="Title"
+            type="page"
+        />
+    );
 
-    expect(item.find(TextEditor).prop('value')).toEqual('Description');
-    expect(item.find('Input').prop('value')).toEqual('Title');
+    expect(screen.getByLabelText('text-editor')).toHaveValue('Description');
+    expect(screen.getByDisplayValue('Title')).toBeInTheDocument();
 });
 
-test('Applying the item while editing should call the onApply callback with the current data', () => {
+test('Applying the item while editing should call the onApply callback with the current data', async() => {
+    const user = userEvent.setup();
     const applySpy = jest.fn();
 
-    const item = shallow(
+    render(
         <Item
             description="Description"
             edited={false}
@@ -216,17 +288,19 @@ test('Applying the item while editing should call the onApply callback with the 
         />
     );
 
-    item.find(TextEditor).prop('onChange')('Edited description');
-    item.find('Input').prop('onChange')('Edited title');
+    await user.clear(screen.getByLabelText('text-editor'));
+    await user.type(screen.getByLabelText('text-editor'), 'Edited description');
+    await user.clear(screen.getByDisplayValue('Title'));
+    await user.type(screen.getByRole('textbox', {name: ''}), 'Edited title');
 
-    expect(item.find(SingleMediaSelectionOverlay).prop('open')).toEqual(false);
-    item.find('button[className="mediaButton"]').simulate('click');
-    expect(item.find(SingleMediaSelectionOverlay).prop('open')).toEqual(true);
-    item.find(SingleMediaSelectionOverlay).prop('onConfirm')({id: 8});
-    expect(item.find(SingleMediaSelectionOverlay).prop('open')).toEqual(false);
+    expect(mockSingleMediaSelectionOverlayProps.open).toEqual(false);
+    await user.click(screen.getByRole('button', {name: 'su-pen'}));
+    expect(mockSingleMediaSelectionOverlayProps.open).toEqual(true);
+    await user.click(screen.getByRole('button', {name: 'confirm-media'}));
+    expect(mockSingleMediaSelectionOverlayProps.open).toEqual(false);
 
     expect(applySpy).not.toHaveBeenCalled();
-    item.find('Button[children="sulu_admin.apply"]').simulate('click');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.apply'}));
     expect(applySpy).toHaveBeenCalledWith({
         description: 'Edited description',
         id: 5,
@@ -236,10 +310,11 @@ test('Applying the item while editing should call the onApply callback with the 
     });
 });
 
-test('Applying the item while editing should call the onApply callback with the current data', () => {
+test('Resetting the item while editing should call the onApply callback with only id and type', async() => {
+    const user = userEvent.setup();
     const applySpy = jest.fn();
 
-    const item = shallow(
+    render(
         <Item
             description="Description"
             edited={false}
@@ -254,7 +329,8 @@ test('Applying the item while editing should call the onApply callback with the 
         />
     );
 
-    item.find('Button[children="sulu_admin.reset"]').simulate('click');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.reset'}));
+
     expect(applySpy).toHaveBeenCalledWith({
         id: 5,
         type: 'page',

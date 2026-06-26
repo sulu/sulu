@@ -74,6 +74,25 @@
         "object-shorthand": "error",
         "no-alert": "error",
         "no-console": "error",
+        "no-restricted-imports": [
+            "error",
+            {
+                "paths": [
+                    {
+                        "name": "enzyme",
+                        "message": "Use React Testing Library for React tests."
+                    },
+                    {
+                        "name": "enzyme-to-json",
+                        "message": "Use React Testing Library snapshots instead."
+                    },
+                    {
+                        "name": "@wojtekmaj/enzyme-adapter-react-17",
+                        "message": "Enzyme is no longer configured for tests."
+                    }
+                ]
+            }
+        ],
         "no-prototype-builtins": "off",
         "no-unused-vars": ["error", {"ignoreRestSiblings": true}],
         "no-useless-rename": "error",

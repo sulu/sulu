@@ -1,41 +1,125 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import CardCollection from '../../fields/CardCollection';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+let mockFormProps: Object = {};
+
+const mockReact = require('react');
+
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
-jest.mock('../../stores/MemoryFormStore', () => jest.fn(function(data, schema) {
-    this.data = data;
-    this.schema = schema;
-    this.change = jest.fn().mockImplementation((name, value) => {
-        this.data[name] = value;
-    });
-    this.validate = jest.fn().mockReturnValue(true);
-    this.destroy = jest.fn();
-    this.types = {};
-}));
 jest.mock('../../stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn(function() {
     this.isFieldModified = jest.fn();
 }));
 
-jest.mock('../../registries/fieldRegistry', () => ({
-    get: jest.fn((type) => {
-        switch (type) {
-            case 'text_line':
-                return require('../../../../components/Input').default;
-        }
-    }),
-    getOptions: jest.fn(),
+jest.mock('../../../../components/CardCollection', () => {
+    const CardCollectionMock: any = jest.fn((props) => {
+        const children = mockReact.Children.toArray(props.children);
+
+        return mockReact.createElement(
+            'div',
+            null,
+            mockReact.createElement('button', {onClick: props.onAdd, type: 'button'}, 'add'),
+            children.map((child, index) => mockReact.createElement(
+                'div',
+                {key: index},
+                child,
+                mockReact.createElement('button', {onClick: () => props.onEdit(index), type: 'button'}, 'edit'),
+                mockReact.createElement('button', {onClick: () => props.onRemove(index), type: 'button'}, 'remove')
+            ))
+        );
+    });
+
+    CardCollectionMock.Card = jest.fn((props) => mockReact.createElement('div', null, props.children));
+
+    return CardCollectionMock;
+});
+
+jest.mock('../../../../components/Overlay', () => jest.fn((props) => {
+    if (!props.open) {
+        return null;
+    }
+
+    return mockReact.createElement(
+        'div',
+        {role: 'dialog'},
+        mockReact.createElement('button', {onClick: props.onClose, type: 'button'}, 'close'),
+        mockReact.createElement(
+            'button',
+            {
+                disabled: props.confirmDisabled,
+                onClick: props.onConfirm,
+                type: 'button',
+            },
+            'confirm'
+        ),
+        props.children
+    );
 }));
+
+jest.mock('../../../Form', () => {
+    const mockReactForForm = require('react');
+
+    const memoryFormStoreFactory = {
+        createFromSchema: jest.fn((schema, jsonSchema, data = {}) => {
+            const store: any = {
+                data: {...data},
+                dirty: true,
+                schema,
+                validate: jest.fn().mockReturnValue(true),
+                destroy: jest.fn(),
+            };
+
+            store.change = jest.fn((name, value) => {
+                store.data[name] = value;
+                store.dirty = true;
+            });
+
+            return store;
+        }),
+    };
+
+    const FormMock = mockReactForForm.forwardRef((props, ref) => {
+        mockFormProps = props;
+
+        mockReactForForm.useImperativeHandle(ref, () => ({
+            submit: () => {
+                if (props.store.validate()) {
+                    props.onSubmit();
+                }
+            },
+        }));
+
+        return mockReactForForm.createElement(
+            'div',
+            null,
+            Object.keys(props.store.schema).map((name) => mockReactForForm.createElement('input', {
+                'aria-label': name,
+                defaultValue: props.store.data[name] || '',
+                key: name,
+                onChange: (event) => props.store.change(name, event.target.value),
+            }))
+        );
+    });
+
+    return {
+        __esModule: true,
+        default: FormMock,
+        memoryFormStoreFactory,
+    };
+});
+
+beforeEach(() => {
+    mockFormProps = {};
+});
 
 test('Render a CardCollection', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
@@ -55,17 +139,21 @@ test('Render a CardCollection', () => {
         },
     ];
 
-    expect(render(
+    render(
         <CardCollection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
             value={value}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(screen.getByText('Max Mustermann')).toBeInTheDocument();
+    expect(screen.getByText('Erika Mustermann')).toBeInTheDocument();
 });
 
-test('Close the overlay when its close button is clicked', () => {
+test('Close the overlay when its close button is clicked', async() => {
+    const user = userEvent.setup();
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
 
     const changeSpy = jest.fn();
@@ -95,7 +183,7 @@ test('Close the overlay when its close button is clicked', () => {
         },
     ];
 
-    const cardCollection = mount(
+    render(
         <CardCollection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -105,17 +193,18 @@ test('Close the overlay when its close button is clicked', () => {
         />
     );
 
-    expect(cardCollection.find('Overlay').prop('open')).toEqual(false);
-    cardCollection.find('.addButtonContainer button').simulate('click');
-    expect(cardCollection.find('Overlay').prop('open')).toEqual(true);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    await user.click(screen.getByText('add'));
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
 
-    cardCollection.find('Icon[name="su-times"]').simulate('click');
-    expect(cardCollection.find('Overlay').prop('open')).toEqual(false);
+    await user.click(screen.getByText('close'));
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
 
     expect(changeSpy).not.toHaveBeenCalled();
 });
 
-test('Add a new card using the overlay', () => {
+test('Add a new card using the overlay', async() => {
+    const user = userEvent.setup();
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
 
     const changeSpy = jest.fn();
@@ -145,7 +234,7 @@ test('Add a new card using the overlay', () => {
         },
     ];
 
-    const cardCollection = mount(
+    render(
         <CardCollection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -155,21 +244,21 @@ test('Add a new card using the overlay', () => {
         />
     );
 
-    expect(cardCollection.find('Overlay').prop('open')).toEqual(false);
-    cardCollection.find('.addButtonContainer button').simulate('click');
-    expect(cardCollection.find('Overlay').prop('open')).toEqual(true);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    await user.click(screen.getByText('add'));
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
 
-    cardCollection.find('Input[dataPath="/firstName"]').prop('onChange')('John');
-    cardCollection.find('Input[dataPath="/lastName"]').prop('onChange')('Doe');
-    cardCollection.find('Overlay').prop('onConfirm')();
+    mockFormProps.store.data.firstName = 'John';
+    mockFormProps.store.data.lastName = 'Doe';
+    await user.click(screen.getByText('confirm'));
 
-    cardCollection.update();
-    expect(cardCollection.find('Overlay').prop('open')).toEqual(false);
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
 
     expect(changeSpy).toHaveBeenCalledWith([...value, {firstName: 'John', lastName: 'Doe'}]);
 });
 
-test('Do not add a new card if validation fails', () => {
+test('Do not add a new card if validation fails', async() => {
+    const user = userEvent.setup();
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
 
     const changeSpy = jest.fn();
@@ -193,7 +282,7 @@ test('Do not add a new card if validation fails', () => {
 
     const value = [];
 
-    const cardCollection = mount(
+    render(
         <CardCollection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -203,22 +292,21 @@ test('Do not add a new card if validation fails', () => {
         />
     );
 
-    expect(cardCollection.find('Overlay').prop('open')).toEqual(false);
-    cardCollection.find('.addButtonContainer button').simulate('click');
-    expect(cardCollection.find('Overlay').prop('open')).toEqual(true);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    await user.click(screen.getByText('add'));
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
 
-    cardCollection.instance().formStore.validate.mockReturnValue(false);
+    mockFormProps.store.validate.mockReturnValue(false);
 
-    cardCollection.find('Input[dataPath="/firstName"]').prop('onChange')('John');
-    cardCollection.find('Overlay').prop('onConfirm')();
+    mockFormProps.store.data.firstName = 'John';
+    await user.click(screen.getByText('confirm'));
 
-    cardCollection.update();
-    expect(cardCollection.find('Overlay').prop('open')).toEqual(true);
-
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(changeSpy).not.toHaveBeenCalled();
 });
 
-test('Edit an existing card using the overlay', () => {
+test('Edit an existing card using the overlay', async() => {
+    const user = userEvent.setup();
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
 
     const changeSpy = jest.fn();
@@ -248,7 +336,7 @@ test('Edit an existing card using the overlay', () => {
         },
     ];
 
-    const cardCollection = mount(
+    render(
         <CardCollection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -258,21 +346,21 @@ test('Edit an existing card using the overlay', () => {
         />
     );
 
-    expect(cardCollection.find('Overlay').prop('open')).toEqual(false);
-    cardCollection.find('Icon[name="su-pen"]').at(0).simulate('click');
-    expect(cardCollection.find('Overlay').prop('open')).toEqual(true);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    await user.click(screen.getAllByText('edit')[0]);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
 
-    cardCollection.find('Input[dataPath="/firstName"]').prop('onChange')('John');
-    cardCollection.find('Input[dataPath="/lastName"]').prop('onChange')('Doe');
-    cardCollection.find('Overlay').prop('onConfirm')();
+    mockFormProps.store.data.firstName = 'John';
+    mockFormProps.store.data.lastName = 'Doe';
+    await user.click(screen.getByText('confirm'));
 
-    cardCollection.update();
-    expect(cardCollection.find('Overlay').prop('open')).toEqual(false);
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
 
     expect(changeSpy).toHaveBeenCalledWith([{firstName: 'John', lastName: 'Doe'}, value[1]]);
 });
 
-test('Edit an existing card using the overlay', () => {
+test('Remove an existing card', async() => {
+    const user = userEvent.setup();
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
 
     const changeSpy = jest.fn();
@@ -302,7 +390,7 @@ test('Edit an existing card using the overlay', () => {
         },
     ];
 
-    const cardCollection = mount(
+    render(
         <CardCollection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
@@ -312,16 +400,17 @@ test('Edit an existing card using the overlay', () => {
         />
     );
 
-    cardCollection.find('Icon[name="su-trash-alt"]').at(1).simulate('click');
+    await user.click(screen.getAllByText('remove')[1]);
 
     expect(changeSpy).toHaveBeenCalledWith([value[0]]);
 });
 
 test('Throw error when no renderCardContent function is passed', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    expect(() => shallow(
-        <CardCollection {...fieldTypeDefaultProps} formInspector={formInspector} />
-    )).toThrow(/"renderCardContent"/);
+    expect(() => new CardCollection(({
+        ...fieldTypeDefaultProps,
+        formInspector,
+    }: any))).toThrow(/"renderCardContent"/);
 });
 
 test('Throw error when no schema function is passed', () => {
@@ -330,7 +419,9 @@ test('Throw error when no schema function is passed', () => {
         renderCardContent: jest.fn(),
     };
 
-    expect(() => shallow(
-        <CardCollection {...fieldTypeDefaultProps} fieldTypeOptions={fieldTypeOptions} formInspector={formInspector} />
-    )).toThrow(/"schema"/);
+    expect(() => new CardCollection(({
+        ...fieldTypeDefaultProps,
+        fieldTypeOptions,
+        formInspector,
+    }: any))).toThrow(/"schema"/);
 });

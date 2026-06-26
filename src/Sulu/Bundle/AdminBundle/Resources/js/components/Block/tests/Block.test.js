@@ -9,9 +9,7 @@ jest.mock('loglevel', () => ({
     warn: jest.fn(),
 }));
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('../../../utils/Translator');
 
 test('Render an expanded block with multiple types', () => {
     const {container} = render(

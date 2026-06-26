@@ -5,9 +5,7 @@ import userEvent from '@testing-library/user-event';
 import Input from '../Input';
 import bindValueToOnChange from '../../../utils/TestHelper/bindValueToOnChange';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 test('Input should render', () => {
     const onChange = jest.fn();

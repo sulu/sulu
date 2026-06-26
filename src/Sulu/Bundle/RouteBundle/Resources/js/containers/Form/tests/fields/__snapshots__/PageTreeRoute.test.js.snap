@@ -1,131 +1,192 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Render a PageTreeRoute 1`] = `
-<div
-  class="grid"
->
+<div>
   <div
-    class="item colSpan colSpan-5 space-before-0 space-after-0"
+    class="grid"
   >
     <div
-      class="singleItemSelection"
+      class="item colSpan colSpan-5 space-before-0 space-after-0"
     >
-      <button
-        class="button left"
-        type="button"
-      >
-        <span
-          aria-label="su-document"
-          class="su-document icon"
-        />
-      </button>
       <div
-        class="itemContainer"
+        class="singleItemSelection"
       >
+        <button
+          class="button left"
+          type="button"
+        >
+          <span
+            aria-label="su-document"
+            class="su-document icon"
+          />
+        </button>
         <div
-          class="item"
-          role="button"
+          class="itemContainer"
         >
           <div
-            class="empty"
+            class="item"
+            role="button"
           >
-            sulu_page.no_page_selected
+            <div
+              class="empty"
+            >
+              sulu_page.no_page_selected
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div
-    class="item colSpan colSpan-7 space-before-0 space-after-0"
-  />
-</div>
-`;
-
-exports[`Render a PageTreeRoute 2`] = `
-<div
-  class="singleItemSelection"
->
-  <button
-    class="button left"
-    type="button"
-  >
-    <span
-      aria-label="su-document"
-      class="su-document icon"
-    />
-  </button>
-  <div
-    class="itemContainer"
-  >
     <div
-      class="item"
-      role="button"
+      class="item colSpan colSpan-7 space-before-0 space-after-0"
     >
       <div
-        class="itemContainer"
+        class="resourceLocator"
       >
-        <div
-          class="columnList"
+        <span
+          class="fixed"
         >
-          <span
-            class="itemColumn"
-            style="width: 100%;"
-          >
-            /test/uuid-uuid-uuid-uuid
-          </span>
+          /
+        </span>
+        <div
+          class="input default left"
+        >
+          <input
+            id="/"
+            type="text"
+            value="hello"
+          />
         </div>
       </div>
+      <div
+        class="buttonsContainer"
+      >
+        <button
+          class="button link hasText refreshButton"
+          disabled=""
+          type="button"
+        >
+          <span
+            aria-label="su-sync"
+            class="su-sync buttonIcon"
+          />
+          <span
+            class="buttonText"
+          >
+            sulu_admin.refresh_url
+          </span>
+        </button>
+        <button
+          class="button link hasText"
+          type="button"
+        >
+          <span
+            aria-label="su-process"
+            class="su-process buttonIcon"
+          />
+          <span
+            class="buttonText"
+          >
+            sulu_admin.show_history
+          </span>
+        </button>
+      </div>
     </div>
-    <button
-      class="removeButton"
-      type="button"
-    >
-      <span
-        aria-label="su-trash-alt"
-        class="su-trash-alt"
-      />
-    </button>
   </div>
 </div>
 `;
 
 exports[`Render a PageTreeRoute without value 1`] = `
-<div
-  class="grid"
->
+<div>
   <div
-    class="item colSpan colSpan-5 space-before-0 space-after-0"
+    class="grid"
   >
     <div
-      class="singleItemSelection"
+      class="item colSpan colSpan-5 space-before-0 space-after-0"
     >
-      <button
-        class="button left"
-        type="button"
-      >
-        <span
-          aria-label="su-document"
-          class="su-document icon"
-        />
-      </button>
       <div
-        class="itemContainer"
+        class="singleItemSelection"
       >
+        <button
+          class="button left"
+          type="button"
+        >
+          <span
+            aria-label="su-document"
+            class="su-document icon"
+          />
+        </button>
         <div
-          class="item"
-          role="button"
+          class="itemContainer"
         >
           <div
-            class="empty"
+            class="item"
+            role="button"
           >
-            sulu_page.no_page_selected
+            <div
+              class="empty"
+            >
+              sulu_page.no_page_selected
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <div
+      class="item colSpan colSpan-7 space-before-0 space-after-0"
+    >
+      <div
+        class="resourceLocator"
+      >
+        <span
+          class="fixed"
+        >
+          /
+        </span>
+        <div
+          class="input default left"
+        >
+          <input
+            id="/"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        class="buttonsContainer"
+      >
+        <button
+          class="button link hasText refreshButton"
+          disabled=""
+          type="button"
+        >
+          <span
+            aria-label="su-sync"
+            class="su-sync buttonIcon"
+          />
+          <span
+            class="buttonText"
+          >
+            sulu_admin.refresh_url
+          </span>
+        </button>
+        <button
+          class="button link hasText"
+          disabled=""
+          type="button"
+        >
+          <span
+            aria-label="su-process"
+            class="su-process buttonIcon"
+          />
+          <span
+            class="buttonText"
+          >
+            sulu_admin.show_history
+          </span>
+        </button>
+      </div>
+    </div>
   </div>
-  <div
-    class="item colSpan colSpan-7 space-before-0 space-after-0"
-  />
 </div>
 `;

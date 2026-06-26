@@ -1,68 +1,127 @@
 // @flow
 import React from 'react';
+import {render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {observable} from 'mobx';
-import {mount, shallow} from 'enzyme';
 import ListStore from '../../../containers/List/stores/ListStore';
-import ListOverlay from '../../../containers/ListOverlay';
 import MultiListOverlay from '../MultiListOverlay';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+let mockListOverlayProps: Object = {};
+let mockListStoreInstances: Array<Object> = [];
 
-const ExampleList = function ExampleList(props) {
-    return <div className={props.adapter ? props.className : null} />;
-};
+const mockReact = require('react');
 
-jest.mock('../../../containers/ListOverlay', () => jest.fn(function ListOverlay(props) {
-    return <ExampleList adapter={props.adapter} className="list" />;
+jest.mock('../../../utils/Translator');
+
+jest.mock('../../../containers/ListOverlay', () => jest.fn((props) => {
+    mockListOverlayProps = props;
+
+    return mockReact.createElement(
+        'div',
+        {
+            'data-adapter': props.adapter,
+            'data-open': props.open ? 'true' : 'false',
+            'data-testid': 'list-overlay',
+        },
+        mockReact.createElement(
+            'button',
+            {
+                'aria-label': 'confirm',
+                onClick: props.onConfirm,
+                type: 'button',
+            },
+            'Confirm'
+        ),
+        mockReact.createElement(
+            'button',
+            {
+                'aria-label': 'close',
+                onClick: props.onClose,
+                type: 'button',
+            },
+            'Close'
+        )
+    );
 }));
 
 jest.mock('../../../containers/List/stores/ListStore', () => jest.fn(
-    function(resourceKey, listKey, userSettingsKey, observableOptions, options) {
+    function(resourceKey, listKey, userSettingsKey, observableOptions, options, metadataOptions, initialSelectionIds) {
         this.resourceKey = resourceKey;
         this.listKey = listKey;
         this.userSettingsKey = userSettingsKey;
         this.options = options;
+        this.metadataOptions = metadataOptions;
         this.observableOptions = observableOptions;
+        this.initialSelectionIds = initialSelectionIds;
         this.select = jest.fn();
         this.clear = jest.fn();
         this.reset = jest.fn();
+        this.destroy = jest.fn();
         this.selections = [];
         this.selectionIds = [];
+
+        mockListStoreInstances.push(this);
     }
 ));
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    mockListOverlayProps = {};
+    mockListStoreInstances = [];
+});
+
+function renderMultiListOverlay(props: Object = {}) {
+    return render(
+        <MultiListOverlay
+            adapter="table"
+            listKey="snippets"
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            resourceKey="snippets"
+            title="Selection"
+            {...props}
+        />
+    );
+}
+
+function getListStore() {
+    return mockListStoreInstances[0];
+}
 
 test('Should instantiate the ListStore with locale, excluded-ids and options', () => {
     const locale = observable.box('en');
     const options = {};
 
-    const multiListOverlay = shallow(
-        <MultiListOverlay
-            adapter="table"
-            excludedIds={['id-1', 'id-2']}
-            listKey="snippets_list"
-            locale={locale}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={false}
-            options={options}
-            resourceKey="snippets"
-            title="Selection"
-        />
-    );
+    renderMultiListOverlay({
+        excludedIds: ['id-1', 'id-2'],
+        listKey: 'snippets_list',
+        locale,
+        options,
+    });
 
-    expect(multiListOverlay.instance().listStore.listKey).toEqual('snippets_list');
-    expect(multiListOverlay.instance().listStore.resourceKey).toEqual('snippets');
-    expect(multiListOverlay.instance().listStore.observableOptions.locale.get()).toEqual('en');
-    expect(multiListOverlay.instance().listStore.observableOptions.excludedIds.get()).toEqual(['id-1', 'id-2']);
-    expect(multiListOverlay.instance().listStore.options).toBe(options);
+    expect(getListStore().listKey).toEqual('snippets_list');
+    expect(getListStore().resourceKey).toEqual('snippets');
+    expect(getListStore().observableOptions.locale.get()).toEqual('en');
+    expect(getListStore().observableOptions.excludedIds.get()).toEqual(['id-1', 'id-2']);
+    expect(getListStore().options).toBe(options);
 });
 
-test('Should update options of ListStore if the options prop is changed', () => {
+test('Should update options of ListStore if the options prop is changed', async() => {
     const oldOptions = {key: 'value-1'};
 
-    const multiListOverlay = shallow(
+    const {rerender} = renderMultiListOverlay({
+        excludedIds: ['id-1', 'id-2'],
+        listKey: 'snippets_list',
+        locale: observable.box('en'),
+        options: oldOptions,
+    });
+    getListStore().selectionIds = [12, 14];
+
+    expect(getListStore().reset).not.toHaveBeenCalled();
+    expect(getListStore().options).toEqual(oldOptions);
+
+    rerender(
         <MultiListOverlay
             adapter="table"
             excludedIds={['id-1', 'id-2']}
@@ -71,30 +130,30 @@ test('Should update options of ListStore if the options prop is changed', () => 
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={false}
-            options={oldOptions}
+            options={{key: 'value-2'}}
             resourceKey="snippets"
             title="Selection"
         />
     );
-    multiListOverlay.instance().listStore.selectionIds = [12, 14];
 
-    expect(multiListOverlay.instance().listStore.reset).not.toHaveBeenCalled();
-    expect(multiListOverlay.instance().listStore.options).toEqual(oldOptions);
-
-    const newOptions = {key: 'value-2'};
-    multiListOverlay.setProps({
-        options: newOptions,
-    });
-
-    expect(multiListOverlay.instance().listStore.reset).toHaveBeenCalled();
-    expect(multiListOverlay.instance().listStore.initialSelectionIds).toEqual([12, 14]);
-    expect(multiListOverlay.instance().listStore.options).toEqual(newOptions);
+    await waitFor(() => expect(getListStore().reset).toHaveBeenCalled());
+    expect(getListStore().initialSelectionIds).toEqual([12, 14]);
+    expect(getListStore().options).toEqual({key: 'value-2'});
 });
 
 test('Should not update options of ListStore if new value of options prop is equal to old value', () => {
     const oldOptions = {key: 'value-1'};
 
-    const multiListOverlay = shallow(
+    const {rerender} = renderMultiListOverlay({
+        excludedIds: ['id-1', 'id-2'],
+        listKey: 'snippets_list',
+        locale: observable.box('en'),
+        options: oldOptions,
+    });
+
+    expect(getListStore().reset).not.toHaveBeenCalled();
+
+    rerender(
         <MultiListOverlay
             adapter="table"
             excludedIds={['id-1', 'id-2']}
@@ -103,27 +162,28 @@ test('Should not update options of ListStore if new value of options prop is equ
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={false}
-            options={oldOptions}
+            options={{key: 'value-1'}}
             resourceKey="snippets"
             title="Selection"
         />
     );
 
-    expect(multiListOverlay.instance().listStore.reset).not.toHaveBeenCalled();
-
-    const newOldOptions = {key: 'value-1'};
-    multiListOverlay.setProps({
-        options: newOldOptions,
-    });
-
-    expect(multiListOverlay.instance().listStore.reset).not.toHaveBeenCalled();
+    expect(getListStore().reset).not.toHaveBeenCalled();
 });
 
-test('Should clear ListStore if the excludedIds prop is changed', () => {
-    const multiListOverlay = shallow(
+test('Should clear ListStore if the excludedIds prop is changed', async() => {
+    const {rerender} = renderMultiListOverlay({
+        excludedIds: ['id-1', 'id-2'],
+        listKey: 'snippets_list',
+        locale: observable.box('en'),
+    });
+
+    expect(getListStore().clear).not.toHaveBeenCalled();
+
+    rerender(
         <MultiListOverlay
             adapter="table"
-            excludedIds={['id-1', 'id-2']}
+            excludedIds={['id-3']}
             listKey="snippets_list"
             locale={observable.box('en')}
             onClose={jest.fn()}
@@ -134,17 +194,19 @@ test('Should clear ListStore if the excludedIds prop is changed', () => {
         />
     );
 
-    expect(multiListOverlay.instance().listStore.clear).not.toHaveBeenCalled();
-
-    multiListOverlay.setProps({
-        excludedIds: ['id-3'],
-    });
-
-    expect(multiListOverlay.instance().listStore.clear).toHaveBeenCalled();
+    await waitFor(() => expect(getListStore().clear).toHaveBeenCalled());
 });
 
 test('Should not clear ListStore if new value of excludedIds prop is equal to old value', () => {
-    const multiListOverlay = shallow(
+    const {rerender} = renderMultiListOverlay({
+        excludedIds: ['id-1', 'id-2'],
+        listKey: 'snippets_list',
+        locale: observable.box('en'),
+    });
+
+    expect(getListStore().clear).not.toHaveBeenCalled();
+
+    rerender(
         <MultiListOverlay
             adapter="table"
             excludedIds={['id-1', 'id-2']}
@@ -158,217 +220,106 @@ test('Should not clear ListStore if new value of excludedIds prop is equal to ol
         />
     );
 
-    expect(multiListOverlay.instance().listStore.clear).not.toHaveBeenCalled();
-
-    multiListOverlay.setProps({
-        excludedIds: ['id-1', 'id-2'],
-    });
-
-    expect(multiListOverlay.instance().listStore.clear).not.toHaveBeenCalled();
+    expect(getListStore().clear).not.toHaveBeenCalled();
 });
 
 test('Should instantiate the ListStore without locale, excluded-ids and options', () => {
-    const multiListOverlay = shallow(
-        <MultiListOverlay
-            adapter="table"
-            listKey="snippets"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={false}
-            resourceKey="snippets"
-            title="Selection"
-        />
-    );
+    renderMultiListOverlay();
 
-    expect(multiListOverlay.instance().listStore.observableOptions.locale).toEqual(undefined);
-    expect(multiListOverlay.instance().listStore.observableOptions.excludedIds.get()).toEqual(undefined);
+    expect(getListStore().observableOptions.locale).toEqual(undefined);
+    expect(getListStore().observableOptions.excludedIds.get()).toEqual(undefined);
 });
 
 test('Should pass overlayType overlay by default', () => {
-    const multiListOverlay = shallow(
-        <MultiListOverlay
-            adapter="table"
-            allowActivateForDisabledItems={true}
-            listKey="snippets"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={false}
-            resourceKey="snippets"
-            title="Selection"
-        />
-    );
+    renderMultiListOverlay({allowActivateForDisabledItems: true});
 
-    expect(multiListOverlay.find(ListOverlay).prop('overlayType')).toEqual('overlay');
+    expect(mockListOverlayProps.overlayType).toEqual('overlay');
 });
 
 test('Should pass overlayType dialog if it is set via props', () => {
-    const multiListOverlay = shallow(
-        <MultiListOverlay
-            adapter="table"
-            allowActivateForDisabledItems={true}
-            listKey="snippets"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={false}
-            overlayType="dialog"
-            resourceKey="snippets"
-            title="Selection"
-        />
-    );
+    renderMultiListOverlay({
+        allowActivateForDisabledItems: true,
+        overlayType: 'dialog',
+    });
 
-    expect(multiListOverlay.find(ListOverlay).prop('overlayType')).toEqual('dialog');
+    expect(mockListOverlayProps.overlayType).toEqual('dialog');
 });
 
 test('Should pass disabledIds to the ListOverlay', () => {
     const disabledIds = [1, 2, 5];
 
-    const multiListOverlay = shallow(
-        <MultiListOverlay
-            adapter="table"
-            allowActivateForDisabledItems={true}
-            disabledIds={disabledIds}
-            listKey="snippets"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={false}
-            resourceKey="snippets"
-            title="Selection"
-        />
-    );
+    renderMultiListOverlay({
+        allowActivateForDisabledItems: true,
+        disabledIds,
+    });
 
-    expect(multiListOverlay.find(ListOverlay).prop('disabledIds')).toBe(disabledIds);
-    expect(multiListOverlay.find(ListOverlay).prop('allowActivateForDisabledItems')).toEqual(true);
+    expect(mockListOverlayProps.disabledIds).toBe(disabledIds);
+    expect(mockListOverlayProps.allowActivateForDisabledItems).toEqual(true);
 });
 
 test('Should pass reloadOnOpen to the ListOverlay', () => {
-    const multiListOverlay = shallow(
-        <MultiListOverlay
-            adapter="table"
-            allowActivateForDisabledItems={false}
-            listKey="snippets"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={false}
-            reloadOnOpen={true}
-            resourceKey="snippets"
-            title="Selection"
-        />
-    );
+    renderMultiListOverlay({reloadOnOpen: true});
 
-    expect(multiListOverlay.find(ListOverlay).prop('reloadOnOpen')).toEqual(true);
+    expect(mockListOverlayProps.reloadOnOpen).toEqual(true);
 });
 
 test('Should pass clearSelectionOnClose to the ListOverlay', () => {
-    const multiListOverlay = shallow(
-        <MultiListOverlay
-            adapter="table"
-            allowActivateForDisabledItems={false}
-            clearSelectionOnClose={true}
-            listKey="snippets"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={false}
-            resourceKey="snippets"
-            title="Selection"
-        />
-    );
+    renderMultiListOverlay({clearSelectionOnClose: true});
 
-    expect(multiListOverlay.find(ListOverlay).prop('clearSelectionOnClose')).toEqual(true);
+    expect(mockListOverlayProps.clearSelectionOnClose).toEqual(true);
 });
 
 test('Should pass allowActivateForDisabledItems to the ListOverlay', () => {
     const disabledIds = [1, 2, 5];
 
-    const multiListOverlay = shallow(
-        <MultiListOverlay
-            adapter="table"
-            allowActivateForDisabledItems={false}
-            disabledIds={disabledIds}
-            listKey="snippets"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={false}
-            resourceKey="snippets"
-            title="Selection"
-        />
-    );
+    renderMultiListOverlay({
+        allowActivateForDisabledItems: false,
+        disabledIds,
+    });
 
-    expect(multiListOverlay.find(ListOverlay).prop('disabledIds')).toBe(disabledIds);
-    expect(multiListOverlay.find(ListOverlay).prop('allowActivateForDisabledItems')).toEqual(false);
+    expect(mockListOverlayProps.disabledIds).toBe(disabledIds);
+    expect(mockListOverlayProps.allowActivateForDisabledItems).toEqual(false);
 });
 
 test('Should pass itemDisabledCondition to the ListOverlay', () => {
-    const multiListOverlay = shallow(
-        <MultiListOverlay
-            adapter="table"
-            itemDisabledCondition='status == "inactive"'
-            listKey="snippets"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={false}
-            resourceKey="snippets"
-            title="Selection"
-        />
-    );
+    renderMultiListOverlay({itemDisabledCondition: 'status == "inactive"'});
 
-    expect(multiListOverlay.find(ListOverlay).prop('itemDisabledCondition')).toBe('status == "inactive"');
+    expect(mockListOverlayProps.itemDisabledCondition).toBe('status == "inactive"');
 });
 
 test('Should pass confirmLoading flag to the ListOverlay', () => {
-    const multiListOverlay = shallow(
-        <MultiListOverlay
-            adapter="table"
-            confirmLoading={true}
-            listKey="snippets"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            preSelectedItems={[{}]}
-            resourceKey="snippets"
-            title="Test"
-        />
-    );
+    renderMultiListOverlay({
+        confirmLoading: true,
+        open: true,
+        preSelectedItems: [{}],
+        title: 'Test',
+    });
 
-    expect(multiListOverlay.find(ListOverlay).prop('confirmLoading')).toEqual(true);
+    expect(mockListOverlayProps.confirmLoading).toEqual(true);
 });
 
-test('Should call onConfirm with the current selection', () => {
+test('Should call onConfirm with the current selection', async() => {
     const confirmSpy = jest.fn();
-    const multiListOverlay = mount(
-        <MultiListOverlay
-            adapter="table"
-            listKey="snippets"
-            onClose={jest.fn()}
-            onConfirm={confirmSpy}
-            open={true}
-            preSelectedItems={[{id: 1}, {id: 2}, {id: 3}]}
-            resourceKey="snippets"
-            title="Selection"
-        />
-    );
 
-    const listStore = multiListOverlay.instance().listStore;
-    listStore.selections = [{id: 1}, {id: 2}];
+    renderMultiListOverlay({
+        onConfirm: confirmSpy,
+        open: true,
+        preSelectedItems: [{id: 1}, {id: 2}, {id: 3}],
+    });
+
+    getListStore().selections = [{id: 1}, {id: 2}];
 
     expect(confirmSpy).not.toHaveBeenCalled();
-    multiListOverlay.find(ListOverlay).prop('onConfirm')();
+    await userEvent.click(screen.getByLabelText('confirm'));
 
     expect(confirmSpy).toHaveBeenCalledWith([{id: 1}, {id: 2}]);
 });
 
 test('Should select the preSelectedItems in the ListStore', () => {
-    shallow(
-        <MultiListOverlay
-            adapter="table"
-            listKey="snippets"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            preSelectedItems={[{id: 1}, {id: 2}, {id: 3}]}
-            resourceKey="snippets"
-            title="Selection"
-        />
-    );
+    renderMultiListOverlay({
+        open: true,
+        preSelectedItems: [{id: 1}, {id: 2}, {id: 3}],
+    });
 
     expect(ListStore).toHaveBeenCalledWith(
         'snippets',
@@ -382,19 +333,11 @@ test('Should select the preSelectedItems in the ListStore', () => {
 });
 
 test('Should not add the preSelectedItems to the ListStore if preloadSelectedItems is set to false', () => {
-    shallow(
-        <MultiListOverlay
-            adapter="table"
-            listKey="snippets"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            preloadSelectedItems={false}
-            preSelectedItems={[{id: 1}, {id: 2}, {id: 3}]}
-            resourceKey="snippets"
-            title="Selection"
-        />
-    );
+    renderMultiListOverlay({
+        open: true,
+        preloadSelectedItems: false,
+        preSelectedItems: [{id: 1}, {id: 2}, {id: 3}],
+    });
 
     expect(ListStore).toHaveBeenCalledWith(
         'snippets',
@@ -408,47 +351,26 @@ test('Should not add the preSelectedItems to the ListStore if preloadSelectedIte
 });
 
 test('Should not fail when preSelectedItems is undefined', () => {
-    const multiListOverlay = shallow(
-        <MultiListOverlay
-            adapter="table"
-            listKey="snippets"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            resourceKey="snippets"
-            title="Selection"
-        />
-    );
+    renderMultiListOverlay({open: true});
 
-    const listStore = multiListOverlay.instance().listStore;
-
-    expect(listStore.select).not.toHaveBeenCalled();
+    expect(getListStore().select).not.toHaveBeenCalled();
 });
 
 test('Should instantiate the list with the passed adapter', () => {
-    const multiListOverlay1 = mount(
-        <MultiListOverlay
-            adapter="table"
-            listKey="snippets"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            resourceKey="snippets"
-            title="test"
-        />
-    );
-    expect(multiListOverlay1.find(ListOverlay).prop('adapter')).toEqual('table');
+    const {unmount} = renderMultiListOverlay({
+        adapter: 'table',
+        open: true,
+        title: 'test',
+    });
 
-    const multiListOverlay2 = mount(
-        <MultiListOverlay
-            adapter="column_list"
-            listKey="snippets"
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            resourceKey="snippets"
-            title="test"
-        />
-    );
-    expect(multiListOverlay2.find(ListOverlay).prop('adapter')).toEqual('column_list');
+    expect(mockListOverlayProps.adapter).toEqual('table');
+    unmount();
+
+    renderMultiListOverlay({
+        adapter: 'column_list',
+        open: true,
+        title: 'test',
+    });
+
+    expect(mockListOverlayProps.adapter).toEqual('column_list');
 });

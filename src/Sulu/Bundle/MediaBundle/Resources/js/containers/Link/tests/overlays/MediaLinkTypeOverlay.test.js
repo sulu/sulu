@@ -1,18 +1,17 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {render} from '@testing-library/react';
+import {findElementByType, renderWithRef} from 'sulu-admin-bundle/utils/TestHelper';
 import MediaLinkTypeOverlay from '../../overlays/MediaLinkTypeOverlay';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('../../../SingleMediaSelectionOverlay', () => jest.fn(function() {
     return <div>single media selection overlay</div>;
 }));
 
 test('Render overlay with minimal config', () => {
-    const mediaLinkTypeOverlay = mount(
+    const {instance: mediaLinkTypeOverlay} = renderWithRef(
         <MediaLinkTypeOverlay
             href={undefined}
             onCancel={jest.fn()}
@@ -28,11 +27,11 @@ test('Render overlay with minimal config', () => {
         />
     );
 
-    expect(mediaLinkTypeOverlay.find('Form').render()).toMatchSnapshot();
+    expect(render(findElementByType(mediaLinkTypeOverlay.render(), 'Form')).container).toMatchSnapshot();
 });
 
 test('Render overlay with invalid href type', () => {
-    expect(() => shallow(
+    expect(() => renderWithRef(
         <MediaLinkTypeOverlay
             href="1234"
             onCancel={jest.fn()}
@@ -50,7 +49,7 @@ test('Render overlay with invalid href type', () => {
 });
 
 test('Render overlay with anchor enabled', () => {
-    const mediaLinkTypeOverlay = mount(
+    const {instance: mediaLinkTypeOverlay} = renderWithRef(
         <MediaLinkTypeOverlay
             href={undefined}
             onAnchorChange={jest.fn()}
@@ -67,11 +66,11 @@ test('Render overlay with anchor enabled', () => {
         />
     );
 
-    expect(mediaLinkTypeOverlay.find('Form').render()).toMatchSnapshot();
+    expect(render(findElementByType(mediaLinkTypeOverlay.render(), 'Form')).container).toMatchSnapshot();
 });
 
 test('Render overlay with target enabled', () => {
-    const mediaLinkTypeOverlay = mount(
+    const {instance: mediaLinkTypeOverlay} = renderWithRef(
         <MediaLinkTypeOverlay
             href={undefined}
             onCancel={jest.fn()}
@@ -88,11 +87,11 @@ test('Render overlay with target enabled', () => {
         />
     );
 
-    expect(mediaLinkTypeOverlay.find('Form').render()).toMatchSnapshot();
+    expect(render(findElementByType(mediaLinkTypeOverlay.render(), 'Form')).container).toMatchSnapshot();
 });
 
 test('Render overlay with title enabled', () => {
-    const mediaLinkTypeOverlay = mount(
+    const {instance: mediaLinkTypeOverlay} = renderWithRef(
         <MediaLinkTypeOverlay
             href={undefined}
             onCancel={jest.fn()}
@@ -109,13 +108,13 @@ test('Render overlay with title enabled', () => {
         />
     );
 
-    expect(mediaLinkTypeOverlay.find('Form').render()).toMatchSnapshot();
+    expect(render(findElementByType(mediaLinkTypeOverlay.render(), 'Form')).container).toMatchSnapshot();
 });
 
 test('Delegate only id to onHrefChange method', () => {
     const hrefChangeSpy = jest.fn();
 
-    const mediaLinkTypeOverlay = mount(
+    const {instance: mediaLinkTypeOverlay} = renderWithRef(
         <MediaLinkTypeOverlay
             href={undefined}
             onCancel={jest.fn()}
@@ -132,6 +131,6 @@ test('Delegate only id to onHrefChange method', () => {
         />
     );
 
-    mediaLinkTypeOverlay.find('SingleMediaSelection').get(0).props.onChange({id: 1}, undefined);
+    findElementByType(mediaLinkTypeOverlay.render(), 'SingleMediaSelection').props.onChange({id: 1}, undefined);
     expect(hrefChangeSpy).toHaveBeenCalledWith(1, undefined);
 });

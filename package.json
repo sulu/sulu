@@ -42,7 +42,6 @@
         "@testing-library/jest-dom": "^5.17.0",
         "@testing-library/react": "^12.1.5",
         "@testing-library/user-event": "^14.5.2",
-        "@wojtekmaj/enzyme-adapter-react-17": "^0.6.1",
         "autoprefixer": "^10.4.7",
         "babel-jest": "^30.2.0",
         "babel-loader": "^9.1.0",
@@ -52,8 +51,6 @@
         "css-minimizer-webpack-plugin": "^8.0.0",
         "dependency-cruiser": "^16.2.0",
         "empty": "^0.10.1",
-        "enzyme": "^3.3.0",
-        "enzyme-to-json": "^3.3.1",
         "eslint": "^8.20.0",
         "eslint-plugin-babel": "^5.3.0",
         "eslint-plugin-flowtype": "^8.0.3",
@@ -107,9 +104,6 @@
         ],
         "setupFilesAfterEnv": [
             "./tests/js/testSetup.config.js"
-        ],
-        "snapshotSerializers": [
-            "enzyme-to-json/serializer"
         ],
         "snapshotFormat": {
             "escapeString": true,

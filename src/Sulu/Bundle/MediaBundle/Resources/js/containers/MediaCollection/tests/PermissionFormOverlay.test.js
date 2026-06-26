@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
 import {extendObservable as mockExtendObservable} from 'mobx';
-import {mount, shallow} from 'enzyme';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {memoryFormStoreFactory, ResourceFormStore} from 'sulu-admin-bundle/containers';
+import {findElementByType, renderWithRef} from 'sulu-admin-bundle/utils/TestHelper';
 import PermissionFormOverlay from '../PermissionFormOverlay';
 
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function() {
@@ -34,12 +34,10 @@ jest.mock('sulu-admin-bundle/containers/Form/stores/memoryFormStoreFactory', () 
     })),
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 test('Create new ResourceFormStore when collectionId has changed', () => {
-    const permissionFormOverlay = shallow(
+    const {rerender} = renderWithRef(
         <PermissionFormOverlay
             collectionId={1}
             hasChildren={true}
@@ -58,7 +56,15 @@ test('Create new ResourceFormStore when collectionId has changed', () => {
         undefined
     );
 
-    permissionFormOverlay.setProps({collectionId: 3});
+    rerender(
+        <PermissionFormOverlay
+            collectionId={3}
+            hasChildren={true}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+        />
+    );
 
     // $FlowFixMe
     expect(ResourceStore.mock.instances[0].destroy).toHaveBeenCalledWith();
@@ -77,7 +83,7 @@ test('Create new ResourceFormStore when collectionId has changed', () => {
 });
 
 test('Call destroy of created stores', () => {
-    const permissionFormOverlay = shallow(
+    const {instance, unmount} = renderWithRef(
         <PermissionFormOverlay
             collectionId={undefined}
             hasChildren={true}
@@ -87,14 +93,14 @@ test('Call destroy of created stores', () => {
         />
     );
 
-    const formStore = permissionFormOverlay.instance().formStore;
-    const resourceStore = permissionFormOverlay.instance().resourceStore;
-    const inheritDialogFormStore = permissionFormOverlay.instance().inheritDialogFormStore;
+    const formStore = instance.formStore;
+    const resourceStore = instance.resourceStore;
+    const inheritDialogFormStore = instance.inheritDialogFormStore;
     formStore.destroy = jest.fn();
     resourceStore.destroy = jest.fn();
     inheritDialogFormStore.destroy = jest.fn();
 
-    permissionFormOverlay.unmount();
+    unmount();
     expect(formStore.destroy).toHaveBeenCalledWith();
     expect(resourceStore.destroy).toHaveBeenCalledWith();
     expect(inheritDialogFormStore.destroy).toHaveBeenCalledWith();
@@ -103,7 +109,7 @@ test('Call destroy of created stores', () => {
 test('Confirming dialog should save the current value and inherit it', () => {
     const confirmSpy = jest.fn();
 
-    const permissionFormOverlay = mount(
+    const {instance: permissionFormOverlay} = renderWithRef(
         <PermissionFormOverlay
             collectionId={undefined}
             hasChildren={true}
@@ -114,24 +120,27 @@ test('Confirming dialog should save the current value and inherit it', () => {
     );
 
     const savePromise = Promise.resolve();
-    permissionFormOverlay.instance().resourceStore.save.mockReturnValue(savePromise);
+    permissionFormOverlay.resourceStore.save.mockReturnValue(savePromise);
 
-    permissionFormOverlay.update();
+    permissionFormOverlay.permissionFormRef = {
+        submit: jest.fn((options) => permissionFormOverlay.handleSubmitPermission(options)),
+    };
+    permissionFormOverlay.inheritDialogFormRef = {
+        submit: jest.fn(() => permissionFormOverlay.handleSubmitInherit()),
+    };
 
-    permissionFormOverlay.find('Overlay').prop('onConfirm')();
-    permissionFormOverlay.update();
+    findElementByType(permissionFormOverlay.render(), 'Overlay').props.onConfirm();
 
-    permissionFormOverlay.instance().inheritDialogFormStore.data.inherit = true;
-    permissionFormOverlay.find('Dialog').prop('onConfirm')();
+    permissionFormOverlay.inheritDialogFormStore.data.inherit = true;
+    findElementByType(permissionFormOverlay.render(), 'Dialog').props.onConfirm();
 
-    expect(permissionFormOverlay.instance().resourceStore.save).toHaveBeenCalledWith({
+    expect(permissionFormOverlay.resourceStore.save).toHaveBeenCalledWith({
         inherit: true,
         resourceKey: 'media',
     });
 
     expect(confirmSpy).not.toHaveBeenCalled();
     return savePromise.then(() => {
-        permissionFormOverlay.update();
         expect(confirmSpy).toHaveBeenCalledWith();
     });
 });
@@ -140,7 +149,7 @@ test('Cancel inherit dialog should not save anything', () => {
     const confirmSpy = jest.fn();
     const closeSpy = jest.fn();
 
-    const permissionFormOverlay = mount(
+    const {instance: permissionFormOverlay} = renderWithRef(
         <PermissionFormOverlay
             collectionId={undefined}
             hasChildren={true}
@@ -150,14 +159,11 @@ test('Cancel inherit dialog should not save anything', () => {
         />
     );
 
-    permissionFormOverlay.update();
+    findElementByType(permissionFormOverlay.render(), 'Overlay').props.onConfirm();
 
-    permissionFormOverlay.find('Overlay').prop('onConfirm')();
-    permissionFormOverlay.update();
+    findElementByType(permissionFormOverlay.render(), 'Dialog').props.onCancel();
 
-    permissionFormOverlay.find('Dialog').prop('onCancel')();
-
-    expect(permissionFormOverlay.instance().resourceStore.save).not.toHaveBeenCalled();
+    expect(permissionFormOverlay.resourceStore.save).not.toHaveBeenCalled();
 
     expect(confirmSpy).not.toHaveBeenCalled();
     expect(closeSpy).not.toHaveBeenCalled();
@@ -167,7 +173,7 @@ test.each([
     [true],
     [false],
 ])('Pass saving prop of value "%s" to confirmLoading prop of Overlay', (saving) => {
-    const permissionFormOverlay = shallow(
+    const {instance} = renderWithRef(
         <PermissionFormOverlay
             collectionId={1}
             hasChildren={true}
@@ -177,17 +183,16 @@ test.each([
         />
     );
 
-    permissionFormOverlay.instance().resourceStore.saving = saving;
-    permissionFormOverlay.update();
+    instance.resourceStore.saving = saving;
 
-    expect(permissionFormOverlay.find('Overlay').prop('confirmLoading')).toEqual(saving);
+    expect(findElementByType(instance.render(), 'Overlay').props.confirmLoading).toEqual(saving);
 });
 
 test.each([
     [true],
     [false],
 ])('Pass open prop of value "%s" to open prop of Overlay', (open) => {
-    const permissionFormOverlay = shallow(
+    const {instance} = renderWithRef(
         <PermissionFormOverlay
             collectionId={1}
             hasChildren={true}
@@ -197,5 +202,5 @@ test.each([
         />
     );
 
-    expect(permissionFormOverlay.find('Overlay').prop('open')).toEqual(open);
+    expect(findElementByType(instance.render(), 'Overlay').props.open).toEqual(open);
 });

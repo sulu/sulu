@@ -1,9 +1,8 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
-import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
+import {fieldTypeDefaultProps, findElementByType, renderWithRef} from 'sulu-admin-bundle/utils/TestHelper';
 import {observable} from 'mobx';
 import SingleMediaUpload from '../../fields/SingleMediaUpload';
 import SingleMediaUploadComponent from '../../../SingleMediaUpload';
@@ -51,7 +50,7 @@ test('Pass correct props', () => {
         },
     };
 
-    const singleMediaUpload = shallow(
+    const {instance: singleMediaUpload} = renderWithRef(
         <SingleMediaUpload
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -59,12 +58,13 @@ test('Pass correct props', () => {
             schemaOptions={schemaOptions}
         />
     );
+    const singleMediaUploadProps = findElementByType(singleMediaUpload.render(), SingleMediaUploadComponent).props;
 
-    expect(singleMediaUpload.prop('collectionId')).toEqual(3);
-    expect(singleMediaUpload.prop('emptyIcon')).toEqual('su-icon');
-    expect(singleMediaUpload.prop('imageSize')).toEqual('sulu-400x400-inset');
-    expect(singleMediaUpload.prop('uploadText')).toEqual('Drag and drop');
-    expect(singleMediaUpload.prop('disabled')).toEqual(true);
+    expect(singleMediaUploadProps.collectionId).toEqual(3);
+    expect(singleMediaUploadProps.emptyIcon).toEqual('su-icon');
+    expect(singleMediaUploadProps.imageSize).toEqual('sulu-400x400-inset');
+    expect(singleMediaUploadProps.uploadText).toEqual('Drag and drop');
+    expect(singleMediaUploadProps.disabled).toEqual(true);
 });
 
 test('Pass correct skin to props', () => {
@@ -85,7 +85,7 @@ test('Pass correct skin to props', () => {
         },
     };
 
-    const singleMediaUpload = shallow(
+    const {instance: singleMediaUpload} = renderWithRef(
         <SingleMediaUpload
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -93,7 +93,7 @@ test('Pass correct skin to props', () => {
         />
     );
 
-    expect(singleMediaUpload.prop('skin')).toEqual('round');
+    expect(findElementByType(singleMediaUpload.render(), SingleMediaUploadComponent).props.skin).toEqual('round');
 });
 
 test('Throw if emptyIcon is set but not a valid value', () => {
@@ -115,7 +115,7 @@ test('Throw if emptyIcon is set but not a valid value', () => {
     };
 
     expect(
-        () => shallow(
+        () => renderWithRef(
             <SingleMediaUpload
                 {...fieldTypeDefaultProps}
                 formInspector={formInspector}
@@ -144,7 +144,7 @@ test('Throw if skin is set but not a valid value', () => {
     };
 
     expect(
-        () => shallow(
+        () => renderWithRef(
             <SingleMediaUpload
                 {...fieldTypeDefaultProps}
                 formInspector={formInspector}
@@ -173,7 +173,7 @@ test('Throw if image_size is set but not a valid value', () => {
     };
 
     expect(
-        () => shallow(
+        () => renderWithRef(
             <SingleMediaUpload
                 {...fieldTypeDefaultProps}
                 formInspector={formInspector}
@@ -193,7 +193,7 @@ test('Throw if collectionId is not set', () => {
     const schemaOptions = {};
 
     expect(
-        () => shallow(
+        () => renderWithRef(
             <SingleMediaUpload
                 {...fieldTypeDefaultProps}
                 formInspector={formInspector}
@@ -220,7 +220,7 @@ test('Call onChange and onFinish when upload has completed', () => {
         },
     };
 
-    const singleMediaUpload = shallow(
+    const {instance: singleMediaUpload} = renderWithRef(
         <SingleMediaUpload
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -230,7 +230,7 @@ test('Call onChange and onFinish when upload has completed', () => {
         />
     );
 
-    singleMediaUpload.find(SingleMediaUploadComponent).simulate('uploadComplete', media);
+    findElementByType(singleMediaUpload.render(), SingleMediaUploadComponent).props.onUploadComplete(media);
 
     expect(changeSpy).toHaveBeenCalledWith(media);
     expect(finishSpy).toHaveBeenCalledWith();
@@ -249,7 +249,7 @@ test('Create a MediaUploadStore when constructed', () => {
             value: 2,
         },
     };
-    const singleMediaUpload = shallow(
+    const {instance: singleMediaUpload} = renderWithRef(
         <SingleMediaUpload
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -257,9 +257,9 @@ test('Create a MediaUploadStore when constructed', () => {
         />
     );
 
-    expect(singleMediaUpload.instance().mediaUploadStore).toBeInstanceOf(MediaUploadStore);
-    expect(singleMediaUpload.instance().mediaUploadStore.locale.get()).toEqual('en');
-    expect(singleMediaUpload.instance().mediaUploadStore.media).toEqual(undefined);
+    expect(singleMediaUpload.mediaUploadStore).toBeInstanceOf(MediaUploadStore);
+    expect(singleMediaUpload.mediaUploadStore.locale.get()).toEqual('en');
+    expect(singleMediaUpload.mediaUploadStore.media).toEqual(undefined);
 });
 
 test('Create MediaUploadStore with content-locale of user if locale is not present in form-inspector', () => {
@@ -275,7 +275,7 @@ test('Create MediaUploadStore with content-locale of user if locale is not prese
             value: 2,
         },
     };
-    const singleMediaUpload = shallow(
+    const {instance: singleMediaUpload} = renderWithRef(
         <SingleMediaUpload
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -283,8 +283,8 @@ test('Create MediaUploadStore with content-locale of user if locale is not prese
         />
     );
 
-    expect(singleMediaUpload.instance().mediaUploadStore).toBeInstanceOf(MediaUploadStore);
-    expect(singleMediaUpload.instance().mediaUploadStore.locale.get()).toEqual('userContentLocale');
+    expect(singleMediaUpload.mediaUploadStore).toBeInstanceOf(MediaUploadStore);
+    expect(singleMediaUpload.mediaUploadStore.locale.get()).toEqual('userContentLocale');
 });
 
 test('Create a MediaUploadStore when constructed with data', () => {
@@ -309,7 +309,7 @@ test('Create a MediaUploadStore when constructed with data', () => {
             value: 2,
         },
     };
-    const singleMediaUpload = shallow(
+    const {instance: singleMediaUpload} = renderWithRef(
         <SingleMediaUpload
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -318,6 +318,6 @@ test('Create a MediaUploadStore when constructed with data', () => {
         />
     );
 
-    expect(singleMediaUpload.instance().mediaUploadStore).toBeInstanceOf(MediaUploadStore);
-    expect(singleMediaUpload.instance().mediaUploadStore.media).toEqual(data);
+    expect(singleMediaUpload.mediaUploadStore).toBeInstanceOf(MediaUploadStore);
+    expect(singleMediaUpload.mediaUploadStore.media).toEqual(data);
 });

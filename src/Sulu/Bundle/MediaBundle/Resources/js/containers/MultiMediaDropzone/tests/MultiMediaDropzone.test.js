@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
 import {observable} from 'mobx';
-import {mount, render, shallow} from 'enzyme';
 import Mousetrap from 'mousetrap';
 import {SingleListOverlay} from 'sulu-admin-bundle/containers';
+import {findElementByType, renderWithRef} from 'sulu-admin-bundle/utils/TestHelper';
 import MultiMediaDropzone from '../MultiMediaDropzone';
 import MediaUploadStore from '../../../stores/MediaUploadStore';
 
@@ -14,9 +14,7 @@ beforeEach(() => {
     mockedMediaUploadStorePromises = [];
 });
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function() {
     this.create = jest.fn((_, file) => {
@@ -51,7 +49,7 @@ jest.mock('sulu-admin-bundle/containers/SingleListOverlay', () => jest.fn(functi
 }));
 
 test('Render a MultiMediaDropzone', () => {
-    expect(render(
+    const {container} = renderWithRef(
         <MultiMediaDropzone
             collectionId={3}
             locale={observable.box()}
@@ -63,11 +61,13 @@ test('Render a MultiMediaDropzone', () => {
         >
             <div />
         </MultiMediaDropzone>
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render the DropzoneOverlay when the open prop is set to true', () => {
-    const multiMediaDropzone = mount(
+    const {container} = renderWithRef(
         <MultiMediaDropzone
             collectionId={3}
             locale={observable.box()}
@@ -81,12 +81,11 @@ test('Render the DropzoneOverlay when the open prop is set to true', () => {
         </MultiMediaDropzone>
     );
 
-    expect(multiMediaDropzone.find('DropzoneOverlay')).toHaveLength(1);
-    expect(multiMediaDropzone.find('DropzoneOverlay').prop('open')).toBeTruthy();
+    expect(container).toMatchSnapshot();
 });
 
 test('Component pass correct props to Dropzone component', () => {
-    const multiMediaDropzone = shallow(
+    const {instance: multiMediaDropzone} = renderWithRef(
         <MultiMediaDropzone
             accept="application/json"
             collectionId={3}
@@ -102,7 +101,7 @@ test('Component pass correct props to Dropzone component', () => {
         </MultiMediaDropzone>
     );
 
-    expect(multiMediaDropzone.find('Dropzone').props()).toEqual(expect.objectContaining({
+    expect(findElementByType(multiMediaDropzone.render(), 'Dropzone').props).toEqual(expect.objectContaining({
         accept: {'application/json': []},
         disabled: false,
         noClick: true,
@@ -110,7 +109,7 @@ test('Component pass correct props to Dropzone component', () => {
 });
 
 test('Disable dropzone if disabled prop is set to true', () => {
-    const multiMediaDropzone = mount(
+    const {instance: multiMediaDropzone, rerender} = renderWithRef(
         <MultiMediaDropzone
             collectionId={3}
             disabled={false}
@@ -125,17 +124,30 @@ test('Disable dropzone if disabled prop is set to true', () => {
         </MultiMediaDropzone>
     );
 
-    expect(multiMediaDropzone.find('Dropzone').prop('disabled')).toBeFalsy();
+    expect(findElementByType(multiMediaDropzone.render(), 'Dropzone').props.disabled).toBeFalsy();
 
-    multiMediaDropzone.setProps({disabled: true});
+    rerender(
+        <MultiMediaDropzone
+            collectionId={3}
+            disabled={true}
+            locale={observable.box()}
+            onClose={jest.fn()}
+            onOpen={jest.fn()}
+            onUpload={jest.fn()}
+            onUploadError={jest.fn()}
+            open={true}
+        >
+            <div />
+        </MultiMediaDropzone>
+    );
 
-    expect(multiMediaDropzone.find('Dropzone').prop('disabled')).toBeTruthy();
+    expect(findElementByType(multiMediaDropzone.render(), 'Dropzone').props.disabled).toBeTruthy();
 });
 
 test('Render media item in dropzone overlay while it is being uploaded', () => {
     const locale = observable.box('en');
     const uploadSpy = jest.fn();
-    const multiMediaDropzone = mount(
+    const {instance: multiMediaDropzone} = renderWithRef(
         <MultiMediaDropzone
             collectionId={3}
             locale={locale}
@@ -153,10 +165,9 @@ test('Render media item in dropzone overlay while it is being uploaded', () => {
         new File([''], 'fileB'),
     ];
 
-    multiMediaDropzone.instance().handleDrop(files);
-    multiMediaDropzone.update();
+    multiMediaDropzone.handleDrop(files);
 
-    expect(multiMediaDropzone.find('DropzoneOverlay MediaItem')).toHaveLength(2);
+    expect(multiMediaDropzone.createMediaItems()).toHaveLength(2);
 });
 
 test('Should display overlay for selecting collection when file is dropped and no collectionId is given', () => {
@@ -164,7 +175,7 @@ test('Should display overlay for selecting collection when file is dropped and n
     const uploadSpy = jest.fn();
     const closeSpy = jest.fn();
 
-    const multiMediaDropzone = shallow(
+    const {instance: multiMediaDropzone} = renderWithRef(
         <MultiMediaDropzone
             collectionId={undefined}
             locale={locale}
@@ -178,16 +189,16 @@ test('Should display overlay for selecting collection when file is dropped and n
         </MultiMediaDropzone>
     );
 
-    expect(multiMediaDropzone.find(SingleListOverlay).prop('open')).toBeFalsy();
+    expect(findElementByType(multiMediaDropzone.render(), SingleListOverlay).props.open).toBeFalsy();
 
     const files = [
         new File([''], 'fileA'),
         new File([''], 'fileB'),
     ];
-    multiMediaDropzone.find('Dropzone').props().onDrop(files);
+    findElementByType(multiMediaDropzone.render(), 'Dropzone').props.onDrop(files);
 
     expect(MediaUploadStore).not.toHaveBeenCalled();
-    expect(multiMediaDropzone.find(SingleListOverlay).prop('open')).toBeTruthy();
+    expect(findElementByType(multiMediaDropzone.render(), SingleListOverlay).props.open).toBeTruthy();
 });
 
 test('Should upload media after selecting collection in overlay when file is dropped without collectionId', () => {
@@ -195,7 +206,7 @@ test('Should upload media after selecting collection in overlay when file is dro
     const uploadSpy = jest.fn();
     const closeSpy = jest.fn();
 
-    const multiMediaDropzone = shallow(
+    const {instance: multiMediaDropzone} = renderWithRef(
         <MultiMediaDropzone
             collectionId={undefined}
             locale={locale}
@@ -212,19 +223,19 @@ test('Should upload media after selecting collection in overlay when file is dro
     const files = [
         new File([''], 'fileA'),
     ];
-    multiMediaDropzone.find('Dropzone').props().onDrop(files);
-    multiMediaDropzone.find(SingleListOverlay).prop('onConfirm')({id: 1234});
+    findElementByType(multiMediaDropzone.render(), 'Dropzone').props.onDrop(files);
+    findElementByType(multiMediaDropzone.render(), SingleListOverlay).props.onConfirm({id: 1234});
 
     // $FlowFixMe
     const mediaUploadStore1 = MediaUploadStore.mock.instances[0];
     expect(mediaUploadStore1.create).toHaveBeenCalledWith(1234, files[0]);
-    expect(multiMediaDropzone.instance().mediaUploadStores.length).toBe(1);
+    expect(multiMediaDropzone.mediaUploadStores.length).toBe(1);
 
     return Promise.allSettled(mockedMediaUploadStorePromises).then(() => {
         jest.runAllTimers();
 
         expect(uploadSpy).toHaveBeenCalledWith([{id: 123}]);
-        expect(multiMediaDropzone.instance().mediaUploadStores.length).toBe(0);
+        expect(multiMediaDropzone.mediaUploadStores.length).toBe(0);
         expect(closeSpy).toHaveBeenCalled();
     });
 });
@@ -234,7 +245,7 @@ test('Should not upload media when closing overlay for selecting collection afte
     const uploadSpy = jest.fn();
     const closeSpy = jest.fn();
 
-    const multiMediaDropzone = shallow(
+    const {instance: multiMediaDropzone} = renderWithRef(
         <MultiMediaDropzone
             collectionId={undefined}
             locale={locale}
@@ -251,15 +262,15 @@ test('Should not upload media when closing overlay for selecting collection afte
     const files = [
         new File([''], 'fileA'),
     ];
-    multiMediaDropzone.find('Dropzone').props().onDrop(files);
+    findElementByType(multiMediaDropzone.render(), 'Dropzone').props.onDrop(files);
 
     expect(MediaUploadStore).not.toHaveBeenCalled();
-    expect(multiMediaDropzone.find(SingleListOverlay).prop('open')).toBeTruthy();
+    expect(findElementByType(multiMediaDropzone.render(), SingleListOverlay).props.open).toBeTruthy();
 
-    multiMediaDropzone.find(SingleListOverlay).prop('onClose')();
+    findElementByType(multiMediaDropzone.render(), SingleListOverlay).props.onClose();
 
     expect(MediaUploadStore).not.toHaveBeenCalled();
-    expect(multiMediaDropzone.find(SingleListOverlay).prop('open')).toBeFalsy();
+    expect(findElementByType(multiMediaDropzone.render(), SingleListOverlay).props.open).toBeFalsy();
 });
 
 test('Should upload media when collectionId is set and file is dropped into the dropzone', () => {
@@ -267,7 +278,7 @@ test('Should upload media when collectionId is set and file is dropped into the 
     const uploadSpy = jest.fn();
     const closeSpy = jest.fn();
 
-    const multiMediaDropzone = shallow(
+    const {instance: multiMediaDropzone} = renderWithRef(
         <MultiMediaDropzone
             collectionId={3}
             locale={locale}
@@ -284,7 +295,7 @@ test('Should upload media when collectionId is set and file is dropped into the 
         new File([''], 'fileA'),
         new File([''], 'fileB'),
     ];
-    multiMediaDropzone.find('Dropzone').props().onDrop(files);
+    findElementByType(multiMediaDropzone.render(), 'Dropzone').props.onDrop(files);
 
     // $FlowFixMe
     const mediaUploadStore1 = MediaUploadStore.mock.instances[0];
@@ -293,7 +304,7 @@ test('Should upload media when collectionId is set and file is dropped into the 
 
     expect(mediaUploadStore1.create).toHaveBeenCalledWith(3, files[0]);
     expect(mediaUploadStore2.create).toHaveBeenCalledWith(3, files[1]);
-    expect(multiMediaDropzone.instance().mediaUploadStores.length).toBe(2);
+    expect(multiMediaDropzone.mediaUploadStores.length).toBe(2);
 
     expect(closeSpy).not.toHaveBeenCalled();
 
@@ -304,7 +315,7 @@ test('Should upload media when collectionId is set and file is dropped into the 
             {id: 123},
             {id: 123},
         ]);
-        expect(multiMediaDropzone.instance().mediaUploadStores.length).toBe(0);
+        expect(multiMediaDropzone.mediaUploadStores.length).toBe(0);
         expect(closeSpy).toHaveBeenCalledWith();
     });
 });
@@ -314,7 +325,7 @@ test('Should fire onClose and onUploadError callback if an error happens when up
     const uploadErrorSpy = jest.fn();
     const closeSpy = jest.fn();
 
-    const multiMediaDropzone = shallow(
+    const {instance: multiMediaDropzone} = renderWithRef(
         <MultiMediaDropzone
             collectionId={3}
             locale={locale}
@@ -328,7 +339,7 @@ test('Should fire onClose and onUploadError callback if an error happens when up
         </MultiMediaDropzone>
     );
 
-    multiMediaDropzone.find('Dropzone').props().onDrop([
+    findElementByType(multiMediaDropzone.render(), 'Dropzone').props.onDrop([
         new File([''], 'fileA'),
         new File([''], 'invalid-file'),
         new File([''], 'invalid-file'),
@@ -340,7 +351,7 @@ test('Should fire onClose and onUploadError callback if an error happens when up
         jest.runAllTimers();
 
         expect(closeSpy).toHaveBeenCalledWith();
-        expect(multiMediaDropzone.instance().mediaUploadStores.length).toBe(0);
+        expect(multiMediaDropzone.mediaUploadStores.length).toBe(0);
         expect(uploadErrorSpy).toHaveBeenCalledWith(
             [
                 {
@@ -360,7 +371,7 @@ test('Should fire close callback when escape button is pressed', () => {
     const locale = observable.box('en');
     const closeSpy = jest.fn();
 
-    mount(
+    renderWithRef(
         <MultiMediaDropzone
             collectionId={3}
             locale={locale}

@@ -4,9 +4,7 @@ import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Snackbar from '../Snackbar';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 test('Render an error snackbar', () => {
     const {container} = render(<Snackbar message="Something went wrong" onCloseClick={jest.fn()} type="error" />);

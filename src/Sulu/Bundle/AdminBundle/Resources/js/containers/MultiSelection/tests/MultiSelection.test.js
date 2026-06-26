@@ -1,238 +1,358 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {act, render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import MultiSelection from '../MultiSelection';
 import MultiSelectionStore from '../../../stores/MultiSelectionStore';
-import MultiItemSelection from '../../../components/MultiItemSelection';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
+let mockMultiListOverlayProps: Object = {};
+let mockMultiItemSelectionProps: Object = {};
+let mockMultiItemSelectionItemProps: Array<Object> = [];
+let mockMultiSelectionStoreInstances: Array<Object> = [];
+let mockPublishIndicatorProps: Array<Object> = [];
+let mockOverlaySelectedItems: Array<Object> = [];
+
+const mockReact = require('react');
+
+jest.mock('../../../utils/Translator');
+
+jest.mock('../../../components/CroppedText', () => jest.fn((props) => (
+    mockReact.createElement('span', {}, props.children)
+)));
+
+jest.mock('../../../components/PublishIndicator', () => jest.fn((props) => {
+    mockPublishIndicatorProps.push(props);
+
+    return mockReact.createElement(
+        'div',
+        {
+            'data-draft': props.draft ? 'true' : 'false',
+            'data-published': props.published ? 'true' : 'false',
+            'data-testid': 'publish-indicator',
+        }
+    );
 }));
 
-jest.mock('../../../containers/List', () => function List() {
-    return <div className="list" />;
+jest.mock('../../../components/MultiItemSelection', () => {
+    const MultiItemSelectionMock: any = jest.fn((props) => {
+        mockMultiItemSelectionProps = props;
+
+        const children = mockReact.Children.map(props.children, (child) => (
+            mockReact.cloneElement(child, {
+                onClick: props.onItemClick,
+                onRemove: props.onItemRemove,
+                sortable: props.sortable,
+            })
+        ));
+
+        return mockReact.createElement(
+            'div',
+            {
+                'data-disabled': props.disabled ? 'true' : 'false',
+                'data-testid': 'multi-item-selection',
+            },
+            mockReact.createElement(
+                'button',
+                {
+                    'aria-label': 'left-button',
+                    disabled: props.disabled,
+                    onClick: props.leftButton.onClick,
+                    type: 'button',
+                },
+                props.leftButton.icon
+            ),
+            props.label && mockReact.createElement('span', {}, props.label),
+            mockReact.createElement(
+                'button',
+                {
+                    'aria-label': 'sort',
+                    onClick: () => props.onItemsSorted(1, 2),
+                    type: 'button',
+                },
+                'Sort'
+            ),
+            children
+        );
+    });
+
+    MultiItemSelectionMock.Item = jest.fn((props) => {
+        mockMultiItemSelectionItemProps.push(props);
+
+        return mockReact.createElement(
+            'div',
+            {
+                'data-allow-remove-while-disabled': props.allowRemoveWhileDisabled ? 'true' : 'false',
+                'data-disabled': props.disabled ? 'true' : 'false',
+                'data-testid': 'multi-item',
+            },
+            mockReact.createElement(
+                'button',
+                {
+                    'aria-label': 'item-' + props.id,
+                    onClick: () => props.onClick && props.onClick(props.id, props.value),
+                    type: 'button',
+                },
+                props.id
+            ),
+            mockReact.createElement(
+                'button',
+                {
+                    'aria-label': 'remove-' + props.id,
+                    onClick: () => props.onRemove && props.onRemove(props.id),
+                    type: 'button',
+                },
+                'Remove'
+            ),
+            props.children
+        );
+    });
+
+    return MultiItemSelectionMock;
 });
 
-jest.mock('../../../containers/List/stores/ListStore', () => jest.fn(
-    function(resourceKey, listKey, userSettingsKey, observableOptions) {
-        this.clearSelection = jest.fn();
-        this.destroy = jest.fn();
-        this.resourceKey = resourceKey;
-        this.listKey = listKey;
-        this.observableOptions = observableOptions;
-        this.select = jest.fn();
-        this.setActive = jest.fn();
-        this.clear = jest.fn();
+jest.mock('../../MultiListOverlay', () => jest.fn((props) => {
+    mockMultiListOverlayProps = props;
 
-        mockExtendObservable(this, {
-            selections: [],
-        });
-    }
-));
-
-jest.mock('../../../stores/MultiSelectionStore', () => jest.fn(function() {
-    this.set = jest.fn();
-    this.move = jest.fn();
-    this.removeById = jest.fn();
-    this.loadItems = jest.fn();
-    this.setRequestParameters = jest.fn();
-
-    mockExtendObservable(this, {
-        items: [],
-    });
+    return mockReact.createElement(
+        'div',
+        {
+            'data-open': props.open ? 'true' : 'false',
+            'data-testid': 'multi-list-overlay',
+        },
+        mockReact.createElement(
+            'button',
+            {
+                'aria-label': 'overlay-close',
+                onClick: props.onClose,
+                type: 'button',
+            },
+            'Close'
+        ),
+        mockReact.createElement(
+            'button',
+            {
+                'aria-label': 'overlay-confirm',
+                onClick: () => props.onConfirm(mockOverlaySelectedItems),
+                type: 'button',
+            },
+            'Confirm'
+        )
+    );
 }));
+
+jest.mock('../../../stores/MultiSelectionStore', () => jest.fn());
 
 beforeEach(() => {
-    const body = document.body;
+    jest.clearAllMocks();
+    mockMultiListOverlayProps = {};
+    mockMultiItemSelectionProps = {};
+    mockMultiItemSelectionItemProps = [];
+    mockMultiSelectionStoreInstances = [];
+    mockPublishIndicatorProps = [];
+    mockOverlaySelectedItems = [{id: 3}, {id: 7}, {id: 2}];
 
-    if (body) {
-        body.innerHTML = '';
-    }
+    (MultiSelectionStore: any).mockImplementation(function(resourceKey, value, locale, idFilterParameter, options) {
+        createMultiSelectionStoreMock(this, resourceKey, value, locale, idFilterParameter, options, []);
+    });
 });
 
-test('Show with passed icon and label and open overlay', () => {
-    // $FlowFixMe
-    MultiSelectionStore.mockImplementationOnce(function() {
-        this.items = [{id: 1, title: 'Title 1'}, {id: 2, title: 'Title 2'}, {id: 5, title: 'Title 5'}];
-        this.loadItems = jest.fn();
+function createMultiSelectionStoreMock(
+    store,
+    resourceKey,
+    value,
+    locale,
+    idFilterParameter,
+    options,
+    items
+) {
+    store.resourceKey = resourceKey;
+    store.value = value;
+    store.locale = locale;
+    store.idFilterParameter = idFilterParameter;
+    store.options = options;
+    store.set = jest.fn((items) => {
+        store.items = items;
+    });
+    store.move = jest.fn();
+    store.removeById = jest.fn();
+    store.loadItems = jest.fn();
+    store.setRequestParameters = jest.fn();
+
+    mockExtendObservable(store, {
+        items,
+        loading: false,
     });
 
-    const selection = mount(
+    mockMultiSelectionStoreInstances.push(store);
+}
+
+function mockMultiSelectionStore(items: Array<Object>) {
+    (MultiSelectionStore: any).mockImplementationOnce(function(resourceKey, value, locale, idFilterParameter, options) {
+        createMultiSelectionStoreMock(this, resourceKey, value, locale, idFilterParameter, options, items);
+    });
+}
+
+function renderMultiSelection(props: Object = {}) {
+    return render(
         <MultiSelection
             adapter="table"
-            displayProperties={['id', 'title']}
-            icon="su-document"
-            label="Select Snippets"
             listKey="snippets"
             onChange={jest.fn()}
             overlayTitle="Selection"
             resourceKey="snippets"
+            {...props}
         />
     );
+}
 
-    selection.find('Button[icon="su-document"]').simulate('click');
+function getSelectionStore() {
+    return mockMultiSelectionStoreInstances[0];
+}
 
-    expect(selection.render()).toMatchSnapshot();
+function setStoreItems(items: Array<Object>) {
+    act(() => {
+        (getSelectionStore(): any).items = items;
+    });
+}
+
+function getLatestItemProps(id) {
+    const itemProps = mockMultiItemSelectionItemProps.filter((props) => props.id === id);
+
+    return itemProps[itemProps.length - 1];
+}
+
+test('Show with passed icon and label and open overlay', async() => {
+    mockMultiSelectionStore([{id: 1, title: 'Title 1'}, {id: 2, title: 'Title 2'}, {id: 5, title: 'Title 5'}]);
+
+    renderMultiSelection({
+        displayProperties: ['id', 'title'],
+        icon: 'su-document',
+        label: 'Select Snippets',
+    });
+
+    await userEvent.click(screen.getByLabelText('left-button'));
+
+    expect(screen.getByText('Select Snippets')).toBeInTheDocument();
+    expect(screen.getByText('Title 1')).toBeInTheDocument();
+    expect(screen.getByText('Title 2')).toBeInTheDocument();
+    expect(screen.getByText('Title 5')).toBeInTheDocument();
+    expect(mockMultiListOverlayProps.open).toEqual(true);
 });
 
 test('Pass correct props to MultiItemSelection component', () => {
-    const multiSelection = mount(
-        <MultiSelection
-            adapter="table"
-            disabled={true}
-            listKey="snippets"
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-            sortable={false}
-        />
-    );
+    renderMultiSelection({
+        disabled: true,
+        overlayTitle: 'Selection',
+        sortable: false,
+    });
 
-    expect(multiSelection.find('MultiItemSelection').prop('disabled')).toEqual(true);
-    expect(multiSelection.find('MultiItemSelection').prop('sortable')).toEqual(false);
+    expect(mockMultiItemSelectionProps.disabled).toEqual(true);
+    expect(mockMultiItemSelectionProps.sortable).toEqual(false);
 });
 
 test('Render with disabled item', () => {
-    // $FlowFixMe
-    MultiSelectionStore.mockImplementationOnce(function() {
-        this.items = [
-            {id: 1},
-            {id: 2},
-        ];
+    mockMultiSelectionStore([
+        {id: 1},
+        {id: 2},
+    ]);
+
+    renderMultiSelection({
+        disabledIds: [2, 4],
+        resourceKey: 'pages',
+        value: [1, 2],
     });
 
-    const multiSelection = mount(
-        <MultiSelection
-            adapter="table"
-            disabledIds={[2, 4]}
-            listKey="snippets"
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="pages"
-            value={[1, 5, 8]}
-        />
-    );
-
-    expect(multiSelection.find('Item').at(0).prop('disabled')).toEqual(false);
-    expect(multiSelection.find('Item').at(1).prop('disabled')).toEqual(true);
+    expect(getLatestItemProps(1).disabled).toEqual(false);
+    expect(getLatestItemProps(2).disabled).toEqual(true);
 });
 
 test('Pass locale to MultiListOverlay', () => {
     const locale = observable.box('de');
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            listKey="snippets"
-            locale={locale}
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-        />
-    );
 
-    expect(selection.find('MultiListOverlay').prop('locale').get()).toEqual('de');
+    renderMultiSelection({locale});
+
+    expect(mockMultiListOverlayProps.locale.get()).toEqual('de');
 });
 
 test('Pass options to MultiListOverlay', () => {
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            listKey="snippets"
-            onChange={jest.fn()}
-            options={{types: 'test'}}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-        />
-    );
+    renderMultiSelection({options: {types: 'test'}});
 
-    expect(selection.find('MultiListOverlay').prop('options')).toEqual({types: 'test'});
+    expect(mockMultiListOverlayProps.options).toEqual({types: 'test'});
 });
 
 test('Pass disabledIds to MultiListOverlay', () => {
     const disabledIds = [1, 2, 4];
 
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            disabledIds={disabledIds}
-            listKey="snippets"
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-        />
-    );
+    renderMultiSelection({disabledIds});
 
-    expect(selection.find('MultiListOverlay').prop('disabledIds')).toEqual(disabledIds);
+    expect(mockMultiListOverlayProps.disabledIds).toEqual(disabledIds);
 });
 
 test('Pass itemDisabledCondition to MultiListOverlay', () => {
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            itemDisabledCondition='status == "inactive"'
-            listKey="snippets"
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-        />
-    );
+    renderMultiSelection({itemDisabledCondition: 'status == "inactive"'});
 
-    expect(selection.find('MultiListOverlay').prop('itemDisabledCondition')).toEqual('status == "inactive"');
+    expect(mockMultiListOverlayProps.itemDisabledCondition).toEqual('status == "inactive"');
 });
 
 test('Construct MultiSelectionStore with correct parameters', () => {
     const locale = observable.box('en');
 
-    shallow(
-        <MultiSelection
-            adapter="table"
-            displayProperties={['id', 'title']}
-            listKey="snippets"
-            locale={locale}
-            onChange={jest.fn()}
-            options={{key: 'value-1'}}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-            value={[1, 2, 5]}
-        />
-    );
+    renderMultiSelection({
+        displayProperties: ['id', 'title'],
+        locale,
+        options: {key: 'value-1'},
+        value: [1, 2, 5],
+    });
 
     expect(MultiSelectionStore).toHaveBeenCalledWith('snippets', [1, 2, 5], locale, 'ids', {key: 'value-1'});
 });
 
-test('Update requestParameters and reload items of MultiSelectionStore when options prop is changed', () => {
+test('Update requestParameters and reload items of MultiSelectionStore when options prop is changed', async() => {
     const locale = observable.box('en');
 
-    const selection = shallow(
+    const {rerender} = renderMultiSelection({
+        displayProperties: ['id', 'title'],
+        locale,
+        options: {key: 'value-1'},
+        value: [1, 2, 5],
+    });
+
+    expect((getSelectionStore(): any).setRequestParameters).not.toHaveBeenCalled();
+    expect((getSelectionStore(): any).loadItems).not.toHaveBeenCalled();
+
+    rerender(
         <MultiSelection
             adapter="table"
             displayProperties={['id', 'title']}
             listKey="snippets"
             locale={locale}
             onChange={jest.fn()}
-            options={{key: 'value-1'}}
+            options={{key: 'value-2'}}
             overlayTitle="Selection"
             resourceKey="snippets"
             value={[1, 2, 5]}
         />
     );
 
-    expect(selection.instance().selectionStore.setRequestParameters).not.toHaveBeenCalled();
-    expect(selection.instance().selectionStore.loadItems).not.toHaveBeenCalled();
-
-    selection.setProps({
-        options: {key: 'value-2'},
-    });
-
-    expect(selection.instance().selectionStore.setRequestParameters).toHaveBeenCalledWith({key: 'value-2'});
-    expect(selection.instance().selectionStore.loadItems).toHaveBeenCalledWith([1, 2, 5]);
+    await waitFor(() => expect((getSelectionStore(): any).setRequestParameters).toHaveBeenCalledWith({key: 'value-2'}));
+    expect((getSelectionStore(): any).loadItems).toHaveBeenCalledWith([1, 2, 5]);
 });
 
 test('Not reload items of MultiSelectionStore when new value of option prop is equal to old value', () => {
     const locale = observable.box('en');
 
-    const selection = shallow(
+    const {rerender} = renderMultiSelection({
+        displayProperties: ['id', 'title'],
+        locale,
+        options: {key: 'value-1'},
+        value: [],
+    });
+
+    expect((getSelectionStore(): any).setRequestParameters).not.toHaveBeenCalled();
+    expect((getSelectionStore(): any).loadItems).not.toHaveBeenCalled();
+
+    rerender(
         <MultiSelection
             adapter="table"
             displayProperties={['id', 'title']}
@@ -246,232 +366,138 @@ test('Not reload items of MultiSelectionStore when new value of option prop is e
         />
     );
 
-    expect(selection.instance().selectionStore.setRequestParameters).not.toHaveBeenCalled();
-    expect(selection.instance().selectionStore.loadItems).not.toHaveBeenCalled();
-
-    selection.setProps({
-        options: {key: 'value-1'},
-    });
-
-    expect(selection.instance().selectionStore.setRequestParameters).not.toHaveBeenCalled();
-    expect(selection.instance().selectionStore.loadItems).not.toHaveBeenCalled();
+    expect((getSelectionStore(): any).setRequestParameters).not.toHaveBeenCalled();
+    expect((getSelectionStore(): any).loadItems).not.toHaveBeenCalled();
 });
 
-test('Should not open an overlay on icon-click when disabled', () => {
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            disabled={true}
-            listKey="snippets"
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-        />
-    );
+test('Should not open an overlay on icon-click when disabled', async() => {
+    renderMultiSelection({disabled: true});
 
-    selection.find('Button[icon="su-plus"]').simulate('click');
-    selection.update();
-    expect(selection.find('MultiListOverlay').prop('open')).toEqual(false);
+    await userEvent.click(screen.getByLabelText('left-button'));
+
+    expect(mockMultiListOverlayProps.open).toEqual(false);
 });
 
-test('Should close an overlay using the close button', () => {
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            listKey="snippets"
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-        />
-    );
+test('Should close an overlay using the close button', async() => {
+    renderMultiSelection();
 
-    selection.find('Button[icon="su-plus"]').simulate('click');
+    await userEvent.click(screen.getByLabelText('left-button'));
+    await waitFor(() => expect(mockMultiListOverlayProps.open).toEqual(true));
 
-    const closeButton = document.querySelector('.su-times');
-    if (closeButton) {
-        closeButton.click();
-    }
+    await userEvent.click(screen.getByLabelText('overlay-close'));
 
-    selection.update();
-    expect(selection.find('MultiListOverlay').prop('open')).toEqual(false);
+    expect(mockMultiListOverlayProps.open).toEqual(false);
 });
 
-test('Should close an overlay using the confirm button', () => {
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            listKey="snippets"
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-        />
-    );
+test('Should close an overlay using the confirm button', async() => {
+    mockOverlaySelectedItems = [{id: 1}];
 
-    selection.find('Button[icon="su-plus"]').simulate('click');
-    const listStore = selection.find('MultiListOverlay').instance().listStore;
-    listStore.selections = [1];
+    renderMultiSelection();
 
-    const confirmButton = document.querySelector('button.primary');
-    if (confirmButton) {
-        confirmButton.click();
-    }
+    await userEvent.click(screen.getByLabelText('left-button'));
+    await userEvent.click(screen.getByLabelText('overlay-confirm'));
 
-    selection.update();
-    expect(selection.find('MultiListOverlay').prop('open')).toEqual(false);
+    expect(mockMultiListOverlayProps.open).toEqual(false);
 });
 
-test('Should call the onChange callback when clicking the confirm button', () => {
+test('Should call the onChange callback when clicking the confirm button', async() => {
     const changeSpy = jest.fn();
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            listKey="snippets"
-            onChange={changeSpy}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-        />
-    );
 
-    selection.find('Button[icon="su-plus"]').simulate('click');
-    const listStore = selection.find('MultiListOverlay').instance().listStore;
-    listStore.selections = [3, 7, 2];
+    renderMultiSelection({onChange: changeSpy});
 
-    const confirmButton = document.querySelector('button.primary');
-    if (confirmButton) {
-        confirmButton.click();
-    }
+    await userEvent.click(screen.getByLabelText('left-button'));
+    await userEvent.click(screen.getByLabelText('overlay-confirm'));
 
-    expect(selection.instance().selectionStore.set).toHaveBeenCalledWith([3, 7, 2]);
+    expect((getSelectionStore(): any).set).toHaveBeenCalledWith([{id: 3}, {id: 7}, {id: 2}]);
+    await waitFor(() => expect(changeSpy).toHaveBeenCalledWith([3, 7, 2]));
 });
 
 test('Should not call the onChange callback when items have not changed', () => {
     const changeSpy = jest.fn();
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            listKey="snippets"
-            onChange={changeSpy}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-            value={[1]}
-        />
-    );
+    mockMultiSelectionStore([{id: 1}]);
 
-    expect(changeSpy).not.toHaveBeenCalled();
+    renderMultiSelection({
+        onChange: changeSpy,
+        value: [1],
+    });
 
-    selection.instance().selectionStore.items = [{id: 1}];
-    selection.setProps({value: [1]});
     expect(changeSpy).not.toHaveBeenCalled();
 });
 
-test('Should call the onItemClick callback when an item was clicked', () => {
+test('Should call the onItemClick callback when an item was clicked', async() => {
     const itemClickSpy = jest.fn();
-
     const item1 = {id: 1, title: 'Title 1'};
     const item2 = {id: 2, title: 'Title 2'};
+    mockMultiSelectionStore([item1, item2]);
 
-    // $FlowFixMe
-    MultiSelectionStore.mockImplementationOnce(function() {
-        this.items = [
-            item1,
-            item2,
-        ];
-        this.loadItems = jest.fn();
+    renderMultiSelection({
+        displayProperties: ['id', 'title'],
+        icon: 'su-document',
+        label: 'Select Snippets',
+        onItemClick: itemClickSpy,
     });
 
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            displayProperties={['id', 'title']}
-            icon="su-document"
-            label="Select Snippets"
-            listKey="snippets"
-            onChange={jest.fn()}
-            onItemClick={itemClickSpy}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-        />
-    );
-
-    selection.find('.content').at(0).simulate('click');
+    await userEvent.click(screen.getByLabelText('item-1'));
     expect(itemClickSpy).toHaveBeenLastCalledWith(1, item1);
-    selection.find('.content').at(1).simulate('click');
+
+    await userEvent.click(screen.getByLabelText('item-2'));
     expect(itemClickSpy).toHaveBeenLastCalledWith(2, item2);
 });
 
 test('Should load the items if value prop changes', () => {
-    const changeSpy = jest.fn();
-    const selection = mount(
+    const {rerender} = renderMultiSelection({value: [1]});
+
+    rerender(
         <MultiSelection
             adapter="table"
             listKey="snippets"
-            onChange={changeSpy}
+            onChange={jest.fn()}
             overlayTitle="Selection"
             resourceKey="snippets"
-            value={[1]}
+            value={[1, 3]}
         />
     );
 
-    selection.setProps({value: [1, 3]});
-    expect(selection.instance().selectionStore.loadItems).toHaveBeenCalledWith([1, 3]);
+    expect((getSelectionStore(): any).loadItems).toHaveBeenCalledWith([1, 3]);
 });
 
-test('Should instantiate the ListStore with the correct resourceKey and destroy it on unmount', () => {
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            listKey="pages_list"
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="pages"
-        />
-    );
-
-    selection.find('Button[icon="su-plus"]').simulate('click');
-
-    const listStore = selection.find('MultiListOverlay').instance().listStore;
-    expect(listStore.listKey).toEqual('pages_list');
-    expect(listStore.resourceKey).toEqual('pages');
-
-    selection.unmount();
-    expect(listStore.destroy).toHaveBeenCalled();
-});
-
-test('Should instantiate the ListStore with the preselected ids', () => {
-    // $FlowFixMe
-    MultiSelectionStore.mockImplementationOnce(function() {
-        this.items = [{id: 1}, {id: 5}, {id: 8}];
+test('Pass listKey and resourceKey to MultiListOverlay', async() => {
+    renderMultiSelection({
+        listKey: 'pages_list',
+        resourceKey: 'pages',
     });
 
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            listKey="snippets"
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="pages"
-            value={[1, 5, 8]}
-        />
-    );
+    await userEvent.click(screen.getByLabelText('left-button'));
 
-    selection.find('Button[icon="su-plus"]').simulate('click');
-
-    const listStore = selection.find('MultiListOverlay').instance().listStore;
-    expect(listStore.select).toHaveBeenCalledWith({id: 1});
-    expect(listStore.select).toHaveBeenCalledWith({id: 5});
-    expect(listStore.select).toHaveBeenCalledWith({id: 8});
+    expect(mockMultiListOverlayProps.listKey).toEqual('pages_list');
+    expect(mockMultiListOverlayProps.resourceKey).toEqual('pages');
 });
 
-test('Should reinstantiate the ListStore with the preselected ids when new props are received', () => {
+test('Pass preselected items to MultiListOverlay', async() => {
+    const items = [{id: 1}, {id: 5}, {id: 8}];
+    mockMultiSelectionStore(items);
+
+    renderMultiSelection({
+        resourceKey: 'pages',
+        value: [1, 5, 8],
+    });
+
+    await userEvent.click(screen.getByLabelText('left-button'));
+
+    expect(mockMultiListOverlayProps.preSelectedItems).toEqual(items);
+});
+
+test('Should reload items when new props are received', () => {
     const locale = observable.box('en');
+    mockMultiSelectionStore([{id: 1}, {id: 5}, {id: 8}]);
 
-    // $FlowFixMe
-    MultiSelectionStore.mockImplementationOnce(function() {
-        this.items = [{id: 1}, {id: 5}, {id: 8}];
-        this.loadItems = jest.fn();
+    const {rerender} = renderMultiSelection({
+        locale,
+        resourceKey: 'pages',
+        value: [1, 5, 8],
     });
 
-    const selection = mount(
+    rerender(
         <MultiSelection
             adapter="table"
             listKey="snippets"
@@ -479,32 +505,24 @@ test('Should reinstantiate the ListStore with the preselected ids when new props
             onChange={jest.fn()}
             overlayTitle="Selection"
             resourceKey="pages"
-            value={[1, 5, 8]}
+            value={[1, 3]}
         />
     );
 
-    selection.find('Button[icon="su-plus"]').simulate('click');
-
-    const listStore = selection.find('MultiListOverlay').instance().listStore;
-    expect(listStore.select).toHaveBeenCalledWith({id: 1});
-    expect(listStore.select).toHaveBeenCalledWith({id: 5});
-    expect(listStore.select).toHaveBeenCalledWith({id: 8});
-
-    selection.setProps({value: [1, 3]});
-    const loadItemsCall = selection.instance().selectionStore.loadItems.mock.calls[0];
-    expect(loadItemsCall[0]).toEqual([1, 3]);
+    expect((getSelectionStore(): any).loadItems.mock.calls[0][0]).toEqual([1, 3]);
 });
 
 test('Should not reload items if none of the items changed', () => {
     const locale = observable.box('en');
+    mockMultiSelectionStore([{id: 1}, {id: 5}, {id: 8}]);
 
-    // $FlowFixMe
-    MultiSelectionStore.mockImplementationOnce(function() {
-        this.items = [{id: 1}, {id: 5}, {id: 8}];
-        this.loadItems = jest.fn();
+    const {rerender} = renderMultiSelection({
+        locale,
+        resourceKey: 'pages',
+        value: [1, 5, 8],
     });
 
-    const selection = mount(
+    rerender(
         <MultiSelection
             adapter="table"
             listKey="snippets"
@@ -516,27 +534,20 @@ test('Should not reload items if none of the items changed', () => {
         />
     );
 
-    selection.find('Button[icon="su-plus"]').simulate('click');
-
-    const listStore = selection.find('MultiListOverlay').instance().listStore;
-    expect(listStore.select).toHaveBeenCalledWith({id: 1});
-    expect(listStore.select).toHaveBeenCalledWith({id: 5});
-    expect(listStore.select).toHaveBeenCalledWith({id: 8});
-
-    selection.setProps({value: [1, 5, 8]});
-    expect(selection.instance().selectionStore.loadItems).not.toHaveBeenCalled();
+    expect((getSelectionStore(): any).loadItems).not.toHaveBeenCalled();
 });
 
 test('Should not reinstantiate the ListStore with the preselected ids when new props have the same values', () => {
     const locale = observable.box('en');
+    mockMultiSelectionStore([{id: 1}, {id: 5}, {id: 8}]);
 
-    // $FlowFixMe
-    MultiSelectionStore.mockImplementationOnce(function() {
-        this.items = [{id: 1}, {id: 5}, {id: 8}];
-        this.loadItems = jest.fn();
+    const {rerender} = renderMultiSelection({
+        locale,
+        resourceKey: 'pages',
+        value: [1, 5, 8],
     });
 
-    const selection = mount(
+    rerender(
         <MultiSelection
             adapter="table"
             listKey="snippets"
@@ -548,80 +559,59 @@ test('Should not reinstantiate the ListStore with the preselected ids when new p
         />
     );
 
-    selection.find('Button[icon="su-plus"]').simulate('click');
-
-    selection.setProps({value: [1, 5, 8]});
-    expect(selection.instance().selectionStore.loadItems).not.toHaveBeenCalled();
+    expect((getSelectionStore(): any).loadItems).not.toHaveBeenCalled();
 });
 
-test('Should remove an item when the remove button is clicked', () => {
-    const changeSpy = jest.fn();
-    const selection = shallow(
-        <MultiSelection
-            adapter="table"
-            listKey="snippets"
-            onChange={changeSpy}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-            value={[3, 7, 9]}
-        />
-    );
+test('Should remove an item when the remove button is clicked', async() => {
+    mockMultiSelectionStore([{id: 3}, {id: 7}, {id: 9}]);
 
-    selection.find('MultiItemSelection').prop('onItemRemove')(7);
-    expect(selection.instance().selectionStore.removeById).toHaveBeenCalledWith(7);
+    renderMultiSelection({value: [3, 7, 9]});
+
+    await userEvent.click(screen.getByLabelText('remove-7'));
+
+    expect((getSelectionStore(): any).removeById).toHaveBeenCalledWith(7);
 });
 
-test('Should reorder the items on drag and drop', () => {
-    const changeSpy = jest.fn();
-    const selection = shallow(
-        <MultiSelection
-            adapter="table"
-            listKey="snippets"
-            onChange={changeSpy}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-            value={[3, 7, 9]}
-        />
-    );
+test('Should reorder the items on drag and drop', async() => {
+    renderMultiSelection({value: [3, 7, 9]});
 
-    selection.find('MultiItemSelection').prop('onItemsSorted')(1, 2);
+    await userEvent.click(screen.getByLabelText('sort'));
 
-    expect(selection.instance().selectionStore.move).toHaveBeenCalledWith(1, 2);
+    expect((getSelectionStore(): any).move).toHaveBeenCalledWith(1, 2);
 });
 
-test('Should call the onChange callback if the value of the selection-store changes', () => {
+test('Should call the onChange callback if the value of the selection-store changes', async() => {
     const changeSpy = jest.fn();
 
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            listKey="snippets"
-            onChange={changeSpy}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-            value={[1]}
-        />
-    );
+    renderMultiSelection({
+        onChange: changeSpy,
+        value: [1],
+    });
 
-    selection.instance().selectionStore.items = [{id: 22}, {id: 23}];
-    expect(changeSpy).toHaveBeenCalledWith([22, 23]);
+    setStoreItems([{id: 22}, {id: 23}]);
+
+    await waitFor(() => expect(changeSpy).toHaveBeenCalledWith([22, 23]));
 });
 
 test('Should not call the onChange callback if the component props change', () => {
     const changeSpy = jest.fn();
 
-    const selection = mount(
+    const {rerender} = renderMultiSelection({
+        onChange: changeSpy,
+        value: [1],
+    });
+
+    rerender(
         <MultiSelection
             adapter="table"
             listKey="snippets"
             onChange={changeSpy}
-            overlayTitle="Selection"
+            overlayTitle="New Selection Title"
             resourceKey="snippets"
             value={[1]}
         />
     );
 
-    selection.setProps({overlayTitle: 'New Selection Title'});
     expect(changeSpy).not.toHaveBeenCalled();
 });
 
@@ -631,141 +621,98 @@ test('Should not call onChange callback if an unrelated observable that is acces
         jest.fn()(unrelatedObservable.get());
     });
 
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            listKey="snippets"
-            onChange={changeSpy}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-            value={[1]}
-        />
-    );
+    renderMultiSelection({
+        onChange: changeSpy,
+        value: [1],
+    });
 
-    // change callback should be called when item of the store mock changes
-    selection.instance().selectionStore.items = [{id: 22}, {id: 23}];
+    setStoreItems([{id: 22}, {id: 23}]);
     expect(changeSpy).toHaveBeenCalledWith([22, 23]);
     expect(changeSpy).toHaveBeenCalledTimes(1);
 
-    // change callback should not be called when the unrelated observable changes
-    unrelatedObservable.set(55);
+    act(() => {
+        unrelatedObservable.set(55);
+    });
+
     expect(changeSpy).toHaveBeenCalledTimes(1);
 });
 
 test('Should render selected item in disabled state if it fulfills passed itemDisabledCondition', () => {
-    // $FlowFixMe
-    MultiSelectionStore.mockImplementationOnce(function() {
-        this.items = [
-            {id: 1, status: 'active'},
-            {id: 2, status: 'inactive'},
-        ];
+    mockMultiSelectionStore([
+        {id: 1, status: 'active'},
+        {id: 2, status: 'inactive'},
+    ]);
+
+    renderMultiSelection({
+        itemDisabledCondition: 'status == "inactive"',
+        resourceKey: 'pages',
+        value: [1, 2],
     });
 
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            itemDisabledCondition='status == "inactive"'
-            listKey="snippets"
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="pages"
-            value={[1, 5, 8]}
-        />
-    );
-
-    expect(selection.find(MultiItemSelection.Item).at(0).prop('disabled')).toEqual(false);
-    expect(selection.find(MultiItemSelection.Item).at(1).prop('disabled')).toEqual(true);
+    expect(getLatestItemProps(1).disabled).toEqual(false);
+    expect(getLatestItemProps(2).disabled).toEqual(true);
 });
 
 test('Should render selected item in disabled state if passed disabledIds contain id of item', () => {
-    // $FlowFixMe
-    MultiSelectionStore.mockImplementationOnce(function() {
-        this.items = [
-            {id: 1},
-            {id: 2},
-        ];
+    mockMultiSelectionStore([
+        {id: 1},
+        {id: 2},
+    ]);
+
+    renderMultiSelection({
+        disabledIds: [2, 4],
+        resourceKey: 'pages',
+        value: [1, 2],
     });
 
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            disabledIds={[2, 4]}
-            listKey="snippets"
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="pages"
-            value={[1, 5, 8]}
-        />
-    );
-
-    expect(selection.find(MultiItemSelection.Item).at(0).prop('disabled')).toEqual(false);
-    expect(selection.find(MultiItemSelection.Item).at(1).prop('disabled')).toEqual(true);
+    expect(getLatestItemProps(1).disabled).toEqual(false);
+    expect(getLatestItemProps(2).disabled).toEqual(true);
 });
 
 test('Pass correct allowRemoveWhileDisabled prop to Item of MultiItemSelection', () => {
-    // $FlowFixMe
-    MultiSelectionStore.mockImplementationOnce(function() {
-        this.items = [
-            {id: 1},
-        ];
+    mockMultiSelectionStore([{id: 1}]);
+
+    renderMultiSelection({
+        allowDeselectForDisabledItems: true,
+        resourceKey: 'pages',
+        value: [1],
     });
 
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            allowDeselectForDisabledItems={true}
-            listKey="snippets"
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="pages"
-            value={[1, 5, 8]}
-        />
-    );
-
-    expect(selection.find(MultiItemSelection.Item).at(0).prop('allowRemoveWhileDisabled')).toEqual(true);
+    expect(getLatestItemProps(1).allowRemoveWhileDisabled).toEqual(true);
 });
 
 test('PublishIndicator should be rendered if necessary', () => {
-    // $FlowFixMe
-    MultiSelectionStore.mockImplementationOnce(function() {
-        this.items = [
-            {
-                id: 1, // Published
-                published: '2020-11-16',
-                publishedState: true,
-            },
-            {
-                id: 2, // Draft
-                published: '2020-11-16',
-                publishedState: false,
-            },
-            {
-                id: 3, // Unpublished
-                published: null,
-                publishedState: false,
-            },
-        ];
+    mockMultiSelectionStore([
+        {
+            id: 1,
+            published: '2020-11-16',
+            publishedState: true,
+        },
+        {
+            id: 2,
+            published: '2020-11-16',
+            publishedState: false,
+        },
+        {
+            id: 3,
+            published: null,
+            publishedState: false,
+        },
+    ]);
+
+    renderMultiSelection({
+        resourceKey: 'pages',
+        value: [1, 2, 3],
     });
 
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            listKey="pages"
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="pages"
-            value={[1, 2, 3]}
-        />
-    );
-
-    // Published
-    expect(selection.find(MultiItemSelection.Item).at(0).contains('PublishIndicator')).toBe(false);
-
-    // Draft
-    expect(selection.find(MultiItemSelection.Item).at(1).find('PublishIndicator').prop('draft')).toBe(true);
-    expect(selection.find(MultiItemSelection.Item).at(1).find('PublishIndicator').prop('published')).toBe(true);
-
-    // Unpublished
-    expect(selection.find(MultiItemSelection.Item).at(2).find('PublishIndicator').prop('draft')).toBe(true);
-    expect(selection.find(MultiItemSelection.Item).at(2).find('PublishIndicator').prop('published')).toBe(false);
+    expect(mockPublishIndicatorProps).toEqual([
+        expect.objectContaining({
+            draft: true,
+            published: true,
+        }),
+        expect.objectContaining({
+            draft: true,
+            published: false,
+        }),
+    ]);
 });

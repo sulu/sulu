@@ -1,22 +1,34 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import Number from '../../fields/Number';
-import NumberComponent from '../../../../components/Number';
+
+let mockNumberProps: Object = {};
+
+const mockReact = require('react');
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
+jest.mock('../../../../components/Number', () => jest.fn((props) => {
+    mockNumberProps = props;
+
+    return mockReact.createElement('input', {type: 'number'});
+}));
+
+beforeEach(() => {
+    mockNumberProps = {};
+});
 
 test('Pass error correctly to component', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const error = {keyword: 'minLength', parameters: {}};
 
-    const field = shallow(
+    render(
         <Number
             {...fieldTypeDefaultProps}
             error={error}
@@ -24,12 +36,12 @@ test('Pass error correctly to component', () => {
         />
     );
 
-    expect(field.find(NumberComponent).prop('valid')).toBe(false);
+    expect(mockNumberProps.valid).toBe(false);
 });
 
 test('Pass props correctly to component', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    const field = shallow(
+    render(
         <Number
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -37,8 +49,8 @@ test('Pass props correctly to component', () => {
         />
     );
 
-    expect(field.find(NumberComponent).prop('valid')).toBe(true);
-    expect(field.find(NumberComponent).prop('disabled')).toBe(true);
+    expect(mockNumberProps.valid).toBe(true);
+    expect(mockNumberProps.disabled).toBe(true);
 });
 
 test('Pass props correctly to component inclusive schemaOptions', () => {
@@ -58,7 +70,7 @@ test('Pass props correctly to component inclusive schemaOptions', () => {
         },
     };
 
-    const field = shallow(
+    render(
         <Number
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -66,17 +78,17 @@ test('Pass props correctly to component inclusive schemaOptions', () => {
         />
     );
 
-    expect(field.find(NumberComponent).prop('valid')).toBe(true);
-    expect(field.find(NumberComponent).prop('min')).toBe(50);
-    expect(field.find(NumberComponent).prop('max')).toBe(100);
-    expect(field.find(NumberComponent).prop('step')).toBe(10);
+    expect(mockNumberProps.valid).toBe(true);
+    expect(mockNumberProps.min).toBe(50);
+    expect(mockNumberProps.max).toBe(100);
+    expect(mockNumberProps.step).toBe(10);
 });
 
 test('Should not pass any arguments to onFinish callback', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const finishSpy = jest.fn();
 
-    const input = shallow(
+    render(
         <Number
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -84,7 +96,7 @@ test('Should not pass any arguments to onFinish callback', () => {
         />
     );
 
-    input.find('Number').prop('onBlur')('Test');
+    mockNumberProps.onBlur('Test');
 
     expect(finishSpy).toHaveBeenCalledWith();
 });

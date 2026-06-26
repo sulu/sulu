@@ -1,5 +1,4 @@
 // @flow
-import {mount} from 'enzyme';
 import log from 'loglevel';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceRequester from '../../../../services/ResourceRequester';
@@ -12,9 +11,7 @@ jest.mock('loglevel', () => ({
     warn: jest.fn(),
 }));
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../../utils/Translator');
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions) {
     this.id = id;
@@ -79,6 +76,16 @@ function createDeleteDraftToolbarAction(options = {}) {
     });
 
     return new DeleteDraftToolbarAction(formStore, form, router, [], options, resourceStore);
+}
+
+function getDialogProps(deleteDraftToolbarAction: any): Object {
+    const node = deleteDraftToolbarAction.getNode();
+
+    if (!node) {
+        throw new Error('The delete draft dialog node should be rendered.');
+    }
+
+    return node.props;
 }
 
 test('Return enabled item config', () => {
@@ -180,20 +187,20 @@ test('Close dialog when onClose from delete draft dialog is called', () => {
         throw new Error('An onClick callback should be registered on the delete draft option');
     }
 
-    let element = mount(deleteDraftToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    let dialogProps = getDialogProps(deleteDraftToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
         open: false,
     }));
 
     clickHandler();
-    element = mount(deleteDraftToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    dialogProps = getDialogProps(deleteDraftToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
         open: true,
     }));
 
-    element.prop('onCancel')();
-    element = mount(deleteDraftToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    dialogProps.onCancel();
+    dialogProps = getDialogProps(deleteDraftToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
         open: false,
     }));
 });
@@ -224,13 +231,13 @@ test('Delete draft when dialog is confirmed', () => {
         throw new Error('An onClick callback should be registered on the delete draft option');
     }
 
-    let element = mount(deleteDraftToolbarAction.getNode());
+    let dialogProps = getDialogProps(deleteDraftToolbarAction);
     clickHandler();
 
-    expect(element.prop('confirmLoading')).toEqual(false);
-    element.prop('onConfirm')();
-    element = mount(deleteDraftToolbarAction.getNode());
-    expect(element.prop('confirmLoading')).toEqual(true);
+    expect(dialogProps.confirmLoading).toEqual(false);
+    dialogProps.onConfirm();
+    dialogProps = getDialogProps(deleteDraftToolbarAction);
+    expect(dialogProps.confirmLoading).toEqual(true);
     expect(ResourceRequester.post).toHaveBeenCalledWith(
         'snippets',
         undefined,
@@ -238,9 +245,9 @@ test('Delete draft when dialog is confirmed', () => {
     );
 
     return deleteDraftPromise.then(() => {
-        element = mount(deleteDraftToolbarAction.getNode());
+        dialogProps = getDialogProps(deleteDraftToolbarAction);
         expect(deleteDraftToolbarAction.form.showSuccessSnackbar).toHaveBeenCalledWith();
-        expect(element.prop('confirmLoading')).toEqual(false);
+        expect(dialogProps.confirmLoading).toEqual(false);
         expect(deleteDraftToolbarAction.resourceFormStore.changeMultiple).toHaveBeenCalledWith(
             data,
             {isServerValue: true}

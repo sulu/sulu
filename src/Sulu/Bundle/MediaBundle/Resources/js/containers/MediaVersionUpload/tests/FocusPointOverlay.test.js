@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
+import {findElementByType, renderWithRef} from 'sulu-admin-bundle/utils/TestHelper';
 import FocusPointOverlay from '../FocusPointOverlay';
 
 jest.mock('sulu-admin-bundle/stores', () => ({
@@ -13,9 +13,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
     }),
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 test('Should not create a ResourceStore before overlay was opened', () => {
     const resourceStore = new ResourceStore('media');
@@ -25,7 +23,7 @@ test('Should not create a ResourceStore before overlay was opened', () => {
         focusPointY: undefined,
     };
 
-    shallow(
+    renderWithRef(
         <FocusPointOverlay
             onClose={jest.fn()}
             onConfirm={jest.fn()}
@@ -45,7 +43,7 @@ test('Should select the middle by default', () => {
         focusPointY: undefined,
     };
 
-    const focusPointOverlay = shallow(
+    const {instance: focusPointOverlay, rerender} = renderWithRef(
         <FocusPointOverlay
             onClose={jest.fn()}
             onConfirm={jest.fn()}
@@ -54,9 +52,16 @@ test('Should select the middle by default', () => {
         />
     );
 
-    focusPointOverlay.setProps({open: true});
+    rerender(
+        <FocusPointOverlay
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            resourceStore={resourceStore}
+        />
+    );
 
-    expect(focusPointOverlay.find('ImageFocusPoint').prop('value')).toEqual({x: 1, y: 1});
+    expect(findElementByType(focusPointOverlay.render(), 'ImageFocusPoint').props.value).toEqual({x: 1, y: 1});
 });
 
 test('Initialize with data from resourceStore when overlay opens', () => {
@@ -67,7 +72,7 @@ test('Initialize with data from resourceStore when overlay opens', () => {
         focusPointY: 1,
     };
 
-    const focusPointOverlay = shallow(
+    const {instance: focusPointOverlay, rerender} = renderWithRef(
         <FocusPointOverlay
             onClose={jest.fn()}
             onConfirm={jest.fn()}
@@ -76,12 +81,18 @@ test('Initialize with data from resourceStore when overlay opens', () => {
         />
     );
 
-    focusPointOverlay.instance().focusPointX = 0;
-    focusPointOverlay.instance().focusPointY = 0;
+    focusPointOverlay.focusPointX = 0;
+    focusPointOverlay.focusPointY = 0;
 
-    focusPointOverlay.setProps({open: true});
-    focusPointOverlay.update();
-    expect(focusPointOverlay.find('ImageFocusPoint').prop('value')).toEqual({x: 2, y: 1});
+    rerender(
+        <FocusPointOverlay
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            resourceStore={resourceStore}
+        />
+    );
+    expect(findElementByType(focusPointOverlay.render(), 'ImageFocusPoint').props.value).toEqual({x: 2, y: 1});
 });
 
 test('Closing the overlay should call the onClose callback', () => {
@@ -93,7 +104,7 @@ test('Closing the overlay should call the onClose callback', () => {
         focusPointY: 1,
     };
 
-    const focusPointOverlay = shallow(
+    const {instance: focusPointOverlay} = renderWithRef(
         <FocusPointOverlay
             onClose={closeSpy}
             onConfirm={jest.fn()}
@@ -102,7 +113,7 @@ test('Closing the overlay should call the onClose callback', () => {
         />
     );
 
-    focusPointOverlay.find('Overlay').prop('onClose')();
+    findElementByType(focusPointOverlay.render(), 'Overlay').props.onClose();
 
     expect(closeSpy).toHaveBeenCalledWith();
 });
@@ -120,7 +131,7 @@ test('Should save the focus point when confirm button is clicked', () => {
     const savePromise = Promise.resolve({});
     resourceStore.save.mockReturnValue(savePromise);
 
-    const focusPointOverlay = shallow(
+    const {instance: focusPointOverlay, rerender} = renderWithRef(
         <FocusPointOverlay
             onClose={jest.fn()}
             onConfirm={confirmSpy}
@@ -129,14 +140,21 @@ test('Should save the focus point when confirm button is clicked', () => {
         />
     );
 
-    focusPointOverlay.setProps({open: true});
+    rerender(
+        <FocusPointOverlay
+            onClose={jest.fn()}
+            onConfirm={confirmSpy}
+            open={true}
+            resourceStore={resourceStore}
+        />
+    );
 
-    expect(focusPointOverlay.find('Overlay').prop('confirmDisabled')).toEqual(true);
-    focusPointOverlay.find('ImageFocusPoint').prop('onChange')({x: 0, y: 2});
-    expect(focusPointOverlay.find('Overlay').prop('confirmDisabled')).toEqual(false);
-    focusPointOverlay.find('Overlay').prop('onConfirm')();
+    expect(findElementByType(focusPointOverlay.render(), 'Overlay').props.confirmDisabled).toEqual(true);
+    findElementByType(focusPointOverlay.render(), 'ImageFocusPoint').props.onChange({x: 0, y: 2});
+    expect(findElementByType(focusPointOverlay.render(), 'Overlay').props.confirmDisabled).toEqual(false);
+    findElementByType(focusPointOverlay.render(), 'Overlay').props.onConfirm();
 
-    const clonedResourceStore = focusPointOverlay.instance().resourceStore;
+    const clonedResourceStore = focusPointOverlay.resourceStore;
 
     expect(clonedResourceStore.change).toHaveBeenCalledWith('focusPointX', 0);
     expect(clonedResourceStore.change).toHaveBeenCalledWith('focusPointY', 2);

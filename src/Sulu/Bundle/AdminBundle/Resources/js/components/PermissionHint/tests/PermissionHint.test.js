@@ -3,9 +3,7 @@ import React from 'react';
 import {render} from '@testing-library/react';
 import PermissionHint from '../PermissionHint';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('../../../utils/Translator');
 
 test('Render PermissionHint', () => {
     const {container} = render(<PermissionHint />);
