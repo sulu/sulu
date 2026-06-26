@@ -13,6 +13,7 @@ namespace Sulu\Component\Persistence\Tests\Unit\EventSubscriber\ORM;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\FieldMapping;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Persistence\EventSubscriber\ORM\LegacyLengthSubscriber;
@@ -41,8 +42,7 @@ class LegacyLengthSubscriberTest extends TestCase
 
         $this->subscriber->loadClassMetadata($this->createEvent($metadata));
 
-        $webspaceMapping = $metadata->fieldMappings['webspace'];
-        $this->assertSame(32, is_array($webspaceMapping) ? $webspaceMapping['length'] : $webspaceMapping->length);
+        $this->assertSame(32, $this->getFieldLength($metadata->fieldMappings['webspace']));
     }
 
     public function testLoadClassMetadataWidensTemplateKeyField(): void
@@ -56,8 +56,21 @@ class LegacyLengthSubscriberTest extends TestCase
 
         $this->subscriber->loadClassMetadata($this->createEvent($metadata));
 
-        $templateKeyMapping = $metadata->fieldMappings['templateKey'];
-        $this->assertSame(64, is_array($templateKeyMapping) ? $templateKeyMapping['length'] : $templateKeyMapping->length);
+        $this->assertSame(64, $this->getFieldLength($metadata->fieldMappings['templateKey']));
+    }
+
+    /**
+     * @param array<string, mixed>|FieldMapping $fieldMapping
+     */
+    private function getFieldLength(array|FieldMapping $fieldMapping): ?int
+    {
+        if (\is_array($fieldMapping)) {
+            $length = $fieldMapping['length'];
+
+            return \is_int($length) ? $length : null;
+        }
+
+        return $fieldMapping->length;
     }
 
     /**
