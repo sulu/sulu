@@ -2,12 +2,15 @@
 import React from 'react';
 import log from 'loglevel';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
-import {mount, shallow} from 'enzyme';
-import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
+import {
+    createRouterMock,
+    fieldTypeDefaultProps,
+    findElementByType,
+    renderWithRef,
+} from 'sulu-admin-bundle/utils/TestHelper';
 import FormInspector from 'sulu-admin-bundle/containers/Form/FormInspector';
 import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/ResourceFormStore';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
-import Router from 'sulu-admin-bundle/services/Router';
 import MediaSelection from '../../fields/MediaSelection';
 import MultiMediaSelection from '../../../MultiMediaSelection';
 
@@ -46,9 +49,7 @@ jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(funct
     this.locale = formStore.locale;
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     contentLocale: 'userContentLocale',
@@ -62,7 +63,7 @@ test('Pass correct props to MultiMediaSelection component', () => {
         )
     );
 
-    const mediaSelection = shallow(
+    const {instance: mediaSelection} = renderWithRef(
         <MediaSelection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -70,12 +71,13 @@ test('Pass correct props to MultiMediaSelection component', () => {
             value={{displayOption: undefined, ids: [55, 66, 77]}}
         />
     );
+    const multiMediaSelectionProps = findElementByType(mediaSelection.render(), MultiMediaSelection).props;
 
-    expect(mediaSelection.find(MultiMediaSelection).props().displayOptions).toEqual([]);
-    expect(mediaSelection.find(MultiMediaSelection).props().disabled).toEqual(true);
-    expect(mediaSelection.find(MultiMediaSelection).props().sortable).toEqual(true);
-    expect(mediaSelection.find(MultiMediaSelection).props().locale.get()).toEqual('en');
-    expect(mediaSelection.find(MultiMediaSelection).props().value).toEqual({ids: [55, 66, 77]});
+    expect(multiMediaSelectionProps.displayOptions).toEqual([]);
+    expect(multiMediaSelectionProps.disabled).toEqual(true);
+    expect(multiMediaSelectionProps.sortable).toEqual(true);
+    expect(multiMediaSelectionProps.locale.get()).toEqual('en');
+    expect(multiMediaSelectionProps.value).toEqual({ids: [55, 66, 77]});
 });
 
 test('Pass content-locale of user to MultiMediaSelection if locale is not present in form-inspector', () => {
@@ -86,7 +88,7 @@ test('Pass content-locale of user to MultiMediaSelection if locale is not presen
         )
     );
 
-    const mediaSelection = shallow(
+    const {instance: mediaSelection} = renderWithRef(
         <MediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -94,7 +96,8 @@ test('Pass content-locale of user to MultiMediaSelection if locale is not presen
         />
     );
 
-    expect(mediaSelection.find(MultiMediaSelection).props().locale.get()).toEqual('userContentLocale');
+    expect(findElementByType(mediaSelection.render(), MultiMediaSelection).props.locale.get())
+        .toEqual('userContentLocale');
 });
 
 test('Set default display option if no value is passed', () => {
@@ -117,7 +120,7 @@ test('Set default display option if no value is passed', () => {
         )
     );
 
-    shallow(
+    renderWithRef(
         <MediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -149,7 +152,7 @@ test('Pass correct props for given schema-options to MultiMediaSelection compone
         )
     );
 
-    const mediaSelection = shallow(
+    const {instance: mediaSelection} = renderWithRef(
         <MediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -158,8 +161,8 @@ test('Pass correct props for given schema-options to MultiMediaSelection compone
         />
     );
 
-    expect(mediaSelection.find(MultiMediaSelection).props().types).toEqual(['image', 'video']);
-    expect(mediaSelection.find(MultiMediaSelection).props().sortable).toEqual(false);
+    expect(findElementByType(mediaSelection.render(), MultiMediaSelection).props.types).toEqual(['image', 'video']);
+    expect(findElementByType(mediaSelection.render(), MultiMediaSelection).props.sortable).toEqual(false);
 });
 
 test('Do not set default display option if value is passed', () => {
@@ -182,7 +185,7 @@ test('Do not set default display option if value is passed', () => {
         )
     );
 
-    shallow(
+    renderWithRef(
         <MediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -206,7 +209,7 @@ test('Should call onChange and onFinish if the selection changes', () => {
         )
     );
 
-    const mediaSelection = shallow(
+    const {instance: mediaSelection} = renderWithRef(
         <MediaSelection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -217,7 +220,7 @@ test('Should call onChange and onFinish if the selection changes', () => {
         />
     );
 
-    mediaSelection.find(MultiMediaSelection).props().onChange({ids: [33, 44]});
+    findElementByType(mediaSelection.render(), MultiMediaSelection).props.onChange({ids: [33, 44]});
 
     expect(changeSpy).toHaveBeenCalledWith({ids: [33, 44]});
     expect(finishSpy).toHaveBeenCalled();
@@ -234,9 +237,9 @@ test('Should navigate to media if a media is clicked', () => {
         )
     );
 
-    const router = new Router();
+    const router = createRouterMock();
 
-    const mediaSelection = mount(
+    const {instance: mediaSelection} = renderWithRef(
         <MediaSelection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -248,16 +251,11 @@ test('Should navigate to media if a media is clicked', () => {
         />
     );
 
-    mediaSelection.find('MultiMediaSelection').instance().mediaSelectionStore.items = [
-        {id: 55, locale: 'en', mimeType: 'application/pdf'},
-        {id: 66, locale: 'en', mimeType: 'application/pdf'},
-    ];
-
-    mediaSelection.update();
-
-    mediaSelection.find('MultiItemSelection .content').at(0).simulate('click');
+    findElementByType(mediaSelection.render(), MultiMediaSelection)
+        .props.onItemClick(55, {id: 55, locale: 'en', mimeType: 'application/pdf'});
     expect(router.navigate).toHaveBeenLastCalledWith('sulu_media.form', {id: 55, locale: 'en'});
-    mediaSelection.find('MultiItemSelection .content').at(1).simulate('click');
+    findElementByType(mediaSelection.render(), MultiMediaSelection)
+        .props.onItemClick(66, {id: 66, locale: 'en', mimeType: 'application/pdf'});
     expect(router.navigate).toHaveBeenLastCalledWith('sulu_media.form', {id: 66, locale: 'en'});
 });
 
@@ -269,7 +267,7 @@ test('Should throw an error if given value does not have an ids property', () =>
         )
     );
 
-    expect(() => shallow(
+    expect(() => renderWithRef(
         <MediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -286,7 +284,7 @@ test('Should log warning and use ids of objects if given value is an array of ob
         )
     );
 
-    const mediaSelection = shallow(
+    const {instance: mediaSelection} = renderWithRef(
         <MediaSelection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -295,11 +293,11 @@ test('Should log warning and use ids of objects if given value is an array of ob
         />
     );
 
-    expect(mediaSelection.find(MultiMediaSelection).props().value).toEqual({ids: [55, 66, 77]});
+    expect(findElementByType(mediaSelection.render(), MultiMediaSelection).props.value).toEqual({ids: [55, 66, 77]});
     expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('expects an object with an "ids" property as value'));
 });
 
-test('Should throw an error if displayOptions schemaOption is given but not an array', () => {
+test('Should throw an error if displayOptions schemaOption value is not an array', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
@@ -307,7 +305,7 @@ test('Should throw an error if displayOptions schemaOption is given but not an a
         )
     );
 
-    expect(() => shallow(
+    expect(() => renderWithRef(
         <MediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -324,7 +322,7 @@ test('Should throw an error if given value is not an object', () => {
         )
     );
 
-    expect(() => shallow(
+    expect(() => renderWithRef(
         <MediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -341,7 +339,7 @@ test('Should throw an error if displayOptions schemaOption is given but not an a
         )
     );
 
-    expect(() => shallow(
+    expect(() => renderWithRef(
         <MediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -358,7 +356,7 @@ test('Should throw an error if displayOptions schemaOption is given but contains
         )
     );
 
-    expect(() => shallow(
+    expect(() => renderWithRef(
         <MediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -367,7 +365,7 @@ test('Should throw an error if displayOptions schemaOption is given but contains
     )).toThrow(/"test"/);
 });
 
-test('Should throw an error if types schemaOption is given but not an array', () => {
+test('Should throw an error if types schemaOption value is not an array', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
@@ -375,7 +373,7 @@ test('Should throw an error if types schemaOption is given but not an array', ()
         )
     );
 
-    expect(() => shallow(
+    expect(() => renderWithRef(
         <MediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -392,7 +390,7 @@ test('Should throw an error if types schemaOption is given but not an array', ()
         )
     );
 
-    expect(() => shallow(
+    expect(() => renderWithRef(
         <MediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}

@@ -1,11 +1,14 @@
 // @flow
-import {mount, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {observable} from 'mobx';
 import SelectFieldFilterType from '../../fieldFilterTypes/SelectFieldFilterType';
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../../utils/Translator');
+
+function expectCheckboxValue(label: string, value: string) {
+    expect((screen.getByLabelText(label): any).value).toBe(value);
+}
 
 test.each([
     [undefined, 'parameters'],
@@ -21,7 +24,9 @@ test.each([
     [['image', 'video'], {options: {image: 'sulu_media.image', video: 'sulu_media.video'}}],
 ])('Render with a value of "%s"', (value, parameters) => {
     const selectFieldFilterType = new SelectFieldFilterType(jest.fn(), parameters, value);
-    expect(render(selectFieldFilterType.getFormNode())).toMatchSnapshot();
+    const {asFragment} = render(selectFieldFilterType.getFormNode());
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render with value set by setValue', () => {
@@ -32,7 +37,9 @@ test('Render with value set by setValue', () => {
     );
 
     selectFieldFilterType.setValue(['audio']);
-    expect(render(selectFieldFilterType.getFormNode())).toMatchSnapshot();
+    const {asFragment} = render(selectFieldFilterType.getFormNode());
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Pass correct props to CheckboxGroup', () => {
@@ -42,35 +49,39 @@ test('Pass correct props to CheckboxGroup', () => {
         ['audio', 'video']
     );
 
-    const selectFieldFilterTypeForm = mount(selectFieldFilterType.getFormNode());
+    render(selectFieldFilterType.getFormNode());
 
-    expect(selectFieldFilterTypeForm.find('CheckboxGroup').prop('values')).toEqual(['audio', 'video']);
+    const checkboxes = screen.getAllByRole('checkbox');
 
-    expect(selectFieldFilterTypeForm.find('Checkbox')).toHaveLength(3);
-    expect(selectFieldFilterTypeForm.find('Checkbox').at(0).prop('value')).toEqual('audio');
-    expect(selectFieldFilterTypeForm.find('Checkbox').at(0).text()).toEqual('Audio');
-    expect(selectFieldFilterTypeForm.find('Checkbox').at(1).prop('value')).toEqual('image');
-    expect(selectFieldFilterTypeForm.find('Checkbox').at(1).text()).toEqual('Image');
-    expect(selectFieldFilterTypeForm.find('Checkbox').at(2).prop('value')).toEqual('video');
-    expect(selectFieldFilterTypeForm.find('Checkbox').at(2).text()).toEqual('Video');
+    expect(checkboxes).toHaveLength(3);
+    expectCheckboxValue('Audio', 'audio');
+    expect(screen.getByLabelText('Audio')).toBeChecked();
+    expectCheckboxValue('Image', 'image');
+    expect(screen.getByLabelText('Image')).not.toBeChecked();
+    expectCheckboxValue('Video', 'video');
+    expect(screen.getByLabelText('Video')).toBeChecked();
 });
 
-test('Call onChange handler with new value', () => {
+test('Call onChange handler with new value', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const selectFieldFilterType = new SelectFieldFilterType(changeSpy, {options: {test: 'test'}}, undefined);
-    const selectFieldFilterTypeForm = mount(selectFieldFilterType.getFormNode());
 
-    selectFieldFilterTypeForm.find('CheckboxGroup').prop('onChange')(['test']);
+    render(selectFieldFilterType.getFormNode());
+
+    await user.click(screen.getByLabelText('test'));
 
     expect(changeSpy).toHaveBeenCalledWith(['test']);
 });
 
-test('Call onChange handler with undefined if the new selection is empty', () => {
+test('Call onChange handler with undefined if the new selection is empty', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
-    const selectFieldFilterType = new SelectFieldFilterType(changeSpy, {options: {test: 'test'}}, undefined);
-    const selectFieldFilterTypeForm = mount(selectFieldFilterType.getFormNode());
+    const selectFieldFilterType = new SelectFieldFilterType(changeSpy, {options: {test: 'test'}}, ['test']);
 
-    selectFieldFilterTypeForm.find('CheckboxGroup').prop('onChange')([]);
+    render(selectFieldFilterType.getFormNode());
+
+    await user.click(screen.getByLabelText('test'));
 
     expect(changeSpy).toHaveBeenCalledWith(undefined);
 });
@@ -105,15 +116,14 @@ test('Handle observable array options with numeric keys', () => {
         undefined
     );
 
-    const selectFieldFilterTypeForm = mount(selectFieldFilterType.getFormNode());
+    render(selectFieldFilterType.getFormNode());
 
-    expect(selectFieldFilterTypeForm.find('Checkbox')).toHaveLength(3);
-    expect(selectFieldFilterTypeForm.find('Checkbox').at(0).prop('value')).toEqual('0');
-    expect(selectFieldFilterTypeForm.find('Checkbox').at(0).text()).toEqual('app.job.jobSource.0');
-    expect(selectFieldFilterTypeForm.find('Checkbox').at(1).prop('value')).toEqual('1');
-    expect(selectFieldFilterTypeForm.find('Checkbox').at(1).text()).toEqual('app.job.jobSource.1');
-    expect(selectFieldFilterTypeForm.find('Checkbox').at(2).prop('value')).toEqual('2');
-    expect(selectFieldFilterTypeForm.find('Checkbox').at(2).text()).toEqual('app.job.jobSource.2');
+    const checkboxes = screen.getAllByRole('checkbox');
+
+    expect(checkboxes).toHaveLength(3);
+    expectCheckboxValue('app.job.jobSource.0', '0');
+    expectCheckboxValue('app.job.jobSource.1', '1');
+    expectCheckboxValue('app.job.jobSource.2', '2');
 });
 
 test('Return value node observable array options', () => {

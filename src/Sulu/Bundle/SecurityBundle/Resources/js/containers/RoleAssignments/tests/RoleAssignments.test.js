@@ -1,8 +1,9 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
+import {render} from '@testing-library/react';
 import {localizationStore} from 'sulu-admin-bundle/stores';
 import {ResourceMultiSelect} from 'sulu-admin-bundle/containers';
+import {findAllElementsByType, findElementByType, renderWithRef} from 'sulu-admin-bundle/utils/TestHelper';
 import RoleAssignments from '../RoleAssignments';
 import RoleAssignment from '../RoleAssignment';
 
@@ -35,13 +36,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
     },
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
-
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 test('Render component without data', () => {
     localizationStore.localizations = [
@@ -64,14 +59,14 @@ test('Render component without data', () => {
             xDefault: '',
         },
     ];
-    const roleAssignments = mount(
+    const {container} = render(
         <RoleAssignments
             onChange={jest.fn()}
             value={[]}
         />
     );
 
-    expect(roleAssignments.render()).toMatchSnapshot();
+    expect(container.innerHTML).toMatchSnapshot();
 });
 
 test('Render component', () => {
@@ -117,14 +112,14 @@ test('Render component', () => {
         },
     ];
 
-    const roleAssignments = mount(
+    const {container} = render(
         <RoleAssignments
             onChange={jest.fn()}
             value={value}
         />
     );
 
-    expect(roleAssignments.render()).toMatchSnapshot();
+    expect(container.innerHTML).toMatchSnapshot();
 });
 
 test('Render component in disabled state', () => {
@@ -170,7 +165,7 @@ test('Render component in disabled state', () => {
         },
     ];
 
-    const roleAssignments = mount(
+    const {container} = render(
         <RoleAssignments
             disabled={true}
             onChange={jest.fn()}
@@ -178,7 +173,7 @@ test('Render component in disabled state', () => {
         />
     );
 
-    expect(roleAssignments.render()).toMatchSnapshot();
+    expect(container.innerHTML).toMatchSnapshot();
 });
 
 test('Should trigger onChange correctly when MultiSelect for roles changes', () => {
@@ -225,14 +220,14 @@ test('Should trigger onChange correctly when MultiSelect for roles changes', () 
     ];
 
     const onChangeSpy = jest.fn();
-    const roleAssignments = mount(
+    const {instance: roleAssignments} = renderWithRef(
         <RoleAssignments
             onChange={onChangeSpy}
             value={value}
         />
     );
 
-    roleAssignments.find(ResourceMultiSelect).at(0).instance().props.onChange(
+    findElementByType(roleAssignments.render(), ResourceMultiSelect).props.onChange(
         [2, 5, 23],
         [
             {
@@ -329,7 +324,7 @@ test('Should trigger onChange correctly when RoleAssignment changes', () => {
     ];
 
     const onChangeSpy = jest.fn();
-    const roleAssignments = mount(
+    const {instance: roleAssignments} = renderWithRef(
         <RoleAssignments
             onChange={onChangeSpy}
             value={value}
@@ -356,6 +351,6 @@ test('Should trigger onChange correctly when RoleAssignment changes', () => {
             locales: ['de'],
         },
     ];
-    roleAssignments.find(RoleAssignment).at(1).instance().props.onChange(newValue[0]);
+    findAllElementsByType(roleAssignments.render(), RoleAssignment)[1].props.onChange(newValue[0]);
     expect(onChangeSpy).toHaveBeenCalledWith(newValue);
 });

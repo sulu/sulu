@@ -1,5 +1,6 @@
 // @flow
-import {mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import symfonyRouting from 'fos-jsrouting/router';
 import ReloadFormStoreToolbarAction from '../../toolbarActions/ReloadFormStoreToolbarAction';
 import {ResourceFormStore} from '../../../../containers/Form';
@@ -16,9 +17,36 @@ jest.mock('fos-jsrouting/router', () => ({
     generate: jest.fn(),
 }));
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../../utils/Translator');
+
+jest.mock('../../../../components/Dialog', () => {
+    const React = require('react');
+
+    return jest.fn((props) => {
+        if (!props.open) {
+            return null;
+        }
+
+        return (
+            <div
+                data-cancel-text={props.cancelText}
+                data-confirm-text={props.confirmText}
+                data-testid="dialog"
+                data-title={props.title}
+            >
+                <div>{props.children}</div>
+                <button onClick={props.onConfirm} type="button">
+                    {props.confirmText}
+                </button>
+                {props.onCancel && props.cancelText &&
+                    <button onClick={props.onCancel} type="button">
+                        {props.cancelText}
+                    </button>
+                }
+            </div>
+        );
+    });
+});
 
 jest.mock('../../../../containers/Form/stores/metadataStore', () => ({
     getSchema: jest.fn().mockReturnValue(Promise.resolve({})),
@@ -127,17 +155,23 @@ test('Open dialog on button click', () => {
     expect(action.showDialog).toBe(true);
 });
 
-test('Close dialog on cancel', () => {
+test('Close dialog on cancel', async() => {
+    const user = userEvent.setup();
     const action = createReloadFormStoreToolbarAction();
     action.showDialog = true;
 
-    const element = mount(action.getNode());
-    element.find('Button[skin="secondary"]').simulate('click');
+    render(action.getNode());
+    await user.click(screen.getByRole('button', {name: 'Cancel'}));
 
     expect(action.showDialog).toBe(false);
 });
 
 test('Fetch data on confirm', async() => {
+    const user = userEvent.setup();
+    let resolveRequest: (value?: Object) => void = () => {};
+    const requestPromise = new Promise((resolve) => {
+        resolveRequest = resolve;
+    });
     const action = createReloadFormStoreToolbarAction();
     action.showDialog = true;
     action.resourceFormStore.resourceStore.id = 5;
@@ -146,13 +180,14 @@ test('Fetch data on confirm', async() => {
     action.resourceFormStore.resourceStore.load = jest.fn();
 
     symfonyRouting.generate.mockReturnValue('/test/5?locale=en');
-    Requester.post.mockResolvedValue({});
+    Requester.post.mockReturnValue(requestPromise);
 
-    const element = mount(action.getNode());
-    element.find('Button[skin="primary"]').simulate('click');
+    render(action.getNode());
+    await user.click(screen.getByRole('button', {name: 'OK'}));
 
     expect(action.loading).toBe(true);
 
+    resolveRequest({});
     await new Promise((resolve) => setTimeout(resolve));
 
     expect(Requester.post).toHaveBeenCalledWith('/test/5?locale=en');
@@ -162,6 +197,7 @@ test('Fetch data on confirm', async() => {
 });
 
 test('Handle error on fetch', async() => {
+    const user = userEvent.setup();
     const action = createReloadFormStoreToolbarAction();
     action.showDialog = true;
 
@@ -170,8 +206,8 @@ test('Handle error on fetch', async() => {
     error.json = jest.fn().mockResolvedValue({messageKey: 'error.message'});
     Requester.post.mockRejectedValue(error);
 
-    const element = mount(action.getNode());
-    element.find('Button[skin="primary"]').simulate('click');
+    render(action.getNode());
+    await user.click(screen.getByRole('button', {name: 'OK'}));
 
     await new Promise((resolve) => setTimeout(resolve));
 
@@ -187,11 +223,11 @@ test('Render dialog with correct props', () => {
     });
     action.showDialog = true;
 
-    const element = mount(action.getNode());
-    const dialog = element.find('Dialog');
+    render(action.getNode());
+    const dialog = screen.getByTestId('dialog');
 
-    expect(dialog.prop('cancelText')).toBe('Cancel Test');
-    expect(dialog.prop('confirmText')).toBe('OK Test');
-    expect(dialog.prop('title')).toBe('Test Dialog');
-    expect(dialog.prop('children')).toBe('Test Description');
+    expect(dialog).toHaveAttribute('data-cancel-text', 'Cancel Test');
+    expect(dialog).toHaveAttribute('data-confirm-text', 'OK Test');
+    expect(dialog).toHaveAttribute('data-title', 'Test Dialog');
+    expect(dialog).toHaveTextContent('Test Description');
 });

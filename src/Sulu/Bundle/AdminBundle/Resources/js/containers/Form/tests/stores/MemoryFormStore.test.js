@@ -204,7 +204,7 @@ test('Create data object for schema with sections', () => {
     });
 });
 
-test('Asking for resourceKey should return undefined', () => {
+test('Asking for resourceKey should return undefined without schema', () => {
     const memoryFormStore = new MemoryFormStore({}, {});
     expect(memoryFormStore.resourceKey).toBeUndefined();
 });

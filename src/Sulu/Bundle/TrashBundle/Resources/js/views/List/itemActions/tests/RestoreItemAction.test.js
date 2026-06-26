@@ -1,19 +1,17 @@
 // @flow
 import mockReact from 'react';
-import {mount} from 'enzyme';
 import {observable} from 'mobx';
 import ListStore from 'sulu-admin-bundle/containers/List/stores/ListStore';
 import Router from 'sulu-admin-bundle/services/Router';
 import List from 'sulu-admin-bundle/views/List';
 import Dialog from 'sulu-admin-bundle/components/Dialog';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
+import {findElementByType} from 'sulu-admin-bundle/utils/TestHelper';
 import RestoreItemAction from '../../itemActions/RestoreItemAction';
 
 const React = mockReact;
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
     post: jest.fn(),
@@ -59,6 +57,14 @@ function createItemAction(options = {}) {
     return new RestoreItemAction(listStore, list, router, undefined, undefined, options);
 }
 
+function getDialogProps(itemAction) {
+    return findElementByType(itemAction.getNode(), Dialog).props;
+}
+
+function getRestoreFormOverlayProps(itemAction) {
+    return findElementByType(itemAction.getNode(), 'RestoreFormOverlay').props;
+}
+
 test('Return disabled item action config without callback if no item is given', () => {
     const itemAction = createItemAction();
 
@@ -76,8 +82,7 @@ test('Return disabled item action config without callback if no item is given', 
 test('Display dialog if onClick callback is fired', () => {
     const itemAction = createItemAction();
 
-    let dialog = mount(itemAction.getNode()).find(Dialog);
-    expect(dialog.props()).toEqual(expect.objectContaining({
+    expect(getDialogProps(itemAction)).toEqual(expect.objectContaining({
         open: false,
         cancelText: 'sulu_admin.cancel',
         confirmText: 'sulu_admin.ok',
@@ -90,13 +95,12 @@ test('Display dialog if onClick callback is fired', () => {
     }
     onClick('id-1234', 1);
 
-    dialog = mount(itemAction.getNode()).find(Dialog);
-    expect(dialog.props()).toEqual(expect.objectContaining({
+    expect(getDialogProps(itemAction)).toEqual(expect.objectContaining({
         open: true,
     }));
 });
 
-test('Close dialog if it is canceled', () => {
+test('Close RestoreFormOverlay if it is canceled', () => {
     const itemAction = createItemAction();
 
     const onClick = itemAction.getItemActionConfig({id: 'id-1234'}).onClick;
@@ -105,16 +109,14 @@ test('Close dialog if it is canceled', () => {
     }
     onClick('id-1234', 1);
 
-    let dialog = mount(itemAction.getNode()).find(Dialog);
-    expect(dialog.props().open).toBeTruthy();
+    expect(getDialogProps(itemAction).open).toBeTruthy();
 
-    dialog.props().onCancel();
+    getDialogProps(itemAction).onCancel();
 
-    dialog = mount(itemAction.getNode()).find(Dialog);
-    expect(dialog.props().open).toBeFalsy();
+    expect(getDialogProps(itemAction).open).toBeFalsy();
 });
 
-test('Send request and reload list store if dialog is confirmed', () => {
+test('Send request and reload list store if RestoreFormOverlay is confirmed', () => {
     const postPromise = Promise.resolve();
     ResourceRequester.post.mockReturnValue(postPromise);
 
@@ -125,20 +127,20 @@ test('Send request and reload list store if dialog is confirmed', () => {
         throw new Error('The onClick callback should not be undefined in this case');
     }
     onClick('id-1234', 1);
-    mount(itemAction.getNode()).find(Dialog).props().onConfirm();
+    getDialogProps(itemAction).onConfirm();
 
     expect(ResourceRequester.post).toHaveBeenCalledWith(
         'list-resource-key',
         {},
         {action: 'restore', id: 'id-1234'}
     );
-    expect(mount(itemAction.getNode()).find(Dialog).props()).toEqual(expect.objectContaining({
+    expect(getDialogProps(itemAction)).toEqual(expect.objectContaining({
         confirmLoading: true,
         open: true,
     }));
 
     return postPromise.then(() => {
-        expect(mount(itemAction.getNode()).find(Dialog).props()).toEqual(expect.objectContaining({
+        expect(getDialogProps(itemAction)).toEqual(expect.objectContaining({
             confirmLoading: false,
             open: false,
         }));
@@ -162,20 +164,20 @@ test('Send request and navigate to view if dialog is confirmed and view is confi
         throw new Error('The onClick callback should not be undefined in this case');
     }
     onClick('id-1234', 1);
-    mount(itemAction.getNode()).find(Dialog).props().onConfirm();
+    getDialogProps(itemAction).onConfirm();
 
     expect(ResourceRequester.post).toHaveBeenCalledWith(
         'list-resource-key',
         {},
         {action: 'restore', id: 'id-1234'}
     );
-    expect(mount(itemAction.getNode()).find(Dialog).props()).toEqual(expect.objectContaining({
+    expect(getDialogProps(itemAction)).toEqual(expect.objectContaining({
         confirmLoading: true,
         open: true,
     }));
 
     return postPromise.then(() => {
-        expect(mount(itemAction.getNode()).find(Dialog).props()).toEqual(expect.objectContaining({
+        expect(getDialogProps(itemAction)).toEqual(expect.objectContaining({
             confirmLoading: false,
             open: false,
         }));
@@ -187,8 +189,7 @@ test('Display RestoreFormOverlay if onClick callback is fired', () => {
     RestoreItemAction.restoreConfigurationMapping.test = {form: 'foo'};
     const itemAction = createItemAction();
 
-    let overlay = mount(itemAction.getNode()).find('RestoreFormOverlay');
-    expect(overlay.props()).toEqual(expect.objectContaining({
+    expect(getRestoreFormOverlayProps(itemAction)).toEqual(expect.objectContaining({
         open: false,
     }));
 
@@ -198,8 +199,7 @@ test('Display RestoreFormOverlay if onClick callback is fired', () => {
     }
     onClick('id-1234', 1);
 
-    overlay = mount(itemAction.getNode()).find('RestoreFormOverlay');
-    expect(overlay.props()).toEqual(expect.objectContaining({
+    expect(getRestoreFormOverlayProps(itemAction)).toEqual(expect.objectContaining({
         open: true,
         formKey: 'foo',
         trashItemId: 'id-1234',
@@ -216,13 +216,11 @@ test('Close dialog if it is canceled', () => {
     }
     onClick('id-1234', 1);
 
-    let overlay = mount(itemAction.getNode()).find('RestoreFormOverlay');
-    expect(overlay.props().open).toBeTruthy();
+    expect(getRestoreFormOverlayProps(itemAction).open).toBeTruthy();
 
-    overlay.props().onClose();
+    getRestoreFormOverlayProps(itemAction).onClose();
 
-    overlay = mount(itemAction.getNode()).find('RestoreFormOverlay');
-    expect(overlay.props().open).toBeFalsy();
+    expect(getRestoreFormOverlayProps(itemAction).open).toBeFalsy();
 });
 
 test('Send request and reload list store if dialog is confirmed', () => {
@@ -239,20 +237,20 @@ test('Send request and reload list store if dialog is confirmed', () => {
     onClick('id-1234', 1);
 
     const data = {foo: 'bar'};
-    mount(itemAction.getNode()).find('RestoreFormOverlay').props().onConfirm(data);
+    getRestoreFormOverlayProps(itemAction).onConfirm(data);
 
     expect(ResourceRequester.post).toHaveBeenCalledWith(
         'list-resource-key',
         data,
         {action: 'restore', id: 'id-1234'}
     );
-    expect(mount(itemAction.getNode()).find('RestoreFormOverlay').props()).toEqual(expect.objectContaining({
+    expect(getRestoreFormOverlayProps(itemAction)).toEqual(expect.objectContaining({
         confirmLoading: true,
         open: true,
     }));
 
     return postPromise.then(() => {
-        expect(mount(itemAction.getNode()).find('RestoreFormOverlay').props()).toEqual(expect.objectContaining({
+        expect(getRestoreFormOverlayProps(itemAction)).toEqual(expect.objectContaining({
             confirmLoading: false,
             open: false,
         }));

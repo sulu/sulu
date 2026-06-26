@@ -1,12 +1,11 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {render} from '@testing-library/react';
+import {findElementByType, renderWithRef} from 'sulu-admin-bundle/utils/TestHelper';
 import securityContextStore from '../../../stores/securityContextStore';
 import SystemRolePermissions from '../SystemRolePermissions';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('../../../stores/securityContextStore', () => ({
     getAvailableActions: jest.fn(),
@@ -19,7 +18,7 @@ test('Render permissions for a single system', () => {
         {id: 3, identifier: '', name: 'Contact Manager', permissions: [], system: 'Sulu'},
     ];
 
-    const systemRolePermissions = mount(
+    const {container} = render(
         <SystemRolePermissions
             actions={['view', 'add', 'edit']}
             disabled={false}
@@ -31,7 +30,7 @@ test('Render permissions for a single system', () => {
         />
     );
 
-    expect(systemRolePermissions.render()).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('Do not show Matrix if no values are given', () => {
@@ -40,7 +39,7 @@ test('Do not show Matrix if no values are given', () => {
         {id: 3, identifier: '', name: 'Contact Manager', permissions: [], system: 'Sulu'},
     ];
 
-    const systemRolePermissions = mount(
+    const {instance: systemRolePermissions} = renderWithRef(
         <SystemRolePermissions
             actions={['view', 'add', 'edit']}
             disabled={false}
@@ -52,12 +51,12 @@ test('Do not show Matrix if no values are given', () => {
         />
     );
 
-    expect(systemRolePermissions.find('Matrix')).toHaveLength(0);
-    expect(systemRolePermissions.find('Toggler').prop('checked')).toEqual(false);
+    expect(() => findElementByType(systemRolePermissions.render(), 'Matrix')).toThrow('Element not found');
+    expect(findElementByType(systemRolePermissions.render(), 'Toggler').props.checked).toEqual(false);
 });
 
 test('Render permissions for a single system in disabled state', () => {
-    const systemRolePermissions = shallow(
+    const {instance: systemRolePermissions} = renderWithRef(
         <SystemRolePermissions
             actions={[]}
             disabled={true}
@@ -69,13 +68,13 @@ test('Render permissions for a single system in disabled state', () => {
         />
     );
 
-    expect(systemRolePermissions.find('Matrix').prop('disabled')).toEqual(true);
+    expect(findElementByType(systemRolePermissions.render(), 'Matrix').props.disabled).toEqual(true);
 });
 
 test('Call onChange callback when matrix changes', () => {
     const changeSpy = jest.fn();
 
-    const systemRolePermissions = shallow(
+    const {instance: systemRolePermissions} = renderWithRef(
         <SystemRolePermissions
             actions={['view']}
             disabled={false}
@@ -87,10 +86,10 @@ test('Call onChange callback when matrix changes', () => {
         />
     );
 
-    systemRolePermissions.find('Toggler').simulate('change', true);
+    findElementByType(systemRolePermissions.render(), 'Toggler').props.onChange(true);
 
     const newValue = {'1': {view: true}};
-    systemRolePermissions.find('Matrix').simulate('change', newValue);
+    findElementByType(systemRolePermissions.render(), 'Matrix').props.onChange(newValue);
 
     expect(changeSpy).toHaveBeenCalledWith(newValue, 'Sulu');
 });
@@ -98,7 +97,7 @@ test('Call onChange callback when matrix changes', () => {
 test('Call onChange callback with empty values if toggler is deactivated', () => {
     const changeSpy = jest.fn();
 
-    const systemRolePermissions = shallow(
+    const {instance: systemRolePermissions} = renderWithRef(
         <SystemRolePermissions
             actions={['view']}
             disabled={false}
@@ -110,7 +109,7 @@ test('Call onChange callback with empty values if toggler is deactivated', () =>
         />
     );
 
-    systemRolePermissions.find('Toggler').simulate('change', false);
+    findElementByType(systemRolePermissions.render(), 'Toggler').props.onChange(false);
 
     expect(changeSpy).toHaveBeenCalledWith({}, 'Sulu');
 });
@@ -147,7 +146,7 @@ test('Show default values after activating toggler', () => {
     });
     securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit']);
 
-    const systemRolePermissions = shallow(
+    const {instance: systemRolePermissions} = renderWithRef(
         <SystemRolePermissions
             actions={['view']}
             disabled={false}
@@ -159,11 +158,11 @@ test('Show default values after activating toggler', () => {
         />
     );
 
-    expect(systemRolePermissions.find('Matrix')).toHaveLength(0);
-    systemRolePermissions.find('Toggler').simulate('change', true);
-    expect(systemRolePermissions.find('Matrix')).toHaveLength(1);
+    expect(() => findElementByType(systemRolePermissions.render(), 'Matrix')).toThrow('Element not found');
+    findElementByType(systemRolePermissions.render(), 'Toggler').props.onChange(true);
+    expect(findElementByType(systemRolePermissions.render(), 'Matrix')).toBeTruthy();
 
-    expect(systemRolePermissions.find('Matrix').prop('values')).toEqual({
+    expect(findElementByType(systemRolePermissions.render(), 'Matrix').props.values).toEqual({
         '2': {view: true, add: true, edit: true},
         '3': {view: true, add: false, edit: true},
     });

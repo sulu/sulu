@@ -7,9 +7,7 @@ import MultiSelect from '../../MultiSelect';
 const Option = MultiSelect.Option;
 const Divider = MultiSelect.Divider;
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('../../../utils/Translator');
 
 function renderMultiSelect(props: any = {}) {
     return render(

@@ -1,8 +1,11 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
 import {webspaceStore} from 'sulu-page-bundle/stores';
-import {defaultWebspace} from 'sulu-admin-bundle/utils/TestHelper';
+import {
+    defaultWebspace,
+    findElementByType,
+    renderWithRef,
+} from 'sulu-admin-bundle/utils/TestHelper';
 import Permissions from '../Permissions';
 import securityContextStore from '../../../stores/securityContextStore/securityContextStore';
 import PermissionMatrix from '../PermissionMatrix';
@@ -17,9 +20,7 @@ jest.mock('../../../stores/securityContextStore/securityContextStore', () => ({
     getSecurityContextGroups: jest.fn(() => Promise.resolve()),
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 test('Render with minimal', () => {
     const value: Array<ContextPermission> = [
@@ -53,7 +54,7 @@ test('Render with minimal', () => {
     };
     securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
-    const permissions = mount(
+    const {container} = renderWithRef(
         <Permissions
             onChange={jest.fn()}
             system="Sulu"
@@ -62,8 +63,7 @@ test('Render with minimal', () => {
     );
 
     expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Sulu');
-    permissions.update();
-    expect(permissions.render()).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('Render in disabled state', () => {
@@ -98,7 +98,7 @@ test('Render in disabled state', () => {
     };
     securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
-    const permissions = mount(
+    const {container} = renderWithRef(
         <Permissions
             disabled={true}
             onChange={jest.fn()}
@@ -108,8 +108,7 @@ test('Render in disabled state', () => {
     );
 
     expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Sulu');
-    permissions.update();
-    expect(permissions.render()).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('Should trigger onChange correctly', () => {
@@ -145,7 +144,7 @@ test('Should trigger onChange correctly', () => {
     securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
     const onChange = jest.fn();
-    const permissions = mount(
+    const {instance: permissions} = renderWithRef(
         <Permissions
             onChange={onChange}
             system="Sulu"
@@ -175,7 +174,7 @@ test('Should trigger onChange correctly', () => {
             },
         },
     ];
-    permissions.find(PermissionMatrix).at(0).instance().props.onChange(newContextPermissions);
+    findElementByType(permissions.render(), PermissionMatrix).props.onChange(newContextPermissions);
     expect(onChange).toHaveBeenCalledWith(newContextPermissions);
 });
 
@@ -234,7 +233,7 @@ test('Render with empty webspace section', () => {
         },
     ];
 
-    const permissions = mount(
+    const {container} = renderWithRef(
         <Permissions
             onChange={jest.fn()}
             system="Sulu"
@@ -243,14 +242,7 @@ test('Render with empty webspace section', () => {
     );
 
     expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Sulu');
-
-    // Currently we have to load each child separately, because of a bug in enzyme.
-    // TODO: https://github.com/airbnb/enzyme/issues/1213
-    const permissionChildren = permissions.children();
-    expect(permissionChildren.at(0).render()).toMatchSnapshot();
-    expect(permissionChildren.at(1).render()).toMatchSnapshot();
-    expect(permissionChildren.at(2).render()).toMatchSnapshot();
-    expect(permissionChildren.at(3).render()).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('Render with webspace section', () => {
@@ -320,7 +312,7 @@ test('Render with webspace section', () => {
         },
     ];
 
-    const permissions = mount(
+    const {container} = renderWithRef(
         <Permissions
             onChange={jest.fn()}
             system="Sulu"
@@ -329,15 +321,7 @@ test('Render with webspace section', () => {
     );
 
     expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Sulu');
-    permissions.update();
-
-    // Currently we have to load each child separately, because of a bug in enzyme.
-    // TODO: https://github.com/airbnb/enzyme/issues/1213
-    const permissionChildren = permissions.children();
-    expect(permissionChildren.at(0).render()).toMatchSnapshot();
-    expect(permissionChildren.at(1).render()).toMatchSnapshot();
-    expect(permissionChildren.at(2).render()).toMatchSnapshot();
-    expect(permissionChildren.at(3).render()).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('Should trigger onChange correctly when changing something in the webspace section', () => {
@@ -408,7 +392,7 @@ test('Should trigger onChange correctly when changing something in the webspace 
     ];
 
     const onChange = jest.fn();
-    const permissions = mount(
+    const {instance: permissions} = renderWithRef(
         <Permissions
             onChange={onChange}
             system="Sulu"
@@ -450,7 +434,7 @@ test('Should trigger onChange correctly when changing something in the webspace 
             },
         },
     ];
-    permissions.find(PermissionMatrix).at(0).instance().props.onChange(newContextPermissions);
+    findElementByType(permissions.render(), PermissionMatrix).props.onChange(newContextPermissions);
     expect(onChange).toHaveBeenCalledWith(newContextPermissions);
 });
 
@@ -522,7 +506,7 @@ test('Should trigger onChange correctly when a webspace is added', () => {
     ];
 
     const onChange = jest.fn();
-    const permissions = mount(
+    const {instance: permissions} = renderWithRef(
         <Permissions
             onChange={onChange}
             system="Sulu"
@@ -530,7 +514,7 @@ test('Should trigger onChange correctly when a webspace is added', () => {
         />
     );
 
-    permissions.find('MultiSelect').prop('onChange')(['example', 'example3']);
+    findElementByType(permissions.render(), 'MultiSelect').props.onChange(['example', 'example3']);
 
     const expectedNewValue: Array<ContextPermission> = [
         {
@@ -682,7 +666,7 @@ test('Should trigger onChange correctly when a webspace is removed', () => {
     ];
 
     const onChange = jest.fn();
-    const permissions = mount(
+    const {instance: permissions} = renderWithRef(
         <Permissions
             onChange={onChange}
             system="Sulu"
@@ -690,7 +674,7 @@ test('Should trigger onChange correctly when a webspace is removed', () => {
         />
     );
 
-    permissions.find('MultiSelect').prop('onChange')(['example3']);
+    findElementByType(permissions.render(), 'MultiSelect').props.onChange(['example3']);
 
     const expectedNewValue: Array<ContextPermission> = [
         {
@@ -762,7 +746,7 @@ test('Should trigger a mobx autorun if the prop system changes', () => {
     };
     securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
-    const permissions = mount(
+    const {rerender} = renderWithRef(
         <Permissions
             onChange={jest.fn()}
             system="Sulu"
@@ -772,8 +756,20 @@ test('Should trigger a mobx autorun if the prop system changes', () => {
 
     // update with the same system, nothing should happen
     // update it with a other system it should trigger a reload
-    permissions.setProps({system: 'Sulu'});
-    permissions.setProps({system: 'Other-System'});
+    rerender(
+        <Permissions
+            onChange={jest.fn()}
+            system="Sulu"
+            value={value}
+        />
+    );
+    rerender(
+        <Permissions
+            onChange={jest.fn()}
+            system="Other-System"
+            value={value}
+        />
+    );
 
     expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Sulu');
     expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Other-System');
@@ -788,7 +784,7 @@ test('Pass disabled state to MultiSelect', () => {
     };
     securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
-    const permissions = mount(
+    const {instance: permissions} = renderWithRef(
         <Permissions
             disabled={true}
             onChange={jest.fn()}
@@ -797,7 +793,7 @@ test('Pass disabled state to MultiSelect', () => {
         />
     );
 
-    expect(permissions.find('MultiSelect').prop('disabled')).toEqual(true);
+    expect(findElementByType(permissions.render(), 'MultiSelect').props.disabled).toEqual(true);
 });
 
 test('Dispose autorun on unmount', () => {
@@ -832,7 +828,7 @@ test('Dispose autorun on unmount', () => {
     };
     securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
-    const permissions = mount(
+    const {instance: permissions, unmount} = renderWithRef(
         <Permissions
             onChange={jest.fn()}
             system="Sulu"
@@ -840,11 +836,9 @@ test('Dispose autorun on unmount', () => {
         />
     );
 
-    permissions.update();
-
     const systemDisposerSpy = jest.fn();
-    permissions.instance().systemDisposer = systemDisposerSpy;
-    permissions.unmount();
+    permissions.systemDisposer = systemDisposerSpy;
+    unmount();
 
     expect(systemDisposerSpy).toHaveBeenCalledWith();
 });
@@ -910,7 +904,7 @@ test('Should restore original permission when webspace is removed and re-added w
     ];
 
     const onChange = jest.fn();
-    const permissions = mount(
+    const {instance: permissions, rerender} = renderWithRef(
         <Permissions
             onChange={onChange}
             system="Sulu"
@@ -919,7 +913,7 @@ test('Should restore original permission when webspace is removed and re-added w
     );
 
     // First remove the webspace
-    permissions.find('MultiSelect').prop('onChange')([]);
+    findElementByType(permissions.render(), 'MultiSelect').props.onChange([]);
 
     const expectedAfterRemove: Array<ContextPermission> = [
         {
@@ -937,11 +931,16 @@ test('Should restore original permission when webspace is removed and re-added w
     expect(onChange).toHaveBeenLastCalledWith(expectedAfterRemove);
 
     // Update component props to reflect the removed state
-    permissions.setProps({value: expectedAfterRemove});
-    permissions.update();
+    rerender(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={expectedAfterRemove}
+        />
+    );
 
     // Now re-add the same webspace - it should restore the original permissions with their IDs
-    permissions.find('MultiSelect').prop('onChange')(['example']);
+    findElementByType(permissions.render(), 'MultiSelect').props.onChange(['example']);
 
     const expectedAfterReAdd: Array<ContextPermission> = [
         {
@@ -1032,7 +1031,7 @@ test('Should restore multiple webspaces independently when removed and re-added'
     ];
 
     const onChange = jest.fn();
-    const permissions = mount(
+    const {instance: permissions, rerender} = renderWithRef(
         <Permissions
             onChange={onChange}
             system="Sulu"
@@ -1041,15 +1040,20 @@ test('Should restore multiple webspaces independently when removed and re-added'
     );
 
     // Remove both webspaces
-    permissions.find('MultiSelect').prop('onChange')([]);
+    findElementByType(permissions.render(), 'MultiSelect').props.onChange([]);
     expect(onChange).toHaveBeenLastCalledWith([]);
 
     // Update component props
-    permissions.setProps({value: []});
-    permissions.update();
+    rerender(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={[]}
+        />
+    );
 
     // Re-add only example2 - should restore its original permissions
-    permissions.find('MultiSelect').prop('onChange')(['example2']);
+    findElementByType(permissions.render(), 'MultiSelect').props.onChange(['example2']);
 
     const expectedWithExample2: Array<ContextPermission> = [
         {
@@ -1069,11 +1073,16 @@ test('Should restore multiple webspaces independently when removed and re-added'
     expect(onChange).toHaveBeenLastCalledWith(expectedWithExample2);
 
     // Update component props again
-    permissions.setProps({value: expectedWithExample2});
-    permissions.update();
+    rerender(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={expectedWithExample2}
+        />
+    );
 
     // Now also add example - should restore its original permissions
-    permissions.find('MultiSelect').prop('onChange')(['example2', 'example']);
+    findElementByType(permissions.render(), 'MultiSelect').props.onChange(['example2', 'example']);
 
     const expectedWithBoth: Array<ContextPermission> = [
         {
@@ -1142,7 +1151,7 @@ test('Should create new permission when adding a webspace that was never selecte
     ];
 
     const onChange = jest.fn();
-    const permissions = mount(
+    const {instance: permissions} = renderWithRef(
         <Permissions
             onChange={onChange}
             system="Sulu"
@@ -1151,7 +1160,7 @@ test('Should create new permission when adding a webspace that was never selecte
     );
 
     // Add example2 which was never selected before - should create new permission with id: undefined
-    permissions.find('MultiSelect').prop('onChange')(['example', 'example2']);
+    findElementByType(permissions.render(), 'MultiSelect').props.onChange(['example', 'example2']);
 
     const expected: Array<ContextPermission> = [
         {
@@ -1216,7 +1225,7 @@ test('Should maintain removed permissions cache when toggling same webspace mult
     ];
 
     const onChange = jest.fn();
-    const permissions = mount(
+    const {instance: permissions, rerender} = renderWithRef(
         <Permissions
             onChange={onChange}
             system="Sulu"
@@ -1225,13 +1234,18 @@ test('Should maintain removed permissions cache when toggling same webspace mult
     );
 
     // Remove the webspace
-    permissions.find('MultiSelect').prop('onChange')([]);
+    findElementByType(permissions.render(), 'MultiSelect').props.onChange([]);
     expect(onChange).toHaveBeenLastCalledWith([]);
-    permissions.setProps({value: []});
-    permissions.update();
+    rerender(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={[]}
+        />
+    );
 
     // Re-add it - should restore original
-    permissions.find('MultiSelect').prop('onChange')(['example']);
+    findElementByType(permissions.render(), 'MultiSelect').props.onChange(['example']);
     const firstReAdd = [
         {
             id: 1,
@@ -1247,17 +1261,27 @@ test('Should maintain removed permissions cache when toggling same webspace mult
         },
     ];
     expect(onChange).toHaveBeenLastCalledWith(firstReAdd);
-    permissions.setProps({value: firstReAdd});
-    permissions.update();
+    rerender(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={firstReAdd}
+        />
+    );
 
     // Remove it again
-    permissions.find('MultiSelect').prop('onChange')([]);
+    findElementByType(permissions.render(), 'MultiSelect').props.onChange([]);
     expect(onChange).toHaveBeenLastCalledWith([]);
-    permissions.setProps({value: []});
-    permissions.update();
+    rerender(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={[]}
+        />
+    );
 
     // Re-add it again - should still restore the original permission
-    permissions.find('MultiSelect').prop('onChange')(['example']);
+    findElementByType(permissions.render(), 'MultiSelect').props.onChange(['example']);
     const secondReAdd = [
         {
             id: 1,

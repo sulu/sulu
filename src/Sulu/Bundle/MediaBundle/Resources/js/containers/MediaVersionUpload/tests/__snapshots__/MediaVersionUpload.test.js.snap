@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Render a MediaVersionUpload field for images 1`] = `
-Array [
+<div>
   <div
     class="mediaContainer default"
     role="presentation"
@@ -11,6 +11,17 @@ Array [
       class="thumbnail"
       src="sulu-400x400-inset"
     />
+    <div
+      class="spinner"
+      style="width: 40px; height: 40px;"
+    >
+      <div
+        class="doubleBounce1"
+      />
+      <div
+        class="doubleBounce2"
+      />
+    </div>
     <div
       class="uploadIndicatorContainer"
     >
@@ -31,14 +42,14 @@ Array [
       </div>
     </div>
     <input
-      style="border:0;clip:rect(0, 0, 0, 0);clip-path:inset(50%);height:1px;margin:0 -1px -1px 0;overflow:hidden;padding:0;position:absolute;width:1px;white-space:nowrap"
+      style="border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;"
       tabindex="-1"
       type="file"
     />
-  </div>,
+  </div>
   <div
     class="buttons"
-  />,
+  />
   <div
     class="buttons"
   >
@@ -70,12 +81,12 @@ Array [
         sulu_media.define_crops
       </span>
     </button>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Render a MediaVersionUpload field for videos 1`] = `
-Array [
+<div>
   <div
     class="mediaContainer default"
     role="presentation"
@@ -85,6 +96,17 @@ Array [
       class="thumbnail"
       src="sulu-400x400-inset"
     />
+    <div
+      class="spinner"
+      style="width: 40px; height: 40px;"
+    >
+      <div
+        class="doubleBounce1"
+      />
+      <div
+        class="doubleBounce2"
+      />
+    </div>
     <div
       class="uploadIndicatorContainer"
     >
@@ -105,14 +127,14 @@ Array [
       </div>
     </div>
     <input
-      style="border:0;clip:rect(0, 0, 0, 0);clip-path:inset(50%);height:1px;margin:0 -1px -1px 0;overflow:hidden;padding:0;position:absolute;width:1px;white-space:nowrap"
+      style="border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;"
       tabindex="-1"
       type="file"
     />
-  </div>,
+  </div>
   <div
     class="buttons"
-  />,
+  />
   <div
     class="buttons"
   >
@@ -136,7 +158,7 @@ Array [
       </button>
       <input
         multiple=""
-        style="border:0;clip:rect(0, 0, 0, 0);clip-path:inset(50%);height:1px;margin:0 -1px -1px 0;overflow:hidden;padding:0;position:absolute;width:1px;white-space:nowrap"
+        style="border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;"
         tabindex="-1"
         type="file"
       />
@@ -155,12 +177,12 @@ Array [
         sulu_media.delete_preview_image
       </span>
     </button>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Render a MediaVersionUpload field for videos without assigned preview image 1`] = `
-Array [
+<div>
   <div
     class="mediaContainer default"
     role="presentation"
@@ -170,6 +192,17 @@ Array [
       class="thumbnail"
       src="sulu-400x400-inset"
     />
+    <div
+      class="spinner"
+      style="width: 40px; height: 40px;"
+    >
+      <div
+        class="doubleBounce1"
+      />
+      <div
+        class="doubleBounce2"
+      />
+    </div>
     <div
       class="uploadIndicatorContainer"
     >
@@ -190,14 +223,14 @@ Array [
       </div>
     </div>
     <input
-      style="border:0;clip:rect(0, 0, 0, 0);clip-path:inset(50%);height:1px;margin:0 -1px -1px 0;overflow:hidden;padding:0;position:absolute;width:1px;white-space:nowrap"
+      style="border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;"
       tabindex="-1"
       type="file"
     />
-  </div>,
+  </div>
   <div
     class="buttons"
-  />,
+  />
   <div
     class="buttons"
   >
@@ -221,7 +254,7 @@ Array [
       </button>
       <input
         multiple=""
-        style="border:0;clip:rect(0, 0, 0, 0);clip-path:inset(50%);height:1px;margin:0 -1px -1px 0;overflow:hidden;padding:0;position:absolute;width:1px;white-space:nowrap"
+        style="border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;"
         tabindex="-1"
         type="file"
       />
@@ -241,6 +274,6 @@ Array [
         sulu_media.delete_preview_image
       </span>
     </button>
-  </div>,
-]
+  </div>
+</div>
 `;

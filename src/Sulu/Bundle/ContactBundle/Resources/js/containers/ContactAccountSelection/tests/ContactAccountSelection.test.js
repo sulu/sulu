@@ -1,20 +1,45 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
-import {MultiListOverlay} from 'sulu-admin-bundle/containers';
+import {act, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {arrayMove} from 'sulu-admin-bundle/utils';
 import ContactAccountSelectionStore from '../stores/ContactAccountSelectionStore';
 import ContactAccountSelection from '../ContactAccountSelection';
 
-jest.mock('sulu-admin-bundle/containers/MultiListOverlay', () => jest.fn(() => null));
+let mockMultiListOverlayProps: Object = {};
+let mockSortableContainerProps: Object = {};
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
+const mockReact = require('react');
+
+jest.mock('react-sortable-hoc', () => ({
+    SortableContainer: (Component) => (props) => {
+        mockSortableContainerProps = props;
+        return mockReact.createElement(Component, props);
+    },
+    SortableElement: (Component) => Component,
+    SortableHandle: (Component) => Component,
 }));
+
+jest.mock('sulu-admin-bundle/containers/MultiListOverlay', () => jest.fn((props) => {
+    mockMultiListOverlayProps[props.listKey] = props;
+
+    return mockReact.createElement(
+        'div',
+        {
+            'data-open': String(props.open),
+            'data-testid': props.listKey + '-overlay',
+        }
+    );
+}));
+
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('../stores/ContactAccountSelectionStore', () => jest.fn());
 
 beforeEach(() => {
+    mockMultiListOverlayProps = {};
+    mockSortableContainerProps = {};
+
     // $FlowFixMe
     ContactAccountSelectionStore.mockImplementation(function() {
         this.loadItems = jest.fn();
@@ -26,8 +51,30 @@ beforeEach(() => {
     ContactAccountSelectionStore.contactPrefix = 'c';
 });
 
+function getStore() {
+    return (ContactAccountSelectionStore: any).mock.instances[0];
+}
+
+async function openOverlay(user, optionName) {
+    await user.click(screen.getAllByRole('button')[0]);
+    await user.click(screen.getByRole('button', {name: optionName}));
+}
+
+function getRemoveButton(itemText) {
+    const content = screen.getByText(itemText).closest('.content');
+    const button = content && content.parentElement && content.parentElement.querySelector('button');
+
+    if (!button) {
+        throw new Error('Expected remove button for item "' + itemText + '"');
+    }
+
+    return button;
+}
+
 test('Render ContactAccountSelection', () => {
-    expect(render(<ContactAccountSelection onChange={jest.fn()} />)).toMatchSnapshot();
+    const {asFragment} = render(<ContactAccountSelection onChange={jest.fn()} />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render ContactAccountSelection with data', () => {
@@ -41,7 +88,9 @@ test('Render ContactAccountSelection with data', () => {
         ];
     });
 
-    expect(render(<ContactAccountSelection onChange={jest.fn()} />)).toMatchSnapshot();
+    const {asFragment} = render(<ContactAccountSelection onChange={jest.fn()} />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render loading ContactAccountSelection', () => {
@@ -52,39 +101,37 @@ test('Render loading ContactAccountSelection', () => {
         this.loading = true;
     });
 
-    expect(render(<ContactAccountSelection onChange={jest.fn()} />)).toMatchSnapshot();
+    const {asFragment} = render(<ContactAccountSelection onChange={jest.fn()} />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render disabled ContactAccountSelection', () => {
-    expect(render(<ContactAccountSelection disabled={true} onChange={jest.fn()} />)).toMatchSnapshot();
+    const {asFragment} = render(<ContactAccountSelection disabled={true} onChange={jest.fn()} />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Avoid that MultiListOverlay loads the preSelectedItems from start', () => {
-    const contactAccountSelection = mount(
-        <ContactAccountSelection onChange={jest.fn()} />
-    );
+    render(<ContactAccountSelection onChange={jest.fn()} />);
 
-    expect(contactAccountSelection.find(MultiListOverlay)).toHaveLength(2);
-    expect(contactAccountSelection.find(MultiListOverlay).at(0).prop('preloadSelectedItems')).toEqual(false);
-    expect(contactAccountSelection.find(MultiListOverlay).at(1).prop('preloadSelectedItems')).toEqual(false);
+    expect(mockMultiListOverlayProps.contacts.preloadSelectedItems).toEqual(false);
+    expect(mockMultiListOverlayProps.accounts.preloadSelectedItems).toEqual(false);
 });
 
 test('Load items when being constructed', () => {
-    const contactAccountSelection = mount(
-        <ContactAccountSelection onChange={jest.fn()} value={['a1', 'c2']} />
-    );
+    render(<ContactAccountSelection onChange={jest.fn()} value={['a1', 'c2']} />);
 
-    expect(contactAccountSelection.instance().store.loadItems).toHaveBeenCalledWith(['a1', 'c2']);
+    expect(getStore().loadItems).toHaveBeenCalledWith(['a1', 'c2']);
 });
 
 test('Load items when being updated', () => {
-    const contactAccountSelection = mount(
-        <ContactAccountSelection onChange={jest.fn()} value={undefined} />
-    );
+    const onChange = jest.fn();
+    const {rerender} = render(<ContactAccountSelection onChange={onChange} value={undefined} />);
 
-    contactAccountSelection.setProps({value: ['a1', 'c2']});
+    rerender(<ContactAccountSelection onChange={onChange} value={['a1', 'c2']} />);
 
-    expect(contactAccountSelection.instance().store.loadItems).toHaveBeenCalledWith(['a1', 'c2']);
+    expect(getStore().loadItems).toHaveBeenCalledWith(['a1', 'c2']);
 });
 
 test('Load items when being updated without infinite loop', () => {
@@ -99,74 +146,76 @@ test('Load items when being updated without infinite loop', () => {
         this.items = [];
     });
 
-    const contactAccountSelection = mount(
-        <ContactAccountSelection onChange={jest.fn()} value={['a1', 'c1', 'c2']} />
-    );
+    const onChange = jest.fn();
+    const {rerender} = render(<ContactAccountSelection onChange={onChange} value={['a1', 'c1', 'c2']} />);
 
-    expect(contactAccountSelection.instance().store.loadItems).toHaveBeenCalledWith(['a1', 'c1', 'c2']);
-    expect(contactAccountSelection.instance().store.loadItems).toHaveBeenCalledTimes(1);
+    expect(getStore().loadItems).toHaveBeenCalledWith(['a1', 'c1', 'c2']);
+    expect(getStore().loadItems).toHaveBeenCalledTimes(1);
 
-    contactAccountSelection.setProps({value: ['a1', 'c1', 'c2']});
+    rerender(<ContactAccountSelection onChange={onChange} value={['a1', 'c1', 'c2']} />);
 
-    expect(contactAccountSelection.instance().store.loadItems).toHaveBeenCalledTimes(1);
+    expect(getStore().loadItems).toHaveBeenCalledTimes(1);
 });
 
-test('Close contact overlay if close button is clicked', () => {
-    const contactAccountSelection = mount(
-        <ContactAccountSelection onChange={jest.fn()} value={undefined} />
-    );
+test('Close contact overlay if overlay close callback is fired', async() => {
+    const user = userEvent.setup();
+    render(<ContactAccountSelection onChange={jest.fn()} value={undefined} />);
 
-    expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="contacts"]').prop('open')).toEqual(false);
-    contactAccountSelection.find('MultiItemSelection').prop('leftButton').onClick('contacts');
-    contactAccountSelection.update();
+    expect(screen.getByTestId('contacts-overlay')).toHaveAttribute('data-open', 'false');
 
-    expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="contacts"]').prop('open')).toEqual(true);
+    await openOverlay(user, 'sulu_contact.people');
 
-    contactAccountSelection.find(MultiListOverlay).find('[listKey="contacts"]').prop('onClose')();
-    contactAccountSelection.update();
-    expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="contacts"]').prop('open')).toEqual(false);
+    expect(screen.getByTestId('contacts-overlay')).toHaveAttribute('data-open', 'true');
+
+    act(() => {
+        mockMultiListOverlayProps.contacts.onClose();
+    });
+
+    expect(screen.getByTestId('contacts-overlay')).toHaveAttribute('data-open', 'false');
 });
 
-test('Confirm contact overlay if close button is clicked', () => {
+test('Confirm contact overlay if close button is clicked', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
-    const contactAccountSelection = mount(
-        <ContactAccountSelection onChange={changeSpy} value={['a1', 'c1', 'c2']} />
-    );
+    render(<ContactAccountSelection onChange={changeSpy} value={['a1', 'c1', 'c2']} />);
 
-    expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="contacts"]').prop('open')).toEqual(false);
-    contactAccountSelection.find('MultiItemSelection').prop('leftButton').onClick('contacts');
-    contactAccountSelection.update();
+    expect(screen.getByTestId('contacts-overlay')).toHaveAttribute('data-open', 'false');
+    await openOverlay(user, 'sulu_contact.people');
+    expect(screen.getByTestId('contacts-overlay')).toHaveAttribute('data-open', 'true');
 
-    expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="contacts"]').prop('open')).toEqual(true);
+    act(() => {
+        mockMultiListOverlayProps.contacts.onConfirm([
+            {id: 1},
+            {id: 4},
+        ]);
+    });
 
-    contactAccountSelection.find(MultiListOverlay).find('[listKey="contacts"]').prop('onConfirm')([
-        {id: 1},
-        {id: 4},
-    ]);
-    contactAccountSelection.update();
-    expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="contacts"]').prop('open')).toEqual(false);
+    expect(screen.getByTestId('contacts-overlay')).toHaveAttribute('data-open', 'false');
 
     expect(changeSpy).toHaveBeenCalledWith(['a1', 'c1', 'c4']);
 });
 
-test('Close contact overlay if close button is clicked', () => {
-    const contactAccountSelection = mount(
-        <ContactAccountSelection onChange={jest.fn()} value={undefined} />
-    );
+test('Close contact overlay if close button is clicked', async() => {
+    const user = userEvent.setup();
+    render(<ContactAccountSelection onChange={jest.fn()} value={undefined} />);
 
-    expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="contacts"]').prop('open')).toEqual(false);
-    contactAccountSelection.find('MultiItemSelection').prop('leftButton').onClick('contacts');
-    contactAccountSelection.update();
+    expect(screen.getByTestId('contacts-overlay')).toHaveAttribute('data-open', 'false');
 
-    expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="contacts"]').prop('open')).toEqual(true);
+    await openOverlay(user, 'sulu_contact.people');
 
-    contactAccountSelection.find(MultiListOverlay).find('[listKey="contacts"]').prop('onClose')();
-    contactAccountSelection.update();
-    expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="contacts"]').prop('open')).toEqual(false);
+    expect(screen.getByTestId('contacts-overlay')).toHaveAttribute('data-open', 'true');
+
+    act(() => {
+        mockMultiListOverlayProps.contacts.onClose();
+    });
+
+    expect(screen.getByTestId('contacts-overlay')).toHaveAttribute('data-open', 'false');
 });
 
-test('Remove contact if delete button is clicked', () => {
+test('Remove contact if delete button is clicked', async() => {
+    const user = userEvent.setup();
+
     // $FlowFixMe
     ContactAccountSelectionStore.mockImplementation(function() {
         this.loadItems = jest.fn();
@@ -182,56 +231,56 @@ test('Remove contact if delete button is clicked', () => {
 
     const changeSpy = jest.fn();
 
-    const contactAccountSelection = mount(
-        <ContactAccountSelection onChange={changeSpy} value={['c2', 'a3', 'c3']} />
-    );
+    render(<ContactAccountSelection onChange={changeSpy} value={['c2', 'a3', 'c3']} />);
 
-    contactAccountSelection.find('MultiItemSelection Item[index=1]').prop('onRemove')('c2');
+    await user.click(getRemoveButton('Max Mustermann'));
 
-    expect(contactAccountSelection.instance().store.remove).toHaveBeenCalledWith('c2');
+    expect(getStore().remove).toHaveBeenCalledWith('c2');
     expect(changeSpy).toHaveBeenCalledWith(['a3', 'c3']);
 });
 
-test('Confirm account overlay if confirm button is clicked', () => {
+test('Confirm account overlay if confirm button is clicked', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
-    const contactAccountSelection = mount(
-        <ContactAccountSelection onChange={changeSpy} value={['a1', 'a2', 'c1']} />
-    );
+    render(<ContactAccountSelection onChange={changeSpy} value={['a1', 'a2', 'c1']} />);
 
-    expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="accounts"]').prop('open')).toEqual(false);
-    contactAccountSelection.find('MultiItemSelection').prop('leftButton').onClick('accounts');
-    contactAccountSelection.update();
+    expect(screen.getByTestId('accounts-overlay')).toHaveAttribute('data-open', 'false');
+    await openOverlay(user, 'sulu_contact.organizations');
+    expect(screen.getByTestId('accounts-overlay')).toHaveAttribute('data-open', 'true');
 
-    expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="accounts"]').prop('open')).toEqual(true);
+    act(() => {
+        mockMultiListOverlayProps.accounts.onConfirm([
+            {id: 1},
+            {id: 4},
+        ]);
+    });
 
-    contactAccountSelection.find(MultiListOverlay).find('[listKey="accounts"]').prop('onConfirm')([
-        {id: 1},
-        {id: 4},
-    ]);
-    contactAccountSelection.update();
-    expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="accounts"]').prop('open')).toEqual(false);
+    expect(screen.getByTestId('accounts-overlay')).toHaveAttribute('data-open', 'false');
 
     expect(changeSpy).toHaveBeenCalledWith(['a1', 'c1', 'a4']);
 });
 
-test('Close account overlay if close button is clicked', () => {
-    const contactAccountSelection = mount(
-        <ContactAccountSelection onChange={jest.fn()} value={undefined} />
-    );
+test('Close account overlay if close button is clicked', async() => {
+    const user = userEvent.setup();
+    render(<ContactAccountSelection onChange={jest.fn()} value={undefined} />);
 
-    expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="accounts"]').prop('open')).toEqual(false);
-    contactAccountSelection.find('MultiItemSelection').prop('leftButton').onClick('accounts');
-    contactAccountSelection.update();
+    expect(screen.getByTestId('accounts-overlay')).toHaveAttribute('data-open', 'false');
 
-    expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="accounts"]').prop('open')).toEqual(true);
+    await openOverlay(user, 'sulu_contact.organizations');
 
-    contactAccountSelection.find(MultiListOverlay).find('[listKey="accounts"]').prop('onClose')();
-    contactAccountSelection.update();
-    expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="accounts"]').prop('open')).toEqual(false);
+    expect(screen.getByTestId('accounts-overlay')).toHaveAttribute('data-open', 'true');
+
+    act(() => {
+        mockMultiListOverlayProps.accounts.onClose();
+    });
+
+    expect(screen.getByTestId('accounts-overlay')).toHaveAttribute('data-open', 'false');
 });
 
-test('Call onItemClick callback when an item is clicked', () => {
+test('Call onItemClick callback when an item is clicked', async() => {
+    const user = userEvent.setup();
+
     // $FlowFixMe
     ContactAccountSelectionStore.mockImplementation(function() {
         this.loadItems = jest.fn();
@@ -247,15 +296,13 @@ test('Call onItemClick callback when an item is clicked', () => {
 
     const itemClickSpy = jest.fn();
 
-    const contactAccountSelection = mount(
-        <ContactAccountSelection onChange={jest.fn()} onItemClick={itemClickSpy} value={['c2', 'a3', 'c3']} />
-    );
+    render(<ContactAccountSelection onChange={jest.fn()} onItemClick={itemClickSpy} value={['c2', 'a3', 'c3']} />);
 
-    contactAccountSelection.find('MultiItemSelection .content').at(0).simulate('click');
+    await user.click(screen.getByText('Max Mustermann'));
     expect(itemClickSpy).toHaveBeenLastCalledWith('c2', {id: 'c2', fullName: 'Max Mustermann'});
-    contactAccountSelection.find('MultiItemSelection .content').at(1).simulate('click');
+    await user.click(screen.getByText('Sulu'));
     expect(itemClickSpy).toHaveBeenLastCalledWith('a3', {id: 'a3', name: 'Sulu'});
-    contactAccountSelection.find('MultiItemSelection .content').at(2).simulate('click');
+    await user.click(screen.getByText('Erika Mustermann'));
     expect(itemClickSpy).toHaveBeenLastCalledWith('c3', {id: 'c3', fullName: 'Erika Mustermann'});
 });
 
@@ -275,11 +322,11 @@ test('Change order of items', () => {
 
     const changeSpy = jest.fn();
 
-    const contactAccountSelection = mount(
-        <ContactAccountSelection onChange={changeSpy} value={['c2', 'a3', 'c3']} />
-    );
+    render(<ContactAccountSelection onChange={changeSpy} value={['c2', 'a3', 'c3']} />);
 
-    contactAccountSelection.find('MultiItemSelection').prop('onItemsSorted')(2, 1);
+    act(() => {
+        mockSortableContainerProps.onSortEnd({newIndex: 1, oldIndex: 2});
+    });
 
     expect(changeSpy).toHaveBeenCalledWith(['c2', 'c3', 'a3']);
 });

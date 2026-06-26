@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Render a MultiMediaSelection field 1`] = `
-Array [
+<div>
   <div
     class="multiItemSelectionClass"
   >
@@ -258,15 +258,15 @@ Array [
         </div>
       </li>
     </ul>
-  </div>,
+  </div>
   <div>
     single media selection overlay
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Render a MultiMediaSelection field with display options 1`] = `
-Array [
+<div>
   <div
     class="multiItemSelectionClass"
   >
@@ -382,15 +382,15 @@ Array [
         </div>
       </li>
     </ul>
-  </div>,
+  </div>
   <div>
     single media selection overlay
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Render a MultiMediaSelection field with display options and selected icon 1`] = `
-Array [
+<div>
   <div
     class="multiItemSelectionClass"
   >
@@ -506,15 +506,15 @@ Array [
         </div>
       </li>
     </ul>
-  </div>,
+  </div>
   <div>
     single media selection overlay
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Render a MultiMediaSelection field without thumbnails with MimeTypeIndicator 1`] = `
-Array [
+<div>
   <div
     class="multiItemSelectionClass"
   >
@@ -567,7 +567,7 @@ Array [
             >
               <div
                 class="mimeTypeIndicator"
-                style="color:#fff;font-size:16px;background-color:#585858;width:25px;height:25px"
+                style="color: rgb(255, 255, 255); font-size: 16px; background-color: rgb(88, 88, 88); width: 25px; height: 25px;"
               >
                 <span
                   aria-label="fa-file-code-o"
@@ -648,7 +648,7 @@ Array [
             >
               <div
                 class="mimeTypeIndicator"
-                style="color:#fff;font-size:16px;background-color:#bb0806;width:25px;height:25px"
+                style="color: rgb(255, 255, 255); font-size: 16px; background-color: rgb(187, 8, 6); width: 25px; height: 25px;"
               >
                 <span
                   aria-label="fa-file-pdf-o"
@@ -729,7 +729,7 @@ Array [
             >
               <div
                 class="mimeTypeIndicator"
-                style="color:#fff;font-size:16px;background-color:#00723a;width:25px;height:25px"
+                style="color: rgb(255, 255, 255); font-size: 16px; background-color: rgb(0, 114, 58); width: 25px; height: 25px;"
               >
                 <span
                   aria-label="fa-file-excel-o"
@@ -783,9 +783,9 @@ Array [
         </div>
       </li>
     </ul>
-  </div>,
+  </div>
   <div>
     single media selection overlay
-  </div>,
-]
+  </div>
+</div>
 `;

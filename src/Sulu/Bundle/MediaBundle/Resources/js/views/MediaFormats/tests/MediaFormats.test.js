@@ -1,8 +1,11 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import {observable} from 'mobx';
-import {mount, render} from 'enzyme';
-import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
+import {
+    findAllElementsByType,
+    findWithHighOrderFunction,
+    renderWithRef,
+} from 'sulu-admin-bundle/utils/TestHelper';
 
 jest.useFakeTimers();
 
@@ -21,9 +24,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
     }),
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('../../../stores/formatStore', () => ({
     loadFormats: jest.fn(),
@@ -35,7 +36,9 @@ beforeEach(() => {
 
 test('Render a loading MediaFormats view', () => {
     const MediaFormats = require('../MediaFormats').default;
+    const formatStore = require('../../../stores/formatStore');
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    formatStore.loadFormats.mockReturnValue(new Promise(() => undefined));
     const router = {
         bind: jest.fn(),
         route: {
@@ -47,14 +50,18 @@ test('Render a loading MediaFormats view', () => {
     const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
     resourceStore.loading = true;
 
-    expect(render(
+    const {container} = renderWithRef(
         <MediaFormats resourceStore={resourceStore} router={router} title="Test 1" />
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a loading MediaFormats view if formats have not been loaded yet', () => {
     const MediaFormats = require('../MediaFormats').default;
+    const formatStore = require('../../../stores/formatStore');
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    formatStore.loadFormats.mockReturnValue(new Promise(() => undefined));
     const router = {
         bind: jest.fn(),
         route: {
@@ -66,9 +73,11 @@ test('Render a loading MediaFormats view if formats have not been loaded yet', (
     const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
     resourceStore.loading = false;
 
-    expect(render(
+    const {container} = renderWithRef(
         <MediaFormats resourceStore={resourceStore} router={router} />
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a MediaFormats view', () => {
@@ -101,10 +110,10 @@ test('Render a MediaFormats view', () => {
         '800x800': '/media/800x800/image.jpg',
     };
 
-    const mediaFormats = mount(<MediaFormats resourceStore={resourceStore} router={router} title="Test 2" />);
+    const {container} = renderWithRef(<MediaFormats resourceStore={resourceStore} router={router} title="Test 2" />);
 
     return formatPromise.then(() => {
-        expect(mediaFormats.render()).toMatchSnapshot();
+        expect(container).toMatchSnapshot();
     });
 });
 
@@ -138,14 +147,14 @@ test('Open the image in the given format when icon is clicked', () => {
         '800x800': '/media/800x800/image.jpg?v=1',
     };
 
-    const mediaFormats = mount(<MediaFormats resourceStore={resourceStore} router={router} />);
+    const {instance: mediaFormats} = renderWithRef(<MediaFormats resourceStore={resourceStore} router={router} />);
 
     return formatPromise.then(() => {
-        mediaFormats.update();
+        const rows = findAllElementsByType(mediaFormats.render(), 'Row');
 
-        mediaFormats.find('Row').at(0).find('ButtonCell').at(0).prop('onClick')('400x400');
+        rows[0].props.buttons[0].onClick('400x400');
         expect(window.open).toHaveBeenLastCalledWith('/media/400x400/image.jpg?v=1&inline=1');
-        mediaFormats.find('Row').at(1).find('ButtonCell').at(0).prop('onClick')('800x800');
+        rows[1].props.buttons[0].onClick('800x800');
         expect(window.open).toHaveBeenLastCalledWith('/media/800x800/image.jpg?v=1&inline=1');
     });
 });
@@ -179,26 +188,23 @@ test('Copy the image URL for the given format when icon is clicked and show a su
         '800x800': '/media/800x800/image.jpg?v=1',
     };
 
-    const mediaFormats = mount(<MediaFormats resourceStore={resourceStore} router={router} />);
+    const {instance: mediaFormats} = renderWithRef(<MediaFormats resourceStore={resourceStore} router={router} />);
 
     return formatPromise.then(() => {
-        mediaFormats.update();
+        const getRows = () => findAllElementsByType(mediaFormats.render(), 'Row');
+        const getButtons = (index) => getRows()[index].props.buttons;
 
-        mediaFormats.find('Row').at(0).find('ButtonCell').at(1).prop('onClick')('400x400');
+        getButtons(0)[1].onClick('400x400');
         expect(copyToClipboard).toHaveBeenLastCalledWith('http://localhost/media/400x400/image.jpg?v=1');
-        mediaFormats.update();
-        expect(mediaFormats.find('Row').at(0).find('ButtonCell').at(1).prop('icon')).toEqual('su-check');
+        expect(getButtons(0)[1].icon).toEqual('su-check');
         jest.runAllTimers();
-        mediaFormats.update();
-        expect(mediaFormats.find('Row').at(0).find('ButtonCell').at(1).prop('icon')).toEqual('su-copy');
+        expect(getButtons(0)[1].icon).toEqual('su-copy');
 
-        mediaFormats.find('Row').at(1).find('ButtonCell').at(1).prop('onClick')('800x800');
+        getButtons(1)[1].onClick('800x800');
         expect(copyToClipboard).toHaveBeenLastCalledWith('http://localhost/media/800x800/image.jpg?v=1');
-        mediaFormats.update();
-        expect(mediaFormats.find('Row').at(1).find('ButtonCell').at(1).prop('icon')).toEqual('su-check');
+        expect(getButtons(1)[1].icon).toEqual('su-check');
         jest.runAllTimers();
-        mediaFormats.update();
-        expect(mediaFormats.find('Row').at(0).find('ButtonCell').at(1).prop('icon')).toEqual('su-copy');
+        expect(getButtons(0)[1].icon).toEqual('su-copy');
     });
 });
 
@@ -222,7 +228,7 @@ test('Should change locale via locale chooser', () => {
             },
         },
     };
-    const mediaFormats = mount(<MediaFormats resourceStore={resourceStore} router={router} />).get(0);
+    const {instance: mediaFormats} = renderWithRef(<MediaFormats resourceStore={resourceStore} router={router} />);
     resourceStore.locale.set('de');
 
     const toolbarConfig = toolbarFunction.call(mediaFormats);
@@ -248,7 +254,7 @@ test('Should show locales from router options in toolbar', () => {
             },
         },
     };
-    const mediaFormats = mount(<MediaFormats resourceStore={resourceStore} router={router} />).get(0);
+    const {instance: mediaFormats} = renderWithRef(<MediaFormats resourceStore={resourceStore} router={router} />);
 
     const toolbarConfig = toolbarFunction.call(mediaFormats);
     expect(toolbarConfig.locale.options).toEqual([
@@ -276,7 +282,7 @@ test('Should navigate to defined route on back button click', () => {
             },
         },
     };
-    const mediaFormats = mount(<MediaFormats resourceStore={resourceStore} router={router} />).get(0);
+    const {instance: mediaFormats} = renderWithRef(<MediaFormats resourceStore={resourceStore} router={router} />);
 
     const toolbarConfig = toolbarFunction.call(mediaFormats);
     toolbarConfig.backButton.onClick();

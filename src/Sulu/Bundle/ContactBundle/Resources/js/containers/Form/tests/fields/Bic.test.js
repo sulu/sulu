@@ -1,75 +1,52 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
-import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import bindValueToOnChange from 'sulu-admin-bundle/utils/TestHelper/bindValueToOnChange';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import Bic from '../../fields/Bic';
 
-jest.mock('sulu-admin-bundle/containers', () => ({
-    FormInspector: jest.fn(),
-    ResourceFormStore: jest.fn(),
-}));
-
-jest.mock('sulu-admin-bundle/stores', () => ({
-    ResourceStore: jest.fn(),
-}));
-
-test('Pass props correctly to Bic component', () => {
+test('Pass props correctly to Bic component', async() => {
     const finishSpy = jest.fn();
     const changeSpy = jest.fn();
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
-    const bic = shallow(
-        <Bic {...fieldTypeDefaultProps} formInspector={formInspector} onChange={changeSpy} onFinish={finishSpy} />
+    render(
+        bindValueToOnChange(<Bic {...fieldTypeDefaultProps} onChange={changeSpy} onFinish={finishSpy} />)
     );
 
-    expect(bic.props()).toEqual(expect.objectContaining({
-        disabled: false,
-        id: '/',
-        onBlur: finishSpy,
-        onChange: changeSpy,
-        valid: true,
-        value: undefined,
-    }));
+    const input = screen.getByRole('textbox');
+
+    expect(input).toBeEnabled();
+    expect(input).toHaveAttribute('id', '/');
+    expect(input).toHaveValue('');
+
+    await userEvent.type(input, 'Test');
+    await userEvent.tab();
+
+    expect(changeSpy).toHaveBeenLastCalledWith('Test');
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Pass disabled prop to Bic component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    render(<Bic {...fieldTypeDefaultProps} disabled={true} />);
 
-    const bic = shallow(
-        <Bic {...fieldTypeDefaultProps} disabled={true} formInspector={formInspector} />
-    );
-
-    expect(bic.prop('disabled')).toEqual(true);
+    expect(screen.getByRole('textbox')).toBeDisabled();
 });
 
 test('Pass id prop to Bic component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    render(<Bic {...fieldTypeDefaultProps} dataPath="/test" />);
 
-    const bic = shallow(
-        <Bic {...fieldTypeDefaultProps} dataPath="/test" formInspector={formInspector} />
-    );
-
-    expect(bic.prop('id')).toEqual('/test');
+    expect(screen.getByRole('textbox')).toHaveAttribute('id', '/test');
 });
 
 test('Pass error to Bic component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    render(<Bic {...fieldTypeDefaultProps} error={{}} />);
 
-    const bic = shallow(
-        <Bic {...fieldTypeDefaultProps} error={{}} formInspector={formInspector} />
-    );
-
-    expect(bic.prop('valid')).toEqual(false);
+    expect(screen.getByRole('textbox').parentElement).toHaveClass('error');
 });
 
 test('Pass value prop to Bic component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    render(<Bic {...fieldTypeDefaultProps} value="Test" />);
 
-    const bic = shallow(
-        <Bic {...fieldTypeDefaultProps} formInspector={formInspector} value="Test" />
-    );
-
-    expect(bic.prop('value')).toEqual('Test');
+    expect(screen.getByRole('textbox')).toHaveValue('Test');
 });

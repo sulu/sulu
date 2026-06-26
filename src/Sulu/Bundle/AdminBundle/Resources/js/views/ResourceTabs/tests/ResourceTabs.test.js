@@ -1,12 +1,15 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {mount} from 'enzyme';
 import {extendObservable, extendObservable as mockExtendObservable, observable} from 'mobx';
 import React from 'react';
+import {act, render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import ResourceTabs from '../ResourceTabs';
 import Router from '../../../services/Router';
 import ResourceStore from '../../../stores/ResourceStore';
+import {createTestRef, mockResourceStoreImplementation} from '../../../utils/TestHelper';
 
 jest.mock('debounce', () => jest.fn((callback) => callback));
+jest.mock('../../../components/Loader', () => () => 'loader');
 
 window.ResizeObserver = jest.fn(function() {
     this.observe = jest.fn();
@@ -47,8 +50,24 @@ beforeEach(() => {
     ResourceStore.mockReset();
 });
 
-test('Should pass the tab title from the ResourceStore as configured in the route', () => {
-    ResourceStore.mockImplementation(function() {
+function mockResourceStore(implementation) {
+    mockResourceStoreImplementation(ResourceStore, implementation);
+}
+
+function createResourceTabsRef() {
+    return createTestRef();
+}
+
+function getTabLabels() {
+    return screen.getAllByRole('button').map((button) => button.textContent);
+}
+
+function waitForAutorun() {
+    return new Promise((resolve) => setTimeout(resolve));
+}
+
+test('Should pass the tab title from the ResourceStore as configured in the route', async() => {
+    mockResourceStore(function() {
         this.initialized = true;
         this.load = jest.fn();
         extendObservable(this, {data: {}});
@@ -80,18 +99,20 @@ test('Should pass the tab title from the ResourceStore as configured in the rout
     router.route = route.children[1];
 
     const children = jest.fn();
-    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{children}</ResourceTabs>);
+    const ref = createResourceTabsRef();
+    render(<ResourceTabs ref={ref} route={route} router={router}>{children}</ResourceTabs>);
 
-    resourceTabs.instance().resourceStore.data = {test1: 'value1'};
-    resourceTabs.update();
+    act(() => {
+        ref.current.resourceStore.data = {test1: 'value1'};
+    });
 
-    expect(children).toHaveBeenCalledWith(
+    await waitFor(() => expect(children).toHaveBeenLastCalledWith(
         {locales: undefined, resourceStore: expect.anything(ResourceStore), title: 'value1'}
-    );
+    ));
 });
 
-test('Should not pass the tab title from the ResourceStore if no titleProperty is set', () => {
-    ResourceStore.mockImplementation(function() {
+test('Should not pass the tab title from the ResourceStore if no titleProperty is set', async() => {
+    mockResourceStore(function() {
         this.initialized = true;
         this.loading = false;
         this.load = jest.fn();
@@ -124,18 +145,20 @@ test('Should not pass the tab title from the ResourceStore if no titleProperty i
 
     const children = jest.fn();
 
-    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{children}</ResourceTabs>);
+    const ref = createResourceTabsRef();
+    render(<ResourceTabs ref={ref} route={route} router={router}>{children}</ResourceTabs>);
 
-    resourceTabs.instance().resourceStore.data = {test1: 'value1'};
-    resourceTabs.update();
+    act(() => {
+        ref.current.resourceStore.data = {test1: 'value1'};
+    });
 
-    expect(children).toHaveBeenCalledWith(
+    await waitFor(() => expect(children).toHaveBeenLastCalledWith(
         {locales: undefined, resourceStore: expect.anything(ResourceStore), title: undefined}
-    );
+    ));
 });
 
 test('Should pass the tab title from the resourceStore as configured in the props to the child component', () => {
-    ResourceStore.mockImplementation(function() {
+    mockResourceStore(function() {
         this.initialized = true;
         this.loading = false;
         this.load = jest.fn();
@@ -169,7 +192,7 @@ test('Should pass the tab title from the resourceStore as configured in the prop
 
     const children = jest.fn();
 
-    mount(
+    render(
         <ResourceTabs route={route} router={router} titleProperty="test2">
             {children}
         </ResourceTabs>
@@ -182,8 +205,8 @@ test('Should pass the tab title from the resourceStore as configured in the prop
     });
 });
 
-test('Should not render the tab title on the first tab when tabOrder is defined', (done) => {
-    ResourceStore.mockImplementation(function() {
+test('Should not render the tab title on the first tab when tabOrder is defined', async() => {
+    mockResourceStore(function() {
         this.initialized = true;
         this.load = jest.fn();
         extendObservable(this, {data: {}});
@@ -218,22 +241,24 @@ test('Should not render the tab title on the first tab when tabOrder is defined'
 
     const Child = () => (<h1>Child</h1>);
 
-    const resourceTabs = mount(
-        <ResourceTabs route={route} router={router}>
+    const ref = createResourceTabsRef();
+    render(
+        <ResourceTabs ref={ref} route={route} router={router}>
             {() => (<Child route={route.children[1]} />)}
         </ResourceTabs>
     );
 
-    resourceTabs.instance().resourceStore.data = {test1: 'value1'};
-    setTimeout(() => {
-        resourceTabs.update();
-        expect(resourceTabs.find('ResourceTabs > h1')).toHaveLength(0);
-        done();
+    act(() => {
+        ref.current.resourceStore.data = {test1: 'value1'};
     });
+
+    expect(await screen.findByRole('heading', {name: 'Child'})).toBeInTheDocument();
+
+    expect(screen.queryByRole('heading', {name: 'value1'})).not.toBeInTheDocument();
 });
 
-test('Should render the child components after the tabs', (done) => {
-    ResourceStore.mockImplementation(function() {
+test('Should render the child components after the tabs', () => {
+    mockResourceStore(function() {
         this.initialized = true;
         this.load = jest.fn();
         extendObservable(this, {data: {}});
@@ -265,20 +290,16 @@ test('Should render the child components after the tabs', (done) => {
 
     const Child = () => (<h1>Child</h1>);
 
-    const resourceTabs = mount(
+    render(
         <ResourceTabs isRootView={true} route={route} router={router}>{() => (<Child />)}</ResourceTabs>
     );
 
-    setTimeout(() => {
-        expect(resourceTabs.find('Loader')).toHaveLength(0);
-        expect(resourceTabs.find('ResourceTabs Tabs Tabs').render()).toMatchSnapshot();
-        expect(resourceTabs.find('ResourceTabs Child').render()).toMatchSnapshot();
-        done();
-    });
+    expect(getTabLabels()).toEqual(['Tab Titel 1', 'Tab Titel 2']);
+    expect(screen.getByRole('heading', {name: 'Child'})).toBeInTheDocument();
 });
 
 test('Should render a loader if resourceStore was not initialized yet', () => {
-    ResourceStore.mockImplementation(function() {
+    mockResourceStore(function() {
         this.initialized = false;
         this.load = jest.fn();
         extendObservable(this, {data: {}});
@@ -310,14 +331,14 @@ test('Should render a loader if resourceStore was not initialized yet', () => {
 
     const Child = () => (<h1>Child</h1>);
 
-    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+    render(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
-    expect(resourceTabs.find('Loader')).toHaveLength(1);
-    expect(resourceTabs.find('Child')).toHaveLength(0);
+    expect(screen.getByText('loader')).toBeInTheDocument();
+    expect(screen.queryByRole('heading', {name: 'Child'})).not.toBeInTheDocument();
 });
 
-test('Should mark the currently active child route as selected tab', (done) => {
-    ResourceStore.mockImplementation(function() {
+test('Should mark the currently active child route as selected tab', () => {
+    mockResourceStore(function() {
         this.initialized = true;
         this.load = jest.fn();
         extendObservable(this, {data: {}});
@@ -352,19 +373,18 @@ test('Should mark the currently active child route as selected tab', (done) => {
 
     const Child = () => (<h1>Child</h1>);
 
-    const resourceTabs = mount(
+    render(
         <ResourceTabs route={route} router={router}>{() => (<Child route={route.children[1]} />)}</ResourceTabs>
     );
 
-    setTimeout(() => {
-        expect(resourceTabs.find('ResourceTabs Tabs Tabs').render()).toMatchSnapshot();
-        expect(resourceTabs.find('ResourceTabs Child').render()).toMatchSnapshot();
-        done();
-    });
+    expect(getTabLabels()).toEqual(['Tab Titel 1', 'Tab Titel 2']);
+    expect(screen.getByRole('button', {name: 'Tab Titel 1'})).toBeEnabled();
+    expect(screen.getByRole('button', {name: 'Tab Titel 2'})).toBeDisabled();
+    expect(screen.getByRole('heading', {name: 'Child'})).toBeInTheDocument();
 });
 
-test('Should consider the tabOrder option of the route', (done) => {
-    ResourceStore.mockImplementation(function() {
+test('Should consider the tabOrder option of the route', () => {
+    mockResourceStore(function() {
         this.initialized = true;
         this.load = jest.fn();
         extendObservable(this, {data: {}});
@@ -415,23 +435,15 @@ test('Should consider the tabOrder option of the route', (done) => {
 
     const Child = () => (<h1>Child</h1>);
 
-    const resourceTabs = mount(
+    render(
         <ResourceTabs route={route} router={router}>{() => (<Child route={route.children[1]} />)}</ResourceTabs>
     );
 
-    setTimeout(() => {
-        resourceTabs.update();
-        expect(resourceTabs.find('ResourceTabs Tab')).toHaveLength(4);
-        expect(resourceTabs.find('ResourceTabs Tab').at(0).text()).toEqual('Tab Titel 4');
-        expect(resourceTabs.find('ResourceTabs Tab').at(1).text()).toEqual('Tab Titel 1');
-        expect(resourceTabs.find('ResourceTabs Tab').at(2).text()).toEqual('Tab Titel 3');
-        expect(resourceTabs.find('ResourceTabs Tab').at(3).text()).toEqual('Tab Titel 2');
-        done();
-    });
+    expect(getTabLabels()).toEqual(['Tab Titel 4', 'Tab Titel 1', 'Tab Titel 3', 'Tab Titel 2']);
 });
 
-test('Should hide tabs which do not match the tab condition', (done) => {
-    ResourceStore.mockImplementation(function() {
+test('Should hide tabs which do not match the tab condition', async() => {
+    mockResourceStore(function() {
         this.initialized = true;
         this.load = jest.fn();
         extendObservable(this, {data: {}});
@@ -468,31 +480,28 @@ test('Should hide tabs which do not match the tab condition', (done) => {
 
     const Child = () => (<h1>Child</h1>);
 
-    const resourceTabs = mount(
-        <ResourceTabs isRootView={true} route={route} router={router}>
+    const ref = createResourceTabsRef();
+    render(
+        <ResourceTabs isRootView={true} ref={ref} route={route} router={router}>
             {() => (<Child route={route.children[1]} />)}
         </ResourceTabs>
     );
 
-    resourceTabs.instance().resourceStore.data = {test: 1};
-
-    setTimeout(() => {
-        resourceTabs.update();
-        expect(resourceTabs.find('ResourceTabs Tab')).toHaveLength(1);
-        expect(resourceTabs.find('ResourceTabs Tab').text()).toEqual('Tab Titel 1');
-
-        resourceTabs.instance().resourceStore.data.test = 2;
-        setTimeout(() => {
-            resourceTabs.update();
-            expect(resourceTabs.find('ResourceTabs Tab')).toHaveLength(1);
-            expect(resourceTabs.find('ResourceTabs Tab').text()).toEqual('Tab Titel 2');
-            done();
-        });
+    act(() => {
+        ref.current.resourceStore.data = {test: 1};
     });
+
+    await waitFor(() => expect(getTabLabels()).toEqual(['Tab Titel 1']));
+
+    act(() => {
+        ref.current.resourceStore.data.test = 2;
+    });
+
+    await waitFor(() => expect(getTabLabels()).toEqual(['Tab Titel 2']));
 });
 
-test('Should redirect to first child route if no tab is active by default', (done) => {
-    ResourceStore.mockImplementation(function() {
+test('Should redirect to first child route if no tab is active by default', async() => {
+    mockResourceStore(function() {
         this.initialized = true;
         this.load = jest.fn();
         extendObservable(this, {data: {}});
@@ -530,16 +539,13 @@ test('Should redirect to first child route if no tab is active by default', (don
     router.route = route;
 
     const Child = () => (<h1>Child</h1>);
-    mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+    render(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
-    setTimeout(() => {
-        expect(router.redirect).toHaveBeenCalledWith('route1', attributes);
-        done();
-    });
+    await waitFor(() => expect(router.redirect).toHaveBeenCalledWith('route1', attributes));
 });
 
-test('Should redirect to first visible child route if no tab is active', (done) => {
-    ResourceStore.mockImplementation(function() {
+test('Should redirect to first visible child route if no tab is active', async() => {
+    mockResourceStore(function() {
         this.initialized = true;
         this.load = jest.fn();
         extendObservable(this, {data: {}});
@@ -579,17 +585,18 @@ test('Should redirect to first visible child route if no tab is active', (done) 
     router.route = route;
 
     const Child = () => (<h1>Child</h1>);
-    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
-    resourceTabs.instance().resourceStore.data = {test: 2};
+    const ref = createResourceTabsRef();
+    render(<ResourceTabs ref={ref} route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
-    setTimeout(() => {
-        expect(router.redirect).toHaveBeenCalledWith('route2', attributes);
-        done();
+    act(() => {
+        ref.current.resourceStore.data = {test: 2};
     });
+
+    await waitFor(() => expect(router.redirect).toHaveBeenCalledWith('route2', attributes));
 });
 
-test('Should redirect to first visible child route if invisible tab is active', (done) => {
-    ResourceStore.mockImplementation(function() {
+test('Should redirect to first visible child route if invisible tab is active', async() => {
+    mockResourceStore(function() {
         this.initialized = true;
         this.load = jest.fn();
         extendObservable(this, {data: {}});
@@ -629,17 +636,18 @@ test('Should redirect to first visible child route if invisible tab is active', 
     router.route = childRoute1;
 
     const Child = () => (<h1>Child</h1>);
-    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
-    resourceTabs.instance().resourceStore.data = {test: 2};
+    const ref = createResourceTabsRef();
+    render(<ResourceTabs ref={ref} route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
-    setTimeout(() => {
-        expect(router.redirect).toHaveBeenCalledWith('route2', attributes);
-        done();
+    act(() => {
+        ref.current.resourceStore.data = {test: 2};
     });
+
+    await waitFor(() => expect(router.redirect).toHaveBeenCalledWith('route2', attributes));
 });
 
-test('Should redirect to highest prioritized tab if no tab is active', (done) => {
-    ResourceStore.mockImplementation(function() {
+test('Should redirect to highest prioritized tab if no tab is active', async() => {
+    mockResourceStore(function() {
         this.initialized = true;
         this.load = jest.fn();
         extendObservable(this, {data: {}});
@@ -685,16 +693,13 @@ test('Should redirect to highest prioritized tab if no tab is active', (done) =>
     router.route = route;
 
     const Child = () => (<h1>Child</h1>);
-    mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+    render(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
-    setTimeout(() => {
-        expect(router.redirect).toHaveBeenCalledWith('route2', attributes);
-        done();
-    });
+    await waitFor(() => expect(router.redirect).toHaveBeenCalledWith('route2', attributes));
 });
 
-test('Should not redirect to first child route if resourceStore is not initialized', (done) => {
-    ResourceStore.mockImplementation(function() {
+test('Should not redirect to first child route if resourceStore is not initialized', async() => {
+    mockResourceStore(function() {
         extendObservable(this, {data: {}});
     });
 
@@ -730,17 +735,15 @@ test('Should not redirect to first child route if resourceStore is not initializ
     router.route = route;
 
     const Child = () => (<h1>Child</h1>);
-    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
-    resourceTabs.instance().resourceStore.initialized = false;
+    render(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
-    setTimeout(() => {
-        expect(router.redirect).not.toHaveBeenCalledWith('route1', attributes);
-        done();
-    });
+    await waitForAutorun();
+
+    expect(router.redirect).not.toHaveBeenCalledWith('route1', attributes);
 });
 
-test('Should not redirect to first child route if resourceStore is currently loading', (done) => {
-    ResourceStore.mockImplementation(function() {
+test('Should not redirect to first child route if resourceStore is currently loading', async() => {
+    mockResourceStore(function() {
         extendObservable(this, {data: {}});
     });
 
@@ -776,17 +779,15 @@ test('Should not redirect to first child route if resourceStore is currently loa
     router.route = route;
 
     const Child = () => (<h1>Child</h1>);
-    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
-    resourceTabs.instance().resourceStore.loading = true;
+    render(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
-    setTimeout(() => {
-        expect(router.redirect).not.toHaveBeenCalledWith('route1', attributes);
-        done();
-    });
+    await waitForAutorun();
+
+    expect(router.redirect).not.toHaveBeenCalledWith('route1', attributes);
 });
 
 test('Should not redirect if a tab is already active', () => {
-    ResourceStore.mockImplementation(function() {
+    mockResourceStore(function() {
         extendObservable(this, {data: {}});
     });
 
@@ -822,13 +823,13 @@ test('Should not redirect if a tab is already active', () => {
     router.route = childRoute1;
 
     const Child = () => (<h1>Child</h1>);
-    mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+    render(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
     expect(router.redirect).not.toHaveBeenCalled();
 });
 
 test('Should reload ResourceStore if route is about to change to another child route', () => {
-    ResourceStore.mockImplementation(function() {
+    mockResourceStore(function() {
         this.initialized = true;
         this.load = jest.fn();
         this.reload = jest.fn();
@@ -862,15 +863,16 @@ test('Should reload ResourceStore if route is about to change to another child r
     router.route = childRoute2;
 
     const Child = () => (<h1>Child</h1>);
-    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+    const ref = createResourceTabsRef();
+    render(<ResourceTabs ref={ref} route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
     router.addUpdateRouteHook.mock.calls[1][0](childRoute1, attributes);
 
-    expect(resourceTabs.instance().resourceStore.reload).toHaveBeenCalledWith();
+    expect(ref.current.resourceStore.reload).toHaveBeenCalledWith();
 });
 
 test('Should not reload ResourceStore if route is about to change to same route', () => {
-    ResourceStore.mockImplementation(function() {
+    mockResourceStore(function() {
         this.initialized = true;
         this.load = jest.fn();
         this.reload = jest.fn();
@@ -899,15 +901,16 @@ test('Should not reload ResourceStore if route is about to change to same route'
     router.route = childRoute1;
 
     const Child = () => (<h1>Child</h1>);
-    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+    const ref = createResourceTabsRef();
+    render(<ResourceTabs ref={ref} route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
     router.addUpdateRouteHook.mock.calls[0][0](childRoute1);
 
-    expect(resourceTabs.instance().resourceStore.reload).not.toHaveBeenCalled();
+    expect(ref.current.resourceStore.reload).not.toHaveBeenCalled();
 });
 
 test('Should reload ResourceStore if route is about to change to parent route', () => {
-    ResourceStore.mockImplementation(function() {
+    mockResourceStore(function() {
         this.initialized = true;
         this.load = jest.fn();
         this.reload = jest.fn();
@@ -936,15 +939,16 @@ test('Should reload ResourceStore if route is about to change to parent route', 
     router.route = childRoute1;
 
     const Child = () => (<h1>Child</h1>);
-    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+    const ref = createResourceTabsRef();
+    render(<ResourceTabs ref={ref} route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
     router.addUpdateRouteHook.mock.calls[1][0](route);
 
-    expect(resourceTabs.instance().resourceStore.reload).toHaveBeenCalledWith();
+    expect(ref.current.resourceStore.reload).toHaveBeenCalledWith();
 });
 
 test('Should not reload ResourceStore if route is about to change to route outside of tabs', () => {
-    ResourceStore.mockImplementation(function() {
+    mockResourceStore(function() {
         this.initialized = true;
         this.load = jest.fn();
         this.reload = jest.fn();
@@ -974,15 +978,16 @@ test('Should not reload ResourceStore if route is about to change to route outsi
     router.route = childRoute1;
 
     const Child = () => (<h1>Child</h1>);
-    const resourceTabs = mount(<ResourceTabs route={route1} router={router}>{() => (<Child />)}</ResourceTabs>);
+    const ref = createResourceTabsRef();
+    render(<ResourceTabs ref={ref} route={route1} router={router}>{() => (<Child />)}</ResourceTabs>);
 
     router.addUpdateRouteHook.mock.calls[0][0](route2);
 
-    expect(resourceTabs.instance().resourceStore.reload).not.toHaveBeenCalledWith();
+    expect(ref.current.resourceStore.reload).not.toHaveBeenCalledWith();
 });
 
-test('Should navigate to child route if tab is clicked', (done) => {
-    ResourceStore.mockImplementation(function() {
+test('Should navigate to child route if tab is clicked', async() => {
+    mockResourceStore(function() {
         this.initialized = true;
         this.load = jest.fn();
         extendObservable(this, {data: {}});
@@ -1015,18 +1020,16 @@ test('Should navigate to child route if tab is clicked', (done) => {
     router.route = childRoute1;
 
     const Child = () => (<h1>Child</h1>);
-    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+    const user = userEvent.setup();
+    render(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
-    setTimeout(() => {
-        resourceTabs.update();
-        resourceTabs.find('Tab button').at(1).simulate('click');
-        expect(router.navigate).toHaveBeenCalledWith('route2', attributes);
-        done();
-    });
+    await user.click(screen.getByRole('button', {name: 'route2'}));
+
+    expect(router.navigate).toHaveBeenCalledWith('route2', attributes);
 });
 
-test('Should navigate to child route if tab is clicked with hidden tabs', (done) => {
-    ResourceStore.mockImplementation(function() {
+test('Should navigate to child route if tab is clicked with hidden tabs', async() => {
+    mockResourceStore(function() {
         this.initialized = true;
         this.load = jest.fn();
         extendObservable(this, {data: {}});
@@ -1066,19 +1069,23 @@ test('Should navigate to child route if tab is clicked with hidden tabs', (done)
     router.route = childRoute1;
 
     const Child = () => (<h1>Child</h1>);
-    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
-    resourceTabs.instance().resourceStore.data = {test: 1};
+    const ref = createResourceTabsRef();
+    const user = userEvent.setup();
+    render(<ResourceTabs ref={ref} route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
-    setTimeout(() => {
-        resourceTabs.update();
-        resourceTabs.find('Tab button').at(0).simulate('click');
-        expect(router.navigate).toHaveBeenCalledWith('route2', attributes);
-        done();
+    act(() => {
+        ref.current.resourceStore.data = {test: 1};
     });
+
+    await waitFor(() => expect(getTabLabels()).toEqual(['route2', 'route3']));
+
+    await user.click(screen.getByRole('button', {name: 'route2'}));
+
+    expect(router.navigate).toHaveBeenCalledWith('route2', attributes);
 });
 
 test('Should create a ResourceStore on mount and destroy it on unmount', () => {
-    ResourceStore.mockImplementation(function() {
+    mockResourceStore(function() {
         this.destroy = jest.fn();
         this.initialized = true;
         extendObservable(this, {data: {}});
@@ -1096,18 +1103,18 @@ test('Should create a ResourceStore on mount and destroy it on unmount', () => {
     router.route = route;
 
     router.addUpdateRouteHook.mockImplementationOnce(() => jest.fn());
-    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
+    const {unmount} = render(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
     const resourceStoreConstructorCall = ResourceStore.mock.calls;
     expect(resourceStoreConstructorCall[0][0]).toEqual('snippets');
     expect(resourceStoreConstructorCall[0][1]).toEqual(5);
     expect(resourceStoreConstructorCall[0][2].locale).not.toBeDefined();
 
-    resourceTabs.unmount();
+    unmount();
     expect(ResourceStore.mock.instances[0].destroy).toHaveBeenCalled();
 });
 
 test('Should create a new ResourceStore if the resourceKey changes', () => {
-    ResourceStore.mockImplementation(function() {
+    mockResourceStore(function() {
         this.destroy = jest.fn();
         this.initialized = true;
         extendObservable(this, {data: {}});
@@ -1124,31 +1131,27 @@ test('Should create a new ResourceStore if the resourceKey changes', () => {
     router.attributes = {id: 5};
     router.route = route;
 
-    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
+    const {rerender, unmount} = render(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
 
     expect(ResourceStore).toHaveBeenLastCalledWith('snippets', 5, {});
 
-    resourceTabs.setProps(
-        {
-            route: {
-                children: [],
-                options: {
-                    resourceKey: 'contacts',
-                },
-            },
-        }
-    );
+    const newRoute = {
+        children: [],
+        options: {
+            resourceKey: 'contacts',
+        },
+    };
 
-    resourceTabs.update();
+    rerender(<ResourceTabs route={newRoute} router={router}>{() => null}</ResourceTabs>);
 
     expect(ResourceStore.mock.instances[0].destroy).toHaveBeenCalled();
     expect(ResourceStore).toHaveBeenLastCalledWith('contacts', 5, {});
 
-    resourceTabs.unmount();
+    unmount();
 });
 
 test('Should not create a new ResourceStore if the resourceKey changes but the router changes to another view', () => {
-    ResourceStore.mockImplementation(function() {
+    mockResourceStore(function() {
         this.destroy = jest.fn();
         this.initialized = true;
         extendObservable(this, {data: {}});
@@ -1170,7 +1173,7 @@ test('Should not create a new ResourceStore if the resourceKey changes but the r
         return jest.fn();
     });
 
-    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
+    const {rerender, unmount} = render(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
 
     expect(ResourceStore).toHaveBeenLastCalledWith('snippets', 5, {});
 
@@ -1183,19 +1186,15 @@ test('Should not create a new ResourceStore if the resourceKey changes but the r
 
     updateRouteHooks.forEach((updateRouteHook) => updateRouteHook(newRoute));
 
-    resourceTabs.setProps({
-        route: newRoute,
-    });
-
-    resourceTabs.update();
+    rerender(<ResourceTabs route={newRoute} router={router}>{() => null}</ResourceTabs>);
 
     expect(ResourceStore).not.toHaveBeenCalledWith('contacts', 5, {});
 
-    resourceTabs.unmount();
+    unmount();
 });
 
 test('Should create a new ResourceStore if the ID changes', () => {
-    ResourceStore.mockImplementation(function() {
+    mockResourceStore(function() {
         this.destroy = jest.fn();
         this.initialized = true;
         extendObservable(this, {data: {}});
@@ -1213,24 +1212,24 @@ test('Should create a new ResourceStore if the ID changes', () => {
     router.attributes = {id: 5};
 
     router.addUpdateRouteHook.mockImplementationOnce(() => jest.fn());
-    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
+    const {unmount} = render(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
 
     expect(ResourceStore).toHaveBeenLastCalledWith('snippets', 5, {});
 
-    router.attributes = {
-        id: 6,
-    };
-
-    resourceTabs.update();
+    act(() => {
+        router.attributes = {
+            id: 6,
+        };
+    });
 
     expect(ResourceStore.mock.instances[0].destroy).toHaveBeenCalled();
     expect(ResourceStore).toHaveBeenLastCalledWith('snippets', 6, {});
 
-    resourceTabs.unmount();
+    unmount();
 });
 
 test('Should create a ResourceStore with locale on mount if locales have been passed in route options', () => {
-    ResourceStore.mockImplementation(function() {
+    mockResourceStore(function() {
         this.destroy = jest.fn();
         this.initialized = true;
         extendObservable(this, {data: {}});
@@ -1248,18 +1247,18 @@ test('Should create a ResourceStore with locale on mount if locales have been pa
     router.attributes = {id: 5};
     router.route = route;
 
-    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
+    const {unmount} = render(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
     const resourceStoreConstructorCall = ResourceStore.mock.calls;
     expect(resourceStoreConstructorCall[0][0]).toEqual('snippets');
     expect(resourceStoreConstructorCall[0][1]).toEqual(5);
     expect(resourceStoreConstructorCall[0][2].locale).toBeDefined();
 
-    resourceTabs.unmount();
+    unmount();
     expect(ResourceStore.mock.instances[0].destroy).toHaveBeenCalled();
 });
 
 test('Should create a ResourceStore with locale on mount if locales have been passed as observable array', () => {
-    ResourceStore.mockImplementation(function() {
+    mockResourceStore(function() {
         this.destroy = jest.fn();
         this.initialized = true;
         extendObservable(this, {data: {}});
@@ -1277,19 +1276,19 @@ test('Should create a ResourceStore with locale on mount if locales have been pa
     router.attributes = {id: 5};
     router.route = route;
 
-    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
+    const {unmount} = render(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
     const resourceStoreConstructorCall = ResourceStore.mock.calls;
     expect(router.bind).toHaveBeenCalled();
     expect(resourceStoreConstructorCall[0][0]).toEqual('snippets');
     expect(resourceStoreConstructorCall[0][1]).toEqual(5);
     expect(resourceStoreConstructorCall[0][2].locale).toBeDefined();
 
-    resourceTabs.unmount();
+    unmount();
     expect(ResourceStore.mock.instances[0].destroy).toHaveBeenCalled();
 });
 
 test('Should pass the ResourceStore and locales to child components', () => {
-    ResourceStore.mockImplementation(function() {
+    mockResourceStore(function() {
         this.initialized = true;
         extendObservable(this, {data: {}});
     });
@@ -1308,22 +1307,24 @@ test('Should pass the ResourceStore and locales to child components', () => {
     router.route = route;
 
     const ChildComponent = jest.fn(() => null);
-    const resourceTabs = mount(
+    const ref = createResourceTabsRef();
+    render(
         <ResourceTabs
             locales={[]}
+            ref={ref}
             route={route}
             router={router}
         >
             {(props) => (<ChildComponent {...props} />)}
         </ResourceTabs>
-    ).instance();
+    );
 
-    expect(ChildComponent.mock.calls[0][0].resourceStore).toBe(resourceTabs.resourceStore);
+    expect(ChildComponent.mock.calls[0][0].resourceStore).toBe(ref.current.resourceStore);
     expect(ChildComponent.mock.calls[0][0].locales).toBe(locales);
 });
 
 test('Should pass locales from route options instead of props to child components', () => {
-    ResourceStore.mockImplementation(function() {
+    mockResourceStore(function() {
         this.initialized = true;
         extendObservable(this, {data: {}});
     });
@@ -1336,7 +1337,7 @@ test('Should pass locales from route options instead of props to child component
         },
     };
     const router = {
-        addUpdateRouteHook: jest.fn(),
+        addUpdateRouteHook: jest.fn(() => jest.fn()),
         attributes: {
             id: 5,
         },
@@ -1345,12 +1346,13 @@ test('Should pass locales from route options instead of props to child component
     };
 
     const ChildComponent = jest.fn(() => null);
-    const resourceTabs = mount(
-        <ResourceTabs locales={['fr', 'nl']} route={route} router={router}>
+    const ref = createResourceTabsRef();
+    render(
+        <ResourceTabs locales={['fr', 'nl']} ref={ref} route={route} router={router}>
             {(props) => (<ChildComponent {...props} />)}
         </ResourceTabs>
-    ).instance();
+    );
 
-    expect(ChildComponent.mock.calls[0][0].resourceStore).toBe(resourceTabs.resourceStore);
+    expect(ChildComponent.mock.calls[0][0].resourceStore).toBe(ref.current.resourceStore);
     expect(ChildComponent.mock.calls[0][0].locales).toEqual(['de', 'en']);
 });

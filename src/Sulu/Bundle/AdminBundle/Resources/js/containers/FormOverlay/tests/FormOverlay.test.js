@@ -1,41 +1,121 @@
 // @flow
-import mockReact from 'react';
-import {mount, shallow} from 'enzyme';
+import React from 'react';
+import {act, render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {extendObservable as mockExtendObservable} from 'mobx';
 import FormOverlay from '../FormOverlay';
-import Overlay from '../../../components/Overlay';
 import ResourceStore from '../../../stores/ResourceStore';
 import MemoryFormStore from '../../../containers/Form/stores/MemoryFormStore';
 import ResourceFormStore from '../../../containers/Form/stores/ResourceFormStore';
-import Form from '../../../containers/Form';
-import Snackbar from '../../../components/Snackbar';
 
-const React = mockReact;
+let mockOverlayProps: Object = {};
+let mockFormProps: Object = {};
+let mockFormInstance: any;
 
-jest.mock('../../../containers/Form', () => class FormMock extends mockReact.Component<*> {
-    render() {
-        return <div>form container mock</div>;
-    }
+jest.mock('../../../containers/Form', () => {
+    const ReactMock = require('react');
+
+    return class FormMock extends ReactMock.Component<*> {
+        submit = jest.fn();
+
+        componentDidMount() {
+            mockFormInstance = this;
+        }
+
+        componentDidUpdate() {
+            mockFormInstance = this;
+        }
+
+        render() {
+            mockFormProps = this.props;
+
+            return ReactMock.createElement(
+                'div',
+                {'data-testid': 'form'},
+                'form container mock',
+                ReactMock.createElement(
+                    'button',
+                    {
+                        'aria-label': 'form-submit',
+                        onClick: this.props.onSubmit,
+                        type: 'button',
+                    },
+                    'Submit'
+                ),
+                ReactMock.createElement(
+                    'button',
+                    {
+                        'aria-label': 'form-error',
+                        onClick: this.props.onError,
+                        type: 'button',
+                    },
+                    'Error'
+                )
+            );
+        }
+    };
 });
 
-jest.mock('../../../utils/Translator', () => ({
+jest.mock('../../../components/Overlay', () => jest.fn((props) => {
+    const ReactMock = require('react');
+
+    mockOverlayProps = props;
+
+    if (!props.open) {
+        return null;
+    }
+
+    return ReactMock.createElement(
+        'section',
+        {
+            'data-confirm-disabled': props.confirmDisabled ? 'true' : 'false',
+            'data-confirm-loading': props.confirmLoading ? 'true' : 'false',
+            'data-size': props.size,
+            'data-testid': 'overlay',
+        },
+        ReactMock.createElement('h2', {}, props.title),
+        props.children,
+        ReactMock.createElement(
+            'button',
+            {
+                'aria-label': 'overlay-confirm',
+                disabled: props.confirmDisabled,
+                onClick: props.onConfirm,
+                type: 'button',
+            },
+            props.confirmText
+        ),
+        props.snackbarMessage && ReactMock.createElement(
+            'div',
+            {'data-testid': 'snackbar'},
+            props.snackbarMessage,
+            ReactMock.createElement(
+                'button',
+                {
+                    'aria-label': 'snackbar-close',
+                    onClick: props.onSnackbarCloseClick,
+                    type: 'button',
+                },
+                'Close snackbar'
+            )
+        )
+    );
+}));
+
+jest.mock('../../../utils', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../../stores/ResourceStore', () => jest.fn(
-    (resourceKey, itemId) => {
-        return {
-            id: itemId,
-        };
-    }
-));
+jest.mock('../../../stores/ResourceStore', () => jest.fn((resourceKey, itemId) => ({
+    id: itemId,
+})));
+
 jest.mock('../../../containers/Form/stores/ResourceFormStore',
     () => jest.fn(function(resourceStore, formKey, options, metadataOptions) {
         this.id = resourceStore.id;
         this.formKey = formKey;
         this.options = options;
         this.metadataOptions = metadataOptions;
-
         this.save = jest.fn();
 
         mockExtendObservable(this, {
@@ -44,6 +124,7 @@ jest.mock('../../../containers/Form/stores/ResourceFormStore',
         });
     })
 );
+
 jest.mock('../../../containers/Form/stores/MemoryFormStore',
     () => jest.fn(function(data, rawSchema, jsonSchema, locale) {
         this.rawSchema = rawSchema;
@@ -57,22 +138,41 @@ jest.mock('../../../containers/Form/stores/MemoryFormStore',
     })
 );
 
+beforeEach(() => {
+    jest.clearAllMocks();
+    mockOverlayProps = {};
+    mockFormProps = {};
+    mockFormInstance = undefined;
+});
+
+function renderFormOverlay(props: Object = {}) {
+    const formStore = props.formStore || new MemoryFormStore({}, {}, undefined, undefined);
+
+    return {
+        formStore,
+        ...render(
+            <FormOverlay
+                confirmDisabled={false}
+                confirmLoading={false}
+                confirmText="confirm-text"
+                formStore={formStore}
+                onClose={jest.fn()}
+                onConfirm={jest.fn()}
+                open={true}
+                size="small"
+                title="overlay-title"
+                {...props}
+            />
+        ),
+    };
+}
+
 test('Component should render', () => {
-    const formStore = new MemoryFormStore({}, {}, undefined, undefined);
+    renderFormOverlay();
 
-    const formOverlay = mount(<FormOverlay
-        confirmDisabled={false}
-        confirmLoading={false}
-        confirmText="confirm-text"
-        formStore={formStore}
-        onClose={jest.fn()}
-        onConfirm={jest.fn()}
-        open={true}
-        size="small"
-        title="overlay-title"
-    />);
-
-    expect(formOverlay.render()).toMatchSnapshot();
+    expect(screen.getByText('overlay-title')).toBeInTheDocument();
+    expect(screen.getByTestId('form')).toHaveTextContent('form container mock');
+    expect(screen.getByText('confirm-text')).toBeInTheDocument();
 });
 
 test('Should pass correct props to Overlay component', () => {
@@ -81,21 +181,14 @@ test('Should pass correct props to Overlay component', () => {
 
     const closeSpy = jest.fn();
 
-    const formOverlay = shallow(<FormOverlay
-        confirmDisabled={true}
-        confirmLoading={true}
-        confirmText="confirm-text"
-        formStore={formStore}
-        onClose={closeSpy}
-        onConfirm={jest.fn()}
-        open={true}
-        size="small"
-        title="overlay-title"
-    />);
+    renderFormOverlay({
+        confirmDisabled: true,
+        confirmLoading: true,
+        formStore,
+        onClose: closeSpy,
+    });
 
-    const overlay = formOverlay.find(Overlay);
-
-    expect(overlay.props()).toEqual(expect.objectContaining({
+    expect(mockOverlayProps).toEqual(expect.objectContaining({
         confirmDisabled: true,
         confirmLoading: true,
         confirmText: 'confirm-text',
@@ -112,18 +205,18 @@ test('Should pass correct props to Overlay component when using default values',
 
     const closeSpy = jest.fn();
 
-    const formOverlay = shallow(<FormOverlay
-        confirmText="confirm-text"
-        formStore={formStore}
-        onClose={closeSpy}
-        onConfirm={jest.fn()}
-        open={true}
-        title="overlay-title"
-    />);
+    render(
+        <FormOverlay
+            confirmText="confirm-text"
+            formStore={formStore}
+            onClose={closeSpy}
+            onConfirm={jest.fn()}
+            open={true}
+            title="overlay-title"
+        />
+    );
 
-    const overlay = formOverlay.find(Overlay);
-
-    expect(overlay.props()).toEqual(expect.objectContaining({
+    expect(mockOverlayProps).toEqual(expect.objectContaining({
         confirmDisabled: false,
         confirmLoading: false,
         confirmText: 'confirm-text',
@@ -137,259 +230,177 @@ test('Should pass correct props to Overlay component when using default values',
 test('Should pass correct props to Form component', () => {
     const formStore = new MemoryFormStore({}, {}, undefined, undefined);
 
-    const formOverlay = shallow(<FormOverlay
-        confirmDisabled={false}
-        confirmLoading={false}
-        confirmText="confirm-text"
-        formStore={formStore}
-        onClose={jest.fn()}
-        onConfirm={jest.fn()}
-        open={true}
-        size="small"
-        title="overlay-title"
-    />);
+    renderFormOverlay({formStore});
 
-    const form = formOverlay.find(Form);
-
-    expect(form.props()).toEqual(expect.objectContaining({
+    expect(mockFormProps).toEqual(expect.objectContaining({
         store: formStore,
     }));
 });
 
-test('Should display confirm button as loading if FormStore is saving', () => {
+test('Should display confirm button as loading if FormStore is saving', async() => {
     const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
 
-    const formOverlay = shallow(<FormOverlay
-        confirmDisabled={false}
-        confirmLoading={false}
-        confirmText="confirm-text"
-        formStore={formStore}
-        onClose={jest.fn()}
-        onConfirm={jest.fn()}
-        open={true}
-        size="small"
-        title="overlay-title"
-    />);
+    renderFormOverlay({formStore});
 
-    // $FlowFixMe
-    formStore.saving = false;
-    expect(formOverlay.find(Overlay).props().confirmLoading).toEqual(false);
+    (formStore: any).saving = false;
+    expect(mockOverlayProps.confirmLoading).toEqual(false);
 
-    // $FlowFixMe
-    formStore.saving = true;
-    expect(formOverlay.find(Overlay).props().confirmLoading).toEqual(true);
+    act(() => {
+        (formStore: any).saving = true;
+    });
+
+    await waitFor(() => expect(mockOverlayProps.confirmLoading).toEqual(true));
 });
 
-test('Should submit Form container when Overlay is confirmed', () => {
-    const formStore = new MemoryFormStore({}, {}, undefined, undefined);
+test('Should submit Form container when Overlay is confirmed', async() => {
+    renderFormOverlay();
 
-    const formOverlay = mount(<FormOverlay
-        confirmDisabled={false}
-        confirmLoading={false}
-        confirmText="confirm-text"
-        formStore={formStore}
-        onClose={jest.fn()}
-        onConfirm={jest.fn()}
-        open={true}
-        size="small"
-        title="overlay-title"
-    />);
+    expect(mockFormInstance.submit).not.toHaveBeenCalled();
 
-    const submitSpy = jest.fn();
-    formOverlay.find(Form).instance().submit = submitSpy;
+    await userEvent.click(screen.getByLabelText('overlay-confirm'));
 
-    formOverlay.find(Overlay).props().onConfirm();
-
-    expect(submitSpy).toHaveBeenCalled();
+    expect(mockFormInstance.submit).toHaveBeenCalled();
 });
 
-test('Should save ResourceFormStore and call onConfirm callback on submit of Form', () => {
+test('Should save ResourceFormStore and call onConfirm callback on submit of Form', async() => {
     const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
     const confirmSpy = jest.fn();
-
-    const formOverlay = shallow(<FormOverlay
-        confirmDisabled={false}
-        confirmLoading={false}
-        confirmText="confirm-text"
-        formStore={formStore}
-        onClose={jest.fn()}
-        onConfirm={confirmSpy}
-        open={true}
-        size="small"
-        title="overlay-title"
-    />);
-
     const savePromise = Promise.resolve();
     formStore.save.mockReturnValueOnce(savePromise);
 
-    formOverlay.find(Form).props().onSubmit();
-
-    return savePromise.finally(() => {
-        expect(formStore.save).toHaveBeenCalled();
-        expect(confirmSpy).toHaveBeenCalled();
+    renderFormOverlay({
+        formStore,
+        onConfirm: confirmSpy,
     });
+
+    await userEvent.click(screen.getByLabelText('form-submit'));
+    await savePromise;
+
+    expect(formStore.save).toHaveBeenCalled();
+    expect(confirmSpy).toHaveBeenCalled();
 });
 
-test('Should call onConfirm callback directly in case of MemoryFormStore on submit of Form', () => {
+test('Should call onConfirm callback directly in case of MemoryFormStore on submit of Form', async() => {
     const formStore = new MemoryFormStore({}, {}, undefined, undefined);
     const confirmSpy = jest.fn();
 
-    const formOverlay = shallow(<FormOverlay
-        confirmDisabled={false}
-        confirmLoading={false}
-        confirmText="confirm-text"
-        formStore={formStore}
-        onClose={jest.fn()}
-        onConfirm={confirmSpy}
-        open={true}
-        size="small"
-        title="overlay-title"
-    />);
+    renderFormOverlay({
+        formStore,
+        onConfirm: confirmSpy,
+    });
 
-    formOverlay.find(Form).props().onSubmit();
+    await userEvent.click(screen.getByLabelText('form-submit'));
 
     expect(confirmSpy).toHaveBeenCalled();
 });
 
-test('Should display Snackbar with generic message if an error happens while saving ResourceFormStore', (done) => {
+test('Should display Snackbar with generic message if an error happens while saving ResourceFormStore', async() => {
     const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
     const confirmSpy = jest.fn();
+    formStore.save.mockImplementationOnce(() => Promise.reject('error'));
 
-    const formOverlay = mount(<FormOverlay
-        confirmDisabled={false}
-        confirmLoading={false}
-        confirmText="confirm-text"
-        formStore={formStore}
-        onClose={jest.fn()}
-        onConfirm={confirmSpy}
-        open={true}
-        size="small"
-        title="overlay-title"
-    />);
-
-    const savePromise = Promise.reject('error');
-    formStore.save.mockReturnValueOnce(savePromise);
-
-    formOverlay.find(Form).props().onSubmit();
-
-    // wait until rejection of savePromise was handled by component with setTimeout
-    setTimeout(() => {
-        expect(formStore.save).toHaveBeenCalled();
-        expect(confirmSpy).not.toHaveBeenCalled();
-
-        formOverlay.update();
-        expect(formOverlay.find(Snackbar).prop('visible')).toBeTruthy();
-        expect(formOverlay.find(Snackbar).prop('message')).toEqual('sulu_admin.form_save_server_error');
-
-        done();
+    renderFormOverlay({
+        formStore,
+        onConfirm: confirmSpy,
     });
+
+    await userEvent.click(screen.getByLabelText('form-submit'));
+
+    expect(formStore.save).toHaveBeenCalled();
+    expect(confirmSpy).not.toHaveBeenCalled();
+    expect(await screen.findByTestId('snackbar')).toHaveTextContent('sulu_admin.form_save_server_error');
 });
 
-test('Should display Snackbar with message from server if an error happens while saving ResourceFormStore', (done) => {
+test('Should display Snackbar with message from server if an error happens while saving ResourceFormStore', async() => {
     const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
     const confirmSpy = jest.fn();
+    formStore.save.mockImplementationOnce(() => Promise.reject({
+        code: 100,
+        detail: 'URL is already assigned to another page.',
+    }));
 
-    const formOverlay = mount(<FormOverlay
-        confirmDisabled={false}
-        confirmLoading={false}
-        confirmText="confirm-text"
-        formStore={formStore}
-        onClose={jest.fn()}
-        onConfirm={confirmSpy}
-        open={true}
-        size="small"
-        title="overlay-title"
-    />);
-
-    const savePromise = Promise.reject({code: 100, detail: 'URL is already assigned to another page.'});
-    formStore.save.mockReturnValueOnce(savePromise);
-
-    formOverlay.find(Form).props().onSubmit();
-
-    // wait until rejection of savePromise was handled by component with setTimeout
-    setTimeout(() => {
-        expect(formStore.save).toHaveBeenCalled();
-        expect(confirmSpy).not.toHaveBeenCalled();
-
-        formOverlay.update();
-        expect(formOverlay.find(Snackbar).prop('visible')).toBeTruthy();
-        expect(formOverlay.find(Snackbar).prop('message')).toEqual('URL is already assigned to another page.');
-
-        done();
+    renderFormOverlay({
+        formStore,
+        onConfirm: confirmSpy,
     });
+
+    await userEvent.click(screen.getByLabelText('form-submit'));
+
+    expect(formStore.save).toHaveBeenCalled();
+    expect(confirmSpy).not.toHaveBeenCalled();
+    expect(await screen.findByTestId('snackbar')).toHaveTextContent('URL is already assigned to another page.');
 });
 
-test('Should display Snackbar if a form is not valid', () => {
+test('Should display Snackbar if a form is not valid', async() => {
     const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
     const confirmSpy = jest.fn();
 
-    const formOverlay = mount(<FormOverlay
-        confirmDisabled={false}
-        confirmLoading={false}
-        confirmText="confirm-text"
-        formStore={formStore}
-        onClose={jest.fn()}
-        onConfirm={confirmSpy}
-        open={true}
-        size="small"
-        title="overlay-title"
-    />);
+    renderFormOverlay({
+        formStore,
+        onConfirm: confirmSpy,
+    });
 
-    formOverlay.find(Form).props().onError();
-    formOverlay.update();
+    await userEvent.click(screen.getByLabelText('form-error'));
 
-    expect(formOverlay.find(Snackbar).prop('visible')).toBeTruthy();
-    expect(formOverlay.find(Snackbar).prop('message')).toEqual('sulu_admin.form_contains_invalid_values');
+    expect(screen.getByTestId('snackbar')).toHaveTextContent('sulu_admin.form_contains_invalid_values');
 });
 
-test('Should hide Snackbar when closeClick callback of Snackbar is fired', () => {
+test('Should hide Snackbar when closeClick callback of Snackbar is fired', async() => {
     const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
     const confirmSpy = jest.fn();
 
-    const formOverlay = mount(<FormOverlay
-        confirmDisabled={false}
-        confirmLoading={false}
-        confirmText="confirm-text"
-        formStore={formStore}
-        onClose={jest.fn()}
-        onConfirm={confirmSpy}
-        open={true}
-        size="small"
-        title="overlay-title"
-    />);
+    renderFormOverlay({
+        formStore,
+        onConfirm: confirmSpy,
+    });
 
-    formOverlay.find(Form).props().onError();
-    formOverlay.update();
-    expect(formOverlay.find(Snackbar).prop('visible')).toBeTruthy();
+    await userEvent.click(screen.getByLabelText('form-error'));
+    expect(screen.getByTestId('snackbar')).toBeInTheDocument();
 
-    formOverlay.find(Snackbar).props().onCloseClick();
-    formOverlay.update();
-    expect(formOverlay.find(Snackbar).props().visible).toBeFalsy();
+    await userEvent.click(screen.getByLabelText('snackbar-close'));
+
+    expect(screen.queryByTestId('snackbar')).not.toBeInTheDocument();
 });
 
-test('Should clear old errors if Overlay is opened a second time', () => {
+test('Should clear old errors if Overlay is opened a second time', async() => {
     const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
     const confirmSpy = jest.fn();
 
-    const formOverlay = mount(<FormOverlay
-        confirmDisabled={false}
-        confirmLoading={false}
-        confirmText="confirm-text"
-        formStore={formStore}
-        onClose={jest.fn()}
-        onConfirm={confirmSpy}
-        open={true}
-        size="small"
-        title="overlay-title"
-    />);
+    const {rerender} = renderFormOverlay({
+        formStore,
+        onConfirm: confirmSpy,
+    });
 
-    formOverlay.find(Form).props().onError();
-    formOverlay.update();
-    expect(formOverlay.find(Snackbar).prop('visible')).toBeTruthy();
+    await userEvent.click(screen.getByLabelText('form-error'));
+    expect(screen.getByTestId('snackbar')).toBeInTheDocument();
 
-    formOverlay.setProps({open: false});
-    formOverlay.setProps({open: true});
-    formOverlay.update();
+    rerender(
+        <FormOverlay
+            confirmDisabled={false}
+            confirmLoading={false}
+            confirmText="confirm-text"
+            formStore={formStore}
+            onClose={jest.fn()}
+            onConfirm={confirmSpy}
+            open={false}
+            size="small"
+            title="overlay-title"
+        />
+    );
 
-    expect(formOverlay.find(Snackbar).props().visible).toBeFalsy();
+    rerender(
+        <FormOverlay
+            confirmDisabled={false}
+            confirmLoading={false}
+            confirmText="confirm-text"
+            formStore={formStore}
+            onClose={jest.fn()}
+            onConfirm={confirmSpy}
+            open={true}
+            size="small"
+            title="overlay-title"
+        />
+    );
+
+    expect(screen.queryByTestId('snackbar')).not.toBeInTheDocument();
 });

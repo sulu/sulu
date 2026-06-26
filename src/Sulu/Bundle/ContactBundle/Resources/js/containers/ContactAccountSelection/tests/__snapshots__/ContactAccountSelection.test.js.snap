@@ -1,277 +1,317 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Render ContactAccountSelection 1`] = `
-<div
-  class="multiItemSelectionClass"
->
+<DocumentFragment>
   <div
-    class="header emptyList"
+    class="multiItemSelectionClass"
   >
-    <button
-      class="button left hasOptions"
-      type="button"
-    >
-      <span
-        aria-label="su-plus-circle"
-        class="su-plus-circle icon"
-      />
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
-      />
-    </button>
     <div
-      class="label"
+      class="header emptyList"
     >
-      sulu_contact.contact_account_selection_label
+      <button
+        class="button left hasOptions"
+        type="button"
+      >
+        <span
+          aria-label="su-plus-circle"
+          class="su-plus-circle icon"
+        />
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down"
+        />
+      </button>
+      <div
+        class="label"
+      >
+        sulu_contact.contact_account_selection_label
+      </div>
     </div>
+    <ul
+      class="list"
+    />
   </div>
-  <ul
-    class="list"
+  <div
+    data-open="false"
+    data-testid="contacts-overlay"
   />
-</div>
+  <div
+    data-open="false"
+    data-testid="accounts-overlay"
+  />
+</DocumentFragment>
 `;
 
 exports[`Render ContactAccountSelection with data 1`] = `
-<div
-  class="multiItemSelectionClass"
->
+<DocumentFragment>
   <div
-    class="header"
+    class="multiItemSelectionClass"
   >
-    <button
-      class="button left hasOptions"
-      type="button"
-    >
-      <span
-        aria-label="su-plus-circle"
-        class="su-plus-circle icon"
-      />
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
-      />
-    </button>
     <div
-      class="label"
+      class="header"
     >
-      sulu_contact.contact_account_selection_label
+      <button
+        class="button left hasOptions"
+        type="button"
+      >
+        <span
+          aria-label="su-plus-circle"
+          class="su-plus-circle icon"
+        />
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down"
+        />
+      </button>
+      <div
+        class="label"
+      >
+        sulu_contact.contact_account_selection_label
+      </div>
     </div>
+    <ul
+      class="list"
+    >
+      <li
+        class="listElement"
+      >
+        <div
+          class="item"
+        >
+          <span
+            class="dragHandle sortable"
+          >
+            <span
+              aria-label="su-more"
+              class="su-more"
+            />
+            <span
+              class="index"
+            >
+              1
+            </span>
+          </span>
+          <div
+            class="content clickable"
+            role="button"
+          >
+            <div
+              class="item"
+            >
+              Max Mustermann
+            </div>
+          </div>
+          <div
+            class="buttons"
+          >
+            <button
+              class="button"
+              type="button"
+            >
+              <span
+                aria-label="su-trash-alt"
+                class="su-trash-alt"
+              />
+            </button>
+          </div>
+        </div>
+      </li>
+      <li
+        class="listElement"
+      >
+        <div
+          class="item"
+        >
+          <span
+            class="dragHandle sortable"
+          >
+            <span
+              aria-label="su-more"
+              class="su-more"
+            />
+            <span
+              class="index"
+            >
+              2
+            </span>
+          </span>
+          <div
+            class="content clickable"
+            role="button"
+          >
+            <div
+              class="item"
+            >
+              Sulu
+            </div>
+          </div>
+          <div
+            class="buttons"
+          >
+            <button
+              class="button"
+              type="button"
+            >
+              <span
+                aria-label="su-trash-alt"
+                class="su-trash-alt"
+              />
+            </button>
+          </div>
+        </div>
+      </li>
+      <li
+        class="listElement"
+      >
+        <div
+          class="item"
+        >
+          <span
+            class="dragHandle sortable"
+          >
+            <span
+              aria-label="su-more"
+              class="su-more"
+            />
+            <span
+              class="index"
+            >
+              3
+            </span>
+          </span>
+          <div
+            class="content clickable"
+            role="button"
+          >
+            <div
+              class="item"
+            >
+              Erika Mustermann
+            </div>
+          </div>
+          <div
+            class="buttons"
+          >
+            <button
+              class="button"
+              type="button"
+            >
+              <span
+                aria-label="su-trash-alt"
+                class="su-trash-alt"
+              />
+            </button>
+          </div>
+        </div>
+      </li>
+    </ul>
   </div>
-  <ul
-    class="list"
-  >
-    <li
-      class="listElement"
-    >
-      <div
-        class="item"
-      >
-        <span
-          class="dragHandle sortable"
-        >
-          <span
-            aria-label="su-more"
-            class="su-more"
-          />
-          <span
-            class="index"
-          >
-            1
-          </span>
-        </span>
-        <div
-          class="content clickable"
-          role="button"
-        >
-          <div
-            class="item"
-          >
-            Max Mustermann
-          </div>
-        </div>
-        <div
-          class="buttons"
-        >
-          <button
-            class="button"
-            type="button"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
-        </div>
-      </div>
-    </li>
-    <li
-      class="listElement"
-    >
-      <div
-        class="item"
-      >
-        <span
-          class="dragHandle sortable"
-        >
-          <span
-            aria-label="su-more"
-            class="su-more"
-          />
-          <span
-            class="index"
-          >
-            2
-          </span>
-        </span>
-        <div
-          class="content clickable"
-          role="button"
-        >
-          <div
-            class="item"
-          >
-            Sulu
-          </div>
-        </div>
-        <div
-          class="buttons"
-        >
-          <button
-            class="button"
-            type="button"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
-        </div>
-      </div>
-    </li>
-    <li
-      class="listElement"
-    >
-      <div
-        class="item"
-      >
-        <span
-          class="dragHandle sortable"
-        >
-          <span
-            aria-label="su-more"
-            class="su-more"
-          />
-          <span
-            class="index"
-          >
-            3
-          </span>
-        </span>
-        <div
-          class="content clickable"
-          role="button"
-        >
-          <div
-            class="item"
-          >
-            Erika Mustermann
-          </div>
-        </div>
-        <div
-          class="buttons"
-        >
-          <button
-            class="button"
-            type="button"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
-        </div>
-      </div>
-    </li>
-  </ul>
-</div>
+  <div
+    data-open="false"
+    data-testid="contacts-overlay"
+  />
+  <div
+    data-open="false"
+    data-testid="accounts-overlay"
+  />
+</DocumentFragment>
 `;
 
 exports[`Render disabled ContactAccountSelection 1`] = `
-<div
-  class="multiItemSelectionClass disabled"
->
+<DocumentFragment>
   <div
-    class="header disabled emptyList"
+    class="multiItemSelectionClass disabled"
   >
-    <button
-      class="button left hasOptions"
-      disabled=""
-      type="button"
-    >
-      <span
-        aria-label="su-plus-circle"
-        class="su-plus-circle icon"
-      />
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
-      />
-    </button>
     <div
-      class="label"
+      class="header disabled emptyList"
     >
-      sulu_contact.contact_account_selection_label
+      <button
+        class="button left hasOptions"
+        disabled=""
+        type="button"
+      >
+        <span
+          aria-label="su-plus-circle"
+          class="su-plus-circle icon"
+        />
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down"
+        />
+      </button>
+      <div
+        class="label"
+      >
+        sulu_contact.contact_account_selection_label
+      </div>
     </div>
+    <ul
+      class="list"
+    />
   </div>
-  <ul
-    class="list"
+  <div
+    data-open="false"
+    data-testid="contacts-overlay"
   />
-</div>
+  <div
+    data-open="false"
+    data-testid="accounts-overlay"
+  />
+</DocumentFragment>
 `;
 
 exports[`Render loading ContactAccountSelection 1`] = `
-<div
-  class="multiItemSelectionClass"
->
+<DocumentFragment>
   <div
-    class="header emptyList"
+    class="multiItemSelectionClass"
   >
-    <button
-      class="button left hasOptions"
-      type="button"
-    >
-      <span
-        aria-label="su-plus-circle"
-        class="su-plus-circle icon"
-      />
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
-      />
-    </button>
     <div
-      class="label"
+      class="header emptyList"
     >
+      <button
+        class="button left hasOptions"
+        type="button"
+      >
+        <span
+          aria-label="su-plus-circle"
+          class="su-plus-circle icon"
+        />
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down"
+        />
+      </button>
       <div
-        class="loader"
+        class="label"
       >
         <div
-          class="spinner"
-          style="width:24px;height:24px"
+          class="loader"
         >
           <div
-            class="doubleBounce1"
-          />
-          <div
-            class="doubleBounce2"
-          />
+            class="spinner"
+            style="width: 24px; height: 24px;"
+          >
+            <div
+              class="doubleBounce1"
+            />
+            <div
+              class="doubleBounce2"
+            />
+          </div>
         </div>
       </div>
     </div>
+    <ul
+      class="list"
+    />
   </div>
-  <ul
-    class="list"
+  <div
+    data-open="false"
+    data-testid="contacts-overlay"
   />
-</div>
+  <div
+    data-open="false"
+    data-testid="accounts-overlay"
+  />
+</DocumentFragment>
 `;

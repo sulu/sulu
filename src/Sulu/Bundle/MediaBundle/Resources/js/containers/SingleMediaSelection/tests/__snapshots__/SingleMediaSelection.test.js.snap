@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Component should render with display options 1`] = `
-Array [
+<div>
   <div
     class="singleItemSelection"
   >
@@ -41,15 +41,15 @@ Array [
         class="su-angle-down"
       />
     </button>
-  </div>,
+  </div>
   <div>
     single media selection overlay
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Component should render with display options and correctly selected icon 1`] = `
-Array [
+<div>
   <div
     class="singleItemSelection"
   >
@@ -89,15 +89,15 @@ Array [
         class="su-angle-down"
       />
     </button>
-  </div>,
+  </div>
   <div>
     single media selection overlay
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Component should render with selected media 1`] = `
-Array [
+<div>
   <div
     class="singleItemSelection"
   >
@@ -142,15 +142,15 @@ Array [
         />
       </button>
     </div>
-  </div>,
+  </div>
   <div>
     single media selection overlay
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Component should render with selected media without thumbnails with MimeTypeIndicator 1`] = `
-Array [
+<div>
   <div
     class="singleItemSelection"
   >
@@ -175,7 +175,7 @@ Array [
         >
           <div
             class="mimeTypeIndicator"
-            style="color:#fff;font-size:14px;background-color:#bb0806;width:19px;height:19px"
+            style="color: rgb(255, 255, 255); font-size: 14px; background-color: rgb(187, 8, 6); width: 19px; height: 19px;"
           >
             <span
               aria-label="fa-file-pdf-o"
@@ -199,15 +199,15 @@ Array [
         />
       </button>
     </div>
-  </div>,
+  </div>
   <div>
     single media selection overlay
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Component should render without selected media 1`] = `
-Array [
+<div>
   <div
     class="singleItemSelection"
   >
@@ -234,9 +234,9 @@ Array [
         </div>
       </div>
     </div>
-  </div>,
+  </div>
   <div>
     single media selection overlay
-  </div>,
-]
+  </div>
+</div>
 `;

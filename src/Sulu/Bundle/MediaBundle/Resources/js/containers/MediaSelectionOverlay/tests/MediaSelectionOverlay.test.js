@@ -1,13 +1,12 @@
 // @flow
-import {mount, shallow} from 'enzyme';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import React from 'react';
 import ListStore from 'sulu-admin-bundle/containers/List/stores/ListStore';
+import {findElementByType, renderWithRef} from 'sulu-admin-bundle/utils/TestHelper';
+import MediaCollection from '../../MediaCollection';
 import MediaSelectionOverlay from '../../MediaSelectionOverlay';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function() {
     this.destroy = jest.fn();
@@ -71,6 +70,7 @@ jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () =>
         this.clearSelection = jest.fn();
         this.reload = jest.fn();
         this.clear = jest.fn();
+        this.destroy = jest.fn();
         this.getSchema = jest.fn().mockReturnValue({});
         this.options = {};
     })
@@ -83,6 +83,8 @@ jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => je
 jest.mock('sulu-admin-bundle/containers/Form/stores/memoryFormStoreFactory', () => ({
     createFromFormKey: jest.fn(),
 }));
+
+jest.mock('../../MediaCollection', () => jest.fn(() => null));
 
 let collectionListStoreMock: ListStore;
 let mediaListStoreMock: ListStore;
@@ -137,7 +139,7 @@ beforeEach(() => {
 
 test('Render an open MediaSelectionOverlay', () => {
     const locale = observable.box();
-    const mediaSelectionOverlay = mount(
+    const {container} = renderWithRef(
         <MediaSelectionOverlay
             collectionId={observable.box()}
             collectionListStore={collectionListStoreMock}
@@ -149,14 +151,14 @@ test('Render an open MediaSelectionOverlay', () => {
         />
     );
 
-    expect(mediaSelectionOverlay.render()).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('Render an open MediaSelectionOverlay with selected items', () => {
     mediaListStoreMock.selections.push({id: 1});
 
     const locale = observable.box();
-    const mediaSelectionOverlay = mount(
+    const {container} = renderWithRef(
         <MediaSelectionOverlay
             collectionId={observable.box()}
             collectionListStore={collectionListStoreMock}
@@ -168,11 +170,11 @@ test('Render an open MediaSelectionOverlay with selected items', () => {
         />
     );
 
-    expect(mediaSelectionOverlay.render()).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('Render the overlay with a loading confirm button', () => {
-    const mediaSelectionOverlay = mount(
+    const {instance: mediaSelectionOverlay} = renderWithRef(
         <MediaSelectionOverlay
             collectionId={observable.box()}
             collectionListStore={collectionListStoreMock}
@@ -185,13 +187,13 @@ test('Render the overlay with a loading confirm button', () => {
         />
     );
 
-    expect(mediaSelectionOverlay.find('Overlay').at(0).prop('confirmLoading')).toEqual(true);
+    expect(findElementByType(mediaSelectionOverlay.render(), 'Overlay').props.confirmLoading).toEqual(true);
 });
 
 test('Should call onConfirm callback with selected medias from media list', () => {
     const confirmSpy = jest.fn();
     const locale = observable.box();
-    const mediaSelectionOverlay = shallow(
+    const {instance: mediaSelectionOverlay} = renderWithRef(
         <MediaSelectionOverlay
             collectionId={observable.box()}
             collectionListStore={collectionListStoreMock}
@@ -208,32 +210,14 @@ test('Should call onConfirm callback with selected medias from media list', () =
         {id: 3},
     ];
     mediaListStoreMock.selections = selections;
-    mediaSelectionOverlay.find('Overlay').simulate('confirm');
+    findElementByType(mediaSelectionOverlay.render(), 'Overlay').props.onConfirm();
 
     expect(confirmSpy).toHaveBeenCalledWith(selections);
 });
 
 test('Should reset the selection of the media list when the reset-button is clicked', () => {
     const locale = observable.box();
-    const mediaSelectionOverlayInstance = shallow(
-        <MediaSelectionOverlay
-            collectionId={observable.box()}
-            collectionListStore={collectionListStoreMock}
-            locale={locale}
-            mediaListStore={mediaListStoreMock}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-        />
-    ).instance();
-
-    mediaSelectionOverlayInstance.handleSelectionReset();
-    expect(mediaListStoreMock.clearSelection).toHaveBeenCalled();
-});
-
-test('Should reset the selection of the media list when the overlay is closed', () => {
-    const locale = observable.box();
-    const mediaSelectionOverlay = shallow(
+    const {instance: mediaSelectionOverlayInstance} = renderWithRef(
         <MediaSelectionOverlay
             collectionId={observable.box()}
             collectionListStore={collectionListStoreMock}
@@ -245,14 +229,42 @@ test('Should reset the selection of the media list when the overlay is closed', 
         />
     );
 
-    mediaSelectionOverlay.setProps({open: false});
+    mediaSelectionOverlayInstance.handleSelectionReset();
+    expect(mediaListStoreMock.clearSelection).toHaveBeenCalled();
+});
+
+test('Should reset the selection of the media list when the overlay is closed', () => {
+    const locale = observable.box();
+    const {rerender} = renderWithRef(
+        <MediaSelectionOverlay
+            collectionId={observable.box()}
+            collectionListStore={collectionListStoreMock}
+            locale={locale}
+            mediaListStore={mediaListStoreMock}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+        />
+    );
+
+    rerender(
+        <MediaSelectionOverlay
+            collectionId={observable.box()}
+            collectionListStore={collectionListStoreMock}
+            locale={locale}
+            mediaListStore={mediaListStoreMock}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+        />
+    );
     expect(mediaListStoreMock.clearSelection).toHaveBeenCalled();
 });
 
 test('Should change the current collection id and reset the page of the lists on collection-change', () => {
     const locale = observable.box();
     const collectionId = observable.box();
-    const mediaSelectionOverlay = mount(
+    const {instance: mediaSelectionOverlay} = renderWithRef(
         <MediaSelectionOverlay
             collectionId={collectionId}
             collectionListStore={collectionListStoreMock}
@@ -267,7 +279,7 @@ test('Should change the current collection id and reset the page of the lists on
     expect(collectionListStoreMock.setPage).not.toHaveBeenCalled();
     expect(mediaListStoreMock.setPage).not.toHaveBeenCalled();
 
-    mediaSelectionOverlay.find('Folder').at(0).simulate('click');
+    findElementByType(mediaSelectionOverlay.render(), MediaCollection).props.onCollectionNavigate(1);
 
     expect(collectionListStoreMock.setPage).toHaveBeenCalledWith(1);
     expect(mediaListStoreMock.setPage).toHaveBeenCalledWith(1);

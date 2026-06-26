@@ -2,12 +2,8 @@
 // eslint-disable-next-line import/no-nodejs-modules
 import {TextDecoder, TextEncoder} from 'util';
 import 'core-js/features/string/replace-all';
-import Enzyme from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import {isObservableArray, toJS} from 'mobx';
 import '@testing-library/jest-dom';
-
-Enzyme.configure({adapter: new Adapter()});
 
 Object.defineProperty(window, 'TextDecoder', {
     writable: true,

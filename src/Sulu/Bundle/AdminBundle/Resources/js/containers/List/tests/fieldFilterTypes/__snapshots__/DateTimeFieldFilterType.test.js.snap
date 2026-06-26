@@ -1,456 +1,470 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Render with from and to value 1`] = `
-<div>
-  <label
-    class="label"
-  >
-    sulu_admin.from
-  </label>
-  <div
-    class="date"
-  >
-    <div>
-      <div
-        class="input default left"
-      >
+<DocumentFragment>
+  <div>
+    <label
+      class="label"
+    >
+      sulu_admin.from
+    </label>
+    <div
+      class="date"
+    >
+      <div>
         <div
-          class="prependedContainer default"
+          class="input default left"
         >
-          <span
-            aria-label="su-calendar"
-            class="su-calendar clickable icon default iconClickable"
-            role="button"
-            tabindex="0"
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-calendar"
+              class="su-calendar clickable icon default iconClickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            placeholder="MM/DD/YYYY h:mm A"
+            type="text"
+            value="01/02/2020 12:00 PM"
           />
         </div>
-        <input
-          placeholder="MM/DD/YYYY h:mm A"
-          type="text"
-          value="01/02/2020 12:00 PM"
-        />
+      </div>
+    </div>
+    <label
+      class="label"
+    >
+      sulu_admin.until
+    </label>
+    <div
+      class="date"
+    >
+      <div>
+        <div
+          class="input default left"
+        >
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-calendar"
+              class="su-calendar clickable icon default iconClickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            placeholder="MM/DD/YYYY h:mm A"
+            type="text"
+            value="01/09/2020 1:00 PM"
+          />
+        </div>
       </div>
     </div>
   </div>
-  <label
-    class="label"
-  >
-    sulu_admin.until
-  </label>
-  <div
-    class="date"
-  >
-    <div>
-      <div
-        class="input default left"
-      >
-        <div
-          class="prependedContainer default"
-        >
-          <span
-            aria-label="su-calendar"
-            class="su-calendar clickable icon default iconClickable"
-            role="button"
-            tabindex="0"
-          />
-        </div>
-        <input
-          placeholder="MM/DD/YYYY h:mm A"
-          type="text"
-          value="01/09/2020 1:00 PM"
-        />
-      </div>
-    </div>
-  </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render with from and to value 2`] = `
-<div>
-  <label
-    class="label"
-  >
-    sulu_admin.from
-  </label>
-  <div
-    class="date"
-  >
-    <div>
-      <div
-        class="input default left"
-      >
+<DocumentFragment>
+  <div>
+    <label
+      class="label"
+    >
+      sulu_admin.from
+    </label>
+    <div
+      class="date"
+    >
+      <div>
         <div
-          class="prependedContainer default"
+          class="input default left"
         >
-          <span
-            aria-label="su-calendar"
-            class="su-calendar clickable icon default iconClickable"
-            role="button"
-            tabindex="0"
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-calendar"
+              class="su-calendar clickable icon default iconClickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            placeholder="MM/DD/YYYY h:mm A"
+            type="text"
+            value="02/01/2018 12:00 AM"
           />
         </div>
-        <input
-          placeholder="MM/DD/YYYY h:mm A"
-          type="text"
-          value="02/01/2018 12:00 AM"
-        />
+      </div>
+    </div>
+    <label
+      class="label"
+    >
+      sulu_admin.until
+    </label>
+    <div
+      class="date"
+    >
+      <div>
+        <div
+          class="input default left"
+        >
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-calendar"
+              class="su-calendar clickable icon default iconClickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            placeholder="MM/DD/YYYY h:mm A"
+            type="text"
+            value="05/03/2019 12:00 AM"
+          />
+        </div>
       </div>
     </div>
   </div>
-  <label
-    class="label"
-  >
-    sulu_admin.until
-  </label>
-  <div
-    class="date"
-  >
-    <div>
-      <div
-        class="input default left"
-      >
-        <div
-          class="prependedContainer default"
-        >
-          <span
-            aria-label="su-calendar"
-            class="su-calendar clickable icon default iconClickable"
-            role="button"
-            tabindex="0"
-          />
-        </div>
-        <input
-          placeholder="MM/DD/YYYY h:mm A"
-          type="text"
-          value="05/03/2019 12:00 AM"
-        />
-      </div>
-    </div>
-  </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render with from and to value 3`] = `
-<div>
-  <label
-    class="label"
-  >
-    sulu_admin.from
-  </label>
-  <div
-    class="date"
-  >
-    <div>
-      <div
-        class="input default left"
-      >
+<DocumentFragment>
+  <div>
+    <label
+      class="label"
+    >
+      sulu_admin.from
+    </label>
+    <div
+      class="date"
+    >
+      <div>
         <div
-          class="prependedContainer default"
+          class="input default left"
         >
-          <span
-            aria-label="su-calendar"
-            class="su-calendar clickable icon default iconClickable"
-            role="button"
-            tabindex="0"
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-calendar"
+              class="su-calendar clickable icon default iconClickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            placeholder="MM/DD/YYYY"
+            type="text"
+            value="01/02/2020"
           />
         </div>
-        <input
-          placeholder="MM/DD/YYYY"
-          type="text"
-          value="01/02/2020"
-        />
+      </div>
+    </div>
+    <label
+      class="label"
+    >
+      sulu_admin.until
+    </label>
+    <div
+      class="date"
+    >
+      <div>
+        <div
+          class="input default left"
+        >
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-calendar"
+              class="su-calendar clickable icon default iconClickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            placeholder="MM/DD/YYYY"
+            type="text"
+            value="01/09/2020"
+          />
+        </div>
       </div>
     </div>
   </div>
-  <label
-    class="label"
-  >
-    sulu_admin.until
-  </label>
-  <div
-    class="date"
-  >
-    <div>
-      <div
-        class="input default left"
-      >
-        <div
-          class="prependedContainer default"
-        >
-          <span
-            aria-label="su-calendar"
-            class="su-calendar clickable icon default iconClickable"
-            role="button"
-            tabindex="0"
-          />
-        </div>
-        <input
-          placeholder="MM/DD/YYYY"
-          type="text"
-          value="01/09/2020"
-        />
-      </div>
-    </div>
-  </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render with from and to value 4`] = `
-<div>
-  <label
-    class="label"
-  >
-    sulu_admin.from
-  </label>
-  <div
-    class="date"
-  >
-    <div>
-      <div
-        class="input default left"
-      >
+<DocumentFragment>
+  <div>
+    <label
+      class="label"
+    >
+      sulu_admin.from
+    </label>
+    <div
+      class="date"
+    >
+      <div>
         <div
-          class="prependedContainer default"
+          class="input default left"
         >
-          <span
-            aria-label="su-calendar"
-            class="su-calendar clickable icon default iconClickable"
-            role="button"
-            tabindex="0"
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-calendar"
+              class="su-calendar clickable icon default iconClickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            placeholder="MM/DD/YYYY"
+            type="text"
+            value="02/01/2018"
           />
         </div>
-        <input
-          placeholder="MM/DD/YYYY"
-          type="text"
-          value="02/01/2018"
-        />
+      </div>
+    </div>
+    <label
+      class="label"
+    >
+      sulu_admin.until
+    </label>
+    <div
+      class="date"
+    >
+      <div>
+        <div
+          class="input default left"
+        >
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-calendar"
+              class="su-calendar clickable icon default iconClickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            placeholder="MM/DD/YYYY"
+            type="text"
+            value="05/03/2019"
+          />
+        </div>
       </div>
     </div>
   </div>
-  <label
-    class="label"
-  >
-    sulu_admin.until
-  </label>
-  <div
-    class="date"
-  >
-    <div>
-      <div
-        class="input default left"
-      >
-        <div
-          class="prependedContainer default"
-        >
-          <span
-            aria-label="su-calendar"
-            class="su-calendar clickable icon default iconClickable"
-            role="button"
-            tabindex="0"
-          />
-        </div>
-        <input
-          placeholder="MM/DD/YYYY"
-          type="text"
-          value="05/03/2019"
-        />
-      </div>
-    </div>
-  </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render with value of undefined 1`] = `
-<div>
-  <label
-    class="label"
-  >
-    sulu_admin.from
-  </label>
-  <div
-    class="date"
-  >
-    <div>
-      <div
-        class="input default left"
-      >
+<DocumentFragment>
+  <div>
+    <label
+      class="label"
+    >
+      sulu_admin.from
+    </label>
+    <div
+      class="date"
+    >
+      <div>
         <div
-          class="prependedContainer default"
+          class="input default left"
         >
-          <span
-            aria-label="su-calendar"
-            class="su-calendar clickable icon default iconClickable"
-            role="button"
-            tabindex="0"
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-calendar"
+              class="su-calendar clickable icon default iconClickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            placeholder="MM/DD/YYYY h:mm A"
+            type="text"
+            value=""
           />
         </div>
-        <input
-          placeholder="MM/DD/YYYY h:mm A"
-          type="text"
-          value=""
-        />
+      </div>
+    </div>
+    <label
+      class="label"
+    >
+      sulu_admin.until
+    </label>
+    <div
+      class="date"
+    >
+      <div>
+        <div
+          class="input default left"
+        >
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-calendar"
+              class="su-calendar clickable icon default iconClickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            placeholder="MM/DD/YYYY h:mm A"
+            type="text"
+            value=""
+          />
+        </div>
       </div>
     </div>
   </div>
-  <label
-    class="label"
-  >
-    sulu_admin.until
-  </label>
-  <div
-    class="date"
-  >
-    <div>
-      <div
-        class="input default left"
-      >
-        <div
-          class="prependedContainer default"
-        >
-          <span
-            aria-label="su-calendar"
-            class="su-calendar clickable icon default iconClickable"
-            role="button"
-            tabindex="0"
-          />
-        </div>
-        <input
-          placeholder="MM/DD/YYYY h:mm A"
-          type="text"
-          value=""
-        />
-      </div>
-    </div>
-  </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render with value set by setValue 1`] = `
-<div>
-  <label
-    class="label"
-  >
-    sulu_admin.from
-  </label>
-  <div
-    class="date"
-  >
-    <div>
-      <div
-        class="input default left"
-      >
+<DocumentFragment>
+  <div>
+    <label
+      class="label"
+    >
+      sulu_admin.from
+    </label>
+    <div
+      class="date"
+    >
+      <div>
         <div
-          class="prependedContainer default"
+          class="input default left"
         >
-          <span
-            aria-label="su-calendar"
-            class="su-calendar clickable icon default iconClickable"
-            role="button"
-            tabindex="0"
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-calendar"
+              class="su-calendar clickable icon default iconClickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            placeholder="MM/DD/YYYY h:mm A"
+            type="text"
+            value="06/03/2017 12:00 PM"
           />
         </div>
-        <input
-          placeholder="MM/DD/YYYY h:mm A"
-          type="text"
-          value="06/03/2017 12:00 PM"
-        />
+      </div>
+    </div>
+    <label
+      class="label"
+    >
+      sulu_admin.until
+    </label>
+    <div
+      class="date"
+    >
+      <div>
+        <div
+          class="input default left"
+        >
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-calendar"
+              class="su-calendar clickable icon default iconClickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            placeholder="MM/DD/YYYY h:mm A"
+            type="text"
+            value="03/06/2018 12:00 PM"
+          />
+        </div>
       </div>
     </div>
   </div>
-  <label
-    class="label"
-  >
-    sulu_admin.until
-  </label>
-  <div
-    class="date"
-  >
-    <div>
-      <div
-        class="input default left"
-      >
-        <div
-          class="prependedContainer default"
-        >
-          <span
-            aria-label="su-calendar"
-            class="su-calendar clickable icon default iconClickable"
-            role="button"
-            tabindex="0"
-          />
-        </div>
-        <input
-          placeholder="MM/DD/YYYY h:mm A"
-          type="text"
-          value="03/06/2018 12:00 PM"
-        />
-      </div>
-    </div>
-  </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render with value set by setValue 2`] = `
-<div>
-  <label
-    class="label"
-  >
-    sulu_admin.from
-  </label>
-  <div
-    class="date"
-  >
-    <div>
-      <div
-        class="input default left"
-      >
+<DocumentFragment>
+  <div>
+    <label
+      class="label"
+    >
+      sulu_admin.from
+    </label>
+    <div
+      class="date"
+    >
+      <div>
         <div
-          class="prependedContainer default"
+          class="input default left"
         >
-          <span
-            aria-label="su-calendar"
-            class="su-calendar clickable icon default iconClickable"
-            role="button"
-            tabindex="0"
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-calendar"
+              class="su-calendar clickable icon default iconClickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            placeholder="MM/DD/YYYY"
+            type="text"
+            value="06/03/2017"
           />
         </div>
-        <input
-          placeholder="MM/DD/YYYY"
-          type="text"
-          value="06/03/2017"
-        />
+      </div>
+    </div>
+    <label
+      class="label"
+    >
+      sulu_admin.until
+    </label>
+    <div
+      class="date"
+    >
+      <div>
+        <div
+          class="input default left"
+        >
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-calendar"
+              class="su-calendar clickable icon default iconClickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            placeholder="MM/DD/YYYY"
+            type="text"
+            value="03/06/2018"
+          />
+        </div>
       </div>
     </div>
   </div>
-  <label
-    class="label"
-  >
-    sulu_admin.until
-  </label>
-  <div
-    class="date"
-  >
-    <div>
-      <div
-        class="input default left"
-      >
-        <div
-          class="prependedContainer default"
-        >
-          <span
-            aria-label="su-calendar"
-            class="su-calendar clickable icon default iconClickable"
-            role="button"
-            tabindex="0"
-          />
-        </div>
-        <input
-          placeholder="MM/DD/YYYY"
-          type="text"
-          value="03/06/2018"
-        />
-      </div>
-    </div>
-  </div>
-</div>
+</DocumentFragment>
 `;

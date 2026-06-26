@@ -1,24 +1,48 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {translate} from '../../../utils/Translator';
 import SmartContentStore from '../stores/SmartContentStore';
 import smartContentConfigStore from '../stores/smartContentConfigStore';
 import SmartContent from '../SmartContent';
 
-jest.mock('../stores/SmartContentStore', () => jest.fn(function() {
+const mockReact = require('react');
+let mockFilterOverlayProps: Object = {};
+
+jest.mock('../stores/SmartContentStore', () => jest.fn(function(provider) {
     this.items = [];
+    this.itemsLoading = false;
+    this.loading = false;
+    this.provider = provider;
 }));
 
 jest.mock('../stores/smartContentConfigStore', () => ({
-    getConfig: jest.fn().mockReturnValue({}),
+    getConfig: jest.fn(),
 }));
 
-jest.mock('../../MultiListOverlay', () => jest.fn(() => null));
+jest.mock('../FilterOverlay', () => jest.fn((props) => {
+    mockFilterOverlayProps = props;
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
+    return mockReact.createElement(
+        'div',
+        {
+            'data-open': props.open ? 'true' : 'false',
+            'data-testid': 'filter-overlay',
+        },
+        mockReact.createElement(
+            'button',
+            {
+                'aria-label': 'filter-overlay-close',
+                onClick: props.onClose,
+                type: 'button',
+            },
+            'Close'
+        )
+    );
 }));
+
+jest.mock('../../../utils/Translator');
 
 const defaultValue = {
     dataSource: undefined,
@@ -35,6 +59,60 @@ const defaultValue = {
     types: undefined,
 };
 
+const defaultConfig = {
+    tags: false,
+    categories: false,
+    audienceTargeting: false,
+    sorting: [],
+    presentAs: false,
+    limit: false,
+    types: [],
+};
+
+function renderSmartContent(props: Object = {}) {
+    const smartContentStore = props.store || new SmartContentStore('content');
+
+    return {
+        smartContentStore,
+        ...render(
+            <SmartContent
+                defaultValue={defaultValue}
+                fieldLabel="Test"
+                store={smartContentStore}
+                {...props}
+            />
+        ),
+    };
+}
+
+function getButtonByIcon(icon: string): HTMLButtonElement {
+    const iconElement = screen.getByLabelText(icon);
+    const button = iconElement.parentElement;
+
+    if (!(button instanceof HTMLButtonElement)) {
+        throw new Error('Button with icon "' + icon + '" was not rendered.');
+    }
+
+    return button;
+}
+
+function getItemButton(title: string): HTMLElement {
+    const titleElement = screen.getByText(title);
+    const button = titleElement.closest('[role="button"]');
+
+    if (!(button instanceof HTMLElement)) {
+        throw new Error('Item with title "' + title + '" was not rendered.');
+    }
+
+    return button;
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    mockFilterOverlayProps = {};
+    smartContentConfigStore.getConfig.mockReturnValue(defaultConfig);
+});
+
 test('Pass correct sections prop', () => {
     smartContentConfigStore.getConfig.mockReturnValue({
         tags: true,
@@ -49,64 +127,25 @@ test('Pass correct sections prop', () => {
         ],
     });
 
-    const smartContentStore = new SmartContentStore('content');
-    const smartContent = shallow(
-        <SmartContent
-            defaultValue={defaultValue}
-            fieldLabel="Test"
-            store={smartContentStore}
-        />
-    );
+    renderSmartContent();
 
-    expect(smartContent.find('FilterOverlay').prop('sections'))
-        .toEqual(['tags', 'audienceTargeting', 'types', 'limit']);
+    expect(mockFilterOverlayProps.sections).toEqual(['tags', 'audienceTargeting', 'types', 'limit']);
 });
 
 test('Disable sorting on MultiItemSelection', () => {
-    smartContentConfigStore.getConfig.mockReturnValue({
-        tags: true,
-        categories: false,
-        audienceTargeting: true,
-        sorting: [],
-        presentAs: false,
-        limit: true,
-        types: [],
-    });
-
     const smartContentStore = new SmartContentStore('content');
-    const smartContent = shallow(
-        <SmartContent
-            defaultValue={defaultValue}
-            fieldLabel="Test"
-            store={smartContentStore}
-        />
-    );
+    smartContentStore.items = [{id: 1, title: 'Homepage'}];
 
-    expect(smartContent.find('MultiItemSelection').prop('sortable')).toEqual(false);
+    renderSmartContent({store: smartContentStore});
+
+    expect(screen.getByText('Homepage')).toBeInTheDocument();
+    expect(screen.queryByLabelText('su-more')).not.toBeInTheDocument();
 });
 
 test('Pass correct props to MultiItemSelection component', () => {
-    smartContentConfigStore.getConfig.mockReturnValue({
-        tags: true,
-        categories: false,
-        audienceTargeting: true,
-        sorting: [],
-        presentAs: false,
-        limit: true,
-        types: [],
-    });
+    renderSmartContent({disabled: true});
 
-    const smartContentStore = new SmartContentStore('content');
-    const smartContent = shallow(
-        <SmartContent
-            defaultValue={defaultValue}
-            disabled={true}
-            fieldLabel="Test"
-            store={smartContentStore}
-        />
-    );
-
-    expect(smartContent.find('MultiItemSelection').prop('disabled')).toEqual(true);
+    expect(getButtonByIcon('su-filter')).toBeDisabled();
 });
 
 test('Pass correct sections prop with other values', () => {
@@ -126,34 +165,26 @@ test('Pass correct sections prop with other values', () => {
         ],
     });
 
-    const presentations = [
-        {name: 'one', value: 'One column'},
-    ];
+    renderSmartContent({
+        categoryRootKey: 'test1',
+        presentations: [
+            {name: 'one', value: 'One column'},
+        ],
+    });
 
-    const smartContentStore = new SmartContentStore('content');
-    const smartContent = shallow(
-        <SmartContent
-            categoryRootKey="test1"
-            defaultValue={defaultValue}
-            fieldLabel="Test"
-            presentations={presentations}
-            store={smartContentStore}
-        />
-    );
-
-    expect(smartContent.find('FilterOverlay').prop('categoryRootKey')).toEqual('test1');
-    expect(smartContent.find('FilterOverlay').prop('dataSourceListKey')).toEqual('pages_list');
-    expect(smartContent.find('FilterOverlay').prop('dataSourceResourceKey')).toEqual('pages');
-    expect(smartContent.find('FilterOverlay').prop('sections'))
+    expect(mockFilterOverlayProps.categoryRootKey).toEqual('test1');
+    expect(mockFilterOverlayProps.dataSourceListKey).toEqual('pages_list');
+    expect(mockFilterOverlayProps.dataSourceResourceKey).toEqual('pages');
+    expect(mockFilterOverlayProps.sections)
         .toEqual(['datasource', 'categories', 'sorting', 'types', 'presentation']);
-    expect(smartContent.find('FilterOverlay').prop('presentations'))
+    expect(mockFilterOverlayProps.presentations)
         .toEqual({
             one: 'One column',
         });
 });
 
-test('Open and closes the FilterOverlay when the icon is clicked', () => {
-    const smartContentStore = new SmartContentStore('content');
+test('Open and closes the FilterOverlay when the icon is clicked', async() => {
+    const user = userEvent.setup();
     smartContentConfigStore.getConfig.mockReturnValue({
         datasourceResourceKey: 'pages',
         datasourceAdapter: 'table',
@@ -167,23 +198,18 @@ test('Open and closes the FilterOverlay when the icon is clicked', () => {
         limit: false,
         types: [],
     });
-    const smartContent = shallow(
-        <SmartContent
-            defaultValue={defaultValue}
-            fieldLabel="Test"
-            store={smartContentStore}
-        />
-    );
 
-    expect(smartContent.find('FilterOverlay').prop('open')).toEqual(false);
+    renderSmartContent();
 
-    smartContent.find('MultiItemSelection').prop('leftButton').onClick();
-    expect(smartContent.find('FilterOverlay').prop('open')).toEqual(true);
+    expect(screen.getByTestId('filter-overlay')).toHaveAttribute('data-open', 'false');
 
-    smartContent.find('FilterOverlay').prop('onClose')();
-    expect(smartContent.find('FilterOverlay').prop('open')).toEqual(false);
-    expect(smartContent.find('FilterOverlay').prop('title')).toEqual('sulu_admin.filter_overlay_title');
-    expect(smartContent.find('FilterOverlay').prop('sortings')).toEqual([{name: 'title', value: 'Title'}]);
+    await user.click(getButtonByIcon('su-filter'));
+    expect(screen.getByTestId('filter-overlay')).toHaveAttribute('data-open', 'true');
+
+    await user.click(screen.getByLabelText('filter-overlay-close'));
+    expect(screen.getByTestId('filter-overlay')).toHaveAttribute('data-open', 'false');
+    expect(mockFilterOverlayProps.title).toEqual('sulu_admin.filter_overlay_title');
+    expect(mockFilterOverlayProps.sortings).toEqual([{name: 'title', value: 'Title'}]);
     expect(translate).toHaveBeenCalledWith('sulu_admin.filter_overlay_title', {fieldLabel: 'Test'});
 });
 
@@ -194,20 +220,14 @@ test('Show items in a SmartContentItem', () => {
         {title: 'About us'},
     ];
 
-    const smartContent = shallow(
-        <SmartContent
-            defaultValue={defaultValue}
-            fieldLabel="Test"
-            store={smartContentStore}
-        />
-    );
+    renderSmartContent({store: smartContentStore});
 
-    expect(smartContent.find('SmartContentItem')).toHaveLength(2);
-    expect(smartContent.find('SmartContentItem').at(0).prop('item')).toEqual({title: 'Homepage'});
-    expect(smartContent.find('SmartContentItem').at(1).prop('item')).toEqual({title: 'About us'});
+    expect(screen.getByText('Homepage')).toBeInTheDocument();
+    expect(screen.getByText('About us')).toBeInTheDocument();
 });
 
-test('Call onItemClick when an item in the SmartContent is clicked', () => {
+test('Call onItemClick when an item in the SmartContent is clicked', async() => {
+    const user = userEvent.setup();
     const itemClickSpy = jest.fn();
     const smartContentStore = new SmartContentStore('content');
     smartContentStore.items = [
@@ -215,19 +235,15 @@ test('Call onItemClick when an item in the SmartContent is clicked', () => {
         {id: 2, title: 'About us'},
     ];
 
-    const smartContent = mount(
-        <SmartContent
-            defaultValue={defaultValue}
-            fieldLabel="Test"
-            onItemClick={itemClickSpy}
-            store={smartContentStore}
-        />
-    );
+    renderSmartContent({
+        onItemClick: itemClickSpy,
+        store: smartContentStore,
+    });
 
-    smartContent.find('MultiItemSelection .content').at(0).simulate('click');
+    await user.click(getItemButton('Homepage'));
     expect(itemClickSpy).toHaveBeenLastCalledWith(1, {id: 1, title: 'Homepage'});
 
-    smartContent.find('MultiItemSelection .content').at(1).simulate('click');
+    await user.click(getItemButton('About us'));
     expect(itemClickSpy).toHaveBeenLastCalledWith(2, {id: 2, title: 'About us'});
 });
 
@@ -235,29 +251,16 @@ test('Pass the loading prop to the MultiItemSelection if items are still loading
     const smartContentStore = new SmartContentStore('content');
     smartContentStore.itemsLoading = true;
 
-    const smartContent = shallow(
-        <SmartContent
-            defaultValue={defaultValue}
-            fieldLabel="Test"
-            store={smartContentStore}
-        />
-    );
+    renderSmartContent({store: smartContentStore});
 
-    expect(smartContent.find('MultiItemSelection').prop('loading')).toEqual(true);
+    expect(document.querySelector('.loader')).toBeInTheDocument();
 });
 
 test('Pass the loading prop to the MultiItemSelection if list or categories are still loading', () => {
     const smartContentStore = new SmartContentStore('content');
-    // $FlowFixMe
-    smartContentStore.loading = true;
+    (smartContentStore: any).loading = true;
 
-    const smartContent = shallow(
-        <SmartContent
-            defaultValue={defaultValue}
-            fieldLabel="Test"
-            store={smartContentStore}
-        />
-    );
+    renderSmartContent({store: smartContentStore});
 
-    expect(smartContent.find('MultiItemSelection').prop('loading')).toEqual(true);
+    expect(document.querySelector('.loader')).toBeInTheDocument();
 });

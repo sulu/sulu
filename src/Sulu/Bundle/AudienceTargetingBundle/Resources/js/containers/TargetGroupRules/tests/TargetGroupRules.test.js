@@ -1,60 +1,103 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import TargetGroupRules from '../TargetGroupRules';
 import ruleRegistry from '../registries/ruleRegistry';
 import ruleTypeRegistry from '../registries/ruleTypeRegistry';
 import KeyValue from '../ruleTypes/KeyValue';
 import SingleSelect from '../ruleTypes/SingleSelect';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+let mockOverlayProps: Object = {};
 
-jest.mock('../registries/ruleTypeRegistry', () => ({
-    get: jest.fn(),
-}));
+const mockReact = require('react');
 
-jest.mock('../registries/ruleRegistry', () => ({
-    getAll: jest.fn(),
-    get: jest.fn(),
-}));
+jest.mock('sulu-admin-bundle/components', () => {
+    const actual = jest.requireActual('sulu-admin-bundle/components');
+
+    return {
+        ...actual,
+        Overlay: jest.fn((props) => {
+            mockOverlayProps = props;
+
+            if (!props.open) {
+                return null;
+            }
+
+            return mockReact.createElement(
+                'div',
+                {
+                    'data-testid': 'overlay',
+                },
+                mockReact.createElement('h2', {}, props.title),
+                props.children,
+                mockReact.createElement(
+                    'button',
+                    {onClick: () => props.onConfirm(), type: 'button'},
+                    props.confirmText
+                ),
+                mockReact.createElement('button', {
+                    'aria-label': 'su-times',
+                    onClick: () => props.onClose(),
+                    type: 'button',
+                })
+            );
+        }),
+    };
+});
+
+jest.mock('sulu-admin-bundle/utils/Translator');
+
+const rules = {
+    browser: {
+        name: 'Browser',
+        type: {
+            name: 'select',
+            options: {
+                name: 'browser',
+                options: [
+                    {id: 'firefox', name: 'Firefox'},
+                    {id: 'chrome', name: 'Chrome'},
+                ],
+            },
+        },
+    },
+    query_string: {
+        name: 'Query String',
+        type: {
+            name: 'key_value',
+            options: {
+                keyName: 'parameter',
+                keyPlaceholder: 'Parameter',
+                valueName: 'value',
+                valuePlaceholder: 'Value',
+            },
+        },
+    },
+};
+
+beforeEach(() => {
+    mockOverlayProps = {};
+    ruleRegistry.setRules(rules);
+    ruleTypeRegistry.add('key_value', KeyValue);
+    ruleTypeRegistry.add('select', SingleSelect);
+});
+
+afterEach(() => {
+    ruleRegistry.clear();
+    ruleTypeRegistry.clear();
+});
 
 test('Render an empty list of rules', () => {
-    expect(render(<TargetGroupRules onChange={jest.fn()} value={[]} />)).toMatchSnapshot();
+    const {asFragment} = render(<TargetGroupRules onChange={jest.fn()} value={[]} />);
+
+    expect(asFragment()).toMatchSnapshot();
+    expect(mockOverlayProps).toEqual(expect.objectContaining({
+        open: false,
+    }));
 });
 
 test('Render a list of rules', () => {
-    ruleRegistry.get.mockImplementation((key) => {
-        switch (key) {
-            case 'browser':
-                return {
-                    name: 'Browser',
-                    type: {
-                        name: 'select',
-                        options: {
-                            name: 'browser',
-                            options: [
-                                {id: 'firefox', name: 'Firefox'},
-                                {id: 'chrome', name: 'Chrome'},
-                            ],
-                        },
-                    },
-                };
-            case 'query_string':
-                return {
-                    name: 'Query String',
-                    type: {
-                        name: 'key_value',
-                        options: {
-                            keyName: 'parameter',
-                            valueName: 'value',
-                        },
-                    },
-                };
-        }
-    });
-
     const value = [
         {
             conditions: [
@@ -87,10 +130,13 @@ test('Render a list of rules', () => {
         },
     ];
 
-    expect(render(<TargetGroupRules onChange={jest.fn()} value={value} />)).toMatchSnapshot();
+    const {asFragment} = render(<TargetGroupRules onChange={jest.fn()} value={value} />);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Add a new rule', () => {
+test('Add a new rule', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
     const value = [
@@ -101,16 +147,17 @@ test('Add a new rule', () => {
         },
     ];
 
-    const targetGroupRules = mount(<TargetGroupRules onChange={changeSpy} value={value} />);
+    render(<TargetGroupRules onChange={changeSpy} value={value} />);
 
-    targetGroupRules.find('Button[icon="su-plus"]').prop('onClick')();
+    await user.click(screen.getByRole('button', {name: 'su-plus'}));
 
-    targetGroupRules.update();
+    expect(screen.getByText('sulu_audience_targeting.configure_rule')).toBeInTheDocument();
 
-    targetGroupRules.find('RuleOverlay Input').prop('onChange')('Rule 2');
-    targetGroupRules.find('RuleOverlay SingleSelect').prop('onChange')(2);
+    await user.type(screen.getByRole('textbox'), 'Rule 2');
+    await user.click(screen.getByLabelText('su-angle-down'));
+    await user.click(screen.getByRole('button', {name: 'sulu_audience_targeting.each_session'}));
 
-    targetGroupRules.find('RuleOverlay Button[skin="primary"]').prop('onClick')();
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
 
     expect(changeSpy).toHaveBeenCalledWith([
         {
@@ -126,44 +173,8 @@ test('Add a new rule', () => {
     ]);
 });
 
-test('Edit an existing rule', () => {
-    ruleRegistry.getAll.mockReturnValue({
-        browser: {
-            name: 'Browser',
-            type: {
-                name: 'select',
-                options: {
-                    name: 'browser',
-                    options: [
-                        {id: 'firefox', name: 'Firefox'},
-                        {id: 'chrome', name: 'Chrome'},
-                    ],
-                },
-            },
-        },
-        query_string: {
-            name: 'Query String',
-            type: {
-                name: 'key_value',
-                options: {
-                    keyName: 'parameter',
-                    valueName: 'value',
-                },
-            },
-        },
-    });
-
-    ruleRegistry.get.mockImplementation((key) => ruleRegistry.getAll()[key]);
-
-    ruleTypeRegistry.get.mockImplementation((type) => {
-        switch (type) {
-            case 'select':
-                return SingleSelect;
-            case 'key_value':
-                return KeyValue;
-        }
-    });
-
+test('Edit an existing rule', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
     const value = [
@@ -179,37 +190,32 @@ test('Edit an existing rule', () => {
         },
     ];
 
-    const targetGroupRules = mount(<TargetGroupRules onChange={changeSpy} value={value} />);
+    render(<TargetGroupRules onChange={changeSpy} value={value} />);
 
-    targetGroupRules.find('ButtonCell[rowIndex=0] button').prop('onClick')();
-    targetGroupRules.update();
+    await user.click(screen.getAllByRole('button', {name: 'su-pen'})[0]);
 
-    expect((targetGroupRules.find('RuleOverlay Input').prop('value'))).toEqual('Rule 1');
-    expect((targetGroupRules.find('RuleOverlay SingleSelect').prop('value'))).toEqual(1);
+    expect(screen.getByDisplayValue('Rule 1')).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: /sulu_audience_targeting.each_page_visit/})).toBeInTheDocument();
 
-    targetGroupRules.find('RuleOverlay Input').prop('onChange')('Rule 1 edited');
-    targetGroupRules.find('RuleOverlay SingleSelect').prop('onChange')(3);
+    await user.clear(screen.getByDisplayValue('Rule 1'));
+    await user.type(screen.getByRole('textbox'), 'Rule 1 edited');
+    await user.click(screen.getByRole('button', {name: /sulu_audience_targeting.each_page_visit/}));
+    await user.click(screen.getByRole('button', {name: 'sulu_audience_targeting.first_visit'}));
 
-    targetGroupRules.find('ConditionList Button[icon="su-plus"]').prop('onClick')();
-    targetGroupRules.find('ConditionList Button[icon="su-plus"]').prop('onClick')();
-    targetGroupRules.update();
+    await user.click(screen.getByRole('button', {name: /sulu_audience_targeting.add_condition/}));
+    await user.click(screen.getByRole('button', {name: /sulu_audience_targeting.add_condition/}));
 
-    targetGroupRules.find('ConditionList Condition').at(0).find('SingleSelect DisplayValue').prop('onClick')();
-    targetGroupRules.update();
-    targetGroupRules.find('ConditionList Condition').at(0).find('SingleSelect Option button').at(0).prop('onClick')();
-    targetGroupRules.update();
-    targetGroupRules.find('ConditionList Condition').at(0).find('SingleSelect DisplayValue').at(1).prop('onClick')();
-    targetGroupRules.update();
-    targetGroupRules.find('ConditionList Condition').at(0).find('SingleSelect Option button').at(0).prop('onClick')();
+    await user.click(screen.getAllByRole('button', {name: /sulu_admin.please_choose/})[0]);
+    await user.click(screen.getByRole('button', {name: 'Browser'}));
+    await user.click(screen.getAllByRole('button', {name: /sulu_admin.please_choose/})[0]);
+    await user.click(screen.getByRole('button', {name: 'Firefox'}));
 
-    targetGroupRules.find('ConditionList Condition').at(1).find('SingleSelect DisplayValue').prop('onClick')();
-    targetGroupRules.update();
-    targetGroupRules.find('ConditionList Condition').at(1).find('SingleSelect Option button').at(1).prop('onClick')();
-    targetGroupRules.update();
-    targetGroupRules.find('ConditionList Condition').at(1).find('KeyValue Input').at(0).prop('onChange')('parameter');
-    targetGroupRules.find('ConditionList Condition').at(1).find('KeyValue Input').at(1).prop('onChange')('value');
+    await user.click(screen.getByRole('button', {name: /sulu_admin.please_choose/}));
+    await user.click(screen.getByRole('button', {name: 'Query String'}));
+    await user.type(screen.getByPlaceholderText('Parameter'), 'parameter');
+    await user.type(screen.getByPlaceholderText('Value'), 'value');
 
-    targetGroupRules.find('RuleOverlay Button[skin="primary"]').prop('onClick')();
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
 
     expect(changeSpy).toHaveBeenCalledWith([
         {
@@ -239,7 +245,8 @@ test('Edit an existing rule', () => {
     ]);
 });
 
-test('Close without adding a new rule', () => {
+test('Close without adding a new rule', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
     const value = [
@@ -250,21 +257,22 @@ test('Close without adding a new rule', () => {
         },
     ];
 
-    const targetGroupRules = mount(<TargetGroupRules onChange={changeSpy} value={value} />);
+    render(<TargetGroupRules onChange={changeSpy} value={value} />);
 
-    expect(targetGroupRules.find('RuleOverlay').prop('open')).toEqual(false);
-    targetGroupRules.find('Button[icon="su-plus"]').prop('onClick')();
+    expect(screen.queryByText('sulu_audience_targeting.configure_rule')).not.toBeInTheDocument();
 
-    targetGroupRules.update();
-    expect(targetGroupRules.find('RuleOverlay').prop('open')).toEqual(true);
+    await user.click(screen.getByRole('button', {name: 'su-plus'}));
 
-    targetGroupRules.find('RuleOverlay span.su-times').simulate('click');
+    expect(screen.getByText('sulu_audience_targeting.configure_rule')).toBeInTheDocument();
 
-    expect(targetGroupRules.find('RuleOverlay').prop('open')).toEqual(false);
+    await user.click(screen.getByRole('button', {name: 'su-times'}));
+
+    expect(screen.queryByText('sulu_audience_targeting.configure_rule')).not.toBeInTheDocument();
     expect(changeSpy).not.toHaveBeenCalled();
 });
 
-test('Remove rules', () => {
+test('Remove rules', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
     const value = [
@@ -285,21 +293,16 @@ test('Remove rules', () => {
         },
     ];
 
-    const targetGroupRules = mount(<TargetGroupRules onChange={changeSpy} value={value} />);
+    render(<TargetGroupRules onChange={changeSpy} value={value} />);
 
-    expect(targetGroupRules.find('Button[icon="su-trash-alt"]').prop('disabled')).toEqual(true);
+    expect(screen.getByRole('button', {name: 'su-trash-alt'})).toBeDisabled();
 
-    targetGroupRules.find('Row[rowIndex=1] input[type="checkbox"]').getDOMNode().checked = true;
-    targetGroupRules.find('Row[rowIndex=2] input[type="checkbox"]').getDOMNode().checked = true;
-    targetGroupRules.find('Row[rowIndex=1] input[type="checkbox"]')
-        .simulate('change', {currentTarget: {checked: true}});
-    targetGroupRules.find('Row[rowIndex=2] input[type="checkbox"]')
-        .simulate('change', {currentTarget: {checked: true}});
+    await user.click(screen.getAllByRole('checkbox')[2]);
+    await user.click(screen.getAllByRole('checkbox')[3]);
 
-    targetGroupRules.update();
-    expect(targetGroupRules.find('Button[icon="su-trash-alt"]').prop('disabled')).toEqual(false);
+    expect(screen.getByRole('button', {name: 'su-trash-alt'})).toBeEnabled();
 
-    targetGroupRules.find('Button[icon="su-trash-alt"]').prop('onClick')();
+    await user.click(screen.getByRole('button', {name: 'su-trash-alt'}));
 
     expect(changeSpy).toHaveBeenCalledWith([
         {

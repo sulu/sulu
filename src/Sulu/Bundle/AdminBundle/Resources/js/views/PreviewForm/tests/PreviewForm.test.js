@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {mount, render} from 'enzyme';
 import mockReact from 'react';
+import {render, screen} from '@testing-library/react';
 import {findWithHighOrderFunction} from '../../../utils/TestHelper';
 import ResourceStore from '../../../stores/ResourceStore';
 
@@ -50,9 +50,9 @@ test('Should render Form view', () => {
 
     const PreviewForm = require('../PreviewForm').default;
 
-    expect(render(
-        <PreviewForm locales={[]} resourceStore={resourceStore} route={route} router={router} />
-    )).toMatchSnapshot();
+    render(<PreviewForm locales={[]} resourceStore={resourceStore} route={route} router={router} />);
+
+    expect(screen.getByText('form view mock')).toBeInTheDocument();
 });
 
 test('Should initialize preview sidebar per default when previewCondition is not set', () => {
@@ -66,14 +66,19 @@ test('Should initialize preview sidebar per default when previewCondition is not
     };
 
     // require preview form to trigger call of withSidebar mock and retrieve passed function
-    const PreviewForm = require('../PreviewForm').default;
+    require('../PreviewForm').default;
     const withSidebar = require('../../../containers/Sidebar/withSidebar');
     const Form = require('../../Form');
     const sidebarFunction = findWithHighOrderFunction(withSidebar, Form);
 
-    // mount PreviewForm and call function that was passed to withSidebar
-    const previewForm = mount(<PreviewForm locales={[]} resourceStore={resourceStore} route={route} router={router} />);
-    const sidebarConfig = sidebarFunction.call(previewForm.instance());
+    const sidebarConfig = sidebarFunction.call({
+        props: {locales: [], resourceStore, route, router},
+        resourceFormStore: {
+            data: {
+                testKey: 'test-value',
+            },
+        },
+    });
 
     // check if function that was passed to withSidebar returns the correct SidebarConfig
     expect(sidebarConfig.view).toEqual('sulu_preview.preview');
@@ -99,14 +104,19 @@ test('Should initialize preview sidebar when previewCondition evaluates to true'
     };
 
     // require preview form to trigger call of withSidebar mock and retrieve passed function
-    const PreviewForm = require('../PreviewForm').default;
+    require('../PreviewForm').default;
     const withSidebar = require('../../../containers/Sidebar/withSidebar');
     const Form = require('../../Form');
     const sidebarFunction = findWithHighOrderFunction(withSidebar, Form);
 
-    // mount PreviewForm and call function that was passed to withSidebar
-    const previewForm = mount(<PreviewForm locales={[]} resourceStore={resourceStore} route={route} router={router} />);
-    const sidebarConfig = sidebarFunction.call(previewForm.instance());
+    const sidebarConfig = sidebarFunction.call({
+        props: {locales: [], resourceStore, route, router},
+        resourceFormStore: {
+            data: {
+                testKey: 'test-value',
+            },
+        },
+    });
 
     // check if function that was passed to withSidebar returns the correct SidebarConfig
     expect(sidebarConfig.view).toEqual('sulu_preview.preview');
@@ -132,14 +142,19 @@ test('Should not initialize preview sidebar when previewCondition evaluates to t
     };
 
     // require preview form to trigger call of withSidebar mock and retrieve passed function
-    const PreviewForm = require('../PreviewForm').default;
+    require('../PreviewForm').default;
     const withSidebar = require('../../../containers/Sidebar/withSidebar');
     const Form = require('../../Form');
     const sidebarFunction = findWithHighOrderFunction(withSidebar, Form);
 
-    // mount PreviewForm and call function that was passed to withSidebar
-    const previewForm = mount(<PreviewForm locales={[]} resourceStore={resourceStore} route={route} router={router} />);
-    const sidebarConfig = sidebarFunction.call(previewForm.instance());
+    const sidebarConfig = sidebarFunction.call({
+        props: {locales: [], resourceStore, route, router},
+        resourceFormStore: {
+            data: {
+                testKey: 'test-value',
+            },
+        },
+    });
 
     // check if function that was passed to withSidebar returns the correct SidebarConfig
     expect(sidebarConfig).toEqual(null);

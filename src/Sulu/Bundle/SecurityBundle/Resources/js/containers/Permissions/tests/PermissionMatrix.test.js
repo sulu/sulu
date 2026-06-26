@@ -1,14 +1,13 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {render} from '@testing-library/react';
+import {findElementByType, renderWithRef} from 'sulu-admin-bundle/utils/TestHelper';
 import PermissionMatrix from '../PermissionMatrix';
 import type {MatrixValues} from 'sulu-admin-bundle/components/Matrix/types';
 import type {ContextPermission} from '../types';
 import type {SecurityContexts} from '../../../stores/securityContextStore/types';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 test('Render with minimal', () => {
     const contextPermissions: Array<ContextPermission> = [
@@ -39,13 +38,15 @@ test('Render with minimal', () => {
         'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
     };
 
-    expect(render(
+    const {container} = render(
         <PermissionMatrix
             contextPermissions={contextPermissions}
             onChange={jest.fn()}
             securityContexts={securityContexts}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render in disabled state', () => {
@@ -77,14 +78,16 @@ test('Render in disabled state', () => {
         'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
     };
 
-    expect(render(
+    const {container} = render(
         <PermissionMatrix
             contextPermissions={contextPermissions}
             disabled={true}
             onChange={jest.fn()}
             securityContexts={securityContexts}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render with title', () => {
@@ -116,14 +119,16 @@ test('Render with title', () => {
         'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
     };
 
-    expect(render(
+    const {container} = render(
         <PermissionMatrix
             contextPermissions={contextPermissions}
             onChange={jest.fn()}
             securityContexts={securityContexts}
             title="Contact"
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render with subTitle', () => {
@@ -155,14 +160,16 @@ test('Render with subTitle', () => {
         'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
     };
 
-    expect(render(
+    const {container} = render(
         <PermissionMatrix
             contextPermissions={contextPermissions}
             onChange={jest.fn()}
             securityContexts={securityContexts}
             subTitle="Contact"
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Should trigger onChange correctly', () => {
@@ -195,7 +202,7 @@ test('Should trigger onChange correctly', () => {
         'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
     };
 
-    const permissionMatrix = mount(
+    const {instance: permissionMatrix} = renderWithRef(
         <PermissionMatrix
             contextPermissions={contextPermissions}
             onChange={onChange}
@@ -211,7 +218,7 @@ test('Should trigger onChange correctly', () => {
             'edit': false,
         },
     };
-    permissionMatrix.find('Matrix').instance().props.onChange(matrixValues);
+    findElementByType(permissionMatrix.render(), 'Matrix').props.onChange(matrixValues);
 
     const expectedContextPermissions: Array<ContextPermission> = [
         {

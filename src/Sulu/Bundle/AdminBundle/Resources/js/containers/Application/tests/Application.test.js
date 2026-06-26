@@ -1,18 +1,18 @@
-//@flow
+// @flow
 import React from 'react';
-import {render, mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Router, {Route} from '../../../services/Router';
 import Application from '../Application';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('../../../utils/Translator');
 
 jest.mock('../../../services/Router/Router', () => jest.fn(function() {
     this.attributes = {};
+    this.navigate = jest.fn();
+    this.reload = jest.fn();
+    this.reset = jest.fn();
 }));
-
-jest.mock('sulu-admin-bundle/containers/Form/stores/MemoryFormStore', () => jest.fn((memoryStore) =>({memoryStore})));
 
 const mockInitializerInitialized = jest.fn();
 const mockInitializerLoading = jest.fn();
@@ -37,9 +37,15 @@ jest.mock('../../../services/initializer', () => {
 const mockUserStoreLoggedIn = jest.fn();
 const mockUserStoreContact = jest.fn();
 const mockUserStoreUser = jest.fn();
-const mockUserStoreGetPersistentSetting = jest.fn().mockReturnValue(0);
+const mockUserStoreGetPersistentSetting = jest.fn();
 const mockUserStoreSetPersistentSetting = jest.fn();
-const mockUserStoreHasSingleSignOn = jest.fn().mockReturnValue(false);
+const mockUserStoreHasSingleSignOn = jest.fn();
+const mockUserStoreLoading = jest.fn();
+const mockUserStoreLoginError = jest.fn();
+const mockUserStoreLoginMethod = jest.fn();
+const mockUserStoreForgotPasswordSuccess = jest.fn();
+const mockUserStoreRedirectUrl = jest.fn();
+const mockUserStoreLogout = jest.fn();
 
 jest.mock('../../../stores/userStore', () => {
     return new class {
@@ -55,6 +61,26 @@ jest.mock('../../../stores/userStore', () => {
             return mockUserStoreContact();
         }
 
+        get loading() {
+            return mockUserStoreLoading();
+        }
+
+        get loginError() {
+            return mockUserStoreLoginError();
+        }
+
+        get loginMethod() {
+            return mockUserStoreLoginMethod();
+        }
+
+        get forgotPasswordSuccess() {
+            return mockUserStoreForgotPasswordSuccess();
+        }
+
+        get redirectUrl() {
+            return mockUserStoreRedirectUrl();
+        }
+
         hasSingleSignOn() {
             return mockUserStoreHasSingleSignOn();
         }
@@ -65,6 +91,14 @@ jest.mock('../../../stores/userStore', () => {
 
         setPersistentSetting(name, value) {
             return mockUserStoreSetPersistentSetting(name, value);
+        }
+
+        setLoginError() {}
+
+        setForgotPasswordSuccess() {}
+
+        logout() {
+            return mockUserStoreLogout();
         }
     };
 });
@@ -84,11 +118,9 @@ jest.mock('../../ProfileFormOverlay', () => function Test() {
     );
 });
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: (key) => key,
-}));
-
 beforeEach(() => {
+    jest.clearAllMocks();
+
     mockInitializerInitialized.mockReturnValue(true);
     mockInitializerLoading.mockReturnValue(false);
     mockInitializedTranslationsLocale.mockReturnValue('en');
@@ -101,7 +133,43 @@ beforeEach(() => {
         id: 99,
         username: 'test',
     });
+    mockUserStoreGetPersistentSetting.mockReturnValue(false);
+    mockUserStoreHasSingleSignOn.mockReturnValue(false);
+    mockUserStoreLoading.mockReturnValue(false);
+    mockUserStoreLoginError.mockReturnValue(false);
+    mockUserStoreLoginMethod.mockReturnValue('');
+    mockUserStoreForgotPasswordSuccess.mockReturnValue(false);
+    mockUserStoreRedirectUrl.mockReturnValue('');
+    mockUserStoreLogout.mockReturnValue(Promise.resolve());
 });
+
+function createRouter(routeConfig) {
+    const router = new Router({});
+
+    if (routeConfig) {
+        router.route = new Route(routeConfig);
+    }
+
+    return router;
+}
+
+function createRouteConfig() {
+    return {
+        name: 'test',
+        path: '/webspaces',
+        type: 'test',
+    };
+}
+
+function renderApplication(props: Object = {}) {
+    return render(
+        <Application
+            appVersion={props.appVersion === undefined ? null : props.appVersion}
+            router={props.router || createRouter()}
+            suluVersion="2.0.0-RC1"
+        />
+    );
+}
 
 test('Render login with loader', () => {
     mockInitializerInitialized.mockReturnValue(false);
@@ -109,9 +177,11 @@ test('Render login with loader', () => {
     mockInitializedTranslationsLocale.mockReturnValue(null);
     mockUserStoreLoggedIn.mockReturnValue(false);
 
-    const router = new Router({});
-    const application = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-    expect(application.render()).toMatchSnapshot();
+    renderApplication();
+
+    expect(screen.getByLabelText('su-sulu')).toBeInTheDocument();
+    expect(screen.queryByLabelText('sulu_admin.username_or_email')).not.toBeInTheDocument();
+    expect(screen.queryByText('sulu_admin.back_to_website')).not.toBeInTheDocument();
 });
 
 test('Render login screen to reset password', () => {
@@ -120,10 +190,14 @@ test('Render login screen to reset password', () => {
     mockInitializedTranslationsLocale.mockReturnValue('en');
     mockUserStoreLoggedIn.mockReturnValue(false);
 
-    const router = new Router({});
+    const router = createRouter();
     router.attributes.forgotPasswordToken = 'some-uuid';
-    const application = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-    expect(application.render()).toMatchSnapshot();
+
+    renderApplication({router});
+
+    expect(screen.getAllByText('sulu_admin.reset_password')).toHaveLength(2);
+    expect(screen.getByLabelText('sulu_admin.password')).toBeInTheDocument();
+    expect(screen.getByLabelText('sulu_admin.repeat_password')).toBeInTheDocument();
 });
 
 test('Render login when user is not logged in', () => {
@@ -132,111 +206,84 @@ test('Render login when user is not logged in', () => {
     mockInitializedTranslationsLocale.mockReturnValue('en');
     mockUserStoreLoggedIn.mockReturnValue(false);
 
-    const router = new Router({});
-    const application = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
+    renderApplication();
 
-    expect(application.render()).toMatchSnapshot();
+    expect(screen.getByText('sulu_admin.welcome')).toBeInTheDocument();
+    expect(screen.getByLabelText('sulu_admin.username_or_email')).toBeInTheDocument();
+    expect(screen.getByLabelText('sulu_admin.password')).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'sulu_admin.login'})).toBeDisabled();
 });
 
 test('Should not fail if current route does not exist', () => {
-    const router = new Router({});
-    const view = render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
+    renderApplication();
 
-    expect(view).toMatchSnapshot();
+    expect(screen.getByLabelText('su-sulu-logo')).toBeInTheDocument();
+    expect(screen.getByText('Hikaru Sulu')).toBeInTheDocument();
+    expect(screen.queryByRole('heading', {name: 'Test'})).not.toBeInTheDocument();
 });
 
 test('Render based on current route', () => {
-    const router = new Router({});
-    router.route = new Route({
-        name: 'test',
-        path: '/webspaces',
-        type: 'test',
-    });
+    const router = createRouter(createRouteConfig());
 
-    const view = render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
+    renderApplication({router});
 
-    expect(view).toMatchSnapshot();
+    expect(screen.getByRole('heading', {name: 'Test'})).toBeInTheDocument();
+    expect(screen.getByRole('heading', {name: 'test'})).toBeInTheDocument();
+    expect(screen.getByText('ProfileFormOverlay Mock')).toBeInTheDocument();
 });
 
 test('Render based on current route with app version', () => {
-    const router = new Router({});
-    router.route = new Route({
-        name: 'test',
-        path: '/webspaces',
-        type: 'test',
-    });
+    const router = createRouter(createRouteConfig());
 
-    const view = render(<Application appVersion="666" router={router} suluVersion="2.0.0-RC1" />);
+    renderApplication({appVersion: '666', router});
 
-    expect(view).toMatchSnapshot();
+    expect(screen.getByRole('heading', {name: 'Test'})).toBeInTheDocument();
+    expect(screen.getByLabelText('su-sulu-logo').parentElement).toHaveAttribute('title', '2.0.0-RC1');
 });
 
-test('Render opened navigation', () => {
-    const router = new Router({});
-    router.route = new Route({
-        name: 'test',
-        path: '/webspaces',
-        type: 'test',
-    });
+test('Render opened navigation', async() => {
+    const user = userEvent.setup();
+    const router = createRouter(createRouteConfig());
 
-    const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-    view.find('Button[icon="su-bars"]').simulate('click');
+    renderApplication({router});
 
-    expect(view.render()).toMatchSnapshot();
+    await user.click(screen.getByLabelText('su-bars'));
+
+    expect(screen.queryByLabelText('su-bars')).not.toBeInTheDocument();
+    expect(screen.getByTestId('backdrop')).toBeInTheDocument();
 });
 
-test('Pin navigation', () => {
-    const router = new Router({});
-    router.route = new Route({
-        name: 'test',
-        path: '/webspaces',
-        type: 'test',
-    });
+test('Pin navigation', async() => {
+    const user = userEvent.setup();
+    const router = createRouter(createRouteConfig());
 
-    const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-    view.find('Button[icon="su-bars"]').simulate('click');
-    view.find('.pin').simulate('click');
+    renderApplication({router});
 
-    expect(view.find('Navigation').at(0).prop('pinned')).toEqual(true);
+    await user.click(screen.getByLabelText('su-bars'));
+    await user.click(screen.getByLabelText('su-stick-right'));
+
+    expect(screen.queryByTestId('backdrop')).not.toBeInTheDocument();
     expect(mockUserStoreSetPersistentSetting).toHaveBeenCalledWith('sulu_admin.application.navigation_pinned', true);
 });
 
 test('Pin navigation from beginning', () => {
-    const router = new Router({});
-    router.route = new Route({
-        name: 'test',
-        path: '/webspaces',
-        type: 'test',
-    });
+    const router = createRouter(createRouteConfig());
+    mockUserStoreGetPersistentSetting.mockReturnValue(true);
 
-    mockUserStoreGetPersistentSetting.mockReturnValueOnce(true);
+    renderApplication({router});
 
-    const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-    expect(view.find('Button[icon="su-bars"]')).toHaveLength(0);
-    expect(view.find('Button[icon="su-sulu-logo"]')).toHaveLength(0);
-    expect(view.find('.pin')).toHaveLength(1);
-
+    expect(screen.queryByLabelText('su-bars')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('backdrop')).not.toBeInTheDocument();
     expect(mockUserStoreGetPersistentSetting).toHaveBeenCalledWith('sulu_admin.application.navigation_pinned');
-
-    expect(view.find('Navigation').at(0).prop('pinned')).toEqual(true);
 });
 
 test('Do not pin navigation from beginning', () => {
-    const router = new Router({});
-    router.route = new Route({
-        name: 'test',
-        path: '/webspaces',
-        type: 'test',
-    });
+    const router = createRouter(createRouteConfig());
+    mockUserStoreGetPersistentSetting.mockReturnValue(false);
 
-    mockUserStoreGetPersistentSetting.mockReturnValueOnce(false);
+    renderApplication({router});
 
-    const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
-    expect(view.find('Button[icon="su-bars"]')).toHaveLength(1);
-    expect(view.find('Button[icon="su-sulu-logo"]')).toHaveLength(0);
-    expect(view.find('.pin')).toHaveLength(1);
-
+    expect(screen.getByLabelText('su-bars')).toBeInTheDocument();
+    expect(screen.queryByTestId('backdrop')).not.toBeInTheDocument();
     expect(mockUserStoreGetPersistentSetting).toHaveBeenCalledWith('sulu_admin.application.navigation_pinned');
-
-    expect(view.find('Navigation').at(0).prop('pinned')).toEqual(false);
 });

@@ -1,13 +1,12 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import {MultiSelect} from 'sulu-admin-bundle/components';
+import {findElementByType, renderWithRef} from 'sulu-admin-bundle/utils/TestHelper';
 import RoleAssignment from '../RoleAssignment';
 import type {Localization} from 'sulu-admin-bundle/stores';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 test('Render component', () => {
     const value = {
@@ -41,13 +40,15 @@ test('Render component', () => {
         },
     ];
 
-    expect(render(
+    const {container} = render(
         <RoleAssignment
             localizations={localizations}
             onChange={jest.fn()}
             value={value}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render component in disabled state', () => {
@@ -82,14 +83,16 @@ test('Render component in disabled state', () => {
         },
     ];
 
-    expect(render(
+    const {container} = render(
         <RoleAssignment
             disabled={true}
             localizations={localizations}
             onChange={jest.fn()}
             value={value}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('The component should trigger the change callback', () => {
@@ -125,7 +128,7 @@ test('The component should trigger the change callback', () => {
     ];
 
     const onChangeSpy = jest.fn();
-    const roleAssignment = shallow(
+    const {instance: roleAssignment} = renderWithRef(
         <RoleAssignment
             localizations={localizations}
             onChange={onChangeSpy}
@@ -133,7 +136,7 @@ test('The component should trigger the change callback', () => {
         />
     );
 
-    roleAssignment.find(MultiSelect).props().onChange(['de', 'en']);
+    findElementByType(roleAssignment.render(), MultiSelect).props.onChange(['de', 'en']);
 
     const expectedValue = {
         id: 1,

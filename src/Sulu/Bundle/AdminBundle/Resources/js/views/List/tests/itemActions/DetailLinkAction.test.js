@@ -6,9 +6,7 @@ import ResourceStore from '../../../../stores/ResourceStore';
 import List from '../../../../views/List';
 import DetailLinkItemAction from '../../itemActions/DetailLinkItemAction';
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../../utils/Translator');
 
 jest.mock('../../../../containers/List/stores/ListStore', () => jest.fn(function() {
     this.selectionIds = [];
@@ -123,7 +121,7 @@ test('Throw error if "resource_key_property" option is not correctly set', () =>
     expect(() => linkItemAction.getItemActionConfig()).toThrow(/resource_key_property/);
 });
 
-test('Throw error if "resource_key_property" item is not correctly set', () => {
+test('Throw error if "resource_id_property" item is not correctly set', () => {
     const linkItemAction = createLinkItemAction();
 
     const item = {resourceKey: {}};
@@ -139,7 +137,7 @@ test('Throw error if "resource_id_property" option is not correctly set', () => 
     expect(() => linkItemAction.getItemActionConfig()).toThrow(/resource_id_property/);
 });
 
-test('Throw error if "resource_key_property" item is not correctly set', () => {
+test('Throw error if "resource_view_attributes_property" item is not correctly set', () => {
     const linkItemAction = createLinkItemAction();
 
     const item = {resourceId: {}};

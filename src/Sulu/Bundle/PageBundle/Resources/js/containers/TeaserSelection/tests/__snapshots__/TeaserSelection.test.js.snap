@@ -1,607 +1,475 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Load combined data from TeaserStore and props 1`] = `
-<div
-  class="multiItemSelectionClass"
->
+<DocumentFragment>
   <div
-    class="header"
+    data-disabled="false"
+    data-loading="false"
+    data-testid="multi-item-selection"
   >
     <button
-      class="button left hasOptions"
       type="button"
     >
-      <span
-        aria-label="su-plus-circle"
-        class="su-plus-circle icon"
-      />
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
-      />
+      Pages
+    </button>
+    <button
+      type="button"
+    >
+      Articles
+    </button>
+    <button
+      type="button"
+    >
+      sort-2-1
     </button>
     <div
-      class="label"
-    />
+      data-testid="item-pages;2"
+    >
+      <div
+        data-clickable="false"
+        data-testid="item-content-pages;2"
+      >
+        <div
+          class="item"
+        >
+          <div
+            class="media"
+          >
+            <img
+              src="/admin/media/8?format=sulu-25x25"
+            />
+          </div>
+          <div
+            class="content"
+          >
+            <p
+              class="title"
+            >
+              Edited Page Title
+            </p>
+            <p
+              class="description"
+            >
+              Edited Page Description
+
+            </p>
+          </div>
+          <p
+            class="type"
+          >
+            Pages (sulu_page.edited)
+          </p>
+        </div>
+      </div>
+      <button
+        type="button"
+      >
+        edit-pages;2
+      </button>
+      <button
+        type="button"
+      >
+        remove-pages;2
+      </button>
+    </div>
+    <div
+      data-testid="item-contacts;3"
+    >
+      <div
+        data-clickable="false"
+        data-testid="item-content-contacts;3"
+      >
+        <div
+          class="item"
+        >
+          <div
+            class="media"
+          />
+          <div
+            class="content"
+          >
+            <p
+              class="title"
+            >
+              Contact 1
+            </p>
+            <p
+              class="description"
+            >
+              Contact Description 1
+
+            </p>
+          </div>
+          <p
+            class="type"
+          >
+            Contacts
+          </p>
+        </div>
+      </div>
+      <button
+        type="button"
+      >
+        edit-contacts;3
+      </button>
+      <button
+        type="button"
+      >
+        remove-contacts;3
+      </button>
+    </div>
+    <div
+      data-testid="item-contacts;4"
+    >
+      <div
+        data-clickable="false"
+        data-testid="item-content-contacts;4"
+      >
+        <div
+          class="item"
+        >
+          <div
+            class="media"
+          />
+          <div
+            class="content"
+          >
+            <p
+              class="title"
+            >
+              Contact 2
+            </p>
+            <p
+              class="description"
+            >
+              Contact Description 2
+
+            </p>
+          </div>
+          <p
+            class="type"
+          >
+            Contacts
+          </p>
+        </div>
+      </div>
+      <button
+        type="button"
+      >
+        edit-contacts;4
+      </button>
+      <button
+        type="button"
+      >
+        remove-contacts;4
+      </button>
+    </div>
   </div>
-  <ul
-    class="list"
+  <div
+    data-open="false"
+    data-testid="multi-list-overlay-pages"
   >
-    <li
-      class="listElement"
+    <button
+      type="button"
     >
-      <div
-        class="item"
-      >
-        <span
-          class="dragHandle sortable"
-        >
-          <span
-            aria-label="su-more"
-            class="su-more"
-          />
-          <span
-            class="index"
-          >
-            1
-          </span>
-        </span>
-        <div
-          class="content"
-        >
-          <div
-            class="item"
-          >
-            <div
-              class="media"
-            >
-              <img
-                src="/admin/media/8?format=sulu-25x25"
-              />
-            </div>
-            <div
-              class="content"
-            >
-              <p
-                class="title"
-              >
-                Edited Page Title
-              </p>
-              <p
-                class="description"
-              >
-                Edited Page Description
-
-              </p>
-            </div>
-            <p
-              class="type"
-            >
-              Pages (sulu_page.edited)
-            </p>
-          </div>
-        </div>
-        <div
-          class="buttons"
-        >
-          <button
-            class="button"
-            type="button"
-          >
-            <span
-              aria-label="su-pen"
-              class="su-pen"
-            />
-          </button>
-          <button
-            class="button"
-            type="button"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
-        </div>
-      </div>
-    </li>
-    <li
-      class="listElement"
+      close-pages
+    </button>
+  </div>
+  <div
+    data-open="false"
+    data-testid="multi-list-overlay-articles"
+  >
+    <button
+      type="button"
     >
-      <div
-        class="item"
-      >
-        <span
-          class="dragHandle sortable"
-        >
-          <span
-            aria-label="su-more"
-            class="su-more"
-          />
-          <span
-            class="index"
-          >
-            2
-          </span>
-        </span>
-        <div
-          class="content"
-        >
-          <div
-            class="item"
-          >
-            <div
-              class="media"
-            />
-            <div
-              class="content"
-            >
-              <p
-                class="title"
-              >
-                Contact 1
-              </p>
-              <p
-                class="description"
-              >
-                Contact Description 1
-
-              </p>
-            </div>
-            <p
-              class="type"
-            >
-              Contacts
-            </p>
-          </div>
-        </div>
-        <div
-          class="buttons"
-        >
-          <button
-            class="button"
-            type="button"
-          >
-            <span
-              aria-label="su-pen"
-              class="su-pen"
-            />
-          </button>
-          <button
-            class="button"
-            type="button"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
-        </div>
-      </div>
-    </li>
-    <li
-      class="listElement"
-    >
-      <div
-        class="item"
-      >
-        <span
-          class="dragHandle sortable"
-        >
-          <span
-            aria-label="su-more"
-            class="su-more"
-          />
-          <span
-            class="index"
-          >
-            3
-          </span>
-        </span>
-        <div
-          class="content"
-        >
-          <div
-            class="item"
-          >
-            <div
-              class="media"
-            />
-            <div
-              class="content"
-            >
-              <p
-                class="title"
-              >
-                Contact 2
-              </p>
-              <p
-                class="description"
-              >
-                Contact Description 2
-
-              </p>
-            </div>
-            <p
-              class="type"
-            >
-              Contacts
-            </p>
-          </div>
-        </div>
-        <div
-          class="buttons"
-        >
-          <button
-            class="button"
-            type="button"
-          >
-            <span
-              aria-label="su-pen"
-              class="su-pen"
-            />
-          </button>
-          <button
-            class="button"
-            type="button"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
-        </div>
-      </div>
-    </li>
-  </ul>
-</div>
+      close-articles
+    </button>
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Render loading teaser selection 1`] = `
-<div
-  class="multiItemSelectionClass"
->
+<DocumentFragment>
   <div
-    class="header"
+    data-disabled="false"
+    data-loading="true"
+    data-testid="multi-item-selection"
   >
     <button
-      class="button left hasOptions"
       type="button"
     >
-      <span
-        aria-label="su-plus-circle"
-        class="su-plus-circle icon"
-      />
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
-      />
+      Pages
+    </button>
+    <button
+      type="button"
+    >
+      Articles
+    </button>
+    <button
+      type="button"
+    >
+      sort-2-1
     </button>
     <div
-      class="label"
+      data-testid="item-pages;2"
     >
       <div
-        class="loader"
+        data-clickable="false"
+        data-testid="item-content-pages;2"
       >
         <div
-          class="spinner"
-          style="width: 24px; height: 24px;"
+          class="item"
         >
           <div
-            class="doubleBounce1"
+            class="media"
           />
           <div
-            class="doubleBounce2"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-  <ul
-    class="list"
-  >
-    <li
-      class="listElement"
-    >
-      <div
-        class="item"
-      >
-        <span
-          class="dragHandle sortable"
-        >
-          <span
-            aria-label="su-more"
-            class="su-more"
-          />
-          <span
-            class="index"
+            class="content"
           >
-            1
-          </span>
-        </span>
-        <div
-          class="content"
-        >
-          <div
-            class="item"
-          >
-            <div
-              class="media"
-            />
-            <div
-              class="content"
-            >
-              <p
-                class="title"
-              >
-                Title
-              </p>
-              <p
-                class="description"
-              >
-                Description
-
-              </p>
-            </div>
             <p
-              class="type"
+              class="title"
             >
-              Pages (sulu_page.edited)
+              Title
+            </p>
+            <p
+              class="description"
+            >
+              Description
+
             </p>
           </div>
-        </div>
-        <div
-          class="buttons"
-        >
-          <button
-            class="button"
-            type="button"
+          <p
+            class="type"
           >
-            <span
-              aria-label="su-pen"
-              class="su-pen"
-            />
-          </button>
-          <button
-            class="button"
-            type="button"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
+            Pages (sulu_page.edited)
+          </p>
         </div>
       </div>
-    </li>
-  </ul>
-</div>
+      <button
+        type="button"
+      >
+        edit-pages;2
+      </button>
+      <button
+        type="button"
+      >
+        remove-pages;2
+      </button>
+    </div>
+  </div>
+  <div
+    data-open="false"
+    data-testid="multi-list-overlay-pages"
+  >
+    <button
+      type="button"
+    >
+      close-pages
+    </button>
+  </div>
+  <div
+    data-open="false"
+    data-testid="multi-list-overlay-articles"
+  >
+    <button
+      type="button"
+    >
+      close-articles
+    </button>
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Render teaser selection with data 1`] = `
-<div
-  class="multiItemSelectionClass"
->
+<DocumentFragment>
   <div
-    class="header"
+    data-disabled="false"
+    data-loading="false"
+    data-testid="multi-item-selection"
   >
     <button
-      class="button left hasOptions"
       type="button"
     >
-      <span
-        aria-label="su-plus-circle"
-        class="su-plus-circle icon"
-      />
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
-      />
+      Pages
+    </button>
+    <button
+      type="button"
+    >
+      Articles
+    </button>
+    <button
+      type="button"
+    >
+      sort-2-1
     </button>
     <div
-      class="label"
-    />
-  </div>
-  <ul
-    class="list"
-  >
-    <li
-      class="listElement"
+      data-testid="item-pages;2"
     >
       <div
-        class="item"
+        data-clickable="false"
+        data-testid="item-content-pages;2"
       >
-        <span
-          class="dragHandle sortable"
-        >
-          <span
-            aria-label="su-more"
-            class="su-more"
-          />
-          <span
-            class="index"
-          >
-            1
-          </span>
-        </span>
         <div
-          class="content"
+          class="item"
         >
           <div
-            class="item"
+            class="media"
+          />
+          <div
+            class="content"
           >
-            <div
-              class="media"
-            />
-            <div
-              class="content"
-            >
-              <p
-                class="title"
-              >
-                Title
-              </p>
-              <p
-                class="description"
-              >
-                Description
-
-              </p>
-            </div>
             <p
-              class="type"
+              class="title"
             >
-              Pages (sulu_page.edited)
+              Title
+            </p>
+            <p
+              class="description"
+            >
+              Description
+
             </p>
           </div>
-        </div>
-        <div
-          class="buttons"
-        >
-          <button
-            class="button"
-            type="button"
+          <p
+            class="type"
           >
-            <span
-              aria-label="su-pen"
-              class="su-pen"
-            />
-          </button>
-          <button
-            class="button"
-            type="button"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
+            Pages (sulu_page.edited)
+          </p>
         </div>
       </div>
-    </li>
-  </ul>
-</div>
+      <button
+        type="button"
+      >
+        edit-pages;2
+      </button>
+      <button
+        type="button"
+      >
+        remove-pages;2
+      </button>
+    </div>
+  </div>
+  <div
+    data-open="false"
+    data-testid="multi-list-overlay-pages"
+  >
+    <button
+      type="button"
+    >
+      close-pages
+    </button>
+  </div>
+  <div
+    data-open="false"
+    data-testid="multi-list-overlay-articles"
+  >
+    <button
+      type="button"
+    >
+      close-articles
+    </button>
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Render teaser selection with presentations 1`] = `
-<div
-  class="multiItemSelectionClass"
->
+<DocumentFragment>
   <div
-    class="header"
+    data-disabled="false"
+    data-loading="false"
+    data-testid="multi-item-selection"
   >
     <button
-      class="button left hasOptions"
       type="button"
     >
-      <span
-        aria-label="su-plus-circle"
-        class="su-plus-circle icon"
-      />
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
-      />
+      Pages
+    </button>
+    <button
+      type="button"
+    >
+      Articles
+    </button>
+    <button
+      type="button"
+    >
+      Test 1
+    </button>
+    <button
+      type="button"
+    >
+      Test 2
+    </button>
+    <button
+      type="button"
+    >
+      sort-2-1
     </button>
     <div
-      class="label"
-    />
-    <button
-      class="button right hasLabel hasOptions"
-      type="button"
-    >
-      <span
-        aria-label="su-eye"
-        class="su-eye icon"
-      />
-      <span
-        class="label"
-      >
-        Test 2
-      </span>
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
-      />
-    </button>
-  </div>
-  <ul
-    class="list"
-  >
-    <li
-      class="listElement"
+      data-testid="item-pages;2"
     >
       <div
-        class="item"
+        data-clickable="false"
+        data-testid="item-content-pages;2"
       >
-        <span
-          class="dragHandle sortable"
-        >
-          <span
-            aria-label="su-more"
-            class="su-more"
-          />
-          <span
-            class="index"
-          >
-            1
-          </span>
-        </span>
         <div
-          class="content"
+          class="item"
         >
           <div
-            class="item"
+            class="media"
+          />
+          <div
+            class="content"
           >
-            <div
-              class="media"
-            />
-            <div
-              class="content"
-            >
-              <p
-                class="title"
-              >
-                Title
-              </p>
-              <p
-                class="description"
-              >
-                Description
-
-              </p>
-            </div>
             <p
-              class="type"
+              class="title"
             >
-              Pages (sulu_page.edited)
+              Title
+            </p>
+            <p
+              class="description"
+            >
+              Description
+
             </p>
           </div>
-        </div>
-        <div
-          class="buttons"
-        >
-          <button
-            class="button"
-            type="button"
+          <p
+            class="type"
           >
-            <span
-              aria-label="su-pen"
-              class="su-pen"
-            />
-          </button>
-          <button
-            class="button"
-            type="button"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
+            Pages (sulu_page.edited)
+          </p>
         </div>
       </div>
-    </li>
-  </ul>
-</div>
+      <button
+        type="button"
+      >
+        edit-pages;2
+      </button>
+      <button
+        type="button"
+      >
+        remove-pages;2
+      </button>
+    </div>
+  </div>
+  <div
+    data-open="false"
+    data-testid="multi-list-overlay-pages"
+  >
+    <button
+      type="button"
+    >
+      close-pages
+    </button>
+  </div>
+  <div
+    data-open="false"
+    data-testid="multi-list-overlay-articles"
+  >
+    <button
+      type="button"
+    >
+      close-articles
+    </button>
+  </div>
+</DocumentFragment>
 `;

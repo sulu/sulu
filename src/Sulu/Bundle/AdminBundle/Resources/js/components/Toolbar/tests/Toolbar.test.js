@@ -5,9 +5,7 @@ import Button from '../Button';
 import Controls from '../Controls';
 import Toolbar from '../Toolbar';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 test('Render controls', () => {
     const {container} = render(

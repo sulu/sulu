@@ -1,30 +1,40 @@
 // @flow
 import React from 'react';
 import {extendObservable as mockExtendObservable} from 'mobx';
-import {mount, shallow} from 'enzyme';
-import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
+import {act, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Router from 'sulu-admin-bundle/services/Router';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
+import ContactAccountSelectionStore from '../../../ContactAccountSelection/stores/ContactAccountSelectionStore';
 import ContactAccountSelection from '../../fields/ContactAccountSelection';
 
-jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn());
+let mockMultiListOverlayProps: Object = {};
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn());
+const mockReact = require('react');
 
-jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(function() {
-    this.clearSelection = jest.fn();
+jest.mock('react-sortable-hoc', () => ({
+    SortableContainer: (Component) => Component,
+    SortableElement: (Component) => Component,
+    SortableHandle: (Component) => Component,
 }));
 
-jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn());
+jest.mock('sulu-admin-bundle/containers/MultiListOverlay', () => jest.fn((props) => {
+    mockMultiListOverlayProps[props.listKey] = props;
+
+    return mockReact.createElement(
+        'div',
+        {
+            'data-open': String(props.open),
+            'data-testid': props.listKey + '-overlay',
+        }
+    );
+}));
 
 jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('../../../ContactAccountSelection/stores/ContactAccountSelectionStore', () => jest.fn(function() {
     this.loadItems = jest.fn();
@@ -34,85 +44,94 @@ jest.mock('../../../ContactAccountSelection/stores/ContactAccountSelectionStore'
     });
 }));
 
+beforeEach(() => {
+    mockMultiListOverlayProps = {};
+
+    ContactAccountSelectionStore.accountPrefix = 'a';
+    ContactAccountSelectionStore.contactPrefix = 'c';
+});
+
+function getStore() {
+    return (ContactAccountSelectionStore: any).mock.instances[0];
+}
+
+async function openOverlay(user, optionName) {
+    await user.click(screen.getAllByRole('button')[0]);
+    await user.click(screen.getByRole('button', {name: optionName}));
+}
+
 test('Pass props correctly to ContactAccountSelection component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    render(<ContactAccountSelection {...fieldTypeDefaultProps} />);
 
-    const contactAccountSelection = shallow(
-        <ContactAccountSelection {...fieldTypeDefaultProps} formInspector={formInspector} />
-    );
-
-    expect(contactAccountSelection.props()).toEqual(expect.objectContaining({
-        disabled: false,
-        value: [],
-    }));
+    expect(screen.getByText('sulu_contact.contact_account_selection_label')).toBeInTheDocument();
+    expect(screen.getAllByRole('button')[0]).toBeEnabled();
+    expect(getStore().loadItems).toHaveBeenCalledWith([]);
 });
 
 test('Pass disabled prop to ContactAccountSelection component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    render(<ContactAccountSelection {...fieldTypeDefaultProps} disabled={true} />);
 
-    const contactAccountSelection = shallow(
-        <ContactAccountSelection {...fieldTypeDefaultProps} disabled={true} formInspector={formInspector} />
-    );
-
-    expect(contactAccountSelection.prop('disabled')).toEqual(true);
+    expect(screen.getAllByRole('button')[0]).toBeDisabled();
 });
 
 test('Pass value prop to ContactAccountSelection component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    render(<ContactAccountSelection {...fieldTypeDefaultProps} value={['a1', 'c2']} />);
 
-    const contactAccountSelection = shallow(
-        <ContactAccountSelection {...fieldTypeDefaultProps} formInspector={formInspector} value={['a1', 'c2']} />
-    );
-
-    expect(contactAccountSelection.prop('value')).toEqual(['a1', 'c2']);
+    expect(getStore().loadItems).toHaveBeenCalledWith(['a1', 'c2']);
 });
 
-test('Call onChange and onFinish calbacks', () => {
+test('Call onChange and onFinish calbacks', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-
-    const contactAccountSelection = shallow(
+    render(
         <ContactAccountSelection
             {...fieldTypeDefaultProps}
-            formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}
             value={['a1', 'c2']}
         />
     );
 
-    contactAccountSelection.prop('onChange')(['a1', 'c6']);
+    await openOverlay(user, 'sulu_contact.people');
+
+    act(() => {
+        mockMultiListOverlayProps.contacts.onConfirm([
+            {id: 6},
+        ]);
+    });
 
     expect(changeSpy).toHaveBeenCalledWith(['a1', 'c6']);
     expect(finishSpy).toHaveBeenCalledWith();
 });
 
-test('Call onItemClick callback', () => {
+test('Call onItemClick callback', async() => {
+    const user = userEvent.setup();
     const router = new Router();
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    (ContactAccountSelectionStore: any).mockImplementationOnce(function() {
+        this.loadItems = jest.fn();
 
-    const contactAccountSelection = mount(
+        mockExtendObservable(this, {
+            items: [
+                {id: 'a1', name: 'Sulu'},
+                {id: 'c2', fullName: 'Max Mustermann'},
+            ],
+        });
+    });
+
+    render(
         <ContactAccountSelection
             {...fieldTypeDefaultProps}
-            formInspector={formInspector}
             router={router}
             value={['a1', 'c2']}
         />
     );
 
-    contactAccountSelection.find('ContactAccountSelection').at(1).instance().store.items = [
-        {id: 'a1'},
-        {id: 'c2'},
-    ];
-
-    contactAccountSelection.update();
-
-    contactAccountSelection.find('MultiItemSelection .content').at(0).simulate('click');
+    await user.click(screen.getByText('Sulu'));
     expect(router.navigate).toHaveBeenLastCalledWith('sulu_contact.account_edit_form', {id: '1'});
 
-    contactAccountSelection.find('MultiItemSelection .content').at(1).simulate('click');
+    await user.click(screen.getByText('Max Mustermann'));
     expect(router.navigate).toHaveBeenLastCalledWith('sulu_contact.contact_edit_form', {id: '2'});
 });

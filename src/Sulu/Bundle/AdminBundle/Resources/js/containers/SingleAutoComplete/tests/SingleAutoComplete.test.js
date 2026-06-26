@@ -1,13 +1,20 @@
 // @flow
 import React from 'react';
-import {mount, shallow, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import SingleAutoComplete from '../SingleAutoComplete';
-import SingleAutoCompleteComponent from '../../../components/SingleAutoComplete';
 import SearchStore from '../../../stores/SearchStore';
 import SingleSelectionStore from '../../../stores/SingleSelectionStore';
 
+let mockSingleAutoCompleteProps: Object = {};
+let mockSearchStoreInstances: Array<Object> = [];
+let mockChangeValue: ?Object;
+
+const mockReact = require('react');
+
 jest.mock('../../../stores/SearchStore', () => jest.fn());
+
 jest.mock('../../../stores/SingleSelectionStore', () => jest.fn(function(resourceKey, selectedItemId, locale) {
     this.resourceKey = resourceKey;
     this.locale = locale;
@@ -17,45 +24,96 @@ jest.mock('../../../stores/SingleSelectionStore', () => jest.fn(function(resourc
     mockExtendObservable(this, {item: selectedItemId ? {id: selectedItemId} : undefined});
 }));
 
-test('Render in loading state when SearchStore is loading', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = true;
-    });
+jest.mock('../../../components/SingleAutoComplete', () => jest.fn((props) => {
+    mockSingleAutoCompleteProps = props;
 
+    return mockReact.createElement(
+        'div',
+        {
+            'data-disabled': props.disabled ? 'true' : 'false',
+            'data-loading': props.loading ? 'true' : 'false',
+            'data-testid': 'single-auto-complete',
+        },
+        props.value && mockReact.createElement('span', {}, props.value[props.displayProperty]),
+        props.suggestions.map((suggestion) => (
+            mockReact.createElement('span', {key: suggestion.id}, suggestion[props.displayProperty])
+        )),
+        mockReact.createElement(
+            'button',
+            {
+                'aria-label': 'search',
+                onClick: () => props.onSearch('James'),
+                type: 'button',
+            },
+            'Search'
+        ),
+        mockReact.createElement(
+            'button',
+            {
+                'aria-label': 'change',
+                onClick: () => props.onChange(mockChangeValue),
+                type: 'button',
+            },
+            'Change'
+        )
+    );
+}));
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    mockSingleAutoCompleteProps = {};
+    mockSearchStoreInstances = [];
+    mockChangeValue = undefined;
+
+    mockSearchStore([], false);
+});
+
+function mockSearchStore(searchResults, loading) {
+    (SearchStore: any).mockImplementation(function(resourceKey, searchProperties, options, locale) {
+        this.resourceKey = resourceKey;
+        this.searchProperties = searchProperties;
+        this.options = options;
+        this.locale = locale;
+        this.searchResults = searchResults;
+        this.loading = loading;
+        this.search = jest.fn();
+        this.clearSearchResults = jest.fn();
+        mockSearchStoreInstances.push(this);
+    });
+}
+
+function renderSingleAutoComplete(props: Object = {}) {
+    const selectionStore = props.selectionStore || new SingleSelectionStore('tags');
+
+    return {
+        selectionStore,
+        ...render(
+            <SingleAutoComplete
+                displayProperty="name"
+                searchProperties={[]}
+                selectionStore={selectionStore}
+                {...props}
+            />
+        ),
+    };
+}
+
+test('Render in loading state when SearchStore is loading', () => {
+    mockSearchStore([], true);
     const selectionStore = new SingleSelectionStore('tags');
 
-    const singleAutoComplete = shallow(
-        <SingleAutoComplete
-            displayProperty="name"
-            searchProperties={[]}
-            selectionStore={selectionStore}
-        />
-    );
+    renderSingleAutoComplete({selectionStore});
 
-    expect(singleAutoComplete.find('SingleAutoComplete').prop('loading')).toBeTruthy();
+    expect(mockSingleAutoCompleteProps.loading).toBeTruthy();
 });
 
 test('Render in loading state when SingleSelectionStore is loading', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = false;
-    });
-
     const selectionStore = new SingleSelectionStore('tags');
     selectionStore.loading = true;
 
-    const singleAutoComplete = shallow(
-        <SingleAutoComplete
-            displayProperty="name"
-            searchProperties={[]}
-            selectionStore={selectionStore}
-        />
-    );
+    renderSingleAutoComplete({selectionStore});
 
-    expect(singleAutoComplete.find('SingleAutoComplete').prop('loading')).toBeTruthy();
+    expect(mockSingleAutoCompleteProps.loading).toBeTruthy();
 });
 
 test('Render with loaded suggestions', () => {
@@ -64,142 +122,80 @@ test('Render with loaded suggestions', () => {
         {id: 6, number: '006', name: 'John Doe'},
     ];
 
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = suggestions;
-        this.loading = false;
-    });
-
+    mockSearchStore(suggestions, false);
     const selectionStore = new SingleSelectionStore('tags');
 
-    const singleAutoComplete = mount(
-        <SingleAutoComplete
-            displayProperty="name"
-            searchProperties={['name', 'number']}
-            selectionStore={selectionStore}
-        />
-    );
+    renderSingleAutoComplete({
+        searchProperties: ['name', 'number'],
+        selectionStore,
+    });
 
-    singleAutoComplete.find(SingleAutoCompleteComponent).instance().displaySuggestions = true;
-    singleAutoComplete.update();
-
-    expect(singleAutoComplete.find('SingleAutoComplete').find('Suggestion').at(0).prop('value'))
-        .toEqual(suggestions[0]);
-    expect(singleAutoComplete.find('SingleAutoComplete').find('Suggestion').at(1).prop('value'))
-        .toEqual(suggestions[1]);
+    expect(mockSingleAutoCompleteProps.suggestions).toEqual(suggestions);
+    expect(screen.getByText('James Bond')).toBeInTheDocument();
+    expect(screen.getByText('John Doe')).toBeInTheDocument();
 });
 
 test('Render with value of given SingleSelectionStore', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = true;
-    });
-
+    mockSearchStore([], true);
     const selectionStore = new SingleSelectionStore('tags');
     selectionStore.item = {id: 7, name: 'James Bond', number: '007'};
 
-    expect(render(
-        <SingleAutoComplete
-            displayProperty="name"
-            searchProperties={[]}
-            selectionStore={selectionStore}
-        />
-    )).toMatchSnapshot();
+    renderSingleAutoComplete({selectionStore});
+
+    expect(mockSingleAutoCompleteProps.value).toEqual({id: 7, name: 'James Bond', number: '007'});
+    expect(screen.getByText('James Bond')).toBeInTheDocument();
 });
 
 test('Render in disabled state', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = true;
-    });
-
+    mockSearchStore([], true);
     const selectionStore = new SingleSelectionStore('tags');
     selectionStore.item = {id: 7, name: 'James Bond', number: '007'};
 
-    expect(render(
-        <SingleAutoComplete
-            disabled={true}
-            displayProperty="name"
-            searchProperties={[]}
-            selectionStore={selectionStore}
-        />
-    )).toMatchSnapshot();
-});
-
-test('Search using store when new search value is retrieved from SingleAutoComplete component', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = false;
-        this.search = jest.fn();
+    renderSingleAutoComplete({
+        disabled: true,
+        selectionStore,
     });
 
-    const selectionStore = new SingleSelectionStore('tags');
-
-    const singleAutoComplete = shallow(
-        <SingleAutoComplete
-            displayProperty="name"
-            searchProperties={[]}
-            selectionStore={selectionStore}
-        />
-    );
-
-    singleAutoComplete.find('SingleAutoComplete').simulate('search', 'James');
-
-    expect(singleAutoComplete.instance().searchStore.search).toHaveBeenCalledWith('James');
+    expect(screen.getByTestId('single-auto-complete')).toHaveAttribute('data-disabled', 'true');
 });
 
-test('Call set item to SingleSelectionStore and clear search result when chosen option has changed', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [data];
-        this.loading = false;
-        this.clearSearchResults = jest.fn();
-    });
-
+test('Search using store when new search value is retrieved from SingleAutoComplete component', async() => {
     const selectionStore = new SingleSelectionStore('tags');
 
-    const data = {
+    renderSingleAutoComplete({selectionStore});
+
+    await userEvent.click(screen.getByLabelText('search'));
+
+    expect(mockSearchStoreInstances[0].search).toHaveBeenCalledWith('James');
+});
+
+test('Call set item to SingleSelectionStore and clear search result when chosen option has changed', async() => {
+    const selectionStore = new SingleSelectionStore('tags');
+    mockChangeValue = {
         id: 7,
         name: 'James Bond',
         number: '007',
     };
 
-    const singleAutoComplete = shallow(
-        <SingleAutoComplete
-            displayProperty="name"
-            searchProperties={[]}
-            selectionStore={selectionStore}
-        />
-    );
+    mockSearchStore([mockChangeValue], false);
 
-    singleAutoComplete.find('SingleAutoComplete').simulate('change', data);
+    renderSingleAutoComplete({selectionStore});
 
-    expect(selectionStore.set).toHaveBeenCalledWith(data);
-    expect(singleAutoComplete.instance().searchStore.clearSearchResults).toHaveBeenCalledWith();
+    await userEvent.click(screen.getByLabelText('change'));
+
+    expect(selectionStore.set).toHaveBeenCalledWith(mockChangeValue);
+    expect(mockSearchStoreInstances[0].clearSearchResults).toHaveBeenCalledWith();
 });
 
 test('Construct SearchStore with correct parameters on mount', () => {
-    // $FlowFixMe
-    SearchStore.mockImplementation(function() {
-        this.searchResults = [];
-        this.loading = false;
-        this.search = jest.fn();
-    });
-
     const locale = observable.box('cz');
     const selectionStore = new SingleSelectionStore('tags', undefined, locale);
 
-    shallow(
-        <SingleAutoComplete
-            displayProperty="name"
-            options={{country: 'US'}}
-            searchProperties={['firstName', 'lastName']}
-            selectionStore={selectionStore}
-        />
-    );
+    renderSingleAutoComplete({
+        options: {country: 'US'},
+        searchProperties: ['firstName', 'lastName'],
+        selectionStore,
+    });
 
     expect(SearchStore).toHaveBeenCalledWith('tags', ['firstName', 'lastName'], {country: 'US'}, locale);
 });

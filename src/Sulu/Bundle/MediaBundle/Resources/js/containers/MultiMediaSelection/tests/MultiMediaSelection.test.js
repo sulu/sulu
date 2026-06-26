@@ -1,14 +1,15 @@
 // @flow
-import {mount, render, shallow} from 'enzyme';
 import React from 'react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import {MultiItemSelection} from 'sulu-admin-bundle/components';
 import MultiSelectionStore from 'sulu-admin-bundle/stores/MultiSelectionStore';
+import {findElementByType, renderWithRef} from 'sulu-admin-bundle/utils/TestHelper';
 import MultiMediaSelection from '../MultiMediaSelection';
 import MultiMediaSelectionOverlay from '../../MultiMediaSelectionOverlay';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('../../MultiMediaSelectionOverlay', () => jest.fn(function() {
     return <div>single media selection overlay</div>;
@@ -18,6 +19,8 @@ jest.mock('sulu-admin-bundle/stores/MultiSelectionStore', () => jest.fn(function
     this.items = [];
     this.loadItems = jest.fn();
 }));
+
+const MultiMediaSelectionOverlayMock = (MultiMediaSelectionOverlay: any);
 
 test('Render a MultiMediaSelection field', () => {
     // $FlowFixMe
@@ -47,9 +50,11 @@ test('Render a MultiMediaSelection field', () => {
         ];
     });
 
-    expect(render(
+    const {container} = render(
         <MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a MultiMediaSelection field with display options', () => {
@@ -66,13 +71,15 @@ test('Render a MultiMediaSelection field with display options', () => {
         ];
     });
 
-    expect(render(
+    const {container} = render(
         <MultiMediaSelection
             displayOptions={['top', 'left', 'right', 'bottom']}
             locale={observable.box('en')}
             onChange={jest.fn()}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a MultiMediaSelection field with display options and selected icon', () => {
@@ -89,14 +96,16 @@ test('Render a MultiMediaSelection field with display options and selected icon'
         ];
     });
 
-    expect(render(
+    const {container} = render(
         <MultiMediaSelection
             displayOptions={['top', 'left', 'right', 'bottom']}
             locale={observable.box('en')}
             onChange={jest.fn()}
             value={{displayOption: 'left', ids: []}}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a MultiMediaSelection field without thumbnails with MimeTypeIndicator', () => {
@@ -121,9 +130,11 @@ test('Render a MultiMediaSelection field without thumbnails with MimeTypeIndicat
         ];
     });
 
-    expect(render(
+    const {container} = render(
         <MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('The MultiMediaSelection should have 3 child-items', () => {
@@ -154,19 +165,21 @@ test('The MultiMediaSelection should have 3 child-items', () => {
         ];
     });
 
-    const mediaSelection = shallow(
+    render(
         <MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />
     );
 
-    expect(mediaSelection.find('Item').length).toBe(3);
+    expect(screen.getAllByRole('button', {name: /Media/})).toHaveLength(3);
 });
 
-test('Clicking on the "add media" button should open up an overlay', () => {
-    const mediaSelection = mount(<MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />);
+test('Clicking on the "add media" button should open up an overlay', async() => {
+    const user = userEvent.setup();
+    render(<MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />);
 
-    expect(mediaSelection.find(MultiMediaSelectionOverlay).prop('open')).toEqual(false);
-    mediaSelection.find('.button.left').simulate('click');
-    expect(mediaSelection.find(MultiMediaSelectionOverlay).prop('open')).toEqual(true);
+    expect(MultiMediaSelectionOverlayMock.mock.calls[0][0].open).toEqual(false);
+    await user.click(screen.getByRole('button', {name: 'su-image'}));
+    expect(MultiMediaSelectionOverlayMock.mock.calls[MultiMediaSelectionOverlayMock.mock.calls.length - 1][0].open)
+        .toEqual(true);
 });
 
 test('Should remove media from the selection store', () => {
@@ -176,9 +189,9 @@ test('Should remove media from the selection store', () => {
         this.removeById = jest.fn();
     });
 
-    const mediaSelectionInstance = shallow(
+    const {instance: mediaSelectionInstance} = renderWithRef(
         <MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />
-    ).instance();
+    );
 
     mediaSelectionInstance.handleRemove(1);
     expect(mediaSelectionInstance.mediaSelectionStore.removeById).toHaveBeenCalledWith(1);
@@ -191,9 +204,9 @@ test('Should move media inside the selection store', () => {
         this.move = jest.fn();
     });
 
-    const mediaSelectionInstance = shallow(
+    const {instance: mediaSelectionInstance} = renderWithRef(
         <MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />
-    ).instance();
+    );
 
     mediaSelectionInstance.handleSorted(1, 3);
     expect(mediaSelectionInstance.mediaSelectionStore.move).toHaveBeenCalledWith(1, 3);
@@ -229,9 +242,9 @@ test('Should add the selected medias to the selection store on confirm', () => {
         },
     ];
 
-    const mediaSelectionInstance = shallow(
+    const {instance: mediaSelectionInstance} = renderWithRef(
         <MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />
-    ).instance();
+    );
 
     mediaSelectionInstance.openMediaOverlay();
     mediaSelectionInstance.handleOverlayConfirm(medias);
@@ -242,34 +255,36 @@ test('Should add the selected medias to the selection store on confirm', () => {
 test('Should call the onChange handler if selection store changes', () => {
     // $FlowFixMe
     MultiSelectionStore.mockImplementationOnce(function(resourceKey, selectedIds) {
+        this.loadItems = jest.fn();
         mockExtendObservable(this, {
             items: selectedIds.map((id) => {
-                return {id, thumbnails: {}};
+                return {id, mimeType: 'image/jpeg', thumbnails: {}};
             }),
         });
     });
 
     const changeSpy = jest.fn();
 
-    const mediaSelectionInstance = shallow(
+    const {instance: mediaSelectionInstance} = renderWithRef(
         <MultiMediaSelection
             locale={observable.box('en')}
             onChange={changeSpy}
             value={{displayOption: undefined, ids: [55]}}
         />
-    ).instance();
+    );
 
-    mediaSelectionInstance.mediaSelectionStore.items.push({id: 99, thumbnails: {}});
+    mediaSelectionInstance.mediaSelectionStore.items.push({id: 99, mimeType: 'image/jpeg', thumbnails: {}});
     expect(changeSpy).toHaveBeenCalledWith({ids: [55, 99]});
 
     mediaSelectionInstance.mediaSelectionStore.items.splice(0, 1);
     expect(changeSpy).toHaveBeenCalledWith({ids: [99]});
 });
 
-test('Should call the onChange handler if the displayOption changes', () => {
+test('Should call the onChange handler if the displayOption changes', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
-    const mediaSelection = mount(
+    render(
         <MultiMediaSelection
             displayOptions={['left']}
             locale={observable.box('en')}
@@ -278,8 +293,8 @@ test('Should call the onChange handler if the displayOption changes', () => {
         />
     );
 
-    mediaSelection.find('Button[icon="su-display-default"]').simulate('click');
-    mediaSelection.find('Action[value="left"]').simulate('click');
+    await user.click(screen.getByRole('button', {name: 'su-display-default su-angle-down'}));
+    await user.click(screen.getByRole('button', {name: /sulu_media\.left/}));
 
     expect(changeSpy).toHaveBeenCalledWith({displayOption: 'left', ids: [55]});
 });
@@ -287,7 +302,7 @@ test('Should call the onChange handler if the displayOption changes', () => {
 test('Should not call the onChange callback if the component props change', () => {
     const changeSpy = jest.fn();
 
-    const mediaSelection = shallow(
+    const {rerender} = renderWithRef(
         <MultiMediaSelection
             locale={observable.box('en')}
             onChange={changeSpy}
@@ -295,16 +310,24 @@ test('Should not call the onChange callback if the component props change', () =
         />
     );
 
-    mediaSelection.setProps({disabled: true});
+    rerender(
+        <MultiMediaSelection
+            disabled={true}
+            locale={observable.box('en')}
+            onChange={changeSpy}
+            value={{displayOption: undefined, ids: [55]}}
+        />
+    );
     expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Should not call onChange callback if an unrelated observable that is accessed in the callback changes', () => {
     // $FlowFixMe
     MultiSelectionStore.mockImplementationOnce(function(resourceKey, selectedIds) {
+        this.loadItems = jest.fn();
         mockExtendObservable(this, {
             items: selectedIds.map((id) => {
-                return {id, thumbnails: {}};
+                return {id, mimeType: 'image/jpeg', thumbnails: {}};
             }),
         });
     });
@@ -314,16 +337,16 @@ test('Should not call onChange callback if an unrelated observable that is acces
         jest.fn()(unrelatedObservable.get());
     });
 
-    const mediaSelectionInstance = shallow(
+    const {instance: mediaSelectionInstance} = renderWithRef(
         <MultiMediaSelection
             locale={observable.box('en')}
             onChange={changeSpy}
             value={{displayOption: undefined, ids: [55]}}
         />
-    ).instance();
+    );
 
     // change callback should be called when item of the store mock changes
-    mediaSelectionInstance.mediaSelectionStore.items.push({id: 99, thumbnails: {}});
+    mediaSelectionInstance.mediaSelectionStore.items.push({id: 99, mimeType: 'image/jpeg', thumbnails: {}});
     expect(changeSpy).toHaveBeenCalledWith({ids: [55, 99]});
     expect(changeSpy).toHaveBeenCalledTimes(1);
 
@@ -332,19 +355,20 @@ test('Should not call onChange callback if an unrelated observable that is acces
     expect(changeSpy).toHaveBeenCalledTimes(1);
 });
 
-test('Should call the onItemClick handler if an item is clicked', () => {
+test('Should call the onItemClick handler if an item is clicked', async() => {
+    const user = userEvent.setup();
     // $FlowFixMe
     MultiSelectionStore.mockImplementationOnce(function(resourceKey, selectedIds) {
         mockExtendObservable(this, {
             items: selectedIds.map((id) => {
-                return {id, mimeType: 'image/jpeg', thumbnails: {}};
+                return {id, mimeType: 'image/jpeg', thumbnails: {}, title: `Media ${selectedIds.indexOf(id) + 1}`};
             }),
         });
     });
 
     const itemClickSpy = jest.fn();
 
-    const mediaSelection = mount(
+    render(
         <MultiMediaSelection
             locale={observable.box('en')}
             onChange={jest.fn()}
@@ -353,18 +377,19 @@ test('Should call the onItemClick handler if an item is clicked', () => {
         />
     );
 
-    mediaSelection.find('MultiItemSelection .content').at(0).simulate('click');
-    expect(itemClickSpy).toHaveBeenLastCalledWith(55, {id: 55, mimeType: 'image/jpeg', thumbnails: {}});
+    await user.click(screen.getByText('Media 1'));
+    expect(itemClickSpy).toHaveBeenLastCalledWith(55, expect.objectContaining({id: 55, mimeType: 'image/jpeg'}));
 
-    mediaSelection.find('MultiItemSelection .content').at(1).simulate('click');
-    expect(itemClickSpy).toHaveBeenLastCalledWith(99, {id: 99, mimeType: 'image/jpeg', thumbnails: {}});
+    await user.click(screen.getByText('Media 2'));
+    expect(itemClickSpy).toHaveBeenLastCalledWith(99, expect.objectContaining({id: 99, mimeType: 'image/jpeg'}));
 });
 
 test('Pass correct props to MultiItemSelection component', () => {
-    const mediaSelection = mount(
+    const {instance: mediaSelection} = renderWithRef(
         <MultiMediaSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} sortable={false} />
     );
+    const multiItemSelectionProps = findElementByType(mediaSelection.render(), MultiItemSelection).props;
 
-    expect(mediaSelection.find('MultiItemSelection').prop('disabled')).toEqual(true);
-    expect(mediaSelection.find('MultiItemSelection').prop('sortable')).toEqual(false);
+    expect(multiItemSelectionProps.disabled).toEqual(true);
+    expect(multiItemSelectionProps.sortable).toEqual(false);
 });

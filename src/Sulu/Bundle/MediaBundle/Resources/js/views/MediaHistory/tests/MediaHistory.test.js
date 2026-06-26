@@ -1,8 +1,13 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import {observable} from 'mobx';
-import {mount, render} from 'enzyme';
-import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
+import {
+    findAllElementsByType,
+    findElementByType,
+    findWithHighOrderFunction,
+    renderWithRef,
+    waitForReaction,
+} from 'sulu-admin-bundle/utils/TestHelper';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     withToolbar: jest.fn((Component) => Component),
@@ -23,9 +28,7 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
     delete: jest.fn(),
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 beforeEach(() => {
     jest.resetModules();
@@ -46,9 +49,11 @@ test('Render a loading MediaHistory view', () => {
     const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
     resourceStore.loading = true;
 
-    expect(render(
+    const {container} = renderWithRef(
         <MediaHistory resourceStore={resourceStore} router={router} title="Test 1" />
-    )).toMatchSnapshot();
+    );
+
+    expect(container.innerHTML).toMatchSnapshot();
 });
 
 test('Render a MediaHistory view', () => {
@@ -75,9 +80,11 @@ test('Render a MediaHistory view', () => {
         },
     };
 
-    expect(render(
+    const {container} = renderWithRef(
         <MediaHistory resourceStore={resourceStore} router={router} title="Test 2" />
-    )).toMatchSnapshot();
+    );
+
+    expect(container.innerHTML).toMatchSnapshot();
 });
 
 test('Open the old media when icon is clicked', () => {
@@ -108,11 +115,12 @@ test('Open the old media when icon is clicked', () => {
         },
     };
 
-    const mediaHistory = mount(<MediaHistory resourceStore={resourceStore} router={router} />);
+    const {instance: mediaHistory} = renderWithRef(<MediaHistory resourceStore={resourceStore} router={router} />);
+    const rows = findAllElementsByType(mediaHistory.render(), 'Row');
 
-    mediaHistory.find('Row').at(0).find('ButtonCell').at(0).prop('onClick')(1);
+    rows[0].props.buttons[0].onClick(1);
     expect(window.open).toHaveBeenLastCalledWith('/media/1?v=1&inline=1');
-    mediaHistory.find('Row').at(1).find('ButtonCell').at(0).prop('onClick')(2);
+    rows[1].props.buttons[0].onClick(2);
     expect(window.open).toHaveBeenLastCalledWith('/media/1?v=2&inline=1');
 });
 
@@ -143,17 +151,14 @@ test('Deleting version should not happen when cancelled', () => {
         },
     };
 
-    const mediaHistory = mount(<MediaHistory resourceStore={resourceStore} router={router} />);
+    const {instance: mediaHistory} = renderWithRef(<MediaHistory resourceStore={resourceStore} router={router} />);
 
-    mediaHistory.find('Row').at(1).find('ButtonCell').at(1).prop('onClick')(1);
+    findAllElementsByType(mediaHistory.render(), 'Row')[1].props.buttons[1].onClick(1);
 
-    mediaHistory.update();
+    expect(findElementByType(mediaHistory.render(), 'Dialog').props.open).toEqual(true);
+    findElementByType(mediaHistory.render(), 'Dialog').props.onCancel();
 
-    expect(mediaHistory.find('Dialog').prop('open')).toEqual(true);
-    mediaHistory.find('Dialog').prop('onCancel')();
-
-    mediaHistory.update();
-    expect(mediaHistory.find('Dialog').prop('open')).toEqual(false);
+    expect(findElementByType(mediaHistory.render(), 'Dialog').props.open).toEqual(false);
 });
 
 test('Deleting version should happen when confirmed', () => {
@@ -190,21 +195,20 @@ test('Deleting version should happen when confirmed', () => {
         },
     };
 
-    const mediaHistory = mount(<MediaHistory resourceStore={resourceStore} router={router} />);
+    const {instance: mediaHistory} = renderWithRef(<MediaHistory resourceStore={resourceStore} router={router} />);
 
-    mediaHistory.find('Row').at(1).find('ButtonCell').at(1).prop('onClick')(1);
+    findAllElementsByType(mediaHistory.render(), 'Row')[1].props.buttons[1].onClick(1);
 
-    mediaHistory.update();
-
-    expect(mediaHistory.find('Dialog').prop('open')).toEqual(true);
-    mediaHistory.find('Dialog').prop('onConfirm')();
+    expect(findElementByType(mediaHistory.render(), 'Dialog').props.open).toEqual(true);
+    findElementByType(mediaHistory.render(), 'Dialog').props.onConfirm();
 
     expect(ResourceRequester.delete).toHaveBeenCalledWith('media_versions', {id: 1, locale, version: 1});
 
     return deletePromise.then(() => {
-        mediaHistory.update();
-        expect(mediaHistory.find('Dialog').prop('open')).toEqual(false);
-        expect(resourceStore.reload).toHaveBeenCalledWith();
+        return waitForReaction().then(() => {
+            expect(findElementByType(mediaHistory.render(), 'Dialog').props.open).toEqual(false);
+            expect(resourceStore.reload).toHaveBeenCalledWith();
+        });
     });
 });
 
@@ -242,10 +246,13 @@ test('Deleting version should be disabled on latest version', () => {
         },
     };
 
-    const mediaHistory = mount(<MediaHistory resourceStore={resourceStore} router={router} />);
+    const {instance: mediaHistory} = renderWithRef(<MediaHistory resourceStore={resourceStore} router={router} />);
+    const rows = findAllElementsByType(mediaHistory.render(), 'Row');
+    const latestVersionRow = rows.find((row) => row.props.id === 2);
+    const oldVersionRow = rows.find((row) => row.props.id === 1);
 
-    expect(mediaHistory.find('Row').at(0).find('ButtonCell').at(1).prop('disabled')).toEqual(true);
-    expect(mediaHistory.find('Row').at(1).find('ButtonCell').at(1).prop('disabled')).toEqual(false);
+    expect(latestVersionRow.props.buttons[1].disabled).toEqual(true);
+    expect(oldVersionRow.props.buttons[1].disabled).not.toEqual(true);
 });
 
 test('Should change locale via locale chooser', () => {
@@ -265,7 +272,7 @@ test('Should change locale via locale chooser', () => {
             },
         },
     };
-    const mediaHistory = mount(<MediaHistory resourceStore={resourceStore} router={router} />).get(0);
+    const {instance: mediaHistory} = renderWithRef(<MediaHistory resourceStore={resourceStore} router={router} />);
     resourceStore.locale.set('de');
 
     const toolbarConfig = toolbarFunction.call(mediaHistory);
@@ -289,7 +296,7 @@ test('Should show locales from router options in toolbar', () => {
             },
         },
     };
-    const mediaHistory = mount(<MediaHistory resourceStore={resourceStore} router={router} />).get(0);
+    const {instance: mediaHistory} = renderWithRef(<MediaHistory resourceStore={resourceStore} router={router} />);
 
     const toolbarConfig = toolbarFunction.call(mediaHistory);
     expect(toolbarConfig.locale.options).toEqual([
@@ -314,7 +321,7 @@ test('Should navigate to defined route on back button click', () => {
             },
         },
     };
-    const mediaHistory = mount(<MediaHistory resourceStore={resourceStore} router={router} />).get(0);
+    const {instance: mediaHistory} = renderWithRef(<MediaHistory resourceStore={resourceStore} router={router} />);
 
     const toolbarConfig = toolbarFunction.call(mediaHistory);
     toolbarConfig.backButton.onClick();

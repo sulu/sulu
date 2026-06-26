@@ -1,7 +1,31 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import SingleSelection from '../../ruleTypes/SingleSelection';
+
+let mockSingleSelectionProps: Object = {};
+
+const mockReact = require('react');
+
+jest.mock('sulu-admin-bundle/containers', () => ({
+    SingleSelection: jest.fn((props) => {
+        mockSingleSelectionProps = props;
+
+        return mockReact.createElement(
+            'button',
+            {
+                onClick: () => props.onChange('changed-value'),
+                type: 'button',
+            },
+            props.value || 'empty'
+        );
+    }),
+}));
+
+beforeEach(() => {
+    mockSingleSelectionProps = {};
+});
 
 test.each([
     [
@@ -38,21 +62,22 @@ test.each([
     result
 ) => {
     const options = {adapter, displayProperties, emptyText, icon, name, overlayTitle, resourceKey};
-    const singleSelection = shallow(<SingleSelection onChange={jest.fn()} options={options} value={value} />);
+    render(<SingleSelection onChange={jest.fn()} options={options} value={value} />);
 
-    expect(singleSelection.find('SingleSelection').prop('value')).toEqual(result);
-    expect(singleSelection.find('SingleSelection').prop('adapter')).toEqual(adapter);
-    expect(singleSelection.find('SingleSelection').prop('displayProperties')).toEqual(displayProperties);
-    expect(singleSelection.find('SingleSelection').prop('emptyText')).toEqual(emptyText);
-    expect(singleSelection.find('SingleSelection').prop('icon')).toEqual(icon);
-    expect(singleSelection.find('SingleSelection').prop('overlayTitle')).toEqual(overlayTitle);
-    expect(singleSelection.find('SingleSelection').prop('resourceKey')).toEqual(resourceKey);
+    expect(mockSingleSelectionProps.value).toEqual(result);
+    expect(mockSingleSelectionProps.adapter).toEqual(adapter);
+    expect(mockSingleSelectionProps.displayProperties).toEqual(displayProperties);
+    expect(mockSingleSelectionProps.emptyText).toEqual(emptyText);
+    expect(mockSingleSelectionProps.icon).toEqual(icon);
+    expect(mockSingleSelectionProps.overlayTitle).toEqual(overlayTitle);
+    expect(mockSingleSelectionProps.resourceKey).toEqual(resourceKey);
 });
 
 test.each([
     ['test1', 'value1'],
     ['test2', 'value2'],
-])('Pass correct value for "%s" using "%s" in onChange', (name, value) => {
+])('Pass correct value for "%s" using "%s" in onChange', async(name) => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const options = {
         adapter: 'table',
@@ -64,8 +89,9 @@ test.each([
         resourceKey: 'snippets',
     };
 
-    const singleSelection = shallow(<SingleSelection onChange={changeSpy} options={options} value={{}} />);
-    singleSelection.find('SingleSelection').prop('onChange')(value);
+    render(<SingleSelection onChange={changeSpy} options={options} value={{}} />);
 
-    expect(changeSpy).toHaveBeenCalledWith({[name]: value});
+    await user.click(screen.getByRole('button'));
+
+    expect(changeSpy).toHaveBeenCalledWith({[name]: 'changed-value'});
 });

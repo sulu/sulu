@@ -1,9 +1,15 @@
 // @flow
 import React from 'react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
-import {mount} from 'enzyme';
-import {Router} from 'sulu-admin-bundle/services';
-import {findWithHighOrderFunction, defaultWebspace} from 'sulu-admin-bundle/utils/TestHelper';
+import {
+    createRoute,
+    createRouterMock,
+    defaultWebspace,
+    findElementByType,
+    findWithHighOrderFunction,
+    renderWithRef,
+    waitForReaction,
+} from 'sulu-admin-bundle/utils/TestHelper';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     FlatStructureStrategy: require(
@@ -80,9 +86,7 @@ jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function() {
     this.bind = jest.fn();
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(function() {
     this.selections = [];
@@ -98,6 +102,13 @@ beforeEach(() => {
     jest.resetModules();
 });
 
+function createPageRouter(attributes: Object = {webspace: 'sulu'}) {
+    return createRouterMock({
+        attributes,
+        route: createRoute({}, attributes, [], {name: 'sulu_page.page_list'}),
+    });
+}
+
 test('Render PageList', () => {
     const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
     const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
@@ -110,12 +121,9 @@ test('Render PageList', () => {
     };
 
     const PageList = require('../PageList').default;
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    const router = createPageRouter();
 
-    const webspaceOverview = mount(
+    const {container, instance: webspaceOverview} = renderWithRef(
         <PageList
             route={router.route}
             router={router}
@@ -125,12 +133,12 @@ test('Render PageList', () => {
         />
     );
 
-    webspaceOverview.instance().listStore.data.push(
+    webspaceOverview.listStore.data.push(
         [
             {id: 1, title: 'Homepage', template: 'homepage'},
         ]
     );
-    webspaceOverview.instance().listStore.data.push(
+    webspaceOverview.listStore.data.push(
         [
             {id: 2, title: 'Page 1', template: 'example'},
             {id: 3, title: 'Page 2', template: 'not-existing'},
@@ -138,8 +146,9 @@ test('Render PageList', () => {
     );
 
     return metadataPromise.then(() => {
-        webspaceOverview.update();
-        expect(webspaceOverview.render()).toMatchSnapshot();
+        return waitForReaction().then(() => {
+            expect(container).toMatchSnapshot();
+        });
     });
 });
 
@@ -155,12 +164,9 @@ test('Should show loader if available page types have not been loaded yet', () =
     };
 
     const PageList = require('../PageList').default;
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    const router = createPageRouter();
 
-    const webspaceOverview = mount(
+    const {instance: webspaceOverview} = renderWithRef(
         <PageList
             route={router.route}
             router={router}
@@ -170,11 +176,12 @@ test('Should show loader if available page types have not been loaded yet', () =
         />
     );
 
-    expect(webspaceOverview.find('Loader')).toHaveLength(1);
+    expect(findElementByType(webspaceOverview.render(), 'Loader')).toBeTruthy();
 
     return metadataPromise.then(() => {
-        webspaceOverview.update();
-        expect(webspaceOverview.find('Loader')).toHaveLength(0);
+        return waitForReaction().then(() => {
+            expect(() => findElementByType(webspaceOverview.render(), 'Loader')).toThrow('Element not found');
+        });
     });
 });
 
@@ -192,12 +199,9 @@ test('Should show the locales from the webspace configuration for the toolbar', 
         allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
     };
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    const router = createPageRouter();
 
-    const webspaceOverview = mount(
+    const {instance: webspaceOverview} = renderWithRef(
         <PageList
             route={router.route}
             router={router}
@@ -207,10 +211,10 @@ test('Should show the locales from the webspace configuration for the toolbar', 
         />
     );
 
-    webspaceOverview.instance().locale.set('en');
-    expect(webspaceOverview.instance().locale.get()).toBe('en');
+    webspaceOverview.locale.set('en');
+    expect(webspaceOverview.locale.get()).toBe('en');
 
-    const toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
+    const toolbarConfig = toolbarFunction.call(webspaceOverview);
     expect(toolbarConfig.locale.value).toBe('en');
     expect(toolbarConfig.locale.options).toEqual(
         expect.arrayContaining(
@@ -236,12 +240,9 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
         key: 'sulu',
     };
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    const router = createPageRouter();
 
-    const webspaceOverview = mount(
+    const {instance: webspaceOverview} = renderWithRef(
         <PageList
             route={router.route}
             router={router}
@@ -251,28 +252,26 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
         />
     );
 
-    webspaceOverview.update();
-
-    const excludeGhostsAndShadows = webspaceOverview.instance().excludeGhostsAndShadows;
+    const excludeGhostsAndShadows = webspaceOverview.excludeGhostsAndShadows;
     expect(excludeGhostsAndShadows.get()).toEqual(false);
-    expect(webspaceOverview.instance().listStore.observableOptions).toEqual(expect.objectContaining({
+    expect(webspaceOverview.listStore.observableOptions).toEqual(expect.objectContaining({
         'exclude-ghosts': excludeGhostsAndShadows,
         'exclude-shadows': excludeGhostsAndShadows,
     }));
 
-    let toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
+    let toolbarConfig = toolbarFunction.call(webspaceOverview);
     expect(toolbarConfig.items[0].value).toEqual(true);
 
     toolbarConfig.items[0].onClick();
-    toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
+    toolbarConfig = toolbarFunction.call(webspaceOverview);
     expect(toolbarConfig.items[0].value).toEqual(false);
-    expect(webspaceOverview.instance().listStore.clear).toHaveBeenCalledWith();
-    expect(webspaceOverview.instance().excludeGhostsAndShadows.get()).toEqual(true);
+    expect(webspaceOverview.listStore.clear).toHaveBeenCalledWith();
+    expect(webspaceOverview.excludeGhostsAndShadows.get()).toEqual(true);
 
     toolbarConfig.items[0].onClick();
-    toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
+    toolbarConfig = toolbarFunction.call(webspaceOverview);
     expect(toolbarConfig.items[0].value).toEqual(true);
-    expect(webspaceOverview.instance().excludeGhostsAndShadows.get()).toEqual(false);
+    expect(webspaceOverview.excludeGhostsAndShadows.get()).toEqual(false);
 });
 
 test('Should set webspace if copied page is in different webspace than the source', () => {
@@ -291,12 +290,9 @@ test('Should set webspace if copied page is in different webspace than the sourc
         key: 'sulu',
     };
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    const router = createPageRouter();
 
-    const webspaceOverview = mount(
+    const {instance: webspaceOverview} = renderWithRef(
         <PageList
             route={router.route}
             router={router}
@@ -307,9 +303,10 @@ test('Should set webspace if copied page is in different webspace than the sourc
     );
 
     return metadataPromise.then(() => {
-        webspaceOverview.update();
-        webspaceOverview.find('List').prop('onCopyFinished')({webspace: 'test'});
-        expect(webspaceKey.get()).toEqual('test');
+        return waitForReaction().then(() => {
+            findElementByType(webspaceOverview.render(), 'List').props.onCopyFinished({webspace: 'test'});
+            expect(webspaceKey.get()).toEqual('test');
+        });
     });
 });
 
@@ -328,12 +325,9 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
         allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
     };
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    const router = createPageRouter();
 
-    const pageList = mount(
+    const {instance: pageList} = renderWithRef(
         <PageList
             route={router.route}
             router={router}
@@ -349,7 +343,7 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
     expect(cacheClearToolbarAction.getNode).toHaveBeenCalledWith();
 
     expect(cacheClearToolbarAction.getToolbarItemConfig).not.toHaveBeenCalled();
-    toolbarFunction.call(pageList.instance());
+    toolbarFunction.call(pageList);
     expect(cacheClearToolbarAction.getToolbarItemConfig).toHaveBeenCalled();
 });
 
@@ -385,12 +379,9 @@ test('Destroy ListStore to avoid many requests and reset active to be set on web
         allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
     };
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    const router = createPageRouter();
 
-    const webspaceOverview = mount(
+    const {instance: webspaceOverview} = renderWithRef(
         <PageList
             route={router.route}
             router={router}
@@ -402,8 +393,8 @@ test('Destroy ListStore to avoid many requests and reset active to be set on web
 
     webspaceKey.set('sulu_blog');
 
-    expect(webspaceOverview.instance().listStore.destroy).toHaveBeenCalledWith();
-    expect(webspaceOverview.instance().listStore.active.set).toHaveBeenCalledWith(undefined);
+    expect(webspaceOverview.listStore.destroy).toHaveBeenCalledWith();
+    expect(webspaceOverview.listStore.active.set).toHaveBeenCalledWith(undefined);
 });
 
 test('Should bind router', () => {
@@ -415,12 +406,9 @@ test('Should bind router', () => {
         localizations: undefined,
     };
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    const router = createPageRouter();
 
-    const webspaceOverview = mount(
+    const {instance: webspaceOverview} = renderWithRef(
         <PageList
             route={router.route}
             router={router}
@@ -429,14 +417,14 @@ test('Should bind router', () => {
             webspaceKey={webspaceKey}
         />
     );
-    const page = webspaceOverview.instance().page;
-    const locale = webspaceOverview.instance().locale;
-    const excludeGhostsAndShadows = webspaceOverview.instance().excludeGhostsAndShadows;
+    const page = webspaceOverview.page;
+    const locale = webspaceOverview.locale;
+    const excludeGhostsAndShadows = webspaceOverview.excludeGhostsAndShadows;
 
     expect(router.bind).toHaveBeenCalledWith('page', page, 1);
     expect(router.bind).toHaveBeenCalledWith('excludeGhostsAndShadows', excludeGhostsAndShadows, false);
     expect(router.bind).toHaveBeenCalledWith('locale', locale);
-    expect(router.bind).toHaveBeenCalledWith('active', webspaceOverview.instance().listStore.active);
+    expect(router.bind).toHaveBeenCalledWith('active', webspaceOverview.listStore.active);
 });
 
 test('Should call disposers on unmount', () => {
@@ -448,12 +436,9 @@ test('Should call disposers on unmount', () => {
         localizations: undefined,
     };
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    const router = createPageRouter();
 
-    const webspaceOverview = mount(
+    const {instance: webspaceOverview, unmount} = renderWithRef(
         <PageList
             route={router.route}
             router={router}
@@ -463,11 +448,11 @@ test('Should call disposers on unmount', () => {
         />
     );
 
-    const listStore = webspaceOverview.instance().listStore;
+    const listStore = webspaceOverview.listStore;
 
     const excludeGhostsAndShadowsDisposerSpy = jest.fn();
-    webspaceOverview.instance().excludeGhostsAndShadowsDisposer = excludeGhostsAndShadowsDisposerSpy;
-    webspaceOverview.unmount();
+    webspaceOverview.excludeGhostsAndShadowsDisposer = excludeGhostsAndShadowsDisposerSpy;
+    unmount();
 
     expect(listStore.destroy).toHaveBeenCalledWith();
     expect(excludeGhostsAndShadowsDisposerSpy).toHaveBeenCalledWith();

@@ -1,208 +1,214 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Render a MediaFormats view 1`] = `
-<div
-  class="mediaFormats"
->
-  <h1>
-    Test 2
-  </h1>
+<div>
   <div
-    class="tableContainer dark hasButtons"
+    class="mediaFormats"
   >
-    <table
-      class="table"
+    <h1>
+      Test 2
+    </h1>
+    <div
+      class="tableContainer dark hasButtons"
     >
-      <thead
-        class="header"
+      <table
+        class="table"
       >
-        <tr>
-          <th
-            class="headerButtonCell headerCell"
-          >
-            <span>
-              <span
-                aria-label="su-eye"
-                class="su-eye"
-              />
-            </span>
-          </th>
-          <th
-            class="headerButtonCell headerCell"
-          >
-            <span>
-              <span
-                aria-label="su-copy"
-                class="su-copy"
-              />
-            </span>
-          </th>
-          <th
-            class="headerCell"
-          >
-            <span>
-              sulu_admin.title
-            </span>
-          </th>
-          <th
-            class="headerCell"
-          >
-            <span>
-              sulu_admin.key
-            </span>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          class="row"
+        <thead
+          class="header"
         >
-          <td
-            class="buttonCell cell"
-          >
-            <div
-              class="cellContent"
+          <tr>
+            <th
+              class="headerButtonCell headerCell"
             >
-              <button
-                type="button"
-              >
+              <span>
                 <span
                   aria-label="su-eye"
                   class="su-eye"
                 />
-              </button>
-            </div>
-          </td>
-          <td
-            class="buttonCell cell"
-          >
-            <div
-              class="cellContent"
+              </span>
+            </th>
+            <th
+              class="headerButtonCell headerCell"
             >
-              <button
-                type="button"
-              >
+              <span>
                 <span
                   aria-label="su-copy"
                   class="su-copy"
                 />
-              </button>
-            </div>
-          </td>
-          <td
-            class="cell"
-          >
-            <div
-              class="cellContent"
+              </span>
+            </th>
+            <th
+              class="headerCell"
             >
-              Contact
-            </div>
-          </td>
-          <td
-            class="cell"
-          >
-            <div
-              class="cellContent"
+              <span>
+                sulu_admin.title
+              </span>
+            </th>
+            <th
+              class="headerCell"
             >
-              400x400
-            </div>
-          </td>
-        </tr>
-        <tr
-          class="row"
-        >
-          <td
-            class="buttonCell cell"
+              <span>
+                sulu_admin.key
+              </span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            class="row"
           >
-            <div
-              class="cellContent"
+            <td
+              class="buttonCell cell"
             >
-              <button
-                type="button"
+              <div
+                class="cellContent"
               >
-                <span
-                  aria-label="su-eye"
-                  class="su-eye"
-                />
-              </button>
-            </div>
-          </td>
-          <td
-            class="buttonCell cell"
-          >
-            <div
-              class="cellContent"
+                <button
+                  type="button"
+                >
+                  <span
+                    aria-label="su-eye"
+                    class="su-eye"
+                  />
+                </button>
+              </div>
+            </td>
+            <td
+              class="buttonCell cell"
             >
-              <button
-                type="button"
+              <div
+                class="cellContent"
               >
-                <span
-                  aria-label="su-copy"
-                  class="su-copy"
-                />
-              </button>
-            </div>
-          </td>
-          <td
-            class="cell"
-          >
-            <div
-              class="cellContent"
+                <button
+                  type="button"
+                >
+                  <span
+                    aria-label="su-copy"
+                    class="su-copy"
+                  />
+                </button>
+              </div>
+            </td>
+            <td
+              class="cell"
             >
-              Account
-            </div>
-          </td>
-          <td
-            class="cell"
-          >
-            <div
-              class="cellContent"
+              <div
+                class="cellContent"
+              >
+                Contact
+              </div>
+            </td>
+            <td
+              class="cell"
             >
-              800x800
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+              <div
+                class="cellContent"
+              >
+                400x400
+              </div>
+            </td>
+          </tr>
+          <tr
+            class="row"
+          >
+            <td
+              class="buttonCell cell"
+            >
+              <div
+                class="cellContent"
+              >
+                <button
+                  type="button"
+                >
+                  <span
+                    aria-label="su-eye"
+                    class="su-eye"
+                  />
+                </button>
+              </div>
+            </td>
+            <td
+              class="buttonCell cell"
+            >
+              <div
+                class="cellContent"
+              >
+                <button
+                  type="button"
+                >
+                  <span
+                    aria-label="su-copy"
+                    class="su-copy"
+                  />
+                </button>
+              </div>
+            </td>
+            <td
+              class="cell"
+            >
+              <div
+                class="cellContent"
+              >
+                Account
+              </div>
+            </td>
+            <td
+              class="cell"
+            >
+              <div
+                class="cellContent"
+              >
+                800x800
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 `;
 
 exports[`Render a loading MediaFormats view 1`] = `
-<div
-  class="mediaFormats"
->
-  <h1>
-    Test 1
-  </h1>
+<div>
   <div
-    class="spinner"
-    style="width:40px;height:40px"
+    class="mediaFormats"
   >
+    <h1>
+      Test 1
+    </h1>
     <div
-      class="doubleBounce1"
-    />
-    <div
-      class="doubleBounce2"
-    />
+      class="spinner"
+      style="width: 40px; height: 40px;"
+    >
+      <div
+        class="doubleBounce1"
+      />
+      <div
+        class="doubleBounce2"
+      />
+    </div>
   </div>
 </div>
 `;
 
 exports[`Render a loading MediaFormats view if formats have not been loaded yet 1`] = `
-<div
-  class="mediaFormats"
->
+<div>
   <div
-    class="spinner"
-    style="width:40px;height:40px"
+    class="mediaFormats"
   >
     <div
-      class="doubleBounce1"
-    />
-    <div
-      class="doubleBounce2"
-    />
+      class="spinner"
+      style="width: 40px; height: 40px;"
+    >
+      <div
+        class="doubleBounce1"
+      />
+      <div
+        class="doubleBounce2"
+      />
+    </div>
   </div>
 </div>
 `;

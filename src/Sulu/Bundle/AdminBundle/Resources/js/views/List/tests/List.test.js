@@ -1,11 +1,15 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
-import {extendObservable as mockExtendObservable, observable} from 'mobx';
+import {act, screen} from '@testing-library/react';
+import {observable} from 'mobx';
 import TableAdapter from '../../../containers/List/adapters/TableAdapter';
 import listFieldTransformRegistry from '../../../containers/List/registries/listFieldTransformerRegistry';
 import StringFieldTransformer from '../../../containers/List/fieldTransformers/StringFieldTransformer';
-import {findWithHighOrderFunction} from '../../../utils/TestHelper';
+import {
+    createListStoreMock as mockCreateListStoreMock,
+    findWithHighOrderFunction,
+    renderWithRef,
+} from '../../../utils/TestHelper';
 import ResourceStore from '../../../stores/ResourceStore';
 
 jest.mock('../../../services/ResourceRequester/registries/resourceRouteRegistry', () => ({
@@ -27,77 +31,16 @@ jest.mock('../../../stores/userStore', () => ({
 jest.mock(
     '../../../containers/List/stores/ListStore',
     () => jest.fn(function(resourceKey, listKey, userSettingsKey, observableOptions, options, metadataOptions) {
-        this.resourceKey = resourceKey;
-        this.listKey = listKey;
-        this.userSettingsKey = userSettingsKey;
-        this.observableOptions = observableOptions;
-        this.options = options;
-        this.metadataOptions = metadataOptions;
-        this.filterOptions = {
-            get: jest.fn().mockReturnValue({}),
-        };
-        this.loading = false;
-        this.pageCount = 3;
-        this.active = {
-            get: jest.fn(),
-        };
-        this.sortColumn = {
-            get: jest.fn(),
-        };
-        this.sortOrder = {
-            get: jest.fn(),
-        };
-        this.searchTerm = {
-            get: jest.fn(),
-        };
-        this.limit = {
-            get: jest.fn().mockReturnValue(10),
-        };
-        this.setLimit = jest.fn();
-        this.updateLoadingStrategy = jest.fn();
-        this.updateStructureStrategy = jest.fn();
-        this.data = [
-            {
-                id: 1,
-                title: 'Title 1',
-                description: 'Description 1',
-            },
-            {
-                id: 2,
-                title: 'Title 2',
-                description: 'Description 2',
-            },
-        ];
-        this.selections = [];
-        this.selectionIds = [];
-        this.deleteSelection = jest.fn();
-        this.getPage = jest.fn().mockReturnValue(2);
-        this.userSchema = {
-            title: {
-                type: 'string',
-                sortable: true,
-                visibility: 'no',
-                label: 'Title',
-            },
-            description: {
-                type: 'string',
-                sortable: true,
-                visibility: 'yes',
-                label: 'Description',
-            },
-        };
-        this.filterQueryOption = {};
-        this.destroy = jest.fn();
-        this.reset = jest.fn();
-        this.reload = jest.fn();
-        this.clearSelection = jest.fn();
-        this.remove = jest.fn();
-        this.moveSelection = jest.fn();
-
-        mockExtendObservable(this, {
-            moving: false,
-            movingSelection: false,
-        });
+        mockCreateListStoreMock(
+            resourceKey,
+            listKey,
+            userSettingsKey,
+            observableOptions,
+            options,
+            metadataOptions,
+            {},
+            this
+        );
     })
 );
 
@@ -164,6 +107,20 @@ beforeEach(() => {
     listFieldTransformRegistry.get.mockReturnValue(new StringFieldTransformer());
 });
 
+function renderListElement(element) {
+    const {instance: list, ...utils} = renderWithRef(element, {
+        afterRender: (list) => {
+            list.toolbarActions.forEach((toolbarAction) => {
+                if (!toolbarAction.destroy) {
+                    toolbarAction.destroy = jest.fn();
+                }
+            });
+        },
+    });
+
+    return {list, ...utils};
+}
+
 test('Should render the list with the correct resourceKey', () => {
     const List = require('../List').default;
     const router = {
@@ -177,8 +134,13 @@ test('Should render the list with the correct resourceKey', () => {
         },
     };
 
-    const list = render(<List router={router} title="Test 1" />);
-    expect(list).toMatchSnapshot();
+    const {list} = renderListElement(<List router={router} title="Test 1" />);
+
+    expect(list.listStore.resourceKey).toEqual('snippets');
+    expect(list.listStore.listKey).toEqual('snippets');
+    expect(screen.getByRole('heading', {name: 'Test 1'})).toBeInTheDocument();
+    expect(screen.getByText('Description 1')).toBeInTheDocument();
+    expect(screen.getByText('Description 2')).toBeInTheDocument();
 });
 
 test('Should render the list with a title', () => {
@@ -196,8 +158,11 @@ test('Should render the list with a title', () => {
         },
     };
 
-    const list = render(<List router={router} title="Test 2" />);
-    expect(list).toMatchSnapshot();
+    renderListElement(<List router={router} title="Test 2" />);
+
+    expect(screen.getByRole('heading', {name: 'Snippets'})).toBeInTheDocument();
+    expect(screen.getByText('Description 1')).toBeInTheDocument();
+    expect(screen.getByText('Description 2')).toBeInTheDocument();
 });
 
 test('Should render the list with nodes of given ToolbarActions', () => {
@@ -205,6 +170,7 @@ test('Should render the list with nodes of given ToolbarActions', () => {
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
 
     const ToolbarActionMock1 = jest.fn(function() {
+        this.destroy = jest.fn();
         this.getNode = jest.fn().mockReturnValue(<div key="node-1">toolbar action node</div>);
         this.getToolbarItemConfig = jest.fn().mockReturnValue({});
     });
@@ -228,8 +194,10 @@ test('Should render the list with nodes of given ToolbarActions', () => {
         },
     };
 
-    const list = mount(<List router={router} title="Test 2" />);
-    expect(list.render()).toMatchSnapshot();
+    renderListElement(<List router={router} title="Test 2" />);
+
+    expect(screen.getByRole('heading', {name: 'Snippets'})).toBeInTheDocument();
+    expect(screen.getByText('toolbar action node')).toBeInTheDocument();
 });
 
 test('Should render the list with nodes of given ListItemActions', () => {
@@ -260,8 +228,10 @@ test('Should render the list with nodes of given ListItemActions', () => {
         },
     };
 
-    const list = mount(<List router={router} title="Test 2" />);
-    expect(list.render()).toMatchSnapshot();
+    renderListElement(<List router={router} title="Test 2" />);
+
+    expect(screen.getByRole('heading', {name: 'Snippets'})).toBeInTheDocument();
+    expect(screen.getByText('item action node')).toBeInTheDocument();
 });
 
 test('Get ToolbarActions from listToolbarActionRegistry and instantiate them correct with the arguments', () => {
@@ -270,18 +240,24 @@ test('Get ToolbarActions from listToolbarActionRegistry and instantiate them cor
     const resourceStore = new ResourceStore('tests', '123-456-789');
 
     const ToolbarActionMock1 = jest.fn(function() {
+        this.destroy = jest.fn();
         this.getNode = jest.fn().mockReturnValue(null);
         this.getToolbarItemConfig = jest.fn().mockReturnValue({});
+        this.setLocales = jest.fn();
     });
 
     const ToolbarActionMock2 = jest.fn(function() {
+        this.destroy = jest.fn();
         this.getNode = jest.fn().mockReturnValue(null);
         this.getToolbarItemConfig = jest.fn().mockReturnValue({});
+        this.setLocales = jest.fn();
     });
 
     const ToolbarActionMock3 = jest.fn(function() {
+        this.destroy = jest.fn();
         this.getNode = jest.fn().mockReturnValue(null);
         this.getToolbarItemConfig = jest.fn().mockReturnValue({});
+        this.setLocales = jest.fn();
     });
 
     listToolbarActionRegistry.add('mock1', ToolbarActionMock1);
@@ -311,19 +287,19 @@ test('Get ToolbarActions from listToolbarActionRegistry and instantiate them cor
         },
     };
 
-    const list = shallow(<List resourceStore={resourceStore} router={router} />);
+    const {list} = renderListElement(<List resourceStore={resourceStore} router={router} />);
 
     expect(ToolbarActionMock1).toHaveBeenCalledWith(
-        list.instance().listStore,
-        list.instance(),
+        list.listStore,
+        list,
         router,
         locales,
         resourceStore,
         {'test1': 'value1'}
     );
     expect(ToolbarActionMock2).toHaveBeenCalledWith(
-        list.instance().listStore,
-        list.instance(),
+        list.listStore,
+        list,
         router,
         locales,
         resourceStore,
@@ -340,16 +316,19 @@ test('Get ListItemActions from listItemActionRegistry and instantiate them corre
     const ItemActionMock1 = jest.fn(function() {
         this.getNode = jest.fn().mockReturnValue(null);
         this.getItemActionConfig = jest.fn().mockReturnValue({icon: 'su-eye'});
+        this.setLocales = jest.fn();
     });
 
     const ItemActionMock2 = jest.fn(function() {
         this.getNode = jest.fn().mockReturnValue(null);
         this.getItemActionConfig = jest.fn().mockReturnValue({icon: 'su-eye'});
+        this.setLocales = jest.fn();
     });
 
     const ItemActionMock3 = jest.fn(function() {
         this.getNode = jest.fn().mockReturnValue(null);
         this.getItemActionConfig = jest.fn().mockReturnValue({icon: 'su-eye'});
+        this.setLocales = jest.fn();
     });
 
     listItemActionRegistry.add('mock1', ItemActionMock1);
@@ -379,19 +358,19 @@ test('Get ListItemActions from listItemActionRegistry and instantiate them corre
         },
     };
 
-    const list = shallow(<List resourceStore={resourceStore} router={router} />);
+    const {list} = renderListElement(<List resourceStore={resourceStore} router={router} />);
 
     expect(ItemActionMock1).toHaveBeenCalledWith(
-        list.instance().listStore,
-        list.instance(),
+        list.listStore,
+        list,
         router,
         locales,
         resourceStore,
         {'test1': 'value1'}
     );
     expect(ItemActionMock2).toHaveBeenCalledWith(
-        list.instance().listStore,
-        list.instance(),
+        list.listStore,
+        list,
         router,
         locales,
         resourceStore,
@@ -417,7 +396,7 @@ test('Throw error if "toolbarActions" route-option is not an array of objects', 
         },
     };
 
-    expect(() => shallow(<List router={router} />)).toThrow('but string was given');
+    expect(() => renderListElement(<List router={router} />)).toThrow('but string was given');
 });
 
 test('Throw error if "itemActions" route-option is not an array of objects', () => {
@@ -437,7 +416,7 @@ test('Throw error if "itemActions" route-option is not an array of objects', () 
         },
     };
 
-    expect(() => shallow(<List router={router} />)).toThrow('but string was given');
+    expect(() => renderListElement(<List router={router} />)).toThrow('but string was given');
 });
 
 test('Update locales of given ToolbarActions if "locales" prop is changed', () => {
@@ -471,10 +450,24 @@ test('Update locales of given ToolbarActions if "locales" prop is changed', () =
         },
     };
 
-    const list = shallow(<List router={router} />);
+    const {rerender} = renderListElement(<List router={router} />);
 
+    setLocalesSpy.mockClear();
     expect(setLocalesSpy).not.toHaveBeenCalled();
-    list.setProps({router: {route: {options: {locales: ['de', 'ru']}}}});
+    rerender(
+        <List
+            router={{
+                ...router,
+                route: {
+                    ...router.route,
+                    options: {
+                        ...router.route.options,
+                        locales: ['de', 'ru'],
+                    },
+                },
+            }}
+        />
+    );
     expect(setLocalesSpy).toHaveBeenCalledWith(['de', 'ru']);
 });
 
@@ -509,10 +502,24 @@ test('Update locales of given ListItemActions if "locales" prop is changed', () 
         },
     };
 
-    const list = shallow(<List router={router} />);
+    const {rerender} = renderListElement(<List router={router} />);
 
+    setLocalesSpy.mockClear();
     expect(setLocalesSpy).not.toHaveBeenCalled();
-    list.setProps({router: {route: {options: {locales: ['de', 'ru']}}}});
+    rerender(
+        <List
+            router={{
+                ...router,
+                route: {
+                    ...router.route,
+                    options: {
+                        ...router.route.options,
+                        locales: ['de', 'ru'],
+                    },
+                },
+            }}
+        />
+    );
     expect(setLocalesSpy).toHaveBeenCalledWith(['de', 'ru']);
 });
 
@@ -537,9 +544,9 @@ test('Should pass correct props to move list overlay', () => {
         },
     };
 
-    const list = shallow(<List router={router} />);
+    const {list} = renderListElement(<List router={router} />);
 
-    expect(list.find('SingleListOverlay').props()).toEqual(expect.objectContaining({
+    expect(list.toolbarActions[0].getNode().props).toEqual(expect.objectContaining({
         listKey: 'snippets_list',
         options: {includeRoot: true},
         reloadOnOpen: true,
@@ -561,8 +568,8 @@ test('Should pass the onItemClick callback when an editView has been passed', ()
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('onItemClick')).toBeInstanceOf(Function);
+    const {list} = renderListElement(<List router={router} />);
+    expect(list.list.props.onItemClick).toBeInstanceOf(Function);
 });
 
 test('Should pass the onItemClick callback if onItemClick prop is set', () => {
@@ -578,8 +585,8 @@ test('Should pass the onItemClick callback if onItemClick prop is set', () => {
         },
     };
 
-    const list = shallow(<List onItemClick={jest.fn()} router={router} />);
-    expect(list.find('List').prop('onItemClick')).toBeInstanceOf(Function);
+    const {list} = renderListElement(<List onItemClick={jest.fn()} router={router} />);
+    expect(list.list.props.onItemClick).toBeInstanceOf(Function);
 });
 
 test('Should not pass the onItemClick callback if no editView has been passed and no onItemClick prop is set', () => {
@@ -595,8 +602,8 @@ test('Should not pass the onItemClick callback if no editView has been passed an
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('onItemClick')).not.toBeInstanceOf(Function);
+    const {list} = renderListElement(<List router={router} />);
+    expect(list.list.props.onItemClick).not.toBeInstanceOf(Function);
 });
 
 test('Should render the list with the add icon if a addView has been passed', () => {
@@ -620,8 +627,8 @@ test('Should render the list with the add icon if a addView has been passed', ()
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('onItemAdd')).toBeInstanceOf(Function);
+    const {list} = renderListElement(<List router={router} />);
+    expect(list.list.props.onItemAdd).toBeInstanceOf(Function);
 });
 
 test('Should render the list with the add icon if onItemAdd prop is set', () => {
@@ -644,8 +651,8 @@ test('Should render the list with the add icon if onItemAdd prop is set', () => 
         },
     };
 
-    const list = shallow(<List onItemAdd={jest.fn()} router={router} />);
-    expect(list.find('List').prop('onItemAdd')).toBeInstanceOf(Function);
+    const {list} = renderListElement(<List onItemAdd={jest.fn()} router={router} />);
+    expect(list.list.props.onItemAdd).toBeInstanceOf(Function);
 });
 
 test('Should render the list without add icon if no addView has been passed and onItemAdd prop is not set', () => {
@@ -661,8 +668,8 @@ test('Should render the list without add icon if no addView has been passed and 
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('onItemAdd')).not.toBeInstanceOf(Function);
+    const {list} = renderListElement(<List router={router} />);
+    expect(list.list.props.onItemAdd).not.toBeInstanceOf(Function);
 });
 
 test('Should render the list non-searchable if the searchable option has been passed as false', () => {
@@ -679,8 +686,8 @@ test('Should render the list non-searchable if the searchable option has been pa
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('searchable')).toEqual(false);
+    const {list} = renderListElement(<List router={router} />);
+    expect(list.list.props.searchable).toEqual(false);
 });
 
 test('Should render the list non-filterable if the filterable option has been passed as false', () => {
@@ -697,8 +704,8 @@ test('Should render the list non-filterable if the filterable option has been pa
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('filterable')).toEqual(false);
+    const {list} = renderListElement(<List router={router} />);
+    expect(list.list.props.filterable).toEqual(false);
 });
 
 test('Should render the list filterable if the filterable option has not been passed', () => {
@@ -714,8 +721,8 @@ test('Should render the list filterable if the filterable option has not been pa
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('filterable')).toEqual(true);
+    const {list} = renderListElement(<List router={router} />);
+    expect(list.list.props.filterable).toEqual(true);
 });
 
 test('Should render the list without columnOptions if the hideColumnOptions option has been passed as true', () => {
@@ -732,8 +739,8 @@ test('Should render the list without columnOptions if the hideColumnOptions opti
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('showColumnOptions')).toEqual(false);
+    const {list} = renderListElement(<List router={router} />);
+    expect(list.list.props.showColumnOptions).toEqual(false);
 });
 
 test('Should render the list with columnOptions if the hideColumnOptions option has not been passed', () => {
@@ -749,8 +756,8 @@ test('Should render the list with columnOptions if the hideColumnOptions option 
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('showColumnOptions')).toEqual(true);
+    const {list} = renderListElement(<List router={router} />);
+    expect(list.list.props.showColumnOptions).toEqual(true);
 });
 
 test('Should render the list non-selectable if the selectable option has been passed as false', () => {
@@ -767,8 +774,8 @@ test('Should render the list non-selectable if the selectable option has been pa
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('selectable')).toEqual(false);
+    const {list} = renderListElement(<List router={router} />);
+    expect(list.list.props.selectable).toEqual(false);
 });
 
 test('Should render the list with the passed itemDisabledCondition option', () => {
@@ -785,8 +792,8 @@ test('Should render the list with the passed itemDisabledCondition option', () =
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('itemDisabledCondition')).toEqual('(_permissions && !_permissions.view)');
+    const {list} = renderListElement(<List router={router} />);
+    expect(list.list.props.itemDisabledCondition).toEqual('(_permissions && !_permissions.view)');
 });
 
 test('Should throw an error when no resourceKey is defined in the route options', () => {
@@ -797,7 +804,7 @@ test('Should throw an error when no resourceKey is defined in the route options'
         },
     };
 
-    expect(() => render(<List router={router} />)).toThrow(/mandatory "resourceKey" option/);
+    expect(() => renderListElement(<List router={router} />)).toThrow(/mandatory "resourceKey" option/);
 });
 
 test('Should throw an error when no listKey is defined in the route options', () => {
@@ -810,7 +817,7 @@ test('Should throw an error when no listKey is defined in the route options', ()
         },
     };
 
-    expect(() => render(<List router={router} />)).toThrow(/mandatory "listKey" option/);
+    expect(() => renderListElement(<List router={router} />)).toThrow(/mandatory "listKey" option/);
 });
 
 test('Should destroy the store on unmount', () => {
@@ -849,11 +856,11 @@ test('Should destroy the store on unmount', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const {list, unmount} = renderListElement(<List router={router} />);
     const page = router.bind.mock.calls[0][1];
     const locale = router.bind.mock.calls[1][1];
 
-    const listStore = list.instance().listStore;
+    const listStore = list.listStore;
 
     expect(page.get()).toBe(undefined);
     expect(locale.get()).toBe(undefined);
@@ -865,9 +872,9 @@ test('Should destroy the store on unmount', () => {
     expect(router.bind).toHaveBeenCalledWith('limit', listStore.limit, 10);
     expect(router.bind).toHaveBeenCalledWith('filter', listStore.filterOptions, {});
 
-    const toolbarActions = list.instance().toolbarActions;
+    const toolbarActions = list.toolbarActions;
 
-    list.unmount();
+    unmount();
 
     expect(listStore.destroy).toHaveBeenCalled();
     expect(toolbarActions[0].destroy).toHaveBeenCalledWith();
@@ -892,14 +899,14 @@ test('Should navigate to defined route on back button click', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    list.instance().locale = {
+    const {list} = renderListElement(<List router={router} />);
+    list.locale = {
         get() {
             return 'de';
         },
     };
 
-    const toolbarConfig = toolbarFunction.call(list.instance());
+    const toolbarConfig = toolbarFunction.call(list);
     toolbarConfig.backButton.onClick();
     expect(router.restore).toHaveBeenCalledWith('backView', {locale: 'de'});
 });
@@ -922,11 +929,11 @@ test('Should propagate errors to toolbar', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const {list} = renderListElement(<List router={router} />);
     const error = 'This is an error';
-    list.instance().errors.push(error);
+    list.errors.push(error);
 
-    const toolbarConfig = toolbarFunction.call(list.instance());
+    const toolbarConfig = toolbarFunction.call(list);
     expect(toolbarConfig.errors.length).toBe(1);
     expect(toolbarConfig.errors[0]).toBe(error);
 });
@@ -949,9 +956,9 @@ test('Should navigate to defined route on back button click without locale', () 
         },
     };
 
-    const list = mount(<List router={router} />);
+    const {list} = renderListElement(<List router={router} />);
 
-    const toolbarConfig = toolbarFunction.call(list.instance());
+    const toolbarConfig = toolbarFunction.call(list);
     toolbarConfig.backButton.onClick();
     expect(router.restore).toHaveBeenCalledWith('backView', {});
 });
@@ -973,9 +980,9 @@ test('Should not render back button when no backView is configured', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const {list} = renderListElement(<List router={router} />);
 
-    const toolbarConfig = toolbarFunction.call(list.instance());
+    const toolbarConfig = toolbarFunction.call(list);
     expect(toolbarConfig.backButton).toBe(undefined);
 });
 
@@ -1001,9 +1008,9 @@ test('Should render the add button in the toolbar only if an addView has been pa
         },
     };
 
-    const list = mount(<List router={router} />);
+    const {list} = renderListElement(<List router={router} />);
 
-    const toolbarConfig = toolbarFunction.call(list.instance());
+    const toolbarConfig = toolbarFunction.call(list);
     expect(toolbarConfig.items).toEqual(
         expect.arrayContaining(
             [
@@ -1037,13 +1044,13 @@ test('Should navigate when add button is clicked and locales have been passed in
         },
     };
 
-    const list = mount(<List router={router} />);
-    list.instance().locale = {
+    const {list} = renderListElement(<List router={router} />);
+    list.locale = {
         get() {
             return 'de';
         },
     };
-    const toolbarConfig = toolbarFunction.call(list.instance());
+    const toolbarConfig = toolbarFunction.call(list);
 
     toolbarConfig.items[0].onClick();
 
@@ -1073,8 +1080,8 @@ test('Should navigate without locale when add button is clicked', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const toolbarConfig = toolbarFunction.call(list.instance());
+    const {list} = renderListElement(<List router={router} />);
+    const toolbarConfig = toolbarFunction.call(list);
 
     toolbarConfig.items[0].onClick();
 
@@ -1105,8 +1112,8 @@ test('Should fire callback instead of navigate when onItemAdd prop is set and ad
     };
     const itemAddCallback = jest.fn();
 
-    const list = mount(<List onItemAdd={itemAddCallback} router={router} />);
-    const toolbarConfig = toolbarFunction.call(list.instance());
+    const {list} = renderListElement(<List onItemAdd={itemAddCallback} router={router} />);
+    const toolbarConfig = toolbarFunction.call(list);
 
     toolbarConfig.items[0].onClick();
 
@@ -1130,13 +1137,13 @@ test('Should navigate when pencil button is clicked and locales have been passed
         },
     };
 
-    const list = mount(<List router={router} />);
-    list.instance().locale = {
+    const {list} = renderListElement(<List router={router} />);
+    list.locale = {
         get() {
             return 'de';
         },
     };
-    list.find('ButtonCell button').at(0).simulate('click');
+    list.list.props.onItemClick(1);
     expect(router.navigate).toHaveBeenCalledWith('editView', {id: 1, locale: 'de'});
 });
 
@@ -1155,8 +1162,8 @@ test('Should navigate without locale when pencil button is clicked', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    list.find('ButtonCell button').at(0).simulate('click');
+    const {list} = renderListElement(<List router={router} />);
+    list.list.props.onItemClick(1);
     expect(router.navigate).toHaveBeenCalledWith('editView', {id: 1});
 });
 
@@ -1177,8 +1184,8 @@ test('Should fire callback instead of navigate when onItemClick prop is set and 
         },
     };
 
-    const list = mount(<List onItemClick={onItemClickCallback} router={router} />);
-    list.find('ButtonCell button').at(0).simulate('click');
+    const {list} = renderListElement(<List onItemClick={onItemClickCallback} router={router} />);
+    list.list.props.onItemClick(1);
 
     expect(onItemClickCallback).toHaveBeenCalledWith(1);
     expect(router.navigate).not.toHaveBeenCalled();
@@ -1311,16 +1318,16 @@ test('Should render the delete item enabled only if something is selected', () =
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    const {list} = renderListElement(<List router={router} />);
+    const listStore = list.listStore;
 
     let toolbarConfig, item;
-    toolbarConfig = toolbarFunction.call(list.instance());
+    toolbarConfig = toolbarFunction.call(list);
     item = toolbarConfig.items.find((item) => item.label === 'Delete');
     expect(item.disabled).toBe(true);
 
     listStore.selectionIds.push(1);
-    toolbarConfig = toolbarFunction.call(list.instance());
+    toolbarConfig = toolbarFunction.call(list);
     item = toolbarConfig.items.find((item) => item.label === 'Delete');
     expect(item.disabled).toBe(false);
 });
@@ -1341,14 +1348,14 @@ test('Should render the locale dropdown with the options from router', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    list.instance().locale = {
+    const {list} = renderListElement(<List router={router} />);
+    list.locale = {
         get() {
             return 'de';
         },
     };
 
-    const toolbarConfig = toolbarFunction.call(list.instance());
+    const toolbarConfig = toolbarFunction.call(list);
     expect(toolbarConfig.locale.value).toBe('de');
     expect(toolbarConfig.locale.options).toEqual([
         {value: 'en', label: 'en'},
@@ -1371,14 +1378,14 @@ test('Should render the locale dropdown with the options from props', () => {
         },
     };
 
-    const list = mount(<List locales={['en', 'de']} router={router} />);
-    list.instance().locale = {
+    const {list} = renderListElement(<List locales={['en', 'de']} router={router} />);
+    list.locale = {
         get() {
             return 'de';
         },
     };
 
-    const toolbarConfig = toolbarFunction.call(list.instance());
+    const toolbarConfig = toolbarFunction.call(list);
     expect(toolbarConfig.locale.value).toBe('de');
     expect(toolbarConfig.locale.options).toEqual([
         {value: 'en', label: 'en'},
@@ -1403,8 +1410,8 @@ test('Should pass requestParameters from router to the ListStore', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    const {list} = renderListElement(<List router={router} />);
+    const listStore = list.listStore;
 
     expect(listStore.options.webspace).toEqual('example');
 });
@@ -1430,8 +1437,8 @@ test('Should pass router attributes from router to the ListStore', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    const {list} = renderListElement(<List router={router} />);
+    const listStore = list.listStore;
 
     expect(listStore.options.locale).toEqual('en');
     expect(listStore.options.parentId).toEqual('123-123-123');
@@ -1455,8 +1462,8 @@ test('Should pass resourceStore properties from router to the ListStore', () => 
         },
     };
 
-    const list = mount(<List resourceStore={resourceStore} router={router} />);
-    const listStore = list.instance().listStore;
+    const {list} = renderListElement(<List resourceStore={resourceStore} router={router} />);
+    const listStore = list.listStore;
 
     expect(listStore.options.locale).toEqual('de');
     expect(listStore.options.parentId).toEqual('123-456-789');
@@ -1484,8 +1491,8 @@ test('Should pass router attributes array from router to the ListStore', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    const {list} = renderListElement(<List router={router} />);
+    const listStore = list.listStore;
 
     expect(listStore.options.locale).toEqual('en');
     expect(listStore.options.id).toEqual('123-123-123');
@@ -1513,8 +1520,8 @@ test('Should pass router attributes array from router to the ListStore metadataO
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    const {list} = renderListElement(<List router={router} />);
+    const listStore = list.listStore;
 
     expect(listStore.metadataOptions.locale).toEqual('en');
     expect(listStore.metadataOptions.id).toEqual('123-123-123');
@@ -1544,8 +1551,8 @@ test('Should pass metadataRequestParameters to metadataOptions', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    const {list} = renderListElement(<List router={router} />);
+    const listStore = list.listStore;
     expect(listStore.metadataOptions.showResource).toEqual(true);
 });
 
@@ -1571,8 +1578,8 @@ test('Should pass resource-store properties array from router to the ListStore m
     };
     const resourceStore = new ResourceStore('tests', '123-123-123');
 
-    const list = mount(<List resourceStore={resourceStore} router={router} />);
-    const listStore = list.instance().listStore;
+    const {list} = renderListElement(<List resourceStore={resourceStore} router={router} />);
+    const listStore = list.listStore;
 
     expect(listStore.metadataOptions.locale).toEqual('de');
     expect(listStore.metadataOptions.pageId).toEqual('123-123-123');
@@ -1593,8 +1600,8 @@ test('Should pass locale and page observables to the ListStore', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    const {list} = renderListElement(<List router={router} />);
+    const listStore = list.listStore;
 
     expect(listStore.observableOptions).toHaveProperty('page');
     expect(listStore.observableOptions).toHaveProperty('locale');
@@ -1615,8 +1622,8 @@ test('Should pass locale observable from props to the ListStore if it is set', (
     };
 
     const locale = observable.box('ru');
-    const list = mount(<List locale={locale} router={router} />);
-    const listStore = list.instance().listStore;
+    const {list} = renderListElement(<List locale={locale} router={router} />);
+    const listStore = list.listStore;
 
     expect(listStore.observableOptions.locale).toEqual(locale);
 });
@@ -1634,8 +1641,8 @@ test('Should not pass the locale observable to the ListStore if no locales are d
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    const {list} = renderListElement(<List router={router} />);
+    const listStore = list.listStore;
 
     expect(listStore.observableOptions).toHaveProperty('page');
     expect(listStore.observableOptions).not.toHaveProperty('locale');
@@ -1654,15 +1661,15 @@ test('Should fire reload method of ListStore when reload method is called', () =
         },
     };
 
-    const listInstance = mount(<List router={router} />).instance();
-    listInstance.reload();
+    const {list} = renderListElement(<List router={router} />);
+    list.reload();
 
-    expect(listInstance.listStore.reload).toHaveBeenCalled();
+    expect(list.listStore.reload).toHaveBeenCalled();
 });
 
 test('Should delete selected items when delete button is clicked', () => {
     function getDeleteItem() {
-        return toolbarFunction.call(list.instance()).items.find((item) => item.label === 'Delete');
+        return toolbarFunction.call(list).items.find((item) => item.label === 'Delete');
     }
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
@@ -1685,16 +1692,15 @@ test('Should delete selected items when delete button is clicked', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    const {list} = renderListElement(<List router={router} />);
+    const listStore = list.listStore;
     listStore.selectionIds.push(1, 4, 6);
 
-    list.update();
-    expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
+    expect(list.list.showDeleteSelectionDialog).toEqual(false);
 
-    getDeleteItem().onClick();
-    list.update();
-    expect(list.find('Dialog').at(0).prop('open')).toEqual(true);
+    act(() => getDeleteItem().onClick());
+
+    expect(list.list.showDeleteSelectionDialog).toEqual(true);
 });
 
 test('Should pass allowConflictDeletion correctly to List component', () => {
@@ -1716,20 +1722,19 @@ test('Should pass allowConflictDeletion correctly to List component', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    const {list} = renderListElement(<List router={router} />);
+    const listStore = list.listStore;
     listStore.selectionIds.push(1, 4, 6);
-    list.instance().requestSelectionDelete(false);
+    act(() => list.requestSelectionDelete(false));
 
-    list.update();
-    expect(list.find('Dialog').at(0).prop('open')).toEqual(true);
+    expect(list.list.showDeleteSelectionDialog).toEqual(true);
 
-    expect(list.find('List').at(1).instance().allowConflictDeletion).toEqual(false);
+    expect(list.list.allowConflictDeletion).toEqual(false);
 });
 
 test('Should make move overlay disappear if cancel is clicked', () => {
     function getMoveItem() {
-        return toolbarFunction.call(list.instance()).items.find((item) => item.label === 'Move selected');
+        return toolbarFunction.call(list).items.find((item) => item.label === 'Move selected');
     }
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
@@ -1752,25 +1757,24 @@ test('Should make move overlay disappear if cancel is clicked', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    const {list} = renderListElement(<List router={router} />);
+    const listStore = list.listStore;
     listStore.selectionIds.push(1, 4, 6);
+    const moveToolbarAction = list.toolbarActions[0];
 
-    list.update();
-    expect(list.find('SingleListOverlay[title="Move items"]').prop('open')).toEqual(false);
+    expect(moveToolbarAction.showOverlay).toEqual(false);
 
-    getMoveItem().onClick();
-    list.update();
-    expect(list.find('SingleListOverlay[title="Move items"]').prop('open')).toEqual(true);
-    list.find('SingleListOverlay[title="Move items"]').prop('onClose')();
+    act(() => getMoveItem().onClick());
+    expect(moveToolbarAction.showOverlay).toEqual(true);
 
-    list.update();
-    expect(list.find('SingleListOverlay[title="Move items"]').prop('open')).toEqual(false);
+    act(() => moveToolbarAction.handleClose());
+
+    expect(moveToolbarAction.showOverlay).toEqual(false);
 });
 
 test('Should move items after move overlay was confirmed', () => {
     function getMoveItem() {
-        return toolbarFunction.call(list.instance()).items.find((item) => item.label === 'Move selected');
+        return toolbarFunction.call(list).items.find((item) => item.label === 'Move selected');
     }
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
@@ -1793,38 +1797,40 @@ test('Should move items after move overlay was confirmed', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    const {list} = renderListElement(<List router={router} />);
+    const listStore = list.listStore;
     listStore.selectionIds.push(1, 4, 6);
+    const moveToolbarAction = list.toolbarActions[0];
 
     const moveSelectionPromise = Promise.resolve();
     listStore.moveSelection.mockReturnValue(moveSelectionPromise);
 
-    list.update();
-    expect(list.find('SingleListOverlay[title="Move items"]').prop('open')).toEqual(false);
+    expect(moveToolbarAction.showOverlay).toEqual(false);
 
-    getMoveItem().onClick();
-    listStore.movingSelection = true;
-    list.update();
-    expect(list.find('SingleListOverlay[title="Move items"]').prop('open')).toEqual(true);
-    list.find('SingleListOverlay[title="Move items"]').prop('onConfirm')({id: 5});
+    act(() => getMoveItem().onClick());
+    act(() => {
+        listStore.movingSelection = true;
+    });
+    expect(moveToolbarAction.showOverlay).toEqual(true);
+    act(() => moveToolbarAction.handleConfirm({id: 5}));
 
-    list.update();
-    expect(list.find('SingleListOverlay[title="Move items"]').prop('confirmLoading')).toEqual(true);
+    expect(moveToolbarAction.getNode().props.confirmLoading).toEqual(true);
 
     expect(listStore.moveSelection).toHaveBeenCalledWith(5);
 
     return moveSelectionPromise.then(() => {
-        listStore.movingSelection = false;
-        list.update();
-        expect(list.find('SingleListOverlay[title="Move items"]').prop('confirmLoading')).toEqual(false);
-        expect(list.find('SingleListOverlay[title="Move items"]').prop('open')).toEqual(false);
+        act(() => {
+            listStore.movingSelection = false;
+        });
+
+        expect(moveToolbarAction.getNode().props.confirmLoading).toEqual(false);
+        expect(moveToolbarAction.showOverlay).toEqual(false);
     });
 });
 
 test('Export dialog should open when the button is pressed', () => {
     function getExportItem() {
-        return toolbarFunction.call(list.instance()).items.find((item) => item.label === 'Export');
+        return toolbarFunction.call(list).items.find((item) => item.label === 'Export');
     }
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
@@ -1847,22 +1853,21 @@ test('Export dialog should open when the button is pressed', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    const {list} = renderListElement(<List router={router} />);
+    const listStore = list.listStore;
     listStore.selectionIds.push(1, 4, 6);
+    const exportToolbarAction = list.toolbarActions[0];
 
-    list.update();
-    expect(list.find('Overlay').find({confirmText: 'Export'}).prop('open')).toEqual(false);
+    expect(exportToolbarAction.showOverlay).toEqual(false);
 
-    getExportItem().onClick();
-    list.update();
+    act(() => getExportItem().onClick());
 
-    expect(list.find('Overlay').find({confirmText: 'Export'}).prop('open')).toEqual(true);
+    expect(exportToolbarAction.showOverlay).toEqual(true);
 });
 
 test('Render export dialog', () => {
     function getExportItem() {
-        return toolbarFunction.call(list.instance()).items.find((item) => item.label === 'Export');
+        return toolbarFunction.call(list).items.find((item) => item.label === 'Export');
     }
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
@@ -1885,21 +1890,26 @@ test('Render export dialog', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    const {list} = renderListElement(<List router={router} />);
+    const listStore = list.listStore;
     listStore.selectionIds.push(1, 4, 6);
+    const exportToolbarAction = list.toolbarActions[0];
 
-    list.update();
+    act(() => getExportItem().onClick());
 
-    getExportItem().onClick();
-    list.update();
+    const exportOverlay = exportToolbarAction.getNode();
 
-    expect(list.find('Overlay').find({confirmText: 'Export'}).render()).toMatchSnapshot();
+    expect(exportOverlay.props.confirmText).toEqual('Export');
+    expect(exportOverlay.props.open).toEqual(true);
+    expect(exportToolbarAction.delimiter).toEqual(';');
+    expect(exportToolbarAction.enclosure).toEqual('"');
+    expect(exportToolbarAction.escape).toEqual('\\');
+    expect(exportToolbarAction.newLine).toEqual('\\n');
 });
 
 test('Export method should be called when the export-button is pressed', () => {
     function getExportItem() {
-        return toolbarFunction.call(list.instance()).items.find((item) => item.label === 'Export');
+        return toolbarFunction.call(list).items.find((item) => item.label === 'Export');
     }
 
     window.location.assign = jest.fn();
@@ -1926,18 +1936,17 @@ test('Export method should be called when the export-button is pressed', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    const {list} = renderListElement(<List router={router} />);
+    const listStore = list.listStore;
     listStore.selectionIds.push(1, 4, 6);
-    list.update();
+    const exportToolbarAction = list.toolbarActions[0];
 
-    getExportItem().onClick();
-    list.update();
+    act(() => getExportItem().onClick());
 
-    list.find('Overlay').find({confirmText: 'Export'}).find('Button').simulate('click');
+    act(() => exportToolbarAction.handleConfirm());
     expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('list', 'test', {
         _format: 'csv',
-        locale: list.instance().locale.get(),
+        locale: list.locale.get(),
         flat: true,
         delimiter: ';',
         escape: '\\',
@@ -1947,5 +1956,5 @@ test('Export method should be called when the export-button is pressed', () => {
     expect(window.location.assign).toHaveBeenCalledWith(
         'testfile.csv?locale=en&flat=true&delimiter=%3B&escape=%5C&enclosure=%22&newLine=%5Cn'
     );
-    expect(list.find('Overlay').find({confirmText: 'Export'}).prop('open')).toEqual(false);
+    expect(exportToolbarAction.showOverlay).toEqual(false);
 });

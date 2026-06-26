@@ -1,7 +1,11 @@
 // @flow
-import {shallow, render} from 'enzyme';
 import React from 'react';
-import {listAdapterDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
+import {
+    findAllElementsByType,
+    findElementByType,
+    listAdapterDefaultProps,
+    renderWithRef,
+} from 'sulu-admin-bundle/utils/TestHelper';
 import MediaCardAdapter from '../../adapters/MediaCardAdapter';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
@@ -39,7 +43,7 @@ test('Render a basic Masonry view with MediaCards', () => {
             thumbnails,
         },
     ];
-    const mediaCardAdapter = render(
+    const {container} = renderWithRef(
         <MediaCardAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -50,7 +54,7 @@ test('Render a basic Masonry view with MediaCards', () => {
         />
     );
 
-    expect(mediaCardAdapter).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('AdminUrl should fallback to url on undefined', () => {
@@ -73,7 +77,7 @@ test('AdminUrl should fallback to url on undefined', () => {
         },
     ];
 
-    const mediaCardAdapter = shallow(
+    const {instance: mediaCardAdapter} = renderWithRef(
         <MediaCardAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -83,10 +87,11 @@ test('AdminUrl should fallback to url on undefined', () => {
             pageCount={7}
         />
     );
+    const mediaCards = findAllElementsByType(mediaCardAdapter.render(), 'MediaCard');
 
-    expect(mediaCardAdapter.find('MediaCard').get(0).props.downloadUrl)
+    expect(mediaCards[0].props.downloadUrl)
         .toBe('http://localhost/admin/media/1/download/test1.svg');
-    expect(mediaCardAdapter.find('MediaCard').get(1).props.downloadUrl)
+    expect(mediaCards[1].props.downloadUrl)
         .toBe('http://localhost/media/2/download/test2.svg');
 });
 
@@ -114,7 +119,7 @@ test('MediaCard should call the the appropriate handler', () => {
             thumbnails,
         },
     ];
-    const mediaCardAdapter = shallow(
+    const {instance: mediaCardAdapter} = renderWithRef(
         <MediaCardAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -125,14 +130,15 @@ test('MediaCard should call the the appropriate handler', () => {
             pageCount={9}
         />
     );
+    const mediaCard = findAllElementsByType(mediaCardAdapter.render(), 'MediaCard')[0];
 
-    expect(mediaCardAdapter.find('MediaCard').get(0).props.onClick).toBe(mediaCardSelectionChangeSpy);
-    expect(mediaCardAdapter.find('MediaCard').get(0).props.onSelectionChange).toBe(mediaCardSelectionChangeSpy);
+    expect(mediaCard.props.onClick).toBe(mediaCardSelectionChangeSpy);
+    expect(mediaCard.props.onSelectionChange).toBe(mediaCardSelectionChangeSpy);
 });
 
 test('InfiniteScroller should be passed correct props', () => {
     const pageChangeSpy = jest.fn();
-    const tableAdapter = shallow(
+    const {instance: tableAdapter} = renderWithRef(
         <MediaCardAdapter
             {...listAdapterDefaultProps}
             icon="su-pen"
@@ -142,7 +148,7 @@ test('InfiniteScroller should be passed correct props', () => {
             pageCount={7}
         />
     );
-    expect(tableAdapter.find('InfiniteScroller').get(0).props).toEqual({
+    expect(findElementByType(tableAdapter.render(), 'InfiniteScroller').props).toEqual({
         totalPages: 7,
         currentPage: 2,
         loading: false,

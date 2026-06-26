@@ -1,5 +1,4 @@
 // @flow
-import {mount} from 'enzyme';
 import log from 'loglevel';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceRequester from '../../../../services/ResourceRequester';
@@ -12,9 +11,7 @@ jest.mock('loglevel', () => ({
     warn: jest.fn(),
 }));
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../../utils/Translator');
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions) {
     this.id = id;
@@ -79,6 +76,16 @@ function createSetUnpublishedToolbarAction(options = {}) {
     });
 
     return new SetUnpublishedToolbarAction(formStore, form, router, [], options, resourceStore);
+}
+
+function getDialogProps(setUnpublishedToolbarAction: any): Object {
+    const node = setUnpublishedToolbarAction.getNode();
+
+    if (!node) {
+        throw new Error('The unpublish dialog node should be rendered.');
+    }
+
+    return node.props;
 }
 
 test('Return enabled item config', () => {
@@ -193,20 +200,20 @@ test('Close dialog when onClose from unpublish dialog is called', () => {
         throw new Error('A onClick callback should be registered on the unpublish option');
     }
 
-    let element = mount(setUnpublishedToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    let dialogProps = getDialogProps(setUnpublishedToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
         open: false,
     }));
 
     clickHandler();
-    element = mount(setUnpublishedToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    dialogProps = getDialogProps(setUnpublishedToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
         open: true,
     }));
 
-    element.prop('onCancel')();
-    element = mount(setUnpublishedToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    dialogProps.onCancel();
+    dialogProps = getDialogProps(setUnpublishedToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
         open: false,
     }));
 });
@@ -237,13 +244,13 @@ test('Unpublish page when dialog is confirmed', () => {
         throw new Error('A onClick callback should be registered on the unpublish option');
     }
 
-    let element = mount(setUnpublishedToolbarAction.getNode());
+    let dialogProps = getDialogProps(setUnpublishedToolbarAction);
     clickHandler();
 
-    expect(element.prop('confirmLoading')).toEqual(false);
-    element.prop('onConfirm')();
-    element = mount(setUnpublishedToolbarAction.getNode());
-    expect(element.prop('confirmLoading')).toEqual(true);
+    expect(dialogProps.confirmLoading).toEqual(false);
+    dialogProps.onConfirm();
+    dialogProps = getDialogProps(setUnpublishedToolbarAction);
+    expect(dialogProps.confirmLoading).toEqual(true);
     expect(ResourceRequester.post).toHaveBeenCalledWith(
         'pages',
         undefined,
@@ -251,9 +258,9 @@ test('Unpublish page when dialog is confirmed', () => {
     );
 
     return unpublishPromise.then(() => {
-        element = mount(setUnpublishedToolbarAction.getNode());
+        dialogProps = getDialogProps(setUnpublishedToolbarAction);
         expect(setUnpublishedToolbarAction.form.showSuccessSnackbar).toHaveBeenCalledWith();
-        expect(element.prop('confirmLoading')).toEqual(false);
+        expect(dialogProps.confirmLoading).toEqual(false);
         expect(setUnpublishedToolbarAction.resourceFormStore.changeMultiple).toHaveBeenCalledWith(
             data,
             {isServerValue: true}

@@ -1,8 +1,8 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import {observable} from 'mobx';
-import {mount, shallow} from 'enzyme';
-import {findWithHighOrderFunction} from '../../../utils/TestHelper';
+import {act, screen, waitFor} from '@testing-library/react';
+import {findWithHighOrderFunction, renderWithRef} from '../../../utils/TestHelper';
 import AbstractFormToolbarAction from '../toolbarActions/AbstractFormToolbarAction';
 
 jest.mock('../../../services/initializer', () => jest.fn());
@@ -12,9 +12,7 @@ jest.mock('../toolbarActions/SaveWithPublishingToolbarAction', () => jest.fn());
 jest.mock('../toolbarActions/SaveToolbarAction', () => jest.fn());
 jest.mock('../toolbarActions/TypeToolbarAction', () => jest.fn());
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('../../../utils/Translator');
 
 jest.mock('../../../containers/Form/registries/fieldRegistry', () => ({
     get: jest.fn().mockReturnValue(function() {
@@ -44,6 +42,20 @@ beforeEach(() => {
     jest.resetModules();
 });
 
+function renderFormElement(element) {
+    const {
+        router,
+    } = element.props;
+
+    if (router && router.addUpdateRouteHook && router.addUpdateRouteHook.mockReturnValue) {
+        router.addUpdateRouteHook.mockReturnValue(jest.fn());
+    }
+
+    const {instance: form, ...utils} = renderWithRef(element);
+
+    return {form, ...utils};
+}
+
 test('Should reuse the passed resourceStore if the passed resourceKey is the same', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
@@ -61,9 +73,9 @@ test('Should reuse the passed resourceStore if the passed resourceKey is the sam
         route,
     };
 
-    const form = shallow(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    expect(resourceStore).toBe(form.instance().resourceStore);
+    expect(resourceStore).toBe(form.resourceStore);
 });
 
 test('Should not show the title if the titleVisible option is not given', () => {
@@ -83,9 +95,9 @@ test('Should not show the title if the titleVisible option is not given', () => 
         route,
     };
 
-    const form = shallow(<Form resourceStore={resourceStore} route={route} router={router} title="Test 1" />);
+    renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} title="Test 1" />);
 
-    expect(form.find('h1')).toHaveLength(0);
+    expect(screen.queryByRole('heading', {name: 'Test 1'})).not.toBeInTheDocument();
 });
 
 test('Should show the title if the titleVisible option is set to true', () => {
@@ -106,9 +118,9 @@ test('Should show the title if the titleVisible option is set to true', () => {
         route,
     };
 
-    const form = shallow(<Form resourceStore={resourceStore} route={route} router={router} title="Test 2" />);
+    renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} title="Test 2" />);
 
-    expect(form.find('h1[children="Test 2"]')).toHaveLength(1);
+    expect(screen.getByRole('heading', {name: 'Test 2'})).toBeInTheDocument();
 });
 
 test('Should create a new resourceStore if the passed resourceKey differs', () => {
@@ -128,8 +140,8 @@ test('Should create a new resourceStore if the passed resourceKey differs', () =
         route,
     };
 
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-    const formResourceStore = form.instance().resourceStore;
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const formResourceStore = form.resourceStore;
 
     expect(resourceStore).not.toBe(formResourceStore);
     expect(resourceStore.resourceKey).toEqual('snippets');
@@ -156,8 +168,8 @@ test('Should create a new resourceStore if the passed resourceKey differs with l
         route,
     };
 
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-    const formResourceStore = form.instance().resourceStore;
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const formResourceStore = form.resourceStore;
 
     expect(resourceStore).not.toBe(formResourceStore);
     expect(resourceStore.resourceKey).toEqual('snippets');
@@ -184,8 +196,8 @@ test('Should create a new resourceStore if the passed resourceKey differs with o
         route,
     };
 
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-    const formResourceStore = form.instance().resourceStore;
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const formResourceStore = form.resourceStore;
 
     expect(resourceStore).not.toBe(formResourceStore);
     expect(resourceStore.resourceKey).toEqual('snippets');
@@ -213,8 +225,8 @@ test('Should create a new resourceStore if the passed resourceKey differs with o
         route,
     };
 
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-    const formResourceStore = form.instance().resourceStore;
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const formResourceStore = form.resourceStore;
 
     expect(resourceStore).not.toBe(formResourceStore);
     expect(resourceStore.resourceKey).toEqual('snippets');
@@ -240,8 +252,8 @@ test('Should instantiate the ResourceStore with the idQueryParameter if given', 
         route,
     };
 
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-    const formResourceStore = form.instance().resourceStore;
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const formResourceStore = form.resourceStore;
 
     expect(formResourceStore.idQueryParameter).toEqual('contactId');
 });
@@ -263,8 +275,8 @@ test('Should not instantiate a CollaborationStore if it is an add form', () => {
         route,
     };
 
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-    expect(form.instance().collaborationStore).toEqual(undefined);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
+    expect(form.collaborationStore).toEqual(undefined);
 });
 
 test('Should instantiate a CollaborationStore if it is an edit form and show ', () => {
@@ -301,13 +313,13 @@ test('Should instantiate a CollaborationStore if it is an edit form and show ', 
         route,
     };
 
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-    expect(form.instance().collaborationStore.resourceKey).toEqual('snippets');
-    expect(form.instance().collaborationStore.id).toEqual(6);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
+    expect(form.collaborationStore.resourceKey).toEqual('snippets');
+    expect(form.collaborationStore.id).toEqual(6);
     expect(ResourceRequester.put).toHaveBeenCalledWith('collaborations', null, {id: 6, resourceKey: 'snippets'});
 
     return collaborationsPromise.then(() => {
-        const toolbarConfig = toolbarFunction.call(form.instance());
+        const toolbarConfig = toolbarFunction.call(form);
         expect(toolbarConfig.warnings).toEqual(['sulu_admin.form_used_by Max Mustermann, Erika Mustermann']);
     });
 });
@@ -361,7 +373,7 @@ test('Throw error if options are not passed correctly', () => {
         route,
         attributes: {},
     };
-    expect(() => shallow(<Form resourceStore={resourceStore} route={route} router={router} />))
+    expect(() => renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />))
         .toThrow('but string was given');
 });
 
@@ -372,14 +384,17 @@ test('Should add items defined in ToolbarActions to Toolbar with options', () =>
     const resourceStore = new ResourceStore('snippet', 1);
 
     const SaveToolbarAction = jest.fn(function() {
+        this.destroy = jest.fn();
         this.getNode = jest.fn();
     });
 
     const DeleteToolbarAction = jest.fn(function() {
+        this.destroy = jest.fn();
         this.getNode = jest.fn();
     });
 
     const EditToolbarAction = jest.fn(function() {
+        this.destroy = jest.fn();
         this.getNode = jest.fn();
     });
 
@@ -419,11 +434,11 @@ test('Should add items defined in ToolbarActions to Toolbar with options', () =>
         route,
         attributes: {},
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     expect(SaveToolbarAction).toHaveBeenCalledWith(
-        form.instance().resourceFormStore,
-        form.instance(),
+        form.resourceFormStore,
+        form,
         router,
         undefined,
         {test1: 'value1'},
@@ -431,8 +446,8 @@ test('Should add items defined in ToolbarActions to Toolbar with options', () =>
     );
 
     expect(DeleteToolbarAction).toHaveBeenCalledWith(
-        form.instance().resourceFormStore,
-        form.instance(),
+        form.resourceFormStore,
+        form,
         router,
         undefined,
         {test2: 'value2'},
@@ -440,8 +455,8 @@ test('Should add items defined in ToolbarActions to Toolbar with options', () =>
     );
 
     expect(EditToolbarAction).toHaveBeenCalledWith(
-        form.instance().resourceFormStore,
-        form.instance(),
+        form.resourceFormStore,
+        form,
         router,
         undefined,
         {},
@@ -470,9 +485,9 @@ test('Should not add PublishIndicator if no publish status is available', () => 
         route,
         attributes: {},
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    const toolbarConfig = toolbarFunction.call(form.instance());
+    const toolbarConfig = toolbarFunction.call(form);
 
     expect(toolbarConfig.icons).toHaveLength(0);
 });
@@ -502,14 +517,13 @@ test('Should add PublishIndicator if publish status is available showing draft',
         route,
         attributes: {},
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    const toolbarConfig = toolbarFunction.call(form.instance());
+    const toolbarConfig = toolbarFunction.call(form);
 
     expect(toolbarConfig.icons).toHaveLength(1);
-    const publishIndicator = shallow(toolbarConfig.icons[0]);
 
-    expect(publishIndicator.instance().props).toEqual(expect.objectContaining({
+    expect(toolbarConfig.icons[0].props).toEqual(expect.objectContaining({
         draft: true,
         published: false,
     }));
@@ -540,14 +554,13 @@ test('Should add PublishIndicator if publish status is available showing publish
         route,
         attributes: {},
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    const toolbarConfig = toolbarFunction.call(form.instance());
+    const toolbarConfig = toolbarFunction.call(form);
 
     expect(toolbarConfig.icons).toHaveLength(1);
-    const publishIndicator = shallow(toolbarConfig.icons[0]);
 
-    expect(publishIndicator.instance().props).toEqual(expect.objectContaining({
+    expect(toolbarConfig.icons[0].props).toEqual(expect.objectContaining({
         draft: false,
         published: true,
     }));
@@ -578,14 +591,13 @@ test('Should add PublishIndicator if publish status is available showing publish
         route,
         attributes: {},
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    const toolbarConfig = toolbarFunction.call(form.instance());
+    const toolbarConfig = toolbarFunction.call(form);
 
     expect(toolbarConfig.icons).toHaveLength(1);
-    const publishIndicator = shallow(toolbarConfig.icons[0]);
 
-    expect(publishIndicator.instance().props).toEqual(expect.objectContaining({
+    expect(toolbarConfig.icons[0].props).toEqual(expect.objectContaining({
         draft: true,
         published: true,
     }));
@@ -626,11 +638,13 @@ test('Should set and update locales defined in ToolbarActions', () => {
         attributes: {},
     };
 
-    const form = mount(<Form locales={[]} resourceStore={resourceStore} route={route} router={router} />);
-    expect(form.instance().toolbarActions[0].locales).toEqual([]);
+    const {form, rerender} = renderFormElement(
+        <Form locales={[]} resourceStore={resourceStore} route={route} router={router} />
+    );
+    expect(form.toolbarActions[0].locales).toEqual([]);
 
-    form.setProps({locales: ['en', 'de']});
-    expect(form.instance().toolbarActions[0].locales).toEqual(['en', 'de']);
+    rerender(<Form locales={['en', 'de']} resourceStore={resourceStore} route={route} router={router} />);
+    expect(form.toolbarActions[0].locales).toEqual(['en', 'de']);
 });
 
 test('Should navigate to defined route on back button click', () => {
@@ -655,9 +669,9 @@ test('Should navigate to defined route on back button click', () => {
         route,
         attributes: {},
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    const toolbarConfig = toolbarFunction.call(form.instance());
+    const toolbarConfig = toolbarFunction.call(form);
     toolbarConfig.backButton.onClick();
     expect(router.restore).toHaveBeenCalledWith('test_route', {locale: 'de'});
 });
@@ -687,9 +701,9 @@ test('Should navigate to defined route on back button click with routerAttribues
         restore: jest.fn(),
         route,
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    const toolbarConfig = toolbarFunction.call(form.instance());
+    const toolbarConfig = toolbarFunction.call(form);
     toolbarConfig.backButton.onClick();
     expect(router.restore).toHaveBeenCalledWith('test_route', {locale: 'de', webspace: 'sulu_io'});
 });
@@ -720,9 +734,9 @@ test('Should navigate to defined route on back button click with mixed routerAtt
         restore: jest.fn(),
         route,
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    const toolbarConfig = toolbarFunction.call(form.instance());
+    const toolbarConfig = toolbarFunction.call(form);
     toolbarConfig.backButton.onClick();
     expect(router.restore).toHaveBeenCalledWith('test_route', {active: 4, locale: 'de', webspace: 'sulu_io'});
 });
@@ -748,9 +762,9 @@ test('Should navigate to defined route on back button click without locale', () 
         route,
         attributes: {},
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    const toolbarConfig = toolbarFunction.call(form.instance());
+    const toolbarConfig = toolbarFunction.call(form);
     toolbarConfig.backButton.onClick();
     expect(router.restore).toHaveBeenCalledWith('test_route', {});
 });
@@ -774,9 +788,9 @@ test('Should navigate to defined route after dialog has been confirmed', () => {
         navigate: jest.fn(),
         route,
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    form.instance().resourceFormStore.dirty = true;
+    form.resourceFormStore.dirty = true;
 
     const checkFormStoreDirtyStateBeforeNavigation = router.addUpdateRouteHook.mock.calls[0][0];
 
@@ -785,19 +799,20 @@ test('Should navigate to defined route after dialog has been confirmed', () => {
     };
     const backViewAttributes = {};
 
-    expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
-    expect(checkFormStoreDirtyStateBeforeNavigation({}, backViewAttributes, router.navigate)).toEqual(false);
-    form.update();
-    expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(true);
+    expect(form.showDirtyWarning).toEqual(false);
+    act(() => {
+        expect(checkFormStoreDirtyStateBeforeNavigation({}, backViewAttributes, router.navigate)).toEqual(false);
+    });
+    expect(form.showDirtyWarning).toEqual(true);
 
-    form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('onCancel')();
-    form.update();
-    expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
+    act(() => form.handleDirtyWarningCancelClick());
+    expect(form.showDirtyWarning).toEqual(false);
     expect(router.navigate).not.toHaveBeenCalled();
 
-    expect(checkFormStoreDirtyStateBeforeNavigation(backView, backViewAttributes, router.navigate)).toEqual(false);
-    form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('onConfirm')();
-    form.update();
+    act(() => {
+        expect(checkFormStoreDirtyStateBeforeNavigation(backView, backViewAttributes, router.navigate)).toEqual(false);
+    });
+    act(() => form.handleDirtyWarningConfirmClick());
     expect(router.navigate).toHaveBeenCalledWith('test_route', backViewAttributes);
 });
 
@@ -826,15 +841,15 @@ test('Should not show dialog on navigation if another route has already been loa
         navigate: jest.fn(),
         route: otherRoute,
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    form.instance().resourceFormStore.dirty = true;
+    form.resourceFormStore.dirty = true;
 
     const checkFormStoreDirtyStateBeforeNavigation = router.addUpdateRouteHook.mock.calls[0][0];
 
     const backViewAttributes = {};
 
-    expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
+    expect(form.showDirtyWarning).toEqual(false);
     expect(checkFormStoreDirtyStateBeforeNavigation({}, backViewAttributes, router.navigate)).toEqual(true);
 });
 
@@ -857,9 +872,9 @@ test('Should navigate to defined route after dialog has been confirmed using res
         restore: jest.fn(),
         route,
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    form.instance().resourceFormStore.dirty = true;
+    form.resourceFormStore.dirty = true;
 
     const checkFormStoreDirtyStateBeforeNavigation = router.addUpdateRouteHook.mock.calls[0][0];
 
@@ -868,19 +883,20 @@ test('Should navigate to defined route after dialog has been confirmed using res
     };
     const backViewAttributes = {};
 
-    expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
-    expect(checkFormStoreDirtyStateBeforeNavigation({}, backViewAttributes, router.restore)).toEqual(false);
-    form.update();
-    expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(true);
+    expect(form.showDirtyWarning).toEqual(false);
+    act(() => {
+        expect(checkFormStoreDirtyStateBeforeNavigation({}, backViewAttributes, router.restore)).toEqual(false);
+    });
+    expect(form.showDirtyWarning).toEqual(true);
 
-    form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('onCancel')();
-    form.update();
-    expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
+    act(() => form.handleDirtyWarningCancelClick());
+    expect(form.showDirtyWarning).toEqual(false);
     expect(router.restore).not.toHaveBeenCalled();
 
-    expect(checkFormStoreDirtyStateBeforeNavigation(backView, backViewAttributes, router.restore)).toEqual(false);
-    form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('onConfirm')();
-    form.update();
+    act(() => {
+        expect(checkFormStoreDirtyStateBeforeNavigation(backView, backViewAttributes, router.restore)).toEqual(false);
+    });
+    act(() => form.handleDirtyWarningConfirmClick());
     expect(router.restore).toHaveBeenCalledWith('test_route', backViewAttributes);
 });
 
@@ -903,13 +919,13 @@ test('Should not close the window if formStore is still dirty', () => {
         navigate: jest.fn(),
         route,
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    form.instance().resourceFormStore.dirty = true;
+    form.resourceFormStore.dirty = true;
 
     const checkFormStoreDirtyStateBeforeNavigation = router.addUpdateRouteHook.mock.calls[0][0];
 
-    expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
+    expect(form.showDirtyWarning).toEqual(false);
     expect(checkFormStoreDirtyStateBeforeNavigation()).toEqual(false);
 });
 
@@ -932,13 +948,13 @@ test('Should close the window if formStore is not dirty', () => {
         navigate: jest.fn(),
         route,
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    form.instance().resourceFormStore.dirty = false;
+    form.resourceFormStore.dirty = false;
 
     const checkFormStoreDirtyStateBeforeNavigation = router.addUpdateRouteHook.mock.calls[0][0];
 
-    expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
+    expect(form.showDirtyWarning).toEqual(false);
     expect(checkFormStoreDirtyStateBeforeNavigation()).toEqual(true);
 });
 
@@ -962,9 +978,9 @@ test('Should not render back button when no editLink is configured', () => {
         route,
         attributes: {},
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    const toolbarConfig = toolbarFunction.call(form.instance());
+    const toolbarConfig = toolbarFunction.call(form);
     expect(toolbarConfig.backButton).toBe(undefined);
 });
 
@@ -991,10 +1007,10 @@ test('Should change locale by route navigation via locale chooser', () => {
         route,
         attributes: {},
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
     resourceStore.locale.set('de');
 
-    const toolbarConfig = toolbarFunction.call(form.instance());
+    const toolbarConfig = toolbarFunction.call(form);
     toolbarConfig.locale.onChange('en');
     expect(router.navigate).toHaveBeenCalledWith('sulu_admin.form', {locale: 'en'});
 });
@@ -1020,9 +1036,9 @@ test('Should show locales from router options in toolbar', () => {
         route,
         attributes: {},
     };
-    const form = mount(<Form locales={[]} resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form locales={[]} resourceStore={resourceStore} route={route} router={router} />);
 
-    const toolbarConfig = toolbarFunction.call(form.instance());
+    const toolbarConfig = toolbarFunction.call(form);
     expect(toolbarConfig.locale.options).toEqual([
         {value: 'en', label: 'en'},
         {value: 'de', label: 'de'},
@@ -1049,9 +1065,11 @@ test('Should show locales from props in toolbar if route has no locales', () => 
         route,
         attributes: {},
     };
-    const form = mount(<Form locales={['en', 'de']} resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(
+        <Form locales={['en', 'de']} resourceStore={resourceStore} route={route} router={router} />
+    );
 
-    const toolbarConfig = toolbarFunction.call(form.instance());
+    const toolbarConfig = toolbarFunction.call(form);
     expect(toolbarConfig.locale.options).toEqual([
         {value: 'en', label: 'en'},
         {value: 'de', label: 'de'},
@@ -1078,9 +1096,9 @@ test('Should not show a locale chooser if no locales are passed in router option
         route,
         attributes: {},
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    const toolbarConfig = toolbarFunction.call(form.instance());
+    const toolbarConfig = toolbarFunction.call(form);
     expect(toolbarConfig.locale).toBe(undefined);
 });
 
@@ -1114,7 +1132,7 @@ test('Should initialize the ResourceStore with a schema', () => {
     });
     metadataStore.getSchema.mockReturnValue(schemaPromise);
 
-    mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     return Promise.all([schemaTypesPromise, schemaPromise]).then(() => {
         expect(resourceStore.resourceKey).toBe('snippets');
@@ -1159,7 +1177,7 @@ test('Should save form when submitted', () => {
             id: 8,
         },
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
@@ -1167,7 +1185,7 @@ test('Should save form when submitted', () => {
     resourceStore.destroy = jest.fn();
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        form.find('Form').at(1).instance().submit({action: 'publish'});
+        form.form.submit({action: 'publish'});
         expect(resourceStore.destroy).not.toHaveBeenCalled();
         expect(ResourceRequester.put).toHaveBeenCalledWith(
             'snippets',
@@ -1213,7 +1231,7 @@ test('Should save form when submitted with mapped router attributes', () => {
             webspace: 'sulu_io',
         },
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
@@ -1221,7 +1239,7 @@ test('Should save form when submitted with mapped router attributes', () => {
     resourceStore.destroy = jest.fn();
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        form.find('Form').at(1).instance().submit();
+        form.form.submit();
         expect(resourceStore.destroy).not.toHaveBeenCalled();
         expect(ResourceRequester.put)
             .toHaveBeenCalledWith(
@@ -1266,7 +1284,7 @@ test('Should save form when submitted with given requestParameters', () => {
             id: 8,
         },
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
@@ -1274,7 +1292,7 @@ test('Should save form when submitted with given requestParameters', () => {
     resourceStore.destroy = jest.fn();
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        form.find('Form').at(1).instance().submit();
+        form.form.submit();
         expect(resourceStore.destroy).not.toHaveBeenCalled();
         expect(ResourceRequester.put)
             .toHaveBeenCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en', apiKey: 'api-option-value'});
@@ -1319,7 +1337,7 @@ test('Should save form when submitted with mapped router attributes and given re
             title: 'Sulu is awesome',
         },
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
@@ -1327,7 +1345,7 @@ test('Should save form when submitted with mapped router attributes and given re
     resourceStore.destroy = jest.fn();
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        form.find('Form').at(1).instance().submit();
+        form.form.submit();
         expect(resourceStore.destroy).not.toHaveBeenCalled();
         expect(ResourceRequester.put).toHaveBeenCalledWith(
             'snippets',
@@ -1372,7 +1390,7 @@ test('Should save form when submitted with mapped named router attributes and gi
             id: 8,
         },
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
@@ -1380,7 +1398,7 @@ test('Should save form when submitted with mapped named router attributes and gi
     resourceStore.destroy = jest.fn();
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        form.find('Form').at(1).instance().submit();
+        form.form.submit();
         expect(resourceStore.destroy).not.toHaveBeenCalled();
         expect(ResourceRequester.put).toHaveBeenCalledWith(
             'snippets', {value: 'Value'}, {id: 8, locale: 'en', apiKey: 'api-option-value', parentId: 8}
@@ -1388,7 +1406,7 @@ test('Should save form when submitted with mapped named router attributes and gi
     });
 });
 
-test('Should show warning when form is submitted but already changed on the server and cancel', (done) => {
+test('Should show warning when form is submitted but already changed on the server and cancel', async() => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     const putPromise = Promise.reject({json: jest.fn().mockReturnValue(Promise.resolve({code: 1102}))});
     ResourceRequester.put.mockReturnValue(putPromise);
@@ -1422,44 +1440,37 @@ test('Should show warning when form is submitted but already changed on the serv
             id: 8,
         },
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
-    Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        form.find('Form').at(1).instance().submit({action: 'publish'});
-        expect(resourceStore.destroy).not.toHaveBeenCalled();
-        expect(ResourceRequester.put).toHaveBeenCalledWith(
-            'snippets',
-            {value: 'Value'},
-            {action: 'publish', id: 8, locale: 'en'}
-        );
+    await Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]);
 
-        ResourceRequester.put.mockClear();
+    form.form.submit({action: 'publish'});
+    expect(resourceStore.destroy).not.toHaveBeenCalled();
+    expect(ResourceRequester.put).toHaveBeenCalledWith(
+        'snippets',
+        {value: 'Value'},
+        {action: 'publish', id: 8, locale: 'en'}
+    );
 
-        expect(form.find('Dialog[title="sulu_admin.has_changed_warning_dialog_title"]').prop('open')).toEqual(false);
+    ResourceRequester.put.mockClear();
 
-        return putPromise.catch(() => {
-            setTimeout(() => {
-                form.update();
-                expect(form.find('Dialog[title="sulu_admin.has_changed_warning_dialog_title"]').prop('open'))
-                    .toEqual(true);
-                form.find('Dialog[title="sulu_admin.has_changed_warning_dialog_title"] Button[skin="secondary"]')
-                    .simulate('click');
-                form.update();
-                expect(form.find('Dialog[title="sulu_admin.has_changed_warning_dialog_title"]').prop('open'))
-                    .toEqual(false);
-                expect(ResourceRequester.put).not.toHaveBeenCalled();
-                done();
-            });
-        });
-    });
+    expect(form.showHasChangedWarning).toEqual(false);
+
+    await putPromise.catch(() => undefined);
+    await waitFor(() => expect(form.showHasChangedWarning).toEqual(true));
+
+    act(() => form.handleHasChangedWarningCancelClick());
+
+    expect(form.showHasChangedWarning).toEqual(false);
+    expect(ResourceRequester.put).not.toHaveBeenCalled();
 });
 
-test('Should show warning when form is submitted but already changed on the server and confirm', (done) => {
+test('Should show warning when form is submitted but already changed on the server and confirm', async() => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     const putPromise = Promise.reject({json: jest.fn().mockReturnValue(Promise.resolve({code: 1102}))});
     ResourceRequester.put.mockReturnValue(putPromise);
@@ -1493,46 +1504,38 @@ test('Should show warning when form is submitted but already changed on the serv
             id: 8,
         },
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
-    Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        form.find('Form').at(1).instance().submit({action: 'publish'});
-        expect(resourceStore.destroy).not.toHaveBeenCalled();
-        expect(ResourceRequester.put).toHaveBeenCalledWith(
-            'snippets',
-            {value: 'Value'},
-            {action: 'publish', id: 8, locale: 'en'}
-        );
+    await Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]);
 
-        ResourceRequester.put.mockClear();
+    form.form.submit({action: 'publish'});
+    expect(resourceStore.destroy).not.toHaveBeenCalled();
+    expect(ResourceRequester.put).toHaveBeenCalledWith(
+        'snippets',
+        {value: 'Value'},
+        {action: 'publish', id: 8, locale: 'en'}
+    );
 
-        expect(form.find('Dialog[title="sulu_admin.has_changed_warning_dialog_title"]').prop('open')).toEqual(false);
+    ResourceRequester.put.mockClear();
 
-        return putPromise.catch(() => {
-            setTimeout(() => {
-                form.update();
-                expect(form.find('Dialog[title="sulu_admin.has_changed_warning_dialog_title"]').prop('open'))
-                    .toEqual(true);
-                form.find('Dialog[title="sulu_admin.has_changed_warning_dialog_title"] Button[skin="primary"]')
-                    .simulate('click');
-                form.update();
-                expect(form.find('Dialog[title="sulu_admin.has_changed_warning_dialog_title"]').prop('open'))
-                    .toEqual(false);
+    expect(form.showHasChangedWarning).toEqual(false);
 
-                expect(ResourceRequester.put).toHaveBeenCalledWith(
-                    'snippets',
-                    {value: 'Value'},
-                    {action: 'publish', force: true, id: 8, locale: 'en'}
-                );
-                done();
-            });
-        });
-    });
+    await putPromise.catch(() => undefined);
+    await waitFor(() => expect(form.showHasChangedWarning).toEqual(true));
+
+    act(() => form.handleHasChangedWarningConfirmClick());
+
+    expect(form.showHasChangedWarning).toEqual(false);
+    expect(ResourceRequester.put).toHaveBeenCalledWith(
+        'snippets',
+        {value: 'Value'},
+        {action: 'publish', force: true, id: 8, locale: 'en'}
+    );
 });
 
 test('Should set showSuccess flag after form submission', (done) => {
@@ -1565,17 +1568,17 @@ test('Should set showSuccess flag after form submission', (done) => {
             id: 8,
         },
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
-    form.find('Form').at(1).instance().submit().then(() => {
+    form.form.submit().then(() => {
         expect(resourceStore.destroy).not.toHaveBeenCalled();
         expect(ResourceRequester.put).toHaveBeenCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en'});
-        expect(form.instance().showSuccess.get()).toEqual(true);
+        expect(form.showSuccess.get()).toEqual(true);
         done();
     });
 });
@@ -1601,12 +1604,12 @@ test('Should set showSuccess flag after calling onSuccess', () => {
             id: 8,
         },
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    expect(form.instance().showSuccess.get()).toEqual(false);
-    expect(form.find('Form').at(1).prop('onSuccess')).toBeInstanceOf(Function);
-    form.find('Form').at(1).prop('onSuccess')();
-    expect(form.instance().showSuccess.get()).toEqual(true);
+    expect(form.showSuccess.get()).toEqual(false);
+    expect(form.form.props.onSuccess).toBeInstanceOf(Function);
+    form.form.props.onSuccess();
+    expect(form.showSuccess.get()).toEqual(true);
 });
 
 test('Should show error if form has been tried to save although it is not valid', () => {
@@ -1641,7 +1644,7 @@ test('Should show error if form has been tried to save although it is not valid'
             id: 8,
         },
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     resourceStore.locale.set('en');
     resourceStore.data = {};
@@ -1650,10 +1653,10 @@ test('Should show error if form has been tried to save although it is not valid'
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         return jsonSchemaPromise.then(() => {
-            form.find('Form').at(1).instance().submit();
+            form.form.submit();
             expect(resourceStore.destroy).not.toHaveBeenCalled();
             expect(ResourceRequester.put).not.toHaveBeenCalled();
-            expect(form.instance().errors).toEqual(['sulu_admin.form_contains_invalid_values']);
+            expect(form.errors).toEqual(['sulu_admin.form_contains_invalid_values']);
         });
     });
 });
@@ -1693,23 +1696,23 @@ test('Should clear errors if form has been saved', () => {
             id: 8,
         },
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     resourceStore.locale.set('en');
     resourceStore.data = {};
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
-    form.instance().errors.push({});
+    form.errors.push({});
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         return jsonSchemaPromise.then(() => {
-            form.find('Form').at(1).instance().submit().then(() => {
+            form.form.submit().then(() => {
                 expect(ResourceRequester.put).toHaveBeenCalledWith('snippets', {}, {
                     action: undefined,
                     id: 8,
                     locale: 'en',
                 });
-                expect(form.instance().errors).toHaveLength(0);
+                expect(form.errors).toHaveLength(0);
             });
         });
     });
@@ -1749,17 +1752,17 @@ test('Should display generic error message if form submission fails', (done) => 
             id: 8,
         },
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
-    form.find('Form').at(1).instance().submit().then(() => {
+    form.form.submit().then(() => {
         expect(resourceStore.destroy).not.toHaveBeenCalled();
         expect(ResourceRequester.put).toHaveBeenCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en'});
-        expect(form.instance().errors).toEqual(['sulu_admin.form_save_server_error']);
+        expect(form.errors).toEqual(['sulu_admin.form_save_server_error']);
         done();
     });
 });
@@ -1798,22 +1801,22 @@ test('Should display error message from server if server returns error message w
             id: 8,
         },
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
-    form.find('Form').at(1).instance().submit().then(() => {
+    form.form.submit().then(() => {
         expect(resourceStore.destroy).not.toHaveBeenCalled();
         expect(ResourceRequester.put).toHaveBeenCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en'});
-        expect(form.instance().errors).toEqual(['URL is already assigned to another page.']);
+        expect(form.errors).toEqual(['URL is already assigned to another page.']);
         done();
     });
 });
 
-test('Should save form when submitted and redirect to editView', () => {
+test('Should save form when submitted and redirect to editView with mapped attributes', () => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve());
     ResourceRequester.post.mockReturnValue(Promise.resolve({}));
@@ -1850,14 +1853,14 @@ test('Should save form when submitted and redirect to editView', () => {
         navigate: jest.fn(),
         route,
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     resourceStore.data = {value: 'Value'};
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        return form.find('Form').at(1).instance().submit().then(() => {
+        return form.form.submit().then(() => {
             expect(resourceStore.destroy).toHaveBeenCalled();
             expect(ResourceRequester.post).toHaveBeenCalledWith('snippets', {value: 'Value'}, {});
             expect(router.navigate)
@@ -1903,14 +1906,14 @@ test('Should save form when submitted and redirect to editView', () => {
         navigate: jest.fn(),
         route,
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     resourceStore.data = {value: 'Value'};
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        return form.find('Form').at(1).instance().submit().then(() => {
+        return form.form.submit().then(() => {
             expect(resourceStore.destroy).toHaveBeenCalled();
             expect(ResourceRequester.post).toHaveBeenCalledWith('snippets', {value: 'Value'}, {});
             expect(router.navigate)
@@ -1954,7 +1957,7 @@ test('Should restore previous view to backView after MissingTypeOverlay has been
             id: 8,
         },
     };
-    const form = mount(
+    const {form} = renderFormElement(
         <Form resourceStore={resourceStore} route={route} router={router} />
     );
 
@@ -1964,7 +1967,7 @@ test('Should restore previous view to backView after MissingTypeOverlay has been
     resourceStore.destroy = jest.fn();
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        form.find('Form').at(1).prop('onMissingTypeCancel')();
+        form.form.props.onMissingTypeCancel();
         expect(resourceStore.destroy).not.toHaveBeenCalled();
         expect(router.restore).toHaveBeenCalledWith('sulu_snippet.snippet_list', {locale: 'en'});
     });
@@ -2004,7 +2007,7 @@ test('Should not restore previous view if no backView is given after MissingType
             id: 8,
         },
     };
-    const form = mount(
+    const {form} = renderFormElement(
         <Form resourceStore={resourceStore} route={route} router={router} />
     );
 
@@ -2014,7 +2017,7 @@ test('Should not restore previous view if no backView is given after MissingType
     resourceStore.destroy = jest.fn();
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        form.find('Form').at(1).prop('onMissingTypeCancel')();
+        form.form.props.onMissingTypeCancel();
         expect(resourceStore.destroy).not.toHaveBeenCalled();
         expect(router.restore).not.toHaveBeenCalledWith();
     });
@@ -2040,12 +2043,11 @@ test('Should pass router, store and schema handler to FormContainer', () => {
         attributes: {},
     };
 
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-    const formContainer = form.find('Form').at(1);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    expect(formContainer.prop('router')).toEqual(router);
-    expect(formContainer.prop('store').resourceStore).toEqual(resourceStore);
-    expect(formContainer.prop('onSubmit')).toBeInstanceOf(Function);
+    expect(form.form.props.router).toEqual(router);
+    expect(form.form.props.store.resourceStore).toEqual(resourceStore);
+    expect(form.form.props.onSubmit).toBeInstanceOf(Function);
 });
 
 test('Should pass metadataRequestParameters options to Form View', () => {
@@ -2073,11 +2075,10 @@ test('Should pass metadataRequestParameters options to Form View', () => {
         attributes: {},
     };
 
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    const formContainer = form.find('Form').at(1);
-    expect(formContainer.prop('store').resourceStore).toEqual(resourceStore);
-    expect(formContainer.prop('store').metadataOptions).toEqual(metadataRequestParameters);
+    expect(form.form.props.store.resourceStore).toEqual(resourceStore);
+    expect(form.form.props.store.metadataOptions).toEqual(metadataRequestParameters);
 });
 
 test('Should pass option to form metadata with routerAttribuesToFormMetadata', () => {
@@ -2103,7 +2104,7 @@ test('Should pass option to form metadata with routerAttribuesToFormMetadata', (
         restore: jest.fn(),
         route,
     };
-    mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     expect(metadataStore.getSchemaTypes).toHaveBeenCalledWith('snippets', {webspace: 'sulu_io'});
 });
@@ -2133,7 +2134,7 @@ test('Should pass options to Form metadata with mixed routerAttribuesToFormMetad
         restore: jest.fn(),
         route,
     };
-    mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     expect(metadataStore.getSchemaTypes).toHaveBeenCalledWith('snippets', {active: 4, webspace: 'sulu_io'});
 });
@@ -2187,17 +2188,17 @@ test('Should destroy the store on unmount', () => {
     };
 
     router.addUpdateRouteHook.mockImplementationOnce(() => jest.fn());
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-    const locale = form.find('Form').at(1).prop('store').locale;
+    const {form, unmount} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const locale = form.form.props.store.locale;
 
     expect(router.bind).toHaveBeenCalledWith('locale', locale);
 
-    const resourceFormStore = form.instance().resourceFormStore;
+    const resourceFormStore = form.resourceFormStore;
     resourceFormStore.destroy = jest.fn();
 
-    const toolbarActions = form.instance().toolbarActions;
+    const toolbarActions = form.toolbarActions;
 
-    form.unmount();
+    unmount();
     expect(resourceFormStore.destroy).toHaveBeenCalled();
     expect(resourceStore.destroy).not.toHaveBeenCalled();
     expect(toolbarActions[0].destroy).toHaveBeenCalled();
@@ -2228,14 +2229,14 @@ test('Should destroy the own resourceStore if existing on unmount', () => {
     };
 
     router.addUpdateRouteHook.mockImplementationOnce(() => jest.fn());
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-    const formResourceStore = form.instance().resourceStore;
+    const {form, unmount} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const formResourceStore = form.resourceStore;
     formResourceStore.destroy = jest.fn();
 
-    const collaborationStore = form.instance().collaborationStore;
+    const collaborationStore = form.collaborationStore;
     collaborationStore.destroy = jest.fn();
 
-    form.unmount();
+    unmount();
     expect(resourceStore.destroy).not.toHaveBeenCalled();
     expect(formResourceStore.destroy).toHaveBeenCalled();
     expect(collaborationStore.destroy).toHaveBeenCalled();
@@ -2259,7 +2260,7 @@ test('Should not bind the locale if no locales have been passed via options', ()
         route,
     };
 
-    mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     expect(router.bind).not.toHaveBeenCalled();
 });
@@ -2285,14 +2286,14 @@ test('Should add and remove the UpdateRouteHook on mounting and unmounting', () 
 
     const checkFormStoreDirtyStateBeforeNavigationDisposerSpy = jest.fn();
     router.addUpdateRouteHook.mockImplementationOnce(() => checkFormStoreDirtyStateBeforeNavigationDisposerSpy);
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const {form, unmount} = renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    const checkFormStoreDirtyStateBeforeNavigation = form.instance().checkFormStoreDirtyStateBeforeNavigation;
+    const checkFormStoreDirtyStateBeforeNavigation = form.checkFormStoreDirtyStateBeforeNavigation;
 
     expect(router.addUpdateRouteHook).toHaveBeenCalledWith(checkFormStoreDirtyStateBeforeNavigation, 2048);
     expect(checkFormStoreDirtyStateBeforeNavigationDisposerSpy).not.toHaveBeenCalledWith();
 
-    form.unmount();
+    unmount();
     expect(checkFormStoreDirtyStateBeforeNavigationDisposerSpy).toHaveBeenCalledWith();
 });
 
@@ -2307,7 +2308,7 @@ test('Should throw an error if the resourceStore is not passed', () => {
         },
     };
     const Form = require('../Form').default;
-    expect(() => shallow(<Form router={router} />)).toThrow(/"ResourceTabs"/);
+    expect(() => renderFormElement(<Form router={router} />)).toThrow(/"ResourceTabs"/);
 });
 
 test('Should throw an error if no formKey is passed', () => {
@@ -2326,5 +2327,7 @@ test('Should throw an error if no formKey is passed', () => {
         route,
     };
     const Form = require('../Form').default;
-    expect(() => shallow(<Form resourceStore={resourceStore} route={route} router={router} />)).toThrow(/"formKey"/);
+    expect(() => renderFormElement(
+        <Form resourceStore={resourceStore} route={route} router={router} />
+    )).toThrow(/"formKey"/);
 });

@@ -1,23 +1,122 @@
 // @flow
 import React from 'react';
+import {act, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {observable} from 'mobx';
-import {mount} from 'enzyme';
-import {MultiListOverlay, TextEditor} from 'sulu-admin-bundle/containers';
 import TeaserSelection from '../TeaserSelection';
 import TeaserStore from '../stores/TeaserStore';
-import Item from '../Item';
+
+let mockMultiItemSelectionProps: Object = {};
+let mockMultiListOverlayProps: {[string]: Object} = {};
+let mockTextEditorProps: Object = {};
+
+const mockReact = require('react');
 
 jest.mock('sulu-media-bundle/containers/SingleMediaSelectionOverlay', () => jest.fn(() => null));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
+jest.mock('sulu-admin-bundle/utils/Translator');
+
+jest.mock('sulu-admin-bundle/components', () => {
+    const actual = jest.requireActual('sulu-admin-bundle/components');
+
+    const MultiItemSelection = jest.fn((props) => {
+        mockMultiItemSelectionProps = props;
+
+        return mockReact.createElement(
+            'div',
+            {
+                'data-disabled': String(props.disabled),
+                'data-loading': String(props.loading),
+                'data-testid': 'multi-item-selection',
+            },
+            props.leftButton && props.leftButton.options.map((option) => mockReact.createElement(
+                'button',
+                {
+                    key: option.value,
+                    onClick: () => props.leftButton.onClick(option.value),
+                    type: 'button',
+                },
+                option.label
+            )),
+            props.rightButton && props.rightButton.options.map((option) => mockReact.createElement(
+                'button',
+                {
+                    key: option.value,
+                    onClick: () => props.rightButton.onClick(option.value),
+                    type: 'button',
+                },
+                option.label
+            )),
+            props.onItemsSorted && mockReact.createElement(
+                'button',
+                {onClick: () => props.onItemsSorted(2, 1), type: 'button'},
+                'sort-2-1'
+            ),
+            props.children
+        );
+    });
+
+    (MultiItemSelection: any).Item = jest.fn((props) => mockReact.createElement(
+        'div',
+        {'data-testid': 'item-' + props.id},
+        mockReact.createElement(
+            'div',
+            {
+                'data-clickable': String(!!props.onClick),
+                'data-testid': 'item-content-' + props.id,
+                ...(props.onClick
+                    ? {
+                        onClick: () => props.onClick(props.id, props.value),
+                        role: 'button',
+                    }
+                    : {}),
+            },
+            props.children
+        ),
+        props.onEdit && mockReact.createElement(
+            'button',
+            {onClick: () => props.onEdit(props.id), type: 'button'},
+            'edit-' + props.id
+        ),
+        props.onRemove && mockReact.createElement(
+            'button',
+            {onClick: () => props.onRemove(props.id), type: 'button'},
+            'remove-' + props.id
+        )
+    ));
+
+    return {
+        ...actual,
+        MultiItemSelection,
+    };
+});
+
+jest.mock('sulu-admin-bundle/containers/MultiListOverlay', () => jest.fn((props) => {
+    mockMultiListOverlayProps[props.resourceKey] = props;
+
+    return mockReact.createElement(
+        'div',
+        {
+            'data-open': String(props.open),
+            'data-testid': 'multi-list-overlay-' + props.resourceKey,
+        },
+        mockReact.createElement(
+            'button',
+            {onClick: () => props.onClose(), type: 'button'},
+            'close-' + props.resourceKey
+        )
+    );
 }));
 
-jest.mock('sulu-admin-bundle/containers/MultiListOverlay', () => jest.fn(() => null));
+jest.mock('sulu-admin-bundle/containers/TextEditor', () => jest.fn((props) => {
+    mockTextEditorProps = props;
 
-jest.mock('sulu-admin-bundle/containers/TextEditor', () => jest.fn(
-    ({value}) => (<textarea onChange={jest.fn()} value={value} />))
-);
+    return mockReact.createElement('textarea', {
+        'aria-label': 'text-editor',
+        onChange: (event) => props.onChange(event.currentTarget.value),
+        value: props.value || '',
+    });
+}));
 
 jest.mock('../stores/TeaserStore', () => jest.fn());
 
@@ -26,17 +125,36 @@ jest.mock('../registries/teaserProviderRegistry', () => ({
     get: jest.fn((key) => {
         switch (key) {
             case 'pages':
-                return {title: 'Pages'};
+                return {overlayTitle: 'Pages Overlay', title: 'Pages'};
             case 'articles':
-                return {title: 'Articles'};
+                return {overlayTitle: 'Articles Overlay', title: 'Articles'};
             case 'contacts':
                 return {title: 'Contacts'};
         }
     }),
 }));
 
+function mockTeaserStore(options: Object = {}) {
+    (TeaserStore: any).mockImplementation(function() {
+        this.add = jest.fn();
+        this.destroy = jest.fn();
+        this['findById'] = options.teaserLookup || jest.fn();
+        this.loading = !!options.loading;
+    });
+}
+
+function getTeaserStore() {
+    return (TeaserStore: any).mock.instances[0];
+}
+
 beforeEach(() => {
+    mockMultiItemSelectionProps = {};
+    mockMultiListOverlayProps = {};
+    mockTextEditorProps = {};
+
     TeaserSelection.Item.mediaUrl = '/admin/media/:id?format=sulu-25x25';
+    (TeaserStore: any).mockClear();
+    mockTeaserStore();
 });
 
 test('Render loading teaser selection', () => {
@@ -52,17 +170,12 @@ test('Render loading teaser selection', () => {
         presentAs: '',
     };
 
-    // $FlowFixMe
-    TeaserStore.mockImplementation(function() {
-        this.add = jest.fn();
-        this.findById = jest.fn();
-        this.loading = true;
-    });
+    mockTeaserStore({loading: true});
 
-    const teaserSelection = mount(<TeaserSelection locale={observable.box('en')} onChange={jest.fn()} value={value} />);
+    const {asFragment} = render(<TeaserSelection locale={observable.box('en')} onChange={jest.fn()} value={value} />);
 
-    teaserSelection.update();
-    expect(teaserSelection.render()).toMatchSnapshot();
+    expect(screen.getByTestId('multi-item-selection')).toHaveAttribute('data-loading', 'true');
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render teaser selection with presentations', () => {
@@ -89,13 +202,7 @@ test('Render teaser selection with presentations', () => {
         },
     ];
 
-    // $FlowFixMe
-    TeaserStore.mockImplementation(function() {
-        this.add = jest.fn();
-        this.findById = jest.fn();
-    });
-
-    const teaserSelection = mount(
+    const {asFragment} = render(
         <TeaserSelection
             locale={observable.box('en')}
             onChange={jest.fn()}
@@ -104,8 +211,9 @@ test('Render teaser selection with presentations', () => {
         />
     );
 
-    teaserSelection.update();
-    expect(teaserSelection.render()).toMatchSnapshot();
+    expect(screen.getByRole('button', {name: 'Test 1'})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'Test 2'})).toBeInTheDocument();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render teaser selection with data', () => {
@@ -121,38 +229,28 @@ test('Render teaser selection with data', () => {
         ],
     };
 
-    // $FlowFixMe
-    TeaserStore.mockImplementation(function() {
-        this.add = jest.fn();
-        this.findById = jest.fn();
-    });
+    const {asFragment} = render(<TeaserSelection locale={observable.box('en')} onChange={jest.fn()} value={value} />);
 
-    const teaserSelection = mount(<TeaserSelection locale={observable.box('en')} onChange={jest.fn()} value={value} />);
-    teaserSelection.instance().teaserStore.loading = false;
-
-    teaserSelection.update();
-    expect(teaserSelection.render()).toMatchSnapshot();
+    expect(screen.getByText('Title')).toBeInTheDocument();
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render MultiItemSelection disabled when disabled flag is set', () => {
-    const teaserSelection = mount(
-        <TeaserSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} />
-    );
+    render(<TeaserSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} />);
 
-    expect(teaserSelection.find('MultiItemSelection').prop('disabled')).toEqual(true);
+    expect(screen.getByTestId('multi-item-selection')).toHaveAttribute('data-disabled', 'true');
 });
 
 test('Avoid that MultiListOverlay loads the preSelectedItems from start', () => {
-    const teaserSelection = mount(
-        <TeaserSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} />
-    );
+    render(<TeaserSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} />);
 
-    expect(teaserSelection.find(MultiListOverlay)).toHaveLength(2);
-    expect(teaserSelection.find(MultiListOverlay).at(0).prop('preloadSelectedItems')).toEqual(false);
-    expect(teaserSelection.find(MultiListOverlay).at(1).prop('preloadSelectedItems')).toEqual(false);
+    expect(Object.keys(mockMultiListOverlayProps)).toEqual(['pages', 'articles']);
+    expect(mockMultiListOverlayProps.pages.preloadSelectedItems).toEqual(false);
+    expect(mockMultiListOverlayProps.articles.preloadSelectedItems).toEqual(false);
 });
 
-test('Call onChange when presentation is changed', () => {
+test('Call onChange when presentation is changed', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
     const presentations = [
@@ -166,12 +264,7 @@ test('Call onChange when presentation is changed', () => {
         },
     ];
 
-    // $FlowFixMe
-    TeaserStore.mockImplementation(function() {
-        this.add = jest.fn();
-    });
-
-    const teaserSelection = mount(
+    render(
         <TeaserSelection
             locale={observable.box('en')}
             onChange={changeSpy}
@@ -180,8 +273,7 @@ test('Call onChange when presentation is changed', () => {
         />
     );
 
-    teaserSelection.find('Button[icon="su-eye"]').simulate('click');
-    teaserSelection.find('Action[value="test-2"]').simulate('click');
+    await user.click(screen.getByRole('button', {name: 'Test 2'}));
 
     expect(changeSpy).toHaveBeenCalledWith({
         presentAs: 'test-2',
@@ -208,17 +300,12 @@ test('Add passed data to TeaserStore', () => {
         ],
     };
 
-    // $FlowFixMe
-    TeaserStore.mockImplementation(function() {
-        this.add = jest.fn();
-        this.findById = jest.fn();
-    });
+    render(<TeaserSelection locale={observable.box('en')} onChange={jest.fn()} value={value} />);
 
-    const teaserSelection = mount(<TeaserSelection locale={observable.box('en')} onChange={jest.fn()} value={value} />);
-
-    expect(teaserSelection.instance().teaserStore.add).toHaveBeenCalledTimes(2);
-    expect(teaserSelection.instance().teaserStore.add).toHaveBeenCalledWith('pages', 2);
-    expect(teaserSelection.instance().teaserStore.add).toHaveBeenCalledWith('contacts', 3);
+    const teaserStore = getTeaserStore();
+    expect(teaserStore.add).toHaveBeenCalledTimes(2);
+    expect(teaserStore.add).toHaveBeenCalledWith('pages', 2);
+    expect(teaserStore.add).toHaveBeenCalledWith('contacts', 3);
 });
 
 test('Load combined data from TeaserStore and props', () => {
@@ -244,11 +331,8 @@ test('Load combined data from TeaserStore and props', () => {
         ],
     };
 
-    // $FlowFixMe
-    TeaserStore.mockImplementation(function() {
-        this.add = jest.fn();
-
-        this.findById = jest.fn((type, id) => {
+    mockTeaserStore({
+        teaserLookup: jest.fn((type, id) => {
             if (type === 'pages' && id === 2) {
                 return {
                     description: 'Page Description',
@@ -278,74 +362,67 @@ test('Load combined data from TeaserStore and props', () => {
             }
 
             throw new Error('This case should not happen!');
-        });
+        }),
     });
 
-    const teaserSelection = mount(<TeaserSelection locale={observable.box('en')} onChange={jest.fn()} value={value} />);
+    const {asFragment} = render(<TeaserSelection locale={observable.box('en')} onChange={jest.fn()} value={value} />);
 
-    teaserSelection.update();
-    expect(teaserSelection.render()).toMatchSnapshot();
+    expect(screen.getByText('Edited Page Title')).toBeInTheDocument();
+    expect(screen.getByText('Contact 1')).toBeInTheDocument();
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Opening different adding overlays and close them without any action', () => {
-    const teaserSelection = mount(
-        <TeaserSelection locale={observable.box('en')} onChange={jest.fn()} value={undefined} />
-    );
+test('Opening different adding overlays and close them without any action', async() => {
+    const user = userEvent.setup();
 
-    expect(teaserSelection.find('MultiItemSelection').prop('leftButton').options).toEqual([
+    render(<TeaserSelection locale={observable.box('en')} onChange={jest.fn()} value={undefined} />);
+
+    expect(mockMultiItemSelectionProps.leftButton.options).toEqual([
         {label: 'Pages', value: 'pages'},
         {label: 'Articles', value: 'articles'},
     ]);
+    expect(screen.getByTestId('multi-list-overlay-pages')).toHaveAttribute('data-open', 'false');
+    expect(screen.getByTestId('multi-list-overlay-articles')).toHaveAttribute('data-open', 'false');
 
-    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(false);
-    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="articles"]').prop('open')).toEqual(false);
+    await user.click(screen.getByRole('button', {name: 'Articles'}));
 
-    teaserSelection.find('MultiItemSelection').prop('leftButton').onClick('articles');
+    expect(screen.getByTestId('multi-list-overlay-pages')).toHaveAttribute('data-open', 'false');
+    expect(screen.getByTestId('multi-list-overlay-articles')).toHaveAttribute('data-open', 'true');
 
-    teaserSelection.update();
-    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(false);
-    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="articles"]').prop('open')).toEqual(true);
+    await user.click(screen.getByRole('button', {name: 'close-articles'}));
+    await user.click(screen.getByRole('button', {name: 'Pages'}));
 
-    teaserSelection.find(MultiListOverlay).find('[resourceKey="articles"]').prop('onClose')();
-    teaserSelection.find('MultiItemSelection').prop('leftButton').onClick('pages');
-
-    teaserSelection.update();
-    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(true);
-    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="articles"]').prop('open')).toEqual(false);
+    expect(screen.getByTestId('multi-list-overlay-pages')).toHaveAttribute('data-open', 'true');
+    expect(screen.getByTestId('multi-list-overlay-articles')).toHaveAttribute('data-open', 'false');
 });
 
-test('Adding a teaser element', () => {
+test('Adding a teaser element', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
-    // $FlowFixMe
-    TeaserStore.mockImplementation(function() {
-        this.add = jest.fn();
+    render(<TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={undefined} />);
+
+    await user.click(screen.getByRole('button', {name: 'Pages'}));
+
+    expect(screen.getByTestId('multi-list-overlay-pages')).toHaveAttribute('data-open', 'true');
+
+    act(() => {
+        mockMultiListOverlayProps.pages.onConfirm([{id: 6}, {id: 5}]);
     });
 
-    const teaserSelection = mount(
-        <TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={undefined} />
-    );
-
-    teaserSelection.find('Button[icon="su-plus-circle"]').simulate('click');
-    teaserSelection.find('Action[value="pages"]').simulate('click');
-
-    teaserSelection.update();
-    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(true);
-    teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('onConfirm')([{id: 6}, {id: 5}]);
-
-    teaserSelection.update();
-    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(false);
-
+    expect(screen.getByTestId('multi-list-overlay-pages')).toHaveAttribute('data-open', 'false');
     expect(changeSpy).toHaveBeenCalledWith({
         presentAs: undefined,
         items: [{id: 6, type: 'pages'}, {id: 5, type: 'pages'}],
     });
 
-    expect(teaserSelection.instance().teaserStore.add).toHaveBeenCalledWith('pages', 6);
-    expect(teaserSelection.instance().teaserStore.add).toHaveBeenCalledWith('pages', 5);
+    const teaserStore = getTeaserStore();
+    expect(teaserStore.add).toHaveBeenCalledWith('pages', 6);
+    expect(teaserStore.add).toHaveBeenCalledWith('pages', 5);
 });
 
-test('Adding two different kind of teasers', () => {
+test('Adding two different kind of teasers', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
     const value = {
@@ -356,26 +433,17 @@ test('Adding two different kind of teasers', () => {
         ],
     };
 
-    // $FlowFixMe
-    TeaserStore.mockImplementation(function() {
-        this.add = jest.fn();
-        this.findById = jest.fn();
+    render(<TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={value} />);
+
+    await user.click(screen.getByRole('button', {name: 'Articles'}));
+
+    expect(screen.getByTestId('multi-list-overlay-articles')).toHaveAttribute('data-open', 'true');
+
+    act(() => {
+        mockMultiListOverlayProps.articles.onConfirm([{id: 6}]);
     });
 
-    const teaserSelection = mount(
-        <TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={value} />
-    );
-
-    teaserSelection.find('Button[icon="su-plus-circle"]').simulate('click');
-    teaserSelection.find('Action[value="articles"]').simulate('click');
-
-    teaserSelection.update();
-    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="articles"]').prop('open')).toEqual(true);
-    teaserSelection.find(MultiListOverlay).find('[resourceKey="articles"]').prop('onConfirm')([{id: 6}]);
-
-    teaserSelection.update();
-    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="articles"]').prop('open')).toEqual(false);
-
+    expect(screen.getByTestId('multi-list-overlay-articles')).toHaveAttribute('data-open', 'false');
     expect(changeSpy).toHaveBeenCalledWith({
         presentAs: undefined,
         items: [
@@ -385,10 +453,11 @@ test('Adding two different kind of teasers', () => {
         ],
     });
 
-    expect(teaserSelection.instance().teaserStore.add).toHaveBeenCalledWith('articles', 6);
+    expect(getTeaserStore().add).toHaveBeenCalledWith('articles', 6);
 });
 
-test('Adding a teaser item along with other teaser items which has already been added', () => {
+test('Adding a teaser item along with other teaser items which has already been added', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
     const value = {
@@ -398,26 +467,17 @@ test('Adding a teaser item along with other teaser items which has already been 
         ],
     };
 
-    // $FlowFixMe
-    TeaserStore.mockImplementation(function() {
-        this.add = jest.fn();
-        this.findById = jest.fn();
+    render(<TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={value} />);
+
+    await user.click(screen.getByRole('button', {name: 'Pages'}));
+
+    expect(screen.getByTestId('multi-list-overlay-pages')).toHaveAttribute('data-open', 'true');
+
+    act(() => {
+        mockMultiListOverlayProps.pages.onConfirm([{id: 5}, {id: 6}]);
     });
 
-    const teaserSelection = mount(
-        <TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={value} />
-    );
-
-    teaserSelection.find('Button[icon="su-plus-circle"]').simulate('click');
-    teaserSelection.find('Action[value="pages"]').simulate('click');
-
-    teaserSelection.update();
-    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(true);
-    teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('onConfirm')([{id: 5}, {id: 6}]);
-
-    teaserSelection.update();
-    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(false);
-
+    expect(screen.getByTestId('multi-list-overlay-pages')).toHaveAttribute('data-open', 'false');
     expect(changeSpy).toHaveBeenCalledWith({
         presentAs: undefined,
         items: [
@@ -426,10 +486,11 @@ test('Adding a teaser item along with other teaser items which has already been 
         ],
     });
 
-    expect(teaserSelection.instance().teaserStore.add).toHaveBeenCalledWith('pages', 6);
+    expect(getTeaserStore().add).toHaveBeenCalledWith('pages', 6);
 });
 
-test('Removing by unselecting element in teaser selection', () => {
+test('Removing by unselecting element in teaser selection', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
     const value = {
@@ -441,37 +502,29 @@ test('Removing by unselecting element in teaser selection', () => {
         ],
     };
 
-    // $FlowFixMe
-    TeaserStore.mockImplementation(function() {
-        this.add = jest.fn();
-        this.findById = jest.fn();
+    render(<TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={value} />);
+
+    await user.click(screen.getByRole('button', {name: 'Pages'}));
+
+    expect(screen.getByTestId('multi-list-overlay-pages')).toHaveAttribute('data-open', 'true');
+
+    act(() => {
+        mockMultiListOverlayProps.pages.onConfirm([{id: 6}]);
     });
 
-    const teaserSelection = mount(
-        <TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={value} />
-    );
-
-    teaserSelection.find('Button[icon="su-plus-circle"]').simulate('click');
-    teaserSelection.find('Action[value="pages"]').simulate('click');
-
-    teaserSelection.update();
-    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(true);
-    teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('onConfirm')([{id: 6}]);
-
-    teaserSelection.update();
-    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(false);
-
+    expect(screen.getByTestId('multi-list-overlay-pages')).toHaveAttribute('data-open', 'false');
     expect(changeSpy).toHaveBeenCalledWith({
         presentAs: undefined,
         items: [{id: 5, type: 'articles'}, {id: 6, type: 'pages'}],
     });
 
-    expect(teaserSelection.instance().teaserStore.add).toHaveBeenCalledWith('pages', 6);
-    expect(teaserSelection.instance().teaserStore.add).toHaveBeenCalledWith('pages', 5);
+    const teaserStore = getTeaserStore();
+    expect(teaserStore.add).toHaveBeenCalledWith('pages', 6);
+    expect(teaserStore.add).toHaveBeenCalledWith('pages', 5);
 });
 
-test('Preselecting correct items', () => {
-    const changeSpy = jest.fn();
+test('Preselecting correct items', async() => {
+    const user = userEvent.setup();
 
     const value = {
         presentAs: undefined,
@@ -482,26 +535,18 @@ test('Preselecting correct items', () => {
         ],
     };
 
-    // $FlowFixMe
-    TeaserStore.mockImplementation(function() {
-        this.add = jest.fn();
-        this.findById = jest.fn();
-    });
+    render(<TeaserSelection locale={observable.box('en')} onChange={jest.fn()} value={value} />);
 
-    const teaserSelection = mount(
-        <TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={value} />
-    );
+    await user.click(screen.getByRole('button', {name: 'Pages'}));
 
-    teaserSelection.find('Button[icon="su-plus-circle"]').simulate('click');
-    teaserSelection.find('Action[value="pages"]').simulate('click');
-
-    teaserSelection.update();
-    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(true);
-    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('preSelectedItems'))
+    expect(screen.getByTestId('multi-list-overlay-pages')).toHaveAttribute('data-open', 'true');
+    expect(mockMultiListOverlayProps.pages.preSelectedItems)
         .toEqual([{id: 5, type: 'pages'}, {id: 8, type: 'pages'}]);
 });
 
-test('Open and close items when clicking on the pen icon', () => {
+test('Open and close items when clicking on the pen icon', async() => {
+    const user = userEvent.setup();
+
     const value = {
         presentAs: '',
         items: [
@@ -520,37 +565,29 @@ test('Open and close items when clicking on the pen icon', () => {
         ],
     };
 
-    // $FlowFixMe
-    TeaserStore.mockImplementation(function() {
-        this.add = jest.fn();
-        this.findById = jest.fn();
-    });
+    render(<TeaserSelection locale={observable.box('en')} onChange={jest.fn()} value={value} />);
 
-    const teaserSelection = mount(<TeaserSelection locale={observable.box('en')} onChange={jest.fn()} value={value} />);
+    expect(screen.queryByDisplayValue('Title')).not.toBeInTheDocument();
+    expect(screen.queryByDisplayValue('Title 2')).not.toBeInTheDocument();
 
-    expect(teaserSelection.find(Item).at(0).prop('editing')).toEqual(false);
-    expect(teaserSelection.find(Item).at(1).prop('editing')).toEqual(false);
+    await user.click(screen.getByRole('button', {name: 'edit-pages;2'}));
 
-    teaserSelection.find('Icon[name="su-pen"]').at(0).parent().prop('onClick')();
-    teaserSelection.update();
+    expect(screen.getByDisplayValue('Title')).toBeInTheDocument();
+    expect(screen.queryByDisplayValue('Title 2')).not.toBeInTheDocument();
 
-    expect(teaserSelection.find(Item).at(0).prop('editing')).toEqual(true);
-    expect(teaserSelection.find(Item).at(1).prop('editing')).toEqual(false);
+    await user.click(screen.getByRole('button', {name: 'edit-pages;6'}));
 
-    teaserSelection.find('Icon[name="su-pen"]').at(1).parent().prop('onClick')();
-    teaserSelection.update();
+    expect(screen.getByDisplayValue('Title')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Title 2')).toBeInTheDocument();
 
-    expect(teaserSelection.find(Item).at(0).prop('editing')).toEqual(true);
-    expect(teaserSelection.find(Item).at(1).prop('editing')).toEqual(true);
+    await user.click(screen.getAllByRole('button', {name: 'sulu_admin.cancel'})[0]);
 
-    teaserSelection.find('Button[children="sulu_admin.cancel"]').at(0).prop('onClick')();
-    teaserSelection.update();
-
-    expect(teaserSelection.find(Item).at(0).prop('editing')).toEqual(false);
-    expect(teaserSelection.find(Item).at(1).prop('editing')).toEqual(true);
+    expect(screen.queryByDisplayValue('Title')).not.toBeInTheDocument();
+    expect(screen.getByDisplayValue('Title 2')).toBeInTheDocument();
 });
 
-test('Call onChange with new values when apply button is clicked', () => {
+test('Call onChange with new values when apply button is clicked', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
     const value = {
@@ -577,22 +614,16 @@ test('Call onChange with new values when apply button is clicked', () => {
         ],
     };
 
-    // $FlowFixMe
-    TeaserStore.mockImplementation(function() {
-        this.add = jest.fn();
-        this.findById = jest.fn();
-    });
+    render(<TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={value} />);
 
-    const teaserSelection = mount(<TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={value} />);
+    await user.click(screen.getByRole('button', {name: 'edit-pages;6'}));
+    await user.clear(screen.getByDisplayValue('Title 2'));
+    await user.type(screen.getByRole('textbox', {name: ''}), 'Edited Title 2');
+    await user.clear(screen.getByLabelText('text-editor'));
+    await user.type(screen.getByLabelText('text-editor'), 'Edited Description 2');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.apply'}));
 
-    teaserSelection.find('Icon[name="su-pen"]').at(1).parent().prop('onClick')();
-    teaserSelection.update();
-
-    teaserSelection.find('Input').prop('onChange')('Edited Title 2');
-    teaserSelection.find(TextEditor).prop('onChange')('Edited Description 2');
-
-    teaserSelection.find('Button[children="sulu_admin.apply"]').prop('onClick')();
-
+    expect(mockTextEditorProps.adapter).toEqual('ckeditor5');
     expect(changeSpy).toHaveBeenCalledWith(
         {
             presentAs: '',
@@ -606,6 +637,7 @@ test('Call onChange with new values when apply button is clicked', () => {
                 {
                     description: 'Edited Description 2',
                     id: 6,
+                    mediaId: undefined,
                     title: 'Edited Title 2',
                     type: 'pages',
                 },
@@ -620,7 +652,8 @@ test('Call onChange with new values when apply button is clicked', () => {
     );
 });
 
-test('Call onChange with new values after one item is removed', () => {
+test('Call onChange with new values after one item is removed', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
     const value = {
@@ -647,15 +680,9 @@ test('Call onChange with new values after one item is removed', () => {
         ],
     };
 
-    // $FlowFixMe
-    TeaserStore.mockImplementation(function() {
-        this.add = jest.fn();
-        this.findById = jest.fn();
-    });
+    render(<TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={value} />);
 
-    const teaserSelection = mount(<TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={value} />);
-
-    teaserSelection.find('Icon[name="su-trash-alt"]').at(1).parent().prop('onClick')();
+    await user.click(screen.getByRole('button', {name: 'remove-pages;6'}));
 
     expect(changeSpy).toHaveBeenCalledWith(
         {
@@ -678,7 +705,8 @@ test('Call onChange with new values after one item is removed', () => {
     );
 });
 
-test('Call onChange with new values after items are sorted', () => {
+test('Call onChange with new values after items are sorted', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
     const value = {
@@ -705,15 +733,9 @@ test('Call onChange with new values after items are sorted', () => {
         ],
     };
 
-    // $FlowFixMe
-    TeaserStore.mockImplementation(function() {
-        this.add = jest.fn();
-        this.findById = jest.fn();
-    });
+    render(<TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={value} />);
 
-    const teaserSelection = mount(<TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={value} />);
-
-    teaserSelection.find('MultiItemSelection').prop('onItemsSorted')(2, 1);
+    await user.click(screen.getByRole('button', {name: 'sort-2-1'}));
 
     expect(changeSpy).toHaveBeenCalledWith(
         {
@@ -742,7 +764,8 @@ test('Call onChange with new values after items are sorted', () => {
     );
 });
 
-test('Call onItemClick when an item is clicked', () => {
+test('Call onItemClick when an item is clicked', async() => {
+    const user = userEvent.setup();
     const itemClickSpy = jest.fn();
 
     const item1 = {
@@ -769,23 +792,18 @@ test('Call onItemClick when an item is clicked', () => {
         ],
     };
 
-    // $FlowFixMe
-    TeaserStore.mockImplementation(function() {
-        this.add = jest.fn();
-        this.findById = jest.fn();
-    });
-
-    const teaserSelection = mount(
+    render(
         <TeaserSelection locale={observable.box('en')} onChange={jest.fn()} onItemClick={itemClickSpy} value={value} />
     );
 
-    teaserSelection.find('MultiItemSelection .content.clickable').at(0).simulate('click');
+    await user.click(screen.getByTestId('item-content-pages;2'));
     expect(itemClickSpy).toHaveBeenLastCalledWith('pages;2', item1);
-    teaserSelection.find('MultiItemSelection .content.clickable').at(1).simulate('click');
+    await user.click(screen.getByTestId('item-content-pages;6'));
     expect(itemClickSpy).toHaveBeenLastCalledWith('pages;6', item2);
 });
 
-test('Call not onItemClick when an item is clicked in edit mode', () => {
+test('Call not onItemClick when an item is clicked in edit mode', async() => {
+    const user = userEvent.setup();
     const itemClickSpy = jest.fn();
 
     const item1 = {
@@ -812,35 +830,23 @@ test('Call not onItemClick when an item is clicked in edit mode', () => {
         ],
     };
 
-    // $FlowFixMe
-    TeaserStore.mockImplementation(function() {
-        this.add = jest.fn();
-        this.findById = jest.fn();
-    });
-
-    const teaserSelection = mount(
+    render(
         <TeaserSelection locale={observable.box('en')} onChange={jest.fn()} onItemClick={itemClickSpy} value={value} />
     );
 
-    teaserSelection.find('Icon[name="su-pen"]').at(0).parent().prop('onClick')();
-    teaserSelection.update();
+    await user.click(screen.getByRole('button', {name: 'edit-pages;2'}));
 
-    expect(teaserSelection.find(Item).at(0).prop('editing')).toEqual(true);
-
-    teaserSelection.find('MultiItemSelection .content').at(0).simulate('click');
+    expect(screen.getByDisplayValue('Title')).toBeInTheDocument();
+    expect(screen.getByTestId('item-content-pages;2')).toHaveAttribute('data-clickable', 'false');
     expect(itemClickSpy).toHaveBeenCalledTimes(0);
 });
 
 test('Call destroy of TeaserStore when unmounted', () => {
-    // $FlowFixMe
-    TeaserStore.mockImplementation(function() {
-        this.destroy = jest.fn();
-    });
+    const {unmount} = render(<TeaserSelection locale={observable.box('en')} onChange={jest.fn()} />);
 
-    const teaserSelection = mount(<TeaserSelection locale={observable.box('en')} onChange={jest.fn()} />);
+    const teaserStore = getTeaserStore();
 
-    const teaserStore = teaserSelection.instance().teaserStore;
-    teaserSelection.unmount();
+    unmount();
 
     expect(teaserStore.destroy).toHaveBeenCalledWith();
 });

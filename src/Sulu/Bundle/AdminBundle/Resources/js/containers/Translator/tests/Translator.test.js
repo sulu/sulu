@@ -7,9 +7,7 @@ import Translator from '../Translator';
 
 jest.mock('../../../services/Requester');
 jest.mock('debounce', () => jest.fn((fn) => fn));
-jest.mock('../../../utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('../../../utils/Translator');
 
 jest.mock('../../../containers', () => ({
     TextEditor: jest.fn(() => <div data-testid="text-editor" />),
