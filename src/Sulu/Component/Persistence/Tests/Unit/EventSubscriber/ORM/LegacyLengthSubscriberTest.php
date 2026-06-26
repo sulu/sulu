@@ -41,7 +41,8 @@ class LegacyLengthSubscriberTest extends TestCase
 
         $this->subscriber->loadClassMetadata($this->createEvent($metadata));
 
-        $this->assertSame(32, $metadata->fieldMappings['webspace']->length);
+        $webspaceMapping = $metadata->fieldMappings['webspace'];
+        $this->assertSame(32, is_array($webspaceMapping) ? $webspaceMapping['length'] : $webspaceMapping->length);
     }
 
     public function testLoadClassMetadataWidensTemplateKeyField(): void
@@ -55,7 +56,8 @@ class LegacyLengthSubscriberTest extends TestCase
 
         $this->subscriber->loadClassMetadata($this->createEvent($metadata));
 
-        $this->assertSame(64, $metadata->fieldMappings['templateKey']->length);
+        $templateKeyMapping = $metadata->fieldMappings['templateKey'];
+        $this->assertSame(64, is_array($templateKeyMapping) ? $templateKeyMapping['length'] : $templateKeyMapping->length);
     }
 
     /**
