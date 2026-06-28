@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Infrastructure\Sulu\Route;
 
+use Sulu\Article\Domain\Model\ArticleDimensionContent;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\CacheLifetimeMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
@@ -21,13 +22,19 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
+use Sulu\Route\Domain\Exception\MissingRequestContextParameterException;
 use Sulu\Route\Domain\Model\Route;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal this class is internal and should not be extended or relied on in custom code
@@ -39,6 +46,8 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
         private ContentAggregatorInterface $contentAggregator,
         private MetadataProviderRegistry $metadataProviderRegistry,
         private CacheLifetimeResolverInterface $cacheLifetimeResolver,
+        private RouteGeneratorInterface $routeGenerator,
+        private RequestStack $requestStack,
     ) {
     }
 
@@ -96,12 +105,66 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
             '_controller' => $templateMetadata->getController(),
         ];
 
+        $canonicalUrl = $this->resolveAdditionalWebspaceCanonicalUrl($route, $dimensionContent);
+        if (null !== $canonicalUrl) {
+            $defaults['_seo'] = ['canonicalUrl' => $canonicalUrl];
+        }
+
         $cacheLifetime = $this->getCacheLifetime($templateMetadata);
         if (null !== $cacheLifetime) {
             $defaults[CacheLifetimeRequestStore::ATTRIBUTE_KEY] = $cacheLifetime;
         }
 
         return $defaults;
+    }
+
+    /**
+     * When an article is served through one of its additional webspaces, the canonical URL should point
+     * to the article URL of its main webspace.
+     */
+    private function resolveAdditionalWebspaceCanonicalUrl(Route $route, ArticleDimensionContent $dimensionContent): ?string
+    {
+        $mainWebspace = $dimensionContent->getMainWebspace();
+        if (null === $mainWebspace) {
+            return null;
+        }
+
+        $requestWebspace = $this->getRequestWebspaceKey();
+        if (null === $requestWebspace || $requestWebspace === $mainWebspace) {
+            return null;
+        }
+
+        if (!\in_array($requestWebspace, $dimensionContent->getAdditionalWebspaces(), true)) {
+            return null;
+        }
+
+        try {
+            return $this->routeGenerator->generate(
+                $route->getSlug(),
+                $route->getLocale(),
+                $mainWebspace,
+                UrlGeneratorInterface::ABSOLUTE_URL,
+            );
+        } catch (MissingRequestContextParameterException) {
+            return null;
+        }
+    }
+
+    private function getRequestWebspaceKey(): ?string
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        if (null === $request) {
+            return null;
+        }
+
+        $suluAttribute = $request->attributes->get('_sulu');
+        if (!$suluAttribute instanceof RequestAttributes) {
+            return null;
+        }
+
+        $webspace = $suluAttribute->getAttribute('webspace');
+
+        return $webspace instanceof Webspace ? $webspace->getKey() : null;
     }
 
     private function getCacheLifetime(TemplateMetadata $templateMetadata): ?int
