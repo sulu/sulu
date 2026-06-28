@@ -15,6 +15,7 @@ use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
+use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
@@ -68,7 +69,7 @@ class PageLinkProvider implements LinkProviderInterface
             $locale,
             MappingBuilder::create()
                 ->setResolveUrl(true)
-                ->addProperties(['title', 'published'])
+                ->addProperties(['title', 'published', 'external'])
                 ->setOnlyPublished($published)
                 ->setHydrateGhost(false)
                 ->getMapping()
@@ -114,14 +115,19 @@ class PageLinkProvider implements LinkProviderInterface
     protected function getLinkItem(Content $content, $locale, $scheme, $domain = null)
     {
         $published = !empty($content->getPropertyWithDefault('published'));
-        $url = $this->webspaceManager->findUrlByResourceLocator(
-            $content->getUrl(),
-            $this->environment,
-            $locale,
-            $content->getWebspaceKey(),
-            $domain,
-            $scheme
-        );
+
+        if (RedirectType::EXTERNAL === $content->getNodeType()) {
+            $url = $content->getPropertyWithDefault('external');
+        } else {
+            $url = $this->webspaceManager->findUrlByResourceLocator(
+                $content->getUrl(),
+                $this->environment,
+                $locale,
+                $content->getWebspaceKey(),
+                $domain,
+                $scheme
+            );
+        }
 
         return new LinkItem($content->getId(), $content->getPropertyWithDefault('title'), $url, $published);
     }

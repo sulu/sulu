@@ -20,6 +20,7 @@ use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\PageBundle\Markup\Link\PageLinkProvider;
 use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\MappingInterface;
@@ -163,7 +164,7 @@ class PageLinkProviderTest extends TestCase
                     return $mapping->resolveUrl()
                         && !$mapping->shouldHydrateGhost()
                         && $mapping->onlyPublished()
-                        && ['title', 'published'] === $mapping->getProperties();
+                        && ['title', 'published', 'external'] === $mapping->getProperties();
                 }
             )
         )->shouldBeCalledTimes(1)->willReturn($contents);
@@ -189,6 +190,48 @@ class PageLinkProviderTest extends TestCase
         $this->assertEquals(!empty($contents[2]->getPropertyWithDefault('published')), $result[2]->isPublished());
     }
 
+    public function testPreloadExternalLink(): void
+    {
+        $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
+        $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn(new Webspace());
+
+        $contents = [
+            $this->createContent(
+                1,
+                'External page',
+                '/external-page',
+                null,
+                'sulu.io',
+                'sulu_io',
+                [],
+                RedirectType::EXTERNAL,
+                'https://example.com',
+            ),
+        ];
+
+        $this->contentRepository->findByUuids(
+            [1],
+            $this->locale,
+            Argument::that(
+                function(MappingInterface $mapping) {
+                    return $mapping->resolveUrl()
+                        && !$mapping->shouldHydrateGhost()
+                        && $mapping->onlyPublished()
+                        && ['title', 'published', 'external'] === $mapping->getProperties();
+                }
+            )
+        )->shouldBeCalledTimes(1)->willReturn($contents);
+
+        /** @var LinkItem[] $result */
+        $result = $this->pageLinkProvider->preload([1], $this->locale, true);
+
+        $this->assertCount(1, $result);
+
+        // the external url must be used instead of the resolved resource locator
+        $this->assertEquals('https://example.com', $result[0]->getUrl());
+        $this->assertEquals('External page', $result[0]->getTitle());
+    }
+
     public function testPreloadRemoved(): void
     {
         $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
@@ -207,7 +250,7 @@ class PageLinkProviderTest extends TestCase
                     return $mapping->resolveUrl()
                         && !$mapping->shouldHydrateGhost()
                         && $mapping->onlyPublished()
-                        && ['title', 'published'] === $mapping->getProperties();
+                        && ['title', 'published', 'external'] === $mapping->getProperties();
                 }
             )
         )->shouldBeCalledTimes(1)->willReturn($contents);
@@ -245,7 +288,7 @@ class PageLinkProviderTest extends TestCase
                     return $mapping->resolveUrl()
                     && !$mapping->shouldHydrateGhost()
                     && $mapping->onlyPublished()
-                    && ['title', 'published'] === $mapping->getProperties();
+                    && ['title', 'published', 'external'] === $mapping->getProperties();
                 }
             )
         )->shouldBeCalledTimes(1)->willReturn($contents);
@@ -312,7 +355,7 @@ class PageLinkProviderTest extends TestCase
                     return $mapping->resolveUrl()
                         && !$mapping->shouldHydrateGhost()
                         && $mapping->onlyPublished()
-                        && ['title', 'published'] === $mapping->getProperties();
+                        && ['title', 'published', 'external'] === $mapping->getProperties();
                 }
             )
         )->shouldBeCalledTimes(1)->willReturn($contents);
@@ -376,7 +419,7 @@ class PageLinkProviderTest extends TestCase
                     return $mapping->resolveUrl()
                         && !$mapping->shouldHydrateGhost()
                         && $mapping->onlyPublished()
-                        && ['title', 'published'] === $mapping->getProperties();
+                        && ['title', 'published', 'external'] === $mapping->getProperties();
                 }
             )
         )->shouldBeCalledTimes(1)->willReturn($contents);
@@ -408,7 +451,9 @@ class PageLinkProviderTest extends TestCase
         $published = null,
         $domain = 'sulu.io',
         $webspaceKey = 'sulu_io',
-        $permissions = []
+        $permissions = [],
+        $nodeType = RedirectType::NONE,
+        $external = null
     ) {
         $content = $this->prophesize(Content::class);
         $content->getId()->willReturn($id);
@@ -416,8 +461,10 @@ class PageLinkProviderTest extends TestCase
         $content->getLocale()->willReturn($this->locale);
         $content->getPermissions()->willReturn($permissions);
         $content->getWebspaceKey()->willReturn($webspaceKey);
+        $content->getNodeType()->willReturn($nodeType);
         $content->getPropertyWithDefault('title', null)->willReturn($title);
         $content->getPropertyWithDefault('published', null)->willReturn($published);
+        $content->getPropertyWithDefault('external', null)->willReturn($external);
 
         $this->webspaceManager->findUrlByResourceLocator(
             $url,
