@@ -44,6 +44,8 @@ use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactory;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface;
 use Sulu\Content\Infrastructure\Sulu\HttpCache\EventSubscriber\DimensionContentTagSubscriber;
 use Sulu\Content\Infrastructure\Sulu\Page\Select\WebspaceSelect;
+use Sulu\Content\Infrastructure\Symfony\Twig\Runtime\TableRuntime;
+use Sulu\Content\Infrastructure\Symfony\Twig\TableTwigExtension;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -194,4 +196,12 @@ return static function(ContainerConfigurator $container) {
         ]);
 
     $services->alias(ContentManagerInterface::class, 'sulu_content.content_manager');
+
+    $services->set('sulu_content.table_twig_extension', TableTwigExtension::class)
+        ->tag('twig.extension')
+        ->tag('sulu.context', ['context' => 'website']);
+
+    $services->set('sulu_content.table_runtime', TableRuntime::class)
+        ->tag('twig.runtime')
+        ->tag('sulu.context', ['context' => 'website']);
 };

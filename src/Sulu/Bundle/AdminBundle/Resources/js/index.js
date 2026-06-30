@@ -99,6 +99,7 @@ import {
     Url,
     Link,
     SingleIconSelection,
+    Table,
 } from './containers/Form';
 import {textEditorRegistry} from './containers/TextEditor';
 import Form, {
@@ -163,6 +164,7 @@ const FIELD_TYPE_TIME = 'time';
 const FIELD_TYPE_URL = 'url';
 const FIELD_TYPE_LINK = 'link';
 const FIELD_TYPE_SINGLE_ICON_SELECTION = 'single_icon_selection';
+const FIELD_TYPE_TABLE = 'table';
 
 initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: boolean) => {
     if (!initialized) {
@@ -271,6 +273,7 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add(FIELD_TYPE_URL, Url);
     fieldRegistry.add(FIELD_TYPE_LINK, Link);
     fieldRegistry.add(FIELD_TYPE_SINGLE_ICON_SELECTION, SingleIconSelection);
+    fieldRegistry.add(FIELD_TYPE_TABLE, Table);
 
     registerFieldTypesWithOptions(fieldTypeOptions['selection'], Selection);
     registerFieldTypesWithOptions(fieldTypeOptions['single_selection'], SingleSelection);
