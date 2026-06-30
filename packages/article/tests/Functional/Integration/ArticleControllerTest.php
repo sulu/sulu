@@ -324,6 +324,27 @@ class ArticleControllerTest extends SuluTestCase
     }
 
     #[Depends('testPost')]
+    public function testCgetGhostLocale(string $id): void
+    {
+        // The article from testPost only exists in `en`. Listing in `de` must still return it as a ghost.
+        // The `templates` parameter reproduces what ArticleAdmin always sends for its list views (it filters
+        // the list by the group's templates), which is what triggers the ghost-row regression.
+        $this->client->request('GET', '/admin/api/articles?locale=de&templates=article&fields=id,title,ghostLocale');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
+        /** @var array<int, array<string, mixed>> $articles */
+        $articles = $content['_embedded']['articles'] ?? [];
+
+        $this->assertCount(1, $articles, 'The ghost article must be listed in a locale without translation.');
+        $this->assertSame($id, $articles[0]['id'] ?? null);
+        $this->assertSame('en', $articles[0]['ghostLocale'] ?? null);
+        $this->assertSame('Test Article', $articles[0]['title'] ?? null);
+    }
+
+    #[Depends('testPost')]
     public function testPutShadowLocale(string $id): string
     {
         $this->client->request('PUT', '/admin/api/articles/' . $id . '?locale=de', [], [], [], \json_encode([

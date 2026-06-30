@@ -813,16 +813,31 @@ class DoctrineListBuilder extends AbstractListBuilder
     {
         if ($expression instanceof DoctrineAndExpression) {
             $entityNames = [];
+            $nullableEntityNames = [];
 
             foreach ($expression->getExpressions() as $subExpression) {
                 if (!$subExpression instanceof AbstractDoctrineExpression) {
                     continue;
                 }
 
+                // A join whose field is constrained to be NULL within the same AND group must stay LEFT —
+                // it cannot be promoted to INNER even if another sub-expression references the same join.
+                // This keeps the ghost-fallback branch ("dimensionContent.x IS NULL AND
+                // ghostDimensionContent.y IN (...)") working: the ghost join chain structurally references
+                // dimensionContent, but that row legitimately has a NULL dimensionContent.
+                if ($subExpression instanceof BasicExpressionInterface && $this->allowsNullJoinResult($subExpression)) {
+                    $nullableEntityNames = \array_merge(
+                        $nullableEntityNames,
+                        $this->getJoinEntityNamesForField($subExpression->getFieldName())
+                    );
+
+                    continue;
+                }
+
                 $entityNames = \array_merge($entityNames, $this->getStrictJoinEntityNamesForExpression($subExpression));
             }
 
-            return \array_values(\array_unique($entityNames));
+            return \array_values(\array_diff(\array_unique($entityNames), $nullableEntityNames));
         }
 
         if ($expression instanceof DoctrineOrExpression) {
