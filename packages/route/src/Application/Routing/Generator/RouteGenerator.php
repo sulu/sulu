@@ -64,7 +64,18 @@ final class RouteGenerator implements RouteGeneratorInterface
 
         \assert($webspaceRouteGenerator instanceof WebspaceRouteGeneratorInterface, 'The WebspaceRouteGenerator for "' . $webspace . '" must implement WebspaceRouteGeneratorInterface but got: ' . \get_debug_type($webspaceRouteGenerator));
 
-        $generatedUrl = $webspaceRouteGenerator->generate($this->requestContext, $slug, $locale);
+        // propagate the resolved target webspace to the generator via the request context so that
+        // cross-webspace urls are generated for the requested webspace instead of the current request's one.
+        // snapshot and restore the whole parameters array so both the value and the presence of the
+        // webspace parameter are restored (a key set to null still counts as present for hasParameter()).
+        $previousParameters = $this->requestContext->getParameters();
+        $this->requestContext->setParameter(RequestAttributeEnum::WEBSPACE->value, $webspace);
+
+        try {
+            $generatedUrl = $webspaceRouteGenerator->generate($this->requestContext, $slug, $locale);
+        } finally {
+            $this->requestContext->setParameters($previousParameters);
+        }
 
         $schemeAndHttpHost = \sprintf(
             '%s://%s%s/',
