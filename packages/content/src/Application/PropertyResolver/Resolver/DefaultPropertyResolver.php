@@ -19,7 +19,7 @@ class DefaultPropertyResolver implements PropertyResolverInterface
 {
     public function resolve(mixed $data, string $locale, array $params = []): ContentView
     {
-        return ContentView::create($data, []);
+        return ContentView::create($data, $params);
     }
 
     public static function getType(): string

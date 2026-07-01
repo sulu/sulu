@@ -24,7 +24,7 @@ class DefaultPropertyResolverTest extends TestCase
         $result = $defaultPropertyResolver->resolve('data', 'locale', ['params' => 'value']);
 
         $this->assertSame('data', $result->getContent());
-        $this->assertSame([], $result->getView());
+        $this->assertSame(['params' => 'value'], $result->getView());
     }
 
     public function testGetType(): void

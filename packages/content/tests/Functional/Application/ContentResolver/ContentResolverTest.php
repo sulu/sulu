@@ -812,7 +812,7 @@ class ContentResolverTest extends SuluTestCase
         // root view mapping (ids/displayOption); ignore metadata
         /** @var array{content: array<int, mixed>, view: array<int, mixed>, title: array<mixed>, url: array<mixed>} $view */
         $view = $result['view'];
-        self::assertSame([], $view['title']);
+        self::assertSame(['headline' => true], $view['title']);
         self::assertSame([], $view['url']);
 
         /** @var array<int, mixed> $viewContentBlocks */
