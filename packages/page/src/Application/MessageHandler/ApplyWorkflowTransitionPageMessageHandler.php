@@ -11,6 +11,7 @@
 
 namespace Sulu\Page\Application\MessageHandler;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -29,33 +30,78 @@ final class ApplyWorkflowTransitionPageMessageHandler
     public function __construct(
         private PageRepositoryInterface $pageRepository,
         private ContentWorkflowInterface $contentWorkflow,
+        private EntityManagerInterface $entityManager,
         private DomainEventCollectorInterface $domainEventCollector,
     ) {
     }
 
     public function __invoke(ApplyWorkflowTransitionPageMessage $message): PageInterface
     {
-        $page = $this->pageRepository->getOneBy(
+        $locale = $message->getLocale();
+
+        $page = $this->loadPage($message, [$locale]);
+
+        // The shadow source and dependent locales are only known once this locale is loaded.
+        $relatedLocales = $this->resolveRelatedLocales($page, $locale);
+        if ([] !== $relatedLocales) {
+            // Drop the identity-map collection (filled by a preceding ModifyPageMessage) so the
+            // wider query re-hydrates it with all locales.
+            $this->entityManager->refresh($page);
+
+            $page = $this->loadPage($message, [$locale, ...$relatedLocales]);
+        }
+
+        $this->contentWorkflow->apply(
+            $page,
+            ['locale' => $locale],
+            $message->getTransitionName()
+        );
+
+        $this->domainEventCollector->collect(new PageWorkflowTransitionAppliedEvent($page, $message->getTransitionName(), $locale));
+
+        return $page;
+    }
+
+    /**
+     * @param string[] $locales
+     */
+    private function loadPage(ApplyWorkflowTransitionPageMessage $message, array $locales): PageInterface
+    {
+        return $this->pageRepository->getOneBy(
             $message->getIdentifier(),
             [
                 PageRepositoryInterface::SELECT_PAGE_CONTENT => [
                     'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_ADMIN => true],
                     'dimensionAttributes' => [
-                        'locale' => $message->getLocale(),
+                        'locale' => $locales,
                         'stage' => [DimensionContentInterface::STAGE_DRAFT, DimensionContentInterface::STAGE_LIVE],
                     ],
                 ],
             ]
         );
+    }
 
-        $this->contentWorkflow->apply(
-            $page,
-            ['locale' => $message->getLocale()],
-            $message->getTransitionName()
-        );
+    /**
+     * @return string[]
+     */
+    private function resolveRelatedLocales(PageInterface $page, string $locale): array
+    {
+        foreach ($page->getDimensionContents() as $dimensionContent) {
+            if (DimensionContentInterface::STAGE_DRAFT !== $dimensionContent->getStage()
+                || null !== $dimensionContent->getLocale()
+            ) {
+                continue;
+            }
 
-        $this->domainEventCollector->collect(new PageWorkflowTransitionAppliedEvent($page, $message->getTransitionName(), $message->getLocale()));
+            $relatedLocales = $dimensionContent->getShadowLocalesForLocale($locale);
+            $sourceLocale = ($dimensionContent->getShadowLocales() ?? [])[$locale] ?? null;
+            if (null !== $sourceLocale) {
+                $relatedLocales[] = $sourceLocale;
+            }
 
-        return $page;
+            return \array_values(\array_unique($relatedLocales));
+        }
+
+        return [];
     }
 }
