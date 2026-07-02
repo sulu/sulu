@@ -794,6 +794,54 @@ class ArticleControllerTest extends SuluTestCase
         }
     }
 
+    public function testGetListWithTemplateFilteringShowsGhostLocaleAlongsidePublished(): void
+    {
+        self::purgeDatabase();
+
+        // Article that exists in the requested locale "en"
+        $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'article',
+            'title' => 'English Article',
+            'url' => '/english-article',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+
+        // Article that only exists in "de"
+        $this->client->request('POST', '/admin/api/articles?locale=de&action=publish', [], [], [], \json_encode([
+            'template' => 'article',
+            'title' => 'German Ghost Article',
+            'url' => '/german-ghost-article',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+
+        // List in "en" with the template filter. The real "en" article and the "de"-only
+        // ghost must both appear: the join upgrade must not drop the ghost row even when a
+        // non-ghost row is also present in the result set.
+        $this->client->request('GET', '/admin/api/articles?locale=en&templates=article');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        /** @var array{total: int, _embedded: array{articles: array<int, array{title: string, locale: string|null, ghostLocale: string|null}>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+
+        $this->assertSame(2, $content['total']);
+        $this->assertCount(2, $content['_embedded']['articles']);
+
+        $articlesByTitle = [];
+        foreach ($content['_embedded']['articles'] as $article) {
+            $articlesByTitle[$article['title']] = $article;
+        }
+
+        $this->assertArrayHasKey('English Article', $articlesByTitle);
+        $this->assertSame('en', $articlesByTitle['English Article']['locale']);
+        $this->assertNull($articlesByTitle['English Article']['ghostLocale']);
+
+        $this->assertArrayHasKey('German Ghost Article', $articlesByTitle);
+        $this->assertNull($articlesByTitle['German Ghost Article']['locale']);
+        $this->assertSame('de', $articlesByTitle['German Ghost Article']['ghostLocale']);
+    }
+
     public function testGetListWithGroupFiltering(): void
     {
         self::purgeDatabase();

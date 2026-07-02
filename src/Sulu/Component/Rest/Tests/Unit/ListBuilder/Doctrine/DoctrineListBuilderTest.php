@@ -1368,6 +1368,81 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
+    public function testLeftJoinNotUpgradedWhenCaseFieldDescriptorUsedForFilter(): void
+    {
+        $case1EntityName = 'Sulu\Bundle\CoreBundle\Entity\ExampleTranslation';
+        $case2EntityName = 'Sulu\Bundle\CoreBundle\Entity\ExampleFallback';
+        $case2EntityNameAlias = 'Sulu_Bundle_CoreBundle_Entity_ExampleFallback';
+
+        $caseFieldDescriptor = new DoctrineCaseFieldDescriptor(
+            'title',
+            new DoctrineDescriptor(
+                $case1EntityName,
+                'title',
+                [
+                    $case1EntityName => new DoctrineJoinDescriptor(
+                        $case1EntityName,
+                        self::$entityNameAlias . '.translations',
+                        '',
+                        DoctrineJoinDescriptor::JOIN_METHOD_LEFT,
+                    ),
+                ]
+            ),
+            new DoctrineDescriptor(
+                $case2EntityName,
+                'title',
+                [
+                    // The fallback (ghost) branch depends on the case1 join being present
+                    // but NULL (its join condition references the case1 entity), so its
+                    // join chain includes the case1 join in addition to its own.
+                    $case1EntityName => new DoctrineJoinDescriptor(
+                        $case1EntityName,
+                        self::$entityNameAlias . '.translations',
+                        '',
+                        DoctrineJoinDescriptor::JOIN_METHOD_LEFT,
+                    ),
+                    $case2EntityName => new DoctrineJoinDescriptor(
+                        $case2EntityName,
+                        self::$entityNameAlias . '.fallbacks',
+                        '',
+                        DoctrineJoinDescriptor::JOIN_METHOD_LEFT,
+                    ),
+                ]
+            ),
+        );
+
+        $this->doctrineListBuilder->setFieldDescriptors(['title' => $caseFieldDescriptor]);
+        $this->doctrineListBuilder->in($caseFieldDescriptor, ['value1', 'value2']);
+
+        $this->queryBuilder->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->distinct(Argument::any())->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->where(self::$entityNameAlias . '.id IN (:ids)')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->andWhere(Argument::any())->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter(Argument::cetera())->willReturn($this->queryBuilder->reveal());
+
+        // the localized join, shared by both case branches, must stay LEFT
+        $this->queryBuilder->leftJoin(
+            self::$entityNameAlias . '.translations',
+            self::$translationEntityNameAlias,
+            'WITH',
+            ''
+        )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        // the fallback join itself also stays LEFT
+        $this->queryBuilder->leftJoin(
+            self::$entityNameAlias . '.fallbacks',
+            $case2EntityNameAlias,
+            'WITH',
+            ''
+        )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        $this->queryBuilder->innerJoin(Argument::cetera())->willReturn($this->queryBuilder->reveal())->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
     public function testLeftJoinNotUpgradedWhenNoExpressionReferencesJoin(): void
     {
         $this->doctrineListBuilder->addSelectField($this->createLeftJoinedTranslationFieldDescriptor());
