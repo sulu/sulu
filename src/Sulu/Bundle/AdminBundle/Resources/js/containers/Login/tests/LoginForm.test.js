@@ -49,7 +49,7 @@ test('Should trigger onChangeForm correctly', () => {
 
     loginForm.find('Button').at(0).simulate('click');
 
-    expect(onChangeForm).toBeCalled();
+    expect(onChangeForm).toHaveBeenCalled();
 });
 
 test('Should not trigger onSubmit if password or user is missing', () => {
@@ -68,8 +68,8 @@ test('Should not trigger onSubmit if password or user is missing', () => {
     loginForm.find('Input[icon="su-user"]').prop('onChange')('Max');
     loginForm.find('form').prop('onSubmit')(event);
 
-    expect(event.preventDefault).toBeCalledWith();
-    expect(onSubmit).not.toBeCalled();
+    expect(event.preventDefault).toHaveBeenCalledWith();
+    expect(onSubmit).not.toHaveBeenCalled();
 });
 
 test('Should trigger onSubmit correctly', () => {
@@ -89,6 +89,6 @@ test('Should trigger onSubmit correctly', () => {
     loginForm.find('Input[icon="su-lock"]').prop('onChange')('max');
     loginForm.find('form').prop('onSubmit')(event);
 
-    expect(event.preventDefault).toBeCalledWith();
-    expect(onSubmit).toBeCalledWith({username: 'Max', password: 'max'});
+    expect(event.preventDefault).toHaveBeenCalledWith();
+    expect(onSubmit).toHaveBeenCalledWith({username: 'Max', password: 'max'});
 });

@@ -78,7 +78,7 @@ test('Initialize the list correctly', () => {
         <SettingsVersions {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />
     );
 
-    expect(ListStore).toBeCalledWith(
+    expect(ListStore).toHaveBeenCalledWith(
         'page_versions',
         'page_versions',
         'page_versions',
@@ -128,7 +128,7 @@ test('Reload the ListStore if a new version was published', () => {
     const saveHandler = formInspector.addSaveHandler.mock.calls[0][0];
     saveHandler('publish');
 
-    expect(listStore.reload).toBeCalledWith();
+    expect(listStore.reload).toHaveBeenCalledWith();
 });
 
 test('Do not reload the ListStore if page was saved without being published', () => {
@@ -164,7 +164,7 @@ test('Do not reload the ListStore if page was saved without being published', ()
     const saveHandler = formInspector.addSaveHandler.mock.calls[0][0];
     saveHandler('draft');
 
-    expect(listStore.reload).not.toBeCalled();
+    expect(listStore.reload).not.toHaveBeenCalled();
 });
 
 test('Open and cancel restore overlay', () => {
@@ -264,7 +264,7 @@ test('Open and confirm restore overlay', () => {
     return postPromise.then(() => {
         expect(pageSettingsVersions.find('Dialog').prop('open')).toEqual(false);
         expect(pageSettingsVersions.find('Dialog').prop('confirmLoading')).toEqual(false);
-        expect(router.navigate).toBeCalledWith('sulu_page.page_edit_form', {id: 3, locale, webspace: 'sulu'});
+        expect(router.navigate).toHaveBeenCalledWith('sulu_page.page_edit_form', {id: 3, locale, webspace: 'sulu'});
     });
 });
 

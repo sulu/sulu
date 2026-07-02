@@ -36,7 +36,7 @@ test('Call onAdd callback when add button is clicked', async() => {
 
     await userEvent.click(icon);
 
-    expect(addSpy).toBeCalled();
+    expect(addSpy).toHaveBeenCalled();
 });
 
 test('Call onEdit callback when edit icon is clicked', async() => {
@@ -57,7 +57,7 @@ test('Call onEdit callback when edit icon is clicked', async() => {
 
     await userEvent.click(icon);
 
-    expect(editSpy).toBeCalledWith(1);
+    expect(editSpy).toHaveBeenCalledWith(1);
 });
 
 test('Call onRemove callback when remove icon is clicked', async() => {
@@ -78,5 +78,5 @@ test('Call onRemove callback when remove icon is clicked', async() => {
 
     await userEvent.click(icon);
 
-    expect(removeSpy).toBeCalledWith(1);
+    expect(removeSpy).toHaveBeenCalledWith(1);
 });

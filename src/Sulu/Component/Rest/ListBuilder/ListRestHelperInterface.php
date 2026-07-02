@@ -34,7 +34,7 @@ interface ListRestHelperInterface
     /**
      * Returns the desired sort column.
      *
-     * @return string
+     * @return string|null
      */
     public function getSortColumn();
 

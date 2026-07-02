@@ -198,7 +198,7 @@ test('Construct MultiSelectionStore with correct parameters', () => {
         />
     );
 
-    expect(MultiSelectionStore).toBeCalledWith('snippets', [1, 2, 5], locale, 'ids', {key: 'value-1'});
+    expect(MultiSelectionStore).toHaveBeenCalledWith('snippets', [1, 2, 5], locale, 'ids', {key: 'value-1'});
 });
 
 test('Update requestParameters and reload items of MultiSelectionStore when options prop is changed', () => {
@@ -218,15 +218,15 @@ test('Update requestParameters and reload items of MultiSelectionStore when opti
         />
     );
 
-    expect(selection.instance().selectionStore.setRequestParameters).not.toBeCalled();
-    expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
+    expect(selection.instance().selectionStore.setRequestParameters).not.toHaveBeenCalled();
+    expect(selection.instance().selectionStore.loadItems).not.toHaveBeenCalled();
 
     selection.setProps({
         options: {key: 'value-2'},
     });
 
-    expect(selection.instance().selectionStore.setRequestParameters).toBeCalledWith({key: 'value-2'});
-    expect(selection.instance().selectionStore.loadItems).toBeCalledWith([1, 2, 5]);
+    expect(selection.instance().selectionStore.setRequestParameters).toHaveBeenCalledWith({key: 'value-2'});
+    expect(selection.instance().selectionStore.loadItems).toHaveBeenCalledWith([1, 2, 5]);
 });
 
 test('Not reload items of MultiSelectionStore when new value of option prop is equal to old value', () => {
@@ -246,15 +246,15 @@ test('Not reload items of MultiSelectionStore when new value of option prop is e
         />
     );
 
-    expect(selection.instance().selectionStore.setRequestParameters).not.toBeCalled();
-    expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
+    expect(selection.instance().selectionStore.setRequestParameters).not.toHaveBeenCalled();
+    expect(selection.instance().selectionStore.loadItems).not.toHaveBeenCalled();
 
     selection.setProps({
         options: {key: 'value-1'},
     });
 
-    expect(selection.instance().selectionStore.setRequestParameters).not.toBeCalled();
-    expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
+    expect(selection.instance().selectionStore.setRequestParameters).not.toHaveBeenCalled();
+    expect(selection.instance().selectionStore.loadItems).not.toHaveBeenCalled();
 });
 
 test('Should not open an overlay on icon-click when disabled', () => {
@@ -341,7 +341,7 @@ test('Should call the onChange callback when clicking the confirm button', () =>
         confirmButton.click();
     }
 
-    expect(selection.instance().selectionStore.set).toBeCalledWith([3, 7, 2]);
+    expect(selection.instance().selectionStore.set).toHaveBeenCalledWith([3, 7, 2]);
 });
 
 test('Should not call the onChange callback when items have not changed', () => {
@@ -357,11 +357,11 @@ test('Should not call the onChange callback when items have not changed', () => 
         />
     );
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 
     selection.instance().selectionStore.items = [{id: 1}];
     selection.setProps({value: [1]});
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Should call the onItemClick callback when an item was clicked', () => {
@@ -413,7 +413,7 @@ test('Should load the items if value prop changes', () => {
     );
 
     selection.setProps({value: [1, 3]});
-    expect(selection.instance().selectionStore.loadItems).toBeCalledWith([1, 3]);
+    expect(selection.instance().selectionStore.loadItems).toHaveBeenCalledWith([1, 3]);
 });
 
 test('Should instantiate the ListStore with the correct resourceKey and destroy it on unmount', () => {
@@ -434,7 +434,7 @@ test('Should instantiate the ListStore with the correct resourceKey and destroy 
     expect(listStore.resourceKey).toEqual('pages');
 
     selection.unmount();
-    expect(listStore.destroy).toBeCalled();
+    expect(listStore.destroy).toHaveBeenCalled();
 });
 
 test('Should instantiate the ListStore with the preselected ids', () => {
@@ -457,9 +457,9 @@ test('Should instantiate the ListStore with the preselected ids', () => {
     selection.find('Button[icon="su-plus"]').simulate('click');
 
     const listStore = selection.find('MultiListOverlay').instance().listStore;
-    expect(listStore.select).toBeCalledWith({id: 1});
-    expect(listStore.select).toBeCalledWith({id: 5});
-    expect(listStore.select).toBeCalledWith({id: 8});
+    expect(listStore.select).toHaveBeenCalledWith({id: 1});
+    expect(listStore.select).toHaveBeenCalledWith({id: 5});
+    expect(listStore.select).toHaveBeenCalledWith({id: 8});
 });
 
 test('Should reinstantiate the ListStore with the preselected ids when new props are received', () => {
@@ -486,9 +486,9 @@ test('Should reinstantiate the ListStore with the preselected ids when new props
     selection.find('Button[icon="su-plus"]').simulate('click');
 
     const listStore = selection.find('MultiListOverlay').instance().listStore;
-    expect(listStore.select).toBeCalledWith({id: 1});
-    expect(listStore.select).toBeCalledWith({id: 5});
-    expect(listStore.select).toBeCalledWith({id: 8});
+    expect(listStore.select).toHaveBeenCalledWith({id: 1});
+    expect(listStore.select).toHaveBeenCalledWith({id: 5});
+    expect(listStore.select).toHaveBeenCalledWith({id: 8});
 
     selection.setProps({value: [1, 3]});
     const loadItemsCall = selection.instance().selectionStore.loadItems.mock.calls[0];
@@ -519,12 +519,12 @@ test('Should not reload items if none of the items changed', () => {
     selection.find('Button[icon="su-plus"]').simulate('click');
 
     const listStore = selection.find('MultiListOverlay').instance().listStore;
-    expect(listStore.select).toBeCalledWith({id: 1});
-    expect(listStore.select).toBeCalledWith({id: 5});
-    expect(listStore.select).toBeCalledWith({id: 8});
+    expect(listStore.select).toHaveBeenCalledWith({id: 1});
+    expect(listStore.select).toHaveBeenCalledWith({id: 5});
+    expect(listStore.select).toHaveBeenCalledWith({id: 8});
 
     selection.setProps({value: [1, 5, 8]});
-    expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
+    expect(selection.instance().selectionStore.loadItems).not.toHaveBeenCalled();
 });
 
 test('Should not reinstantiate the ListStore with the preselected ids when new props have the same values', () => {
@@ -551,7 +551,7 @@ test('Should not reinstantiate the ListStore with the preselected ids when new p
     selection.find('Button[icon="su-plus"]').simulate('click');
 
     selection.setProps({value: [1, 5, 8]});
-    expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
+    expect(selection.instance().selectionStore.loadItems).not.toHaveBeenCalled();
 });
 
 test('Should remove an item when the remove button is clicked', () => {
@@ -568,7 +568,7 @@ test('Should remove an item when the remove button is clicked', () => {
     );
 
     selection.find('MultiItemSelection').prop('onItemRemove')(7);
-    expect(selection.instance().selectionStore.removeById).toBeCalledWith(7);
+    expect(selection.instance().selectionStore.removeById).toHaveBeenCalledWith(7);
 });
 
 test('Should reorder the items on drag and drop', () => {
@@ -586,7 +586,7 @@ test('Should reorder the items on drag and drop', () => {
 
     selection.find('MultiItemSelection').prop('onItemsSorted')(1, 2);
 
-    expect(selection.instance().selectionStore.move).toBeCalledWith(1, 2);
+    expect(selection.instance().selectionStore.move).toHaveBeenCalledWith(1, 2);
 });
 
 test('Should call the onChange callback if the value of the selection-store changes', () => {
@@ -604,7 +604,7 @@ test('Should call the onChange callback if the value of the selection-store chan
     );
 
     selection.instance().selectionStore.items = [{id: 22}, {id: 23}];
-    expect(changeSpy).toBeCalledWith([22, 23]);
+    expect(changeSpy).toHaveBeenCalledWith([22, 23]);
 });
 
 test('Should not call the onChange callback if the component props change', () => {
@@ -622,7 +622,7 @@ test('Should not call the onChange callback if the component props change', () =
     );
 
     selection.setProps({overlayTitle: 'New Selection Title'});
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Should not call onChange callback if an unrelated observable that is accessed in the callback changes', () => {
@@ -644,7 +644,7 @@ test('Should not call onChange callback if an unrelated observable that is acces
 
     // change callback should be called when item of the store mock changes
     selection.instance().selectionStore.items = [{id: 22}, {id: 23}];
-    expect(changeSpy).toBeCalledWith([22, 23]);
+    expect(changeSpy).toHaveBeenCalledWith([22, 23]);
     expect(changeSpy).toHaveBeenCalledTimes(1);
 
     // change callback should not be called when the unrelated observable changes

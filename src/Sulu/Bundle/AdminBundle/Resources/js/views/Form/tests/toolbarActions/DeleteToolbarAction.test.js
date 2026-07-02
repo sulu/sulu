@@ -160,14 +160,14 @@ test('Return empty item config when deprecated display_condition is not met', ()
     const deleteToolbarAction = createDeleteToolbarAction({display_condition: 'url == "/"'});
 
     expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(undefined);
-    expect(log.warn).toBeCalledWith(expect.stringContaining('The "display_condition" option is deprecated'));
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "display_condition" option is deprecated'));
 });
 
 test('Return empty item config when passed visible_condition is not met', () => {
     const deleteToolbarAction = createDeleteToolbarAction({visible_condition: 'url == "/"'});
 
     expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(undefined);
-    expect(log.warn).not.toBeCalled();
+    expect(log.warn).not.toHaveBeenCalled();
 });
 
 test('Return item config when passed visible_condition is met', () => {
@@ -251,11 +251,11 @@ test('Call delete when dialog is confirmed', () => {
     }));
 
     element.find('Button[skin="primary"]').simulate('click');
-    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith({deleteLocale: false});
+    expect(deleteToolbarAction.resourceFormStore.delete).toHaveBeenCalledWith({deleteLocale: false});
 
     return deletePromise.then(() => {
         element = mount(deleteToolbarAction.getNode());
-        expect(deleteToolbarAction.router.restore).toBeCalledWith('sulu_test.list', {locale: 'en'});
+        expect(deleteToolbarAction.router.restore).toHaveBeenCalledWith('sulu_test.list', {locale: 'en'});
         expect(element.at(0).instance().props).toEqual(expect.objectContaining({
             open: false,
         }));
@@ -282,11 +282,11 @@ test('Call delete when dialog is confirmed with deleteLocale', () => {
     }));
 
     element.find('Button[skin="primary"]').simulate('click');
-    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith({deleteLocale: true});
+    expect(deleteToolbarAction.resourceFormStore.delete).toHaveBeenCalledWith({deleteLocale: true});
 
     return deletePromise.then(() => {
         element = mount(deleteToolbarAction.getNode());
-        expect(deleteToolbarAction.router.restore).toBeCalledWith('sulu_test.list', {locale: 'en'});
+        expect(deleteToolbarAction.router.restore).toHaveBeenCalledWith('sulu_test.list', {locale: 'en'});
         expect(element.at(0).instance().props).toEqual(expect.objectContaining({
             open: false,
         }));
@@ -314,12 +314,12 @@ test('Call delete when dialog is confirmed with router_attributes_to_back_view o
     }));
 
     element.find('Button[skin="primary"]').simulate('click');
-    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith({deleteLocale: false});
+    expect(deleteToolbarAction.resourceFormStore.delete).toHaveBeenCalledWith({deleteLocale: false});
 
     return deletePromise.then(() => {
         element = mount(deleteToolbarAction.getNode());
         expect(deleteToolbarAction.router.restore)
-            .toBeCalledWith('sulu_test.list', {locale: 'en', webspace: 'example'});
+            .toHaveBeenCalledWith('sulu_test.list', {locale: 'en', webspace: 'example'});
         expect(element.at(0).instance().props).toEqual(expect.objectContaining({
             open: false,
         }));
@@ -347,12 +347,12 @@ test('Call delete when dialog is confirmed with router_attributes_to_back_view o
     }));
 
     element.find('Button[skin="primary"]').simulate('click');
-    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith({deleteLocale: false});
+    expect(deleteToolbarAction.resourceFormStore.delete).toHaveBeenCalledWith({deleteLocale: false});
 
     return deletePromise.then(() => {
         element = mount(deleteToolbarAction.getNode());
         expect(deleteToolbarAction.router.restore)
-            .toBeCalledWith('sulu_test.list', {locale: 'en', webspace: 'example'});
+            .toHaveBeenCalledWith('sulu_test.list', {locale: 'en', webspace: 'example'});
         expect(element.at(0).instance().props).toEqual(expect.objectContaining({
             open: false,
         }));
@@ -394,11 +394,11 @@ test('Call delete with force when dialog is confirmed twice', (done) => {
     }));
 
     element.find('Button[skin="primary"]').simulate('click');
-    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith({deleteLocale: false});
+    expect(deleteToolbarAction.resourceFormStore.delete).toHaveBeenCalledWith({deleteLocale: false});
 
     setTimeout(() => {
         element = mount(deleteToolbarAction.getNode());
-        expect(deleteToolbarAction.router.restore).toBeCalledTimes(0);
+        expect(deleteToolbarAction.router.restore).toHaveBeenCalledTimes(0);
         expect(element.at(0).prop('open')).toEqual(false);
         expect(element.contains('DeleteReferencedResourceDialog'));
         expect(element.find('DeleteReferencedResourceDialog').find('li')).toHaveLength(2);
@@ -411,7 +411,7 @@ test('Call delete with force when dialog is confirmed twice', (done) => {
         element.find('Button[skin="primary"]').simulate('click');
 
         setTimeout(() => {
-            expect(deleteToolbarAction.router.restore).toBeCalledWith('sulu_test.list', {locale: 'en'});
+            expect(deleteToolbarAction.router.restore).toHaveBeenCalledWith('sulu_test.list', {locale: 'en'});
             expect(element.at(0).instance().props).toEqual(expect.objectContaining({
                 open: false,
             }));
@@ -456,11 +456,11 @@ test('Call delete with force and deleteLocale when dialog is confirmed twice', (
     }));
 
     element.find('Button[skin="primary"]').simulate('click');
-    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith({deleteLocale: true});
+    expect(deleteToolbarAction.resourceFormStore.delete).toHaveBeenCalledWith({deleteLocale: true});
 
     setTimeout(() => {
         element = mount(deleteToolbarAction.getNode());
-        expect(deleteToolbarAction.router.restore).toBeCalledTimes(0);
+        expect(deleteToolbarAction.router.restore).toHaveBeenCalledTimes(0);
         expect(element.at(0).prop('open')).toEqual(false);
         expect(element.contains('DeleteReferencedResourceDialog'));
         expect(element.find('DeleteReferencedResourceDialog').find('li')).toHaveLength(2);
@@ -473,7 +473,7 @@ test('Call delete with force and deleteLocale when dialog is confirmed twice', (
         element.find('Button[skin="primary"]').simulate('click');
 
         setTimeout(() => {
-            expect(deleteToolbarAction.router.restore).toBeCalledWith('sulu_test.list', {locale: 'en'});
+            expect(deleteToolbarAction.router.restore).toHaveBeenCalledWith('sulu_test.list', {locale: 'en'});
             expect(element.at(0).instance().props).toEqual(expect.objectContaining({
                 open: false,
             }));
@@ -518,11 +518,11 @@ test('Cancel delete conflict occured with the allowConflictDeletion option set t
     }));
 
     element.find('Button[skin="primary"]').simulate('click');
-    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith({deleteLocale: false});
+    expect(deleteToolbarAction.resourceFormStore.delete).toHaveBeenCalledWith({deleteLocale: false});
 
     setTimeout(() => {
         element = mount(deleteToolbarAction.getNode());
-        expect(deleteToolbarAction.router.restore).toBeCalledTimes(0);
+        expect(deleteToolbarAction.router.restore).toHaveBeenCalledTimes(0);
         expect(element.at(0).prop('open')).toEqual(false);
         expect(element.contains('DeleteReferencedResourceDialog'));
         expect(element.find('DeleteReferencedResourceDialog').find('li')).toHaveLength(2);
@@ -535,8 +535,8 @@ test('Cancel delete conflict occured with the allowConflictDeletion option set t
         element.find('Button[skin="primary"]').simulate('click');
 
         setTimeout(() => {
-            expect(deleteToolbarAction.router.restore).not.toBeCalled();
-            expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledTimes(1);
+            expect(deleteToolbarAction.router.restore).not.toHaveBeenCalled();
+            expect(deleteToolbarAction.resourceFormStore.delete).toHaveBeenCalledTimes(1);
             expect(element.at(0).instance().props).toEqual(expect.objectContaining({
                 open: false,
             }));
@@ -581,11 +581,11 @@ test('Call delete when DeleteDependantResourcesDialog is finished', (done) => {
     }));
 
     element.find('Button[skin="primary"]').simulate('click');
-    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith({deleteLocale: false});
+    expect(deleteToolbarAction.resourceFormStore.delete).toHaveBeenCalledWith({deleteLocale: false});
 
     setTimeout(() => {
         element = mount(deleteToolbarAction.getNode());
-        expect(deleteToolbarAction.router.restore).toBeCalledTimes(0);
+        expect(deleteToolbarAction.router.restore).toHaveBeenCalledTimes(0);
         expect(element.at(0).prop('open')).toEqual(false);
         expect(element.contains('DeleteDependantResourcesDialog'));
 
@@ -595,7 +595,7 @@ test('Call delete when DeleteDependantResourcesDialog is finished', (done) => {
         element.find('DeleteDependantResourcesDialog').prop('onFinish')();
 
         setTimeout(() => {
-            expect(deleteToolbarAction.router.restore).toBeCalledWith('sulu_test.list', {locale: 'en'});
+            expect(deleteToolbarAction.router.restore).toHaveBeenCalledWith('sulu_test.list', {locale: 'en'});
             expect(element.at(0).instance().props).toEqual(expect.objectContaining({
                 open: false,
             }));
@@ -640,11 +640,11 @@ test('Do not call delete when DeleteDependantResourcesDialog is cancelled', (don
     }));
 
     element.find('Button[skin="primary"]').simulate('click');
-    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith({deleteLocale: false});
+    expect(deleteToolbarAction.resourceFormStore.delete).toHaveBeenCalledWith({deleteLocale: false});
 
     setTimeout(() => {
         element = mount(deleteToolbarAction.getNode());
-        expect(deleteToolbarAction.router.restore).toBeCalledTimes(0);
+        expect(deleteToolbarAction.router.restore).toHaveBeenCalledTimes(0);
         expect(element.at(0).prop('open')).toEqual(false);
         expect(element.contains('DeleteDependantResourcesDialog'));
 
@@ -654,8 +654,8 @@ test('Do not call delete when DeleteDependantResourcesDialog is cancelled', (don
         element.find('DeleteDependantResourcesDialog').prop('onCancel')();
 
         setTimeout(() => {
-            expect(deleteToolbarAction.router.restore).not.toBeCalled();
-            expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledTimes(1);
+            expect(deleteToolbarAction.router.restore).not.toHaveBeenCalled();
+            expect(deleteToolbarAction.resourceFormStore.delete).toHaveBeenCalledTimes(1);
             expect(element.at(0).instance().props).toEqual(expect.objectContaining({
                 open: false,
             }));

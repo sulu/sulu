@@ -282,7 +282,7 @@ test('Should trigger onChange correctly when MultiSelect for roles changes', () 
         },
     ];
 
-    expect(onChangeSpy).toBeCalledWith(newValue);
+    expect(onChangeSpy).toHaveBeenCalledWith(newValue);
 });
 
 test('Should trigger onChange correctly when RoleAssignment changes', () => {
@@ -357,5 +357,5 @@ test('Should trigger onChange correctly when RoleAssignment changes', () => {
         },
     ];
     roleAssignments.find(RoleAssignment).at(1).instance().props.onChange(newValue[0]);
-    expect(onChangeSpy).toBeCalledWith(newValue);
+    expect(onChangeSpy).toHaveBeenCalledWith(newValue);
 });

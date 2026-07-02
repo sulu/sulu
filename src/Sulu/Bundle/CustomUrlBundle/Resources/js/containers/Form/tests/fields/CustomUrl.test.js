@@ -124,7 +124,7 @@ test('Call onChange when if a value changes', () => {
 
     customUrl.find('CustomUrl').prop('onChange')(['test']);
 
-    expect(changeSpy).toBeCalledWith(['test']);
+    expect(changeSpy).toHaveBeenCalledWith(['test']);
 });
 
 test('Call onFinish when if the field is blurred', () => {
@@ -150,5 +150,5 @@ test('Call onFinish when if the field is blurred', () => {
 
     customUrl.find('CustomUrl').prop('onBlur')();
 
-    expect(finishSpy).toBeCalledWith();
+    expect(finishSpy).toHaveBeenCalledWith();
 });

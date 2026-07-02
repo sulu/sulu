@@ -15,10 +15,14 @@ use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 
+/** @phpstan-import-type ObjectsDefinition from PersistenceExtensionTrait */
 class UsingPersistenceExtensionTrait extends Extension
 {
     use PersistenceExtensionTrait;
 
+    /**
+     * @param array{objects: ObjectsDefinition} $config
+     */
     public function load(array $config, ContainerBuilder $container): void
     {
         $this->configurePersistence($config['objects'], $container);

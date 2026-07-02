@@ -10,13 +10,13 @@ jest.mock('debounce', () => jest.fn((value) => value));
 test('Should render two password fields and add a debounced function', () => {
     const {container} = render(<PasswordConfirmation disabled={true} onChange={jest.fn()} />);
     expect(container).toMatchSnapshot();
-    expect(debounce).toBeCalledWith(expect.any(Function), 500);
+    expect(debounce).toHaveBeenCalledWith(expect.any(Function), 500);
 });
 
 test('Should render disabled input-components when disabled', () => {
     const {container} = render(<PasswordConfirmation onChange={jest.fn()} />);
     expect(container).toMatchSnapshot();
-    expect(debounce).toBeCalledWith(expect.any(Function), 500);
+    expect(debounce).toHaveBeenCalledWith(expect.any(Function), 500);
 });
 
 test('Should only call onChange when both values match after the debounced time', async() => {
@@ -25,17 +25,17 @@ test('Should only call onChange when both values match after the debounced time'
 
     const inputs = screen.queryAllByDisplayValue('');
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 
     await userEvent.type(inputs[0], 'asdf');
     await userEvent.type(inputs[1], 'jklö');
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 
     await userEvent.clear(inputs[1]);
     await userEvent.type(inputs[1], 'asdf');
 
-    expect(changeSpy).toBeCalledWith('asdf');
+    expect(changeSpy).toHaveBeenCalledWith('asdf');
 });
 
 test('Should mark the input fields as invalid if they do not match', async() => {
@@ -44,7 +44,7 @@ test('Should mark the input fields as invalid if they do not match', async() => 
 
     const inputs = screen.queryAllByDisplayValue('');
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 
     await userEvent.type(inputs[0], 'asdf');
     await userEvent.type(inputs[1], 'jklö');

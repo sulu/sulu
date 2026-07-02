@@ -567,7 +567,7 @@ test('Call activate on store if item is activated', () => {
 
     list.find('TestAdapter').prop('onItemActivate')(5);
 
-    expect(listStore.activate).toBeCalledWith(5);
+    expect(listStore.activate).toHaveBeenCalledWith(5);
 });
 
 test('Do not call activate if item is activated but disabled and allowActivateForDisabledItems is false', () => {
@@ -579,8 +579,8 @@ test('Do not call activate if item is activated but disabled and allowActivateFo
     list.find('TestAdapter').prop('onItemActivate')(5);
     list.find('TestAdapter').prop('onItemActivate')(7);
 
-    expect(listStore.activate).not.toBeCalledWith(5);
-    expect(listStore.activate).toBeCalledWith(7);
+    expect(listStore.activate).not.toHaveBeenCalledWith(5);
+    expect(listStore.activate).toHaveBeenCalledWith(7);
 });
 
 test('Do not call activate if item fulfills itemDisabledCondition and allowActivateForDisabledItems is false', () => {
@@ -608,8 +608,8 @@ test('Do not call activate if item fulfills itemDisabledCondition and allowActiv
     list.find('TestAdapter').prop('onItemActivate')(1);
     list.find('TestAdapter').prop('onItemActivate')(2);
 
-    expect(listStore.activate).toBeCalledWith(1);
-    expect(listStore.activate).not.toBeCalledWith(2);
+    expect(listStore.activate).toHaveBeenCalledWith(1);
+    expect(listStore.activate).not.toHaveBeenCalledWith(2);
 });
 
 test('Call deactivate on store if item is deactivated', () => {
@@ -618,7 +618,7 @@ test('Call deactivate on store if item is deactivated', () => {
 
     list.find('TestAdapter').prop('onItemDeactivate')(5);
 
-    expect(listStore.deactivate).toBeCalledWith(5);
+    expect(listStore.deactivate).toHaveBeenCalledWith(5);
 });
 
 test('Pass sortColumn and sortOrder to adapter', () => {
@@ -677,14 +677,14 @@ test('Selecting and deselecting items should update store', () => {
     checkboxes.at(1).getDOMNode().checked = true;
     checkboxes.at(2).getDOMNode().checked = true;
     checkboxes.at(1).simulate('change', {currentTarget: {checked: true}});
-    expect(listStore.findById).toBeCalledWith(1);
-    expect(listStore.select).toBeCalledWith({id: 1});
+    expect(listStore.findById).toHaveBeenCalledWith(1);
+    expect(listStore.select).toHaveBeenCalledWith({id: 1});
     checkboxes.at(2).simulate('change', {currentTarget: {checked: true}});
-    expect(listStore.findById).toBeCalledWith(2);
-    expect(listStore.select).toBeCalledWith({id: 2});
+    expect(listStore.findById).toHaveBeenCalledWith(2);
+    expect(listStore.select).toHaveBeenCalledWith({id: 2});
     checkboxes.at(1).simulate('change', {currentTarget: {checked: false}});
-    expect(listStore.findById).toBeCalledWith(1);
-    expect(listStore.deselect).toBeCalledWith({id: 1});
+    expect(listStore.findById).toHaveBeenCalledWith(1);
+    expect(listStore.deselect).toHaveBeenCalledWith({id: 1});
 });
 
 test('Selecting and unselecting all visible items should update store', () => {
@@ -703,14 +703,14 @@ test('Selecting and unselecting all visible items should update store', () => {
     headerCheckbox.getDOMNode().checked = true;
 
     headerCheckbox.simulate('change', {currentTarget: {checked: true}});
-    expect(listStore.select).toBeCalledWith({id: 1});
-    expect(listStore.select).toBeCalledWith({id: 2});
-    expect(listStore.select).toBeCalledWith({id: 3});
+    expect(listStore.select).toHaveBeenCalledWith({id: 1});
+    expect(listStore.select).toHaveBeenCalledWith({id: 2});
+    expect(listStore.select).toHaveBeenCalledWith({id: 3});
 
     headerCheckbox.simulate('change', {currentTarget: {checked: false}});
-    expect(listStore.deselect).toBeCalledWith({id: 1});
-    expect(listStore.deselect).toBeCalledWith({id: 2});
-    expect(listStore.deselect).toBeCalledWith({id: 3});
+    expect(listStore.deselect).toHaveBeenCalledWith({id: 1});
+    expect(listStore.deselect).toHaveBeenCalledWith({id: 2});
+    expect(listStore.deselect).toHaveBeenCalledWith({id: 3});
 });
 
 test('Should select and unselect all non-disabled items when adapter fires onAllSelectionChange callback', () => {
@@ -725,14 +725,14 @@ test('Should select and unselect all non-disabled items when adapter fires onAll
     const list = mount(<List adapters={['table']} disabledIds={[2]} store={listStore} />);
 
     list.find(TableAdapter).props().onAllSelectionChange(true);
-    expect(listStore.select).toBeCalledWith({id: 1});
-    expect(listStore.select).not.toBeCalledWith({id: 2});
-    expect(listStore.select).toBeCalledWith({id: 3});
+    expect(listStore.select).toHaveBeenCalledWith({id: 1});
+    expect(listStore.select).not.toHaveBeenCalledWith({id: 2});
+    expect(listStore.select).toHaveBeenCalledWith({id: 3});
 
     list.find(TableAdapter).props().onAllSelectionChange(false);
-    expect(listStore.deselect).toBeCalledWith({id: 1});
-    expect(listStore.deselect).not.toBeCalledWith({id: 2});
-    expect(listStore.deselect).toBeCalledWith({id: 3});
+    expect(listStore.deselect).toHaveBeenCalledWith({id: 1});
+    expect(listStore.deselect).not.toHaveBeenCalledWith({id: 2});
+    expect(listStore.deselect).toHaveBeenCalledWith({id: 3});
 });
 
 test('Clicking a header cell should sort the table', () => {
@@ -747,7 +747,7 @@ test('Clicking a header cell should sort the table', () => {
 
     const headerCell = list.find('th button').at(0);
     headerCell.simulate('click');
-    expect(listStore.sort).toBeCalledWith('title', 'asc');
+    expect(listStore.sort).toHaveBeenCalledWith('title', 'asc');
 });
 
 test('Trigger a search should call search on the store', () => {
@@ -761,7 +761,7 @@ test('Trigger a search should call search on the store', () => {
     const list = mount(<List adapters={['table']} store={listStore} />);
 
     list.find('Search').prop('onSearch')('search-value');
-    expect(listStore.search).toBeCalledWith('search-value');
+    expect(listStore.search).toHaveBeenCalledWith('search-value');
 });
 
 test('Trigger a filter should call filter on the store', () => {
@@ -784,7 +784,7 @@ test('Trigger a filter should call filter on the store', () => {
     const list = mount(<List adapters={['table']} store={listStore} />);
 
     list.find('FieldFilter').prop('onChange')({title: undefined});
-    expect(listStore.filter).toBeCalledWith({title: undefined});
+    expect(listStore.filter).toHaveBeenCalledWith({title: undefined});
 });
 
 test('Should start with adapter from user settings', () => {
@@ -803,7 +803,7 @@ test('Should start with adapter from user settings', () => {
 
     const list = mount(<List adapters={['table', 'folder']} store={listStore} />);
 
-    expect(userStore.getPersistentSetting).toBeCalledWith('sulu_admin.list.test.list_test.adapter');
+    expect(userStore.getPersistentSetting).toHaveBeenCalledWith('sulu_admin.list.test.list_test.adapter');
     expect(list.find('AdapterSwitch').length).toBe(1);
     expect(list.find('FolderAdapter').length).toBe(1);
 });
@@ -827,7 +827,7 @@ test('Switching the adapter should render the correct adapter', () => {
     list.find('AdapterSwitch Button').at(1).simulate('click');
     expect(list.find('TableAdapter').length).toBe(0);
     expect(list.find('FolderAdapter').length).toBe(1);
-    expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.list.test.list_test.adapter', 'folder');
+    expect(userStore.setPersistentSetting).toHaveBeenCalledWith('sulu_admin.list.test.list_test.adapter', 'folder');
 });
 
 test('ListStore should be initialized correctly on init and update', () => {
@@ -842,8 +842,8 @@ test('ListStore should be initialized correctly on init and update', () => {
         }
     });
     mount(<List adapters={['table', 'folder']} store={listStore} />);
-    expect(listStore.updateLoadingStrategy).toBeCalledWith(expect.any(TableAdapter.LoadingStrategy));
-    expect(listStore.updateStructureStrategy).toBeCalledWith(expect.any(TableAdapter.StructureStrategy));
+    expect(listStore.updateLoadingStrategy).toHaveBeenCalledWith(expect.any(TableAdapter.LoadingStrategy));
+    expect(listStore.updateStructureStrategy).toHaveBeenCalledWith(expect.any(TableAdapter.StructureStrategy));
 });
 
 test('Correct LoadingStrategyOptions should be passed to the LoadingStrategy if paginated prop is set', () => {
@@ -860,7 +860,7 @@ test('Correct LoadingStrategyOptions should be passed to the LoadingStrategy if 
         }
     });
     mount(<List adapters={['table', 'folder']} paginated={true} store={listStore} />);
-    expect(TableAdapter.LoadingStrategy).toBeCalledWith({paginated: true});
+    expect(TableAdapter.LoadingStrategy).toHaveBeenCalledWith({paginated: true});
 });
 
 test('Correct LoadingStrategyOptions should not be passed to the LoadingStrategy if adapter is not paginatable', () => {
@@ -875,7 +875,7 @@ test('Correct LoadingStrategyOptions should not be passed to the LoadingStrategy
         }
     });
     mount(<List adapters={['column_list']} paginated={true} store={listStore} />);
-    expect(ColumnListAdapter.LoadingStrategy).toBeCalledWith({paginated: false});
+    expect(ColumnListAdapter.LoadingStrategy).toHaveBeenCalledWith({paginated: false});
 });
 
 test('ListStore should be updated with current active element', () => {
@@ -917,7 +917,7 @@ test('ListStore should be updated with current active element', () => {
     expect(listStore.active.get()).toBe(undefined);
     mount(<List adapters={['test']} store={listStore} />);
 
-    expect(listStore.activate).toBeCalledWith('some-uuid');
+    expect(listStore.activate).toHaveBeenCalledWith('some-uuid');
 });
 
 test('SingleListOverlay should disappear when onRequestItemCopy callback is called and overlay is closed', () => {
@@ -943,7 +943,7 @@ test('SingleListOverlay should disappear when onRequestItemCopy callback is call
         list.update();
         expect(list.find(SingleListOverlay).at(1).prop('open')).toEqual(false);
 
-        expect(listStore.copy).not.toBeCalled();
+        expect(listStore.copy).not.toHaveBeenCalled();
     });
 });
 
@@ -969,7 +969,7 @@ test('ListStore should copy item when onRequestItemCopy callback is called and o
 
     list.find(SingleListOverlay).at(1).prop('onConfirm')({id: 8});
     return requestCopyPromise.then(() => {
-        expect(listStore.copy).toBeCalledWith(5, 8, copyFinishedSpy);
+        expect(listStore.copy).toHaveBeenCalledWith(5, 8, copyFinishedSpy);
 
         return copyPromise.then(() => {
             list.update();
@@ -1001,7 +1001,7 @@ test('SingleListOverlay should disappear when onRequestItemMove callback is call
         list.update();
         expect(list.find(SingleListOverlay).at(0).prop('open')).toEqual(false);
 
-        expect(listStore.move).not.toBeCalled();
+        expect(listStore.move).not.toHaveBeenCalled();
     });
 });
 
@@ -1026,7 +1026,7 @@ test('ListStore should move item when onRequestItemMove callback is called and o
 
     list.find(SingleListOverlay).at(0).prop('onConfirm')({id: 8});
     return requestMovePromise.then(() => {
-        expect(listStore.move).toBeCalledWith(5, 8);
+        expect(listStore.move).toHaveBeenCalledWith(5, 8);
 
         return movePromise.then(() => {
             list.update();
@@ -1060,7 +1060,7 @@ test('ListStore should move item when onRequestItemMove callback is called and p
     expect(list.find('Dialog[title="sulu_security.move_permission_title"]').prop('open')).toEqual(true);
     list.find('Dialog[title="sulu_security.move_permission_title"]').prop('onConfirm')();
     return requestMovePromise.then(() => {
-        expect(listStore.move).toBeCalledWith(5, 8);
+        expect(listStore.move).toHaveBeenCalledWith(5, 8);
 
         return movePromise.then(() => {
             list.update();
@@ -1096,7 +1096,7 @@ test('ListStore should not move when onRequestItemMove callback is called and pe
     list.update();
     expect(list.find('Dialog[title="sulu_security.move_permission_title"]').prop('open')).toEqual(false);
     expect(list.find(SingleListOverlay).at(0).prop('open')).toEqual(true);
-    expect(listStore.move).not.toBeCalledWith(5, 8);
+    expect(listStore.move).not.toHaveBeenCalledWith(5, 8);
 });
 
 test('Delete warning should disappear when deleting selection was requested and overlay is cancelled', () => {
@@ -1141,7 +1141,7 @@ test('ListStore should delete selections when deleting selection was requested a
 
     list.find('Dialog').at(0).prop('onConfirm')();
 
-    expect(listStore.deleteSelection).toBeCalledWith();
+    expect(listStore.deleteSelection).toHaveBeenCalledWith();
 
     return deleteSelectionPromise.then(() => {
         list.update();
@@ -1168,7 +1168,7 @@ test('Delete warning should disappear when onRequestItemDelete callback is calle
         list.update();
         expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
 
-        expect(listStore.delete).not.toBeCalled();
+        expect(listStore.delete).not.toHaveBeenCalled();
     });
 });
 
@@ -1192,7 +1192,7 @@ test('ListStore should delete item when onRequestItemDelete callback is called a
 
     list.find('Dialog').at(1).prop('onConfirm')();
     return requestDeletePromise.then(() => {
-        expect(listStore.delete).toBeCalledWith(5);
+        expect(listStore.delete).toHaveBeenCalledWith(5);
 
         return deletePromise.then(() => {
             list.update();
@@ -1238,7 +1238,7 @@ test('ListStore should delete linked item when onRequestItemDelete callback is i
 
     list.find('Dialog').at(1).prop('onConfirm')();
     requestDeletePromise.then(() => {
-        expect(listStore.delete).toBeCalledWith(5);
+        expect(listStore.delete).toHaveBeenCalledWith(5);
 
         setTimeout(() => {
             list.update();
@@ -1251,7 +1251,7 @@ test('ListStore should delete linked item when onRequestItemDelete callback is i
             list.find('DeleteReferencedResourceDialog Dialog Button[skin="primary"]').simulate('click');
 
             setTimeout(() => {
-                expect(listStore.delete).toBeCalledWith(5, {force: true});
+                expect(listStore.delete).toHaveBeenCalledWith(5, {force: true});
                 list.update();
                 expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
                 expect(list.contains('DeleteReferencedResourceDialog')).toBe(false);
@@ -1297,7 +1297,7 @@ test('ListStore should not delete linked item when onRequestItemDelete callback 
 
     list.find('Dialog').at(1).prop('onConfirm')();
     requestDeletePromise.then(() => {
-        expect(listStore.delete).toBeCalledWith(5);
+        expect(listStore.delete).toHaveBeenCalledWith(5);
         // $FlowFixMe
         listStore.delete.mockReset();
 
@@ -1315,7 +1315,7 @@ test('ListStore should not delete linked item when onRequestItemDelete callback 
             list.find('DeleteReferencedResourceDialog').prop('onCancel')();
 
             setTimeout(() => {
-                expect(listStore.delete).not.toBeCalled();
+                expect(listStore.delete).not.toHaveBeenCalled();
                 list.update();
                 expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
                 expect(list.contains('DeleteReferencedResourceDialog')).toBe(false);
@@ -1374,7 +1374,7 @@ test('ListStore should delete linked item when called with allowConflictDeletion
         list.find('DeleteReferencedResourceDialog Dialog Button[skin="primary"]').simulate('click');
 
         setTimeout(() => {
-            expect(listStore.delete).toBeCalledWith(5, {force: true});
+            expect(listStore.delete).toHaveBeenCalledWith(5, {force: true});
             list.update();
             expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
             expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
@@ -1430,7 +1430,7 @@ test('ListStore should not delete linked item when called with allowConflictDele
         list.find('DeleteReferencedResourceDialog Dialog Button[skin="primary"]').simulate('click');
 
         setTimeout(() => {
-            expect(listStore.delete).not.toBeCalledWith(5, {force: true});
+            expect(listStore.delete).not.toHaveBeenCalledWith(5, {force: true});
             list.update();
             expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
             expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
@@ -1579,7 +1579,7 @@ test('Order warning should just disappear when onRequestItemOrder callback is ca
         list.update();
         expect(list.find('Dialog[title="sulu_admin.order_warning_title"]').prop('open')).toEqual(false);
 
-        expect(listStore.order).not.toBeCalled();
+        expect(listStore.order).not.toHaveBeenCalled();
     });
 });
 
@@ -1602,7 +1602,7 @@ test('ListStore should order item when onRequestItemOrder callback is called and
     list.find('Dialog[title="sulu_admin.order_warning_title"]').prop('onConfirm')();
 
     return requestOrderPromise.then(() => {
-        expect(listStore.order).toBeCalledWith(5, 8);
+        expect(listStore.order).toHaveBeenCalledWith(5, 8);
 
         return orderPromise.then(() => {
             list.update();

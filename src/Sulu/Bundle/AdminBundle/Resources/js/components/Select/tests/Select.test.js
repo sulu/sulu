@@ -133,9 +133,9 @@ test('The component should call the onClose callback when it is closing', async(
 
     await user.click(getDisplayButton());
 
-    expect(closeSpy).not.toBeCalled();
+    expect(closeSpy).not.toHaveBeenCalled();
     await user.click(screen.getByTestId('backdrop'));
-    expect(closeSpy).toBeCalled();
+    expect(closeSpy).toHaveBeenCalled();
 });
 
 test('The component should render the selected option in opened list', async() => {

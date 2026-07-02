@@ -63,8 +63,8 @@ test('Load categories and datasource when constructed', () => {
     );
 
     expect(smartContentStore.loading).toEqual(true);
-    expect(ResourceRequester.get).toBeCalledWith('pages', {id: 4, locale: 'en'});
-    expect(ResourceRequester.get).toBeCalledWith('categories', {ids: [1, 2, 4], locale: 'en'});
+    expect(ResourceRequester.get).toHaveBeenCalledWith('pages', {id: 4, locale: 'en'});
+    expect(ResourceRequester.get).toHaveBeenCalledWith('categories', {ids: [1, 2, 4], locale: 'en'});
 
     return Promise.all([dataSourcePromise, categoriesPromise]).then(() => {
         expect(smartContentStore.loading).toEqual(false);
@@ -102,7 +102,7 @@ test('Reset dataSourceLoading if loading of dataSource fails', (done) => {
     );
 
     expect(smartContentStore.loading).toEqual(true);
-    expect(ResourceRequester.get).toBeCalledWith('pages', {id: 4, locale: 'en'});
+    expect(ResourceRequester.get).toHaveBeenCalledWith('pages', {id: 4, locale: 'en'});
 
     setTimeout(() => {
         expect(smartContentStore.loading).toEqual(false);
@@ -138,7 +138,7 @@ test('Load items if FilterCriteria is given with datasource', () => {
 
     return datasourcePromise.then(() => {
         expect(Requester.get)
-            .toBeCalledWith(
+            .toHaveBeenCalledWith(
                 '/api/items?provider=content&excluded=4&locale=en&params=%7B%7D&webspace=sulu_io&dataSource=3'
             );
     });
@@ -174,7 +174,7 @@ test('Load items if FilterCriteria is given with categories', () => {
 
     const expectedParams = '%7B%22provider%22%3A%7B%22name%22%3A%22provider%22,%22value%22%3A%22content%22%7D%7D';
     return categoriesPromise.then(() => {
-        expect(Requester.get).toBeCalledWith(
+        expect(Requester.get).toHaveBeenCalledWith(
             '/api/items?provider=content&excluded=4&locale=en&params=' + expectedParams + '&categories=1,5'
         );
     });
@@ -202,7 +202,7 @@ test('Load items if FilterCriteria is given with tags', () => {
     smartContentStore.start();
 
     const expectedParams = '%7B%22provider%22%3A%7B%22name%22%3A%22provider%22,%22value%22%3A%22content%22%7D%7D';
-    expect(Requester.get).toBeCalledWith(
+    expect(Requester.get).toHaveBeenCalledWith(
         '/api/items?provider=content&excluded=4&locale=en&params=' + expectedParams + '&tags=Tag2'
     );
 });
@@ -229,7 +229,7 @@ test('Load items if FilterCriteria is given with types', () => {
     smartContentStore.start();
 
     const expectedParams = '%7B%22provider%22%3A%7B%22name%22%3A%22provider%22,%22value%22%3A%22content%22%7D%7D';
-    expect(Requester.get).toBeCalledWith(
+    expect(Requester.get).toHaveBeenCalledWith(
         '/api/items?provider=content&excluded=4&locale=en&params=' + expectedParams + '&types=default,homepage'
     );
 });
@@ -255,7 +255,7 @@ test('Load items excluding given ids', () => {
     smartContentStore.setExcludedIds([1, 2, 6]);
     smartContentStore.start();
 
-    expect(Requester.get).toBeCalledWith('/api/items?provider=content&excluded=4,1,2,6&locale=en');
+    expect(Requester.get).toHaveBeenCalledWith('/api/items?provider=content&excluded=4,1,2,6&locale=en');
 });
 
 test('Do not load items if FilterCriteria is given with empty categories and tags arrays', () => {
@@ -277,7 +277,7 @@ test('Do not load items if FilterCriteria is given with empty categories and tag
 
     new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
 
-    expect(Requester.get).not.toBeCalled();
+    expect(Requester.get).not.toHaveBeenCalled();
 });
 
 test('Load items and store them in the items variable', () => {
@@ -416,5 +416,5 @@ test('Dispose autorun on unmount', () => {
 
     smartContentStore.itemDisposer = itemDisposerSpy;
     smartContentStore.destroy();
-    expect(itemDisposerSpy).toBeCalledWith();
+    expect(itemDisposerSpy).toHaveBeenCalledWith();
 });

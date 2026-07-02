@@ -27,7 +27,7 @@ test('Test undefined', () => {
 
 test('Test invalid format', () => {
     expect(numberFieldTransformer.transform('xxx')).toBe(null);
-    expect(log.error).toBeCalledWith('Invalid number given: "xxx"');
+    expect(log.error).toHaveBeenCalledWith('Invalid number given: "xxx"');
 });
 
 test('Test valid example', () => {

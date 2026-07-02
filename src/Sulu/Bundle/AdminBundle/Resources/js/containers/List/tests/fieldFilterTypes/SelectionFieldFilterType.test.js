@@ -36,7 +36,7 @@ test('Pass correct props to MultiAutoComplete', () => {
         undefined
     );
 
-    expect(MultiSelectionStore).toBeCalledWith('accounts', [], expect.anything(), 'ids', {rootKey: 'rootKey'});
+    expect(MultiSelectionStore).toHaveBeenCalledWith('accounts', [], expect.anything(), 'ids', {rootKey: 'rootKey'});
     // $FlowFixMe
     expect(MultiSelectionStore.mock.calls[0][2].get()).toEqual('ru');
 
@@ -77,8 +77,8 @@ test('Destroy should call disposers', () => {
 
     selectionFieldFilterType.destroy();
 
-    expect(selectionFieldFilterType.selectionStoreDisposer).toBeCalledWith();
-    expect(selectionFieldFilterType.valueDisposer).toBeCalledWith();
+    expect(selectionFieldFilterType.selectionStoreDisposer).toHaveBeenCalledWith();
+    expect(selectionFieldFilterType.valueDisposer).toHaveBeenCalledWith();
 });
 
 test('Setting a new value should update the select', () => {
@@ -103,9 +103,9 @@ test('Setting a new value should update the selectionStore', () => {
         [4, 6]
     );
 
-    expect(selectionFieldFilterType.selectionStore.loadItems).toBeCalledWith([4, 6]);
+    expect(selectionFieldFilterType.selectionStore.loadItems).toHaveBeenCalledWith([4, 6]);
     selectionFieldFilterType.setValue([4, 7]);
-    expect(selectionFieldFilterType.selectionStore.loadItems).toBeCalledWith([4, 7]);
+    expect(selectionFieldFilterType.selectionStore.loadItems).toHaveBeenCalledWith([4, 7]);
 });
 
 test('Setting the same value should not update the selectionStore', () => {
@@ -120,7 +120,7 @@ test('Setting the same value should not update the selectionStore', () => {
     selectionFieldFilterType.selectionStore.loadItems.mockReset();
 
     selectionFieldFilterType.setValue([4, 6]);
-    expect(selectionFieldFilterType.selectionStore.loadItems).not.toBeCalledWith([4, 6]);
+    expect(selectionFieldFilterType.selectionStore.loadItems).not.toHaveBeenCalledWith([4, 6]);
 });
 
 test('Call onChange handler when selection changes for auto_complete type', () => {
@@ -133,7 +133,7 @@ test('Call onChange handler when selection changes for auto_complete type', () =
 
     selectionFieldFilterType.selectionStore.ids.push(4, 7);
 
-    expect(changeSpy).toBeCalledWith([4, 7]);
+    expect(changeSpy).toHaveBeenCalledWith([4, 7]);
 });
 
 test('Call onChange handler when selection changes for select type after filter type is confirmed', () => {
@@ -148,9 +148,9 @@ test('Call onChange handler when selection changes for select type after filter 
     changeSpy.mockReset();
     selectionFieldFilterTypeForm.find('ResourceCheckboxGroup').prop('onChange')([4, 7]);
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
     selectionFieldFilterType.confirm();
-    expect(changeSpy).toBeCalledWith([4, 7]);
+    expect(changeSpy).toHaveBeenCalledWith([4, 7]);
 });
 
 test('Return value node without a value', () => {
@@ -164,7 +164,7 @@ test('Return value node without a value', () => {
     const valueNodePromise = selectionFieldFilterType.getValueNode(undefined);
 
     return valueNodePromise.then((valueNode) => {
-        expect(selectionFieldFilterType.selectionStore.loadItems).not.toBeCalled();
+        expect(selectionFieldFilterType.selectionStore.loadItems).not.toHaveBeenCalled();
         expect(valueNode).toEqual(null);
     });
 });
@@ -193,7 +193,7 @@ test('Return value node with a value', () => {
     const valueNodePromise = selectionFieldFilterType.getValueNode([1, 2, 5]);
 
     return valueNodePromise.then((valueNode) => {
-        expect(selectionFieldFilterType.selectionStore.loadItems).not.toBeCalled();
+        expect(selectionFieldFilterType.selectionStore.loadItems).not.toHaveBeenCalled();
         expect(valueNode).toEqual('Max, Erika, John');
     });
 });

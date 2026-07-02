@@ -108,7 +108,7 @@ test('Set default value of null should not call onChange', () => {
         />
     );
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Set default value if no value is passed', () => {
@@ -131,7 +131,7 @@ test('Set default value if no value is passed', () => {
         />
     );
 
-    expect(changeSpy).toBeCalledWith(false, {'isDefaultValue': true});
+    expect(changeSpy).toHaveBeenCalledWith(false, {'isDefaultValue': true});
 });
 
 test('Do not set default value if a value is passed', () => {
@@ -155,7 +155,7 @@ test('Do not set default value if a value is passed', () => {
         />
     );
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Pass the value of true correctly to Checkbox component', () => {
@@ -197,8 +197,8 @@ test('Call onChange and onFinish on the changed callback of the Checkbox', () =>
     );
     checkbox.find(CheckboxComponent).simulate('change', true);
 
-    expect(changeSpy).toBeCalledWith(true);
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith(true);
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Pass the label correctly to Toggler component', () => {
@@ -281,8 +281,8 @@ test('Call onChange and onFinish on the changed callback of the Toggler', () => 
     );
     checkbox.find(Toggler).simulate('change', true);
 
-    expect(changeSpy).toBeCalledWith(true);
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith(true);
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Call onChange and onFinish on the changed callback of the Toggler with the header skin', () => {
@@ -301,6 +301,6 @@ test('Call onChange and onFinish on the changed callback of the Toggler with the
     );
     checkbox.find(Toggler).simulate('change', true);
 
-    expect(changeSpy).toBeCalledWith(true);
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith(true);
+    expect(finishSpy).toHaveBeenCalledWith();
 });

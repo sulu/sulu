@@ -2,7 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount} from 'enzyme';
-import {ClassicEditor} from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
+import {ClassicEditor} from '@ckeditor/ckeditor5-editor-classic';
 import CKEditor5 from '../CKEditor5';
 import configRegistry from '../registries/configRegistry';
 import pluginRegistry from '../registries/pluginRegistry';
@@ -15,7 +15,7 @@ jest.mock('../registries/configRegistry', () => ({
     configs: [],
 }));
 
-jest.mock('@ckeditor/ckeditor5-editor-classic/src/classiceditor', () => ({
+jest.mock('@ckeditor/ckeditor5-editor-classic', () => ({
     ClassicEditor: {
         create: jest.fn(),
     },
@@ -65,7 +65,8 @@ test('Create a CKEditor5 instance', () => {
 
     mount(<CKEditor5 locale={locale} onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
 
-    expect(ClassicEditor.create).toBeCalledWith(expect.anything(), expect.objectContaining({
+    expect(ClassicEditor.create).toHaveBeenCalledWith(expect.objectContaining({
+        attachTo: expect.anything(),
         heading: {
             options: [
                 {
@@ -127,7 +128,8 @@ test('Create a CKEditor5 instance with an additional plugin', () => {
 
     mount(<CKEditor5 onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
 
-    expect(ClassicEditor.create).toBeCalledWith(expect.anything(), expect.objectContaining({
+    expect(ClassicEditor.create).toHaveBeenCalledWith(expect.objectContaining({
+        attachTo: expect.anything(),
         plugins: expect.arrayContaining([Plugin]),
         toolbar: expect.arrayContaining(['bold', 'italic', 'underline', 'plugin1', 'plugin2']),
     }));
@@ -141,7 +143,8 @@ test('Create a CKEditor5 instance with given formats', () => {
 
     mount(<CKEditor5 formats={['h1', 'h2', 'h3']} onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
 
-    expect(ClassicEditor.create).toBeCalledWith(expect.anything(), expect.objectContaining({
+    expect(ClassicEditor.create).toHaveBeenCalledWith(expect.objectContaining({
+        attachTo: expect.anything(),
         heading: {
             options: [
                 {
@@ -188,7 +191,7 @@ test('Set data on editor when value is updated', () => {
     return editorPromise.then(() => {
         ckeditor.setProps({value: '<p>Test</p>'});
 
-        expect(editor.setData).toBeCalledWith('<p>Test</p>');
+        expect(editor.setData).toHaveBeenCalledWith('<p>Test</p>');
     });
 });
 
@@ -207,7 +210,7 @@ test('Do not set data on editor when value is not changed when props change', ()
         editor.setData.mockClear();
         ckeditor.setProps({value: '<p>Test</p>'});
 
-        expect(editor.setData).not.toBeCalled();
+        expect(editor.setData).not.toHaveBeenCalled();
     });
 });
 
@@ -226,7 +229,7 @@ test('Do not set data on editor when value and editorData is undefined', () => {
         editor.setData.mockClear();
         ckeditor.setProps({});
 
-        expect(editor.setData).not.toBeCalled();
+        expect(editor.setData).not.toHaveBeenCalled();
     });
 });
 
@@ -248,8 +251,8 @@ test('Set disabled class and isReadOnly property to CKEditor5', () => {
     mount(<CKEditor5 disabled={true} onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
 
     return editorPromise.then(() => {
-        expect(ClassicEditor.create).toBeCalled();
-        expect(editor.ui.element.classList.add).toBeCalledWith('disabled');
+        expect(ClassicEditor.create).toHaveBeenCalled();
+        expect(editor.ui.element.classList.add).toHaveBeenCalledWith('disabled');
         expect(editor.isReadOnly).toEqual(true);
     });
 });
@@ -276,7 +279,7 @@ test('Call onChange prop when something changed', () => {
 
     return editorPromise.then(() => {
         editor.model.document.on.mock.calls[0][1]();
-        expect(changeSpy).toBeCalledWith('test');
+        expect(changeSpy).toHaveBeenCalledWith('test');
     });
 });
 
@@ -302,7 +305,7 @@ test('Call onChange prop with undefined if editor is empty', () => {
 
     return editorPromise.then(() => {
         editor.model.document.on.mock.calls[0][1]();
-        expect(changeSpy).toBeCalledWith(undefined);
+        expect(changeSpy).toHaveBeenCalledWith(undefined);
     });
 });
 
@@ -328,7 +331,7 @@ test('Do not call onChange prop when nothing changed', () => {
 
     return editorPromise.then(() => {
         editor.model.document.on.mock.calls[0][1]();
-        expect(changeSpy).not.toBeCalled();
+        expect(changeSpy).not.toHaveBeenCalled();
     });
 });
 
@@ -354,7 +357,7 @@ test('Call onBlur prop when CKEditor5 fires its blur event', () => {
 
     return editorPromise.then(() => {
         editor.editing.view.document.on.mock.calls[0][1]();
-        expect(blurSpy).toBeCalled();
+        expect(blurSpy).toHaveBeenCalled();
     });
 });
 
@@ -387,7 +390,7 @@ test('Call onFocus prop when CKEditor5 fires its focus event', () => {
 
     return editorPromise.then(() => {
         editor.editing.view.document.on.mock.calls[0][1]();
-        expect(focusSpy).toBeCalledWith({target});
-        expect(querySelectorSpy).toBeCalledWith('div[contenteditable="true"]');
+        expect(focusSpy).toHaveBeenCalledWith({target});
+        expect(querySelectorSpy).toHaveBeenCalledWith('div[contenteditable="true"]');
     });
 });

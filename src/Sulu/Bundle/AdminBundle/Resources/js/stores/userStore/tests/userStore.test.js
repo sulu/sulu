@@ -145,24 +145,24 @@ test('Should set persistent setting', () => {
 
 test('Should update persistent settings of server with a debounce delay of 5 seconds', () => {
     userStore.setPersistentSetting('test1', 'value1');
-    expect(Requester.patch).toBeCalledWith('profile_settings_url', {test1: 'value1'});
+    expect(Requester.patch).toHaveBeenCalledWith('profile_settings_url', {test1: 'value1'});
 
     userStore.setPersistentSetting('test2', 'value2');
-    expect(Requester.patch).toBeCalledWith('profile_settings_url', {test2: 'value2'});
+    expect(Requester.patch).toHaveBeenCalledWith('profile_settings_url', {test2: 'value2'});
 });
 
 test('Should not update persistent setting if the value did not change', () => {
     userStore.setPersistentSetting('test1', 'test');
-    expect(Requester.patch).toBeCalledWith('profile_settings_url', {test1: 'test'});
+    expect(Requester.patch).toHaveBeenCalledWith('profile_settings_url', {test1: 'test'});
 
     Requester.patch.mockReset();
     userStore.setPersistentSetting('test1', 'test');
-    expect(Requester.patch).not.toBeCalled();
+    expect(Requester.patch).not.toHaveBeenCalled();
 });
 
 test('Should also update persistent setting with the value of false on the server', () => {
     userStore.setPersistentSetting('test1', false);
-    expect(Requester.patch).toBeCalledWith('profile_settings_url', {test1: false});
+    expect(Requester.patch).toHaveBeenCalledWith('profile_settings_url', {test1: false});
 });
 
 test('Should login', () => {
@@ -176,8 +176,8 @@ test('Should login', () => {
     expect(userStore.loading).toBe(true);
 
     return loginPromise.then(() => {
-        expect(Requester.post).toBeCalledWith('login_check_url', {username: 'test', password: 'password'});
-        expect(initializer.initialize).toBeCalledWith(true);
+        expect(Requester.post).toHaveBeenCalledWith('login_check_url', {username: 'test', password: 'password'});
+        expect(initializer.initialize).toHaveBeenCalledWith(true);
 
         return initializePromise.then(() => {
             expect(userStore.loading).toBe(false);
@@ -196,8 +196,8 @@ test('Should login after the password was reset', () => {
     expect(userStore.loading).toBe(true);
 
     return resetPromise.then(() => {
-        expect(Requester.post).toBeCalledWith('reset_password_url', {password: 'test', token: 'some-uuid'});
-        expect(initializer.initialize).toBeCalledWith(true);
+        expect(Requester.post).toHaveBeenCalledWith('reset_password_url', {password: 'test', token: 'some-uuid'});
+        expect(initializer.initialize).toHaveBeenCalledWith(true);
 
         return initializePromise.then(() => {
             expect(userStore.loading).toBe(false);
@@ -218,8 +218,8 @@ test('Should login without initializing when it`s the same user', () => {
     expect(userStore.loading).toBe(true);
 
     return loginPromise.then(() => {
-        expect(Requester.post).toBeCalledWith('login_check_url', {username: 'test', password: 'password'});
-        expect(initializer.initialize).not.toBeCalled();
+        expect(Requester.post).toHaveBeenCalledWith('login_check_url', {username: 'test', password: 'password'});
+        expect(initializer.initialize).not.toHaveBeenCalled();
         expect(userStore.loading).toBe(false);
         expect(userStore.loggedIn).toBe(true);
     });
@@ -237,8 +237,8 @@ test('Should set two factor methods after login when completed false', () => {
     expect(userStore.loading).toBe(true);
 
     return loginPromise.then(() => {
-        expect(Requester.post).toBeCalledWith('login_check_url', {username: 'test', password: 'password'});
-        expect(initializer.initialize).not.toBeCalled();
+        expect(Requester.post).toHaveBeenCalledWith('login_check_url', {username: 'test', password: 'password'});
+        expect(initializer.initialize).not.toHaveBeenCalled();
         expect(userStore.loading).toBe(false);
         expect(userStore.loggedIn).toBe(false);
         expect(userStore.twoFactorMethods).toEqual(['email', 'trusted_devices']);
@@ -256,8 +256,8 @@ test('Should do nothing when not completed but no two factor methods provided', 
     expect(userStore.loading).toBe(true);
 
     return loginPromise.then(() => {
-        expect(Requester.post).toBeCalledWith('login_check_url', {username: 'test', password: 'password'});
-        expect(initializer.initialize).not.toBeCalled();
+        expect(Requester.post).toHaveBeenCalledWith('login_check_url', {username: 'test', password: 'password'});
+        expect(initializer.initialize).not.toHaveBeenCalled();
         expect(userStore.loading).toBe(false);
         expect(userStore.loggedIn).toBe(false);
         expect(userStore.twoFactorMethods).toEqual([]);
@@ -276,11 +276,11 @@ test('Should login with initializing when it`s not the same user', () => {
     expect(userStore.loading).toBe(true);
 
     return loginPromise.then(() => {
-        expect(Requester.post).toBeCalledWith(
+        expect(Requester.post).toHaveBeenCalledWith(
             'login_check_url',
             {username: 'other-user-than-test', password: 'password'}
         );
-        expect(initializer.initialize).toBeCalledWith(true);
+        expect(initializer.initialize).toHaveBeenCalledWith(true);
         expect(userStore.loading).toBe(true);
         expect(userStore.loggedIn).toBe(false);
         expect(userStore.loginError).toBe(false);
@@ -302,8 +302,8 @@ test('Should show error when login is not working and error status is 401', () =
 
     return loginPromise
         .then(() => {
-            expect(Requester.post).toBeCalledWith('login_check_url', {username: 'test', password: 'password'});
-            expect(initializer.initialize).not.toBeCalled();
+            expect(Requester.post).toHaveBeenCalledWith('login_check_url', {username: 'test', password: 'password'});
+            expect(initializer.initialize).not.toHaveBeenCalled();
             expect(userStore.loginError).toBe(true);
             expect(userStore.loggedIn).toBe(false);
             expect(userStore.loading).toBe(false);
@@ -323,8 +323,8 @@ test('Should two factor login', () => {
     expect(userStore.loading).toBe(true);
 
     return loginPromise.then(() => {
-        expect(Requester.post).toBeCalledWith('two_factor_login_check', {_auth_code: 'test', _trusted: false});
-        expect(initializer.initialize).toBeCalledWith(true);
+        expect(Requester.post).toHaveBeenCalledWith('two_factor_login_check', {_auth_code: 'test', _trusted: false});
+        expect(initializer.initialize).toHaveBeenCalledWith(true);
 
         return initializePromise.then(() => {
             expect(userStore.loading).toBe(false);
@@ -345,8 +345,8 @@ test('Should two factor login without initializing when it`s the same user', () 
     expect(userStore.loading).toBe(true);
 
     return loginPromise.then(() => {
-        expect(Requester.post).toBeCalledWith('two_factor_login_check', {_auth_code: 'test', _trusted: false});
-        expect(initializer.initialize).not.toBeCalled();
+        expect(Requester.post).toHaveBeenCalledWith('two_factor_login_check', {_auth_code: 'test', _trusted: false});
+        expect(initializer.initialize).not.toHaveBeenCalled();
         expect(userStore.loading).toBe(false);
         expect(userStore.loggedIn).toBe(true);
     });
@@ -367,11 +367,11 @@ test('Should two factor login with initializing when it`s not the same user', ()
     expect(userStore.loading).toBe(true);
 
     return loginPromise.then(() => {
-        expect(Requester.post).toBeCalledWith(
+        expect(Requester.post).toHaveBeenCalledWith(
             'two_factor_login_check',
             {_auth_code: 'test', _trusted: false}
         );
-        expect(initializer.initialize).toBeCalledWith(true);
+        expect(initializer.initialize).toHaveBeenCalledWith(true);
         expect(userStore.loading).toBe(true);
         expect(userStore.loggedIn).toBe(false);
         expect(userStore.loginError).toBe(false);
@@ -392,8 +392,8 @@ test('Should show error when two factor login is not working and error status is
     expect(userStore.loading).toBe(true);
 
     return loginPromise.then(() => {
-        expect(Requester.post).toBeCalledWith('two_factor_login_check', {_auth_code: 'test', _trusted: false});
-        expect(initializer.initialize).not.toBeCalled();
+        expect(Requester.post).toHaveBeenCalledWith('two_factor_login_check', {_auth_code: 'test', _trusted: false});
+        expect(initializer.initialize).not.toHaveBeenCalled();
         expect(userStore.twoFactorError).toBe(true);
         expect(userStore.loggedIn).toBe(false);
         expect(userStore.loading).toBe(false);
@@ -407,7 +407,7 @@ test('Should send an email when the password is forgotten', () => {
     expect(userStore.loading).toBe(true);
 
     return promise.then(() => {
-        expect(Requester.post).toBeCalledWith('forgot_password_reset_url', {user: 'test'});
+        expect(Requester.post).toHaveBeenCalledWith('forgot_password_reset_url', {user: 'test'});
         expect(userStore.forgotPasswordSuccess).toBe(true);
         expect(userStore.loggedIn).toBe(false);
         expect(userStore.loading).toBe(false);
@@ -421,14 +421,14 @@ test('Should logout', () => {
     const promise = userStore.logout();
 
     return promise.then(() => {
-        expect(Requester.get).toBeCalledWith('logout_url');
+        expect(Requester.get).toHaveBeenCalledWith('logout_url');
         expect(userStore.loggedIn).toBe(false);
     });
 });
 
 test('Should update persistent settings on updateContentLocale', () => {
     userStore.updateContentLocale('fr');
-    expect(Requester.patch).toBeCalledWith('profile_settings_url', {'sulu_admin.content_locale': 'fr'});
+    expect(Requester.patch).toHaveBeenCalledWith('profile_settings_url', {'sulu_admin.content_locale': 'fr'});
     expect(userStore.contentLocale).toBe('fr');
 });
 

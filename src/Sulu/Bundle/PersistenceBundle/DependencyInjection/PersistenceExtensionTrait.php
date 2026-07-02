@@ -21,11 +21,13 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * Define repository services for each object (e.g. sulu.repository.[object name]) and
  * map all object parameters to the container.
+ *
+ * @phpstan-type ObjectsDefinition array<string, array{model: class-string, repository?: class-string}>
  */
 trait PersistenceExtensionTrait
 {
     /**
-     * @param array<string, array{model: class-string, repository?: class-string}> $objects
+     * @param ObjectsDefinition $objects
      *
      * @return void
      */
@@ -47,7 +49,7 @@ trait PersistenceExtensionTrait
     }
 
     /**
-     * @param array<string, array{model: class-string, repository?: class-string}> $objects
+     * @param ObjectsDefinition $objects
      */
     private function defineRepositories(array $objects, ContainerBuilder $container): void
     {
@@ -126,7 +128,7 @@ trait PersistenceExtensionTrait
     }
 
     /**
-     * @param array<string, array{model: class-string, repository?: class-string}> $objects
+     * @param ObjectsDefinition $objects
      */
     private function remapObjectParameters(array $objects, ContainerBuilder $container): void
     {

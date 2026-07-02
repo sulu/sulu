@@ -139,12 +139,6 @@ parameters:
 			path: src/Sulu/Bundle/ActivityBundle/Infrastructure/Symfony/DependencyInjection/SuluActivityExtension.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/ActivityBundle/Infrastructure/Symfony/DependencyInjection/SuluActivityExtension.php
-
-		-
 			message: '#^Cannot access offset ''adapter'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -303,30 +297,6 @@ parameters:
 		-
 			message: '#^Property Sulu\\Bundle\\ActivityBundle\\UserInterface\\Controller\\ActivityController\:\:\$securityChecker is never read, only written\.$#'
 			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/ActivityBundle/UserInterface/Controller/ActivityController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/ActivityBundle/UserInterface/Controller/ActivityController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/ActivityBundle/UserInterface/Controller/ActivityController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/ActivityBundle/UserInterface/Controller/ActivityController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
 			count: 1
 			path: src/Sulu/Bundle/ActivityBundle/UserInterface/Controller/ActivityController.php
 
@@ -2105,36 +2075,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/MetadataProviderInterface.php
-
-		-
-			message: '#^Cannot access offset string on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/MetadataProviderRegistry.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\MetadataProviderRegistry\:\:addMetadataProvider\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/MetadataProviderRegistry.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\MetadataProviderRegistry\:\:getMetadataProvider\(\) should return Sulu\\Bundle\\AdminBundle\\Metadata\\MetadataProviderInterface but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/MetadataProviderRegistry.php
-
-		-
-			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/MetadataProviderRegistry.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\AdminBundle\\Metadata\\MetadataProviderRegistry\:\:\$metadataProviders has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/MetadataProviderRegistry.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\AllOfsMetadata\:\:toJsonSchema\(\) return type has no value type specified in iterable type array\.$#'
@@ -4213,12 +4153,6 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/DependencyInjection/Configuration.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/DependencyInjection/SuluAudienceTargetingExtension.php
-
-		-
 			message: '#^Cannot access offset ''headers'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -4251,12 +4185,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''uuid'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/DependencyInjection/SuluAudienceTargetingExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\DependencyInjection\\SuluAudienceTargetingExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/DependencyInjection/SuluAudienceTargetingExtension.php
 
@@ -7471,30 +7399,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Controller\\KeywordController\:\:deleteAction\(\) has parameter \$id with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -7623,18 +7527,6 @@ parameters:
 		-
 			message: '#^Call to function array_key_exists\(\) with ''SuluTrashBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, DoctrinePHPCRBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/DependencyInjection/SuluCategoryExtension.php
-
-		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/DependencyInjection/SuluCategoryExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\DependencyInjection\\SuluCategoryExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/DependencyInjection/SuluCategoryExtension.php
 
@@ -7965,19 +7857,19 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 74
+			count: 29
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
 			message: '#^Cannot access offset 1 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 24
+			count: 3
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
 			message: '#^Cannot access offset 2 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 7
+			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -8223,7 +8115,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
-			count: 20
+			count: 12
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -8266,18 +8158,6 @@ parameters:
 			message: '#^Cannot access offset ''locale'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 11
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/KeywordControllerTest.php
-
-		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/KeywordControllerTest.php
-
-		-
-			message: '#^Cannot access offset 1 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/KeywordControllerTest.php
 
 		-
@@ -12073,12 +11953,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: '#^Loose comparison using \=\= between null and null will always evaluate to true\.$#'
-			identifier: equal.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:addBankAccount\(\) has parameter \$data with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -12967,12 +12841,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
-			identifier: notIdentical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: '#^Trying to invoke \(callable\(\)\: mixed\)\|null but it might not be a callable\.$#'
 			identifier: callable.nonCallable
 			count: 1
@@ -13633,24 +13501,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
 
 		-
-			message: '#^Call to an undefined method object\:\:addMedia\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Call to an undefined method object\:\:getMedias\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Call to an undefined method object\:\:removeMedia\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
 			message: '#^Cannot access offset ''thumbnails'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -13660,12 +13510,6 @@ parameters:
 			message: '#^Cannot access offset ''url'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Cannot call method contains\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
 
 		-
@@ -13753,12 +13597,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
 
 		-
-			message: '#^Parameter \#1 \$className of method Doctrine\\ORM\\EntityManagerInterface\:\:getRepository\(\) expects class\-string\<object\>, string given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
 			message: '#^Parameter \#1 \$entities of method Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:addThumbnails\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -13810,12 +13648,6 @@ parameters:
 			message: '#^Property Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:\$fieldDescriptors has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Unable to resolve the template type T in call to method Doctrine\\ORM\\EntityManagerInterface\:\:getRepository\(\)$#'
-			identifier: argument.templateType
-			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
 
 		-
@@ -14953,12 +14785,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/SuluContactExtension.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/SuluContactExtension.php
-
-		-
 			message: '#^Cannot access offset ''account'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -14973,12 +14799,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''contact'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/SuluContactExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\DependencyInjection\\SuluContactExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/SuluContactExtension.php
 
@@ -15172,12 +14992,6 @@ parameters:
 			message: '#^Parameter \#3 \$values of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepository\:\:appendRelation\(\) expects array\<int\>, mixed given\.$#'
 			identifier: argument.type
 			count: 5
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and int will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
 		-
@@ -15496,12 +15310,6 @@ parameters:
 			message: '#^Parameter \#3 \$values of method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepository\:\:appendRelation\(\) expects array\<int\>, mixed given\.$#'
 			identifier: argument.type
 			count: 5
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and int will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
 		-
@@ -15849,19 +15657,13 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 136
+			count: 134
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
 			message: '#^Cannot access offset 1 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 42
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Cannot access offset 2 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 40
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -16869,19 +16671,19 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 140
+			count: 139
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
 			message: '#^Cannot access offset 1 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 21
+			count: 20
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
 			message: '#^Cannot access offset 2 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
+			count: 4
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -20329,32 +20131,8 @@ parameters:
 			path: src/Sulu/Bundle/CustomUrlBundle/Controller/CustomUrlController.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Controller/CustomUrlController.php
-
-		-
 			message: '#^Strict comparison using \!\=\= between null and object will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Controller/CustomUrlController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Controller/CustomUrlController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Controller/CustomUrlController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
 			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/Controller/CustomUrlController.php
 
@@ -22555,12 +22333,6 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/Tests/Unit/Routing/Loader/VersionRouteLoaderTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\HashBundle\\DependencyInjection\\SuluHashExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/HashBundle/DependencyInjection/SuluHashExtension.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\Cache\\CacheManager\:\:invalidatePath\(\) has parameter \$headers with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -22773,12 +22545,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\DependencyInjection\\SuluHttpCacheExtension\:\:getConfiguration\(\) has parameter \$config with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/DependencyInjection/SuluHttpCacheExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\DependencyInjection\\SuluHttpCacheExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/DependencyInjection/SuluHttpCacheExtension.php
 
@@ -23661,12 +23427,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''provider_attribute'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/DependencyInjection/SuluMarkupExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MarkupBundle\\DependencyInjection\\SuluMarkupExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/DependencyInjection/SuluMarkupExtension.php
 
@@ -25015,12 +24775,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManagerInterface.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Command\\FormatCacheCleanupCommand\:\:__construct\(\) has parameter \$mediaRepository with generic class Doctrine\\ORM\\EntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Command/FormatCacheCleanupCommand.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Command\\FormatCacheCleanupCommand\:\:mediaExists\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -25753,56 +25507,8 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Controller\\FormatController\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/FormatController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/FormatController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/FormatController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/FormatController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/FormatController.php
 
@@ -26083,30 +25789,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Controller\\MediaFormatController\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -26121,30 +25803,6 @@ parameters:
 		-
 			message: '#^Parameter \#3 \$data of method Sulu\\Bundle\\MediaBundle\\Media\\FormatOptions\\FormatOptionsManagerInterface\:\:save\(\) expects array, array\<mixed\>\|float\|int\<min, \-1\>\|int\<1, max\>\|string\|true given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaFormatController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaFormatController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaFormatController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaFormatController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaFormatController.php
 
@@ -26191,31 +25849,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaRedirectController.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaRedirectController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaRedirectController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaRedirectController.php
-
-		-
 			message: '#^Strict comparison using \=\=\= between null and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaRedirectController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaRedirectController.php
@@ -26415,12 +26049,6 @@ parameters:
 		-
 			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
-
-		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
 
@@ -26625,12 +26253,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\DependencyInjection\\SuluMediaExtension\:\:getSupportedMimeTypes\(\) has parameter \$ghostScriptPath with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\DependencyInjection\\SuluMediaExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
 
@@ -27123,7 +26745,7 @@ parameters:
 		-
 			message: '#^Strict comparison using \!\=\= between null and int will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
 		-
@@ -28025,12 +27647,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManagerInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\FormatOptions\\FormatOptionsManager\:\:__construct\(\) has parameter \$formatOptionsRepository with generic class Doctrine\\ORM\\EntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatOptions/FormatOptionsManager.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\FormatOptions\\FormatOptionsManager\:\:getAll\(\) has no return type specified\.$#'
@@ -30093,7 +29709,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
-			count: 19
+			count: 18
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
@@ -32722,12 +32338,6 @@ parameters:
 			message: '#^Cannot call method getFileVersions\(\) on Sulu\\Bundle\\MediaBundle\\Entity\\File\|null\.$#'
 			identifier: method.nonObject
 			count: 5
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/FormatOptionsManager/FormatOptionsManagerTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Unit\\Media\\FormatOptionsManager\\FormatOptionsManagerTest\:\:\$formatOptionsRepository with generic class Doctrine\\ORM\\EntityRepository does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/FormatOptionsManager/FormatOptionsManagerTest.php
 
 		-
@@ -35671,32 +35281,8 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
-
-		-
 			message: '#^Strict comparison using \!\=\= between null and array\|object will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
 
@@ -35749,30 +35335,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/PageResourcelocatorController.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/PageResourcelocatorController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/PageResourcelocatorController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/PageResourcelocatorController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/PageResourcelocatorController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Controller\\ResourcelocatorController\:\:generateUrlResponse\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -35799,30 +35361,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$array of function implode expects array, string given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/ResourcelocatorController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/ResourcelocatorController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/ResourcelocatorController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/ResourcelocatorController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/ResourcelocatorController.php
 
@@ -35905,30 +35443,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/SmartContentItemController.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/SmartContentItemController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/SmartContentItemController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/SmartContentItemController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/SmartContentItemController.php
-
-		-
 			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\PageBundle\\Teaser\\TeaserManagerInterface\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -36001,30 +35515,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Controller\\WebspaceController\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -36039,30 +35529,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$webspaceKey of method Sulu\\Bundle\\PageBundle\\Controller\\WebspaceController\:\:getSecurityContextByWebspace\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/WebspaceController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/WebspaceController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/WebspaceController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/WebspaceController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/WebspaceController.php
 
@@ -36213,12 +35679,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\DependencyInjection\\SuluPageExtension\:\:appendDefaultAuthor\(\) has parameter \$config with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/DependencyInjection/SuluPageExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\DependencyInjection\\SuluPageExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/DependencyInjection/SuluPageExtension.php
 
@@ -46165,36 +45625,6 @@ parameters:
 			path: src/Sulu/Bundle/PersistenceBundle/Tests/Functional/EventSubscriber/ORM/UserBlameSubscriberIntegrationTest.php
 
 		-
-			message: '#^Method class@anonymous/src/Sulu/Bundle/PersistenceBundle/Tests/Unit/DependencyInjection/PersistenceExtensionTraitTest\.php\:79\:\:setAccessControlQueryEnhancer\(\) has parameter \$accessControlQueryEnhancer with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/DependencyInjection/PersistenceExtensionTraitTest.php
-
-		-
-			message: '#^Parameter \#1 \$interfaces of method Sulu\\Bundle\\PersistenceBundle\\Tests\\Unit\\Fixture\\Bundle\\UsingPersistenceBundleTrait\:\:buildPersistence\(\) expects array\<class\-string, string\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/Fixture/Bundle/UsingPersistenceBundleTrait.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PersistenceBundle\\Tests\\Unit\\Fixture\\Bundle\\UsingPersistenceBundleTrait\:\:\$modelInterfaces has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/Fixture/Bundle/UsingPersistenceBundleTrait.php
-
-		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/Fixture/DependencyInjection/UsingPersistenceExtensionTrait.php
-
-		-
-			message: '#^Parameter \#1 \$objects of method Sulu\\Bundle\\PersistenceBundle\\Tests\\Unit\\Fixture\\DependencyInjection\\UsingPersistenceExtensionTrait\:\:configurePersistence\(\) expects array\<string, array\{model\: class\-string, repository\?\: class\-string\}\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/Fixture/DependencyInjection/UsingPersistenceExtensionTrait.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Admin\\PreviewAdmin\:\:__construct\(\) has parameter \$bundles with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -46211,12 +45641,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Domain/Model/PreviewLink.php
-
-		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Infrastructure/Symfony/DependencyInjection/SuluPreviewExtension.php
 
 		-
 			message: '#^Parameter \#1 \$objects of method Sulu\\Bundle\\PreviewBundle\\Infrastructure\\Symfony\\DependencyInjection\\SuluPreviewExtension\:\:configurePersistence\(\) expects array\<string, array\{model\: class\-string, repository\?\: class\-string\}\>, mixed given\.$#'
@@ -46831,6 +46255,18 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Tests/Functional/UserInterface/Controller/PreviewLinkControllerTest.php
 
 		-
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Infrastructure/Symfony/DependencyInjection/Compiler/RegisterPreviewWebspaceClassPassTest.php
+
+		-
+			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Infrastructure/Symfony/DependencyInjection/Compiler/RegisterPreviewWebspaceClassPassTest.php
+
+		-
 			message: '#^Parameter \#1 \$json of function json_decode expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 7
@@ -46933,56 +46369,8 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewController.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\PreviewBundle\\UserInterface\\Controller\\PreviewLinkController\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewLinkController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewLinkController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewLinkController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewLinkController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewLinkController.php
 
@@ -46991,36 +46379,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PublicPreviewController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PublicPreviewController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PublicPreviewController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PublicPreviewController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PublicPreviewController.php
-
-		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/ReferenceBundle/Infrastructure/Symfony/DependencyInjection/SuluReferenceExtension.php
 
 		-
 			message: '#^Parameter \#1 \$objects of method Sulu\\Bundle\\ReferenceBundle\\Infrastructure\\Symfony\\DependencyInjection\\SuluReferenceExtension\:\:configurePersistence\(\) expects array\<string, array\{model\: class\-string, repository\?\: class\-string\}\>, mixed given\.$#'
@@ -47317,30 +46675,6 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Controller/RouteController.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Controller/RouteController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Controller/RouteController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Controller/RouteController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Controller/RouteController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\RouteBundle\\DependencyInjection\\Configuration\:\:addObjectsSection\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -47395,12 +46729,6 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/DependencyInjection/SuluRouteExtension.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/DependencyInjection/SuluRouteExtension.php
-
-		-
 			message: '#^Cannot access offset ''entityClass'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -47422,12 +46750,6 @@ parameters:
 			message: '#^Cannot access offset ''resource_key'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: src/Sulu/Bundle/RouteBundle/DependencyInjection/SuluRouteExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\RouteBundle\\DependencyInjection\\SuluRouteExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: src/Sulu/Bundle/RouteBundle/DependencyInjection/SuluRouteExtension.php
 
 		-
@@ -48343,38 +47665,8 @@ parameters:
 			path: src/Sulu/Bundle/SearchBundle/Controller/WebsiteSearchController.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Controller/WebsiteSearchController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Controller/WebsiteSearchController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Controller/WebsiteSearchController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Controller/WebsiteSearchController.php
-
-		-
 			message: '#^Cannot access offset ''indexes'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/DependencyInjection/SuluSearchExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SearchBundle\\DependencyInjection\\SuluSearchExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/SearchBundle/DependencyInjection/SuluSearchExtension.php
 
@@ -49465,12 +48757,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ProfileController.php
 
 		-
-			message: '#^Call to an undefined method object\:\:setValue\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ProfileController.php
-
-		-
 			message: '#^Cannot call method getUser\(\) on Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 4
@@ -49861,21 +49147,9 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
 
 		-
-			message: '#^Parameter \#1 \$className of method Doctrine\\ORM\\EntityManagerInterface\:\:getRepository\(\) expects class\-string\<object\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
 			message: '#^Parameter \#1 \$context of method Sulu\\Bundle\\SecurityBundle\\Entity\\Permission\:\:setContext\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: '#^Parameter \#1 \$entity of class Sulu\\Component\\Rest\\Exception\\EntityNotFoundException constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
 
 		-
@@ -50011,12 +49285,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
 
 		-
-			message: '#^Unable to resolve the template type T in call to method Doctrine\\ORM\\EntityManagerInterface\:\:getRepository\(\)$#'
-			identifier: argument.templateType
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
 			message: '#^Variable \$permissions in empty\(\) always exists and is not falsy\.$#'
 			identifier: empty.variable
 			count: 1
@@ -50027,12 +49295,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleSettingController.php
-
-		-
-			message: '#^Binary operation "\." between ''Unrecognized action…'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
 
 		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<object\>\:\:findUserByContact\(\)\.$#'
@@ -50091,30 +49353,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$fieldDescriptors of method Sulu\\Component\\Rest\\RestHelperInterface\:\:initializeListBuilder\(\) expects array\<Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface\>, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
 
@@ -50187,12 +49425,6 @@ parameters:
 		-
 			message: '#^Binary operation "\." between ''sulu_security\.reset…'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/SuluSecurityExtension.php
-
-		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/SuluSecurityExtension.php
 
@@ -50791,12 +50023,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Entity/UserRole.php
 
 		-
-			message: '#^Class Doctrine\\ORM\\EntityRepository specifies template type TEntityClass of interface Doctrine\\Persistence\\ObjectRepository as Sulu\\Bundle\\SecurityBundle\\Entity\\UserSetting but it''s already specified as object\.$#'
-			identifier: generics.interfaceConflict
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/UserSettingRepository.php
-
-		-
 			message: '#^Call to method getAuthenticationException\(\) on an unknown class Symfony\\Component\\Security\\Core\\Event\\AuthenticationFailureEvent\.$#'
 			identifier: class.notFound
 			count: 1
@@ -50919,12 +50145,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\EventListener\\SystemListener\:\:onKernelRequest\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/EventListener/SystemListener.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\SecurityBundle\\EventListener\\SystemListener\:\:\$requestAnalyzer is never read, only written\.$#'
-			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/SystemListener.php
 
@@ -52825,12 +52045,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
-			message: '#^Loose comparison using \=\= between null and null will always evaluate to true\.$#'
-			identifier: equal.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager\:\:addUserGroup\(\) has parameter \$userGroupData with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -53241,12 +52455,6 @@ parameters:
 		-
 			message: '#^Result of \|\| is always true\.$#'
 			identifier: booleanOr.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
-			identifier: notIdentical.alwaysFalse
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
@@ -53971,30 +53179,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
-
-		-
 			message: '#^Cannot call method getData\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -54199,30 +53383,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
-
-		-
 			message: '#^Parameter \#3 \$area of method Sulu\\Bundle\\SnippetBundle\\DependencyInjection\\Compiler\\SnippetAreaCompilerPass\:\:getArea\(\) expects array\{key\: string, title\: array\<string\>, cache\-invalidation\: string\}, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -54250,12 +53410,6 @@ parameters:
 			message: '#^Cannot access offset ''snippet'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: src/Sulu/Bundle/SnippetBundle/DependencyInjection/SuluSnippetExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SnippetBundle\\DependencyInjection\\SuluSnippetExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/DependencyInjection/SuluSnippetExtension.php
 
 		-
@@ -56803,18 +55957,6 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/DependencyInjection/SuluTagExtension.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/DependencyInjection/SuluTagExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\TagBundle\\DependencyInjection\\SuluTagExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/DependencyInjection/SuluTagExtension.php
-
-		-
 			message: '#^Parameter \#1 \$objects of method Sulu\\Bundle\\TagBundle\\DependencyInjection\\SuluTagExtension\:\:configurePersistence\(\) expects array\<string, array\{model\: class\-string, repository\?\: class\-string\}\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -57373,12 +56515,6 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/Twig/TagTwigExtension.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\TestBundle\\DependencyInjection\\SuluTestExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/DependencyInjection/SuluTestExtension.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\TestBundle\\Kernel\\SuluKernelBrowser\:\:jsonRequest\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -57829,12 +56965,6 @@ parameters:
 			path: src/Sulu/Bundle/TrashBundle/Infrastructure/Sulu/Admin/TrashAdmin.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Infrastructure/Symfony/DependencyInjection/SuluTrashExtension.php
-
-		-
 			message: '#^Parameter \#1 \$objects of method Sulu\\Bundle\\TrashBundle\\Infrastructure\\Symfony\\DependencyInjection\\SuluTrashExtension\:\:configurePersistence\(\) expects array\<string, array\{model\: class\-string, repository\?\: class\-string\}\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -57999,30 +57129,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$restoreType of method Sulu\\Bundle\\TrashBundle\\UserInterface\\Controller\\Admin\\TrashItemController\:\:getResourceTranslation\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/UserInterface/Controller/Admin/TrashItemController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/UserInterface/Controller/Admin/TrashItemController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/UserInterface/Controller/Admin/TrashItemController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/UserInterface/Controller/Admin/TrashItemController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/UserInterface/Controller/Admin/TrashItemController.php
 
@@ -58749,12 +57855,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''switch_url'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/DependencyInjection/SuluWebsiteExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\DependencyInjection\\SuluWebsiteExtension\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/DependencyInjection/SuluWebsiteExtension.php
 
@@ -62209,18 +61309,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Exception/ParentNotFoundException.php
 
 		-
-			message: '#^Cannot access offset ''description'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Meta/MetaTwigExtension.php
-
-		-
-			message: '#^Cannot access offset ''keywords'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Meta/MetaTwigExtension.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Twig\\Meta\\MetaTwigExtension\:\:getAlternateLinks\(\) has parameter \$urls with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -62259,7 +61347,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 4
+			count: 2
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Meta/MetaTwigExtension.php
 
 		-
@@ -66127,12 +65215,6 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Subscriber/Compat/ContentMapperSubscriber.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Document\\Subscriber\\Compat\\ContentMapperSubscriber\:\:getDeleteEvent\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/Compat/ContentMapperSubscriber.php
-
-		-
 			message: '#^Method Sulu\\Component\\Content\\Document\\Subscriber\\Compat\\ContentMapperSubscriber\:\:getDeleteEvent\(\) has parameter \$document with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -66193,32 +65275,14 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Subscriber/Compat/ContentMapperSubscriber.php
 
 		-
-			message: '#^Parameter \#1 \$event of method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface\:\:dispatch\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/Compat/ContentMapperSubscriber.php
-
-		-
 			message: '#^Parameter \#2 \$structure of method Sulu\\Component\\Content\\Compat\\StructureManagerInterface\:\:wrapStructure\(\) expects Sulu\\Component\\Content\\Metadata\\StructureMetadata, Sulu\\Component\\Content\\Metadata\\StructureMetadata\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/Compat/ContentMapperSubscriber.php
 
 		-
-			message: '#^Property Sulu\\Component\\Content\\Document\\Subscriber\\Compat\\ContentMapperSubscriber\:\:\$deleteEvents \(array\<Sulu\\Component\\Content\\Mapper\\Event\\ContentNodeDeleteEvent\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/Compat/ContentMapperSubscriber.php
-
-		-
 			message: '#^Strict comparison using \=\=\= between null and Sulu\\Component\\Content\\Document\\Behavior\\StructureBehavior will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/Compat/ContentMapperSubscriber.php
-
-		-
-			message: '#^Unable to resolve the template type TEvent in call to method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface\:\:dispatch\(\)$#'
-			identifier: argument.templateType
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/Compat/ContentMapperSubscriber.php
 
@@ -67793,30 +66857,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: src/Sulu/Component/Content/Extension/ExtensionManager.php
-
-		-
-			message: '#^Class Sulu\\Component\\Content\\Form\\DataTransformer\\DocumentToUuidTransformer implements generic interface Symfony\\Component\\Form\\DataTransformerInterface but does not specify its types\: T, R$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Content/Form/DataTransformer/DocumentToUuidTransformer.php
-
-		-
-			message: '#^Parameter \#1 \$id of static method PHPCR\\Util\\UUIDHelper\:\:isUUID\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Form/DataTransformer/DocumentToUuidTransformer.php
-
-		-
-			message: '#^Parameter \#1 \$identifier of method Sulu\\Component\\DocumentManager\\DocumentManagerInterface\:\:find\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Form/DataTransformer/DocumentToUuidTransformer.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Component/Content/Form/DataTransformer/DocumentToUuidTransformer.php
 
 		-
 			message: '#^Strict comparison using \=\=\= between null and object will always evaluate to false\.$#'
@@ -69547,18 +68587,6 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Loader/Exception/TemplateNotFoundException.php
 
 		-
-			message: '#^Property Sulu\\Component\\Content\\Metadata\\Loader\\Exception\\TemplateNotFoundException\:\:\$path is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/Exception/TemplateNotFoundException.php
-
-		-
-			message: '#^Property Sulu\\Component\\Content\\Metadata\\Loader\\Exception\\TemplateNotFoundException\:\:\$templateKey is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/Exception/TemplateNotFoundException.php
-
-		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 3
@@ -69597,7 +68625,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''key'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
+			count: 3
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
 		-
@@ -70107,7 +69135,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''name'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 12
+			count: 11
 			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
 
 		-
@@ -71929,12 +70957,6 @@ parameters:
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Repository\\ContentRepository\:\:resolveQueryBuilder\(\) has parameter \$locales with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Repository/ContentRepository.php
-
-		-
 			message: '#^Method Sulu\\Component\\Content\\Repository\\ContentRepository\:\:resolveResultPermissions\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -71960,12 +70982,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$array of function array_intersect expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Repository/ContentRepository.php
-
-		-
-			message: '#^Parameter \#1 \$array of function array_walk expects array\|object, string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
@@ -72013,12 +71029,6 @@ parameters:
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
 
 		-
-			message: '#^Parameter \#1 \$urls of method Sulu\\Component\\Content\\Repository\\Content\:\:setUrls\(\) expects array\<string, string\|null\>, array\<int\|string, string\|null\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Repository/ContentRepository.php
-
-		-
 			message: '#^Parameter \#1 \$uuid of method Sulu\\Component\\Content\\Repository\\ContentRepository\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -72038,12 +71048,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Repository/ContentRepository.php
-
-		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Component\\Content\\Repository\\ContentRepository\:\:resolveUrl\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
@@ -72073,18 +71077,6 @@ parameters:
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
 
 		-
-			message: '#^Parameter \#3 \$locales of method Sulu\\Component\\Content\\Repository\\ContentRepository\:\:resolveContent\(\) expects string, array\<string\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Repository/ContentRepository.php
-
-		-
-			message: '#^Parameter \#3 \$locales of method Sulu\\Component\\Content\\Repository\\ContentRepository\:\:resolveContent\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Repository/ContentRepository.php
-
-		-
 			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -72105,7 +71097,7 @@ parameters:
 		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
-			count: 7
+			count: 6
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
 
 		-
@@ -81247,12 +80239,6 @@ parameters:
 			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
 
 		-
-			message: '#^PHPDoc tag @var for variable \$mediaTypeRepository contains generic interface Doctrine\\Persistence\\ObjectRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
-
-		-
 			message: '#^Parameter \#1 \$filters of method Sulu\\Component\\Media\\SmartContent\\MediaDataProvider\:\:resolveDataItems\(\) expects array\{dataSource\?\: int\|string\|null, sortMethod\?\: ''asc''\|''desc'', sortBy\?\: string, tags\?\: array\<string\>, tagOperator\?\: ''and''\|''or'', types\?\: array\<string\>, categories\?\: array\<int\>, categoryOperator\?\: ''and''\|''or'', \.\.\.\}, array\{dataSource\: 42, tags\: array\{1\}\} given\.$#'
 			identifier: argument.type
 			count: 1
@@ -82359,7 +81345,7 @@ parameters:
 		-
 			message: '#^Result of && is always false\.$#'
 			identifier: booleanAnd.alwaysFalse
-			count: 2
+			count: 1
 			path: src/Sulu/Component/Rest/AbstractRestController.php
 
 		-
@@ -82511,12 +81497,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Rest/Exception/RestException.php
-
-		-
-			message: '#^Property Sulu\\Component\\Rest\\Exception\\SearchFieldNotFoundException\:\:\$field is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Component/Rest/Exception/SearchFieldNotFoundException.php
 
 		-
 			message: '#^Cannot call method getCode\(\) on mixed\.$#'
@@ -83468,12 +82448,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getSearchPattern\(\) should return string\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getSortColumn\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
@@ -84445,12 +83419,6 @@ parameters:
 			path: src/Sulu/Component/Rest/Listing/ListRepository.php
 
 		-
-			message: '#^Class Sulu\\Component\\Rest\\Listing\\ListRepository extends generic class Doctrine\\ORM\\EntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListRepository.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\Listing\\ListRepository\:\:find\(\) has parameter \$joinConditions with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -84655,7 +83623,7 @@ parameters:
 			path: src/Sulu/Component/Rest/Listing/ListRestHelper.php
 
 		-
-			message: '#^Parameter \#2 \$class of class Sulu\\Component\\Rest\\Listing\\ListRepository constructor expects Doctrine\\ORM\\Mapping\\ClassMetadata\<T of object\>, Doctrine\\Persistence\\Mapping\\ClassMetadata\<object\> given\.$#'
+			message: '#^Parameter \#2 \$class of class Sulu\\Component\\Rest\\Listing\\ListRepository constructor expects Doctrine\\ORM\\Mapping\\ClassMetadata\<object\>, Doctrine\\Persistence\\Mapping\\ClassMetadata\<object\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Rest/Listing/ListRestHelper.php
@@ -85531,12 +84499,6 @@ parameters:
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/ListRestHelperTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\ListRestHelperTest\:\:dataFieldsProvider\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/ListRestHelperTest.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\ListBuilder\\ListRestHelperTest\:\:testGetFields\(\) has parameter \$expected with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -85823,12 +84785,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Security/Authentication/UserRepositoryInterface.php
-
-		-
-			message: '#^Interface Sulu\\Component\\Security\\Authentication\\UserSettingRepositoryInterface extends generic interface Doctrine\\Persistence\\ObjectRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Security/Authentication/UserSettingRepositoryInterface.php
 
 		-
 			message: '#^Method Sulu\\Component\\Security\\Authorization\\AbstractSecurityChecker\:\:checkPermission\(\) has parameter \$subject with no type specified\.$#'
@@ -86881,61 +85837,7 @@ parameters:
 			path: src/Sulu/Component/SmartContent/ContentType.php
 
 		-
-			message: '#^Cannot access offset ''audienceTargeting'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/SmartContent/ContentType.php
-
-		-
-			message: '#^Cannot access offset ''categories'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/SmartContent/ContentType.php
-
-		-
 			message: '#^Cannot access offset ''excluded'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/SmartContent/ContentType.php
-
-		-
-			message: '#^Cannot access offset ''segmentKey'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/SmartContent/ContentType.php
-
-		-
-			message: '#^Cannot access offset ''tags'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/SmartContent/ContentType.php
-
-		-
-			message: '#^Cannot access offset ''targetGroupId'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/SmartContent/ContentType.php
-
-		-
-			message: '#^Cannot access offset ''websiteCategories'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/SmartContent/ContentType.php
-
-		-
-			message: '#^Cannot access offset ''websiteCategoriesOperator'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/SmartContent/ContentType.php
-
-		-
-			message: '#^Cannot access offset ''websiteTags'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/SmartContent/ContentType.php
-
-		-
-			message: '#^Cannot access offset ''websiteTagsOperator'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Sulu/Component/SmartContent/ContentType.php
@@ -87015,7 +85917,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$value of method Sulu\\Component\\SmartContent\\ContentType\:\:resolveTags\(\) expects array\<mixed\>, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Sulu/Component/SmartContent/ContentType.php
 
 		-
@@ -87027,7 +85929,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Sulu/Component/SmartContent/ContentType.php
 
 		-
@@ -87681,7 +86583,7 @@ parameters:
 		-
 			message: '#^Strict comparison using \!\=\= between null and int will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
-			count: 2
+			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
@@ -89667,12 +88569,6 @@ parameters:
 		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
-			count: 1
-			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
-
-		-
-			message: '#^Property Sulu\\Component\\Webspace\\Manager\\WebspaceCollectionBuilder\:\:\$portalInformations \(array\<array\<Sulu\\Component\\Webspace\\PortalInformation\>\>\) does not accept array\<array\<mixed\>\>\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
 

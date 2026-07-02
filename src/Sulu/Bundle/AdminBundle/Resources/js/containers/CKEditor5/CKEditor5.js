@@ -1,21 +1,14 @@
 // @flow
 import React from 'react';
 import log from 'loglevel';
-import {Alignment} from '@ckeditor/ckeditor5-alignment/src/alignment';
-import {Bold} from '@ckeditor/ckeditor5-basic-styles/src/bold';
-import {ClassicEditor} from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
-import {Essentials} from '@ckeditor/ckeditor5-essentials/src/essentials';
-import {Heading} from '@ckeditor/ckeditor5-heading/src/heading';
-import {Italic} from '@ckeditor/ckeditor5-basic-styles/src/italic';
-import {List} from '@ckeditor/ckeditor5-list/src/list';
-import {Paragraph} from '@ckeditor/ckeditor5-paragraph/src/paragraph';
-import {Strikethrough} from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
-import {Underline} from '@ckeditor/ckeditor5-basic-styles/src/underline';
-import {Subscript} from '@ckeditor/ckeditor5-basic-styles/src/subscript';
-import {Superscript} from '@ckeditor/ckeditor5-basic-styles/src/superscript';
-import {Code} from '@ckeditor/ckeditor5-basic-styles/src/code';
-import {Table} from '@ckeditor/ckeditor5-table/src/table';
-import {TableToolbar} from '@ckeditor/ckeditor5-table/src/tabletoolbar';
+import {Alignment} from '@ckeditor/ckeditor5-alignment';
+import {Bold, Code, Italic, Strikethrough, Subscript, Superscript, Underline} from '@ckeditor/ckeditor5-basic-styles';
+import {ClassicEditor} from '@ckeditor/ckeditor5-editor-classic';
+import {Essentials} from '@ckeditor/ckeditor5-essentials';
+import {Heading} from '@ckeditor/ckeditor5-heading';
+import {List} from '@ckeditor/ckeditor5-list';
+import {Paragraph} from '@ckeditor/ckeditor5-paragraph';
+import {Table, TableToolbar} from '@ckeditor/ckeditor5-table';
 import {translate} from '../../utils/Translator';
 import {addPTags, removePTags} from './utils';
 import ExternalLinkPlugin from './plugins/ExternalLinkPlugin';
@@ -24,6 +17,16 @@ import configRegistry from './registries/configRegistry';
 import pluginRegistry from './registries/pluginRegistry';
 import type {IObservableValue} from 'mobx/lib/mobx';
 import type {ElementRef} from 'react';
+import '@ckeditor/ckeditor5-ui/dist/index.css';
+import '@ckeditor/ckeditor5-editor-classic/dist/index.css';
+import '@ckeditor/ckeditor5-alignment/dist/index.css';
+import '@ckeditor/ckeditor5-basic-styles/dist/index.css';
+import '@ckeditor/ckeditor5-essentials/dist/index.css';
+import '@ckeditor/ckeditor5-heading/dist/index.css';
+import '@ckeditor/ckeditor5-list/dist/index.css';
+import '@ckeditor/ckeditor5-paragraph/dist/index.css';
+import '@ckeditor/ckeditor5-table/dist/index.css';
+import '@ckeditor/ckeditor5-widget/dist/index.css';
 import './ckeditor5.scss';
 import type {SchemaOptions} from '../Form/types';
 
@@ -192,7 +195,8 @@ export default class CKEditor5 extends React.Component<Props> {
         };
 
         ClassicEditor
-            .create(this.containerRef, {
+            .create({
+                attachTo: this.containerRef,
                 plugins: [
                     Alignment,
                     Bold,

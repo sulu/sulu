@@ -158,10 +158,10 @@ test('Clicking the left and right button inside the header should call the right
     expect(asFragment()).toMatchSnapshot();
 
     await user.click(getRequiredElement(container, '.button.left'));
-    expect(leftClickHandler).toBeCalled();
+    expect(leftClickHandler).toHaveBeenCalled();
 
     await user.click(getRequiredElement(container, '.button.right'));
-    expect(rightClickHandler).toBeCalled();
+    expect(rightClickHandler).toHaveBeenCalled();
 });
 
 test('Clicking the left button inside the header should call the right handler after choosing an option', async() => {
@@ -196,11 +196,11 @@ test('Clicking the left button inside the header should call the right handler a
 
     await user.click(getRequiredElement(container, '.button.left'));
     await user.click(screen.getByRole('button', {name: 'Test1'}));
-    expect(leftClickHandler).toBeCalledWith('test1');
+    expect(leftClickHandler).toHaveBeenCalledWith('test1');
 
     await user.click(getRequiredElement(container, '.button.left'));
     await user.click(screen.getByRole('button', {name: 'Test2'}));
-    expect(leftClickHandler).toBeCalledWith('test2');
+    expect(leftClickHandler).toHaveBeenCalledWith('test2');
 });
 
 test('Clicking on the remove button inside an item should call the remove handler on the parent component', async() => {

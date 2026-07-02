@@ -56,6 +56,6 @@ test('Call onChange and onFinish if value of componetn changes', () => {
 
     targetGroupRules.find(TargetGroupRulesComponent).prop('onChange')([{}]);
 
-    expect(changeSpy).toBeCalledWith([{}]);
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith([{}]);
+    expect(finishSpy).toHaveBeenCalledWith();
 });

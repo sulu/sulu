@@ -162,9 +162,9 @@ test('The component should call the callback when the confirm button is clicked'
     );
     const button = screen.queryByText('Confirm');
 
-    expect(onConfirm).not.toBeCalled();
+    expect(onConfirm).not.toHaveBeenCalled();
     await userEvent.click(button);
-    expect(onConfirm).toBeCalled();
+    expect(onConfirm).toHaveBeenCalled();
 });
 
 test('The component should call the callback when the cancel button is clicked', async() => {
@@ -184,9 +184,9 @@ test('The component should call the callback when the cancel button is clicked',
     );
     const button = screen.queryByText('Cancel');
 
-    expect(onCancel).not.toBeCalled();
+    expect(onCancel).not.toHaveBeenCalled();
     await userEvent.click(button);
-    expect(onCancel).toBeCalled();
+    expect(onCancel).toHaveBeenCalled();
 });
 
 test('The component should render with a warning', () => {
@@ -277,9 +277,9 @@ test('The component should call the callback when the snackbar close button is c
     const closeIcon = screen.queryByLabelText('su-times');
 
     expect(snackbar).toBeInTheDocument();
-    expect(onSnackbarCloseClick).not.toBeCalled();
+    expect(onSnackbarCloseClick).not.toHaveBeenCalled();
     await userEvent.click(closeIcon);
-    expect(onSnackbarCloseClick).toBeCalled();
+    expect(onSnackbarCloseClick).toHaveBeenCalled();
 });
 
 test('The component should call the callback when the snackbar is clicked', async() => {
@@ -301,7 +301,7 @@ test('The component should call the callback when the snackbar is clicked', asyn
     const snackbar = screen.queryByText(/Something really strange happened/).parentElement;
 
     expect(snackbar).toBeInTheDocument();
-    expect(onSnackbarClick).not.toBeCalled();
+    expect(onSnackbarClick).not.toHaveBeenCalled();
     await userEvent.click(snackbar);
-    expect(onSnackbarClick).toBeCalled();
+    expect(onSnackbarClick).toHaveBeenCalled();
 });

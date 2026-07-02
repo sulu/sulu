@@ -19,6 +19,8 @@ use Doctrine\Persistence\ObjectManager;
  * Class ListRepository.
  *
  * @deprecated
+ *
+ * @extends EntityRepository<object>
  */
 class ListRepository extends EntityRepository
 {

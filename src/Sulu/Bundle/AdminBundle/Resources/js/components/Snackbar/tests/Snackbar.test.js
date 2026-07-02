@@ -73,7 +73,7 @@ test('Click the snackbar should call the onClick callback', async() => {
     const snackbar = screen.queryByText('- Something went wrong');
     await userEvent.click(snackbar);
 
-    expect(clickSpy).toBeCalled();
+    expect(clickSpy).toHaveBeenCalled();
 });
 
 test('Call onCloseClick callback when close button is clicked', async() => {
@@ -83,5 +83,5 @@ test('Call onCloseClick callback when close button is clicked', async() => {
     const icon = screen.queryByLabelText('su-times');
     await userEvent.click(icon);
 
-    expect(closeClickSpy).toBeCalledWith();
+    expect(closeClickSpy).toHaveBeenCalledWith();
 });

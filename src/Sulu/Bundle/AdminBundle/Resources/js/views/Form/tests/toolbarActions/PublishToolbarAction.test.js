@@ -122,5 +122,5 @@ test('Submit form with correct options when button is clicked', () => {
 
     toolbarItemConfig.onClick();
 
-    expect(publishToolbarAction.form.submit).toBeCalledWith({action: 'publish'});
+    expect(publishToolbarAction.form.submit).toHaveBeenCalledWith({action: 'publish'});
 });

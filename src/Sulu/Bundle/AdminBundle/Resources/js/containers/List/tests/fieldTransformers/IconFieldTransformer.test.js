@@ -27,7 +27,7 @@ test('Test parameters/mapping undefined', () => {
 
 test('Test parameters/mapping wrong type', () => {
     expect(iconFieldTransformer.transform('failed', {mapping: 'foo'})).toBe(null);
-    expect(log.error).toBeCalledWith('Transformer parameter "mapping" needs to be of type collection.');
+    expect(log.error).toHaveBeenCalledWith('Transformer parameter "mapping" needs to be of type collection.');
 });
 
 test('Test parameters/mapping empty', () => {
@@ -36,7 +36,7 @@ test('Test parameters/mapping empty', () => {
 
 test('Test icon wrong type', () => {
     expect(iconFieldTransformer.transform('failed', {mapping: {failed: 1}})).toBe(null);
-    expect(log.error).toBeCalledWith(
+    expect(log.error).toHaveBeenCalledWith(
         'Transformer parameter "mapping/failed" needs to be either of type string or collection.'
     );
 });
@@ -46,29 +46,29 @@ test('Test parameters/default wrong type', () => {
         mapping: {failed: 'su-fail'},
         default: 1}
     )).toBe('default_failed');
-    expect(log.warn).toBeCalledWith(
+    expect(log.warn).toHaveBeenCalledWith(
         'Transformer parameter "default" needs to be of type string or collection, number given.'
     );
 });
 
 test('Test icon is object without icon', () => {
     expect(iconFieldTransformer.transform('failed', {mapping: {failed: {}}})).toBe(null);
-    expect(log.error).toBeCalledWith('Transformer parameter "mapping/failed/icon" needs to be of type string.');
+    expect(log.error).toHaveBeenCalledWith('Transformer parameter "mapping/failed/icon" needs to be of type string.');
 });
 
 test('Test icon is object with icon having wrong type', () => {
     expect(iconFieldTransformer.transform('failed', {mapping: {failed: {icon: 1}}})).toBe(null);
-    expect(log.error).toBeCalledWith('Transformer parameter "mapping/failed/icon" needs to be of type string.');
+    expect(log.error).toHaveBeenCalledWith('Transformer parameter "mapping/failed/icon" needs to be of type string.');
 });
 
 test('Test icon is object with color having wrong type', () => {
     expect(iconFieldTransformer.transform('failed', {mapping: {failed: {icon: 'su-ban', color: ['bar']}}})).toBe(null);
-    expect(log.error).toBeCalledWith('Transformer parameter "mapping/failed/color" needs to be of type string.');
+    expect(log.error).toHaveBeenCalledWith('Transformer parameter "mapping/failed/color" needs to be of type string.');
 });
 
 test('Test icon not configured', () => {
     expect(iconFieldTransformer.transform('succeeded', {mapping: {failed: 'su-ban'}})).toBe('succeeded');
-    expect(log.warn).toBeCalledWith(
+    expect(log.warn).toHaveBeenCalledWith(
         'There was no icon specified in the "mapping" transformer parameter for the value "succeeded".'
     );
 });
@@ -146,5 +146,5 @@ test('Test dark skin', () => {
 test('Test invalid skin type', () => {
     iconFieldTransformer.transform('failed', {skin: 123, mapping: {failed: 'su-ban'}});
 
-    expect(log.error).toBeCalledWith('Transformer parameter "skin" needs to be of type string, number given.');
+    expect(log.error).toHaveBeenCalledWith('Transformer parameter "skin" needs to be of type string, number given.');
 });

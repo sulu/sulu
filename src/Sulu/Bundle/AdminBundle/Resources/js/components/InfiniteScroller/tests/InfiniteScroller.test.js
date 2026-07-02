@@ -54,8 +54,8 @@ test('InfiniteScroller traverses the dom upwards until it finds a scroll contain
         </div>
     );
 
-    expect(addEventListenerSpy).toBeCalledWith('scroll', expect.any(Function), false);
-    expect(addEventListenerSpy).toBeCalledWith('resize', expect.any(Function), false);
+    expect(addEventListenerSpy).toHaveBeenCalledWith('scroll', expect.any(Function), false);
+    expect(addEventListenerSpy).toHaveBeenCalledWith('resize', expect.any(Function), false);
     addEventListenerSpy.mockRestore();
 });
 
@@ -93,7 +93,7 @@ test('InfiniteScroller should call onPageChange if the the bottom of the content
 
     fireEvent.scroll(scrollable);
 
-    expect(loadSpy).toBeCalledWith(2);
+    expect(loadSpy).toHaveBeenCalledWith(2);
     scrollContainerRectSpy.mockRestore();
     elementRectSpy.mockRestore();
 });
@@ -149,8 +149,8 @@ test('InfiniteScroller should unbind scroll and resize event on unmount', () => 
     const resizeListener = resizeCall[1];
 
     unmount();
-    expect(removeEventListenerSpy).toBeCalledWith('resize', resizeListener, false);
-    expect(removeEventListenerSpy).toBeCalledWith('scroll', scrollListener, false);
+    expect(removeEventListenerSpy).toHaveBeenCalledWith('resize', resizeListener, false);
+    expect(removeEventListenerSpy).toHaveBeenCalledWith('scroll', scrollListener, false);
 });
 
 test('InfiniteScroller should show a loader when the loading prop is set to true', () => {

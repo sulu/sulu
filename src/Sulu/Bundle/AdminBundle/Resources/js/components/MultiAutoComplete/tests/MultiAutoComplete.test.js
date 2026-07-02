@@ -89,7 +89,7 @@ test('Should assign input as ref to inputRef', () => {
         value: [],
     });
 
-    expect(inputRefSpy).toBeCalledWith(getInput());
+    expect(inputRefSpy).toHaveBeenCalledWith(getInput());
 });
 
 test('Clicking a suggestion should call onChange with value of the Suggestion and focus input afterwards', async() => {
@@ -153,7 +153,7 @@ test('Should call the onFinish callback when an item is added', async() => {
     fireEvent.focus(getInput());
     await user.click(screen.getByRole('button', {name: 'Suggestion 1'}));
 
-    expect(finishSpy).toBeCalledWith();
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Should not trigger any callbacks when input is not focused', () => {
@@ -175,8 +175,8 @@ test('Should not trigger any callbacks when input is not focused', () => {
     Mousetrap.trigger('enter');
     Mousetrap.trigger(',');
 
-    expect(changeSpy).not.toBeCalled();
-    expect(finishSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
+    expect(finishSpy).not.toHaveBeenCalled();
 });
 
 test('Should trigger callbacks when input matches a suggestion and input is focused', () => {
@@ -199,8 +199,8 @@ test('Should trigger callbacks when input matches a suggestion and input is focu
     Mousetrap.trigger('enter');
     Mousetrap.trigger(',');
 
-    expect(changeSpy).toBeCalledWith([suggestions[0]]);
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith([suggestions[0]]);
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Should not trigger callbacks when input does not match a suggestion and input is focused', () => {
@@ -223,8 +223,8 @@ test('Should not trigger callbacks when input does not match a suggestion and in
     Mousetrap.trigger('enter');
     Mousetrap.trigger(',');
 
-    expect(changeSpy).not.toBeCalled();
-    expect(finishSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
+    expect(finishSpy).not.toHaveBeenCalled();
 });
 
 test('Should not trigger callbacks when input matches a suggestion and input has lost focus', () => {
@@ -248,8 +248,8 @@ test('Should not trigger callbacks when input matches a suggestion and input has
     Mousetrap.trigger('enter');
     Mousetrap.trigger(',');
 
-    expect(changeSpy).not.toBeCalled();
-    expect(finishSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
+    expect(finishSpy).not.toHaveBeenCalled();
 });
 
 test('Should trigger callbacks when input does not match a suggestion and allowAdd is set', () => {
@@ -274,8 +274,8 @@ test('Should trigger callbacks when input does not match a suggestion and allowA
     Mousetrap.trigger('enter');
     Mousetrap.trigger(',');
 
-    expect(changeSpy).toBeCalledWith([{name: 'Suggestion'}]);
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith([{name: 'Suggestion'}]);
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Should not trigger callbacks when input does not match a suggestion but an already added value', () => {
@@ -301,8 +301,8 @@ test('Should not trigger callbacks when input does not match a suggestion but an
     Mousetrap.trigger(',');
 
     expect(getInput().value).toEqual('Suggestion');
-    expect(changeSpy).not.toBeCalled();
-    expect(finishSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
+    expect(finishSpy).not.toHaveBeenCalled();
 });
 
 test('Should not trigger callbacks when input does not match case-insensitive an already added value', () => {
@@ -328,8 +328,8 @@ test('Should not trigger callbacks when input does not match case-insensitive an
     Mousetrap.trigger(',');
 
     expect(getInput().value).toEqual('suggestion');
-    expect(changeSpy).not.toBeCalled();
-    expect(finishSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
+    expect(finishSpy).not.toHaveBeenCalled();
 });
 
 test('Should delete last value item if backspace is pressed in empty focused input field', () => {
@@ -348,15 +348,15 @@ test('Should delete last value item if backspace is pressed in empty focused inp
     });
 
     fireEvent.focus(getInput());
-    expect(searchSpy).toBeCalledTimes(1);
-    expect(searchSpy).nthCalledWith(1, '');
+    expect(searchSpy).toHaveBeenCalledTimes(1);
+    expect(searchSpy).toHaveBeenNthCalledWith(1, '');
 
     Mousetrap.trigger('backspace');
 
-    expect(searchSpy).toBeCalledTimes(2);
-    expect(searchSpy).nthCalledWith(2, '');
-    expect(changeSpy).toBeCalledWith([{name: 'Tag1'}]);
-    expect(finishSpy).toBeCalledWith();
+    expect(searchSpy).toHaveBeenCalledTimes(2);
+    expect(searchSpy).toHaveBeenNthCalledWith(2, '');
+    expect(changeSpy).toHaveBeenCalledWith([{name: 'Tag1'}]);
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Should not delete last value item if backspace is pressed in filled focused input field', () => {
@@ -377,8 +377,8 @@ test('Should not delete last value item if backspace is pressed in filled focuse
 
     Mousetrap.trigger('backspace');
 
-    expect(changeSpy).not.toBeCalled();
-    expect(finishSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
+    expect(finishSpy).not.toHaveBeenCalled();
 });
 
 test('Should not delete last value item if backspace is pressed in empty non-focused input field', () => {
@@ -396,8 +396,8 @@ test('Should not delete last value item if backspace is pressed in empty non-foc
 
     Mousetrap.trigger('backspace');
 
-    expect(changeSpy).not.toBeCalled();
-    expect(finishSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
+    expect(finishSpy).not.toHaveBeenCalled();
 });
 
 test('Should fire onSearch callback and open popover when input field is focused', () => {
@@ -413,11 +413,11 @@ test('Should fire onSearch callback and open popover when input field is focused
         value: [{name: 'Tag1'}, {name: 'Tag2'}],
     });
 
-    expect(searchSpy).not.toBeCalled();
+    expect(searchSpy).not.toHaveBeenCalled();
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
 
     fireEvent.focus(getInput());
-    expect(searchSpy).toBeCalledWith('');
+    expect(searchSpy).toHaveBeenCalledWith('');
     expect(screen.getByRole('list')).toBeInTheDocument();
 });
 
@@ -436,13 +436,13 @@ test('Should close popover when requested and reopen popover when input field is
     });
 
     fireEvent.focus(getInput());
-    expect(searchSpy).nthCalledWith(1, '');
+    expect(searchSpy).toHaveBeenNthCalledWith(1, '');
     expect(screen.getByRole('list')).toBeInTheDocument();
 
     await user.click(screen.getByTestId('backdrop'));
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
 
     changeInputValue('search term');
-    expect(searchSpy).nthCalledWith(2, 'search term');
+    expect(searchSpy).toHaveBeenNthCalledWith(2, 'search term');
     expect(screen.getByRole('list')).toBeInTheDocument();
 });

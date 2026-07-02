@@ -41,7 +41,7 @@ class FormatOptionsManagerTest extends TestCase
     private $em;
 
     /**
-     * @var ObjectProphecy<EntityRepository>
+     * @var ObjectProphecy<EntityRepository<FormatOptions>>
      */
     private $formatOptionsRepository;
 
@@ -80,7 +80,11 @@ class FormatOptionsManagerTest extends TestCase
         parent::setUp();
 
         $this->em = $this->prophesize(EntityManagerInterface::class);
-        $this->formatOptionsRepository = $this->prophesize(EntityRepository::class);
+
+        /** @var ObjectProphecy<EntityRepository<FormatOptions>> */
+        $formatOptionsRepository = $this->prophesize(EntityRepository::class);
+        $this->formatOptionsRepository = $formatOptionsRepository;
+
         $this->mediaManager = $this->prophesize(MediaManagerInterface::class);
         $this->formatManager = $this->prophesize(FormatManagerInterface::class);
         $this->domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);

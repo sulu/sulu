@@ -25,7 +25,7 @@ test('Call onChange handler with new value', () => {
 
     textFieldFilterTypeForm.find('Input').prop('onChange')('value');
 
-    expect(changeSpy).toBeCalledWith({eq: 'value'});
+    expect(changeSpy).toHaveBeenCalledWith({eq: 'value'});
 });
 
 test.each([

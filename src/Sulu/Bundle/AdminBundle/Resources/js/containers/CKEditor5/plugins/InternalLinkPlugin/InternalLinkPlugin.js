@@ -3,21 +3,16 @@ import React, {Fragment} from 'react';
 import {render, unmountComponentAtNode} from 'react-dom';
 import {action, computed, observable} from 'mobx';
 import {Observer} from 'mobx-react';
-import {Plugin} from '@ckeditor/ckeditor5-core/src/plugin';
-import {ButtonView} from '@ckeditor/ckeditor5-ui/src/button/buttonview';
-import {ListView} from '@ckeditor/ckeditor5-ui/src/list/listview';
-import {ListItemView} from '@ckeditor/ckeditor5-ui/src/list/listitemview';
-import {createDropdown} from '@ckeditor/ckeditor5-ui/src/dropdown/utils';
-import {ContextualBalloon} from '@ckeditor/ckeditor5-ui/src/panel/balloon/contextualballoon';
-import {ClickObserver} from '@ckeditor/ckeditor5-engine/src/view/observer/clickobserver';
+import {Plugin} from '@ckeditor/ckeditor5-core';
+import {ClickObserver} from '@ckeditor/ckeditor5-engine';
+import {ButtonView, ContextualBalloon, createDropdown, ListItemView, ListView} from '@ckeditor/ckeditor5-ui';
 import {translate} from '../../../../utils';
 import LinkBalloonView from '../../LinkBalloonView';
 import LinkCommand from '../../LinkCommand';
 import {addLinkConversion, findModelItemInSelection, findViewLinkItemInSelection} from '../../utils';
 import UnlinkCommand from '../../UnlinkCommand';
 import linkTypeRegistry from '../../../Link/registries/linkTypeRegistry';
-// $FlowFixMe
-import linkIcon from '!!raw-loader!./link.svg'; // eslint-disable-line import/no-webpack-loader-syntax
+import linkIcon from './link.svg';
 
 const DEFAULT_TARGET = '_self';
 

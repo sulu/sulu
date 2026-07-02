@@ -78,7 +78,7 @@ test('Should update options of ListStore if the options prop is changed', () => 
     );
     multiListOverlay.instance().listStore.selectionIds = [12, 14];
 
-    expect(multiListOverlay.instance().listStore.reset).not.toBeCalled();
+    expect(multiListOverlay.instance().listStore.reset).not.toHaveBeenCalled();
     expect(multiListOverlay.instance().listStore.options).toEqual(oldOptions);
 
     const newOptions = {key: 'value-2'};
@@ -86,7 +86,7 @@ test('Should update options of ListStore if the options prop is changed', () => 
         options: newOptions,
     });
 
-    expect(multiListOverlay.instance().listStore.reset).toBeCalled();
+    expect(multiListOverlay.instance().listStore.reset).toHaveBeenCalled();
     expect(multiListOverlay.instance().listStore.initialSelectionIds).toEqual([12, 14]);
     expect(multiListOverlay.instance().listStore.options).toEqual(newOptions);
 });
@@ -109,14 +109,14 @@ test('Should not update options of ListStore if new value of options prop is equ
         />
     );
 
-    expect(multiListOverlay.instance().listStore.reset).not.toBeCalled();
+    expect(multiListOverlay.instance().listStore.reset).not.toHaveBeenCalled();
 
     const newOldOptions = {key: 'value-1'};
     multiListOverlay.setProps({
         options: newOldOptions,
     });
 
-    expect(multiListOverlay.instance().listStore.reset).not.toBeCalled();
+    expect(multiListOverlay.instance().listStore.reset).not.toHaveBeenCalled();
 });
 
 test('Should clear ListStore if the excludedIds prop is changed', () => {
@@ -134,13 +134,13 @@ test('Should clear ListStore if the excludedIds prop is changed', () => {
         />
     );
 
-    expect(multiListOverlay.instance().listStore.clear).not.toBeCalled();
+    expect(multiListOverlay.instance().listStore.clear).not.toHaveBeenCalled();
 
     multiListOverlay.setProps({
         excludedIds: ['id-3'],
     });
 
-    expect(multiListOverlay.instance().listStore.clear).toBeCalled();
+    expect(multiListOverlay.instance().listStore.clear).toHaveBeenCalled();
 });
 
 test('Should not clear ListStore if new value of excludedIds prop is equal to old value', () => {
@@ -158,13 +158,13 @@ test('Should not clear ListStore if new value of excludedIds prop is equal to ol
         />
     );
 
-    expect(multiListOverlay.instance().listStore.clear).not.toBeCalled();
+    expect(multiListOverlay.instance().listStore.clear).not.toHaveBeenCalled();
 
     multiListOverlay.setProps({
         excludedIds: ['id-1', 'id-2'],
     });
 
-    expect(multiListOverlay.instance().listStore.clear).not.toBeCalled();
+    expect(multiListOverlay.instance().listStore.clear).not.toHaveBeenCalled();
 });
 
 test('Should instantiate the ListStore without locale, excluded-ids and options', () => {
@@ -350,10 +350,10 @@ test('Should call onConfirm with the current selection', () => {
     const listStore = multiListOverlay.instance().listStore;
     listStore.selections = [{id: 1}, {id: 2}];
 
-    expect(confirmSpy).not.toBeCalled();
+    expect(confirmSpy).not.toHaveBeenCalled();
     multiListOverlay.find(ListOverlay).prop('onConfirm')();
 
-    expect(confirmSpy).toBeCalledWith([{id: 1}, {id: 2}]);
+    expect(confirmSpy).toHaveBeenCalledWith([{id: 1}, {id: 2}]);
 });
 
 test('Should select the preSelectedItems in the ListStore', () => {
@@ -370,7 +370,7 @@ test('Should select the preSelectedItems in the ListStore', () => {
         />
     );
 
-    expect(ListStore).toBeCalledWith(
+    expect(ListStore).toHaveBeenCalledWith(
         'snippets',
         'snippets',
         'multi_list_overlay',
@@ -396,7 +396,7 @@ test('Should not add the preSelectedItems to the ListStore if preloadSelectedIte
         />
     );
 
-    expect(ListStore).toBeCalledWith(
+    expect(ListStore).toHaveBeenCalledWith(
         'snippets',
         'snippets',
         'multi_list_overlay',
@@ -422,7 +422,7 @@ test('Should not fail when preSelectedItems is undefined', () => {
 
     const listStore = multiListOverlay.instance().listStore;
 
-    expect(listStore.select).not.toBeCalled();
+    expect(listStore.select).not.toHaveBeenCalled();
 });
 
 test('Should instantiate the list with the passed adapter', () => {

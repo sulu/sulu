@@ -36,7 +36,7 @@ test('Pass locales from webspace and titleProperty to ResourceTabs component', (
 
     const pageTabs = mount(<PageTabs route={route} router={router}>{() => null}</PageTabs>);
 
-    expect(webspaceStore.getWebspace).toBeCalledWith('sulu');
+    expect(webspaceStore.getWebspace).toHaveBeenCalledWith('sulu');
     expect(pageTabs.find(ResourceTabs).prop('locales')).toEqual(['en', 'de']);
     expect(pageTabs.find(ResourceTabs).prop('titleProperty')).toEqual('title');
 });

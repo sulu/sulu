@@ -23,7 +23,7 @@ test('Send a request using the ResourceRequester', () => {
     expect(resourceListStore.loading).toEqual(true);
 
     return requestPromise.then(() => {
-        expect(ResourceRequester.getList).toBeCalledWith('accounts', {});
+        expect(ResourceRequester.getList).toHaveBeenCalledWith('accounts', {});
         expect(resourceListStore.data).toEqual(requestResults);
         expect(resourceListStore.loading).toEqual(false);
     });
@@ -47,7 +47,7 @@ test('Send a request with options using the ResourceRequester', () => {
     expect(resourceListStore.loading).toEqual(true);
 
     return requestPromise.then(() => {
-        expect(ResourceRequester.getList).toBeCalledWith('accounts', requestParameters);
+        expect(ResourceRequester.getList).toHaveBeenCalledWith('accounts', requestParameters);
         expect(resourceListStore.data).toEqual(requestResults);
         expect(resourceListStore.loading).toEqual(false);
     });
@@ -71,7 +71,7 @@ test('Delete items using the ResourceRequester', () => {
 
         ResourceRequester.deleteList.mockReturnValue(Promise.resolve());
         const deleteListPromise = resourceListStore.deleteList([1, 3]);
-        expect(ResourceRequester.deleteList).toBeCalledWith('contacts', {ids: [1, 3]});
+        expect(ResourceRequester.deleteList).toHaveBeenCalledWith('contacts', {ids: [1, 3]});
         expect(resourceListStore.loading).toEqual(true);
 
         return deleteListPromise.then(() => {
@@ -99,7 +99,7 @@ test('Delete items using the ResourceRequester with api options', () => {
 
         ResourceRequester.deleteList.mockReturnValue(Promise.resolve());
         const deleteListPromise = resourceListStore.deleteList([1, 3]);
-        expect(ResourceRequester.deleteList).toBeCalledWith('contacts', {ids: [1, 3], webspace: 'sulu_io'});
+        expect(ResourceRequester.deleteList).toHaveBeenCalledWith('contacts', {ids: [1, 3], webspace: 'sulu_io'});
         expect(resourceListStore.loading).toEqual(true);
 
         return deleteListPromise.then(() => {
@@ -135,7 +135,7 @@ test('Patch items using the ResourceRequester', () => {
             {id: 2, name: 'Test2 Updated'},
         ];
         const patchListPromise = resourceListStore.patchList(data);
-        expect(ResourceRequester.patchList).toBeCalledWith('accounts', data);
+        expect(ResourceRequester.patchList).toHaveBeenCalledWith('accounts', data);
         expect(resourceListStore.loading).toEqual(true);
 
         return patchListPromise.then(() => {
@@ -172,7 +172,7 @@ test('Patch and delete items using the ResourceRequester', () => {
     expect(resourceListStore.loading).toEqual(true);
 
     return requestPromise.then(() => {
-        expect(ResourceRequester.getList).toBeCalledWith('accounts', {});
+        expect(ResourceRequester.getList).toHaveBeenCalledWith('accounts', {});
         expect(resourceListStore.data).toEqual(requestResults);
         expect(resourceListStore.loading).toEqual(false);
 

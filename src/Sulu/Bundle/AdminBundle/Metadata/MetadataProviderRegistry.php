@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\Exception\MetadataProviderNotFoundException;
 
 class MetadataProviderRegistry
 {
+    /** @var array<string, MetadataProviderInterface> */
     private $metadataProviders = [];
 
     public function __construct(
@@ -50,6 +51,8 @@ class MetadataProviderRegistry
 
     /**
      * @deprecated since Sulu 2.6 use the constructor instead
+     *
+     * @return void
      */
     public function addMetadataProvider(string $type, MetadataProviderInterface $metadataProvider)
     {

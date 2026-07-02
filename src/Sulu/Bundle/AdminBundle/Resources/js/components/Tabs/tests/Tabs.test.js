@@ -141,7 +141,7 @@ test('ResizeObserver.disconnect should be called before component unmount', () =
     );
     unmount();
 
-    expect(ResizeObserver.mock.instances[0].disconnect).toBeCalled();
+    expect(ResizeObserver.mock.instances[0].disconnect).toHaveBeenCalled();
 });
 
 test('Clicking on several non- and collapsed tabs', async() => {
@@ -166,7 +166,7 @@ test('Clicking on several non- and collapsed tabs', async() => {
     expect(screen.getByRole('button', {name: 'Tab 6'}).parentElement).toHaveClass('hidden');
 
     await user.click(screen.getByRole('button', {name: 'Tab 5'}));
-    expect(changeSpy).toBeCalledWith(4);
+    expect(changeSpy).toHaveBeenCalledWith(4);
 
     rerender(
         <Tabs onSelect={changeSpy} selectedIndex={4}>
@@ -187,7 +187,7 @@ test('Clicking on several non- and collapsed tabs', async() => {
 
     await user.click(screen.getByRole('button', {name: 'su-more-horizontal'}));
     await user.click(within(getCollapsedTabList()).getByRole('button', {name: 'Tab 7'}));
-    expect(changeSpy).toBeCalledWith(6);
+    expect(changeSpy).toHaveBeenCalledWith(6);
 
     rerender(
         <Tabs onSelect={changeSpy} selectedIndex={6}>
@@ -209,7 +209,7 @@ test('Clicking on several non- and collapsed tabs', async() => {
 
     await user.click(screen.getByRole('button', {name: 'su-more-horizontal'}));
     await user.click(within(getCollapsedTabList()).getByRole('button', {name: 'Tab 9'}));
-    expect(changeSpy).toBeCalledWith(8);
+    expect(changeSpy).toHaveBeenCalledWith(8);
 
     rerender(
         <Tabs onSelect={changeSpy} selectedIndex={8}>
@@ -230,7 +230,7 @@ test('Clicking on several non- and collapsed tabs', async() => {
     expect(screen.getByRole('button', {name: 'Tab 9'}).parentElement).not.toHaveClass('hidden');
 
     await user.click(screen.getByRole('button', {name: 'Tab 3'}));
-    expect(changeSpy).toBeCalledWith(2);
+    expect(changeSpy).toHaveBeenCalledWith(2);
 
     rerender(
         <Tabs onSelect={changeSpy} selectedIndex={2}>
@@ -250,5 +250,5 @@ test('Clicking on several non- and collapsed tabs', async() => {
     expect(screen.getByRole('button', {name: 'Tab 5'}).parentElement).toHaveClass('hidden');
 
     await user.click(screen.getByRole('button', {name: 'Tab 4'}));
-    expect(changeSpy).toBeCalledWith(3);
+    expect(changeSpy).toHaveBeenCalledWith(3);
 });

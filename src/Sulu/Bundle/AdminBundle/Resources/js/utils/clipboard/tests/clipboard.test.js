@@ -4,17 +4,17 @@ import clipboard from '../clipboard';
 test('Set should store data in localStorage', () => {
     const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
 
-    expect(setItemSpy).not.toBeCalled();
+    expect(setItemSpy).not.toHaveBeenCalled();
     clipboard.set('test-key', {objectKey1: 'object-value-1'});
-    expect(setItemSpy).toBeCalledWith('test-key', JSON.stringify({objectKey1: 'object-value-1'}));
+    expect(setItemSpy).toHaveBeenCalledWith('test-key', JSON.stringify({objectKey1: 'object-value-1'}));
 });
 
 test('Set should remove data in localStorage when passing falsy value', () => {
     const removeItemSpy = jest.spyOn(Storage.prototype, 'removeItem');
 
-    expect(removeItemSpy).not.toBeCalled();
+    expect(removeItemSpy).not.toHaveBeenCalled();
     clipboard.set('test-key', undefined);
-    expect(removeItemSpy).toBeCalledWith('test-key');
+    expect(removeItemSpy).toHaveBeenCalledWith('test-key');
 });
 
 test('Observer should be called with current value if invokeImmediately parameter is set', () => {
@@ -23,51 +23,51 @@ test('Observer should be called with current value if invokeImmediately paramete
     const observerSpy = jest.fn();
     clipboard.observe('test-key', observerSpy, true);
 
-    expect(observerSpy).toBeCalledWith('current-test-value');
+    expect(observerSpy).toHaveBeenCalledWith('current-test-value');
 });
 
 test('Observer should be called when observed key is changed via service', () => {
     const observerSpy = jest.fn();
     const disposer = clipboard.observe('test-key', observerSpy);
 
-    expect(observerSpy).not.toBeCalled();
+    expect(observerSpy).not.toHaveBeenCalled();
 
     clipboard.set('test-key', 'test-value-1');
-    expect(observerSpy).toBeCalledWith('test-value-1');
-    expect(observerSpy).toBeCalledTimes(1);
+    expect(observerSpy).toHaveBeenCalledWith('test-value-1');
+    expect(observerSpy).toHaveBeenCalledTimes(1);
 
     clipboard.set('test-key', 'test-value-2');
-    expect(observerSpy).toBeCalledWith('test-value-2');
-    expect(observerSpy).toBeCalledTimes(2);
+    expect(observerSpy).toHaveBeenCalledWith('test-value-2');
+    expect(observerSpy).toHaveBeenCalledTimes(2);
 
     clipboard.set('other-key', 'test-value-3');
-    expect(observerSpy).toBeCalledTimes(2);
+    expect(observerSpy).toHaveBeenCalledTimes(2);
 
     disposer();
     clipboard.set('test-key', 'test-value-4');
-    expect(observerSpy).toBeCalledTimes(2);
+    expect(observerSpy).toHaveBeenCalledTimes(2);
 });
 
 test('Observer should be called when observed key is changed n another tab', () => {
     const observerSpy = jest.fn();
     const disposer = clipboard.observe('test-key', observerSpy);
 
-    expect(observerSpy).not.toBeCalled();
+    expect(observerSpy).not.toHaveBeenCalled();
 
     window.dispatchEvent(new StorageEvent('storage', {key: 'test-key', newValue: JSON.stringify({key1: 'value1'})}));
-    expect(observerSpy).toBeCalledWith({key1: 'value1'});
-    expect(observerSpy).toBeCalledTimes(1);
+    expect(observerSpy).toHaveBeenCalledWith({key1: 'value1'});
+    expect(observerSpy).toHaveBeenCalledTimes(1);
 
     window.dispatchEvent(new StorageEvent('storage', {key: 'test-key', newValue: JSON.stringify({key1: 'value2'})}));
-    expect(observerSpy).toBeCalledWith({key1: 'value2'});
-    expect(observerSpy).toBeCalledTimes(2);
+    expect(observerSpy).toHaveBeenCalledWith({key1: 'value2'});
+    expect(observerSpy).toHaveBeenCalledTimes(2);
 
     window.dispatchEvent(new StorageEvent('storage', {key: 'other-key', newValue: JSON.stringify({key1: 'value3'})}));
-    expect(observerSpy).toBeCalledTimes(2);
+    expect(observerSpy).toHaveBeenCalledTimes(2);
 
     disposer();
     window.dispatchEvent(new StorageEvent('storage', {key: 'test-key', newValue: JSON.stringify({key1: 'value4'})}));
-    expect(observerSpy).toBeCalledTimes(2);
+    expect(observerSpy).toHaveBeenCalledTimes(2);
 });
 
 test('Should not crash if external code writes invalid JSON string to localStorage', () => {
@@ -76,16 +76,16 @@ test('Should not crash if external code writes invalid JSON string to localStora
     const observerSpy = jest.fn();
     clipboard.observe('test-key', observerSpy, true);
 
-    expect(observerSpy).toBeCalledTimes(1);
+    expect(observerSpy).toHaveBeenCalledTimes(1);
     expect(observerSpy).toHaveBeenLastCalledWith(undefined);
 
     window.dispatchEvent(new StorageEvent('storage', {key: 'test-key', newValue: 'invalid-json-string-2'}));
 
-    expect(observerSpy).toBeCalledTimes(2);
+    expect(observerSpy).toHaveBeenCalledTimes(2);
     expect(observerSpy).toHaveBeenLastCalledWith(undefined);
 
     window.dispatchEvent(new StorageEvent('storage', {key: 'test-key', newValue: '"valid-json-string"'}));
 
-    expect(observerSpy).toBeCalledTimes(3);
+    expect(observerSpy).toHaveBeenCalledTimes(3);
     expect(observerSpy).toHaveBeenLastCalledWith('valid-json-string');
 });

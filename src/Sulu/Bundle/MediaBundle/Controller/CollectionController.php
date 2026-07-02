@@ -22,6 +22,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
@@ -126,7 +127,7 @@ class CollectionController extends AbstractRestController implements ClassResour
             $offset = $this->getOffset($request, $limit);
             $search = $this->listRestHelper->getSearchPattern();
             /** @var string|null $sortBy */
-            $sortBy = $request->get('sortBy');
+            $sortBy = $request->get('sortBy', 'title');
             /** @var string $sortOrder */
             $sortOrder = $request->get('sortOrder', 'ASC');
 
@@ -183,7 +184,7 @@ class CollectionController extends AbstractRestController implements ClassResour
             $offset = $this->getOffset($request, $limit);
             $search = $this->listRestHelper->getSearchPattern();
             /** @var string|null $sortBy */
-            $sortBy = $request->get('sortBy');
+            $sortBy = $request->get('sortBy', 'title');
             /** @var string $sortOrder */
             $sortOrder = $request->get('sortOrder', 'ASC');
             $includeRoot = $this->getBooleanRequestParameter($request, 'includeRoot', false, false);
@@ -306,7 +307,7 @@ class CollectionController extends AbstractRestController implements ClassResour
      */
     public function postTriggerAction($id, Request $request)
     {
-        $action = $this->getRequestParameter($request, 'action', true);
+        $action = $request->query->get('action') ?: throw new MissingParameterException(self::class, 'action');
 
         try {
             return match ($action) {

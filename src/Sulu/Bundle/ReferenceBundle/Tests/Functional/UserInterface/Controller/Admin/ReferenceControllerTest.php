@@ -29,7 +29,7 @@ class ReferenceControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $response);
 
         /** @var array<string, mixed> $json */
-        $json = \json_decode($response->getContent() ?: '', true, \JSON_THROW_ON_ERROR);
+        $json = \json_decode($response->getContent() ?: '', true, flags: \JSON_THROW_ON_ERROR);
 
         $this->assertSame(
             [
@@ -68,7 +68,7 @@ class ReferenceControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $response);
 
         /** @var array<string, mixed> $json */
-        $json = \json_decode($response->getContent() ?: '', true, \JSON_THROW_ON_ERROR);
+        $json = \json_decode($response->getContent() ?: '', true, flags: \JSON_THROW_ON_ERROR);
 
         $this->assertSame(
             [
@@ -135,7 +135,7 @@ class ReferenceControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $response);
 
         /** @var array<string, mixed> $json */
-        $json = \json_decode($response->getContent() ?: '', true, \JSON_THROW_ON_ERROR);
+        $json = \json_decode($response->getContent() ?: '', true, flags: \JSON_THROW_ON_ERROR);
 
         $this->assertTrue(isset($json['_embedded']));
         $this->assertIsArray($json['_embedded']);
@@ -151,7 +151,7 @@ class ReferenceControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $response);
 
         /** @var array<string, mixed> $json */
-        $json = \json_decode($response->getContent() ?: '', true, \JSON_THROW_ON_ERROR);
+        $json = \json_decode($response->getContent() ?: '', true, flags: \JSON_THROW_ON_ERROR);
 
         $this->assertSame(
             [

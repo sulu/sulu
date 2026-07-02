@@ -30,9 +30,9 @@ test('The component should render and handle clicks correctly', async() => {
 
     expect(container).toMatchSnapshot();
     await userEvent.click(screen.queryByText(/sulu_admin.edit_profile/));
-    expect(handleProfileClick).toBeCalled();
+    expect(handleProfileClick).toHaveBeenCalled();
     await userEvent.click(screen.queryByText(/sulu_admin.logout/));
-    expect(handleLogoutClick).toBeCalled();
+    expect(handleLogoutClick).toHaveBeenCalled();
 });
 
 test('The component should render with all available props and handle clicks correctly', async() => {
@@ -81,13 +81,13 @@ test('The component should render with all available props and handle clicks cor
     expect(container).toMatchSnapshot();
 
     await userEvent.click(screen.queryByLabelText('su-stick-right'));
-    expect(handlePinClick).toBeCalled();
+    expect(handlePinClick).toHaveBeenCalled();
 
     await userEvent.click(screen.queryByText(/sulu_admin.edit_profile/));
-    expect(handleProfileClick).toBeCalled();
+    expect(handleProfileClick).toHaveBeenCalled();
 
     await userEvent.click(screen.queryByText(/sulu_admin.logout/));
-    expect(handleLogoutClick).toBeCalled();
+    expect(handleLogoutClick).toHaveBeenCalled();
 });
 
 test('The expanded prop should be set correct automatically', async() => {
