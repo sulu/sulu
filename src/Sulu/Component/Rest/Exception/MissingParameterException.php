@@ -13,6 +13,8 @@ namespace Sulu\Component\Rest\Exception;
 
 /**
  * missing parameter in api.
+ *
+ * @deprecated use Symfony's BadRequestException
  */
 class MissingParameterException extends RestException
 {
