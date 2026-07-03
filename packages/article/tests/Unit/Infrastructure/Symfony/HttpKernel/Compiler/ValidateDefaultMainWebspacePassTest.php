@@ -226,6 +226,23 @@ class ValidateDefaultMainWebspacePassTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
+    public function testIgnoresPortalLocalizationsWhenCollectingWebspaceLocales(): void
+    {
+        // A <portal> may declare its own <localizations>, but runtime Webspace::getLocalization()
+        // only considers the webspace-level <localizations>. The pass must mirror that and not
+        // treat a portal-only locale ("de") as supported by the webspace.
+        $dir = $this->createTempDir();
+        \file_put_contents($dir . '/website.xml', $this->webspaceXmlWithPortalLocales('website', ['en'], ['de']));
+        \file_put_contents($dir . '/magazine.xml', $this->webspaceXml('magazine', ['de']));
+
+        $container = $this->createContainer($dir, ['default' => 'website']);
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('maps locale "de" to webspace "website"');
+
+        (new ValidateDefaultMainWebspacePass())->process($container);
+    }
+
     public function testRegistersConfigDirAsContainerResource(): void
     {
         $dir = $this->createWebspaceDir(['sulu-io']);
@@ -325,6 +342,44 @@ class ValidateDefaultMainWebspacePassTest extends TestCase
      */
     private function webspaceXml(string $key, array $locales = ['en', 'de']): string
     {
+        return '<?xml version="1.0" encoding="utf-8"?>' . "\n"
+            . '<webspace xmlns="http://schemas.sulu.io/webspace/webspace">' . "\n"
+            . '    <name>' . $key . '</name>' . "\n"
+            . '    <key>' . $key . '</key>' . "\n"
+            . '    <localizations>' . "\n"
+            . $this->renderLocalizations($locales)
+            . '    </localizations>' . "\n"
+            . '</webspace>' . "\n";
+    }
+
+    /**
+     * @param list<string> $webspaceLocales
+     * @param list<string> $portalLocales
+     */
+    private function webspaceXmlWithPortalLocales(string $key, array $webspaceLocales, array $portalLocales): string
+    {
+        return '<?xml version="1.0" encoding="utf-8"?>' . "\n"
+            . '<webspace xmlns="http://schemas.sulu.io/webspace/webspace">' . "\n"
+            . '    <name>' . $key . '</name>' . "\n"
+            . '    <key>' . $key . '</key>' . "\n"
+            . '    <localizations>' . "\n"
+            . $this->renderLocalizations($webspaceLocales)
+            . '    </localizations>' . "\n"
+            . '    <portals>' . "\n"
+            . '        <portal>' . "\n"
+            . '            <localizations>' . "\n"
+            . $this->renderLocalizations($portalLocales)
+            . '            </localizations>' . "\n"
+            . '        </portal>' . "\n"
+            . '    </portals>' . "\n"
+            . '</webspace>' . "\n";
+    }
+
+    /**
+     * @param list<string> $locales
+     */
+    private function renderLocalizations(array $locales): string
+    {
         $localizations = '';
         foreach ($locales as $locale) {
             $parts = \explode('_', $locale, 2);
@@ -332,14 +387,7 @@ class ValidateDefaultMainWebspacePassTest extends TestCase
             $localizations .= \sprintf('        <localization language="%s"%s/>', $parts[0], $country) . "\n";
         }
 
-        return '<?xml version="1.0" encoding="utf-8"?>' . "\n"
-            . '<webspace xmlns="http://schemas.sulu.io/webspace/webspace">' . "\n"
-            . '    <name>' . $key . '</name>' . "\n"
-            . '    <key>' . $key . '</key>' . "\n"
-            . '    <localizations>' . "\n"
-            . $localizations
-            . '    </localizations>' . "\n"
-            . '</webspace>' . "\n";
+        return $localizations;
     }
 
     private function createTempDir(): string

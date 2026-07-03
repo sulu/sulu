@@ -175,7 +175,7 @@ final class ValidateDefaultMainWebspacePass implements CompilerPassInterface
             }
 
             $locales = [];
-            $localizationNodes = $xpath->query('/*[local-name()="webspace"]//*[local-name()="localization"]');
+            $localizationNodes = $xpath->query('/*[local-name()="webspace"]/*[local-name()="localizations"]//*[local-name()="localization"]');
             if (false !== $localizationNodes) {
                 foreach ($localizationNodes as $node) {
                     if (!$node instanceof \DOMElement) {

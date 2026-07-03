@@ -67,7 +67,7 @@ class AdditionalWebspacesDataMapper implements DataMapperInterface
             return;
         }
 
-        // Only process mainWebspace if customize is activated
+        // Only validate mainWebspace if customize is activated; the value itself is written by the generic WebspaceDataMapper
         if (\array_key_exists('mainWebspace', $data)) {
             Assert::nullOrString($data['mainWebspace']);
 
