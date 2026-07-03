@@ -16,7 +16,6 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ContentDataMapper\DataMapp
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
@@ -132,11 +131,8 @@ class WebspaceDataMapperTest extends TestCase
         $this->assertNull($localizedDimensionContent->getMainWebspace());
     }
 
-    public function testMapDataWithUnsupportedLocaleThrowsException(): void
+    public function testMapDataWritesMainWebspaceWithoutLocaleValidation(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Webspace "example" does not support locale "de"');
-
         $data = [
             'mainWebspace' => 'example',
         ];
@@ -146,15 +142,11 @@ class WebspaceDataMapperTest extends TestCase
         $localizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent->setLocale('de');
 
-        $localizationEn = new Localization('en');
-        $webspace = new Webspace();
-        $webspace->setKey('example');
-        $webspace->addLocalization($localizationEn);
-
-        $this->webspaceManager->findWebspaceByKey('example')->willReturn($webspace);
-
         $authorMapper = $this->createWebspaceDataMapperInstance();
         $authorMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        // Locale validation is the article bundle's concern; the value is written regardless.
+        $this->assertSame('example', $localizedDimensionContent->getMainWebspace());
     }
 
     public function testMapDataWithSupportedLocale(): void
@@ -167,13 +159,6 @@ class WebspaceDataMapperTest extends TestCase
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent->setLocale('en');
-
-        $localizationEn = new Localization('en');
-        $webspace = new Webspace();
-        $webspace->setKey('example');
-        $webspace->addLocalization($localizationEn);
-
-        $this->webspaceManager->findWebspaceByKey('example')->willReturn($webspace);
 
         $authorMapper = $this->createWebspaceDataMapperInstance();
         $authorMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);

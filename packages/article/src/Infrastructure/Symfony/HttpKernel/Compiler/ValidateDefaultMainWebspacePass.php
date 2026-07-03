@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Infrastructure\Symfony\HttpKernel\Compiler;
 
+use Sulu\Component\Localization\Localization;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Config\Util\Exception\XmlParsingException;
@@ -35,7 +36,8 @@ final class ValidateDefaultMainWebspacePass implements CompilerPassInterface
 
         $container->addResource(new DirectoryResource($configDir, '/\.xml$/'));
 
-        $webspaceKeys = $this->readWebspaceKeys($configDir);
+        $localizations = $this->readWebspaceLocalizations($configDir);
+        $webspaceKeys = \array_keys($localizations);
         $defaultMainWebspace = $this->getConfiguredDefaultMainWebspace($container);
 
         if ([] === $defaultMainWebspace) {
@@ -65,6 +67,54 @@ final class ValidateDefaultMainWebspacePass implements CompilerPassInterface
                 ));
             }
         }
+
+        // Every authorable locale must map to a webspace that supports it, so a
+        // non-pinned article never receives an incompatible mainWebspace at runtime.
+        foreach ($this->collectLocales($localizations) as $locale) {
+            $resolved = $this->resolveConfiguredWebspaceForLocale($defaultMainWebspace, $locale, $webspaceKeys);
+
+            if (null === $resolved) {
+                throw new InvalidConfigurationException(\sprintf(
+                    'The locale "%s" has no "sulu_article.default_main_webspace" mapping. Add a per-locale entry '
+                    . '"%s" or a "default" entry pointing to a webspace that supports this locale.',
+                    $locale,
+                    $locale,
+                ));
+            }
+
+            if (!\in_array($locale, $localizations[$resolved] ?? [], true)) {
+                throw new InvalidConfigurationException(\sprintf(
+                    'The "sulu_article.default_main_webspace" maps locale "%s" to webspace "%s", which does not '
+                    . 'support that locale. Map "%s" to a webspace whose localizations include it.',
+                    $locale,
+                    $resolved,
+                    $locale,
+                ));
+            }
+        }
+    }
+
+    /**
+     * Mirrors WebspaceSettingsConfigurationResolver precedence.
+     *
+     * @param array<string, string> $defaultMainWebspace
+     * @param list<string> $webspaceKeys
+     */
+    private function resolveConfiguredWebspaceForLocale(array $defaultMainWebspace, string $locale, array $webspaceKeys): ?string
+    {
+        if (\array_key_exists($locale, $defaultMainWebspace)) {
+            return $defaultMainWebspace[$locale];
+        }
+
+        if (\array_key_exists('default', $defaultMainWebspace)) {
+            return $defaultMainWebspace['default'];
+        }
+
+        if (1 === \count($webspaceKeys)) {
+            return $webspaceKeys[0];
+        }
+
+        return null;
     }
 
     /**
@@ -100,11 +150,14 @@ final class ValidateDefaultMainWebspacePass implements CompilerPassInterface
     }
 
     /**
-     * @return list<string>
+     * Maps each webspace key to its declared locales (`language` or
+     * `language_country`, matching Localization::getLocale()).
+     *
+     * @return array<string, list<string>>
      */
-    private function readWebspaceKeys(string $configDir): array
+    private function readWebspaceLocalizations(string $configDir): array
     {
-        $webspaceKeys = [];
+        $localizations = [];
         foreach ((new Finder())->in($configDir)->files()->name('*.xml') as $file) {
             try {
                 $document = XmlUtils::loadFile($file->getPathname());
@@ -112,14 +165,53 @@ final class ValidateDefaultMainWebspacePass implements CompilerPassInterface
                 continue;
             }
 
-            $keyNodes = (new \DOMXPath($document))->query('/*[local-name()="webspace"]/*[local-name()="key"]');
-            $key = false !== $keyNodes && null !== $keyNodes->item(0) ? (string) $keyNodes->item(0)->nodeValue : '';
+            $xpath = new \DOMXPath($document);
 
-            if ('' !== $key) {
-                $webspaceKeys[] = $key;
+            $keyNodes = $xpath->query('/*[local-name()="webspace"]/*[local-name()="key"]');
+            $key = false !== $keyNodes && null !== $keyNodes->item(0) ? \trim((string) $keyNodes->item(0)->nodeValue) : '';
+
+            if ('' === $key) {
+                continue;
+            }
+
+            $locales = [];
+            $localizationNodes = $xpath->query('/*[local-name()="webspace"]/*[local-name()="localizations"]//*[local-name()="localization"]');
+            if (false !== $localizationNodes) {
+                foreach ($localizationNodes as $node) {
+                    if (!$node instanceof \DOMElement) {
+                        continue;
+                    }
+
+                    $language = \trim($node->getAttribute('language'));
+                    if ('' === $language) {
+                        continue;
+                    }
+
+                    $country = \trim($node->getAttribute('country'));
+                    $locales[] = (new Localization($language, '' !== $country ? $country : null))->getLocale();
+                }
+            }
+
+            $localizations[$key] = \array_values(\array_unique($locales));
+        }
+
+        return $localizations;
+    }
+
+    /**
+     * @param array<string, list<string>> $localizations
+     *
+     * @return list<string>
+     */
+    private function collectLocales(array $localizations): array
+    {
+        $locales = [];
+        foreach ($localizations as $webspaceLocales) {
+            foreach ($webspaceLocales as $locale) {
+                $locales[$locale] = true;
             }
         }
 
-        return $webspaceKeys;
+        return \array_keys($locales);
     }
 }
