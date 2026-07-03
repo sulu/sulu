@@ -73,8 +73,8 @@ class CategoryController extends AbstractRestController implements SecuredContro
     public function cgetAction(Request $request)
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
-        $rootKey = $request->get('rootKey');
-        $parentId = $request->get('parentId');
+        $rootKey = $request->query->get('rootKey');
+        $parentId = $request->query->get('parentId');
         $includeRoot = $this->getBooleanRequestParameter($request, 'includeRoot', false, false);
 
         if ('root' === $parentId) {
@@ -82,9 +82,9 @@ class CategoryController extends AbstractRestController implements SecuredContro
             $parentId = null;
         }
 
-        if ('true' == $request->get('flat')) {
+        if ('true' == $request->query->get('flat')) {
             $rootId = ($rootKey) ? $this->categoryManager->findByKey($rootKey)->getId() : null;
-            $expandedIds = \array_filter(\explode(',', $request->get('expandedIds', $request->get('selectedIds', $request->query->get('ids', '')))));
+            $expandedIds = \array_filter(\explode(',', $request->query->get('expandedIds', $request->query->get('selectedIds', $request->query->get('ids', '')))));
             $defaultSort = !$request->query->has('sortBy');
             $list = $this->getListRepresentation(
                 $request,
@@ -232,7 +232,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
             );
         }
 
-        $search = $request->get('search');
+        $search = $request->query->get('search');
 
         if (!$search) {
             // expand collected parents if search is not set

@@ -107,7 +107,7 @@ return static function(ContainerConfigurator $container) {
         ]);
 
     $services->set('sulu_contact.twig.cache_adapter', ArrayAdapter::class)
-        ->args(['$storeSerialized' => false]);
+        ->args([0, false]);
 
     $services->set('sulu_contact.twig', ContactTwigExtension::class)
         ->args([

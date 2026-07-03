@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\Security;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
@@ -57,7 +58,7 @@ class PreviewVoter implements VoterInterface
      *
      * @return int either ACCESS_GRANTED, ACCESS_ABSTAIN, or ACCESS_DENIED
      */
-    public function vote(TokenInterface $token, $object, array $attributes): int
+    public function vote(TokenInterface $token, mixed $object, array $attributes, ?Vote $vote = null): int
     {
         return VoterInterface::ACCESS_GRANTED;
     }

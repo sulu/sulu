@@ -260,7 +260,7 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu.context', ['context' => 'admin']);
 
     $services->set('sulu_security.twig_extension.user.cache_adapter', ArrayAdapter::class)
-        ->args(['$storeSerialized' => false]);
+        ->args([0, false]);
 
     $services->set('sulu_security.twig_extension.user', UserTwigExtension::class)
         ->args([

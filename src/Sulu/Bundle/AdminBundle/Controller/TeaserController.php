@@ -40,7 +40,7 @@ class TeaserController extends AbstractRestController
 
                 return ['type' => $parts[0], 'id' => $parts[1]];
             },
-            \array_filter(\explode(',', $request->get('ids', '')))
+            \array_filter(\explode(',', $request->query->get('ids', '')))
         );
 
         return $this->handleView(
