@@ -27,7 +27,7 @@ trait DataProviderRepositoryTrait
 
     /**
      * @param array $filters
-     * @param int $page
+     * @param int|null $page
      * @param int $pageSize
      * @param int|null $limit
      * @param string $locale
@@ -88,7 +88,7 @@ trait DataProviderRepositoryTrait
      * Resolves filter and returns id array for second query.
      *
      * @param array $filters array of filters: tags, tagOperator
-     * @param int $page
+     * @param int|null $page
      * @param int $pageSize
      * @param int|null $limit
      * @param string $locale

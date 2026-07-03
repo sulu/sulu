@@ -58,17 +58,18 @@ trait RequestParametersTrait
      */
     protected function getBooleanRequestParameter($request, $name, $force = false, $default = null)
     {
+        /** @var mixed $value */
         $value = $this->getRequestParameter($request, $name, $force, $default);
         if ('true' === $value || true === $value) {
-            $value = true;
-        } elseif ('false' === $value || false === $value) {
-            $value = false;
-        } elseif ($force && true !== $value && false !== $value) {
+            return true;
+        }
+        if ('false' === $value || false === $value) {
+            return false;
+        }
+        if ($force) {
             throw new ParameterDataTypeException(\get_class($this), $name);
-        } else {
-            $value = $default;
         }
 
-        return $value;
+        return $default;
     }
 }
