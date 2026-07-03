@@ -25,6 +25,8 @@ describe('AiApplication', () => {
                 formKey: 'formKey',
                 route: 'feedbackRoute',
             },
+            htmlFieldTypes: ['text_editor'],
+            textFieldTypes: ['text_line', 'text_area'],
             translation: {
                 enabled: true,
                 route: 'translationRoute',
