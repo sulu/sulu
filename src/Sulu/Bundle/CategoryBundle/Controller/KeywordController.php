@@ -86,7 +86,7 @@ class KeywordController extends AbstractRestController implements SecuredControl
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptor);
 
         /** @var string $locale */
-        $locale = $request->get('locale');
+        $locale = $this->getLocale($request);
         $categoryTranslation = $category->findTranslationByLocale($locale);
 
         if (false == $categoryTranslation) {
@@ -128,8 +128,8 @@ class KeywordController extends AbstractRestController implements SecuredControl
         /** @var KeywordInterface $keyword */
         $keyword = $this->keywordRepository->createNew();
         $category = $this->categoryRepository->findCategoryById($categoryId);
-        $keyword->setKeyword($request->get('keyword'));
-        $keyword->setLocale($request->get('locale'));
+        $keyword->setKeyword($request->request->getString('keyword'));
+        $keyword->setLocale($request->request->getString('locale'));
 
         $keyword = $this->keywordManager->save($keyword, $category);
 
@@ -162,9 +162,12 @@ class KeywordController extends AbstractRestController implements SecuredControl
             return $this->handleView($this->view(null, 404));
         }
 
-        $force = $request->get('force');
+        $force = null;
+        if ($request->query->has('force')) {
+            $force = $request->query->getString('force');
+        }
         $category = $this->categoryRepository->findCategoryById($categoryId);
-        $keyword->setKeyword($request->get('keyword'));
+        $keyword->setKeyword($request->request->getString('keyword'));
 
         $keyword = $this->keywordManager->save($keyword, $category, $force);
 
@@ -203,7 +206,7 @@ class KeywordController extends AbstractRestController implements SecuredControl
     {
         $category = $this->categoryRepository->findCategoryById($categoryId);
 
-        $ids = \array_filter(\explode(',', $request->get('ids')));
+        $ids = \array_filter(\explode(',', $request->query->getString('ids')));
         foreach ($ids as $id) {
             $keyword = $this->keywordRepository->findById($id);
             $this->keywordManager->delete($keyword, $category);
