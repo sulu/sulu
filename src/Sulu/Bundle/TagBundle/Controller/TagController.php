@@ -91,19 +91,19 @@ class TagController extends AbstractRestController implements SecuredControllerI
      */
     public function cgetAction(Request $request)
     {
-        if ('true' == $request->get('flat')) {
+        if ('true' == $request->query->get('flat')) {
             $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('tags');
             $listBuilder = $this->listBuilderFactory->create($this->tagClass);
 
             $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
-            $names = \array_filter(\explode(',', $request->get('names', '')));
+            $names = \array_filter(\explode(',', $request->query->get('names', '')));
             if (\count($names) > 0) {
                 $listBuilder->in($fieldDescriptors['name'], $names);
                 $listBuilder->limit(\count($names));
             }
 
-            $idsParam = $request->get('ids', '');
+            $idsParam = $request->query->get('ids', '');
             $ids = \array_filter(\explode(',', \is_string($idsParam) ? $idsParam : ''));
             if (\count($ids) > 0 && isset($fieldDescriptors['id'])) {
                 $listBuilder->in($fieldDescriptors['id'], $ids);
@@ -138,7 +138,7 @@ class TagController extends AbstractRestController implements SecuredControllerI
      */
     public function postAction(Request $request)
     {
-        $name = $request->get('name');
+        $name = $request->request->get('name');
 
         try {
             if (null == $name) {
@@ -173,7 +173,7 @@ class TagController extends AbstractRestController implements SecuredControllerI
      */
     public function putAction(Request $request, $id)
     {
-        $name = $request->get('name');
+        $name = $request->request->get('name');
 
         try {
             if (null == $name) {
@@ -230,9 +230,9 @@ class TagController extends AbstractRestController implements SecuredControllerI
     public function postMergeAction(Request $request)
     {
         try {
-            $srcParam = $request->get('src');
+            $srcParam = $request->request->get('src') ?? $request->query->get('src');
             $srcTagIds = \explode(',', \is_scalar($srcParam) ? (string) $srcParam : '');
-            $destTagId = $request->get('dest');
+            $destTagId = $request->request->get('dest') ?? $request->query->get('dest');
 
             $destTag = $this->tagManager->merge($srcTagIds, $destTagId);
 
@@ -260,7 +260,7 @@ class TagController extends AbstractRestController implements SecuredControllerI
             $tags = [];
 
             $i = 0;
-            while ($item = $request->get($i)) {
+            while ($item = $request->request->all((string) $i)) {
                 if (isset($item['id'])) {
                     $tags[] = $this->tagManager->save($item, $item['id']);
                 } else {

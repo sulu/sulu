@@ -93,13 +93,13 @@ class CollectionController extends AbstractRestController implements SecuredCont
 
             // filter children
             /** @var int|null $limit */
-            $limit = $request->get('limit', null);
+            $limit = $request->query->get('limit', null);
             $offset = $this->getOffset($request, $limit);
             $search = $this->listRestHelper->getSearchPattern();
             /** @var string|null $sortBy */
-            $sortBy = $request->get('sortBy', 'title');
+            $sortBy = $request->query->get('sortBy', 'title');
             /** @var string $sortOrder */
-            $sortOrder = $request->get('sortOrder', 'ASC');
+            $sortOrder = $request->query->get('sortOrder', 'ASC');
 
             $filter = [
                 'limit' => $limit,
@@ -147,16 +147,16 @@ class CollectionController extends AbstractRestController implements SecuredCont
     {
         try {
             $flat = $this->getBooleanRequestParameter($request, 'flat', false);
-            $depth = $request->get('depth', 0);
-            $parentId = $request->get('parentId', null);
+            $depth = $request->query->get('depth', 0);
+            $parentId = $request->query->get('parentId', null);
             /** @var int|null $limit */
-            $limit = $request->get('limit', null);
+            $limit = $request->query->get('limit', null);
             $offset = $this->getOffset($request, $limit);
             $search = $this->listRestHelper->getSearchPattern();
             /** @var string|null $sortBy */
-            $sortBy = $request->get('sortBy', 'title');
+            $sortBy = $request->query->get('sortBy', 'title');
             /** @var string $sortOrder */
-            $sortOrder = $request->get('sortOrder', 'ASC');
+            $sortOrder = $request->query->get('sortOrder', 'ASC');
             $includeRoot = $this->getBooleanRequestParameter($request, 'includeRoot', false, false);
 
             if ('root' === $parentId) {
@@ -249,7 +249,7 @@ class CollectionController extends AbstractRestController implements SecuredCont
     public function deleteAction($id, Request $request)
     {
         /** @var string|null $parent */
-        $parent = $request->get('parent');
+        $parent = $this->getRequestParameter($request, 'parent');
 
         $this->checkSystemCollection($id, $parent);
 
@@ -312,16 +312,16 @@ class CollectionController extends AbstractRestController implements SecuredCont
     protected function getData(Request $request)
     {
         return [
-            'style' => $request->get('style'),
-            'type' => $request->get('type', $this->defaultCollectionType),
-            'parent' => $request->get('parent'),
+            'style' => $this->getRequestParameter($request, 'style'),
+            'type' => $this->getRequestParameter($request, 'type', false, $this->defaultCollectionType),
+            'parent' => $this->getRequestParameter($request, 'parent'),
             'locale' => $this->getRequestParameter($request, 'locale', true),
-            'title' => $request->get('title'),
-            'description' => $request->get('description'),
-            'changer' => $request->get('changer'),
-            'creator' => $request->get('creator'),
-            'changed' => $request->get('changed'),
-            'created' => $request->get('created'),
+            'title' => $this->getRequestParameter($request, 'title'),
+            'description' => $this->getRequestParameter($request, 'description'),
+            'changer' => $this->getRequestParameter($request, 'changer'),
+            'creator' => $this->getRequestParameter($request, 'creator'),
+            'changed' => $this->getRequestParameter($request, 'changed'),
+            'created' => $this->getRequestParameter($request, 'created'),
         ];
     }
 
@@ -333,7 +333,7 @@ class CollectionController extends AbstractRestController implements SecuredCont
     protected function saveEntity($id, Request $request)
     {
         /** @var string|null $parent */
-        $parent = $request->get('parent');
+        $parent = $this->getRequestParameter($request, 'parent');
         $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
 
         $this->checkSystemCollection($id, $parent);
@@ -376,7 +376,7 @@ class CollectionController extends AbstractRestController implements SecuredCont
      */
     private function getOffset(Request $request, $limit)
     {
-        $page = $request->get('page', 1);
+        $page = $request->query->get('page', 1);
 
         return (null !== $limit) ? $limit * ($page - 1) : 0;
     }
@@ -399,6 +399,6 @@ class CollectionController extends AbstractRestController implements SecuredCont
 
     public function getSecuredObjectId(Request $request)
     {
-        return $request->get('id') ?: $request->get('parent');
+        return $request->attributes->get('id') ?? $request->query->get('id') ?? $request->request->get('id') ?? $request->attributes->get('parent') ?? $request->query->get('parent') ?? $request->request->get('parent');
     }
 }

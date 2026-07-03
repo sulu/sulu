@@ -77,7 +77,7 @@ class ProfileController
         $this->checkArguments($request);
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
-        $this->userManager->save($this->getData($request), $request->get('locale'), $user->getId(), true);
+        $this->userManager->save($this->getData($request), $request->request->get('locale') ?? $request->query->get('locale'), $user->getId(), true);
 
         $user->setFirstName((string) $request->request->get('firstName'));
         $user->setLastName((string) $request->request->get('lastName'));
@@ -163,7 +163,7 @@ class ProfileController
      */
     public function deleteSettingsAction(Request $request)
     {
-        $key = $request->get('key');
+        $key = $request->attributes->get('key') ?? $request->query->get('key') ?? $request->request->get('key');
 
         try {
             if (!$key) {
@@ -198,19 +198,19 @@ class ProfileController
      */
     private function checkArguments(Request $request)
     {
-        if (null === $request->get('firstName')) {
+        if (null === $request->request->get('firstName')) {
             throw new MissingArgumentException($this->contactClass, 'firstName');
         }
-        if (null === $request->get('lastName')) {
+        if (null === $request->request->get('lastName')) {
             throw new MissingArgumentException($this->contactClass, 'lastName');
         }
-        if (null === $request->get('username')) {
+        if (null === $request->request->get('username')) {
             throw new MissingArgumentException($this->userClass, 'username');
         }
-        if (null === $request->get('email')) {
+        if (null === $request->request->get('email')) {
             throw new MissingArgumentException($this->userClass, 'email');
         }
-        if (null === $request->get('locale')) {
+        if (null === ($request->request->get('locale') ?? $request->query->get('locale'))) {
             throw new MissingArgumentException($this->userClass, 'locale');
         }
     }

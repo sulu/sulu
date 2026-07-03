@@ -73,18 +73,17 @@ class RequestParametersTraitTest extends TestCase
     {
         $this->expectException(MissingParameterException::class);
 
-        $request = $this->prophesize(Request::class);
+        $request = new Request();
 
-        $this->getBooleanRequestParameter($request->reveal(), 'test', true);
+        $this->getBooleanRequestParameter($request, 'test', true);
     }
 
     public function testGetBooleanRequestWrongParameter(): void
     {
         $this->expectException(ParameterDataTypeException::class);
 
-        $request = $this->prophesize(Request::class);
-        $request->get('test', null)->willReturn('asdf');
+        $request = new Request(['test' => 'asdf']);
 
-        $this->getBooleanRequestParameter($request->reveal(), 'test', true);
+        $this->getBooleanRequestParameter($request, 'test', true);
     }
 }

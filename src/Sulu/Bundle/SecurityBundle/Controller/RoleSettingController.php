@@ -64,7 +64,9 @@ class RoleSettingController extends AbstractRestController implements SecuredCon
         }
 
         $setting->setKey($key);
-        $setting->setValue($request->get('value', []));
+        $requestData = $request->request->all();
+        $queryData = $request->query->all();
+        $setting->setValue($requestData['value'] ?? $queryData['value'] ?? []);
         $setting->setRole($this->entityManager->getReference(Role::class, $roleId));
 
         $this->entityManager->persist($setting);

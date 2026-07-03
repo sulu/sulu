@@ -38,8 +38,8 @@ class PermissionController
     public function cgetAction(Request $request)
     {
         try {
-            $identifier = $request->get('id');
-            $resourceKey = $request->get('resourceKey');
+            $identifier = $request->attributes->get('id') ?? $request->query->get('id') ?? $request->request->get('id');
+            $resourceKey = $request->attributes->get('resourceKey') ?? $request->query->get('resourceKey') ?? $request->request->get('resourceKey');
 
             if (!$identifier) {
                 throw new MissingParameterException(static::class, 'id');
@@ -71,10 +71,10 @@ class PermissionController
     public function cputAction(Request $request)
     {
         try {
-            $resourceKey = $request->get('resourceKey');
-            $identifier = $request->get('id');
-            $permissions = $request->get('permissions');
-            $webspace = $request->get('webspace');
+            $resourceKey = $request->attributes->get('resourceKey') ?? $request->query->get('resourceKey') ?? $request->request->get('resourceKey');
+            $identifier = $request->attributes->get('id') ?? $request->query->get('id') ?? $request->request->get('id');
+            $permissions = $request->request->all()['permissions'] ?? $request->query->all()['permissions'] ?? null;
+            $webspace = $request->attributes->get('webspace') ?? $request->query->get('webspace') ?? $request->request->get('webspace');
             $inherit = $request->query->getBoolean('inherit', false);
 
             $rawSecurityContext = $this->resources[$resourceKey]['security_context'] ?? null;

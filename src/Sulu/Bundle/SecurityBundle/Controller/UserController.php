@@ -254,16 +254,16 @@ class UserController extends AbstractRestController implements SecuredController
     // https://github.com/sulu-io/sulu/issues/1136
     private function checkArguments(Request $request)
     {
-        if (null == $request->get('username')) {
+        if (null == $request->request->get('username')) {
             throw new MissingArgumentException($this->userClass, 'username');
         }
-        if ($request->isMethod('POST') && null === $request->get('password')) {
+        if ($request->isMethod('POST') && null === $request->request->get('password')) {
             throw new MissingArgumentException($this->userClass, 'password');
         }
-        if (null == $request->get('locale')) {
+        if (null == ($request->request->get('locale') ?? $request->query->get('locale'))) {
             throw new MissingArgumentException($this->userClass, 'locale');
         }
-        if (null == $request->get('contact') && null == $request->get('contactId')) {
+        if (null == $request->request->get('contact') && null == ($request->request->get('contactId') ?? $request->query->get('contactId'))) {
             throw new MissingArgumentException($this->userClass, 'contact');
         }
     }
@@ -277,7 +277,7 @@ class UserController extends AbstractRestController implements SecuredController
     public function cgetAction(Request $request)
     {
         $view = null;
-        if ('true' == $request->get('flat')) {
+        if ('true' == $request->query->get('flat')) {
             $listBuilder = $this->doctrineListBuilderFactory->create($this->userClass);
 
             $this->restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
@@ -291,7 +291,7 @@ class UserController extends AbstractRestController implements SecuredController
             );
             $view = $this->view($list, 200);
         } else {
-            $contactId = $request->get('contactId');
+            $contactId = $request->request->get('contactId') ?? $request->query->get('contactId');
 
             if (null != $contactId) {
                 $user = $this->entityManager->getRepository($this->userClass)->findUserByContact($contactId);

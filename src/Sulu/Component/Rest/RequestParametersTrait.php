@@ -33,7 +33,20 @@ trait RequestParametersTrait
      */
     protected function getRequestParameter(Request $request, $name, $force = false, $default = null)
     {
-        $value = $request->get($name, $default);
+        $attributes = $request->attributes->all();
+        $query = $request->query->all();
+        $requestData = $request->request->all();
+
+        if (\array_key_exists($name, $attributes)) {
+            $value = $attributes[$name];
+        } elseif (\array_key_exists($name, $query)) {
+            $value = $query[$name];
+        } elseif (\array_key_exists($name, $requestData)) {
+            $value = $requestData[$name];
+        } else {
+            $value = $default;
+        }
+
         if ($force && null === $value) {
             throw new MissingParameterException(\get_class($this), $name);
         }

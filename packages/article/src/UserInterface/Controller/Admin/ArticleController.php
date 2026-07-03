@@ -70,7 +70,7 @@ final class ArticleController implements SecuredControllerInterface
 
     public function cgetAction(Request $request): Response
     {
-        $typesParam = $request->get('types', '');
+        $typesParam = $request->query->get('types', '');
         $types = \array_filter(\explode(',', \is_string($typesParam) ? $typesParam : ''));
 
         $groupTemplates = [];
@@ -81,7 +81,7 @@ final class ArticleController implements SecuredControllerInterface
             }
         }
 
-        $templatesParam = $request->get('templates', '');
+        $templatesParam = $request->query->get('templates', '');
         $templates = \array_filter(\explode(',', \is_string($templatesParam) ? $templatesParam : ''));
         $templates = \array_unique(\array_merge($templates, $groupTemplates));
 

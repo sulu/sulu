@@ -39,7 +39,7 @@ class RedirectController
      */
     public function redirectAction(Request $request)
     {
-        return new RedirectResponse($request->get('url'), 301, ['Cache-Control' => 'private']);
+        return new RedirectResponse($request->attributes->get('url') ?? $request->query->get('url'), 301, ['Cache-Control' => 'private']);
     }
 
     /**

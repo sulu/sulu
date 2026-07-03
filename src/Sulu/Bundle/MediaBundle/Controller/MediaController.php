@@ -118,8 +118,8 @@ class MediaController extends AbstractMediaController implements
     {
         /** @var UserInterface $user */
         $user = $this->getUser();
-        $types = \array_filter(\explode(',', $request->get('types', '')));
-        $collectionId = $request->get('collection');
+        $types = \array_filter(\explode(',', $request->query->get('types', '')));
+        $collectionId = $request->attributes->get('collection') ?? $request->query->get('collection') ?? $request->request->get('collection');
         $collectionId = $collectionId ? (int) $collectionId : null;
         $locale = $this->getRequestParameter($request, 'locale', true);
 
@@ -128,7 +128,7 @@ class MediaController extends AbstractMediaController implements
             $fieldDescriptors,
             $user,
             $types,
-            !$request->get('sortBy'),
+            !$request->query->get('sortBy'),
             $collectionId
         );
 
@@ -306,6 +306,6 @@ class MediaController extends AbstractMediaController implements
      */
     public function getSecuredObjectId(Request $request)
     {
-        return $request->get('collection');
+        return $request->attributes->get('collection') ?? $request->query->get('collection') ?? $request->request->get('collection');
     }
 }

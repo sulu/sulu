@@ -620,7 +620,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
     {
         // For detail actions, use id parameter
         // For list action, no specific object (will check webspace-level permissions)
-        $id = $request->get('id');
+        $id = $request->attributes->get('id') ?? $request->query->get('id') ?? $request->request->get('id');
 
         return \is_string($id) ? $id : '';
     }
