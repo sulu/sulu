@@ -81097,6 +81097,18 @@ parameters:
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/UserBlameSubscriber.php
 
 		-
+			message: '#^Loose comparison using \=\= between null and null will always evaluate to true\.$#'
+			identifier: equal.alwaysTrue
+			count: 1
+			path: src/Sulu/Component/Persistence/RelationTrait.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
+			identifier: notIdentical.alwaysFalse
+			count: 1
+			path: src/Sulu/Component/Persistence/RelationTrait.php
+
+		-
 			message: '#^Property Sulu\\Component\\Persistence\\Tests\\Unit\\EventSubscriber\\ORM\\MetadataSubscriberTest\:\:\$classMetadata with generic class Doctrine\\ORM\\Mapping\\ClassMetadata does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1
