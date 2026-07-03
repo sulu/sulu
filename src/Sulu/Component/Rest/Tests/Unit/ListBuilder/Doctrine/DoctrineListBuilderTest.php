@@ -125,6 +125,12 @@ class DoctrineListBuilderTest extends TestCase
     /** @var string */
     private static $translationEntityNameAlias = 'Sulu_Bundle_CoreBundle_Entity_ExampleTranslation';
 
+    /** @var string */
+    private static $fallbackEntityName = 'Sulu\Bundle\CoreBundle\Entity\ExampleFallbackTranslation';
+
+    /** @var string */
+    private static $fallbackEntityNameAlias = 'Sulu_Bundle_CoreBundle_Entity_ExampleFallbackTranslation';
+
     public function setUp(): void
     {
         $this->entityManager = $this->prophesize(EntityManager::class);
@@ -1308,6 +1314,131 @@ class DoctrineListBuilderTest extends TestCase
         )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
 
         $this->queryBuilder->innerJoin(Argument::cetera())->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testLeftJoinNotUpgradedWhenSiblingIsNullAssertionTargetsJoinOfFallbackChain(): void
+    {
+        $localizedFieldDescriptor = $this->createLeftJoinedTranslationFieldDescriptor();
+        $fallbackFieldDescriptor = $this->createFallbackChainFieldDescriptor();
+
+        $this->doctrineListBuilder->setFieldDescriptors([
+            'name' => $localizedFieldDescriptor,
+            'fallbackName' => $fallbackFieldDescriptor,
+        ]);
+        $this->doctrineListBuilder->addExpression(
+            $this->doctrineListBuilder->createOrExpression([
+                $this->doctrineListBuilder->createAndExpression([
+                    $this->doctrineListBuilder->createIsNotNullExpression($localizedFieldDescriptor),
+                    $this->doctrineListBuilder->createInExpression($localizedFieldDescriptor, ['value1', 'value2']),
+                ]),
+                $this->doctrineListBuilder->createAndExpression([
+                    $this->doctrineListBuilder->createIsNullExpression($localizedFieldDescriptor),
+                    $this->doctrineListBuilder->createInExpression($fallbackFieldDescriptor, ['value1', 'value2']),
+                ]),
+            ])
+        );
+
+        $this->queryBuilder->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->distinct(Argument::any())->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->where(self::$entityNameAlias . '.id IN (:ids)')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->andWhere(Argument::containingString(' IS NULL'))->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter(Argument::cetera())->willReturn($this->queryBuilder->reveal());
+
+        // the localized join (shared with the fallback chain) must stay LEFT
+        $this->queryBuilder->leftJoin(
+            self::$entityNameAlias . '.translations',
+            self::$translationEntityNameAlias,
+            'WITH',
+            ''
+        )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        // the fallback join itself also stays LEFT
+        $this->queryBuilder->leftJoin(
+            self::$translationEntityNameAlias . '.fallback',
+            self::$fallbackEntityNameAlias,
+            'WITH',
+            ''
+        )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        $this->queryBuilder->innerJoin(Argument::cetera())->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testLeftJoinNotUpgradedWhenCaseFieldDescriptorUsedForFilter(): void
+    {
+        $case1EntityName = 'Sulu\Bundle\CoreBundle\Entity\ExampleTranslation';
+        $case2EntityName = 'Sulu\Bundle\CoreBundle\Entity\ExampleFallback';
+        $case2EntityNameAlias = 'Sulu_Bundle_CoreBundle_Entity_ExampleFallback';
+
+        $caseFieldDescriptor = new DoctrineCaseFieldDescriptor(
+            'title',
+            new DoctrineDescriptor(
+                $case1EntityName,
+                'title',
+                [
+                    $case1EntityName => new DoctrineJoinDescriptor(
+                        $case1EntityName,
+                        self::$entityNameAlias . '.translations',
+                        '',
+                        DoctrineJoinDescriptor::JOIN_METHOD_LEFT,
+                    ),
+                ]
+            ),
+            new DoctrineDescriptor(
+                $case2EntityName,
+                'title',
+                [
+                    // The fallback (ghost) branch depends on the case1 join being present
+                    // but NULL (its join condition references the case1 entity), so its
+                    // join chain includes the case1 join in addition to its own.
+                    $case1EntityName => new DoctrineJoinDescriptor(
+                        $case1EntityName,
+                        self::$entityNameAlias . '.translations',
+                        '',
+                        DoctrineJoinDescriptor::JOIN_METHOD_LEFT,
+                    ),
+                    $case2EntityName => new DoctrineJoinDescriptor(
+                        $case2EntityName,
+                        self::$entityNameAlias . '.fallbacks',
+                        '',
+                        DoctrineJoinDescriptor::JOIN_METHOD_LEFT,
+                    ),
+                ]
+            ),
+        );
+
+        $this->doctrineListBuilder->setFieldDescriptors(['title' => $caseFieldDescriptor]);
+        $this->doctrineListBuilder->in($caseFieldDescriptor, ['value1', 'value2']);
+
+        $this->queryBuilder->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->distinct(Argument::any())->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->where(self::$entityNameAlias . '.id IN (:ids)')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->andWhere(Argument::any())->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter(Argument::cetera())->willReturn($this->queryBuilder->reveal());
+
+        // the localized join, shared by both case branches, must stay LEFT
+        $this->queryBuilder->leftJoin(
+            self::$entityNameAlias . '.translations',
+            self::$translationEntityNameAlias,
+            'WITH',
+            ''
+        )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        // the fallback join itself also stays LEFT
+        $this->queryBuilder->leftJoin(
+            self::$entityNameAlias . '.fallbacks',
+            $case2EntityNameAlias,
+            'WITH',
+            ''
+        )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        $this->queryBuilder->innerJoin(Argument::cetera())->willReturn($this->queryBuilder->reveal())->shouldNotBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
@@ -2525,6 +2656,30 @@ class DoctrineListBuilderTest extends TestCase
                 self::$translationEntityName => new DoctrineJoinDescriptor(
                     self::$translationEntityName,
                     self::$entityNameAlias . '.translations',
+                    '',
+                    DoctrineJoinDescriptor::JOIN_METHOD_LEFT,
+                ),
+            ]
+        );
+    }
+
+    private function createFallbackChainFieldDescriptor(): DoctrineFieldDescriptor
+    {
+        return new DoctrineFieldDescriptor(
+            'name',
+            'fallbackName',
+            self::$fallbackEntityName,
+            'fallback',
+            [
+                self::$translationEntityName => new DoctrineJoinDescriptor(
+                    self::$translationEntityName,
+                    self::$entityNameAlias . '.translations',
+                    '',
+                    DoctrineJoinDescriptor::JOIN_METHOD_LEFT,
+                ),
+                self::$fallbackEntityName => new DoctrineJoinDescriptor(
+                    self::$fallbackEntityName,
+                    self::$translationEntityNameAlias . '.fallback',
                     '',
                     DoctrineJoinDescriptor::JOIN_METHOD_LEFT,
                 ),

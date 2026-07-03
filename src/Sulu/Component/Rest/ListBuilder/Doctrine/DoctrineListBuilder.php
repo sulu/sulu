@@ -813,16 +813,26 @@ class DoctrineListBuilder extends AbstractListBuilder
     {
         if ($expression instanceof DoctrineAndExpression) {
             $entityNames = [];
+            $nullAssertedEntityNames = [];
 
             foreach ($expression->getExpressions() as $subExpression) {
                 if (!$subExpression instanceof AbstractDoctrineExpression) {
                     continue;
                 }
 
+                if ($subExpression instanceof BasicExpressionInterface && $this->allowsNullJoinResult($subExpression)) {
+                    $nullAssertedEntityNames = \array_merge(
+                        $nullAssertedEntityNames,
+                        $this->getJoinEntityNamesForField($subExpression->getFieldName())
+                    );
+
+                    continue;
+                }
+
                 $entityNames = \array_merge($entityNames, $this->getStrictJoinEntityNamesForExpression($subExpression));
             }
 
-            return \array_values(\array_unique($entityNames));
+            return \array_values(\array_diff(\array_unique($entityNames), $nullAssertedEntityNames));
         }
 
         if ($expression instanceof DoctrineOrExpression) {
