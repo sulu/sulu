@@ -220,7 +220,7 @@ export default class AiApplication extends Component<Props> {
 
     @computed get delta() {
         const schemaType = this.selectedComponent?.schemaType;
-        if (schemaType && this.props.htmlFieldTypes.includes(schemaType)) {
+        if (schemaType && this.canonicalFieldType(schemaType) === 'text_editor') {
             return 50;
         }
 
@@ -228,12 +228,12 @@ export default class AiApplication extends Component<Props> {
     }
 
     canonicalFieldType(schemaType: string): 'text_line' | 'text_area' | 'text_editor' {
-        if (this.props.htmlFieldTypes.includes(schemaType)) {
-            return 'text_editor';
+        if (schemaType === 'text_line' || schemaType === 'text_area' || schemaType === 'text_editor') {
+            return schemaType;
         }
 
-        if (schemaType === 'text_area') {
-            return 'text_area';
+        if (this.props.htmlFieldTypes.includes(schemaType)) {
+            return 'text_editor';
         }
 
         return 'text_line';

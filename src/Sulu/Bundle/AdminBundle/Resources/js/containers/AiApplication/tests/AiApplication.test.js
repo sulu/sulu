@@ -180,6 +180,18 @@ describe('AiApplication', () => {
         expect(instance.canonicalFieldType('text_line')).toBe('text_line');
     });
 
+    test('canonicalFieldType maps canonical types to themselves regardless of configuration', () => {
+        const instance = new AiApplication({
+            ...props,
+            htmlFieldTypes: ['configurable_text_editor'],
+            textFieldTypes: ['custom_line'],
+        });
+
+        expect(instance.canonicalFieldType('text_editor')).toBe('text_editor');
+        expect(instance.canonicalFieldType('text_area')).toBe('text_area');
+        expect(instance.canonicalFieldType('text_line')).toBe('text_line');
+    });
+
     test('handles scroll and resize events', () => {
         render(<AiApplication {...props} />);
 
