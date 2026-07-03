@@ -9,6 +9,7 @@ import MemoryFormStore from '../../../containers/Form/stores/MemoryFormStore';
 import ResourceFormStore from '../../../containers/Form/stores/ResourceFormStore';
 import Form from '../../../containers/Form';
 import Snackbar from '../../../components/Snackbar';
+import Router from '../../../services/Router';
 
 const React = mockReact;
 
@@ -153,6 +154,28 @@ test('Should pass correct props to Form component', () => {
 
     expect(form.props()).toEqual(expect.objectContaining({
         store: formStore,
+    }));
+});
+
+test('Should pass router to Form component', () => {
+    const formStore = new MemoryFormStore({}, {}, undefined, undefined);
+    const router: Router = ({}: any);
+
+    const formOverlay = shallow(<FormOverlay
+        confirmDisabled={false}
+        confirmLoading={false}
+        confirmText="confirm-text"
+        formStore={formStore}
+        onClose={jest.fn()}
+        onConfirm={jest.fn()}
+        open={true}
+        router={router}
+        size="small"
+        title="overlay-title"
+    />);
+
+    expect(formOverlay.find(Form).props()).toEqual(expect.objectContaining({
+        router,
     }));
 });
 

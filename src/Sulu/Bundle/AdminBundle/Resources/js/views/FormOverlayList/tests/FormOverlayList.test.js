@@ -245,6 +245,7 @@ test('Should open FormOverlay with correct props when List fires the item-add ca
         confirmText: 'sulu_admin.save',
         formStore: formOverlayList.instance().formStore,
         open: true,
+        router,
         size: 'large',
         title: 'app.add_overlay_title',
     }));

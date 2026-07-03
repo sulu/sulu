@@ -42,13 +42,14 @@ class WebspaceDataMapper implements DataMapperInterface
     }
 
     /**
-     * @template T of \Sulu\Content\Domain\Model\ContentRichEntityInterface
-     *
-     * @param WebspaceInterface&DimensionContentInterface<T> $dimensionContent
      * @param array<string, mixed> $data
      */
-    private function setWebspaceData(WebspaceInterface|DimensionContentInterface $dimensionContent, array $data): void
+    private function setWebspaceData(WebspaceInterface $dimensionContent, array $data): void
     {
+        if (!$dimensionContent instanceof DimensionContentInterface) {
+            return;
+        }
+
         // TODO allow to configure another webspace with `<tag name="sulu_content.default_main_webspace" value="example" />`
         //      on the template itself which will be injected with ["type" => ["template-key" => "webspace-key"]] into this service.
         if (\array_key_exists('mainWebspace', $data)) {
