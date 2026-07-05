@@ -20,6 +20,8 @@ use Sulu\Component\Webspace\Webspace;
 interface WebspaceRepositoryInterface
 {
     /**
+     * @internal This is only here for BC reasons
+     *
      * @param array{
      *    cache_class: string,
      *    cache_dir: ?string,
