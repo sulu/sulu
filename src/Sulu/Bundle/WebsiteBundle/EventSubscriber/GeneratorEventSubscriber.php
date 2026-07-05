@@ -21,13 +21,10 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class GeneratorEventSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var string
+     * @param string $version
      */
-    private $version;
-
-    public function __construct($version)
+    public function __construct(private $version)
     {
-        $this->version = $version;
     }
 
     public static function getSubscribedEvents(): array

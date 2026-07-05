@@ -42,42 +42,15 @@ class AppendAnalyticsListener
     ];
 
     /**
-     * @var Environment
+     * @param string $environment
      */
-    private $engine;
-
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    /**
-     * @var AnalyticsRepositoryInterface
-     */
-    private $analyticsRepository;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @var bool
-     */
-    private $preview;
-
     public function __construct(
-        Environment $engine,
-        RequestAnalyzerInterface $requestAnalyzer,
-        AnalyticsRepositoryInterface $analyticsRepository,
-        $environment,
-        bool $preview = false
+        private Environment $engine,
+        private RequestAnalyzerInterface $requestAnalyzer,
+        private AnalyticsRepositoryInterface $analyticsRepository,
+        private $environment,
+        private bool $preview = false,
     ) {
-        $this->engine = $engine;
-        $this->requestAnalyzer = $requestAnalyzer;
-        $this->analyticsRepository = $analyticsRepository;
-        $this->environment = $environment;
-        $this->preview = $preview;
     }
 
     /**

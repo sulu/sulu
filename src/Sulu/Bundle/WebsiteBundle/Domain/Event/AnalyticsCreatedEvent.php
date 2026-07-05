@@ -18,26 +18,13 @@ use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 class AnalyticsCreatedEvent extends DomainEvent
 {
     /**
-     * @var AnalyticsInterface
-     */
-    private $analytics;
-
-    /**
-     * @var mixed[]
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
     public function __construct(
-        AnalyticsInterface $analytics,
-        array $payload
+        private AnalyticsInterface $analytics,
+        private array $payload
     ) {
         parent::__construct();
-
-        $this->analytics = $analytics;
-        $this->payload = $payload;
     }
 
     public function getAnalytics(): AnalyticsInterface

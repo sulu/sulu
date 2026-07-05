@@ -27,36 +27,12 @@ class WebsiteAdmin extends Admin
 {
     public const ANALYTICS_LIST_VIEW = 'sulu_webspace.analytics_list';
 
-    /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
-
     public function __construct(
-        ViewBuilderFactoryInterface $viewBuilderFactory,
-        WebspaceManagerInterface $webspaceManager,
-        SecurityCheckerInterface $securityChecker,
-        UrlGeneratorInterface $urlGenerator
+        private ViewBuilderFactoryInterface $viewBuilderFactory,
+        private WebspaceManagerInterface $webspaceManager,
+        private SecurityCheckerInterface $securityChecker,
+        private UrlGeneratorInterface $urlGenerator,
     ) {
-        $this->viewBuilderFactory = $viewBuilderFactory;
-        $this->webspaceManager = $webspaceManager;
-        $this->securityChecker = $securityChecker;
-        $this->urlGenerator = $urlGenerator;
     }
 
     public function configureViews(ViewCollection $viewCollection): void

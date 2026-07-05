@@ -29,39 +29,14 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AnalyticsController extends AbstractRestController implements SecuredControllerInterface
 {
-    /**
-     * @var AnalyticsManagerInterface
-     */
-    private $analyticsManager;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var CacheClearerInterface
-     */
-    private $cacheClearer;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        AnalyticsManagerInterface $analyticsManager,
-        EntityManagerInterface $entityManager,
-        CacheClearerInterface $cacheClearer,
-        RequestStack $requestStack
+        private AnalyticsManagerInterface $analyticsManager,
+        private EntityManagerInterface $entityManager,
+        private CacheClearerInterface $cacheClearer,
+        private RequestStack $requestStack
     ) {
         parent::__construct($viewHandler);
-
-        $this->analyticsManager = $analyticsManager;
-        $this->entityManager = $entityManager;
-        $this->cacheClearer = $cacheClearer;
-        $this->requestStack = $requestStack;
     }
 
     /**

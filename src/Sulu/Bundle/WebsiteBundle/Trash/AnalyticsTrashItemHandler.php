@@ -35,57 +35,15 @@ use Webmozart\Assert\Assert;
 
 class AnalyticsTrashItemHandler implements StoreTrashItemHandlerInterface, RestoreTrashItemHandlerInterface, RestoreConfigurationProviderInterface
 {
-    /**
-     * @var TrashItemRepositoryInterface
-     */
-    private $trashItemRepository;
-
-    /**
-     * @var AnalyticsRepositoryInterface
-     */
-    private $analyticsRepository;
-
-    /**
-     * @var DomainRepository
-     */
-    private $domainRepository;
-
-    /**
-     * @var DoctrineRestoreHelperInterface
-     */
-    private $doctrineRestoreHelper;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
     public function __construct(
-        TrashItemRepositoryInterface $trashItemRepository,
-        AnalyticsRepositoryInterface $analyticsRepository,
-        DomainRepository $domainRepository,
-        DoctrineRestoreHelperInterface $doctrineRestoreHelper,
-        EntityManagerInterface $entityManager,
-        DomainEventCollectorInterface $domainEventCollector,
-        string $environment
+        private TrashItemRepositoryInterface $trashItemRepository,
+        private AnalyticsRepositoryInterface $analyticsRepository,
+        private DomainRepository $domainRepository,
+        private DoctrineRestoreHelperInterface $doctrineRestoreHelper,
+        private EntityManagerInterface $entityManager,
+        private DomainEventCollectorInterface $domainEventCollector,
+        private string $environment,
     ) {
-        $this->trashItemRepository = $trashItemRepository;
-        $this->analyticsRepository = $analyticsRepository;
-        $this->domainRepository = $domainRepository;
-        $this->doctrineRestoreHelper = $doctrineRestoreHelper;
-        $this->entityManager = $entityManager;
-        $this->domainEventCollector = $domainEventCollector;
-        $this->environment = $environment;
     }
 
     public static function getResourceKey(): string
