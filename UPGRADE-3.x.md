@@ -21,6 +21,8 @@ The function `Sulu\Component\Webspace\Environment::setType()` is now deprecated 
 
 Using the `Url::getEnvironment()` and `Url::setEnvironment()` functions is deprecated. Retrieve the environment from the portal instead via `Portal::getEnvironment($type)`, and use the returned `Environment` object for reading or updating the environment configuration.
 
+The `Sulu\Component\Webspace\Url::setUrl` is now deprecated as it should only be set through the constructor.
+
 ## 3.0.7
 
 ### Smart content tag and category resolving is opt-in

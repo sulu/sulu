@@ -51,13 +51,16 @@ class Url implements ArrayableInterface
     private $main;
 
     /**
-     * @param ?string $url
+     * @param string $url
      * @param ?string $environment
      */
     public function __construct(
         private $url = null,
         private $environment = null
     ) {
+        if (null === $url) {
+            @trigger_deprecation('sulu/sulu', '3.0', 'Not passing a URL is deprecated.');
+        }
         if (null !== $environment) {
             @trigger_deprecation('sulu/sulu', '3.0', 'Passing an environment to the URL is deprecated.');
         }
@@ -67,6 +70,8 @@ class Url implements ArrayableInterface
      * Sets the url.
      *
      * @param string $url
+     *
+     * @deprecated use the constructor for that
      */
     public function setUrl($url)
     {
@@ -186,7 +191,7 @@ class Url implements ArrayableInterface
     /**
      * Returns the environment.
      *
-     * @return string
+     * @return string|null
      *
      * @deprecated use Portal::getEnvironment() instead
      */

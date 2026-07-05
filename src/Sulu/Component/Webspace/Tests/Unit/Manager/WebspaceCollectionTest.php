@@ -39,13 +39,13 @@ class WebspaceCollectionTest extends TestCase
         $portal->setKey('portal1');
 
         $environment = new Environment('prod');
-        $url = new Url();
-        $url->setUrl('www.portal1.com');
+
+        $url = new Url('www.portal1.com');
         $url->setLanguage('en');
         $url->setCountry('us');
         $environment->addUrl($url);
-        $url = new Url();
-        $url->setUrl('portal1.com');
+
+        $url = new Url('portal1.com');
         $url->setRedirect('www.portal1.com');
         $environment->addUrl($url);
         $portal->addEnvironment($environment);
