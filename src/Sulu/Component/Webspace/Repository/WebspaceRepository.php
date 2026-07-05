@@ -27,7 +27,7 @@ use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RequestContext;
 
-class WebspaceRepository implements WebspaceRepositoryInterface
+final class WebspaceRepository implements WebspaceRepositoryInterface
 {
     private ?WebspaceCollection $webspaceCollection = null;
 
