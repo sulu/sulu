@@ -23,6 +23,8 @@ trait RequestParametersTrait
     /**
      * returns request parameter with given name.
      *
+     * @deprecated since version 2.6 use $request->query->get() or $request->request->get()
+     *
      * @param string $name
      * @param bool $force TRUE if value is mandatory
      * @param mixed $default value if parameter not exists
@@ -43,6 +45,8 @@ trait RequestParametersTrait
 
     /**
      * returns request parameter as boolean 'true' => true , 'false' => false.
+     *
+     * @deprecated since version 2.6 use $request->query->getBoolean() or $request->request->getBoolean()
      *
      * @template T of bool|null
      *
