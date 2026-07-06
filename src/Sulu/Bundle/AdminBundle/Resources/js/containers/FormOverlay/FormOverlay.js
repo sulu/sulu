@@ -5,6 +5,7 @@ import {observer} from 'mobx-react';
 import Overlay from '../../components/Overlay';
 import {translate} from '../../utils';
 import Form from '../Form';
+import Router from '../../services/Router';
 import formOverlayStyles from './formOverlay.scss';
 import type {FormStoreInterface} from '../Form/types';
 import type {ResourceFormStore} from '../Form';
@@ -20,6 +21,7 @@ type Props = {|
     onConfirm: () => void,
     onFieldFinish?: (dataPath: string, schemaPath: string) => void,
     open: boolean,
+    router?: Router,
     size?: Size,
     title: string,
 |};
@@ -109,6 +111,7 @@ class FormOverlay extends React.Component<Props> {
             formStore,
             onClose,
             open,
+            router,
             size,
             title,
         } = this.props;
@@ -133,6 +136,7 @@ class FormOverlay extends React.Component<Props> {
                         onFieldFinish={this.handleFieldFinish}
                         onSubmit={this.handleFormSubmit}
                         ref={this.setFormRef}
+                        router={router}
                         store={formStore}
                     />
                 </div>

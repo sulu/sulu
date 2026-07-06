@@ -455,6 +455,64 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('snippet_post_restore.json', $response, 200);
     }
 
+    public function testGetListWithGhostLocaleAndTypesFiltering(): void
+    {
+        self::purgeDatabase();
+
+        // Snippet only exists in "de", template "snippet"
+        $this->client->request('POST', '/admin/api/snippets?locale=de&action=publish', [], [], [], \json_encode([
+            'template' => 'snippet',
+            'title' => 'Ghost Snippet',
+        ]) ?: null);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(201, $response);
+        /** @var array<string, mixed> $created */
+        $created = \json_decode((string) $response->getContent(), true);
+        $snippetId = $created['id'];
+
+        // Snippet only exists in "de", different template "snippet-alternate"
+        $this->client->request('POST', '/admin/api/snippets?locale=de&action=publish', [], [], [], \json_encode([
+            'template' => 'snippet-alternate',
+            'title' => 'Ghost Snippet Alternate',
+        ]) ?: null);
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+
+        // Request the list in "en" (ghost) with a type filter: the "snippet" ghost must appear
+        $this->client->request('GET', '/admin/api/snippets?locale=en&types=snippet');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+
+        $this->assertSame(1, $content['total']);
+        $this->assertIsArray($content['_embedded']);
+        $this->assertIsArray($content['_embedded']['snippets']);
+        $this->assertCount(1, $content['_embedded']['snippets']);
+
+        /** @var array<string, mixed> $item */
+        $item = $content['_embedded']['snippets'][0];
+        $this->assertSame($snippetId, $item['id']);
+        $this->assertSame('Ghost Snippet', $item['title']);
+        // it is a ghost in "en": no localized row, falling back to "de"
+        $this->assertNull($item['locale']);
+        $this->assertSame('de', $item['ghostLocale']);
+
+        // Without a type filter, both ghosts must appear in "en"
+        $this->client->request('GET', '/admin/api/snippets?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertSame(2, $content['total']);
+        $this->assertIsArray($content['_embedded']);
+        $this->assertIsArray($content['_embedded']['snippets']);
+        foreach ($content['_embedded']['snippets'] as $ghost) {
+            $this->assertIsArray($ghost);
+            $this->assertNull($ghost['locale']);
+            $this->assertSame('de', $ghost['ghostLocale']);
+        }
+    }
+
     protected function getSnapshotFolder(): string
     {
         return 'responses';

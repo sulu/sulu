@@ -98,4 +98,31 @@ class FormMetadataTest extends TestCase
         $this->assertNull($merged->getTemplate());
         $this->assertSame('key1', $merged->getKey());
     }
+
+    public function testMergePreservesGroup(): void
+    {
+        $originalForm = new FormMetadata();
+        $originalForm->setKey('test_key');
+        $originalForm->setGroup('original-group');
+
+        $overrideForm = new FormMetadata();
+        $overrideForm->setKey('test_key');
+
+        // The group is kept when only the original form defines it.
+        $this->assertSame('original-group', $originalForm->merge($overrideForm)->getGroup());
+
+        // It is used when only the override form defines it.
+        $originalForm->setGroup(null);
+        $overrideForm->setGroup('override-group');
+        $this->assertSame('override-group', $originalForm->merge($overrideForm)->getGroup());
+
+        // The override form wins when both define a group (other wins over this, like the controller/view merge).
+        $originalForm->setGroup('original-group');
+        $this->assertSame('override-group', $originalForm->merge($overrideForm)->getGroup());
+
+        // No group on either side stays null.
+        $originalForm->setGroup(null);
+        $overrideForm->setGroup(null);
+        $this->assertNull($originalForm->merge($overrideForm)->getGroup());
+    }
 }

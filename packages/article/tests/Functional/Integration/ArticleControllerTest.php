@@ -732,6 +732,116 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertSame(0, $content['total']);
     }
 
+    public function testGetListWithGhostLocaleAndTemplateFiltering(): void
+    {
+        self::purgeDatabase();
+
+        // Article only exists in "en", template "article"
+        $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'article',
+            'title' => 'Ghost Article',
+            'url' => '/ghost-article',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(201, $response);
+        /** @var array<string, mixed> $created */
+        $created = \json_decode((string) $response->getContent(), true);
+        $articleId = $created['id'];
+
+        // Article only exists in "en", different template "blog"
+        $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'blog',
+            'title' => 'Ghost Blog',
+            'url' => '/ghost-blog',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+
+        // Request the list in "de" (ghost) with a template filter: the "article" ghost must appear
+        $this->client->request('GET', '/admin/api/articles?locale=de&templates=article');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+
+        $this->assertSame(1, $content['total']);
+        $this->assertIsArray($content['_embedded']);
+        $this->assertIsArray($content['_embedded']['articles']);
+        $this->assertCount(1, $content['_embedded']['articles']);
+
+        /** @var array<string, mixed> $item */
+        $item = $content['_embedded']['articles'][0];
+        $this->assertSame($articleId, $item['id']);
+        $this->assertSame('Ghost Article', $item['title']);
+        // it is a ghost in "de": no localized row, falling back to "en"
+        $this->assertNull($item['locale']);
+        $this->assertSame('en', $item['ghostLocale']);
+
+        // Without a template filter, both ghosts must appear in "de"
+        $this->client->request('GET', '/admin/api/articles?locale=de');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertSame(2, $content['total']);
+        $this->assertIsArray($content['_embedded']);
+        $this->assertIsArray($content['_embedded']['articles']);
+        foreach ($content['_embedded']['articles'] as $ghost) {
+            $this->assertIsArray($ghost);
+            $this->assertNull($ghost['locale']);
+            $this->assertSame('en', $ghost['ghostLocale']);
+        }
+    }
+
+    public function testGetListWithTemplateFilteringShowsGhostLocaleAlongsidePublished(): void
+    {
+        self::purgeDatabase();
+
+        // Article that exists in the requested locale "en"
+        $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'article',
+            'title' => 'English Article',
+            'url' => '/english-article',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+
+        // Article that only exists in "de"
+        $this->client->request('POST', '/admin/api/articles?locale=de&action=publish', [], [], [], \json_encode([
+            'template' => 'article',
+            'title' => 'German Ghost Article',
+            'url' => '/german-ghost-article',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+
+        // List in "en" with the template filter. The real "en" article and the "de"-only
+        // ghost must both appear: the join upgrade must not drop the ghost row even when a
+        // non-ghost row is also present in the result set.
+        $this->client->request('GET', '/admin/api/articles?locale=en&templates=article');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        /** @var array{total: int, _embedded: array{articles: array<int, array{title: string, locale: string|null, ghostLocale: string|null}>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+
+        $this->assertSame(2, $content['total']);
+        $this->assertCount(2, $content['_embedded']['articles']);
+
+        $articlesByTitle = [];
+        foreach ($content['_embedded']['articles'] as $article) {
+            $articlesByTitle[$article['title']] = $article;
+        }
+
+        $this->assertArrayHasKey('English Article', $articlesByTitle);
+        $this->assertSame('en', $articlesByTitle['English Article']['locale']);
+        $this->assertNull($articlesByTitle['English Article']['ghostLocale']);
+
+        $this->assertArrayHasKey('German Ghost Article', $articlesByTitle);
+        $this->assertNull($articlesByTitle['German Ghost Article']['locale']);
+        $this->assertSame('de', $articlesByTitle['German Ghost Article']['ghostLocale']);
+    }
+
     public function testGetListWithGroupFiltering(): void
     {
         self::purgeDatabase();

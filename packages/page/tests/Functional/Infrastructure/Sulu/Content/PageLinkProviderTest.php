@@ -128,4 +128,54 @@ class PageLinkProviderTest extends SuluTestCase
         $this->assertSame('Internal Link Page', $linksByUuid[$internalPage->getUuid()]->getTitle());
         $this->assertSame('http://sulu.io/en/link-target', $linksByUuid[$internalPage->getUuid()]->getUrl());
     }
+
+    public function testPreloadWithCrossWebspaceContentLink(): void
+    {
+        // current request is handled in the context of the "sulu-io" webspace (see setUp)
+
+        // Create target page in a *different* webspace ("blog" => blog.io)
+        $targetPage = self::createPage([
+            'en' => [
+                'live' => [
+                    'title' => 'Blog Target Page',
+                    'url' => '/blog-target',
+                    'template' => 'default',
+                ],
+            ],
+        ], 'blog');
+
+        // Internal link page lives in "sulu-io" but points to the page in the "blog" webspace
+        $internalPage = self::createPage([
+            'en' => [
+                'live' => [
+                    'title' => 'Cross Webspace Link Page',
+                    'url' => '/cross-webspace-link',
+                    'template' => 'default',
+                    'linkOn' => true,
+                    'linkData' => [
+                        'href' => $targetPage->getUuid(),
+                        'provider' => 'page',
+                    ],
+                ],
+            ],
+        ]);
+
+        $links = $this->linkProvider->preload(
+            [$internalPage->getUuid()],
+            'en',
+            true
+        );
+
+        $this->assertCount(1, $links);
+
+        $linksByUuid = [];
+        foreach ($links as $link) {
+            $linksByUuid[$link->getId()] = $link;
+        }
+
+        // The url must target the "blog" webspace (blog.io), not the current request's "sulu-io"
+        $this->assertArrayHasKey($internalPage->getUuid(), $linksByUuid);
+        $this->assertSame('Cross Webspace Link Page', $linksByUuid[$internalPage->getUuid()]->getTitle());
+        $this->assertSame('http://blog.io/en/blog-target', $linksByUuid[$internalPage->getUuid()]->getUrl());
+    }
 }
