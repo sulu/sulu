@@ -363,7 +363,7 @@ class CollectionController extends AbstractRestController implements ClassResour
     protected function saveEntity($id, Request $request)
     {
         /** @var string|null $parent */
-        $parent = $request->get('parent');
+        $parent = $request->query->get('parent');
         $breadcrumb = $request->query->getBoolean('breadcrumb');
 
         $this->checkSystemCollection($id, $parent);
