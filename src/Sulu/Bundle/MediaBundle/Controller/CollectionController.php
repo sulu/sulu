@@ -169,7 +169,7 @@ class CollectionController extends AbstractRestController implements ClassResour
     {
         $depth = $request->query->getInt('depth');
         $parentId = $request->query->get('parentId', null);
-        $limit = $request->query->getInt('limit', 1000);
+        $limit = $this->listRestHelper->getLimit();
 
         /** @var int $offset */
         $offset = $this->listRestHelper->getOffset();
@@ -271,7 +271,7 @@ class CollectionController extends AbstractRestController implements ClassResour
     public function deleteAction($id, Request $request)
     {
         /** @var string|null $parent */
-        $parent = $request->get('parent');
+        $parent = $request->query->get('parent');
 
         $this->checkSystemCollection($id, $parent);
 
@@ -363,7 +363,7 @@ class CollectionController extends AbstractRestController implements ClassResour
     protected function saveEntity($id, Request $request)
     {
         /** @var string|null $parent */
-        $parent = $request->query->get('parent');
+        $parent = $request->query->get('parent') ?? $request->request->get('parent');
         $breadcrumb = $request->query->getBoolean('breadcrumb');
 
         $this->checkSystemCollection($id, $parent);

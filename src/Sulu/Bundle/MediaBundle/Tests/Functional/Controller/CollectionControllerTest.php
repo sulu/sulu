@@ -353,6 +353,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections?' . \http_build_query([
                 'locale' => 'en-gb',
+                'limit' => 100,
             ])
         );
 
