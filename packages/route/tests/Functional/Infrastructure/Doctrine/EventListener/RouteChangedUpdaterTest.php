@@ -712,6 +712,57 @@ class RouteChangedUpdaterTest extends KernelTestCase
             'expectedChangedRoutes' => 4,
         ];
 
+        // A webspace-NULL route (e.g. a page_tree_route article) is anchored to its page via
+        // parent_id. Two webspaces may share a slug ("/blog"), so renaming one webspace's "/blog"
+        // must not sweep in an article anchored to the other webspace's "/blog".
+        yield 'cross_webspace_null_child_not_touched_by_other_webspace' => [
+            'routes' => [
+                // First entry is the route that gets renamed: intranet "/blog" -> "/news".
+                [
+                    'resourceId' => '1',
+                    'slug' => '/blog',
+                    'webspace' => 'intranet',
+                ],
+                // A different webspace that happens to share the same slug.
+                [
+                    'resourceId' => '2',
+                    'slug' => '/blog',
+                    'webspace' => 'website',
+                ],
+                // page_tree_route article anchored to WEBSITE's "/blog" (webspace NULL, parent_id
+                // -> website "/blog"). It has nothing to do with the intranet page.
+                [
+                    'resourceId' => '3',
+                    'slug' => '/blog/my-post',
+                    'webspace' => null,
+                    'parentSlug' => '/blog',
+                    'parentWebspace' => 'website',
+                ],
+            ],
+            'changeRoute' => '/news',
+            'expectedRoutes' => [
+                [
+                    'resourceId' => '1',
+                    'slug' => '/news',
+                    'webspace' => 'intranet',
+                ],
+                [
+                    'resourceId' => '2',
+                    'slug' => '/blog',
+                    'webspace' => 'website',
+                ],
+                // Must stay put: the intranet rename must not touch the website-anchored article.
+                [
+                    'resourceId' => '3',
+                    'slug' => '/blog/my-post',
+                    'webspace' => null,
+                    'parentSlug' => '/blog',
+                    'parentWebspace' => 'website',
+                ],
+            ],
+            'expectedChangedRoutes' => 1,
+        ];
+
         yield 'tree_full_edit_last_part_changes_keep_parent' => [
             'routes' => [
                 [

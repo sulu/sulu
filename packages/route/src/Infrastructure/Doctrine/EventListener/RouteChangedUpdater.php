@@ -11,6 +11,7 @@
 
 namespace Sulu\Route\Infrastructure\Doctrine\EventListener;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\ORM\EntityManagerInterface;
@@ -127,24 +128,27 @@ class RouteChangedUpdater implements ResetInterface
             $locale = $route->getLocale();
             $webspace = $route->getWebspace();
 
-            // match descendants by slug prefix, not the parent_id FK (unset for "route" fields);
-            // OR-NULL keeps cross-site children attached
+            // Same-webspace descendants are matched by slug prefix (plain page routes have no
+            // parent_id). A webspace-NULL route (e.g. a page_tree_route article) is matched only
+            // when its parent_id resolves into this webspace, so it follows just its real anchor.
             $webspaceCondition = \is_string($webspace)
-                ? '(webspace = :webspace OR webspace IS NULL)'
-                : 'webspace IS NULL';
+                ? '(child.webspace = :webspace OR (child.webspace IS NULL AND parent.webspace = :webspace))'
+                : 'child.webspace IS NULL';
 
             // select all child and grand routes of oldSlug
             $selectQueryBuilder = $connection->createQueryBuilder()
-                ->from($routesTableName)
-                ->select('webspace')
-                ->addSelect('slug')
-                ->addSelect('resource_key')
-                ->addSelect('resource_id')
+                ->from($routesTableName, 'child')
+                ->leftJoin('child', $routesTableName, 'parent', 'parent.id = child.parent_id')
+                ->select('child.id AS id')
+                ->addSelect('child.webspace AS webspace')
+                ->addSelect('child.slug AS slug')
+                ->addSelect('child.resource_key AS resource_key')
+                ->addSelect('child.resource_id AS resource_id')
                 ->andWhere($webspaceCondition)
-                ->andWhere('locale = :locale')
-                ->andWhere('slug LIKE :oldSlugSlash')
-                ->andWhere('resource_key != :historyResourceKey') // never rewrite or re-historize history routes
-                ->andWhere('id != :changedRouteId') // never re-process the changed route itself
+                ->andWhere('child.locale = :locale')
+                ->andWhere('child.slug LIKE :oldSlugSlash')
+                ->andWhere('child.resource_key != :historyResourceKey') // never rewrite or re-historize history routes
+                ->andWhere('child.id != :changedRouteId') // never re-process the changed route itself
                 ->setParameter('oldSlugSlash', $oldSlug . '/%', ParameterType::STRING)
                 ->setParameter('locale', $locale, ParameterType::STRING)
                 ->setParameter('historyResourceKey', Route::HISTORY_RESOURCE_KEY, ParameterType::STRING)
@@ -156,6 +160,7 @@ class RouteChangedUpdater implements ResetInterface
 
             /**
              * @var array<int, array{
+             *     id: int,
              *     webspace: string|null,
              *     slug: string,
              *     resource_key: string,
@@ -163,8 +168,10 @@ class RouteChangedUpdater implements ResetInterface
              * }> $childAndGrandChildResult
              */
             $childAndGrandChildResult = $selectQueryBuilder->executeQuery()->iterateAssociative();
+            $childAndGrandChildIds = [];
             $childAndGrandChildHistoryRoutes = [];
             foreach ($childAndGrandChildResult as $childAndGrandChildRow) {
+                $childAndGrandChildIds[] = $childAndGrandChildRow['id'];
                 $childAndGrandChildHistoryRoutes[] = new Route(
                     Route::HISTORY_RESOURCE_KEY,
                     $childAndGrandChildRow['resource_key'] . '::' . $childAndGrandChildRow['resource_id'],
@@ -186,30 +193,19 @@ class RouteChangedUpdater implements ResetInterface
 
             $this->createHistoryRoute($objectManager, $classMetadata, $historyRoute);
 
-            if (0 !== \count($childAndGrandChildHistoryRoutes)) {
+            if (0 !== \count($childAndGrandChildIds)) {
                 $newSlugCast = '';
                 if ($connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
                     $newSlugCast = '::text'; // concat seems not directly supported by dbal and parameter $1 (newSlug) is not cast to text correctly. So manually cast it here: https://github.com/sulu/sulu/pull/7726#discussion_r1930324013
                 }
 
-                // update child and grand routes
+                // update exactly the routes the select matched, by id
                 $updateQueryBuilder = $connection->createQueryBuilder()
                     ->update($routesTableName)
                     ->set('slug', 'CONCAT(:newSlug' . $newSlugCast . ', SUBSTRING(slug, ' . (\strlen($oldSlug) + 1) . '))')
                     ->setParameter('newSlug', $newSlug, ParameterType::STRING)
-                    ->andWhere($webspaceCondition)
-                    ->andWhere('locale = :locale')
-                    ->andWhere('slug LIKE :oldSlugSlash')
-                    ->andWhere('resource_key != :historyResourceKey')
-                    ->andWhere('id != :changedRouteId')
-                    ->setParameter('oldSlugSlash', $oldSlug . '/%', ParameterType::STRING)
-                    ->setParameter('locale', $locale, ParameterType::STRING)
-                    ->setParameter('historyResourceKey', Route::HISTORY_RESOURCE_KEY, ParameterType::STRING)
-                    ->setParameter('changedRouteId', $route->getId(), ParameterType::INTEGER);
-
-                if (\is_string($webspace)) {
-                    $updateQueryBuilder->setParameter('webspace', $webspace, ParameterType::STRING);
-                }
+                    ->where('id IN (:childAndGrandChildIds)')
+                    ->setParameter('childAndGrandChildIds', $childAndGrandChildIds, ArrayParameterType::INTEGER);
 
                 $updateQueryBuilder->executeStatement();
             }

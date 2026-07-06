@@ -94,17 +94,6 @@ class MovePageMessageHandler
             }
 
             $locale = $route->getLocale();
-
-            $newParentRoute = $this->routeRepository->findOneBy([
-                'resourceKey' => PageInterface::RESOURCE_KEY,
-                'resourceId' => $newParent->getUuid(),
-                'locale' => $locale,
-            ]);
-
-            if (null === $newParentRoute) {
-                continue;
-            }
-
             $oldSlug = $route->getSlug();
             $newSlug = $this->resourceLocatorGenerator->generate(new ResourceLocatorRequest(
                 parts: [],
@@ -124,9 +113,9 @@ class MovePageMessageHandler
     }
 
     /**
-     * Slug relative to the old parent, or the full slug when there is no old parent route. The
-     * parent path must be followed by a "/" to count as a prefix, so a sibling slug that merely
-     * shares a string prefix is not stripped.
+     * The page's own slug segment relative to its previous parent, or the trailing segment when the
+     * previous parent has no route in this locale. The parent path must be followed by a "/", so a
+     * sibling that merely shares a string prefix is not stripped.
      */
     private function relativeSlug(string $slug, ?PageInterface $previousParent, string $locale): string
     {
@@ -140,7 +129,11 @@ class MovePageMessageHandler
             'locale' => $locale,
         ]);
 
-        $previousParentPath = \rtrim($previousParentRoute?->getSlug() ?? '', '/');
+        if (null === $previousParentRoute) {
+            return \substr($slug, (int) \strrpos($slug, '/'));
+        }
+
+        $previousParentPath = \rtrim($previousParentRoute->getSlug(), '/');
 
         if ('' !== $previousParentPath && \str_starts_with($slug, $previousParentPath . '/')) {
             return \substr($slug, \strlen($previousParentPath));

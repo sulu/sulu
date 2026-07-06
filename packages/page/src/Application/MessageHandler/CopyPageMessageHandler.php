@@ -218,9 +218,9 @@ final class CopyPageMessageHandler
     }
 
     /**
-     * Slug relative to the old parent, or the full slug when there is no old parent route. The
-     * parent path must be followed by a "/" to count as a prefix, so a sibling slug that merely
-     * shares a string prefix is not stripped.
+     * The page's own slug segment relative to the given parent, or the trailing segment when the
+     * parent has no route in this locale. The parent path must be followed by a "/", so a sibling
+     * that merely shares a string prefix is not stripped.
      */
     private function relativeSlug(string $slug, ?PageInterface $parent, string $locale): string
     {
@@ -234,7 +234,11 @@ final class CopyPageMessageHandler
             'locale' => $locale,
         ]);
 
-        $parentPath = \rtrim($parentRoute?->getSlug() ?? '', '/');
+        if (null === $parentRoute) {
+            return \substr($slug, (int) \strrpos($slug, '/'));
+        }
+
+        $parentPath = \rtrim($parentRoute->getSlug(), '/');
 
         if ('' !== $parentPath && \str_starts_with($slug, $parentPath . '/')) {
             return \substr($slug, \strlen($parentPath));
