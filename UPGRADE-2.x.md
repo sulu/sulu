@@ -2,6 +2,29 @@
 
 For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upgrades/upgrade-2.x.html) steps.
 
+## 2.6.25
+
+### Deprecated `RequestParametersTrait`
+
+The `RequestParametersTrait` has been deprecated. Specifically, the `getRequestParameter` method should be replaced
+with direct access to the request object, such as:
+
+```php
+$request->query->get('param');
+$request->headers->get('param');
+$request->request->get('param');
+```
+
+For type-safe alternatives, use the appropriate methods on the `ParameterBag`:
+
+```php
+$request->query->getBoolean('param');
+$request->query->getString('param');
+$request->query->getInt('param');
+```
+
+This deprecation also includes the `Sulu\Component\Rest\Exception\MissingParameterException`.
+
 ## 2.6.24
 
 ### CKEditor upgrade to 48
