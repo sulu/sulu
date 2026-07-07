@@ -759,7 +759,7 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(201, $this->client->getResponse());
 
         // Request the list in "de" (ghost) with a template filter: the "article" ghost must appear
-        $this->client->request('GET', '/admin/api/articles?locale=de&templates=article');
+        $this->client->request('GET', '/admin/api/articles?locale=de&templateKeys=article');
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
         /** @var array<string, mixed> $content */
@@ -819,7 +819,7 @@ class ArticleControllerTest extends SuluTestCase
         // List in "en" with the template filter. The real "en" article and the "de"-only
         // ghost must both appear: the join upgrade must not drop the ghost row even when a
         // non-ghost row is also present in the result set.
-        $this->client->request('GET', '/admin/api/articles?locale=en&templates=article');
+        $this->client->request('GET', '/admin/api/articles?locale=en&templateKeys=article');
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
         /** @var array{total: int, _embedded: array{articles: array<int, array{title: string, locale: string|null, ghostLocale: string|null}>}} $content */

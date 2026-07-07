@@ -14,6 +14,42 @@ We refactored the Migrations the abstract class is now under the Infrastructure 
 
  - `Sulu\Content\Migrations\AbstractTagNameToIdMigration` -> `Sulu\Content\Infrastructure\Doctrine\Migrations\AbstractTagNameToIdMigration`
 
+### Renamed selection filter parameters
+
+The parameters used to pre-filter the snippet and article selection overlays were renamed so they match the naming already used by `smart_content` (see #8716). The frontend `Selection` and `SingleSelection` field types now send the new parameters, and the corresponding list endpoints only read the new names:
+
+| Resource | Old parameter | New parameter | Meaning |
+| --- | --- | --- | --- |
+| Article selection | `types` | `groups` | article template group identifiers |
+| Article selection | `templates` | `templateKeys` | concrete template keys |
+| Snippet selection | `types` | `templateKeys` | concrete template keys |
+
+If you configured these filters through the schema options of a `snippet_selection`, `article_selection` or one of their `single_*` variants, rename the params in your form XML:
+
+```xml
+<!-- before -->
+<property name="mySnippets" type="snippet_selection">
+    <params>
+        <param name="types" value="footer,header"/>
+    </params>
+</property>
+
+<!-- after -->
+<property name="mySnippets" type="snippet_selection">
+    <params>
+        <param name="templateKeys" value="footer,header"/>
+    </params>
+</property>
+```
+
+For article selections, `<param name="types" .../>` (group identifiers) becomes `<param name="groups" .../>` and `<param name="templates" .../>` becomes `<param name="templateKeys" .../>`.
+
+> **Note:** The old parameters are no longer read by the snippet/article list endpoints, but they still pass frontend validation and are sent to the server, where they are silently ignored. A selection that is not migrated therefore shows **all** items instead of the filtered subset, without any error. Search your form templates for `types`/`templates` params on selection fields and migrate them.
+
+The `types` parameter of `media_selection`/`single_media_selection` (mime-type filtering, e.g. `image,video`) is unrelated and stays unchanged.
+
+The article and snippet list endpoints now read these parameters with `Request::getString()`, so passing an array-shaped value (e.g. `?templateKeys[]=a&templateKeys[]=b`) results in an HTTP 400 response instead of the previously silent fallback to an unfiltered list. The admin UI always sends a comma-separated string, so this only affects custom/manual requests.
+
 ## 3.0.7
 
 ### Smart content tag and category resolving is opt-in

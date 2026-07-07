@@ -429,8 +429,8 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         $templateKeys = $filters['templateKeys'] ?? [];
         unset($filters['templateKeys']);
 
-        if (!empty($templateKeys) && isset($fieldDescriptors['templateKey'])) {
-            $listBuilder->in($fieldDescriptors['templateKey'], $templateKeys);
+        if (!empty($templateKeys) && isset($fieldDescriptors['template'])) {
+            $listBuilder->in($fieldDescriptors['template'], $templateKeys);
         }
 
         foreach ($filters as $key => $value) {

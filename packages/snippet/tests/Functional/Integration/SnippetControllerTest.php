@@ -478,7 +478,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(201, $this->client->getResponse());
 
         // Request the list in "en" (ghost) with a type filter: the "snippet" ghost must appear
-        $this->client->request('GET', '/admin/api/snippets?locale=en&types=snippet');
+        $this->client->request('GET', '/admin/api/snippets?locale=en&templateKeys=snippet');
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
         /** @var array<string, mixed> $content */
