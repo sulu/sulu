@@ -128,22 +128,31 @@ class RouteChangedUpdater implements ResetInterface
             $locale = $route->getLocale();
             $webspace = $route->getWebspace();
 
+            // Same-webspace descendants are matched by slug prefix (plain page routes have no
+            // parent_id). A webspace-NULL route (e.g. a page_tree_route article) is matched only
+            // when its parent_id resolves into this webspace, so it follows just its real anchor.
+            $webspaceCondition = \is_string($webspace)
+                ? '(child.webspace = :webspace OR (child.webspace IS NULL AND parent.webspace = :webspace))'
+                : 'child.webspace IS NULL';
+
             // select all child and grand routes of oldSlug
             $selectQueryBuilder = $connection->createQueryBuilder()
-                ->from($routesTableName, 'parent')
-                ->select('parent.id AS parent_id')
-                ->addSelect('child.webspace')
-                ->addSelect('child.slug')
-                ->addSelect('child.resource_key')
-                ->addSelect('child.resource_id')
-                ->innerJoin('parent', $routesTableName, 'child', 'child.parent_id = parent.id')
-                ->andWhere(\is_string($webspace) ? 'parent.webspace = :webspace' : 'parent.webspace IS NULL')
-                ->andWhere('parent.locale = :locale')
-                ->andWhere('(parent.slug = :newSlug OR parent.slug LIKE :oldSlugSlash)') // direct child is using newSlug already updated as we are in PostFlush, grand child use oldSlugWithSlash as not yet updated
-                ->andWhere('(child.slug LIKE :oldSlugSlash)') // ignore disconnected child routes in case of full tree edit
-                ->setParameter('newSlug', $newSlug, ParameterType::STRING)
+                ->from($routesTableName, 'child')
+                ->leftJoin('child', $routesTableName, 'parent', 'parent.id = child.parent_id')
+                ->select('child.id AS id')
+                ->addSelect('child.webspace AS webspace')
+                ->addSelect('child.slug AS slug')
+                ->addSelect('child.resource_key AS resource_key')
+                ->addSelect('child.resource_id AS resource_id')
+                ->andWhere($webspaceCondition)
+                ->andWhere('child.locale = :locale')
+                ->andWhere('child.slug LIKE :oldSlugSlash')
+                ->andWhere('child.resource_key != :historyResourceKey') // never rewrite or re-historize history routes
+                ->andWhere('child.id != :changedRouteId') // never re-process the changed route itself
                 ->setParameter('oldSlugSlash', $oldSlug . '/%', ParameterType::STRING)
-                ->setParameter('locale', $locale, ParameterType::STRING);
+                ->setParameter('locale', $locale, ParameterType::STRING)
+                ->setParameter('historyResourceKey', Route::HISTORY_RESOURCE_KEY, ParameterType::STRING)
+                ->setParameter('changedRouteId', $route->getId(), ParameterType::INTEGER);
 
             if (\is_string($webspace)) {
                 $selectQueryBuilder->setParameter('webspace', $webspace, ParameterType::STRING);
@@ -151,7 +160,7 @@ class RouteChangedUpdater implements ResetInterface
 
             /**
              * @var array<int, array{
-             *     parent_id: int,
+             *     id: int,
              *     webspace: string|null,
              *     slug: string,
              *     resource_key: string,
@@ -159,10 +168,10 @@ class RouteChangedUpdater implements ResetInterface
              * }> $childAndGrandChildResult
              */
             $childAndGrandChildResult = $selectQueryBuilder->executeQuery()->iterateAssociative();
-            $parentIds = [];
+            $childAndGrandChildIds = [];
             $childAndGrandChildHistoryRoutes = [];
             foreach ($childAndGrandChildResult as $childAndGrandChildRow) {
-                $parentIds[] = $childAndGrandChildRow['parent_id'];
+                $childAndGrandChildIds[] = $childAndGrandChildRow['id'];
                 $childAndGrandChildHistoryRoutes[] = new Route(
                     Route::HISTORY_RESOURCE_KEY,
                     $childAndGrandChildRow['resource_key'] . '::' . $childAndGrandChildRow['resource_id'],
@@ -172,9 +181,6 @@ class RouteChangedUpdater implements ResetInterface
                     null, // history never has parents as they never will be updated
                 );
             }
-
-            $parentIds = \array_filter($parentIds);
-            $parentIds = \array_unique($parentIds); // DISTINCT and GROUP BY is a lot slower as make it unique in PHP itself
 
             $historyRoute = new Route(
                 Route::HISTORY_RESOURCE_KEY,
@@ -187,21 +193,19 @@ class RouteChangedUpdater implements ResetInterface
 
             $this->createHistoryRoute($objectManager, $classMetadata, $historyRoute);
 
-            if (0 !== \count($parentIds)) {
+            if (0 !== \count($childAndGrandChildIds)) {
                 $newSlugCast = '';
                 if ($connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
                     $newSlugCast = '::text'; // concat seems not directly supported by dbal and parameter $1 (newSlug) is not cast to text correctly. So manually cast it here: https://github.com/sulu/sulu/pull/7726#discussion_r1930324013
                 }
 
-                // update child and grand routes
+                // update exactly the routes the select matched, by id
                 $updateQueryBuilder = $connection->createQueryBuilder()
                     ->update($routesTableName)
                     ->set('slug', 'CONCAT(:newSlug' . $newSlugCast . ', SUBSTRING(slug, ' . (\strlen($oldSlug) + 1) . '))')
                     ->setParameter('newSlug', $newSlug, ParameterType::STRING)
-                    ->where('parent_id IN (:parentIds)')
-                    ->andWhere('slug LIKE :oldSlugSlash') // ignore disconnected child routes in case of full tree edit
-                    ->setParameter('oldSlugSlash', $oldSlug . '/%', ParameterType::STRING)
-                    ->setParameter('parentIds', $parentIds, ArrayParameterType::INTEGER);
+                    ->where('id IN (:childAndGrandChildIds)')
+                    ->setParameter('childAndGrandChildIds', $childAndGrandChildIds, ArrayParameterType::INTEGER);
 
                 $updateQueryBuilder->executeStatement();
             }

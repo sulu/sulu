@@ -795,7 +795,7 @@ class PageControllerTest extends SuluTestCase
         $copiedPageId = $content['_embedded']['pages'][0]['_embedded']['pages'][1]['_embedded']['pages'][0]['id']; // @phpstan-ignore-line
 
         $routeRepository = $this->getContainer()->get(RouteRepositoryInterface::class);
-        $this->assertCount(10, $routeRepository->findBy([]));
+        $this->assertCount(11, $routeRepository->findBy([]));
 
         return $copiedPageId;
     }
