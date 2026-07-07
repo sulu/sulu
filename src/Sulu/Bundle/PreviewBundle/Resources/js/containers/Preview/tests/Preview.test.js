@@ -640,3 +640,36 @@ test('Fall back to first webspace when mainWebspace is not in webspace options',
 
     expect(PreviewStore).toHaveBeenCalledWith('articles', undefined, undefined, 'sulu_io', undefined);
 });
+
+test('Use mainWebspace when the current locale is a nested localization', () => {
+    const locale = observable.box('de_ch');
+    const resourceStore = new ResourceStore('articles', 1, {locale});
+    const formStore = new ResourceFormStore(resourceStore, 'articles');
+
+    // $FlowFixMe
+    formStore.data = {mainWebspace: 'example'};
+
+    const grantedWebspaces = webspaceStore.grantedWebspaces;
+    // $FlowFixMe
+    webspaceStore.grantedWebspaces = [
+        {
+            key: 'example',
+            name: 'Example',
+            localizations: [
+                {locale: 'de', children: [{locale: 'de_ch'}, {locale: 'de_de'}]},
+                {locale: 'en'},
+            ],
+        },
+    ];
+
+    const router = new Router({});
+
+    try {
+        mount(<Preview formStore={formStore} router={router} />);
+
+        expect(PreviewStore).toHaveBeenCalledWith('articles', undefined, locale, 'example', undefined);
+    } finally {
+        // $FlowFixMe
+        webspaceStore.grantedWebspaces = grantedWebspaces;
+    }
+});
