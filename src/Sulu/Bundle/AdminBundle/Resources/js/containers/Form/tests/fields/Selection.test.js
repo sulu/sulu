@@ -668,7 +668,7 @@ test('Should throw an error if "templateKeys" schema option is not a string', ()
             formInspector={formInspector}
             schemaOptions={{templateKeys: {name: 'templateKeys', value: []}}}
         />
-    )).toThrowError(/"templateKeys"/);
+    )).toThrow(/"templateKeys"/);
 });
 
 test('Should throw an error if "item_disabled_condition" schema option is not a string', () => {
