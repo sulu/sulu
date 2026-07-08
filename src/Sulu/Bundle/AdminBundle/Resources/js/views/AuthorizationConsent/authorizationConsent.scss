@@ -1,0 +1,121 @@
+@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/variables.scss';
+
+$borderColor: $mercury;
+$contentBackgroundColor: $white;
+$descriptionColor: $scorpion;
+$scopeBackgroundColor: $alabaster;
+$textColor: $mineShaft;
+
+.authorization-consent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+    padding: 20px;
+    color: $textColor;
+}
+
+.content {
+    width: 100%;
+    max-width: 680px;
+    padding: 40px;
+    border-radius: 3px;
+    background-color: $contentBackgroundColor;
+    box-shadow: $cardBoxShadow;
+
+    h1 {
+        margin: 0 0 18px;
+        font-size: 28px;
+        line-height: 36px;
+        font-weight: 600;
+    }
+
+    h2 {
+        margin: 0 0 12px;
+        font-size: 16px;
+        line-height: 24px;
+        font-weight: 600;
+    }
+}
+
+.description {
+    margin: 0 0 28px;
+    color: $descriptionColor;
+    font-size: 14px;
+    line-height: 22px;
+}
+
+.metadata {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr);
+    gap: 12px 24px;
+    margin: 0;
+    font-size: 13px;
+    line-height: 20px;
+
+    dt {
+        color: $descriptionColor;
+        font-weight: 600;
+    }
+
+    dd {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+}
+
+.scopes {
+    margin-top: 30px;
+}
+
+.scope-list {
+    display: grid;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.scope {
+    padding: 10px 12px;
+    border: 1px solid $borderColor;
+    border-radius: 3px;
+    background-color: $scopeBackgroundColor;
+    font-size: 13px;
+    line-height: 20px;
+}
+
+.notification {
+    margin-top: 24px;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 34px;
+}
+
+.loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 320px;
+}
+
+@media (max-width: 640px) {
+    .content {
+        padding: 28px;
+    }
+
+    .metadata {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+
+    .actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+}

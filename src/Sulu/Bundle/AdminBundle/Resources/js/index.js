@@ -18,6 +18,7 @@ import userStore, {
 } from './stores/userStore';
 import {Config, resourceRouteRegistry} from './services';
 import initializer from './services/initializer';
+import AuthorizationConsent from './views/AuthorizationConsent';
 import ResourceTabs from './views/ResourceTabs';
 import List, {
     listItemActionRegistry,
@@ -199,6 +200,11 @@ function registerViews() {
     viewRegistry.add('sulu_admin.form_overlay_list', FormOverlayList);
     viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs, {disableDefaultSpacing: true});
     viewRegistry.add('sulu_admin.tabs', Tabs, {disableDefaultSpacing: true});
+    viewRegistry.add(
+        'sulu_admin.authorization_consent',
+        AuthorizationConsent,
+        {disableDefaultSpacing: true, fullscreen: true}
+    );
 }
 
 function registerListAdapters() {
