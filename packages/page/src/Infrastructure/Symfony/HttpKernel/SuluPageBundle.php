@@ -230,6 +230,8 @@ final class SuluPageBundle extends AbstractBundle
             ->class(MovePageMessageHandler::class)
             ->args([
                 new Reference('sulu_page.page_repository'),
+                new Reference('sulu_route.route_repository'),
+                new Reference('sulu_route.resource_locator_generator'),
                 new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
@@ -240,6 +242,8 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_page.page_repository'),
                 new Reference('sulu_content.content_copier'),
                 new Reference('sulu.core.localization_manager'),
+                new Reference('sulu_route.route_repository'),
+                new Reference('sulu_route.resource_locator_generator'),
                 new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');

@@ -81,15 +81,20 @@ class Preview extends React.Component<Props> {
         const {formStore: {locale}} = this.props;
         const currentLocale = locale?.get();
 
+        const supportsLocale = (localizations) => localizations.some(
+            (localization) => localization.locale === currentLocale
+                || (localization.children && supportsLocale(localization.children))
+        );
+
         return webspaceStore.grantedWebspaces
             .filter((webspace) => {
                 // Filter webspaces that support the current locale
                 if (!currentLocale || !webspace.localizations) {
                     return true;
                 }
-                return webspace.localizations.some(
-                    (localization) => localization.locale === currentLocale
-                );
+                // Localizations are a nested tree (e.g. "de" -> "de_ch"), so the
+                // check needs to recurse into the child localizations.
+                return supportsLocale(webspace.localizations);
             })
             .map((webspace): Object => ({
                 label: webspace.name,

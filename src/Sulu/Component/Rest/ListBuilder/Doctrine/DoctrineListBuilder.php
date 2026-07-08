@@ -468,7 +468,10 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         if (!empty($groupByFields)) {
             foreach ($groupByFields as $field) {
-                if ($field instanceof DoctrineFieldDescriptor) {
+                // aggregate fields (e.g. COUNT or GROUP_CONCAT sort fields) must
+                // not be added to the GROUP BY clause - grouping by an aggregate
+                // is invalid SQL and rejected by the DQL parser
+                if ($field instanceof DoctrineFieldDescriptor && !$this->isGroupingFieldDescriptor($field)) {
                     $queryBuilder->addGroupBy($field->getSelect());
                 }
             }

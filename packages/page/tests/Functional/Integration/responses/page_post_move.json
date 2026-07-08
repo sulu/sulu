@@ -59,7 +59,7 @@
     "stage" : "draft",
     "template" : "default",
     "title" : "Test page for copy",
-    "url" : null,
+    "url" : "/test-page-for-copy-1",
     "version" : 0,
     "webspace": "sulu-io",
     "workflowPlace" : "unpublished"
