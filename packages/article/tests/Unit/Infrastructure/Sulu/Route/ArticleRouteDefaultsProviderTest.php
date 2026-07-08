@@ -27,12 +27,18 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TemplateMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolver;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Model\Route;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ArticleRouteDefaultsProviderTest extends TestCase
 {
@@ -46,6 +52,9 @@ class ArticleRouteDefaultsProviderTest extends TestCase
     private CacheLifetimeResolver $cacheLifetimeResolver;
     /** @var ObjectProphecy<FormMetadataProvider> */
     private ObjectProphecy $formMetadataProvider;
+    /** @var ObjectProphecy<RouteGeneratorInterface> */
+    private ObjectProphecy $routeGenerator;
+    private RequestStack $requestStack;
 
     protected function setUp(): void
     {
@@ -56,6 +65,8 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $container = new Container();
         $container->set('form', $this->formMetadataProvider->reveal());
         $this->metadataProviderRegistry = new MetadataProviderRegistry($container);
+        $this->routeGenerator = $this->prophesize(RouteGeneratorInterface::class);
+        $this->requestStack = new RequestStack();
     }
 
     protected function getArticleRouteDefaultsProviderInstance(): RouteDefaultsProviderInterface
@@ -65,7 +76,20 @@ class ArticleRouteDefaultsProviderTest extends TestCase
             $this->contentAggregator->reveal(),
             $this->metadataProviderRegistry,
             $this->cacheLifetimeResolver,
+            $this->routeGenerator->reveal(),
+            $this->requestStack,
         );
+    }
+
+    private function pushRequestWithWebspace(string $webspaceKey): void
+    {
+        $webspace = new Webspace();
+        $webspace->setKey($webspaceKey);
+
+        $request = new Request();
+        $request->attributes->set('_sulu', new RequestAttributes(['webspace' => $webspace]));
+
+        $this->requestStack->push($request);
     }
 
     public function testGetDefaults(): void
@@ -187,6 +211,112 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $this->assertSame($resolvedDimensionContent, $result['object']);
         $this->assertSame('article.html.twig', $result['view']);
         $this->assertSame('ArticleController::indexAction', $result['_controller']);
+    }
+
+    public function testGetDefaultsSetsCanonicalUrlWhenServedThroughAdditionalWebspace(): void
+    {
+        $provider = $this->getArticleRouteDefaultsProviderInstance();
+
+        $locale = 'en';
+        $slug = '/test-article';
+
+        $article = new Article('123-123-123');
+        $resolvedDimensionContent = new ArticleDimensionContent($article);
+        $resolvedDimensionContent->setLocale($locale);
+        $resolvedDimensionContent->setTemplateKey('default');
+        $resolvedDimensionContent->setMainWebspace('sulu-io');
+        $resolvedDimensionContent->setAdditionalWebspaces(['blog']);
+
+        $this->prepareArticle($article, $resolvedDimensionContent, $locale);
+        $this->prepareTemplateMetadata('ArticleController::indexAction', 'article.html.twig', 'seconds', '3600');
+
+        $this->pushRequestWithWebspace('blog');
+
+        $this->routeGenerator->generate($slug, $locale, 'sulu-io', UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://sulu.io/test-article')
+            ->shouldBeCalled();
+
+        $result = $provider->getDefaults(new Route(Article::RESOURCE_KEY, '123-123-123', $locale, $slug));
+
+        $this->assertSame(['canonicalUrl' => 'https://sulu.io/test-article'], $result['_seo']);
+    }
+
+    public function testGetDefaultsDoesNotSetCanonicalUrlWhenServedThroughMainWebspace(): void
+    {
+        $provider = $this->getArticleRouteDefaultsProviderInstance();
+
+        $locale = 'en';
+        $slug = '/test-article';
+
+        $article = new Article('123-123-123');
+        $resolvedDimensionContent = new ArticleDimensionContent($article);
+        $resolvedDimensionContent->setLocale($locale);
+        $resolvedDimensionContent->setTemplateKey('default');
+        $resolvedDimensionContent->setMainWebspace('sulu-io');
+        $resolvedDimensionContent->setAdditionalWebspaces(['blog']);
+
+        $this->prepareArticle($article, $resolvedDimensionContent, $locale);
+        $this->prepareTemplateMetadata('ArticleController::indexAction', 'article.html.twig', 'seconds', '3600');
+
+        $this->pushRequestWithWebspace('sulu-io');
+
+        $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
+
+        $result = $provider->getDefaults(new Route(Article::RESOURCE_KEY, '123-123-123', $locale, $slug));
+
+        $this->assertArrayNotHasKey('_seo', $result);
+    }
+
+    public function testGetDefaultsDoesNotSetCanonicalUrlForUnrelatedWebspace(): void
+    {
+        $provider = $this->getArticleRouteDefaultsProviderInstance();
+
+        $locale = 'en';
+        $slug = '/test-article';
+
+        $article = new Article('123-123-123');
+        $resolvedDimensionContent = new ArticleDimensionContent($article);
+        $resolvedDimensionContent->setLocale($locale);
+        $resolvedDimensionContent->setTemplateKey('default');
+        $resolvedDimensionContent->setMainWebspace('sulu-io');
+        $resolvedDimensionContent->setAdditionalWebspaces(['blog']);
+
+        $this->prepareArticle($article, $resolvedDimensionContent, $locale);
+        $this->prepareTemplateMetadata('ArticleController::indexAction', 'article.html.twig', 'seconds', '3600');
+
+        $this->pushRequestWithWebspace('unrelated');
+
+        $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
+
+        $result = $provider->getDefaults(new Route(Article::RESOURCE_KEY, '123-123-123', $locale, $slug));
+
+        $this->assertArrayNotHasKey('_seo', $result);
+    }
+
+    private function prepareArticle(Article $article, ArticleDimensionContent $dimensionContent, string $routeLocale): void
+    {
+        $this->articleRepository->findOneBy(
+            [
+                'uuid' => $article->getUuid(),
+            ],
+            [
+                ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
+                    'dimensionAttributes' => [
+                        'locale' => $routeLocale,
+                        'stage' => DimensionContentInterface::STAGE_LIVE,
+                        'version' => DimensionContentInterface::CURRENT_VERSION,
+                    ],
+                    'selects' => [
+                        DimensionContentQueryEnhancer::SELECT_EXCERPT_TAGS => true,
+                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES => true,
+                        DimensionContentQueryEnhancer::SELECT_EXCERPT_CATEGORIES_TRANSLATION => true,
+                    ],
+                ],
+            ]
+        )->willReturn($article);
+
+        $this->contentAggregator->aggregate($article, ['locale' => $routeLocale, 'stage' => 'live', 'version' => 0])
+            ->willReturn($dimensionContent);
     }
 
     private function prepareTemplateMetadata(
