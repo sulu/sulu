@@ -412,6 +412,61 @@ class WebsiteArticleReindexContentEnhancerTest extends TestCase
         ];
     }
 
+    public function testVisitExtractsContentFromGlobalBlocks(): void
+    {
+        // A global block "ref" type carries the tag but no items (as produced by the metadata parser).
+        $globalBlockType = new FormMetadata();
+        $globalBlockType->setKey('text_content');
+        $globalBlockType->addTag($this->createGlobalBlockTag('text_content'));
+
+        $blockField = new FieldMetadata('main_content');
+        $blockField->setType('block');
+        $blockField->addType($globalBlockType);
+
+        $articleForm = new FormMetadata();
+        $articleForm->setKey('default');
+        $articleForm->addItem($blockField);
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('default', $articleForm);
+
+        $this->formMetadataProvider->getMetadata('article', 'en', [])
+            ->willReturn($typedFormMetadata)
+            ->shouldBeCalledOnce();
+
+        $contentField = new FieldMetadata('content');
+        $contentField->setType('text_editor');
+        $contentField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG));
+
+        $globalBlockForm = new FormMetadata();
+        $globalBlockForm->setKey('text_content');
+        $globalBlockForm->addItem($contentField);
+
+        $blockMetadata = new TypedFormMetadata();
+        $blockMetadata->addForm('text_content', $globalBlockForm);
+
+        $this->formMetadataProvider->getMetadata('block', 'en', ['ignore_global_blocks' => true])
+            ->willReturn($blockMetadata)
+            ->shouldBeCalledOnce();
+
+        $result = [
+            'templateKey' => 'default',
+            'locale' => 'en',
+            'templateData' => [
+                'main_content' => [
+                    [
+                        'type' => 'text_content',
+                        'content' => '<p>Global block content</p>',
+                    ],
+                ],
+            ],
+        ];
+
+        $returnedData = $this->enhancer->enhanceDocument($result, ['content' => []]);
+
+        $this->assertSame(['Global block content'], $returnedData['content']);
+    }
+
     public function testRoleImageSingleMediaSelectionSetsMediaId(): void
     {
         $imageField = new FieldMetadata('header_image');
@@ -700,6 +755,15 @@ class WebsiteArticleReindexContentEnhancerTest extends TestCase
         if (null !== $role) {
             $tag->setAttributes(['role' => $role]);
         }
+
+        return $tag;
+    }
+
+    private function createGlobalBlockTag(string $blockName): TagMetadata
+    {
+        $tag = new TagMetadata();
+        $tag->setName('sulu.global_block');
+        $tag->setAttributes(['global_block' => $blockName]);
 
         return $tag;
     }

@@ -40,6 +40,11 @@ class WebsiteArticleReindexContentEnhancer implements WebsiteArticleReindexProvi
         'single_media_selection',
     ];
 
+    /**
+     * @var array<string, array<string, FormMetadata>>
+     */
+    private array $globalBlockForms = [];
+
     public function __construct(
         private MetadataProviderInterface $formMetadataProvider,
     ) {
@@ -70,7 +75,7 @@ class WebsiteArticleReindexContentEnhancer implements WebsiteArticleReindexProvi
         }
 
         $searchableFields = [];
-        $this->collectSearchableFields($metadata->getFlatFieldMetadata(), $searchableFields);
+        $this->collectSearchableFields($metadata->getFlatFieldMetadata(), $searchableFields, '', $locale);
 
         $document['content'] = $this->extractContent($templateData, $searchableFields);
 
@@ -101,7 +106,7 @@ class WebsiteArticleReindexContentEnhancer implements WebsiteArticleReindexProvi
      * @param array<ItemMetadata> $items
      * @param array<string, array{type: string, role: string|null}> $fields
      */
-    private function collectSearchableFields(array $items, array &$fields, string $prefix = ''): void
+    private function collectSearchableFields(array $items, array &$fields, string $prefix, string $locale): void
     {
         foreach ($items as $item) {
             if (!$item instanceof FieldMetadata) {
@@ -128,15 +133,54 @@ class WebsiteArticleReindexContentEnhancer implements WebsiteArticleReindexProvi
 
             if ('block' === $item->getType()) {
                 $blockPath = $prefix ? $prefix . '.' . $item->getName() : $item->getName();
-                foreach ($item->getTypes() as $type => $typeFormMetadata) {
+                foreach ($item->getTypes() as $typeFormMetadata) {
                     $this->collectSearchableFields(
-                        $typeFormMetadata->getItems(),
+                        $this->resolveTypeItems($typeFormMetadata, $locale),
                         $fields,
-                        $blockPath
+                        $blockPath,
+                        $locale
                     );
                 }
             }
         }
+    }
+
+    /**
+     * A global block type has no items of its own, so its referenced block form is resolved instead.
+     *
+     * @return array<ItemMetadata>
+     */
+    private function resolveTypeItems(FormMetadata $type, string $locale): array
+    {
+        $globalBlockTag = $type->getTagsByName('sulu.global_block')[0] ?? null;
+        if (null === $globalBlockTag) {
+            return $type->getItems();
+        }
+
+        $globalBlockName = $globalBlockTag->getAttribute('global_block');
+        if (!\is_string($globalBlockName)) {
+            return $type->getItems();
+        }
+
+        $globalBlockForm = $this->getGlobalBlockForms($locale)[$globalBlockName] ?? null;
+
+        return $globalBlockForm?->getItems() ?? $type->getItems();
+    }
+
+    /**
+     * @return array<string, FormMetadata>
+     */
+    private function getGlobalBlockForms(string $locale): array
+    {
+        if (!isset($this->globalBlockForms[$locale])) {
+            /** @var TypedFormMetadata $blockMetadata */
+            $blockMetadata = $this->formMetadataProvider->getMetadata('block', $locale, ['ignore_global_blocks' => true]);
+            /** @var array<string, FormMetadata> $forms */
+            $forms = $blockMetadata->getForms();
+            $this->globalBlockForms[$locale] = $forms;
+        }
+
+        return $this->globalBlockForms[$locale];
     }
 
     /**
