@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Infrastructure\Sulu\Route;
 
-use Sulu\Article\Domain\Model\ArticleDimensionContent;
+use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\CacheLifetimeMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
@@ -122,7 +122,7 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
      * When an article is served through one of its additional webspaces, the canonical URL should point
      * to the article URL of its main webspace.
      */
-    private function resolveAdditionalWebspaceCanonicalUrl(Route $route, ArticleDimensionContent $dimensionContent): ?string
+    private function resolveAdditionalWebspaceCanonicalUrl(Route $route, ArticleDimensionContentInterface $dimensionContent): ?string
     {
         $mainWebspace = $dimensionContent->getMainWebspace();
         if (null === $mainWebspace) {
