@@ -16,6 +16,7 @@ namespace Sulu\Page\Infrastructure\Symfony\HttpKernel;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
+use Sulu\Page\Application\ContentNormalizer\DefaultTemplateNormalizer;
 use Sulu\Page\Application\Mapper\PageContentMapper;
 use Sulu\Page\Application\Mapper\PageMapperInterface;
 use Sulu\Page\Application\MessageHandler\ApplyWorkflowTransitionPageMessageHandler;
@@ -264,6 +265,13 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_content.content_persister'),
             ])
             ->tag('sulu_page.page_mapper');
+
+        $services->set('sulu_page.default_template_normalizer')
+            ->class(DefaultTemplateNormalizer::class)
+            ->args([
+                new Reference('sulu_core.webspace.webspace_manager'),
+            ])
+            ->tag('sulu_content.normalizer', ['priority' => 127]);
 
         // DataMapper service
         $services->set('sulu_page.navigation_context_data_mapper')
