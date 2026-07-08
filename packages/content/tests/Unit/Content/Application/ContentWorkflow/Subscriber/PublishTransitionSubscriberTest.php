@@ -13,12 +13,16 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentWorkflow\Subscriber;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\PublishTransitionSubscriber;
+use Sulu\Content\Domain\Exception\ContentNotFoundException;
+use Sulu\Content\Domain\Exception\ShadowSourceNotPublishedException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollectionInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -33,9 +37,13 @@ class PublishTransitionSubscriberTest extends TestCase
     use ProphecyTrait;
 
     public function createContentPublisherSubscriberInstance(
-        ContentCopierInterface $contentCopier
+        ContentCopierInterface $contentCopier,
+        ?ContentAggregatorInterface $contentAggregator = null
     ): PublishTransitionSubscriber {
-        return new PublishTransitionSubscriber($contentCopier);
+        return new PublishTransitionSubscriber(
+            $contentCopier,
+            $contentAggregator ?? $this->prophesize(ContentAggregatorInterface::class)->reveal()
+        );
     }
 
     public function testGetSubscribedEvents(): void
@@ -283,10 +291,17 @@ class PublishTransitionSubscriberTest extends TestCase
         )
             ->willReturn($versionDimensionContent->reveal());
 
+        $contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
+        $sourceDimensionContent = $this->prophesize(DimensionContentInterface::class);
+        $sourceDimensionContent->willImplement(TemplateInterface::class);
+        $sourceDimensionContent->getTemplateKey()->willReturn('default');
+        $contentAggregator->aggregate($contentRichEntity->reveal(), $sourceDimensionAttributes)
+            ->willReturn($sourceDimensionContent->reveal())
+            ->shouldBeCalled();
+
         $resolvedCopiedContent = $this->prophesize(DimensionContentInterface::class);
-        $contentCopier->copy(
-            $contentRichEntity->reveal(),
-            $sourceDimensionAttributes,
+        $contentCopier->copyFromDimensionContent(
+            $sourceDimensionContent->reveal(),
             $contentRichEntity->reveal(),
             $targetDimensionAttributes,
             [
@@ -299,7 +314,104 @@ class PublishTransitionSubscriberTest extends TestCase
             ->willReturn($resolvedCopiedContent->reveal())
             ->shouldBeCalled();
 
-        $contentPublishSubscriber = $this->createContentPublisherSubscriberInstance($contentCopier->reveal());
+        $contentPublishSubscriber = $this->createContentPublisherSubscriberInstance(
+            $contentCopier->reveal(),
+            $contentAggregator->reveal()
+        );
+
+        $contentPublishSubscriber->onPublish($event);
+    }
+
+    public function testOnPublishShadowWithUnpublishedSourceThrows(): void
+    {
+        $dimensionContent = $this->prophesize(DimensionContentInterface::class);
+        $dimensionContent->willImplement(WorkflowInterface::class);
+        $dimensionContent->willImplement(ShadowInterface::class);
+        $dimensionContentCollection = $this->prophesize(DimensionContentCollectionInterface::class);
+        $contentRichEntity = $this->prophesize(ContentRichEntityInterface::class);
+        $dimensionAttributes = ['locale' => 'en', 'stage' => 'draft'];
+
+        $dimensionContent->getLocale()->willReturn('en');
+        $dimensionContent->getShadowLocale()->willReturn('de');
+        $dimensionContent->getWorkflowPublished()->willReturn(null);
+        $dimensionContent->setWorkflowPublished(Argument::cetera())->shouldBeCalled();
+
+        $event = new TransitionEvent($dimensionContent->reveal(), new Marking());
+        $event->setContext([
+            ContentWorkflowInterface::DIMENSION_CONTENT_COLLECTION_CONTEXT_KEY => $dimensionContentCollection->reveal(),
+            ContentWorkflowInterface::DIMENSION_ATTRIBUTES_CONTEXT_KEY => $dimensionAttributes,
+            ContentWorkflowInterface::CONTENT_RICH_ENTITY_CONTEXT_KEY => $contentRichEntity->reveal(),
+        ]);
+
+        $contentCopier = $this->prophesize(ContentCopierInterface::class);
+        $contentCopier->copyFromDimensionContentCollection(Argument::cetera())
+            ->willReturn($this->prophesize(DimensionContentInterface::class)->reveal());
+        // The shadow source must not be copied when it has no published template.
+        $contentCopier->copyFromDimensionContent(Argument::cetera())->shouldNotBeCalled();
+
+        $sourceDimensionAttributes = ['locale' => 'de', 'stage' => 'live'];
+
+        // Source live content exists (e.g. an unlocalized live of the page) but carries no template.
+        $contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
+        $sourceDimensionContent = $this->prophesize(DimensionContentInterface::class);
+        $sourceDimensionContent->willImplement(TemplateInterface::class);
+        $sourceDimensionContent->getTemplateKey()->willReturn(null);
+        $contentAggregator->aggregate($contentRichEntity->reveal(), $sourceDimensionAttributes)
+            ->willReturn($sourceDimensionContent->reveal())
+            ->shouldBeCalled();
+
+        $contentPublishSubscriber = $this->createContentPublisherSubscriberInstance(
+            $contentCopier->reveal(),
+            $contentAggregator->reveal()
+        );
+
+        $this->expectException(ShadowSourceNotPublishedException::class);
+
+        $contentPublishSubscriber->onPublish($event);
+    }
+
+    public function testOnPublishShadowWithMissingSourceThrows(): void
+    {
+        $dimensionContent = $this->prophesize(DimensionContentInterface::class);
+        $dimensionContent->willImplement(WorkflowInterface::class);
+        $dimensionContent->willImplement(ShadowInterface::class);
+        $dimensionContentCollection = $this->prophesize(DimensionContentCollectionInterface::class);
+        $contentRichEntity = $this->prophesize(ContentRichEntityInterface::class);
+        $dimensionAttributes = ['locale' => 'en', 'stage' => 'draft'];
+
+        $dimensionContent->getLocale()->willReturn('en');
+        $dimensionContent->getShadowLocale()->willReturn('de');
+        $dimensionContent->getWorkflowPublished()->willReturn(null);
+        $dimensionContent->setWorkflowPublished(Argument::cetera())->shouldBeCalled();
+
+        $event = new TransitionEvent($dimensionContent->reveal(), new Marking());
+        $event->setContext([
+            ContentWorkflowInterface::DIMENSION_CONTENT_COLLECTION_CONTEXT_KEY => $dimensionContentCollection->reveal(),
+            ContentWorkflowInterface::DIMENSION_ATTRIBUTES_CONTEXT_KEY => $dimensionAttributes,
+            ContentWorkflowInterface::CONTENT_RICH_ENTITY_CONTEXT_KEY => $contentRichEntity->reveal(),
+        ]);
+
+        $contentCopier = $this->prophesize(ContentCopierInterface::class);
+        $contentCopier->copyFromDimensionContentCollection(Argument::cetera())
+            ->willReturn($this->prophesize(DimensionContentInterface::class)->reveal());
+        $contentCopier->copyFromDimensionContent(Argument::cetera())->shouldNotBeCalled();
+
+        $sourceDimensionAttributes = ['locale' => 'de', 'stage' => 'live'];
+
+        // The source has no live content at all.
+        $contentRichEntity->getId()->willReturn('some-uuid');
+        $contentRichEntity->getDimensionContents()->willReturn(new ArrayCollection([]));
+        $contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
+        $contentAggregator->aggregate($contentRichEntity->reveal(), $sourceDimensionAttributes)
+            ->willThrow(new ContentNotFoundException($contentRichEntity->reveal(), $sourceDimensionAttributes))
+            ->shouldBeCalled();
+
+        $contentPublishSubscriber = $this->createContentPublisherSubscriberInstance(
+            $contentCopier->reveal(),
+            $contentAggregator->reveal()
+        );
+
+        $this->expectException(ShadowSourceNotPublishedException::class);
 
         $contentPublishSubscriber->onPublish($event);
     }

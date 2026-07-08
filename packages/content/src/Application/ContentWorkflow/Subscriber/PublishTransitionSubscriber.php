@@ -13,13 +13,17 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentWorkflow\Subscriber;
 
+use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
+use Sulu\Content\Domain\Exception\ContentNotFoundException;
+use Sulu\Content\Domain\Exception\ShadowSourceNotPublishedException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollectionInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
+use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Route\Domain\Model\Route;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -32,8 +36,10 @@ use Symfony\Component\Workflow\Event\TransitionEvent;
  */
 class PublishTransitionSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private ContentCopierInterface $contentCopier)
-    {
+    public function __construct(
+        private ContentCopierInterface $contentCopier,
+        private ContentAggregatorInterface $contentAggregator,
+    ) {
     }
 
     public function onPublish(TransitionEvent $transitionEvent): void
@@ -119,6 +125,18 @@ class PublishTransitionSubscriber implements EventSubscriberInterface
         $sourceDimensionAttributes['locale'] = $shadowLocale;
         $sourceDimensionAttributes['stage'] = DimensionContentInterface::STAGE_LIVE;
 
+        // Resolve the source content up front to fail with a translatable error when its locale is
+        // not published yet, instead of crashing later in the copy.
+        try {
+            $sourceDimensionContent = $this->contentAggregator->aggregate($contentRichEntity, $sourceDimensionAttributes);
+        } catch (ContentNotFoundException $exception) {
+            throw new ShadowSourceNotPublishedException($locale, $shadowLocale, $exception);
+        }
+
+        if ($sourceDimensionContent instanceof TemplateInterface && null === $sourceDimensionContent->getTemplateKey()) {
+            throw new ShadowSourceNotPublishedException($locale, $shadowLocale);
+        }
+
         $data = [
             // @see \Sulu\Content\Application\ContentDataMapper\DataMapper\ShadowDataMapper::map
             'shadowOn' => true,
@@ -134,9 +152,8 @@ class PublishTransitionSubscriber implements EventSubscriberInterface
             }
         }
 
-        $this->contentCopier->copy(
-            $contentRichEntity,
-            $sourceDimensionAttributes,
+        $this->contentCopier->copyFromDimensionContent(
+            $sourceDimensionContent,
             $contentRichEntity,
             $targetDimensionAttributes,
             ['data' => $data]
