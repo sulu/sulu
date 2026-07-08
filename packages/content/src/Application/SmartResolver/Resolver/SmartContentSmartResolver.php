@@ -20,6 +20,7 @@ use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Content\Application\ResourceLoader\Loader\RawResourceLoader;
+use Sulu\Content\Application\SmartResolver\SmartContentReferenceStore;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
 /**
@@ -42,6 +43,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
  *       maxPerPage: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: string[],
  *       audienceTargeting?: bool,
  *       targetGroupId?: string,
  *       offset?: int,
@@ -54,6 +56,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
      */
     public function __construct(
         private ServiceLocator $smartContentProviders,
+        private SmartContentReferenceStore $referenceStore,
     ) {
     }
 
@@ -109,11 +112,26 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $filters['offset'] = $maxPerPage ? (($page - 1) * $maxPerPage) : 0;
         $filters['limit'] = $maxPerPage ?? $limit;
 
+        // Exclude the ids already resolved by previous smart content blocks of the same type when the
+        // "exclude_duplicates" option is enabled. The "excluded" filter may already contain ids added by
+        // the smart content filters visitors (e.g. the current page itself).
+        /** @var string[] $excluded */
+        $excluded = $filters['excluded'] ?? [];
+        if ($filters['excludeDuplicates']) {
+            $excluded = \array_values(\array_unique([...$excluded, ...$this->referenceStore->getAll($provider)]));
+        }
+        $filters['excluded'] = $excluded;
+
         $countByFilters = $filters;
         unset($countByFilters['offset']);
 
         $params = ['value' => $value, ...$parameters];
         $result = $smartContentProvider->findFlatBy($filters, $sortBys, $params);
+
+        // Register the resolved ids so that following smart content blocks can exclude them.
+        foreach ($result as $item) {
+            $this->referenceStore->add($provider, $item['id']);
+        }
 
         $fullTotal = $smartContentProvider->countBy($countByFilters, $params);
         $total = $limit ? \min($limit, $fullTotal) : $fullTotal;
@@ -148,8 +166,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
             'limit' => $limit,
             'maxPerPage' => $maxPerPage,
 
-            // TODO duplicates
-            'excluded' => [],
+            'excluded' => $excluded,
         ];
 
         $configuration = $smartContentProvider->getConfiguration();
