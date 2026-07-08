@@ -22,6 +22,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Content\Application\SmartResolver\Resolver\SmartContentSmartResolver;
+use Sulu\Content\Application\SmartResolver\SmartContentReferenceStore;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class SmartContentSmartResolverTest extends TestCase
@@ -40,6 +41,7 @@ class SmartContentSmartResolverTest extends TestCase
 
         $this->smartResolver = new SmartContentSmartResolver(
             $this->serviceLocator->reveal(),
+            new SmartContentReferenceStore(),
         );
     }
 
@@ -69,6 +71,7 @@ class SmartContentSmartResolverTest extends TestCase
                 'websiteTagOperator' => 'OR',
                 'limit' => 5,
                 'page' => 1,
+                'excludeDuplicates' => false,
             ],
             'sortBys' => ['title' => 'asc'],
             'parameters' => ['provider' => 'pages', 'categoryRoot' => null],
@@ -86,6 +89,7 @@ class SmartContentSmartResolverTest extends TestCase
         unset($expectedFilters['limit']);
         $expectedFilters['offset'] = 0; // page 1 with offset 0
         $expectedFilters['limit'] = 5; // from original limit
+        $expectedFilters['excluded'] = []; // no self/duplicate exclusion in this scenario
 
         $countByFilters = $expectedFilters;
         unset($countByFilters['offset']);
@@ -109,6 +113,75 @@ class SmartContentSmartResolverTest extends TestCase
         $view = $result->getView();
         $this->assertArrayHasKey('total', $view);
         $this->assertSame(5, $view['total']); // min(limit (5), fullTotal (10)) = 5
+    }
+
+    public function testResolveExcludesDuplicatesAndRegistersResolvedIds(): void
+    {
+        $referenceStore = new SmartContentReferenceStore();
+        // ids resolved by a previous smart content block of the same provider type
+        $referenceStore->add('pages', 'page-1');
+        $referenceStore->add('pages', 'page-2');
+
+        /** @var ObjectProphecy<ServiceLocator<SmartContentProviderInterface>> $serviceLocator */
+        $serviceLocator = $this->prophesize(ServiceLocator::class);
+        $smartContentProvider = $this->prophesize(SmartContentProviderInterface::class);
+
+        $resolver = new SmartContentSmartResolver(
+            $serviceLocator->reveal(),
+            $referenceStore,
+        );
+
+        $smartResolvable = $this->prophesize(SmartResolvable::class);
+        $data = [
+            'value' => [],
+            'filters' => [
+                'dataSource' => 'root',
+                'includeSubFolders' => true,
+                'categories' => [],
+                'categoryOperator' => 'OR',
+                'tagOperator' => 'OR',
+                'types' => [],
+                'typesOperator' => 'OR',
+                'websiteCategories' => [],
+                'websiteCategoryOperator' => 'OR',
+                'websiteTags' => [],
+                'websiteTagOperator' => 'OR',
+                'limit' => null,
+                'page' => 1,
+                'excludeDuplicates' => true,
+                'excluded' => ['self-page'], // added by the exclude self visitor
+            ],
+            'sortBys' => [],
+            'parameters' => ['provider' => 'pages'],
+        ];
+
+        $smartResolvable->getData()->willReturn($data);
+
+        $serviceLocator->has('pages')->willReturn(true);
+        $serviceLocator->get('pages')->willReturn($smartContentProvider->reveal());
+
+        // the provider must receive the self id merged with the already resolved ids
+        $smartContentProvider->findFlatBy(
+            Argument::that(function(array $filters): bool {
+                return ['self-page', 'page-1', 'page-2'] === ($filters['excluded'] ?? []);
+            }),
+            Argument::cetera(),
+        )->willReturn([['id' => 'page-3'], ['id' => 'page-4']]);
+        $smartContentProvider->countBy(Argument::cetera())->willReturn(2);
+        $smartContentProvider->getResourceLoaderKey()->willReturn('pages');
+        $smartContentProvider->getConfiguration()->willReturn(new ProviderConfiguration());
+
+        $result = $resolver->resolve($smartResolvable->reveal(), 'en');
+
+        /** @var array{excluded: list<string>} $view */
+        $view = $result->getView();
+        $this->assertSame(['self-page', 'page-1', 'page-2'], $view['excluded']);
+
+        // newly resolved ids must be registered so following blocks exclude them too
+        $this->assertSame(
+            ['page-1', 'page-2', 'page-3', 'page-4'],
+            $referenceStore->getAll('pages'),
+        );
     }
 
     public function testResolveWithInvalidProvider(): void
@@ -173,6 +246,7 @@ class SmartContentSmartResolverTest extends TestCase
                 'websiteCategoryOperator' => 'OR',
                 'websiteTags' => [],
                 'websiteTagOperator' => 'OR',
+                'excludeDuplicates' => false,
             ],
             'sortBys' => [],
             'parameters' => ['provider' => 'pages'],
@@ -189,6 +263,7 @@ class SmartContentSmartResolverTest extends TestCase
         unset($expectedFilters['limit']);
         $expectedFilters['offset'] = 0;
         $expectedFilters['limit'] = 3; // from original limit
+        $expectedFilters['excluded'] = []; // no self/duplicate exclusion in this scenario
 
         $countByFilters = $expectedFilters;
         unset($countByFilters['offset']);
@@ -238,6 +313,7 @@ class SmartContentSmartResolverTest extends TestCase
                 'websiteTagOperator' => 'OR',
                 'limit' => null,
                 'page' => 1,
+                'excludeDuplicates' => false,
             ],
             'sortBys' => [],
             'parameters' => ['provider' => 'articles'],
@@ -293,6 +369,7 @@ class SmartContentSmartResolverTest extends TestCase
                 'websiteTagOperator' => 'OR',
                 'limit' => null,
                 'page' => 1,
+                'excludeDuplicates' => false,
             ],
             'sortBys' => [],
             'parameters' => [
