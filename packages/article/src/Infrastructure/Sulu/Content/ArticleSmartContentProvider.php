@@ -45,6 +45,7 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
  *       offset: int,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: string[],
  *       audienceTargeting?: bool,
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
@@ -68,6 +69,7 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
  *        limit: int|null,
  *        includeSubFolders: bool,
  *        excludeDuplicates: bool,
+ *        excluded?: string[],
  *        audienceTargeting?: bool,
  *        audienceTargeting?: bool,
  *        targetGroupId?: int,
@@ -262,6 +264,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      *         offset?: int,
      *         includeSubFolders: bool,
      *         excludeDuplicates: bool,
+     *         excluded?: string[],
      *         audienceTargeting?: bool,
      *         webspaceKey?: string
      *     }
@@ -393,10 +396,17 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      *     websiteTags: string[],
      *     websiteTagOperator: 'AND'|'OR',
      *     webspaceKey?: string,
+     *     excluded?: string[],
      *  } $filters
      */
     protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
     {
+        $excluded = $filters['excluded'] ?? [];
+        if ([] !== $excluded) {
+            $queryBuilder->andWhere($alias . '.uuid NOT IN (:excluded)')
+                ->setParameter('excluded', $excluded);
+        }
+
         $websiteCategoryIds = $filters['websiteCategories'];
         if ([] !== $websiteCategoryIds) {
             $this->smartContentQueryEnhancer->addJoinFilter(
