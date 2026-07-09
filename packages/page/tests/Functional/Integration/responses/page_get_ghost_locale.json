@@ -42,7 +42,7 @@
     "shadowLocales": [],
     "shadowOn": false,
     "stage": "draft",
-    "template": null,
+    "template": "default",
     "title": null,
     "version" : 0,
     "webspace": "sulu-io",

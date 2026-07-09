@@ -11,6 +11,7 @@
 
 namespace Sulu\Article\Application\MessageHandler;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Article\Application\Message\ApplyWorkflowTransitionArticleMessage;
 use Sulu\Article\Domain\Event\ArticleWorkflowTransitionAppliedEvent;
 use Sulu\Article\Domain\Model\ArticleInterface;
@@ -29,33 +30,81 @@ final class ApplyWorkflowTransitionArticleMessageHandler
     public function __construct(
         private ArticleRepositoryInterface $articleRepository,
         private ContentWorkflowInterface $contentWorkflow,
-        private DomainEventCollectorInterface $domainEventCollector
+        private EntityManagerInterface $entityManager,
+        private DomainEventCollectorInterface $domainEventCollector,
     ) {
     }
 
     public function __invoke(ApplyWorkflowTransitionArticleMessage $message): ArticleInterface
     {
-        $article = $this->articleRepository->getOneBy(
+        $locale = $message->getLocale();
+
+        $article = $this->loadArticle($message, [$locale]);
+
+        // The shadow source and dependent locales are only known once this locale is loaded.
+        $relatedLocales = $this->resolveRelatedLocales($article, $locale);
+        if ([] !== $relatedLocales) {
+            // Drop the identity-map collection (filled by a preceding ModifyArticleMessage) so the
+            // wider query re-hydrates it with all locales.
+            $this->entityManager->refresh($article);
+
+            $article = $this->loadArticle($message, [$locale, ...$relatedLocales]);
+        }
+
+        $this->contentWorkflow->apply(
+            $article,
+            ['locale' => $locale],
+            $message->getTransitionName()
+        );
+
+        $this->domainEventCollector->collect(new ArticleWorkflowTransitionAppliedEvent($article, $message->getTransitionName(), $locale));
+
+        return $article;
+    }
+
+    /**
+     * @param string[] $locales
+     */
+    private function loadArticle(ApplyWorkflowTransitionArticleMessage $message, array $locales): ArticleInterface
+    {
+        return $this->articleRepository->getOneBy(
             $message->getIdentifier(),
             [
                 ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
                     'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_ADMIN => true],
                     'dimensionAttributes' => [
-                        'locale' => $message->getLocale(),
+                        'locale' => $locales,
                         'stage' => [DimensionContentInterface::STAGE_DRAFT, DimensionContentInterface::STAGE_LIVE],
                     ],
                 ],
             ]
         );
+    }
 
-        $this->contentWorkflow->apply(
-            $article,
-            ['locale' => $message->getLocale()],
-            $message->getTransitionName()
-        );
+    /**
+     * Resolve the shadow source and dependent locales so the caller can re-load the article
+     * with them hydrated before the publish subscriber aggregates the source locale.
+     *
+     * @return string[]
+     */
+    private function resolveRelatedLocales(ArticleInterface $article, string $locale): array
+    {
+        foreach ($article->getDimensionContents() as $dimensionContent) {
+            if (DimensionContentInterface::STAGE_DRAFT !== $dimensionContent->getStage()
+                || null !== $dimensionContent->getLocale()
+            ) {
+                continue;
+            }
 
-        $this->domainEventCollector->collect(new ArticleWorkflowTransitionAppliedEvent($article, $message->getTransitionName(), $message->getLocale()));
+            $relatedLocales = $dimensionContent->getShadowLocalesForLocale($locale);
+            $sourceLocale = ($dimensionContent->getShadowLocales() ?? [])[$locale] ?? null;
+            if (null !== $sourceLocale) {
+                $relatedLocales[] = $sourceLocale;
+            }
 
-        return $article;
+            return \array_values(\array_unique($relatedLocales));
+        }
+
+        return [];
     }
 }
