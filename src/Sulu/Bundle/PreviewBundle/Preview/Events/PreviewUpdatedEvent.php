@@ -13,7 +13,7 @@ namespace Sulu\Bundle\PreviewBundle\Preview\Events;
 
 use Symfony\Contracts\EventDispatcher\Event;
 
-class PreviewUpdatedEvent extends Event
+readonly class PreviewUpdatedEvent extends Event
 {
     /**
      * @param mixed[] $payload
@@ -23,11 +23,17 @@ class PreviewUpdatedEvent extends Event
     ) {
     }
 
+    /**
+     * @return string
+     */
     public function getEventType(): string
     {
         return 'preview_updated';
     }
 
+    /**
+     * @return array|null
+     */
     public function getEventPayload(): ?array
     {
         return $this->payload;
