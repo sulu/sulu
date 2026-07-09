@@ -22,6 +22,11 @@ final class Events
     public const PRE_RENDER = 'sulu.preview.pre-render';
 
     /**
+     * Will be raised when the preview was updated
+     */
+    public const PREVIEW_UPDATED = 'sulu.preview.updated';
+
+    /**
      * No object can be created for this class.
      */
     private function __construct()

@@ -91,6 +91,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_preview.preview'),
             new Reference('security.token_storage'),
             new Reference('profiler', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            new Reference('event_dispatcher'),
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 

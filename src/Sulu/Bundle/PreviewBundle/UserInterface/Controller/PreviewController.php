@@ -11,10 +11,8 @@
 
 namespace Sulu\Bundle\PreviewBundle\UserInterface\Controller;
 
-use Blockbeaver\CoreBundle\Event\Article\SyncKordiamTaskConfigEvent;
-use Sulu\Bundle\PreviewBundle\Domain\Event\PreviewUpdatedEvent;
+use Sulu\Bundle\PreviewBundle\Preview\Events\PreviewUpdatedEvent;
 use Sulu\Bundle\PreviewBundle\Preview\Events;
-use Sulu\Bundle\PreviewBundle\Preview\Events\PreRenderEvent;
 use Sulu\Bundle\PreviewBundle\Preview\Preview;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
