@@ -11,9 +11,14 @@
 
 namespace Sulu\Bundle\PreviewBundle\UserInterface\Controller;
 
+use Blockbeaver\CoreBundle\Event\Article\SyncKordiamTaskConfigEvent;
+use Sulu\Bundle\PreviewBundle\Domain\Event\PreviewUpdatedEvent;
+use Sulu\Bundle\PreviewBundle\Preview\Events;
+use Sulu\Bundle\PreviewBundle\Preview\Events\PreRenderEvent;
 use Sulu\Bundle\PreviewBundle\Preview\Preview;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,6 +37,7 @@ class PreviewController
         private Preview $preview,
         private TokenStorageInterface $tokenStorage,
         private ?Profiler $profiler = null,
+        private EventDispatcherInterface $eventDispatcher
     ) {
     }
 
@@ -86,6 +92,8 @@ class PreviewController
             $data,
             $options
         );
+
+        $this->eventDispatcher->dispatch(new PreviewUpdatedEvent($data), Events::PREVIEW_UPDATED);
 
         return new JsonResponse(['content' => $content]);
     }
