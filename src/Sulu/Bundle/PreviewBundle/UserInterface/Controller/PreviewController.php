@@ -11,9 +11,12 @@
 
 namespace Sulu\Bundle\PreviewBundle\UserInterface\Controller;
 
+use Sulu\Bundle\PreviewBundle\Preview\Events\PreviewUpdatedEvent;
+use Sulu\Bundle\PreviewBundle\Preview\Events;
 use Sulu\Bundle\PreviewBundle\Preview\Preview;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,6 +35,7 @@ class PreviewController
         private Preview $preview,
         private TokenStorageInterface $tokenStorage,
         private ?Profiler $profiler = null,
+        private EventDispatcherInterface $eventDispatcher
     ) {
     }
 
@@ -86,6 +90,8 @@ class PreviewController
             $data,
             $options
         );
+
+        $this->eventDispatcher->dispatch(new PreviewUpdatedEvent($data), Events::PREVIEW_UPDATED);
 
         return new JsonResponse(['content' => $content]);
     }
