@@ -170,6 +170,7 @@
         "scheb/2fa-google-authenticator": "< 6.10 || >= 9.0",
         "scheb/2fa-totp": "< 6.10 || >= 9.0",
         "scheb/2fa-trusted-device": "< 6.10 || >= 9.0",
+        "symfony/doctrine-bridge": ">= 8.0",
         "thecodingmachine/safe": "< 2.0.0"
     },
     "replace": {
