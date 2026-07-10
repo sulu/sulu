@@ -18,6 +18,9 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Route\Application\Routing\Matcher\RouteCollectionForRequestRouteLoader;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Model\Route;
@@ -96,6 +99,62 @@ class RouteCollectionForRequestRouteLoaderTest extends TestCase
         $routeCollection = $this->routeCollectionForRequestRouteLoader->getRouteCollectionForRequest($request);
 
         $this->assertCount(0, $routeCollection);
+    }
+
+    public function testGetRouteCollectionForRequestHomepageWithTrailingSlashDoesNotMatch(): void
+    {
+        $request = Request::create('/de/');
+        $request->attributes->set('_sulu', $this->createSuluAttributes('/', '/de'));
+
+        $this->routeRepository->findFirstBy(Argument::cetera())->shouldNotBeCalled();
+        $routeCollection = $this->routeCollectionForRequestRouteLoader->getRouteCollectionForRequest($request);
+
+        $this->assertCount(0, $routeCollection);
+    }
+
+    public function testGetRouteCollectionForRequestHomepageOfPrefixedPortalMatches(): void
+    {
+        // the homepage has no resourceLocator, the RequestAttributes filter out its empty string
+        $request = Request::create('/de');
+        $request->attributes->set('_sulu', $this->createSuluAttributes(null, '/de'));
+
+        $routeModel = new Route('resource_key_example', '1', 'en', '/', 'the_site');
+        static::setPrivateProperty($routeModel, 'id', 1);
+
+        $this->routeRepository->findFirstBy(['webspaceOrNull' => 'the_site', 'locale' => 'en', 'slug' => '/'], Argument::cetera())
+            ->willReturn($routeModel);
+        $routeCollection = $this->routeCollectionForRequestRouteLoader->getRouteCollectionForRequest($request);
+
+        $this->assertCount(1, $routeCollection);
+    }
+
+    public function testGetRouteCollectionForRequestHomepageOfPortalWithoutPrefixMatches(): void
+    {
+        // without a prefix "/" is the canonical homepage url, it must keep matching
+        $request = Request::create('/');
+        $request->attributes->set('_sulu', $this->createSuluAttributes('/', null));
+
+        $routeModel = new Route('resource_key_example', '1', 'en', '/', 'the_site');
+        static::setPrivateProperty($routeModel, 'id', 1);
+
+        $this->routeRepository->findFirstBy(['webspaceOrNull' => 'the_site', 'locale' => 'en', 'slug' => '/'], Argument::cetera())
+            ->willReturn($routeModel);
+        $routeCollection = $this->routeCollectionForRequestRouteLoader->getRouteCollectionForRequest($request);
+
+        $this->assertCount(1, $routeCollection);
+    }
+
+    private function createSuluAttributes(?string $resourceLocator, ?string $resourceLocatorPrefix): RequestAttributes
+    {
+        $portalInformation = $this->prophesize(PortalInformation::class);
+        $portalInformation->getWebspaceKey()->willReturn('the_site');
+
+        return new RequestAttributes([
+            'portalInformation' => $portalInformation->reveal(),
+            'matchType' => RequestAnalyzerInterface::MATCH_TYPE_FULL,
+            'resourceLocator' => $resourceLocator,
+            'resourceLocatorPrefix' => $resourceLocatorPrefix,
+        ]);
     }
 
     public function testGetRouteCollectionForRequestMatch(): void

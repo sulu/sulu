@@ -66,7 +66,17 @@ final readonly class RouteCollectionForRequestRouteLoader implements RouteCollec
                     // Important: This fix is only possible because we check that the matchType
                     // ResourceLocator is not set for homepage, because it is an empty string
                     // and the constructor of the RequestAttributes filters the given attributes via array_filter
-                    $slug = $suluAttribute->getAttribute('resourceLocator') ?? '/';
+                    $resourceLocator = $suluAttribute->getAttribute('resourceLocator');
+
+                    // The homepage of a portal whose url carries a prefix (e.g. "{host}/{localization}")
+                    // has no resourceLocator. Requesting it with a trailing slash gives "/" instead, which
+                    // is not its canonical url: no route may match, so that the RedirectExceptionSubscriber
+                    // redirects to the url without the trailing slash.
+                    if ('/' === $resourceLocator && '' !== ($suluAttribute->getAttribute('resourceLocatorPrefix') ?? '')) {
+                        return new RouteCollection();
+                    }
+
+                    $slug = $resourceLocator ?? '/';
 
                     if ($slug) {
                         $request->attributes->set(RequestAttributeEnum::SLUG->value, $slug);
