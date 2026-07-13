@@ -72,8 +72,11 @@ test('Should load and render authorization consent details', async() => {
 
     const authorizationConsent = mount(<AuthorizationConsent route={route} router={router} />);
 
-    expect(symfonyRouting.generate).toBeCalledWith('sulu_mcp_server_oauth_consent_details', {requestId: 'request-1'});
-    expect(Requester.get).toBeCalledWith('/sulu_mcp_server_oauth_consent_details/request-1');
+    expect(symfonyRouting.generate).toHaveBeenCalledWith(
+        'sulu_mcp_server_oauth_consent_details',
+        {requestId: 'request-1'}
+    );
+    expect(Requester.get).toHaveBeenCalledWith('/sulu_mcp_server_oauth_consent_details/request-1');
 
     await flushPromises();
     authorizationConsent.update();
@@ -94,12 +97,15 @@ test('Should approve authorization consent and redirect to continuation URL', as
 
     authorizationConsent.find('button').at(1).simulate('click');
 
-    expect(symfonyRouting.generate).toBeCalledWith('sulu_mcp_server_oauth_consent_decision', {requestId: 'request-1'});
-    expect(Requester.post).toBeCalledWith('/sulu_mcp_server_oauth_consent_decision/request-1', {approved: true});
+    expect(symfonyRouting.generate).toHaveBeenCalledWith(
+        'sulu_mcp_server_oauth_consent_decision',
+        {requestId: 'request-1'}
+    );
+    expect(Requester.post).toHaveBeenCalledWith('/sulu_mcp_server_oauth_consent_decision/request-1', {approved: true});
 
     await flushPromises();
 
-    expect(window.location.assign).toBeCalledWith('/admin/mcp/authorize?sulu_mcp_consent=request-1');
+    expect(window.location.assign).toHaveBeenCalledWith('/admin/mcp/authorize?sulu_mcp_consent=request-1');
 });
 
 test('Should deny authorization consent and redirect to continuation URL', async() => {
@@ -113,11 +119,11 @@ test('Should deny authorization consent and redirect to continuation URL', async
 
     authorizationConsent.find('button').at(0).simulate('click');
 
-    expect(Requester.post).toBeCalledWith('/sulu_mcp_server_oauth_consent_decision/request-1', {approved: false});
+    expect(Requester.post).toHaveBeenCalledWith('/sulu_mcp_server_oauth_consent_decision/request-1', {approved: false});
 
     await flushPromises();
 
-    expect(window.location.assign).toBeCalledWith('/admin/mcp/authorize?sulu_mcp_consent=request-1');
+    expect(window.location.assign).toHaveBeenCalledWith('/admin/mcp/authorize?sulu_mcp_consent=request-1');
 });
 
 test('Should show an error and re-enable the buttons when the decision cannot be submitted', async() => {
@@ -135,7 +141,7 @@ test('Should show an error and re-enable the buttons when the decision cannot be
     authorizationConsent.update();
 
     expect(authorizationConsent.text()).toContain('sulu_admin.authorization_consent_decision_error');
-    expect(window.location.assign).not.toBeCalled();
+    expect(window.location.assign).not.toHaveBeenCalled();
     expect(authorizationConsent.find('Button').at(0).prop('disabled')).toBe(false);
     expect(authorizationConsent.find('Button').at(1).prop('disabled')).toBe(false);
 });
