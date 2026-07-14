@@ -65,7 +65,7 @@ class RoutableNormalizer implements NormalizerInterface
             }
             $url = $this->resolveRouteFieldUrl($object, $type);
 
-            if ($url) {
+            if (null !== $url) {
                 $normalizedData[$field->getName()] = $url;
             }
         }

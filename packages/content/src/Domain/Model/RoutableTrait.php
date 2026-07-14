@@ -21,6 +21,11 @@ trait RoutableTrait
 
     abstract public static function getResourceKey(): string;
 
+    public static function isRouteMandatory(): bool
+    {
+        return true;
+    }
+
     public function getResourceId(): int|string
     {
         return $this->getResource()->getId();

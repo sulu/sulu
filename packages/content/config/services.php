@@ -32,6 +32,7 @@ use Sulu\Content\Application\ContentWorkflow\ContentWorkflow;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\PublishTransitionSubscriber;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\RemoveDraftTransitionSubscriber;
+use Sulu\Content\Application\ContentWorkflow\Subscriber\RoutePublishGuardSubscriber;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\UnpublishTransitionSubscriber;
 use Sulu\Content\Application\DimensionContentCollectionFactory\DimensionContentCollectionFactory;
 use Sulu\Content\Domain\Factory\DimensionContentCollectionFactoryInterface;
@@ -163,6 +164,10 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_content.content_copier'),
             new Reference('sulu_content.content_aggregator'),
         ])
+        ->tag('kernel.event_subscriber');
+
+    $services->set('sulu_content.route_publish_guard_subscriber', RoutePublishGuardSubscriber::class)
+        ->args([new Reference('sulu_admin.metadata_provider_registry')])
         ->tag('kernel.event_subscriber');
 
     $services->set('sulu_content.remove_draft_transition_subscriber', RemoveDraftTransitionSubscriber::class)

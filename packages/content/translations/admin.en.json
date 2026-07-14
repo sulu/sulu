@@ -45,5 +45,6 @@
     "sulu_content.schedules_label": "Assign time schedule",
     "sulu_content.schedules_description": "The block will only be visible if at least one condition is valid.",
     "sulu_content.add_schedule": "Add schedule",
-    "sulu_content.changelog": "Changelog"
+    "sulu_content.changelog": "Changelog",
+    "sulu_content.publish_without_route_error": "The content cannot be published because it has no URL."
 }

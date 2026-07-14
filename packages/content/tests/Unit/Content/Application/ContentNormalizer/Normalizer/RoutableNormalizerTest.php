@@ -174,22 +174,33 @@ class RoutableNormalizerTest extends TestCase
 
     public function testEnhanceDoesNotAddUrlWhenRouteIsNull(): void
     {
-        $example = new Example();
-        $dimensionContent = new ExampleDimensionContent($example);
-        $example->addDimensionContent($dimensionContent);
-        $dimensionContent->setLocale('en');
-        $dimensionContent->setTemplateKey('default');
-        // no setRoute call — route remains null
+        $object = $this->createDimensionContent('en', 'default');
 
         $this->primeFormMetadata('example', 'en', 'default', [
             'url' => $this->createField('url', 'route'),
             'title' => $this->createField('title', 'text_line'),
         ]);
 
-        $result = $this->normalizer->enhance($dimensionContent, ['title' => 'Page title']);
+        $result = $this->normalizer->enhance($object, ['title' => 'Page title']);
 
         $this->assertSame(['title' => 'Page title'], $result);
         $this->assertArrayNotHasKey('url', $result);
+    }
+
+    public function testEnhanceAddsUrlWhenRouteSlugIsEmptyString(): void
+    {
+        $route = new Route('examples', '1', 'en', '');
+        $object = $this->createDimensionContent('en', 'default', $route);
+
+        $this->primeFormMetadata('example', 'en', 'default', [
+            'url' => $this->createField('url', 'route'),
+            'title' => $this->createField('title', 'text_line'),
+        ]);
+
+        $result = $this->normalizer->enhance($object, ['title' => 'Page title']);
+
+        $this->assertArrayHasKey('url', $result);
+        $this->assertSame('', $result['url']);
     }
 
     public function testEnhanceDoesNotAddPageTreeRouteUrlWhenNoParentRoute(): void
@@ -277,14 +288,16 @@ class RoutableNormalizerTest extends TestCase
             ->willReturn($formMetadataProvider->reveal());
     }
 
-    private function createDimensionContent(string $locale, string $templateKey, Route $route): ExampleDimensionContent
+    private function createDimensionContent(string $locale, string $templateKey, ?Route $route = null): ExampleDimensionContent
     {
         $example = new Example();
         $dimensionContent = new ExampleDimensionContent($example);
         $example->addDimensionContent($dimensionContent);
         $dimensionContent->setLocale($locale);
         $dimensionContent->setTemplateKey($templateKey);
-        $dimensionContent->setRoute($route);
+        if (null !== $route) {
+            $dimensionContent->setRoute($route);
+        }
 
         return $dimensionContent;
     }

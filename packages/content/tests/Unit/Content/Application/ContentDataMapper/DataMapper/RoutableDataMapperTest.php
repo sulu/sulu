@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentDataMapper\DataMapper;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -183,10 +184,12 @@ class RoutableDataMapperTest extends TestCase
         $this->assertNull($localizedDimensionContent->getRoute());
     }
 
-    public function testMapNoRoutePropertyValue(): void
+    /**
+     * @param array<string, mixed> $data
+     */
+    #[DataProvider('provideEmptyRoutePropertyValues')]
+    public function testMapEmptyRoutePropertyValue(array $data): void
     {
-        $data = [];
-
         $example = new Example();
         static::setPrivateProperty($example, 'id', 1);
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
@@ -203,24 +206,16 @@ class RoutableDataMapperTest extends TestCase
         $this->assertNull($localizedDimensionContent->getRoute());
     }
 
-    public function testMapNullRoutePropertyValue(): void
+    /**
+     * @return iterable<array{
+     *     0: array<string, mixed>,
+     * }>
+     */
+    public static function provideEmptyRoutePropertyValues(): iterable
     {
-        $data = ['url' => null];
-
-        $example = new Example();
-        static::setPrivateProperty($example, 'id', 1);
-        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
-        $localizedDimensionContent = new ExampleDimensionContent($example);
-        $localizedDimensionContent->setTemplateKey('default');
-        $localizedDimensionContent->setLocale('en');
-
-        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
-
-        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithRoute());
-        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
-
-        $this->assertSame([], $localizedDimensionContent->getTemplateData());
-        $this->assertNull($localizedDimensionContent->getRoute());
+        yield 'missing_key' => [[]];
+        yield 'null_value' => [['url' => null]];
+        yield 'empty_string' => [['url' => '']];
     }
 
     public function testMapRouteProperty(): void
@@ -287,6 +282,31 @@ class RoutableDataMapperTest extends TestCase
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
     }
 
+    public function testMapPageTreeRoutePropertyCleared(): void
+    {
+        $data = [
+            'url' => [
+                'page' => [],
+                'suffix' => '/my-page',
+            ],
+        ];
+
+        $example = new Example();
+        static::setPrivateProperty($example, 'id', 1);
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setTemplateKey('default');
+        $localizedDimensionContent->setLocale('en');
+
+        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
+
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithPageTreeRoute());
+        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame([], $localizedDimensionContent->getTemplateData());
+        $this->assertNull($localizedDimensionContent->getRoute());
+    }
+
     public function testMapRoutePropertyLive(): void
     {
         $data = [
@@ -317,6 +337,38 @@ class RoutableDataMapperTest extends TestCase
 
         $this->assertSame('/test', $localizedDimensionContent->getRoute()?->getSlug());
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
+    }
+
+    public function testMapLiveStageThrowsWhenNoRouteExists(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Expected that the draft dimension of "examples" with id "1" and locale "en" already created the route.');
+
+        $data = [
+            'url' => '/test',
+        ];
+
+        $example = new Example();
+        static::setPrivateProperty($example, 'id', 1);
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $unlocalizedDimensionContent->setStage('live');
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setTemplateKey('default');
+        $localizedDimensionContent->setStage('live');
+        $localizedDimensionContent->setLocale('en');
+
+        $this->routeRepository->findOneBy([
+            'locale' => 'en',
+            'resourceKey' => 'examples',
+            'resourceId' => '1',
+        ])
+            ->willReturn(null)
+            ->shouldBeCalled();
+
+        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
+
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithRoute());
+        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
     }
 
     public function testMapNoResourceId(): void
@@ -398,6 +450,50 @@ class RoutableDataMapperTest extends TestCase
 
         $this->assertSame('/test', $localizedDimensionContent->getRoute()?->getSlug());
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
+    }
+
+    public function testMapRoutePropertyInvalidType(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Expected property "url" to be a string or null but "bool" given.');
+
+        $data = [
+            'url' => false,
+        ];
+
+        $example = new Example();
+        static::setPrivateProperty($example, 'id', 1);
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setTemplateKey('default');
+        $localizedDimensionContent->setLocale('en');
+
+        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
+
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithRoute());
+        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+    }
+
+    public function testMapPageTreeRoutePropertyInvalidType(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Expected property "url" to be an array or null but "string" given.');
+
+        $data = [
+            'url' => 'not-an-array',
+        ];
+
+        $example = new Example();
+        static::setPrivateProperty($example, 'id', 1);
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setTemplateKey('default');
+        $localizedDimensionContent->setLocale('en');
+
+        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
+
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithPageTreeRoute());
+        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
     }
 
     private function createTypedFormMetadataWithRoute(string $propertyName = 'url'): TypedFormMetadata
