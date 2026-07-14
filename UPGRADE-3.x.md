@@ -2,9 +2,9 @@
 
 ## 3.0.8
 
-### Publishing routable content without a route is blocked
+### Route value is required when saving routable content
 
-`Sulu\Content\Domain\Model\RoutableInterface` gained the static method `isRouteMandatory()`. Classes using the `RoutableTrait` inherit the default `true`, other implementations need to add the method. When it returns `true`, publishing content whose template contains a route field is rejected with a `PublishWithoutRouteException` until a URL is set. Return `false` for resources that are allowed to live without a URL.
+`Sulu\Content\Domain\Model\RoutableInterface` gained the static method `isRouteMandatory()`. Classes using the `RoutableTrait` inherit the default `true`, other implementations need to add the method. When it returns `true`, saving a routable entity with an empty route value for its route field is rejected. Return `false` for resources that are allowed to live without a URL.
 
 ### AbstractTagNameToIdMigration moved to Infrastructure Layer
 

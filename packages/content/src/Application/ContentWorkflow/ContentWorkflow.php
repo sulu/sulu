@@ -17,7 +17,6 @@ use Doctrine\ORM\PersistentCollection;
 use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
 use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
-use Sulu\Content\Domain\Exception\PublishWithoutRouteException;
 use Sulu\Content\Domain\Exception\UnavailableContentTransitionException;
 use Sulu\Content\Domain\Exception\UnknownContentTransitionException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
@@ -104,10 +103,6 @@ class ContentWorkflow implements ContentWorkflowInterface
         } catch (UndefinedTransitionException $e) {
             throw new UnknownContentTransitionException($e->getMessage(), $e->getCode(), $e);
         } catch (NotEnabledTransitionException $e) {
-            if ($e->getTransitionBlockerList()->has(PublishWithoutRouteException::TRANSITION_BLOCKER_CODE)) {
-                throw new PublishWithoutRouteException($e->getMessage(), $e->getCode(), $e);
-            }
-
             throw new UnavailableContentTransitionException($e->getMessage(), $e->getCode(), $e);
         }
 

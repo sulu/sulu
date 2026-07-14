@@ -24,7 +24,6 @@ use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorIn
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflow;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
-use Sulu\Content\Domain\Exception\PublishWithoutRouteException;
 use Sulu\Content\Domain\Exception\UnavailableContentTransitionException;
 use Sulu\Content\Domain\Exception\UnknownContentTransitionException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
@@ -35,10 +34,6 @@ use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionCont
 use Sulu\Content\Tests\Unit\Mocks\DimensionContentMockWrapperTrait;
 use Sulu\Content\Tests\Unit\Mocks\MockWrapper;
 use Sulu\Content\Tests\Unit\Mocks\WorkflowMockWrapperTrait;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Workflow\Event\GuardEvent;
-use Symfony\Component\Workflow\TransitionBlocker;
 
 class ContentWorkflowTest extends TestCase
 {
@@ -46,14 +41,11 @@ class ContentWorkflowTest extends TestCase
 
     protected function createContentWorkflowInstance(
         ContentMetadataInspectorInterface $contentMetadataInspector,
-        ContentMergerInterface $contentMerger,
-        ?EventDispatcherInterface $eventDispatcher = null
+        ContentMergerInterface $contentMerger
     ): ContentWorkflowInterface {
         return new ContentWorkflow(
             $contentMetadataInspector,
-            $contentMerger,
-            null,
-            $eventDispatcher
+            $contentMerger
         );
     }
 
@@ -284,120 +276,6 @@ class ContentWorkflowTest extends TestCase
                 $dimensionAttributes,
                 $transitionName
             )
-        );
-    }
-
-    public function testTransitionBlockedByPublishWithoutRouteGuard(): void
-    {
-        $this->expectException(PublishWithoutRouteException::class);
-
-        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
-        $contentMerger = $this->prophesize(ContentMergerInterface::class);
-
-        $eventDispatcher = new EventDispatcher();
-        $eventDispatcher->addListener(
-            'workflow.content_workflow.guard.publish',
-            static function(GuardEvent $event): void {
-                $event->addTransitionBlocker(new TransitionBlocker('blocked', PublishWithoutRouteException::TRANSITION_BLOCKER_CODE));
-            }
-        );
-
-        $contentWorkflow = $this->createContentWorkflowInstance(
-            $contentMetadataInspector->reveal(),
-            $contentMerger->reveal(),
-            $eventDispatcher
-        );
-
-        $dimensionAttributes = ['locale' => 'de', 'stage' => 'draft'];
-
-        $dimensionContent1 = $this->prophesize(DimensionContentInterface::class);
-        $dimensionContent1->willImplement(WorkflowInterface::class);
-        $dimensionContent1->getLocale()->willReturn(null);
-        $dimensionContent1->getStage()->willReturn('draft');
-        $dimensionContent1->getVersion()->willReturn(DimensionContentInterface::CURRENT_VERSION);
-
-        $dimensionContent2 = $this->prophesize(DimensionContentInterface::class);
-        $dimensionContent2->willImplement(WorkflowInterface::class);
-        $dimensionContent2->getLocale()->willReturn('de');
-        $dimensionContent2->getStage()->willReturn('draft');
-        $dimensionContent2->getVersion()->willReturn(DimensionContentInterface::CURRENT_VERSION);
-
-        $dimensionContent2->getWorkflowPlace()
-            ->willReturn('unpublished')
-            ->shouldBeCalled();
-
-        $dimensionContents = new ArrayCollection([
-            $this->wrapWorkflowMock($dimensionContent1),
-            $this->wrapWorkflowMock($dimensionContent2),
-        ]);
-
-        $contentRichEntity = $this->prophesize(ContentRichEntityInterface::class);
-        $contentRichEntity->getDimensionContents()->willReturn($dimensionContents);
-
-        $contentMetadataInspector->getDimensionContentClass($contentRichEntity->reveal()::class)
-            ->willReturn(ExampleDimensionContent::class);
-
-        $contentWorkflow->apply(
-            $contentRichEntity->reveal(),
-            $dimensionAttributes,
-            'publish'
-        );
-    }
-
-    public function testTransitionBlockedByOtherGuardStaysUnavailable(): void
-    {
-        $this->expectException(UnavailableContentTransitionException::class);
-
-        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
-        $contentMerger = $this->prophesize(ContentMergerInterface::class);
-
-        $eventDispatcher = new EventDispatcher();
-        $eventDispatcher->addListener(
-            'workflow.content_workflow.guard.publish',
-            static function(GuardEvent $event): void {
-                $event->addTransitionBlocker(new TransitionBlocker('blocked', 'something_else'));
-            }
-        );
-
-        $contentWorkflow = $this->createContentWorkflowInstance(
-            $contentMetadataInspector->reveal(),
-            $contentMerger->reveal(),
-            $eventDispatcher
-        );
-
-        $dimensionAttributes = ['locale' => 'de', 'stage' => 'draft'];
-
-        $dimensionContent1 = $this->prophesize(DimensionContentInterface::class);
-        $dimensionContent1->willImplement(WorkflowInterface::class);
-        $dimensionContent1->getLocale()->willReturn(null);
-        $dimensionContent1->getStage()->willReturn('draft');
-        $dimensionContent1->getVersion()->willReturn(DimensionContentInterface::CURRENT_VERSION);
-
-        $dimensionContent2 = $this->prophesize(DimensionContentInterface::class);
-        $dimensionContent2->willImplement(WorkflowInterface::class);
-        $dimensionContent2->getLocale()->willReturn('de');
-        $dimensionContent2->getStage()->willReturn('draft');
-        $dimensionContent2->getVersion()->willReturn(DimensionContentInterface::CURRENT_VERSION);
-
-        $dimensionContent2->getWorkflowPlace()
-            ->willReturn('unpublished')
-            ->shouldBeCalled();
-
-        $dimensionContents = new ArrayCollection([
-            $this->wrapWorkflowMock($dimensionContent1),
-            $this->wrapWorkflowMock($dimensionContent2),
-        ]);
-
-        $contentRichEntity = $this->prophesize(ContentRichEntityInterface::class);
-        $contentRichEntity->getDimensionContents()->willReturn($dimensionContents);
-
-        $contentMetadataInspector->getDimensionContentClass($contentRichEntity->reveal()::class)
-            ->willReturn(ExampleDimensionContent::class);
-
-        $contentWorkflow->apply(
-            $contentRichEntity->reveal(),
-            $dimensionAttributes,
-            'publish'
         );
     }
 

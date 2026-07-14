@@ -45,6 +45,5 @@
     "sulu_content.schedules_label": "Zeitfenster zuweisen",
     "sulu_content.schedules_description": "Der Block wird nur angezeigt, wenn mindestens einer der Bedingungen erfüllt wird.",
     "sulu_content.add_schedule": "Zeitfenster hinzufügen",
-    "sulu_content.changelog": "Änderungshistorie",
-    "sulu_content.publish_without_route_error": "Der Inhalt kann nicht veröffentlicht werden, da keine URL gesetzt ist."
+    "sulu_content.changelog": "Änderungshistorie"
 }

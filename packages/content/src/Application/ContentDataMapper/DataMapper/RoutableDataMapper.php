@@ -93,6 +93,13 @@ class RoutableDataMapper implements DataMapperInterface
         }
 
         if (!$this->hasRouteData($property, $data[$name] ?? null)) {
+            if (\array_key_exists($name, $data) && $localizedDimensionContent::isRouteMandatory()) {
+                throw new \RuntimeException(\sprintf(
+                    'Expected a route value for the mandatory property "%s".',
+                    $name
+                ));
+            }
+
             return;
         }
 

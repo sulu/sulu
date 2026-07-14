@@ -184,16 +184,58 @@ class RoutableDataMapperTest extends TestCase
         $this->assertNull($localizedDimensionContent->getRoute());
     }
 
-    /**
-     * @param array<string, mixed> $data
-     */
-    #[DataProvider('provideEmptyRoutePropertyValues')]
-    public function testMapEmptyRoutePropertyValue(array $data): void
+    public function testMapMissingRoutePropertyValue(): void
     {
+        $data = [];
+
         $example = new Example();
         static::setPrivateProperty($example, 'id', 1);
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setTemplateKey('default');
+        $localizedDimensionContent->setLocale('en');
+
+        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
+
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithRoute());
+        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame([], $localizedDimensionContent->getTemplateData());
+        $this->assertNull($localizedDimensionContent->getRoute());
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    #[DataProvider('provideEmptyRoutePropertyValues')]
+    public function testMapEmptyRoutePropertyValueThrowsWhenRouteIsMandatory(array $data): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Expected a route value for the mandatory property "url".');
+
+        $example = new Example();
+        static::setPrivateProperty($example, 'id', 1);
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setTemplateKey('default');
+        $localizedDimensionContent->setLocale('en');
+
+        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
+
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithRoute());
+        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    #[DataProvider('provideEmptyRoutePropertyValues')]
+    public function testMapEmptyRoutePropertyValueWhenRouteIsNotMandatory(array $data): void
+    {
+        $example = new Example();
+        static::setPrivateProperty($example, 'id', 1);
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = $this->createRouteNotMandatoryDimensionContent($example);
         $localizedDimensionContent->setTemplateKey('default');
         $localizedDimensionContent->setLocale('en');
 
@@ -213,7 +255,6 @@ class RoutableDataMapperTest extends TestCase
      */
     public static function provideEmptyRoutePropertyValues(): iterable
     {
-        yield 'missing_key' => [[]];
         yield 'null_value' => [['url' => null]];
         yield 'empty_string' => [['url' => '']];
     }
@@ -282,8 +323,11 @@ class RoutableDataMapperTest extends TestCase
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
     }
 
-    public function testMapPageTreeRoutePropertyCleared(): void
+    public function testMapPageTreeRoutePropertyClearedThrowsWhenRouteIsMandatory(): void
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Expected a route value for the mandatory property "url".');
+
         $data = [
             'url' => [
                 'page' => [],
@@ -302,9 +346,41 @@ class RoutableDataMapperTest extends TestCase
 
         $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithPageTreeRoute());
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+    }
+
+    public function testMapPageTreeRoutePropertyClearedWhenRouteIsNotMandatory(): void
+    {
+        $data = [
+            'url' => [
+                'page' => [],
+                'suffix' => '/my-page',
+            ],
+        ];
+
+        $example = new Example();
+        static::setPrivateProperty($example, 'id', 1);
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = $this->createRouteNotMandatoryDimensionContent($example);
+        $localizedDimensionContent->setTemplateKey('default');
+        $localizedDimensionContent->setLocale('en');
+
+        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
+
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithPageTreeRoute());
+        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
         $this->assertNull($localizedDimensionContent->getRoute());
+    }
+
+    private function createRouteNotMandatoryDimensionContent(Example $example): ExampleDimensionContent
+    {
+        return new class($example) extends ExampleDimensionContent {
+            public static function isRouteMandatory(): bool
+            {
+                return false;
+            }
+        };
     }
 
     public function testMapRoutePropertyLive(): void
