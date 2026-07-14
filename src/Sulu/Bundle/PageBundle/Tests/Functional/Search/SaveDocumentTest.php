@@ -14,6 +14,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\Search;
 use Composer\InstalledVersions;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\QueryHit;
+use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Massive\Bundle\SearchBundle\Search\SearchResult;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\SearchBundle\Search\Document;
@@ -72,6 +73,42 @@ class SaveDocumentTest extends BaseTestCase
         $searches = [
             'Places' => 1,
             'Basel' => 1,
+            'Dornbirn' => 1,
+        ];
+
+        foreach ($searches as $search => $count) {
+            $res = $searchManager->createSearch($search)->locale('de')->index('page_sulu_io')->execute();
+            $this->assertCount($count, $res, 'Searching for: ' . $search);
+        }
+    }
+
+    public function testSaveDocumentWithSectionedGlobalBlock(): void
+    {
+        $document = new PageDocument();
+        $document->setTitle('Global Places');
+        $document->setStructureType('global_block_section');
+        $document->setResourceSegment('/global-places');
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $document->getStructure()->bind([
+            'blocks' => [
+                [
+                    'type' => 'searchable_section_block',
+                    'headline' => 'Dornbirn',
+                ],
+            ],
+        ], false);
+        $document->setParent($this->homeDocument);
+
+        $this->documentManager->persist($document, 'de');
+        $this->documentManager->flush();
+
+        $searchManager = $this->getSearchManager();
+        $this->assertInstanceOf(SearchManagerInterface::class, $searchManager);
+
+        // "Dornbirn" only exists in the search field nested inside the global block's <section>,
+        // so finding it proves the sectioned global block is indexed.
+        $searches = [
+            'Global Places' => 1,
             'Dornbirn' => 1,
         ];
 
