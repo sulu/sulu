@@ -2,6 +2,10 @@
 
 ## 3.0.8
 
+### Publishing routable content without a route is blocked
+
+`Sulu\Content\Domain\Model\RoutableInterface` gained the static method `isRouteMandatory()`. Classes using the `RoutableTrait` inherit the default `true`, other implementations need to add the method. When it returns `true`, publishing content whose template contains a route field is rejected with a `PublishWithoutRouteException` until a URL is set. Return `false` for resources that are allowed to live without a URL.
+
 ### AbstractTagNameToIdMigration moved to Infrastructure Layer
 
 If somebody already created their own Entities with they may also need to migrate the tag names to tag ids.
