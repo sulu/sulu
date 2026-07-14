@@ -124,6 +124,10 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
             $url = $this->appendQueryAndAnchor($url, $linkData);
         }
 
+        if (null === $targetDimensionContent->getLocale()) {
+            return $pageDimensionContent;
+        }
+
         $enhancedDimensionContent->setTemplateData([
             ...$enhancedDimensionContent->getTemplateData(),
             ...[

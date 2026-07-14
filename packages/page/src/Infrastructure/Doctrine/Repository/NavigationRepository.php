@@ -23,6 +23,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentResolver\ContentResolverInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\LinkInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
@@ -222,7 +223,12 @@ final class NavigationRepository implements NavigationRepositoryInterface
     ): array {
         $result = [];
         foreach ($pages as $page) {
-            $result[] = $this->resolvePageContent($page, $locale, $properties);
+            $normalizedContent = $this->resolvePageContent($page, $locale, $properties);
+            if (null === $normalizedContent) {
+                continue;
+            }
+
+            $result[] = $normalizedContent;
         }
 
         return $result;
@@ -338,6 +344,10 @@ final class NavigationRepository implements NavigationRepositoryInterface
         foreach ($pageUuids as $pageUuid) {
             $page = $pagesByUuid[$pageUuid];
             $normalizedContent = $this->resolvePageContent($page, $locale, $properties);
+            if (null === $normalizedContent) {
+                continue;
+            }
+
             $normalizedContent['children'] = $this->normalizePageTreeNodes(
                 $childPageUuidsByParent[$pageUuid] ?? [],
                 $pagesByUuid,
@@ -355,14 +365,16 @@ final class NavigationRepository implements NavigationRepositoryInterface
     /**
      * @param array<string, string> $properties
      *
-     * @return array<string, mixed>
+     * @return array<string, mixed>|null
      */
-    private function resolvePageContent(PageInterface $page, string $locale, array $properties): array
+    private function resolvePageContent(PageInterface $page, string $locale, array $properties): ?array
     {
         $pageDimensionContent = $this->contentAggregator->aggregate($page, [
             'locale' => $locale,
             'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);
+
+        $urlKeys = \array_keys($properties, 'url', true);
 
         // prefix all properties with "nav." to only resolve navigation related content
         foreach ($properties as $key => $value) {
@@ -378,9 +390,45 @@ final class NavigationRepository implements NavigationRepositoryInterface
 
         $result = $resolvedContent['nav'];
 
+        if ($this->isUnresolvedInternalPageLink($pageDimensionContent, $result, $urlKeys)) {
+            return null;
+        }
+
         $result['targetType'] = $result['targetType'] ?? PageLinkProvider::ALIAS;
 
         return $result;
+    }
+
+    /**
+     * @param DimensionContentInterface<PageInterface> $dimensionContent
+     * @param array<string, mixed> $result
+     * @param array<int, string> $urlKeys
+     */
+    private function isUnresolvedInternalPageLink(
+        DimensionContentInterface $dimensionContent,
+        array $result,
+        array $urlKeys,
+    ): bool {
+        if (!$dimensionContent instanceof LinkInterface) {
+            return false;
+        }
+
+        if (PageLinkProvider::ALIAS !== ($dimensionContent->getLinkData()['provider'] ?? null)) {
+            return false;
+        }
+
+        if ([] === $urlKeys) {
+            return false;
+        }
+
+        foreach ($urlKeys as $urlKey) {
+            $url = $result[$urlKey] ?? null;
+            if (null !== $url && '' !== $url) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
