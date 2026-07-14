@@ -58,14 +58,6 @@ class KeywordController extends AbstractRestController implements SecuredControl
         private string $keywordClass
     ) {
         parent::__construct($viewHandler);
-        $this->restHelper = $restHelper;
-        $this->listBuilderFactory = $listBuilderFactory;
-        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
-        $this->keywordManager = $keywordManager;
-        $this->keywordRepository = $keywordRepository;
-        $this->categoryRepository = $categoryRepository;
-        $this->entityManager = $entityManager;
-        $this->keywordClass = $keywordClass;
     }
 
     /**
