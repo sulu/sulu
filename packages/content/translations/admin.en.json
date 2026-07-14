@@ -1,4 +1,5 @@
 {
+    "sulu_content.shadow_source_not_published": "This page cannot be published as a shadow of \"{shadowLocale}\" because \"{shadowLocale}\" has not been published yet. Please publish \"{shadowLocale}\" first.",
     "sulu_content.seo": "SEO",
     "sulu_content.excerpt": "Excerpt & Taxonomies",
     "sulu_content.taxonomies": "Taxonomies",

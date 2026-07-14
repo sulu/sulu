@@ -159,7 +159,10 @@ return static function(ContainerConfigurator $container) {
     $services->alias(ContentWorkflowInterface::class, 'sulu_content.content_workflow');
 
     $services->set('sulu_content.publish_transition_subscriber', PublishTransitionSubscriber::class)
-        ->args([new Reference('sulu_content.content_copier')])
+        ->args([
+            new Reference('sulu_content.content_copier'),
+            new Reference('sulu_content.content_aggregator'),
+        ])
         ->tag('kernel.event_subscriber');
 
     $services->set('sulu_content.remove_draft_transition_subscriber', RemoveDraftTransitionSubscriber::class)

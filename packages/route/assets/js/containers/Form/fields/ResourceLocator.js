@@ -47,12 +47,13 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
     @computed get enableAutoGeneration(): boolean {
         const {
             disabled,
+            value,
             formInspector: {
                 id,
             },
         } = this.props;
 
-        return !id && !disabled && !this.inputChanged && Object.keys(this.parts).length > 0;
+        return (!id || !value) && !disabled && !this.inputChanged && Object.keys(this.parts).length > 0;
     }
 
     @computed get enableRefreshButton(): boolean {

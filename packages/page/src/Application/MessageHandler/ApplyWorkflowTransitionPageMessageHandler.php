@@ -82,6 +82,9 @@ final class ApplyWorkflowTransitionPageMessageHandler
     }
 
     /**
+     * Resolve the shadow source and dependent locales so the caller can re-load the page
+     * with them hydrated before the publish subscriber aggregates the source locale.
+     *
      * @return string[]
      */
     private function resolveRelatedLocales(PageInterface $page, string $locale): array

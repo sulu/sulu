@@ -448,6 +448,67 @@ test('Should not request new URL when part field is finished on edit form', () =
     expect(Requester.post).not.toHaveBeenCalled();
 });
 
+test('Should automatically request new URL when part field is finished on edit form with no existing URL', () => {
+    const resourceStore = new ResourceStore('tests', 5, {locale: observable.box('en')});
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            resourceStore,
+            'test'
+        )
+    );
+    const changeSpy = jest.fn();
+
+    formInspector.getPathsByTag.mockReturnValue(['/title']);
+    resourceStore.data = {
+        '/title': 'title-value',
+    };
+
+    shallow(
+        <ResourceLocator
+            {...fieldTypeDefaultProps}
+            dataPath="/block/0/url"
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resource-locators',
+                defaultMode: 'tree_leaf_edit',
+            }}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaPath="/url"
+            value={null}
+        />
+    );
+
+    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
+
+    formInspector.getSchemaEntryByPath.mockReturnValue({
+        tags: [
+            {name: 'sulu.rlp.part'},
+        ],
+    });
+
+    const resourceLocatorPromise = Promise.resolve({
+        resourceLocator: '/test',
+    });
+    Requester.post.mockReturnValue(resourceLocatorPromise);
+
+    finishFieldHandler('/block/0/title', '/title');
+
+    expect(Requester.post).toHaveBeenCalledWith(
+        '/admin/api/resource-locators',
+        {
+            locale: 'en',
+            resourceKey: 'tests',
+            resourceId: 5,
+            routeSchema: undefined,
+            parts: {title: 'title-value'},
+        }
+    );
+
+    return resourceLocatorPromise.then(() => {
+        expect(changeSpy).toHaveBeenCalledWith('/test');
+    });
+});
+
 test('Should not request new URL when part field is finished if all parts are empty', () => {
     const resourceStore = new ResourceStore('tests', undefined, {locale: observable.box('en')});
     const formInspector = new FormInspector(
@@ -646,6 +707,7 @@ test('Should enable refresh button when value of part field changes on edit form
             }}
             formInspector={formInspector}
             schemaPath="/url"
+            value="/existing-url"
         />
     );
 
