@@ -148,8 +148,8 @@ class KeywordControllerTest extends SuluTestCase
     {
         $this->client->jsonRequest(
             'POST',
-            '/api/categories/' . ($categoryId ?: $this->category1->getId()) . '/keywords',
-            ['locale' => $locale, 'keyword' => $keyword]
+            '/api/categories/' . ($categoryId ?: $this->category1->getId()) . '/keywords?locale=' . $locale,
+            ['keyword' => $keyword]
         );
 
         $result = \json_decode($this->client->getResponse()->getContent(), true);
@@ -168,8 +168,8 @@ class KeywordControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'POST',
-            '/api/categories/' . $this->category1->getId() . '/keywords',
-            ['locale' => $locale, 'keyword' => $keyword]
+            '/api/categories/' . $this->category1->getId() . '/keywords?locale=' . $locale,
+            ['keyword' => $keyword]
         );
 
         $result = \json_decode($this->client->getResponse()->getContent(), true);
@@ -184,8 +184,8 @@ class KeywordControllerTest extends SuluTestCase
     {
         $this->client->jsonRequest(
             'POST',
-            '/api/categories/' . $this->category1->getId() . '/keywords',
-            ['locale' => 'it', 'keyword' => 'my-keyword']
+            '/api/categories/' . $this->category1->getId() . '/keywords?locale=it',
+            ['keyword' => 'my-keyword']
         );
 
         $result = \json_decode($this->client->getResponse()->getContent(), true);
@@ -202,8 +202,8 @@ class KeywordControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'POST',
-            '/api/categories/' . $this->category2->getId() . '/keywords',
-            ['locale' => $locale, 'keyword' => $keyword]
+            '/api/categories/' . $this->category2->getId() . '/keywords?locale=' . $locale,
+            ['keyword' => $keyword]
         );
 
         $result = \json_decode($this->client->getResponse()->getContent(), true);
@@ -222,8 +222,8 @@ class KeywordControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'POST',
-            '/api/categories/' . $this->category2->getId() . '/keywords',
-            ['locale' => $locale, 'keyword' => $keyword]
+            '/api/categories/' . $this->category2->getId() . '/keywords?locale=' . $locale,
+            ['keyword' => $keyword]
         );
 
         $result = \json_decode($this->client->getResponse()->getContent(), true);
@@ -241,7 +241,7 @@ class KeywordControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'PUT',
-            '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id'],
+            '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id'] . '?locale=' . $locale,
             ['keyword' => $keyword]
         );
 
