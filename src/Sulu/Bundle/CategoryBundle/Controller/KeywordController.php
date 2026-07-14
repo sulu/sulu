@@ -128,8 +128,8 @@ class KeywordController extends AbstractRestController implements SecuredControl
         /** @var KeywordInterface $keyword */
         $keyword = $this->keywordRepository->createNew();
         $category = $this->categoryRepository->findCategoryById($categoryId);
-        $keyword->setKeyword($request->request->getString('keyword'));
-        $keyword->setLocale($request->request->getString('locale'));
+        $keyword->setKeyword($request->getPayload()->getString('keyword'));
+        $keyword->setLocale($this->getLocale($request));
 
         $keyword = $this->keywordManager->save($keyword, $category);
 
@@ -167,7 +167,7 @@ class KeywordController extends AbstractRestController implements SecuredControl
             $force = $request->query->getString('force');
         }
         $category = $this->categoryRepository->findCategoryById($categoryId);
-        $keyword->setKeyword($request->request->getString('keyword'));
+        $keyword->setKeyword($request->getPayload()->getString('keyword'));
 
         $keyword = $this->keywordManager->save($keyword, $category, $force);
 
