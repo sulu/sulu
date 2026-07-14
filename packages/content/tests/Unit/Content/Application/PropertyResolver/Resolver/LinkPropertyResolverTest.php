@@ -55,6 +55,8 @@ class LinkPropertyResolverTest extends TestCase
 
         $resolvableResource = $contentView->getContent();
         $this->assertInstanceOf(ResolvableResource::class, $resolvableResource);
+
+        // the title is enriched by LinkResourceLoader::resolveContentViewEnhancement(), not here
         $this->assertSame([
             'href' => 'http://example.com',
             'provider' => 'external',
@@ -98,6 +100,8 @@ class LinkPropertyResolverTest extends TestCase
         $resolvableResource = $contentView->getContent();
         $this->assertInstanceOf(ResolvableResource::class, $resolvableResource);
         $this->assertSame('article::1234-4567-7890', $resolvableResource->getId());
+
+        // the title is enriched by LinkResourceLoader::resolveContentViewEnhancement(), not here
         $this->assertSame([
             'href' => '1234-4567-7890',
             'provider' => 'article',

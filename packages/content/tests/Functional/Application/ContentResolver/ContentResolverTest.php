@@ -1212,6 +1212,8 @@ class ContentResolverTest extends SuluTestCase
         self::assertSame('external', $linkView['provider']);
         self::assertSame('https://sulu.io', $linkView['href']);
         self::assertSame('Sulu Website', $linkView['title']);
+        // external links have no resource title of their own
+        self::assertSame('', $linkView['resourceTitle']);
     }
 
     public function testResolveLinkInternal(): void
@@ -1271,7 +1273,71 @@ class ContentResolverTest extends SuluTestCase
         $linkView = $view['link'];
         self::assertSame('examples', $linkView['provider']);
         self::assertSame($linkedExample->getId(), $linkView['href']);
+        // editor-provided title and the linked resource's own title coexist
         self::assertSame('Linked Example', $linkView['title']);
+        self::assertSame('Linked Example', $linkView['resourceTitle']);
+    }
+
+    public function testResolveLinkInternalTitleFallback(): void
+    {
+        $linkedExample = static::createExample(
+            [
+                'en' => [
+                    'live' => [
+                        'template' => 'full-content',
+                        'title' => 'Fallback Target Title',
+                        'url' => '/fallback-target',
+                    ],
+                ],
+            ],
+            [
+                'create_route' => true,
+            ],
+        );
+
+        static::getEntityManager()->flush();
+
+        $example1 = static::createExample(
+            [
+                'en' => [
+                    'live' => [
+                        'template' => 'full-content',
+                        'title' => 'Lorem Ipsum',
+                        'url' => '/lorem-ipsum',
+                        'link' => [
+                            'provider' => 'examples',
+                            'href' => $linkedExample->getId(),
+                            // no title set in the admin -> should fall back to the linked example's title
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'create_route' => true,
+            ],
+        );
+
+        static::getEntityManager()->flush();
+
+        $dimensionContent = $this->contentAggregator->aggregate($example1, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        $content = $result['content'];
+
+        self::assertArrayHasKey('link', $content);
+        self::assertSame('/fallback-target', $content['link']);
+
+        /** @var array<string, mixed> $view */
+        $view = $result['view'];
+        self::assertArrayHasKey('link', $view);
+        /** @var array<string, mixed> $linkView */
+        $linkView = $view['link'];
+        self::assertSame('examples', $linkView['provider']);
+        self::assertSame($linkedExample->getId(), $linkView['href']);
+        // editor left the title empty, so no "title" is set; the linked resource's own
+        // title is exposed separately under "resourceTitle" by the LinkResourceLoader enhancement
+        self::assertArrayNotHasKey('title', $linkView);
+        self::assertSame('Fallback Target Title', $linkView['resourceTitle']);
     }
 
     public function testResolveNestedContentWithDraftStage(): void
