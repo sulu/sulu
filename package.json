@@ -103,7 +103,8 @@
         },
         "setupFiles": [
             "jest-canvas-mock",
-            "regenerator-runtime/runtime"
+            "regenerator-runtime/runtime",
+            "./tests/js/polyfills-for-jest.js"
         ],
         "setupFilesAfterEnv": [
             "./tests/js/testSetup.config.js"
