@@ -41,6 +41,9 @@ function parseConsentDetails(response: Object): ConsentDetails {
     };
 }
 
+/**
+ * @experimental We can not yet give BC Promise for this new component in Sulu 3.0.
+ */
 @observer
 class AuthorizationConsent extends React.Component<ViewProps> {
     @observable consentDetails: ?ConsentDetails;
