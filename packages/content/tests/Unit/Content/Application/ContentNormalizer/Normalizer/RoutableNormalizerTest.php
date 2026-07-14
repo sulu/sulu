@@ -172,7 +172,7 @@ class RoutableNormalizerTest extends TestCase
         );
     }
 
-    public function testEnhanceDoesNotAddUrlWhenRouteIsNull(): void
+    public function testEnhanceAddsNullUrlWhenRouteIsNull(): void
     {
         $object = $this->createDimensionContent('en', 'default');
 
@@ -183,8 +183,7 @@ class RoutableNormalizerTest extends TestCase
 
         $result = $this->normalizer->enhance($object, ['title' => 'Page title']);
 
-        $this->assertSame(['title' => 'Page title'], $result);
-        $this->assertArrayNotHasKey('url', $result);
+        $this->assertSame(['title' => 'Page title', 'url' => null], $result);
     }
 
     public function testEnhanceAddsUrlWhenRouteSlugIsEmptyString(): void
@@ -203,7 +202,7 @@ class RoutableNormalizerTest extends TestCase
         $this->assertSame('', $result['url']);
     }
 
-    public function testEnhanceDoesNotAddPageTreeRouteUrlWhenNoParentRoute(): void
+    public function testEnhanceAddsNullPageTreeRouteUrlWhenNoParentRoute(): void
     {
         $route = new Route('examples', '1', 'en', '/my-page');
         // route has no parent — resolvePageTreeRoute returns null
@@ -215,8 +214,7 @@ class RoutableNormalizerTest extends TestCase
 
         $result = $this->normalizer->enhance($object, []);
 
-        $this->assertSame([], $result);
-        $this->assertArrayNotHasKey('url', $result);
+        $this->assertSame(['url' => null], $result);
     }
 
     public function testEnhanceLeavesNonRouteFieldsUntouched(): void
