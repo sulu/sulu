@@ -1,7 +1,11 @@
+@import './colors.scss';
+
 $viewPaddingHorizontal: 60px;
 $viewPaddingVertical: 40px;
 $viewMinWidth: 420px;
 $viewMaxWidth: 1140px;
+
+$cardBoxShadow: 0 2px 18px 0 rgba($black, .22);
 
 $sidebarShrinkAnimationDuration: 700ms;
 $navigationMoveAnimationDuration: 500ms;

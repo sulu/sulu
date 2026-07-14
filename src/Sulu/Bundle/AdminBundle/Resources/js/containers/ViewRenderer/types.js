@@ -22,4 +22,5 @@ export type View = Class<Component<ViewProps & *>> & GetDerivedRouteAttributesIn
 
 export type ViewConfig = {
     disableDefaultSpacing?: boolean,
+    fullscreen?: boolean,
 };

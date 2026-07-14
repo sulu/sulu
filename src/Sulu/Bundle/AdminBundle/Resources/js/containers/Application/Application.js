@@ -14,7 +14,7 @@ import Login from '../Login';
 import ProfileFormOverlay from '../ProfileFormOverlay';
 import Sidebar, {sidebarStore} from '../Sidebar';
 import Toolbar from '../Toolbar';
-import ViewRenderer from '../ViewRenderer';
+import ViewRenderer, {viewRegistry} from '../ViewRenderer';
 import './global.scss';
 import SnackbarContainer from '../../components/SnackbarContainer';
 import snackbarStore from '../../stores/snackbarStore';
@@ -131,6 +131,8 @@ class Application extends React.Component<Props>{
         const {appVersion, router, suluVersion} = this.props;
         const {loggedIn} = userStore;
 
+        const fullscreenView = !!router.route && viewRegistry.getConfig(router.route.type).fullscreen === true;
+
         const rootClass = classNames(
             applicationStyles.root,
             {
@@ -174,7 +176,14 @@ class Application extends React.Component<Props>{
                         router={router}
                     />
                 }
-                {initializer.initialized && initializer.initializedTranslationsLocale
+                {fullscreenView && initializer.initialized && initializer.initializedTranslationsLocale &&
+                    <div className={applicationStyles.fullscreen}>
+                        {router.route &&
+                            <ViewRenderer router={router} />
+                        }
+                    </div>
+                }
+                {!fullscreenView && (initializer.initialized && initializer.initializedTranslationsLocale
                     ? <Fragment>
                         <div className={rootClass}>
                             <nav className={applicationStyles.navigation}>
@@ -242,7 +251,7 @@ class Application extends React.Component<Props>{
                     : <div className={applicationStyles.loader}>
                         <Loader />
                     </div>
-                }
+                )}
             </Fragment>
         );
     }
