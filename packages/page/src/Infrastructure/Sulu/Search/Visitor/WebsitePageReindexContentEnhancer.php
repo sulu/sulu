@@ -40,11 +40,6 @@ class WebsitePageReindexContentEnhancer implements WebsitePageReindexProviderEnh
         'single_media_selection',
     ];
 
-    /**
-     * @var array<string, array<string, FormMetadata>>
-     */
-    private array $globalBlockForms = [];
-
     public function __construct(
         private MetadataProviderInterface $formMetadataProvider,
     ) {
@@ -162,25 +157,13 @@ class WebsitePageReindexContentEnhancer implements WebsitePageReindexProviderEnh
             return $type->getItems();
         }
 
-        $globalBlockForm = $this->getGlobalBlockForms($locale)[$globalBlockName] ?? null;
+        /** @var TypedFormMetadata $blockMetadata */
+        $blockMetadata = $this->formMetadataProvider->getMetadata('block', $locale, ['ignore_global_blocks' => true]);
+        /** @var array<string, FormMetadata> $forms */
+        $forms = $blockMetadata->getForms();
+        $globalBlockForm = $forms[$globalBlockName] ?? null;
 
         return $globalBlockForm?->getItems() ?? $type->getItems();
-    }
-
-    /**
-     * @return array<string, FormMetadata>
-     */
-    private function getGlobalBlockForms(string $locale): array
-    {
-        if (!isset($this->globalBlockForms[$locale])) {
-            /** @var TypedFormMetadata $blockMetadata */
-            $blockMetadata = $this->formMetadataProvider->getMetadata('block', $locale, ['ignore_global_blocks' => true]);
-            /** @var array<string, FormMetadata> $forms */
-            $forms = $blockMetadata->getForms();
-            $this->globalBlockForms[$locale] = $forms;
-        }
-
-        return $this->globalBlockForms[$locale];
     }
 
     /**

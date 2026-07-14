@@ -467,6 +467,81 @@ class WebsiteArticleReindexContentEnhancerTest extends TestCase
         $this->assertSame(['Global block content'], $returnedData['content']);
     }
 
+    public function testVisitExtractsContentFromNestedGlobalBlocks(): void
+    {
+        // The article references an outer global block, which itself references an inner global block.
+        $outerGlobalBlockType = new FormMetadata();
+        $outerGlobalBlockType->setKey('outer_block');
+        $outerGlobalBlockType->addTag($this->createGlobalBlockTag('outer_block'));
+
+        $blockField = new FieldMetadata('main_content');
+        $blockField->setType('block');
+        $blockField->addType($outerGlobalBlockType);
+
+        $articleForm = new FormMetadata();
+        $articleForm->setKey('default');
+        $articleForm->addItem($blockField);
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('default', $articleForm);
+
+        $this->formMetadataProvider->getMetadata('article', 'en', [])
+            ->willReturn($typedFormMetadata)
+            ->shouldBeCalledOnce();
+
+        // The inner global block form holds the searchable field.
+        $contentField = new FieldMetadata('content');
+        $contentField->setType('text_editor');
+        $contentField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG));
+
+        $innerGlobalBlockForm = new FormMetadata();
+        $innerGlobalBlockForm->setKey('inner_block');
+        $innerGlobalBlockForm->addItem($contentField);
+
+        // The outer global block form references the inner global block through a nested block field.
+        $innerGlobalBlockType = new FormMetadata();
+        $innerGlobalBlockType->setKey('inner_block');
+        $innerGlobalBlockType->addTag($this->createGlobalBlockTag('inner_block'));
+
+        $nestedBlockField = new FieldMetadata('nested');
+        $nestedBlockField->setType('block');
+        $nestedBlockField->addType($innerGlobalBlockType);
+
+        $outerGlobalBlockForm = new FormMetadata();
+        $outerGlobalBlockForm->setKey('outer_block');
+        $outerGlobalBlockForm->addItem($nestedBlockField);
+
+        $blockMetadata = new TypedFormMetadata();
+        $blockMetadata->addForm('outer_block', $outerGlobalBlockForm);
+        $blockMetadata->addForm('inner_block', $innerGlobalBlockForm);
+
+        $this->formMetadataProvider->getMetadata('block', 'en', ['ignore_global_blocks' => true])
+            ->willReturn($blockMetadata)
+            ->shouldBeCalled();
+
+        $result = [
+            'templateKey' => 'default',
+            'locale' => 'en',
+            'templateData' => [
+                'main_content' => [
+                    [
+                        'type' => 'outer_block',
+                        'nested' => [
+                            [
+                                'type' => 'inner_block',
+                                'content' => '<p>Nested global block content</p>',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $returnedData = $this->enhancer->enhanceDocument($result, ['content' => []]);
+
+        $this->assertSame(['Nested global block content'], $returnedData['content']);
+    }
+
     public function testRoleImageSingleMediaSelectionSetsMediaId(): void
     {
         $imageField = new FieldMetadata('header_image');
