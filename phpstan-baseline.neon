@@ -7237,18 +7237,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
 
 		-
-			message: '#^Parameter \#1 \$keyword of method Sulu\\Bundle\\CategoryBundle\\Entity\\KeywordInterface\:\:setKeyword\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
-
-		-
-			message: '#^Parameter \#1 \$locale of method Sulu\\Bundle\\CategoryBundle\\Entity\\KeywordInterface\:\:setLocale\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
-
-		-
 			message: '#^Parameter \#2 \$category of method Sulu\\Bundle\\CategoryBundle\\Category\\KeywordManagerInterface\:\:delete\(\) expects Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryInterface, Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryInterface\|null given\.$#'
 			identifier: argument.type
 			count: 2
@@ -7262,18 +7250,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$fieldDescriptors of method Sulu\\Component\\Rest\\RestHelperInterface\:\:initializeListBuilder\(\) expects array\<Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface\>, array\<Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface\>\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
-
-		-
-			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
-
-		-
-			message: '#^Parameter \#3 \$force of method Sulu\\Bundle\\CategoryBundle\\Category\\KeywordManagerInterface\:\:save\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
@@ -7671,7 +7647,7 @@ parameters:
 		-
 			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 11
+			count: 16
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/KeywordControllerTest.php
 
 		-
@@ -32879,7 +32855,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/UserBlameSubscriber.php
-
 		-
 			message: '#^Loose comparison using \=\= between null and null will always evaluate to true\.$#'
 			identifier: equal.alwaysTrue

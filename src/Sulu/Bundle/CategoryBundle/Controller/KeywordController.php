@@ -22,6 +22,7 @@ use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordIsMultipleReferencedException;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordNotUniqueException;
 use Sulu\Component\Rest\AbstractRestController;
+use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
@@ -77,8 +78,10 @@ class KeywordController extends AbstractRestController implements SecuredControl
         $listBuilder = $this->listBuilderFactory->create($this->keywordClass);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptor);
 
-        /** @var string $locale */
         $locale = $this->getLocale($request);
+        if (null === $locale) {
+            throw new MissingParameterException(self::class, 'locale');
+        }
         $categoryTranslation = $category->findTranslationByLocale($locale);
 
         if (false == $categoryTranslation) {
@@ -117,11 +120,16 @@ class KeywordController extends AbstractRestController implements SecuredControl
      */
     public function postAction($categoryId, Request $request)
     {
+        $locale = $this->getLocale($request);
+        if (null === $locale) {
+            throw new MissingParameterException(self::class, 'locale');
+        }
+
         /** @var KeywordInterface $keyword */
         $keyword = $this->keywordRepository->createNew();
         $category = $this->categoryRepository->findCategoryById($categoryId);
         $keyword->setKeyword($request->getPayload()->getString('keyword'));
-        $keyword->setLocale($this->getLocale($request));
+        $keyword->setLocale($locale);
 
         $keyword = $this->keywordManager->save($keyword, $category);
 
