@@ -12,10 +12,12 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\SchemaMetadata;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NumberMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
 
 class SchemaMetadataTest extends TestCase
 {
@@ -180,6 +182,49 @@ class SchemaMetadataTest extends TestCase
             '{"type":"object","properties":{"attributes":{"type":"object","properties":{
                 "0":{"minimum":0,"type":"number"},"1":{"maximum":10,"type":"number"}}}}}',
             (string) \json_encode($schema->toJsonSchema())
+        );
+    }
+
+    public function testNestedPropertyNamesKeepFieldConstraints(): void
+    {
+        $schema = new SchemaMetadata(
+            [
+                new PropertyMetadata('settings/text', false, new StringMetadata(3, 10)),
+                new PropertyMetadata('settings/number', false, new NumberMetadata(0.0, 100.0)),
+                new PropertyMetadata('settings/selection', false, new ArrayMetadata(new StringMetadata(), 1, 5)),
+            ]
+        );
+
+        $this->assertEquals(
+            [
+                'properties' => [
+                    'settings' => [
+                        'properties' => [
+                            'text' => [
+                                'type' => 'string',
+                                'minLength' => 3,
+                                'maxLength' => 10,
+                            ],
+                            'number' => [
+                                'minimum' => 0.0,
+                                'maximum' => 100.0,
+                                'type' => 'number',
+                            ],
+                            'selection' => [
+                                'type' => 'array',
+                                'items' => [
+                                    'type' => 'string',
+                                ],
+                                'minItems' => 1,
+                                'maxItems' => 5,
+                            ],
+                        ],
+                        'type' => 'object',
+                    ],
+                ],
+                'type' => 'object',
+            ],
+            $schema->toJsonSchema()
         );
     }
 }
