@@ -29,11 +29,34 @@ function deepMerge(base: Object, override: Object): Object {
     return result;
 }
 
+// json-pointer creates an array when the next path segment is numeric; this creates objects instead, so that a
+// property whose name contains a numeric segment (e.g. "attributes/1") is stored as a nested object matching its schema
+function setNestedProperty(data: Object, key: string, value: mixed) {
+    const tokens = key.split('/');
+    let current = data;
+
+    for (let i = 0; i < tokens.length - 1; i++) {
+        const token = tokens[i];
+
+        if (token === '__proto__' || token === 'constructor' || token === 'prototype') {
+            return;
+        }
+
+        if (typeof current[token] !== 'object' || current[token] === null) {
+            current[token] = {};
+        }
+
+        current = current[token];
+    }
+
+    current[tokens[tokens.length - 1]] = value;
+}
+
 function addSchemaProperties(data: Object, key: string, schema: Schema) {
     const type = schema[key].type;
 
     if (type !== SECTION_TYPE) {
-        jsonpointer.set(data, '/' + key, undefined);
+        setNestedProperty(data, key, undefined);
     }
 
     const items = schema[key].items;

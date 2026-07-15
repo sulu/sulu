@@ -26,84 +26,82 @@ class PropertiesMetadata implements SchemaMetadataInterface
         $this->properties = $properties;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toJsonSchema(): array
     {
-        return $this->buildJsonSchema($this->createPropertyTree(), false);
+        return $this->buildJsonSchema(false);
     }
 
     /**
-     * @return array<string, array{children: array, mandatory: bool, schema: array|null}>
+     * @return array<string, mixed>
      */
-    private function createPropertyTree(): array
+    private function buildJsonSchema(bool $includeType): array
     {
-        $tree = [];
-
-        foreach ($this->properties as $property) {
-            $pathSegments = \explode('/', $property->getName());
-            $siblings = &$tree;
-
-            foreach ($pathSegments as $pathSegment) {
-                if (!\array_key_exists($pathSegment, $siblings)) {
-                    $siblings[$pathSegment] = [
-                        'children' => [],
-                        'mandatory' => false,
-                        'schema' => null,
-                    ];
-                }
-
-                $node = &$siblings[$pathSegment];
-                $siblings = &$node['children'];
-            }
-
-            $node['mandatory'] = $property->isMandatory();
-            $node['schema'] = $property->toJsonSchema();
-
-            unset($node, $siblings);
-        }
-
-        return $tree;
-    }
-
-    /**
-     * @param array<string, array{children: array, mandatory: bool, schema: array|null}> $propertyTree
-     */
-    private function buildJsonSchema(array $propertyTree, bool $includeType): array
-    {
-        $jsonSchema = [];
         $properties = [];
         $required = [];
 
-        foreach ($propertyTree as $propertyName => $propertyNode) {
-            $propertySchema = $propertyNode['schema'];
+        /** @var array<string, PropertyMetadata[]> $nestedProperties */
+        $nestedProperties = [];
 
-            if (!empty($propertyNode['children'])) {
-                $propertySchema = \array_merge(
-                    $propertySchema ?? [],
-                    $this->buildJsonSchema($propertyNode['children'], true)
+        foreach ($this->properties as $property) {
+            $name = $property->getName();
+
+            // a name with a slash (e.g. "attributes/1") describes a nested property; the first segment is grouped
+            // and the rest is handled recursively, so it ends up as a nested object in the JSON schema
+            if (\str_contains($name, '/')) {
+                [$parent, $child] = \explode('/', $name, 2);
+                $nestedProperties[$parent][] = new PropertyMetadata(
+                    $child,
+                    $property->isMandatory(),
+                    $property->getSchemaMetadata()
                 );
+
+                continue;
             }
 
+            $propertySchema = $property->toJsonSchema();
             if ($propertySchema) {
-                $properties[$propertyName] = $propertySchema;
+                $properties[$name] = $propertySchema;
             }
 
-            if ($propertyNode['mandatory']) {
-                // cast to string because PHP coerces numeric property names (e.g. "1") to integer array keys,
-                // which would produce an invalid JSON schema (the "required" keyword only allows strings)
-                $required[] = (string) $propertyName;
+            if ($property->isMandatory()) {
+                $required[$name] = true;
             }
         }
+
+        foreach ($nestedProperties as $parent => $childProperties) {
+            $properties[$parent] = (new self($childProperties))->buildJsonSchema(true);
+        }
+
+        return $this->assembleJsonSchema($properties, $required, $includeType);
+    }
+
+    /**
+     * @param array<int|string, mixed> $properties
+     * @param array<int|string, bool> $required
+     *
+     * @return array<string, mixed>
+     */
+    private function assembleJsonSchema(array $properties, array $required, bool $includeType): array
+    {
+        $jsonSchema = [];
 
         if ($includeType && (!empty($properties) || !empty($required))) {
             $jsonSchema['type'] = 'object';
         }
 
         if (!empty($properties)) {
-            $jsonSchema['properties'] = $properties;
+            // cast to object because PHP coerces numeric property names (e.g. "0", "1") to a list, which json_encode
+            // would serialize as a JSON array although the "properties" keyword of a JSON schema requires an object
+            $jsonSchema['properties'] = \array_is_list($properties) ? (object) $properties : $properties;
         }
 
         if (!empty($required)) {
-            $jsonSchema['required'] = $required;
+            // cast to string because PHP coerces numeric property names to integer array keys, which would produce
+            // an invalid JSON schema (the "required" keyword only allows strings)
+            $jsonSchema['required'] = \array_map('\strval', \array_keys($required));
         }
 
         return $jsonSchema;

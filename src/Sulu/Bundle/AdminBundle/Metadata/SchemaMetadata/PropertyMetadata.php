@@ -45,6 +45,11 @@ class PropertyMetadata
         return $this->mandatory;
     }
 
+    public function getSchemaMetadata(): ?SchemaMetadataInterface
+    {
+        return $this->schemaMetadata;
+    }
+
     public function toJsonSchema(): ?array
     {
         if (null !== $this->schemaMetadata) {

@@ -161,4 +161,25 @@ class SchemaMetadataTest extends TestCase
             $schema->toJsonSchema()
         );
     }
+
+    /**
+     * PHP coerces numeric-string array keys to integers, so a zero-based group of segments forms a list which
+     * json_encode would serialize as a JSON array. This can only be caught on the encoded JSON, because the coercion
+     * already happens when the expected array literal is created.
+     */
+    public function testNestedNumericPropertyNamesEncodeAsObject(): void
+    {
+        $schema = new SchemaMetadata(
+            [
+                new PropertyMetadata('attributes/0', false, new NumberMetadata(0.0)),
+                new PropertyMetadata('attributes/1', false, new NumberMetadata(null, 10.0)),
+            ]
+        );
+
+        $this->assertJsonStringEqualsJsonString(
+            '{"type":"object","properties":{"attributes":{"type":"object","properties":{
+                "0":{"minimum":0,"type":"number"},"1":{"maximum":10,"type":"number"}}}}}',
+            (string) \json_encode($schema->toJsonSchema())
+        );
+    }
 }

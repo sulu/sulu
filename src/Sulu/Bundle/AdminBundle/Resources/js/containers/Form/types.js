@@ -33,7 +33,8 @@ export type PropertyError = {
 
 export type BlockError = Array<?{[key: string]: Error}>;
 
-export type Error = BlockError | PropertyError;
+// nested errors are built from slash separated property names: objects, plus arrays for numeric segments (blocks)
+export type Error = PropertyError | ErrorCollection | Array<?Error>;
 
 export type ErrorCollection = {[key: string]: Error};
 
