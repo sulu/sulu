@@ -292,7 +292,7 @@ class QueryBuilder extends ContentQueryBuilder
             'excerpt'
         );
 
-        return 'page.[' . $property->getName() . '] = ' . $targetGroupId;
+        return 'page.[' . $property->getName() . '] = ' . (int) $targetGroupId;
     }
 
     private function buildSegmentKey($webspaceKey, $segmentKey, $locale)
@@ -333,7 +333,7 @@ class QueryBuilder extends ContentQueryBuilder
             );
 
             foreach ($tags as $tag) {
-                $sql2Where[] = 'page.[' . $property->getName() . '] = ' . $tag;
+                $sql2Where[] = 'page.[' . $property->getName() . '] = ' . (int) $tag;
             }
 
             if (\count($sql2Where) > 0) {
@@ -379,7 +379,7 @@ class QueryBuilder extends ContentQueryBuilder
                 'excerpt'
             );
             foreach ($categories as $category) {
-                $sql2Where[] = 'page.[' . $property->getName() . '] = ' . $category;
+                $sql2Where[] = 'page.[' . $property->getName() . '] = ' . (int) $category;
             }
 
             if (\count($sql2Where) > 0) {
