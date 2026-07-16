@@ -12,9 +12,12 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\SchemaMetadata;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NumberMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
 
 class SchemaMetadataTest extends TestCase
 {
@@ -119,6 +122,120 @@ class SchemaMetadataTest extends TestCase
                     ],
                     [
                         'required' => ['article'],
+                        'type' => 'object',
+                    ],
+                ],
+                'type' => 'object',
+            ],
+            $schema->toJsonSchema()
+        );
+    }
+
+    public function testNestedPropertyNames(): void
+    {
+        $schema = new SchemaMetadata(
+            [
+                new PropertyMetadata('attributes/1', false, new NumberMetadata(null, 10.0)),
+                new PropertyMetadata('attributes/2', true, new NumberMetadata(0.0)),
+            ]
+        );
+
+        $this->assertEquals(
+            [
+                'properties' => [
+                    'attributes' => [
+                        'properties' => [
+                            '1' => [
+                                'maximum' => 10.0,
+                                'type' => 'number',
+                            ],
+                            '2' => [
+                                'minimum' => 0.0,
+                                'type' => 'number',
+                            ],
+                        ],
+                        'required' => ['2'],
+                        'type' => 'object',
+                    ],
+                ],
+                'type' => 'object',
+            ],
+            $schema->toJsonSchema()
+        );
+    }
+
+    /**
+     * Asserted on the encoded JSON because the key coercion already happens in the expected array literal.
+     */
+    public function testNestedNumericPropertyNamesEncodeAsObject(): void
+    {
+        $schema = new SchemaMetadata(
+            [
+                new PropertyMetadata('attributes/0', false, new NumberMetadata(0.0)),
+                new PropertyMetadata('attributes/1', false, new NumberMetadata(null, 10.0)),
+            ]
+        );
+
+        $this->assertJsonStringEqualsJsonString(
+            '{"type":"object","properties":{"attributes":{"type":"object","properties":{
+                "0":{"minimum":0,"type":"number"},"1":{"maximum":10,"type":"number"}}}}}',
+            (string) \json_encode($schema->toJsonSchema())
+        );
+    }
+
+    /**
+     * Field types without a PropertyMetadataMapper have no schema, and an empty group would encode as "options":[].
+     */
+    public function testNestedPropertyNamesWithoutSchemaAreOmitted(): void
+    {
+        $schema = new SchemaMetadata(
+            [
+                new PropertyMetadata('title', false, new StringMetadata()),
+                new PropertyMetadata('options/flag', false),
+                new PropertyMetadata('options/note', false),
+            ]
+        );
+
+        $this->assertJsonStringEqualsJsonString(
+            '{"type":"object","properties":{"title":{"type":"string"}}}',
+            (string) \json_encode($schema->toJsonSchema())
+        );
+    }
+
+    public function testNestedPropertyNamesKeepFieldConstraints(): void
+    {
+        $schema = new SchemaMetadata(
+            [
+                new PropertyMetadata('settings/text', false, new StringMetadata(3, 10)),
+                new PropertyMetadata('settings/number', false, new NumberMetadata(0.0, 100.0)),
+                new PropertyMetadata('settings/selection', false, new ArrayMetadata(new StringMetadata(), 1, 5)),
+            ]
+        );
+
+        $this->assertEquals(
+            [
+                'properties' => [
+                    'settings' => [
+                        'properties' => [
+                            'text' => [
+                                'type' => 'string',
+                                'minLength' => 3,
+                                'maxLength' => 10,
+                            ],
+                            'number' => [
+                                'minimum' => 0.0,
+                                'maximum' => 100.0,
+                                'type' => 'number',
+                            ],
+                            'selection' => [
+                                'type' => 'array',
+                                'items' => [
+                                    'type' => 'string',
+                                ],
+                                'minItems' => 1,
+                                'maxItems' => 5,
+                            ],
+                        ],
                         'type' => 'object',
                     ],
                 ],

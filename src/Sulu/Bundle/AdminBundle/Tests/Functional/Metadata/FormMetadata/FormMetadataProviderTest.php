@@ -53,6 +53,27 @@ class FormMetadataProviderTest extends KernelTestCase
         $this->assertCount(1, \array_keys($schema));
     }
 
+    public function testGetMetadataWithNestedPropertyNames(): void
+    {
+        $form = $this->formMetadataProvider->getMetadata('form_with_nested_schema', 'en');
+        $this->assertInstanceOf(FormMetadata::class, $form);
+
+        $schema = $form->getSchema()->toJsonSchema();
+
+        $properties = $schema['properties'];
+        $this->assertIsArray($properties);
+
+        $settings = $properties['settings'];
+        $this->assertIsArray($settings);
+        $this->assertSame('object', $settings['type']);
+        $this->assertSame(['title'], $settings['required']);
+
+        $settingsProperties = $settings['properties'];
+        $this->assertIsArray($settingsProperties);
+        $this->assertArrayHasKey('title', $settingsProperties);
+        $this->assertArrayHasKey('description', $settingsProperties);
+    }
+
     public function testGetMetadataWithExpression(): void
     {
         $form = $this->formMetadataProvider->getMetadata(
