@@ -442,7 +442,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_content.content_data_mapper'),
                 '%sulu.model.page.class%',
-                null, // TODO add security context for preview
+                null, // pages resolve their webspace context via SecuredEntityInterface
             ])
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu_preview.object_provider', ['provider-key' => 'pages']);

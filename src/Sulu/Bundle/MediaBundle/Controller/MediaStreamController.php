@@ -38,6 +38,21 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class MediaStreamController
 {
+    /**
+     * MIME types a browser renders as a document and would execute on the application
+     * origin (stored XSS), so they are forced to "attachment" instead of shown inline.
+     * SVG is omitted because uploads are sanitized by the default SvgFileInspector, and
+     * standalone scripts are omitted because they do not execute on top-level navigation.
+     *
+     * @var string[]
+     */
+    private const DANGEROUS_INLINE_MIME_TYPES = [
+        'text/html',
+        'application/xhtml+xml',
+        'text/xml',
+        'application/xml',
+    ];
+
     public function __construct(
         protected DispositionTypeResolver $dispositionTypeResolver,
         protected MediaRepositoryInterface $mediaRepository,
@@ -147,6 +162,7 @@ class MediaStreamController
         $storageType = $this->storage->getType($storageOptions);
 
         if (StorageInterface::TYPE_REMOTE === $storageType) {
+            // Remote storage redirects to the storage/CDN; the headers set below do not apply.
             $response = new RedirectResponse($this->storage->getPath($storageOptions), 302);
             $response->setPrivate();
 
@@ -170,16 +186,20 @@ class MediaStreamController
         $mimeType = $fileVersion->getMimeType();
         $lastModified = $fileVersion->getCreated(); // use created as file itself is not changed when entity is changed
 
+        $dangerousInlineMimeType = $this->isDangerousInlineMimeType($mimeType);
+
+        if ($dangerousInlineMimeType && ResponseHeaderBag::DISPOSITION_INLINE === $dispositionType) {
+            $dispositionType = ResponseHeaderBag::DISPOSITION_ATTACHMENT;
+        }
+
         $response = new BinaryFileResponse($storage->getPath($storageOptions));
 
-        // Prepare headers
         $disposition = $response->headers->makeDisposition(
             $dispositionType,
             $fileName,
             $this->cleanUpFileName($fileName, $locale, $fileVersion->getExtension())
         );
 
-        // Set headers for
         $file = $fileVersion->getFile();
         if ($file && $fileVersion->getVersion() !== $file->getVersion()) {
             $latestFileVersion = $file->getLatestFileVersion();
@@ -198,13 +218,28 @@ class MediaStreamController
             $response->headers->set('X-Robots-Tag', 'noindex, follow');
         }
 
-        // Set headers
         $response->headers->set('Content-Type', !empty($mimeType) ? $mimeType : 'application/octet-stream');
         $response->headers->set('Content-Disposition', $disposition);
         $response->headers->set('Content-length', $fileSize);
         $response->headers->set('Last-Modified', $lastModified->format('D, d M Y H:i:s \G\M\T'));
+        $response->headers->set('Content-Security-Policy', 'sandbox');
 
         return $response;
+    }
+
+    /**
+     * @param string|null $mimeType
+     */
+    private function isDangerousInlineMimeType($mimeType): bool
+    {
+        if (empty($mimeType)) {
+            return false;
+        }
+
+        // Strip a possible parameter (e.g. "text/html; charset=UTF-8") before matching.
+        $normalizedMimeType = \strtolower(\trim(\explode(';', $mimeType)[0]));
+
+        return \in_array($normalizedMimeType, self::DANGEROUS_INLINE_MIME_TYPES, true);
     }
 
     /**
