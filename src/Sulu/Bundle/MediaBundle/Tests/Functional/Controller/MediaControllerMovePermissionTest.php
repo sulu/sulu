@@ -126,10 +126,14 @@ class MediaControllerMovePermissionTest extends SuluTestCase
 
         $passwordHasherFactory = self::getContainer()->get('sulu_security.encoder_factory');
         if ($passwordHasherFactory instanceof PasswordHasherFactoryInterface) {
-            $user->setPassword($passwordHasherFactory->getPasswordHasher($user)->hash($username));
+            $hasher = $passwordHasherFactory->getPasswordHasher($user);
+            $password = $hasher->hash($username);
         } else {
-            $user->setPassword($passwordHasherFactory->getEncoder($user)->encodePassword($username, $user->getSalt()));
+            $encoder = $passwordHasherFactory->getEncoder($user);
+            $password = $encoder->encodePassword($username, $user->getSalt());
         }
+
+        $user->setPassword($password);
 
         $userRole = new UserRole();
         $userRole->setUser($user);

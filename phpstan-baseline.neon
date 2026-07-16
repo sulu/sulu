@@ -29827,6 +29827,18 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/FormatControllerTest.php
 
 		-
+			message: '#^Cannot call method encodePassword\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerMovePermissionTest.php
+
+		-
+			message: '#^Instanceof between Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactory and Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactoryInterface will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerMovePermissionTest.php
+
+		-
 			message: '#^Access to an undefined property object\:\:\$categories\.$#'
 			identifier: property.notFound
 			count: 1
@@ -46211,6 +46223,18 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Tests/Functional/Preview/Renderer/PreviewRendererTest.php
+
+		-
+			message: '#^Cannot call method encodePassword\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Bundle/PreviewBundle/Tests/Functional/UserInterface/Controller/PreviewLinkControllerPermissionTest.php
+
+		-
+			message: '#^Instanceof between Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactory and Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactoryInterface will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: src/Sulu/Bundle/PreviewBundle/Tests/Functional/UserInterface/Controller/PreviewLinkControllerPermissionTest.php
 
 		-
 			message: '#^Cannot access offset ''lastVisit'' on mixed\.$#'
@@ -71656,6 +71680,12 @@ parameters:
 			message: '#^Cannot call method getValue\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
+			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
+
+		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 2
 			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
 
 		-

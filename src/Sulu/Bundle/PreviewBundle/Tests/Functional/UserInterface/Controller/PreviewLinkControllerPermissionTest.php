@@ -22,6 +22,7 @@ use Sulu\Bundle\TestBundle\Kernel\SuluKernelBrowser;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 use function Symfony\Component\String\u;
 
@@ -226,8 +227,16 @@ class PreviewLinkControllerPermissionTest extends SuluTestCase
         $user->setSalt('');
         $user->setLocale('en');
 
-        $passwordHasher = static::getContainer()->get('sulu_security.encoder_factory')->getPasswordHasher($user);
-        $user->setPassword($passwordHasher->hash($username));
+        $passwordHasherFactory = static::getContainer()->get('sulu_security.encoder_factory');
+        if ($passwordHasherFactory instanceof PasswordHasherFactoryInterface) {
+            $hasher = $passwordHasherFactory->getPasswordHasher($user);
+            $password = $hasher->hash($username);
+        } else {
+            $encoder = $passwordHasherFactory->getEncoder($user);
+            $password = $encoder->encodePassword($username, $user->getSalt());
+        }
+
+        $user->setPassword($password);
 
         $userRole = new UserRole();
         $userRole->setUser($user);

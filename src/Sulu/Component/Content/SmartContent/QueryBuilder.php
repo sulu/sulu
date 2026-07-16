@@ -318,6 +318,8 @@ class QueryBuilder extends ContentQueryBuilder
 
     /**
      * build tags where clauses.
+     *
+     * @return string
      */
     protected function buildTagsWhere($tags, $operator, $languageCode)
     {
@@ -365,6 +367,8 @@ class QueryBuilder extends ContentQueryBuilder
 
     /**
      * build categories where clauses.
+     *
+     * @return string
      */
     protected function buildCategoriesWhere($categories, $operator, $languageCode)
     {
