@@ -165,9 +165,7 @@ class SchemaMetadataTest extends TestCase
     }
 
     /**
-     * PHP coerces numeric-string array keys to integers, so a zero-based group of segments forms a list which
-     * json_encode would serialize as a JSON array. This can only be caught on the encoded JSON, because the coercion
-     * already happens when the expected array literal is created.
+     * Asserted on the encoded JSON because the key coercion already happens in the expected array literal.
      */
     public function testNestedNumericPropertyNamesEncodeAsObject(): void
     {
@@ -186,9 +184,7 @@ class SchemaMetadataTest extends TestCase
     }
 
     /**
-     * A field type without a registered PropertyMetadataMapper has no schema metadata, so a group whose children all
-     * lack one has nothing to validate and has to be omitted like a flat property is. An empty group would encode as
-     * "options":[] - a JSON array where the "properties" keyword requires a schema object.
+     * Field types without a PropertyMetadataMapper have no schema, and an empty group would encode as "options":[].
      */
     public function testNestedPropertyNamesWithoutSchemaAreOmitted(): void
     {

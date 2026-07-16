@@ -48,8 +48,7 @@ class PropertiesMetadata implements SchemaMetadataInterface
         foreach ($this->properties as $property) {
             $name = $property->getName();
 
-            // a name with a slash (e.g. "attributes/1") describes a nested property; the first segment is grouped
-            // and the rest is handled recursively, so it ends up as a nested object in the JSON schema
+            // a slash in the name (e.g. "settings/title") denotes a nested object
             if (\str_contains($name, '/')) {
                 [$parent, $child] = \explode('/', $name, 2);
                 $nestedProperties[$parent][] = new PropertyMetadata(
@@ -96,14 +95,12 @@ class PropertiesMetadata implements SchemaMetadataInterface
         }
 
         if (!empty($properties)) {
-            // cast to object because PHP coerces numeric property names (e.g. "0", "1") to a list, which json_encode
-            // would serialize as a JSON array although the "properties" keyword of a JSON schema requires an object
+            // numeric names (e.g. "0", "1") form a PHP list, which json_encode would emit as a JSON array
             $jsonSchema['properties'] = \array_is_list($properties) ? (object) $properties : $properties;
         }
 
         if (!empty($required)) {
-            // cast to string because PHP coerces numeric property names to integer array keys, which would produce
-            // an invalid JSON schema (the "required" keyword only allows strings)
+            // PHP coerces numeric names to int keys, but "required" only allows strings
             $jsonSchema['required'] = \array_map('\strval', \array_keys($required));
         }
 

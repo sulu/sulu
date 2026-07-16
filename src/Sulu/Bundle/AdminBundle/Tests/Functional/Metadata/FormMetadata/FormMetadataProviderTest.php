@@ -60,7 +60,6 @@ class FormMetadataProviderTest extends KernelTestCase
 
         $schema = $form->getSchema()->toJsonSchema();
 
-        // a property name containing a "/" (e.g. "settings/title") is nested into an object instead of a literal key
         $properties = $schema['properties'];
         $this->assertIsArray($properties);
 

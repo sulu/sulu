@@ -29,8 +29,7 @@ function deepMerge(base: Object, override: Object): Object {
     return result;
 }
 
-// json-pointer creates an array when the next path segment is numeric; this creates objects instead, so that a
-// property whose name contains a numeric segment (e.g. "attributes/1") is stored as a nested object matching its schema
+// json-pointer creates an array when the next segment is numeric; the schema always expects an object
 function setNestedProperty(data: Object, key: string, value: mixed) {
     const tokens = key.split('/');
     let current = data;
