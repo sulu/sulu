@@ -73,7 +73,7 @@ class ValidateSelectionParamsPassTest extends TestCase
         $container = $this->createContainer([$dir]);
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('param "types" was renamed to "templateKeys"');
+        $this->expectExceptionMessage('param "types" is not supported, use "templateKeys"');
 
         (new ValidateSelectionParamsPass())->process($container);
     }
@@ -88,7 +88,7 @@ class ValidateSelectionParamsPassTest extends TestCase
         $container = $this->createContainer([$dir]);
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('param "types" was renamed to "templateKeys"');
+        $this->expectExceptionMessage('param "types" is not supported, use "templateKeys"');
 
         (new ValidateSelectionParamsPass())->process($container);
     }
@@ -103,7 +103,7 @@ class ValidateSelectionParamsPassTest extends TestCase
         $container = $this->createContainer([$dir]);
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('param "types" was renamed to "groups"');
+        $this->expectExceptionMessage('param "types" is not supported, use "groups"');
 
         (new ValidateSelectionParamsPass())->process($container);
     }
@@ -118,7 +118,7 @@ class ValidateSelectionParamsPassTest extends TestCase
         $container = $this->createContainer([$dir]);
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('param "templates" was renamed to "templateKeys"');
+        $this->expectExceptionMessage('param "templates" is not supported, use "templateKeys"');
 
         (new ValidateSelectionParamsPass())->process($container);
     }
@@ -133,7 +133,7 @@ class ValidateSelectionParamsPassTest extends TestCase
         $container = $this->createContainer([$dir]);
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('param "templates" was renamed to "templateKeys"');
+        $this->expectExceptionMessage('param "templates" is not supported, use "templateKeys"');
 
         (new ValidateSelectionParamsPass())->process($container);
     }
@@ -250,7 +250,7 @@ XML,
         $container = $this->createContainer([$dir]);
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('param "types" was renamed to "templateKeys"');
+        $this->expectExceptionMessage('param "types" is not supported, use "templateKeys"');
 
         (new ValidateSelectionParamsPass())->process($container);
     }
@@ -290,8 +290,8 @@ XML,
             $this->fail('Expected RuntimeException was not thrown.');
         } catch (\RuntimeException $e) {
             $message = $e->getMessage();
-            $this->assertStringContainsString('param "types" was renamed to "groups"', $message);
-            $this->assertStringContainsString('param "templates" was renamed to "templateKeys"', $message);
+            $this->assertStringContainsString('param "types" is not supported, use "groups"', $message);
+            $this->assertStringContainsString('param "templates" is not supported, use "templateKeys"', $message);
         }
     }
 
@@ -312,7 +312,7 @@ XML,
             $this->fail('Expected RuntimeException was not thrown.');
         } catch (\RuntimeException $e) {
             $message = $e->getMessage();
-            $this->assertStringContainsString('param "types" was renamed to "templateKeys"', $message);
+            $this->assertStringContainsString('param "types" is not supported, use "templateKeys"', $message);
             $this->assertStringContainsString('Key "my-form"', $message);
         }
     }
@@ -331,7 +331,7 @@ XML,
         $container->setParameter('sulu_admin.forms.directories', [$dir]);
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('param "types" was renamed to "templateKeys"');
+        $this->expectExceptionMessage('param "types" is not supported, use "templateKeys"');
 
         (new ValidateSelectionParamsPass())->process($container);
     }
@@ -352,7 +352,7 @@ XML,
         } catch (\RuntimeException $e) {
             $this->assertSame(
                 1,
-                \substr_count($e->getMessage(), 'param "types" was renamed to "templateKeys"'),
+                \substr_count($e->getMessage(), 'param "types" is not supported, use "templateKeys"'),
                 'The same file must not be reported twice when a directory is configured as both a template and a form directory.',
             );
         }

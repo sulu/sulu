@@ -26,30 +26,20 @@ use Symfony\Component\Finder\Finder;
 final class ValidateSelectionParamsPass implements CompilerPassInterface
 {
     /**
-     * Params which filtered correctly under their old name and were renamed.
+     * Outdated param names per selection field type, mapped to their replacement.
      *
      * @var array<string, array<string, string>>
      */
-    private const RENAMED_PARAMS = [
+    private const OUTDATED_PARAMS = [
         'snippet_selection' => ['types' => 'templateKeys'],
         'single_snippet_selection' => ['types' => 'templateKeys'],
         'article_selection' => ['types' => 'groups', 'templates' => 'templateKeys'],
         'single_article_selection' => ['types' => 'groups', 'templates' => 'templateKeys'],
-    ];
-
-    private const RENAMED_MESSAGE = '- Key "%s", property "%s": param "%s" was renamed to "%s" (file: %s)';
-
-    /**
-     * Params which were never read for these field types, but now have a working equivalent.
-     *
-     * @var array<string, array<string, string>>
-     */
-    private const UNSUPPORTED_PARAMS = [
         'page_selection' => ['types' => 'templateKeys'],
         'single_page_selection' => ['types' => 'templateKeys'],
     ];
 
-    private const UNSUPPORTED_MESSAGE = '- Key "%s", property "%s": param "%s" is not supported, use "%s" (file: %s)';
+    private const OUTDATED_MESSAGE = '- Key "%s", property "%s": param "%s" is not supported, use "%s" (file: %s)';
 
     private const TEMPLATE_NAMESPACE = 'http://schemas.sulu.io/template/template';
 
@@ -134,24 +124,11 @@ final class ValidateSelectionParamsPass implements CompilerPassInterface
         $keyNode = false !== $keyNodes ? $keyNodes->item(0) : null;
         $key = null !== $keyNode ? $keyNode->nodeValue ?? '' : '';
 
-        foreach (self::RENAMED_PARAMS as $fieldType => $replacements) {
+        foreach (self::OUTDATED_PARAMS as $fieldType => $replacements) {
             $this->collectErrorsForFieldType(
                 $xpath,
                 $fieldType,
                 $replacements,
-                self::RENAMED_MESSAGE,
-                $key,
-                $filePath,
-                $errors,
-            );
-        }
-
-        foreach (self::UNSUPPORTED_PARAMS as $fieldType => $replacements) {
-            $this->collectErrorsForFieldType(
-                $xpath,
-                $fieldType,
-                $replacements,
-                self::UNSUPPORTED_MESSAGE,
                 $key,
                 $filePath,
                 $errors,
@@ -167,7 +144,6 @@ final class ValidateSelectionParamsPass implements CompilerPassInterface
         \DOMXPath $xpath,
         string $fieldType,
         array $replacements,
-        string $messageFormat,
         string $key,
         string $filePath,
         array &$errors,
@@ -187,7 +163,7 @@ final class ValidateSelectionParamsPass implements CompilerPassInterface
                 }
 
                 $errors[] = \sprintf(
-                    $messageFormat,
+                    self::OUTDATED_MESSAGE,
                     $key,
                     $propertyName,
                     $name,
