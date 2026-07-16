@@ -25,11 +25,6 @@ use Symfony\Component\Finder\Finder;
  */
 final class ValidateSelectionParamsPass implements CompilerPassInterface
 {
-    /**
-     * Outdated param names per selection field type, mapped to their replacement.
-     *
-     * @var array<string, array<string, string>>
-     */
     private const OUTDATED_PARAMS = [
         'snippet_selection' => ['types' => 'templateKeys'],
         'single_snippet_selection' => ['types' => 'templateKeys'],
