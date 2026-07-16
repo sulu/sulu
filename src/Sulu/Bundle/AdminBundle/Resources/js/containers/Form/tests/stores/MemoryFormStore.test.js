@@ -618,3 +618,21 @@ test('Forbidden flag should always be set to false', () => {
 
     expect(memoryFormStore.forbidden).toEqual(false);
 });
+
+test('Store slash-named properties with a numeric segment as nested objects and validate them', () => {
+    const schema = {'attributes/1': {label: 'Attribute', type: 'text_line'}};
+    const jsonSchema = {
+        type: 'object',
+        properties: {attributes: {type: 'object', properties: {'1': {maximum: 10, type: 'number'}}}},
+    };
+
+    const memoryFormStore = new MemoryFormStore({}, schema, jsonSchema);
+    memoryFormStore.change('/attributes/1', 999);
+
+    // must stay an object (not a json-pointer array) so it matches the "type: object" schema and is validated
+    expect(Array.isArray(memoryFormStore.data.attributes)).toEqual(false);
+    expect(memoryFormStore.validate()).toEqual(false);
+    expect(memoryFormStore.errors.attributes[1]).toEqual(
+        {keyword: 'maximum', parameters: {comparison: '<=', limit: 10}}
+    );
+});

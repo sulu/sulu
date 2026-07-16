@@ -57,8 +57,11 @@ class Renderer extends React.Component<Props> {
         const {data, dataPath, errors, formInspector, onChange, onSuccess, router, showAllErrors, value} = this.props;
         const itemDataPath = dataPath + '/' + schemaKey;
 
-        const error = (showAllErrors || formInspector.isFieldModified(itemDataPath)) && errors && errors[schemaKey]
-            ? errors[schemaKey]
+        const schemaError = errors && jsonpointer.has(errors, '/' + schemaKey)
+            ? jsonpointer.get(errors, '/' + schemaKey)
+            : undefined;
+        const error = (showAllErrors || formInspector.isFieldModified(itemDataPath)) && schemaError
+            ? schemaError
             : undefined;
 
         return (

@@ -118,7 +118,7 @@
         },
         "clearMocks": true,
         "transformIgnorePatterns": [
-            "node_modules/(?!(@ckeditor|array-move|lodash-es|vanilla-colorful|color-parse|color-name|color-convert)/)"
+            "node_modules/(?!(@ckeditor|array-move|lodash-es|vanilla-colorful|color-parse|color-name|color-convert|sanitize-html|htmlparser2|domhandler|domutils|dom-serializer|domelementtype|entities)/)"
         ],
         "testPathIgnorePatterns": [
             "vendor/friendsofsymfony"
