@@ -31,6 +31,8 @@ class NavigationRepositoryLinkTest extends SuluTestCase
 
     private static string $internalLinkPageUuid;
 
+    private static string $mediaLinkPageUuid;
+
     /**
      * @return array<string, string>
      */
@@ -165,6 +167,79 @@ class NavigationRepositoryLinkTest extends SuluTestCase
                 ],
             ],
         ]);
+
+        // Created last so it cannot shift the positional indexes the tests above rely on.
+        $mediaLinkPage = self::createPage([
+            'en' => [
+                'live' => [
+                    'title' => 'Media Link Page',
+                    'url' => '/media-link',
+                    'template' => 'default',
+                    'navigationContexts' => ['main'],
+                    'linkOn' => true,
+                    'linkData' => [
+                        'href' => 999999,
+                        'provider' => 'media',
+                    ],
+                    'parentId' => $homepage->getId(),
+                ],
+            ],
+        ]);
+        self::$mediaLinkPageUuid = $mediaLinkPage->getUuid();
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $navigation
+     *
+     * @return array<string, mixed>|null
+     */
+    private function findByUuid(array $navigation, string $uuid): ?array
+    {
+        foreach ($navigation as $item) {
+            if ($uuid === ($item['uuid'] ?? null)) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
+    public function testGetNavigationFlatKeepsValidInternalLinkWhenUrlIsMappedToNestedProperty(): void
+    {
+        $properties = $this->getDefaultProperties();
+        unset($properties['url']);
+        $properties['link.url'] = 'url';
+
+        $navigation = $this->navigationRepository->getNavigationFlat(
+            'main',
+            'en',
+            'sulu-io',
+            null,
+            1,
+            $properties
+        );
+
+        $internalLinkNav = $this->findByUuid($navigation, self::$internalLinkPageUuid);
+        $this->assertNotNull($internalLinkNav, 'valid internal link was dropped when its url is mapped to a nested property');
+
+        /** @var array<string, mixed> $link */
+        $link = $internalLinkNav['link'];
+        $this->assertSame('/target-page', $link['url']);
+    }
+
+    public function testGetNavigationFlatExcludesLinkWithUnresolvableMediaTarget(): void
+    {
+        $navigation = $this->navigationRepository->getNavigationFlat(
+            'main',
+            'en',
+            'sulu-io',
+            null,
+            1,
+            $this->getDefaultProperties()
+        );
+
+        $uuids = \array_map(static fn (array $item) => $item['uuid'], $navigation);
+        $this->assertNotContains(self::$mediaLinkPageUuid, $uuids);
     }
 
     public function testGetNavigationFlat(): void
