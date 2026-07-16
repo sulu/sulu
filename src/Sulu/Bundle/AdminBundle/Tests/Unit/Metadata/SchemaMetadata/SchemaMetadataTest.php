@@ -185,6 +185,27 @@ class SchemaMetadataTest extends TestCase
         );
     }
 
+    /**
+     * A field type without a registered PropertyMetadataMapper has no schema metadata, so a group whose children all
+     * lack one has nothing to validate and has to be omitted like a flat property is. An empty group would encode as
+     * "options":[] - a JSON array where the "properties" keyword requires a schema object.
+     */
+    public function testNestedPropertyNamesWithoutSchemaAreOmitted(): void
+    {
+        $schema = new SchemaMetadata(
+            [
+                new PropertyMetadata('title', false, new StringMetadata()),
+                new PropertyMetadata('options/flag', false),
+                new PropertyMetadata('options/note', false),
+            ]
+        );
+
+        $this->assertJsonStringEqualsJsonString(
+            '{"type":"object","properties":{"title":{"type":"string"}}}',
+            (string) \json_encode($schema->toJsonSchema())
+        );
+    }
+
     public function testNestedPropertyNamesKeepFieldConstraints(): void
     {
         $schema = new SchemaMetadata(

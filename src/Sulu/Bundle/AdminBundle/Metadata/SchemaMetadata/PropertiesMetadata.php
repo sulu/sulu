@@ -72,7 +72,10 @@ class PropertiesMetadata implements SchemaMetadataInterface
         }
 
         foreach ($nestedProperties as $parent => $childProperties) {
-            $properties[$parent] = (new self($childProperties))->buildJsonSchema(true);
+            $nestedSchema = (new self($childProperties))->buildJsonSchema(true);
+            if ($nestedSchema) {
+                $properties[$parent] = $nestedSchema;
+            }
         }
 
         return $this->assembleJsonSchema($properties, $required, $includeType);
