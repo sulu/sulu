@@ -189,7 +189,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
     }
 
     /**
-     * @param array<int, array<string, mixed>> $navigation
+     * @param array<string, mixed>[] $navigation
      *
      * @return array<string, mixed>|null
      */
