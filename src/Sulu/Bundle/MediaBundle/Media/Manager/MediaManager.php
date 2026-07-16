@@ -713,6 +713,19 @@ class MediaManager implements MediaManagerInterface
         $previousCollectionTitle = $previousCollectionMeta ? $previousCollectionMeta->getTitle() : null;
         $previousCollectionTitleLocale = $previousCollectionMeta ? $previousCollectionMeta->getLocale() : null;
 
+        if (null !== $this->securityChecker) {
+            // check the real source collection, not the collection sent in the request,
+            // and the destination the media is moved into
+            $this->securityChecker->checkPermission(
+                new SecurityCondition('sulu.media.collections', null, Collection::class, $previousCollectionId),
+                PermissionTypes::EDIT
+            );
+            $this->securityChecker->checkPermission(
+                new SecurityCondition('sulu.media.collections', null, Collection::class, $destCollection),
+                PermissionTypes::EDIT
+            );
+        }
+
         /** @var CollectionInterface $collection */
         $collection = $this->em->getReference(CollectionInterface::class, $destCollection);
         $mediaEntity->setCollection($collection);
