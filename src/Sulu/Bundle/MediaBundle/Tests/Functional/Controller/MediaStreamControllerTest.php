@@ -206,6 +206,60 @@ class MediaStreamControllerTest extends WebsiteTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
+    public function testDownloadActionAddsSecurityHeaders(): void
+    {
+        $filePath = $this->createMediaFile('test.jpg');
+        $media = $this->createMedia($filePath, 'test.jpg');
+
+        $this->client->request('GET', $media->getUrl());
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertStringStartsWith('attachment', (string) $response->headers->get('Content-Disposition'));
+        $this->assertSame('sandbox', $response->headers->get('Content-Security-Policy'));
+    }
+
+    public function testDownloadActionServesBenignTypeInlineWhenRequested(): void
+    {
+        $filePath = $this->createMediaFile('test.jpg');
+        $media = $this->createMedia($filePath, 'test.jpg');
+
+        $this->client->request('GET', $media->getUrl() . '&inline=1');
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertStringStartsWith('inline', (string) $response->headers->get('Content-Disposition'));
+        $this->assertSame('sandbox', $response->headers->get('Content-Security-Policy'));
+    }
+
+    public function testDownloadActionForcesHtmlToAttachmentEvenWhenInlineRequested(): void
+    {
+        $filePath = $this->createMediaFile('test.html', 'test.html');
+        $media = $this->createMedia($filePath, 'test.html');
+
+        $this->client->request('GET', $media->getUrl() . '&inline=1');
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertStringStartsWith('text/html', (string) $response->headers->get('Content-Type'));
+        $this->assertStringStartsWith('attachment', (string) $response->headers->get('Content-Disposition'));
+        $this->assertSame('sandbox', $response->headers->get('Content-Security-Policy'));
+    }
+
+    public function testDownloadActionServesSanitizedSvgInlineWhenRequested(): void
+    {
+        $filePath = $this->createMediaFile('test.svg', 'sulu.svg');
+        $media = $this->createMedia($filePath, 'test.svg');
+
+        $this->client->request('GET', $media->getUrl() . '&inline=1');
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertSame('image/svg+xml', $response->headers->get('Content-Type'));
+        $this->assertStringStartsWith('inline', (string) $response->headers->get('Content-Disposition'));
+        $this->assertSame('sandbox', $response->headers->get('Content-Security-Policy'));
+    }
+
     private function createUploadedFile(string $path): UploadedFile
     {
         /** @var string $mimeType */
