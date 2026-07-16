@@ -70,20 +70,20 @@ final class ArticleController implements SecuredControllerInterface
 
     public function cgetAction(Request $request): Response
     {
-        $typesParam = $request->get('types', '');
-        $types = \array_filter(\explode(',', \is_string($typesParam) ? $typesParam : ''));
+        $groupsParam = $request->query->getString('groups', '');
+        $groupIdentifiers = \array_filter(\explode(',', $groupsParam));
 
         $groupTemplates = [];
         $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
         foreach ($groups as $group) {
-            if (\in_array($group->identifier, $types)) {
+            if (\in_array($group->identifier, $groupIdentifiers)) {
                 $groupTemplates = \array_merge($groupTemplates, $group->templates);
             }
         }
 
-        $templatesParam = $request->get('templates', '');
-        $templates = \array_filter(\explode(',', \is_string($templatesParam) ? $templatesParam : ''));
-        $templates = \array_unique(\array_merge($templates, $groupTemplates));
+        $templateKeysParam = $request->query->getString('templateKeys', '');
+        $templateKeys = \array_filter(\explode(',', $templateKeysParam));
+        $templateKeys = \array_unique(\array_merge($templateKeys, $groupTemplates));
 
         // TODO this should be ArticleRepository::findFlatBy / ::countFlatBy methods
         //      but first we would need to avoid that the restHelper requires the request.
@@ -114,8 +114,8 @@ final class ArticleController implements SecuredControllerInterface
             $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);
         }
         $listBuilder->setParameter('locale', $this->getLocale($request));
-        if (0 !== \count($templates)) {
-            $listBuilder->in($fieldDescriptors['templateKey'], $templates);
+        if (0 !== \count($templateKeys)) {
+            $listBuilder->in($fieldDescriptors['templateKey'], $templateKeys);
         }
 
         $listRepresentation = new PaginatedRepresentation(

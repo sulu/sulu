@@ -104,17 +104,17 @@ final class SnippetController implements SecuredControllerInterface
         }
         $listBuilder->setParameter('locale', $this->getLocale($request));
 
-        $typesParam = $request->query->get('types');
-        $types = \array_filter(\explode(',', \is_string($typesParam) ? $typesParam : ''));
+        $templateKeysParam = $request->query->getString('templateKeys');
+        $templateKeys = \array_filter(\explode(',', $templateKeysParam));
 
-        if (0 !== \count($types)) {
-            $listBuilder->in($fieldDescriptors['templateKey'], $types);
+        if (0 !== \count($templateKeys)) {
+            $listBuilder->in($fieldDescriptors['templateKey'], $templateKeys);
         }
 
         $areasParam = $request->query->get('areas');
         if (null !== $areasParam) {
             $areas = \explode(',', (string) $areasParam);
-            $templateKeys = [];
+            $areaTemplateKeys = [];
             foreach ($areas as $area) {
                 if (!\array_key_exists($area, $this->snippetAreas)) {
                     continue;
@@ -124,11 +124,11 @@ final class SnippetController implements SecuredControllerInterface
                 if (empty($templateKey)) {
                     continue;
                 }
-                $templateKeys[] = $templateKey;
+                $areaTemplateKeys[] = $templateKey;
             }
 
-            if (!empty($templateKeys)) {
-                $listBuilder->in($fieldDescriptors['templateKey'], $templateKeys);
+            if (!empty($areaTemplateKeys)) {
+                $listBuilder->in($fieldDescriptors['templateKey'], $areaTemplateKeys);
             }
         }
 
