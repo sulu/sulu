@@ -82,7 +82,7 @@ final class MetadataLoader
         }
 
         if ($reflection->implementsInterface(TemplateInterface::class)) {
-            $this->addField($metadata, 'templateKey', 'string', ['length' => 31]);
+            $this->addField($metadata, 'templateKey', 'string', ['length' => 64]);
             $this->addField($metadata, 'templateData', 'json', ['nullable' => false, 'options' => ['jsonb' => true]]);
 
             $this->addIndex($metadata, 'template_key', ['templateKey']);

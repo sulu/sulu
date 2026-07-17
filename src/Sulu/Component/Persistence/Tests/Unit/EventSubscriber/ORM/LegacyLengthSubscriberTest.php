@@ -16,8 +16,10 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\FieldMapping;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Article\Domain\Model\ArticleDimensionContentAdditionalWebspace;
 use Sulu\Component\Persistence\EventSubscriber\ORM\LegacyLengthSubscriber;
 use Sulu\Page\Domain\Model\Page;
+use Sulu\Page\Domain\Model\PageDimensionContentNavigationContext;
 use Sulu\Route\Domain\Model\Route;
 
 class LegacyLengthSubscriberTest extends TestCase
@@ -31,32 +33,74 @@ class LegacyLengthSubscriberTest extends TestCase
         $this->subscriber = new LegacyLengthSubscriber();
     }
 
-    public function testLoadClassMetadataWidensConfiguredLegacyFields(): void
+    public function testLoadClassMetadataShrinksRouteWebspaceField(): void
     {
         $metadata = new ClassMetadata(Route::class);
         $metadata->mapField([
             'fieldName' => 'webspace',
             'type' => 'string',
-            'length' => 31,
+            'length' => 32,
         ]);
 
         $this->subscriber->loadClassMetadata($this->createEvent($metadata));
 
-        $this->assertSame(32, $this->getFieldLength($metadata->fieldMappings['webspace']));
+        $this->assertSame(31, $this->getFieldLength($metadata->fieldMappings['webspace']));
     }
 
-    public function testLoadClassMetadataWidensTemplateKeyField(): void
+    public function testLoadClassMetadataShrinksPageWebspaceKeyField(): void
+    {
+        $metadata = new ClassMetadata(Page::class);
+        $metadata->mapField([
+            'fieldName' => 'webspaceKey',
+            'type' => 'string',
+            'length' => 64,
+        ]);
+
+        $this->subscriber->loadClassMetadata($this->createEvent($metadata));
+
+        $this->assertSame(31, $this->getFieldLength($metadata->fieldMappings['webspaceKey']));
+    }
+
+    public function testLoadClassMetadataShrinksNavigationContextField(): void
+    {
+        $metadata = new ClassMetadata(PageDimensionContentNavigationContext::class);
+        $metadata->mapField([
+            'fieldName' => 'navigationContext',
+            'type' => 'string',
+            'length' => 64,
+        ]);
+
+        $this->subscriber->loadClassMetadata($this->createEvent($metadata));
+
+        $this->assertSame(31, $this->getFieldLength($metadata->fieldMappings['navigationContext']));
+    }
+
+    public function testLoadClassMetadataShrinksAdditionalWebspaceField(): void
+    {
+        $metadata = new ClassMetadata(ArticleDimensionContentAdditionalWebspace::class);
+        $metadata->mapField([
+            'fieldName' => 'additionalWebspace',
+            'type' => 'string',
+            'length' => 64,
+        ]);
+
+        $this->subscriber->loadClassMetadata($this->createEvent($metadata));
+
+        $this->assertSame(31, $this->getFieldLength($metadata->fieldMappings['additionalWebspace']));
+    }
+
+    public function testLoadClassMetadataShrinksTemplateKeyField(): void
     {
         $metadata = new ClassMetadata(Page::class);
         $metadata->mapField([
             'fieldName' => 'templateKey',
             'type' => 'string',
-            'length' => 31,
+            'length' => 64,
         ]);
 
         $this->subscriber->loadClassMetadata($this->createEvent($metadata));
 
-        $this->assertSame(64, $this->getFieldLength($metadata->fieldMappings['templateKey']));
+        $this->assertSame(31, $this->getFieldLength($metadata->fieldMappings['templateKey']));
     }
 
     /**

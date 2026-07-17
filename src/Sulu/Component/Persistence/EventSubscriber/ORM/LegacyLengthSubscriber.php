@@ -14,7 +14,8 @@ namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 
 /**
- * Restores legacy field lengths for installations that still run the older database schema.
+ * Shrinks field lengths back down to the pre-3.x column widths for installations whose
+ * database schema has not yet been migrated to the new, longer default column lengths.
  *
  * @internal
  */
@@ -24,10 +25,10 @@ class LegacyLengthSubscriber
      * @var array<string, array<string, int>>
      */
     private const LEGACY_FIELD_LENGTHS = [
-        'Sulu\Route\Domain\Model\Route' => ['webspace' => 32],
-        'Sulu\Page\Domain\Model\Page' => ['webspaceKey' => 64],
-        'Sulu\Page\Domain\Model\PageDimensionContentNavigationContext' => ['navigationContext' => 64],
-        'Sulu\Article\Domain\Model\ArticleDimensionContentAdditionalWebspace' => ['additionalWebspace' => 64],
+        'Sulu\Route\Domain\Model\Route' => ['webspace' => 31],
+        'Sulu\Page\Domain\Model\Page' => ['webspaceKey' => 31],
+        'Sulu\Page\Domain\Model\PageDimensionContentNavigationContext' => ['navigationContext' => 31],
+        'Sulu\Article\Domain\Model\ArticleDimensionContentAdditionalWebspace' => ['additionalWebspace' => 31],
     ];
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $event): void
@@ -38,7 +39,7 @@ class LegacyLengthSubscriber
         $fieldLengths = self::LEGACY_FIELD_LENGTHS[$className] ?? [];
 
         if ($metadata->hasField('templateKey')) {
-            $fieldLengths['templateKey'] = 64;
+            $fieldLengths['templateKey'] = 31;
         }
 
         foreach ($fieldLengths as $fieldName => $length) {
