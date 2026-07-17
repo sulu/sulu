@@ -143,7 +143,7 @@ class ArticleAdmin extends Admin
                 ->addListAdapters(['table'])
                 ->setTabTitle($group->title)
                 ->addLocales($locales)
-                ->addRequestParameters(['templates' => \implode(',', $group->templates)])
+                ->addRequestParameters(['templateKeys' => \implode(',', $group->templates)])
                 ->setDefaultLocale($locales[0] ?? '')
                 ->setAddView(static::ADD_TABS_VIEW . '_' . $groupIdentifier)
                 ->setEditView(static::EDIT_TABS_VIEW . '_' . $groupIdentifier)

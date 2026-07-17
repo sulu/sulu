@@ -375,6 +375,12 @@ class Selection extends React.Component<Props> {
                 types: {
                     value: types,
                 } = {},
+                templateKeys: {
+                    value: templateKeys,
+                } = {},
+                groups: {
+                    value: groups,
+                } = {},
                 item_disabled_condition: {
                     value: itemDisabledCondition,
                 } = {},
@@ -389,6 +395,14 @@ class Selection extends React.Component<Props> {
 
         if (types !== undefined && typeof types !== 'string') {
             throw new Error('The "types" schema option must be a string if given!');
+        }
+
+        if (templateKeys !== undefined && typeof templateKeys !== 'string') {
+            throw new Error('The "templateKeys" schema option must be a string if given!');
+        }
+
+        if (groups !== undefined && typeof groups !== 'string') {
+            throw new Error('The "groups" schema option must be a string if given!');
         }
 
         if (itemDisabledCondition !== undefined && typeof itemDisabledCondition !== 'string') {
@@ -410,6 +424,12 @@ class Selection extends React.Component<Props> {
         const options = {...this.requestOptions};
         if (types) {
             options.types = types;
+        }
+        if (templateKeys) {
+            options.templateKeys = templateKeys;
+        }
+        if (groups) {
+            options.groups = groups;
         }
 
         return (

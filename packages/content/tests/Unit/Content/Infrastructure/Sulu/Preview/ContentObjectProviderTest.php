@@ -29,6 +29,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\PreviewBundle\Preview\PreviewContext;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
+use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapperInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
@@ -365,9 +366,71 @@ class ContentObjectProviderTest extends TestCase
     {
         $previewContext = new PreviewContext('123-123-123', 'e ');
 
+        $this->entityManager->find(Argument::cetera())->shouldNotBeCalled();
+
         $this->assertSame(
             ExampleAdmin::SECURITY_CONTEXT,
             $this->contentObjectProvider->getSecurityContext($previewContext)
+        );
+    }
+
+    public function testGetSecurityContextOfSecuredEntity(): void
+    {
+        $previewContext = new PreviewContext('123-123-123', 'en');
+
+        $securedEntity = $this->prophesize(ContentRichEntityInterface::class);
+        $securedEntity->willImplement(SecuredEntityInterface::class);
+        $securedEntity->getSecurityContext()->willReturn('sulu.webspaces.sulu_io');
+
+        $this->entityManager->find(Example::class, '123-123-123')
+            ->willReturn($securedEntity->reveal())
+            ->shouldBeCalledTimes(1);
+
+        $this->assertSame(
+            'sulu.webspaces.sulu_io',
+            $this->createContentObjectProviderWithoutSecurityContext()->getSecurityContext($previewContext)
+        );
+    }
+
+    public function testGetSecurityContextOfUnsecuredEntityWithoutSecurityContext(): void
+    {
+        $previewContext = new PreviewContext('123-123-123', 'en');
+
+        $this->entityManager->find(Example::class, '123-123-123')
+            ->willReturn(new Example())
+            ->shouldBeCalledTimes(1);
+
+        $this->assertNull(
+            $this->createContentObjectProviderWithoutSecurityContext()->getSecurityContext($previewContext)
+        );
+    }
+
+    public function testGetSecurityContextWithoutId(): void
+    {
+        $previewContext = new PreviewContext(null, 'en');
+
+        $this->entityManager->find(Argument::cetera())->shouldNotBeCalled();
+
+        $this->assertNull(
+            $this->createContentObjectProviderWithoutSecurityContext()->getSecurityContext($previewContext)
+        );
+    }
+
+    /**
+     * @return ContentObjectProvider<ExampleDimensionContent, Example>
+     */
+    private function createContentObjectProviderWithoutSecurityContext(): ContentObjectProvider
+    {
+        $container = new Container();
+        $container->set('form', $this->formMetadataProvider->reveal());
+
+        return new ContentObjectProvider(
+            new MetadataProviderRegistry($container),
+            $this->entityManager->reveal(),
+            $this->contentAggregator->reveal(),
+            $this->contentDataMapper->reveal(),
+            Example::class,
+            null
         );
     }
 
