@@ -11,7 +11,7 @@ export default class SaveToolbarAction extends AbstractFormToolbarAction {
             options: submitOptions,
         } = this.options;
 
-        const {dirty, saving} = this.resourceFormStore;
+        const {saving} = this.resourceFormStore;
 
         if (typeof label !== 'string') {
             throw new Error('The "label" option must be a string!');
@@ -25,7 +25,7 @@ export default class SaveToolbarAction extends AbstractFormToolbarAction {
 
         if (visibleConditionFulfilled) {
             return {
-                disabled: !dirty,
+                disabled: this.isDisabled(),
                 icon: 'su-save',
                 label: translate(label),
                 loading: saving,
@@ -35,5 +35,11 @@ export default class SaveToolbarAction extends AbstractFormToolbarAction {
                 type: 'button',
             };
         }
+    }
+
+    isDisabled(): boolean {
+        const disabled = super.isDisabled();
+
+        return disabled || !this.resourceFormStore.dirty;
     }
 }

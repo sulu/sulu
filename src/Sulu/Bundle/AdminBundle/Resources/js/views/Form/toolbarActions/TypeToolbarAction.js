@@ -1,5 +1,4 @@
 // @flow
-import jexl from 'jexl';
 import React from 'react';
 import {observable, action} from 'mobx';
 import Dialog from '../../../components/Dialog';
@@ -18,15 +17,12 @@ export default class TypeToolbarAction extends AbstractFormToolbarAction {
         }
 
         const {
-            disabled_condition: disabledCondition,
             sort_by: sortBy,
         } = this.options;
 
         if (sortBy !== undefined && typeof sortBy !== 'string') {
             throw new Error('The "sort_by" option must be a string if given!');
         }
-
-        const isDisabled = disabledCondition ? jexl.evalSync(disabledCondition, this.conditionData) : false;
 
         const sortedTypes = sortBy
             ? formTypes.sort((t1, t2) => String(t1[sortBy]).localeCompare(String(t2[sortBy])))
@@ -48,7 +44,7 @@ export default class TypeToolbarAction extends AbstractFormToolbarAction {
             }),
             loading: this.resourceFormStore.typesLoading,
             value: this.resourceFormStore.type,
-            disabled: isDisabled,
+            disabled: this.isDisabled(),
             options: sortedTypes.map((type) => ({
                 value: type.key,
                 label: type.title,

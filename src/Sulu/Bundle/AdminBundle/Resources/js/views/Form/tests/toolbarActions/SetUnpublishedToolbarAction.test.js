@@ -93,6 +93,20 @@ test('Return enabled item config', () => {
     }));
 });
 
+test('Return item config with disabled_condition is met', () => {
+    const setUnpublishedToolbarAction = createSetUnpublishedToolbarAction(
+        {disabled_condition: 'true == true'}
+    );
+    setUnpublishedToolbarAction.resourceFormStore.resourceStore.id = 5;
+    setUnpublishedToolbarAction.resourceFormStore.resourceStore.data.published = true;
+    setUnpublishedToolbarAction.resourceFormStore.resourceStore.data.publishedState = false;
+
+    expect(setUnpublishedToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        disabled: true,
+        label: 'sulu_page.unpublish',
+    }));
+});
+
 test('Return item config if passed visible_condition is met', () => {
     const setUnpublishedToolbarAction = createSetUnpublishedToolbarAction({visible_condition: '_permission.edit'});
     setUnpublishedToolbarAction.resourceFormStore.resourceStore.data._permission = {edit: true};
