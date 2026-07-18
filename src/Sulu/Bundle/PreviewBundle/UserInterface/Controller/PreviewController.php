@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\PreviewBundle\UserInterface\Controller;
 
 use Sulu\Bundle\PreviewBundle\Preview\Preview;
-use Sulu\Component\Rest\RequestParametersTrait;
+use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,8 +26,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class PreviewController
 {
-    use RequestParametersTrait;
-
     public function __construct(
         private Preview $preview,
         private TokenStorageInterface $tokenStorage,
@@ -37,8 +35,8 @@ class PreviewController
 
     public function startAction(Request $request): Response
     {
-        $id = $this->getRequestParameter($request, 'id', true);
-        $provider = $this->getRequestParameter($request, 'provider', true);
+        $id = $request->query->getString('id') ?: throw new MissingParameterException(self::class, 'id');
+        $provider = $request->query->getString('provider') ?: throw new MissingParameterException(self::class, 'provider');
         $options = $this->getOptionsFromRequest($request);
 
         return new JsonResponse(
@@ -50,9 +48,9 @@ class PreviewController
 
     public function renderAction(Request $request): Response
     {
-        $provider = $this->getRequestParameter($request, 'provider', true);
-        $id = $this->getRequestParameter($request, 'id', true);
-        $token = $this->getRequestParameter($request, 'token', true);
+        $provider = $request->query->getString('provider') ?: throw new MissingParameterException(self::class, 'provider');
+        $id = $request->query->getString('id') ?: throw new MissingParameterException(self::class, 'id');
+        $token = $request->query->getString('token') ?: throw new MissingParameterException(self::class, 'token');
 
         $options = $this->getOptionsFromRequest($request);
 
@@ -69,11 +67,18 @@ class PreviewController
 
     public function updateAction(Request $request): Response
     {
-        $provider = $this->getRequestParameter($request, 'provider', true);
-        $id = $this->getRequestParameter($request, 'id', true);
-        $token = $this->getRequestParameter($request, 'token', true);
+        $provider = $request->query->getString('provider') ?: throw new MissingParameterException(self::class, 'provider');
+        $id = $request->query->getString('id') ?: throw new MissingParameterException(self::class, 'id');
+        $token = $request->query->getString('token') ?: throw new MissingParameterException(self::class, 'token');
+
+        $payload = $request->getPayload();
+
+        if (!$payload->has('data')) {
+            throw new MissingParameterException(self::class, 'data');
+        }
+
         /** @var array<string, mixed> $data */
-        $data = (array) $this->getRequestParameter($request, 'data', true);
+        $data = $payload->all('data');
 
         $options = $this->getOptionsFromRequest($request);
 
@@ -92,13 +97,25 @@ class PreviewController
 
     public function updateContextAction(Request $request): Response
     {
-        $id = $this->getRequestParameter($request, 'id', true);
-        $provider = $this->getRequestParameter($request, 'provider', true);
-        $token = $this->getRequestParameter($request, 'token', true);
+        $provider = $request->query->getString('provider') ?: throw new MissingParameterException(self::class, 'provider');
+        $id = $request->query->getString('id') ?: throw new MissingParameterException(self::class, 'id');
+        $token = $request->query->getString('token') ?: throw new MissingParameterException(self::class, 'token');
+
+        $payload = $request->getPayload();
+
+        if (!$payload->has('context')) {
+            throw new MissingParameterException(self::class, 'context');
+        }
+
+        if (!$payload->has('data')) {
+            throw new MissingParameterException(self::class, 'data');
+        }
+
         /** @var array<string, mixed> $context */
-        $context = (array) $this->getRequestParameter($request, 'context', true);
+        $context = $payload->all('context');
+
         /** @var array<string, mixed> $data */
-        $data = $this->getRequestParameter($request, 'data', true);
+        $data = $payload->all('data');
 
         $options = $this->getOptionsFromRequest($request);
 
@@ -118,7 +135,9 @@ class PreviewController
 
     public function stopAction(Request $request): Response
     {
-        $this->preview->stop($this->getRequestParameter($request, 'token', true));
+        $token = $request->query->getString('token') ?: throw new MissingParameterException(self::class, 'token');
+
+        $this->preview->stop($token);
 
         return new JsonResponse();
     }

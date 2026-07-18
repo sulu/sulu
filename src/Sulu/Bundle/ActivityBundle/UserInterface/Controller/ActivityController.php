@@ -24,7 +24,6 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
-use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -37,8 +36,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ActivityController extends AbstractRestController implements SecuredControllerInterface
 {
-    use RequestParametersTrait;
-
     /**
      * @param class-string $activityClass
      * @param array<string, int> $permissions Inject `sulu_security.permissions` parameter
@@ -83,11 +80,11 @@ class ActivityController extends AbstractRestController implements SecuredContro
         $translationLocale = $user->getLocale();
 
         /** @var string|null $resourceLocale */
-        $resourceLocale = $this->getRequestParameter($request, 'locale');
+        $resourceLocale = $this->getLocale($request);
         /** @var string|null $resourceId */
-        $resourceId = $this->getRequestParameter($request, 'resourceId');
+        $resourceId = $request->query->get('resourceId');
         /** @var string|null $resourceKey */
-        $resourceKey = $this->getRequestParameter($request, 'resourceKey');
+        $resourceKey = $request->query->get('resourceKey');
 
         $this->addResourceSecurityContextCondition($listBuilder, $fieldDescriptors, $user);
         $this->addResourceObjectSecurityCondition($listBuilder, $fieldDescriptors, $user);

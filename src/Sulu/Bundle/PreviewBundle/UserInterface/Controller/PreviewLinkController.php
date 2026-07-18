@@ -17,7 +17,6 @@ use Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -27,8 +26,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class PreviewLinkController extends AbstractRestController
 {
-    use RequestParametersTrait;
-
     public function __construct(
         private PreviewLinkRepositoryInterface $previewLinkRepository,
         private PreviewLinkManagerInterface $previewLinkManager,
@@ -40,8 +37,8 @@ class PreviewLinkController extends AbstractRestController
 
     public function getAction(Request $request, string $resourceId): Response
     {
-        $resourceKey = $this->getRequestParameter($request, 'resourceKey', true);
-        $locale = $this->getRequestParameter($request, 'locale', true);
+        $resourceKey = $request->query->getString('resourceKey') ?: throw new MissingParameterException(self::class, 'resourceKey');
+        $locale = $this->getLocale($request) ?: throw new MissingParameterException(self::class, 'locale');
 
         $previewLink = $this->previewLinkRepository->findByResource($resourceKey, $resourceId, $locale);
         if (!$previewLink) {
@@ -54,12 +51,12 @@ class PreviewLinkController extends AbstractRestController
     public function postTriggerAction(Request $request, string $resourceId): Response
     {
         $action = $request->query->getString('action') ?: throw new MissingParameterException(self::class, 'action');
+        $resourceKey = $request->query->getString('resourceKey') ?: throw new MissingParameterException(self::class, 'resourceKey');
+        $locale = $this->getLocale($request) ?: throw new MissingParameterException(self::class, 'locale');
 
         try {
             switch ($action) {
                 case 'generate':
-                    $resourceKey = $this->getRequestParameter($request, 'resourceKey', true);
-                    $locale = $this->getRequestParameter($request, 'locale', true);
                     $options = $request->query->all();
                     unset($options['action'], $options['resourceKey'], $options['provider'], $options['locale']);
 
@@ -67,9 +64,6 @@ class PreviewLinkController extends AbstractRestController
 
                     return $this->handleView($this->view($previewLink, 201));
                 case 'revoke':
-                    $resourceKey = $this->getRequestParameter($request, 'resourceKey', true);
-                    $locale = $this->getRequestParameter($request, 'locale', true);
-
                     $this->previewLinkManager->revoke($resourceKey, $resourceId, $locale);
 
                     return $this->handleView($this->view(null, 204));

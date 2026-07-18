@@ -21,11 +21,15 @@ use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserControllerTest extends SuluTestCase
 {
+    use AssertSnapshotTrait;
+
     /**
      * @var EntityManager
      */
@@ -274,6 +278,7 @@ class UserControllerTest extends SuluTestCase
             ]
         );
 
+        $this->assertResponseIsSuccessful();
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
@@ -336,6 +341,7 @@ class UserControllerTest extends SuluTestCase
             '/api/users/' . $response->id
         );
 
+        $this->assertResponseIsSuccessful();
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
@@ -368,10 +374,12 @@ class UserControllerTest extends SuluTestCase
                 ],
             ]
         );
-        $response = \json_decode($this->client->getResponse()->getContent());
 
-        $this->assertHttpStatusCode(400, $this->client->getResponse());
-        $this->assertStringContainsString('username', $response->message);
+        $this->assertResponseSnapshot(
+            'user_post_missing_username.json',
+            $this->client->getResponse(),
+            Response::HTTP_BAD_REQUEST,
+        );
     }
 
     public function testPostWithMissingPassword(): void
@@ -398,10 +406,11 @@ class UserControllerTest extends SuluTestCase
                 ],
             ]
         );
-        $response = \json_decode($this->client->getResponse()->getContent());
-
-        $this->assertHttpStatusCode(400, $this->client->getResponse());
-        $this->assertStringContainsString('password', $response->message);
+        $this->assertResponseSnapshot(
+            'user_post_missing_password.json',
+            $this->client->getResponse(),
+            Response::HTTP_BAD_REQUEST,
+        );
     }
 
     public function testPostWithNotUniqueEmail(): void
@@ -619,6 +628,7 @@ class UserControllerTest extends SuluTestCase
                 'locale' => 'en',
             ]
         );
+        $this->assertResponseIsSuccessful();
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('en', $response->locale);
 
@@ -633,6 +643,8 @@ class UserControllerTest extends SuluTestCase
                 'username' => 'newusername',
             ]
         );
+
+        $this->assertResponseIsSuccessful();
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('newusername', $response->username);
 
@@ -652,6 +664,7 @@ class UserControllerTest extends SuluTestCase
             'GET',
             '/api/users/' . $this->user1->getId()
         );
+        $this->assertResponseIsSuccessful();
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('en', $response->locale);
