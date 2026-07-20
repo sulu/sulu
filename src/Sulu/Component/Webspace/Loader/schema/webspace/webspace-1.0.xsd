@@ -96,7 +96,7 @@
         <xs:attribute name="key" use="required">
             <xs:simpleType>
                 <xs:restriction base="xs:string">
-                    <xs:maxLength value="31"/>
+                    <xs:maxLength value="64"/>
                     <xs:pattern value="[a-z0-9_-]+"/>
                 </xs:restriction>
             </xs:simpleType>
