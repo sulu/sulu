@@ -276,11 +276,25 @@ class SingleSelection extends React.Component<Props>
                 types: {
                     value: types,
                 } = {},
+                templateKeys: {
+                    value: templateKeys,
+                } = {},
+                groups: {
+                    value: groups,
+                } = {},
             } = {},
         } = this.props;
 
         if (types !== undefined && typeof types !== 'string') {
             throw new Error('The "types" schema option must be a string if given!');
+        }
+
+        if (templateKeys !== undefined && typeof templateKeys !== 'string') {
+            throw new Error('The "templateKeys" schema option must be a string if given!');
+        }
+
+        if (groups !== undefined && typeof groups !== 'string') {
+            throw new Error('The "groups" schema option must be a string if given!');
         }
 
         if (itemDisabledCondition !== undefined && typeof itemDisabledCondition !== 'string') {
@@ -310,7 +324,16 @@ class SingleSelection extends React.Component<Props>
             return currentOptions;
         }, {});
 
-        const typeOptions = types ? {types} : undefined;
+        const typeOptions = {};
+        if (types) {
+            typeOptions.types = types;
+        }
+        if (templateKeys) {
+            typeOptions.templateKeys = templateKeys;
+        }
+        if (groups) {
+            typeOptions.groups = groups;
+        }
 
         const listOptions = {
             ...this.requestOptions,

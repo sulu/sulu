@@ -2383,12 +2383,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/SchemaMetadata/ObjectMetadata.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\PropertiesMetadata\:\:toJsonSchema\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/SchemaMetadata/PropertiesMetadata.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\PropertyMetadata\:\:toJsonSchema\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1

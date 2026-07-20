@@ -19,6 +19,12 @@ interface RoutableInterface
 {
     public static function getResourceKey(): string;
 
+    /**
+     * Whether this resource requires a route. When false, the resource
+     * may be saved and published without a route.
+     */
+    public static function isRouteMandatory(): bool;
+
     public function getResourceId(): int|string;
 
     public function getLocale(): ?string;
