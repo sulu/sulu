@@ -173,6 +173,42 @@ class WebsitePageReindexContentEnhancerTest extends TestCase
         $this->assertSame(['Hello world'], $returnedData['content']);
     }
 
+    public function testVisitStripsHtmlTagsWithoutMergingAdjacentWords(): void
+    {
+        $textField = new FieldMetadata('text');
+        $textField->setType('text_editor');
+        $textField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG));
+
+        $formMetadata = new FormMetadata();
+        $formMetadata->setKey('default');
+        $formMetadata->addItem($textField);
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('default', $formMetadata);
+
+        $this->formMetadataProvider->getMetadata('page', 'en', [])
+            ->willReturn($typedFormMetadata)
+            ->shouldBeCalledOnce();
+
+        $result = [
+            'templateKey' => 'default',
+            'locale' => 'en',
+            'templateData' => [
+                // Block-level tags (<br>, </p><p>) must split words into separate
+                // tokens, otherwise only the first stays searchable. Inline tags
+                // (<strong>) must NOT split a word ("third" stays one token), and
+                // "&nbsp;" must decode to a real space instead of gluing words.
+                'text' => '<p>first<br>second</p><p>th<strong>ir</strong>d</p><p>a&nbsp;b</p>',
+            ],
+        ];
+
+        $data = ['content' => []];
+
+        $returnedData = $this->enhancer->enhanceDocument($result, $data);
+
+        $this->assertSame(['first second third a b'], $returnedData['content']);
+    }
+
     public function testVisitFiltersNonTextFieldTypes(): void
     {
         $titleField = new FieldMetadata('title');

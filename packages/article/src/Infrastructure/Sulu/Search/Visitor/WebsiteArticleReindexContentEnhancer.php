@@ -338,6 +338,18 @@ class WebsiteArticleReindexContentEnhancer implements WebsiteArticleReindexProvi
 
     private function stripHtml(string $html): string
     {
-        return \trim(\strip_tags($html));
+        // Only block-level tags (and <br>) should introduce a word boundary, so
+        // that words split across paragraphs, list items, table cells or line
+        // breaks stay separate, searchable tokens — while inline formatting
+        // inside a word (e.g. "<strong>") keeps the word together as one token.
+        $html = (string) \preg_replace('~</?(?:p|div|br|li|th|td|h[1-6])\b[^>]*>~i', ' ', $html);
+
+        // strip_tags removes the remaining inline tags but leaves entities as-is,
+        // so decode them afterwards ("&nbsp;" would otherwise survive and glue
+        // words together). Then collapse whitespace — including the non-breaking
+        // spaces produced by decoding — into single spaces.
+        $text = \html_entity_decode(\strip_tags($html), \ENT_QUOTES | \ENT_HTML5, 'UTF-8');
+
+        return \trim((string) \preg_replace('~[\s\x{a0}]+~u', ' ', $text));
     }
 }
