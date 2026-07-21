@@ -49,7 +49,11 @@ class MetadataTest extends KernelTestCase
                 $countLimit += $fieldDefinition['length'];
             }
 
-            $this->assertLessThanOrEqual(191, $countLimit, 'The index "' . $indexName . '" exceeds the MySQL utf8mb4 limit.');
+            // InnoDB DYNAMIC row format (MySQL default since 5.7.9) allows a 3072 byte index
+            // key prefix; at 4 bytes/char (utf8mb4) that's 768 chars. The old 191-char (767 byte)
+            // limit only applies to legacy COMPACT/REDUNDANT row format tables and is enforced
+            // separately via LegacyLengthSubscriber for un-migrated installations.
+            $this->assertLessThanOrEqual(768, $countLimit, 'The index "' . $indexName . '" exceeds the MySQL utf8mb4 DYNAMIC row format limit.');
         }
     }
 
@@ -83,7 +87,47 @@ class MetadataTest extends KernelTestCase
                 $countLimit += $fieldDefinition['length'];
             }
 
-            $this->assertLessThanOrEqual(191, $countLimit, 'The index "' . $uniqueConstraintName . '" exceeds the MySQL utf8mb4 limit.');
+            // See comment in testMetadataIndexDoNotExceedMySQLUtf8Mb4Limits() re: 768-char DYNAMIC row format budget.
+            $this->assertLessThanOrEqual(768, $countLimit, 'The index "' . $uniqueConstraintName . '" exceeds the MySQL utf8mb4 DYNAMIC row format limit.');
+        }
+    }
+
+    public function testMetadataUniqueConstraintsDoNotExceedLegacyMySQLUtf8Mb4LimitsWhenLegacyLengthEnabled(): void
+    {
+        self::bootKernel(['environment' => 'test_legacy']);
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = self::getContainer()->get('doctrine.orm.entity_manager');
+        $classMetadata = $entityManager->getClassMetadata(Route::class);
+
+        $tableDefinition = $classMetadata->table;
+
+        Assert::true(isset($tableDefinition['uniqueConstraints']), 'We expect that the table definition contains uniqueConstraints.');
+        Assert::notEmpty($tableDefinition['uniqueConstraints'], 'We expect that the table definition contains uniqueConstraints.');
+
+        foreach ($tableDefinition['uniqueConstraints'] as $uniqueConstraintName => $uniqueConstraintDefinition) {
+            Assert::isArray($uniqueConstraintDefinition, 'We expect that the uniqueConstraints definition is an array.');
+            Assert::true(isset($uniqueConstraintDefinition['fields']), 'We expect that the uniqueConstraints definition contains fields.');
+            Assert::isArray($uniqueConstraintDefinition['fields'], 'We expect that the uniqueConstraints definition contains fields.');
+            Assert::notEmpty($uniqueConstraintDefinition['fields'], 'We expect that the uniqueConstraints definition contains fields.');
+
+            $countLimit = 0;
+
+            foreach ($uniqueConstraintDefinition['fields'] as $field) {
+                Assert::string($field);
+                $fieldDefinition = $classMetadata->getFieldMapping($field);
+
+                Assert::true('string' === $fieldDefinition['type'], 'Currently this tests handles only strings.');
+                Assert::true(isset($fieldDefinition['length']), 'We expect the length to be returned.');
+                Assert::integer($fieldDefinition['length'], 'We expect the length to be a integer.');
+
+                $countLimit += $fieldDefinition['length'];
+            }
+
+            // legacy_length shrinks fields back down for installs whose physical DB schema
+            // still uses the old COMPACT/REDUNDANT row format, which caps the index key
+            // prefix at 767 bytes (191 chars for utf8mb4). Must stay under the strict limit here.
+            $this->assertLessThanOrEqual(191, $countLimit, 'The index "' . $uniqueConstraintName . '" exceeds the legacy MySQL utf8mb4 limit.');
         }
     }
 }
