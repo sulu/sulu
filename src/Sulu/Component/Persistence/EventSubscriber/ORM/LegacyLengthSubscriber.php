@@ -25,7 +25,7 @@ class LegacyLengthSubscriber
      * @var array<string, array<string, int>>
      */
     private const LEGACY_FIELD_LENGTHS = [
-        'Sulu\Route\Domain\Model\Route' => ['webspace' => 31],
+        'Sulu\Route\Domain\Model\Route' => ['webspace' => 31, 'slug' => 144],
         'Sulu\Page\Domain\Model\Page' => ['webspaceKey' => 31],
         'Sulu\Page\Domain\Model\PageDimensionContentNavigationContext' => ['navigationContext' => 31],
         'Sulu\Article\Domain\Model\ArticleDimensionContentAdditionalWebspace' => ['additionalWebspace' => 31],

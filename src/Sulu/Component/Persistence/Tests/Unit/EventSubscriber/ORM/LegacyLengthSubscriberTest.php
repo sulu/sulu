@@ -39,12 +39,26 @@ class LegacyLengthSubscriberTest extends TestCase
         $metadata->mapField([
             'fieldName' => 'webspace',
             'type' => 'string',
-            'length' => 32,
+            'length' => 64,
         ]);
 
         $this->subscriber->loadClassMetadata($this->createEvent($metadata));
 
         $this->assertSame(31, $this->getFieldLength($metadata->fieldMappings['webspace']));
+    }
+
+    public function testLoadClassMetadataShrinksRouteSlugField(): void
+    {
+        $metadata = new ClassMetadata(Route::class);
+        $metadata->mapField([
+            'fieldName' => 'slug',
+            'type' => 'string',
+            'length' => 255,
+        ]);
+
+        $this->subscriber->loadClassMetadata($this->createEvent($metadata));
+
+        $this->assertSame(144, $this->getFieldLength($metadata->fieldMappings['slug']));
     }
 
     public function testLoadClassMetadataShrinksPageWebspaceKeyField(): void

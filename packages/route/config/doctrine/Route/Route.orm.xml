@@ -18,9 +18,9 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="webspace" type="string" length="32" nullable="true"/>
+        <field name="webspace" type="string" length="64" nullable="true"/>
         <field name="locale" type="string" length="15"/>
-        <field name="slug" type="string" length="144"/>
+        <field name="slug" type="string" length="255"/>
 
         <many-to-one field="parentRoute" target-entity="Sulu\Route\Domain\Model\Route">
             <join-column name="parent_id" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
