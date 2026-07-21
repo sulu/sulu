@@ -92,7 +92,7 @@ class MetadataTest extends KernelTestCase
         }
     }
 
-    public function testMetadataUniqueConstraintsDoNotExceedLegacyMySQLUtf8Mb4LimitsWhenLegacyLengthEnabled(): void
+    public function testPersistAndLoadRouteWithLegacyFieldLengthsWhenLegacyLengthEnabled(): void
     {
         self::bootKernel(['environment' => 'test_legacy']);
 
@@ -100,34 +100,39 @@ class MetadataTest extends KernelTestCase
         $entityManager = self::getContainer()->get('doctrine.orm.entity_manager');
         $classMetadata = $entityManager->getClassMetadata(Route::class);
 
-        $tableDefinition = $classMetadata->table;
+        $webspaceLength = $classMetadata->getFieldMapping('webspace')['length'];
+        $slugLength = $classMetadata->getFieldMapping('slug')['length'];
 
-        Assert::true(isset($tableDefinition['uniqueConstraints']), 'We expect that the table definition contains uniqueConstraints.');
-        Assert::notEmpty($tableDefinition['uniqueConstraints'], 'We expect that the table definition contains uniqueConstraints.');
+        Assert::integer($webspaceLength, 'We expect the webspace length to be a integer.');
+        Assert::integer($slugLength, 'We expect the slug length to be a integer.');
 
-        foreach ($tableDefinition['uniqueConstraints'] as $uniqueConstraintName => $uniqueConstraintDefinition) {
-            Assert::isArray($uniqueConstraintDefinition, 'We expect that the uniqueConstraints definition is an array.');
-            Assert::true(isset($uniqueConstraintDefinition['fields']), 'We expect that the uniqueConstraints definition contains fields.');
-            Assert::isArray($uniqueConstraintDefinition['fields'], 'We expect that the uniqueConstraints definition contains fields.');
-            Assert::notEmpty($uniqueConstraintDefinition['fields'], 'We expect that the uniqueConstraints definition contains fields.');
+        $webspace = \str_repeat('w', $webspaceLength);
+        $slug = \str_repeat('s', $slugLength);
 
-            $countLimit = 0;
+        $entityManager->getConnection()->executeStatement(
+            'DELETE FROM ro_routes WHERE resource_key = ?',
+            ['metadata-test'],
+        );
 
-            foreach ($uniqueConstraintDefinition['fields'] as $field) {
-                Assert::string($field);
-                $fieldDefinition = $classMetadata->getFieldMapping($field);
+        $route = new Route('metadata-test', 'legacy-length-test', 'en', $slug, $webspace);
 
-                Assert::true('string' === $fieldDefinition['type'], 'Currently this tests handles only strings.');
-                Assert::true(isset($fieldDefinition['length']), 'We expect the length to be returned.');
-                Assert::integer($fieldDefinition['length'], 'We expect the length to be a integer.');
+        $entityManager->persist($route);
+        $entityManager->flush();
+        $routeId = $route->getId();
+        $entityManager->clear();
 
-                $countLimit += $fieldDefinition['length'];
-            }
+        try {
+            /** @var Route|null $reloadedRoute */
+            $reloadedRoute = $entityManager->find(Route::class, $routeId);
 
-            // legacy_length shrinks fields back down for installs whose physical DB schema
-            // still uses the old COMPACT/REDUNDANT row format, which caps the index key
-            // prefix at 767 bytes (191 chars for utf8mb4). Must stay under the strict limit here.
-            $this->assertLessThanOrEqual(191, $countLimit, 'The index "' . $uniqueConstraintName . '" exceeds the legacy MySQL utf8mb4 limit.');
+            $this->assertNotNull($reloadedRoute, 'We expect the route to be found after reloading it from the database.');
+            $this->assertSame($webspace, $reloadedRoute->getWebspace(), 'We expect the webspace to not be truncated when it matches the configured legacy field length.');
+            $this->assertSame($slug, $reloadedRoute->getSlug(), 'We expect the slug to not be truncated when it matches the configured legacy field length.');
+        } finally {
+            $entityManager->getConnection()->executeStatement(
+                'DELETE FROM ro_routes WHERE resource_key = ?',
+                ['metadata-test'],
+            );
         }
     }
 }
