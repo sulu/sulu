@@ -22,6 +22,7 @@ use Sulu\Content\Application\ContentResolver\ResolvableResourceQueue\ResolvableR
 use Sulu\Content\Application\ContentResolver\ResolvableResourceReplacer\ResolvableResourceReplacerInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableInterface;
+use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewEnhancementInterface;
 use Sulu\Content\Application\ResourceLoader\ResourceLoaderProvider;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
@@ -141,7 +142,8 @@ readonly class ContentResolver implements ContentResolverInterface
         private ContentAggregatorInterface $contentAggregator,
         private int $maxDepth,
         private ContentEnhancerInterface $contentEnhancer,
-        private ResourceLoaderProvider $resourceLoaderProvider
+        private ResourceLoaderProvider $resourceLoaderProvider,
+        private ContentDeduplicationTracker $deduplicationTracker
     ) {
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
     }
@@ -157,12 +159,24 @@ readonly class ContentResolver implements ContentResolverInterface
             $context['_shadowLocale'] = $dimensionContent->getShadowLocale();
         }
 
+        // Pass the currently resolved resource so smart content blocks can exclude the "own" page from
+        // their own results, regardless of whether the resolution happens within an HTTP request.
+        $context['selfReference'] = [
+            'resourceKey' => $dimensionContent::getResourceKey(),
+            'id' => (string) $dimensionContent->getResource()->getId(),
+        ];
+
         // Initial resolution to gather ResolvableResources
         /** @var array<int, array<string, array<int, array<int|string, array<string, ResolvableInterface>>>>> $priorityQueue */
         $priorityQueue = [];
         $resolvedResources = [];
 
         $resolvedContent = $this->resolveInternal($dimensionContent, 0, $priorityQueue, $properties);
+
+        // Register the resources referenced by regular selections before processing the priority queue,
+        // so smart content blocks can deduplicate against them even when the resolved content itself does
+        // not contain any smart content block (e.g. a selection whose items later render a smart content).
+        $this->registerReferences($priorityQueue);
 
         // Process the priority queue until it's empty
         while (!empty($priorityQueue)) {
@@ -353,6 +367,21 @@ readonly class ContentResolver implements ContentResolverInterface
         }
 
         return $normalizedContentData;
+    }
+
+    /**
+     * Registers every resolvable resource of the priority queue in the deduplication tracker, grouped
+     * by resource key. Smart content resolvables register their own results, so they are skipped here.
+     *
+     * @param array<int, array<string, array<int, array<int|string, array<string, ResolvableInterface>>>>> $priorityQueue
+     */
+    private function registerReferences(array $priorityQueue): void
+    {
+        \array_walk_recursive($priorityQueue, function (mixed $resource): void {
+            if ($resource instanceof ResolvableResource && null !== $resourceKey = $resource->getResourceKey()) {
+                $this->deduplicationTracker->add($resourceKey, $resource->getId());
+            }
+        });
     }
 
     /**

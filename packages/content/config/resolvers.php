@@ -38,10 +38,9 @@ use Sulu\Content\Application\PropertyResolver\Resolver\DefaultPropertyResolver;
 use Sulu\Content\Application\PropertyResolver\Resolver\LinkPropertyResolver;
 use Sulu\Content\Application\PropertyResolver\Resolver\SmartContentPropertyResolver;
 use Sulu\Content\Application\PropertyResolver\Resolver\TeaserSelectionPropertyResolver;
+use Sulu\Content\Application\ContentResolver\ContentDeduplicationTracker;
 use Sulu\Content\Application\SmartResolver\Resolver\SmartContentSmartResolver;
-use Sulu\Content\Application\SmartResolver\SmartContentReferenceStore;
 use Sulu\Content\Application\SmartResolver\SmartResolverProvider;
-use Sulu\Content\Application\Visitor\ExcludeSelfSmartContentFiltersVisitor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -85,6 +84,7 @@ return static function(ContainerConfigurator $container) {
             '',
             new Reference('sulu_content.content_enhancer'),
             new Reference('sulu_content.resource_loader_provider'),
+            new Reference('sulu_content.content_deduplication_tracker'),
         ]);
 
     $services->alias(ContentResolverInterface::class, 'sulu_content.content_resolver');
@@ -174,13 +174,7 @@ return static function(ContainerConfigurator $container) {
         ])
         ->tag('sulu_content.property_resolver');
 
-    $services->set('sulu_content.exclude_self_smart_content_filters_visitor', ExcludeSelfSmartContentFiltersVisitor::class)
-        ->args([
-            new Reference('request_stack'),
-        ])
-        ->tag('sulu_content.smart_content_filters_visitor');
-
-    $services->set('sulu_content.smart_content_reference_store', SmartContentReferenceStore::class)
+    $services->set('sulu_content.content_deduplication_tracker', ContentDeduplicationTracker::class)
         ->tag('kernel.reset', ['method' => 'reset']);
 
     $services->set('sulu_content.smart_resolver_provider', SmartResolverProvider::class)
@@ -189,7 +183,7 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_content.smart_content_smart_resolver', SmartContentSmartResolver::class)
         ->args([
             tagged_locator('sulu_content.smart_content_provider', indexAttribute: 'type', defaultIndexMethod: 'getType'),
-            new Reference('sulu_content.smart_content_reference_store'),
+            new Reference('sulu_content.content_deduplication_tracker'),
         ])
         ->tag('sulu_content.smart_resolver', ['type' => 'smart_content']);
 };
