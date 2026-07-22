@@ -231,6 +231,7 @@
             "Sulu\\Page\\Tests\\": "packages/page/tests",
             "Sulu\\Page\\Migrations\\": "packages/page/migrations",
             "Sulu\\Route\\Tests\\": "packages/route/tests",
+            "Sulu\\Route\\Migrations\\": "packages/route/migrations",
             "Sulu\\Search\\Tests\\": "packages/search/tests",
             "Sulu\\Content\\Tests\\": "packages/content/tests",
             "Sulu\\CustomUrl\\Tests\\": "packages/custom-url/tests"
