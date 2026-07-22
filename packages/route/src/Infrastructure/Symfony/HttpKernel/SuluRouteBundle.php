@@ -251,6 +251,18 @@ final class SuluRouteBundle extends AbstractBundle
             );
         }
 
+        if ($builder->hasExtension('doctrine_migrations')) {
+            $builder->prependExtensionConfig(
+                'doctrine_migrations',
+                [
+                    'migrations_paths' => [
+                        'Sulu\\Route\\Migrations' => \dirname(__DIR__, 4) . '/migrations',
+                    ],
+                    'enable_service_migrations' => true,
+                ],
+            );
+        }
+
         if ($builder->hasExtension('cmf_routing')) {
             $builder->prependExtensionConfig(
                 'cmf_routing',

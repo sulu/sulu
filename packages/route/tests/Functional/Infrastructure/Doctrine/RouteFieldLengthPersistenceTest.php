@@ -11,10 +11,12 @@
 
 namespace Sulu\Route\Tests\Functional\Infrastructure\Doctrine;
 
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use Sulu\Route\Domain\Model\Route;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Uid\Uuid;
 use Webmozart\Assert\Assert;
 
 #[CoversNothing]
@@ -22,15 +24,25 @@ class RouteFieldLengthPersistenceTest extends KernelTestCase
 {
     public function testPersistAndLoadRouteWithDefaultFieldLengths(): void
     {
-        $this->assertRouteRoundTripsAtConfiguredFieldLengths('test', 'default-length-test');
+        $this->assertRouteRoundTripsAtConfiguredFieldLengths('test');
     }
 
     public function testPersistAndLoadRouteWithLegacyFieldLengthsWhenLegacyLengthEnabled(): void
     {
-        $this->assertRouteRoundTripsAtConfiguredFieldLengths('test_legacy', 'legacy-length-test');
+        $this->assertRouteRoundTripsAtConfiguredFieldLengths('test_legacy');
     }
 
-    private function assertRouteRoundTripsAtConfiguredFieldLengths(string $environment, string $resourceKey): void
+    public function testPersistRouteExceedingConfiguredFieldLengthsThrowsForDefaultFieldLengths(): void
+    {
+        $this->assertPersistingRouteExceedingConfiguredFieldLengthsThrows('test');
+    }
+
+    public function testPersistRouteExceedingConfiguredFieldLengthsThrowsWhenLegacyLengthEnabled(): void
+    {
+        $this->assertPersistingRouteExceedingConfiguredFieldLengthsThrows('test_legacy');
+    }
+
+    private function assertRouteRoundTripsAtConfiguredFieldLengths(string $environment): void
     {
         self::bootKernel(['environment' => $environment]);
 
@@ -39,38 +51,69 @@ class RouteFieldLengthPersistenceTest extends KernelTestCase
         $classMetadata = $entityManager->getClassMetadata(Route::class);
 
         $webspaceLength = $classMetadata->getFieldMapping('webspace')['length'];
+        $localeLength = $classMetadata->getFieldMapping('locale')['length'];
         $slugLength = $classMetadata->getFieldMapping('slug')['length'];
 
         Assert::integer($webspaceLength);
+        Assert::integer($localeLength);
         Assert::integer($slugLength);
 
         $webspace = \str_repeat('w', $webspaceLength);
-        $slug = \str_repeat('s', $slugLength);
+        $locale = \str_repeat('l', $localeLength);
+        // Fill with a unique uuid so parallel/repeated test runs never collide on the
+        // (webspace, locale, slug) unique constraint and the row does not need cleanup.
+        $slug = $this->fillToLength(Uuid::v4()->toRfc4122(), $slugLength);
 
-        $entityManager->getConnection()->executeStatement(
-            'DELETE FROM ro_routes WHERE resource_key = ?',
-            [$resourceKey],
-        );
-
-        $route = new Route($resourceKey, 'field-length-test', 'en', $slug, $webspace);
+        $route = new Route('field-length-test', 'field-length-test', $locale, $slug, $webspace);
 
         $entityManager->persist($route);
         $entityManager->flush();
         $routeId = $route->getId();
         $entityManager->clear();
 
-        try {
-            /** @var Route|null $reloadedRoute */
-            $reloadedRoute = $entityManager->find(Route::class, $routeId);
+        /** @var Route|null $reloadedRoute */
+        $reloadedRoute = $entityManager->find(Route::class, $routeId);
 
-            $this->assertNotNull($reloadedRoute, 'We expect the route to be found after reloading it from the database.');
-            $this->assertSame($webspace, $reloadedRoute->getWebspace(), 'We expect the webspace to not be truncated when it matches the configured field length.');
-            $this->assertSame($slug, $reloadedRoute->getSlug(), 'We expect the slug to not be truncated when it matches the configured field length.');
+        $this->assertNotNull($reloadedRoute, 'We expect the route to be found after reloading it from the database.');
+        $this->assertSame($webspace, $reloadedRoute->getWebspace(), 'We expect the webspace to not be truncated when it matches the configured field length.');
+        $this->assertSame($locale, $reloadedRoute->getLocale(), 'We expect the locale to not be truncated when it matches the configured field length.');
+        $this->assertSame($slug, $reloadedRoute->getSlug(), 'We expect the slug to not be truncated when it matches the configured field length.');
+    }
+
+    private function assertPersistingRouteExceedingConfiguredFieldLengthsThrows(string $environment): void
+    {
+        self::bootKernel(['environment' => $environment]);
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = self::getContainer()->get('doctrine.orm.entity_manager');
+        $classMetadata = $entityManager->getClassMetadata(Route::class);
+
+        $webspaceLength = $classMetadata->getFieldMapping('webspace')['length'];
+        $localeLength = $classMetadata->getFieldMapping('locale')['length'];
+        $slugLength = $classMetadata->getFieldMapping('slug')['length'];
+
+        Assert::integer($webspaceLength);
+        Assert::integer($localeLength);
+        Assert::integer($slugLength);
+
+        $webspace = \str_repeat('w', $webspaceLength + 1);
+        $locale = \str_repeat('l', $localeLength + 1);
+        $slug = $this->fillToLength(Uuid::v4()->toRfc4122(), $slugLength + 1);
+
+        $route = new Route('field-length-test', 'field-length-test', $locale, $slug, $webspace);
+
+        $this->expectException(DBALException::class);
+
+        try {
+            $entityManager->persist($route);
+            $entityManager->flush();
         } finally {
-            $entityManager->getConnection()->executeStatement(
-                'DELETE FROM ro_routes WHERE resource_key = ?',
-                [$resourceKey],
-            );
+            $entityManager->clear();
         }
+    }
+
+    private function fillToLength(string $seed, int $length): string
+    {
+        return \substr(\str_pad($seed, $length, $seed), 0, $length);
     }
 }
