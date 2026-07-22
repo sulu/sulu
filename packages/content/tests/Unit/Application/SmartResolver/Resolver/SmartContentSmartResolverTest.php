@@ -22,7 +22,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Content\Application\SmartResolver\Resolver\SmartContentSmartResolver;
-use Sulu\Content\Application\SmartResolver\SmartContentReferenceStore;
+use Sulu\Content\Application\ContentResolver\ContentDeduplicationTracker;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class SmartContentSmartResolverTest extends TestCase
@@ -41,7 +41,7 @@ class SmartContentSmartResolverTest extends TestCase
 
         $this->smartResolver = new SmartContentSmartResolver(
             $this->serviceLocator->reveal(),
-            new SmartContentReferenceStore(),
+            new ContentDeduplicationTracker(),
         );
     }
 
@@ -120,10 +120,10 @@ class SmartContentSmartResolverTest extends TestCase
 
     public function testResolveExcludesDuplicatesAndRegistersResolvedIds(): void
     {
-        $referenceStore = new SmartContentReferenceStore();
-        // ids resolved by a previous smart content block of the same provider type
-        $referenceStore->add('pages', 'page-1');
-        $referenceStore->add('pages', 'page-2');
+        $tracker = new ContentDeduplicationTracker();
+        // ids resolved by a previous smart content block of the same resource key
+        $tracker->add('pages', 'page-1');
+        $tracker->add('pages', 'page-2');
 
         /** @var ObjectProphecy<ServiceLocator<SmartContentProviderInterface>> $serviceLocator */
         $serviceLocator = $this->prophesize(ServiceLocator::class);
@@ -131,7 +131,7 @@ class SmartContentSmartResolverTest extends TestCase
 
         $resolver = new SmartContentSmartResolver(
             $serviceLocator->reveal(),
-            $referenceStore,
+            $tracker,
         );
 
         $smartResolvable = $this->prophesize(SmartResolvable::class);
@@ -152,7 +152,6 @@ class SmartContentSmartResolverTest extends TestCase
                 'limit' => null,
                 'page' => 1,
                 'excludeDuplicates' => true,
-                'excluded' => ['self-page'], // added by the exclude self visitor
             ],
             'sortBys' => [],
             'parameters' => ['provider' => 'pages'],
@@ -172,9 +171,12 @@ class SmartContentSmartResolverTest extends TestCase
         )->willReturn([['id' => 'page-3'], ['id' => 'page-4']]);
         $smartContentProvider->countBy(Argument::cetera())->willReturn(2);
         $smartContentProvider->getResourceLoaderKey()->willReturn('pages');
+        $smartContentProvider->getType()->willReturn('pages');
         $smartContentProvider->getConfiguration()->willReturn(new ProviderConfiguration());
 
-        $result = $resolver->resolve($smartResolvable->reveal(), 'en');
+        // the currently rendered page is passed through the resolver context (not the filters anymore)
+        $context = ['selfReference' => ['resourceKey' => 'pages', 'id' => 'self-page']];
+        $result = $resolver->resolve($smartResolvable->reveal(), 'en', $context);
 
         /** @var array{excluded: list<string>} $view */
         $view = $result->getView();
@@ -183,7 +185,7 @@ class SmartContentSmartResolverTest extends TestCase
         // newly resolved ids must be registered so following blocks exclude them too
         $this->assertSame(
             ['page-1', 'page-2', 'page-3', 'page-4'],
-            $referenceStore->getAll('pages'),
+            $tracker->getAll('pages'),
         );
     }
 
