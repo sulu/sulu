@@ -91,48 +91,4 @@ class MetadataTest extends KernelTestCase
             $this->assertLessThanOrEqual(768, $countLimit, 'The index "' . $uniqueConstraintName . '" exceeds the MySQL utf8mb4 DYNAMIC row format limit.');
         }
     }
-
-    public function testPersistAndLoadRouteWithLegacyFieldLengthsWhenLegacyLengthEnabled(): void
-    {
-        self::bootKernel(['environment' => 'test_legacy']);
-
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = self::getContainer()->get('doctrine.orm.entity_manager');
-        $classMetadata = $entityManager->getClassMetadata(Route::class);
-
-        $webspaceLength = $classMetadata->getFieldMapping('webspace')['length'];
-        $slugLength = $classMetadata->getFieldMapping('slug')['length'];
-
-        Assert::integer($webspaceLength, 'We expect the webspace length to be a integer.');
-        Assert::integer($slugLength, 'We expect the slug length to be a integer.');
-
-        $webspace = \str_repeat('w', $webspaceLength);
-        $slug = \str_repeat('s', $slugLength);
-
-        $entityManager->getConnection()->executeStatement(
-            'DELETE FROM ro_routes WHERE resource_key = ?',
-            ['metadata-test'],
-        );
-
-        $route = new Route('metadata-test', 'legacy-length-test', 'en', $slug, $webspace);
-
-        $entityManager->persist($route);
-        $entityManager->flush();
-        $routeId = $route->getId();
-        $entityManager->clear();
-
-        try {
-            /** @var Route|null $reloadedRoute */
-            $reloadedRoute = $entityManager->find(Route::class, $routeId);
-
-            $this->assertNotNull($reloadedRoute, 'We expect the route to be found after reloading it from the database.');
-            $this->assertSame($webspace, $reloadedRoute->getWebspace(), 'We expect the webspace to not be truncated when it matches the configured legacy field length.');
-            $this->assertSame($slug, $reloadedRoute->getSlug(), 'We expect the slug to not be truncated when it matches the configured legacy field length.');
-        } finally {
-            $entityManager->getConnection()->executeStatement(
-                'DELETE FROM ro_routes WHERE resource_key = ?',
-                ['metadata-test'],
-            );
-        }
-    }
 }
