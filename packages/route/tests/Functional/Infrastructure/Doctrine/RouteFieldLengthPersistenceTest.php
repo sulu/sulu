@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use Sulu\Route\Domain\Model\Route;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Webmozart\Assert\Assert;
 
 #[CoversNothing]
 class RouteFieldLengthPersistenceTest extends KernelTestCase
@@ -39,6 +40,9 @@ class RouteFieldLengthPersistenceTest extends KernelTestCase
 
         $webspaceLength = $classMetadata->getFieldMapping('webspace')['length'];
         $slugLength = $classMetadata->getFieldMapping('slug')['length'];
+
+        Assert::integer($webspaceLength);
+        Assert::integer($slugLength);
 
         $webspace = \str_repeat('w', $webspaceLength);
         $slug = \str_repeat('s', $slugLength);
