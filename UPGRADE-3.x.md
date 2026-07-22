@@ -2,6 +2,22 @@
 
 ## 3.0.8
 
+### Widened webspace, slug and template key column lengths
+
+The `webspace`/`webspaceKey`, `slug`, `templateKey` and navigation-context/additional-webspace `name` columns
+were widened (e.g. `ro_routes.slug` from 144 to 255 characters, `webspace`/`webspaceKey` from 31 to 64). Run the
+new migrations to apply the schema change:
+
+```bash
+bin/console doctrine:migrations:migrate
+```
+
+If your project has `sulu_persistence.legacy_length` enabled, these migrations are no-ops — your schema stays at
+the pre-3.x widths, matching the ORM mapping that `LegacyLengthSubscriber` already shrinks back down for you.
+
+The route package (`Sulu\Route\Migrations`) now ships its own migrations directory for the first time; no action
+is needed beyond running the command above, Sulu registers the path automatically.
+
 ### Route value is required when saving routable content
 
 `Sulu\Content\Domain\Model\RoutableInterface` gained the static method `isRouteMandatory()`. Classes using the `RoutableTrait` inherit the default `true`, other implementations need to add the method. When it returns `true`, saving a routable entity with an empty route value for its route field is rejected. Return `false` for resources that are allowed to live without a URL.
