@@ -18,9 +18,9 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\ContentResolver\ContentDeduplicationTracker;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Content\Application\ResourceLoader\Loader\RawResourceLoader;
-use Sulu\Content\Application\SmartResolver\SmartContentReferenceStore;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
 /**
@@ -56,11 +56,14 @@ class SmartContentSmartResolver implements SmartResolverInterface
      */
     public function __construct(
         private ServiceLocator $smartContentProviders,
-        private SmartContentReferenceStore $referenceStore,
+        private ContentDeduplicationTracker $deduplicationTracker,
     ) {
     }
 
-    public function resolve(SmartResolvable $resolvable, ?string $locale = null): ContentView
+    /**
+     * @param array<string, mixed> $context
+     */
+    public function resolve(SmartResolvable $resolvable, ?string $locale = null, array $context = []): ContentView
     {
         /** @var array{
          *     value: array<string, mixed>,
@@ -112,14 +115,27 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $filters['offset'] = $maxPerPage ? (($page - 1) * $maxPerPage) : 0;
         $filters['limit'] = $maxPerPage ?? $limit;
 
-        // Exclude the ids already resolved by previous smart content blocks of the same type when the
-        // "exclude_duplicates" option is enabled. The "excluded" filter may already contain ids added by
-        // the smart content filters visitors (e.g. the current page itself).
+        // Smart content deduplication is keyed by the provider's resource key, which is shared with the
+        // regular selections and with the currently rendered resource.
+        $resourceKey = $smartContentProvider->getType();
+
+        // Preserve any explicit exclusions already present in the filters.
         /** @var string[] $excluded */
         $excluded = $filters['excluded'] ?? [];
-        if ($filters['excludeDuplicates']) {
-            $excluded = \array_values(\array_unique([...$excluded, ...$this->referenceStore->getAll($provider)]));
+
+        // Exclude the currently rendered resource (the "own" page) from its own results.
+        $selfReference = $context['selfReference'] ?? null;
+        if (\is_array($selfReference) && ($selfReference['resourceKey'] ?? null) === $resourceKey) {
+            $excluded[] = (string) $selfReference['id'];
         }
+
+        // When "exclude_duplicates" is enabled, also exclude the resources already referenced by earlier
+        // selections or smart content blocks of the same resource key.
+        if ($filters['excludeDuplicates']) {
+            $excluded = [...$excluded, ...$this->deduplicationTracker->getAll($resourceKey)];
+        }
+
+        $excluded = \array_values(\array_unique($excluded));
         $filters['excluded'] = $excluded;
 
         $countByFilters = $filters;
@@ -128,9 +144,10 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $params = ['value' => $value, ...$parameters];
         $result = $smartContentProvider->findFlatBy($filters, $sortBys, $params);
 
-        // Register the resolved ids so that following smart content blocks can exclude them.
+        // Always register the resolved ids so that following blocks can deduplicate against them, even
+        // when this block has "exclude_duplicates" disabled.
         foreach ($result as $item) {
-            $this->referenceStore->add($provider, $item['id']);
+            $this->deduplicationTracker->add($resourceKey, $item['id']);
         }
 
         $fullTotal = $smartContentProvider->countBy($countByFilters, $params);

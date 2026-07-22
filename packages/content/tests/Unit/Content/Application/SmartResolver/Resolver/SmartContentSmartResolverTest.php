@@ -21,7 +21,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Content\Application\SmartResolver\Resolver\SmartContentSmartResolver;
-use Sulu\Content\Application\SmartResolver\SmartContentReferenceStore;
+use Sulu\Content\Application\ContentResolver\ContentDeduplicationTracker;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class SmartContentSmartResolverTest extends TestCase
@@ -54,7 +54,7 @@ class SmartContentSmartResolverTest extends TestCase
 
         $this->resolver = new SmartContentSmartResolver(
             $this->serviceLocator->reveal(),
-            new SmartContentReferenceStore(),
+            new ContentDeduplicationTracker(),
         );
     }
 
@@ -270,7 +270,7 @@ class SmartContentSmartResolverTest extends TestCase
 
         $resolver = new SmartContentSmartResolver(
             $serviceLocator->reveal(),
-            new SmartContentReferenceStore(),
+            new ContentDeduplicationTracker(),
         );
 
         $data = [
