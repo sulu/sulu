@@ -82,9 +82,11 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
             return $this->replaceUnresolvedWithNull($content);
         }
 
-        if (0 === \count($resolvedResources)) {
-            return $content;
-        }
+        // No `0 === \count($resolvedResources)` early-return: an empty map also occurs when every resolvable
+        // failed to load (e.g. a link to an unpublished/absent page), and those unresolved resources must
+        // still be nulled and compacted below. Returning $content untouched would leak a ResolvableResource
+        // object to the template layer (uncastable to string) — inconsistent with the $depth > $maxDepth
+        // branch above, which already nulls unresolved resources.
 
         $onlyResolvableResources = true;
         foreach ($content as $key => $value) {
@@ -229,10 +231,8 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
         int $depth,
         int $maxDepth
     ): array {
-        if (0 === \count($resolvedResources)) {
-            return $view;
-        }
-
+        // See replaceRecursively(): no early-return on an empty map — unresolved resources must be nulled
+        // and compacted rather than left in place, so we always walk.
         /** @var array<string, mixed> $result */
         $result = $this->replaceInViewRecursively($view, $resolvedResources, $depth, $maxDepth);
 

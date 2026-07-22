@@ -182,6 +182,10 @@ class ResolvableResourceReplacerTest extends TestCase
 
     public function testReplaceWithEmptyResolvedResources(): void
     {
+        // An empty $resolvedResources map also occurs when every resolvable failed to load (e.g. a link to
+        // an unpublished/absent page). The unresolved resource must be nulled rather than left in place,
+        // otherwise it reaches the template layer and throws "could not be converted to string". This
+        // matches the depth-exceeded path (testReplaceWithMaxDepthExceeded) and the partial-resolution path.
         $resolvableResource = new ResolvableResource(
             '123',
             'page',
@@ -193,7 +197,10 @@ class ResolvableResourceReplacerTest extends TestCase
             'pages'
         );
 
-        $content = ['page' => $resolvableResource];
+        $content = [
+            'title' => 'Test',
+            'page' => $resolvableResource,
+        ];
         $resolvedResources = [];
 
         $result = $this->replacer->replaceResolvableResourcesWithResolvedValues(
@@ -203,10 +210,38 @@ class ResolvableResourceReplacerTest extends TestCase
             5
         );
 
-        self::assertSame($resolvableResource, $result['content']['page']);
+        self::assertSame('Test', $result['content']['title']);
+        self::assertNull($result['content']['page']);
 
         $tags = $this->referenceStore->getAll();
         self::assertEmpty($tags);
+    }
+
+    public function testReplaceNullsUnresolvedLinkNestedInBlockCollection(): void
+    {
+        // Regression for a real-world crash: a `link` field pointing at an unpublished page, nested inside a
+        // block's CTA collection, with no other resource on the page resolving (empty $resolvedResources).
+        // Before the fix the ResolvableResource survived to the template and threw during string conversion.
+        $link = new ResolvableResource('page::7509', 'link', -50);
+
+        $content = [
+            'blocks' => [
+                [
+                    'type' => 'app-cta',
+                    'ctas' => [
+                        ['headline' => 'CTA', 'link' => $link],
+                    ],
+                ],
+            ],
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesWithResolvedValues($content, [], 1, 5);
+
+        /** @var array{blocks: array<int, array{ctas: array<int, array{headline: string, link: string|null}>}>} $resolvedContent */
+        $resolvedContent = $result['content'];
+        $cta = $resolvedContent['blocks'][0]['ctas'][0];
+        self::assertSame('CTA', $cta['headline']);
+        self::assertNull($cta['link']);
     }
 
     public function testReplaceWithComplexNestedStructure(): void
@@ -539,9 +574,10 @@ class ResolvableResourceReplacerTest extends TestCase
             5
         );
 
+        // The resolvable did not resolve, so the list of only-resolvables compacts to an empty list rather
+        // than keeping the unresolved object (which would leak to the template).
         $mySnippets = $result['content']['mySnippets'];
-        self::assertIsArray($mySnippets);
-        self::assertSame($resolvableResource, $mySnippets[0]);
+        self::assertSame([], $mySnippets);
         self::assertEmpty($result['viewEnhancements']);
     }
 
@@ -958,14 +994,16 @@ class ResolvableResourceReplacerTest extends TestCase
         self::assertContains('tags-4', $refs);
     }
 
-    public function testReplaceResolvableResourcesInViewReturnsEarlyWithNoResolvedResources(): void
+    public function testReplaceResolvableResourcesInViewDropsUnresolvedWithNoResolvedResources(): void
     {
+        // Mirror the content side: with no resolved resources an unresolved list entry is dropped
+        // (consistent with the partial-resolution path), not left in place as a surviving object.
         $tag = new ResolvableResource(3, 'tag', 0);
         $view = ['tags' => [$tag]];
 
         $result = $this->replacer->replaceResolvableResourcesInView($view, [], 1, 10);
 
-        self::assertSame($view, $result);
+        self::assertSame(['tags' => []], $result);
     }
 
     public function testReplaceResolvableResourcesInViewFiltersUnresolvedListEntries(): void
