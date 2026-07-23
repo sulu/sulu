@@ -258,7 +258,6 @@ final class SuluRouteBundle extends AbstractBundle
                     'migrations_paths' => [
                         'Sulu\\Route\\Migrations' => \dirname(__DIR__, 4) . '/migrations',
                     ],
-                    'enable_service_migrations' => true,
                 ],
             );
         }

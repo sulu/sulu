@@ -824,7 +824,6 @@ final class SuluPageBundle extends AbstractBundle
                     'migrations_paths' => [
                         'Sulu\\Page\\Migrations' => \dirname(__DIR__, 4) . '/migrations',
                     ],
-                    'enable_service_migrations' => true,
                 ],
             );
         }

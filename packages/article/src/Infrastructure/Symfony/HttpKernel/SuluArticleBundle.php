@@ -633,7 +633,6 @@ final class SuluArticleBundle extends AbstractBundle
                     'migrations_paths' => [
                         'Sulu\\Article\\Migrations' => \dirname(__DIR__, 4) . '/migrations',
                     ],
-                    'enable_service_migrations' => true,
                 ],
             );
         }

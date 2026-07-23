@@ -82,12 +82,26 @@ abstract class AbstractLengthMigrationTestCase extends TestCase
         self::assertSame([], $schema->getTables());
     }
 
+    public function testUpThrowsWhenLegacyLengthWasNeverSet(): void
+    {
+        $class = $this->getMigrationClass();
+        $connection = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
+        $migration = new $class($connection, new NullLogger());
+
+        $this->expectException(\LogicException::class);
+
+        $migration->up(new Schema());
+    }
+
     private function createMigration(bool $legacyLength): AbstractLengthMigration
     {
         $class = $this->getMigrationClass();
         $connection = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
 
-        return new $class($connection, new NullLogger(), $legacyLength);
+        $migration = new $class($connection, new NullLogger());
+        $migration->setLegacyLength($legacyLength);
+
+        return $migration;
     }
 
     /**
