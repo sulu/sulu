@@ -34,12 +34,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
     public function setUp(): void
     {
-        $locator = $this->prophesize(FileLocatorInterface::class);
-        $locator->locate(Argument::any())->will(function($arguments) {
-            return $arguments[0];
-        });
-
-        $this->loader = new XmlFileLoader11($locator->reveal());
+        $this->loader = $this->createLoader();
     }
 
     public function testSupports10(): void
@@ -58,6 +53,22 @@ class XmlFileLoader11Test extends WebspaceTestCase
                 $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io.xml'
             )
         );
+    }
+
+    public function testLoadRejectsLongWebspaceKeyWhenLegacyLengthIsEnabled(): void
+    {
+        $resource = $this->createLongWebspaceKeyResource(
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io.xml',
+        );
+
+        try {
+            $this->expectException(InvalidWebspaceException::class);
+            $this->expectExceptionMessage('legacy length limit');
+
+            $this->createLoader(true)->load($resource);
+        } finally {
+            \unlink($resource);
+        }
     }
 
     public function testLoad(): void
@@ -503,5 +514,33 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
 
         $this->assertEquals('Sulu CMF', $webspace->getName());
+    }
+
+    private function createLoader(bool $legacyLength = false): XmlFileLoader11
+    {
+        $locator = $this->prophesize(FileLocatorInterface::class);
+        $locator->locate(Argument::any())->will(function($arguments) {
+            return $arguments[0];
+        });
+
+        return new XmlFileLoader11($locator->reveal(), null, $legacyLength);
+    }
+
+    private function createLongWebspaceKeyResource(string $resource): string
+    {
+        $contents = \file_get_contents($resource);
+        self::assertIsString($contents);
+
+        $contents = \str_replace(
+            '<key>sulu_io</key>',
+            '<key>' . \str_repeat('a', 32) . '</key>',
+            $contents,
+        );
+
+        $temporaryResource = \tempnam(\sys_get_temp_dir(), 'sulu-webspace-');
+        self::assertNotFalse($temporaryResource);
+        \file_put_contents($temporaryResource, $contents);
+
+        return $temporaryResource;
     }
 }

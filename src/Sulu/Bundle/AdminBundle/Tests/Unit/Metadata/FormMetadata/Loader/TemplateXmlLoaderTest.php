@@ -45,27 +45,17 @@ class TemplateXmlLoaderTest extends TestCase
     protected function setUp(): void
     {
         $this->translator = $this->prophesize(TranslatorInterface::class);
-        $tagXmlParser = new TagXmlParser();
-        $metaXmlParser = new MetaXmlParser(
-            $this->translator->reveal(),
-            ['en' => 'en', 'de' => 'de', 'fr' => 'fr', 'nl' => 'nl'],
-        );
-        $propertiesXmlParser = new PropertiesXmlParser(
-            $tagXmlParser,
-            $metaXmlParser,
-        );
-        $schemaXmlParser = new SchemaXmlParser();
-        $templateXmlParser = new TemplateXmlParser();
+        $this->loader = $this->createLoader();
+    }
 
-        $container = new Container();
-        $propertyMetadataMapperRegistry = new PropertyMetadataMapperRegistry($container);
-        $schemaMetadataProvider = new SchemaMetadataProvider($propertyMetadataMapperRegistry);
-        $blockMetadataProvider = new BlockPropertyMetadataMapper(
-            $schemaMetadataProvider,
-        );
-        $container->set('block', $blockMetadataProvider);
+    public function testLoadRejectsLongTemplateKeyWhenLegacyLengthIsEnabled(): void
+    {
+        $loader = $this->createLoader(true);
 
-        $this->loader = new TemplateXmlLoader($propertiesXmlParser, $schemaXmlParser, $tagXmlParser, $metaXmlParser, $templateXmlParser, $schemaMetadataProvider);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('legacy length limit');
+
+        $loader->load(__DIR__ . '/../data/long-template-key.xml');
     }
 
     public function testLoadDefaultTemplate(): void
@@ -504,5 +494,38 @@ class TemplateXmlLoaderTest extends TestCase
     {
         return \dirname(__DIR__, 4) . \DIRECTORY_SEPARATOR
             . 'Application' . \DIRECTORY_SEPARATOR . 'config' . \DIRECTORY_SEPARATOR . 'templates' . \DIRECTORY_SEPARATOR . 'pages' . \DIRECTORY_SEPARATOR;
+    }
+
+    private function createLoader(bool $legacyLength = false): TemplateXmlLoader
+    {
+        $tagXmlParser = new TagXmlParser();
+        $metaXmlParser = new MetaXmlParser(
+            $this->translator->reveal(),
+            ['en' => 'en', 'de' => 'de', 'fr' => 'fr', 'nl' => 'nl'],
+        );
+        $propertiesXmlParser = new PropertiesXmlParser(
+            $tagXmlParser,
+            $metaXmlParser,
+        );
+        $schemaXmlParser = new SchemaXmlParser();
+        $templateXmlParser = new TemplateXmlParser();
+
+        $container = new Container();
+        $propertyMetadataMapperRegistry = new PropertyMetadataMapperRegistry($container);
+        $schemaMetadataProvider = new SchemaMetadataProvider($propertyMetadataMapperRegistry);
+        $blockMetadataProvider = new BlockPropertyMetadataMapper(
+            $schemaMetadataProvider,
+        );
+        $container->set('block', $blockMetadataProvider);
+
+        return new TemplateXmlLoader(
+            $propertiesXmlParser,
+            $schemaXmlParser,
+            $tagXmlParser,
+            $metaXmlParser,
+            $templateXmlParser,
+            $schemaMetadataProvider,
+            $legacyLength,
+        );
     }
 }

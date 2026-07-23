@@ -16,6 +16,7 @@ namespace Sulu\Component\Persistence\Tests\Unit\Migrations;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\Migrations\Exception\SkipMigration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Sulu\Component\Persistence\Migrations\AbstractLengthMigration;
@@ -46,13 +47,13 @@ abstract class AbstractLengthMigrationTestCase extends TestCase
         $this->assertLengths($schema, $this->getExpectedWidenedLengths());
     }
 
-    public function testUpSkipsWhenLegacyLengthEnabled(): void
+    public function testUpRemainsPendingWhenLegacyLengthEnabled(): void
     {
         $schema = $this->createSchema($this->getExpectedLegacyLengths());
 
-        $this->createMigration(true)->up($schema);
+        $this->expectException(SkipMigration::class);
 
-        $this->assertLengths($schema, $this->getExpectedLegacyLengths());
+        $this->createMigration(true)->up($schema);
     }
 
     public function testDownRevertsColumnLengths(): void
@@ -64,13 +65,13 @@ abstract class AbstractLengthMigrationTestCase extends TestCase
         $this->assertLengths($schema, $this->getExpectedLegacyLengths());
     }
 
-    public function testDownSkipsWhenLegacyLengthEnabled(): void
+    public function testDownRemainsPendingWhenLegacyLengthEnabled(): void
     {
         $schema = $this->createSchema($this->getExpectedWidenedLengths());
 
-        $this->createMigration(true)->down($schema);
+        $this->expectException(SkipMigration::class);
 
-        $this->assertLengths($schema, $this->getExpectedWidenedLengths());
+        $this->createMigration(true)->down($schema);
     }
 
     public function testUpIsNoopWhenTableIsMissing(): void

@@ -12,6 +12,7 @@
 namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Sulu\Content\Domain\Model\TemplateInterface;
 
 /**
  * Shrinks field lengths back down to the pre-3.x column widths for installations whose
@@ -38,7 +39,7 @@ class LegacyLengthSubscriber
 
         $fieldLengths = self::LEGACY_FIELD_LENGTHS[$className] ?? [];
 
-        if ($metadata->hasField('templateKey')) {
+        if (\is_a($className, TemplateInterface::class, true) && $metadata->hasField('templateKey')) {
             $fieldLengths['templateKey'] = 31;
         }
 

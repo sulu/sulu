@@ -63,18 +63,20 @@ abstract class AbstractLengthMigration extends AbstractMigration
 
     final public function up(Schema $schema): void
     {
-        if ($this->isLegacyLength()) {
-            return;
-        }
+        $this->skipIf(
+            $this->isLegacyLength(),
+            'The migration is skipped because "sulu_persistence.legacy_length" is enabled.',
+        );
 
         $this->changeLengths($schema, $this->getWidenedLengths());
     }
 
     final public function down(Schema $schema): void
     {
-        if ($this->isLegacyLength()) {
-            return;
-        }
+        $this->skipIf(
+            $this->isLegacyLength(),
+            'The migration is skipped because "sulu_persistence.legacy_length" is enabled.',
+        );
 
         $this->changeLengths($schema, $this->getLegacyLengths());
     }

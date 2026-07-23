@@ -34,6 +34,7 @@ use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Util\XmlUtils;
 
 /**
@@ -47,6 +48,16 @@ class XmlFileLoader10 extends BaseXmlFileLoader
     public const SCHEMA_LOCATION = '/schema/webspace/webspace-1.0.xsd';
 
     public const SCHEMA_URI = 'http://schemas.sulu.io/webspace/webspace-1.0.xsd';
+
+    private const LEGACY_KEY_LENGTH = 31;
+
+    public function __construct(
+        FileLocatorInterface $locator,
+        ?string $env = null,
+        private readonly bool $legacyLength = false,
+    ) {
+        parent::__construct($locator, $env);
+    }
 
     /**
      * @var \DOMXPath
@@ -101,6 +112,16 @@ class XmlFileLoader10 extends BaseXmlFileLoader
         $this->xpath = new \DOMXPath($this->tryLoad($file));
         $this->xpath->registerNamespace('x', 'http://schemas.sulu.io/webspace/webspace');
 
+        $this->validateLegacyKey(
+            ($this->xpath->query('/x:webspace/x:key') ?: null)?->item(0)?->nodeValue,
+            'webspace key',
+            $file,
+        );
+
+        foreach ($this->xpath->query('/x:webspace/x:navigation/x:contexts/x:context/@key') ?: [] as $keyNode) {
+            $this->validateLegacyKey($keyNode->nodeValue, 'navigation context key', $file);
+        }
+
         // set simple webspace properties
         $this->webspace = new Webspace();
         $this->webspace->setName($this->xpath->query('/x:webspace/x:name')?->item(0)->nodeValue);
@@ -128,6 +149,21 @@ class XmlFileLoader10 extends BaseXmlFileLoader
         $this->validate();
 
         return $this->webspace;
+    }
+
+    private function validateLegacyKey(?string $key, string $keyType, string $file): void
+    {
+        if (!$this->legacyLength || null === $key || \strlen($key) <= self::LEGACY_KEY_LENGTH) {
+            return;
+        }
+
+        throw new InvalidWebspaceException(\sprintf(
+            'The %s "%s" in "%s" exceeds the legacy length limit of %d characters.',
+            $keyType,
+            $key,
+            $file,
+            self::LEGACY_KEY_LENGTH,
+        ));
     }
 
     /**

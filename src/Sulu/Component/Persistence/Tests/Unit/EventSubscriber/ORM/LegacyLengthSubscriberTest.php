@@ -19,6 +19,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Article\Domain\Model\ArticleDimensionContentAdditionalWebspace;
 use Sulu\Component\Persistence\EventSubscriber\ORM\LegacyLengthSubscriber;
 use Sulu\Page\Domain\Model\Page;
+use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageDimensionContentNavigationContext;
 use Sulu\Route\Domain\Model\Route;
 
@@ -105,7 +106,7 @@ class LegacyLengthSubscriberTest extends TestCase
 
     public function testLoadClassMetadataShrinksTemplateKeyField(): void
     {
-        $metadata = new ClassMetadata(Page::class);
+        $metadata = new ClassMetadata(PageDimensionContent::class);
         $metadata->mapField([
             'fieldName' => 'templateKey',
             'type' => 'string',
@@ -115,6 +116,20 @@ class LegacyLengthSubscriberTest extends TestCase
         $this->subscriber->loadClassMetadata($this->createEvent($metadata));
 
         $this->assertSame(31, $this->getFieldLength($metadata->fieldMappings['templateKey']));
+    }
+
+    public function testLoadClassMetadataDoesNotShrinkUnrelatedTemplateKeyField(): void
+    {
+        $metadata = new ClassMetadata(\stdClass::class);
+        $metadata->mapField([
+            'fieldName' => 'templateKey',
+            'type' => 'string',
+            'length' => 64,
+        ]);
+
+        $this->subscriber->loadClassMetadata($this->createEvent($metadata));
+
+        $this->assertSame(64, $this->getFieldLength($metadata->fieldMappings['templateKey']));
     }
 
     /**

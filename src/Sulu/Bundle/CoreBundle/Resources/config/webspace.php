@@ -35,10 +35,10 @@ return static function(ContainerConfigurator $container) {
         ->args([new Reference('sulu_core.webspace.loader.resolver')]);
 
     $services->set('sulu_core.webspace.loader.xml.1.0', XmlFileLoader10::class)
-        ->args([new Reference('file_locator')]);
+        ->args([new Reference('file_locator'), null, '%sulu.persistence.legacy_length%']);
 
     $services->set('sulu_core.webspace.loader.xml.1.1', XmlFileLoader11::class)
-        ->args([new Reference('file_locator')]);
+        ->args([new Reference('file_locator'), null, '%sulu.persistence.legacy_length%']);
 
     $services->set('sulu_core.webspace.webspace_manager.url_replacer', Replacer::class);
 

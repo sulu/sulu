@@ -30,6 +30,8 @@ class TemplateXmlLoader extends AbstractLoader
 {
     use XmlParserTrait;
 
+    private const LEGACY_KEY_LENGTH = 31;
+
     /**
      * @var string
      */
@@ -47,6 +49,7 @@ class TemplateXmlLoader extends AbstractLoader
         private MetaXmlParser $metaXmlParser,
         private TemplateXmlParser $templateXmlParser,
         private SchemaMetadataProvider $schemaMetadataProvider,
+        private bool $legacyLength = false,
     ) {
         parent::__construct(
             self::SCHEMA_PATH,
@@ -64,6 +67,16 @@ class TemplateXmlLoader extends AbstractLoader
         $form->addResource($resource);
         $templateKey = $this->getValueFromXPath('/x:template/x:key', $xpath);
         \assert(\is_string($templateKey), 'Expected the template key of "' . $resource . '" to be defined.');
+
+        if ($this->legacyLength && \strlen($templateKey) > self::LEGACY_KEY_LENGTH) {
+            throw new \InvalidArgumentException(\sprintf(
+                'The template key "%s" in "%s" exceeds the legacy length limit of %d characters.',
+                $templateKey,
+                $resource,
+                self::LEGACY_KEY_LENGTH,
+            ));
+        }
+
         $form->setKey($templateKey);
 
         $templateGroup = $this->getValueFromXPath('/x:template/x:group', $xpath);
