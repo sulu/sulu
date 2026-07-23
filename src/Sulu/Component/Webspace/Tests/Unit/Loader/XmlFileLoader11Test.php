@@ -34,7 +34,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
     public function setUp(): void
     {
-        $this->loader = $this->createLoader(false);
+        $this->loader = $this->createLoader();
     }
 
     public function testSupports10(): void
@@ -52,32 +52,6 @@ class XmlFileLoader11Test extends WebspaceTestCase
             $this->loader->supports(
                 $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io.xml'
             )
-        );
-    }
-
-    public function testLoadRejectsLongWebspaceKeyWhenLegacyLengthIsEnabled(): void
-    {
-        $resource = $this->createLongWebspaceKeyResource(
-            $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io.xml',
-        );
-
-        try {
-            $this->expectException(InvalidWebspaceException::class);
-            $this->expectExceptionMessage('legacy length limit');
-
-            $this->createLoader(true)->load($resource);
-        } finally {
-            \unlink($resource);
-        }
-    }
-
-    public function testLoadThrowsWhenLegacyLengthIsNotConfigured(): void
-    {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('sulu_persistence.legacy_length');
-
-        $this->createLoader()->load(
-            $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io.xml',
         );
     }
 
@@ -526,31 +500,13 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('Sulu CMF', $webspace->getName());
     }
 
-    private function createLoader(?bool $legacyLength = null): XmlFileLoader11
+    private function createLoader(): XmlFileLoader11
     {
         $locator = $this->prophesize(FileLocatorInterface::class);
         $locator->locate(Argument::any())->will(function($arguments) {
             return $arguments[0];
         });
 
-        return new XmlFileLoader11($locator->reveal(), null, $legacyLength);
-    }
-
-    private function createLongWebspaceKeyResource(string $resource): string
-    {
-        $contents = \file_get_contents($resource);
-        self::assertIsString($contents);
-
-        $contents = \str_replace(
-            '<key>sulu_io</key>',
-            '<key>' . \str_repeat('a', 32) . '</key>',
-            $contents,
-        );
-
-        $temporaryResource = \tempnam(\sys_get_temp_dir(), 'sulu-webspace-');
-        self::assertNotFalse($temporaryResource);
-        \file_put_contents($temporaryResource, $contents);
-
-        return $temporaryResource;
+        return new XmlFileLoader11($locator->reveal());
     }
 }

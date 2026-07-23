@@ -42,7 +42,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         });
 
         $resolver = new LoaderResolver([
-            new XmlFileLoader11($locator->reveal(), null, false),
+            new XmlFileLoader11($locator->reveal(), null),
             new XmlFileLoader10($locator->reveal(), null),
         ]);
 
