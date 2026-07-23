@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\PersistenceBundle;
 
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\Compiler\ActivateResolveTargetEntityResolverPass;
-use Sulu\Bundle\PersistenceBundle\DependencyInjection\Compiler\DecorateMigrationFactoryPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -29,7 +28,5 @@ final class SuluPersistenceBundle extends Bundle
             PassConfig::TYPE_BEFORE_OPTIMIZATION,
             10 // need to be run before the "EntityListenerPass" of the "DoctrineBundle"
         );
-
-        $container->addCompilerPass(new DecorateMigrationFactoryPass());
     }
 }

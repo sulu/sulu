@@ -80,7 +80,7 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $resolver = new LoaderResolver([
             new XmlFileLoader11($locator->reveal(), null, false),
-            new XmlFileLoader10($locator->reveal(), null, false),
+            new XmlFileLoader10($locator->reveal(), null),
         ]);
 
         $this->loader = new DelegatingLoader($resolver);

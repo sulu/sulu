@@ -259,7 +259,6 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_admin.meta_xml_parser'),
             new Reference('sulu_admin.template_xml_parser'),
             new Reference('sulu_admin.schema_metadata_provider'),
-            '%sulu.persistence.legacy_length%',
         ]);
 
     $services->set('sulu_admin.property_metadata_mapper_registry', PropertyMetadataMapperRegistry::class)

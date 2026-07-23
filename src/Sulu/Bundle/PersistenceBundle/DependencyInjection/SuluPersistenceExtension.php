@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\PersistenceBundle\DependencyInjection;
 
+use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
 use Sulu\Component\Persistence\EventSubscriber\ORM\LegacyLengthSubscriber;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -37,6 +38,13 @@ class SuluPersistenceExtension extends Extension
             $definition = new Definition(LegacyLengthSubscriber::class);
             $definition->addTag('doctrine.event_listener', ['event' => 'loadClassMetadata']);
             $container->setDefinition('sulu.persistence.event_subscriber.orm.legacy_length', $definition);
+        }
+
+        /** @var array<string, class-string> $bundles */
+        $bundles = $container->getParameter('kernel.bundles');
+
+        if (\in_array(DoctrineMigrationsBundle::class, $bundles, true)) {
+            $loader->load('services_migrations.php');
         }
     }
 }
