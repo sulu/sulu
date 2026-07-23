@@ -54,7 +54,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
     public function __construct(
         FileLocatorInterface $locator,
         ?string $env = null,
-        private readonly bool $legacyLength = false,
+        private readonly ?bool $legacyLength = null,
     ) {
         parent::__construct($locator, $env);
     }
@@ -153,7 +153,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
 
     private function validateLegacyKey(?string $key, string $keyType, string $file): void
     {
-        if (!$this->legacyLength || null === $key || \strlen($key) <= self::LEGACY_KEY_LENGTH) {
+        if (!$this->isLegacyLength() || null === $key || \strlen($key) <= self::LEGACY_KEY_LENGTH) {
             return;
         }
 
@@ -164,6 +164,18 @@ class XmlFileLoader10 extends BaseXmlFileLoader
             $file,
             self::LEGACY_KEY_LENGTH,
         ));
+    }
+
+    private function isLegacyLength(): bool
+    {
+        if (null === $this->legacyLength) {
+            throw new \LogicException(\sprintf(
+                '"%s" was not configured with "sulu_persistence.legacy_length".',
+                self::class,
+            ));
+        }
+
+        return $this->legacyLength;
     }
 
     /**

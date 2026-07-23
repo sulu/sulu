@@ -34,7 +34,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
     public function setUp(): void
     {
-        $this->loader = $this->createLoader();
+        $this->loader = $this->createLoader(false);
     }
 
     public function testSupports10(): void
@@ -69,6 +69,16 @@ class XmlFileLoader11Test extends WebspaceTestCase
         } finally {
             \unlink($resource);
         }
+    }
+
+    public function testLoadThrowsWhenLegacyLengthIsNotConfigured(): void
+    {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('sulu_persistence.legacy_length');
+
+        $this->createLoader()->load(
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io.xml',
+        );
     }
 
     public function testLoad(): void
@@ -516,7 +526,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('Sulu CMF', $webspace->getName());
     }
 
-    private function createLoader(bool $legacyLength = false): XmlFileLoader11
+    private function createLoader(?bool $legacyLength = null): XmlFileLoader11
     {
         $locator = $this->prophesize(FileLocatorInterface::class);
         $locator->locate(Argument::any())->will(function($arguments) {

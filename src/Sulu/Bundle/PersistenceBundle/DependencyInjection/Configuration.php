@@ -27,7 +27,7 @@ final class Configuration implements ConfigurationInterface
         $root
             ->children()
                 ->booleanNode('legacy_length')
-                    ->defaultFalse()
+                    ->isRequired()
                 ->end()
             ->end();
 

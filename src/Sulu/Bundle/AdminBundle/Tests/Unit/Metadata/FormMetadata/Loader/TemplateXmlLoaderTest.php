@@ -45,7 +45,15 @@ class TemplateXmlLoaderTest extends TestCase
     protected function setUp(): void
     {
         $this->translator = $this->prophesize(TranslatorInterface::class);
-        $this->loader = $this->createLoader();
+        $this->loader = $this->createLoader(false);
+    }
+
+    public function testLoadThrowsWhenLegacyLengthIsNotConfigured(): void
+    {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('sulu_persistence.legacy_length');
+
+        $this->createLoader()->load(__DIR__ . '/../data/long-template-key.xml');
     }
 
     public function testLoadRejectsLongTemplateKeyWhenLegacyLengthIsEnabled(): void
@@ -496,7 +504,7 @@ class TemplateXmlLoaderTest extends TestCase
             . 'Application' . \DIRECTORY_SEPARATOR . 'config' . \DIRECTORY_SEPARATOR . 'templates' . \DIRECTORY_SEPARATOR . 'pages' . \DIRECTORY_SEPARATOR;
     }
 
-    private function createLoader(bool $legacyLength = false): TemplateXmlLoader
+    private function createLoader(?bool $legacyLength = null): TemplateXmlLoader
     {
         $tagXmlParser = new TagXmlParser();
         $metaXmlParser = new MetaXmlParser(

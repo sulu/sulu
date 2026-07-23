@@ -49,7 +49,7 @@ class TemplateXmlLoader extends AbstractLoader
         private MetaXmlParser $metaXmlParser,
         private TemplateXmlParser $templateXmlParser,
         private SchemaMetadataProvider $schemaMetadataProvider,
-        private bool $legacyLength = false,
+        private ?bool $legacyLength = null,
     ) {
         parent::__construct(
             self::SCHEMA_PATH,
@@ -68,7 +68,7 @@ class TemplateXmlLoader extends AbstractLoader
         $templateKey = $this->getValueFromXPath('/x:template/x:key', $xpath);
         \assert(\is_string($templateKey), 'Expected the template key of "' . $resource . '" to be defined.');
 
-        if ($this->legacyLength && \strlen($templateKey) > self::LEGACY_KEY_LENGTH) {
+        if ($this->isLegacyLength() && \strlen($templateKey) > self::LEGACY_KEY_LENGTH) {
             throw new \InvalidArgumentException(\sprintf(
                 'The template key "%s" in "%s" exceeds the legacy length limit of %d characters.',
                 $templateKey,
@@ -119,5 +119,17 @@ class TemplateXmlLoader extends AbstractLoader
         }
 
         return $form;
+    }
+
+    private function isLegacyLength(): bool
+    {
+        if (null === $this->legacyLength) {
+            throw new \LogicException(\sprintf(
+                '"%s" was not configured with "sulu_persistence.legacy_length".',
+                self::class,
+            ));
+        }
+
+        return $this->legacyLength;
     }
 }
