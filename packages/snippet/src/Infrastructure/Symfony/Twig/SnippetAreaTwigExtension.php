@@ -74,6 +74,34 @@ class SnippetAreaTwigExtension extends AbstractExtension
             $locale = $localization->getLocale();
         }
 
+        return $this->loadSnippetByAreaForLocale(
+            $areaKey,
+            $properties,
+            $webspaceKey,
+            $locale,
+            $locale,
+            []
+        );
+    }
+
+    /**
+     * @param array<string, string>|null $properties
+     * @param array<string, true> $visitedLocales
+     *
+     * @return array<string, mixed>|null
+     */
+    private function loadSnippetByAreaForLocale(
+        string $areaKey,
+        ?array $properties,
+        string $webspaceKey,
+        string $locale,
+        string $requestedLocale,
+        array $visitedLocales,
+    ): ?array {
+        // The only recursive call site below already guards against revisiting a locale,
+        // so $locale here is always unvisited; no need to re-check on entry.
+        $visitedLocales[$locale] = true;
+
         $snippetArea = $this->snippetAreaRepository->findOneBy([
             'webspaceKey' => $webspaceKey,
             'areaKey' => $areaKey,
@@ -116,11 +144,30 @@ class SnippetAreaTwigExtension extends AbstractExtension
         }
 
         if ($shadowLocale = $dimensionContent->getShadowLocale()) {
+            if (isset($visitedLocales[$shadowLocale])) {
+                return null;
+            }
+
             // Detach to bypass identity map: recursive call must load a fresh Snippet whose
             // dimensionContents collection is for the source locale, not this shadow locale.
             $this->entityManager->detach($snippet);
 
-            return $this->loadSnippetByArea($areaKey, $properties, $webspaceKey, $shadowLocale);
+            return $this->loadSnippetByAreaForLocale(
+                $areaKey,
+                $properties,
+                $webspaceKey,
+                $shadowLocale,
+                $requestedLocale,
+                $visitedLocales
+            );
+        }
+
+        if ($locale !== $requestedLocale) {
+            // The source content supplies the shadow area's data, but nested resources must
+            // still be resolved in the locale requested by the caller. Keep the source locale
+            // as the fallback for nested resources which do not exist in that locale.
+            $dimensionContent->setLocale($requestedLocale);
+            $dimensionContent->setShadowLocale($locale);
         }
 
         $resolvedContent = $this->contentResolver->resolve($dimensionContent, $properties);
