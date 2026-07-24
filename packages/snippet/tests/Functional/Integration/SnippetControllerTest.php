@@ -513,9 +513,21 @@ class SnippetControllerTest extends SuluTestCase
         }
     }
 
-    #[Depends('testPost')]
-    public function testPutShadowLocale(string $id): string
+    public function testPutShadowLocale(): string
     {
+        // Uses its own snippet instead of the one from testPost, because that fixture is shared
+        // and mutated by many other dependent tests (including one that purges the database).
+        self::purgeDatabase();
+
+        $this->client->request('POST', '/admin/api/snippets?locale=en', [], [], [], \json_encode([
+            'template' => 'snippet',
+            'title' => 'Test Snippet',
+        ]) ?: null);
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+        /** @var array{id: string} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $id = $content['id'];
+
         $this->client->request('PUT', '/admin/api/snippets/' . $id . '?locale=de', [], [], [], \json_encode([
             'template' => 'snippet',
             'title' => 'Test Snippet (DE)',

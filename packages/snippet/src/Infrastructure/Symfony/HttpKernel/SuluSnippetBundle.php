@@ -176,6 +176,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_snippet.snippet_repository'),
                 new Reference('sulu_content.content_workflow'),
+                new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
