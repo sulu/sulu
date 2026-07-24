@@ -33,7 +33,10 @@ final class Version20260609000000 extends AbstractMigration
         }
 
         if (!$table->hasColumn('shadowLocales')) {
-            $table->addColumn('shadowLocales', Types::JSON, ['notnull' => false]);
+            $table->addColumn('shadowLocales', Types::JSON, [
+                'notnull' => false,
+                'platformOptions' => ['jsonb' => true],
+            ]);
         }
     }
 
