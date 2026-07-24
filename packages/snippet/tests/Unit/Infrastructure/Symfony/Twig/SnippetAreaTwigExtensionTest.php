@@ -461,6 +461,62 @@ class SnippetAreaTwigExtensionTest extends TestCase
         $result = $this->extension->loadSnippetByArea($areaKey, [], $webspaceKey, $locale);
 
         $this->assertSame($resolvedContent, $result);
+        $this->assertSame($locale, $sourceDimensionContent->getLocale());
+        $this->assertSame($shadowLocale, $sourceDimensionContent->getShadowLocale());
+    }
+
+    public function testLoadSnippetByAreaWithShadowLocaleCycle(): void
+    {
+        $areaKey = 'header';
+        $webspaceKey = 'example';
+        $locale = 'de';
+        $shadowLocale = 'en';
+
+        $snippet = new Snippet('test-snippet-uuid');
+
+        $deDimensionContent = new SnippetDimensionContent($snippet);
+        $deDimensionContent->setLocale($locale);
+        $deDimensionContent->setShadowLocale($shadowLocale);
+
+        $enDimensionContent = new SnippetDimensionContent($snippet);
+        $enDimensionContent->setLocale($shadowLocale);
+        $enDimensionContent->setShadowLocale($locale);
+
+        $snippetArea = new SnippetArea($areaKey, $webspaceKey);
+        $snippetArea->setSnippet($snippet);
+
+        $this->snippetAreaRepository->findOneBy([
+            'webspaceKey' => $webspaceKey,
+            'areaKey' => $areaKey,
+        ])->willReturn($snippetArea);
+
+        $this->snippetRepository->findOneBy(Argument::any(), Argument::any())
+            ->willReturn($snippet);
+
+        $this->contentAggregator->aggregate(
+            $snippet,
+            [
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ]
+        )->willReturn($deDimensionContent);
+
+        $this->contentAggregator->aggregate(
+            $snippet,
+            [
+                'locale' => $shadowLocale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ]
+        )->willReturn($enDimensionContent);
+
+        $this->entityManager->detach($snippet)->shouldBeCalledOnce();
+        $this->contentResolver->resolve(Argument::any(), Argument::any())->shouldNotBeCalled();
+
+        $result = $this->extension->loadSnippetByArea($areaKey, [], $webspaceKey, $locale);
+
+        $this->assertNull($result);
     }
 
     public function testLoadSnippetByAreaWithGhostLocale(): void

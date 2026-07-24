@@ -99,10 +99,6 @@ class SnippetReferenceRefresher implements ReferenceRefresherInterface
      */
     private function processSnippetDimensionContent(SnippetDimensionContentInterface $snippetDimensionContent): void
     {
-        if (null !== $snippetDimensionContent->getShadowLocale()) {
-            return;
-        }
-
         $referenceCollector = new ReferenceCollector(
             referenceRepository: $this->referenceRepository,
             referenceResourceKey: $snippetDimensionContent->getResourceKey(),
@@ -114,6 +110,14 @@ class SnippetReferenceRefresher implements ReferenceRefresherInterface
                 'locale' => $snippetDimensionContent->getLocale() ?? '',
             ]
         );
+
+        if (null !== $snippetDimensionContent->getShadowLocale()) {
+            // Shadow contents do not own references. Persist the empty collection so
+            // references from a former independent translation are removed.
+            $referenceCollector->persistReferences();
+
+            return;
+        }
 
         $contentViews = $this->contentViewResolver->getContentViews(dimensionContent: $snippetDimensionContent);
 
