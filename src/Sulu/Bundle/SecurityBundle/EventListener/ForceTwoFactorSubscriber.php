@@ -70,9 +70,9 @@ class ForceTwoFactorSubscriber
     }
 
     /**
-     * The "totp" and "google" methods require the user to enroll an authenticator app first.
-     * Activating them without a secret would lock the user out, so they are only activated
-     * automatically when the matching secret was already set up.
+     * The "totp" method requires the user to enroll an authenticator app first.
+     * Activating it without a secret would lock the user out, so it is only activated
+     * automatically when the secret was already set up.
      */
     private function supportsMethodActivation(UserTwoFactor $twoFactor): bool
     {
@@ -80,7 +80,6 @@ class ForceTwoFactorSubscriber
 
         return match ($this->twoFactorForceMethod) {
             'totp' => isset($options['totpSecret']),
-            'google' => isset($options['googleAuthenticatorSecret']),
             default => true,
         };
     }

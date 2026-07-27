@@ -42,7 +42,7 @@
     "sulu_security.two_factor_method": "Two-Factor authentication method",
     "sulu_security.two_factor_method_none": "None",
     "sulu_security.two_factor_method_email": "Email",
-    "sulu_security.two_factor_method_google": "Google Authenticator",
+    "sulu_security.two_factor_method_google": "Google",
     "sulu_security.two_factor_method_totp": "Authenticator app (TOTP)",
     "sulu_security.two_factor_setup_title": "Set up Two-Factor authentication",
     "sulu_security.two_factor_setup_scan_hint": "Scan the QR code with your authenticator app (e.g. Google Authenticator or Microsoft Authenticator) and enter the generated verification code to activate the Two-Factor authentication.",

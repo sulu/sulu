@@ -14,7 +14,6 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 use Doctrine\Persistence\ObjectManager;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Totp\TotpAuthenticatorInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor;
@@ -38,15 +37,14 @@ class ProfileTwoFactorController
         private ViewHandlerInterface $viewHandler,
         private BackupCodeGenerator $backupCodeGenerator,
         private ?TotpAuthenticatorInterface $totpAuthenticator,
-        private ?GoogleAuthenticatorInterface $googleAuthenticator,
         private bool $backupCodesEnabled,
         private ?string $twoFactorForcePattern,
     ) {
     }
 
     /**
-     * Generates a new secret for an authenticator app based two factor method ("totp" or
-     * "google") and returns the content for the QR code to be scanned by the app.
+     * Generates a new secret for the authenticator app based "totp" two factor method
+     * and returns the content for the QR code to be scanned by the app.
      *
      * The secret is only parked in the two factor options and does not activate the
      * second factor until it was confirmed with a valid code.
@@ -71,17 +69,14 @@ class ProfileTwoFactorController
         }
 
         $options = $twoFactor->getOptions() ?? [];
-        $options[$this->getSecretOption($method)] = $authenticator->generateSecret();
-        if ('google' === $method) {
-            $options['googleAuthenticatorUsername'] = $user->getUserIdentifier();
-        }
+        $options['totpSecret'] = $authenticator->generateSecret();
         $twoFactor->setOptions($options);
 
         $this->objectManager->flush();
 
         return $this->viewHandler->handle(
             View::create([
-                'secret' => $options[$this->getSecretOption($method)],
+                'secret' => $options['totpSecret'],
                 'qrContent' => $authenticator->getQRContent($user),
             ]),
         );
@@ -98,7 +93,7 @@ class ProfileTwoFactorController
         $user = $this->getUser();
 
         $twoFactor = $user->getTwoFactor();
-        if (!($twoFactor?->getOptions()[$this->getSecretOption($method)] ?? null)) {
+        if (!($twoFactor?->getOptions()['totpSecret'] ?? null)) {
             return $this->viewHandler->handle(
                 View::create(['error' => 'setup_required'], 400),
             );
@@ -188,17 +183,13 @@ class ProfileTwoFactorController
         return $backupCodes;
     }
 
-    private function getAuthenticator(string $method): TotpAuthenticatorInterface|GoogleAuthenticatorInterface
+    private function getAuthenticator(string $method): TotpAuthenticatorInterface
     {
-        $authenticator = match ($method) {
-            'totp' => $this->totpAuthenticator,
-            'google' => $this->googleAuthenticator,
-            default => null,
-        };
+        $authenticator = 'totp' === $method ? $this->totpAuthenticator : null;
 
         if (!$authenticator) {
             throw new NotFoundHttpException(\sprintf(
-                'The two factor method "%s" is not available. Install the matching "scheb/2fa-totp" or "scheb/2fa-google-authenticator" package and enable it in the "scheb_two_factor" configuration.',
+                'The two factor method "%s" is not available. Install the "scheb/2fa-totp" package and enable it in the "scheb_two_factor" configuration.',
                 $method,
             ));
         }
@@ -206,17 +197,12 @@ class ProfileTwoFactorController
         return $authenticator;
     }
 
-    private function getSecretOption(string $method): string
-    {
-        return 'google' === $method ? 'googleAuthenticatorSecret' : 'totpSecret';
-    }
-
     /**
-     * @return User&\Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface&\Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface
+     * @return User&\Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface
      */
     private function getUser(): User
     {
-        /** @var User&\Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface&\Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface $user */
+        /** @var User&\Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface $user */
         $user = $this->tokenStorage->getToken()?->getUser();
 
         return $user;

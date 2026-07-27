@@ -242,7 +242,6 @@ return static function(ContainerConfigurator $container) {
             new Reference('fos_rest.view_handler'),
             new Reference('sulu_security.two_factor_backup_code_generator'),
             new Reference('scheb_two_factor.security.totp_authenticator', ContainerInterface::NULL_ON_INVALID_REFERENCE),
-            new Reference('scheb_two_factor.security.google_authenticator', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             '%sulu_security.two_factor_backup_codes_enabled%',
             '%sulu_security.two_factor_force_pattern%',
         ])

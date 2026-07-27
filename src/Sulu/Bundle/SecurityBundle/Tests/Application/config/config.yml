@@ -58,8 +58,6 @@ scheb_two_factor:
     totp:
         enabled: true
         issuer: "Sulu"
-    google:
-        enabled: true
     backup_codes:
         enabled: true
     trusted_device:

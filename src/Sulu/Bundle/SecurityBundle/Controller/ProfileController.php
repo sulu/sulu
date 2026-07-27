@@ -95,10 +95,8 @@ class ProfileController implements ClassResourceInterface
                     $twoFactor = new UserTwoFactor($user);
                 }
 
-                $secretOptions = ['totp' => 'totpSecret', 'google' => 'googleAuthenticatorSecret'];
-                $secretOption = $secretOptions[$twoFactorMethod] ?? null;
-                if ($secretOption && !isset($twoFactor->getOptions()[$secretOption])) {
-                    // authenticator app based methods must not be activated before a secret was
+                if ('totp' === $twoFactorMethod && !isset($twoFactor->getOptions()['totpSecret'])) {
+                    // the authenticator app based method must not be activated before a secret was
                     // set up and confirmed via the ProfileTwoFactorController, because the user
                     // would be locked out otherwise
                     throw new BadRequestHttpException(\sprintf(

@@ -105,7 +105,7 @@ class Configuration implements ConfigurationInterface
                                     ->defaultValue('(.+)')
                                 ->end()
                                 ->enumNode('method')
-                                    ->values(['email', 'totp', 'google'])
+                                    ->values(['email', 'totp'])
                                     ->defaultValue('email')
                                 ->end()
                             ->end()

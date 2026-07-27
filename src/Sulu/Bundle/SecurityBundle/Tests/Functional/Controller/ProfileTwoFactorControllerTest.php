@@ -88,26 +88,6 @@ class ProfileTwoFactorControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    public function testGoogleSetup(): void
-    {
-        $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'google']);
-
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
-        /** @var array{secret: non-empty-string, qrContent: string} $response */
-        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
-
-        $this->assertNotEmpty($response['secret']);
-        $this->assertStringStartsWith('otpauth://totp/', $response['qrContent']);
-
-        $user = $this->refreshTestUser();
-        $this->assertNotNull($user->getTwoFactor());
-        $this->assertNull($user->getTwoFactor()->getMethod());
-        $this->assertSame(
-            $response['secret'],
-            $user->getTwoFactor()->getOptions()['googleAuthenticatorSecret'] ?? null,
-        );
-    }
-
     public function testSetupInvalidMethod(): void
     {
         $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'email']);

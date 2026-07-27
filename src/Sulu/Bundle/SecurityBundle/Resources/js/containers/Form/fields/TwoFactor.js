@@ -9,7 +9,7 @@ import {translate} from 'sulu-admin-bundle/utils';
 import twoFactorStyles from './twoFactor.scss';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 
-const SETUP_METHODS = ['totp', 'google'];
+const SETUP_METHODS = ['totp'];
 
 @observer
 class TwoFactor extends React.Component<FieldTypeProps<?string>> {

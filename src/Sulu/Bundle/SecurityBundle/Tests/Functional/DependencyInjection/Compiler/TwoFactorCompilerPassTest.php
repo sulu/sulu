@@ -17,8 +17,6 @@ class TwoFactorCompilerPassTest extends SuluTestCase
 {
     public function testParameter(): void
     {
-        // "google" is not offered although it is enabled in the test application,
-        // because it is redundant to the enabled "totp" method
         $this->assertSame(
             [
                 'email',

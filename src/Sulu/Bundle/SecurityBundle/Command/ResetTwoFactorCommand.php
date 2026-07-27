@@ -21,7 +21,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(name: 'sulu:security:reset-two-factor', description: 'Reset the two factor authentication of a user.')]
+#[AsCommand(name: 'sulu:security:user:reset-two-factor', description: 'Reset the two factor authentication of a user.')]
 class ResetTwoFactorCommand extends Command
 {
     public function __construct(
