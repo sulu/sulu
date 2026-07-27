@@ -42,6 +42,16 @@
     "sulu_security.two_factor_method": "Zwei-Faktor Authentifizierungsmethode",
     "sulu_security.two_factor_method_none": "Keine",
     "sulu_security.two_factor_method_email": "Email",
-    "sulu_security.two_factor_method_google": "Google",
-    "sulu_security.two_factor_method_totp": "Totp"
+    "sulu_security.two_factor_method_google": "Google Authenticator",
+    "sulu_security.two_factor_method_totp": "Authenticator-App (TOTP)",
+    "sulu_security.two_factor_setup_title": "Zwei-Faktor Authentifizierung einrichten",
+    "sulu_security.two_factor_setup_scan_hint": "Scanne den QR-Code mit deiner Authenticator-App (z.B. Google Authenticator oder Microsoft Authenticator) und gib den generierten Bestätigungscode ein, um die Zwei-Faktor Authentifizierung zu aktivieren.",
+    "sulu_security.two_factor_setup_manual_secret": "Schlüssel für manuelle Eingabe",
+    "sulu_security.two_factor_setup_activate": "Aktivieren",
+    "sulu_security.two_factor_backup_codes": "Backup-Codes",
+    "sulu_security.two_factor_backup_codes_hint": "Bewahre diese Backup-Codes an einem sicheren Ort auf. Jeder Code kann einmal verwendet werden, um sich anzumelden, wenn die Zwei-Faktor Authentifizierungsmethode nicht verfügbar ist. Sie werden nicht erneut angezeigt.",
+    "sulu_security.two_factor_backup_codes_generate": "Backup-Codes generieren",
+    "sulu_security.two_factor_backup_codes_generate_warning": "Es wird ein neuer Satz von Backup-Codes generiert. Zuvor generierte Backup-Codes funktionieren danach nicht mehr. Möchtest du fortfahren?",
+    "sulu_security.reset_two_factor": "Zwei-Faktor Authentifizierung zurücksetzen",
+    "sulu_activity.description.users.two_factor_resetted": "{userFullName} hat die Zwei-Faktor Authentifizierung des Benutzers \"{resourceTitle}\" zurückgesetzt"
 }

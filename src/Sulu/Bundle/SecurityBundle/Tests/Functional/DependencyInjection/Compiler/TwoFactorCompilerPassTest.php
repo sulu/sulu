@@ -17,12 +17,22 @@ class TwoFactorCompilerPassTest extends SuluTestCase
 {
     public function testParameter(): void
     {
+        // "google" is not offered although it is enabled in the test application,
+        // because it is redundant to the enabled "totp" method
         $this->assertSame(
             [
                 'email',
+                'totp',
                 'trusted_devices',
             ],
             static::getContainer()->getParameter('sulu_security.two_factor_methods')
+        );
+    }
+
+    public function testBackupCodesEnabledParameter(): void
+    {
+        $this->assertTrue(
+            static::getContainer()->getParameter('sulu_security.two_factor_backup_codes_enabled')
         );
     }
 }

@@ -16,7 +16,10 @@ return static function(ContainerConfigurator $container) {
     $services = $container->services();
 
     $services->set('sulu_security.force_two_factor_listener', ForceTwoFactorSubscriber::class)
-        ->args(['%sulu_security.two_factor_force_pattern%'])
+        ->args([
+            '%sulu_security.two_factor_force_pattern%',
+            '%sulu_security.two_factor_force_method%',
+        ])
         ->tag('doctrine.event_listener', ['event' => 'preUpdate'])
         ->tag('doctrine.event_listener', ['event' => 'prePersist']);
 };

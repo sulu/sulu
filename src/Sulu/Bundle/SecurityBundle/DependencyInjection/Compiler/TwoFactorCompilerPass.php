@@ -24,6 +24,14 @@ class TwoFactorCompilerPass implements CompilerPassInterface
             $methods[] = 'email';
         }
 
+        if ($container->has('scheb_two_factor.security.totp_authenticator')) {
+            $methods[] = 'totp';
+        } elseif ($container->has('scheb_two_factor.security.google_authenticator')) {
+            // the "google" method is also totp based and works with the same authenticator apps,
+            // it is only offered as fallback to avoid two identical choices in the profile form
+            $methods[] = 'google';
+        }
+
         if ($container->hasParameter('scheb_two_factor.trusted_device.enabled')
             && $container->getParameter('scheb_two_factor.trusted_device.enabled')
         ) {
@@ -31,6 +39,11 @@ class TwoFactorCompilerPass implements CompilerPassInterface
         }
 
         $container->setParameter('sulu_security.two_factor_methods', $methods);
+
+        $container->setParameter(
+            'sulu_security.two_factor_backup_codes_enabled',
+            $container->has('scheb_two_factor.backup_code_manager'),
+        );
 
         if (0 === \count($methods)) {
             $container->setParameter('sulu_security.two_factor_force_pattern', null);

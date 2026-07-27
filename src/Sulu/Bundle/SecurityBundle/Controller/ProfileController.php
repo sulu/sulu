@@ -26,6 +26,7 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Security\Authentication\UserSettingRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -92,6 +93,18 @@ class ProfileController implements ClassResourceInterface
                 $twoFactor = $user->getTwoFactor();
                 if (!$twoFactor) {
                     $twoFactor = new UserTwoFactor($user);
+                }
+
+                $secretOptions = ['totp' => 'totpSecret', 'google' => 'googleAuthenticatorSecret'];
+                $secretOption = $secretOptions[$twoFactorMethod] ?? null;
+                if ($secretOption && !isset($twoFactor->getOptions()[$secretOption])) {
+                    // authenticator app based methods must not be activated before a secret was
+                    // set up and confirmed via the ProfileTwoFactorController, because the user
+                    // would be locked out otherwise
+                    throw new BadRequestHttpException(\sprintf(
+                        'The two factor method "%s" requires a confirmed setup via the "/profile/two-factor/setup" and "/profile/two-factor/confirm" endpoints.',
+                        $twoFactorMethod,
+                    ));
                 }
 
                 $twoFactor->setMethod($twoFactorMethod);

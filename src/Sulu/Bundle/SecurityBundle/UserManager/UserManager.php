@@ -22,6 +22,7 @@ use Sulu\Bundle\SecurityBundle\Domain\Event\UserEnabledEvent;
 use Sulu\Bundle\SecurityBundle\Domain\Event\UserLockedEvent;
 use Sulu\Bundle\SecurityBundle\Domain\Event\UserModifiedEvent;
 use Sulu\Bundle\SecurityBundle\Domain\Event\UserRemovedEvent;
+use Sulu\Bundle\SecurityBundle\Domain\Event\UserTwoFactorResettedEvent;
 use Sulu\Bundle\SecurityBundle\Domain\Event\UserUnlockedEvent;
 use Sulu\Bundle\SecurityBundle\Entity\GroupRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
@@ -322,6 +323,33 @@ class UserManager implements UserManagerInterface
 
         $this->domainEventCollector->collect(new UserEnabledEvent($user));
         $this->em->flush();
+
+        return $user;
+    }
+
+    /**
+     * Removes the two factor configuration of the given user.
+     *
+     * If two factor authentication is forced, it will be set up
+     * again on the next login of the user.
+     *
+     * @param int $id
+     *
+     * @return UserInterface
+     */
+    public function resetTwoFactor($id)
+    {
+        /** @var UserInterface $user */
+        $user = $this->userRepository->findUserById($id);
+
+        $twoFactor = $user->getTwoFactor();
+        if ($twoFactor) {
+            $user->setTwoFactor(null);
+            $this->em->remove($twoFactor);
+
+            $this->domainEventCollector->collect(new UserTwoFactorResettedEvent($user));
+            $this->em->flush();
+        }
 
         return $user;
     }

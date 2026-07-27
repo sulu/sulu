@@ -20,8 +20,10 @@ use Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor;
  */
 class ForceTwoFactorSubscriber
 {
-    public function __construct(private string $twoFactorForcePattern)
-    {
+    public function __construct(
+        private string $twoFactorForcePattern,
+        private string $twoFactorForceMethod = 'email',
+    ) {
     }
 
     /**
@@ -62,8 +64,24 @@ class ForceTwoFactorSubscriber
             $event->getObjectManager()->persist($twoFactor);
         }
 
-        if (!$twoFactor->getMethod()) {
-            $twoFactor->setMethod('email');
+        if (!$twoFactor->getMethod() && $this->supportsMethodActivation($twoFactor)) {
+            $twoFactor->setMethod($this->twoFactorForceMethod);
         }
+    }
+
+    /**
+     * The "totp" and "google" methods require the user to enroll an authenticator app first.
+     * Activating them without a secret would lock the user out, so they are only activated
+     * automatically when the matching secret was already set up.
+     */
+    private function supportsMethodActivation(UserTwoFactor $twoFactor): bool
+    {
+        $options = $twoFactor->getOptions() ?? [];
+
+        return match ($this->twoFactorForceMethod) {
+            'totp' => isset($options['totpSecret']),
+            'google' => isset($options['googleAuthenticatorSecret']),
+            default => true,
+        };
     }
 }

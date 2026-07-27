@@ -42,6 +42,16 @@
     "sulu_security.two_factor_method": "Two-Factor authentication method",
     "sulu_security.two_factor_method_none": "None",
     "sulu_security.two_factor_method_email": "Email",
-    "sulu_security.two_factor_method_google": "Google",
-    "sulu_security.two_factor_method_totp": "Totp"
+    "sulu_security.two_factor_method_google": "Google Authenticator",
+    "sulu_security.two_factor_method_totp": "Authenticator app (TOTP)",
+    "sulu_security.two_factor_setup_title": "Set up Two-Factor authentication",
+    "sulu_security.two_factor_setup_scan_hint": "Scan the QR code with your authenticator app (e.g. Google Authenticator or Microsoft Authenticator) and enter the generated verification code to activate the Two-Factor authentication.",
+    "sulu_security.two_factor_setup_manual_secret": "Secret for manual entry",
+    "sulu_security.two_factor_setup_activate": "Activate",
+    "sulu_security.two_factor_backup_codes": "Backup codes",
+    "sulu_security.two_factor_backup_codes_hint": "Store these backup codes in a safe place. Each code can be used once to log in if your Two-Factor authentication method is not available. They will not be shown again.",
+    "sulu_security.two_factor_backup_codes_generate": "Generate backup codes",
+    "sulu_security.two_factor_backup_codes_generate_warning": "This generates a new set of backup codes. Any previously generated backup codes will no longer work. Do you want to continue?",
+    "sulu_security.reset_two_factor": "Reset Two-Factor authentication",
+    "sulu_activity.description.users.two_factor_resetted": "{userFullName} has reset the two-factor authentication of the user \"{resourceTitle}\""
 }

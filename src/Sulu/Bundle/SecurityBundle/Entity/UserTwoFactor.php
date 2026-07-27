@@ -25,7 +25,7 @@ class UserTwoFactor
     private UserInterface $user;
 
     #[Expose]
-    #[Groups(['profile'])]
+    #[Groups(['profile', 'fullUser'])]
     private ?string $method = null;
 
     private ?string $options = null;

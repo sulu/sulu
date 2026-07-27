@@ -59,12 +59,15 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
 
         $container->setParameter('sulu_security.two_factor_email_template', $config['two_factor']['email']['template']);
 
+        /** @var array{enabled: bool, pattern: string, method: string} $twoFactorForceConfig */
+        $twoFactorForceConfig = $config['two_factor']['force'];
         $twoFactorForcePattern = null;
-        $twoFactorForceEnabled = $config['two_factor']['force']['enabled'];
+        $twoFactorForceEnabled = $twoFactorForceConfig['enabled'];
         if ($twoFactorForceEnabled) {
-            $twoFactorForcePattern = $config['two_factor']['force']['pattern'];
+            $twoFactorForcePattern = $twoFactorForceConfig['pattern'];
         }
         $container->setParameter('sulu_security.two_factor_force_pattern', $twoFactorForcePattern);
+        $container->setParameter('sulu_security.two_factor_force_method', $twoFactorForceConfig['method']);
 
         foreach ($config['reset_password']['mail'] as $option => $value) {
             $container->setParameter('sulu_security.reset_password.mail.' . $option, $value);

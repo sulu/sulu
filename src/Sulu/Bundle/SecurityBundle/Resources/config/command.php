@@ -48,6 +48,14 @@ return static function(ContainerConfigurator $container) {
         ->tag('console.command')
         ->tag('sulu.context', ['context' => 'admin']);
 
+    $services->set('sulu_security.command.reset_two_factor', \Sulu\Bundle\SecurityBundle\Command\ResetTwoFactorCommand::class)
+        ->args([
+            service('doctrine.orm.entity_manager'),
+            service('sulu.repository.user'),
+        ])
+        ->tag('console.command')
+        ->tag('sulu.context', ['context' => 'admin']);
+
     $services->set('sulu_security.command.sync_phpcr_permissions', \Sulu\Bundle\SecurityBundle\Command\SyncPhpcrPermissionsCommand::class)
         ->args([
             service('doctrine.orm.default_entity_manager'),
