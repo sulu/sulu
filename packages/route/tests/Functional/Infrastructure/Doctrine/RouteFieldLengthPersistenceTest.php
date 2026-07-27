@@ -13,6 +13,7 @@ namespace Sulu\Route\Tests\Functional\Infrastructure\Doctrine;
 
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use Sulu\Route\Domain\Model\Route;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -49,6 +50,12 @@ class RouteFieldLengthPersistenceTest extends KernelTestCase
         /** @var EntityManagerInterface $entityManager */
         $entityManager = self::getContainer()->get('doctrine.orm.entity_manager');
         $classMetadata = $entityManager->getClassMetadata(Route::class);
+
+        // update db schema for active environment
+        $entityManager->getConnection()->executeStatement(
+            'DELETE FROM ' . $entityManager->getConnection()->quoteIdentifier($classMetadata->getTableName())
+        );
+        (new SchemaTool($entityManager))->updateSchema([$classMetadata], true);
 
         $webspaceLength = $classMetadata->getFieldMapping('webspace')['length'];
         $localeLength = $classMetadata->getFieldMapping('locale')['length'];
@@ -87,6 +94,15 @@ class RouteFieldLengthPersistenceTest extends KernelTestCase
         /** @var EntityManagerInterface $entityManager */
         $entityManager = self::getContainer()->get('doctrine.orm.entity_manager');
         $classMetadata = $entityManager->getClassMetadata(Route::class);
+
+        // The `test` and `test_legacy` environments share one physical database, so the
+        // `ro_routes` table must be cleared and re-synced to whichever field lengths are
+        // active for the booted environment before asserting against them: clearing first
+        // avoids failing the narrowing ALTER on rows a wider-length run left behind.
+        $entityManager->getConnection()->executeStatement(
+            'DELETE FROM ' . $entityManager->getConnection()->quoteIdentifier($classMetadata->getTableName())
+        );
+        (new SchemaTool($entityManager))->updateSchema([$classMetadata], true);
 
         $webspaceLength = $classMetadata->getFieldMapping('webspace')['length'];
         $localeLength = $classMetadata->getFieldMapping('locale')['length'];

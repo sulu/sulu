@@ -34,7 +34,12 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
     public function setUp(): void
     {
-        $this->loader = $this->createLoader();
+        $locator = $this->prophesize(FileLocatorInterface::class);
+        $locator->locate(Argument::any())->will(function($arguments) {
+            return $arguments[0];
+        });
+
+        $this->loader = new XmlFileLoader11($locator->reveal());
     }
 
     public function testSupports10(): void
@@ -498,15 +503,5 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
 
         $this->assertEquals('Sulu CMF', $webspace->getName());
-    }
-
-    private function createLoader(): XmlFileLoader11
-    {
-        $locator = $this->prophesize(FileLocatorInterface::class);
-        $locator->locate(Argument::any())->will(function($arguments) {
-            return $arguments[0];
-        });
-
-        return new XmlFileLoader11($locator->reveal());
     }
 }

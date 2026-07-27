@@ -17,6 +17,8 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
 /**
+ * @internal
+ *
  * Widens (or, on rollback, shrinks) column lengths for the pre-3.x -> 3.x length increase.
  *
  * Skipped entirely for installations that opted into `sulu_persistence.legacy_length`, since

@@ -34,7 +34,6 @@ use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Util\XmlUtils;
 
 /**
@@ -48,13 +47,6 @@ class XmlFileLoader10 extends BaseXmlFileLoader
     public const SCHEMA_LOCATION = '/schema/webspace/webspace-1.0.xsd';
 
     public const SCHEMA_URI = 'http://schemas.sulu.io/webspace/webspace-1.0.xsd';
-
-    public function __construct(
-        FileLocatorInterface $locator,
-        ?string $env = null,
-    ) {
-        parent::__construct($locator, $env);
-    }
 
     /**
      * @var \DOMXPath

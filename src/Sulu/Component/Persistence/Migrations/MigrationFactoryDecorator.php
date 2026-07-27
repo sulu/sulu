@@ -17,6 +17,8 @@ use Doctrine\Migrations\AbstractMigration;
 use Doctrine\Migrations\Version\MigrationFactory;
 
 /**
+ * @internal
+ *
  * Pushes the resolved `sulu_persistence.legacy_length` value onto freshly created
  * {@see AbstractLengthMigration} instances, since doctrine-migrations instantiates
  * migrations itself and has no notion of our container parameter otherwise.
