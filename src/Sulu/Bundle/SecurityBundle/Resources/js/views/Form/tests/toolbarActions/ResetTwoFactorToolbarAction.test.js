@@ -4,6 +4,7 @@ import Router from 'sulu-admin-bundle/services/Router';
 import Form from 'sulu-admin-bundle/views/Form/Form';
 import {ResourceFormStore} from 'sulu-admin-bundle/containers/Form';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
+import {Dialog} from 'sulu-admin-bundle/components';
 import ResetTwoFactorToolbarAction from '../../toolbarActions/ResetTwoFactorToolbarAction';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
@@ -17,8 +18,6 @@ jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function() {
 jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => (
     class {
         resourceStore;
-
-        change = jest.fn();
 
         constructor(resourceStore) {
             this.resourceStore = resourceStore;
@@ -74,13 +73,11 @@ test('Return item config with correct type, icon and label', () => {
     const toolbarAction = createResetTwoFactorToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = false;
     toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
-    toolbarAction.resourceFormStore.resourceStore.data.twoFactor = {method: 'totp'};
 
     expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         type: 'button',
         icon: 'su-lock',
         label: 'sulu_security.reset_two_factor',
-        loading: false,
     }));
 });
 
@@ -88,7 +85,6 @@ test('Return null as item config when resource store is loading', () => {
     const toolbarAction = createResetTwoFactorToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = true;
     toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
-    toolbarAction.resourceFormStore.resourceStore.data.twoFactor = {method: 'totp'};
 
     expect(toolbarAction.getToolbarItemConfig()).toBeFalsy();
 });
@@ -97,36 +93,36 @@ test('Return null as item config when user has no id yet', () => {
     const toolbarAction = createResetTwoFactorToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = false;
     toolbarAction.resourceFormStore.resourceStore.data.id = null;
-    toolbarAction.resourceFormStore.resourceStore.data.twoFactor = {method: 'totp'};
 
     expect(toolbarAction.getToolbarItemConfig()).toBeFalsy();
 });
 
-test('Return null as item config when user has no two factor method', () => {
-    const toolbarAction = createResetTwoFactorToolbarAction();
-    toolbarAction.resourceFormStore.resourceStore.loading = false;
-    toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
-    toolbarAction.resourceFormStore.resourceStore.data.twoFactor = undefined;
-
-    expect(toolbarAction.getToolbarItemConfig()).toBeFalsy();
-});
-
-test('Call ResourceRequester with correct parameters when button is clicked', () => {
+test('Open the dialog when the button is clicked and reset when confirmed', () => {
     const resetTwoFactorPromise = Promise.resolve({});
     ResourceRequester.post.mockReturnValue(resetTwoFactorPromise);
 
     const toolbarAction = createResetTwoFactorToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = false;
     toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
-    toolbarAction.resourceFormStore.resourceStore.data.twoFactor = {method: 'totp'};
     // $FlowFixMe
     toolbarAction.resourceFormStore.resourceStore.locale = 'de';
+
+    let node = (toolbarAction.getNode(): any);
+    expect(node.type).toBe(Dialog);
+    expect(node.props.open).toEqual(false);
 
     const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
     if (!toolbarItemConfig) {
         throw new Error('The ToolbarItemConfig should not be undefined or null');
     }
     toolbarItemConfig.onClick();
+
+    expect(ResourceRequester.post).not.toHaveBeenCalled();
+
+    node = (toolbarAction.getNode(): any);
+    expect(node.props.open).toEqual(true);
+
+    node.props.onConfirm();
 
     expect(ResourceRequester.post).toHaveBeenCalledWith(
         'users',
@@ -135,7 +131,29 @@ test('Call ResourceRequester with correct parameters when button is clicked', ()
     );
 
     return resetTwoFactorPromise.then(() => {
-        expect(toolbarAction.resourceFormStore.change)
-            .toHaveBeenCalledWith('twoFactor', undefined, {isServerValue: true});
+        node = (toolbarAction.getNode(): any);
+        expect(node.props.open).toEqual(false);
+        expect(toolbarAction.form.showSuccessSnackbar).toHaveBeenCalled();
     });
+});
+
+test('Do not reset when the dialog is cancelled', () => {
+    const toolbarAction = createResetTwoFactorToolbarAction();
+    toolbarAction.resourceFormStore.resourceStore.loading = false;
+    toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
+
+    const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The ToolbarItemConfig should not be undefined or null');
+    }
+    toolbarItemConfig.onClick();
+
+    let node = (toolbarAction.getNode(): any);
+    expect(node.props.open).toEqual(true);
+
+    node.props.onCancel();
+
+    node = (toolbarAction.getNode(): any);
+    expect(node.props.open).toEqual(false);
+    expect(ResourceRequester.post).not.toHaveBeenCalled();
 });

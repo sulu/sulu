@@ -53,5 +53,6 @@
     "sulu_security.two_factor_backup_codes_generate": "Generate backup codes",
     "sulu_security.two_factor_backup_codes_generate_warning": "This generates a new set of backup codes. Any previously generated backup codes will no longer work. Do you want to continue?",
     "sulu_security.reset_two_factor": "Reset Two-Factor authentication",
+    "sulu_security.reset_two_factor_dialog_text": "This removes the Two-Factor authentication configuration of the user. The user can log in with the password only afterwards and has to set up Two-Factor authentication again. Do you want to continue?",
     "sulu_activity.description.users.two_factor_resetted": "{userFullName} has reset the two-factor authentication of the user \"{resourceTitle}\""
 }

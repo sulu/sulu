@@ -31,7 +31,7 @@ trait TwoFactorTrait
      * @var UserTwoFactor|null
      */
     #[Expose]
-    #[Groups(['profile', 'fullUser'])]
+    #[Groups(['profile'])]
     protected $twoFactor = null;
 
     public function getTwoFactor(): ?UserTwoFactor
