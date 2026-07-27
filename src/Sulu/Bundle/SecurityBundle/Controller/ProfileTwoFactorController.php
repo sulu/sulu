@@ -25,8 +25,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * Handles the setup of the two factor authentication of the current user.
- *
  * @internal
  */
 class ProfileTwoFactorController

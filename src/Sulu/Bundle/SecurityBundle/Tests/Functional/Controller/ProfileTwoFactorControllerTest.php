@@ -112,7 +112,6 @@ class ProfileTwoFactorControllerTest extends SuluTestCase
         $user = $this->refreshTestUser();
         $this->assertNotNull($user->getTwoFactor());
 
-        // the previous backup code was invalidated and the new hashed codes match the returned ones
         $this->assertFalse($user->isBackupCode('11111111'));
         $this->assertTrue($user->isBackupCode($response['backupCodes'][0]));
     }
@@ -197,9 +196,6 @@ class ProfileTwoFactorControllerTest extends SuluTestCase
         $this->assertSame('totp', $user->getTwoFactor()?->getMethod());
     }
 
-    /**
-     * Activates the "totp" method for the test user directly in the database.
-     */
     private function activateTwoFactor(): User
     {
         /** @var User $user */
