@@ -93,8 +93,9 @@ class ProfileTwoFactorController
         $user = $this->getUser();
 
         $twoFactor = $user->getTwoFactor();
-        $pendingTotpSecret = $twoFactor?->getOptions()['pendingTotpSecret'] ?? null;
-        if (!$pendingTotpSecret) {
+        $options = $twoFactor?->getOptions() ?? [];
+        $pendingTotpSecret = $options['pendingTotpSecret'] ?? null;
+        if (!$twoFactor || !$pendingTotpSecret) {
             return $this->viewHandler->handle(
                 View::create(['error' => 'setup_required'], 400),
             );
@@ -107,7 +108,6 @@ class ProfileTwoFactorController
             );
         }
 
-        $options = $twoFactor->getOptions() ?? [];
         $options['totpSecret'] = $pendingTotpSecret;
         unset($options['pendingTotpSecret']);
         $twoFactor->setOptions($options);
