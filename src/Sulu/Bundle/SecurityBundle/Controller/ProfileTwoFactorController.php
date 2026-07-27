@@ -140,9 +140,6 @@ class ProfileTwoFactorController
         );
     }
 
-    /**
-     * Disables the two factor authentication of the current user.
-     */
     public function deleteAction(): Response
     {
         $user = $this->getUser();
@@ -164,9 +161,6 @@ class ProfileTwoFactorController
     }
 
     /**
-     * Regenerates the backup codes and stores them as password hashes.
-     * The returned plain text codes are only visible once.
-     *
      * @return string[]
      */
     private function regenerateBackupCodes(UserTwoFactor $twoFactor): array

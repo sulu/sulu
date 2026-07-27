@@ -328,8 +328,6 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * Removes the two factor configuration of the given user.
-     *
      * If two factor authentication is forced, it will be set up
      * again on the next login of the user.
      *

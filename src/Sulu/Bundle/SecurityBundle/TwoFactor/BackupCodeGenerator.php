@@ -21,8 +21,6 @@ class BackupCodeGenerator
     private const CODE_CHARACTERS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     /**
-     * Generates a set of unique plain text backup codes.
-     *
      * @param positive-int $count
      *
      * @return string[]
@@ -46,9 +44,6 @@ class BackupCodeGenerator
         return $codes;
     }
 
-    /**
-     * Hashes a plain text backup code for storage.
-     */
     public function hash(string $code): string
     {
         return \password_hash($code, \PASSWORD_BCRYPT);

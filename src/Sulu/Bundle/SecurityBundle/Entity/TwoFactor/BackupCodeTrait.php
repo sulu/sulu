@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\Entity\TwoFactor;
 
 use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
+use Sulu\Bundle\SecurityBundle\TwoFactor\BackupCodeGenerator;
 
 /*
  * Bridge interface to the scheb/2fa-backup-code TwoFactorInterface.
@@ -70,8 +71,6 @@ if (\interface_exists(BackupCodeInterface::class)) {
         }
 
         /**
-         * Returns the array key of the matching backup code or null if the code does not match.
-         *
          * Backup codes are stored as password hashes. Plain text codes are also
          * supported for backwards compatibility with existing setups.
          */
@@ -85,10 +84,9 @@ if (\interface_exists(BackupCodeInterface::class)) {
                 }
             }
 
-            // hashed backup codes always have the length of BackupCodeGenerator::CODE_LENGTH, skip
-            // the expensive hash verification for other inputs (e.g. totp or email codes), because
-            // this method is called for every submitted two factor code
-            if (\Sulu\Bundle\SecurityBundle\TwoFactor\BackupCodeGenerator::CODE_LENGTH !== \strlen($code)) {
+            // skip the expensive hash verification for inputs that can not be a generated
+            // backup code, because this method is called for every submitted two factor code
+            if (BackupCodeGenerator::CODE_LENGTH !== \strlen($code)) {
                 return null;
             }
 
