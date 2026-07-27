@@ -36,7 +36,10 @@ if (\interface_exists(TwoFactorInterface::class)) {
 
         public function getTotpAuthenticationConfiguration(): TotpConfigurationInterface
         {
-            $totpSecret = $this->getTwoFactor()?->getOptions()['totpSecret'] ?? '';
+            $options = $this->getTwoFactor()?->getOptions() ?? [];
+            // the pending secret is used to generate the QR code and to verify the code
+            // during the setup, before the method gets activated
+            $totpSecret = $options['totpSecret'] ?? $options['pendingTotpSecret'] ?? '';
 
             // SHA1 with a 30 seconds period and 6 digits is the only configuration supported
             // by the common authenticator apps (Google Authenticator, Microsoft Authenticator, ...).

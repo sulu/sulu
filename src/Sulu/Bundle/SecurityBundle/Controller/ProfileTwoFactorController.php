@@ -44,8 +44,8 @@ class ProfileTwoFactorController
      * Generates a new secret for the authenticator app based "totp" two factor method
      * and returns the content for the QR code to be scanned by the app.
      *
-     * The secret is only parked in the two factor options and does not activate the
-     * second factor until it was confirmed with a valid code.
+     * The secret is only stored as pending and does not activate the second factor
+     * until it was confirmed with a valid code.
      */
     public function postSetupAction(Request $request): Response
     {
@@ -67,14 +67,16 @@ class ProfileTwoFactorController
         }
 
         $options = $twoFactor->getOptions() ?? [];
-        $options['totpSecret'] = $authenticator->generateSecret();
+        $options['pendingTotpSecret'] = $authenticator->generateSecret();
+        // a stale secret of a previously disabled setup must not be confirmable
+        unset($options['totpSecret']);
         $twoFactor->setOptions($options);
 
         $this->objectManager->flush();
 
         return $this->viewHandler->handle(
             View::create([
-                'secret' => $options['totpSecret'],
+                'secret' => $options['pendingTotpSecret'],
                 'qrContent' => $authenticator->getQRContent($user),
             ]),
         );
@@ -91,7 +93,8 @@ class ProfileTwoFactorController
         $user = $this->getUser();
 
         $twoFactor = $user->getTwoFactor();
-        if (!($twoFactor?->getOptions()['totpSecret'] ?? null)) {
+        $pendingTotpSecret = $twoFactor?->getOptions()['pendingTotpSecret'] ?? null;
+        if (!$pendingTotpSecret) {
             return $this->viewHandler->handle(
                 View::create(['error' => 'setup_required'], 400),
             );
@@ -104,6 +107,10 @@ class ProfileTwoFactorController
             );
         }
 
+        $options = $twoFactor->getOptions() ?? [];
+        $options['totpSecret'] = $pendingTotpSecret;
+        unset($options['pendingTotpSecret']);
+        $twoFactor->setOptions($options);
         $twoFactor->setMethod($method);
 
         $this->objectManager->flush();

@@ -46,7 +46,8 @@ class ProfileTwoFactorControllerTest extends SuluTestCase
         $user = $this->refreshTestUser();
         $this->assertNotNull($user->getTwoFactor());
         $this->assertNull($user->getTwoFactor()->getMethod());
-        $this->assertSame($response['secret'], $user->getTwoFactor()->getOptions()['totpSecret'] ?? null);
+        $this->assertSame($response['secret'], $user->getTwoFactor()->getOptions()['pendingTotpSecret'] ?? null);
+        $this->assertArrayNotHasKey('totpSecret', $user->getTwoFactor()->getOptions());
     }
 
     public function testTotpConfirm(): void
@@ -65,6 +66,8 @@ class ProfileTwoFactorControllerTest extends SuluTestCase
         $user = $this->refreshTestUser();
         $this->assertNotNull($user->getTwoFactor());
         $this->assertSame('totp', $user->getTwoFactor()->getMethod());
+        $this->assertSame($setupResponse['secret'], $user->getTwoFactor()->getOptions()['totpSecret'] ?? null);
+        $this->assertArrayNotHasKey('pendingTotpSecret', $user->getTwoFactor()->getOptions());
     }
 
     public function testTotpConfirmInvalidCode(): void
@@ -176,7 +179,7 @@ class ProfileTwoFactorControllerTest extends SuluTestCase
         $this->assertNull($user->getTwoFactor()?->getMethod());
     }
 
-    public function testPutProfileTotpMethodAfterSetup(): void
+    public function testPutProfileTotpMethodAfterUnconfirmedSetup(): void
     {
         $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'totp']);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -190,7 +193,28 @@ class ProfileTwoFactorControllerTest extends SuluTestCase
             'twoFactor' => ['method' => 'totp'],
         ]);
 
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        // a pending secret that was never confirmed must not activate the method
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+
+        $user = $this->refreshTestUser();
+        $this->assertNull($user->getTwoFactor()?->getMethod());
+    }
+
+    public function testPutProfileTotpMethodAfterConfirmedSetup(): void
+    {
+        $user = $this->activateTwoFactor();
+        $client = $this->createLoggedInClient($user);
+
+        $client->jsonRequest('PUT', '/api/profile', [
+            'firstName' => 'Max',
+            'lastName' => 'Mustermann',
+            'username' => 'test',
+            'email' => 'test@example.localhost',
+            'locale' => 'en',
+            'twoFactor' => ['method' => 'totp'],
+        ]);
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $user = $this->refreshTestUser();
         $this->assertSame('totp', $user->getTwoFactor()?->getMethod());
