@@ -25,6 +25,13 @@ A new `sulu:security:user:reset-two-factor <username>` command and a "Reset Two-
 toolbar button on the user permissions tab allow administrators to reset the two factor
 authentication of a user.
 
+No database schema changes are required, the feature uses the existing `se_user_two_factors` table.
+
+If you have overridden the `profile_details.xml` form in your project, update the `twoFactor/method`
+property from `type="single_select"` to `type="two_factor"` to get the guided setup flow. Without
+the new field type the `totp` method can not be activated, because the profile endpoint rejects
+activating it without a confirmed setup.
+
 ## 2.6.25
 
 ### Deprecated `RequestParametersTrait`
