@@ -21,10 +21,6 @@ The TOTP configuration was changed from a non-standard 20 seconds period with 8 
 If you enabled the `totp` method before via a custom compiler pass, existing users have to set up
 their authenticator app again.
 
-The `sulu_security.two_factor.force.method` configuration was added to configure which method is
-enforced by `sulu_security.two_factor.force` (default `email`). The `totp` method is only activated
-automatically after the user has set up an authenticator app.
-
 A new `sulu:security:user:reset-two-factor <username>` command and a "Reset Two-Factor authentication"
 toolbar button on the user permissions tab allow administrators to reset the two factor
 authentication of a user.

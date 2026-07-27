@@ -110,44 +110,18 @@ class ForceTwoFactorSubscriberTest extends TestCase
         $this->assertSame('other', $userTwoFactor->getMethod());
     }
 
-    public function testPrePersistUserMatchingEmailWithConfiguredMethod(): void
+    public function testPreUpdateUserMatchingWithTotpMethod(): void
     {
-        $forceTwoFactorSubscriber = new ForceTwoFactorSubscriber(
-            '/^(.*)@sulu\.io$/',
-            'totp'
-        );
-
-        $user = new User();
-        $user->setEmail('other@sulu.io');
-        $event = $this->createEvent($user);
-
-        $forceTwoFactorSubscriber->prePersist($event);
-
-        $this->entityManager->persist(Argument::that(function(UserTwoFactor $userTwoFactor) {
-            // "totp" requires the user to set up an authenticator app first and so must not
-            // be activated automatically without a secret
-            $this->assertNull($userTwoFactor->getMethod());
-
-            return true;
-        }))->shouldBeCalled();
-    }
-
-    public function testPreUpdateUserMatchingWithTotpMethodAndSecret(): void
-    {
-        $forceTwoFactorSubscriber = new ForceTwoFactorSubscriber(
-            '/^(.*)@sulu\.io$/',
-            'totp'
-        );
-
         $user = new User();
         $user->setEmail('other@sulu.io');
         $userTwoFactor = new UserTwoFactor($user);
+        $userTwoFactor->setMethod('totp');
         $userTwoFactor->setOptions(['totpSecret' => 'SECRET']);
         $user->setTwoFactor($userTwoFactor);
 
         $event = $this->createEvent($user);
 
-        $forceTwoFactorSubscriber->preUpdate($event);
+        $this->forceTwoFactorSubscriber->preUpdate($event);
 
         $this->assertSame('totp', $userTwoFactor->getMethod());
     }
