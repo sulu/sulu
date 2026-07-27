@@ -11,6 +11,11 @@
 
 namespace Sulu\Component\Persistence\Tests\Unit\EventSubscriber\ORM;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\FieldMapping;
@@ -48,7 +53,7 @@ class LegacyLengthSubscriberTest extends TestCase
         $this->assertSame(31, $this->getFieldLength($metadata->fieldMappings['webspace']));
     }
 
-    public function testLoadClassMetadataShrinksRouteSlugField(): void
+    public function testLoadClassMetadataShrinksRouteSlugFieldForMysql(): void
     {
         $metadata = new ClassMetadata(Route::class);
         $metadata->mapField([
@@ -57,9 +62,23 @@ class LegacyLengthSubscriberTest extends TestCase
             'length' => 255,
         ]);
 
-        $this->subscriber->loadClassMetadata($this->createEvent($metadata));
+        $this->subscriber->loadClassMetadata($this->createEvent($metadata, new MySQLPlatform()));
 
         $this->assertSame(144, $this->getFieldLength($metadata->fieldMappings['slug']));
+    }
+
+    public function testLoadClassMetadataShrinksRouteSlugFieldForPostgres(): void
+    {
+        $metadata = new ClassMetadata(Route::class);
+        $metadata->mapField([
+            'fieldName' => 'slug',
+            'type' => 'string',
+            'length' => 255,
+        ]);
+
+        $this->subscriber->loadClassMetadata($this->createEvent($metadata, new PostgreSQLPlatform()));
+
+        $this->assertSame(208, $this->getFieldLength($metadata->fieldMappings['slug']));
     }
 
     public function testLoadClassMetadataShrinksPageWebspaceKeyField(): void
@@ -149,10 +168,17 @@ class LegacyLengthSubscriberTest extends TestCase
     /**
      * @param ClassMetadata<object> $metadata
      */
-    private function createEvent(ClassMetadata $metadata): LoadClassMetadataEventArgs
+    private function createEvent(ClassMetadata $metadata, ?AbstractPlatform $platform = null): LoadClassMetadataEventArgs
     {
+        $connection = $this->prophesize(Connection::class);
+        $connection->getDatabasePlatform()->willReturn($platform ?? new MySQLPlatform());
+
+        $entityManager = $this->prophesize(EntityManagerInterface::class);
+        $entityManager->getConnection()->willReturn($connection->reveal());
+
         $event = $this->prophesize(LoadClassMetadataEventArgs::class);
         $event->getClassMetadata()->willReturn($metadata);
+        $event->getEntityManager()->willReturn($entityManager->reveal());
 
         return $event->reveal();
     }

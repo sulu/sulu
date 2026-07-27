@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Sulu\Content\Domain\Model\TemplateInterface;
 
@@ -23,10 +24,18 @@ use Sulu\Content\Domain\Model\TemplateInterface;
 class LegacyLengthSubscriber
 {
     /**
+     * MySQL's combined-index byte limit (767 bytes under `innodb_large_prefix=false`) forces a
+     * shorter slug length than Postgres, which has no equivalent per-column index prefix limit.
+     */
+    private const LEGACY_SLUG_LENGTH_MYSQL = 144;
+
+    private const LEGACY_SLUG_LENGTH_POSTGRES = 208;
+
+    /**
      * @var array<string, array<string, int>>
      */
     private const LEGACY_FIELD_LENGTHS = [
-        'Sulu\Route\Domain\Model\Route' => ['webspace' => 31, 'slug' => 144],
+        'Sulu\Route\Domain\Model\Route' => ['webspace' => 31],
         'Sulu\Page\Domain\Model\Page' => ['webspaceKey' => 31],
         'Sulu\Page\Domain\Model\PageDimensionContentNavigationContext' => ['navigationContext' => 31],
         'Sulu\Article\Domain\Model\ArticleDimensionContentAdditionalWebspace' => ['additionalWebspace' => 31],
@@ -38,6 +47,13 @@ class LegacyLengthSubscriber
         $className = $metadata->getName();
 
         $fieldLengths = self::LEGACY_FIELD_LENGTHS[$className] ?? [];
+
+        if ('Sulu\Route\Domain\Model\Route' === $className) {
+            $platform = $event->getEntityManager()->getConnection()->getDatabasePlatform();
+            $fieldLengths['slug'] = $platform instanceof PostgreSQLPlatform
+                ? self::LEGACY_SLUG_LENGTH_POSTGRES
+                : self::LEGACY_SLUG_LENGTH_MYSQL;
+        }
 
         if (\is_a($className, TemplateInterface::class, true) && $metadata->hasField('templateKey')) {
             $fieldLengths['templateKey'] = 31;
