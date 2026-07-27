@@ -26,9 +26,7 @@ final class Configuration implements ConfigurationInterface
 
         $root
             ->children()
-                ->booleanNode('legacy_length')
-                    ->isRequired()
-                ->end()
+                ->booleanNode('legacy_length')->defaultFalse()->end()
             ->end();
 
         return $treeBuilder;

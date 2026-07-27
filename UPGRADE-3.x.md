@@ -12,20 +12,7 @@ new migrations to apply the schema change:
 bin/console doctrine:migrations:migrate
 ```
 
-The `sulu_persistence.legacy_length` setting is required and must be explicitly configured:
-
-```yaml
-# config/packages/sulu_persistence.yaml
-sulu_persistence:
-    legacy_length: false # Set to true to keep the pre-3.x column widths
-```
-
-If `legacy_length` is enabled, these migrations are skipped and remain pending — your schema stays at the pre-3.x
-widths, matching the ORM mapping that `LegacyLengthSubscriber` already shrinks back down for you. Omitting the setting
-causes configuration to fail instead of assuming a default.
-
-The route package (`Sulu\Route\Migrations`) now ships its own migrations directory for the first time; no action
-is needed beyond running the command above, Sulu registers the path automatically.
+If your database does not support the widened length you can set the `sulu_persistence.legacy_length` to true in your `config/packages/sulu_persistence.yaml`.
 
 ### Route value is required when saving routable content
 
