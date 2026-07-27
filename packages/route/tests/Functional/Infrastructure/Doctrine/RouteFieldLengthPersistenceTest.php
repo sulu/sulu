@@ -12,7 +12,9 @@
 namespace Sulu\Route\Tests\Functional\Infrastructure\Doctrine;
 
 use Doctrine\DBAL\Exception as DBALException;
+use Doctrine\DBAL\Schema\AbstractAsset;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use Sulu\Route\Domain\Model\Route;
@@ -51,11 +53,10 @@ class RouteFieldLengthPersistenceTest extends KernelTestCase
         $entityManager = self::getContainer()->get('doctrine.orm.entity_manager');
         $classMetadata = $entityManager->getClassMetadata(Route::class);
 
-        // update db schema for active environment
-        $entityManager->getConnection()->executeStatement(
-            'DELETE FROM ' . $entityManager->getConnection()->quoteIdentifier($classMetadata->getTableName())
-        );
-        (new SchemaTool($entityManager))->updateSchema([$classMetadata], true);
+        // The `test` and `test_legacy` environments share one physical database, so the
+        // `ro_routes` table must be cleared and re-synced to whichever field lengths are
+        // active for the booted environment before asserting against them.
+        $this->syncRouteTableSchema($entityManager, $classMetadata);
 
         $webspaceLength = $classMetadata->getFieldMapping('webspace')['length'];
         $localeLength = $classMetadata->getFieldMapping('locale')['length'];
@@ -97,12 +98,8 @@ class RouteFieldLengthPersistenceTest extends KernelTestCase
 
         // The `test` and `test_legacy` environments share one physical database, so the
         // `ro_routes` table must be cleared and re-synced to whichever field lengths are
-        // active for the booted environment before asserting against them: clearing first
-        // avoids failing the narrowing ALTER on rows a wider-length run left behind.
-        $entityManager->getConnection()->executeStatement(
-            'DELETE FROM ' . $entityManager->getConnection()->quoteIdentifier($classMetadata->getTableName())
-        );
-        (new SchemaTool($entityManager))->updateSchema([$classMetadata], true);
+        // active for the booted environment before asserting against them.
+        $this->syncRouteTableSchema($entityManager, $classMetadata);
 
         $webspaceLength = $classMetadata->getFieldMapping('webspace')['length'];
         $localeLength = $classMetadata->getFieldMapping('locale')['length'];
@@ -125,6 +122,33 @@ class RouteFieldLengthPersistenceTest extends KernelTestCase
             $entityManager->flush();
         } finally {
             $entityManager->clear();
+        }
+    }
+
+    /**
+     * @param ClassMetadata<Route> $classMetadata
+     */
+    private function syncRouteTableSchema(EntityManagerInterface $entityManager, ClassMetadata $classMetadata): void
+    {
+        $connection = $entityManager->getConnection();
+        $tableName = $classMetadata->getTableName();
+
+        $connection->executeStatement('DELETE FROM ' . $connection->quoteIdentifier($tableName));
+
+        // Doctrine's default schema-assets filter accepts every table, so without restricting it here
+        // SchemaTool would introspect the whole (shared) test database and generate DROP statements for
+        // every table not part of the given (single-entity) target schema. Scoping the filter to just the
+        // `ro_routes` table keeps the diff limited to the column-length change we actually want to apply.
+        $configuration = $connection->getConfiguration();
+        $previousFilter = $configuration->getSchemaAssetsFilter();
+        $configuration->setSchemaAssetsFilter(
+            static fn (string|AbstractAsset $asset): bool => ($asset instanceof AbstractAsset ? $asset->getName() : $asset) === $tableName
+        );
+
+        try {
+            (new SchemaTool($entityManager))->updateSchema([$classMetadata]);
+        } finally {
+            $configuration->setSchemaAssetsFilter($previousFilter);
         }
     }
 
