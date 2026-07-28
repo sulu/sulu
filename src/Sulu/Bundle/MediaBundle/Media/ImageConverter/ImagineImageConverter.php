@@ -80,16 +80,11 @@ class ImagineImageConverter implements ImageConverterInterface
                 return \array_unique([
                     $preferredExtension,
                     'jpg',
-                    'JPG',
-                    'JPEG',
+                    'jpeg',
                     'gif',
-                    'GIF',
                     'png',
-                    'PNG',
                     'webp',
-                    'WEBP',
                     'avif',
-                    'AVIF',
                 ]);
             }
         }
