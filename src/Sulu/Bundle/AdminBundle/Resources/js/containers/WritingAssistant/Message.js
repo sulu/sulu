@@ -5,6 +5,7 @@ import {observable} from 'mobx';
 import {Button} from '../../components';
 import {TextEditor} from '../../containers';
 import {translate} from '../../utils';
+import ReplyIcon from './ReplyIcon';
 import messageStyles from './message.scss';
 
 type Props = {|
@@ -127,6 +128,7 @@ class Message extends Component<Props> {
             expert,
             command,
             collapsed,
+            index,
             isLoading,
             displayActions,
         } = this.props;
@@ -135,16 +137,15 @@ class Message extends Component<Props> {
             return null;
         }
 
-        const commandTitle = title || command;
+        const commandTitle = (title || command).substring(0, MAX_LENGTH);
 
-        return (
+        const content = (
             <Fragment>
-                {
-                    commandTitle.substring(0, MAX_LENGTH) + ' ...' &&
-                        <div className={messageStyles.command}>
-                            {commandTitle}
-                            {expert && <div className={messageStyles.expert}>{expert}</div>}
-                        </div>
+                {commandTitle &&
+                    <div className={messageStyles.command}>
+                        {commandTitle}
+                        {expert && <div className={messageStyles.expert}>{expert}</div>}
+                    </div>
                 }
 
                 <div
@@ -163,7 +164,7 @@ class Message extends Component<Props> {
                                 disabled={isLoading}
                                 onClick={this.handleOnInsert}
                                 size="small"
-                                skin="secondary"
+                                skin="primary"
                             >{translate('sulu_admin.insert')}</Button>
                             <Button
                                 disabled={isLoading}
@@ -183,6 +184,20 @@ class Message extends Component<Props> {
                     }
                 </div>
             </Fragment>
+        );
+
+        // the selected text heads the conversation, every generated answer is marked as a reply to it
+        if (index === 0) {
+            return content;
+        }
+
+        return (
+            <div className={messageStyles.reply}>
+                <span className={messageStyles.replyIcon}><ReplyIcon /></span>
+                <div className={messageStyles.replyContent}>
+                    {content}
+                </div>
+            </div>
         );
     }
 }

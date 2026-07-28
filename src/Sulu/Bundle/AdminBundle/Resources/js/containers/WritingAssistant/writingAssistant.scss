@@ -1,14 +1,27 @@
+@import '../Application/colors.scss';
+@import '../../components/Overlay/variables.scss';
+
 .content {
     display: flex;
     flex-direction: row;
 }
 
+/* the dialog keeps the same size no matter how long the conversation is, so nothing jumps while working */
 .chat {
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     width: 100%;
+    height: $overlayContentMaxHeight;
     z-index: 2;
     box-sizing: border-box;
+}
+
+/* sticks above the prompt so the reason stays visible while the conversation is scrolled */
+.account-limit {
+    position: sticky;
+    bottom: 92px;
+    z-index: 3;
+    padding: 0 50px;
+    background-color: $white;
 }

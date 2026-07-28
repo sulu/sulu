@@ -1,44 +1,63 @@
+/* generated answers are indented and marked with an arrow, so they read as replies to the selected text */
+.reply {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+
+.reply-icon {
+    display: flex;
+    flex-shrink: 0;
+    width: 24px;
+    margin-top: 4px;
+    color: #999;
+}
+
+.reply-content {
+    flex-grow: 1;
+    min-width: 0;
+}
+
 .message {
     box-sizing: border-box;
-    padding: 1rem;
+    padding: 12px;
     background: #fff;
-    border-radius: 8px;
-    line-height: 30px;
+    border-radius: 4px;
+    line-height: 1.5;
     text-align: left;
-    margin: 16px 0;
+    margin: 0 0 8px;
     display: flex;
     flex-direction: column;
 }
 
 .text {
     overflow: auto;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    padding: 5px;
-    line-height: 28px;
+    line-height: 1.5;
     max-height: 300px;
-    resize: vertical;
-    min-height: 40px;
 }
 
 .actions {
     display: flex;
     flex-direction: row;
     gap: 8px;
-    margin-top: 8px;
+    margin-top: 12px;
 }
 
 .command {
     display: flex;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 700;
-    margin: 8px 0;
+    margin: 0 0 6px;
 }
 
 .expert {
-    border-left: 1px solid #ccc;
-    padding-left: 8px;
     margin-left: 8px;
+    font-weight: normal;
+
+    &::before {
+        content: '\2022';
+        margin-right: 8px;
+    }
 }
 
 .insert-button {
