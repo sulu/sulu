@@ -1,60 +1,69 @@
 @import '../Application/colors.scss';
 
-.predefined-prompts-dropdown {
-    max-width: 20vh;
-}
-
+/* stays at the bottom of the overlay body while the conversation scrolls behind it */
 .input-container {
-    background-color: white;
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    background-color: $white;
     padding: 20px 50px;
 }
 
-.expert-select {
-    flex-grow: 1;
-    flex-basis: 0;
-    border-right: 1px solid $silver;
-    padding-right: 8px;
-    min-width: 10vh;
-}
-
-.single-expert {
-    flex-grow: 1;
-    flex-basis: 0;
-    border-right: 1px solid $silver;
-    padding-right: 8px;
-    min-width: 10vh;
-    line-height: 30px;
-}
-
-.single-expert-container {
+.label {
+    font-size: 12px;
     white-space: nowrap;
 }
 
-.input {
-    display: flex;
-    gap: 8px;
-}
-
-.predefined-prompts {
+.options {
     display: flex;
     flex-direction: row;
+    align-items: center;
     gap: 8px;
-    margin: 8px 0;
-    justify-content: left;
-    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
 
-    button {
-        flex-grow: 1;
-        flex-basis: 0;
-        min-width: 80px;
-    }
+.expert-select {
+    min-width: 10vh;
+    padding-right: 8px;
+    border-right: 1px solid $silver;
+}
+
+.single-expert {
+    min-width: 10vh;
+    padding-right: 8px;
+    border-right: 1px solid $silver;
+    line-height: 30px;
 }
 
 .content-context-checkbox {
     display: flex;
     align-items: center;
+    gap: 6px;
     white-space: nowrap;
     margin-right: auto;
-    border-left: 1px solid $silver;
-    padding-left: 8px;
+}
+
+.info-icon {
+    font-size: 12px;
+    color: $silverChalice;
+}
+
+.panel {
+    background-color: $wildSand;
+    border-radius: 3px;
+    padding: 12px;
+}
+
+.predefined-prompts {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.input {
+    display: flex;
+    gap: 8px;
 }

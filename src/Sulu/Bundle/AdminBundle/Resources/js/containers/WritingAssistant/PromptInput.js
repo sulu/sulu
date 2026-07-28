@@ -3,11 +3,13 @@
 import React, {Component} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import {Button, Checkbox, Input, SingleSelect, DropdownButton} from '../../components';
+import {Button, Checkbox, DropdownButton, Icon, Input, SingleSelect} from '../../components';
+import Tooltip from '../../components/Tooltip';
 import promptInputStyles from './prompt-input.scss';
 
 type Props = {|
     canIncludeContentContext?: boolean,
+    disabled?: boolean,
     experts: {
         name: string,
         text: string,
@@ -19,7 +21,9 @@ type Props = {|
         selected: string,
         type: 'select',
     },
+    expertsLabel: string,
     includeContentContext?: boolean,
+    includeContentContextInfo?: string,
     includeContentContextLabel?: string,
     isLoading: boolean,
     messages: {
@@ -31,12 +35,17 @@ type Props = {|
     predefinedPrompts: ?{
         handleClick: (index: number) => void,
         label: string,
+        moreLabel: string,
         options: Array<{
+            icon?: ?string,
             id: number,
             name: string,
         }>,
     },
 |};
+
+const DEFAULT_PREDEFINED_PROMPT_ICON = 'fa-terminal';
+const VISIBLE_PREDEFINED_PROMPTS = 3;
 
 /**
  * @internal
@@ -50,7 +59,11 @@ class PromptInput extends Component<Props> {
     };
 
     @action handleSendMessage = () => {
-        const {onAddMessage} = this.props;
+        const {disabled, onAddMessage} = this.props;
+
+        if (disabled) {
+            return;
+        }
 
         const messageInput = this.messageInput.trim();
         this.messageInput = '';
@@ -65,26 +78,69 @@ class PromptInput extends Component<Props> {
         }
     };
 
-    renderPredefinedPrompts = () => {
-        const {predefinedPrompts, isLoading} = this.props;
-        if (!predefinedPrompts) {
-            return null;
+    renderExperts = () => {
+        const {disabled, experts} = this.props;
+
+        if (experts.type !== 'select') {
+            return <span className={promptInputStyles.singleExpert}>{experts.text}</span>;
         }
 
         return (
-            <div className={promptInputStyles.predefinedPromptsDropdown}>
-                <DropdownButton icon="fa-terminal" label={predefinedPrompts.label} skin="secondary">
-                    {predefinedPrompts.options.map((option) => (
-                        <DropdownButton.Item
-                            disabled={isLoading}
-                            key={option.id}
-                            onClick={predefinedPrompts.handleClick}
-                            value={option.id}
-                        >
+            <div className={promptInputStyles.expertSelect}>
+                <SingleSelect disabled={disabled} onChange={experts.handleClick} value={experts.selected}>
+                    {experts.options.map((option) => (
+                        <SingleSelect.Option key={option.id} value={option.id}>
                             {option.name}
-                        </DropdownButton.Item>
+                        </SingleSelect.Option>
                     ))}
-                </DropdownButton>
+                </SingleSelect>
+            </div>
+        );
+    };
+
+    renderPredefinedPrompts = () => {
+        const {disabled, isLoading, predefinedPrompts} = this.props;
+
+        if (!predefinedPrompts || predefinedPrompts.options.length === 0) {
+            return null;
+        }
+
+        // the most used prompts stay within reach, the rest would otherwise wrap into additional rows
+        const buttons = predefinedPrompts.options.slice(0, VISIBLE_PREDEFINED_PROMPTS);
+        const remaining = predefinedPrompts.options.slice(VISIBLE_PREDEFINED_PROMPTS);
+
+        return (
+            <div className={promptInputStyles.predefinedPrompts}>
+                <span className={promptInputStyles.label}>{predefinedPrompts.label}:</span>
+                {buttons.map((option) => (
+                    <Button
+                        disabled={disabled || isLoading}
+                        icon={option.icon || DEFAULT_PREDEFINED_PROMPT_ICON}
+                        key={option.id}
+                        onClick={predefinedPrompts.handleClick}
+                        size="small"
+                        skin="secondary"
+                        value={option.id}
+                    >{option.name}</Button>
+                ))}
+                {remaining.length > 0 &&
+                    <DropdownButton
+                        icon={DEFAULT_PREDEFINED_PROMPT_ICON}
+                        label={predefinedPrompts.moreLabel}
+                        skin="secondary"
+                    >
+                        {remaining.map((option) => (
+                            <DropdownButton.Item
+                                disabled={disabled || isLoading}
+                                key={option.id}
+                                onClick={predefinedPrompts.handleClick}
+                                value={option.id}
+                            >
+                                {option.name}
+                            </DropdownButton.Item>
+                        ))}
+                    </DropdownButton>
+                }
             </div>
         );
     };
@@ -92,7 +148,9 @@ class PromptInput extends Component<Props> {
     renderContentContextCheckbox = () => {
         const {
             canIncludeContentContext,
+            disabled,
             includeContentContext,
+            includeContentContextInfo,
             includeContentContextLabel,
             onIncludeContentContextChange,
         } = this.props;
@@ -105,19 +163,25 @@ class PromptInput extends Component<Props> {
             <div className={promptInputStyles.contentContextCheckbox}>
                 <Checkbox
                     checked={includeContentContext}
+                    disabled={disabled}
                     onChange={onIncludeContentContextChange}
                     size="small"
                 >
                     {includeContentContextLabel}
                 </Checkbox>
+                {includeContentContextInfo &&
+                    <Tooltip label={includeContentContextInfo}>
+                        <Icon className={promptInputStyles.infoIcon} name="su-exclamation-circle" />
+                    </Tooltip>
+                }
             </div>
         );
     };
 
     render() {
         const {
-            experts,
-            predefinedPrompts,
+            disabled,
+            expertsLabel,
             messages: {
                 addMessage: addMessageMessage,
                 send: sendMessage,
@@ -126,57 +190,28 @@ class PromptInput extends Component<Props> {
 
         return (
             <div className={promptInputStyles.inputContainer}>
-                <div className={promptInputStyles.predefinedPrompts}>
-                    {predefinedPrompts !== undefined && (
-                        <div>
-                            {experts.type === 'select' ? (
-                                <div className={promptInputStyles.expertSelect}>
-                                    <SingleSelect onChange={experts.handleClick} value={experts.selected}>
-                                        {experts.options.map((option) => (
-                                            <SingleSelect.Option key={option.id} value={option.id}>
-                                                {option.name}
-                                            </SingleSelect.Option>
-                                        ))}
-                                    </SingleSelect>
-                                </div>
-                            ) : (
-                                <span className={promptInputStyles.singleExpert}>{experts.text}</span>
-                            )}
-                        </div>
-                    )}
-                    {this.renderPredefinedPrompts()}
+                <div className={promptInputStyles.options}>
+                    <span className={promptInputStyles.label}>{expertsLabel}:</span>
+                    {this.renderExperts()}
                     {this.renderContentContextCheckbox()}
                 </div>
-                <div className={promptInputStyles.input}>
-                    {predefinedPrompts === undefined && (
-                        <div className={promptInputStyles.singleExpertContainer}>
-                            {experts.type === 'select' ? (
-                                <div className={promptInputStyles.expertSelect}>
-                                    <SingleSelect onChange={experts.handleClick} value={experts.selected}>
-                                        {experts.options.map((option) => (
-                                            <SingleSelect.Option key={option.id} value={option.id}>
-                                                {option.name}
-                                            </SingleSelect.Option>
-                                        ))}
-                                    </SingleSelect>
-                                </div>
-                            ) : (
-                                <span className={promptInputStyles.singleExpert}>{experts.text}</span>
-                            )}
-                        </div>
-                    )}
-                    <Input
-                        onChange={this.handleInputChange}
-                        onKeyPress={this.handleKeyPress}
-                        placeholder={addMessageMessage}
-                        type="text"
-                        value={this.messageInput}
-                    />
-                    <Button
-                        disabled={(this.messageInput?.trim() ?? '') === ''}
-                        onClick={this.handleSendMessage}
-                        skin="primary"
-                    >{sendMessage}</Button>
+                <div className={promptInputStyles.panel}>
+                    {this.renderPredefinedPrompts()}
+                    <div className={promptInputStyles.input}>
+                        <Input
+                            disabled={disabled}
+                            onChange={this.handleInputChange}
+                            onKeyPress={this.handleKeyPress}
+                            placeholder={addMessageMessage}
+                            type="text"
+                            value={this.messageInput}
+                        />
+                        <Button
+                            disabled={disabled || (this.messageInput?.trim() ?? '') === ''}
+                            onClick={this.handleSendMessage}
+                            skin="primary"
+                        >{sendMessage}</Button>
+                    </div>
                 </div>
             </div>
         );
