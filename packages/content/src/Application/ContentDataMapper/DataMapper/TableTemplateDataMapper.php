@@ -18,7 +18,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
-use Sulu\Content\Domain\Table\TableData;
+use Sulu\Content\Domain\Table\TableTemplateDataNormalizer;
 
 /**
  * Normalizes every `table` property of the active template after the
@@ -31,6 +31,7 @@ final readonly class TableTemplateDataMapper implements DataMapperInterface
 
     public function __construct(
         private MetadataProviderRegistry $metadataProviderRegistry,
+        private TableTemplateDataNormalizer $tableTemplateDataNormalizer,
     ) {
     }
 
@@ -50,47 +51,37 @@ final readonly class TableTemplateDataMapper implements DataMapperInterface
             return;
         }
 
-        $tableProperties = $this->resolveTableProperties(
+        $tablePropertyPaths = $this->resolveTablePropertyPaths(
             $localizedDimensionContent::getTemplateType(),
             $localizedDimensionContent->getLocale(),
             $template,
         );
 
-        if ([] === $tableProperties) {
+        if ([] === $tablePropertyPaths) {
             return;
         }
 
         foreach ([$unlocalizedDimensionContent, $localizedDimensionContent] as $dimensionContent) {
-            $this->normalize($dimensionContent, $tableProperties);
+            $this->normalize($dimensionContent, $tablePropertyPaths);
         }
     }
 
     /**
-     * @param list<string> $tableProperties
+     * @param list<string> $tablePropertyPaths
      */
-    private function normalize(TemplateInterface $dimensionContent, array $tableProperties): void
+    private function normalize(TemplateInterface $dimensionContent, array $tablePropertyPaths): void
     {
         $templateData = $dimensionContent->getTemplateData();
-        $changed = false;
 
-        foreach ($tableProperties as $name) {
-            if (!\array_key_exists($name, $templateData)) {
-                continue;
-            }
-
-            $templateData[$name] = TableData::fromArray($templateData[$name])->toArray();
-            $changed = true;
-        }
-
-        if ($changed) {
-            $dimensionContent->setTemplateData($templateData);
-        }
+        $dimensionContent->setTemplateData(
+            $this->tableTemplateDataNormalizer->normalize($templateData, $tablePropertyPaths),
+        );
     }
 
     /**
      * @return list<string>
      */
-    private function resolveTableProperties(string $type, ?string $locale, string $template): array
+    private function resolveTablePropertyPaths(string $type, ?string $locale, string $template): array
     {
         if (null === $locale) {
             return [];
@@ -109,17 +100,15 @@ final readonly class TableTemplateDataMapper implements DataMapperInterface
             return [];
         }
 
-        $tableProperties = [];
+        $tablePropertyPaths = [];
         foreach ($metadata->getFlatFieldMetadata() as $property) {
             if (self::TABLE_TYPE !== $property->getType()) {
                 continue;
             }
 
-            // Only handle top-level properties (block paths use a "/" separator).
-            $name = \explode('/', $property->getName(), 2)[0];
-            $tableProperties[$name] = true;
+            $tablePropertyPaths[] = $property->getName();
         }
 
-        return \array_keys($tableProperties);
+        return $tablePropertyPaths;
     }
 }

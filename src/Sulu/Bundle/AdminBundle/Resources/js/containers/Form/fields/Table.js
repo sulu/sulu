@@ -54,6 +54,29 @@ function toCell(raw: mixed): Cell {
     return {text: raw == null ? '' : String(raw), bold: false, italic: false, underline: false};
 }
 
+function resolveTableValue(raw: mixed): ?TableValue {
+    if (!raw || typeof raw !== 'object') {
+        return null;
+    }
+
+    // Unwrap ContentView-shaped values ({content, view}) if they were stored accidentally.
+    if (raw.content && typeof raw.content === 'object' && !Array.isArray(raw.content)) {
+        const content = raw.content;
+        if (Array.isArray(content.head) && Array.isArray(content.body)) {
+            const {head, body, ...rest} = content; // eslint-disable-line no-unused-vars
+            const {content: contentView, view, ...outerRest} = raw; // eslint-disable-line no-unused-vars
+
+            return {...outerRest, ...rest, head, body};
+        }
+    }
+
+    if (!Array.isArray(raw.head) || !Array.isArray(raw.body)) {
+        return null;
+    }
+
+    return raw;
+}
+
 function emptyCell(): Cell {
     return {text: '', bold: false, italic: false, underline: false};
 }
@@ -65,9 +88,9 @@ export default class Table extends React.Component<FieldTypeProps<?TableValue>, 
     };
 
     get extras(): Object {
-        const value = toJS(this.props.value);
+        const value = resolveTableValue(toJS(this.props.value));
 
-        if (!value || typeof value !== 'object') {
+        if (!value) {
             return {};
         }
 
@@ -77,9 +100,9 @@ export default class Table extends React.Component<FieldTypeProps<?TableValue>, 
     }
 
     get value(): NormalizedValue {
-        const value = toJS(this.props.value);
+        const value = resolveTableValue(toJS(this.props.value));
 
-        if (!value || !Array.isArray(value.head) || !Array.isArray(value.body)) {
+        if (!value) {
             return {head: [], body: []};
         }
 
