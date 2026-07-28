@@ -81,6 +81,7 @@ class ImagineImageConverter implements ImageConverterInterface
                     $preferredExtension,
                     'jpg',
                     'JPG',
+                    'JPEG',
                     'gif',
                     'GIF',
                     'png',
