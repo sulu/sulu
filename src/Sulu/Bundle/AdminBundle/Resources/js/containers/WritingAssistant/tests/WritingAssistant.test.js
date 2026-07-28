@@ -37,11 +37,22 @@ describe('WritingAssistant Component', () => {
         locale: 'en',
         messages: {
             addMessage: 'Add Message',
+            contactAdmin: 'Contact Admin',
             copiedToClipboard: 'Copied to Clipboard',
+            experts: 'Experts',
             includeContentContext: 'Add whole content as context',
+            includeContentContextInfo: 'Use the entire page content',
             initialMessage: 'Initial Message',
+            outOfCredits: 'Out of Credits',
+            outOfCreditsDescription: 'Your AI credits have been used up.',
+            morePredefinedPrompts: 'More',
             predefinedPrompts: 'Predefined Prompts',
+            requestFailed: 'Something went wrong',
+            requestFailedDescription: 'Your request could not be completed right now.',
             send: 'Send',
+            subscriptionInactive: 'Subscription Inactive',
+            subscriptionInactiveDescription: 'Your AI subscription is not active.',
+            tryAgain: 'Try Again',
             writingAssistant: 'Writing Assistant',
         },
         onConfirm: jest.fn(),
@@ -67,7 +78,7 @@ describe('WritingAssistant Component', () => {
         expect(screen.getAllByText('Expert 2')[0]).toBeInTheDocument();
     });
 
-    test('renders the predefined prompts dropdown when predefinedPrompts are available', async() => {
+    test('renders a quick action button for every predefined prompt', () => {
         const predefinedPrompts = [
             {id: 1, name: 'Prompt 1', prompt: 'Prompt 1 text'},
             {id: 2, name: 'Prompt 2', prompt: 'Prompt 2 text'},
@@ -84,7 +95,7 @@ describe('WritingAssistant Component', () => {
 
         render(<WritingAssistant {...defaultProps} configuration={configuration} />);
 
-        await userEvent.click(screen.getByText(defaultProps.messages.predefinedPrompts));
+        expect(screen.getByText(defaultProps.messages.predefinedPrompts + ':')).toBeInTheDocument();
         expect(screen.getByText('Prompt 1')).toBeInTheDocument();
         expect(screen.getByText('Prompt 2')).toBeInTheDocument();
     });
@@ -310,5 +321,132 @@ describe('WritingAssistant Component', () => {
         );
 
         expect(screen.getByText('Add whole content as context')).toBeInTheDocument();
+    });
+
+    test('appends every answer below the previous one and collapses the older ones', async() => {
+        Requester.post
+            .mockResolvedValueOnce({response: {text: 'First answer'}})
+            .mockResolvedValueOnce({response: {text: 'Second answer'}});
+
+        render(<WritingAssistant {...defaultProps} />);
+
+        const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
+        await userEvent.type(input, 'first{enter}');
+        expect(await screen.findByText('First answer')).toBeInTheDocument();
+
+        await userEvent.type(input, 'second{enter}');
+        expect(await screen.findByText('Second answer')).toBeInTheDocument();
+
+        const texts = [...document.querySelectorAll('[class*="message"] [class*="text"]')]
+            .map((element) => element.textContent);
+        const first = texts.findIndex((text) => text.includes('First answer'));
+        const second = texts.findIndex((text) => text.includes('Second answer'));
+
+        expect(first).toBeGreaterThan(-1);
+        expect(second).toBeGreaterThan(first);
+
+        // only the newest answer offers the actions, the older one is collapsed
+        expect(screen.getAllByText('sulu_admin.insert')).toHaveLength(1);
+    });
+
+    test('shows the retryable error when the request fails', async() => {
+        Requester.post.mockRejectedValueOnce({json: () => Promise.resolve({})});
+
+        render(<WritingAssistant {...defaultProps} />);
+
+        const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
+        await userEvent.type(input, 'Test message{enter}');
+
+        await waitFor(() => {
+            expect(screen.getByText(defaultProps.messages.requestFailed)).toBeInTheDocument();
+        });
+
+        expect(screen.getByText(defaultProps.messages.requestFailed).parentElement)
+            .toHaveTextContent(defaultProps.messages.requestFailedDescription);
+        expect(screen.getByText(defaultProps.messages.tryAgain)).toBeInTheDocument();
+        expect(screen.queryByText(defaultProps.messages.outOfCredits)).not.toBeInTheDocument();
+    });
+
+    test('retries the failed prompt when try again is clicked', async() => {
+        Requester.post
+            .mockRejectedValueOnce({json: () => Promise.resolve({})})
+            .mockResolvedValueOnce({response: {text: 'Optimized text'}});
+
+        render(<WritingAssistant {...defaultProps} />);
+
+        const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
+        await userEvent.type(input, 'Test message{enter}');
+
+        await waitFor(() => {
+            expect(screen.getByText(defaultProps.messages.tryAgain)).toBeInTheDocument();
+        });
+
+        await userEvent.click(screen.getByText(defaultProps.messages.tryAgain));
+
+        await waitFor(() => {
+            expect(screen.getByText('Optimized text')).toBeInTheDocument();
+        });
+
+        expect(screen.queryByText(defaultProps.messages.requestFailed)).not.toBeInTheDocument();
+        expect(Requester.post).toHaveBeenCalledTimes(2);
+    });
+
+    test('shows the out of credits error and disables the input', async() => {
+        Requester.post.mockRejectedValueOnce({
+            json: () => Promise.resolve({messageKey: 'sulu_ai.out_of_credits'}),
+        });
+
+        render(<WritingAssistant {...defaultProps} contactEmail="admin@example.com" />);
+
+        const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
+        await userEvent.type(input, 'Test message{enter}');
+
+        await waitFor(() => {
+            expect(screen.getByText(defaultProps.messages.outOfCredits)).toBeInTheDocument();
+        });
+
+        expect(screen.getByText(defaultProps.messages.outOfCredits).parentElement)
+            .toHaveTextContent(defaultProps.messages.outOfCreditsDescription);
+        expect(screen.getByText(defaultProps.messages.contactAdmin)).toBeInTheDocument();
+        expect(screen.queryByText(defaultProps.messages.requestFailed)).not.toBeInTheDocument();
+        expect(input).toBeDisabled();
+    });
+
+    test('shows the subscription inactive error and disables the input', async() => {
+        Requester.post.mockRejectedValueOnce({
+            json: () => Promise.resolve({messageKey: 'sulu_ai.subscription_inactive'}),
+        });
+
+        render(<WritingAssistant {...defaultProps} contactEmail="admin@example.com" />);
+
+        const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
+        await userEvent.type(input, 'Test message{enter}');
+
+        await waitFor(() => {
+            expect(screen.getByText(defaultProps.messages.subscriptionInactive)).toBeInTheDocument();
+        });
+
+        expect(screen.getByText(defaultProps.messages.subscriptionInactive).parentElement)
+            .toHaveTextContent(defaultProps.messages.subscriptionInactiveDescription);
+        expect(screen.queryByText(defaultProps.messages.outOfCredits)).not.toBeInTheDocument();
+        expect(screen.queryByText(defaultProps.messages.requestFailed)).not.toBeInTheDocument();
+        expect(input).toBeDisabled();
+    });
+
+    test('does not show the contact admin action without a contact email', async() => {
+        Requester.post.mockRejectedValueOnce({
+            json: () => Promise.resolve({messageKey: 'sulu_ai.out_of_credits'}),
+        });
+
+        render(<WritingAssistant {...defaultProps} />);
+
+        const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
+        await userEvent.type(input, 'Test message{enter}');
+
+        await waitFor(() => {
+            expect(screen.getByText(defaultProps.messages.outOfCredits)).toBeInTheDocument();
+        });
+
+        expect(screen.queryByText(defaultProps.messages.contactAdmin)).not.toBeInTheDocument();
     });
 });

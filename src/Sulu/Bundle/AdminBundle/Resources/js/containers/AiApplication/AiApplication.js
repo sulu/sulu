@@ -33,6 +33,7 @@ type Props = {|
         |}>,
     },
     writingAssistant: {
+        contactEmail?: ?string,
         enabled: boolean,
         experts: {
             [string]: ExpertType,
@@ -353,16 +354,28 @@ export default class AiApplication extends Component<Props> {
                             url: this.actionUrl,
                         }}
                         configuration={this.props.writingAssistant}
+                        contactEmail={this.props.writingAssistant.contactEmail}
                         contentData={this.contentData}
                         dataPath={this.selectedComponent.dataPath}
                         locale={locale}
                         messages={{
                             addMessage: translate('sulu_admin.writing_assistant_prompt_placeholder'),
+                            contactAdmin: translate('sulu_admin.contact_admin'),
                             copiedToClipboard: translate('sulu_admin.sucessfully_copied_to_clipboard'),
+                            experts: translate('sulu_admin.experts'),
                             includeContentContext: translate('sulu_admin.include_content_context'),
+                            includeContentContextInfo: translate('sulu_admin.include_content_context_info'),
                             initialMessage: translate('sulu_admin.selected_text'),
+                            outOfCredits: translate('sulu_admin.out_of_credits'),
+                            outOfCreditsDescription: translate('sulu_admin.out_of_credits_description'),
+                            morePredefinedPrompts: translate('sulu_admin.more_predefined_prompts'),
                             predefinedPrompts: translate('sulu_admin.predefined_prompts'),
+                            requestFailed: translate('sulu_admin.writing_assistant_failed'),
+                            requestFailedDescription: translate('sulu_admin.writing_assistant_failed_description'),
                             send: translate('sulu_admin.send'),
+                            subscriptionInactive: translate('sulu_admin.subscription_inactive'),
+                            subscriptionInactiveDescription: translate('sulu_admin.subscription_inactive_description'),
+                            tryAgain: translate('sulu_admin.try_again'),
                             writingAssistant: translate('sulu_admin.writing_assistant'),
                         }}
                         onConfirm={this.handleWritingAssistantConfirm}
