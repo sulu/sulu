@@ -194,9 +194,6 @@ class Account extends ApiWrapper
      *
      * @return self|null
      */
-    #[VirtualProperty]
-    #[SerializedName('parent')]
-    #[Groups(['fullAccount'])]
     public function getParent()
     {
         $account = $this->entity->getParent();
@@ -205,6 +202,14 @@ class Account extends ApiWrapper
         }
 
         return null;
+    }
+
+    #[VirtualProperty]
+    #[SerializedName('parent')]
+    #[Groups(['fullAccount'])]
+    public function getParentId(): ?int
+    {
+        return $this->getParent()?->getId();
     }
 
     /**

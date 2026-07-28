@@ -1,10 +1,9 @@
 @import '../Application/colors.scss';
+@import '../Application/variables.scss';
 
 $loginTextColor: $black;
 $borderColor: $mercury;
 $formContainerBackgroundColor: $white;
-$formContainerBoxShadowColor: $black;
-$formContainerBoxShadow: 0 2px 18px 0 rgba($formContainerBoxShadowColor, .22);
 
 .login {
     height: 100vh;
@@ -19,7 +18,7 @@ $formContainerBoxShadow: 0 2px 18px 0 rgba($formContainerBoxShadowColor, .22);
 
 .login-container {
     background-color: $formContainerBackgroundColor;
-    box-shadow: $formContainerBoxShadow;
+    box-shadow: $cardBoxShadow;
     width: 480px;
     min-height: 615px;
 }

@@ -16,6 +16,7 @@ namespace Sulu\Page\Infrastructure\Symfony\HttpKernel;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
+use Sulu\Page\Application\ContentNormalizer\DefaultTemplateNormalizer;
 use Sulu\Page\Application\Mapper\PageContentMapper;
 use Sulu\Page\Application\Mapper\PageMapperInterface;
 use Sulu\Page\Application\MessageHandler\ApplyWorkflowTransitionPageMessageHandler;
@@ -230,6 +231,8 @@ final class SuluPageBundle extends AbstractBundle
             ->class(MovePageMessageHandler::class)
             ->args([
                 new Reference('sulu_page.page_repository'),
+                new Reference('sulu_route.route_repository'),
+                new Reference('sulu_route.resource_locator_generator'),
                 new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
@@ -240,6 +243,8 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_page.page_repository'),
                 new Reference('sulu_content.content_copier'),
                 new Reference('sulu.core.localization_manager'),
+                new Reference('sulu_route.route_repository'),
+                new Reference('sulu_route.resource_locator_generator'),
                 new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
@@ -260,6 +265,13 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_content.content_persister'),
             ])
             ->tag('sulu_page.page_mapper');
+
+        $services->set('sulu_page.default_template_normalizer')
+            ->class(DefaultTemplateNormalizer::class)
+            ->args([
+                new Reference('sulu_core.webspace.webspace_manager'),
+            ])
+            ->tag('sulu_content.normalizer', ['priority' => 127]);
 
         // DataMapper service
         $services->set('sulu_page.navigation_context_data_mapper')
@@ -430,7 +442,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_content.content_data_mapper'),
                 '%sulu.model.page.class%',
-                null, // TODO add security context for preview
+                null, // pages resolve their webspace context via SecuredEntityInterface
             ])
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu_preview.object_provider', ['provider-key' => 'pages']);

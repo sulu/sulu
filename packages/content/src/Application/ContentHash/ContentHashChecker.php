@@ -51,9 +51,12 @@ class ContentHashChecker
             $dimensionContentClass,
         ))->getDimensionContent($dimensionAttributes);
 
-        if (!$dimensionContent instanceof DimensionContentInterface
-            || $expectedHash !== $this->hasher->hash($dimensionContent)
-        ) {
+        if (!$dimensionContent instanceof DimensionContentInterface) {
+            // No persisted content for this locale yet, so there is nothing to lock against.
+            return;
+        }
+
+        if ($expectedHash !== $this->hasher->hash($dimensionContent)) {
             throw new InvalidHashException($contentRichEntity::class, $identifier);
         }
     }

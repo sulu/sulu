@@ -211,6 +211,7 @@ final class SuluArticleBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_article.article_repository'),
                 new Reference('sulu_content.content_workflow'),
+                new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
@@ -458,6 +459,8 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_admin.metadata_provider_registry'),
                 new Reference('sulu_http_cache.cache_lifetime.resolver'),
+                new Reference('sulu_route.route_generator'),
+                new Reference('request_stack'),
             ])
             ->tag('sulu_route.route_defaults_provider', ['resource_key' => 'articles']);
 

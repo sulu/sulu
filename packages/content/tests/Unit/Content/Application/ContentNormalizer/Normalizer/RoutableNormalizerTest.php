@@ -172,6 +172,51 @@ class RoutableNormalizerTest extends TestCase
         );
     }
 
+    public function testEnhanceAddsNullUrlWhenRouteIsNull(): void
+    {
+        $object = $this->createDimensionContent('en', 'default');
+
+        $this->primeFormMetadata('example', 'en', 'default', [
+            'url' => $this->createField('url', 'route'),
+            'title' => $this->createField('title', 'text_line'),
+        ]);
+
+        $result = $this->normalizer->enhance($object, ['title' => 'Page title']);
+
+        $this->assertSame(['title' => 'Page title', 'url' => null], $result);
+    }
+
+    public function testEnhanceAddsUrlWhenRouteSlugIsEmptyString(): void
+    {
+        $route = new Route('examples', '1', 'en', '');
+        $object = $this->createDimensionContent('en', 'default', $route);
+
+        $this->primeFormMetadata('example', 'en', 'default', [
+            'url' => $this->createField('url', 'route'),
+            'title' => $this->createField('title', 'text_line'),
+        ]);
+
+        $result = $this->normalizer->enhance($object, ['title' => 'Page title']);
+
+        $this->assertArrayHasKey('url', $result);
+        $this->assertSame('', $result['url']);
+    }
+
+    public function testEnhanceAddsNullPageTreeRouteUrlWhenNoParentRoute(): void
+    {
+        $route = new Route('examples', '1', 'en', '/my-page');
+        // route has no parent — resolvePageTreeRoute returns null
+        $object = $this->createDimensionContent('en', 'default', $route);
+
+        $this->primeFormMetadata('example', 'en', 'default', [
+            'url' => $this->createField('url', 'page_tree_route'),
+        ]);
+
+        $result = $this->normalizer->enhance($object, []);
+
+        $this->assertSame(['url' => null], $result);
+    }
+
     public function testEnhanceLeavesNonRouteFieldsUntouched(): void
     {
         $route = new Route('examples', '1', 'en', '/my-page');
@@ -241,14 +286,16 @@ class RoutableNormalizerTest extends TestCase
             ->willReturn($formMetadataProvider->reveal());
     }
 
-    private function createDimensionContent(string $locale, string $templateKey, Route $route): ExampleDimensionContent
+    private function createDimensionContent(string $locale, string $templateKey, ?Route $route = null): ExampleDimensionContent
     {
         $example = new Example();
         $dimensionContent = new ExampleDimensionContent($example);
         $example->addDimensionContent($dimensionContent);
         $dimensionContent->setLocale($locale);
         $dimensionContent->setTemplateKey($templateKey);
-        $dimensionContent->setRoute($route);
+        if (null !== $route) {
+            $dimensionContent->setRoute($route);
+        }
 
         return $dimensionContent;
     }

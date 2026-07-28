@@ -55,7 +55,8 @@ abstract class AbstractTagNameToIdMigration extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $this->throwIrreversibleMigrationException();
+        // This migration is not reversible: the original tag names cannot be
+        // restored from the ids. Intentionally a no-op instead of throwing.
     }
 
     /**

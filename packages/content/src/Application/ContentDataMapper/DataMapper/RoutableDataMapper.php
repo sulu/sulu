@@ -92,7 +92,14 @@ class RoutableDataMapper implements DataMapperInterface
             )); // TODO move this validation to a compiler pass see also direct access of 'url' in PublishTransitionSubscriber class.
         }
 
-        if (!\array_key_exists($name, $data)) {
+        if (!$this->hasRouteData($property, $data[$name] ?? null)) {
+            if (\array_key_exists($name, $data) && $localizedDimensionContent::isRouteMandatory()) {
+                throw new \RuntimeException(\sprintf(
+                    'Expected a route value for the mandatory property "%s".',
+                    $name
+                ));
+            }
+
             return;
         }
 
@@ -155,6 +162,42 @@ class RoutableDataMapper implements DataMapperInterface
         }
 
         return null;
+    }
+
+    private function hasRouteData(FieldMetadata $property, mixed $routeData): bool
+    {
+        if (null === $routeData) {
+            return false;
+        }
+
+        if ('page_tree_route' === $property->getType()) {
+            if (!\is_array($routeData)) {
+                throw new \RuntimeException(\sprintf(
+                    'Expected property "%s" to be an array or null but "%s" given.',
+                    $property->getName(),
+                    \get_debug_type($routeData)
+                ));
+            }
+
+            $pageData = $routeData['page'] ?? null;
+            $pageUuid = \is_array($pageData) ? ($pageData['uuid'] ?? null) : null;
+            $pagePath = \is_array($pageData) ? ($pageData['path'] ?? null) : null;
+
+            // the admin field submits an empty page (e.g. {"page": {}}) when no parent page is selected yet
+            return \is_string($pageUuid) && '' !== $pageUuid
+                && \is_string($pagePath) && '' !== $pagePath
+                && \is_string($routeData['suffix'] ?? null);
+        }
+
+        if (!\is_string($routeData)) {
+            throw new \RuntimeException(\sprintf(
+                'Expected property "%s" to be a string or null but "%s" given.',
+                $property->getName(),
+                \get_debug_type($routeData)
+            ));
+        }
+
+        return '' !== $routeData;
     }
 
     private function extractRouteSlug(FieldMetadata $property, mixed $routeData): string

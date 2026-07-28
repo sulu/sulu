@@ -9,6 +9,7 @@ import List, {
     listItemActionRegistry,
     listToolbarActionRegistry,
 } from './List';
+import AuthorizationConsent from './AuthorizationConsent';
 import Tabs from './Tabs';
 import ResourceTabs from './ResourceTabs';
 
@@ -21,6 +22,7 @@ export {
     listToolbarActionRegistry,
     Form,
     formToolbarActionRegistry,
+    AuthorizationConsent,
     ResourceTabs,
     Tabs,
 };

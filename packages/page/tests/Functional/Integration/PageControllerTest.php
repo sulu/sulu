@@ -795,7 +795,7 @@ class PageControllerTest extends SuluTestCase
         $copiedPageId = $content['_embedded']['pages'][0]['_embedded']['pages'][1]['_embedded']['pages'][0]['id']; // @phpstan-ignore-line
 
         $routeRepository = $this->getContainer()->get(RouteRepositoryInterface::class);
-        $this->assertCount(10, $routeRepository->findBy([]));
+        $this->assertCount(11, $routeRepository->findBy([]));
 
         return $copiedPageId;
     }
@@ -1060,6 +1060,90 @@ class PageControllerTest extends SuluTestCase
         $this->assertArrayHasKey('creator', $childPage);
         $this->assertIsString($childPage['creator']);
         $this->assertNotSame('', $childPage['creator']);
+    }
+
+    public function testGetListFilteredByTemplateKeys(): void
+    {
+        self::purgeDatabase();
+
+        $homepage = $this->createHomepage('0199ee04-c220-784e-a6fa-ac985870f2d5', 'sulu-io');
+        $homepageId = $homepage->getId();
+
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/pages?locale=en&action=publish&parentId=%s&webspace=sulu-io', $homepageId),
+            [],
+            [],
+            [],
+            \json_encode([
+                'template' => 'default',
+                'title' => 'Default Template Page',
+                'url' => '/default-template-page',
+            ]) ?: null,
+        );
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/pages?locale=en&action=publish&parentId=%s&webspace=sulu-io', $homepageId),
+            [],
+            [],
+            [],
+            \json_encode([
+                'template' => 'blog',
+                'title' => 'Blog Template Page',
+                'url' => '/blog-template-page',
+            ]) ?: null,
+        );
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+
+        self::ensureKernelShutdown();
+
+        // Without a template filter, both children must appear
+        $this->client->request(
+            'GET',
+            \sprintf('/admin/api/pages?locale=en&webspace=sulu-io&parentId=%s', $homepageId),
+        );
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        /** @var array{_embedded: array{pages: array<int, array<string, mixed>>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertCount(2, $content['_embedded']['pages']);
+
+        // Filtering by a single templateKey must return only the matching page
+        $this->client->request(
+            'GET',
+            \sprintf('/admin/api/pages?locale=en&webspace=sulu-io&parentId=%s&templateKeys=default', $homepageId),
+        );
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        /** @var array{_embedded: array{pages: array<int, array<string, mixed>>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $pages = $content['_embedded']['pages'];
+        $this->assertCount(1, $pages);
+        $this->assertSame('Default Template Page', $pages[0]['title']);
+
+        // Filtering by multiple templateKeys must return all matching pages
+        $this->client->request(
+            'GET',
+            \sprintf('/admin/api/pages?locale=en&webspace=sulu-io&parentId=%s&templateKeys=default,blog', $homepageId),
+        );
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        /** @var array{_embedded: array{pages: array<int, array<string, mixed>>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertCount(2, $content['_embedded']['pages']);
+
+        // Filtering by a non-existent templateKey must return no pages
+        $this->client->request(
+            'GET',
+            \sprintf('/admin/api/pages?locale=en&webspace=sulu-io&parentId=%s&templateKeys=nonexistent', $homepageId),
+        );
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        /** @var array{_embedded: array{pages: array<int, array<string, mixed>>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertCount(0, $content['_embedded']['pages']);
     }
 
     public function testNestedTemplatePropertyWithSlash(): void

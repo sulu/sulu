@@ -22,6 +22,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\PreviewBundle\Preview\PreviewContext;
 use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
+use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapperInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
@@ -151,7 +152,22 @@ class ContentObjectProvider implements PreviewDefaultsProviderInterface
 
     public function getSecurityContext(PreviewContext $previewContext): ?string
     {
-        return $this->securityContext;
+        if (null !== $this->securityContext) {
+            return $this->securityContext;
+        }
+
+        $id = $previewContext->getId();
+
+        if (null === $id) {
+            return null;
+        }
+
+        // entities like pages carry a per-instance context (e.g. their webspace) which cannot be injected statically
+        $contentRichEntity = $this->entityManager->find($this->contentRichEntityClass, $id);
+
+        return $contentRichEntity instanceof SecuredEntityInterface
+            ? $contentRichEntity->getSecurityContext()
+            : null;
     }
 
     /**

@@ -113,8 +113,8 @@ test('Should pass props correctly to MultiSelection component', () => {
     };
 
     const schemaOptions = {
-        types: {
-            name: 'types',
+        templateKeys: {
+            name: 'templateKeys',
             value: 'test',
         },
     };
@@ -153,7 +153,7 @@ test('Should pass props correctly to MultiSelection component', () => {
         label: 'sulu_snippet.selection_label',
         locale,
         resourceKey: 'snippets',
-        options: {types: 'test'},
+        options: {templateKeys: 'test'},
         overlayTitle: 'sulu_snippet.selection_overlay_title',
         value,
     }));
@@ -270,8 +270,8 @@ test('Should pass props with schema-options correctly to MultiSelection componen
             name: 'type',
             value: 'list_overlay',
         },
-        types: {
-            name: 'types',
+        templateKeys: {
+            name: 'templateKeys',
             value: 'image,video',
         },
         allow_deselect_for_disabled_items: {
@@ -346,7 +346,7 @@ test('Should pass props with schema-options correctly to MultiSelection componen
         overlayTitle: 'sulu_snippet.selection_overlay_title',
         value,
         options: {
-            types: 'image,video',
+            templateKeys: 'image,video',
             staticKey: 'some-static-value',
             dynamicKey: 'value-returned-by-form-inspector',
         },
@@ -646,9 +646,29 @@ test('Should throw an error if "types" schema option is not a string', () => {
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            schemaOptions={{types: {name: 'type', value: []}}}
+            schemaOptions={{types: {name: 'types', value: []}}}
         />
     )).toThrow(/"types"/);
+});
+
+test('Should throw an error if "templateKeys" schema option is not a string', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'test',
+        types: {
+            list_overlay: {},
+        },
+    };
+
+    expect(() => shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={{templateKeys: {name: 'templateKeys', value: []}}}
+        />
+    )).toThrow(/"templateKeys"/);
 });
 
 test('Should throw an error if "item_disabled_condition" schema option is not a string', () => {

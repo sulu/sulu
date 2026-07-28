@@ -69,14 +69,20 @@ jest.mock('../../../stores/userStore', () => {
     };
 });
 
-jest.mock('../../ViewRenderer', () => function Test(props) {
-    return (
-        <div>
-            <h1>Test</h1>
-            <h2>{props.router.route.type}</h2>
-        </div>
-    );
-});
+jest.mock('../../ViewRenderer', () => ({
+    __esModule: true,
+    default: function Test(props) {
+        return (
+            <div>
+                <h1>Test</h1>
+                <h2>{props.router.route.type}</h2>
+            </div>
+        );
+    },
+    viewRegistry: {
+        getConfig: () => ({}),
+    },
+}));
 
 jest.mock('../../ProfileFormOverlay', () => function Test() {
     return (

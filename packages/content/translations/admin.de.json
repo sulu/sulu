@@ -1,4 +1,5 @@
 {
+    "sulu_content.shadow_source_not_published": "Diese Seite kann nicht als Shadow von \"{shadowLocale}\" veröffentlicht werden, da \"{shadowLocale}\" noch nicht veröffentlicht wurde. Bitte veröffentlichen Sie zuerst \"{shadowLocale}\".",
     "sulu_content.seo": "SEO",
     "sulu_content.excerpt": "Auszug & Taxonomien",
     "sulu_content.taxonomies": "Taxonomien",
