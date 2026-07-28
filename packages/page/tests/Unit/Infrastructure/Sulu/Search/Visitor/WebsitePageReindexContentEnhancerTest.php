@@ -173,6 +173,46 @@ class WebsitePageReindexContentEnhancerTest extends TestCase
         $this->assertSame(['Hello world'], $returnedData['content']);
     }
 
+    public function testVisitConvertsHtmlOnlyForTextEditorFields(): void
+    {
+        // text_line/text_area are plain text and must be kept as-is; only the
+        // text_editor field runs through SEAL's HTML-to-text conversion, which
+        // keeps words separated across block boundaries (<br>, </p><p>) instead
+        // of merging them into a single, unsearchable token.
+        $lineField = new FieldMetadata('line');
+        $lineField->setType('text_line');
+        $lineField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG));
+
+        $editorField = new FieldMetadata('editor');
+        $editorField->setType('text_editor');
+        $editorField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG));
+
+        $formMetadata = new FormMetadata();
+        $formMetadata->setKey('default');
+        $formMetadata->addItem($lineField);
+        $formMetadata->addItem($editorField);
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('default', $formMetadata);
+
+        $this->formMetadataProvider->getMetadata('page', 'en', [])
+            ->willReturn($typedFormMetadata)
+            ->shouldBeCalledOnce();
+
+        $result = [
+            'templateKey' => 'default',
+            'locale' => 'en',
+            'templateData' => [
+                'line' => 'a < b <notatag>',
+                'editor' => '<p>first<br>second</p><p>third</p>',
+            ],
+        ];
+
+        $returnedData = $this->enhancer->enhanceDocument($result, ['content' => []]);
+
+        $this->assertSame(['a < b <notatag>', "first\nsecond\nthird"], $returnedData['content']);
+    }
+
     public function testVisitFiltersNonTextFieldTypes(): void
     {
         $titleField = new FieldMetadata('title');
