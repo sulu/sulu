@@ -61,6 +61,30 @@ const clickHandler = () => alert('The snackbar was clicked');
 <Snackbar message="Something went wrong" onClick={clickHandler} type="error" />
 ```
 
+The `title` prop replaces the type name shown in front of the message, and the `action` prop adds a link at the end of
+the snackbar. Both are useful to describe a more specific situation than the plain type does.
+
+```javascript
+const retryHandler = () => alert('The failed request should be retried now');
+
+<div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+    <Snackbar
+        action={{label: 'Try Again', onClick: retryHandler}}
+        icon="su-exclamation-triangle"
+        message="Your request couldn't be completed right now. This is usually a temporary issue."
+        title="Something went wrong"
+        type="warning"
+    />
+
+    <Snackbar
+        action={{label: 'Contact Admin', onClick: retryHandler}}
+        message="Your AI credits have been used up."
+        title="Out of Credits"
+        type="error"
+    />
+</div>
+```
+
 The toolbar is also animated when it (dis)appears.
 
 ```javascript

@@ -54,6 +54,35 @@ exports[`Render a info snackbar 1`] = `
 </div>
 `;
 
+exports[`Render a snackbar with a title and an action 1`] = `
+<div>
+  <div
+    class="snackbar error visible"
+    role="button"
+  >
+    <span
+      aria-label="su-exclamation-triangle"
+      class="su-exclamation-triangle icon"
+    />
+    <div
+      class="text"
+    >
+      <strong>
+        Out of Credits
+      </strong>
+       - 
+      Something went wrong
+    </div>
+    <button
+      class="action"
+      type="button"
+    >
+      Try Again
+    </button>
+  </div>
+</div>
+`;
+
 exports[`Render a success snackbar 1`] = `
 <div>
   <div
