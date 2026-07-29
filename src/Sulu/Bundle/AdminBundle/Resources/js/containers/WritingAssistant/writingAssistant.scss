@@ -1,4 +1,3 @@
-@import '../Application/colors.scss';
 @import '../../components/Overlay/variables.scss';
 
 .content {
@@ -17,11 +16,24 @@
     box-sizing: border-box;
 }
 
-/* sticks above the prompt so the reason stays visible while the conversation is scrolled */
+/* closes off the conversation right above the prompt, so the reason stays put while messages scroll behind it.
+   slides out from behind the prompt, which covers it while it travels because it paints above */
 .account-limit {
-    position: sticky;
-    bottom: 92px;
-    z-index: 3;
     padding: 0 50px;
-    background-color: $white;
+    animation: account-limit-reveal 300ms ease-out;
+
+    /* only the top corners are rounded, the bottom edge sits flush on the prompt */
+    > div {
+        border-radius: 4px 4px 0 0;
+    }
+}
+
+@keyframes account-limit-reveal {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
 }

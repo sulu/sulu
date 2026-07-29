@@ -45,6 +45,8 @@ describe('WritingAssistant Component', () => {
             initialMessage: 'Initial Message',
             outOfCredits: 'Out of Credits',
             outOfCreditsDescription: 'Your AI credits have been used up.',
+            platformUnauthorized: 'AI not available',
+            platformUnauthorizedDescription: 'The AI platform rejected the credentials.',
             morePredefinedPrompts: 'More',
             predefinedPrompts: 'Predefined Prompts',
             requestFailed: 'Something went wrong',
@@ -430,6 +432,25 @@ describe('WritingAssistant Component', () => {
             .toHaveTextContent(defaultProps.messages.subscriptionInactiveDescription);
         expect(screen.queryByText(defaultProps.messages.outOfCredits)).not.toBeInTheDocument();
         expect(screen.queryByText(defaultProps.messages.requestFailed)).not.toBeInTheDocument();
+        expect(input).toBeDisabled();
+    });
+
+    test('blocks further requests when the platform rejects the credentials', async() => {
+        Requester.post.mockRejectedValueOnce({
+            json: () => Promise.resolve({messageKey: 'sulu_ai.platform_unauthorized'}),
+        });
+
+        render(<WritingAssistant {...defaultProps} contactEmail="admin@example.com" />);
+
+        const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
+        await userEvent.type(input, 'Test message{enter}');
+
+        await waitFor(() => {
+            expect(screen.getByText(defaultProps.messages.platformUnauthorized)).toBeInTheDocument();
+        });
+
+        // retrying cannot help here, so no retry is offered and the input stays closed
+        expect(screen.queryByText(defaultProps.messages.tryAgain)).not.toBeInTheDocument();
         expect(input).toBeDisabled();
     });
 

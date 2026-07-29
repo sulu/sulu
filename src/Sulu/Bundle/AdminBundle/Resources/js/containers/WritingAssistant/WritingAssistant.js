@@ -13,6 +13,7 @@ import type {ExpertType, MessageType, RequestErrorType} from './types';
 // message keys the backend reports for account limits, which block further requests until an admin acts
 const ACCOUNT_LIMIT_MESSAGE_KEYS = {
     'sulu_ai.out_of_credits': 'outOfCredits',
+    'sulu_ai.platform_unauthorized': 'platformUnauthorized',
     'sulu_ai.subscription_inactive': 'subscriptionInactive',
 };
 
@@ -48,6 +49,8 @@ type Props = {|
         morePredefinedPrompts: string,
         outOfCredits: string,
         outOfCreditsDescription: string,
+        platformUnauthorized: string,
+        platformUnauthorizedDescription: string,
         predefinedPrompts: string,
         requestFailed: string,
         requestFailedDescription: string,
@@ -345,12 +348,26 @@ export default class WritingAssistant extends React.Component<Props> {
                 outOfCreditsDescription: outOfCreditsDescriptionMessage,
                 requestFailed: requestFailedMessage,
                 requestFailedDescription: requestFailedDescriptionMessage,
+                platformUnauthorized: platformUnauthorizedMessage,
+                platformUnauthorizedDescription: platformUnauthorizedDescriptionMessage,
                 send: sendMessage,
                 subscriptionInactive: subscriptionInactiveMessage,
                 subscriptionInactiveDescription: subscriptionInactiveDescriptionMessage,
                 tryAgain: tryAgainMessage,
             },
         } = this.props;
+
+        const accountLimitMessages = {
+            outOfCredits: {description: outOfCreditsDescriptionMessage, title: outOfCreditsMessage},
+            platformUnauthorized: {
+                description: platformUnauthorizedDescriptionMessage,
+                title: platformUnauthorizedMessage,
+            },
+            subscriptionInactive: {
+                description: subscriptionInactiveDescriptionMessage,
+                title: subscriptionInactiveMessage,
+            },
+        };
 
         const actionNode = Action ? (
             <Action
@@ -400,14 +417,8 @@ export default class WritingAssistant extends React.Component<Props> {
                                         ? {label: contactAdminMessage, onClick: this.handleContactAdminClick}
                                         : undefined
                                     }
-                                    message={this.accountLimit === 'subscriptionInactive'
-                                        ? subscriptionInactiveDescriptionMessage
-                                        : outOfCreditsDescriptionMessage
-                                    }
-                                    title={this.accountLimit === 'subscriptionInactive'
-                                        ? subscriptionInactiveMessage
-                                        : outOfCreditsMessage
-                                    }
+                                    message={accountLimitMessages[this.accountLimit].description}
+                                    title={accountLimitMessages[this.accountLimit].title}
                                     type="error"
                                 />
                             </div>

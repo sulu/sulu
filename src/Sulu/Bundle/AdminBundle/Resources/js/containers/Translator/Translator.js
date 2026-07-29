@@ -4,33 +4,35 @@ import React from 'react';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import {action, observable, toJS} from 'mobx';
-import {Overlay, SingleSelect} from '../../components';
+import {Overlay} from '../../components';
 import {Requester} from '../../services';
 import translatorStyles from './translator.scss';
 import Input from './Input';
+import LanguageSelect from './LanguageSelect';
+import type {LanguageType} from './types';
 
 type Props = {|
     action?: React$ComponentType<Object>,
     actionProps?: Object,
     locale: string,
     messages: {|
+        allLanguages: string,
         detected: string,
         errorTranslatingText: string,
         insert: string,
+        searchLanguages: string,
+        sourceLanguage: string,
+        suggestedLanguages: string,
+        targetLanguage: string,
         title: string,
     |},
     onConfirm: (text: string) => void,
     onDialogClose: () => void,
     resourceId?: ?(string | number),
     resourceKey?: ?string,
-    sourceLanguages: Array<{|
-        label: string,
-        locale: string,
-    |}>,
-    targetLanguages: Array<{|
-        label: string,
-        locale: string,
-    |}>,
+    sourceLanguages: Array<LanguageType>,
+    suggestedLocales: Array<string>,
+    targetLanguages: Array<LanguageType>,
     type: 'text_line' | 'text_area' | 'text_editor',
     url: string,
     value?: string,
@@ -155,14 +157,26 @@ export default class Translator extends React.Component<Props> {
         const {
             type,
             sourceLanguages,
+            suggestedLocales,
             targetLanguages,
             action: Action,
             messages: {
+                allLanguages: allLanguagesMessage,
                 title: titleMessage,
                 insert: insertMessage,
                 detected: detectedMessage,
+                searchLanguages: searchLanguagesMessage,
+                sourceLanguage: sourceLanguageMessage,
+                suggestedLanguages: suggestedLanguagesMessage,
+                targetLanguage: targetLanguageMessage,
             },
         } = this.props;
+
+        const languageSelectMessages = {
+            allLanguages: allLanguagesMessage,
+            searchLanguages: searchLanguagesMessage,
+            suggestedLanguages: suggestedLanguagesMessage,
+        };
 
         const actionNode = Action ? (
             <Action
@@ -191,23 +205,15 @@ export default class Translator extends React.Component<Props> {
                 <div className={translatorStyles.translator}>
                     <div className={translatorStyles.column}>
                         <div className={translatorStyles.select}>
-                            <SingleSelect
+                            <LanguageSelect
+                                ariaLabel={sourceLanguageMessage}
+                                languages={sourceLanguages}
+                                messages={languageSelectMessages}
                                 onChange={this.handleSourceLanguageChanged}
-                                skin="flat"
+                                suffix={this.sourceSelectedOnce ? undefined : detectedMessage}
+                                suggestedLocales={suggestedLocales}
                                 value={this.sourceLanguage}
-                            >
-                                {sourceLanguages.map((option) => {
-                                    const isDetected = option.locale.toLowerCase() === this.sourceLanguage
-                                        && !this.sourceSelectedOnce;
-
-                                    return (
-                                        <SingleSelect.Option key={option.locale} value={option.locale.toLowerCase()}>
-                                            {option.label}
-                                            {isDetected && ' (' + detectedMessage + ')'}
-                                        </SingleSelect.Option>
-                                    );
-                                })}
-                            </SingleSelect>
+                            />
                         </div>
                         <Input
                             onChange={this.handleSourceTextChanged}
@@ -217,17 +223,14 @@ export default class Translator extends React.Component<Props> {
                     </div>
                     <div className={translatorStyles.column}>
                         <div className={translatorStyles.select}>
-                            <SingleSelect
+                            <LanguageSelect
+                                ariaLabel={targetLanguageMessage}
+                                languages={targetLanguages}
+                                messages={languageSelectMessages}
                                 onChange={this.handleTargetLanguageChanged}
-                                skin="flat"
+                                suggestedLocales={suggestedLocales}
                                 value={this.targetLanguage}
-                            >
-                                {targetLanguages.map((option) => (
-                                    <SingleSelect.Option key={option.locale} value={option.locale.toLowerCase()}>
-                                        {option.label}
-                                    </SingleSelect.Option>
-                                ))}
-                            </SingleSelect>
+                            />
                         </div>
                         <Input
                             text={this.targetText}

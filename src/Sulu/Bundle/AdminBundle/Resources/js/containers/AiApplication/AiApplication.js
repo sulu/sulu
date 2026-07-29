@@ -5,12 +5,21 @@ import {action, computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import symfonyRouting from 'fos-jsrouting/router';
 import {translate} from '../../utils';
+import localizationStore from '../../stores/localizationStore';
 import {FormInspector} from '../../containers';
 import WritingAssistant from '../WritingAssistant';
 import Translator from '../Translator';
 import FeatureBadge from './FeatureBadge';
 import ActionOverlay from './ActionOverlay';
 import type {ExpertType} from '../WritingAssistant/types';
+
+/* what a resource records about itself rather than about its content, across pages, articles and snippets */
+const SYSTEM_FIELDS = [
+    'author', 'authored', 'availableLocales', 'changed', 'changer', 'contentLocales', 'created', 'creator',
+    'hasSub', 'id', 'internal', 'lastModified', 'lastModifiedEnabled', 'linked', 'localizedTemplate',
+    'navContexts', 'nodeState', 'nodeType', 'order', 'originTemplate', 'parentUuid', 'path', 'published',
+    'publishedState', 'shadowBaseLanguage', 'shadowLocales', 'shadowOn', 'template', 'webspace',
+];
 
 type Props = {|
     feedback: ?{
@@ -266,30 +275,31 @@ export default class AiApplication extends Component<Props> {
         });
     }
 
-    @computed get contentData(): ?Object {
-        if (!this.selectedComponent?.formInspector?.formStore) {
-            return undefined;
-        }
+    @computed get suggestedLocales(): Array<string> {
+        return localizationStore.localizations.map((localization) => localization.locale);
+    }
 
-        const {schema, data} = this.selectedComponent.formInspector.formStore;
-        if (!schema || !data) {
+    /* the whole record is offered, not just the fields of the open tab: writing SEO text needs the page content,
+       which the SEO form does not describe. everything collected here ends up verbatim in the prompt, so the
+       bookkeeping the resource carries alongside its content is left out */
+    @computed get contentData(): ?Object {
+        const data = this.selectedComponent?.formInspector?.formStore?.data;
+        if (!data) {
             return undefined;
         }
 
         const contentData = {};
 
-        const collectFields = (schemaLevel) => {
-            Object.keys(schemaLevel).forEach((key) => {
-                const entry = schemaLevel[key];
-                if (entry.type === 'section' && entry.items) {
-                    collectFields(entry.items);
-                } else if (data[key] !== undefined) {
-                    contentData[key] = toJS(data[key]);
-                }
-            });
-        };
+        Object.keys(data).forEach((key) => {
+            if (key.startsWith('_') || SYSTEM_FIELDS.includes(key)) {
+                return;
+            }
 
-        collectFields(schema);
+            const value = toJS(data[key]);
+            if (value !== undefined && value !== null && value !== '') {
+                contentData[key] = value;
+            }
+        });
 
         return Object.keys(contentData).length > 0 ? contentData : undefined;
     }
@@ -368,6 +378,8 @@ export default class AiApplication extends Component<Props> {
                             initialMessage: translate('sulu_admin.selected_text'),
                             outOfCredits: translate('sulu_admin.out_of_credits'),
                             outOfCreditsDescription: translate('sulu_admin.out_of_credits_description'),
+                            platformUnauthorized: translate('sulu_admin.platform_unauthorized'),
+                            platformUnauthorizedDescription: translate('sulu_admin.platform_unauthorized_description'),
                             morePredefinedPrompts: translate('sulu_admin.more_predefined_prompts'),
                             predefinedPrompts: translate('sulu_admin.predefined_prompts'),
                             requestFailed: translate('sulu_admin.writing_assistant_failed'),
@@ -397,16 +409,22 @@ export default class AiApplication extends Component<Props> {
                         }}
                         locale={locale}
                         messages={{
+                            allLanguages: translate('sulu_admin.all_languages'),
                             title: translate('sulu_admin.translator'),
                             insert: translate('sulu_admin.insert'),
                             detected: translate('sulu_admin.detected'),
                             errorTranslatingText: translate('sulu_admin.translator_error'),
+                            searchLanguages: translate('sulu_admin.search_languages'),
+                            sourceLanguage: translate('sulu_admin.source_language'),
+                            targetLanguage: translate('sulu_admin.target_language'),
+                            suggestedLanguages: translate('sulu_admin.suggested_languages'),
                         }}
                         onConfirm={this.handleTranslateConfirm}
                         onDialogClose={this.handleTranslateClose}
                         resourceId={this.selectedComponent.formInspector.id}
                         resourceKey={this.selectedComponent.formInspector.resourceKey}
                         sourceLanguages={this.props.translation.sourceLanguages}
+                        suggestedLocales={this.suggestedLocales}
                         targetLanguages={this.props.translation.targetLanguages}
                         type={canonicalType}
                         url={this.translationUrl}
