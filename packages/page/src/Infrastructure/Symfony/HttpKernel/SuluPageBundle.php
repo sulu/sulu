@@ -85,6 +85,7 @@ use Sulu\Page\Infrastructure\Sulu\Security\PageSecurityListener;
 use Sulu\Page\Infrastructure\Sulu\Sitemap\PagesSitemapProvider;
 use Sulu\Page\Infrastructure\Sulu\Trash\PageTrashItemHandler;
 use Sulu\Page\Infrastructure\Sulu\Webspace\PageSegmentListener;
+use Sulu\Page\Infrastructure\Symfony\DependencyInjection\Compiler\FixturesBuilderDependencyPass;
 use Sulu\Page\Infrastructure\Symfony\DependencyInjection\Compiler\OverrideTreeListenerPass;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\ContentPathTwigExtension;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension;
@@ -887,5 +888,6 @@ final class SuluPageBundle extends AbstractBundle
             PageDimensionContentInterface::class => 'sulu.model.page_content.class',
         ], $container);
         $container->addCompilerPass(new OverrideTreeListenerPass());
+        $container->addCompilerPass(new FixturesBuilderDependencyPass());
     }
 }
