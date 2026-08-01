@@ -30,6 +30,8 @@ class TagRequestHandlerTest extends TestCase
             ['t', 'Sulu,Core', ['Sulu', 'Core']],
             ['t', 'Sulu,Core,Massive Art', ['Sulu', 'Core', 'Massive Art']],
             ['t', 'Sulu, Core', ['Sulu', 'Core']],
+            ['t', 'Sulu,, Core', [0 => 'Sulu', 2 => 'Core']],
+            ['t', 'Sulu, , Core', ['Sulu', '', 'Core']],
             ['t', ' Sulu, Core ', ['Sulu', 'Core']],
         ];
     }
@@ -48,7 +50,6 @@ class TagRequestHandlerTest extends TestCase
         $requestReveal = $request->reveal();
         $requestReveal->query = new InputBag([$tagsParameter => $tagsString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
-        $request->get($tagsParameter, '')->willReturn($tagsString);
 
         $handler = new TagRequestHandler($requestStack->reveal());
         $tags = $handler->getTags($tagsParameter);
@@ -63,6 +64,8 @@ class TagRequestHandlerTest extends TestCase
             ['tags', '/asdf', 'Sulu,Core', 'Sulu,Core,Test'],
             ['t', '/asdf', 'Sulu,Core', 'Sulu,Core,Test'],
             ['tags', '/test', 'Sulu,Core', 'Sulu,Core,Test'],
+            ['tags', '/test', 'Sulu,,Core', 'Sulu,Core,Test'],
+            ['tags', '/test', 'Sulu,,Core,Core', 'Sulu,Core,Test'],
             ['tags', '/test', 'Sulu,Test', 'Sulu,Test'],
             ['tags', '/test', '', 'Test'],
         ];
@@ -85,7 +88,6 @@ class TagRequestHandlerTest extends TestCase
         $requestReveal = $request->reveal();
         $requestReveal->query = new InputBag([$tagsParameter => $tagsString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
-        $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
 
         $handler = new TagRequestHandler($requestStack->reveal());
@@ -102,6 +104,7 @@ class TagRequestHandlerTest extends TestCase
             ['t', '/asdf', 'Sulu,Core', 'Test'],
             ['tags', '/test', 'Sulu,Core', 'Test'],
             ['tags', '/test', 'Sulu,Test', 'Test'],
+            ['tags', '/test', 'Sulu,,Core', 'Test'],
             ['tags', '/test', '', 'Test'],
         ];
     }
@@ -123,7 +126,6 @@ class TagRequestHandlerTest extends TestCase
         $requestReveal = $request->reveal();
         $requestReveal->query = new InputBag([$tagsParameter => $tagsString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
-        $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
 
         $handler = new TagRequestHandler($requestStack->reveal());
@@ -158,7 +160,6 @@ class TagRequestHandlerTest extends TestCase
         $requestReveal = $request->reveal();
         $requestReveal->query = new InputBag([$tagsParameter => $tagsString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
-        $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
 
         $handler = new TagRequestHandler($requestStack->reveal());
