@@ -265,7 +265,7 @@ const PageListWithToolbar = withToolbar(PageList, function() {
                 value: !this.excludeGhostsAndShadows.get(),
             },
             this.cacheClearToolbarAction.getToolbarItemConfig(),
-        ],
+        ].filter(Boolean),
         locale: {
             value: this.locale.get(),
             onChange: action((locale) => {

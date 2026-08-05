@@ -188,6 +188,6 @@ export default withToolbar(SnippetAreas, function() {
     return {
         items: [
             this.cacheClearToolbarAction.getToolbarItemConfig(),
-        ],
+        ].filter(Boolean),
     };
 });
