@@ -70,6 +70,11 @@ class WebsiteAdmin extends Admin
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             $securityContextKey = self::getAnalyticsSecurityContext($webspace->getKey());
             $webspaceContexts[$securityContextKey] = $this->getSecurityContextPermissions();
+
+            $cacheSecurityContextKey = self::getCacheSecurityContext($webspace->getKey());
+            $webspaceContexts[$cacheSecurityContextKey] = [
+                PermissionTypes::DELETE,
+            ];
         }
 
         return [
@@ -85,6 +90,9 @@ class WebsiteAdmin extends Admin
             self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Webspaces' => [
                     self::getAnalyticsSecurityContext('#webspace#') => $this->getSecurityContextPermissions(),
+                    self::getCacheSecurityContext('#webspace#') => [
+                        PermissionTypes::DELETE,
+                    ],
                 ],
             ],
         ];
@@ -107,10 +115,20 @@ class WebsiteAdmin extends Admin
 
     public function getConfig(): ?array
     {
+        $webspaceCachePermissions = [];
+        /* @var Webspace $webspace */
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+            $webspaceCachePermissions[$webspace->getKey()] = $this->securityChecker->hasPermission(
+                self::getCacheSecurityContext($webspace->getKey()),
+                PermissionTypes::DELETE
+            );
+        }
+
         return [
             'endpoints' => [
                 'clearCache' => $this->urlGenerator->generate('sulu_website.cache.remove'),
             ],
+            'webspaceCachePermissions' => $webspaceCachePermissions,
         ];
     }
 
@@ -136,5 +154,13 @@ class WebsiteAdmin extends Admin
     public static function getAnalyticsSecurityContext(string $webspaceKey): string
     {
         return \sprintf('%s%s.%s', PageAdmin::SECURITY_CONTEXT_PREFIX, $webspaceKey, 'analytics');
+    }
+
+    /**
+     * Returns security context for cache clearing in given webspace.
+     */
+    public static function getCacheSecurityContext(string $webspaceKey): string
+    {
+        return \sprintf('%s%s.%s', PageAdmin::SECURITY_CONTEXT_PREFIX, $webspaceKey, 'cache');
     }
 }

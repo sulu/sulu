@@ -6,6 +6,7 @@ import AnalyticsDomainSelect from './containers/Form/fields/AnalyticsDomainSelec
 
 initializer.addUpdateConfigHook('sulu_website', (config: Object) => {
     CacheClearToolbarAction.clearCacheEndpoint = config.endpoints.clearCache;
+    CacheClearToolbarAction.webspaceCachePermissions = config.webspaceCachePermissions;
 });
 
 fieldRegistry.add('analytics_domain_select', AnalyticsDomainSelect);

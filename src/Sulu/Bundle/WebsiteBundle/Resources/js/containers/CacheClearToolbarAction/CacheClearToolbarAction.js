@@ -7,6 +7,7 @@ import {buildQueryString, translate} from 'sulu-admin-bundle/utils';
 
 export default class CacheClearToolbarAction {
     static clearCacheEndpoint: string;
+    static webspaceCachePermissions: {[webspaceKey: string]: boolean};
 
     webspaceKey: ?string;
     @observable cacheClearing = false;
@@ -14,6 +15,16 @@ export default class CacheClearToolbarAction {
 
     constructor(webspaceKey: ?string) {
         this.webspaceKey = webspaceKey;
+    }
+
+    hasPermission() {
+        if (!this.webspaceKey) {
+            return true;
+        }
+
+        const {webspaceCachePermissions} = CacheClearToolbarAction;
+
+        return !!webspaceCachePermissions && !!webspaceCachePermissions[this.webspaceKey];
     }
 
     getNode() {
@@ -36,6 +47,10 @@ export default class CacheClearToolbarAction {
     }
 
     getToolbarItemConfig() {
+        if (!this.hasPermission()) {
+            return undefined;
+        }
+
         return {
             icon: 'su-paint',
             label: translate('sulu_website.cache_clear'),

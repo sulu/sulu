@@ -31,6 +31,7 @@ test('Return item config with correct icon, type and label and return closed dia
 });
 
 test('Open dialog on toolbar item click', () => {
+    CacheClearToolbarAction.webspaceCachePermissions = {'sulu-io': true};
     const cacheClearToolbarAction = new CacheClearToolbarAction('sulu-io');
 
     const toolbarItemConfig = cacheClearToolbarAction.getToolbarItemConfig();
@@ -91,7 +92,15 @@ test('Call delete when dialog is confirmed', () => {
     });
 });
 
+test('Return no item config when user has no cache permission for webspace', () => {
+    CacheClearToolbarAction.webspaceCachePermissions = {'sulu-io': false};
+    const cacheClearToolbarAction = new CacheClearToolbarAction('sulu-io');
+
+    expect(cacheClearToolbarAction.getToolbarItemConfig()).toEqual(undefined);
+});
+
 test('Call delete when dialog is confirmed with query parameter', () => {
+    CacheClearToolbarAction.webspaceCachePermissions = {'sulu-io': true};
     const cacheClearToolbarAction = new CacheClearToolbarAction('sulu-io');
     CacheClearToolbarAction.clearCacheEndpoint = '/cache';
 
