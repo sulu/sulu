@@ -12,11 +12,14 @@ import List, {
 import AuthorizationConsent from './AuthorizationConsent';
 import Tabs from './Tabs';
 import ResourceTabs from './ResourceTabs';
+import AbstractViewToolbarAction from './toolbarActions/AbstractViewToolbarAction';
+import viewToolbarActionRegistry from './registries/viewToolbarActionRegistry';
 
 export {
     AbstractListItemAction,
     AbstractListToolbarAction,
     AbstractFormToolbarAction,
+    AbstractViewToolbarAction,
     List,
     listItemActionRegistry,
     listToolbarActionRegistry,
@@ -25,4 +28,5 @@ export {
     AuthorizationConsent,
     ResourceTabs,
     Tabs,
+    viewToolbarActionRegistry,
 };

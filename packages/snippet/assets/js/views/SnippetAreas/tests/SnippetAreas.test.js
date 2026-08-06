@@ -8,6 +8,11 @@ jest.mock('sulu-admin-bundle/containers', () => ({
     SingleListOverlay: jest.fn(() => null),
     withToolbar: jest.fn((Component) => Component),
 }));
+jest.mock('sulu-admin-bundle/views', () => ({
+    viewToolbarActionRegistry: {
+        get: jest.fn(),
+    },
+}));
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) =>key),
 }));
@@ -21,6 +26,9 @@ jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
     this.attributes = {
         webspace: 'sulu',
+    };
+    this.route = {
+        options: {},
     };
 }));
 
@@ -308,12 +316,24 @@ test('Navigate to the edit view of the template group of the selected default sn
 
 test('Should use CacheClearToolbarAction for cache clearing', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const viewToolbarActionRegistry = require('sulu-admin-bundle/views').viewToolbarActionRegistry;
     const SnippetAreas = require('../SnippetAreas').default;
     const SnippetAreaStore = require('../stores/SnippetAreaStore');
     const toolbarFunction = findWithHighOrderFunction(withToolbar, SnippetAreas);
     const CacheClearToolbarAction = require('sulu-website-bundle/containers').CacheClearToolbarAction;
+    viewToolbarActionRegistry.get.mockReturnValue(CacheClearToolbarAction);
 
     const router = new Router();
+    router.route = {
+        options: {
+            toolbarActions: [
+                {
+                    type: 'sulu_website.cache_clear',
+                    options: {},
+                },
+            ],
+        },
+    };
 
     // $FlowFixMe
     SnippetAreaStore.mockImplementation(function() {
@@ -333,6 +353,8 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
 
     const cacheClearToolbarAction: CacheClearToolbarAction = (CacheClearToolbarAction: any).mock.instances[0];
 
+    expect(viewToolbarActionRegistry.get).toHaveBeenCalledWith('sulu_website.cache_clear');
+    expect(CacheClearToolbarAction).toHaveBeenCalledWith(router, {});
     expect(cacheClearToolbarAction.getNode).toHaveBeenCalledWith();
 
     expect(cacheClearToolbarAction.getToolbarItemConfig).not.toHaveBeenCalled();

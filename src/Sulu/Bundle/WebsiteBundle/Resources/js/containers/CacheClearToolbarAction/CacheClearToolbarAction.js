@@ -4,8 +4,10 @@ import {action, observable} from 'mobx';
 import {Dialog} from 'sulu-admin-bundle/components';
 import {Requester} from 'sulu-admin-bundle/services';
 import {buildQueryString, translate} from 'sulu-admin-bundle/utils';
+import {AbstractViewToolbarAction} from 'sulu-admin-bundle/views';
+import type Router from 'sulu-admin-bundle/services/Router';
 
-export default class CacheClearToolbarAction {
+export default class CacheClearToolbarAction extends AbstractViewToolbarAction {
     static clearCacheEndpoint: string;
     static webspaceCachePermissions: {[webspaceKey: string]: boolean};
 
@@ -13,8 +15,10 @@ export default class CacheClearToolbarAction {
     @observable cacheClearing = false;
     @observable showDialog = false;
 
-    constructor(webspaceKey: ?string) {
-        this.webspaceKey = webspaceKey;
+    constructor(router: Router, options: {[key: string]: mixed} = {}) {
+        super(router, options);
+
+        this.webspaceKey = router.attributes.webspace;
     }
 
     hasPermission() {
