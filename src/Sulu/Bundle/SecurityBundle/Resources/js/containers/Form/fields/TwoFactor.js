@@ -28,6 +28,8 @@ class TwoFactor extends React.Component<FieldTypeProps<?string>> {
     @observable backupCodes: ?Array<string>;
     @observable backupCodesGenerated: boolean = false;
 
+    setupRequestCount: number = 0;
+
     @action handleSetupOverlayClose = () => {
         this.setupMethod = undefined;
         this.secret = undefined;
@@ -48,13 +50,25 @@ class TwoFactor extends React.Component<FieldTypeProps<?string>> {
             this.setupMethod = value;
             this.loading = true;
 
+            // responses of setup requests that were superseded by selecting another method in the
+            // meantime must be ignored, otherwise they would override the current setup
+            const setupRequestCount = ++this.setupRequestCount;
+
             Requester.post(TwoFactor.endpoints.twoFactorSetup, {method: value})
                 .then(action((response) => {
+                    if (setupRequestCount !== this.setupRequestCount) {
+                        return;
+                    }
+
                     this.secret = response.secret;
                     this.qrContent = response.qrContent;
                     this.loading = false;
                 }))
                 .catch(action(() => {
+                    if (setupRequestCount !== this.setupRequestCount) {
+                        return;
+                    }
+
                     this.handleSetupOverlayClose();
                 }));
 

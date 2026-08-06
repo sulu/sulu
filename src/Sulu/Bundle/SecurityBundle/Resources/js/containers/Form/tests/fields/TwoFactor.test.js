@@ -135,6 +135,42 @@ test('Start the setup flow when the google authenticator method is selected', ()
     });
 });
 
+test('Ignore stale setup responses when another method was selected in the meantime', () => {
+    let resolveFirstSetup = jest.fn();
+    const firstSetupPromise = new Promise((resolve) => {
+        resolveFirstSetup = resolve;
+    });
+    let resolveSecondSetup = jest.fn();
+    const secondSetupPromise = new Promise((resolve) => {
+        resolveSecondSetup = resolve;
+    });
+    Requester.post.mockReturnValueOnce(firstSetupPromise).mockReturnValueOnce(secondSetupPromise);
+
+    const twoFactor = shallow(
+        <TwoFactor
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    twoFactor.find(SingleSelect).prop('onChange')('totp');
+    twoFactor.find(SingleSelect).prop('onChange')('google');
+
+    // the response of the superseded totp request arrives after the google response
+    resolveSecondSetup({secret: 'GOOGLE', qrContent: 'otpauth://totp/google'});
+
+    return secondSetupPromise.then(() => {
+        resolveFirstSetup({secret: 'TOTP', qrContent: 'otpauth://totp/totp'});
+
+        return firstSetupPromise.then(() => {
+            twoFactor.update();
+
+            expect(twoFactor.find(QRCode).prop('value')).toEqual('otpauth://totp/google');
+        });
+    });
+});
+
 test('Activate the method and close the overlay when the code is confirmed', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();

@@ -34,7 +34,7 @@ class ProfileTwoFactorController
      * The option holding the confirmed secret and the option holding the not yet
      * confirmed secret per authenticator app based two factor method.
      */
-    private const SECRET_OPTIONS = [
+    public const SECRET_OPTIONS = [
         'totp' => ['secret' => 'totpSecret', 'pendingSecret' => 'pendingTotpSecret'],
         'google' => ['secret' => 'googleAuthenticatorSecret', 'pendingSecret' => 'pendingGoogleAuthenticatorSecret'],
     ];

@@ -95,8 +95,7 @@ class ProfileController implements ClassResourceInterface
                     $twoFactor = new UserTwoFactor($user);
                 }
 
-                $confirmedSecretOptions = ['totp' => 'totpSecret', 'google' => 'googleAuthenticatorSecret'];
-                $confirmedSecretOption = $confirmedSecretOptions[$twoFactorMethod] ?? null;
+                $confirmedSecretOption = ProfileTwoFactorController::SECRET_OPTIONS[$twoFactorMethod]['secret'] ?? null;
                 if ($confirmedSecretOption && !isset($twoFactor->getOptions()[$confirmedSecretOption])) {
                     // the authenticator app based methods must not be activated before a secret was
                     // set up and confirmed via the ProfileTwoFactorController, because the user
