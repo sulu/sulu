@@ -18,7 +18,7 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 }));
 jest.mock('../stores/SnippetAreaStore', () => jest.fn());
 
-jest.mock('sulu-website-bundle/containers/CacheClearToolbarAction', () => jest.fn(function() {
+jest.mock('sulu-website-bundle/views/toolbarActions/CacheClearToolbarAction', () => jest.fn(function() {
     this.getNode = jest.fn();
     this.getToolbarItemConfig = jest.fn();
 }));
@@ -272,11 +272,14 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
     const SnippetAreas = require('../SnippetAreas').default;
     const SnippetAreaStore = require('../stores/SnippetAreaStore');
     const toolbarFunction = findWithHighOrderFunction(withToolbar, SnippetAreas);
-    const CacheClearToolbarAction = require('sulu-website-bundle/containers').CacheClearToolbarAction;
+    const CacheClearToolbarAction = require('sulu-website-bundle/views').CacheClearToolbarAction;
     viewToolbarActionRegistry.get.mockReturnValue(CacheClearToolbarAction);
 
     const router = new Router();
-    router.route = {
+    router.route = new Route({
+        name: 'sulu_snippet.snippet_areas',
+        path: '/snippet-areas',
+        type: 'sulu_snippet.snippet_areas',
         options: {
             toolbarActions: [
                 {
@@ -285,7 +288,7 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
                 },
             ],
         },
-    };
+    });
 
     // $FlowFixMe
     SnippetAreaStore.mockImplementation(function() {

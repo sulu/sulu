@@ -51,11 +51,22 @@ final class Version20260805120000 extends AbstractMigration
             ->fetchAllAssociative();
 
         foreach ($rows as $row) {
-            if (0 === ((int) $row['permissions'] & self::LIVE_PERMISSION)) {
+            $context = $row['context'];
+            $permissions = $row['permissions'];
+            $roleId = $row['idRoles'];
+
+            if (!\is_string($context)
+                || !(\is_int($permissions) || \is_string($permissions))
+                || !(\is_int($roleId) || \is_string($roleId))
+            ) {
                 continue;
             }
 
-            $this->grantCachePermission($row['context'] . '.cache', (int) $row['idRoles']);
+            if (0 === ((int) $permissions & self::LIVE_PERMISSION)) {
+                continue;
+            }
+
+            $this->grantCachePermission($context . '.cache', (int) $roleId);
         }
     }
 
@@ -94,8 +105,17 @@ final class Version20260805120000 extends AbstractMigration
             return;
         }
 
-        $permissions = (int) $existing['permissions'] | self::DELETE_PERMISSION;
-        if ($permissions === (int) $existing['permissions']) {
+        $existingPermissions = $existing['permissions'];
+        $existingId = $existing['id'];
+
+        if (!(\is_int($existingPermissions) || \is_string($existingPermissions))
+            || !(\is_int($existingId) || \is_string($existingId))
+        ) {
+            return;
+        }
+
+        $permissions = (int) $existingPermissions | self::DELETE_PERMISSION;
+        if ($permissions === (int) $existingPermissions) {
             return;
         }
 
@@ -104,7 +124,7 @@ final class Version20260805120000 extends AbstractMigration
             ->set('permissions', ':permissions')
             ->where('id = :id')
             ->setParameter('permissions', $permissions)
-            ->setParameter('id', $existing['id'])
+            ->setParameter('id', (int) $existingId)
             ->executeStatement();
     }
 }
