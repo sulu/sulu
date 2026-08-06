@@ -231,6 +231,7 @@ class TwoFactor extends React.Component<FieldTypeProps<?string>> {
                         <Button
                             disabled={!!disabled}
                             icon="su-sync"
+                            loading={this.backupCodesLoading}
                             onClick={this.handleBackupCodesButtonClick}
                             skin="link"
                         >

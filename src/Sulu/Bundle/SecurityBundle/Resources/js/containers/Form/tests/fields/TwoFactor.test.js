@@ -188,11 +188,17 @@ test('Generate backup codes without a dialog when no backup codes exist yet', ()
 
     expect(twoFactor.find(Dialog).prop('open')).toEqual(false);
     expect(Requester.post).toHaveBeenCalledWith('/backup-codes');
+    expect(
+        twoFactor.find(Button).filterWhere((button) => button.prop('icon') === 'su-sync').prop('loading')
+    ).toEqual(true);
 
     return backupCodesPromise.then(() => {
         twoFactor.update();
 
         expect(twoFactor.find(Overlay).at(1).prop('open')).toEqual(true);
+        expect(
+            twoFactor.find(Button).filterWhere((button) => button.prop('icon') === 'su-sync').prop('loading')
+        ).toEqual(false);
 
         // a second generation would invalidate the codes that were just generated
         twoFactor.find(Button).filterWhere((button) => button.prop('icon') === 'su-sync').prop('onClick')();
