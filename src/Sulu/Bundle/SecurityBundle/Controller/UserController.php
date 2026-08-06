@@ -173,6 +173,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
                 'enable' => $this->userManager->enableUser($id),
                 'lock' => $this->userManager->lockUser($id),
                 'unlock' => $this->userManager->unlockUser($id),
+                'reset-two-factor' => $this->userManager->resetTwoFactor($id),
                 default => throw new RestException('Unrecognized action: ' . $action),
             };
 

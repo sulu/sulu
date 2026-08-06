@@ -50521,7 +50521,7 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/AdminControllerTest.php
 
 		-
-			message: '#^Cannot access offset 2 on mixed\.$#'
+			message: '#^Cannot access offset 3 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/AdminControllerTest.php

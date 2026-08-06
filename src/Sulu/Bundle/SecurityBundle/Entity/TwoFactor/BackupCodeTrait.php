@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\Entity\TwoFactor;
 
 use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
+use Sulu\Bundle\SecurityBundle\TwoFactor\BackupCodeGenerator;
 
 /*
  * Bridge interface to the scheb/2fa-backup-code TwoFactorInterface.
@@ -24,9 +25,7 @@ if (\interface_exists(BackupCodeInterface::class)) {
     {
         public function isBackupCode(string $code): bool
         {
-            $backupCodes = $this->getTwoFactor()?->getOptions()['backupCodes'] ?? [];
-
-            return \in_array($code, $backupCodes);
+            return null !== $this->findBackupCode($code);
         }
 
         public function invalidateBackupCode(string $code): void
@@ -37,11 +36,13 @@ if (\interface_exists(BackupCodeInterface::class)) {
                 return;
             }
 
-            $options = $twoFactor->getOptions();
-            $key = \array_search($code, $options['backupCodes'] ?? []);
+            $key = $this->findBackupCode($code);
 
-            if (false !== $key) {
-                unset($options['backupCodes'][$key]);
+            if (null !== $key) {
+                $options = $twoFactor->getOptions() ?? [];
+                $backupCodes = $options['backupCodes'] ?? [];
+                unset($backupCodes[$key]);
+                $options['backupCodes'] = \array_values($backupCodes);
                 $twoFactor->setOptions($options);
             }
         }
@@ -67,6 +68,35 @@ if (\interface_exists(BackupCodeInterface::class)) {
                 $options['backupCodes'][] = $backUpCode;
                 $twoFactor->setOptions($options);
             }
+        }
+
+        /**
+         * Backup codes are stored as password hashes. Plain text codes are also
+         * supported for backwards compatibility with existing setups.
+         */
+        private function findBackupCode(string $code): ?int
+        {
+            $backupCodes = $this->getTwoFactor()?->getOptions()['backupCodes'] ?? [];
+
+            foreach ($backupCodes as $key => $backupCode) {
+                if (\hash_equals($backupCode, $code)) {
+                    return $key;
+                }
+            }
+
+            // skip the expensive hash verification for inputs that can not be a generated
+            // backup code, because this method is called for every submitted two factor code
+            if (BackupCodeGenerator::CODE_LENGTH !== \strlen($code)) {
+                return null;
+            }
+
+            foreach ($backupCodes as $key => $backupCode) {
+                if (\str_starts_with($backupCode, '$') && \password_verify($code, $backupCode)) {
+                    return $key;
+                }
+            }
+
+            return null;
         }
     }
 } else {
