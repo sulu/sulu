@@ -14269,20 +14269,8 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
 			message: '#^Strict comparison using \!\=\= between null and Doctrine\\Common\\Collections\\Collection\<int, Sulu\\Bundle\\ContactBundle\\Entity\\AccountContact\> will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between numeric\-string and int will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
@@ -14803,25 +14791,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/SuluContactExtension.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\DependencyInjection\\SuluContactExtension\:\:setDefaultForFormOfAddress\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/SuluContactExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\DependencyInjection\\SuluContactExtension\:\:setDefaultForFormOfAddress\(\) has parameter \$config with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/SuluContactExtension.php
-
-		-
 			message: '#^Parameter \#1 \$objects of method Sulu\\Bundle\\ContactBundle\\DependencyInjection\\SuluContactExtension\:\:configurePersistence\(\) expects array\<string, array\{model\: class\-string, repository\?\: class\-string\}\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/SuluContactExtension.php
-
-		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/SuluContactExtension.php
@@ -25411,12 +25381,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/AbstractMediaController.php
 
 		-
-			message: '#^Binary operation "\-" between mixed and 1 results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -25443,12 +25407,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Controller\\CollectionController\:\:__construct\(\) has parameter \$permissions with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Controller\\CollectionController\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
 
@@ -25490,18 +25448,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$userId of method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManagerInterface\:\:save\(\) expects int\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
-			message: '#^Parameter \#3 \$destinationId of method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManagerInterface\:\:move\(\) expects int\|null, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
-			message: '#^Parameter \#5 \$depth of method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManagerInterface\:\:getTree\(\) expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
@@ -29242,12 +29188,6 @@ parameters:
 			message: '#^Binary operation "\." between ''/api/collections/'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 11
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
@@ -46481,12 +46421,6 @@ parameters:
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Sulu/Bundle/ReferenceBundle/Tests/Unit/Application/Collector/ReferenceCollectorTest.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between 0 and 0 will always evaluate to true\.$#'
-			identifier: identical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/ReferenceBundle/UserInterface/Command/RefreshCommand.php
 
 		-
 			message: '#^Parameter \#2 \$destination of method Sulu\\Bundle\\RouteBundle\\PageTree\\PageTreeMoverInterface\:\:move\(\) expects Sulu\\Bundle\\PageBundle\\Document\\BasePageDocument, object given\.$#'
