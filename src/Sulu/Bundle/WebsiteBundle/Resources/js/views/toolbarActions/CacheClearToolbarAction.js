@@ -18,7 +18,8 @@ export default class CacheClearToolbarAction extends AbstractViewToolbarAction {
     constructor(router: Router, options: {[key: string]: mixed} = {}) {
         super(router, options);
 
-        this.webspaceKey = router.attributes.webspace;
+        const {webspace} = router.attributes;
+        this.webspaceKey = typeof webspace === 'string' ? webspace : undefined;
     }
 
     hasPermission() {
