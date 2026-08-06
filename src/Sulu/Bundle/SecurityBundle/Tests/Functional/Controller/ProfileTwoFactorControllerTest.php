@@ -91,6 +91,66 @@ class ProfileTwoFactorControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
+    public function testGoogleSetup(): void
+    {
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'google']);
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        /** @var array{secret: non-empty-string, qrContent: string} $response */
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+
+        $this->assertNotEmpty($response['secret']);
+        $this->assertStringStartsWith('otpauth://totp/', $response['qrContent']);
+        $this->assertStringContainsString($response['secret'], $response['qrContent']);
+
+        // the method must not be activated before the code was confirmed
+        $user = $this->refreshTestUser();
+        $this->assertNotNull($user->getTwoFactor());
+        $this->assertNull($user->getTwoFactor()->getMethod());
+        $this->assertSame(
+            $response['secret'],
+            $user->getTwoFactor()->getOptions()['pendingGoogleAuthenticatorSecret'] ?? null,
+        );
+        $this->assertArrayNotHasKey('googleAuthenticatorSecret', $user->getTwoFactor()->getOptions());
+    }
+
+    public function testGoogleConfirm(): void
+    {
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'google']);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        /** @var array{secret: non-empty-string} $setupResponse */
+        $setupResponse = \json_decode((string) $this->client->getResponse()->getContent(), true);
+
+        $code = TOTP::create($setupResponse['secret'])->now();
+
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/confirm', ['method' => 'google', 'code' => $code]);
+
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
+
+        $user = $this->refreshTestUser();
+        $this->assertNotNull($user->getTwoFactor());
+        $this->assertSame('google', $user->getTwoFactor()->getMethod());
+        $this->assertSame(
+            $setupResponse['secret'],
+            $user->getTwoFactor()->getOptions()['googleAuthenticatorSecret'] ?? null,
+        );
+        $this->assertArrayNotHasKey('pendingGoogleAuthenticatorSecret', $user->getTwoFactor()->getOptions());
+    }
+
+    public function testGoogleConfirmInvalidCode(): void
+    {
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'google']);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/confirm', ['method' => 'google', 'code' => 'invalid']);
+
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+
+        $user = $this->refreshTestUser();
+        $this->assertNotNull($user->getTwoFactor());
+        $this->assertNull($user->getTwoFactor()->getMethod());
+    }
+
     public function testSetupInvalidMethod(): void
     {
         $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'email']);
@@ -226,6 +286,23 @@ class ProfileTwoFactorControllerTest extends SuluTestCase
 
         $user = $this->refreshTestUser();
         $this->assertSame('totp', $user->getTwoFactor()?->getMethod());
+    }
+
+    public function testPutProfileGoogleMethodWithoutSetup(): void
+    {
+        $this->client->jsonRequest('PUT', '/api/profile', [
+            'firstName' => 'Max',
+            'lastName' => 'Mustermann',
+            'username' => 'test',
+            'email' => 'test@example.localhost',
+            'locale' => 'en',
+            'twoFactor' => ['method' => 'google'],
+        ]);
+
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+
+        $user = $this->refreshTestUser();
+        $this->assertNull($user->getTwoFactor()?->getMethod());
     }
 
     private function activateTwoFactor(): User

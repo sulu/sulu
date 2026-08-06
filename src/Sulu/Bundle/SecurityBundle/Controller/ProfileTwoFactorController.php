@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 use Doctrine\Persistence\ObjectManager;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Totp\TotpAuthenticatorInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor;
@@ -29,19 +30,29 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class ProfileTwoFactorController
 {
+    /**
+     * The option holding the confirmed secret and the option holding the not yet
+     * confirmed secret per authenticator app based two factor method.
+     */
+    private const SECRET_OPTIONS = [
+        'totp' => ['secret' => 'totpSecret', 'pendingSecret' => 'pendingTotpSecret'],
+        'google' => ['secret' => 'googleAuthenticatorSecret', 'pendingSecret' => 'pendingGoogleAuthenticatorSecret'],
+    ];
+
     public function __construct(
         private TokenStorageInterface $tokenStorage,
         private ObjectManager $objectManager,
         private ViewHandlerInterface $viewHandler,
         private BackupCodeGenerator $backupCodeGenerator,
         private ?TotpAuthenticatorInterface $totpAuthenticator,
+        private ?GoogleAuthenticatorInterface $googleAuthenticator,
         private bool $backupCodesEnabled,
         private ?string $twoFactorForcePattern,
     ) {
     }
 
     /**
-     * Generates a new secret for the authenticator app based "totp" two factor method
+     * Generates a new secret for an authenticator app based two factor method
      * and returns the content for the QR code to be scanned by the app.
      *
      * The secret is only stored as pending and does not activate the second factor
@@ -66,17 +77,19 @@ class ProfileTwoFactorController
             $this->objectManager->persist($twoFactor);
         }
 
+        $secretOptions = self::SECRET_OPTIONS[$method];
+
         $options = $twoFactor->getOptions() ?? [];
-        $options['pendingTotpSecret'] = $authenticator->generateSecret();
+        $options[$secretOptions['pendingSecret']] = $authenticator->generateSecret();
         // a stale secret of a previously disabled setup must not be confirmable
-        unset($options['totpSecret']);
+        unset($options[$secretOptions['secret']]);
         $twoFactor->setOptions($options);
 
         $this->objectManager->flush();
 
         return $this->viewHandler->handle(
             View::create([
-                'secret' => $options['pendingTotpSecret'],
+                'secret' => $options[$secretOptions['pendingSecret']],
                 'qrContent' => $authenticator->getQRContent($user),
             ]),
         );
@@ -92,10 +105,12 @@ class ProfileTwoFactorController
         $authenticator = $this->getAuthenticator($method);
         $user = $this->getUser();
 
+        $secretOptions = self::SECRET_OPTIONS[$method];
+
         $twoFactor = $user->getTwoFactor();
         $options = $twoFactor?->getOptions() ?? [];
-        $pendingTotpSecret = $options['pendingTotpSecret'] ?? null;
-        if (!$twoFactor || !$pendingTotpSecret) {
+        $pendingSecret = $options[$secretOptions['pendingSecret']] ?? null;
+        if (!$twoFactor || !$pendingSecret) {
             return $this->viewHandler->handle(
                 View::create(['error' => 'setup_required'], 400),
             );
@@ -108,8 +123,8 @@ class ProfileTwoFactorController
             );
         }
 
-        $options['totpSecret'] = $pendingTotpSecret;
-        unset($options['pendingTotpSecret']);
+        $options[$secretOptions['secret']] = $pendingSecret;
+        unset($options[$secretOptions['pendingSecret']]);
         $twoFactor->setOptions($options);
         $twoFactor->setMethod($method);
 
@@ -182,14 +197,21 @@ class ProfileTwoFactorController
         return $backupCodes;
     }
 
-    private function getAuthenticator(string $method): TotpAuthenticatorInterface
+    private function getAuthenticator(string $method): TotpAuthenticatorInterface|GoogleAuthenticatorInterface
     {
-        $authenticator = 'totp' === $method ? $this->totpAuthenticator : null;
+        $authenticator = match ($method) {
+            'totp' => $this->totpAuthenticator,
+            'google' => $this->googleAuthenticator,
+            default => null,
+        };
 
         if (!$authenticator) {
+            $package = 'google' === $method ? 'scheb/2fa-google-authenticator' : 'scheb/2fa-totp';
+
             throw new NotFoundHttpException(\sprintf(
-                'The two factor method "%s" is not available. Install the "scheb/2fa-totp" package and enable it in the "scheb_two_factor" configuration.',
+                'The two factor method "%s" is not available. Install the "%s" package and enable it in the "scheb_two_factor" configuration.',
                 $method,
+                $package,
             ));
         }
 
@@ -197,11 +219,11 @@ class ProfileTwoFactorController
     }
 
     /**
-     * @return User&\Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface
+     * @return User&\Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface&\Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface
      */
     private function getUser(): User
     {
-        /** @var User&\Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface $user */
+        /** @var User&\Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface&\Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface $user */
         $user = $this->tokenStorage->getToken()?->getUser();
 
         return $user;

@@ -74,6 +74,12 @@
                             <title>sulu_security.two_factor_method_totp</title>
                         </meta>
                     </param>
+
+                    <param name="google">
+                        <meta>
+                            <title>sulu_security.two_factor_method_google</title>
+                        </meta>
+                    </param>
                 </param>
             </params>
         </property>

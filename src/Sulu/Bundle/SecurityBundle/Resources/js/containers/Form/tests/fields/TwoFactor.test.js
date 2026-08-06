@@ -28,6 +28,7 @@ const schemaOptions = {
             {name: '', title: 'None'},
             {name: 'email', title: 'Email'},
             {name: 'totp', title: 'Totp'},
+            {name: 'google', title: 'Google Authenticator'},
         ],
     },
 };
@@ -52,7 +53,7 @@ test('Render a SingleSelect with the given values and value', () => {
     );
 
     expect(twoFactor.find(SingleSelect).prop('value')).toEqual('email');
-    expect(twoFactor.find(SingleSelect.Option)).toHaveLength(3);
+    expect(twoFactor.find(SingleSelect.Option)).toHaveLength(4);
     expect(twoFactor.find(Overlay).at(0).prop('open')).toEqual(false);
 });
 
@@ -103,6 +104,34 @@ test('Start the setup flow when an authenticator app method is selected', () => 
         twoFactor.update();
         expect(twoFactor.find(Overlay).at(0).prop('open')).toEqual(true);
         expect(twoFactor.find(QRCode).prop('value')).toEqual('otpauth://totp/test');
+    });
+});
+
+test('Start the setup flow when the google authenticator method is selected', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const setupPromise = Promise.resolve({secret: 'SECRET', qrContent: 'otpauth://totp/test'});
+    Requester.post.mockReturnValue(setupPromise);
+
+    const twoFactor = shallow(
+        <TwoFactor
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    twoFactor.find(SingleSelect).prop('onChange')('google');
+
+    expect(Requester.post).toHaveBeenCalledWith('/setup', {method: 'google'});
+    expect(changeSpy).not.toHaveBeenCalled();
+
+    return setupPromise.then(() => {
+        twoFactor.update();
+        expect(twoFactor.find(Overlay).at(0).prop('open')).toEqual(true);
     });
 });
 
