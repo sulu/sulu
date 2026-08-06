@@ -98,6 +98,7 @@ return $config
             'nyholm/psr7', // required for faster fos http cache clearing
             'symfony/css-selector', // kept for future usage
             'symfony/proxy-manager-bridge', // can only be removed when min symfony version is 6.2
+            'symfony/doctrine-bridge', // install no unsupported Symfony version doctrine bridge
             'symfony/yaml', // we use yaml configurations
         ],
         [ErrorType::UNUSED_DEPENDENCY],
