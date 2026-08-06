@@ -26,6 +26,7 @@ class TwoFactor extends React.Component<FieldTypeProps<?string>> {
     @observable backupCodesDialogOpen: boolean = false;
     @observable backupCodesLoading: boolean = false;
     @observable backupCodes: ?Array<string>;
+    @observable backupCodesGenerated: boolean = false;
 
     @action handleSetupOverlayClose = () => {
         this.setupMethod = undefined;
@@ -89,7 +90,21 @@ class TwoFactor extends React.Component<FieldTypeProps<?string>> {
             }));
     };
 
+    get hasBackupCodes(): boolean {
+        const {formInspector} = this.props;
+
+        return this.backupCodesGenerated || !!formInspector.getValueByPath('/twoFactor/hasBackupCodes');
+    }
+
     @action handleBackupCodesButtonClick = () => {
+        if (!this.hasBackupCodes) {
+            // no backup codes have been generated yet, so there is nothing that could be
+            // invalidated and no need to warn the user before generating a new set
+            this.generateBackupCodes();
+
+            return;
+        }
+
         this.backupCodesDialogOpen = true;
     };
 
@@ -97,12 +112,17 @@ class TwoFactor extends React.Component<FieldTypeProps<?string>> {
         this.backupCodesDialogOpen = false;
     };
 
-    @action handleBackupCodesDialogConfirm = () => {
+    handleBackupCodesDialogConfirm = () => {
+        this.generateBackupCodes();
+    };
+
+    @action generateBackupCodes = () => {
         this.backupCodesLoading = true;
 
         Requester.post(TwoFactor.endpoints.twoFactorBackupCodes)
             .then(action((response) => {
                 this.backupCodes = response.backupCodes;
+                this.backupCodesGenerated = true;
                 this.backupCodesDialogOpen = false;
                 this.backupCodesLoading = false;
             }))

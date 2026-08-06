@@ -17,7 +17,9 @@ jest.mock('sulu-admin-bundle/services', () => ({
     },
 }));
 
-const formInspector: any = {};
+const formInspector: any = {
+    getValueByPath: jest.fn(),
+};
 
 const schemaOptions = {
     values: {
@@ -166,7 +168,12 @@ test('Show the backup codes button only when a method is active and backup codes
     expect(twoFactor.find(Button).filterWhere((button) => button.prop('icon') === 'su-sync')).toHaveLength(0);
 });
 
-test('Generate backup codes after the dialog was confirmed', () => {
+test('Generate backup codes without a dialog when no backup codes exist yet', () => {
+    formInspector.getValueByPath.mockReturnValue(false);
+
+    const backupCodesPromise = Promise.resolve({backupCodes: ['11111111', '22222222']});
+    Requester.post.mockReturnValue(backupCodesPromise);
+
     const twoFactor = shallow(
         <TwoFactor
             {...fieldTypeDefaultProps}
@@ -179,6 +186,38 @@ test('Generate backup codes after the dialog was confirmed', () => {
     twoFactor.find(Button).filterWhere((button) => button.prop('icon') === 'su-sync').prop('onClick')();
     twoFactor.update();
 
+    expect(twoFactor.find(Dialog).prop('open')).toEqual(false);
+    expect(Requester.post).toHaveBeenCalledWith('/backup-codes');
+
+    return backupCodesPromise.then(() => {
+        twoFactor.update();
+
+        expect(twoFactor.find(Overlay).at(1).prop('open')).toEqual(true);
+
+        // a second generation would invalidate the codes that were just generated
+        twoFactor.find(Button).filterWhere((button) => button.prop('icon') === 'su-sync').prop('onClick')();
+        twoFactor.update();
+
+        expect(twoFactor.find(Dialog).prop('open')).toEqual(true);
+    });
+});
+
+test('Generate backup codes after the dialog was confirmed when backup codes already exist', () => {
+    formInspector.getValueByPath.mockReturnValue(true);
+
+    const twoFactor = shallow(
+        <TwoFactor
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+            value="totp"
+        />
+    );
+
+    twoFactor.find(Button).filterWhere((button) => button.prop('icon') === 'su-sync').prop('onClick')();
+    twoFactor.update();
+
+    expect(formInspector.getValueByPath).toHaveBeenCalledWith('/twoFactor/hasBackupCodes');
     expect(twoFactor.find(Dialog).prop('open')).toEqual(true);
     expect(Requester.post).not.toHaveBeenCalled();
 
@@ -199,6 +238,8 @@ test('Generate backup codes after the dialog was confirmed', () => {
 });
 
 test('Do not generate backup codes when the dialog was cancelled', () => {
+    formInspector.getValueByPath.mockReturnValue(true);
+
     const twoFactor = shallow(
         <TwoFactor
             {...fieldTypeDefaultProps}

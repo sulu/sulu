@@ -96,6 +96,7 @@ class ProfileControllerTest extends SuluTestCase
             'email' => 'hans.mustermann@muster.at',
             'locale' => 'de',
             'twoFactor' => [
+                'hasBackupCodes' => false,
                 'method' => 'email',
             ],
         ], $response);

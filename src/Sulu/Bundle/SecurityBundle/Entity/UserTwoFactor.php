@@ -14,6 +14,8 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\SecurityBundle\Entity\TwoFactor\TwoFactorInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
@@ -39,6 +41,14 @@ class UserTwoFactor
     public function getMethod(): ?string
     {
         return $this->method;
+    }
+
+    #[VirtualProperty]
+    #[SerializedName('hasBackupCodes')]
+    #[Groups(['profile'])]
+    public function hasBackupCodes(): bool
+    {
+        return [] !== ($this->getOptions()['backupCodes'] ?? []);
     }
 
     /**

@@ -117,6 +117,14 @@ class ProfileTwoFactorControllerTest extends SuluTestCase
 
         $this->assertFalse($user->isBackupCode('11111111'));
         $this->assertTrue($user->isBackupCode($response['backupCodes'][0]));
+
+        $client->jsonRequest('GET', '/api/profile');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        /** @var array{twoFactor: array{hasBackupCodes: bool}} $profileResponse */
+        $profileResponse = \json_decode((string) $client->getResponse()->getContent(), true);
+
+        $this->assertTrue($profileResponse['twoFactor']['hasBackupCodes']);
     }
 
     public function testBackupCodesWithEmailMethod(): void
