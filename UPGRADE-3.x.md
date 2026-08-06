@@ -23,6 +23,24 @@ Run the new migration to apply the schema change:
 ```bash
 bin/console doctrine:migrations:migrate
 ```
+## 3.1
+
+### Cache clearing now requires a dedicated permission
+
+Clearing the webspace cache (from the page list or snippet areas toolbar) used to be gated by the `LIVE` permission on
+the webspace security context (`sulu.webspaces.<webspace>`). It is now gated by the `DELETE` permission on a new,
+dedicated security context: `sulu.webspaces.<webspace>.cache`.
+
+A migration (`Sulu\Bundle\WebsiteBundle\Migrations\Version20260805120000`) grants the new `DELETE` permission on
+`sulu.webspaces.<webspace>.cache` to every role that already had `LIVE` permission on `sulu.webspaces.<webspace>`, so
+existing roles keep the ability to clear the cache after running:
+
+```bash
+bin/console doctrine:migrations:migrate
+```
+
+Review your roles afterwards and adjust the new `sulu.webspaces.<webspace>.cache` permission if a role should no
+longer be allowed to clear the cache, or should gain it despite not having had `LIVE` permission before.
 
 ## 3.0.8
 

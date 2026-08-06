@@ -11,8 +11,12 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
+jest.mock('sulu-admin-bundle/views', () => ({
+    AbstractViewToolbarAction: require('sulu-admin-bundle/views/toolbarActions/AbstractViewToolbarAction').default,
+}));
+
 test('Return item config with correct icon, type and label and return closed dialog', () => {
-    const cacheClearToolbarAction = new CacheClearToolbarAction();
+    const cacheClearToolbarAction = new CacheClearToolbarAction({attributes: {}});
 
     expect(cacheClearToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         icon: 'su-paint',
@@ -32,7 +36,7 @@ test('Return item config with correct icon, type and label and return closed dia
 
 test('Open dialog on toolbar item click', () => {
     CacheClearToolbarAction.webspaceCachePermissions = {'sulu-io': true};
-    const cacheClearToolbarAction = new CacheClearToolbarAction('sulu-io');
+    const cacheClearToolbarAction = new CacheClearToolbarAction({attributes: {webspace: 'sulu-io'}});
 
     const toolbarItemConfig = cacheClearToolbarAction.getToolbarItemConfig();
     toolbarItemConfig.onClick();
@@ -44,7 +48,7 @@ test('Open dialog on toolbar item click', () => {
 });
 
 test('Close dialog on cancel click', () => {
-    const cacheClearToolbarAction = new CacheClearToolbarAction();
+    const cacheClearToolbarAction = new CacheClearToolbarAction({attributes: {}});
 
     const toolbarItemConfig = cacheClearToolbarAction.getToolbarItemConfig();
     toolbarItemConfig.onClick();
@@ -62,7 +66,7 @@ test('Close dialog on cancel click', () => {
 });
 
 test('Call delete when dialog is confirmed', () => {
-    const cacheClearToolbarAction = new CacheClearToolbarAction();
+    const cacheClearToolbarAction = new CacheClearToolbarAction({attributes: {}});
     CacheClearToolbarAction.clearCacheEndpoint = '/cache';
 
     const deletePromise = Promise.resolve();
@@ -94,14 +98,14 @@ test('Call delete when dialog is confirmed', () => {
 
 test('Return no item config when user has no cache permission for webspace', () => {
     CacheClearToolbarAction.webspaceCachePermissions = {'sulu-io': false};
-    const cacheClearToolbarAction = new CacheClearToolbarAction('sulu-io');
+    const cacheClearToolbarAction = new CacheClearToolbarAction({attributes: {webspace: 'sulu-io'}});
 
     expect(cacheClearToolbarAction.getToolbarItemConfig()).toEqual(undefined);
 });
 
 test('Call delete when dialog is confirmed with query parameter', () => {
     CacheClearToolbarAction.webspaceCachePermissions = {'sulu-io': true};
-    const cacheClearToolbarAction = new CacheClearToolbarAction('sulu-io');
+    const cacheClearToolbarAction = new CacheClearToolbarAction({attributes: {webspace: 'sulu-io'}});
     CacheClearToolbarAction.clearCacheEndpoint = '/cache';
 
     const deletePromise = Promise.resolve();
