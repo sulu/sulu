@@ -40,6 +40,12 @@
 }
 
 .texteditor {
+    /* same trimming as the textarea, so both field kinds show only the divider below the language select */
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    border-radius: 0;
+
     :global(.ck-editor__top) {
         display: none;
     }

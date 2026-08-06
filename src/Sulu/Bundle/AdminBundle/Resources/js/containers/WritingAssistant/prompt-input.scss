@@ -61,6 +61,11 @@
     gap: 8px;
     margin-bottom: 12px;
     flex-wrap: wrap;
+
+    /* the secondary skin shares the panel background, so the prompts would melt into it */
+    button {
+        background-color: $white;
+    }
 }
 
 .input {

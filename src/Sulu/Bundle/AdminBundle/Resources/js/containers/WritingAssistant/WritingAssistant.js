@@ -382,7 +382,7 @@ export default class WritingAssistant extends React.Component<Props> {
                 onClose={this.handleDialogClose}
                 onSnackbarCloseClick={this.handleSnackbarCloseClick}
                 open={true}
-                size="large"
+                size="small"
                 snackbarMessage={this.snackbarMessage}
                 snackbarType="success"
                 title={writingAssistantMessage}
