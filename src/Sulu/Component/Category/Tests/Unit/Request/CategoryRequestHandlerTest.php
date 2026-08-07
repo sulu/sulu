@@ -42,15 +42,12 @@ class CategoryRequestHandlerTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('getProvider')]
     public function testGet($parameter, $queryString, $expected): void
     {
-        $requestStack = $this->prophesize(RequestStack::class);
-        $request = $this->prophesize(Request::class);
+        $requestStack = new RequestStack();
+        $request = Request::create('/');
+        $requestStack->push($request);
+        $request->query->set($parameter, $queryString);
 
-        $requestReveal = $request->reveal();
-        $requestReveal->query = new InputBag([$parameter => $queryString]);
-        $requestStack->getCurrentRequest()->willReturn($requestReveal);
-        $request->get($parameter, '')->willReturn($queryString);
-
-        $handler = new CategoryRequestHandler($requestStack->reveal());
+        $handler = new CategoryRequestHandler($requestStack);
         $result = $handler->getCategories($parameter);
 
         $this->assertEquals($expected, $result);
@@ -81,16 +78,12 @@ class CategoryRequestHandlerTest extends TestCase
     {
         $category = ['id' => 3, 'name' => 'test'];
 
-        $requestStack = $this->prophesize(RequestStack::class);
-        $request = $this->prophesize(Request::class);
+        $requestStack = new RequestStack();
+        $request = Request::create($url);
+        $requestStack->push($request);
+        $request->query->set($parameter, $queryString);
 
-        $requestReveal = $request->reveal();
-        $requestReveal->query = new InputBag([$parameter => $queryString]);
-        $requestStack->getCurrentRequest()->willReturn($requestReveal);
-        $request->get($parameter, '')->willReturn($queryString);
-        $request->getPathInfo()->willReturn($url);
-
-        $handler = new CategoryRequestHandler($requestStack->reveal());
+        $handler = new CategoryRequestHandler($requestStack);
         $result = $handler->appendCategoryToUrl($category, $parameter);
 
         $this->assertEquals($url . '?' . $parameter . '=' . \urlencode($expected), $result);
@@ -121,16 +114,12 @@ class CategoryRequestHandlerTest extends TestCase
     {
         $category = ['id' => 3, 'name' => 'test'];
 
-        $requestStack = $this->prophesize(RequestStack::class);
-        $request = $this->prophesize(Request::class);
+        $requestStack = new RequestStack();
+        $request = Request::create($url);
+        $requestStack->push($request);
+        $request->query->set($parameter, $queryString);
 
-        $requestReveal = $request->reveal();
-        $requestReveal->query = new InputBag([$parameter => $queryString]);
-        $requestStack->getCurrentRequest()->willReturn($requestReveal);
-        $request->get($parameter, '')->willReturn($queryString);
-        $request->getPathInfo()->willReturn($url);
-
-        $handler = new CategoryRequestHandler($requestStack->reveal());
+        $handler = new CategoryRequestHandler($requestStack);
         $result = $handler->removeCategoryFromUrl($category, $parameter);
 
         $this->assertEquals($url . '?' . $parameter . '=' . \urlencode($expected), $result);
@@ -161,16 +150,12 @@ class CategoryRequestHandlerTest extends TestCase
     {
         $category = ['id' => 3, 'name' => 'test'];
 
-        $requestStack = $this->prophesize(RequestStack::class);
-        $request = $this->prophesize(Request::class);
+        $requestStack = new RequestStack();
+        $request = Request::create($url);
+        $requestStack->push($request);
+        $request->query->set($parameter, $queryString);
 
-        $requestReveal = $request->reveal();
-        $requestReveal->query = new InputBag([$parameter => $queryString]);
-        $requestStack->getCurrentRequest()->willReturn($requestReveal);
-        $request->get($parameter, '')->willReturn($queryString);
-        $request->getPathInfo()->willReturn($url);
-
-        $handler = new CategoryRequestHandler($requestStack->reveal());
+        $handler = new CategoryRequestHandler($requestStack);
         $result = $handler->toggleCategoryInUrl($category, $parameter);
 
         $this->assertEquals($url . '?' . $parameter . '=' . \urlencode($expected), $result);
@@ -201,16 +186,12 @@ class CategoryRequestHandlerTest extends TestCase
     {
         $category = ['id' => 3, 'name' => 'test'];
 
-        $requestStack = $this->prophesize(RequestStack::class);
-        $request = $this->prophesize(Request::class);
+        $requestStack = new RequestStack();
+        $request = Request::create($url);
+        $requestStack->push($request);
+        $request->query->set($parameter, $queryString);
 
-        $requestReveal = $request->reveal();
-        $requestReveal->query = new InputBag([$parameter => $queryString]);
-        $requestStack->getCurrentRequest()->willReturn($requestReveal);
-        $request->get($parameter, '')->willReturn($queryString);
-        $request->getPathInfo()->willReturn($url);
-
-        $handler = new CategoryRequestHandler($requestStack->reveal());
+        $handler = new CategoryRequestHandler($requestStack);
         $result = $handler->setCategoryToUrl($category, $parameter);
 
         $this->assertEquals($url . '?' . $parameter . '=' . \urlencode($expected), $result);
@@ -237,16 +218,12 @@ class CategoryRequestHandlerTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('removeProvider')]
     public function testRemoveFromUrl($parameter, $url, $queryString): void
     {
-        $requestStack = $this->prophesize(RequestStack::class);
-        $request = $this->prophesize(Request::class);
+        $requestStack = new RequestStack();
+        $request = Request::create($url);
+        $requestStack->push($request);
+        $request->query->set($parameter, $queryString);
 
-        $requestReveal = $request->reveal();
-        $requestReveal->query = new InputBag([$parameter => $queryString]);
-        $requestStack->getCurrentRequest()->willReturn($requestReveal);
-        $request->get($parameter, '')->willReturn($queryString);
-        $request->getPathInfo()->willReturn($url);
-
-        $handler = new CategoryRequestHandler($requestStack->reveal());
+        $handler = new CategoryRequestHandler($requestStack);
         $result = $handler->removeCategoriesFromUrl($parameter);
 
         $this->assertEquals($url, $result);

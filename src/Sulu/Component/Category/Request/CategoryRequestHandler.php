@@ -49,7 +49,7 @@ class CategoryRequestHandler implements CategoryRequestHandlerInterface
         $id = $category['id'];
 
         // extend comma separated list
-        $categories = $request->get($categoriesParameter, '');
+        $categories = $request->query->get($categoriesParameter, '');
         /** @var array<string> $categoriesArray */
         $categoriesArray = \array_filter(\array_merge(\explode(',', $categories), [$id]));
         $categories = \implode(',', \array_unique($categoriesArray));
@@ -74,7 +74,7 @@ class CategoryRequestHandler implements CategoryRequestHandlerInterface
         $id = $category['id'];
 
         // extend comma separated list
-        $categories = $request->get($categoriesParameter, '');
+        $categories = $request->query->get($categoriesParameter, '');
         /** @var array<string> $categoriesArray */
         $categoriesArray = \array_filter(\explode(',', $categories), function($categoryId) use ($id) {
             return $categoryId && $categoryId != $id;
@@ -101,7 +101,7 @@ class CategoryRequestHandler implements CategoryRequestHandlerInterface
         $id = $category['id'];
 
         // extend comma separated list
-        $categories = $request->get($categoriesParameter, '');
+        $categories = $request->query->get($categoriesParameter, '');
         $categoriesArray = \explode(',', $categories);
 
         if (\in_array($id, $categoriesArray)) {
