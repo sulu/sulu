@@ -93,6 +93,7 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference(ViewBuilderFactoryInterface::class),
             new Reference('sulu_security.security_checker'),
+            new Reference('router'),
             new Reference('translator'),
             new Reference('sulu_admin.admin_pool'),
             '%sulu_admin.resources%',
