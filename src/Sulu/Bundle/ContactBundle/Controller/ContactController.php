@@ -206,7 +206,7 @@ class ContactController extends AbstractRestController implements SecuredControl
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         /** @var string $account */
-        $accountId = $request->get('accountId');
+        $accountId = $request->query->get('accountId');
         if ($accountId) {
             $listBuilder->where($fieldDescriptors['accountId'], $accountId);
         }
@@ -422,13 +422,13 @@ class ContactController extends AbstractRestController implements SecuredControl
 
     private function checkArguments(Request $request)
     {
-        if (null === $request->get('firstName')) {
+        if (null === $request->getPayload()->get('firstName')) {
             throw new MissingArgumentException($this->contactClass, 'firstName');
         }
-        if (null === $request->get('lastName')) {
+        if (null === $request->getPayload()->get('lastName')) {
             throw new MissingArgumentException($this->contactClass, 'lastName');
         }
-        if (null === $request->get('formOfAddress')) {
+        if (null === $request->getPayload()->get('formOfAddress')) {
             throw new MissingArgumentException($this->contactClass, 'formOfAddress');
         }
     }

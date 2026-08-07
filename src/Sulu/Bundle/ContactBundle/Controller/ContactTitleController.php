@@ -87,7 +87,7 @@ class ContactTitleController extends AbstractRestController implements SecuredCo
      */
     public function postAction(Request $request)
     {
-        $name = $request->get('title');
+        $name = $request->getPayload()->get('title');
 
         try {
             if (null == $name) {
@@ -133,7 +133,7 @@ class ContactTitleController extends AbstractRestController implements SecuredCo
             if (!$title) {
                 throw new EntityNotFoundException(self::$entityName, $id);
             } else {
-                $name = $request->get('title');
+                $name = $request->getPayload()->get('title');
 
                 if (empty($name)) {
                     throw new RestException('There is no title-name for the given title');
@@ -159,7 +159,7 @@ class ContactTitleController extends AbstractRestController implements SecuredCo
 
     public function cdeleteAction(Request $request)
     {
-        $ids = \array_filter(\explode(',', $request->get('ids', '')));
+        $ids = \array_filter(\explode(',', $request->query->get('ids', '')));
 
         try {
             foreach ($ids as $id) {
@@ -239,7 +239,7 @@ class ContactTitleController extends AbstractRestController implements SecuredCo
             $data = [];
 
             $i = 0;
-            while ($item = $request->get($i)) {
+            while ($item = $request->getPayload()->get($i)) {
                 if (!isset($item['title'])) {
                     throw new RestException(
                         'There is no title-name for the given title'

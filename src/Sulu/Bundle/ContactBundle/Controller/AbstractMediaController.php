@@ -229,7 +229,7 @@ abstract class AbstractMediaController extends AbstractRestController
                 $fieldDescriptors,
                 $user,
                 [],
-                !$request->get('sortBy'),
+                !$request->query->get('sortBy'),
                 null
             );
 

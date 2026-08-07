@@ -90,7 +90,7 @@ class AccountMediaController extends AbstractMediaController implements SecuredC
             );
         };
 
-        $mediaId = $request->get('mediaId', '');
+        $mediaId = $request->getPayload()->get('mediaId', '');
 
         return $this->addMediaToEntity($this->accountClass, $contactId, $mediaId, $dispatchDomainEventCallback);
     }
