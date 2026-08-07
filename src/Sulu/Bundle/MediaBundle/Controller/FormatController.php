@@ -14,15 +14,13 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
+use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
-use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class FormatController extends AbstractRestController
 {
-    use RequestParametersTrait;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
         private FormatManagerInterface $formatManager
@@ -35,7 +33,7 @@ class FormatController extends AbstractRestController
      */
     public function cgetAction(Request $request)
     {
-        $locale = $this->getRequestParameter($request, 'locale', true);
+        $locale = $this->getLocale($request) ?: throw new MissingParameterException(self::class, 'locale');
 
         return $this->handleView($this->view(
             new CollectionRepresentation(

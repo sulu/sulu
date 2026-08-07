@@ -32797,6 +32797,18 @@ parameters:
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/UserBlameSubscriber.php
 
 		-
+			message: '#^Loose comparison using \=\= between null and null will always evaluate to true\.$#'
+			identifier: equal.alwaysTrue
+			count: 1
+			path: src/Sulu/Component/Persistence/RelationTrait.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
+			identifier: notIdentical.alwaysFalse
+			count: 1
+			path: src/Sulu/Component/Persistence/RelationTrait.php
+
+		-
 			message: '#^Parameter \#1 \$objects of class Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\MetadataSubscriber constructor expects array\<string, array\<string, array\{model\?\: class\-string\<object\>, repository\?\: class\-string\<Doctrine\\ORM\\EntityRepository\<object\>\>\}\>\>, array\{sulu\: array\{contact\: array\{model\: ''stdClass'', repository\: ''Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository''\}, member\: array\{model\: ''Closure''\}, user\: array\{model\: class\-string\<stdClass\>\}\}\} given\.$#'
 			identifier: argument.type
 			count: 1

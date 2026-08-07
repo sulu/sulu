@@ -1,0 +1,4 @@
+{
+    "code": 0,
+    "message": "The \"Sulu\\Bundle\\SecurityBundle\\Entity\\User\"-entity requires a \"username\"-argument"
+}
