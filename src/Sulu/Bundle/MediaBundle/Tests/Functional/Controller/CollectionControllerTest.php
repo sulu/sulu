@@ -288,8 +288,7 @@ class CollectionControllerTest extends SuluTestCase
     {
         $this->client->jsonRequest(
             'GET',
-            '/api/collections/' . $this->collection1->getId() . '?' .
-            \http_build_query([
+            '/api/collections/' . $this->collection1->getId() . '?' . \http_build_query([
                 'locale' => 'en-gb',
             ])
         );
@@ -336,9 +335,9 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?' .
-            \http_build_query([
+            '/api/collections?' . \http_build_query([
                 'locale' => 'en-gb',
+                'limit' => 100,
             ])
         );
 
@@ -363,7 +362,15 @@ class CollectionControllerTest extends SuluTestCase
             );
         }
 
-        $this->client->jsonRequest('GET', '/api/collections?page=3&limit=3&flat=true&locale=en-gb');
+        $this->client->jsonRequest(
+            'GET',
+            '/api/collections?' . \http_build_query([
+                'page' => 3,
+                'limit' => 3,
+                'flat' => 'true',
+                'locale' => 'en-gb',
+            ])
+        );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -431,7 +438,14 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?page=1&limit=4&flat=true&sortBy=title&sortOrder=DESC&locale=de'
+            '/api/collections?' . \http_build_query([
+                'page' => 1,
+                'limit' => 4,
+                'flat' => 'true',
+                'sortBy' => 'title',
+                'sortOrder' => 'DESC',
+                'locale' => 'de',
+            ])
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -456,13 +470,11 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?' . \http_build_query(
-                [
-                    'locale' => 'en-gb',
-                    'parentId' => 'root',
-                    'flat' => 'true',
-                ]
-            )
+            '/api/collections?' . \http_build_query([
+                'locale' => 'en-gb',
+                'parentId' => 'root',
+                'flat' => 'true',
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -479,8 +491,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?' .
-            \http_build_query([
+            '/api/collections?' . \http_build_query([
                 'locale' => 'en-gb',
                 'parentId' => 'root',
                 'flat' => 'true',
@@ -510,8 +521,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?' .
-            \http_build_query([
+            '/api/collections?' . \http_build_query([
                 'locale' => 'en-gb',
                 'parentId' => $collection->getId(),
                 'flat' => 'true',
@@ -543,7 +553,12 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?sortBy=title&page=1&limit=2&locale=en-gb'
+            '/api/collections?' . \http_build_query([
+                'sortBy' => 'title',
+                'page' => 1,
+                'limit' => 2,
+                'locale' => 'en-gb',
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -563,7 +578,13 @@ class CollectionControllerTest extends SuluTestCase
     {
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?sortBy=title&page=1&limit=2&includeRoot=true&locale=en-gb'
+            '/api/collections?' . \http_build_query([
+                'sortBy' => 'title',
+                'page' => 1,
+                'limit' => 2,
+                'includeRoot' => 'true',
+                'locale' => 'en-gb',
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -584,7 +605,14 @@ class CollectionControllerTest extends SuluTestCase
     {
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?sortBy=title&page=1&limit=2&includeRoot=true&parentId=' . $this->collection1->getId() . '&locale=en-gb'
+            '/api/collections?' . \http_build_query([
+                'sortBy' => 'title',
+                'page' => 1,
+                'limit' => 2,
+                'includeRoot' => 'true',
+                'parentId' => $this->collection1->getId(),
+                'locale' => 'en-gb',
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -615,7 +643,15 @@ class CollectionControllerTest extends SuluTestCase
             $parent
         );
 
-        $this->client->jsonRequest('GET', '/api/collections?sortBy=title&page=1&limit=2&locale=en-gb');
+        $this->client->jsonRequest(
+            'GET',
+            '/api/collections?' . \http_build_query([
+                'sortBy' => 'title',
+                'page' => 1,
+                'limit' => 2,
+                'locale' => 'en-gb',
+            ])
+        );
 
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -690,7 +726,13 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNotEmpty($response->changer);
         */
 
-        $this->client->jsonRequest('GET', '/api/collections?flat=true&locale=en-gb');
+        $this->client->jsonRequest(
+            'GET',
+            '/api/collections?' . \http_build_query([
+                'flat' => 'true',
+                'locale' => 'en-gb',
+            ])
+        );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
@@ -786,7 +828,11 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections/' . $this->collection1->getId() . '?depth=1&children=true&locale=en-gb',
+            '/api/collections/' . $this->collection1->getId() . '?' . \http_build_query([
+                'depth' => 1,
+                'children' => 'true',
+                'locale' => 'en-gb',
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -814,7 +860,11 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?flat=true&depth=2&locale=en-gb',
+            '/api/collections?' . \http_build_query([
+                'flat' => 'true',
+                'depth' => 2,
+                'locale' => 'en-gb',
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -951,7 +1001,9 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?locale=en',
+            '/api/collections?' . \http_build_query([
+                'locale' => 'en',
+            ])
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -1034,7 +1086,9 @@ class CollectionControllerTest extends SuluTestCase
                     'type' => 'circle',
                     'color' => '#00ccff',
                 ],
-                'type' => $this->collectionType1->getId(),
+                'type' => [
+                    'id' => $this->collectionType1->getId(),
+                ],
                 'title' => 'Test Collection changed',
                 'description' => 'This Description is only for testing changed',
                 'locale' => 'en-gb',
@@ -1045,7 +1099,9 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections/' . $this->collection1->getId() . '?locale=en-gb',
+            '/api/collections/' . $this->collection1->getId() . '?' . \http_build_query([
+                'locale' => 'en-gb',
+            ])
         );
         $response = \json_decode($this->client->getResponse()->getContent());
 
@@ -1113,7 +1169,9 @@ class CollectionControllerTest extends SuluTestCase
                     'type' => 'circle',
                     'color' => '#00ccff',
                 ],
-                'type' => 1,
+                'type' => [
+                    'id' => 1,
+                ],
                 'title' => 'Test Collection changed',
                 'description' => 'This Description is only for testing changed',
             ]
@@ -1140,7 +1198,9 @@ class CollectionControllerTest extends SuluTestCase
                     'type' => 'circle',
                     'color' => '#00ccff',
                 ],
-                'type' => $this->collectionType1->getId(),
+                'type' => [
+                    'id' => $this->collectionType1->getId(),
+                ],
                 'title' => 'Test Child Collection changed',
                 'description' => 'This Description is only for testing changed',
                 'locale' => 'en-gb',
@@ -1173,7 +1233,7 @@ class CollectionControllerTest extends SuluTestCase
                     'type' => 'circle',
                     'color' => '#00ccff',
                 ],
-                'type' => $this->collectionType1->getId(),
+                'type' => ['id' => $this->collectionType1->getId()],
                 'title' => 'Test Child Collection changed',
                 'description' => 'This Description is only for testing changed',
                 'locale' => 'en-gb',
@@ -1244,7 +1304,7 @@ class CollectionControllerTest extends SuluTestCase
                     'type' => 'quader',
                     'color' => '#00ccff',
                 ],
-                'type' => $this->collectionType1->getId(),
+                'type' => ['id' => $this->collectionType1->getId()],
             ]
         );
 
@@ -1515,7 +1575,10 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?flat=true&locale=en-gb',
+            '/api/collections?' . \http_build_query([
+                'flat' => 'true',
+                'locale' => 'en-gb',
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -1531,7 +1594,11 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?flat=true&depth=1&locale=en-gb',
+            '/api/collections?' . \http_build_query([
+                'flat' => 'true',
+                'depth' => 1,
+                'locale' => 'en-gb',
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -1551,7 +1618,11 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?flat=true&depth=2&locale=en-gb',
+            '/api/collections?' . \http_build_query([
+                'flat' => 'true',
+                'depth' => 2,
+                'locale' => 'en-gb',
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -1577,7 +1648,9 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?locale=en-gb',
+            '/api/collections?' . \http_build_query([
+                'locale' => 'en-gb',
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -1592,7 +1665,10 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?depth=1&locale=en-gb',
+            '/api/collections?' . \http_build_query([
+                'depth' => 1,
+                'locale' => 'en-gb',
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -1627,7 +1703,10 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?depth=2&locale=en-gb',
+            '/api/collections?' . \http_build_query([
+                'depth' => 2,
+                'locale' => 'en-gb',
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -1673,11 +1752,10 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections/' . $ids[6] . '?' . \http_build_query(
-                [
-                    'locale' => 'en-gb',
-                    'breadcrumb' => 'true',
-                ])
+            '/api/collections/' . $ids[6] . '?' . \http_build_query([
+                'locale' => 'en-gb',
+                'breadcrumb' => 'true',
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent(), true);
@@ -1697,7 +1775,9 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections/' . $ids[3] . '?locale=en-gb'
+            '/api/collections/' . $ids[3] . '?' . \http_build_query([
+                'locale' => 'en-gb',
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -1709,7 +1789,11 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections/' . $ids[3] . '?depth=1&children=true&locale=en-gb',
+            '/api/collections/' . $ids[3] . '?' . \http_build_query([
+                'depth' => 1,
+                'children' => 'true',
+                'locale' => 'en-gb',
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -1726,7 +1810,11 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections/' . $ids[3] . '?depth=2&children=true&locale=en-gb',
+            '/api/collections/' . $ids[3] . '?' . \http_build_query([
+                'depth' => 2,
+                'children' => 'true',
+                'locale' => 'en-gb',
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -1758,10 +1846,11 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'POST',
-            '/api/collections/' . $ids[3] . '?action=move&destination=' . $ids[0],
-            [
+            '/api/collections/' . $ids[3] . '?' . \http_build_query([
+                'action' => 'move',
+                'destination' => $ids[0],
                 'locale' => 'en-gb',
-            ]
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -1771,7 +1860,10 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?depth=3&locale=en-gb',
+            '/api/collections?' . \http_build_query([
+                'depth' => 3,
+                'locale' => 'en-gb',
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());

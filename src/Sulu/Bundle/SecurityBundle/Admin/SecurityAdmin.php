@@ -59,7 +59,8 @@ class SecurityAdmin extends Admin
         private SecurityCheckerInterface $securityChecker,
         private TranslatorInterface $translator,
         private AdminPool $adminPool,
-        private array $resources
+        private array $resources,
+        private bool $twoFactorBackupCodesEnabled = false,
     ) {
     }
 
@@ -172,6 +173,7 @@ class SecurityAdmin extends Admin
                     ->addToolbarActions([
                         new ToolbarAction('sulu_admin.save'),
                         new ToolbarAction('sulu_security.enable_user'),
+                        new ToolbarAction('sulu_security.reset_two_factor'),
                         new TogglerToolbarAction(
                             'sulu_security.user_locked',
                             'locked',
@@ -195,6 +197,14 @@ class SecurityAdmin extends Admin
     public function getConfig(): ?array
     {
         return [
+            'endpoints' => [
+                'contexts' => $this->urlGenerator->generate('sulu_security.cget_security-contexts'),
+                'twoFactorSetup' => $this->urlGenerator->generate('sulu_security.post_profile_two-factor_setup'),
+                'twoFactorConfirm' => $this->urlGenerator->generate('sulu_security.post_profile_two-factor_confirm'),
+                'twoFactorBackupCodes' => $this->urlGenerator->generate('sulu_security.post_profile_two-factor_backup-codes'),
+                'twoFactorDelete' => $this->urlGenerator->generate('sulu_security.delete_profile_two-factor'),
+            ],
+            'twoFactorBackupCodesEnabled' => $this->twoFactorBackupCodesEnabled,
             'resourceKeySecurityContextMapping' => \array_filter(\array_map(function(array $resource) {
                 return $resource['security_context'] ?? null;
             }, $this->resources)),

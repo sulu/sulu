@@ -77,6 +77,7 @@
         "symfony/css-selector": "^6.4 || ^7.1",
         "symfony/dependency-injection": "^6.4 || ^7.1",
         "symfony/deprecation-contracts": "^2.5 || ^3.0",
+        "symfony/doctrine-bridge": "^6.4 || ^7.0",
         "symfony/error-handler": "^6.4 || ^7.1",
         "symfony/event-dispatcher": "^6.4 || ^7.1",
         "symfony/event-dispatcher-contracts": "^2.5 || ^3.0",
@@ -170,6 +171,7 @@
         "scheb/2fa-google-authenticator": "< 6.10 || >= 9.0",
         "scheb/2fa-totp": "< 6.10 || >= 9.0",
         "scheb/2fa-trusted-device": "< 6.10 || >= 9.0",
+        "spomky-labs/otphp": "< 11.1",
         "thecodingmachine/safe": "< 2.0.0"
     },
     "replace": {
@@ -197,6 +199,9 @@
         "rokka/imagine-vips": "^0.41 - Rendering formats by using the libvips",
         "php-ffmpeg/php-ffmpeg": "Needed (as in require-dev) to generate preview images for videos",
         "scheb/2fa-bundle": "Needed for two factor authentication.",
+        "scheb/2fa-totp": "Needed for two factor authentication via authenticator apps (TOTP).",
+        "scheb/2fa-backup-code": "Needed for two factor authentication backup codes.",
+        "scheb/2fa-trusted-device": "Needed to allow trusted devices to skip the two factor authentication.",
         "symfony/monolog-bundle": "^3.1"
     },
     "autoload": {

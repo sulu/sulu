@@ -110,6 +110,22 @@ class ForceTwoFactorSubscriberTest extends TestCase
         $this->assertSame('other', $userTwoFactor->getMethod());
     }
 
+    public function testPreUpdateUserMatchingWithTotpMethod(): void
+    {
+        $user = new User();
+        $user->setEmail('other@sulu.io');
+        $userTwoFactor = new UserTwoFactor($user);
+        $userTwoFactor->setMethod('totp');
+        $userTwoFactor->setOptions(['totpSecret' => 'SECRET']);
+        $user->setTwoFactor($userTwoFactor);
+
+        $event = $this->createEvent($user);
+
+        $this->forceTwoFactorSubscriber->preUpdate($event);
+
+        $this->assertSame('totp', $userTwoFactor->getMethod());
+    }
+
     /**
      * @return LifecycleEventArgs<EntityManagerInterface>
      */

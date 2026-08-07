@@ -50,7 +50,7 @@
             </params>
         </property>
 
-        <property name="twoFactor/method" type="single_select" colspan="6">
+        <property name="twoFactor/method" type="two_factor" colspan="6">
             <meta>
                 <title>sulu_security.two_factor_method</title>
             </meta>
@@ -66,12 +66,6 @@
                     <param name="email">
                         <meta>
                             <title>sulu_security.two_factor_method_email</title>
-                        </meta>
-                    </param>
-
-                    <param name="google">
-                        <meta>
-                            <title>sulu_security.two_factor_method_google</title>
                         </meta>
                     </param>
 

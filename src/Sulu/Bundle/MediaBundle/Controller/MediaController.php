@@ -34,6 +34,7 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -74,8 +75,12 @@ class MediaController extends AbstractMediaController implements
      */
     public function getAction($id, Request $request)
     {
+        $locale = $this->getLocale($request);
+        if (null === $locale) {
+            throw new BadRequestException('Missing "locale" in the query string');
+        }
+
         try {
-            $locale = $this->getRequestParameter($request, 'locale', true);
             $view = $this->responseGetById(
                 $id,
                 function($id) use ($locale) {
@@ -118,17 +123,22 @@ class MediaController extends AbstractMediaController implements
     {
         /** @var UserInterface $user */
         $user = $this->getUser();
-        $types = \array_filter(\explode(',', $request->get('types', '')));
-        $collectionId = $request->get('collection');
+        $types = \array_filter(\explode(',', $request->query->getString('types', '')));
+
+        $collectionId = $request->query->get('collection');
         $collectionId = $collectionId ? (int) $collectionId : null;
-        $locale = $this->getRequestParameter($request, 'locale', true);
+
+        $locale = $this->getLocale($request);
+        if (null === $locale) {
+            throw new BadRequestException('Missing "locale" in the query string');
+        }
 
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('media');
         $listBuilder = $this->mediaListBuilderFactory->getListBuilder(
             $fieldDescriptors,
             $user,
             $types,
-            !$request->get('sortBy'),
+            !$request->query->get('sortBy'),
             $collectionId
         );
 
@@ -241,10 +251,15 @@ class MediaController extends AbstractMediaController implements
      */
     protected function moveEntity($id, Request $request)
     {
-        try {
-            $locale = $this->getRequestParameter($request, 'locale', true);
-            $destination = $this->getRequestParameter($request, 'destination', true);
+        $locale = $this->getLocale($request);
+        if (null === $locale) {
+            throw new BadRequestException('Missing "locale" in the query string');
+        }
 
+        $destination = $request->query->getInt('destination')
+            ?: throw new MissingParameterException(self::class, 'destination');
+
+        try {
             $media = $this->mediaManager->move(
                 $id,
                 $locale,
@@ -306,6 +321,11 @@ class MediaController extends AbstractMediaController implements
      */
     public function getSecuredObjectId(Request $request)
     {
-        return $request->get('collection');
+        $collection = $request->query->getString('collection');
+        if ('' === $collection) {
+            $collection = $request->getPayload()->getString('collection');
+        }
+
+        return $collection;
     }
 }

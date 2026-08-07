@@ -61,6 +61,12 @@ parameters:
 			path: packages/content/src/Application/PropertyResolver/Resolver/BlockPropertyResolver.php
 
 		-
+			message: '#^Parameter \#1 \$environment of class Sulu\\Content\\Tests\\Application\\Kernel constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: packages/content/tests/Application/public/index.php
+
+		-
 			message: '#^Method Sulu\\Content\\Tests\\Unit\\Content\\Application\\PropertyResolver\\BlockVisitor\\ScheduleBlockVisitorTest\:\:provideVisit\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -5527,7 +5533,7 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Functional/Controller/TargetGroupControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Functional/Controller/TargetGroupControllerTest.php
@@ -7231,18 +7237,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
 
 		-
-			message: '#^Parameter \#1 \$keyword of method Sulu\\Bundle\\CategoryBundle\\Entity\\KeywordInterface\:\:setKeyword\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
-
-		-
-			message: '#^Parameter \#1 \$locale of method Sulu\\Bundle\\CategoryBundle\\Entity\\KeywordInterface\:\:setLocale\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
-
-		-
 			message: '#^Parameter \#2 \$category of method Sulu\\Bundle\\CategoryBundle\\Category\\KeywordManagerInterface\:\:delete\(\) expects Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryInterface, Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryInterface\|null given\.$#'
 			identifier: argument.type
 			count: 2
@@ -7256,18 +7250,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$fieldDescriptors of method Sulu\\Component\\Rest\\RestHelperInterface\:\:initializeListBuilder\(\) expects array\<Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface\>, array\<Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface\>\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
-
-		-
-			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
-
-		-
-			message: '#^Parameter \#3 \$force of method Sulu\\Bundle\\CategoryBundle\\Category\\KeywordManagerInterface\:\:save\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
@@ -7645,7 +7627,7 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayNotHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayNotHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
@@ -7665,7 +7647,7 @@ parameters:
 		-
 			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 11
+			count: 16
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/KeywordControllerTest.php
 
 		-
@@ -14313,7 +14295,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$id on mixed\.$#'
 			identifier: property.nonObject
-			count: 16
+			count: 14
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -14953,7 +14935,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
@@ -18061,12 +18043,6 @@ parameters:
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/CacheLifetime/CacheLifetimeRequestStoreTest.php
 
 		-
-			message: '#^Parameter \#1 \$query of method Sulu\\Bundle\\LocationBundle\\Geolocator\\GeolocatorInterface\:\:locate\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/LocationBundle/Controller/GeolocatorController.php
-
-		-
 			message: '#^Binary operation "\." between ''sulu_location…'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -18355,7 +18331,7 @@ parameters:
 			path: src/Sulu/Bundle/LocationBundle/Tests/Unit/Geolocator/Service/GoogleGeolocatorTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/LocationBundle/Tests/Unit/Geolocator/Service/GoogleGeolocatorTest.php
@@ -18391,7 +18367,7 @@ parameters:
 			path: src/Sulu/Bundle/LocationBundle/Tests/Unit/Geolocator/Service/NominatimGeolocatorTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/LocationBundle/Tests/Unit/Geolocator/Service/NominatimGeolocatorTest.php
@@ -19747,12 +19723,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/AbstractMediaController.php
 
 		-
-			message: '#^Binary operation "\-" between mixed and 1 results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -19779,12 +19749,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Controller\\CollectionController\:\:__construct\(\) has parameter \$permissions with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Controller\\CollectionController\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
 
@@ -19825,18 +19789,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
 
 		-
-			message: '#^Parameter \#3 \$destinationId of method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManagerInterface\:\:move\(\) expects int\|null, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
-			message: '#^Parameter \#5 \$depth of method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManagerInterface\:\:getTree\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Controller\\FormatController\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -19867,19 +19819,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
 		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Controller\\MediaController\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Controller\\MediaController\:\:getSecuredObjectId\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
@@ -19904,18 +19844,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$id of class Sulu\\Component\\Rest\\Exception\\EntityNotFoundException constructor expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: '#^Parameter \#3 \$destCollection of method Sulu\\Bundle\\MediaBundle\\Media\\Manager\\MediaManagerInterface\:\:move\(\) expects int, string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
@@ -20416,12 +20344,6 @@ parameters:
 			message: '#^Parameter \#1 \$string of function strtolower expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 3
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Result of && is always true\.$#'
-			identifier: booleanAnd.alwaysTrue
-			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-
@@ -22471,7 +22393,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/AdminControllerTest.php
@@ -22510,12 +22432,6 @@ parameters:
 			message: '#^Binary operation "\." between ''/api/collections/'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 11
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
@@ -25939,6 +25855,18 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Admin/Helper/SystemLanguageSelect.php
 
 		-
+			message: '#^Access to an undefined property Sulu\\Bundle\\SecurityBundle\\Admin\\SecurityAdmin\:\:\$urlGenerator\.$#'
+			identifier: property.notFound
+			count: 5
+			path: src/Sulu/Bundle/SecurityBundle/Admin/SecurityAdmin.php
+
+		-
+			message: '#^Cannot call method generate\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 5
+			path: src/Sulu/Bundle/SecurityBundle/Admin/SecurityAdmin.php
+
+		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Admin\\SecurityAdmin\:\:__construct\(\) has parameter \$resources with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -26727,13 +26655,13 @@ parameters:
 		-
 			message: '#^Cannot access offset ''enabled'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/SuluSecurityExtension.php
 
 		-
 			message: '#^Cannot access offset ''force'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/SuluSecurityExtension.php
 
 		-
@@ -26751,7 +26679,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''pattern'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/SuluSecurityExtension.php
 
 		-
@@ -26781,7 +26709,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$value of method Symfony\\Component\\DependencyInjection\\Container\:\:setParameter\(\) expects array\|bool\|float\|int\|string\|UnitEnum\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 6
+			count: 5
 			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/SuluSecurityExtension.php
 
 		-
@@ -27289,7 +27217,7 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/AdminControllerTest.php
 
 		-
-			message: '#^Cannot access offset 2 on mixed\.$#'
+			message: '#^Cannot access offset 3 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/AdminControllerTest.php
@@ -28909,12 +28837,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Util/TokenGenerator.php
 
 		-
-			message: '#^Right side of && is always false\.$#'
-			identifier: booleanAnd.rightAlwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Util/TokenGenerator.php
-
-		-
 			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
 			count: 1
@@ -29875,7 +29797,7 @@ parameters:
 			path: src/Sulu/Bundle/TrashBundle/Tests/Functional/UserInterface/Controller/Admin/TrashItemControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of static method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of static method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/Tests/Functional/UserInterface/Controller/Admin/TrashItemControllerTest.php
@@ -31405,7 +31327,7 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Routing/PortalLoaderTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 6
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Routing/PortalLoaderTest.php
@@ -32873,18 +32795,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/UserBlameSubscriber.php
-
-		-
-			message: '#^Loose comparison using \=\= between null and null will always evaluate to true\.$#'
-			identifier: equal.alwaysTrue
-			count: 1
-			path: src/Sulu/Component/Persistence/RelationTrait.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
-			identifier: notIdentical.alwaysFalse
-			count: 1
-			path: src/Sulu/Component/Persistence/RelationTrait.php
 
 		-
 			message: '#^Parameter \#1 \$objects of class Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\MetadataSubscriber constructor expects array\<string, array\<string, array\{model\?\: class\-string\<object\>, repository\?\: class\-string\<Doctrine\\ORM\\EntityRepository\<object\>\>\}\>\>, array\{sulu\: array\{contact\: array\{model\: ''stdClass'', repository\: ''Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository''\}, member\: array\{model\: ''Closure''\}, user\: array\{model\: class\-string\<stdClass\>\}\}\} given\.$#'
@@ -36559,24 +36469,6 @@ parameters:
 			path: src/Sulu/Component/Tag/Request/TagRequestHandler.php
 
 		-
-			message: '#^Cannot access property \$query on Symfony\\Component\\HttpFoundation\\Request\|null\.$#'
-			identifier: property.nonObject
-			count: 3
-			path: src/Sulu/Component/Tag/Request/TagRequestHandler.php
-
-		-
-			message: '#^Cannot call method get\(\) on Symfony\\Component\\HttpFoundation\\Request\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Tag/Request/TagRequestHandler.php
-
-		-
-			message: '#^Cannot call method getPathInfo\(\) on Symfony\\Component\\HttpFoundation\\Request\|null\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: src/Sulu/Component/Tag/Request/TagRequestHandler.php
-
-		-
 			message: '#^Method Sulu\\Component\\Tag\\Request\\TagRequestHandler\:\:appendTagToUrl\(\) has parameter \$tag with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -36598,12 +36490,6 @@ parameters:
 			message: '#^Method Sulu\\Component\\Tag\\Request\\TagRequestHandler\:\:setTagToUrl\(\) should return string but empty return statement found\.$#'
 			identifier: return.empty
 			count: 1
-			path: src/Sulu/Component/Tag/Request/TagRequestHandler.php
-
-		-
-			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Sulu/Component/Tag/Request/TagRequestHandler.php
 
 		-

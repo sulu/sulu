@@ -20,9 +20,17 @@ class TwoFactorCompilerPassTest extends SuluTestCase
         $this->assertSame(
             [
                 'email',
+                'totp',
                 'trusted_devices',
             ],
             static::getContainer()->getParameter('sulu_security.two_factor_methods')
+        );
+    }
+
+    public function testBackupCodesEnabledParameter(): void
+    {
+        $this->assertTrue(
+            static::getContainer()->getParameter('sulu_security.two_factor_backup_codes_enabled')
         );
     }
 }

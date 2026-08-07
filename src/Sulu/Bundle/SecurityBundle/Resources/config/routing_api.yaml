@@ -147,6 +147,38 @@ sulu_security.put_profile:
     requirements:
         _format: json|csv
 
+sulu_security.post_profile_two-factor_setup:
+    path: '/profile/two-factor/setup.{_format}'
+    methods: POST
+    controller: 'sulu_security.profile_two_factor_controller::postSetupAction'
+    format: json
+    requirements:
+        _format: json
+
+sulu_security.post_profile_two-factor_confirm:
+    path: '/profile/two-factor/confirm.{_format}'
+    methods: POST
+    controller: 'sulu_security.profile_two_factor_controller::postConfirmAction'
+    format: json
+    requirements:
+        _format: json
+
+sulu_security.post_profile_two-factor_backup-codes:
+    path: '/profile/two-factor/backup-codes.{_format}'
+    methods: POST
+    controller: 'sulu_security.profile_two_factor_controller::postBackupCodesAction'
+    format: json
+    requirements:
+        _format: json
+
+sulu_security.delete_profile_two-factor:
+    path: '/profile/two-factor.{_format}'
+    methods: DELETE
+    controller: 'sulu_security.profile_two_factor_controller::deleteAction'
+    format: json
+    requirements:
+        _format: json
+
 sulu_security.patch_profile_settings:
     path: '/profile/settings.{_format}'
     methods: PATCH

@@ -167,6 +167,7 @@ class UserController extends AbstractRestController implements SecuredController
                 'enable' => $this->userManager->enableUser($id),
                 'lock' => $this->userManager->lockUser($id),
                 'unlock' => $this->userManager->unlockUser($id),
+                'reset-two-factor' => $this->userManager->resetTwoFactor($id),
                 default => throw new RestException('Unrecognized action: ' . $action),
             };
 
