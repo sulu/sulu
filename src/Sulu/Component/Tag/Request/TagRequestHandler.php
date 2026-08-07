@@ -11,7 +11,9 @@
 
 namespace Sulu\Component\Tag\Request;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Webmozart\Assert\Assert;
 
 /**
  * Handles tags in current request.
@@ -24,8 +26,9 @@ class TagRequestHandler implements TagRequestHandlerInterface
 
     public function getTags($tagsParameter = 'tags')
     {
-        if (null !== $this->requestStack->getCurrentRequest()) {
-            $tags = $this->requestStack->getCurrentRequest()->get($tagsParameter, '');
+        $request = $this->requestStack->getCurrentRequest();
+        if ($request instanceof Request) {
+            $tags = $request->query->getString($tagsParameter);
         } else {
             $tags = '';
         }
@@ -41,13 +44,13 @@ class TagRequestHandler implements TagRequestHandlerInterface
     public function appendTagToUrl($tag, $tagsParameter = 'tags')
     {
         $request = $this->requestStack->getCurrentRequest();
+        Assert::notNull($request, 'The TagRequestHandler needs a request');
 
         if (\is_array($tag) && !\array_key_exists('name', $tag)) {
             return;
         }
 
-        // extend comma separated list
-        $tags = $request->get($tagsParameter, '');
+        $tags = $request->query->getString($tagsParameter);
         /** @var array<string> $tagsArray */
         $tagsArray = \array_filter(\array_merge(\explode(',', $tags), [$tag['name']]));
         $tags = \implode(',', \array_unique($tagsArray));
@@ -64,6 +67,7 @@ class TagRequestHandler implements TagRequestHandlerInterface
     public function setTagToUrl($tag, $tagsParameter = 'tags')
     {
         $request = $this->requestStack->getCurrentRequest();
+        Assert::notNull($request, 'The TagRequestHandler needs a request');
 
         if (\is_array($tag) && !\array_key_exists('name', $tag)) {
             return;
@@ -81,6 +85,7 @@ class TagRequestHandler implements TagRequestHandlerInterface
     public function removeTagsFromUrl($tagsParameter = 'tags')
     {
         $request = $this->requestStack->getCurrentRequest();
+        Assert::notNull($request, 'The TagRequestHandler needs a request');
 
         // get all parameter and extend with new tags string
         $query = $request->query->all();
