@@ -32,6 +32,8 @@ class AdminConfigControllerTest extends SuluTestCase
 
         $response = $this->client->getResponse();
 
+        $this->assertHttpStatusCode(200, $response);
+
         $data = \json_decode($response->getContent() ?: '', true, 512, \JSON_THROW_ON_ERROR);
         $this->assertIsArray($data);
         $this->assertArrayHasKey('sulu_page', $data);

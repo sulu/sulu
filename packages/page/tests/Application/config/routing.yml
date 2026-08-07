@@ -6,6 +6,10 @@ sulu_admin:
     resource: "@SuluAdminBundle/Resources/config/routing.yaml"
     prefix: /admin
 
+sulu_security:
+    resource: "@SuluSecurityBundle/Resources/config/routing_api.yaml"
+    prefix: /admin
+
 # for admin endpoint tests we require this additional routes
 sulu_website:
     resource: "@SuluWebsiteBundle/Resources/config/routing.yaml"
