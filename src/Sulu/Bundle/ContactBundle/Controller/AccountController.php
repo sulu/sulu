@@ -486,7 +486,7 @@ class AccountController extends AbstractRestController implements SecuredControl
 
         $this->setParent($payload->get('parent'), $account);
 
-        $this->accountManager->processCategories($account, $payload->all('categories', []));
+        $this->accountManager->processCategories($account, $payload->all('categories'));
 
         $account->setCreator($this->getUser());
         $account->setChanger($this->getUser());
@@ -554,7 +554,7 @@ class AccountController extends AbstractRestController implements SecuredControl
         $account->setUid($payload->get('uid'));
         $account->setNote($payload->get('note'));
 
-        $logo = $payload->get('logo', []);
+        $logo = $payload->all('logo');
         if ($logo && \array_key_exists('id', $logo)) {
             $accountManager->setLogo($account, $logo['id']);
         }
@@ -681,11 +681,9 @@ class AccountController extends AbstractRestController implements SecuredControl
             $accountManager->setLogo($account, $logo['id']);
             $accountModified = true;
         }
-        /** @var array<int>|null $medias */
+        /** @var array<int> $medias */
         $medias = $payload->all('medias');
-        if (null !== $medias) {
-            $accountManager->setMedias($account, $medias);
-        }
+        $accountManager->setMedias($account, $medias);
 
         $mainContact = null;
         $mainContactId = $payload->get('mainContact');

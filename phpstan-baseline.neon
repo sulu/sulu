@@ -12669,7 +12669,13 @@ parameters:
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
-			count: 3
+			count: 2
+			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
+
+		-
+			message: '#^Argument of an invalid type string\|null supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
@@ -12739,21 +12745,9 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Cannot access offset ''emails'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Cannot access offset ''faxes'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 7
+			count: 4
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
@@ -12770,24 +12764,6 @@ parameters:
 
 		-
 			message: '#^Cannot access offset ''mainEmail'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Cannot access offset ''phones'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Cannot access offset ''socialMedia'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Cannot access offset ''websites'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
@@ -12901,6 +12877,12 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
+			message: '#^Method Symfony\\Component\\HttpFoundation\\ParameterBag\:\:all\(\) invoked with 2 parameters, 0\-1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
+
+		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 1
@@ -12949,7 +12931,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Parameter \#1 \$corporation of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setCorporation\(\) expects string\|null, mixed given\.$#'
+			message: '#^Parameter \#1 \$corporation of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setCorporation\(\) expects string\|null, bool\|float\|int\|string\|null given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
@@ -13021,12 +13003,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Parameter \#1 \$json of function json_decode expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
 			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -13045,25 +13021,31 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setName\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setName\(\) expects string, bool\|float\|int\|string\|null given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Parameter \#1 \$note of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setNote\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Parameter \#1 \$number of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setNumber\(\) expects string\|null, mixed given\.$#'
+			message: '#^Parameter \#1 \$note of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setNote\(\) expects string\|null, bool\|float\|int\|string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Parameter \#1 \$placeOfJurisdiction of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setPlaceOfJurisdiction\(\) expects string\|null, mixed given\.$#'
+			message: '#^Parameter \#1 \$note of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setNote\(\) expects string\|null, bool\|float\|int\|string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
+
+		-
+			message: '#^Parameter \#1 \$number of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setNumber\(\) expects string\|null, bool\|float\|int\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
+
+		-
+			message: '#^Parameter \#1 \$placeOfJurisdiction of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setPlaceOfJurisdiction\(\) expects string\|null, bool\|float\|int\|string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
@@ -13075,15 +13057,21 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Parameter \#1 \$registerNumber of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setRegisterNumber\(\) expects string\|null, mixed given\.$#'
+			message: '#^Parameter \#1 \$registerNumber of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setRegisterNumber\(\) expects string\|null, bool\|float\|int\|string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Parameter \#1 \$uid of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setUid\(\) expects string\|null, mixed given\.$#'
+			message: '#^Parameter \#1 \$uid of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setUid\(\) expects string\|null, bool\|float\|int\|string given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 2
+			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
+
+		-
+			message: '#^Parameter \#1 \$uid of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setUid\(\) expects string\|null, bool\|float\|int\|string\|null given\.$#'
+			identifier: argument.type
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
@@ -13093,21 +13081,9 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Parameter \#2 \$addresses of method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\<Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface,Sulu\\Bundle\\ContactBundle\\Api\\Account,Sulu\\Bundle\\ContactBundle\\Entity\\AccountAddress\>\:\:processAddresses\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
 			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 4
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Parameter \#2 \$bankAccounts of method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\<Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface,Sulu\\Bundle\\ContactBundle\\Api\\Account,Sulu\\Bundle\\ContactBundle\\Entity\\AccountAddress\>\:\:processBankAccounts\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
@@ -13171,12 +13147,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Parameter \#2 \$notes of method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\<Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface,Sulu\\Bundle\\ContactBundle\\Api\\Account,Sulu\\Bundle\\ContactBundle\\Entity\\AccountAddress\>\:\:processNotes\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
 			message: '#^Parameter \#2 \$order of method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:sort\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -13195,13 +13165,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Parameter \#2 \$tags of method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\<Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface,Sulu\\Bundle\\ContactBundle\\Api\\Account,Sulu\\Bundle\\ContactBundle\\Entity\\AccountAddress\>\:\:processTags\(\) expects array, mixed given\.$#'
+			message: '#^Parameter \#2 \$string of function explode expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
@@ -13285,7 +13249,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountMediaController.php
 
 		-
-			message: '#^Parameter \#3 \$mediaId of method Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:addMediaToEntity\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#3 \$mediaId of method Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:addMediaToEntity\(\) expects string, bool\|float\|int\|string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountMediaController.php
@@ -13459,12 +13423,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
 
 		-
-			message: '#^Parameter \#2 \$value of method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:where\(\) expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\ContactBundle\\Controller\\ContactController\:\:\$accountContactFieldDescriptors has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -13525,7 +13483,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactMediaController.php
 
 		-
-			message: '#^Parameter \#3 \$mediaId of method Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:addMediaToEntity\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#3 \$mediaId of method Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:addMediaToEntity\(\) expects string, bool\|float\|int\|string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactMediaController.php
@@ -13535,12 +13493,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactMediaController.php
-
-		-
-			message: '#^Cannot access offset ''title'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/ContactTitleController.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\ContactTitleController\:\:cdeleteAction\(\) has no return type specified\.$#'
@@ -13555,33 +13507,27 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactTitleController.php
 
 		-
-			message: '#^Parameter \#1 \$item of method Sulu\\Bundle\\ContactBundle\\Controller\\ContactTitleController\:\:addAndUpdateTitles\(\) expects array\<mixed\>, mixed given\.$#'
+			message: '#^Parameter \#1 \$key of method Symfony\\Component\\HttpFoundation\\InputBag\<bool\|float\|int\|string\|null\>\:\:get\(\) expects string, int\<0, max\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactTitleController.php
 
 		-
-			message: '#^Parameter \#1 \$key of method Symfony\\Component\\HttpFoundation\\Request\:\:get\(\) expects string, int\<0, max\> given\.$#'
+			message: '#^Parameter \#1 \$title of method Sulu\\Bundle\\ContactBundle\\Entity\\ContactTitle\:\:setTitle\(\) expects string, float\|int\<min, \-1\>\|int\<1, max\>\|string\|true given\.$#'
 			identifier: argument.type
-			count: 1
+			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactTitleController.php
 
 		-
 			message: '#^Parameter \#1 \$title of method Sulu\\Bundle\\ContactBundle\\Entity\\ContactTitle\:\:setTitle\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 4
+			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactTitleController.php
 
 		-
 			message: '#^Parameter \#2 \$id of class Sulu\\Component\\Rest\\Exception\\EntityNotFoundException constructor expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Controller/ContactTitleController.php
-
-		-
-			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactTitleController.php
 
 		-
@@ -13609,21 +13555,27 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/PositionController.php
 
 		-
+			message: '#^Parameter \#1 \$position of method Sulu\\Bundle\\ContactBundle\\Entity\\Position\:\:setPosition\(\) expects string, bool\|float\|int\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Controller/PositionController.php
+
+		-
+			message: '#^Parameter \#1 \$position of method Sulu\\Bundle\\ContactBundle\\Entity\\Position\:\:setPosition\(\) expects string, float\|int\<min, \-1\>\|int\<1, max\>\|string\|true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Controller/PositionController.php
+
+		-
 			message: '#^Parameter \#1 \$position of method Sulu\\Bundle\\ContactBundle\\Entity\\Position\:\:setPosition\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 4
+			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Controller/PositionController.php
 
 		-
 			message: '#^Parameter \#2 \$id of class Sulu\\Component\\Rest\\Exception\\EntityNotFoundException constructor expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/PositionController.php
-
-		-
-			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Controller/PositionController.php
 
 		-
