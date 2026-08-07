@@ -26,7 +26,6 @@ use Sulu\Component\Category\Request\CategoryRequestHandler;
 use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
 use Sulu\Component\Serializer\ArraySerializerInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
-use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -178,17 +177,14 @@ class CategoryTwigExtensionTest extends TestCase
         $category = ['id' => 3, 'name' => 'test'];
 
         $manager = $this->prophesize(CategoryManagerInterface::class);
-        $requestStack = $this->prophesize(RequestStack::class);
-        $request = $this->prophesize(Request::class);
 
-        $requestReveal = $request->reveal();
-        $requestReveal->query = new InputBag([$parameter => $string]);
-        $requestStack->getCurrentRequest()->willReturn($requestReveal);
-        $request->get($parameter, '')->willReturn($string);
-        $request->getPathInfo()->willReturn($url);
+        $requestStack = new RequestStack();
+        $request = Request::create($url);
+        $requestStack->push($request);
+        $request->query->set($parameter, $string);
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $requestHandler = new CategoryRequestHandler($requestStack->reveal());
+        $requestHandler = new CategoryRequestHandler($requestStack);
 
         $extension = new CategoryTwigExtension(
             $manager->reveal(),
@@ -224,17 +220,14 @@ class CategoryTwigExtensionTest extends TestCase
         $category = ['id' => 3, 'name' => 'test'];
 
         $manager = $this->prophesize(CategoryManagerInterface::class);
-        $requestStack = $this->prophesize(RequestStack::class);
-        $request = $this->prophesize(Request::class);
 
-        $requestReveal = $request->reveal();
-        $requestReveal->query = new InputBag([$parameter => $string]);
-        $requestStack->getCurrentRequest()->willReturn($requestReveal);
-        $request->get($parameter, '')->willReturn($string);
-        $request->getPathInfo()->willReturn($url);
+        $requestStack = new RequestStack();
+        $request = Request::create($url);
+        $requestStack->push($request);
+        $request->query->set($parameter, $string);
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $requestHandler = new CategoryRequestHandler($requestStack->reveal());
+        $requestHandler = new CategoryRequestHandler($requestStack);
 
         $extension = new CategoryTwigExtension(
             $manager->reveal(),
@@ -264,17 +257,14 @@ class CategoryTwigExtensionTest extends TestCase
     public function testClearUrl(string $parameter, string $url, string $string): void
     {
         $manager = $this->prophesize(CategoryManagerInterface::class);
-        $requestStack = $this->prophesize(RequestStack::class);
-        $request = $this->prophesize(Request::class);
 
-        $requestReveal = $request->reveal();
-        $requestReveal->query = new InputBag([$parameter => $string]);
-        $requestStack->getCurrentRequest()->willReturn($requestReveal);
-        $request->get($parameter, '')->willReturn($string);
-        $request->getPathInfo()->willReturn($url);
+        $requestStack = new RequestStack();
+        $request = Request::create($url);
+        $requestStack->push($request);
+        $request->query->set($parameter, $string);
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $requestHandler = new CategoryRequestHandler($requestStack->reveal());
+        $requestHandler = new CategoryRequestHandler($requestStack);
 
         $tagExtension = new CategoryTwigExtension(
             $manager->reveal(),
