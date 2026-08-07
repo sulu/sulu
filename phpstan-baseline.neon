@@ -6919,12 +6919,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Controller\\CategoryController\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Controller\\CategoryController\:\:initializeListBuilder\(\) has parameter \$locale with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -7069,24 +7063,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
 
 		-
-			message: '#^Parameter \#1 \$key of method Sulu\\Bundle\\CategoryBundle\\Category\\CategoryManagerInterface\:\:findByKey\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
-			message: '#^Parameter \#1 \$parentKey of method Sulu\\Bundle\\CategoryBundle\\Category\\CategoryManagerInterface\:\:findChildrenByParentKey\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
-			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
 			message: '#^Parameter \#2 \$categories of class Sulu\\Bundle\\CategoryBundle\\Api\\RootCategory constructor expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -7099,25 +7075,13 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
 
 		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\CategoryBundle\\Category\\CategoryManagerInterface\:\:getApiObject\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\CategoryBundle\\Category\\CategoryManagerInterface\:\:getApiObject\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
 
 		-
 			message: '#^Parameter \#2 \$parent of method Sulu\\Bundle\\CategoryBundle\\Category\\CategoryManagerInterface\:\:move\(\) expects int\|null, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
-			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
-			message: '#^Parameter \#2 \$string of function explode expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
@@ -31425,19 +31389,13 @@ parameters:
 		-
 			message: '#^Cannot access property \$query on Symfony\\Component\\HttpFoundation\\Request\|null\.$#'
 			identifier: property.nonObject
-			count: 5
-			path: src/Sulu/Component/Category/Request/CategoryRequestHandler.php
-
-		-
-			message: '#^Cannot call method get\(\) on Symfony\\Component\\HttpFoundation\\Request\|null\.$#'
-			identifier: method.nonObject
-			count: 3
+			count: 2
 			path: src/Sulu/Component/Category/Request/CategoryRequestHandler.php
 
 		-
 			message: '#^Cannot call method getPathInfo\(\) on Symfony\\Component\\HttpFoundation\\Request\|null\.$#'
 			identifier: method.nonObject
-			count: 5
+			count: 2
 			path: src/Sulu/Component/Category/Request/CategoryRequestHandler.php
 
 		-
@@ -31491,7 +31449,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 4
+			count: 1
 			path: src/Sulu/Component/Category/Request/CategoryRequestHandler.php
 
 		-
