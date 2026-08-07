@@ -20,19 +20,12 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
 {
     /**
-     * @var WebspaceManagerInterface
+     * @param string $environment
      */
-    private $webspaceManager;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
-    {
-        $this->webspaceManager = $webspaceManager;
-        $this->environment = $environment;
+    public function __construct(
+        private WebspaceManagerInterface $webspaceManager,
+        private $environment,
+    ) {
     }
 
     public function resolve(RequestAnalyzerInterface $requestAnalyzer)

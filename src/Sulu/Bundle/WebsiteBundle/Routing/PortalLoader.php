@@ -26,13 +26,8 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class PortalLoader extends FileLoader
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
     public function __construct(
-        WebspaceManagerInterface $webspaceManager,
+        private WebspaceManagerInterface $webspaceManager,
         ?FileLocatorInterface $fileLocator = null
     ) {
         if (!$fileLocator) {
@@ -42,8 +37,6 @@ class PortalLoader extends FileLoader
         }
 
         parent::__construct($fileLocator);
-
-        $this->webspaceManager = $webspaceManager;
     }
 
     /**

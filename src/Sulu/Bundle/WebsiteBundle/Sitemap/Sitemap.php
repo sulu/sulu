@@ -17,35 +17,15 @@ namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 class Sitemap
 {
     /**
-     * Unique identification.
-     *
-     * @var string
+     * @param string $alias unique identification
+     * @param int $maxPage maximum pages of sitemap
+     * @param ?\DateTime $lastmod datetime of last modification
      */
-    private $alias;
-
-    /**
-     * Maximum pages of sitemap.
-     *
-     * @var int
-     */
-    private $maxPage;
-
-    /**
-     * Datetime of last modification.
-     *
-     * @var \DateTime|null
-     */
-    private $lastmod;
-
-    /**
-     * @param string $alias
-     * @param int $maxPage
-     */
-    public function __construct($alias, $maxPage, ?\DateTime $lastmod = null)
-    {
-        $this->alias = $alias;
-        $this->maxPage = $maxPage;
-        $this->lastmod = $lastmod;
+    public function __construct(
+        private $alias,
+        private $maxPage,
+        private ?\DateTime $lastmod = null
+    ) {
     }
 
     /**

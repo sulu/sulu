@@ -28,57 +28,15 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class SitemapController
 {
-    /**
-     * @var XmlSitemapRendererInterface
-     */
-    private $xmlSitemapRenderer;
-
-    /**
-     * @var SitemapProviderPoolInterface
-     */
-    private $sitemapProviderPool;
-
-    /**
-     * @var XmlSitemapDumperInterface
-     */
-    private $xmlSitemapDumper;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
-
-    /**
-     * @var int
-     */
-    private $cacheLifeTime;
-
-    /**
-     * @var bool
-     */
-    private $debug;
-
     public function __construct(
-        XmlSitemapRendererInterface $xmlSitemapRenderer,
-        SitemapProviderPoolInterface $sitemapProviderPool,
-        XmlSitemapDumperInterface $xmlSitemapDumper,
-        Filesystem $filesystem,
-        UrlGeneratorInterface $router,
-        int $cacheLifeTime,
-        bool $debug = false
+        private XmlSitemapRendererInterface $xmlSitemapRenderer,
+        private SitemapProviderPoolInterface $sitemapProviderPool,
+        private XmlSitemapDumperInterface $xmlSitemapDumper,
+        private Filesystem $filesystem,
+        private UrlGeneratorInterface $router,
+        private int $cacheLifeTime,
+        private bool $debug = false,
     ) {
-        $this->xmlSitemapRenderer = $xmlSitemapRenderer;
-        $this->sitemapProviderPool = $sitemapProviderPool;
-        $this->xmlSitemapDumper = $xmlSitemapDumper;
-        $this->filesystem = $filesystem;
-        $this->router = $router;
-        $this->cacheLifeTime = $cacheLifeTime;
-        $this->debug = $debug;
     }
 
     /**

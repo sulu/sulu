@@ -19,38 +19,14 @@ use Symfony\Component\Filesystem\Filesystem;
 class XmlSitemapDumper implements XmlSitemapDumperInterface
 {
     /**
-     * @var string
-     */
-    private $baseDirectory;
-
-    /**
-     * @var XmlSitemapRendererInterface
-     */
-    private $sitemapRenderer;
-
-    /**
-     * @var SitemapProviderPoolInterface
-     */
-    private $sitemapProviderPool;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
      * @param string $baseDirectory
      */
     public function __construct(
-        XmlSitemapRendererInterface $sitemapRenderer,
-        SitemapProviderPoolInterface $sitemapProviderPool,
-        Filesystem $filesystem,
-        $baseDirectory
+        private XmlSitemapRendererInterface $sitemapRenderer,
+        private SitemapProviderPoolInterface $sitemapProviderPool,
+        private Filesystem $filesystem,
+        private $baseDirectory,
     ) {
-        $this->sitemapRenderer = $sitemapRenderer;
-        $this->sitemapProviderPool = $sitemapProviderPool;
-        $this->filesystem = $filesystem;
-        $this->baseDirectory = $baseDirectory;
     }
 
     public function getIndexDumpPath($scheme, $host)

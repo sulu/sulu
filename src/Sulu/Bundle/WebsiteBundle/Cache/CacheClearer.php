@@ -24,56 +24,17 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class CacheClearer implements CacheClearerInterface
 {
     /**
-     * @var string
+     * @param string $kernelEnvironment
      */
-    private $kernelEnvironment;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var string
-     */
-    private $varDir;
-
-    /**
-     * @var null|CacheManager
-     */
-    private $cacheManager;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var bool
-     */
-    private $tagsEnabled;
-
     public function __construct(
-        Filesystem $filesystem,
-        $kernelEnvironment,
-        RequestStack $requestStack,
-        EventDispatcherInterface $eventDispatcher,
-        string $varDir,
-        ?CacheManager $cacheManager,
-        bool $tagsEnabled = true
+        private Filesystem $filesystem,
+        private $kernelEnvironment,
+        private RequestStack $requestStack,
+        private EventDispatcherInterface $eventDispatcher,
+        private string $varDir,
+        private ?CacheManager $cacheManager,
+        private bool $tagsEnabled = true,
     ) {
-        $this->kernelEnvironment = $kernelEnvironment;
-        $this->filesystem = $filesystem;
-        $this->varDir = $varDir;
-        $this->cacheManager = $cacheManager;
-        $this->requestStack = $requestStack;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->tagsEnabled = $tagsEnabled;
     }
 
     public function clear(?array $tags = null)

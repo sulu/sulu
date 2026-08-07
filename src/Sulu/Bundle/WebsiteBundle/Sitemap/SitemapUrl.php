@@ -34,81 +34,28 @@ class SitemapUrl
     public const CHANGE_FREQUENCY_NEVER = 'never';
 
     /**
-     * Relative URL.
-     *
-     * @var string
-     */
-    private $loc;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
-    /**
-     * Datetime of last modification.
-     *
-     * @var \DateTimeInterface|null
-     */
-    private $lastmod;
-
-    /**
-     * Frequency of change.
-     *
-     * See constants SitemapUrl::CHANGE_FREQUENCY_*.
-     *
-     * @var string
-     */
-    private $changefreq;
-
-    /**
-     * Priority of page in relation to other domains.
-     *
-     * @var float
-     */
-    private $priority;
-
-    /**
      * @var SitemapAlternateLink[]
      */
     private $alternateLinks;
 
     /**
-     * @var array
-     */
-    private $attributes;
-
-    /**
-     * @var string
-     */
-    private $defaultLocale;
-
-    /**
-     * @param string $loc
+     * @param string $loc relative URL
      * @param string $locale
      * @param string|null $defaultLocale
-     * @param string $changefreq
-     * @param float $priority
+     * @param SitemapUrl::CHANGE_FREQUENCY_* $changefreq frequency of change
+     * @param float $priority priority of page in relation to other domains
      * @param array $attributes
      */
     public function __construct(
-        $loc,
-        $locale,
-        $defaultLocale,
-        ?\DateTimeInterface $lastmod = null,
-        $changefreq = null,
-        $priority = null,
-        $attributes = []
+        private $loc,
+        private $locale,
+        private $defaultLocale,
+        private ?\DateTimeInterface $lastmod = null,
+        private $changefreq = null,
+        private $priority = null,
+        private $attributes = []
     ) {
-        $this->loc = $loc;
-        $this->locale = $locale;
-        $this->defaultLocale = $defaultLocale;
-        $this->lastmod = $lastmod;
-        $this->changefreq = $changefreq;
-        $this->priority = $priority;
-        $this->attributes = $attributes;
-
-        $this->addAlternateLink(new SitemapAlternateLink($loc, $locale));
+        $this->addAlternateLink(new SitemapAlternateLink($this->loc, $this->locale));
     }
 
     /**

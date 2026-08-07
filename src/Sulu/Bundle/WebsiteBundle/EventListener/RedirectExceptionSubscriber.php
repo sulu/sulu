@@ -30,36 +30,12 @@ use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
  */
 class RedirectExceptionSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var RequestMatcherInterface
-     */
-    private $router;
-
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    /**
-     * @var DefaultLocaleProviderInterface
-     */
-    private $defaultLocaleProvider;
-
-    /**
-     * @var ReplacerInterface
-     */
-    private $urlReplacer;
-
     public function __construct(
-        RequestMatcherInterface $router,
-        RequestAnalyzerInterface $requestAnalyzer,
-        DefaultLocaleProviderInterface $defaultLocaleProvider,
-        ReplacerInterface $urlReplacer
+        private RequestMatcherInterface $router,
+        private RequestAnalyzerInterface $requestAnalyzer,
+        private DefaultLocaleProviderInterface $defaultLocaleProvider,
+        private ReplacerInterface $urlReplacer,
     ) {
-        $this->router = $router;
-        $this->requestAnalyzer = $requestAnalyzer;
-        $this->defaultLocaleProvider = $defaultLocaleProvider;
-        $this->urlReplacer = $urlReplacer;
     }
 
     public static function getSubscribedEvents(): array

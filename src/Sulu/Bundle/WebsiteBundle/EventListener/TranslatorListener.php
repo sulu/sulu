@@ -22,16 +22,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class TranslatorListener implements EventSubscriberInterface
 {
     /**
-     * @var TranslatorInterface|LocaleAwareInterface
-     */
-    private $translator;
-
-    /**
      * @param TranslatorInterface|LocaleAwareInterface $translator
      */
-    public function __construct($translator)
+    public function __construct(private $translator)
     {
-        $this->translator = $translator;
     }
 
     public function onKernelRequest(RequestEvent $event)

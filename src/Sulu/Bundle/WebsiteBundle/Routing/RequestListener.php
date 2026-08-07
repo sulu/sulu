@@ -27,20 +27,10 @@ use Symfony\Component\Routing\RequestContextAwareInterface;
  */
 class RequestListener implements EventSubscriberInterface
 {
-    /**
-     * @var RequestContextAwareInterface
-     */
-    private $router;
-
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    public function __construct(RequestContextAwareInterface $router, RequestAnalyzerInterface $requestAnalyzer)
-    {
-        $this->router = $router;
-        $this->requestAnalyzer = $requestAnalyzer;
+    public function __construct(
+        private RequestContextAwareInterface $router,
+        private RequestAnalyzerInterface $requestAnalyzer,
+    ) {
     }
 
     public static function getSubscribedEvents(): array

@@ -22,7 +22,6 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestAnalyzerResolverTest extends TestCase
 {
@@ -38,22 +37,15 @@ class RequestAnalyzerResolverTest extends TestCase
      */
     private $webspaceManager;
 
-    /**
-     * @var ObjectProphecy<RequestStack>
-     */
-    private $requestStack;
-
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->prepareWebspaceManager();
 
-        $this->requestStack = $this->prophesize(RequestStack::class);
-
         $this->resolver = new RequestAnalyzerResolver(
             $this->webspaceManager->reveal(),
-            $this->requestStack->reveal()
+            'dev',
         );
     }
 

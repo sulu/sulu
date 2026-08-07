@@ -19,20 +19,10 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class SegmentController
 {
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    /**
-     * @var string
-     */
-    private $segmentCookieName;
-
-    public function __construct(RequestAnalyzerInterface $requestAnalyzer, string $segmentCookieName)
-    {
-        $this->requestAnalyzer = $requestAnalyzer;
-        $this->segmentCookieName = $segmentCookieName;
+    public function __construct(
+        private RequestAnalyzerInterface $requestAnalyzer,
+        private string $segmentCookieName,
+    ) {
     }
 
     public function switchAction(Request $request)

@@ -16,18 +16,12 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 class UrlSelect
 {
     /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
      * @var string
      */
     protected $environment;
 
-    public function __construct(WebspaceManagerInterface $webspaceManager, string $environment)
+    public function __construct(private WebspaceManagerInterface $webspaceManager, string $environment)
     {
-        $this->webspaceManager = $webspaceManager;
         $this->environment = $environment;
     }
 
