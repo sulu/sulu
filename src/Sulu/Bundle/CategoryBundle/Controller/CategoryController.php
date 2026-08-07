@@ -81,7 +81,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
 
         if ('true' == $request->query->get('flat')) {
             $rootId = ($rootKey) ? $this->categoryManager->findByKey($rootKey)->getId() : null;
-            $expandedIds = \array_filter(\explode(',', $request->query->getString('expandedIds', $request->query->getString('selectedIds', $request->query->get('ids', '')))));
+            $expandedIds = \array_filter(\explode(',', $request->query->getString('expandedIds', $request->query->getString('selectedIds', $request->query->getString('ids', '')))));
             $defaultSort = !$request->query->has('sortBy');
             $list = $this->getListRepresentation(
                 $request,
@@ -93,7 +93,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
                 $defaultSort
             );
         } elseif ($request->query->has('ids')) {
-            $ids = \array_filter(\explode(',', $request->query->get('ids')));
+            $ids = \array_filter(\explode(',', $request->query->getString('ids')));
             $entities = $this->categoryManager->findByIds($ids);
             $categories = $this->categoryManager->getApiObjects($entities, $locale);
             $list = new CollectionRepresentation($categories, CategoryInterface::RESOURCE_KEY);
@@ -124,7 +124,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
 
     private function move($id, Request $request)
     {
-        $destination = $request->query->get('destination' ?: throw new MissingParameterException(self::class, 'destination'));
+        $destination = $request->query->get('destination') ?: throw new MissingParameterException(self::class, 'destination');
         if ('root' === $destination) {
             $destination = null;
         }
