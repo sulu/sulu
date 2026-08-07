@@ -58,10 +58,10 @@ class SecurityAdmin extends Admin
     public function __construct(
         private ViewBuilderFactoryInterface $viewBuilderFactory,
         private SecurityCheckerInterface $securityChecker,
+        private UrlGeneratorInterface $urlGenerator,
         private TranslatorInterface $translator,
         private AdminPool $adminPool,
         private array $resources,
-        private UrlGeneratorInterface $urlGenerator,
         private bool $twoFactorBackupCodesEnabled = false,
     ) {
     }
