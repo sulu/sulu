@@ -15,14 +15,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
-use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class MediaFormatController extends AbstractRestController
 {
-    use RequestParametersTrait;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
         private FormatOptionsManagerInterface $formatOptionsManager,

@@ -32,7 +32,6 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
-use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -51,8 +50,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class TrashItemController extends AbstractRestController
 {
-    use RequestParametersTrait;
-
     /**
      * @param class-string $trashItemClass
      * @param array<string, int> $permissions Inject `sulu_security.permissions` parameter
