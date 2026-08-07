@@ -181,7 +181,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
             'description' => (empty($payload->get('description'))) ? null : $payload->get('description'),
             'medias' => $medias,
             'key' => (empty($payload->get('key'))) ? null : $payload->get('key'),
-            'parent' => $payload->get('parentId'),
+            'parent' => $request->query->get('parentId') ?? $payload->get('parentId'),
         ];
         $entity = $this->categoryManager->save($data, null, $locale, $patch);
         $category = $this->categoryManager->getApiObject($entity, $locale);
