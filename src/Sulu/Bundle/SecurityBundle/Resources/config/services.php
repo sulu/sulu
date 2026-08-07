@@ -96,6 +96,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('translator'),
             new Reference('sulu_admin.admin_pool'),
             '%sulu_admin.resources%',
+            new Reference('router'),
             '%sulu_security.two_factor_backup_codes_enabled%',
         ])
         ->tag('sulu.admin')

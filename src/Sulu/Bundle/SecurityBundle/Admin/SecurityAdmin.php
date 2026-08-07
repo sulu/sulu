@@ -24,6 +24,7 @@ use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SecurityAdmin extends Admin
@@ -60,6 +61,7 @@ class SecurityAdmin extends Admin
         private TranslatorInterface $translator,
         private AdminPool $adminPool,
         private array $resources,
+        private UrlGeneratorInterface $urlGenerator,
         private bool $twoFactorBackupCodesEnabled = false,
     ) {
     }
@@ -198,7 +200,6 @@ class SecurityAdmin extends Admin
     {
         return [
             'endpoints' => [
-                'contexts' => $this->urlGenerator->generate('sulu_security.cget_security-contexts'),
                 'twoFactorSetup' => $this->urlGenerator->generate('sulu_security.post_profile_two-factor_setup'),
                 'twoFactorConfirm' => $this->urlGenerator->generate('sulu_security.post_profile_two-factor_confirm'),
                 'twoFactorBackupCodes' => $this->urlGenerator->generate('sulu_security.post_profile_two-factor_backup-codes'),
