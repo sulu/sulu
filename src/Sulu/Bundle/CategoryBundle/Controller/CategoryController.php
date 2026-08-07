@@ -26,7 +26,6 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
-use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,8 +37,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class CategoryController extends AbstractRestController implements SecuredControllerInterface
 {
-    use RequestParametersTrait;
-
     /**
      * @param class-string $categoryClass
      */
@@ -58,7 +55,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
 
     public function getAction($id, Request $request)
     {
-        $locale = $this->getRequestParameter($request, 'locale', true);
+        $locale = $this->getLocale($request) ?: throw new MissingParameterException(self::class, 'locale');
         $findCallback = function($id) use ($locale) {
             $entity = $this->categoryManager->findById($id);
 
@@ -72,7 +69,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
 
     public function cgetAction(Request $request)
     {
-        $locale = $this->getRequestParameter($request, 'locale', true);
+        $locale = $this->getLocale($request) ?: throw new MissingParameterException(self::class, 'locale');
         $rootKey = $request->query->get('rootKey');
         $parentId = $request->query->get('parentId');
         $includeRoot = $request->query->getBoolean('includeRoot');
@@ -127,7 +124,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
 
     private function move($id, Request $request)
     {
-        $destination = $this->getRequestParameter($request, 'destination', true);
+        $destination = $request->query->get('destination' ?: throw new MissingParameterException(self::class, 'destination'));
         if ('root' === $destination) {
             $destination = null;
         }
@@ -171,7 +168,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
     protected function saveCategory(Request $request, $id = null, $patch = false)
     {
         $payload = $request->getPayload();
-        $mediasData = $payload->get('medias');
+        $mediasData = $payload->all('medias');
         $medias = null;
         if ($mediasData && \array_key_exists('ids', $mediasData)) {
             $medias = $mediasData['ids'];
@@ -184,7 +181,6 @@ class CategoryController extends AbstractRestController implements SecuredContro
             'description' => (empty($payload->get('description'))) ? null : $payload->get('description'),
             'medias' => $medias,
             'key' => (empty($payload->get('key'))) ? null : $payload->get('key'),
-            'meta' => $payload->get('meta'),
             'parent' => $payload->get('parentId'),
         ];
         $entity = $this->categoryManager->save($data, null, $locale, $patch);
