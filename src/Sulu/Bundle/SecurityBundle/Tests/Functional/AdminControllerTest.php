@@ -36,7 +36,7 @@ class AdminControllerTest extends SuluTestCase
             }
         }
 
-        $this->assertEquals('User locked', $formRoute->options->toolbarActions[2]->options->label);
+        $this->assertEquals('User locked', $formRoute->options->toolbarActions[3]->options->label);
 
         $securityContextConfig = $response->sulu_security->securityContexts;
 

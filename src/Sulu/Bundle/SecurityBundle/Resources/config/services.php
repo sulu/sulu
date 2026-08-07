@@ -20,6 +20,7 @@ use Sulu\Bundle\SecurityBundle\Build\SecurityBuilder;
 use Sulu\Bundle\SecurityBundle\Build\UserBuilder;
 use Sulu\Bundle\SecurityBundle\Controller\PermissionController;
 use Sulu\Bundle\SecurityBundle\Controller\ProfileController;
+use Sulu\Bundle\SecurityBundle\Controller\ProfileTwoFactorController;
 use Sulu\Bundle\SecurityBundle\Controller\ResettingController;
 use Sulu\Bundle\SecurityBundle\Controller\RoleController;
 use Sulu\Bundle\SecurityBundle\Controller\RoleSettingController;
@@ -39,6 +40,7 @@ use Sulu\Bundle\SecurityBundle\Security\AuthenticationHandler;
 use Sulu\Bundle\SecurityBundle\System\SystemStore;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Bundle\SecurityBundle\Twig\UserTwigExtension;
+use Sulu\Bundle\SecurityBundle\TwoFactor\BackupCodeGenerator;
 use Sulu\Bundle\SecurityBundle\User\UserProvider;
 use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Bundle\SecurityBundle\Util\TokenGenerator;
@@ -94,6 +96,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('translator'),
             new Reference('sulu_admin.admin_pool'),
             '%sulu_admin.resources%',
+            '%sulu_security.two_factor_backup_codes_enabled%',
         ])
         ->tag('sulu.admin')
         ->tag('sulu.context', ['context' => 'admin']);
@@ -188,6 +191,21 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_security.user_manager'),
             '%sulu.model.user.class%',
             '%sulu.model.contact.class%',
+        ])
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_security.two_factor_backup_code_generator', BackupCodeGenerator::class);
+
+    $services->set('sulu_security.profile_two_factor_controller', ProfileTwoFactorController::class)
+        ->public()
+        ->args([
+            new Reference('security.token_storage'),
+            new Reference('doctrine.orm.default_entity_manager'),
+            new Reference('fos_rest.view_handler'),
+            new Reference('sulu_security.two_factor_backup_code_generator'),
+            new Reference('scheb_two_factor.security.totp_authenticator', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            '%sulu_security.two_factor_backup_codes_enabled%',
+            '%sulu_security.two_factor_force_pattern%',
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 

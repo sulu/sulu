@@ -1,0 +1,69 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+.setup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    margin: 0 auto;
+    max-width: 420px;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.hint {
+    color: $dustyGray;
+    line-height: 20px;
+    margin: 0;
+}
+
+.qr-code {
+    background: $white;
+    border: 1px solid $silver;
+    border-radius: 3px;
+    display: inline-flex;
+    padding: 20px;
+}
+
+.section {
+    width: 100%;
+}
+
+.label {
+    color: $mineShaft;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.secret {
+    background: $concrete;
+    border-radius: 3px;
+    display: block;
+    font-family: monospace;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+    padding: 10px 15px;
+    user-select: all;
+}
+
+.code-input {
+    margin: 0 auto;
+    max-width: 220px;
+}
+
+.actions {
+    margin-top: 10px;
+}
+
+.backup-codes {
+    display: grid;
+    font-family: monospace;
+    font-size: 16px;
+    gap: 10px 40px;
+    grid-template-columns: repeat(2, 1fr);
+    letter-spacing: 1px;
+    line-height: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
