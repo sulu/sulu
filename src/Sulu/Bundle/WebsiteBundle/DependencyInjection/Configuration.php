@@ -73,6 +73,12 @@ final class Configuration implements ConfigurationInterface
                 ->children()
                     ->scalarNode('provider_service_id')->defaultValue('sulu_website.default_locale.portal_provider')->end()
                 ->end()
+            ->end()
+            ->arrayNode('error_pages')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->booleanNode('cache')->defaultNull()->end()
+                ->end()
             ->end();
 
         $this->addObjectsSection($rootNode);
