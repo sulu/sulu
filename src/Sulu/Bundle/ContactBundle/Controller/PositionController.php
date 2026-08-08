@@ -23,6 +23,7 @@ use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\ContactBundle\Entity\PositionRepository;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Security\SecuredControllerInterface;
@@ -99,11 +100,11 @@ class PositionController extends AbstractRestController implements SecuredContro
         $name = $request->getPayload()->get('position');
 
         try {
-            if (null === $name) {
-                throw new RestException(
-                    'There is no position-name for the given name',
-                );
-            }
+             if (null === $name) {
+                 throw new RestException(
+                     'There is no position-name for the given name',
+                 );
+             }
 
             $position = new Position();
             $position->setPosition($name);
@@ -142,11 +143,13 @@ class PositionController extends AbstractRestController implements SecuredContro
             if (!$position) {
                 throw new EntityNotFoundException(self::$entityName, $id);
             }
+
             $name = $request->getPayload()->get('position');
 
             if (empty($name)) {
                 throw new RestException('There is no position-name for the given name');
             }
+
             $position->setPosition($name);
 
             $this->domainEventCollector->collect(
@@ -166,7 +169,7 @@ class PositionController extends AbstractRestController implements SecuredContro
 
     public function cdeleteAction(Request $request)
     {
-        $ids = \array_filter(\explode(',', $request->query->get('ids', '')));
+        $ids = \array_filter(\explode(',', $request->query->getString('ids')));
 
         try {
             foreach ($ids as $id) {
