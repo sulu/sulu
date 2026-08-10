@@ -230,7 +230,8 @@ class TagController extends AbstractRestController implements SecuredControllerI
     public function postMergeAction(Request $request)
     {
         try {
-            $srcTagIds = \explode(',', $request->query->getString('src') ?: throw new MissingParameterException(self::class, 'src'));
+            $src = $request->query->getString('src') ?: throw new MissingParameterException(self::class, 'src');
+            $srcTagIds = \explode(',', $src);
             $destTagId = $request->query->getInt('dest') ?: throw new MissingParameterException(self::class, 'dest');
 
             $destTag = $this->tagManager->merge($srcTagIds, $destTagId);
