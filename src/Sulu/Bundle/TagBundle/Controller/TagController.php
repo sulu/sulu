@@ -24,6 +24,7 @@ use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
+use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
@@ -229,8 +230,8 @@ class TagController extends AbstractRestController implements SecuredControllerI
     public function postMergeAction(Request $request)
     {
         try {
-            $srcTagIds = \explode(',', $request->query->getString('src'));
-            $destTagId = $request->query->getInt('dest');
+            $srcTagIds = \explode(',', $request->query->getString('src') ?: throw new MissingParameterException(self::class, 'src'));
+            $destTagId = $request->query->getInt('dest') ?: throw new MissingParameterException(self::class, 'dest');
 
             $destTag = $this->tagManager->merge($srcTagIds, $destTagId);
 

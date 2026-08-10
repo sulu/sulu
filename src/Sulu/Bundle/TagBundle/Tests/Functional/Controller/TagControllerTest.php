@@ -401,6 +401,28 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals('Entity with the type "Sulu\Bundle\TagBundle\Entity\Tag" and the id "1233" not found.', $response->message);
     }
 
+    public function testMergeWithoutSource(): void
+    {
+        $this->client->jsonRequest(
+            'POST',
+            '/api/tags/merge?' . \http_build_query(['dest' => 1]),
+            []
+        );
+
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+    }
+
+    public function testMergeWithoutDestination(): void
+    {
+        $this->client->jsonRequest(
+            'POST',
+            '/api/tags/merge?' . \http_build_query(['src' => 1]),
+            []
+        );
+
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+    }
+
     public function testPatch(): void
     {
         $this->createTag('tag1');
