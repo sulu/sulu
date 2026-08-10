@@ -1740,7 +1740,6 @@ Removed unused arguments:
 
 - `Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor::__construct` `$contentMapper` (2nd argument) removed
 - `Sulu\Bundle\SecurityBundle\UserManager\UserManager::__construct` `$groupRepository` (4th argument) removed
-- `Sulu\Bundle\SecurityBundle\Admin\SecurityAdmin::__construct` `$urlGenerator` (3rd argument) removed
 - `Sulu\Bundle\ContactBundle\Controller\ContactController::__construct` `$contactRepository` (7th argument) removed
 - `Sulu\Bundle\ContactBundle\Controller\ContactController::__construct` `$userRepository` (9th argument) removed
 - `Sulu\Bundle\ContactBundle\Controller\ContactController::__construct` `$suluSecuritySystem` (12th argument) removed

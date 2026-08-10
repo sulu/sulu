@@ -56,8 +56,7 @@ class IconController extends AbstractRestController
      */
     public function cgetAction(Request $request)
     {
-        /** @var string $iconSetName */
-        $iconSetName = $request->get('icon_set');
+        $iconSetName = $request->query->getString('icon_set');
 
         if (!$iconSetName) {
             throw new MissingParameterException(\get_class($this), 'icon_set');

@@ -27,50 +27,14 @@ use Sulu\Bundle\WebsiteBundle\Entity\DomainRepository;
  */
 class AnalyticsManager implements AnalyticsManagerInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var AnalyticsRepositoryInterface
-     */
-    private $analyticsRepository;
-
-    /**
-     * @var DomainRepository
-     */
-    private $domainRepository;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
-    /**
-     * @var TrashManagerInterface|null
-     */
-    private $trashManager;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        AnalyticsRepositoryInterface $analyticsRepository,
-        DomainRepository $domainRepository,
-        string $environment,
-        DomainEventCollectorInterface $domainEventCollector,
-        ?TrashManagerInterface $trashManager = null
+        private EntityManagerInterface $entityManager,
+        private AnalyticsRepositoryInterface $analyticsRepository,
+        private DomainRepository $domainRepository,
+        private string $environment,
+        private DomainEventCollectorInterface $domainEventCollector,
+        private ?TrashManagerInterface $trashManager = null,
     ) {
-        $this->entityManager = $entityManager;
-        $this->analyticsRepository = $analyticsRepository;
-        $this->domainRepository = $domainRepository;
-        $this->environment = $environment;
-        $this->domainEventCollector = $domainEventCollector;
-        $this->trashManager = $trashManager;
     }
 
     public function findAll($webspaceKey)

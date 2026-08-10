@@ -27,20 +27,10 @@ class RouterListener implements EventSubscriberInterface
 {
     public const REQUEST_ANALYZER = '_requestAnalyzer';
 
-    /**
-     * @var BaseRouterListener
-     */
-    private $baseRouteListener;
-
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    public function __construct(BaseRouterListener $baseRouterListener, RequestAnalyzerInterface $requestAnalyzer)
-    {
-        $this->baseRouteListener = $baseRouterListener;
-        $this->requestAnalyzer = $requestAnalyzer;
+    public function __construct(
+        private BaseRouterListener $baseRouteListener,
+        private RequestAnalyzerInterface $requestAnalyzer,
+    ) {
     }
 
     /**

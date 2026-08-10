@@ -18,22 +18,10 @@ use Twig\Environment;
  */
 class XmlSitemapRenderer implements XmlSitemapRendererInterface
 {
-    /**
-     * @var SitemapProviderPoolInterface
-     */
-    private $sitemapProviderPool;
-
-    /**
-     * @var Environment
-     */
-    private $engine;
-
     public function __construct(
-        SitemapProviderPoolInterface $sitemapProviderPool,
-        Environment $engine
+        private SitemapProviderPoolInterface $sitemapProviderPool,
+        private Environment $engine,
     ) {
-        $this->sitemapProviderPool = $sitemapProviderPool;
-        $this->engine = $engine;
     }
 
     public function renderIndex($scheme, $host)

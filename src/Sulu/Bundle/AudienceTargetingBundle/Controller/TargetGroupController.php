@@ -122,9 +122,9 @@ class TargetGroupController extends AbstractRestController implements SecuredCon
 
         // If webspaces are concatinated we need to group by id. This happens
         // when no fields are supplied at all OR webspaces are requested as field.
-        $fieldsParam = $request->get('fields');
+        $fieldsParam = $request->query->getString('fields');
         $fields = \explode(',', $fieldsParam);
-        if (null === $fieldsParam || false !== \array_search('webspaceKeys', $fields)) {
+        if ('' === $fieldsParam || false !== \array_search('webspaceKeys', $fields)) {
             $listBuilder->addGroupBy($fieldDescriptors['id']);
         }
 
@@ -223,7 +223,7 @@ class TargetGroupController extends AbstractRestController implements SecuredCon
      */
     public function cdeleteAction(Request $request)
     {
-        $idsData = $request->get('ids');
+        $idsData = $request->query->getString('ids');
         $ids = \explode(',', $idsData);
 
         if (!\count($ids)) {

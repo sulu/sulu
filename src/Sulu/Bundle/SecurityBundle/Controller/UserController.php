@@ -19,13 +19,13 @@ use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
+use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
-use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
@@ -37,8 +37,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class UserController extends AbstractRestController implements SecuredControllerInterface
 {
-    use RequestParametersTrait;
-
     /**
      * @param class-string $userClass
      */
@@ -137,7 +135,7 @@ class UserController extends AbstractRestController implements SecuredController
     {
         try {
             $this->checkArguments($request);
-            $locale = $this->getRequestParameter($request, 'locale', true);
+            $locale = $request->getPayload()->getString('locale') ?: throw new MissingParameterException(self::class, 'locale');
             $data = $request->request->all();
             $data['contactId'] = $request->query->get('contactId');
             $user = $this->userManager->save($data, $locale);
@@ -193,7 +191,7 @@ class UserController extends AbstractRestController implements SecuredController
     {
         try {
             $this->checkArguments($request);
-            $locale = $this->getRequestParameter($request, 'locale', true);
+            $locale = $request->getPayload()->getString('locale') ?: throw new MissingParameterException(self::class, 'locale');
             $user = $this->userManager->save($request->request->all(), $locale, $id);
             $view = $this->view($user, 200);
         } catch (EntityNotFoundException $exc) {
@@ -217,7 +215,7 @@ class UserController extends AbstractRestController implements SecuredController
     public function patchAction(Request $request, $id)
     {
         try {
-            $locale = $this->getRequestParameter($request, 'locale');
+            $locale = $request->getPayload()->getString('locale') ?: null;
             $user = $this->userManager->save($request->request->all(), $locale, $id, true);
             $view = $this->view($user, 200);
         } catch (EntityNotFoundException $exc) {
@@ -253,18 +251,22 @@ class UserController extends AbstractRestController implements SecuredController
      */
     // TODO: Use schema validation see:
     // https://github.com/sulu-io/sulu/issues/1136
-    private function checkArguments(Request $request)
+    private function checkArguments(Request $request): void
     {
-        if (null == $request->get('username')) {
+        $payload = $request->getPayload();
+        $contactId = $request->query->get('contactId') ?? $payload->get('contactId');
+
+        if (null == $payload->get('username')) {
             throw new MissingArgumentException($this->userClass, 'username');
         }
-        if ($request->isMethod('POST') && null === $request->get('password')) {
+        if ($request->isMethod('POST') && null === $payload->get('password')) {
             throw new MissingArgumentException($this->userClass, 'password');
         }
-        if (null == $request->get('locale')) {
+        if (null == $payload->get('locale')) {
             throw new MissingArgumentException($this->userClass, 'locale');
         }
-        if (null == $request->get('contact') && null == $request->get('contactId')) {
+        // "contact" is an array, so `get` can not be used here as `InputBag::get` only allows scalar values
+        if ([] === $payload->all('contact') && null == $contactId) {
             throw new MissingArgumentException($this->userClass, 'contact');
         }
     }

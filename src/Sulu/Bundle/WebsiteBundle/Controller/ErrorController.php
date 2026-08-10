@@ -27,31 +27,13 @@ class ErrorController
      */
     private $symfonyErrorController;
 
-    /**
-     * @var bool
-     */
-    private $debug;
-
-    /**
-     * @var TemplateAttributeResolverInterface
-     */
-    private $templateAttributeResolver;
-
-    /**
-     * @var Environment
-     */
-    private $twig;
-
     public function __construct(
         SymfonyErrorController $symfonyErrorController,
-        TemplateAttributeResolverInterface $templateAttributeResolver,
-        Environment $twig,
-        bool $debug = false
+        private TemplateAttributeResolverInterface $templateAttributeResolver,
+        private Environment $twig,
+        private bool $debug = false
     ) {
         $this->symfonyErrorController = $symfonyErrorController;
-        $this->templateAttributeResolver = $templateAttributeResolver;
-        $this->twig = $twig;
-        $this->debug = $debug;
     }
 
     public function __invoke(Request $request, \Throwable $exception): Response

@@ -24,22 +24,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class DomainEventEventSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DomainEventDispatcherInterface
-     */
-    private $domainEventDispatcher;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
     public function __construct(
-        DomainEventDispatcherInterface $domainEventDispatcher,
-        WebspaceManagerInterface $webspaceManager
+        private DomainEventDispatcherInterface $domainEventDispatcher,
+        private WebspaceManagerInterface $webspaceManager,
     ) {
-        $this->domainEventDispatcher = $domainEventDispatcher;
-        $this->webspaceManager = $webspaceManager;
     }
 
     public static function getSubscribedEvents(): array

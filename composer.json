@@ -161,6 +161,7 @@
     },
     "conflict": {
         "doctrine/doctrine-bundle": "2.13.1 || 2.13.x-dev || 2.14.x-dev",
+        "doctrine/orm": "3.7.x-dev",
         "jms/serializer-bundle": "4.1.0",
         "oro/doctrine-extensions": "2.0.3 || 2.0.4",
         "php-http/discovery": "< 1.8.0",

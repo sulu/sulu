@@ -20,20 +20,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class RequestDefaultLocaleProvider implements DefaultLocaleProviderInterface
 {
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    public function __construct(RequestAnalyzerInterface $requestAnalyzer, RequestStack $requestStack)
-    {
-        $this->requestAnalyzer = $requestAnalyzer;
-        $this->requestStack = $requestStack;
+    public function __construct(
+        private RequestAnalyzerInterface $requestAnalyzer,
+        private RequestStack $requestStack,
+    ) {
     }
 
     public function getDefaultLocale()

@@ -22,7 +22,7 @@
             "collection_id": {
               "name": "collection_id",
               "type": "expression",
-              "value": 42
+              "value": "@integer@"
             },
             "empty_icon": {
               "name": "empty_icon",

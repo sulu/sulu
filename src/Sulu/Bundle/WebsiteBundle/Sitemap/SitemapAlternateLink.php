@@ -17,27 +17,13 @@ namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 class SitemapAlternateLink
 {
     /**
-     * Link.
-     *
-     * @var string
+     * @param string $href Link
+     * @param string $locale Locale for the alternate-link
      */
-    private $href;
-
-    /**
-     * Locale for alternate-link.
-     *
-     * @var string
-     */
-    private $locale;
-
-    /**
-     * @param string $locale
-     * @param string $href
-     */
-    public function __construct($href, $locale)
-    {
-        $this->href = $href;
-        $this->locale = $locale;
+    public function __construct(
+        private $href,
+        private $locale
+    ) {
     }
 
     /**

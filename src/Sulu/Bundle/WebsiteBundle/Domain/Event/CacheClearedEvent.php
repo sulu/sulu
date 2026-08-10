@@ -17,11 +17,6 @@ use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 class CacheClearedEvent extends DomainEvent
 {
     /**
-     * @var string
-     */
-    private $webspaceKey;
-
-    /**
      * @var mixed[]
      */
     private $tags;
@@ -29,11 +24,9 @@ class CacheClearedEvent extends DomainEvent
     /**
      * @param mixed[]|null $tags
      */
-    public function __construct(string $webspaceKey, ?array $tags)
+    public function __construct(private string $webspaceKey, ?array $tags)
     {
         parent::__construct();
-
-        $this->webspaceKey = $webspaceKey;
         $this->tags = $tags ?? [];
     }
 

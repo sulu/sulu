@@ -84,7 +84,7 @@ class ContactMediaController extends AbstractMediaController implements SecuredC
 
     public function postAction(int $contactId, Request $request)
     {
-        $mediaId = $request->get('mediaId', '');
+        $mediaId = $request->getPayload()->get('mediaId', '');
 
         $dispatchDomainEventCallback = function(ContactInterface $contact, MediaInterface $media) {
             $this->domainEventCollector->collect(

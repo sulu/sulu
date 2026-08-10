@@ -49,7 +49,7 @@ class QueryStringRule implements RuleInterface
             $request = Request::create($url);
         }
 
-        $value = $request->get($options['parameter']);
+        $value = $request->query->get($options['parameter']);
         if (!$value) {
             return false;
         }

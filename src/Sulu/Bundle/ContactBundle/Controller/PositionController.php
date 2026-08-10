@@ -73,7 +73,7 @@ class PositionController extends AbstractRestController implements SecuredContro
     public function cgetAction(Request $request)
     {
         $filter = [];
-        $ids = $request->get('ids');
+        $ids = $request->query->getString('ids');
 
         if ($ids) {
             $filter['id'] = \explode(',', $ids);
@@ -96,7 +96,7 @@ class PositionController extends AbstractRestController implements SecuredContro
      */
     public function postAction(Request $request)
     {
-        $name = $request->get('position');
+        $name = $request->getPayload()->get('position');
 
         try {
             if (null === $name) {
@@ -142,8 +142,8 @@ class PositionController extends AbstractRestController implements SecuredContro
             if (!$position) {
                 throw new EntityNotFoundException(self::$entityName, $id);
             }
-            $name = $request->get('position');
 
+            $name = $request->getPayload()->get('position');
             if (empty($name)) {
                 throw new RestException('There is no position-name for the given name');
             }
@@ -166,7 +166,7 @@ class PositionController extends AbstractRestController implements SecuredContro
 
     public function cdeleteAction(Request $request)
     {
-        $ids = \array_filter(\explode(',', $request->get('ids', '')));
+        $ids = \array_filter(\explode(',', $request->query->getString('ids')));
 
         try {
             foreach ($ids as $id) {

@@ -26,7 +26,6 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
-use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,8 +37,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class CategoryController extends AbstractRestController implements SecuredControllerInterface
 {
-    use RequestParametersTrait;
-
     /**
      * @param class-string $categoryClass
      */
@@ -58,7 +55,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
 
     public function getAction($id, Request $request)
     {
-        $locale = $this->getRequestParameter($request, 'locale', true);
+        $locale = $this->getLocale($request) ?: throw new MissingParameterException(self::class, 'locale');
         $findCallback = function($id) use ($locale) {
             $entity = $this->categoryManager->findById($id);
 
@@ -72,19 +69,19 @@ class CategoryController extends AbstractRestController implements SecuredContro
 
     public function cgetAction(Request $request)
     {
-        $locale = $this->getRequestParameter($request, 'locale', true);
-        $rootKey = $request->get('rootKey');
-        $parentId = $request->get('parentId');
-        $includeRoot = $this->getBooleanRequestParameter($request, 'includeRoot', false, false);
+        $locale = $this->getLocale($request) ?: throw new MissingParameterException(self::class, 'locale');
+        $rootKey = $request->query->get('rootKey');
+        $parentId = $request->query->get('parentId');
+        $includeRoot = $request->query->getBoolean('includeRoot');
 
         if ('root' === $parentId) {
             $includeRoot = false;
             $parentId = null;
         }
 
-        if ('true' == $request->get('flat')) {
+        if ('true' == $request->query->get('flat')) {
             $rootId = ($rootKey) ? $this->categoryManager->findByKey($rootKey)->getId() : null;
-            $expandedIds = \array_filter(\explode(',', $request->get('expandedIds', $request->get('selectedIds', $request->query->get('ids', '')))));
+            $expandedIds = \array_filter(\explode(',', $request->query->getString('expandedIds', $request->query->getString('selectedIds', $request->query->getString('ids', '')))));
             $defaultSort = !$request->query->has('sortBy');
             $list = $this->getListRepresentation(
                 $request,
@@ -96,7 +93,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
                 $defaultSort
             );
         } elseif ($request->query->has('ids')) {
-            $ids = \array_filter(\explode(',', $request->query->get('ids')));
+            $ids = \array_filter(\explode(',', $request->query->getString('ids')));
             $entities = $this->categoryManager->findByIds($ids);
             $categories = $this->categoryManager->getApiObjects($entities, $locale);
             $list = new CollectionRepresentation($categories, CategoryInterface::RESOURCE_KEY);
@@ -127,7 +124,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
 
     private function move($id, Request $request)
     {
-        $destination = $this->getRequestParameter($request, 'destination', true);
+        $destination = $request->query->get('destination') ?: throw new MissingParameterException(self::class, 'destination');
         if ('root' === $destination) {
             $destination = null;
         }
@@ -135,7 +132,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
         $category = $this->categoryManager->move($id, $destination);
 
         return $this->handleView($this->view(
-            $this->categoryManager->getApiObject($category, $request->get('locale')))
+            $this->categoryManager->getApiObject($category, $this->getLocale($request)))
         );
     }
 
@@ -170,21 +167,21 @@ class CategoryController extends AbstractRestController implements SecuredContro
      */
     protected function saveCategory(Request $request, $id = null, $patch = false)
     {
-        $mediasData = $request->get('medias');
+        $payload = $request->getPayload();
+        $mediasData = $payload->all('medias');
         $medias = null;
         if ($mediasData && \array_key_exists('ids', $mediasData)) {
             $medias = $mediasData['ids'];
         }
 
-        $locale = $this->getRequestParameter($request, 'locale', true);
+        $locale = $this->getLocale($request) ?: throw new MissingParameterException(self::class, 'locale');
         $data = [
             'id' => $id,
-            'name' => (empty($request->get('name'))) ? null : $request->get('name'),
-            'description' => (empty($request->get('description'))) ? null : $request->get('description'),
+            'name' => (empty($payload->get('name'))) ? null : $payload->get('name'),
+            'description' => (empty($payload->get('description'))) ? null : $payload->get('description'),
             'medias' => $medias,
-            'key' => (empty($request->get('key'))) ? null : $request->get('key'),
-            'meta' => $request->get('meta'),
-            'parent' => $request->get('parentId'),
+            'key' => (empty($payload->get('key'))) ? null : $payload->get('key'),
+            'parent' => $request->query->get('parentId') ?? $payload->get('parentId'),
         ];
         $entity = $this->categoryManager->save($data, null, $locale, $patch);
         $category = $this->categoryManager->getApiObject($entity, $locale);
@@ -232,7 +229,7 @@ class CategoryController extends AbstractRestController implements SecuredContro
             );
         }
 
-        $search = $request->get('search');
+        $search = $request->query->get('search');
 
         if (!$search) {
             // expand collected parents if search is not set

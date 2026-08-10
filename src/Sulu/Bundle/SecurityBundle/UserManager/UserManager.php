@@ -108,7 +108,7 @@ class UserManager implements UserManagerInterface
      * Creates a new user with the given data.
      *
      * @param array $data
-     * @param string $locale
+     * @param string|null $locale
      * @param null|int $id
      * @param bool $patch
      * @param bool $flush

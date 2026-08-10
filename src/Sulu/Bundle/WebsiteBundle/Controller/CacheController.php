@@ -24,29 +24,11 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CacheController
 {
-    /**
-     * @var CacheClearerInterface
-     */
-    private $cacheClearer;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
     public function __construct(
-        CacheClearerInterface $cacheClearer,
-        WebspaceManagerInterface $webspaceManager,
-        SecurityCheckerInterface $securityChecker
+        private CacheClearerInterface $cacheClearer,
+        private WebspaceManagerInterface $webspaceManager,
+        private SecurityCheckerInterface $securityChecker,
     ) {
-        $this->cacheClearer = $cacheClearer;
-        $this->webspaceManager = $webspaceManager;
-        $this->securityChecker = $securityChecker;
     }
 
     /**

@@ -48,11 +48,6 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
     protected $requestStack;
 
     /**
-     * @var string
-     */
-    protected $environment;
-
-    /**
      * TemplateAttributeResolver constructor.
      *
      * @param string $environment
@@ -63,14 +58,13 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
         WebspaceManagerInterface $webspaceManager,
         RouterInterface $router,
         RequestStack $requestStack,
-        $environment,
+        protected $environment,
     ) {
         $this->requestAnalyzer = $requestAnalyzer;
         $this->requestAnalyzerResolver = $requestAnalyzerResolver;
         $this->webspaceManager = $webspaceManager;
         $this->router = $router;
         $this->requestStack = $requestStack;
-        $this->environment = $environment;
     }
 
     public function resolve($customParameters = [])
