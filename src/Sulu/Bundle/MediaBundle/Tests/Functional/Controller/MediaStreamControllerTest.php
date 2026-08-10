@@ -11,9 +11,12 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManager;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
@@ -222,7 +225,28 @@ class MediaStreamControllerTest extends WebsiteTestCase
         $this->assertSame('sandbox', $response->headers->get('Content-Security-Policy'));
     }
 
-    public function testDownloadActionServesBenignTypeInlineWhenRequested(): void
+    #[DataProvider('dataDownloadActionWithoutCountingDownload')]
+    public function testDownloadActionWithoutCountingDownload(string $queryParameter, int $expectedCount): void
+    {
+        $filePath = $this->createMediaFile('test.jpg');
+        $media = $this->createMedia($filePath, 'test.jpg');
+
+        $this->client->request('GET', $media->getUrl() . $queryParameter);
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $this->assertSame($expectedCount, $this->getDownloadCount($media->getFileVersion()->getId()));
+    }
+
+    /** @return \Generator<string, array{string, int}> */
+    public static function dataDownloadActionWithoutCountingDownload(): \Generator
+    {
+        yield 'normal behaviour' => ['', 1];
+        yield 'no count' => ['&no-count=1', 0];
+    }
+
+    public function testDownloadActionServesBeignTypeInlineWhenRequested(): void
     {
         $filePath = $this->createMediaFile('test.jpg');
         $media = $this->createMedia($filePath, 'test.jpg');
@@ -320,6 +344,22 @@ class MediaStreamControllerTest extends WebsiteTestCase
     private function getCollectionManager(): CollectionManager
     {
         return $this->getContainer()->get('sulu_media.collection_manager');
+    }
+
+    private function getDownloadCount(int $fileVersionId): int
+    {
+        $em = $this->getContainer()->get(EntityManagerInterface::class);
+
+        $downloadCount = $em->createQueryBuilder()->select('fV.downloadCounter')
+            ->from(FileVersion::class, 'fV')
+            ->where('fV.id = :id')
+            ->setParameter('id', $fileVersionId)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+        $this->assertIsInt($downloadCount);
+
+        return $downloadCount;
     }
 
     private function createMediaFile(string $name, string $fileName = 'photo.jpeg'): string
