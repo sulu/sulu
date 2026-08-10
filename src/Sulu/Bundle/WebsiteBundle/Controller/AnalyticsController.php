@@ -144,6 +144,7 @@ class AnalyticsController extends AbstractRestController implements SecuredContr
 
     public function getSecurityContext()
     {
+        /** @var Request $request */
         $request = $this->requestStack->getCurrentRequest();
 
         return WebsiteAdmin::getAnalyticsSecurityContext($request->attributes->getString('webspace'));
