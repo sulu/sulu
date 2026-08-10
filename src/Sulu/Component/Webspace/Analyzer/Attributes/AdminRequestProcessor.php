@@ -31,8 +31,8 @@ class AdminRequestProcessor implements RequestProcessorInterface
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
         $attributes = [];
-        $attributes['webspaceKey'] = $request->get('webspace') ?: $request->get('webspaceKey');
-        $attributes['locale'] = $request->get('locale', $request->get('language'));
+        $attributes['webspaceKey'] = $this->getWebspaceKey($request);
+        $attributes['locale'] = $this->getLocale($request);
 
         $request->attributes->set(RequestAttributeEnum::WEBSPACE->value, $attributes['webspaceKey']); // TODO move in own request listener
 
@@ -58,5 +58,33 @@ class AdminRequestProcessor implements RequestProcessorInterface
     public function validate(RequestAttributes $attributes)
     {
         return true;
+    }
+
+    /**
+     * The webspace is either part of the route (e.g. "/admin/api/webspaces/{webspace}/analytics") or is sent
+     * as query parameter by the administration interface (e.g. "/admin/api/pages?webspace=example").
+     *
+     * Some routes and requests of the administration interface use "webspaceKey" as parameter name instead
+     * (e.g. "/admin/api/webspaces/{webspaceKey}" or "/admin/preview/render?webspaceKey=example"), therefore both
+     * parameter names are read from the route and from the query.
+     */
+    private function getWebspaceKey(Request $request): ?string
+    {
+        return $request->attributes->getString('webspace')
+            ?: $request->query->getString('webspace')
+            ?: $request->attributes->getString('webspaceKey')
+            ?: $request->query->getString('webspaceKey')
+            ?: null;
+    }
+
+    /**
+     * The locale is sent as query parameter by the administration interface, the "language" parameter is only
+     * kept as fallback for consumers which still use the parameter name of the sulu 1.x administration interface.
+     */
+    private function getLocale(Request $request): ?string
+    {
+        return $request->query->getString('locale')
+            ?: $request->query->getString('language')
+            ?: null;
     }
 }

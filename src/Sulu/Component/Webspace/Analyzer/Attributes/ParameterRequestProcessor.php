@@ -29,13 +29,18 @@ class ParameterRequestProcessor implements RequestProcessorInterface
 
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
-        if (!$request->get('_locale') || !$request->get('_portal')) {
+        // the "_locale" and "_portal" parameters are set as defaults of a route and are therefore
+        // available in the attributes of the request
+        $locale = $request->attributes->getString('_locale');
+        $portalKey = $request->attributes->getString('_portal');
+
+        if (!$locale || !$portalKey) {
             return new RequestAttributes();
         }
 
         $portalInformations = $this->webspaceManager->findPortalInformationsByPortalKeyAndLocale(
-            $request->get('_portal'),
-            $request->get('_locale'),
+            $portalKey,
+            $locale,
             $this->environment
         );
 
