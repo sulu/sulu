@@ -119,7 +119,6 @@ class TagTwigExtensionTest extends TestCase
         $requestReveal = $request->reveal();
         $requestReveal->query = new InputBag([$tagsParameter => $tagsString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
-        $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
@@ -165,7 +164,6 @@ class TagTwigExtensionTest extends TestCase
         $requestReveal = $request->reveal();
         $requestReveal->query = new InputBag([$tagsParameter => $tagsString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
-        $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
@@ -208,7 +206,6 @@ class TagTwigExtensionTest extends TestCase
         $requestReveal = $request->reveal();
         $requestReveal->query = new InputBag([$tagsParameter => $tagsString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
-        $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
