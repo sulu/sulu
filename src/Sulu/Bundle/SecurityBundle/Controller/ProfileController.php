@@ -176,7 +176,7 @@ class ProfileController
      */
     public function deleteSettingsAction(Request $request)
     {
-        $key = $request->query->getString('key');
+        $key = $request->getPayload()->getString('key');
 
         try {
             if (!$key) {

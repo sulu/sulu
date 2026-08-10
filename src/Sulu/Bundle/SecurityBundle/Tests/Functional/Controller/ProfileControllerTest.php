@@ -408,7 +408,8 @@ class ProfileControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'DELETE',
-            '/api/profile/settings?' . \http_build_query(['key' => 'setting-key'])
+            '/api/profile/settings',
+            ['key' => 'setting-key']
         );
 
         $userSetting = $this->client->getContainer()->get('sulu_security.user_setting_repository')->findOneBy(

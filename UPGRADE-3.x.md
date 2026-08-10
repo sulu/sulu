@@ -2,23 +2,6 @@
 
 ## 3.0.8
 
-### Security bundle endpoints read their parameters from a specific request bag
-
-The security controllers no longer use `Request::get()`, which accepted a parameter in the query string and in the
-request body alike. Every parameter is now read from the bag the admin frontend actually sends it in:
-
-| Endpoint | Parameter | Read from |
-| --- | --- | --- |
-| `DELETE /admin/api/profile/settings` | `key` | query |
-| `PATCH /admin/api/profile/settings` | all settings | body |
-| `PUT /admin/api/profile` | `firstName`, `lastName`, `username`, `email`, `locale`, `password`, `twoFactor` | body |
-| `PUT /admin/api/roles/{roleId}/settings/{key}` | `value` | body |
-| `GET /admin/api/users` | `flat`, `contactId` | query |
-| `POST /security/reset/email` | `user` | body |
-| `POST /security/reset` | `token`, `password` | body |
-
-Custom clients that passed one of these parameters in the other bag need to be adjusted.
-
 ### Route value is required when saving routable content
 
 `Sulu\Content\Domain\Model\RoutableInterface` gained the static method `isRouteMandatory()`. Classes using the `RoutableTrait` inherit the default `true`, other implementations need to add the method. When it returns `true`, saving a routable entity with an empty route value for its route field is rejected. Return `false` for resources that are allowed to live without a URL.
