@@ -89,8 +89,6 @@ interface MediaManagerInterface
      * Deletes a media with a given id.
      *
      * @param int $id the id of the category to delete
-     *
-     * @return void
      */
     public function delete($id, $checkSecurity = false);
 
@@ -112,8 +110,6 @@ interface MediaManagerInterface
      * Increase the download counter of a fileVersion.
      *
      * @param int $fileVersionId
-     *
-     * @return void
      */
     public function increaseDownloadCounter($fileVersionId);
 
