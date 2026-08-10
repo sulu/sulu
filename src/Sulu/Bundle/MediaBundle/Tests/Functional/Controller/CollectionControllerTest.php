@@ -689,9 +689,10 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'POST',
-            '/api/collections',
-            [
+            '/api/collections?' . \http_build_query([
                 'locale' => 'en-gb',
+            ]),
+            [
                 'style' => [
                     'type' => 'circle',
                     'color' => $generateColor,
@@ -786,9 +787,10 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'POST',
-            '/api/collections',
-            [
+            '/api/collections?' . \http_build_query([
                 'locale' => 'en-gb',
+            ]),
+            [
                 'style' => [
                     'type' => 'circle',
                     'color' => $generateColor,
@@ -902,9 +904,10 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/collections',
-            [
+            '/api/collections?' . \http_build_query([
                 'locale' => 'en-gb',
+            ]),
+            [
                 'style' => [
                     'type' => 'circle',
                     'color' => $generateColor,
@@ -933,9 +936,10 @@ class CollectionControllerTest extends SuluTestCase
     {
         $this->client->jsonRequest(
             'POST',
-            '/api/collections',
-            [
+            '/api/collections?' . \http_build_query([
                 'locale' => 'en',
+            ]),
+            [
                 'title' => 'Test Collection 2',
                 'type' => [
                     'id' => $this->collectionType1->getId(),
@@ -1052,7 +1056,9 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'POST',
-            '/api/collections',
+            '/api/collections?' . \http_build_query([
+                'locale' => 'en-gb',
+            ]),
             [
                 'style' => [
                     'type' => 'circle',
@@ -1063,7 +1069,6 @@ class CollectionControllerTest extends SuluTestCase
                 ],
                 'title' => 'Test Collection 2',
                 'description' => 'This Description 2 is only for testing',
-                'locale' => 'en-gb',
             ]
         );
 
@@ -1080,7 +1085,9 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'PUT',
-            '/api/collections/' . $this->collection1->getId(),
+            '/api/collections/' . $this->collection1->getId() . '?' . \http_build_query([
+                'locale' => 'en-gb',
+            ]),
             [
                 'style' => [
                     'type' => 'circle',
@@ -1091,7 +1098,6 @@ class CollectionControllerTest extends SuluTestCase
                 ],
                 'title' => 'Test Collection changed',
                 'description' => 'This Description is only for testing changed',
-                'locale' => 'en-gb',
             ]
         );
 
@@ -1192,7 +1198,10 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'PUT',
-            '/api/collections/' . $childCollection->getId() . '?breadcrumb=true',
+            '/api/collections/' . $childCollection->getId() . '?' . \http_build_query([
+                'locale' => 'en-gb',
+                'breadcrumb' => 'true',
+            ]),
             [
                 'style' => [
                     'type' => 'circle',
@@ -1203,7 +1212,6 @@ class CollectionControllerTest extends SuluTestCase
                 ],
                 'title' => 'Test Child Collection changed',
                 'description' => 'This Description is only for testing changed',
-                'locale' => 'en-gb',
             ]
         );
 
@@ -1227,7 +1235,9 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'PUT',
-            '/api/collections/' . $childCollection->getId(),
+            '/api/collections/' . $childCollection->getId() . '?' . \http_build_query([
+                'locale' => 'en-gb',
+            ]),
             [
                 'style' => [
                     'type' => 'circle',
@@ -1236,7 +1246,6 @@ class CollectionControllerTest extends SuluTestCase
                 'type' => ['id' => $this->collectionType1->getId()],
                 'title' => 'Test Child Collection changed',
                 'description' => 'This Description is only for testing changed',
-                'locale' => 'en-gb',
             ]
         );
 
@@ -1262,9 +1271,10 @@ class CollectionControllerTest extends SuluTestCase
         // Test put with only details
         $this->client->jsonRequest(
             'PUT',
-            '/api/collections/' . $this->collection1->getId(),
-            [
+            '/api/collections/' . $this->collection1->getId() . '?' . \http_build_query([
                 'locale' => 'en',
+            ]),
+            [
                 'style' => [
                     'type' => 'quader',
                     'color' => '#00ccff',
@@ -1297,9 +1307,10 @@ class CollectionControllerTest extends SuluTestCase
     {
         $this->client->jsonRequest(
             'PUT',
-            '/api/collections/404',
-            [
+            '/api/collections/404?' . \http_build_query([
                 'locale' => 'en',
+            ]),
+            [
                 'style' => [
                     'type' => 'quader',
                     'color' => '#00ccff',
@@ -1895,9 +1906,10 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'POST',
-            '/api/collections',
-            [
+            '/api/collections?' . \http_build_query([
                 'locale' => 'en-gb',
+            ]),
+            [
                 'type' => [
                     'id' => $this->collectionType1->getId(),
                 ],
@@ -1918,9 +1930,10 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'PUT',
-            '/api/collections/' . $collectionId,
-            [
+            '/api/collections/' . $collectionId . '?' . \http_build_query([
                 'locale' => 'en-gb',
+            ]),
+            [
                 'type' => [
                     'id' => $this->collectionType1->getId(),
                 ],

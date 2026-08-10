@@ -340,12 +340,12 @@ class CollectionController extends AbstractRestController implements SecuredCont
     protected function saveEntity($id, Request $request)
     {
         /** @var string|null $parent */
-        $parent = $request->query->get('parent') ?? $request->request->get('parent');
+        $parent = $request->request->get('parent');
         $breadcrumb = $request->query->getBoolean('breadcrumb');
 
         $this->checkSystemCollection($id, $parent);
 
-        if (!$request->request->has('locale')) {
+        if (!$request->query->has('locale')) {
             throw new MissingParameterException(self::class, 'locale');
         }
 
@@ -353,7 +353,7 @@ class CollectionController extends AbstractRestController implements SecuredCont
             $data = [
                 ...$this->getData($request),
                 'id' => $id,
-                'locale' => $request->request->get('locale'),
+                'locale' => $request->query->get('locale'),
             ];
 
             $collection = $this->collectionManager->save($data, $this->getUser()->getId(), $breadcrumb);
