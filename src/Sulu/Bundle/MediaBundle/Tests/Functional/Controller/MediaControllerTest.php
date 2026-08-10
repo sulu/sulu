@@ -882,9 +882,9 @@ class MediaControllerTest extends SuluTestCase
             'POST',
             '/api/media?' . \http_build_query([
                 'locale' => 'en-gb',
+                'collection' => $this->collection->getId(),
             ]),
             [
-                'collection' => $this->collection->getId(),
                 'title' => 'New Image Title',
                 'description' => 'New Image Description',
                 'copyright' => 'My copyright',
@@ -945,10 +945,9 @@ class MediaControllerTest extends SuluTestCase
             'POST',
             '/api/media?' . \http_build_query([
                 'locale' => 'en',
-            ]),
-            [
                 'collection' => $this->collection->getId(),
-            ],
+            ]),
+            [],
             [
                 'fileVersion' => $photo,
             ]
@@ -976,10 +975,9 @@ class MediaControllerTest extends SuluTestCase
             'POST',
             '/api/media?' . \http_build_query([
                 'locale' => 'en',
-            ]),
-            [
                 'collection' => $this->collection->getId(),
-            ],
+            ]),
+            [],
             [
                 'fileVersion' => $photo,
             ]
@@ -1006,10 +1004,9 @@ class MediaControllerTest extends SuluTestCase
             'POST',
             '/api/media?' . \http_build_query([
                 'locale' => 'en',
-            ]),
-            [
                 'collection' => $this->collection->getId(),
-            ],
+            ]),
+            [],
             [
                 'fileVersion' => $photo,
             ]
@@ -1039,9 +1036,9 @@ class MediaControllerTest extends SuluTestCase
             '/api/media/' . $media->getId() . '?' . \http_build_query([
                 'locale' => 'en-gb',
                 'action' => 'new-version',
+                'collection' => $this->collection->getId(),
             ]),
             [
-                'collection' => $this->collection->getId(),
                 'title' => 'New Image Title',
                 'description' => 'New Image Description',
                 'copyright' => 'My copyright',
@@ -1312,10 +1309,9 @@ class MediaControllerTest extends SuluTestCase
             '/api/media/' . $media->getId() . '?' . \http_build_query([
                 'locale' => 'en',
                 'action' => 'new-version',
-            ]),
-            [
                 'collection' => $this->collection->getId(),
-            ],
+            ]),
+            [],
             [
                 'fileVersion' => $photo,
             ]
