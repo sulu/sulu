@@ -32,7 +32,7 @@
                         "collection_id": {
                             "name": "collection_id",
                             "type": "expression",
-                            "value": 41
+                            "value": "@integer@"
                         }
                     },
                     "types": [],

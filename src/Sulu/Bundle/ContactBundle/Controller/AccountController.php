@@ -695,8 +695,8 @@ class AccountController extends AbstractRestController implements SecuredControl
             $accountModified = true;
         }
 
-        if (null !== $payload->get('bankAccounts')) {
-            $accountManager->processBankAccounts($account, $payload->all('bankAccounts', []));
+        if ($payload->has('bankAccounts')) {
+            $accountManager->processBankAccounts($account, $payload->all('bankAccounts'));
             $accountModified = true;
         }
 
@@ -779,7 +779,7 @@ class AccountController extends AbstractRestController implements SecuredControl
      */
     public function multipledeleteinfoAction(Request $request)
     {
-        $ids = $request->query->get('ids');
+        $ids = $request->query->all('ids');
 
         $response = [];
         $numContacts = 0;
@@ -883,7 +883,7 @@ class AccountController extends AbstractRestController implements SecuredControl
      */
     public function getAction($id, Request $request)
     {
-        $includes = \explode(',', $request->query->get('include'));
+        $includes = \explode(',', $request->query->getString('include'));
         $locale = $this->getUser()->getLocale();
 
         try {

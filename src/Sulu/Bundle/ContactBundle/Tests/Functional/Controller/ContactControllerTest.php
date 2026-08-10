@@ -410,9 +410,7 @@ class ContactControllerTest extends SuluTestCase
                     ['value' => 'Note 2'],
                 ],
                 'salutation' => 'Sehr geehrte Frau Dr Mustermann',
-                'formOfAddress' => [
-                    'id' => 0,
-                ],
+                'formOfAddress' => '0',
                 'categories' => [
                     $category1->getId(),
                     $category2->getId(),
@@ -582,9 +580,7 @@ class ContactControllerTest extends SuluTestCase
                         'longitude' => '',
                     ],
                 ],
-                'formOfAddress' => [
-                    'id' => 0,
-                ],
+                'formOfAddress' => '0',
             ]
         );
 
@@ -613,9 +609,7 @@ class ContactControllerTest extends SuluTestCase
                 'title' => $title->getId(),
                 'position' => $position->getId(),
                 'salutation' => 'Sehr geehrte Frau Dr Mustermann',
-                'formOfAddress' => [
-                    'id' => 0,
-                ],
+                'formOfAddress' => '0',
             ]
         );
 
@@ -1331,9 +1325,7 @@ class ContactControllerTest extends SuluTestCase
                     ],
                 ],
                 'salutation' => 'Sehr geehrter John',
-                'formOfAddress' => [
-                    'id' => 0,
-                ],
+                'formOfAddress' => '0',
             ]
         );
 
@@ -1457,9 +1449,7 @@ class ContactControllerTest extends SuluTestCase
                     ],
                 ],
                 'salutation' => 'Sehr geehrter John',
-                'formOfAddress' => [
-                    'id' => 0,
-                ],
+                'formOfAddress' => '0',
             ]
         );
 
@@ -1565,9 +1555,7 @@ class ContactControllerTest extends SuluTestCase
                     ],
                 ],
                 'salutation' => 'Sehr geehrter John',
-                'formOfAddress' => [
-                    'id' => 0,
-                ],
+                'formOfAddress' => '0',
             ]
         );
 
@@ -1668,9 +1656,7 @@ class ContactControllerTest extends SuluTestCase
                     ],
                 ],
                 'salutation' => 'Sehr geehrter John',
-                'formOfAddress' => [
-                    'id' => 0,
-                ],
+                'formOfAddress' => '0',
             ]
         );
 
@@ -1999,9 +1985,7 @@ class ContactControllerTest extends SuluTestCase
                     ],
                 ],
                 'salutation' => 'Sehr geehrter John',
-                'formOfAddress' => [
-                    'id' => 0,
-                ],
+                'formOfAddress' => '0',
             ]
         );
 
@@ -2249,9 +2233,7 @@ class ContactControllerTest extends SuluTestCase
                     ['value' => 'Note 2'],
                 ],
                 'salutation' => 'Sehr geehrte Frau Dr Mustermann',
-                'formOfAddress' => [
-                    'id' => 0,
-                ],
+                'formOfAddress' => '0',
             ]
         );
 
@@ -2398,9 +2380,7 @@ class ContactControllerTest extends SuluTestCase
                     ],
                 ],
                 'salutation' => 'Sehr geehrter John',
-                'formOfAddress' => [
-                    'id' => 0,
-                ],
+                'formOfAddress' => '0',
             ]
         );
 

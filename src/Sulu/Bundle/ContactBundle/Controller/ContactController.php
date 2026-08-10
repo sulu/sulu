@@ -422,13 +422,15 @@ class ContactController extends AbstractRestController implements SecuredControl
 
     private function checkArguments(Request $request)
     {
-        if (null === $request->getPayload()->get('firstName')) {
+        $payload = $request->getPayload();
+
+        if (null === $payload->get('firstName')) {
             throw new MissingArgumentException($this->contactClass, 'firstName');
         }
-        if (null === $request->getPayload()->get('lastName')) {
+        if (null === $payload->get('lastName')) {
             throw new MissingArgumentException($this->contactClass, 'lastName');
         }
-        if (null === $request->getPayload()->get('formOfAddress')) {
+        if (null === $payload->get('formOfAddress')) {
             throw new MissingArgumentException($this->contactClass, 'formOfAddress');
         }
     }

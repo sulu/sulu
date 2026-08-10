@@ -238,8 +238,10 @@ class ContactTitleController extends AbstractRestController implements SecuredCo
         try {
             $data = [];
 
+            $payload = $request->getPayload();
+
             $i = 0;
-            while ($item = $request->getPayload()->get($i)) {
+            while ($item = $payload->all((string) $i)) {
                 if (!isset($item['title'])) {
                     throw new RestException(
                         'There is no title-name for the given title'
