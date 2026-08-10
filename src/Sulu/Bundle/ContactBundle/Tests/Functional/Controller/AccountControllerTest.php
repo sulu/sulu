@@ -923,7 +923,7 @@ class AccountControllerTest extends SuluTestCase
                 'name' => 'ExampleCompany',
                 'note' => 'A small notice',
                 'logo' => ['id' => $logo->getId()],
-                'mainContact' => ['id' => $contact->getId()],
+                'mainContact' => $contact->getId(),
                 'contactDetails' => [
                     'websites' => [
                         [
