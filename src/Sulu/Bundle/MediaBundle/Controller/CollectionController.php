@@ -157,7 +157,7 @@ class CollectionController extends AbstractRestController implements SecuredCont
         $sortOrder = $this->listRestHelper->getSortOrder();
         $includeRoot = $request->query->getBoolean('includeRoot');
 
-        $locale = $request->query->get('locale') ?: throw new MissingParameterException(self::class, 'locale');
+        $locale = $this->getLocale($request) ?: throw new MissingParameterException(self::class, 'locale');
 
         if ('root' === $parentId) {
             $includeRoot = false;
@@ -298,7 +298,7 @@ class CollectionController extends AbstractRestController implements SecuredCont
     protected function moveEntity($id, Request $request)
     {
         $destinationId = (int) $request->query->get('destination');
-        $locale = $request->query->get('locale') ?: throw new MissingParameterException(self::class, 'locale');
+        $locale = $this->getLocale($request) ?: throw new MissingParameterException(self::class, 'locale');
 
         $collection = $this->collectionManager->move($id, $locale, $destinationId);
         $view = $this->view($collection);
@@ -320,7 +320,7 @@ class CollectionController extends AbstractRestController implements SecuredCont
             'style' => $request->request->all('style'),
             'type' => $type,
             'parent' => $request->request->get('parent'),
-            'locale' => $request->request->get('locale'),
+            'locale' => $this->getLocale($request),
             'title' => $request->request->get('title'),
             'description' => $request->request->get('description'),
 
