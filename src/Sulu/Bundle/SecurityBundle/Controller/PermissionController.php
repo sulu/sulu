@@ -38,16 +38,8 @@ class PermissionController
     public function cgetAction(Request $request)
     {
         try {
-            $identifier = $request->get('id');
-            $resourceKey = $request->get('resourceKey');
-
-            if (!$identifier) {
-                throw new MissingParameterException(static::class, 'id');
-            }
-
-            if (!$resourceKey) {
-                throw new MissingParameterException(static::class, 'resourceKey');
-            }
+            $identifier = $request->query->get('id') ?: throw new MissingParameterException(static::class, 'id');
+            $resourceKey = $request->query->getString('resourceKey') ?: throw new MissingParameterException(static::class, 'resourceKey');
 
             if (!$this->resources[$resourceKey]) {
                 throw new RestException('The resourceKey "' . $resourceKey . '" does not exist!');
@@ -71,26 +63,14 @@ class PermissionController
     public function cputAction(Request $request)
     {
         try {
-            $resourceKey = $request->get('resourceKey');
-            $identifier = $request->get('id');
-            $permissions = $request->get('permissions');
-            $webspace = $request->get('webspace');
+            $resourceKey = $request->query->getString('resourceKey') ?: throw new MissingParameterException(static::class, 'resourceKey');
+            $identifier = $request->query->getString('id') ?: throw new MissingParameterException(static::class, 'id');
+            $permissions = $request->getPayload()->all('permissions');
+            $webspace = $request->query->getString('webspace');
             $inherit = $request->query->getBoolean('inherit', false);
 
             $rawSecurityContext = $this->resources[$resourceKey]['security_context'] ?? null;
             $securityContext = $rawSecurityContext ? \str_replace('#webspace#', $webspace, $rawSecurityContext) : null;
-
-            if (!$identifier) {
-                throw new MissingParameterException(static::class, 'id');
-            }
-
-            if (!$resourceKey) {
-                throw new MissingParameterException(static::class, 'resourceKey');
-            }
-
-            if (!\is_array($permissions)) {
-                throw new RestException('The "permissions" must be passed as an array');
-            }
 
             if (!$this->resources[$resourceKey]) {
                 throw new RestException('The resourceKey "' . $resourceKey . '" does not exist!');
