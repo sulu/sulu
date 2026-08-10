@@ -63,6 +63,10 @@ class AdminRequestProcessor implements RequestProcessorInterface
     /**
      * The webspace is either part of the route (e.g. "/admin/api/webspaces/{webspace}/analytics") or is sent
      * as query parameter by the administration interface (e.g. "/admin/api/pages?webspace=example").
+     *
+     * Some routes and requests of the administration interface use "webspaceKey" as parameter name instead
+     * (e.g. "/admin/api/webspaces/{webspaceKey}" or "/admin/preview/render?webspaceKey=example"), therefore both
+     * parameter names are read from the route and from the query.
      */
     private function getWebspaceKey(Request $request): ?string
     {
