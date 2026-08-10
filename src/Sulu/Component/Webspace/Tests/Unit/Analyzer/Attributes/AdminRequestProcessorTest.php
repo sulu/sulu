@@ -73,6 +73,41 @@ class AdminRequestProcessorTest extends TestCase
         $this->assertEquals($localization, $result->getAttribute('localization'));
     }
 
+    public function testProcessWithWebspaceRouteAttribute(): void
+    {
+        $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $provider = new AdminRequestProcessor($webspaceManager->reveal(), 'prod');
+
+        $webspace = $this->prophesize(Webspace::class);
+        $webspace->getLocalization('de')->willReturn(Localization::createFromString('de'));
+        $webspaceManager->findWebspaceByKey('sulu_io')->willReturn($webspace->reveal());
+
+        $request = Request::create('/admin/api/webspaces/sulu_io/analytics?locale=de', 'GET', [], [], [], ['HTTP_HOST' => 'sulu.io']);
+        $request->attributes->set('webspace', 'sulu_io');
+
+        $result = $provider->process($request, new RequestAttributes());
+
+        $this->assertSame('sulu_io', $result->getAttribute('webspaceKey'));
+        $this->assertSame('de', $result->getAttribute('locale'));
+    }
+
+    public function testProcessWithWebspaceKeyQueryParameter(): void
+    {
+        $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $provider = new AdminRequestProcessor($webspaceManager->reveal(), 'prod');
+
+        $webspace = $this->prophesize(Webspace::class);
+        $webspace->getLocalization('de')->willReturn(Localization::createFromString('de'));
+        $webspaceManager->findWebspaceByKey('sulu_io')->willReturn($webspace->reveal());
+
+        $request = Request::create('/admin/preview/render?webspaceKey=sulu_io&locale=de', 'GET', [], [], [], ['HTTP_HOST' => 'sulu.io']);
+
+        $result = $provider->process($request, new RequestAttributes());
+
+        $this->assertSame('sulu_io', $result->getAttribute('webspaceKey'));
+        $this->assertSame('de', $result->getAttribute('locale'));
+    }
+
     public function testValidate(): void
     {
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
