@@ -28,10 +28,8 @@ abstract class AbstractMediaController extends AbstractRestController
     protected function getData(Request $request, $fallback = true)
     {
         $data = $request->request->all();
-        $data['locale'] = $request->get('locale', $fallback ? $this->getLocale($request) : null);
-        $data['collection'] = $request->get('collection');
-        $data['title'] = $request->get('title');
-        $data['formats'] = $request->get('formats', []);
+        $data['locale'] = $request->query->get('locale', $fallback ? $this->getLocale($request) : null);
+        $data['collection'] = $request->query->get('collection') ?: $request->getPayload()->get('collection');
 
         return $data;
     }
