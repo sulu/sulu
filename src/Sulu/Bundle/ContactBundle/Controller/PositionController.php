@@ -100,11 +100,11 @@ class PositionController extends AbstractRestController implements SecuredContro
         $name = $request->getPayload()->get('position');
 
         try {
-             if (null === $name) {
-                 throw new RestException(
-                     'There is no position-name for the given name',
-                 );
-             }
+            if (null === $name) {
+                throw new RestException(
+                    'There is no position-name for the given name',
+                );
+            }
 
             $position = new Position();
             $position->setPosition($name);
@@ -145,11 +145,9 @@ class PositionController extends AbstractRestController implements SecuredContro
             }
 
             $name = $request->getPayload()->get('position');
-
             if (empty($name)) {
                 throw new RestException('There is no position-name for the given name');
             }
-
             $position->setPosition($name);
 
             $this->domainEventCollector->collect(
