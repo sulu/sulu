@@ -134,7 +134,7 @@ class MediaStreamController
             }
 
             if ($request->query->has('inline')) {
-                $forceInline = $request->query->getBoolean('inline');
+                $forceInline = (bool) $request->query->get('inline', false);
                 $dispositionType = $forceInline ? ResponseHeaderBag::DISPOSITION_INLINE : ResponseHeaderBag::DISPOSITION_ATTACHMENT;
             } else {
                 $dispositionType = $this->dispositionTypeResolver->getByMimeType($fileVersion->getMimeType());
