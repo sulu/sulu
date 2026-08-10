@@ -351,8 +351,8 @@ class TagControllerTest extends SuluTestCase
         $tagIds = [$tag2Id, $tag3Id, $tag4Id];
         $this->client->jsonRequest(
             'POST',
-            '/api/tags/merge',
-            ['src' => \implode(',', $tagIds), 'dest' => $tag1Id]
+            '/api/tags/merge?' . \http_build_query(['src' => \implode(',', $tagIds), 'dest' => $tag1Id]),
+            []
         );
         $this->assertHttpStatusCode(303, $this->client->getResponse());
         $this->assertEquals('/api/tags/' . $tag1->getId(), $this->client->getResponse()->headers->get('location'));
@@ -390,8 +390,8 @@ class TagControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'POST',
-            '/api/tags/merge',
-            ['src' => 1233, 'dest' => $tag1->getId()]
+            '/api/tags/merge?' . \http_build_query(['src' => 1233, 'dest' => $tag1->getId()]),
+            []
         );
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
