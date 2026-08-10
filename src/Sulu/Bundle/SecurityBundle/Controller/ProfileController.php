@@ -78,14 +78,16 @@ class ProfileController
         $this->checkArguments($request);
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
-        $this->userManager->save($this->getData($request), $request->get('locale'), $user->getId(), true);
+        $payload = $request->getPayload();
 
-        $user->setFirstName((string) $request->request->get('firstName'));
-        $user->setLastName((string) $request->request->get('lastName'));
+        $this->userManager->save($this->getData($request), $payload->getString('locale'), $user->getId(), true);
+
+        $user->setFirstName($payload->getString('firstName'));
+        $user->setLastName($payload->getString('lastName'));
 
         if ($user instanceof TwoFactorInterface) {
             /** @var array{method?: string|null} $twoFactorData */
-            $twoFactorData = $request->request->all('twoFactor');
+            $twoFactorData = $payload->all('twoFactor');
             $twoFactorMethod = $twoFactorData['method'] ?? null;
 
             if ($twoFactorMethod) {
@@ -134,7 +136,7 @@ class ProfileController
      */
     public function patchSettingsAction(Request $request)
     {
-        $settings = $request->request->all();
+        $settings = $request->getPayload()->all();
 
         try {
             /** @var User $user */
@@ -174,7 +176,7 @@ class ProfileController
      */
     public function deleteSettingsAction(Request $request)
     {
-        $key = $request->get('key');
+        $key = $request->query->getString('key');
 
         try {
             if (!$key) {
@@ -209,19 +211,21 @@ class ProfileController
      */
     private function checkArguments(Request $request)
     {
-        if (null === $request->get('firstName')) {
+        $payload = $request->getPayload();
+
+        if (null === $payload->get('firstName')) {
             throw new MissingArgumentException($this->contactClass, 'firstName');
         }
-        if (null === $request->get('lastName')) {
+        if (null === $payload->get('lastName')) {
             throw new MissingArgumentException($this->contactClass, 'lastName');
         }
-        if (null === $request->get('username')) {
+        if (null === $payload->get('username')) {
             throw new MissingArgumentException($this->userClass, 'username');
         }
-        if (null === $request->get('email')) {
+        if (null === $payload->get('email')) {
             throw new MissingArgumentException($this->userClass, 'email');
         }
-        if (null === $request->get('locale')) {
+        if (null === $payload->get('locale')) {
             throw new MissingArgumentException($this->userClass, 'locale');
         }
     }
@@ -233,7 +237,7 @@ class ProfileController
     {
         $data = [];
 
-        foreach ($request->request->all() as $key => $value) {
+        foreach ($request->getPayload()->all() as $key => $value) {
             if (\in_array($key, ['firstName', 'lastName', 'username', 'email', 'password', 'locale'], true)) {
                 $data[$key] = $value;
             }

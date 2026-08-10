@@ -63,8 +63,11 @@ class RoleSettingController extends AbstractRestController implements SecuredCon
             $setting = $this->roleSettingRepository->createNew();
         }
 
+        // the value can be of any type (scalar or array), so neither `InputBag::get` nor `InputBag::all` can be used here
+        $payload = $request->getPayload()->all();
+
         $setting->setKey($key);
-        $setting->setValue($request->get('value', []));
+        $setting->setValue($payload['value'] ?? []);
         $setting->setRole($this->entityManager->getReference(Role::class, $roleId));
 
         $this->entityManager->persist($setting);
