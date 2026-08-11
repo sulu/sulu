@@ -24,20 +24,11 @@
     var MESSAGE_NAVIGATE = 'sulu.preview.navigate';
     var MESSAGE_READY = 'sulu.preview.ready';
 
-    function targetOrigin() {
-        if (document.referrer) {
-            try {
-                return new URL(document.referrer).origin;
-            } catch (error) {
-                // fall through to wildcard below
-            }
-        }
-
-        return '*';
-    }
-
+    // The preview iframe/window is always same-origin with the admin, so target it explicitly
+    // instead of falling back to a wildcard origin when document.referrer is unavailable
+    // (e.g. under a strict Referrer-Policy).
     function postToAdmin(message) {
-        adminWindow.postMessage(message, targetOrigin());
+        adminWindow.postMessage(message, window.location.origin);
     }
 
     function findAnchor(element) {
