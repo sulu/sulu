@@ -11,7 +11,7 @@ your own controllers instead of extending the class or using the trait, and inje
 require yourself.
 
 The `ApiWrapper` has been deprecated as well, as wrapping entities into API objects is no longer
-required. Use your own DTOs instead, or configure the serializer of your choice.
+recommended. Use your own DTOs instead, or configure the serializer of your choice.
 
 ### Two factor authentication via authenticator apps (TOTP)
 
