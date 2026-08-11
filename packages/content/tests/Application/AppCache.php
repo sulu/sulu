@@ -109,9 +109,16 @@ class AppCache extends SuluHttpCache implements KernelInterface
         return $this->kernel->getBuildDir();
     }
 
+    public function getShareDir(): ?string
+    {
+        // before Symfony 7.4 the method is not part of the KernelInterface but SuluKernel provides it already
+        return $this->kernel->getShareDir();
+    }
+
     public function getLogDir(): string
     {
-        return $this->kernel->getLogDir();
+        // the KernelInterface returns a nullable string since Symfony 8 but requires a string before
+        return $this->kernel->getLogDir() ?? '';
     }
 
     public function getCharset(): string
