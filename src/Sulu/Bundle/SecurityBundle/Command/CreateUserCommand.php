@@ -150,7 +150,7 @@ class CreateUserCommand extends Command
         return $this->userRepository->createNew();
     }
 
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output): void
     {
         $roleNames = $this->getRoleNames();
         $helper = $this->getHelper('question');
