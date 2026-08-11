@@ -111,6 +111,9 @@ class Preview extends React.Component<Props> {
     dataDisposer: () => mixed;
     localeDisposer: () => mixed;
 
+    unmounted: boolean = false;
+    renderedData: ?Object;
+
     @computed get webspaceKey() {
         const {
             formStore: {
@@ -292,7 +295,9 @@ class Preview extends React.Component<Props> {
             () => toJS(formStore.schema),
             () => {
                 if (formStore.type) {
-                    previewStore.updateContext(toJS(formStore.type), toJS(formStore.data)).then(this.setContent);
+                    const data = toJS(formStore.data);
+                    previewStore.updateContext(toJS(formStore.type), data)
+                        .then((previewContent) => this.setContent(previewContent, data));
                 }
             }
         );
@@ -301,15 +306,21 @@ class Preview extends React.Component<Props> {
     updatePreview = debounce((data: Object) => {
         if (this.shouldUpdateFormStore && !!this.previewStore.token) {
             const {previewStore} = this;
-            previewStore.update(data).then(this.setContent);
+            previewStore.update(data).then((previewContent) => this.setContent(previewContent, data));
         }
     }, Preview.debounceDelay);
 
-    setContent = (previewContent: string) => {
+    setContent = (previewContent: string, data: Object) => {
         const previewDocument = this.getPreviewDocument();
         if (!previewDocument) {
             return;
         }
+
+        // Tracked per-render (not read live from formStore.data) so warnAboutMissingDeepLinkAttributes
+        // compares the "ready" ids against the data that actually produced this content, rather than
+        // whatever the user has already typed since - which could otherwise flag ids that are simply
+        // not rendered yet as "missing" from the template.
+        this.renderedData = data;
 
         const preservedScrollPosition = this.getPreviewScrollPosition();
         previewDocument.open(); // This will lose in Firefox the and safari previewDocument.location
@@ -322,6 +333,7 @@ class Preview extends React.Component<Props> {
     };
 
     componentWillUnmount() {
+        this.unmounted = true;
         window.removeEventListener('message', this.handleMessage);
 
         this.disposeFormStoreReactions();
@@ -375,6 +387,14 @@ class Preview extends React.Component<Props> {
         // every entry needs to be expanded via a real click - including the target, since it may
         // itself be collapsed - before it can be scrolled into view.
         const expandNext = (index: number, mountAttempt: number = 0) => {
+            // The component may have unmounted (e.g. the sidebar was switched away from Preview)
+            // while a requestAnimationFrame callback below was still pending - rAF callbacks are
+            // not tied to React's lifecycle and would otherwise keep clicking/scrolling the still-
+            // mounted admin form after the user already left Preview.
+            if (this.unmounted) {
+                return;
+            }
+
             if (index >= idPath.length) {
                 const target = findBlockElement(idPath[idPath.length - 1]);
                 if (target) {
@@ -405,7 +425,7 @@ class Preview extends React.Component<Props> {
 
     warnAboutMissingDeepLinkAttributes = (renderedIds: $ReadOnlyArray<mixed>) => {
         const {formStore} = this.props;
-        const expectedIds = collectBlockIds(toJS(formStore.data));
+        const expectedIds = collectBlockIds(this.renderedData || toJS(formStore.data));
         const missingIds = Array.from(expectedIds).filter((id) => !renderedIds.includes(id));
 
         if (missingIds.length > 0) {
