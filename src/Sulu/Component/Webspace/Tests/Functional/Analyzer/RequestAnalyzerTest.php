@@ -26,8 +26,6 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\HttpFoundation\InputBag;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -244,10 +242,7 @@ class RequestAnalyzerTest extends TestCase
         $this->webspaceManager->findPortalInformationsByUrl(Argument::any(), Argument::any())->willReturn([]);
         $this->webspaceManager->getPortalInformations(Argument::any())->willReturn([]);
 
-        $request = $this->getMockBuilder(Request::class)->getMock();
-        $request->request = new InputBag(['post' => 1]);
-        $request->query = new InputBag(['get' => 1]);
-        $request->attributes = new ParameterBag();
+        $request = new Request(['get' => 1], ['post' => 1]);
 
         $this->requestAnalyzer->analyze($request);
         $this->requestAnalyzer->validate($request);
