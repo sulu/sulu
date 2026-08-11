@@ -26,7 +26,7 @@ class CategoryRequestHandler implements CategoryRequestHandlerInterface
     public function getCategories($categoriesParameter = 'categories')
     {
         if (null !== $this->requestStack->getCurrentRequest()) {
-            $categories = $this->requestStack->getCurrentRequest()->get($categoriesParameter, '');
+            $categories = $this->requestStack->getCurrentRequest()->query->get($categoriesParameter, '');
         } else {
             $categories = '';
         }
