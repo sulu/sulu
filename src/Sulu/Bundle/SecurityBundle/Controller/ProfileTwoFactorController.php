@@ -31,6 +31,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class ProfileTwoFactorController
 {
     /**
+     * @internal
+     *
      * The option holding the confirmed secret and the option holding the not yet
      * confirmed secret per authenticator app based two factor method.
      */

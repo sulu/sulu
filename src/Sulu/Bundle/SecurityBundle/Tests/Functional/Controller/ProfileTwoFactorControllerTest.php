@@ -30,6 +30,22 @@ class ProfileTwoFactorControllerTest extends SuluTestCase
         $this->purgeDatabase();
     }
 
+    /**
+     * Generates a TOTP code, waiting out a period boundary if necessary, so the code does
+     * not expire between generating it here and verifying it in the request below.
+     */
+    private function generateCode(string $secret): string
+    {
+        $totp = TOTP::create($secret);
+        $period = $totp->getPeriod();
+
+        while (($period - (\time() % $period)) < 5) {
+            \usleep(200000);
+        }
+
+        return $totp->now();
+    }
+
     public function testTotpSetup(): void
     {
         $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'totp']);
@@ -57,7 +73,7 @@ class ProfileTwoFactorControllerTest extends SuluTestCase
         /** @var array{secret: non-empty-string} $setupResponse */
         $setupResponse = \json_decode((string) $this->client->getResponse()->getContent(), true);
 
-        $code = TOTP::create($setupResponse['secret'])->now();
+        $code = $this->generateCode($setupResponse['secret']);
 
         $this->client->jsonRequest('POST', '/api/profile/two-factor/confirm', ['method' => 'totp', 'code' => $code]);
 
@@ -121,7 +137,7 @@ class ProfileTwoFactorControllerTest extends SuluTestCase
         /** @var array{secret: non-empty-string} $setupResponse */
         $setupResponse = \json_decode((string) $this->client->getResponse()->getContent(), true);
 
-        $code = TOTP::create($setupResponse['secret'])->now();
+        $code = $this->generateCode($setupResponse['secret']);
 
         $this->client->jsonRequest('POST', '/api/profile/two-factor/confirm', ['method' => 'google', 'code' => $code]);
 
