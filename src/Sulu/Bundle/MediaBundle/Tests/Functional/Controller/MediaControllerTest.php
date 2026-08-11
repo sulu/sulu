@@ -880,10 +880,11 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/media',
-            [
-                'collection' => $this->collection->getId(),
+            '/api/media?' . \http_build_query([
                 'locale' => 'en-gb',
+                'collection' => $this->collection->getId(),
+            ]),
+            [
                 'title' => 'New Image Title',
                 'description' => 'New Image Description',
                 'copyright' => 'My copyright',
@@ -942,11 +943,11 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/media',
-            [
+            '/api/media?' . \http_build_query([
                 'locale' => 'en',
                 'collection' => $this->collection->getId(),
-            ],
+            ]),
+            [],
             [
                 'fileVersion' => $photo,
             ]
@@ -972,11 +973,11 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/media',
-            [
+            '/api/media?' . \http_build_query([
                 'locale' => 'en',
                 'collection' => $this->collection->getId(),
-            ],
+            ]),
+            [],
             [
                 'fileVersion' => $photo,
             ]
@@ -1001,11 +1002,11 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/media',
-            [
+            '/api/media?' . \http_build_query([
                 'locale' => 'en',
                 'collection' => $this->collection->getId(),
-            ],
+            ]),
+            [],
             [
                 'fileVersion' => $photo,
             ]
@@ -1032,10 +1033,12 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/media/' . $media->getId() . '?action=new-version',
-            [
-                'collection' => $this->collection->getId(),
+            '/api/media/' . $media->getId() . '?' . \http_build_query([
                 'locale' => 'en-gb',
+                'action' => 'new-version',
+                'collection' => $this->collection->getId(),
+            ]),
+            [
                 'title' => 'New Image Title',
                 'description' => 'New Image Description',
                 'copyright' => 'My copyright',
@@ -1074,7 +1077,10 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/media/' . $media->getId() . '?locale=en&action=new-version',
+            '/api/media/' . $media->getId() . '?' . \http_build_query([
+                'locale' => 'en',
+                'action' => 'new-version',
+            ]),
             [],
             [
                 'fileVersion' => $photo,
@@ -1086,14 +1092,18 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'DELETE',
-            '/api/media/' . $mediaId . '/versions/1?locale=en'
+            '/api/media/' . $mediaId . '/versions/1?' . \http_build_query([
+                'locale' => 'en',
+            ]),
         );
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
         $this->client->jsonRequest(
             'GET',
-            '/api/media/' . $mediaId . '?locale=en'
+            '/api/media/' . $mediaId . '?' . \http_build_query([
+                'locale' => 'en',
+            ]),
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -1108,7 +1118,9 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'DELETE',
-            '/api/media/' . $media->getId() . '/versions/1?locale=en'
+            '/api/media/' . $media->getId() . '/versions/1?' . \http_build_query([
+                'locale' => 'en',
+            ]),
         );
 
         $this->assertHttpStatusCode(400, $this->client->getResponse());
@@ -1120,7 +1132,9 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'DELETE',
-            '/api/media/' . $media->getId() . '/versions/2?locale=en'
+            '/api/media/' . $media->getId() . '/versions/2?' . \http_build_query([
+                'locale' => 'en',
+            ]),
         );
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
@@ -1136,7 +1150,10 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/media/' . $media->getId() . '?locale=en&action=new-version',
+            '/api/media/' . $media->getId() . '?' . \http_build_query([
+                'locale' => 'en',
+                'action' => 'new-version',
+            ]),
             [],
             [
                 'fileVersion' => $photo,
@@ -1148,7 +1165,9 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'DELETE',
-            '/api/media/' . $media->getId() . '/versions/2?locale=en'
+            '/api/media/' . $media->getId() . '/versions/2?' . \http_build_query([
+                'locale' => 'en',
+            ]),
         );
 
         $this->assertHttpStatusCode(400, $this->client->getResponse());
@@ -1160,7 +1179,9 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'PUT',
-            '/api/media/' . $media->getId() . '?locale=de',
+            '/api/media/' . $media->getId() . '?' . \http_build_query([
+                'locale' => 'de',
+            ]),
             [
                 'description' => null,
                 'copyright' => null,
@@ -1195,7 +1216,9 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'PUT',
-            '/api/media/' . $media->getId() . '?locale=en',
+            '/api/media/' . $media->getId() . '?' . \http_build_query([
+                'locale' => 'en',
+            ]),
             [
                 'targetGroups' => [],
             ]
@@ -1216,10 +1239,11 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'PUT',
-            '/api/media/' . $media->getId(),
+            '/api/media/' . $media->getId() . '?' . \http_build_query([
+                'locale' => 'en-gb',
+            ]),
             [
                 'collection' => $this->collection->getId(),
-                'locale' => 'en-gb',
                 'title' => 'Update Title',
                 'description' => 'Update Description',
                 'copyright' => 'My copyright',
@@ -1262,7 +1286,9 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/media/' . $mediaId . '?locale=en'
+            '/api/media/' . $mediaId . '?' . \http_build_query([
+                'locale' => 'en',
+            ]),
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -1280,10 +1306,12 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/media/' . $media->getId() . '?locale=en&action=new-version',
-            [
+            '/api/media/' . $media->getId() . '?' . \http_build_query([
+                'locale' => 'en',
+                'action' => 'new-version',
                 'collection' => $this->collection->getId(),
-            ],
+            ]),
+            [],
             [
                 'fileVersion' => $photo,
             ]
@@ -1311,12 +1339,19 @@ class MediaControllerTest extends SuluTestCase
         $mediaId = $media->getId();
         $this->assertFileExists($this->getStoragePath() . '/1/photo.jpeg');
 
-        $this->client->jsonRequest('DELETE', '/api/media/' . $mediaId);
+        $this->client->jsonRequest(
+            'DELETE',
+            '/api/media/' . $mediaId . '?' . \http_build_query([
+                'locale' => 'en-gb',
+            ]),
+        );
         $this->assertNotNull($this->client->getResponse()->getStatusCode());
 
         $this->client->jsonRequest(
             'GET',
-            '/api/media/' . $mediaId . '?locale=en-gb'
+            '/api/media/' . $mediaId . '?' . \http_build_query([
+                'locale' => 'en-gb',
+            ]),
         );
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());

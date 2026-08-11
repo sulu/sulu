@@ -112,7 +112,7 @@ class ResettingController
     public function sendEmailAction(Request $request)
     {
         try {
-            $user = $this->findUser($request->get('user'));
+            $user = $this->findUser($request->getPayload()->getString('user'));
             $maxNumberEmails = $this->tokenSendLimit;
 
             if (new \DateTime() >= $user->getPasswordResetTokenExpiresAt()) {
@@ -145,15 +145,16 @@ class ResettingController
     public function resetAction(Request $request)
     {
         try {
-            $token = $request->get('token');
+            $payload = $request->getPayload();
+            $token = $payload->getString('token');
 
-            if (null == $token) {
+            if ('' === $token) {
                 throw new NoTokenFoundException();
             }
 
             /** @var User $user */
             $user = $this->findUserByValidToken($this->generateTokenHash($token));
-            $this->changePassword($user, $request->get('password', ''));
+            $this->changePassword($user, $payload->getString('password'));
             $this->deleteToken($user);
             $this->loginUser($user, $request);
             $response = new JsonResponse(['user' => $user->getUsername()]);

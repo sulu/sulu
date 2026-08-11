@@ -133,7 +133,7 @@ class AnalyticsController extends AbstractRestController implements SecuredContr
      */
     public function cdeleteAction(Request $request, string $webspace)
     {
-        $ids = \array_filter(\explode(',', $request->get('ids', '')));
+        $ids = \array_filter(\explode(',', $request->query->getString('ids', '')));
 
         $this->analyticsManager->removeMultiple($ids);
         $this->entityManager->flush();
@@ -144,9 +144,10 @@ class AnalyticsController extends AbstractRestController implements SecuredContr
 
     public function getSecurityContext()
     {
+        /** @var Request $request */
         $request = $this->requestStack->getCurrentRequest();
 
-        return WebsiteAdmin::getAnalyticsSecurityContext($request->get('webspace'));
+        return WebsiteAdmin::getAnalyticsSecurityContext($request->attributes->getString('webspace'));
     }
 
     private function buildContent(array $data)

@@ -16,7 +16,10 @@ use Sulu\Component\Rest\Exception\ParameterDataTypeException;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * handles request parameters.
+ * Handles request parameters.
+ *
+ * @deprecated since Sulu 2.6, use $request->query->get(), $request->request->get(),
+ *             $request->attributes->get() or $request->getPayload()->get() instead.
  */
 trait RequestParametersTrait
 {

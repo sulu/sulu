@@ -280,7 +280,7 @@ class UserController extends AbstractRestController implements SecuredController
     public function cgetAction(Request $request)
     {
         $view = null;
-        if ('true' == $request->get('flat')) {
+        if ('true' == $request->query->get('flat')) {
             $listBuilder = $this->doctrineListBuilderFactory->create($this->userClass);
 
             $this->restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
@@ -294,7 +294,7 @@ class UserController extends AbstractRestController implements SecuredController
             );
             $view = $this->view($list, 200);
         } else {
-            $contactId = $request->get('contactId');
+            $contactId = $request->query->get('contactId');
 
             if (null != $contactId) {
                 $user = $this->entityManager->getRepository($this->userClass)->findUserByContact($contactId);

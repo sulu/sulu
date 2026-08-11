@@ -107,9 +107,9 @@ class MediaStreamController
                 \ob_end_clean();
             }
 
-            $version = $request->get('v', null);
+            $version = $request->query->get('v', null);
             $version = \is_numeric($version) ? ((int) $version) : null;
-            $noCount = $request->get('no-count', false);
+            $noCount = $request->query->get('no-count', false);
 
             $fileVersion = $this->getFileVersion($id, $version);
 
@@ -134,7 +134,7 @@ class MediaStreamController
             }
 
             if ($request->query->has('inline')) {
-                $forceInline = (bool) $request->get('inline', false);
+                $forceInline = (bool) $request->query->get('inline', false);
                 $dispositionType = $forceInline ? ResponseHeaderBag::DISPOSITION_INLINE : ResponseHeaderBag::DISPOSITION_ATTACHMENT;
             } else {
                 $dispositionType = $this->dispositionTypeResolver->getByMimeType($fileVersion->getMimeType());
