@@ -47,10 +47,5 @@ return static function(ContainerConfigurator $container) {
 
     $services->set('sulu_core.proxy_manager.file_locator', FileLocator::class)
         ->private()
-        // Use the "%sulu_core.proxy_cache_dir%" parameter directly instead of reading it back from the
-        // "sulu_core.proxy_manager.configuration" service. Both resolve to the same value, but going through
-        // the service creates a circular reference (configuration -> file_writer_generator_strategy ->
-        // file_locator -> configuration) that the Symfony DI dumper can compile into an infinitely recursing
-        // container factory method.
         ->args(['%sulu_core.proxy_cache_dir%']);
 };
