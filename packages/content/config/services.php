@@ -44,6 +44,7 @@ use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactory;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface;
 use Sulu\Content\Infrastructure\Sulu\HttpCache\EventSubscriber\DimensionContentTagSubscriber;
 use Sulu\Content\Infrastructure\Sulu\Page\Select\WebspaceSelect;
+use Sulu\Content\Infrastructure\Symfony\Twig\PreviewDeepLinkExtension;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -197,4 +198,9 @@ return static function(ContainerConfigurator $container) {
         ]);
 
     $services->alias(ContentManagerInterface::class, 'sulu_content.content_manager');
+
+    // Twig Extensions
+    $services->set('sulu_content.preview_deep_link_twig_extension', PreviewDeepLinkExtension::class)
+        ->args([new Reference('request_stack')])
+        ->tag('twig.extension');
 };
