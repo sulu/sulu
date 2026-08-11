@@ -15,6 +15,9 @@ use JMS\Serializer\Annotation\Exclude;
 
 /**
  * The abstract base class for an API object, which wraps another entity.
+ *
+ * @deprecated since Sulu 2.6, the usage of ApiWrapper is no longer required.
+ *             Use your own DTOs instead or configure the serializer of your choice.
  */
 class ApiWrapper
 {

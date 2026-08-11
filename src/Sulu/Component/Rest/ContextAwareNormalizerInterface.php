@@ -15,11 +15,20 @@ use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface as S
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 if (\class_exists(SymfonyContextAwareNormalizerInterface::class)) {
-    // BC Layer for Symfony <= 6.4: https://github.com/symfony/symfony/blob/7.1/UPGRADE-7.0.md#serializer
+    /**
+     * @internal This is just a BC layer for Symfony <= 6.4, please use the Symfony interface instead.
+     *
+     * @see https://github.com/symfony/symfony/blob/7.1/UPGRADE-7.0.md#serializer
+     */
     interface ContextAwareNormalizerInterface extends SymfonyContextAwareNormalizerInterface
     {
     }
 } else {
+    /**
+     * @internal This is just a BC layer for Symfony <= 6.4, please use the Symfony interface instead.
+     *
+     * @see https://github.com/symfony/symfony/blob/7.1/UPGRADE-7.0.md#serializer
+     */
     interface ContextAwareNormalizerInterface extends NormalizerInterface
     {
     }

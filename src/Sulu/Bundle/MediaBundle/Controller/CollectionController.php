@@ -27,7 +27,6 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
-use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -43,8 +42,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class CollectionController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
 {
-    use RequestParametersTrait;
-
     /**
      * @var string
      */
@@ -71,15 +68,6 @@ class CollectionController extends AbstractRestController implements ClassResour
     ) {
         parent::__construct($viewHandler, $tokenStorage);
 
-        $this->listRestHelper = $listRestHelper;
-        $this->securityChecker = $securityChecker;
-        $this->translator = $translator;
-        $this->systemCollectionManager = $systemCollectionManager;
-        $this->collectionManager = $collectionManager;
-        $this->defaultCollectionType = $defaultCollectionType;
-        $this->permissions = $permissions;
-        $this->collectionClass = $collectionClass;
-
         if (!$this->collectionClass) {
             $this->collectionClass = CollectionEntity::class;
 
@@ -96,17 +84,24 @@ class CollectionController extends AbstractRestController implements ClassResour
     /**
      * Shows a single collection with the given id.
      *
+     * > Note: If you provide a non existing id you will get
+     * >
+     * > tree version: an empty collection and status code 200
+     * > flat version: an error message and status code 400
+     *
      * @param int $id
      *
      * @return Response
      */
     public function getAction($id, Request $request)
     {
-        if ($this->getBooleanRequestParameter($request, 'tree', false, false)) {
-            $collections = $this->collectionManager->getTreeById(
-                $id,
-                $this->getRequestParameter($request, 'locale', true)
-            );
+        $locale = $this->getLocale($request);
+        if (null === $locale) {
+            throw new MissingParameterException(self::class, 'locale');
+        }
+
+        if ($request->query->getBoolean('tree')) {
+            $collections = $this->collectionManager->getTreeById($id, $locale);
 
             return $this->handleView(
                 $this->view(
@@ -115,28 +110,25 @@ class CollectionController extends AbstractRestController implements ClassResour
             );
         }
 
+        $depth = $request->query->getInt('depth');
+        $breadcrumb = $request->query->getBoolean('breadcrumb');
+        $children = $request->query->getBoolean('children');
+
+        // filter children
+        $limit = $this->listRestHelper->getLimit();
+        /** @var int $offset */
+        $offset = $this->listRestHelper->getOffset();
+        $search = $this->listRestHelper->getSearchPattern();
+        $sortBy = $this->listRestHelper->getSortColumn() ?? 'title';
+        $sortOrder = $this->listRestHelper->getSortOrder();
+
+        $filter = [
+            'limit' => $limit,
+            'offset' => $offset,
+            'search' => $search,
+        ];
+
         try {
-            $locale = $this->getRequestParameter($request, 'locale', true);
-            $depth = \intval($this->getRequestParameter($request, 'depth', false, 0));
-            $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
-            $children = $this->getBooleanRequestParameter($request, 'children', false, false);
-
-            // filter children
-            /** @var int|null $limit */
-            $limit = $request->get('limit', null);
-            $offset = $this->getOffset($request, $limit);
-            $search = $this->listRestHelper->getSearchPattern();
-            /** @var string|null $sortBy */
-            $sortBy = $request->get('sortBy', 'title');
-            /** @var string $sortOrder */
-            $sortOrder = $request->get('sortOrder', 'ASC');
-
-            $filter = [
-                'limit' => $limit,
-                'offset' => $offset,
-                'search' => $search,
-            ];
-
             $view = $this->responseGetById(
                 $id,
                 function($id) use ($locale, $depth, $breadcrumb, $filter, $sortBy, $sortOrder, $children) {
@@ -146,7 +138,7 @@ class CollectionController extends AbstractRestController implements ClassResour
                         $depth,
                         $breadcrumb,
                         $filter,
-                        null !== $sortBy ? [$sortBy => $sortOrder] : [],
+                        [$sortBy => $sortOrder],
                         $children,
                         $this->permissions[PermissionTypes::VIEW]
                     );
@@ -175,44 +167,44 @@ class CollectionController extends AbstractRestController implements ClassResour
      */
     public function cgetAction(Request $request)
     {
+        $depth = $request->query->getInt('depth');
+        $parentId = $request->query->get('parentId', null);
+        $limit = $this->listRestHelper->getLimit();
+
+        /** @var int $offset */
+        $offset = $this->listRestHelper->getOffset();
+        $search = $this->listRestHelper->getSearchPattern();
+        $sortBy = $this->listRestHelper->getSortColumn() ?? 'title';
+        $sortOrder = $this->listRestHelper->getSortOrder();
+        $includeRoot = $request->query->getBoolean('includeRoot');
+
+        $locale = $request->query->get('locale') ?: throw new MissingParameterException(self::class, 'locale');
+
+        if ('root' === $parentId) {
+            $includeRoot = false;
+            $parentId = null;
+        }
+
         try {
-            $flat = $this->getBooleanRequestParameter($request, 'flat', false);
-            $depth = $request->get('depth', 0);
-            $parentId = $request->get('parentId', null);
-            /** @var int|null $limit */
-            $limit = $request->get('limit', null);
-            $offset = $this->getOffset($request, $limit);
-            $search = $this->listRestHelper->getSearchPattern();
-            /** @var string|null $sortBy */
-            $sortBy = $request->get('sortBy', 'title');
-            /** @var string $sortOrder */
-            $sortOrder = $request->get('sortOrder', 'ASC');
-            $includeRoot = $this->getBooleanRequestParameter($request, 'includeRoot', false, false);
-
-            if ('root' === $parentId) {
-                $includeRoot = false;
-                $parentId = null;
-            }
-
-            if ($flat) {
+            if ($request->query->getBoolean('flat')) {
                 $collections = $this->collectionManager->get(
-                    $this->getRequestParameter($request, 'locale', true),
+                    $locale,
                     [
                         'depth' => $depth,
                         'parent' => $parentId,
                     ],
                     $limit,
                     $offset,
-                    null !== $sortBy ? [$sortBy => $sortOrder] : []
+                    [$sortBy => $sortOrder],
                 );
             } else {
                 $collections = $this->collectionManager->getTree(
-                    $this->getRequestParameter($request, 'locale', true),
+                    $locale,
                     $offset,
                     $limit,
                     $search,
                     $depth,
-                    null !== $sortBy ? [$sortBy => $sortOrder] : [],
+                    [$sortBy => $sortOrder],
                     $this->securityChecker->hasPermission('sulu.media.system_collections', 'view'),
                     $this->permissions[PermissionTypes::VIEW]
                 );
@@ -227,8 +219,6 @@ class CollectionController extends AbstractRestController implements ClassResour
                 ];
             }
 
-            $all = $this->collectionManager->getCount();
-
             $list = new ListRepresentation(
                 $collections,
                 CollectionInterface::RESOURCE_KEY,
@@ -236,7 +226,7 @@ class CollectionController extends AbstractRestController implements ClassResour
                 $request->query->all(),
                 $this->listRestHelper->getPage(),
                 $this->listRestHelper->getLimit(),
-                $all
+                $this->collectionManager->getCount(),
             );
 
             $view = $this->view($list, 200);
@@ -281,7 +271,7 @@ class CollectionController extends AbstractRestController implements ClassResour
     public function deleteAction($id, Request $request)
     {
         /** @var string|null $parent */
-        $parent = $request->get('parent');
+        $parent = $request->query->get('parent');
 
         $this->checkSystemCollection($id, $parent);
 
@@ -330,8 +320,9 @@ class CollectionController extends AbstractRestController implements ClassResour
      */
     protected function moveEntity($id, Request $request)
     {
-        $destinationId = $this->getRequestParameter($request, 'destination');
-        $locale = $this->getRequestParameter($request, 'locale', true);
+        $destinationId = (int) $request->query->get('destination');
+        $locale = $request->query->get('locale') ?: throw new MissingParameterException(self::class, 'locale');
+
         $collection = $this->collectionManager->move($id, $locale, $destinationId);
         $view = $this->view($collection);
 
@@ -343,17 +334,24 @@ class CollectionController extends AbstractRestController implements ClassResour
      */
     protected function getData(Request $request)
     {
+        $type = $this->defaultCollectionType;
+        if ($request->request->has('type')) {
+            $type = $request->request->all('type');
+        }
+
         return [
-            'style' => $request->get('style'),
-            'type' => $request->get('type', $this->defaultCollectionType),
-            'parent' => $request->get('parent'),
-            'locale' => $this->getRequestParameter($request, 'locale', true),
-            'title' => $request->get('title'),
-            'description' => $request->get('description'),
-            'changer' => $request->get('changer'),
-            'creator' => $request->get('creator'),
-            'changed' => $request->get('changed'),
-            'created' => $request->get('created'),
+            'style' => $request->request->all('style'),
+            'type' => $type,
+            'parent' => $request->request->get('parent'),
+            'locale' => $request->request->get('locale'),
+            'title' => $request->request->get('title'),
+            'description' => $request->request->get('description'),
+
+            // These will be overridden in the CollectionManager::save function anyways
+            'changer' => $request->request->get('changer'),
+            'creator' => $request->request->get('creator'),
+            'changed' => $request->request->get('changed'),
+            'created' => $request->request->get('created'),
         ];
     }
 
@@ -365,16 +363,21 @@ class CollectionController extends AbstractRestController implements ClassResour
     protected function saveEntity($id, Request $request)
     {
         /** @var string|null $parent */
-        $parent = $request->get('parent');
-        $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
+        $parent = $request->query->get('parent') ?? $request->request->get('parent');
+        $breadcrumb = $request->query->getBoolean('breadcrumb');
 
         $this->checkSystemCollection($id, $parent);
 
-        try {
-            $data = $this->getData($request);
-            $data['id'] = $id;
+        if (!$request->request->has('locale')) {
+            throw new MissingParameterException(self::class, 'locale');
+        }
 
-            $data['locale'] = $this->getRequestParameter($request, 'locale', true);
+        try {
+            $data = [
+                ...$this->getData($request),
+                'id' => $id,
+                'locale' => $request->request->get('locale'),
+            ];
 
             $collection = $this->collectionManager->save($data, $this->getUser()->getId(), $breadcrumb);
 
@@ -402,18 +405,6 @@ class CollectionController extends AbstractRestController implements ClassResour
     }
 
     /**
-     * @param int|null $limit
-     *
-     * @return int
-     */
-    private function getOffset(Request $request, $limit)
-    {
-        $page = $request->get('page', 1);
-
-        return (null !== $limit) ? $limit * ($page - 1) : 0;
-    }
-
-    /**
      * @return string
      */
     public function getSecurityContext()
@@ -431,6 +422,6 @@ class CollectionController extends AbstractRestController implements ClassResour
 
     public function getSecuredObjectId(Request $request)
     {
-        return $request->get('id') ?: $request->get('parent');
+        return $request->attributes->get('id') ?: $request->request->get('parent') ?: $request->query->get('parent');
     }
 }

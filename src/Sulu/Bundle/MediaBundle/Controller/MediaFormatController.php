@@ -17,7 +17,6 @@ use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
-use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,8 +25,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class MediaFormatController extends AbstractRestController implements ClassResourceInterface
 {
-    use RequestParametersTrait;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
         private FormatOptionsManagerInterface $formatOptionsManager,

@@ -14,15 +14,12 @@ namespace Sulu\Bundle\PreviewBundle\UserInterface\Controller;
 use Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
-use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
 use Twig\Environment;
 
 class PublicPreviewController
 {
-    use RequestParametersTrait;
-
     public function __construct(
         private PreviewRendererInterface $previewRenderer,
         private PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry,
