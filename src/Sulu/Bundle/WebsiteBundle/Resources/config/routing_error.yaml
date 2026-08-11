@@ -1,3 +1,13 @@
-_errors:
-    resource: "@FrameworkBundle/Resources/config/routing/errors.xml"
-    prefix:   /_error
+# For Symfony 6.4 - 8.x compatibility we use:
+_preview_error:
+    path: /_error/{code}.{_format}
+    defaults:
+        _controller: 'error_controller::preview'
+        _format: html
+    requirements:
+        code: '\d+'
+
+# If min version is Symfony 7.x, we can use the following instead:
+#_errors:
+#    resource: "@FrameworkBundle/Resources/config/routing/errors.php"
+#    prefix:   /_error
