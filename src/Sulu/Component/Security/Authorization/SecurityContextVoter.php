@@ -14,6 +14,7 @@ namespace Sulu\Component\Security\Authorization;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
