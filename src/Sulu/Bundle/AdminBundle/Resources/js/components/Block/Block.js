@@ -19,6 +19,7 @@ type Props<T: string> = {
     expanded: boolean,
     handle?: Node,
     icons?: Array<string>,
+    id?: string,
     onCollapse?: () => void,
     onExpand?: () => void,
     onRemove?: () => void, // @deprecated
@@ -103,6 +104,7 @@ class Block<T: string> extends React.Component<Props<T>> {
             children,
             handle,
             icons,
+            id,
             onCollapse,
             onExpand,
             onSettingsClick,
@@ -121,7 +123,12 @@ class Block<T: string> extends React.Component<Props<T>> {
         );
 
         return (
-            <section className={blockClass} onClick={this.handleExpand} role="switch">
+            <section
+                className={blockClass}
+                data-sulu-block-id={id}
+                onClick={this.handleExpand}
+                role="switch"
+            >
                 {handle &&
                     <div className={blockStyles.handle}>
                         {handle}

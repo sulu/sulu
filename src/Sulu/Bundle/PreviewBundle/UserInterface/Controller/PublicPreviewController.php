@@ -58,6 +58,9 @@ class PublicPreviewController
         $locale = $previewLink->getLocale();
         $options = $previewLink->getOptions();
         $options['locale'] = $locale;
+        // Public preview links have no admin form on the other end to scroll/expand, so disable
+        // the preview-navigation deep-link bridge instead of needlessly exposing block ids to it.
+        $options['deepLinkEnabled'] = false;
 
         $provider = $this->previewObjectProviderRegistry->getPreviewObjectProvider($resourceKey);
         $previewContext = new PreviewContext($resourceId, $locale);

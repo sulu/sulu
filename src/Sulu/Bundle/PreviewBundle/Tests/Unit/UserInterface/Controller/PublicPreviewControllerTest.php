@@ -125,7 +125,7 @@ class PublicPreviewControllerTest extends TestCase
             ],
             '123-123-123',
             false,
-            \array_merge($options, ['locale' => 'de'])
+            \array_merge($options, ['locale' => 'de', 'deepLinkEnabled' => false])
         )
             ->willReturn('<html><body><h1>Hello World</h1></body></html>');
 
