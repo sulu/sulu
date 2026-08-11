@@ -27,6 +27,6 @@ class Kernel extends SuluTestKernel
             $loader->load($envSpecificFile);
         }
 
-        $loader->load(__DIR__ . '/config/services.xml');
+        $loader->load(__DIR__ . '/config/services.php');
     }
 }
