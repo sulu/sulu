@@ -421,4 +421,11 @@ class ProfileControllerTest extends SuluTestCase
 
         $this->assertNull($userSetting);
     }
+
+    public function testDeleteSettingsWithoutKey(): void
+    {
+        $this->client->jsonRequest('DELETE', '/api/profile/settings');
+
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+    }
 }

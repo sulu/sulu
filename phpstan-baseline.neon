@@ -25969,12 +25969,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Command/InitCommand.php
 
 		-
-			message: '#^Binary operation "\." between ''The resourceKey "'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Controller/PermissionController.php
-
-		-
 			message: '#^Cannot access offset ''security_class'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -26023,33 +26017,9 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/PermissionController.php
 
 		-
-			message: '#^Parameter \#2 \$identifier of method Sulu\\Component\\Security\\Authorization\\AccessControl\\AccessControlManagerInterface\:\:getPermissions\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/PermissionController.php
-
-		-
-			message: '#^Parameter \#2 \$identifier of method Sulu\\Component\\Security\\Authorization\\AccessControl\\AccessControlManagerInterface\:\:setPermissions\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/PermissionController.php
-
-		-
-			message: '#^Parameter \#2 \$replace of function str_replace expects array\<string\>\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/PermissionController.php
-
-		-
 			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/PermissionController.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 5
 			path: src/Sulu/Bundle/SecurityBundle/Controller/PermissionController.php
 
 		-
@@ -26185,12 +26155,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
 
 		-
-			message: '#^Parameter \#1 \$identifier of method Sulu\\Bundle\\SecurityBundle\\Controller\\ResettingController\:\:findUser\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
-
-		-
 			message: '#^Parameter \#1 \$limit of class Sulu\\Bundle\\SecurityBundle\\Security\\Exception\\TokenEmailsLimitReachedException constructor expects int, string given\.$#'
 			identifier: argument.type
 			count: 1
@@ -26209,19 +26173,7 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
 
 		-
-			message: '#^Parameter \#1 \$token of method Sulu\\Bundle\\SecurityBundle\\Controller\\ResettingController\:\:generateTokenHash\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
-
-		-
 			message: '#^Parameter \#1 \$user of method Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactoryInterface\:\:getPasswordHasher\(\) expects string\|Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherAwareInterface\|Symfony\\Component\\Security\\Core\\User\\PasswordAuthenticatedUserInterface, Symfony\\Component\\Security\\Core\\User\\UserInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
-
-		-
-			message: '#^Parameter \#2 \$password of method Sulu\\Bundle\\SecurityBundle\\Controller\\ResettingController\:\:changePassword\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
