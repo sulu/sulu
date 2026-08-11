@@ -4,6 +4,7 @@ import {action, computed, observable, reaction, toJS, when} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import classNames from 'classnames';
+import log from 'loglevel';
 import {DatePicker, Form, Loader, Toolbar} from 'sulu-admin-bundle/components';
 import {ResourceFormStore, sidebarStore} from 'sulu-admin-bundle/containers';
 import {Router} from 'sulu-admin-bundle/services';
@@ -20,6 +21,69 @@ type Props = {|
     formStore: ResourceFormStore,
     router: Router,
 |};
+
+const NAVIGATE_MESSAGE_TYPE = 'sulu.preview.navigate';
+const READY_MESSAGE_TYPE = 'sulu.preview.ready';
+
+function collectBlockIds(data: mixed, ids: Set<string> = new Set()): Set<string> {
+    if (Array.isArray(data)) {
+        data.forEach((item) => collectBlockIds(item, ids));
+    } else if (data && typeof data === 'object') {
+        // $FlowFixMe
+        const {_id} = data;
+        if (typeof _id === 'string') {
+            ids.add(_id);
+        }
+
+        Object.keys(data).forEach((key) => collectBlockIds(data[key], ids));
+    }
+
+    return ids;
+}
+
+// A collapsed block only renders its lightweight collapsed preview, not its nested fields (see
+// FieldBlocks.js's renderBlockContent), so a block nested inside a collapsed ancestor does not
+// exist in the DOM yet and can't be found by simply querying for it. This walks the raw form data
+// (not the DOM) to find the chain of block ids - from outermost ancestor to the target itself -
+// that needs to be expanded, in order, before the target block will actually be mounted.
+function findBlockIdPath(data: mixed, targetId: string, path: Array<string> = []): ?Array<string> {
+    if (Array.isArray(data)) {
+        for (const item of data) {
+            const result = findBlockIdPath(item, targetId, path);
+            if (result) {
+                return result;
+            }
+        }
+
+        return undefined;
+    }
+
+    if (data && typeof data === 'object') {
+        // $FlowFixMe
+        const {_id} = data;
+        const nextPath = typeof _id === 'string' ? path.concat(_id) : path;
+
+        if (_id === targetId) {
+            return nextPath;
+        }
+
+        for (const key of Object.keys(data)) {
+            const result = findBlockIdPath(data[key], targetId, nextPath);
+            if (result) {
+                return result;
+            }
+        }
+    }
+
+    return undefined;
+}
+
+function findBlockElement(id: string): ?HTMLElement {
+    const element = Array.from(document.querySelectorAll('[data-sulu-block-id]'))
+        .find((candidate) => candidate.getAttribute('data-sulu-block-id') === id);
+
+    return element instanceof HTMLElement ? element : undefined;
+}
 
 @observer
 class Preview extends React.Component<Props> {
@@ -125,6 +189,10 @@ class Preview extends React.Component<Props> {
         if (Preview.mode === 'auto') {
             this.startPreview();
         }
+    }
+
+    componentDidMount() {
+        window.addEventListener('message', this.handleMessage);
     }
 
     componentDidUpdate(prevProps: Props) {
@@ -254,6 +322,8 @@ class Preview extends React.Component<Props> {
     };
 
     componentWillUnmount() {
+        window.removeEventListener('message', this.handleMessage);
+
         this.disposeFormStoreReactions();
 
         if (!this.started) {
@@ -263,6 +333,89 @@ class Preview extends React.Component<Props> {
         this.updatePreview.clear();
         this.previewStore.stop();
     }
+
+    handleMessage = (event: MessageEvent) => {
+        if (event.source !== this.getPreviewWindow()) {
+            return;
+        }
+
+        // event.source is the preview window's WindowProxy, which stays valid even if that
+        // window navigates to a different origin (e.g. via a link inside the previewed page) -
+        // checking it alone would keep trusting messages from whatever page ends up loaded
+        // there. The preview iframe/window is always same-origin with the admin today, so also
+        // require that.
+        if (event.origin !== window.location.origin) {
+            return;
+        }
+
+        const {data} = event;
+        if (!data || typeof data !== 'object') {
+            return;
+        }
+
+        if (data.type === NAVIGATE_MESSAGE_TYPE && typeof data.id === 'string') {
+            this.navigateToBlock(data.id);
+        }
+
+        if (data.type === READY_MESSAGE_TYPE && Array.isArray(data.ids)) {
+            this.warnAboutMissingDeepLinkAttributes(data.ids);
+        }
+    };
+
+    navigateToBlock = (id: string) => {
+        const {formStore} = this.props;
+        const idPath = findBlockIdPath(toJS(formStore.data), id);
+        if (!idPath) {
+            return;
+        }
+
+        const maxMountAttempts = 30; // ~0.5s at 60fps, generous for a React re-render to commit
+
+        // idPath includes the target block itself as its last entry (not just its ancestors), so
+        // every entry needs to be expanded via a real click - including the target, since it may
+        // itself be collapsed - before it can be scrolled into view.
+        const expandNext = (index: number, mountAttempt: number = 0) => {
+            if (index >= idPath.length) {
+                const target = findBlockElement(idPath[idPath.length - 1]);
+                if (target) {
+                    target.scrollIntoView({behavior: 'smooth', block: 'start'});
+                }
+
+                return;
+            }
+
+            const element = findBlockElement(idPath[index]);
+            if (!element) {
+                if (mountAttempt >= maxMountAttempts) {
+                    // A parent's nested content never mounted (stale/removed block) - give up
+                    // instead of polling forever.
+                    return;
+                }
+
+                requestAnimationFrame(() => expandNext(index, mountAttempt + 1));
+                return;
+            }
+
+            element.click();
+            requestAnimationFrame(() => expandNext(index + 1));
+        };
+
+        expandNext(0);
+    };
+
+    warnAboutMissingDeepLinkAttributes = (renderedIds: $ReadOnlyArray<mixed>) => {
+        const {formStore} = this.props;
+        const expectedIds = collectBlockIds(toJS(formStore.data));
+        const missingIds = Array.from(expectedIds).filter((id) => !renderedIds.includes(id));
+
+        if (missingIds.length > 0) {
+            log.warn(
+                '[sulu_preview] The following blocks are missing the "sulu_preview_deep_link()" attribute ' +
+                'on their template root element and cannot be navigated to from the preview: '
+                + missingIds.join(', ')
+            );
+        }
+    };
 
     disposeFormStoreReactions() {
         if (this.schemaDisposer) {

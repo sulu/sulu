@@ -168,6 +168,7 @@ class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>
                 expanded={expanded}
                 handle={this.renderHandle()}
                 icons={icons}
+                id={typeof value._id === 'string' ? value._id : undefined}
                 onCollapse={onCollapse ? this.handleCollapse : undefined}
                 onExpand={onExpand ? this.handleExpand : undefined}
                 onSettingsClick={onSettingsClick && this.handleSettingsClick}
