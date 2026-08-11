@@ -17,6 +17,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 /**
  * Abstract Controller for extracting some required rest functionality.
+ *
+ * @deprecated since Sulu 2.6, we recommend building your own controllers instead of extending this
+ *             class and injecting the required services yourself.
  */
 abstract class AbstractRestController
 {

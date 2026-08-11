@@ -4,6 +4,15 @@ For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upg
 
 ## 2.6.26
 
+### Deprecated `AbstractRestController`, `RestControllerTrait` and `ApiWrapper`
+
+The `AbstractRestController` and the `RestControllerTrait` have been deprecated. We recommend building
+your own controllers instead of extending the class or using the trait, and injecting the services you
+require yourself.
+
+The `ApiWrapper` has been deprecated as well, as wrapping entities into API objects is no longer
+recommended. Use your own DTOs instead, or configure the serializer of your choice.
+
 ### Two factor authentication via authenticator apps (TOTP)
 
 The `totp` two factor method is now available in the admin profile when the `scheb/2fa-totp`
