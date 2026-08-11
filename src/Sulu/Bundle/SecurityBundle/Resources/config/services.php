@@ -279,7 +279,8 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu.context', ['context' => 'admin']);
 
     $services->set('sulu_security.twig_extension.user.cache_adapter', ArrayAdapter::class)
-        ->args(['$storeSerialized' => false]);
+        // second argument is $storeSerialized before Symfony 8 and $deepClone since, so it is set positionally
+        ->args([0, false]);
 
     $services->set('sulu_security.twig_extension.user', UserTwigExtension::class)
         ->args([
