@@ -12,7 +12,6 @@
 namespace Sulu\Component\Rest\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\ParameterDataTypeException;
 use Sulu\Component\Rest\RequestParametersTrait;
@@ -20,7 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RequestParametersTraitTest extends TestCase
 {
-    use ProphecyTrait;
     use RequestParametersTrait;
 
     public function testGetRequestParameter(): void
@@ -73,18 +71,17 @@ class RequestParametersTraitTest extends TestCase
     {
         $this->expectException(MissingParameterException::class);
 
-        $request = $this->prophesize(Request::class);
+        $request = new Request();
 
-        $this->getBooleanRequestParameter($request->reveal(), 'test', true);
+        $this->getBooleanRequestParameter($request, 'test', true);
     }
 
     public function testGetBooleanRequestWrongParameter(): void
     {
         $this->expectException(ParameterDataTypeException::class);
 
-        $request = $this->prophesize(Request::class);
-        $request->get('test', null)->willReturn('asdf');
+        $request = new Request(['test' => 'asdf']);
 
-        $this->getBooleanRequestParameter($request->reveal(), 'test', true);
+        $this->getBooleanRequestParameter($request, 'test', true);
     }
 }

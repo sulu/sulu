@@ -54,21 +54,21 @@ class ListRestHelper implements ListRestHelperInterface
 
     public function getIds()
     {
-        $idsString = $this->getRequest()->get('ids');
+        $idsString = $this->getRequest()->query->get('ids');
 
         return (null !== $idsString) ? \array_filter(\explode(',', $idsString)) : null;
     }
 
     public function getExcludedIds()
     {
-        $excludedIdsString = $this->getRequest()->get('excludedIds');
+        $excludedIdsString = $this->getRequest()->query->get('excludedIds');
 
         return (null !== $excludedIdsString) ? \array_filter(\explode(',', $excludedIdsString)) : [];
     }
 
     public function getSortColumn()
     {
-        $sortColumn = $this->getRequest()->get('sortBy', null);
+        $sortColumn = $this->getRequest()->query->get('sortBy', null);
         if (null === $sortColumn || !\is_string($sortColumn)) {
             return null;
         }
@@ -88,7 +88,7 @@ class ListRestHelper implements ListRestHelperInterface
      */
     public function getSortOrder()
     {
-        return $this->getRequest()->get('sortOrder', 'asc');
+        return $this->getRequest()->query->get('sortOrder', 'asc');
     }
 
     /**
@@ -109,7 +109,7 @@ class ListRestHelper implements ListRestHelperInterface
             $default = \count($ids);
         }
 
-        return $this->getRequest()->get('limit', $default);
+        return $this->getRequest()->query->get('limit', $default);
     }
 
     /**
@@ -120,7 +120,7 @@ class ListRestHelper implements ListRestHelperInterface
      */
     public function getOffset()
     {
-        $page = $this->getRequest()->get('page', 1);
+        $page = $this->getRequest()->query->get('page', 1);
         $limit = $this->getLimit();
 
         return (null != $limit) ? $limit * ($page - 1) : null;
@@ -131,7 +131,7 @@ class ListRestHelper implements ListRestHelperInterface
      */
     public function getPage()
     {
-        return $this->getRequest()->get('page', 1);
+        return $this->getRequest()->query->get('page', 1);
     }
 
     /**
@@ -142,7 +142,7 @@ class ListRestHelper implements ListRestHelperInterface
      */
     public function getFields()
     {
-        $fields = $this->getRequest()->get('fields');
+        $fields = $this->getRequest()->query->get('fields');
 
         return (null != $fields) ? \explode(',', $fields) : null;
     }
@@ -152,7 +152,7 @@ class ListRestHelper implements ListRestHelperInterface
      */
     public function getSearchPattern()
     {
-        return $this->getRequest()->get('search');
+        return $this->getRequest()->query->get('search');
     }
 
     /**
@@ -162,7 +162,7 @@ class ListRestHelper implements ListRestHelperInterface
      */
     public function getSearchFields()
     {
-        $searchFields = $this->getRequest()->get('searchFields');
+        $searchFields = $this->getRequest()->query->get('searchFields');
 
         return (null != $searchFields) ? \explode(',', $searchFields) : [];
     }
@@ -172,6 +172,6 @@ class ListRestHelper implements ListRestHelperInterface
      */
     public function getFilter()
     {
-        return $this->getRequest()->get('filter', []);
+        return $this->getRequest()->query->all('filter');
     }
 }
