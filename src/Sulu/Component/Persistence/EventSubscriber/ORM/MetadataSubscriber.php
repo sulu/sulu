@@ -18,6 +18,8 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Persistence\Mapping\ReflectionService;
 
 /**
+ * @internal no bc-promise given, we recommend building your own metadata subscriber instead of using this class.
+ *
  * Doctrine subscriber used to manipulate metadata.
  */
 class MetadataSubscriber
