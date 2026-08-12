@@ -4141,12 +4141,6 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Controller/TargetGroupController.php
 
 		-
-			message: '#^Strict comparison using \=\=\= between null and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Controller/TargetGroupController.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
@@ -12673,12 +12667,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Argument of an invalid type string\|null supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
 			message: '#^Binary operation "\+\=" between \(float\|int\) and mixed results in an error\.$#'
 			identifier: assignOp.invalid
 			count: 2
@@ -12873,12 +12861,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\AccountController\:\:initFieldDescriptors\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Method Symfony\\Component\\HttpFoundation\\ParameterBag\:\:all\(\) invoked with 2 parameters, 0\-1 required\.$#'
-			identifier: arguments.count
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
@@ -13160,12 +13142,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$socialMediaProfiles of method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\<Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface,Sulu\\Bundle\\ContactBundle\\Api\\Account,Sulu\\Bundle\\ContactBundle\\Entity\\AccountAddress\>\:\:processSocialMediaProfiles\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Parameter \#2 \$string of function explode expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
@@ -13503,12 +13479,6 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/ContactTitleController.php
-
-		-
-			message: '#^Parameter \#1 \$key of method Symfony\\Component\\HttpFoundation\\InputBag\<bool\|float\|int\|string\|null\>\:\:get\(\) expects string, int\<0, max\> given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactTitleController.php
 
@@ -25735,18 +25705,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Admin/Helper/SystemLanguageSelect.php
 
 		-
-			message: '#^Access to an undefined property Sulu\\Bundle\\SecurityBundle\\Admin\\SecurityAdmin\:\:\$urlGenerator\.$#'
-			identifier: property.notFound
-			count: 5
-			path: src/Sulu/Bundle/SecurityBundle/Admin/SecurityAdmin.php
-
-		-
-			message: '#^Cannot call method generate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 5
-			path: src/Sulu/Bundle/SecurityBundle/Admin/SecurityAdmin.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Admin\\SecurityAdmin\:\:__construct\(\) has parameter \$resources with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -29833,12 +29791,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Command/DumpSitemapCommand.php
 
 		-
-			message: '#^Cannot call method get\(\) on Symfony\\Component\\HttpFoundation\\Request\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/AnalyticsController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Controller\\AnalyticsController\:\:buildContent\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -29852,18 +29804,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$ids of method Sulu\\Bundle\\WebsiteBundle\\Analytics\\AnalyticsManagerInterface\:\:removeMultiple\(\) expects array\<int\>, array\<int\<0, max\>, string\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/AnalyticsController.php
-
-		-
-			message: '#^Parameter \#1 \$webspaceKey of static method Sulu\\Bundle\\WebsiteBundle\\Admin\\WebsiteAdmin\:\:getAnalyticsSecurityContext\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/AnalyticsController.php
-
-		-
-			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Controller/AnalyticsController.php
@@ -32497,18 +32437,6 @@ parameters:
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/UserBlameSubscriber.php
 
 		-
-			message: '#^Loose comparison using \=\= between null and null will always evaluate to true\.$#'
-			identifier: equal.alwaysTrue
-			count: 1
-			path: src/Sulu/Component/Persistence/RelationTrait.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
-			identifier: notIdentical.alwaysFalse
-			count: 1
-			path: src/Sulu/Component/Persistence/RelationTrait.php
-
-		-
 			message: '#^Parameter \#1 \$objects of class Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\MetadataSubscriber constructor expects array\<string, array\<string, array\{model\?\: class\-string\<object\>, repository\?\: class\-string\<Doctrine\\ORM\\EntityRepository\<object\>\>\}\>\>, array\{sulu\: array\{contact\: array\{model\: ''stdClass'', repository\: ''Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository''\}, member\: array\{model\: ''Closure''\}, user\: array\{model\: class\-string\<stdClass\>\}\}\} given\.$#'
 			identifier: argument.type
 			count: 1
@@ -33655,8 +33583,20 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/ListBuilderInterface.php
 
 		-
-			message: '#^Binary operation "\-" between mixed and 1 results in an error\.$#'
+			message: '#^Binary operation "\*" between int\<min, \-1\>\|int\<1, max\> and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
+
+		-
+			message: '#^Binary operation "\-" between 1\|string and 1 results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
+
+		-
+			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
@@ -33673,13 +33613,7 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getFilter\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getLimit\(\) should return int\|null but returns mixed\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getLimit\(\) should return int\|null but returns int\<1, max\>\|string\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
@@ -33691,7 +33625,7 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getPage\(\) should return int but returns mixed\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getPage\(\) should return int but returns int\|string\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
@@ -33700,24 +33634,6 @@ parameters:
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getSearchFields\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getSearchPattern\(\) should return string\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListRestHelper\:\:getSortOrder\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
-
-		-
-			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 4
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
 		-
