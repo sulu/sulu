@@ -44,6 +44,7 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
         $loader->load('services.php');
         $loader->load('command.php');
 
+        /** @var array<string, string> $bundles */
         $bundles = $container->getParameter('kernel.bundles');
         if (\array_key_exists('SuluTrashBundle', $bundles)) {
             $loader->load('services_trash.php');

@@ -93,6 +93,7 @@ class SuluTagExtension extends Extension implements PrependExtensionInterface
 
     public function load(array $configs, ContainerBuilder $container): void
     {
+        /** @var array<string, string> $bundles */
         $bundles = $container->getParameter('kernel.bundles');
 
         $configuration = new Configuration();
