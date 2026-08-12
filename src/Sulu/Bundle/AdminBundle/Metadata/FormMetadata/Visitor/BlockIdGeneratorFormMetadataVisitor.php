@@ -25,6 +25,8 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadataVisitorInterf
  */
 class BlockIdGeneratorFormMetadataVisitor implements TypedFormMetadataVisitorInterface
 {
+    private const AUTO_ENABLED_TYPES = ['block', 'image_map'];
+
     public function visitTypedFormMetadata(TypedFormMetadata $formMetadata, string $key, string $locale, array $metadataOptions = []): void
     {
         foreach ($formMetadata->getForms() as $formMetadata) {
@@ -52,7 +54,7 @@ class BlockIdGeneratorFormMetadataVisitor implements TypedFormMetadataVisitorInt
                 $this->enhanceBlockMetadata($type->getItems());
             }
 
-            if ('block' !== $itemMetadata->getType()
+            if (!\in_array($itemMetadata->getType(), self::AUTO_ENABLED_TYPES, true)
                 || \array_key_exists('block_id_generator', $itemMetadata->getOptions())
             ) {
                 continue;

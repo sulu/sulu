@@ -348,7 +348,7 @@ test('React and update preview when data is changed', () => {
     const preview = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
-    const updatePromise = Promise.resolve('<h1>Sulu is awesome</h1>');
+    const updatePromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>', data: null});
 
     const previewStore = preview.instance().previewStore;
     previewStore.start.mockReturnValue(startPromise);
@@ -366,6 +366,83 @@ test('React and update preview when data is changed', () => {
         expect(previewStore.update).toHaveBeenCalledWith({title: 'New Test'});
 
         expect(preview.render()).toMatchSnapshot();
+    });
+});
+
+test('Ignores a stale preview response superseded by a newer request before it resolves', () => {
+    const resourceStore = new ResourceStore('pages', 1);
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    // $FlowFixMe
+    formStore.data = {blocks: [{type: 'text'}]};
+    // $FlowFixMe
+    formStore.getValueByPath = jest.fn().mockReturnValue(undefined);
+    // $FlowFixMe
+    formStore.change = jest.fn();
+
+    const router = new Router({});
+    const preview = shallow(<Preview formStore={formStore} router={router} />);
+
+    const previewStore = preview.instance().previewStore;
+    previewStore.token = '123-123-123';
+
+    let resolveFirst;
+    let resolveSecond;
+    previewStore.update
+        .mockImplementationOnce(() => new Promise((resolve) => {
+            resolveFirst = resolve;
+        }))
+        .mockImplementationOnce(() => new Promise((resolve) => {
+            resolveSecond = resolve;
+        }));
+
+    preview.instance().updatePreview({blocks: [{type: 'text'}]});
+    preview.instance().updatePreview({blocks: [{type: 'text'}]});
+
+    // The second (newer) request resolves first, and its backfilled id is merged in.
+    resolveSecond({content: '<h1>second</h1>', data: {blocks: [{type: 'text', _id: 'second-id'}]}});
+
+    return Promise.resolve().then(() => {
+        expect(formStore.change).toHaveBeenCalledWith('blocks/0/_id', 'second-id');
+        // $FlowFixMe
+        formStore.change.mockClear();
+
+        // The first (now stale) request resolves after being superseded - its id must be dropped.
+        resolveFirst({content: '<h1>first</h1>', data: {blocks: [{type: 'text', _id: 'first-id'}]}});
+
+        return Promise.resolve().then(() => {
+            expect(formStore.change).not.toHaveBeenCalled();
+        });
+    });
+});
+
+test('Does not mutate the form store from a preview response that resolves after the component has unmounted', () => {
+    const resourceStore = new ResourceStore('pages', 1);
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    // $FlowFixMe
+    formStore.data = {blocks: [{type: 'text'}]};
+    // $FlowFixMe
+    formStore.getValueByPath = jest.fn().mockReturnValue(undefined);
+    // $FlowFixMe
+    formStore.change = jest.fn();
+
+    const router = new Router({});
+    const preview = shallow(<Preview formStore={formStore} router={router} />);
+
+    const previewStore = preview.instance().previewStore;
+    previewStore.token = '123-123-123';
+
+    let resolveUpdate;
+    previewStore.update.mockReturnValue(new Promise((resolve) => {
+        resolveUpdate = resolve;
+    }));
+
+    preview.instance().updatePreview({blocks: [{type: 'text'}]});
+    preview.instance().unmounted = true;
+
+    resolveUpdate({content: '<h1>after unmount</h1>', data: {blocks: [{type: 'text', _id: 'late-id'}]}});
+
+    return Promise.resolve().then(() => {
+        expect(formStore.change).not.toHaveBeenCalled();
     });
 });
 
@@ -399,7 +476,7 @@ test('React and update preview in external window when data is changed', () => {
     const preview = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
-    const updatePromise = Promise.resolve('<h1>Sulu is awesome</h1>');
+    const updatePromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>', data: null});
 
     const previewStore = preview.instance().previewStore;
     previewStore.start.mockReturnValue(startPromise);
@@ -440,7 +517,7 @@ test('Dont react or update preview when data is changed during formstore is load
     const preview = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
-    const updatePromise = Promise.resolve('<h1>Sulu is awesome</h1>');
+    const updatePromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>', data: null});
 
     const previewStore = preview.instance().previewStore;
     previewStore.start.mockReturnValue(startPromise);
@@ -474,7 +551,7 @@ test('Dont react or update preview when data is changed during preview-store is 
     const preview = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
-    const updatePromise = Promise.resolve('<h1>Sulu is awesome</h1>');
+    const updatePromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>', data: null});
 
     const previewStore = preview.instance().previewStore;
     previewStore.start.mockReturnValue(startPromise);
@@ -578,6 +655,7 @@ test('Change target group in PreviewStore when selection of target group has cha
     const startPromise = Promise.resolve();
     const previewStore = preview.instance().previewStore;
     previewStore.start.mockReturnValue(startPromise);
+    previewStore.update.mockReturnValue(Promise.resolve({content: '<h1>Sulu is awesome</h1>', data: null}));
     previewStore.starting = false;
     previewStore.token = '123-123-123';
 
