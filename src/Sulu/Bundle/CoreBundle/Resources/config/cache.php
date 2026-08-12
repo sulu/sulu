@@ -18,7 +18,9 @@ use Symfony\Component\DependencyInjection\Reference;
 return static function(ContainerConfigurator $container) {
     $services = $container->services();
 
-    $services->set('sulu_core.cache.memoize.cache_adapter', ArrayAdapter::class);
+    $services->set('sulu_core.cache.memoize.cache_adapter', ArrayAdapter::class)
+        // second argument is $storeSerialized before Symfony 8 and $deepClone since, so it is set positionally
+        ->args([0, false]);
 
     $services->set('sulu_core.cache.memoize', Memoize::class)
         ->args([
