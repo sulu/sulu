@@ -16,8 +16,11 @@ use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewUrlGenerator;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewUrlGeneratorInterface;
 use Sulu\Bundle\AdminBundle\Application\BlockIdGenerator\BlockIdGenerator;
 use Sulu\Bundle\AdminBundle\Application\BlockIdGenerator\BlockIdGeneratorInterface;
+use Sulu\Bundle\AdminBundle\Command\DownloadBuildCommand;
 use Sulu\Bundle\AdminBundle\Command\DownloadLanguageCommand;
 use Sulu\Bundle\AdminBundle\Command\InfoCommand;
 use Sulu\Bundle\AdminBundle\Command\UpdateBuildCommand;
@@ -299,6 +302,16 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_admin.view_registry', ViewRegistry::class)
         ->args([new Reference('sulu_admin.admin_pool')])
         ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_admin.view_url_generator', ViewUrlGenerator::class)
+        ->args([
+            new Reference('router'),
+            new Reference('sulu_admin.view_registry'),
+            new Reference('request_stack'),
+        ])
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->alias(ViewUrlGeneratorInterface::class, 'sulu_admin.view_url_generator');
 
     $services->set('sulu_admin.navigation_registry', NavigationRegistry::class)
         ->args([
