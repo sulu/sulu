@@ -58,7 +58,7 @@ class TemplateDataMapperTest extends TestCase
 
     private function createBlockIdGenerator(): BlockIdGeneratorInterface
     {
-        return new class implements BlockIdGeneratorInterface {
+        return new class() implements BlockIdGeneratorInterface {
             private int $count = 0;
 
             public function generateId(): string
