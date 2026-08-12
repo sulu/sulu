@@ -28219,6 +28219,12 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
+			message: '#^Loose comparison using \=\= between null and null will always evaluate to true\.$#'
+			identifier: equal.alwaysTrue
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
+
+		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager\:\:addUserRole\(\) has parameter \$userRoleData with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -28564,6 +28570,12 @@ parameters:
 			message: '#^Result of && is always false\.$#'
 			identifier: booleanAnd.alwaysFalse
 			count: 3
+			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
+			identifier: notIdentical.alwaysFalse
+			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
@@ -34399,12 +34411,6 @@ parameters:
 			path: src/Sulu/Component/Rest/RestHelper.php
 
 		-
-			message: '#^Loose comparison using \=\= between null and null will always evaluate to true\.$#'
-			identifier: equal.alwaysTrue
-			count: 1
-			path: src/Sulu/Component/Rest/RestHelper.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\RestHelper\:\:compareData\(\) has parameter \$entities with no value type specified in iterable type Traversable\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -34528,12 +34534,6 @@ parameters:
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
 			count: 2
-			path: src/Sulu/Component/Rest/RestHelper.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
-			identifier: notIdentical.alwaysFalse
-			count: 1
 			path: src/Sulu/Component/Rest/RestHelper.php
 
 		-
