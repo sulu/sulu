@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Sulu\Bundle\AdminBundle\Application\BlockIdGenerator\BlockIdGeneratorInterface;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\AuthorDataMapper;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\ExcerptDataMapper;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\LinkDataMapper;
@@ -28,7 +29,10 @@ return static function(ContainerConfigurator $container) {
     $services = $container->services();
 
     $services->set('sulu_content.template_data_mapper', TemplateDataMapper::class)
-        ->args([new Reference('sulu_admin.metadata_provider_registry')])
+        ->args([
+            new Reference('sulu_admin.metadata_provider_registry'),
+            new Reference(BlockIdGeneratorInterface::class),
+        ])
         ->tag('sulu_content.data_mapper', ['priority' => 128]);
 
     $services->set('sulu_content.excerpt_data_mapper', ExcerptDataMapper::class)
