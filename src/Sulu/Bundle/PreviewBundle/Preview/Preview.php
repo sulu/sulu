@@ -91,11 +91,11 @@ class Preview
      * @param array<string, mixed> $options
      *
      * @return array{content: string, data: ?array<string, mixed>} `data` echoes back the data the
-     *                                                              provider mutated while updating
-     *                                                              (e.g. backfilled block ids) so
-     *                                                              the admin form can stay in sync
-     *                                                              with what was actually rendered;
-     *                                                              null if the provider didn't set any.
+     *                                                             provider mutated while updating
+     *                                                             (e.g. backfilled block ids) so
+     *                                                             the admin form can stay in sync
+     *                                                             with what was actually rendered;
+     *                                                             null if the provider didn't set any.
      */
     public function update(
         string $token,

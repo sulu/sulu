@@ -385,8 +385,8 @@ test('Ignores a stale preview response superseded by a newer request before it r
     const previewStore = preview.instance().previewStore;
     previewStore.token = '123-123-123';
 
-    let resolveFirst;
-    let resolveSecond;
+    let resolveFirst: (result: Object) => void = () => {};
+    let resolveSecond: (result: Object) => void = () => {};
     previewStore.update
         .mockImplementationOnce(() => new Promise((resolve) => {
             resolveFirst = resolve;
@@ -431,7 +431,7 @@ test('Does not mutate the form store from a preview response that resolves after
     const previewStore = preview.instance().previewStore;
     previewStore.token = '123-123-123';
 
-    let resolveUpdate;
+    let resolveUpdate: (result: Object) => void = () => {};
     previewStore.update.mockReturnValue(new Promise((resolve) => {
         resolveUpdate = resolve;
     }));
