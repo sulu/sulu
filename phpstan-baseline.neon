@@ -49,6 +49,24 @@ parameters:
 			path: config/router.php
 
 		-
+			message: '#^Method Sulu\\Content\\Application\\ContentWorkflow\\Subscriber\\PublishTransitionSubscriber\:\:onPublish\(\) has parameter \$transitionEvent with generic class Symfony\\Component\\Workflow\\Event\\TransitionEvent but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: packages/content/src/Application/ContentWorkflow/Subscriber/PublishTransitionSubscriber.php
+
+		-
+			message: '#^Method Sulu\\Content\\Application\\ContentWorkflow\\Subscriber\\RemoveDraftTransitionSubscriber\:\:onRemoveDraft\(\) has parameter \$transitionEvent with generic class Symfony\\Component\\Workflow\\Event\\TransitionEvent but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: packages/content/src/Application/ContentWorkflow/Subscriber/RemoveDraftTransitionSubscriber.php
+
+		-
+			message: '#^Method Sulu\\Content\\Application\\ContentWorkflow\\Subscriber\\UnpublishTransitionSubscriber\:\:onUnpublish\(\) has parameter \$transitionEvent with generic class Symfony\\Component\\Workflow\\Event\\TransitionEvent but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: packages/content/src/Application/ContentWorkflow/Subscriber/UnpublishTransitionSubscriber.php
+
+		-
 			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 4
@@ -59,6 +77,12 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: packages/content/src/Application/PropertyResolver/Resolver/BlockPropertyResolver.php
+
+		-
+			message: '#^Method Sulu\\Content\\Tests\\Application\\AppCache\:\:getLogDir\(\) should return string but returns string\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: packages/content/tests/Application/AppCache.php
 
 		-
 			message: '#^Parameter \#1 \$environment of class Sulu\\Content\\Tests\\Application\\Kernel constructor expects string, mixed given\.$#'
@@ -4831,92 +4855,8 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/TargetGroup/TargetGroupStoreInterface.php
 
 		-
-			message: '#^Call to an undefined method Symfony\\Component\\HttpKernel\\KernelInterface\:\:getName\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
-
-		-
-			message: '#^Call to an undefined method Symfony\\Component\\HttpKernel\\KernelInterface\:\:serialize\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
-
-		-
-			message: '#^Call to an undefined method Symfony\\Component\\HttpKernel\\KernelInterface\:\:unserialize\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Tests\\Application\\AppCache\:\:getBundle\(\) has parameter \$first with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Tests\\Application\\AppCache\:\:getBundle\(\) has parameter \$name with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Tests\\Application\\AppCache\:\:getName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Tests\\Application\\AppCache\:\:locateResource\(\) has parameter \$dir with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Tests\\Application\\AppCache\:\:locateResource\(\) has parameter \$first with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Tests\\Application\\AppCache\:\:locateResource\(\) has parameter \$name with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Tests\\Application\\AppCache\:\:serialize\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Tests\\Application\\AppCache\:\:unserialize\(\) has parameter \$serialized with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
-
-		-
-			message: '#^Method Symfony\\Component\\HttpKernel\\KernelInterface\:\:getBundle\(\) invoked with 2 parameters, 1 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
-
-		-
-			message: '#^Method Symfony\\Component\\HttpKernel\\KernelInterface\:\:locateResource\(\) invoked with 3 parameters, 1 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Component\\HttpKernel\\KernelInterface\:\:getBundle\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Component\\HttpKernel\\KernelInterface\:\:locateResource\(\) expects string, mixed given\.$#'
-			identifier: argument.type
+			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Tests\\Application\\AppCache\:\:getLogDir\(\) should return string but returns string\|null\.$#'
+			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
 
@@ -7205,18 +7145,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
-
-		-
-			message: '#^Call to function array_key_exists\(\) with ''SuluContentBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/DependencyInjection/SuluCategoryExtension.php
-
-		-
-			message: '#^Call to function array_key_exists\(\) with ''SuluTrashBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/DependencyInjection/SuluCategoryExtension.php
 
 		-
 			message: '#^Parameter \#1 \$objects of method Sulu\\Bundle\\CategoryBundle\\DependencyInjection\\SuluCategoryExtension\:\:configurePersistence\(\) expects array\<string, array\{model\: class\-string, repository\?\: class\-string\}\>, mixed given\.$#'
@@ -13627,18 +13555,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/Configuration.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''SuluContentBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/SuluContactExtension.php
-
-		-
-			message: '#^Call to function array_key_exists\(\) with ''SuluTrashBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/SuluContactExtension.php
-
-		-
 			message: '#^Cannot access offset ''account'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -17461,12 +17377,6 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/SuluCoreExtension.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''SuluAdminBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/SuluCoreExtension.php
-
-		-
 			message: '#^Cannot access offset ''default_lifetime'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -19693,12 +19603,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Controller\\MediaController\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
 			message: '#^Parameter \#1 \$fieldDescriptors of method Sulu\\Bundle\\MediaBundle\\Media\\ListBuilderFactory\\MediaListBuilderFactory\:\:getListBuilder\(\) expects array, array\<Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface\>\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -19783,20 +19687,8 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaPreviewController.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Controller\\MediaRedirectController\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaRedirectController.php
-
-		-
 			message: '#^Parameter \#1 \$url of class Symfony\\Component\\HttpFoundation\\RedirectResponse constructor expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaRedirectController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between null and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaRedirectController.php
 
@@ -28753,18 +28645,6 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/Controller/TagController.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''SuluContentBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/DependencyInjection/SuluTagExtension.php
-
-		-
-			message: '#^Call to function array_key_exists\(\) with ''SuluTrashBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/DependencyInjection/SuluTagExtension.php
-
-		-
 			message: '#^Parameter \#1 \$objects of method Sulu\\Bundle\\TagBundle\\DependencyInjection\\SuluTagExtension\:\:configurePersistence\(\) expects array\<string, array\{model\: class\-string, repository\?\: class\-string\}\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -31269,12 +31149,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Component\\Category\\Request\\CategoryRequestHandler\:\:toggleCategoryInUrl\(\) should return string but empty return statement found\.$#'
 			identifier: return.empty
-			count: 1
-			path: src/Sulu/Component/Category/Request/CategoryRequestHandler.php
-
-		-
-			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Category/Request/CategoryRequestHandler.php
 
@@ -35393,6 +35267,12 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Metadata/ListXmlLoaderTest.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\HttpFoundation\\Request\:\:get\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Sulu/Component/Rest/Tests/Unit/RequestParametersTraitTest.php
 
 		-
 			message: '#^Method Sulu\\Component\\Rest\\Tests\\Unit\\RequestParametersTraitTest\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
