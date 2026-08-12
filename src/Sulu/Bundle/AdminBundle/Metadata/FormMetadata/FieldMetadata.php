@@ -19,7 +19,7 @@ class FieldMetadata extends ItemMetadata
     protected $options = [];
 
     /**
-     * @var FormMetadata[]
+     * @var array<string, FormMetadata>
      */
     protected $types = [];
 
@@ -98,7 +98,7 @@ class FieldMetadata extends ItemMetadata
     }
 
     /**
-     * @return array<FormMetadata>
+     * @return array<string, FormMetadata>
      */
     public function getTypes(): array
     {
