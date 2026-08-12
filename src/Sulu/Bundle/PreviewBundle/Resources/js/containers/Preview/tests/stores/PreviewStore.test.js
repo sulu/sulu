@@ -51,8 +51,8 @@ test('Should request server on update preview', () => {
     Requester.post.mockReturnValue(postPromise);
 
     previewStore.start();
-    previewStore.update({title: 'Sulu is aswesome'}).then((content) => {
-        expect(content).toEqual('<h1>Sulu is awesome</h1>');
+    previewStore.update({title: 'Sulu is aswesome'}).then((result) => {
+        expect(result).toEqual({content: '<h1>Sulu is awesome</h1>', data: undefined});
     });
 
     return postPromise.then(() => {
@@ -72,8 +72,8 @@ test('Should request server on update preview with target group', () => {
 
     previewStore.setTargetGroup(2);
     previewStore.start();
-    previewStore.update({title: 'Sulu is aswesome'}).then((content) => {
-        expect(content).toEqual('<h1>Sulu is awesome</h1>');
+    previewStore.update({title: 'Sulu is aswesome'}).then((result) => {
+        expect(result).toEqual({content: '<h1>Sulu is awesome</h1>', data: undefined});
     });
 
     return postPromise.then(() => {
@@ -93,8 +93,8 @@ test('Should request server on update preview with date time', () => {
 
     previewStore.setDateTime(new Date(2020, 11, 10, 18, 50, 10));
     previewStore.start();
-    previewStore.update({title: 'Sulu is aswesome'}).then((content) => {
-        expect(content).toEqual('<h1>Sulu is awesome</h1>');
+    previewStore.update({title: 'Sulu is aswesome'}).then((result) => {
+        expect(result).toEqual({content: '<h1>Sulu is awesome</h1>', data: undefined});
     });
 
     return postPromise.then(() => {
@@ -115,8 +115,8 @@ test('Should request server on update preview with segment', () => {
 
     previewStore.setSegment('w');
     previewStore.start();
-    previewStore.update({title: 'Sulu is aswesome'}).then((content) => {
-        expect(content).toEqual('<h1>Sulu is awesome</h1>');
+    previewStore.update({title: 'Sulu is aswesome'}).then((result) => {
+        expect(result).toEqual({content: '<h1>Sulu is awesome</h1>', data: undefined});
     });
 
     return postPromise.then(() => {

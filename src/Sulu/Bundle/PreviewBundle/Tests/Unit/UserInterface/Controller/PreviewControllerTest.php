@@ -183,12 +183,12 @@ class PreviewControllerTest extends TestCase
             'test-token',
             ['title' => 'Sulu is awesome'],
             ['targetGroupId' => 1, 'segmentKey' => 's', 'webspaceKey' => 'sulu_io', 'locale' => 'de']
-        )->shouldBeCalled()->willReturn('<html><body><h1>SULU is awesome</h1></body></html>');
+        )->shouldBeCalled()->willReturn(['content' => '<html><body><h1>SULU is awesome</h1></body></html>', 'data' => null]);
 
         $response = $this->previewController->updateAction($request);
 
         $this->assertEquals(
-            \json_encode(['content' => '<html><body><h1>SULU is awesome</h1></body></html>'], $this->encodingOptions),
+            \json_encode(['content' => '<html><body><h1>SULU is awesome</h1></body></html>', 'data' => null], $this->encodingOptions),
             $response->getContent()
         );
     }
@@ -215,12 +215,12 @@ class PreviewControllerTest extends TestCase
             'test-token',
             ['title' => 'Sulu is awesome'],
             ['targetGroupId' => 1, 'segmentKey' => 's', 'webspaceKey' => 'sulu_io', 'locale' => 'de']
-        )->shouldBeCalled()->willReturn('<html><body><a href="/test">SULU is awesome</a></body></html>');
+        )->shouldBeCalled()->willReturn(['content' => '<html><body><a href="/test">SULU is awesome</a></body></html>', 'data' => null]);
 
         $response = $this->previewController->updateAction($request);
         $this->assertEquals(
             \json_encode(
-                ['content' => '<html><body><a href="/test">SULU is awesome</a></body></html>'],
+                ['content' => '<html><body><a href="/test">SULU is awesome</a></body></html>', 'data' => null],
                 $this->encodingOptions
             ),
             $response->getContent()

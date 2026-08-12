@@ -130,6 +130,15 @@ class ContentObjectProvider implements PreviewDefaultsProviderInterface
             $data
         );
 
+        // TemplateDataMapper backfills missing block "_id"s (e.g. for blocks nested inside a
+        // collapsed/never-mounted ancestor, whose ids the admin form never generated client-side).
+        // The admin only receives the rendered preview HTML back, not this mutated $object, so
+        // without surfacing it here the admin's own form state would stay out of sync with the ids
+        // the preview just rendered - breaking navigate-from-preview for exactly those blocks.
+        if ($object instanceof TemplateInterface) {
+            $defaults['data'] = $object->getTemplateData();
+        }
+
         return $defaults;
     }
 
