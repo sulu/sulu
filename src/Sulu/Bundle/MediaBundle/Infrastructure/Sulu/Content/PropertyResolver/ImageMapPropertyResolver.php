@@ -148,12 +148,16 @@ class ImageMapPropertyResolver implements PropertyResolverMetadataAwareInterface
                 $formMetadata = $globalBlocksMetadata[$globalBlockType];
             }
 
+            $blockIdGeneratorOption = $metadata->findOption('block_id_generator');
+            $forwardId = $blockIdGeneratorOption && true === $blockIdGeneratorOption->getValue() && isset($block['_id']) && \is_string($block['_id']);
+
             $innerContentViews[$key] = ContentView::create(
                 \array_merge(
                     [
                         'type' => $type,
                         'hotspot' => $block['hotspot'],
                     ],
+                    $forwardId ? ['_id' => $block['_id']] : [],
                     $this->metadataResolver->resolveItems($formMetadata->getItems(), $block, $locale)
                 ),
                 []
