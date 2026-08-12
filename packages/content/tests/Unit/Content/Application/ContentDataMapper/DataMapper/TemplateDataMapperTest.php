@@ -443,13 +443,23 @@ class TemplateDataMapperTest extends TestCase
 
         $templateData = $localizedDimensionContent->getTemplateData();
 
-        $this->assertIsString($templateData['content'][0]['_id']);
-        $this->assertNotSame('', $templateData['content'][0]['_id']);
-        $this->assertIsString($templateData['content'][0]['items'][0]['_id']);
-        $this->assertNotSame('', $templateData['content'][0]['items'][0]['_id']);
+        $content = $templateData['content'];
+        $this->assertIsArray($content);
+        $firstColumn = $content[0];
+        $this->assertIsArray($firstColumn);
+        $this->assertIsString($firstColumn['_id']);
+        $this->assertNotSame('', $firstColumn['_id']);
+        $columnItems = $firstColumn['items'];
+        $this->assertIsArray($columnItems);
+        $firstColumnItem = $columnItems[0];
+        $this->assertIsArray($firstColumnItem);
+        $this->assertIsString($firstColumnItem['_id']);
+        $this->assertNotSame('', $firstColumnItem['_id']);
 
         // A block that already carries an id keeps it instead of being overwritten.
-        $this->assertSame('existing-id', $templateData['content'][1]['_id']);
+        $secondColumn = $content[1];
+        $this->assertIsArray($secondColumn);
+        $this->assertSame('existing-id', $secondColumn['_id']);
     }
 
     public function testMapEnsuresImageMapHotspotIds(): void
@@ -494,11 +504,19 @@ class TemplateDataMapperTest extends TestCase
 
         $templateData = $localizedDimensionContent->getTemplateData();
 
-        $this->assertIsString($templateData['imageMap']['hotspots'][0]['_id']);
-        $this->assertNotSame('', $templateData['imageMap']['hotspots'][0]['_id']);
+        $imageMap = $templateData['imageMap'];
+        $this->assertIsArray($imageMap);
+        $hotspots = $imageMap['hotspots'];
+        $this->assertIsArray($hotspots);
+        $firstHotspot = $hotspots[0];
+        $this->assertIsArray($firstHotspot);
+        $this->assertIsString($firstHotspot['_id']);
+        $this->assertNotSame('', $firstHotspot['_id']);
 
         // A hotspot that already carries an id keeps it instead of being overwritten.
-        $this->assertSame('existing-hotspot-id', $templateData['imageMap']['hotspots'][1]['_id']);
+        $secondHotspot = $hotspots[1];
+        $this->assertIsArray($secondHotspot);
+        $this->assertSame('existing-hotspot-id', $secondHotspot['_id']);
     }
 
     public function testMapEnsuresIdsForArbitraryCustomTypedProperty(): void
@@ -532,8 +550,12 @@ class TemplateDataMapperTest extends TestCase
 
         $templateData = $localizedDimensionContent->getTemplateData();
 
-        $this->assertIsString($templateData['customRepeater'][0]['_id']);
-        $this->assertNotSame('', $templateData['customRepeater'][0]['_id']);
+        $customRepeater = $templateData['customRepeater'];
+        $this->assertIsArray($customRepeater);
+        $firstEntry = $customRepeater[0];
+        $this->assertIsArray($firstEntry);
+        $this->assertIsString($firstEntry['_id']);
+        $this->assertNotSame('', $firstEntry['_id']);
     }
 
     public function testMapDoesNotInjectIdsForNonTypedProperty(): void
