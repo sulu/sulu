@@ -50,7 +50,7 @@ class InitCommandTest extends SuluTestCase
 
     public function testCreateAnonymousRole(): void
     {
-        $this->runCommand();
+        $this->executeCommand();
 
         $this->assertStringContainsString(
             '[+] Create anonymous role in system "Sulu CMF" as "Anonymous User Sulu CMF".',
@@ -70,7 +70,7 @@ class InitCommandTest extends SuluTestCase
         $this->createAnonymousRole('Sulu CMF');
         $this->getEntityManager()->flush();
 
-        $this->runCommand();
+        $this->executeCommand();
 
         $this->assertStringContainsString(
             '[*] Anonymous role named "Anonymous User Sulu CMF" in system "Sulu CMF" was updated.',
@@ -123,7 +123,7 @@ class InitCommandTest extends SuluTestCase
         return $role;
     }
 
-    private function runCommand(): void
+    private function executeCommand(): void
     {
         $this->tester->execute(
             [],
