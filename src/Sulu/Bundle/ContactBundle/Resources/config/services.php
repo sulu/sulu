@@ -107,7 +107,8 @@ return static function(ContainerConfigurator $container) {
         ]);
 
     $services->set('sulu_contact.twig.cache_adapter', ArrayAdapter::class)
-        ->args(['$storeSerialized' => false]);
+        // second argument is $storeSerialized before Symfony 8 and $deepClone since, so it is set positionally
+        ->args([0, false]);
 
     $services->set('sulu_contact.twig', ContactTwigExtension::class)
         ->args([

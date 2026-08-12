@@ -27,16 +27,6 @@ class AppCache extends SuluHttpCache implements KernelInterface
         $this->addSubscriber(new AudienceTargetingCacheListener());
     }
 
-    public function serialize()
-    {
-        return $this->kernel->serialize();
-    }
-
-    public function unserialize($serialized): void
-    {
-        $this->kernel->unserialize($serialized);
-    }
-
     public function registerBundles(): iterable
     {
         return $this->kernel->registerBundles();
@@ -62,19 +52,14 @@ class AppCache extends SuluHttpCache implements KernelInterface
         return $this->kernel->getBundles();
     }
 
-    public function getBundle($name, $first = true): BundleInterface
+    public function getBundle(string $name): BundleInterface
     {
-        return $this->kernel->getBundle($name, $first);
+        return $this->kernel->getBundle($name);
     }
 
-    public function locateResource($name, $dir = null, $first = true): string
+    public function locateResource(string $name): string
     {
-        return $this->kernel->locateResource($name, $dir, $first);
-    }
-
-    public function getName()
-    {
-        return $this->kernel->getName();
+        return $this->kernel->locateResource($name);
     }
 
     public function getEnvironment(): string
@@ -110,6 +95,11 @@ class AppCache extends SuluHttpCache implements KernelInterface
     public function getBuildDir(): string
     {
         return $this->kernel->getBuildDir();
+    }
+
+    public function getShareDir(): ?string
+    {
+        return $this->kernel->getShareDir();
     }
 
     public function getLogDir(): string

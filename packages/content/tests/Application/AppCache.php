@@ -109,6 +109,11 @@ class AppCache extends SuluHttpCache implements KernelInterface
         return $this->kernel->getBuildDir();
     }
 
+    public function getShareDir(): ?string
+    {
+        return $this->kernel->getShareDir();
+    }
+
     public function getLogDir(): string
     {
         return $this->kernel->getLogDir();
