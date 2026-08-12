@@ -14,6 +14,7 @@ namespace Sulu\Component\Security\Authorization;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
@@ -43,7 +44,7 @@ class SecurityContextVoter implements VoterInterface
         return SecurityCondition::class === $class || \is_subclass_of($class, SecurityCondition::class);
     }
 
-    public function vote(TokenInterface $token, $object, array $attributes): int
+    public function vote(TokenInterface $token, $object, array $attributes, ?Vote $vote = null): int
     {
         /** @var User $user */
         $user = $token->getUser();
