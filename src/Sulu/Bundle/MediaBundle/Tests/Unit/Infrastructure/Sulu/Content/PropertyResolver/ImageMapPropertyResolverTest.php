@@ -354,10 +354,24 @@ class ImageMapPropertyResolverTest extends TestCase
             $metadata,
         );
 
-        $hotspots = $contentView->getContent()['hotspots']->getContent();
+        $imageMapContent = $contentView->getContent();
+        $this->assertIsArray($imageMapContent);
+        $hotspotsView = $imageMapContent['hotspots'];
+        $this->assertInstanceOf(ContentView::class, $hotspotsView);
+        $hotspots = $hotspotsView->getContent();
+        $this->assertIsArray($hotspots);
 
-        $this->assertSame('hotspot-id-1', $hotspots[0]->getContent()['_id'] ?? null);
-        $this->assertArrayNotHasKey('_id', $hotspots[1]->getContent());
+        $firstHotspotView = $hotspots[0];
+        $this->assertInstanceOf(ContentView::class, $firstHotspotView);
+        $firstHotspot = $firstHotspotView->getContent();
+        $this->assertIsArray($firstHotspot);
+        $this->assertSame('hotspot-id-1', $firstHotspot['_id'] ?? null);
+
+        $secondHotspotView = $hotspots[1];
+        $this->assertInstanceOf(ContentView::class, $secondHotspotView);
+        $secondHotspot = $secondHotspotView->getContent();
+        $this->assertIsArray($secondHotspot);
+        $this->assertArrayNotHasKey('_id', $secondHotspot);
     }
 
     public function testResolveDoesNotForwardHotspotIdWithoutBlockIdGeneratorOption(): void
@@ -371,9 +385,18 @@ class ImageMapPropertyResolverTest extends TestCase
             $this->createMetadata(),
         );
 
-        $hotspots = $contentView->getContent()['hotspots']->getContent();
+        $imageMapContent = $contentView->getContent();
+        $this->assertIsArray($imageMapContent);
+        $hotspotsView = $imageMapContent['hotspots'];
+        $this->assertInstanceOf(ContentView::class, $hotspotsView);
+        $hotspots = $hotspotsView->getContent();
+        $this->assertIsArray($hotspots);
 
-        $this->assertArrayNotHasKey('_id', $hotspots[0]->getContent());
+        $firstHotspotView = $hotspots[0];
+        $this->assertInstanceOf(ContentView::class, $firstHotspotView);
+        $firstHotspot = $firstHotspotView->getContent();
+        $this->assertIsArray($firstHotspot);
+        $this->assertArrayNotHasKey('_id', $firstHotspot);
     }
 
     public function testResolveGlobalBlockHotspot(): void
