@@ -287,6 +287,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
 
     public function load(array $configs, ContainerBuilder $container): void
     {
+        /** @var array<string, string> $bundles */
         $bundles = $container->getParameter('kernel.bundles');
 
         $configuration = new Configuration();
