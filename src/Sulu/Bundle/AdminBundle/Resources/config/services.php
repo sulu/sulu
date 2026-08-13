@@ -169,7 +169,8 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_admin.property_metadata_mapper.text', TextPropertyMetadataMapper::class)
         ->args([new Reference('sulu_admin.property_metadata_min_max_value_resolver')])
         ->tag('sulu_admin.property_metadata_mapper', ['type' => 'text_line'])
-        ->tag('sulu_admin.property_metadata_mapper', ['type' => 'text_area']);
+        ->tag('sulu_admin.property_metadata_mapper', ['type' => 'text_area'])
+        ->tag('sulu_admin.property_metadata_mapper', ['type' => 'text_editor']);
 
     $services->set('sulu_admin.property_metadata_mapper.selection', SelectionPropertyMetadataMapper::class)
         ->args([new Reference('sulu_admin.property_metadata_min_max_value_resolver')]);
