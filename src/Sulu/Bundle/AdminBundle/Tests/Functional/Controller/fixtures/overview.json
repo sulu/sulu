@@ -307,14 +307,23 @@
                                 ]
                             },
                             "then": {
-                                "type": [
-                                    "number",
-                                    "string",
-                                    "boolean",
-                                    "object",
-                                    "array",
-                                    "null"
-                                ]
+                                "type": "object",
+                                "properties": {
+                                    "text_editor": {
+                                        "anyOf": [
+                                            {
+                                                "type": "null"
+                                            },
+                                            {
+                                                "type": "string",
+                                                "maxLength": 0
+                                            },
+                                            {
+                                                "type": "string"
+                                            }
+                                        ]
+                                    }
+                                }
                             }
                         }
                     ]
@@ -337,14 +346,23 @@
                                 ]
                             },
                             "then": {
-                                "type": [
-                                    "number",
-                                    "string",
-                                    "boolean",
-                                    "object",
-                                    "array",
-                                    "null"
-                                ]
+                                "type": "object",
+                                "properties": {
+                                    "text_editor": {
+                                        "anyOf": [
+                                            {
+                                                "type": "null"
+                                            },
+                                            {
+                                                "type": "string",
+                                                "maxLength": 0
+                                            },
+                                            {
+                                                "type": "string"
+                                            }
+                                        ]
+                                    }
+                                }
                             }
                         }
                     ]
