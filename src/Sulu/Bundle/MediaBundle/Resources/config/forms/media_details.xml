@@ -28,6 +28,101 @@
                     </meta>
                 </property>
 
+                <property name="origin" type="single_select">
+                    <meta>
+                        <title>sulu_media.origin</title>
+                    </meta>
+
+                    <params>
+                        <param name="default_value" value="unknown"/>
+
+                        <param name="values" type="collection">
+                            <param name="human_created">
+                                <meta>
+                                    <title>sulu_media.origin_human_created</title>
+                                </meta>
+                            </param>
+
+                            <param name="ai_generated">
+                                <meta>
+                                    <title>sulu_media.origin_ai_generated</title>
+                                </meta>
+                            </param>
+
+                            <param name="ai_modified">
+                                <meta>
+                                    <title>sulu_media.origin_ai_modified</title>
+                                </meta>
+                            </param>
+
+                            <param name="unknown">
+                                <meta>
+                                    <title>sulu_media.origin_unknown</title>
+                                </meta>
+                            </param>
+                        </param>
+                    </params>
+                </property>
+
+                <section name="aiDisclosure" visibleCondition="origin == 'ai_generated' || origin == 'ai_modified'">
+                    <meta>
+                        <title>sulu_media.ai_disclosure</title>
+                    </meta>
+
+                    <properties>
+                        <property name="aiDisclosureDisabled" type="checkbox">
+                            <meta>
+                                <info_text>sulu_media.ai_disclosure_disabled_info</info_text>
+                            </meta>
+
+                            <params>
+                                <param name="type" value="toggler"/>
+                                <param name="label">
+                                    <meta>
+                                        <title>sulu_media.ai_disclosure_disabled</title>
+                                    </meta>
+                                </param>
+                            </params>
+                        </property>
+
+                        <property name="aiDisclosureText" type="text_area" visibleCondition="aiDisclosureDisabled != true">
+                            <meta>
+                                <title>sulu_media.ai_disclosure_text</title>
+                            </meta>
+                        </property>
+
+                        <property name="aiDisclosureIconVariant" type="single_select" visibleCondition="aiDisclosureDisabled != true">
+                            <meta>
+                                <title>sulu_media.ai_disclosure_icon_variant</title>
+                            </meta>
+
+                            <params>
+                                <param name="default_value" value="auto"/>
+
+                                <param name="values" type="collection">
+                                    <param name="auto">
+                                        <meta>
+                                            <title>sulu_media.ai_disclosure_icon_variant_auto</title>
+                                        </meta>
+                                    </param>
+
+                                    <param name="light">
+                                        <meta>
+                                            <title>sulu_media.ai_disclosure_icon_variant_light</title>
+                                        </meta>
+                                    </param>
+
+                                    <param name="dark">
+                                        <meta>
+                                            <title>sulu_media.ai_disclosure_icon_variant_dark</title>
+                                        </meta>
+                                    </param>
+                                </param>
+                            </params>
+                        </property>
+                    </properties>
+                </section>
+
                 <section name="license">
                     <meta>
                         <title>sulu_media.license</title>

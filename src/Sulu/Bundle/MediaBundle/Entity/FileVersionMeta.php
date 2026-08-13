@@ -34,6 +34,11 @@ class FileVersionMeta
     /**
      * @var string|null
      */
+    private $aiDisclosureText;
+
+    /**
+     * @var string|null
+     */
     private $copyright;
 
     /**
@@ -107,6 +112,30 @@ class FileVersionMeta
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set aiDisclosureText.
+     *
+     * @param string|null $aiDisclosureText
+     *
+     * @return FileVersionMeta
+     */
+    public function setAiDisclosureText($aiDisclosureText)
+    {
+        $this->aiDisclosureText = $aiDisclosureText;
+
+        return $this;
+    }
+
+    /**
+     * Get aiDisclosureText.
+     *
+     * @return string|null
+     */
+    public function getAiDisclosureText()
+    {
+        return $this->aiDisclosureText;
     }
 
     /**

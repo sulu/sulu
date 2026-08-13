@@ -130,6 +130,21 @@ class FileVersion implements AuditableInterface
     private $focusPointY;
 
     /**
+     * @var string|null
+     */
+    private $origin;
+
+    /**
+     * @var bool|null
+     */
+    private $aiDisclosureDisabled;
+
+    /**
+     * @var string|null
+     */
+    private $aiDisclosureIconVariant;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -743,5 +758,65 @@ class FileVersion implements AuditableInterface
     public function setFocusPointY($focusPointY)
     {
         $this->focusPointY = $focusPointY;
+    }
+
+    /**
+     * Get origin.
+     *
+     * @return string|null
+     */
+    public function getOrigin()
+    {
+        return $this->origin;
+    }
+
+    /**
+     * Set origin.
+     *
+     * @param string|null $origin
+     */
+    public function setOrigin($origin)
+    {
+        $this->origin = $origin;
+    }
+
+    /**
+     * Get aiDisclosureDisabled.
+     *
+     * @return bool|null
+     */
+    public function getAiDisclosureDisabled()
+    {
+        return $this->aiDisclosureDisabled;
+    }
+
+    /**
+     * Set aiDisclosureDisabled.
+     *
+     * @param bool|null $aiDisclosureDisabled
+     */
+    public function setAiDisclosureDisabled($aiDisclosureDisabled)
+    {
+        $this->aiDisclosureDisabled = $aiDisclosureDisabled;
+    }
+
+    /**
+     * Get aiDisclosureIconVariant.
+     *
+     * @return string|null
+     */
+    public function getAiDisclosureIconVariant()
+    {
+        return $this->aiDisclosureIconVariant;
+    }
+
+    /**
+     * Set aiDisclosureIconVariant.
+     *
+     * @param string|null $aiDisclosureIconVariant
+     */
+    public function setAiDisclosureIconVariant($aiDisclosureIconVariant)
+    {
+        $this->aiDisclosureIconVariant = $aiDisclosureIconVariant;
     }
 }
