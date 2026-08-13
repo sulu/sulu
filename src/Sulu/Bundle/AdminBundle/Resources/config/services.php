@@ -48,6 +48,7 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegist
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SelectionPropertyMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SingleSelectionPropertyMetadataMapper;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\TextEditorPropertyMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\TextPropertyMetadataMapper;
 use Sulu\Bundle\AdminBundle\Serializer\Handler\SchemaHandler;
 use Sulu\Bundle\AdminBundle\Serializer\Subscriber\DropdownToolbarActionSubscriber;
@@ -169,7 +170,9 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_admin.property_metadata_mapper.text', TextPropertyMetadataMapper::class)
         ->args([new Reference('sulu_admin.property_metadata_min_max_value_resolver')])
         ->tag('sulu_admin.property_metadata_mapper', ['type' => 'text_line'])
-        ->tag('sulu_admin.property_metadata_mapper', ['type' => 'text_area'])
+        ->tag('sulu_admin.property_metadata_mapper', ['type' => 'text_area']);
+
+    $services->set('sulu_admin.property_metadata_mapper.text_editor', TextEditorPropertyMetadataMapper::class)
         ->tag('sulu_admin.property_metadata_mapper', ['type' => 'text_editor']);
 
     $services->set('sulu_admin.property_metadata_mapper.selection', SelectionPropertyMetadataMapper::class)
