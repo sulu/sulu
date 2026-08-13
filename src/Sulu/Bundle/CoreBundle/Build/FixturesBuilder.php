@@ -17,14 +17,19 @@ namespace Sulu\Bundle\CoreBundle\Build;
 class FixturesBuilder extends SuluBuilder
 {
     /**
+     * @var string[]
+     */
+    private array $additionalDependencies = [];
+
+    /**
      * Fixtures often require data which is created by builders of optional bundles. As the core bundle can not
      * depend on those builders, they can register themselves as additional dependency instead.
      *
      * @param string[] $additionalDependencies
      */
-    public function __construct(
-        private array $additionalDependencies = [],
-    ) {
+    public function __construct(array $additionalDependencies = [])
+    {
+        $this->additionalDependencies = $additionalDependencies;
     }
 
     public function getName()
