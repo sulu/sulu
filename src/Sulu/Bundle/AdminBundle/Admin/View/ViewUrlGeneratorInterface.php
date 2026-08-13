@@ -13,23 +13,16 @@ namespace Sulu\Bundle\AdminBundle\Admin\View;
 
 use Sulu\Bundle\AdminBundle\Exception\ViewNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\ViewParameterNotFoundException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface as SymfonyUrlGeneratorInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Generates urls to the Sulu Admin frontend application which point to a given View.
  */
 interface ViewUrlGeneratorInterface
 {
-    public const ABSOLUTE_URL = SymfonyUrlGeneratorInterface::ABSOLUTE_URL;
-
-    public const ABSOLUTE_PATH = SymfonyUrlGeneratorInterface::ABSOLUTE_PATH;
-
-    public const RELATIVE_PATH = SymfonyUrlGeneratorInterface::RELATIVE_PATH;
-
-    public const NETWORK_PATH = SymfonyUrlGeneratorInterface::NETWORK_PATH;
-
     /**
      * @param array<string, int|string> $viewParameters
+     * @param UrlGeneratorInterface::ABSOLUTE_URL|UrlGeneratorInterface::ABSOLUTE_PATH|UrlGeneratorInterface::RELATIVE_PATH|UrlGeneratorInterface::NETWORK_PATH $referenceType
      *
      * @throws ViewNotFoundException
      * @throws ViewParameterNotFoundException
@@ -37,6 +30,6 @@ interface ViewUrlGeneratorInterface
     public function generate(
         string $viewName,
         array $viewParameters = [],
-        int $referenceType = self::ABSOLUTE_PATH,
+        int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH,
     ): string;
 }

@@ -20,7 +20,6 @@ use Sulu\Bundle\AdminBundle\Admin\View\ViewUrlGenerator;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewUrlGeneratorInterface;
 use Sulu\Bundle\AdminBundle\Application\BlockIdGenerator\BlockIdGenerator;
 use Sulu\Bundle\AdminBundle\Application\BlockIdGenerator\BlockIdGeneratorInterface;
-use Sulu\Bundle\AdminBundle\Command\DownloadBuildCommand;
 use Sulu\Bundle\AdminBundle\Command\DownloadLanguageCommand;
 use Sulu\Bundle\AdminBundle\Command\InfoCommand;
 use Sulu\Bundle\AdminBundle\Command\UpdateBuildCommand;

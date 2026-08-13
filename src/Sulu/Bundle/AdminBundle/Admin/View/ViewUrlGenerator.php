@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Admin\View;
 
 use Sulu\Bundle\AdminBundle\Exception\ViewParameterNotFoundException;
+use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -20,17 +21,17 @@ class ViewUrlGenerator implements ViewUrlGeneratorInterface
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
         private ViewRegistry $viewRegistry,
-        private ?RequestStack $requestStack = null,
+        private RequestStack $requestStack,
     ) {
     }
 
     public function generate(
         string $viewName,
         array $viewParameters = [],
-        int $referenceType = self::ABSOLUTE_PATH,
+        int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH,
     ): string {
         $view = $this->viewRegistry->findViewByName($viewName);
-        $viewParameters = $this->resolveDefaultParameters($view->getPath(), $viewParameters);
+        $viewParameters = \array_merge($this->getDefaultParameters($view->getPath()), $viewParameters);
 
         $path = \preg_replace_callback(
             '/:([a-zA-Z0-9_]+)/',
@@ -52,33 +53,29 @@ class ViewUrlGenerator implements ViewUrlGeneratorInterface
     }
 
     /**
-     * @param array<string, int|string> $viewParameters
-     *
-     * @return array<string, int|string>
+     * @return array<string, string>
      */
-    private function resolveDefaultParameters(string $path, array $viewParameters): array
+    private function getDefaultParameters(string $path): array
     {
-        $request = $this->requestStack?->getCurrentRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         if (!$request) {
-            return $viewParameters;
+            return [];
         }
 
-        $webspace = $request->attributes->get('webspace');
+        $defaultParameters = [];
 
-        if (!\array_key_exists('webspace', $viewParameters)
-            && \str_contains($path, ':webspace')
-            && \is_string($webspace)
-            && '' !== $webspace
-        ) {
-            $viewParameters['webspace'] = $webspace;
+        $webspace = $request->attributes->get(RequestAttributeEnum::WEBSPACE->value);
+
+        if (\str_contains($path, ':webspace') && \is_string($webspace) && '' !== $webspace) {
+            $defaultParameters['webspace'] = $webspace;
         }
 
-        if (!\array_key_exists('locale', $viewParameters) && \str_contains($path, ':locale')) {
+        if (\str_contains($path, ':locale')) {
             $locale = $request->query->get('locale');
-            $viewParameters['locale'] = \is_string($locale) && '' !== $locale ? $locale : $request->getLocale();
+            $defaultParameters['locale'] = \is_string($locale) && '' !== $locale ? $locale : $request->getLocale();
         }
 
-        return $viewParameters;
+        return $defaultParameters;
     }
 }

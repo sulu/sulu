@@ -17,9 +17,9 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Admin\View\View;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewUrlGenerator;
-use Sulu\Bundle\AdminBundle\Admin\View\ViewUrlGeneratorInterface;
 use Sulu\Bundle\AdminBundle\Exception\ViewNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\ViewParameterNotFoundException;
+use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -51,12 +51,12 @@ class ViewUrlGeneratorTest extends TestCase
         $this->requestStack = $this->prophesize(RequestStack::class);
     }
 
-    private function createViewUrlGenerator(bool $withRequestStack = true): ViewUrlGenerator
+    private function createViewUrlGenerator(): ViewUrlGenerator
     {
         return new ViewUrlGenerator(
             $this->urlGenerator->reveal(),
             $this->viewRegistry->reveal(),
-            $withRequestStack ? $this->requestStack->reveal() : null
+            $this->requestStack->reveal()
         );
     }
 
@@ -66,7 +66,7 @@ class ViewUrlGeneratorTest extends TestCase
         $this->viewRegistry->findViewByName('sulu_contact.contact_edit_form.details')->willReturn($view);
         $this->requestStack->getCurrentRequest()->willReturn(null);
 
-        $this->urlGenerator->generate('sulu_admin', [], ViewUrlGeneratorInterface::ABSOLUTE_PATH)
+        $this->urlGenerator->generate('sulu_admin', [], UrlGeneratorInterface::ABSOLUTE_PATH)
             ->willReturn('/admin/');
 
         $viewUrlGenerator = $this->createViewUrlGenerator();
@@ -83,7 +83,7 @@ class ViewUrlGeneratorTest extends TestCase
         $this->viewRegistry->findViewByName('sulu_contact.contacts')->willReturn($view);
         $this->requestStack->getCurrentRequest()->willReturn(null);
 
-        $this->urlGenerator->generate('sulu_admin', [], ViewUrlGeneratorInterface::ABSOLUTE_PATH)
+        $this->urlGenerator->generate('sulu_admin', [], UrlGeneratorInterface::ABSOLUTE_PATH)
             ->willReturn('/admin/');
 
         $viewUrlGenerator = $this->createViewUrlGenerator();
@@ -97,7 +97,7 @@ class ViewUrlGeneratorTest extends TestCase
         $this->viewRegistry->findViewByName('sulu_contact.contact_edit_form.details')->willReturn($view);
         $this->requestStack->getCurrentRequest()->willReturn(null);
 
-        $this->urlGenerator->generate('sulu_admin', [], ViewUrlGeneratorInterface::ABSOLUTE_PATH)
+        $this->urlGenerator->generate('sulu_admin', [], UrlGeneratorInterface::ABSOLUTE_PATH)
             ->willReturn('/admin/');
 
         $viewUrlGenerator = $this->createViewUrlGenerator();
@@ -114,7 +114,7 @@ class ViewUrlGeneratorTest extends TestCase
         $this->viewRegistry->findViewByName('sulu_contact.contact_edit_form.details')->willReturn($view);
         $this->requestStack->getCurrentRequest()->willReturn(null);
 
-        $this->urlGenerator->generate('sulu_admin', [], ViewUrlGeneratorInterface::ABSOLUTE_URL)
+        $this->urlGenerator->generate('sulu_admin', [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://example.org/admin/');
 
         $viewUrlGenerator = $this->createViewUrlGenerator();
@@ -124,7 +124,7 @@ class ViewUrlGeneratorTest extends TestCase
             $viewUrlGenerator->generate(
                 'sulu_contact.contact_edit_form.details',
                 ['id' => 1],
-                ViewUrlGeneratorInterface::ABSOLUTE_URL
+                UrlGeneratorInterface::ABSOLUTE_URL
             )
         );
     }
@@ -148,7 +148,7 @@ class ViewUrlGeneratorTest extends TestCase
         $this->viewRegistry->findViewByName('sulu_contact.not_existing')
             ->willThrow(new ViewNotFoundException('sulu_contact.not_existing'));
 
-        $viewUrlGenerator = $this->createViewUrlGenerator(false);
+        $viewUrlGenerator = $this->createViewUrlGenerator();
         $viewUrlGenerator->generate('sulu_contact.not_existing');
     }
 
@@ -158,10 +158,10 @@ class ViewUrlGeneratorTest extends TestCase
         $this->viewRegistry->findViewByName('sulu_page.page_edit_form')->willReturn($view);
 
         $request = Request::create('/', 'GET', ['locale' => 'de']);
-        $request->attributes = new ParameterBag(['webspace' => 'sulu']);
+        $request->attributes = new ParameterBag([RequestAttributeEnum::WEBSPACE->value => 'sulu']);
         $this->requestStack->getCurrentRequest()->willReturn($request);
 
-        $this->urlGenerator->generate('sulu_admin', [], ViewUrlGeneratorInterface::ABSOLUTE_PATH)
+        $this->urlGenerator->generate('sulu_admin', [], UrlGeneratorInterface::ABSOLUTE_PATH)
             ->willReturn('/admin/');
 
         $viewUrlGenerator = $this->createViewUrlGenerator();
@@ -181,7 +181,7 @@ class ViewUrlGeneratorTest extends TestCase
         $request->setLocale('en');
         $this->requestStack->getCurrentRequest()->willReturn($request);
 
-        $this->urlGenerator->generate('sulu_admin', [], ViewUrlGeneratorInterface::ABSOLUTE_PATH)
+        $this->urlGenerator->generate('sulu_admin', [], UrlGeneratorInterface::ABSOLUTE_PATH)
             ->willReturn('/admin/');
 
         $viewUrlGenerator = $this->createViewUrlGenerator();
@@ -197,7 +197,7 @@ class ViewUrlGeneratorTest extends TestCase
         $request = Request::create('/', 'GET', ['locale' => 'de']);
         $this->requestStack->getCurrentRequest()->willReturn($request);
 
-        $this->urlGenerator->generate('sulu_admin', [], ViewUrlGeneratorInterface::ABSOLUTE_PATH)
+        $this->urlGenerator->generate('sulu_admin', [], UrlGeneratorInterface::ABSOLUTE_PATH)
             ->willReturn('/admin/');
 
         $viewUrlGenerator = $this->createViewUrlGenerator();
@@ -208,14 +208,15 @@ class ViewUrlGeneratorTest extends TestCase
         );
     }
 
-    public function testGenerateWithoutRequestStackThrowsForRequiredParameter(): void
+    public function testGenerateThrowsForRequiredParameterWithoutCurrentRequest(): void
     {
         $this->expectException(ViewParameterNotFoundException::class);
 
         $view = new View('sulu_page.pages', '/pages/:locale', 'list');
         $this->viewRegistry->findViewByName('sulu_page.pages')->willReturn($view);
+        $this->requestStack->getCurrentRequest()->willReturn(null);
 
-        $viewUrlGenerator = $this->createViewUrlGenerator(false);
+        $viewUrlGenerator = $this->createViewUrlGenerator();
         $viewUrlGenerator->generate('sulu_page.pages');
     }
 }
