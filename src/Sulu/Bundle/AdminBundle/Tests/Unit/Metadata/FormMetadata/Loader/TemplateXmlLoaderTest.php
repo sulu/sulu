@@ -45,7 +45,27 @@ class TemplateXmlLoaderTest extends TestCase
     protected function setUp(): void
     {
         $this->translator = $this->prophesize(TranslatorInterface::class);
-        $this->loader = $this->createLoader();
+        $tagXmlParser = new TagXmlParser();
+        $metaXmlParser = new MetaXmlParser(
+            $this->translator->reveal(),
+            ['en' => 'en', 'de' => 'de', 'fr' => 'fr', 'nl' => 'nl'],
+        );
+        $propertiesXmlParser = new PropertiesXmlParser(
+            $tagXmlParser,
+            $metaXmlParser,
+        );
+        $schemaXmlParser = new SchemaXmlParser();
+        $templateXmlParser = new TemplateXmlParser();
+
+        $container = new Container();
+        $propertyMetadataMapperRegistry = new PropertyMetadataMapperRegistry($container);
+        $schemaMetadataProvider = new SchemaMetadataProvider($propertyMetadataMapperRegistry);
+        $blockMetadataProvider = new BlockPropertyMetadataMapper(
+            $schemaMetadataProvider,
+        );
+        $container->set('block', $blockMetadataProvider);
+
+        $this->loader = new TemplateXmlLoader($propertiesXmlParser, $schemaXmlParser, $tagXmlParser, $metaXmlParser, $templateXmlParser, $schemaMetadataProvider);
     }
 
     public function testLoadDefaultTemplate(): void
@@ -484,37 +504,5 @@ class TemplateXmlLoaderTest extends TestCase
     {
         return \dirname(__DIR__, 4) . \DIRECTORY_SEPARATOR
             . 'Application' . \DIRECTORY_SEPARATOR . 'config' . \DIRECTORY_SEPARATOR . 'templates' . \DIRECTORY_SEPARATOR . 'pages' . \DIRECTORY_SEPARATOR;
-    }
-
-    private function createLoader(): TemplateXmlLoader
-    {
-        $tagXmlParser = new TagXmlParser();
-        $metaXmlParser = new MetaXmlParser(
-            $this->translator->reveal(),
-            ['en' => 'en', 'de' => 'de', 'fr' => 'fr', 'nl' => 'nl'],
-        );
-        $propertiesXmlParser = new PropertiesXmlParser(
-            $tagXmlParser,
-            $metaXmlParser,
-        );
-        $schemaXmlParser = new SchemaXmlParser();
-        $templateXmlParser = new TemplateXmlParser();
-
-        $container = new Container();
-        $propertyMetadataMapperRegistry = new PropertyMetadataMapperRegistry($container);
-        $schemaMetadataProvider = new SchemaMetadataProvider($propertyMetadataMapperRegistry);
-        $blockMetadataProvider = new BlockPropertyMetadataMapper(
-            $schemaMetadataProvider,
-        );
-        $container->set('block', $blockMetadataProvider);
-
-        return new TemplateXmlLoader(
-            $propertiesXmlParser,
-            $schemaXmlParser,
-            $tagXmlParser,
-            $metaXmlParser,
-            $templateXmlParser,
-            $schemaMetadataProvider,
-        );
     }
 }
