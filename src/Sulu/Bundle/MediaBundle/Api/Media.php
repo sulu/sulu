@@ -279,6 +279,110 @@ class Media extends ApiWrapper
     }
 
     /**
+     * @param string|null $aiDisclosureText
+     *
+     * @return $this
+     */
+    public function setAiDisclosureText($aiDisclosureText)
+    {
+        $this->getMeta(true)->setAiDisclosureText($aiDisclosureText);
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    #[VirtualProperty]
+    #[SerializedName('aiDisclosureText')]
+    public function getAiDisclosureText()
+    {
+        if (!$this->getLocalizedMeta()) {
+            return null;
+        }
+
+        return $this->getLocalizedMeta()->getAiDisclosureText();
+    }
+
+    /**
+     * @param bool|null $aiDisclosureDisabled
+     *
+     * @return $this
+     */
+    public function setAiDisclosureDisabled($aiDisclosureDisabled)
+    {
+        $this->getFileVersion()->setAiDisclosureDisabled($aiDisclosureDisabled);
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    #[VirtualProperty]
+    #[SerializedName('aiDisclosureDisabled')]
+    public function getAiDisclosureDisabled()
+    {
+        if (!$this->getFileVersion()) {
+            return null;
+        }
+
+        return $this->getFileVersion()->getAiDisclosureDisabled();
+    }
+
+    /**
+     * @param string|null $aiDisclosureIconVariant
+     *
+     * @return $this
+     */
+    public function setAiDisclosureIconVariant($aiDisclosureIconVariant)
+    {
+        $this->getFileVersion()->setAiDisclosureIconVariant($aiDisclosureIconVariant);
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    #[VirtualProperty]
+    #[SerializedName('aiDisclosureIconVariant')]
+    public function getAiDisclosureIconVariant()
+    {
+        if (!$this->getFileVersion()) {
+            return null;
+        }
+
+        return $this->getFileVersion()->getAiDisclosureIconVariant();
+    }
+
+    /**
+     * @param string|null $origin
+     *
+     * @return $this
+     */
+    public function setOrigin($origin)
+    {
+        $this->getFileVersion()->setOrigin($origin);
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    #[VirtualProperty]
+    #[SerializedName('origin')]
+    public function getOrigin()
+    {
+        if (!$this->getFileVersion()) {
+            return null;
+        }
+
+        return $this->getFileVersion()->getOrigin();
+    }
+
+    /**
      * @param string|null $copyright
      *
      * @return $this
