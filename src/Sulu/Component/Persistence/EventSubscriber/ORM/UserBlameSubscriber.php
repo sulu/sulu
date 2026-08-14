@@ -20,6 +20,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
+ * @internal no bc-promise given, we recommend building your own user blame subscriber if you need to extend something.
+ *
  * Ensure that blame can be assigned to users when they break things.
  *
  * Persists the user that created and the last user that changed ORM classes

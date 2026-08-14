@@ -22,7 +22,7 @@ type Props = {
     enableTitle?: ?boolean,
     excludedTypes: string[],
     locale: IObservableValue<string>,
-    onChange: (value: LinkValue) => void,
+    onChange: (value: ?LinkValue) => void,
     onFinish: () => void,
     types?: string[],
     value: ?LinkValue,
@@ -116,7 +116,12 @@ class Link extends Component<Props> {
     };
 
     @action handleRemoveClick = () => {
-        this.changeValue(undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+        const {onChange, onFinish} = this.props;
+
+        // clear the whole value instead of an object with only undefined properties, otherwise old
+        // sub-property values (e.g. target, anchor) are not properly cleared when the field is saved
+        onChange(undefined);
+        onFinish();
     };
 
     @action handleTitleClick = () => {

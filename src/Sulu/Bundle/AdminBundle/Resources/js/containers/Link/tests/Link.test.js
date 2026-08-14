@@ -292,18 +292,8 @@ test('Invalidate values on RemoveButton click', () => {
             const removeButton = link.find('.removeButton');
             removeButton.simulate('click');
 
-            expect(changeSpy).toHaveBeenCalledWith(
-                {
-                    title: undefined,
-                    href: undefined,
-                    provider: undefined,
-                    locale: 'en',
-                    query: undefined,
-                    anchor: undefined,
-                    target: undefined,
-                    rel: undefined,
-                }
-            );
+            expect(changeSpy).toHaveBeenCalledWith(undefined);
+            expect(finishSpy).toHaveBeenCalledWith();
         });
 });
 
