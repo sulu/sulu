@@ -11,7 +11,11 @@ EOF;
 
 $finder = PhpCsFixer\Finder::create()
     ->exclude(['var/cache', 'tests/Resources/cache', 'node_modules'])
-    ->in(__DIR__);
+    ->in(__DIR__)
+    ->notPath([
+        'config/bundles.php',
+        'config/reference.php',
+    ]);
 
 $config = new PhpCsFixer\Config();
 $config->setRiskyAllowed(true)

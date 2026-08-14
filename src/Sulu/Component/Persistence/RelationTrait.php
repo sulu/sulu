@@ -12,7 +12,7 @@
 namespace Sulu\Component\Persistence;
 
 /**
- * Offers methods for easier handling of relations.
+ * @deprecated since Sulu 2.6, we recommend building your own relation handling logic instead of using this trait.
  */
 trait RelationTrait
 {

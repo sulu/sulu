@@ -16,6 +16,8 @@ use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
 use Sulu\Component\Persistence\Model\TimestampableInterface;
 
 /**
+ * @internal no bc-promise given, we recommend building your own timestampable subscriber if you need to extend something.
+ *
  * Manage the timestamp fields on models implementing the
  * TimestampableInterface.
  */

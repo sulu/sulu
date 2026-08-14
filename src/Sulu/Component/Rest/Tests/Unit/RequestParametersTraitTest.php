@@ -21,6 +21,13 @@ class RequestParametersTraitTest extends TestCase
 {
     use RequestParametersTrait;
 
+    public function setUp(): void
+    {
+        if (!\method_exists(Request::class, 'get')) { // @phpstan-ignore-line function.alreadyNarrowedType
+            $this->markTestSkipped('Symfony version does not support get() method.');
+        }
+    }
+
     public function testGetRequestParameter(): void
     {
         $request = new Request(['test' => 'data']);

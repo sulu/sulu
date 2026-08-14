@@ -15,6 +15,8 @@ use Doctrine\ORM\EntityRepository as BaseEntityRepository;
 use Sulu\Component\Persistence\Repository\RepositoryInterface;
 
 /**
+ * @deprecated since Sulu 2.6, we recommend building your own repository instead of using this class.
+ *
  * Doctrine ORM entity repository.
  *
  * @template T of object

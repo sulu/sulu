@@ -20,6 +20,9 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @deprecated since Sulu 2.6, use $request->query->get(), $request->request->get(),
  *             $request->attributes->get() or $request->getPayload()->get() instead.
+ *             There will be no support for this trait with Symfony 8, projects,
+ *             libraries, ... upgrading to Symfony 8 must already migrate away from
+ *             this trait.
  */
 trait RequestParametersTrait
 {

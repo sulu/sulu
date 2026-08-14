@@ -27,7 +27,6 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
-use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -46,8 +45,6 @@ class MediaController extends AbstractMediaController implements
     SecuredControllerInterface,
     SecuredObjectControllerInterface
 {
-    use RequestParametersTrait;
-
     /**
      * @param class-string $mediaClass
      */

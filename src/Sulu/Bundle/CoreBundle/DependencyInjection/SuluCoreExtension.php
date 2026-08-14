@@ -333,6 +333,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
      */
     private function initListBuilder(ContainerBuilder $container, FileLoader $loader)
     {
+        /** @var array<string, string> $bundles */
         $bundles = $container->getParameter('kernel.bundles');
         if (\array_key_exists('SuluAdminBundle', $bundles)) {
             $loader->load('list_builder.php');
