@@ -84,7 +84,7 @@ class LinkPropertyResolverTest extends TestCase
     {
         $contentView = $this->resolver->resolve($data, 'en');
 
-        $this->assertSame($data, $contentView->getContent());
+        $this->assertNull($contentView->getContent());
         $this->assertSame([], $contentView->getView());
     }
 

@@ -28,12 +28,7 @@ class LinkPropertyResolver implements PropertyResolverInterface
             || !(\is_string($data['href']) || \is_integer($data['href']))
             || !\is_string($data['provider'])
         ) {
-            if (\is_array($data) && \array_key_exists('href', $data) && null === $data['href']) {
-                // an emptied link field is saved as an array with all values set to null
-                return ContentView::create(null, [...$params]);
-            }
-
-            return ContentView::create($data, [...$params]);
+            return ContentView::create(null, [...$params]);
         }
 
         /** @var string $resourceLoaderKey */
