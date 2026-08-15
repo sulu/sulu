@@ -39,6 +39,8 @@ type Props = {|
     onFocus?: (event: { target: EventTarget }) => void,
     options?: SchemaOptions,
     value: ?string,
+    onCreation?: (editor: any) => void,
+    plugins?: Array<any>,
 |};
 
 /**
@@ -215,6 +217,7 @@ export default class CKEditor5 extends React.Component<Props> {
                     Table,
                     TableToolbar,
                     ...pluginRegistry.plugins,
+                    ...(this.props.plugins ?? []),
                 ],
                 ...configRegistry.configs.reduce((previousConfig, config) => {
                     return {...previousConfig, ...config(previousConfig)};
@@ -266,6 +269,8 @@ export default class CKEditor5 extends React.Component<Props> {
                         }
                     });
                 }
+
+                this.props.onCreation?.(editor);
             })
             .catch((error) => {
                 log.error(error);

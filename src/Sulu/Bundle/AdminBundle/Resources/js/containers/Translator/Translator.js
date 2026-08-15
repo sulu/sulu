@@ -1,3 +1,4 @@
+// src/Sulu/Bundle/AdminBundle/Resources/js/containers/Translator/Translator.js
 // @flow
 
 import React from 'react';
@@ -8,6 +9,10 @@ import {Overlay, SingleSelect} from '../../components';
 import {Requester} from '../../services';
 import translatorStyles from './translator.scss';
 import Input from './Input';
+import TranslationAlternatives from './TranslationAlternatives';
+
+// Import dummy data (in a real implementation, this would come from API calls)
+import {DUMMY_TEXT, DUMMY_SEGMENTS, DUMMY_ALTERNATIVES} from './dummyData';
 
 type Props = {|
     action?: React$ComponentType<Object>,
@@ -18,6 +23,8 @@ type Props = {|
         errorTranslatingText: string,
         insert: string,
         title: string,
+        alternatives: string, // "Alternative translations"
+        noAlternatives: string, // "No alternatives available"
     |},
     onConfirm: (text: string) => void,
     onDialogClose: () => void,
@@ -51,6 +58,14 @@ export default class Translator extends React.Component<Props> {
     @observable targetLanguage = undefined;
     @observable lastResponse = undefined;
 
+    // New observables for alternatives feature
+    @observable segments = [];
+    @observable selectedSegment = null;
+    @observable alternatives = [];
+    @observable alternativesLoading = false;
+
+    // ... existing methods ...
+
     @action handleClose = () => {
         const {onDialogClose} = this.props;
 
@@ -69,10 +84,6 @@ export default class Translator extends React.Component<Props> {
         onConfirm(this.targetText);
     };
 
-    @action handleSnackbarCloseClick = () => {
-        this.snackbarMessage = undefined;
-    };
-
     @action componentDidMount() {
         this.targetLanguage = this.props.locale;
         this.sourceText = this.props.value;
@@ -84,6 +95,11 @@ export default class Translator extends React.Component<Props> {
         this.sourceText = text;
 
         this.translateText(text);
+    };
+
+    @action resetAlternatives = () => {
+        this.selectedSegment = null;
+        this.alternatives = [];
     };
 
     translateText = debounce(action(() => {
@@ -100,6 +116,7 @@ export default class Translator extends React.Component<Props> {
 
         this.loading = true;
         this.lastResponse = undefined;
+        this.resetAlternatives();
 
         return Requester.post(
             url,
@@ -120,16 +137,20 @@ export default class Translator extends React.Component<Props> {
             },
         }) => {
             this.loading = false;
-            this.targetText = data.response.text;
+            this.targetText = DUMMY_TEXT;
             this.lastResponse = data;
 
             this.targetLanguage = data.response.targetLanguage.toLowerCase();
             this.sourceLanguage = data.response.sourceLanguage.toLowerCase();
 
+            // Add dummy segments for the translated text
+            this.segments = this.getDummySegments(this.targetText);
+
             return data;
         })).catch(action((error) => {
             this.loading = false;
             this.lastResponse = {error};
+            this.resetAlternatives();
 
             this.snackbarMessage = {
                 message: errorTranslatingTextMessage,
@@ -138,17 +159,66 @@ export default class Translator extends React.Component<Props> {
         }));
     }), 500);
 
-    @action handleSourceLanguageChanged = (locale: string) => {
-        this.sourceLanguage = locale;
-        this.sourceSelectedOnce = true;
+    // Method to get dummy segments for the demo
+    @action getDummySegments(text) {
+        // For demo purposes, we'll use pre-defined segments
+        // In a real implementation, this would call an AI segmentation API
+        return DUMMY_SEGMENTS.map(segment => ({
+            ...segment,
+            alternatives: []
+        }));
+    }
 
-        this.translateText(this.sourceText);
+    @action handleSegmentClick = (segment) => {
+        this.selectedSegment = segment;
+        this.fetchAlternatives(segment);
     };
 
-    @action handleTargetLanguageChanged = (locale: string) => {
-        this.targetLanguage = locale;
+    @action fetchAlternatives = (segment) => {
+        // In a real implementation, this would call an API
+        // For demo purposes, we'll use pre-defined alternatives
+        this.alternativesLoading = true;
 
-        this.translateText(this.sourceText);
+        // Simulate API delay
+        setTimeout(action(() => {
+            this.alternativesLoading = false;
+
+            // Find alternatives for this segment from our dummy data
+            const segmentAlternatives = (DUMMY_ALTERNATIVES[segment.id] || [])
+                .filter(alternative => alternative !== segment.text);
+
+            segment.alternatives = segmentAlternatives;
+            this.alternatives = segmentAlternatives;
+        }), 800);
+    };
+
+    @action handleAlternativeSelect = (alternativeText) => {
+        if (!this.selectedSegment) return;
+
+        const before = this.targetText.substring(0, this.selectedSegment.beginPos);
+        const after = this.targetText.substring(this.selectedSegment.endPos);
+
+        // Update the target text with the selected alternative
+        this.targetText = before + alternativeText + after;
+
+        // Update segment positions
+        const lengthDiff = alternativeText.length - this.selectedSegment.text.length;
+
+        if (lengthDiff !== 0) {
+            const currentSegmentIndex = this.segments.indexOf(this.selectedSegment);
+
+            for (let i = currentSegmentIndex + 1; i < this.segments.length; i++) {
+                this.segments[i].beginPos += lengthDiff;
+                this.segments[i].endPos += lengthDiff;
+            }
+
+            // Update the current segment
+            this.selectedSegment.text = alternativeText;
+            this.selectedSegment.endPos = this.selectedSegment.beginPos + alternativeText.length;
+        }
+
+        // Reset selection
+        this.selectedSegment = null;
     };
 
     render() {
@@ -161,6 +231,8 @@ export default class Translator extends React.Component<Props> {
                 title: titleMessage,
                 insert: insertMessage,
                 detected: detectedMessage,
+                alternatives: alternativesMessage,
+                noAlternatives: noAlternativesMessage,
             },
         } = this.props;
 
@@ -170,7 +242,7 @@ export default class Translator extends React.Component<Props> {
                 context={toJS(this.lastResponse)}
                 source="translator"
             />
-        ) : <React.Fragment />;
+        ) : <React.Fragment/>;
 
         return (
             <Overlay
@@ -229,12 +301,45 @@ export default class Translator extends React.Component<Props> {
                                 ))}
                             </SingleSelect>
                         </div>
-                        <Input
+                        <TranslationAlternatives
                             text={this.targetText}
                             type={type}
+                            segments={this.segments}
+                            onSegmentClick={this.handleSegmentClick}
+                            selectedSegment={this.selectedSegment}
                         />
                     </div>
                 </div>
+
+                {/* Alternatives panel */}
+                {this.selectedSegment && (
+                    <div className={translatorStyles.alternativesPanel}>
+                        <h4 className={translatorStyles.alternativesTitle}>{alternativesMessage}</h4>
+                        <div className={translatorStyles.content}>
+                            {this.alternativesLoading ? (
+                                <div className={translatorStyles.loading}>
+                                    <span className={translatorStyles.loadingIndicator}></span>
+                                    Loading alternatives...
+                                </div>
+                            ) : this.alternatives.length > 0 ? (
+                                <div className={translatorStyles.alternativesList}>
+                                    {this.alternatives.map((alternative, index) => (
+                                        <button
+                                            key={index}
+                                            type="button"
+                                            className={translatorStyles.alternativeButton}
+                                            onClick={() => this.handleAlternativeSelect(alternative)}
+                                        >
+                                            {alternative}
+                                        </button>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className={translatorStyles.noAlternatives}>{noAlternativesMessage}</div>
+                            )}
+                        </div>
+                    </div>
+                )}
             </Overlay>
         );
     }
