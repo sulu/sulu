@@ -28,6 +28,15 @@
                     </meta>
                 </property>
 
+                <property name="seoFilename" type="text_line">
+                    <meta>
+                        <title>sulu_media.seo_filename</title>
+                    </meta>
+                    <params>
+                        <param name="soft" value="true"/>
+                    </params>
+                </property>
+
                 <section name="license">
                     <meta>
                         <title>sulu_media.license</title>

@@ -15,6 +15,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
@@ -98,9 +99,25 @@ class FormatManager implements FormatManagerInterface
                 throw new ImageProxyMediaNotFoundException(\sprintf('Requested FileVersion "%s" for media with id "%s" was not found.', $version, $id));
             }
 
+            // Check if filename matches either the original name or any SEO filename
             $requestedFileVersionImageFormatName = $this->replaceExtension($requestedFileVersion->getName(), $imageFormat);
+            $fileNameMatches = ($requestedFileVersionImageFormatName === $fileName);
 
-            if ($requestedFileVersionImageFormatName !== $fileName) {
+            // Also check against SEO filenames from all locales
+            if (!$fileNameMatches) {
+                foreach ($requestedFileVersion->getMeta() as $meta) {
+                    $seoFilename = $meta->getSeoFilename();
+                    if (null !== $seoFilename && '' !== $seoFilename) {
+                        $seoFileNameWithExtension = $this->replaceExtension($seoFilename, $imageFormat);
+                        if ($seoFileNameWithExtension === $fileName) {
+                            $fileNameMatches = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!$fileNameMatches) {
                 throw new ImageProxyMediaNotFoundException(\sprintf('FileVersion "%s" for media with id "%s" was not found.', $requestedFileVersion->getVersion(), $id));
             }
 
@@ -144,7 +161,7 @@ class FormatManager implements FormatManagerInterface
                 $this->formatCache->save(
                     $responseContent,
                     $media->getId(),
-                    $this->replaceExtension($fileVersion->getName(), $imageFormat),
+                    $this->replaceExtension($fileName, $imageFormat),
                     $formatKey
                 );
             }
@@ -192,6 +209,40 @@ class FormatManager implements FormatManagerInterface
         }
 
         return $formats;
+    }
+
+    /**
+     * Get formats using SEO filename from FileVersionMeta for a specific locale.
+     *
+     * @param int $id
+     * @param FileVersion $fileVersion
+     * @param string $locale
+     *
+     * @return array
+     */
+    public function getFormatsWithSeoFilename($id, FileVersion $fileVersion, string $locale)
+    {
+        $fileName = $fileVersion->getName();
+
+        // Try to find SEO filename for the given locale
+        foreach ($fileVersion->getMeta() as $meta) {
+            if ($meta->getLocale() === $locale) {
+                $seoFilename = $meta->getSeoFilename();
+                if (null !== $seoFilename && '' !== $seoFilename) {
+                    // Use the effective filename which preserves the original extension
+                    $fileName = $meta->getEffectiveFilename();
+                }
+                break;
+            }
+        }
+
+        return $this->getFormats(
+            $id,
+            $fileName,
+            $fileVersion->getVersion(),
+            $fileVersion->getSubVersion(),
+            $fileVersion->getMimeType()
+        );
     }
 
     public function purge($idMedia, $fileName, $mimeType)

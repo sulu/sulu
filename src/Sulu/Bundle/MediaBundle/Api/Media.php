@@ -344,6 +344,36 @@ class Media extends ApiWrapper
     }
 
     /**
+     * @param string|null $seoFilename
+     *
+     * @return $this
+     */
+    public function setSeoFilename($seoFilename)
+    {
+        $this->getMeta(true)->setSeoFilename($seoFilename);
+
+        return $this;
+    }
+
+    /**
+     * Returns SEO filename for media.
+     *
+     * @return string|null
+     *
+     * @throws FileVersionNotFoundException
+     */
+    #[VirtualProperty]
+    #[SerializedName('seoFilename')]
+    public function getSeoFilename()
+    {
+        if (!$this->getLocalizedMeta()) {
+            return null;
+        }
+
+        return $this->getLocalizedMeta()->getSeoFilename();
+    }
+
+    /**
      * @param int $version
      *
      * @return $this

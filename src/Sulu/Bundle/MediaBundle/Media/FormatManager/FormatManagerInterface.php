@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -47,6 +48,17 @@ interface FormatManagerInterface
      * @return array
      */
     public function getFormats($id, $fileName, $version, $subVersion, $mimeType);
+
+    /**
+     * Get formats using SEO filename from FileVersionMeta for a specific locale.
+     *
+     * @param int $id
+     * @param FileVersion $fileVersion
+     * @param string $locale
+     *
+     * @return array
+     */
+    public function getFormatsWithSeoFilename($id, FileVersion $fileVersion, string $locale);
 
     /**
      * Returns a definition of a format with a given key.
