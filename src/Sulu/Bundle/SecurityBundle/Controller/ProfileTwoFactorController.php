@@ -34,7 +34,7 @@ class ProfileTwoFactorController
      * @internal
      *
      * The option holding the confirmed secret and the option holding the not yet
-     * confirmed secret per authenticator app based two factor method.
+     * confirmed secret per authenticator app based two factor method
      */
     public const SECRET_OPTIONS = [
         'totp' => ['secret' => 'totpSecret', 'pendingSecret' => 'pendingTotpSecret'],
