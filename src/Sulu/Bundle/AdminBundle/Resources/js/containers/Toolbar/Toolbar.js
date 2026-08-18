@@ -123,6 +123,7 @@ class Toolbar extends React.Component<ToolbarProps> {
                 <Snackbar
                     actions={typeof lastWarning === 'object' ? lastWarning.actions : undefined}
                     message={typeof lastWarning === 'object' ? lastWarning.message : lastWarning}
+                    onCloseClick={this.toolbarStore.config?.onWarningCloseClick}
                     title={typeof lastWarning === 'object' ? lastWarning.title : undefined}
                     type="warning"
                     visible={warnings.length > 0}

@@ -40,6 +40,7 @@ export type ToolbarConfig = {
     items?: Array<ToolbarItemConfig<*>>,
     locale?: Select<string>,
     showSuccess?: IObservableValue<boolean>,
+    onWarningCloseClick?: () => void,
     warnings?: Array<ToolbarErrorType>,
 };
 

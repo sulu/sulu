@@ -328,6 +328,10 @@ class Form extends React.Component<Props> {
         this.toolbarActions.forEach((toolbarAction) => toolbarAction.destroy());
     }
 
+    @action handleWarningCloseClick = () => {
+        this.warnings.pop();
+    };
+
     @action showSuccessSnackbar = () => {
         this.showSuccess.set(true);
     };
@@ -599,13 +603,14 @@ export default withToolbar(Form, function() {
         );
     }
 
-    const warnings = [...this.warnings];
+    const warnings = [];
     if (this.collaborationStore && this.collaborationStore.collaborations.length > 0) {
         warnings.push([
             translate('sulu_admin.form_used_by'),
             this.collaborationStore.collaborations.map((collaboration) => collaboration.fullName).join(', '),
         ].join(' '));
     }
+    warnings.push(...this.warnings);
 
     return {
         backButton,
@@ -615,5 +620,6 @@ export default withToolbar(Form, function() {
         icons,
         showSuccess,
         warnings,
+        onWarningCloseClick: this.warnings.length > 0 ? this.handleWarningCloseClick : undefined,
     };
 });
