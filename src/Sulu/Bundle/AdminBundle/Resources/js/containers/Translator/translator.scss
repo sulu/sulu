@@ -4,6 +4,34 @@
     margin: 40px 50px;
 }
 
+/* closes off the content flush above the overlay footer, mirroring the writing assistant.
+   slides out from behind the footer, which covers it while it travels because it paints above */
+.account-limit {
+    padding: 0 50px;
+    animation: account-limit-reveal 300ms ease-out;
+
+    /* only the top corners are rounded, the bottom edge sits flush on the footer */
+    > div {
+        border-radius: 4px 4px 0 0;
+    }
+}
+
+@keyframes account-limit-reveal {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* the banner forms the edge to the footer itself, so the footer's separating line would read as a gap.
+   the :has() is doubled so the selector outweighs the overlay's own footer rule */
+:global(article):has(.account-limit):has(.account-limit) + :global(footer) {
+    border-top-color: transparent;
+}
+
 /* source and result are separate cards so they read as two documents rather than one split field */
 .column {
     flex: 1;

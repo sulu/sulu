@@ -26,9 +26,16 @@ const mockProps = {
         title: 'Translate',
         insert: 'Insert',
         allLanguages: 'All languages',
+        contactAdmin: 'Contact Admin',
         detected: 'Detected',
+        outOfCredits: 'Out of Credits',
+        outOfCreditsDescription: 'Your AI credits have been used up.',
+        platformUnauthorized: 'Sulu.ai not available',
+        platformUnauthorizedDescription: 'Sulu.ai rejected the credentials.',
         searchLanguages: 'Search languages',
         sourceLanguage: 'Source language',
+        subscriptionInactive: 'Subscription Inactive',
+        subscriptionInactiveDescription: 'Your AI subscription is not active.',
         targetLanguage: 'Target language',
         suggestedLanguages: 'Suggested languages',
         errorTranslatingText: 'Error translating text',
@@ -207,6 +214,38 @@ describe('Translator', () => {
 
             expect(errorElement).toBeInTheDocument();
         });
+    });
+
+    test('names the account condition the platform reported and disables inserting', async() => {
+        Requester.post.mockRejectedValue({
+            json: () => Promise.resolve({messageKey: 'sulu_ai.out_of_credits'}),
+        });
+
+        render(<Translator {...mockProps} contactEmail="admin@example.com" />);
+
+        await waitFor(() => {
+            expect(screen.getByText('Out of Credits')).toBeInTheDocument();
+        });
+
+        expect(screen.getAllByText((content, element) => {
+            return element.textContent.includes('Your AI credits have been used up.');
+        })[0]).toBeInTheDocument();
+        expect(screen.getByText('Contact Admin')).toBeInTheDocument();
+        expect(screen.getByText('Insert').closest('button')).toBeDisabled();
+    });
+
+    test('leaves out the contact action when no contact email is configured', async() => {
+        Requester.post.mockRejectedValue({
+            json: () => Promise.resolve({messageKey: 'sulu_ai.platform_unauthorized'}),
+        });
+
+        render(<Translator {...mockProps} />);
+
+        await waitFor(() => {
+            expect(screen.getByText('Sulu.ai not available')).toBeInTheDocument();
+        });
+
+        expect(screen.queryByText('Contact Admin')).not.toBeInTheDocument();
     });
 
     test('calls onConfirm with translated text', async() => {

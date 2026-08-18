@@ -407,15 +407,25 @@ export default class AiApplication extends Component<Props> {
                             formKey: this.props.feedback?.formKey,
                             url: this.actionUrl,
                         }}
+                        contactEmail={this.props.writingAssistant.contactEmail}
                         locale={locale}
                         messages={{
                             allLanguages: translate('sulu_admin.all_languages'),
+                            contactAdmin: translate('sulu_admin.contact_admin'),
                             title: translate('sulu_admin.translator'),
                             insert: translate('sulu_admin.insert'),
                             detected: translate('sulu_admin.detected'),
                             errorTranslatingText: translate('sulu_admin.translator_error'),
+                            outOfCredits: translate('sulu_admin.out_of_credits'),
+                            outOfCreditsDescription: translate('sulu_admin.out_of_credits_description'),
+                            platformUnauthorized: translate('sulu_admin.platform_unauthorized'),
+                            platformUnauthorizedDescription:
+                                translate('sulu_admin.platform_unauthorized_description'),
                             searchLanguages: translate('sulu_admin.search_languages'),
                             sourceLanguage: translate('sulu_admin.source_language'),
+                            subscriptionInactive: translate('sulu_admin.subscription_inactive'),
+                            subscriptionInactiveDescription:
+                                translate('sulu_admin.subscription_inactive_description'),
                             targetLanguage: translate('sulu_admin.target_language'),
                             suggestedLanguages: translate('sulu_admin.suggested_languages'),
                         }}

@@ -5,7 +5,9 @@ import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import {action, observable, toJS} from 'mobx';
 import {Overlay} from '../../components';
+import Snackbar from '../../components/Snackbar';
 import {Requester} from '../../services';
+import {ACCOUNT_LIMIT_MESSAGE_KEYS, readMessageKey} from '../AiApplication/accountLimits';
 import translatorStyles from './translator.scss';
 import Input from './Input';
 import LanguageSelect from './LanguageSelect';
@@ -14,14 +16,22 @@ import type {LanguageType} from './types';
 type Props = {|
     action?: React$ComponentType<Object>,
     actionProps?: Object,
+    contactEmail?: ?string,
     locale: string,
     messages: {|
         allLanguages: string,
+        contactAdmin: string,
         detected: string,
         errorTranslatingText: string,
         insert: string,
+        outOfCredits: string,
+        outOfCreditsDescription: string,
+        platformUnauthorized: string,
+        platformUnauthorizedDescription: string,
         searchLanguages: string,
         sourceLanguage: string,
+        subscriptionInactive: string,
+        subscriptionInactiveDescription: string,
         suggestedLanguages: string,
         targetLanguage: string,
         title: string,
@@ -45,6 +55,7 @@ type Props = {|
 @observer
 export default class Translator extends React.Component<Props> {
     @observable snackbarMessage: ?{ message: string, type: 'error' } = undefined;
+    @observable accountLimit: ?string = undefined;
     @observable loading = false;
     @observable sourceText = '';
     @observable targetText = '';
@@ -88,6 +99,14 @@ export default class Translator extends React.Component<Props> {
         this.translateText(text);
     };
 
+    handleContactAdminClick = () => {
+        const {contactEmail} = this.props;
+
+        if (contactEmail) {
+            window.location.href = 'mailto:' + contactEmail;
+        }
+    };
+
     translateText = debounce(action(() => {
         const {
             url,
@@ -99,6 +118,10 @@ export default class Translator extends React.Component<Props> {
                 errorTranslatingText: errorTranslatingTextMessage,
             },
         } = this.props;
+
+        if (this.accountLimit) {
+            return;
+        }
 
         this.loading = true;
         this.lastResponse = undefined;
@@ -133,10 +156,20 @@ export default class Translator extends React.Component<Props> {
             this.loading = false;
             this.lastResponse = {error};
 
-            this.snackbarMessage = {
-                message: errorTranslatingTextMessage,
-                type: 'error',
-            };
+            return readMessageKey(error).then(action((messageKey: ?string) => {
+                const accountLimit = messageKey ? ACCOUNT_LIMIT_MESSAGE_KEYS[messageKey] : undefined;
+
+                if (accountLimit) {
+                    this.accountLimit = accountLimit;
+
+                    return;
+                }
+
+                this.snackbarMessage = {
+                    message: errorTranslatingTextMessage,
+                    type: 'error',
+                };
+            }));
         }));
     }), 500);
 
@@ -155,6 +188,7 @@ export default class Translator extends React.Component<Props> {
 
     render() {
         const {
+            contactEmail,
             type,
             sourceLanguages,
             suggestedLocales,
@@ -162,11 +196,18 @@ export default class Translator extends React.Component<Props> {
             action: Action,
             messages: {
                 allLanguages: allLanguagesMessage,
+                contactAdmin: contactAdminMessage,
                 title: titleMessage,
                 insert: insertMessage,
                 detected: detectedMessage,
+                outOfCredits: outOfCreditsMessage,
+                outOfCreditsDescription: outOfCreditsDescriptionMessage,
+                platformUnauthorized: platformUnauthorizedMessage,
+                platformUnauthorizedDescription: platformUnauthorizedDescriptionMessage,
                 searchLanguages: searchLanguagesMessage,
                 sourceLanguage: sourceLanguageMessage,
+                subscriptionInactive: subscriptionInactiveMessage,
+                subscriptionInactiveDescription: subscriptionInactiveDescriptionMessage,
                 suggestedLanguages: suggestedLanguagesMessage,
                 targetLanguage: targetLanguageMessage,
             },
@@ -176,6 +217,18 @@ export default class Translator extends React.Component<Props> {
             allLanguages: allLanguagesMessage,
             searchLanguages: searchLanguagesMessage,
             suggestedLanguages: suggestedLanguagesMessage,
+        };
+
+        const accountLimitMessages = {
+            outOfCredits: {description: outOfCreditsDescriptionMessage, title: outOfCreditsMessage},
+            platformUnauthorized: {
+                description: platformUnauthorizedDescriptionMessage,
+                title: platformUnauthorizedMessage,
+            },
+            subscriptionInactive: {
+                description: subscriptionInactiveDescriptionMessage,
+                title: subscriptionInactiveMessage,
+            },
         };
 
         const actionNode = Action ? (
@@ -188,7 +241,7 @@ export default class Translator extends React.Component<Props> {
 
         return (
             <Overlay
-                confirmDisabled={this.targetText === ''}
+                confirmDisabled={this.targetText === '' || !!this.accountLimit}
                 confirmLoading={this.loading}
                 confirmText={insertMessage}
                 onClose={this.handleClose}
@@ -238,6 +291,19 @@ export default class Translator extends React.Component<Props> {
                         />
                     </div>
                 </div>
+                {this.accountLimit &&
+                    <div className={translatorStyles.accountLimit}>
+                        <Snackbar
+                            action={contactEmail
+                                ? {label: contactAdminMessage, onClick: this.handleContactAdminClick}
+                                : undefined
+                            }
+                            message={accountLimitMessages[this.accountLimit].description}
+                            title={accountLimitMessages[this.accountLimit].title}
+                            type="error"
+                        />
+                    </div>
+                }
             </Overlay>
         );
     }
