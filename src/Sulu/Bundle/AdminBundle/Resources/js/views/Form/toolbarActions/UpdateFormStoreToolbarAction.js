@@ -9,9 +9,6 @@ import {
     ACCOUNT_LIMIT_MESSAGE_KEYS,
     getAccountLimitContactEmail,
 } from '../../../containers/AiApplication/accountLimits';
-
-// conditions the platform reports as temporary, where trying again is the sensible reaction
-const TEMPORARY_MESSAGE_KEYS = ['sulu_ai.ai_request_failed', 'sulu_ai.ai_response_invalid'];
 import {translate} from '../../../utils';
 import FormContainer, {memoryFormStoreFactory} from '../../../containers/Form';
 import Router from '../../../services/Router';
@@ -19,6 +16,9 @@ import Form from '../Form';
 import {ResourceStore} from '../../../stores';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 import type {ResourceFormStore, FormStoreInterface} from '../../../containers';
+
+// conditions the platform reports as temporary, where trying again is the sensible reaction
+const TEMPORARY_MESSAGE_KEYS = ['sulu_ai.ai_request_failed', 'sulu_ai.ai_response_invalid'];
 
 /**
  * @experimental We can not yet give BC Promise for this new component in Sulu 2.6.

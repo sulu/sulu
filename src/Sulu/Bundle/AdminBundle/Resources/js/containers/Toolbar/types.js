@@ -39,8 +39,8 @@ export type ToolbarConfig = {
     icons?: Array<Node>, // TODO would be better to be typed as Array<React.ComponentType>
     items?: Array<ToolbarItemConfig<*>>,
     locale?: Select<string>,
-    showSuccess?: IObservableValue<boolean>,
     onWarningCloseClick?: () => void,
+    showSuccess?: IObservableValue<boolean>,
     warnings?: Array<ToolbarErrorType>,
 };
 
