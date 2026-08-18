@@ -294,7 +294,7 @@ test('Turn a temporary messageKey into a warning whose action retries the reques
     expect(action.form.warnings).toHaveLength(1);
     const warning = action.form.warnings[0];
     // $FlowFixMe
-    expect(warning.title).toEqual('sulu_admin.ai_request_failed');
+    expect(warning.title).toEqual('sulu_admin.request_failed');
     // $FlowFixMe
     expect(warning.actions[0].label).toEqual('sulu_admin.try_again');
 
