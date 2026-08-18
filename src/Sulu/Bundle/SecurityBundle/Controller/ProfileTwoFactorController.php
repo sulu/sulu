@@ -81,8 +81,10 @@ class ProfileTwoFactorController
 
         $secretOptions = self::SECRET_OPTIONS[$method];
 
+        $pendingSecret = $authenticator->generateSecret();
+
         $options = $twoFactor->getOptions() ?? [];
-        $options[$secretOptions['pendingSecret']] = $authenticator->generateSecret();
+        $options[$secretOptions['pendingSecret']] = $pendingSecret;
         // a stale secret of a previously disabled setup must not be confirmable
         unset($options[$secretOptions['secret']]);
         $twoFactor->setOptions($options);
@@ -91,7 +93,7 @@ class ProfileTwoFactorController
 
         return $this->viewHandler->handle(
             View::create([
-                'secret' => $options[$secretOptions['pendingSecret']],
+                'secret' => $pendingSecret,
                 'qrContent' => $authenticator->getQRContent($user),
             ]),
         );

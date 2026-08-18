@@ -33,6 +33,8 @@ class ProfileTwoFactorControllerTest extends SuluTestCase
     /**
      * Generates a TOTP code, waiting out a period boundary if necessary, so the code does
      * not expire between generating it here and verifying it in the request below.
+     *
+     * @param non-empty-string $secret
      */
     private function generateCode(string $secret): string
     {
