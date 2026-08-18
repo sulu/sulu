@@ -75,6 +75,10 @@ class TwoFactor extends React.Component<FieldTypeProps<?string>> {
             return;
         }
 
+        // an in-flight setup of a previously selected method must not open the overlay anymore
+        this.setupRequestCount++;
+        this.handleSetupOverlayClose();
+
         onChange(value);
         onFinish();
     };

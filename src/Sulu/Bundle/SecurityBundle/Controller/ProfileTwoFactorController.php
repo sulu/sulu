@@ -32,13 +32,18 @@ class ProfileTwoFactorController
 {
     /**
      * @internal
-     *
-     * The option holding the confirmed secret and the option holding the not yet
-     * confirmed secret per authenticator app based two factor method
      */
     public const SECRET_OPTIONS = [
-        'totp' => ['secret' => 'totpSecret', 'pendingSecret' => 'pendingTotpSecret'],
-        'google' => ['secret' => 'googleAuthenticatorSecret', 'pendingSecret' => 'pendingGoogleAuthenticatorSecret'],
+        'totp' => [
+            'secret' => 'totpSecret',
+            'pendingSecret' => 'pendingTotpSecret',
+            'package' => 'scheb/2fa-totp',
+        ],
+        'google' => [
+            'secret' => 'googleAuthenticatorSecret',
+            'pendingSecret' => 'pendingGoogleAuthenticatorSecret',
+            'package' => 'scheb/2fa-google-authenticator',
+        ],
     ];
 
     public function __construct(
@@ -127,8 +132,12 @@ class ProfileTwoFactorController
             );
         }
 
+        // only the confirmed method keeps a secret, so no stale secret of another
+        // method can be confirmed or activated later anymore
+        foreach (self::SECRET_OPTIONS as $methodSecretOptions) {
+            unset($options[$methodSecretOptions['secret']], $options[$methodSecretOptions['pendingSecret']]);
+        }
         $options[$secretOptions['secret']] = $pendingSecret;
-        unset($options[$secretOptions['pendingSecret']]);
         $twoFactor->setOptions($options);
         $twoFactor->setMethod($method);
 
@@ -210,13 +219,15 @@ class ProfileTwoFactorController
         };
 
         if (!$authenticator) {
-            $package = 'google' === $method ? 'scheb/2fa-google-authenticator' : 'scheb/2fa-totp';
+            $package = self::SECRET_OPTIONS[$method]['package'] ?? null;
 
-            throw new NotFoundHttpException(\sprintf(
-                'The two factor method "%s" is not available. Install the "%s" package and enable it in the "scheb_two_factor" configuration.',
-                $method,
-                $package,
-            ));
+            throw new NotFoundHttpException($package
+                ? \sprintf(
+                    'The two factor method "%s" is not available. Install the "%s" package and enable it in the "scheb_two_factor" configuration.',
+                    $method,
+                    $package,
+                )
+                : \sprintf('The two factor method "%s" does not support a setup.', $method));
         }
 
         return $authenticator;

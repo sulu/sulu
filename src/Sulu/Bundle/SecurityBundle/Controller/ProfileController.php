@@ -107,6 +107,19 @@ class ProfileController implements ClassResourceInterface
                 }
 
                 $twoFactor->setMethod($twoFactorMethod);
+
+                // the secrets of the other methods are cleared, so switching back to a
+                // previously confirmed method requires a fresh guided setup
+                $options = $twoFactor->getOptions() ?? [];
+                foreach (ProfileTwoFactorController::SECRET_OPTIONS as $method => $secretOptions) {
+                    if ($method === $twoFactorMethod) {
+                        continue;
+                    }
+
+                    unset($options[$secretOptions['secret']], $options[$secretOptions['pendingSecret']]);
+                }
+                $twoFactor->setOptions($options);
+
                 $user->setTwoFactor($twoFactor);
             } else {
                 $twoFactor = $user->getTwoFactor();

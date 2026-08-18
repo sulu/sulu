@@ -169,6 +169,32 @@ class ProfileTwoFactorControllerTest extends SuluTestCase
         $this->assertNull($user->getTwoFactor()->getMethod());
     }
 
+    public function testConfirmClearsAbandonedPendingSecretOfOtherMethod(): void
+    {
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'totp']);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'google']);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        /** @var array{secret: non-empty-string} $setupResponse */
+        $setupResponse = \json_decode((string) $this->client->getResponse()->getContent(), true);
+
+        $code = $this->generateCode($setupResponse['secret']);
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/confirm', ['method' => 'google', 'code' => $code]);
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
+
+        $user = $this->refreshTestUser();
+        $this->assertNotNull($user->getTwoFactor());
+        $this->assertSame('google', $user->getTwoFactor()->getMethod());
+        $this->assertArrayNotHasKey('pendingTotpSecret', $user->getTwoFactor()->getOptions() ?? []);
+        $this->assertArrayNotHasKey('totpSecret', $user->getTwoFactor()->getOptions() ?? []);
+
+        // the abandoned totp setup must not be confirmable anymore
+        $client = $this->createLoggedInClient($user);
+        $client->jsonRequest('POST', '/api/profile/two-factor/confirm', ['method' => 'totp', 'code' => '123456']);
+        $this->assertHttpStatusCode(400, $client->getResponse());
+    }
+
     public function testSetupInvalidMethod(): void
     {
         $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'email']);
@@ -321,6 +347,39 @@ class ProfileTwoFactorControllerTest extends SuluTestCase
 
         $user = $this->refreshTestUser();
         $this->assertNull($user->getTwoFactor()?->getMethod());
+    }
+
+    public function testPutProfileMethodSwitchClearsSecretOfPreviousMethod(): void
+    {
+        $user = $this->activateTwoFactor();
+        $client = $this->createLoggedInClient($user);
+
+        $client->jsonRequest('PUT', '/api/profile', [
+            'firstName' => 'Max',
+            'lastName' => 'Mustermann',
+            'username' => 'test',
+            'email' => 'test@example.localhost',
+            'locale' => 'en',
+            'twoFactor' => ['method' => 'email'],
+        ]);
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $user = $this->refreshTestUser();
+        $this->assertSame('email', $user->getTwoFactor()?->getMethod());
+        $this->assertArrayNotHasKey('totpSecret', $user->getTwoFactor()->getOptions() ?? []);
+
+        // switching back requires a fresh guided setup because the old secret was cleared
+        $client->jsonRequest('PUT', '/api/profile', [
+            'firstName' => 'Max',
+            'lastName' => 'Mustermann',
+            'username' => 'test',
+            'email' => 'test@example.localhost',
+            'locale' => 'en',
+            'twoFactor' => ['method' => 'totp'],
+        ]);
+
+        $this->assertHttpStatusCode(400, $client->getResponse());
     }
 
     private function activateTwoFactor(): User

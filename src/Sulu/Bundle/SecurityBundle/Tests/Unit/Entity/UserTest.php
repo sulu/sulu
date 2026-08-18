@@ -99,11 +99,12 @@ class UserTest extends TestCase
         $twoFactor = new UserTwoFactor($user);
         $twoFactor->setOptions([
             'pendingGoogleAuthenticatorSecret' => 'pendingSecret',
+            'googleAuthenticatorUsername' => '',
         ]);
         $user->setTwoFactor($twoFactor);
 
         // the pending secret is used during the setup and the username falls back to
-        // the user identifier when no explicit option was set
+        // the user identifier when no or an empty option was set
         $this->assertSame('pendingSecret', $user->getGoogleAuthenticatorSecret());
         $this->assertSame('test', $user->getGoogleAuthenticatorUsername());
         $this->assertFalse($user->isGoogleAuthenticatorEnabled());

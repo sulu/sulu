@@ -31,6 +31,13 @@ property from `type="single_select"` to `type="two_factor"` to get the guided se
 the new field type the `totp` and `google` methods can not be activated, because the profile
 endpoint rejects activating them without a confirmed setup.
 
+### Changed TOTP Configuration to the Standard Values
+
+The TOTP configuration was changed from a non-standard 20 seconds period with 8 digits to the
+standard 30 seconds period with 6 digits, because common authenticator apps only support the
+standard values. If you enabled the `totp` method before via a custom compiler pass, existing
+users have to set up their authenticator app again.
+
 ## 2.6.25
 
 ### Deprecated `RequestParametersTrait`

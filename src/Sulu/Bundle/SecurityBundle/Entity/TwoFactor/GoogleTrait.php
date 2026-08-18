@@ -29,7 +29,9 @@ if (\interface_exists(TwoFactorInterface::class)) {
 
         public function getGoogleAuthenticatorUsername(): string
         {
-            return $this->getTwoFactor()?->getOptions()['googleAuthenticatorUsername'] ?? $this->getUserIdentifier();
+            $options = $this->getTwoFactor()?->getOptions() ?? [];
+
+            return ($options['googleAuthenticatorUsername'] ?? null) ?: $this->getUserIdentifier();
         }
 
         public function getGoogleAuthenticatorSecret(): ?string
