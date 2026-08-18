@@ -5,6 +5,7 @@ import {action, observable, computed, toJS} from 'mobx';
 import {Requester} from '../../services';
 import {Overlay} from '../../components';
 import Snackbar from '../../components/Snackbar';
+import {translate} from '../../utils';
 import {ACCOUNT_LIMIT_MESSAGE_KEYS, readMessageKey} from '../AiApplication/accountLimits';
 import writingAssistantStyles from './writingAssistant.scss';
 import Messages from './Messages';
@@ -32,16 +33,10 @@ type Props = {|
         includeContentContextInfo: string,
         initialMessage: string,
         morePredefinedPrompts: string,
-        outOfCredits: string,
-        outOfCreditsDescription: string,
-        platformUnauthorized: string,
-        platformUnauthorizedDescription: string,
         predefinedPrompts: string,
         requestFailed: string,
         requestFailedDescription: string,
         send: string,
-        subscriptionInactive: string,
-        subscriptionInactiveDescription: string,
         tryAgain: string,
         writingAssistant: string,
     },
@@ -178,7 +173,7 @@ export default class WritingAssistant extends React.Component<Props> {
     @computed get accountLimit(): ?string {
         const messageKey = this.requestError?.messageKey;
 
-        return messageKey ? ACCOUNT_LIMIT_MESSAGE_KEYS[messageKey] : undefined;
+        return messageKey && ACCOUNT_LIMIT_MESSAGE_KEYS.includes(messageKey) ? messageKey : undefined;
     }
 
     @action handleErrorRetry = () => {
@@ -318,6 +313,7 @@ export default class WritingAssistant extends React.Component<Props> {
     };
 
     render() {
+        const {accountLimit} = this;
         const {
             action: Action,
             locale,
@@ -329,30 +325,12 @@ export default class WritingAssistant extends React.Component<Props> {
                 experts: expertsMessage,
                 includeContentContext: includeContentContextMessage,
                 includeContentContextInfo: includeContentContextInfoMessage,
-                outOfCredits: outOfCreditsMessage,
-                outOfCreditsDescription: outOfCreditsDescriptionMessage,
                 requestFailed: requestFailedMessage,
                 requestFailedDescription: requestFailedDescriptionMessage,
-                platformUnauthorized: platformUnauthorizedMessage,
-                platformUnauthorizedDescription: platformUnauthorizedDescriptionMessage,
                 send: sendMessage,
-                subscriptionInactive: subscriptionInactiveMessage,
-                subscriptionInactiveDescription: subscriptionInactiveDescriptionMessage,
                 tryAgain: tryAgainMessage,
             },
         } = this.props;
-
-        const accountLimitMessages = {
-            outOfCredits: {description: outOfCreditsDescriptionMessage, title: outOfCreditsMessage},
-            platformUnauthorized: {
-                description: platformUnauthorizedDescriptionMessage,
-                title: platformUnauthorizedMessage,
-            },
-            subscriptionInactive: {
-                description: subscriptionInactiveDescriptionMessage,
-                title: subscriptionInactiveMessage,
-            },
-        };
 
         const actionNode = Action ? (
             <Action
@@ -395,15 +373,15 @@ export default class WritingAssistant extends React.Component<Props> {
                             onMessageClicked={this.handleOnMessageClicked}
                             onRetry={this.handleOnRetry}
                         />
-                        {this.accountLimit &&
+                        {accountLimit &&
                             <div className={writingAssistantStyles.accountLimit}>
                                 <Snackbar
                                     actions={contactEmail
                                         ? [{label: contactAdminMessage, onClick: this.handleContactAdminClick}]
                                         : undefined
                                     }
-                                    message={accountLimitMessages[this.accountLimit].description}
-                                    title={accountLimitMessages[this.accountLimit].title}
+                                    message={translate(accountLimit + '_description')}
+                                    title={translate(accountLimit)}
                                     type="error"
                                 />
                             </div>

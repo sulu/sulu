@@ -360,13 +360,12 @@ export default class UpdateFormStoreToolbarAction extends AbstractFormToolbarAct
             return;
         }
 
-        if (messageKey && ACCOUNT_LIMIT_MESSAGE_KEYS[messageKey]) {
-            const translationKey = 'sulu_admin.' + messageKey.split('.')[1];
+        if (messageKey && ACCOUNT_LIMIT_MESSAGE_KEYS.includes(messageKey)) {
             const contactEmail = getAccountLimitContactEmail();
 
             this.form.errors = [...this.form.errors, {
-                title: translate(translationKey),
-                message: translate(translationKey + '_description'),
+                title: translate(messageKey),
+                message: translate(messageKey + '_description'),
                 actions: contactEmail
                     ? [{
                         label: translate('sulu_admin.contact_admin'),

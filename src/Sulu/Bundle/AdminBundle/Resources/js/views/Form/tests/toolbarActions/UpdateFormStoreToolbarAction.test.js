@@ -325,8 +325,8 @@ test('Turn an account limit messageKey into a titled error with a contact action
 
     const lastError = action.form.errors[action.form.errors.length - 1];
     expect(lastError).toEqual(expect.objectContaining({
-        title: 'sulu_admin.out_of_credits',
-        message: 'sulu_admin.out_of_credits_description',
+        title: 'sulu_ai.out_of_credits',
+        message: 'sulu_ai.out_of_credits_description',
     }));
     // $FlowFixMe
     expect(lastError.actions).toHaveLength(1);

@@ -7,6 +7,7 @@ import {action, observable, toJS} from 'mobx';
 import {Overlay} from '../../components';
 import Snackbar from '../../components/Snackbar';
 import {Requester} from '../../services';
+import {translate} from '../../utils';
 import {ACCOUNT_LIMIT_MESSAGE_KEYS, readMessageKey} from '../AiApplication/accountLimits';
 import translatorStyles from './translator.scss';
 import Input from './Input';
@@ -24,14 +25,8 @@ type Props = {|
         detected: string,
         errorTranslatingText: string,
         insert: string,
-        outOfCredits: string,
-        outOfCreditsDescription: string,
-        platformUnauthorized: string,
-        platformUnauthorizedDescription: string,
         searchLanguages: string,
         sourceLanguage: string,
-        subscriptionInactive: string,
-        subscriptionInactiveDescription: string,
         suggestedLanguages: string,
         targetLanguage: string,
         title: string,
@@ -157,10 +152,8 @@ export default class Translator extends React.Component<Props> {
             this.lastResponse = {error};
 
             return readMessageKey(error).then(action((messageKey: ?string) => {
-                const accountLimit = messageKey ? ACCOUNT_LIMIT_MESSAGE_KEYS[messageKey] : undefined;
-
-                if (accountLimit) {
-                    this.accountLimit = accountLimit;
+                if (messageKey && ACCOUNT_LIMIT_MESSAGE_KEYS.includes(messageKey)) {
+                    this.accountLimit = messageKey;
 
                     return;
                 }
@@ -187,6 +180,7 @@ export default class Translator extends React.Component<Props> {
     };
 
     render() {
+        const {accountLimit} = this;
         const {
             contactEmail,
             type,
@@ -200,14 +194,8 @@ export default class Translator extends React.Component<Props> {
                 title: titleMessage,
                 insert: insertMessage,
                 detected: detectedMessage,
-                outOfCredits: outOfCreditsMessage,
-                outOfCreditsDescription: outOfCreditsDescriptionMessage,
-                platformUnauthorized: platformUnauthorizedMessage,
-                platformUnauthorizedDescription: platformUnauthorizedDescriptionMessage,
                 searchLanguages: searchLanguagesMessage,
                 sourceLanguage: sourceLanguageMessage,
-                subscriptionInactive: subscriptionInactiveMessage,
-                subscriptionInactiveDescription: subscriptionInactiveDescriptionMessage,
                 suggestedLanguages: suggestedLanguagesMessage,
                 targetLanguage: targetLanguageMessage,
             },
@@ -217,18 +205,6 @@ export default class Translator extends React.Component<Props> {
             allLanguages: allLanguagesMessage,
             searchLanguages: searchLanguagesMessage,
             suggestedLanguages: suggestedLanguagesMessage,
-        };
-
-        const accountLimitMessages = {
-            outOfCredits: {description: outOfCreditsDescriptionMessage, title: outOfCreditsMessage},
-            platformUnauthorized: {
-                description: platformUnauthorizedDescriptionMessage,
-                title: platformUnauthorizedMessage,
-            },
-            subscriptionInactive: {
-                description: subscriptionInactiveDescriptionMessage,
-                title: subscriptionInactiveMessage,
-            },
         };
 
         const actionNode = Action ? (
@@ -291,7 +267,7 @@ export default class Translator extends React.Component<Props> {
                         />
                     </div>
                 </div>
-                {this.accountLimit &&
+                {accountLimit &&
                     <div className={translatorStyles.accountLimit}>
                         <Snackbar
                             actions={contactEmail
@@ -301,8 +277,8 @@ export default class Translator extends React.Component<Props> {
                                 ]
                                 : undefined
                             }
-                            message={accountLimitMessages[this.accountLimit].description}
-                            title={accountLimitMessages[this.accountLimit].title}
+                            message={translate(accountLimit + '_description')}
+                            title={translate(accountLimit)}
                             type="error"
                         />
                     </div>

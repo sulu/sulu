@@ -28,14 +28,8 @@ const mockProps = {
         allLanguages: 'All languages',
         contactAdmin: 'Contact Admin',
         detected: 'Detected',
-        outOfCredits: 'Out of Credits',
-        outOfCreditsDescription: 'Your AI credits have been used up.',
-        platformUnauthorized: 'Sulu.ai not available',
-        platformUnauthorizedDescription: 'Sulu.ai rejected the credentials.',
         searchLanguages: 'Search languages',
         sourceLanguage: 'Source language',
-        subscriptionInactive: 'Subscription Inactive',
-        subscriptionInactiveDescription: 'Your AI subscription is not active.',
         targetLanguage: 'Target language',
         suggestedLanguages: 'Suggested languages',
         errorTranslatingText: 'Error translating text',
@@ -224,11 +218,11 @@ describe('Translator', () => {
         render(<Translator {...mockProps} contactEmail="admin@example.com" />);
 
         await waitFor(() => {
-            expect(screen.getByText('Out of Credits')).toBeInTheDocument();
+            expect(screen.getByText('sulu_ai.out_of_credits')).toBeInTheDocument();
         });
 
         expect(screen.getAllByText((content, element) => {
-            return element.textContent.includes('Your AI credits have been used up.');
+            return element.textContent.includes('sulu_ai.out_of_credits_description');
         })[0]).toBeInTheDocument();
         expect(screen.getByText('Contact Admin')).toBeInTheDocument();
         expect(screen.getByText('Insert').closest('button')).toBeDisabled();
@@ -242,7 +236,7 @@ describe('Translator', () => {
         render(<Translator {...mockProps} />);
 
         await waitFor(() => {
-            expect(screen.getByText('Sulu.ai not available')).toBeInTheDocument();
+            expect(screen.getByText('sulu_ai.platform_unauthorized')).toBeInTheDocument();
         });
 
         expect(screen.queryByText('Contact Admin')).not.toBeInTheDocument();

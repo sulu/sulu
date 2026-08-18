@@ -43,17 +43,11 @@ describe('WritingAssistant Component', () => {
             includeContentContext: 'Add whole content as context',
             includeContentContextInfo: 'Use the entire page content',
             initialMessage: 'Initial Message',
-            outOfCredits: 'Out of Credits',
-            outOfCreditsDescription: 'Your AI credits have been used up.',
-            platformUnauthorized: 'AI not available',
-            platformUnauthorizedDescription: 'The AI platform rejected the credentials.',
             morePredefinedPrompts: 'More',
             predefinedPrompts: 'Predefined Prompts',
             requestFailed: 'Something went wrong',
             requestFailedDescription: 'Your request could not be completed right now.',
             send: 'Send',
-            subscriptionInactive: 'Subscription Inactive',
-            subscriptionInactiveDescription: 'Your AI subscription is not active.',
             tryAgain: 'Try Again',
             writingAssistant: 'Writing Assistant',
         },
@@ -366,7 +360,7 @@ describe('WritingAssistant Component', () => {
         expect(screen.getByText(defaultProps.messages.requestFailed).parentElement)
             .toHaveTextContent(defaultProps.messages.requestFailedDescription);
         expect(screen.getByText(defaultProps.messages.tryAgain)).toBeInTheDocument();
-        expect(screen.queryByText(defaultProps.messages.outOfCredits)).not.toBeInTheDocument();
+        expect(screen.queryByText('sulu_ai.out_of_credits')).not.toBeInTheDocument();
     });
 
     test('retries the failed prompt when try again is clicked', async() => {
@@ -404,11 +398,11 @@ describe('WritingAssistant Component', () => {
         await userEvent.type(input, 'Test message{enter}');
 
         await waitFor(() => {
-            expect(screen.getByText(defaultProps.messages.outOfCredits)).toBeInTheDocument();
+            expect(screen.getByText('sulu_ai.out_of_credits')).toBeInTheDocument();
         });
 
-        expect(screen.getByText(defaultProps.messages.outOfCredits).parentElement)
-            .toHaveTextContent(defaultProps.messages.outOfCreditsDescription);
+        expect(screen.getByText('sulu_ai.out_of_credits').parentElement)
+            .toHaveTextContent('sulu_ai.out_of_credits_description');
         expect(screen.getByText(defaultProps.messages.contactAdmin)).toBeInTheDocument();
         expect(screen.queryByText(defaultProps.messages.requestFailed)).not.toBeInTheDocument();
         expect(input).toBeDisabled();
@@ -425,12 +419,12 @@ describe('WritingAssistant Component', () => {
         await userEvent.type(input, 'Test message{enter}');
 
         await waitFor(() => {
-            expect(screen.getByText(defaultProps.messages.subscriptionInactive)).toBeInTheDocument();
+            expect(screen.getByText('sulu_ai.subscription_inactive')).toBeInTheDocument();
         });
 
-        expect(screen.getByText(defaultProps.messages.subscriptionInactive).parentElement)
-            .toHaveTextContent(defaultProps.messages.subscriptionInactiveDescription);
-        expect(screen.queryByText(defaultProps.messages.outOfCredits)).not.toBeInTheDocument();
+        expect(screen.getByText('sulu_ai.subscription_inactive').parentElement)
+            .toHaveTextContent('sulu_ai.subscription_inactive_description');
+        expect(screen.queryByText('sulu_ai.out_of_credits')).not.toBeInTheDocument();
         expect(screen.queryByText(defaultProps.messages.requestFailed)).not.toBeInTheDocument();
         expect(input).toBeDisabled();
     });
@@ -446,7 +440,7 @@ describe('WritingAssistant Component', () => {
         await userEvent.type(input, 'Test message{enter}');
 
         await waitFor(() => {
-            expect(screen.getByText(defaultProps.messages.platformUnauthorized)).toBeInTheDocument();
+            expect(screen.getByText('sulu_ai.platform_unauthorized')).toBeInTheDocument();
         });
 
         // retrying cannot help here, so no retry is offered and the input stays closed
@@ -465,7 +459,7 @@ describe('WritingAssistant Component', () => {
         await userEvent.type(input, 'Test message{enter}');
 
         await waitFor(() => {
-            expect(screen.getByText(defaultProps.messages.outOfCredits)).toBeInTheDocument();
+            expect(screen.getByText('sulu_ai.out_of_credits')).toBeInTheDocument();
         });
 
         expect(screen.queryByText(defaultProps.messages.contactAdmin)).not.toBeInTheDocument();

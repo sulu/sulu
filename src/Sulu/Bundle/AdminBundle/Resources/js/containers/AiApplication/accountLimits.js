@@ -1,11 +1,12 @@
 // @flow
 
-/* conditions the platform refuses for that no retry resolves — the dialogs name them and point at an administrator */
-export const ACCOUNT_LIMIT_MESSAGE_KEYS = {
-    'sulu_ai.out_of_credits': 'outOfCredits',
-    'sulu_ai.platform_unauthorized': 'platformUnauthorized',
-    'sulu_ai.subscription_inactive': 'subscriptionInactive',
-};
+/* conditions the platform refuses for that no retry resolves — the dialogs name them and point at an
+   administrator. the reporting bundle also ships the texts, as <key> and <key>_description translations */
+export const ACCOUNT_LIMIT_MESSAGE_KEYS = [
+    'sulu_ai.out_of_credits',
+    'sulu_ai.platform_unauthorized',
+    'sulu_ai.subscription_inactive',
+];
 
 // the Requester rejects with the unread Response, which carries the messageKey the controller responded with
 export function readMessageKey(error: Object): Promise<?string> {
