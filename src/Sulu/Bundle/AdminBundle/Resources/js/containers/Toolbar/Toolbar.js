@@ -104,6 +104,7 @@ class Toolbar extends React.Component<ToolbarProps> {
         const {onNavigationButtonClick, navigationOpen} = this.props;
         const {errors, showSuccess, warnings} = this.toolbarStore;
         const lastError = errors[errors.length - 1];
+        const lastWarning = warnings[warnings.length - 1];
 
         const iconsConfig = this.toolbarStore.getIconsConfig();
         const itemsConfig = this.toolbarStore.getItemsConfig();
@@ -120,7 +121,9 @@ class Toolbar extends React.Component<ToolbarProps> {
                     visible={errors.length > 0}
                 />
                 <Snackbar
-                    message={warnings[warnings.length - 1]}
+                    actions={typeof lastWarning === 'object' ? lastWarning.actions : undefined}
+                    message={typeof lastWarning === 'object' ? lastWarning.message : lastWarning}
+                    title={typeof lastWarning === 'object' ? lastWarning.title : undefined}
                     type="warning"
                     visible={warnings.length > 0}
                 />

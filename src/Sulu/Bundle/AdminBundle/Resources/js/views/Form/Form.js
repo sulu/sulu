@@ -39,6 +39,7 @@ class Form extends React.Component<Props> {
     collaborationStore: ?CollaborationStore;
     form: ?ElementRef<typeof FormContainer>;
     @observable errors: Array<ToolbarErrorType> = [];
+    @observable warnings: Array<ToolbarErrorType> = [];
     showSuccess: IObservableValue<boolean> = observable.box(false);
     @observable toolbarActions: Array<AbstractFormToolbarAction> = [];
     @observable showDirtyWarning: boolean = false;
@@ -598,7 +599,7 @@ export default withToolbar(Form, function() {
         );
     }
 
-    const warnings = [];
+    const warnings = [...this.warnings];
     if (this.collaborationStore && this.collaborationStore.collaborations.length > 0) {
         warnings.push([
             translate('sulu_admin.form_used_by'),

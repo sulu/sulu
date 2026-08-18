@@ -40,7 +40,7 @@ export type ToolbarConfig = {
     items?: Array<ToolbarItemConfig<*>>,
     locale?: Select<string>,
     showSuccess?: IObservableValue<boolean>,
-    warnings?: Array<string>,
+    warnings?: Array<ToolbarErrorType>,
 };
 
 export type ToolbarErrorType = string | {|

@@ -9,6 +9,9 @@ import {
     ACCOUNT_LIMIT_MESSAGE_KEYS,
     getAccountLimitContactEmail,
 } from '../../../containers/AiApplication/accountLimits';
+
+// conditions the platform reports as temporary, where trying again is the sensible reaction
+const TEMPORARY_MESSAGE_KEYS = ['sulu_ai.ai_request_failed', 'sulu_ai.ai_response_invalid'];
 import {translate} from '../../../utils';
 import FormContainer, {memoryFormStoreFactory} from '../../../containers/Form';
 import Router from '../../../services/Router';
@@ -274,6 +277,8 @@ export default class UpdateFormStoreToolbarAction extends AbstractFormToolbarAct
         this.fetchData();
     };
 
+    retryWarning: ?Object;
+
     @action fetchData = async() => {
         const {
             locale,
@@ -282,6 +287,7 @@ export default class UpdateFormStoreToolbarAction extends AbstractFormToolbarAct
             },
         } = this.resourceFormStore;
 
+        this.clearRetryWarning();
         this.loading = true;
 
         const url = symfonyRouting.generate(this.options.route, {
@@ -330,7 +336,29 @@ export default class UpdateFormStoreToolbarAction extends AbstractFormToolbarAct
         return {};
     }
 
+    @action clearRetryWarning = () => {
+        if (this.retryWarning) {
+            this.form.warnings = this.form.warnings.filter((warning) => warning !== this.retryWarning);
+            this.retryWarning = undefined;
+        }
+    };
+
+    @action handleRetry = () => {
+        this.fetchData();
+    };
+
     @action setError = (messageKey: ?string) => {
+        if (messageKey && TEMPORARY_MESSAGE_KEYS.includes(messageKey)) {
+            this.retryWarning = {
+                title: translate('sulu_admin.ai_request_failed'),
+                message: translate('sulu_admin.ai_request_failed_description'),
+                actions: [{label: translate('sulu_admin.try_again'), onClick: this.handleRetry}],
+            };
+            this.form.warnings = [...this.form.warnings, this.retryWarning];
+
+            return;
+        }
+
         if (messageKey && ACCOUNT_LIMIT_MESSAGE_KEYS[messageKey]) {
             const translationKey = 'sulu_admin.' + messageKey.split('.')[1];
             const contactEmail = getAccountLimitContactEmail();
