@@ -1,5 +1,11 @@
 # Upgrade
 
+## 3.0.9
+
+### `form_of_address` configuration is now deprecated
+
+To change the default forms of address override the `Sulu\Bundle\ContactBundle\Provider\FormOfAddressProvider` service.
+
 ## 3.0.8
 
 ### Route value is required when saving routable content
