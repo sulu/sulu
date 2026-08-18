@@ -349,12 +349,13 @@ export default class UpdateFormStoreToolbarAction extends AbstractFormToolbarAct
 
     @action setError = (messageKey: ?string) => {
         if (messageKey && TEMPORARY_MESSAGE_KEYS.includes(messageKey)) {
-            this.retryWarning = {
+            this.form.warnings = [...this.form.warnings, {
                 title: translate('sulu_admin.ai_request_failed'),
                 message: translate('sulu_admin.ai_request_failed_description'),
                 actions: [{label: translate('sulu_admin.try_again'), onClick: this.handleRetry}],
-            };
-            this.form.warnings = [...this.form.warnings, this.retryWarning];
+            }];
+            // the observable array wraps what it stores, so the reference to remove has to come out of it
+            this.retryWarning = this.form.warnings[this.form.warnings.length - 1];
 
             return;
         }

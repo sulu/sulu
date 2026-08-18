@@ -70,8 +70,8 @@ jest.mock('../../../../services/Router', () => jest.fn(function() {
 jest.mock('../../../../views/Form', () => jest.fn(function() {
     this.submit = jest.fn();
     this.showSuccessSnackbar = jest.fn();
-    this.errors = [];
-    this.warnings = [];
+    this.errors = require('mobx').observable([]);
+    this.warnings = require('mobx').observable([]);
 }));
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions) {
