@@ -71,7 +71,7 @@ const retryHandler = () => alert('The failed request should be retried now');
     <Snackbar
         action={{label: 'Try Again', onClick: retryHandler}}
         icon="su-exclamation-triangle"
-        message="Your request couldn't be completed right now. This is usually a temporary issue."
+        message="Your request couldn't be completed right now. Please try again in a moment."
         title="Something went wrong"
         type="warning"
     />
