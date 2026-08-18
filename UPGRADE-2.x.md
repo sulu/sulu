@@ -4,6 +4,17 @@ For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upg
 
 ## 2.6.26
 
+### Deprecated persistence component repositories and traits
+
+The `RelationTrait` and the `OrderByTrait` have been deprecated. We recommend building your own
+relation and order-by handling logic instead of using these traits.
+
+The `EntityRepository` and the `RepositoryInterface` have been deprecated as well. We recommend
+building your own repositories instead of extending the class or implementing the interface.
+
+The doctrine event subscribers `MetadataSubscriber`, `TimestampableSubscriber` and
+`UserBlameSubscriber` have been marked as `@internal`, so no bc promise is given for them anymore.
+
 ### Deprecated `AbstractRestController`, `RestControllerTrait` and `ApiWrapper`
 
 The `AbstractRestController` and the `RestControllerTrait` have been deprecated. We recommend building
