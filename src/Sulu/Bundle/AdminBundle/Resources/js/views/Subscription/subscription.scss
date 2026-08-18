@@ -1,0 +1,177 @@
+@import '../../containers/Application/colors.scss';
+
+.subscription {
+    max-width: 960px;
+}
+
+.title {
+    margin: 0;
+    font-size: 24px;
+    line-height: 32px;
+    color: $blueZodiac;
+}
+
+.description {
+    margin: 5px 0 30px;
+    font-size: 12px;
+    color: $dustyGray;
+}
+
+.card {
+    margin-bottom: 20px;
+    padding: 20px 30px 30px;
+    border: 1px solid $mercury;
+    border-radius: 4px;
+    background-color: $white;
+
+    h2 {
+        margin: 0;
+        font-size: 16px;
+        line-height: 30px;
+        color: $blueZodiac;
+    }
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.facts {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding-right: 15%;
+}
+
+.fact {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.fact-label {
+    font-size: 12px;
+    color: $dustyGray;
+}
+
+.fact-value {
+    font-size: 14px;
+    font-weight: bold;
+    color: $blueZodiac;
+}
+
+.status {
+    align-self: flex-start;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.active {
+    color: #3c7a3d;
+    background-color: rgba($mantis, .2);
+}
+
+.will-be-canceled {
+    color: #8a7400;
+    background-color: rgba($gold, .2);
+}
+
+.canceled {
+    color: $persianRed;
+    background-color: rgba($persianRed, .1);
+}
+
+.credits-left {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.credits-left-number {
+    font-size: 32px;
+    font-weight: bold;
+    color: $blueZodiac;
+}
+
+.credits-left-text {
+    font-size: 14px;
+    color: $dustyGray;
+}
+
+.progress-bar {
+    height: 6px;
+    border-radius: 3px;
+    background-color: $mercury;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background-color: $shakespeare;
+}
+
+.progress-legend {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 12px;
+    color: $dustyGray;
+}
+
+.note {
+    margin: 20px 0 0;
+    font-size: 12px;
+    color: $dustyGray;
+}
+
+.contact {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 5px;
+    margin-bottom: 20px;
+    padding: 15px 30px;
+    border: 1px solid $mercury;
+    border-radius: 4px;
+    background-color: $white;
+    font-size: 12px;
+    color: $doveGray;
+
+    p {
+        margin: 0;
+    }
+}
+
+.contact-link {
+    color: $shakespeare;
+    font-weight: bold;
+    text-decoration: underline;
+
+    &:hover {
+        color: $blueZodiac;
+    }
+}
+
+.error {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 20px 30px;
+    border: 1px solid $mercury;
+    border-radius: 4px;
+
+    p {
+        margin: 0;
+        font-size: 14px;
+        color: $blueZodiac;
+    }
+}
