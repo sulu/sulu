@@ -12,8 +12,9 @@ $snackbarSuccessColor: $white;
 $snackbarSuccessBackgroundColor: $mantis;
 
 .snackbar {
-    height: $snackbarHeight;
-    padding: 0 20px;
+    min-height: $snackbarHeight;
+    padding: 8px 20px;
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     will-change: margin-top;
