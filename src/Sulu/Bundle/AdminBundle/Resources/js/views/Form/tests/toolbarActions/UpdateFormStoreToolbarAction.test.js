@@ -2,6 +2,7 @@
 import {mount} from 'enzyme';
 import symfonyRouting from 'fos-jsrouting/router';
 import UpdateFormStoreToolbarAction from '../../toolbarActions/UpdateFormStoreToolbarAction';
+import {setAccountLimitContactEmail} from '../../../../containers/AiApplication/accountLimits';
 import {ResourceFormStore} from '../../../../containers/Form';
 import memoryFormStoreFactory from '../../../../containers/Form/stores/memoryFormStoreFactory';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -272,6 +273,35 @@ test('Handle error on fetch', async() => {
     expect(action.loading).toBe(false);
     expect(action.showDialog).toBe(false);
     expect(action.form.errors).toContain('error.message');
+});
+
+test('Turn an account limit messageKey into a titled error with a contact action', async() => {
+    setAccountLimitContactEmail('admin@example.com');
+
+    const action = createUpdateFormStoreToolbarAction();
+    action.showDialog = true;
+
+    const error = new Error('Test Error');
+    // $FlowFixMe
+    error.json = jest.fn().mockResolvedValue({messageKey: 'sulu_ai.out_of_credits'});
+    Requester.post.mockRejectedValue(error);
+
+    const element = mount(action.getNode());
+    element.find('Button[skin="primary"]').simulate('click');
+
+    await new Promise((resolve) => setTimeout(resolve));
+
+    const lastError = action.form.errors[action.form.errors.length - 1];
+    expect(lastError).toEqual(expect.objectContaining({
+        title: 'sulu_admin.out_of_credits',
+        message: 'sulu_admin.out_of_credits_description',
+    }));
+    // $FlowFixMe
+    expect(lastError.actions).toHaveLength(1);
+    // $FlowFixMe
+    expect(lastError.actions[0].label).toEqual('sulu_admin.contact_admin');
+
+    setAccountLimitContactEmail(undefined);
 });
 
 test('Handle plain object error on fetch', async() => {

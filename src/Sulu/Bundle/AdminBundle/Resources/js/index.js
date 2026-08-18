@@ -126,6 +126,7 @@ import {initializeJexl} from './utils/jexl';
 import {ExternalLinkTypeOverlay, linkOverlayRegistry, LinkTypeOverlay} from './containers/Link';
 import linkTypeRegistry from './containers/Link/registries/linkTypeRegistry';
 import AiApplication from './containers/AiApplication';
+import {setAccountLimitContactEmail} from './containers/AiApplication/accountLimits';
 
 configure({enforceActions: 'observed'});
 
@@ -454,6 +455,8 @@ initializer.addUpdateConfigHook('sulu_ai', (config: Object, initialized: boolean
     if (undefined === config){
         return;
     }
+
+    setAccountLimitContactEmail(config['writing_assistant']?.contactEmail);
 
     if (!config['writing_assistant']?.enabled && !config['translation']?.enabled && !config['feedback']?.enabled) {
         return;

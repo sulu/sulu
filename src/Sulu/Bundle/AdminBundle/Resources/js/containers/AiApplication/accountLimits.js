@@ -15,3 +15,14 @@ export function readMessageKey(error: Object): Promise<?string> {
 
     return error.json().then((data) => data?.messageKey).catch(() => undefined);
 }
+
+/* set once from the admin config, so places outside the AI dialogs — like toolbar actions — can offer it */
+let contactEmail: ?string;
+
+export function setAccountLimitContactEmail(email: ?string) {
+    contactEmail = email;
+}
+
+export function getAccountLimitContactEmail(): ?string {
+    return contactEmail;
+}

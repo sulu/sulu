@@ -295,7 +295,10 @@ export default class Translator extends React.Component<Props> {
                     <div className={translatorStyles.accountLimit}>
                         <Snackbar
                             actions={contactEmail
-                                ? [{label: contactAdminMessage, onClick: this.handleContactAdminClick}]
+                                ? [
+                                    {label: contactAdminMessage, onClick: this.handleContactAdminClick},
+                                    {label: 'Second Link (Demo)', onClick: this.handleContactAdminClick},
+                                ]
                                 : undefined
                             }
                             message={accountLimitMessages[this.accountLimit].description}

@@ -5,6 +5,10 @@ import symfonyRouting from 'fos-jsrouting/router';
 import jexl from 'jexl';
 import Dialog from '../../../components/Dialog';
 import {Requester} from '../../../services';
+import {
+    ACCOUNT_LIMIT_MESSAGE_KEYS,
+    getAccountLimitContactEmail,
+} from '../../../containers/AiApplication/accountLimits';
 import {translate} from '../../../utils';
 import FormContainer, {memoryFormStoreFactory} from '../../../containers/Form';
 import Router from '../../../services/Router';
@@ -327,6 +331,26 @@ export default class UpdateFormStoreToolbarAction extends AbstractFormToolbarAct
     }
 
     @action setError = (messageKey: ?string) => {
+        if (messageKey && ACCOUNT_LIMIT_MESSAGE_KEYS[messageKey]) {
+            const translationKey = 'sulu_admin.' + messageKey.split('.')[1];
+            const contactEmail = getAccountLimitContactEmail();
+
+            this.form.errors = [...this.form.errors, {
+                title: translate(translationKey),
+                message: translate(translationKey + '_description'),
+                actions: contactEmail
+                    ? [{
+                        label: translate('sulu_admin.contact_admin'),
+                        onClick: () => {
+                            window.location.href = 'mailto:' + contactEmail;
+                        },
+                    }]
+                    : undefined,
+            }];
+
+            return;
+        }
+
         this.form.errors = [...this.form.errors, translate(messageKey || 'sulu_admin.error')];
     };
 
