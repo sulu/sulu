@@ -186,7 +186,7 @@ class Message extends Component<Props> {
             </Fragment>
         );
 
-        // the selected text heads the conversation, every generated answer is marked as a reply to it
+        // index 0 is the selected text, not a reply to it
         if (index === 0) {
             return content;
         }

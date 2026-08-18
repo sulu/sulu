@@ -16,13 +16,11 @@
     box-sizing: border-box;
 }
 
-/* closes off the conversation right above the prompt, so the reason stays put while messages scroll behind it.
-   slides out from behind the prompt, which covers it while it travels because it paints above */
+/* slides out from behind the prompt, which covers it while it travels because it paints above */
 .account-limit {
     padding: 0 50px;
     animation: account-limit-reveal 300ms ease-out;
 
-    /* only the top corners are rounded, the bottom edge sits flush on the prompt */
     > div {
         border-radius: 4px 4px 0 0;
     }

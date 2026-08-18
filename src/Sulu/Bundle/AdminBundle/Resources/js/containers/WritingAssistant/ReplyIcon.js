@@ -4,8 +4,7 @@ import React from 'react';
 /**
  * @internal
  *
- * Marks a generated answer as a reply to the selected text. The shared icon font has no bent arrow,
- * so it is drawn inline like the other icons of the AI features.
+ * The shared icon font has no bent arrow, so it is drawn inline like the other icons of the AI features.
  */
 export default class ReplyIcon extends React.PureComponent<{||}> {
     render() {

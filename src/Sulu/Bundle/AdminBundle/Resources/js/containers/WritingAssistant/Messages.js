@@ -72,8 +72,8 @@ class Messages extends Component<Props, State> {
     }
 
     /**
-     * The newest answer is appended at the end, so it has to be scrolled into view. The prompt sticks to the
-     * bottom of the scroll container, which is why the container is scrolled instead of the last element.
+     * The prompt sticks to the bottom of the scroll container, which is why the container is scrolled
+     * instead of the last element.
      */
     scrollToBottom = () => {
         let scroller = this.bottomRef?.parentElement;

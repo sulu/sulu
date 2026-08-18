@@ -11,7 +11,6 @@ import Messages from './Messages';
 import PromptInput from './PromptInput';
 import type {ExpertType, MessageType, RequestErrorType} from './types';
 
-// message keys the backend reports for account limits, which block further requests until an admin acts
 type Props = {|
     action?: React$ComponentType<Object>,
     actionProps?: Object,
@@ -122,7 +121,7 @@ export default class WritingAssistant extends React.Component<Props> {
     };
 
     @action addMessage = (message: MessageType) => {
-        // the newest answer is appended at the end, every older one collapses to keep it in reach
+        // index 0 is the selected text, which never collapses
         this.messages.forEach((olderMessage, index) => {
             if (index > 0) {
                 olderMessage.collapsed = true;
