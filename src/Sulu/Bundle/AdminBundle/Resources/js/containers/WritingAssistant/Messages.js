@@ -155,7 +155,7 @@ class Messages extends Component<Props, State> {
                 {error &&
                     <div className={messagesStyles.error}>
                         <Snackbar
-                            action={{label: error.actionLabel, onClick: onErrorActionClick}}
+                            actions={[{label: error.actionLabel, onClick: onErrorActionClick}]}
                             icon="su-exclamation-triangle"
                             message={error.message}
                             title={error.title}

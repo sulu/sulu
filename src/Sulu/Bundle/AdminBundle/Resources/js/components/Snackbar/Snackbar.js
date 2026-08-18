@@ -9,11 +9,13 @@ import snackbarStyles from './snackbar.scss';
 
 export type SnackbarType = 'error' | 'warning' | 'info' | 'success';
 
+type ActionType = {|
+    label: string,
+    onClick: () => void,
+|};
+
 type Props = {|
-    action?: {|
-        label: string,
-        onClick: () => void,
-    |},
+    actions?: Array<ActionType>,
     icon?: string,
     message: string,
     onClick?: () => void,
@@ -32,6 +34,23 @@ const ICONS = {
 };
 
 const DEFAULT_SNACKBAR_TYPE: SnackbarType = 'error';
+
+class SnackbarAction extends React.Component<{|action: ActionType|}> {
+    handleClick = (event: SyntheticEvent<HTMLButtonElement>) => {
+        // nested inside the clickable snackbar, so its own onClick must not be triggered as well
+        event.stopPropagation();
+
+        this.props.action.onClick();
+    };
+
+    render() {
+        return (
+            <button className={snackbarStyles.action} onClick={this.handleClick} type="button">
+                {this.props.action.label}
+            </button>
+        );
+    }
+}
 
 @observer
 class Snackbar extends React.Component<Props> {
@@ -84,19 +103,8 @@ class Snackbar extends React.Component<Props> {
         }
     };
 
-    handleActionClick = (event: SyntheticEvent<HTMLButtonElement>) => {
-        const {action: snackbarAction} = this.props;
-
-        // the action is nested inside the clickable snackbar, so its own onClick must not be triggered as well
-        event.stopPropagation();
-
-        if (snackbarAction) {
-            snackbarAction.onClick();
-        }
-    };
-
     render() {
-        const {action: snackbarAction, icon, onCloseClick, onClick, skin, visible} = this.props;
+        const {actions, icon, onCloseClick, onClick, skin, visible} = this.props;
 
         const snackbarClass = classNames(
             snackbarStyles.snackbar,
@@ -121,10 +129,12 @@ class Snackbar extends React.Component<Props> {
                     }
                     {this.message}
                 </div>
-                {snackbarAction &&
-                    <button className={snackbarStyles.action} onClick={this.handleActionClick} type="button">
-                        {snackbarAction.label}
-                    </button>
+                {actions && actions.length > 0 &&
+                    <div className={snackbarStyles.actions}>
+                        {actions.map((snackbarAction) => (
+                            <SnackbarAction action={snackbarAction} key={snackbarAction.label} />
+                        ))}
+                    </div>
                 }
                 {onCloseClick &&
                     <Icon className={snackbarStyles.closeIcon} name="su-times" onClick={onCloseClick} />

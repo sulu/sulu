@@ -54,12 +54,18 @@ $snackbarSuccessBackgroundColor: $mantis;
     flex-grow: 1;
 }
 
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-left: 20px;
+}
+
 .action {
     appearance: none;
     background: none;
     border: 0;
     padding: 0;
-    margin-left: 20px;
     color: inherit;
     font-family: inherit;
     font-size: 12px;

@@ -73,12 +73,16 @@ exports[`Render a snackbar with a title and an action 1`] = `
        - 
       Something went wrong
     </div>
-    <button
-      class="action"
-      type="button"
+    <div
+      class="actions"
     >
-      Try Again
-    </button>
+      <button
+        class="action"
+        type="button"
+      >
+        Try Again
+      </button>
+    </div>
   </div>
 </div>
 `;
@@ -218,6 +222,45 @@ exports[`Render an updated error snackbar 1`] = `
       role="button"
       tabindex="0"
     />
+  </div>
+</div>
+`;
+
+exports[`Render multiple actions side by side 1`] = `
+<div>
+  <div
+    class="snackbar warning visible"
+    role="button"
+  >
+    <span
+      aria-label="su-bell"
+      class="su-bell icon"
+    />
+    <div
+      class="text"
+    >
+      <strong>
+        sulu_admin.warning
+      </strong>
+       - 
+      Something went wrong
+    </div>
+    <div
+      class="actions"
+    >
+      <button
+        class="action"
+        type="button"
+      >
+        Try Again
+      </button>
+      <button
+        class="action"
+        type="button"
+      >
+        Contact Admin
+      </button>
+    </div>
   </div>
 </div>
 `;
