@@ -605,7 +605,8 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
 
         $this->queryBuilder->andWhere(
-            '(LOWER(' . self::$translationEntityNameAlias . '.desc) LIKE LOWER(:search) OR LOWER(' . self::$entityNameAlias . '.name) LIKE LOWER(:search))'
+            '(LOWER(CAST(' . self::$translationEntityNameAlias . '.desc AS STRING)) LIKE LOWER(:search)'
+            . ' OR LOWER(CAST(' . self::$entityNameAlias . '.name AS STRING)) LIKE LOWER(:search))'
         )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->setParameter('search', '%value%')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
 
@@ -631,7 +632,8 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->search('val*e');
 
         $this->queryBuilder->andWhere(
-            '(LOWER(' . self::$translationEntityNameAlias . '.desc) LIKE LOWER(:search) OR LOWER(' . self::$entityNameAlias . '.name) LIKE LOWER(:search))'
+            '(LOWER(CAST(' . self::$translationEntityNameAlias . '.desc AS STRING)) LIKE LOWER(:search)'
+            . ' OR LOWER(CAST(' . self::$entityNameAlias . '.name AS STRING)) LIKE LOWER(:search))'
         )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->setParameter('search', '%val%e%')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
 
@@ -639,25 +641,17 @@ class DoctrineListBuilderTest extends TestCase
     }
 
     /**
-     * @return \Generator<string, array{DoctrineFieldDescriptorInterface, string, string}>
+     * @return \Generator<string, array{DoctrineFieldDescriptorInterface, string}>
      */
     public static function provideSearchField(): \Generator
     {
-        yield 'text field is not casted' => [
+        yield 'field is casted' => [
             new DoctrineFieldDescriptor('name', 'name', Role::class),
-            'string',
-            'LOWER(Sulu_Bundle_SecurityBundle_Entity_Role.name) LIKE LOWER(:search)',
-        ];
-
-        yield 'non text field is casted' => [
-            new DoctrineFieldDescriptor('id', 'id', Role::class),
-            'integer',
-            'LOWER(CAST(Sulu_Bundle_SecurityBundle_Entity_Role.id AS TEXT)) LIKE LOWER(:search)',
+            'LOWER(CAST(Sulu_Bundle_SecurityBundle_Entity_Role.name AS STRING)) LIKE LOWER(:search)',
         ];
 
         yield 'count field is not casted' => [
             new DoctrineCountFieldDescriptor('id', 'id', Role::class),
-            'integer',
             'LOWER(COUNT(Sulu_Bundle_SecurityBundle_Entity_Role.id)) LIKE LOWER(:search)',
         ];
 
@@ -669,7 +663,6 @@ class DoctrineListBuilderTest extends TestCase
                 ],
                 'name'
             ),
-            'integer',
             'LOWER(CONCAT(Sulu_Bundle_SecurityBundle_Entity_Role.id, CONCAT(\' \', Sulu_Bundle_SecurityBundle_Entity_Role.name))) LIKE LOWER(:search)',
         ];
 
@@ -679,7 +672,6 @@ class DoctrineListBuilderTest extends TestCase
                 new DoctrineDescriptor(Role::class, 'id'),
                 new DoctrineDescriptor(Role::class, 'name')
             ),
-            'integer',
             'LOWER(Sulu_Bundle_SecurityBundle_Entity_Role.id) LIKE LOWER(:search)'
                 . ' OR (Sulu_Bundle_SecurityBundle_Entity_Role.id IS NULL'
                 . ' AND LOWER(Sulu_Bundle_SecurityBundle_Entity_Role.name) LIKE LOWER(:search))',
@@ -687,14 +679,10 @@ class DoctrineListBuilderTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('provideSearchField')]
-    public function testSearchWithFieldType(
+    public function testSearchWithFieldDescriptor(
         DoctrineFieldDescriptorInterface $searchField,
-        string $fieldType,
         string $expectedStatement
     ): void {
-        $this->classMetadata->hasField(Argument::any())->willReturn(true);
-        $this->classMetadata->getTypeOfField(Argument::any())->willReturn($fieldType);
-
         $this->doctrineListBuilder->addSearchField($searchField);
         $this->doctrineListBuilder->search('value');
 

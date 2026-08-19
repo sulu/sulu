@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancerInterface;
@@ -51,16 +50,6 @@ class DoctrineListBuilder extends AbstractListBuilder
 {
     use SecuredEntityRepositoryTrait;
     use EncodeAliasTrait;
-
-    /**
-     * Doctrine types which are mapped to a text column on every supported database platform.
-     */
-    private const TEXT_FIELD_TYPES = [
-        Types::ASCII_STRING,
-        Types::SIMPLE_ARRAY,
-        Types::STRING,
-        Types::TEXT,
-    ];
 
     /**
      * @var DoctrineFieldDescriptorInterface[]
@@ -744,37 +733,19 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Returns the search statement of the given field descriptor. Fields which are not mapped to a
-     * text column are casted, because strict database platforms like PostgreSQL do not allow LOWER()
-     * to be used on other column types. Text columns are left untouched, so that indexes defined on
-     * them are not affected.
+     * Returns the search statement of the given field descriptor. The column is casted, because strict
+     * database platforms like PostgreSQL do not allow LOWER() to be used on a column which is not of a
+     * text type. Descriptors which build their own statement keep it, because it can not be casted.
      */
     private function getSearchStatement(DoctrineFieldDescriptorInterface $searchField): string
     {
         if (!$searchField instanceof DoctrineFieldDescriptor
             || $searchField instanceof DoctrineCountFieldDescriptor
-            || $this->isTextField($searchField->getEntityName(), $searchField->getFieldName())
         ) {
             return $searchField->getSearch();
         }
 
-        return \sprintf('LOWER(CAST(%s AS TEXT)) LIKE LOWER(:search)', $searchField->getSelect());
-    }
-
-    private function isTextField(string $entityName, string $fieldName): bool
-    {
-        // entity names are also used as aliases and therefore do not have to reference a real entity
-        if (!\class_exists($entityName)) {
-            return true;
-        }
-
-        $classMetadata = $this->em->getClassMetadata($entityName);
-
-        if (!$classMetadata->hasField($fieldName)) {
-            return true;
-        }
-
-        return \in_array($classMetadata->getTypeOfField($fieldName), self::TEXT_FIELD_TYPES, true);
+        return \sprintf('LOWER(CAST(%s AS STRING)) LIKE LOWER(:search)', $searchField->getSelect());
     }
 
     /**
