@@ -303,3 +303,21 @@ test('ResourceLocator should call the onBlur callback when the Input finishes ed
     fireEvent.blur(getInput());
     expect(finishSpy).toHaveBeenCalledWith();
 });
+
+test('ResourceLocator should remove a trailing dash and call onChange on blur', () => {
+    const onChange = jest.fn();
+    const locale = observable.box('en');
+    render(<ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value="/some/url-" />);
+
+    fireEvent.blur(getInput());
+    expect(onChange).toHaveBeenCalledWith('/some/url');
+});
+
+test('ResourceLocator should not call onChange on blur when the value does not change', () => {
+    const onChange = jest.fn();
+    const locale = observable.box('en');
+    render(<ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value="/some/url" />);
+
+    fireEvent.blur(getInput());
+    expect(onChange).not.toHaveBeenCalled();
+});
