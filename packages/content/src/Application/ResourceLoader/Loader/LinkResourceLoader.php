@@ -15,8 +15,9 @@ namespace Sulu\Content\Application\ResourceLoader\Loader;
 
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
+use Sulu\Content\Application\ContentResolver\Value\ContentView;
 
-class LinkResourceLoader implements ResourceLoaderInterface
+class LinkResourceLoader implements ResourceLoaderContentViewEnhancementInterface
 {
     public const LINK_TYPE_EXTERNAL = 'external';
     public const RESOURCE_LOADER_KEY = 'link';
@@ -81,6 +82,17 @@ class LinkResourceLoader implements ResourceLoaderInterface
         }
 
         return $idsByProvider;
+    }
+
+    public function resolveContentViewEnhancement(mixed $resource): ContentView
+    {
+        $view = [];
+
+        if ($resource instanceof LinkItem) {
+            $view['resourceTitle'] = (string) $resource->getTitle();
+        }
+
+        return ContentView::create([], $view);
     }
 
     public static function getKey(): string

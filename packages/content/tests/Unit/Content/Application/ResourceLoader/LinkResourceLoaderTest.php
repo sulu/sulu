@@ -110,4 +110,32 @@ class LinkResourceLoaderTest extends TestCase
             'external::https://sulu.io' => $link,
         ], $result);
     }
+
+    public function testResolveContentViewEnhancement(): void
+    {
+        $link = new LinkItem('123-123-123', 'Page Title', 'https://sulu.io/page', true);
+
+        $contentView = $this->loader->resolveContentViewEnhancement($link);
+
+        $this->assertSame([], $contentView->getContent());
+        $this->assertSame(['resourceTitle' => 'Page Title'], $contentView->getView());
+    }
+
+    public function testResolveContentViewEnhancementWithEmptyTitle(): void
+    {
+        $link = new LinkItem('https://sulu.io', '', 'https://sulu.io', true);
+
+        $contentView = $this->loader->resolveContentViewEnhancement($link);
+
+        $this->assertSame([], $contentView->getContent());
+        $this->assertSame(['resourceTitle' => ''], $contentView->getView());
+    }
+
+    public function testResolveContentViewEnhancementWithNonLinkItem(): void
+    {
+        $contentView = $this->loader->resolveContentViewEnhancement('not-a-link-item');
+
+        $this->assertSame([], $contentView->getContent());
+        $this->assertSame([], $contentView->getView());
+    }
 }
