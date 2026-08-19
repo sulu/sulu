@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Infrastructure\Sulu\Search\Visitor;
 
+use CmsIg\Seal\Converter\HtmlToTextConverter;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
@@ -187,7 +188,7 @@ class WebsiteArticleReindexContentEnhancer implements WebsiteArticleReindexProvi
 
             $value = $this->getValueByPath($templateData, $fieldPath);
             if (null !== $value) {
-                $extracted = $this->extractTextFromValue($value);
+                $extracted = $this->extractTextFromValue($value, $fieldInfo['type']);
                 $content = \array_merge($content, $extracted);
             }
         }
@@ -212,7 +213,7 @@ class WebsiteArticleReindexContentEnhancer implements WebsiteArticleReindexProvi
 
             $value = $this->getValueByPath($templateData, $fieldPath);
             if (\is_string($value) && '' !== \trim($value)) {
-                return $this->stripHtml($value);
+                return $this->normalizeText($value, $fieldInfo['type']);
             }
         }
 
@@ -309,10 +310,10 @@ class WebsiteArticleReindexContentEnhancer implements WebsiteArticleReindexProvi
     /**
      * @return array<int, string>
      */
-    private function extractTextFromValue(mixed $value): array
+    private function extractTextFromValue(mixed $value, string $type): array
     {
         if (\is_string($value)) {
-            $text = $this->stripHtml($value);
+            $text = $this->normalizeText($value, $type);
 
             return !empty(\trim($text)) ? [$text] : [];
         }
@@ -321,9 +322,9 @@ class WebsiteArticleReindexContentEnhancer implements WebsiteArticleReindexProvi
             $content = [];
             foreach ($value as $item) {
                 if (\is_array($item)) {
-                    $content = \array_merge($content, $this->extractTextFromValue($item));
+                    $content = \array_merge($content, $this->extractTextFromValue($item, $type));
                 } elseif (\is_string($item)) {
-                    $text = $this->stripHtml($item);
+                    $text = $this->normalizeText($item, $type);
                     if (!empty(\trim($text))) {
                         $content[] = $text;
                     }
@@ -336,8 +337,19 @@ class WebsiteArticleReindexContentEnhancer implements WebsiteArticleReindexProvi
         return [];
     }
 
-    private function stripHtml(string $html): string
+    /**
+     * Extracts the searchable plain text from a field value. Only rich-text
+     * (text_editor) fields contain HTML, so those are converted with SEAL's
+     * HtmlToTextConverter — which drops tags, decodes entities and keeps words
+     * separated across block boundaries. Plain-text fields (text_line,
+     * text_area) are left untouched apart from trimming.
+     */
+    private function normalizeText(string $value, string $type): string
     {
-        return \trim(\strip_tags($html));
+        if ('text_editor' === $type) {
+            return HtmlToTextConverter::convert($value);
+        }
+
+        return \trim($value);
     }
 }
