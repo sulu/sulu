@@ -19,9 +19,8 @@ class TextEditorPropertyMetadataMapper implements PropertyMetadataMapperInterfac
     {
         $mandatory = $propertyMetadata->isRequired();
 
-        // text_editor values contain HTML markup, so character based min/max length
-        // constraints are not supported (see docs/reference/content-types/text_editor.html) -
-        // only the mandatory (i.e. not empty) constraint is mapped here.
+        // text_editor values contain HTML markup, so configurable min/max-length constraints are not supported
+        // (see docs/reference/content-types/text_editor.html). Only the mandatory (non-empty) constraint is mapped here.
         $textEditorMetadata = new StringMetadata(
             $mandatory ? 1 : null,
             null,
@@ -37,8 +36,8 @@ class TextEditorPropertyMetadataMapper implements PropertyMetadataMapperInterfac
         }
 
         return new PropertyMetadata(
-            $propertyMetadata->getName(),
-            $propertyMetadata->isRequired(),
+            (string) $propertyMetadata->getName(),
+            $mandatory,
             $textEditorMetadata
         );
     }
