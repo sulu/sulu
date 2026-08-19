@@ -21,5 +21,7 @@ return static function(ContainerConfigurator $container) {
         ->tag('massive_build.builder');
 
     $services->set('sulu_core.build.builder.fixtures', FixturesBuilder::class)
+        // additional dependencies, other bundles can append their builders via a compiler pass
+        ->args([[]])
         ->tag('massive_build.builder');
 };

@@ -102,7 +102,10 @@ class ResourceLocator extends React.Component<Props> {
 
         if (value) {
             const newValue = value.replace(/([-])$/g, '');
-            onChange(newValue);
+
+            if (newValue !== value) {
+                onChange(newValue);
+            }
         }
 
         if (onBlur) {
