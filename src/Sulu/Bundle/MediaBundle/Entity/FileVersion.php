@@ -130,19 +130,19 @@ class FileVersion implements AuditableInterface
     private $focusPointY;
 
     /**
-     * @var string|null
+     * @var string
      */
-    private $origin;
+    private $origin = 'unknown';
 
     /**
-     * @var bool|null
+     * @var bool
      */
-    private $aiDisclosureDisabled;
+    private $aiDisclosureDisabled = false;
 
     /**
-     * @var string|null
+     * @var string
      */
-    private $aiDisclosureIconVariant;
+    private $aiDisclosureIconVariant = 'auto';
 
     /**
      * Constructor.
