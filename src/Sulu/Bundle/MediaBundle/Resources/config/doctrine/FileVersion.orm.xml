@@ -42,7 +42,7 @@
                 <option name="default">0</option>
             </options>
         </field>
-        <field name="aiDisclosureIconVariant" type="string" column="aiDisclosureIconVariant" length="31">
+        <field name="aiDisclosureIconVariant" type="string" column="aiDisclosureIconVariant" length="31" nullable="false">
             <options>
                 <option name="default">auto</option>
             </options>

@@ -129,20 +129,11 @@ class FileVersion implements AuditableInterface
      */
     private $focusPointY;
 
-    /**
-     * @var string
-     */
-    private $origin = 'unknown';
+    private string $origin = 'unknown';
 
-    /**
-     * @var bool
-     */
-    private $aiDisclosureDisabled = false;
+    private bool $aiDisclosureDisabled = false;
 
-    /**
-     * @var string
-     */
-    private $aiDisclosureIconVariant = 'auto';
+    private string $aiDisclosureIconVariant = 'auto';
 
     /**
      * Constructor.
@@ -762,60 +753,48 @@ class FileVersion implements AuditableInterface
 
     /**
      * Get origin.
-     *
-     * @return string|null
      */
-    public function getOrigin()
+    public function getOrigin(): string
     {
         return $this->origin;
     }
 
     /**
      * Set origin.
-     *
-     * @param string|null $origin
      */
-    public function setOrigin($origin)
+    public function setOrigin(string $origin): void
     {
         $this->origin = $origin;
     }
 
     /**
      * Get aiDisclosureDisabled.
-     *
-     * @return bool|null
      */
-    public function getAiDisclosureDisabled()
+    public function getAiDisclosureDisabled(): bool
     {
         return $this->aiDisclosureDisabled;
     }
 
     /**
      * Set aiDisclosureDisabled.
-     *
-     * @param bool|null $aiDisclosureDisabled
      */
-    public function setAiDisclosureDisabled($aiDisclosureDisabled)
+    public function setAiDisclosureDisabled(bool $aiDisclosureDisabled): void
     {
         $this->aiDisclosureDisabled = $aiDisclosureDisabled;
     }
 
     /**
      * Get aiDisclosureIconVariant.
-     *
-     * @return string|null
      */
-    public function getAiDisclosureIconVariant()
+    public function getAiDisclosureIconVariant(): string
     {
         return $this->aiDisclosureIconVariant;
     }
 
     /**
      * Set aiDisclosureIconVariant.
-     *
-     * @param string|null $aiDisclosureIconVariant
      */
-    public function setAiDisclosureIconVariant($aiDisclosureIconVariant)
+    public function setAiDisclosureIconVariant(string $aiDisclosureIconVariant): void
     {
         $this->aiDisclosureIconVariant = $aiDisclosureIconVariant;
     }

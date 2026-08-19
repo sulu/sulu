@@ -612,16 +612,16 @@ class MediaManager implements MediaManagerInterface
                         $media->setFocusPointY($value);
                         break;
                     case 'origin':
-                        $media->setOrigin($value);
+                        $media->setOrigin($value ?? 'unknown');
                         break;
                     case 'aiDisclosureDisabled':
-                        $media->setAiDisclosureDisabled($value);
+                        $media->setAiDisclosureDisabled((bool) $value);
                         break;
                     case 'aiDisclosureText':
                         $media->setAiDisclosureText($value);
                         break;
                     case 'aiDisclosureIconVariant':
-                        $media->setAiDisclosureIconVariant($value);
+                        $media->setAiDisclosureIconVariant($value ?? 'auto');
                         break;
                 }
             }

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\Manager;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -662,6 +663,55 @@ class MediaManagerTest extends TestCase
         $this->domainEventCollector->collect(Argument::type(MediaVersionAddedEvent::class))->shouldNotBeCalled();
 
         $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
+    }
+
+    public function testSaveWithOriginAndAiDisclosure(): void
+    {
+        $media = $this->prophesize(Media::class);
+        $media->getId()->willReturn(1);
+        $media->getPreviewImage()->willReturn(null);
+        $file = $this->prophesize(File::class);
+        $fileVersion = $this->prophesize(FileVersion::class);
+        $fileVersion->getName()->willReturn('test');
+        $fileVersion->getStorageOptions()->willReturn([]);
+        $fileVersion->getSubVersion()->willReturn(1);
+        $fileVersion->getVersion()->willReturn(1);
+        $fileVersion->getMimeType()->willReturn('image/jpeg');
+        $fileVersion->getProperties()->willReturn([]);
+        $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
+        $fileVersionMeta->getLocale()->willReturn('en');
+        $fileVersion->getMeta()->willReturn(new ArrayCollection([$fileVersionMeta->reveal()]));
+        $file->getFileVersion(1)->willReturn($fileVersion->reveal());
+        $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $file->getLatestFileVersion()->willReturn($fileVersion->reveal());
+        $file->getVersion()->willReturn(1);
+        $media->getFiles()->willReturn([$file->reveal()]);
+        $this->mediaRepository->findMediaById(1)->willReturn($media);
+
+        $media->setChanger(Argument::any())->shouldBeCalled();
+        $media->setChanged(Argument::any())->shouldBeCalled();
+        $file->setChanger(Argument::any())->shouldBeCalled();
+        $file->setChanged(Argument::any())->shouldBeCalled();
+        $fileVersion->setProperties([])->shouldBeCalled();
+        $fileVersion->setChanged(Argument::any())->shouldBeCalled();
+        $fileVersion->setOrigin('ai_generated')->shouldBeCalled();
+        // false must still reach the setter, it must not be swallowed by the outer `if ($value || ...)` whitelist check
+        $fileVersion->setAiDisclosureDisabled(false)->shouldBeCalled();
+        $fileVersion->setAiDisclosureIconVariant('dark')->shouldBeCalled();
+        $fileVersionMeta->setAiDisclosureText('Generated with AI')->willReturn($fileVersionMeta)->shouldBeCalled();
+        $fileVersion->increaseSubVersion()->shouldNotBeCalled();
+
+        $this->domainEventCollector->collect(Argument::type(MediaModifiedEvent::class))->shouldBeCalled();
+        $this->domainEventCollector->collect(Argument::type(MediaVersionAddedEvent::class))->shouldNotBeCalled();
+
+        $this->mediaManager->save(null, [
+            'id' => 1,
+            'locale' => 'en',
+            'origin' => 'ai_generated',
+            'aiDisclosureDisabled' => false,
+            'aiDisclosureIconVariant' => 'dark',
+            'aiDisclosureText' => 'Generated with AI',
+        ], 1);
     }
 
     public function testMediaPropertiesProvider(): void

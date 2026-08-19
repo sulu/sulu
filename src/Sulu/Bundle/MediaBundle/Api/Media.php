@@ -279,23 +279,18 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @param string|null $aiDisclosureText
-     *
      * @return $this
      */
-    public function setAiDisclosureText($aiDisclosureText)
+    public function setAiDisclosureText(?string $aiDisclosureText): static
     {
         $this->getMeta(true)->setAiDisclosureText($aiDisclosureText);
 
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     #[VirtualProperty]
     #[SerializedName('aiDisclosureText')]
-    public function getAiDisclosureText()
+    public function getAiDisclosureText(): ?string
     {
         if (!$this->getLocalizedMeta()) {
             return null;
@@ -305,80 +300,53 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @param bool|null $aiDisclosureDisabled
-     *
      * @return $this
      */
-    public function setAiDisclosureDisabled($aiDisclosureDisabled)
+    public function setAiDisclosureDisabled(bool $aiDisclosureDisabled): static
     {
         $this->getFileVersion()->setAiDisclosureDisabled($aiDisclosureDisabled);
 
         return $this;
     }
 
-    /**
-     * @return bool|null
-     */
     #[VirtualProperty]
     #[SerializedName('aiDisclosureDisabled')]
-    public function getAiDisclosureDisabled()
+    public function getAiDisclosureDisabled(): bool
     {
-        if (!$this->getFileVersion()) {
-            return null;
-        }
-
         return $this->getFileVersion()->getAiDisclosureDisabled();
     }
 
     /**
-     * @param string|null $aiDisclosureIconVariant
-     *
      * @return $this
      */
-    public function setAiDisclosureIconVariant($aiDisclosureIconVariant)
+    public function setAiDisclosureIconVariant(string $aiDisclosureIconVariant): static
     {
         $this->getFileVersion()->setAiDisclosureIconVariant($aiDisclosureIconVariant);
 
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     #[VirtualProperty]
     #[SerializedName('aiDisclosureIconVariant')]
-    public function getAiDisclosureIconVariant()
+    public function getAiDisclosureIconVariant(): string
     {
-        if (!$this->getFileVersion()) {
-            return null;
-        }
-
         return $this->getFileVersion()->getAiDisclosureIconVariant();
     }
 
     /**
-     * @param string|null $origin
-     *
      * @return $this
      */
-    public function setOrigin($origin)
+    public function setOrigin(string $origin): static
     {
         $this->getFileVersion()->setOrigin($origin);
 
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     #[VirtualProperty]
     #[SerializedName('origin')]
-    public function getOrigin()
+    public function getOrigin(): string
     {
-        if (!$this->getFileVersion()) {
-            return null;
-        }
-
         return $this->getFileVersion()->getOrigin();
     }
 
