@@ -85,6 +85,7 @@ use Sulu\Page\Infrastructure\Sulu\Security\PageSecurityListener;
 use Sulu\Page\Infrastructure\Sulu\Sitemap\PagesSitemapProvider;
 use Sulu\Page\Infrastructure\Sulu\Trash\PageTrashItemHandler;
 use Sulu\Page\Infrastructure\Sulu\Webspace\PageSegmentListener;
+use Sulu\Page\Infrastructure\Symfony\DependencyInjection\Compiler\FixturesBuilderDependencyPass;
 use Sulu\Page\Infrastructure\Symfony\DependencyInjection\Compiler\OverrideTreeListenerPass;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\ContentPathTwigExtension;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension;
@@ -92,6 +93,7 @@ use Sulu\Page\Infrastructure\Symfony\Twig\Extension\PageTwigExtension;
 use Sulu\Page\UserInterface\Command\InitializeHomepageCommand;
 use Sulu\Page\UserInterface\Controller\Admin\PageController;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -887,5 +889,8 @@ final class SuluPageBundle extends AbstractBundle
             PageDimensionContentInterface::class => 'sulu.model.page_content.class',
         ], $container);
         $container->addCompilerPass(new OverrideTreeListenerPass());
+        // run after Symfony's ResolveNamedArgumentsPass (also an optimization pass) so argument 0 of the
+        // fixtures builder definition is always resolved to a plain positional array before we touch it
+        $container->addCompilerPass(new FixturesBuilderDependencyPass(), PassConfig::TYPE_OPTIMIZE, -10);
     }
 }

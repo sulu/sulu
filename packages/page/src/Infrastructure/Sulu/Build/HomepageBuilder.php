@@ -15,9 +15,11 @@ use Sulu\Bundle\CoreBundle\Build\SuluBuilder;
 
 class HomepageBuilder extends SuluBuilder
 {
+    public const NAME = 'homepage';
+
     public function getName(): string
     {
-        return 'homepage';
+        return self::NAME;
     }
 
     public function getDependencies(): array
