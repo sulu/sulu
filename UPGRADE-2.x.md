@@ -10,7 +10,7 @@ The `aiDisclosure` section has been added to the media details form. It allows y
 
 ```sql
 ALTER TABLE me_file_version_meta ADD ai_disclosure_text LONGTEXT DEFAULT NULL;
-ALTER TABLE me_file_versions ADD origin VARCHAR(191) DEFAULT NULL, ADD aiDisclosureDisabled TINYINT(1) DEFAULT NULL, ADD aiDisclosureIconVariant VARCHAR(191) DEFAULT NULL;
+ALTER TABLE me_file_versions ADD origin VARCHAR(31) NOT NULL DEFAULT 'unknown', ADD aiDisclosureDisabled TINYINT(1) NOT NULL DEFAULT 0, ADD aiDisclosureIconVariant VARCHAR(31) NOT NULL DEFAULT 'auto';
 ```
 
 ### Deprecated persistence component repositories and traits

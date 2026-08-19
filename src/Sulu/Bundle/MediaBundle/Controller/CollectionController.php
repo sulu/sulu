@@ -368,7 +368,10 @@ class CollectionController extends AbstractRestController implements ClassResour
 
         $this->checkSystemCollection($id, $parent);
 
-        if (!$request->request->has('locale')) {
+        /** @var string|null $locale */
+        $locale = $request->query->get('locale') ?? $request->request->get('locale');
+
+        if (null === $locale) {
             throw new MissingParameterException(self::class, 'locale');
         }
 
@@ -376,7 +379,7 @@ class CollectionController extends AbstractRestController implements ClassResour
             $data = [
                 ...$this->getData($request),
                 'id' => $id,
-                'locale' => $request->request->get('locale'),
+                'locale' => $locale,
             ];
 
             $collection = $this->collectionManager->save($data, $this->getUser()->getId(), $breadcrumb);

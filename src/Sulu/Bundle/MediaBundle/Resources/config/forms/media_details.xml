@@ -39,25 +39,25 @@
                         <param name="values" type="collection">
                             <param name="human_created">
                                 <meta>
-                                    <title>sulu_media.origin_human_created</title>
+                                    <title>sulu_media.human_created</title>
                                 </meta>
                             </param>
 
                             <param name="ai_generated">
                                 <meta>
-                                    <title>sulu_media.origin_ai_generated</title>
+                                    <title>sulu_media.ai_generated</title>
                                 </meta>
                             </param>
 
                             <param name="ai_modified">
                                 <meta>
-                                    <title>sulu_media.origin_ai_modified</title>
+                                    <title>sulu_media.ai_modified</title>
                                 </meta>
                             </param>
 
                             <param name="unknown">
                                 <meta>
-                                    <title>sulu_media.origin_unknown</title>
+                                    <title>sulu_media.unknown</title>
                                 </meta>
                             </param>
                         </param>
