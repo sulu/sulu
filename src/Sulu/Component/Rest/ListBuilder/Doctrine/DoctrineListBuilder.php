@@ -722,7 +722,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         if (null !== $this->search) {
             $searchParts = [];
             foreach ($this->searchFields as $searchField) {
-                $searchParts[] = $searchField->getSearch();
+                $searchParts[] = $this->getSearchStatement($searchField);
             }
 
             $this->queryBuilder->andWhere('(' . \implode(' OR ', $searchParts) . ')');
@@ -730,6 +730,22 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         return $this->queryBuilder;
+    }
+
+    /**
+     * Returns the search statement of the given field descriptor. The column is casted, because strict
+     * database platforms like PostgreSQL do not allow LOWER() to be used on a column which is not of a
+     * text type. Descriptors which build their own statement keep it, because it can not be casted.
+     */
+    private function getSearchStatement(DoctrineFieldDescriptorInterface $searchField): string
+    {
+        if (!$searchField instanceof DoctrineFieldDescriptor
+            || $searchField instanceof DoctrineCountFieldDescriptor
+        ) {
+            return $searchField->getSearch();
+        }
+
+        return \sprintf('LOWER(CAST(%s AS STRING)) LIKE LOWER(:search)', $searchField->getSelect());
     }
 
     /**
