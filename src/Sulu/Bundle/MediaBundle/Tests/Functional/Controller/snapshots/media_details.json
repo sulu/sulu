@@ -71,6 +71,161 @@
                     "tags": [],
                     "label": "Description"
                 },
+                "origin": {
+                    "disabledCondition": null,
+                    "visibleCondition": null,
+                    "type": "single_select",
+                    "colSpan": 12,
+                    "options": {
+                        "default_value": {
+                            "name": "default_value",
+                            "type": "string",
+                            "value": "unknown"
+                        },
+                        "values": {
+                            "name": "values",
+                            "type": "collection",
+                            "value": [
+                                {
+                                    "name": "human_created",
+                                    "type": null,
+                                    "value": null,
+                                    "title": "Created by humans"
+                                },
+                                {
+                                    "name": "ai_generated",
+                                    "type": null,
+                                    "value": null,
+                                    "title": "Created by AI"
+                                },
+                                {
+                                    "name": "ai_modified",
+                                    "type": null,
+                                    "value": null,
+                                    "title": "Modified by AI"
+                                },
+                                {
+                                    "name": "unknown",
+                                    "type": null,
+                                    "value": null,
+                                    "title": "Unknown"
+                                }
+                            ]
+                        }
+                    },
+                    "types": [],
+                    "defaultType": null,
+                    "required": false,
+                    "multilingual": true,
+                    "spaceAfter": null,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": [],
+                    "label": "Origin"
+                },
+                "aiDisclosure": {
+                    "disabledCondition": null,
+                    "visibleCondition": "origin == 'ai_generated' || origin == 'ai_modified'",
+                    "type": "section",
+                    "colSpan": 12,
+                    "items": {
+                        "aiDisclosureDisabled": {
+                            "disabledCondition": null,
+                            "visibleCondition": null,
+                            "type": "checkbox",
+                            "colSpan": 12,
+                            "options": {
+                                "type": {
+                                    "name": "type",
+                                    "type": "string",
+                                    "value": "toggler"
+                                },
+                                "label": {
+                                    "name": "label",
+                                    "type": "string",
+                                    "value": null,
+                                    "title": "Disable AI Hint"
+                                }
+                            },
+                            "types": [],
+                            "defaultType": null,
+                            "required": false,
+                            "multilingual": true,
+                            "spaceAfter": null,
+                            "minOccurs": null,
+                            "maxOccurs": null,
+                            "onInvalid": null,
+                            "tags": [],
+                            "description": "I have manually verified that the AI-generated or AI-modified media do not require labeling under the EU AI Act."
+                        },
+                        "aiDisclosureText": {
+                            "disabledCondition": null,
+                            "visibleCondition": "aiDisclosureDisabled != true",
+                            "type": "text_area",
+                            "colSpan": 12,
+                            "options": [],
+                            "types": [],
+                            "defaultType": null,
+                            "required": false,
+                            "multilingual": true,
+                            "spaceAfter": null,
+                            "minOccurs": null,
+                            "maxOccurs": null,
+                            "onInvalid": null,
+                            "tags": [],
+                            "label": "AI hint text"
+                        },
+                        "aiDisclosureIconVariant": {
+                            "disabledCondition": null,
+                            "visibleCondition": "aiDisclosureDisabled != true",
+                            "type": "single_select",
+                            "colSpan": 12,
+                            "options": {
+                                "default_value": {
+                                    "name": "default_value",
+                                    "type": "string",
+                                    "value": "auto"
+                                },
+                                "values": {
+                                    "name": "values",
+                                    "type": "collection",
+                                    "value": [
+                                        {
+                                            "name": "auto",
+                                            "type": null,
+                                            "value": null,
+                                            "title": "Auto"
+                                        },
+                                        {
+                                            "name": "light",
+                                            "type": null,
+                                            "value": null,
+                                            "title": "Light"
+                                        },
+                                        {
+                                            "name": "dark",
+                                            "type": null,
+                                            "value": null,
+                                            "title": "Dark"
+                                        }
+                                    ]
+                                }
+                            },
+                            "types": [],
+                            "defaultType": null,
+                            "required": false,
+                            "multilingual": true,
+                            "spaceAfter": null,
+                            "minOccurs": null,
+                            "maxOccurs": null,
+                            "onInvalid": null,
+                            "tags": [],
+                            "label": "Icon variant"
+                        }
+                    },
+                    "label": "AI Disclosure"
+                },
                 "license": {
                     "disabledCondition": null,
                     "visibleCondition": null,
@@ -185,6 +340,20 @@
                 "minLength": 1
             },
             "description": {
+                "anyOf": [
+                    {
+                        "type": "null"
+                    },
+                    {
+                        "type": "string",
+                        "maxLength": 0
+                    },
+                    {
+                        "type": "string"
+                    }
+                ]
+            },
+            "aiDisclosureText": {
                 "anyOf": [
                     {
                         "type": "null"
