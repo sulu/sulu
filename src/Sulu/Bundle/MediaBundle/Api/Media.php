@@ -278,9 +278,6 @@ class Media extends ApiWrapper
         return $this->getLocalizedMeta()->getDescription();
     }
 
-    /**
-     * @return $this
-     */
     public function setAiDisclosureText(?string $aiDisclosureText): static
     {
         $this->getMeta(true)->setAiDisclosureText($aiDisclosureText);
@@ -299,9 +296,6 @@ class Media extends ApiWrapper
         return $this->getLocalizedMeta()->getAiDisclosureText();
     }
 
-    /**
-     * @return $this
-     */
     public function setAiDisclosureDisabled(bool $aiDisclosureDisabled): static
     {
         $this->getFileVersion()->setAiDisclosureDisabled($aiDisclosureDisabled);
@@ -316,9 +310,6 @@ class Media extends ApiWrapper
         return $this->getFileVersion()->getAiDisclosureDisabled();
     }
 
-    /**
-     * @return $this
-     */
     public function setAiDisclosureIconVariant(string $aiDisclosureIconVariant): static
     {
         $this->getFileVersion()->setAiDisclosureIconVariant($aiDisclosureIconVariant);
@@ -333,9 +324,6 @@ class Media extends ApiWrapper
         return $this->getFileVersion()->getAiDisclosureIconVariant();
     }
 
-    /**
-     * @return $this
-     */
     public function setOrigin(string $origin): static
     {
         $this->getFileVersion()->setOrigin($origin);
