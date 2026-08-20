@@ -20065,12 +20065,6 @@ parameters:
 			path: src/Sulu/Bundle/CustomUrlBundle/Controller/CustomUrlController.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Controller\\CustomUrlController\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Controller/CustomUrlController.php
-
-		-
 			message: '#^Parameter \#1 \$webspaceKey of static method Sulu\\Bundle\\CustomUrlBundle\\Admin\\CustomUrlAdmin\:\:getCustomUrlSecurityContext\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -25717,12 +25711,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Controller\\MediaFormatController\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaFormatController.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -29467,36 +29455,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\CollectionControllerTest\:\:createCollectionType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\CollectionControllerTest\:\:createCollectionType\(\) has parameter \$description with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\CollectionControllerTest\:\:createCollectionType\(\) has parameter \$id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\CollectionControllerTest\:\:createCollectionType\(\) has parameter \$key with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\CollectionControllerTest\:\:createCollectionType\(\) has parameter \$name with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\CollectionControllerTest\:\:createMediaType\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -29551,27 +29509,9 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$collectionType of method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\CollectionControllerTest\:\:createCollection\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\CollectionType, mixed given\.$#'
-			identifier: argument.type
-			count: 7
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
 			message: '#^Parameter \#1 \$datetime of function strtotime expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 20
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$description of method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionType\:\:setDescription\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$id of method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionType\:\:setId\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
@@ -29587,13 +29527,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$key of method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionType\:\:setKey\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionType\:\:setName\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$key of method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionType\:\:setKey\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
@@ -29601,7 +29535,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, mixed given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
@@ -29672,18 +29606,6 @@ parameters:
 
 		-
 			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\CollectionControllerTest\:\:\$collection1 \(Sulu\\Bundle\\MediaBundle\\Entity\\Collection\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\CollectionControllerTest\:\:\$collectionType1 \(Sulu\\Bundle\\MediaBundle\\Entity\\CollectionType\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\CollectionControllerTest\:\:\$collectionType2 \(Sulu\\Bundle\\MediaBundle\\Entity\\CollectionType\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
@@ -46387,12 +46309,6 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewLinkController.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\UserInterface\\Controller\\PublicPreviewController\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PublicPreviewController.php
-
-		-
 			message: '#^Parameter \#1 \$objects of method Sulu\\Bundle\\ReferenceBundle\\Infrastructure\\Symfony\\DependencyInjection\\SuluReferenceExtension\:\:configurePersistence\(\) expects array\<string, array\{model\: class\-string, repository\?\: class\-string\}\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -57093,12 +57009,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\TrashBundle\\UserInterface\\Controller\\Admin\\TrashItemController\:\:__construct\(\) has parameter \$restoreConfigurationProviderLocator with generic class Symfony\\Component\\DependencyInjection\\ServiceLocator but does not specify its types\: T$#'
 			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/UserInterface/Controller/Admin/TrashItemController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\TrashBundle\\UserInterface\\Controller\\Admin\\TrashItemController\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/UserInterface/Controller/Admin/TrashItemController.php
 
@@ -90497,9 +90407,3 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: tests/phpstan/object-manager.php
-
-		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/DependencyInjection/PersistenceExtensionTrait.php
