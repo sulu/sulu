@@ -36,6 +36,23 @@ class LinkPropertyResolverTest extends TestCase
         $this->assertSame([], $contentView->getView());
     }
 
+    public function testResolveEmptiedLink(): void
+    {
+        $contentView = $this->resolver->resolve([
+            'provider' => null,
+            'target' => null,
+            'anchor' => null,
+            'query' => null,
+            'href' => null,
+            'title' => null,
+            'rel' => null,
+            'locale' => 'en',
+        ], 'en');
+
+        $this->assertNull($contentView->getContent());
+        $this->assertSame([], $contentView->getView());
+    }
+
     public function testResolveNullParams(): void
     {
         $contentView = $this->resolver->resolve(null, 'en', ['custom' => 'params']);
@@ -69,7 +86,7 @@ class LinkPropertyResolverTest extends TestCase
     {
         $contentView = $this->resolver->resolve($data, 'en');
 
-        $this->assertSame($data, $contentView->getContent());
+        $this->assertNull($contentView->getContent());
         $this->assertSame([], $contentView->getView());
     }
 

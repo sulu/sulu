@@ -73,11 +73,11 @@ class UserTwoFactor
      *     backupCodes?: string[],
      *     authCode?: string,
      *     googleAuthenticatorSecret?: string,
+     *     pendingGoogleAuthenticatorSecret?: string,
+     *     googleAuthenticatorUsername?: string,
      *     totpSecret?: string,
      *     pendingTotpSecret?: string,
      *     trustedVersion?: int,
-     *     googleAuthenticatorUsername?: string,
-     *     googleAuthenticatorSecret?: string,
      * }
      */
     public function getOptions(): ?array
@@ -91,11 +91,11 @@ class UserTwoFactor
          *     backupCodes?: string[],
          *     authCode?: string,
          *     googleAuthenticatorSecret?: string,
+         *     pendingGoogleAuthenticatorSecret?: string,
+         *     googleAuthenticatorUsername?: string,
          *     totpSecret?: string,
          *     pendingTotpSecret?: string,
          *     trustedVersion?: int,
-         *     googleAuthenticatorUsername?: string,
-         *     googleAuthenticatorSecret?: string,
          * }
          */
         return \json_decode($this->options, true, flags: \JSON_THROW_ON_ERROR);

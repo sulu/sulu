@@ -33,7 +33,7 @@
         "ext-libxml": "*",
         "ext-mbstring": "*",
         "composer-runtime-api": "^2.0",
-        "cmsig/seal": "^0.12.4",
+        "cmsig/seal": "^0.12.16",
         "cmsig/seal-symfony-bundle": "^0.12",
         "contao/imagine-svg": "^1.0",
         "doctrine/collections": "^1.6 || ^2.0",
@@ -41,7 +41,7 @@
         "doctrine/dbal": "^3.9 || ^4.0",
         "doctrine/doctrine-bundle": "^2.6 || ^3.0",
         "doctrine/doctrine-fixtures-bundle": "^3.4 || ^4.0",
-        "doctrine/doctrine-migrations-bundle": "^3.3 || ^4.0",
+        "doctrine/doctrine-migrations-bundle": "^3.7 || ^4.0",
         "doctrine/inflector": "^1.4.1 || ^2.0.1",
         "doctrine/migrations": "^3.9",
         "doctrine/orm": "^2.17.3 || ^3.3",
@@ -201,6 +201,7 @@
         "php-ffmpeg/php-ffmpeg": "Needed (as in require-dev) to generate preview images for videos",
         "scheb/2fa-bundle": "Needed for two factor authentication.",
         "scheb/2fa-totp": "Needed for two factor authentication via authenticator apps (TOTP).",
+        "scheb/2fa-google-authenticator": "Needed for two factor authentication via authenticator apps (Google Authenticator).",
         "scheb/2fa-backup-code": "Needed for two factor authentication backup codes.",
         "scheb/2fa-trusted-device": "Needed to allow trusted devices to skip the two factor authentication.",
         "symfony/monolog-bundle": "^3.1"
@@ -231,6 +232,7 @@
             "Sulu\\Page\\Tests\\": "packages/page/tests",
             "Sulu\\Page\\Migrations\\": "packages/page/migrations",
             "Sulu\\Route\\Tests\\": "packages/route/tests",
+            "Sulu\\Route\\Migrations\\": "packages/route/migrations",
             "Sulu\\Search\\Tests\\": "packages/search/tests",
             "Sulu\\Content\\Tests\\": "packages/content/tests",
             "Sulu\\CustomUrl\\Tests\\": "packages/custom-url/tests"

@@ -92,6 +92,17 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
             throw new NotFoundHttpException(\sprintf('No article found for id "%s" and locale "%s"', $id, $locale));
         }
 
+        // Article routes are stored without a webspace (see RoutableDataMapper), so a single route matches every
+        // webspace via the "webspaceOrNull" filter. The article is therefore only served through its configured
+        // main or additional webspaces; requesting it through any other webspace results in a 404.
+        $requestWebspace = $this->getRequestWebspaceKey();
+        if (null !== $requestWebspace
+            && $requestWebspace !== $dimensionContent->getMainWebspace()
+            && !\in_array($requestWebspace, $dimensionContent->getAdditionalWebspaces(), true)
+        ) {
+            throw new NotFoundHttpException(\sprintf('No article found for id "%s" and locale "%s" in webspace "%s"', $id, $locale, $requestWebspace));
+        }
+
         $templateKey = $dimensionContent->getTemplateKey();
         if (!$templateKey) {
             throw new NotFoundHttpException(\sprintf('No template found for id "%s" and locale "%s"', $id, $locale));

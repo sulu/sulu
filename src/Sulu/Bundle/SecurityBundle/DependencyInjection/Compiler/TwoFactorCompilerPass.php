@@ -28,6 +28,10 @@ class TwoFactorCompilerPass implements CompilerPassInterface
             $methods[] = 'totp';
         }
 
+        if ($container->has('scheb_two_factor.security.google_authenticator')) {
+            $methods[] = 'google';
+        }
+
         if ($container->hasParameter('scheb_two_factor.trusted_device.enabled')
             && $container->getParameter('scheb_two_factor.trusted_device.enabled')
         ) {

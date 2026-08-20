@@ -49,7 +49,11 @@ class MetadataTest extends KernelTestCase
                 $countLimit += $fieldDefinition['length'];
             }
 
-            $this->assertLessThanOrEqual(191, $countLimit, 'The index "' . $indexName . '" exceeds the MySQL utf8mb4 limit.');
+            // InnoDB DYNAMIC row format (MySQL default since 5.7.9) allows a 3072 byte index
+            // key prefix; at 4 bytes/char (utf8mb4) that's 768 chars. The old 191-char (767 byte)
+            // limit only applies to legacy COMPACT/REDUNDANT row format tables and is enforced
+            // separately via LegacyLengthSubscriber for un-migrated installations.
+            $this->assertLessThanOrEqual(768, $countLimit, 'The index "' . $indexName . '" exceeds the MySQL utf8mb4 DYNAMIC row format limit.');
         }
     }
 
@@ -83,7 +87,8 @@ class MetadataTest extends KernelTestCase
                 $countLimit += $fieldDefinition['length'];
             }
 
-            $this->assertLessThanOrEqual(191, $countLimit, 'The index "' . $uniqueConstraintName . '" exceeds the MySQL utf8mb4 limit.');
+            // See comment in testMetadataIndexDoNotExceedMySQLUtf8Mb4Limits() re: 768-char DYNAMIC row format budget.
+            $this->assertLessThanOrEqual(768, $countLimit, 'The index "' . $uniqueConstraintName . '" exceeds the MySQL utf8mb4 DYNAMIC row format limit.');
         }
     }
 }

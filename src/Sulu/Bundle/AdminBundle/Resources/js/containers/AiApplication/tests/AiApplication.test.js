@@ -525,21 +525,24 @@ describe('AiApplication', () => {
         expect(instance.selectedComponent.dataPath).toBe('/block/0/text');
     });
 
-    test('contentData computed returns form data filtered by schema', () => {
+    test('contentData computed leaves out what the resource records about itself', () => {
         const instance = new AiApplication(props);
         // $FlowFixMe
         instance.selectedComponent = {
             // $FlowFixMe
             formInspector: {
                 formStore: {
-                    schema: {
-                        title: {type: 'text_line'},
-                        description: {type: 'text_area'},
-                    },
                     data: {
                         title: 'My Page',
                         description: 'A description',
-                        internalField: 'should not appear',
+                        customField: 'an unknown field counts as content',
+                        id: 'page-uuid',
+                        template: 'default',
+                        webspace: 'website',
+                        created: '2026-07-29T08:00:00+00:00',
+                        changer: null,
+                        _permissions: {view: true},
+                        _hash: 'abc',
                     },
                 },
             },
@@ -550,35 +553,27 @@ describe('AiApplication', () => {
         expect(result).toEqual({
             title: 'My Page',
             description: 'A description',
+            customField: 'an unknown field counts as content',
         });
     });
 
-    test('contentData computed handles nested sections', () => {
+    test('contentData computed offers content the open form does not describe', () => {
         const instance = new AiApplication(props);
         // $FlowFixMe
         instance.selectedComponent = {
             // $FlowFixMe
             formInspector: {
                 formStore: {
+                    // the seo tab describes only its own fields, yet writing seo text needs the page content
                     schema: {
-                        details: {
-                            type: 'section',
-                            items: {
-                                title: {type: 'text_line'},
-                                summary: {type: 'text_area'},
-                            },
-                        },
-                        metadata: {
-                            type: 'section',
-                            items: {
-                                author: {type: 'text_line'},
-                            },
-                        },
+                        'ext/seo/title': {type: 'text_line'},
+                        'ext/seo/description': {type: 'text_area'},
                     },
                     data: {
                         title: 'Page Title',
-                        summary: 'Page Summary',
-                        author: 'John',
+                        article: 'Page Body',
+                        ext: {seo: {title: '', description: ''}},
+                        id: 'page-uuid',
                     },
                 },
             },
@@ -588,8 +583,8 @@ describe('AiApplication', () => {
 
         expect(result).toEqual({
             title: 'Page Title',
-            summary: 'Page Summary',
-            author: 'John',
+            article: 'Page Body',
+            ext: {seo: {title: '', description: ''}},
         });
     });
 

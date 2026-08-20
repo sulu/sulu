@@ -64,6 +64,7 @@ class TemplateXmlLoader extends AbstractLoader
         $form->addResource($resource);
         $templateKey = $this->getValueFromXPath('/x:template/x:key', $xpath);
         \assert(\is_string($templateKey), 'Expected the template key of "' . $resource . '" to be defined.');
+
         $form->setKey($templateKey);
 
         $templateGroup = $this->getValueFromXPath('/x:template/x:group', $xpath);

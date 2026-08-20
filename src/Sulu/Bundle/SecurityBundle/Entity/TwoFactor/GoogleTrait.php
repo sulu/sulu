@@ -29,18 +29,18 @@ if (\interface_exists(TwoFactorInterface::class)) {
 
         public function getGoogleAuthenticatorUsername(): string
         {
-            $googleAuthenticatorUsername = $this->getTwoFactor()?->getOptions()['googleAuthenticatorUsername'] ?? null;
+            $options = $this->getTwoFactor()?->getOptions() ?? [];
 
-            if (!$googleAuthenticatorUsername) {
-                throw new \LogicException('The "googleAuthenticatorUsername" was not set on the user entity.');
-            }
-
-            return $googleAuthenticatorUsername;
+            return ($options['googleAuthenticatorUsername'] ?? null) ?: $this->getUserIdentifier();
         }
 
         public function getGoogleAuthenticatorSecret(): ?string
         {
-            return $this->getTwoFactor()?->getOptions()['googleAuthenticatorSecret'] ?? null;
+            $options = $this->getTwoFactor()?->getOptions() ?? [];
+
+            // the pending secret is used to generate the QR code and to verify the code
+            // during the setup, before the method gets activated
+            return $options['googleAuthenticatorSecret'] ?? $options['pendingGoogleAuthenticatorSecret'] ?? null;
         }
 
         public function setGoogleAuthenticatorSecret(?string $googleAuthenticatorSecret): void

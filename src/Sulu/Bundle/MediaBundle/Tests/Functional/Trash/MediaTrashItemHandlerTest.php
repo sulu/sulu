@@ -139,6 +139,9 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         $media1File1Version2->setProperties(['property-1' => 'value-1']);
         $media1File1Version2->setFocusPointX(35);
         $media1File1Version2->setFocusPointY(45);
+        $media1File1Version2->setOrigin('ai_generated');
+        $media1File1Version2->setAiDisclosureDisabled(true);
+        $media1File1Version2->setAiDisclosureIconVariant('dark');
 
         $media1File1Version2->addTag($tag1);
         $media1File1Version2->addTag($tag2);
@@ -153,6 +156,7 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         $media1File1Version2Meta1->setFileVersion($media1File1Version2);
         $media1File1Version2Meta1->setTitle('file-version-2-title-de');
         $media1File1Version2Meta1->setDescription('file-version-2-description-de');
+        $media1File1Version2Meta1->setAiDisclosureText('file-version-2-ai-disclosure-de');
         $media1File1Version2Meta1->setCopyright('file-version-2-copyright-de');
         $media1File1Version2Meta1->setCredits('file-version-2-credits-de');
         $media1File1Version2Meta1->setLocale('de');
@@ -162,6 +166,7 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         $media1File1Version2Meta2->setFileVersion($media1File1Version2);
         $media1File1Version2Meta2->setTitle('file-version-2-title-en');
         $media1File1Version2Meta2->setDescription('file-version-2-description-en');
+        $media1File1Version2Meta2->setAiDisclosureText('file-version-2-ai-disclosure-en');
         $media1File1Version2Meta2->setCopyright('file-version-2-copyright-en');
         $media1File1Version2Meta2->setCredits('file-version-2-credits-en');
         $media1File1Version2Meta2->setLocale('en');
@@ -236,6 +241,9 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         static::assertSame([], $restoredFile1Version1->getProperties());
         static::assertSame(101, $restoredFile1Version1->getFocusPointX());
         static::assertSame(202, $restoredFile1Version1->getFocusPointY());
+        static::assertSame('unknown', $restoredFile1Version1->getOrigin());
+        static::assertFalse($restoredFile1Version1->getAiDisclosureDisabled());
+        static::assertSame('auto', $restoredFile1Version1->getAiDisclosureIconVariant());
         static::assertSame('de', $restoredFile1Version1->getDefaultMeta()?->getLocale());
         static::assertCount(0, $restoredFile1Version1->getTags());
         static::assertCount(0, $restoredFile1Version1->getCategories());
@@ -259,6 +267,9 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         static::assertSame(['property-1' => 'value-1'], $restoredFile1Version2->getProperties());
         static::assertSame(35, $restoredFile1Version2->getFocusPointX());
         static::assertSame(45, $restoredFile1Version2->getFocusPointY());
+        static::assertSame('ai_generated', $restoredFile1Version2->getOrigin());
+        static::assertTrue($restoredFile1Version2->getAiDisclosureDisabled());
+        static::assertSame('dark', $restoredFile1Version2->getAiDisclosureIconVariant());
         static::assertCount(2, $restoredFile1Version2->getMeta());
         static::assertSame('de', $restoredFile1Version2->getDefaultMeta()?->getLocale());
         static::assertCount(2, $restoredFile1Version2->getFormatOptions());
@@ -285,6 +296,7 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         $restoredFile1Version2Meta1 = $restoredFile1Version2->getMeta()[0];
         static::assertSame('file-version-2-title-de', $restoredFile1Version2Meta1->getTitle());
         static::assertSame('file-version-2-description-de', $restoredFile1Version2Meta1->getDescription());
+        static::assertSame('file-version-2-ai-disclosure-de', $restoredFile1Version2Meta1->getAiDisclosureText());
         static::assertSame('file-version-2-copyright-de', $restoredFile1Version2Meta1->getCopyright());
         static::assertSame('file-version-2-credits-de', $restoredFile1Version2Meta1->getCredits());
         static::assertSame('de', $restoredFile1Version2Meta1->getLocale());
@@ -293,6 +305,7 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         $restoredFile1Version2Meta2 = $restoredFile1Version2->getMeta()[1];
         static::assertSame('file-version-2-title-en', $restoredFile1Version2Meta2->getTitle());
         static::assertSame('file-version-2-description-en', $restoredFile1Version2Meta2->getDescription());
+        static::assertSame('file-version-2-ai-disclosure-en', $restoredFile1Version2Meta2->getAiDisclosureText());
         static::assertSame('file-version-2-copyright-en', $restoredFile1Version2Meta2->getCopyright());
         static::assertSame('file-version-2-credits-en', $restoredFile1Version2Meta2->getCredits());
         static::assertSame('en', $restoredFile1Version2Meta2->getLocale());

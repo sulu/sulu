@@ -15,6 +15,7 @@ import {Route} from '../../services/Router';
 import formToolbarActionRegistry from './registries/formToolbarActionRegistry';
 import AbstractFormToolbarAction from './toolbarActions/AbstractFormToolbarAction';
 import formStyles from './form.scss';
+import type {ToolbarErrorType} from '../../containers/Toolbar/types';
 import type {AttributeMap, UpdateRouteMethod} from '../../services/Router/types';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import type {IObservableValue} from 'mobx/lib/mobx';
@@ -37,7 +38,8 @@ class Form extends React.Component<Props> {
     resourceFormStore: ResourceFormStore;
     collaborationStore: ?CollaborationStore;
     form: ?ElementRef<typeof FormContainer>;
-    @observable errors: Array<string> = [];
+    @observable errors: Array<ToolbarErrorType> = [];
+    @observable warnings: Array<ToolbarErrorType> = [];
     showSuccess: IObservableValue<boolean> = observable.box(false);
     @observable toolbarActions: Array<AbstractFormToolbarAction> = [];
     @observable showDirtyWarning: boolean = false;
@@ -326,6 +328,10 @@ class Form extends React.Component<Props> {
         this.toolbarActions.forEach((toolbarAction) => toolbarAction.destroy());
     }
 
+    @action handleWarningCloseClick = () => {
+        this.warnings.pop();
+    };
+
     @action showSuccessSnackbar = () => {
         this.showSuccess.set(true);
     };
@@ -604,6 +610,7 @@ export default withToolbar(Form, function() {
             this.collaborationStore.collaborations.map((collaboration) => collaboration.fullName).join(', '),
         ].join(' '));
     }
+    warnings.push(...this.warnings);
 
     return {
         backButton,
@@ -613,5 +620,6 @@ export default withToolbar(Form, function() {
         icons,
         showSuccess,
         warnings,
+        onWarningCloseClick: this.warnings.length > 0 ? this.handleWarningCloseClick : undefined,
     };
 });

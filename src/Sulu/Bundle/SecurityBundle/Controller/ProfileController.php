@@ -96,8 +96,9 @@ class ProfileController
                     $twoFactor = new UserTwoFactor($user);
                 }
 
-                if ('totp' === $twoFactorMethod && !isset($twoFactor->getOptions()['totpSecret'])) {
-                    // the authenticator app based method must not be activated before a secret was
+                $confirmedSecretOption = ProfileTwoFactorController::SECRET_OPTIONS[$twoFactorMethod]['secret'] ?? null;
+                if ($confirmedSecretOption && !isset($twoFactor->getOptions()[$confirmedSecretOption])) {
+                    // the authenticator app based methods must not be activated before a secret was
                     // set up and confirmed via the ProfileTwoFactorController, because the user
                     // would be locked out otherwise
                     throw new BadRequestHttpException(\sprintf(
@@ -107,6 +108,19 @@ class ProfileController
                 }
 
                 $twoFactor->setMethod($twoFactorMethod);
+
+                // the secrets of the other methods are cleared, so switching back to a
+                // previously confirmed method requires a fresh guided setup
+                $options = $twoFactor->getOptions() ?? [];
+                foreach (ProfileTwoFactorController::SECRET_OPTIONS as $method => $secretOptions) {
+                    if ($method === $twoFactorMethod) {
+                        continue;
+                    }
+
+                    unset($options[$secretOptions['secret']], $options[$secretOptions['pendingSecret']]);
+                }
+                $twoFactor->setOptions($options);
+
                 $user->setTwoFactor($twoFactor);
             } else {
                 $twoFactor = $user->getTwoFactor();

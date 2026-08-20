@@ -10,7 +10,7 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="additionalWebspace" type="string" column="name" length="31" />
+        <field name="additionalWebspace" type="string" column="name" length="64" />
 
         <many-to-one field="articleDimensionContent" target-entity="Sulu\Article\Domain\Model\ArticleDimensionContent" inversed-by="additionalWebspaces">
             <join-column name="article_dimension_content_id" referenced-column-name="id" on-delete="CASCADE" nullable="false" />

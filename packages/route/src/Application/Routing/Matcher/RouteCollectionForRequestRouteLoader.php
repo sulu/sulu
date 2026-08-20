@@ -17,6 +17,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Sulu\Route\Domain\Value\RequestAttributeEnum;
+use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route as SymfonyRoute;
@@ -90,6 +91,27 @@ final readonly class RouteCollectionForRequestRouteLoader implements RouteCollec
 
         if (null === $route) {
             return new RouteCollection();
+        }
+
+        $pathInfo = \rawurldecode($request->getPathInfo());
+        $requestFormat = $request->getRequestFormat(null);
+
+        if (\in_array($requestFormat, ['htm', 'html'], true)
+            && \str_ends_with($pathInfo, '.' . $requestFormat)
+        ) {
+            // redirect "<url>.html" and "<url>.htm" to the canonical "<url>" to avoid duplicated content
+            $routeCollection = new RouteCollection();
+            $routeCollection->add('sulu_route.html_redirect_route_id_' . $route->getId(), new SymfonyRoute(
+                $pathInfo,
+                [
+                    '_controller' => RedirectController::class,
+                    'path' => \substr($pathInfo, 0, -(\strlen($requestFormat) + 1)),
+                    'permanent' => true,
+                ],
+                host: $request->getHost(),
+            ));
+
+            return $routeCollection;
         }
 
         $routeDefaultsProvider = $this->routeDefaultsProviderLocator->get($route->getResourceKey());

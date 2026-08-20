@@ -23,6 +23,7 @@ use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Sulu\Route\Domain\Value\RequestAttributeEnum;
+use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RequestContext;
@@ -122,6 +123,51 @@ class RouteCollectionForRequestRouteLoaderTest extends TestCase
             ],
             $route->getDefaults(),
         );
+    }
+
+    public function testGetRouteCollectionForRequestRedirectsHtmlFormatToCanonicalUrl(): void
+    {
+        $request = Request::create('/test.html');
+        $request->setRequestFormat('html');
+        $request->attributes->set(RequestAttributeEnum::WEBSPACE->value, 'the_site');
+        $request->attributes->set(RequestAttributeEnum::SLUG->value, '/test');
+
+        $routeModel = new Route('resource_key_example', '1', 'en', '/test', 'the_site');
+        static::setPrivateProperty($routeModel, 'id', 1);
+
+        $this->routeRepository->findFirstBy(Argument::cetera())->willReturn($routeModel);
+        $routeCollection = $this->routeCollectionForRequestRouteLoader->getRouteCollectionForRequest($request);
+
+        $this->assertCount(1, $routeCollection);
+        $route = $routeCollection->get('sulu_route.html_redirect_route_id_1');
+
+        $this->assertNotNull($route);
+        $this->assertSame('/test.html', $route->getPath());
+        $this->assertSame(
+            [
+                '_controller' => RedirectController::class,
+                'path' => '/test',
+                'permanent' => true,
+            ],
+            $route->getDefaults(),
+        );
+    }
+
+    public function testGetRouteCollectionForRequestDoesNotRedirectOtherFormats(): void
+    {
+        $request = Request::create('/test.rss');
+        $request->setRequestFormat('rss');
+        $request->attributes->set(RequestAttributeEnum::WEBSPACE->value, 'the_site');
+        $request->attributes->set(RequestAttributeEnum::SLUG->value, '/test');
+
+        $routeModel = new Route('resource_key_example', '1', 'en', '/test', 'the_site');
+        static::setPrivateProperty($routeModel, 'id', 1);
+
+        $this->routeRepository->findFirstBy(Argument::cetera())->willReturn($routeModel);
+        $routeCollection = $this->routeCollectionForRequestRouteLoader->getRouteCollectionForRequest($request);
+
+        $this->assertCount(1, $routeCollection);
+        $this->assertNotNull($routeCollection->get('sulu_route.route_id_1'));
     }
 
     #[DataProvider('provideEncodedSlugMatches')]

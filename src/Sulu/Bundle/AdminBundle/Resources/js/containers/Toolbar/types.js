@@ -35,10 +35,20 @@ export type ToolbarProps = {
 export type ToolbarConfig = {
     backButton?: Button,
     disableAll?: boolean,
-    errors?: Array<string>,
+    errors?: Array<ToolbarErrorType>,
     icons?: Array<Node>, // TODO would be better to be typed as Array<React.ComponentType>
     items?: Array<ToolbarItemConfig<*>>,
     locale?: Select<string>,
+    onWarningCloseClick?: () => void,
     showSuccess?: IObservableValue<boolean>,
-    warnings?: Array<string>,
+    warnings?: Array<ToolbarErrorType>,
 };
+
+export type ToolbarErrorType = string | {|
+    actions?: Array<{|
+        label: string,
+        onClick: () => void,
+    |}>,
+    message: string,
+    title?: string,
+|};

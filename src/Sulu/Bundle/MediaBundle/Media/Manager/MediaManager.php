@@ -459,6 +459,10 @@ class MediaManager implements MediaManagerInterface
                 || 'focusPointX' === $attribute
                 || 'focusPointY' === $attribute
                 || 'type' === $attribute
+                || 'origin' === $attribute
+                || 'aiDisclosureDisabled' === $attribute
+                || 'aiDisclosureText' === $attribute
+                || 'aiDisclosureIconVariant' === $attribute
             ) {
                 switch ($attribute) {
                     case 'size':
@@ -560,6 +564,18 @@ class MediaManager implements MediaManagerInterface
                         break;
                     case 'focusPointY':
                         $media->setFocusPointY($value);
+                        break;
+                    case 'origin':
+                        $media->setOrigin($value ?? 'unknown');
+                        break;
+                    case 'aiDisclosureDisabled':
+                        $media->setAiDisclosureDisabled((bool) $value);
+                        break;
+                    case 'aiDisclosureText':
+                        $media->setAiDisclosureText($value);
+                        break;
+                    case 'aiDisclosureIconVariant':
+                        $media->setAiDisclosureIconVariant($value ?? 'auto');
                         break;
                 }
             }

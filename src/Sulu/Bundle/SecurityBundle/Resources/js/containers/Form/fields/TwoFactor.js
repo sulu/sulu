@@ -9,7 +9,7 @@ import {translate} from 'sulu-admin-bundle/utils';
 import twoFactorStyles from './twoFactor.scss';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 
-const SETUP_METHODS = ['totp'];
+const SETUP_METHODS = ['totp', 'google'];
 
 @observer
 class TwoFactor extends React.Component<FieldTypeProps<?string>> {
@@ -27,6 +27,8 @@ class TwoFactor extends React.Component<FieldTypeProps<?string>> {
     @observable backupCodesLoading: boolean = false;
     @observable backupCodes: ?Array<string>;
     @observable backupCodesGenerated: boolean = false;
+
+    setupRequestCount: number = 0;
 
     @action handleSetupOverlayClose = () => {
         this.setupMethod = undefined;
@@ -48,18 +50,34 @@ class TwoFactor extends React.Component<FieldTypeProps<?string>> {
             this.setupMethod = value;
             this.loading = true;
 
+            // responses of setup requests that were superseded by selecting another method in the
+            // meantime must be ignored, otherwise they would override the current setup
+            const setupRequestCount = ++this.setupRequestCount;
+
             Requester.post(TwoFactor.endpoints.twoFactorSetup, {method: value})
                 .then(action((response) => {
+                    if (setupRequestCount !== this.setupRequestCount) {
+                        return;
+                    }
+
                     this.secret = response.secret;
                     this.qrContent = response.qrContent;
                     this.loading = false;
                 }))
                 .catch(action(() => {
+                    if (setupRequestCount !== this.setupRequestCount) {
+                        return;
+                    }
+
                     this.handleSetupOverlayClose();
                 }));
 
             return;
         }
+
+        // an in-flight setup of a previously selected method must not open the overlay anymore
+        this.setupRequestCount++;
+        this.handleSetupOverlayClose();
 
         onChange(value);
         onFinish();

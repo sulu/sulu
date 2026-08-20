@@ -38,6 +38,7 @@ use Sulu\Route\Domain\Model\Route;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ArticleRouteDefaultsProviderTest extends TestCase
@@ -150,7 +151,7 @@ class ArticleRouteDefaultsProviderTest extends TestCase
 
         $this->articleRepository->findOneBy(Argument::cetera())->willReturn(null);
 
-        $this->expectException(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+        $this->expectException(NotFoundHttpException::class);
 
         $provider->getDefaults(new Route(Article::RESOURCE_KEY, '123-123-123', 'en', '/test-article'));
     }
@@ -267,7 +268,7 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $this->assertArrayNotHasKey('_seo', $result);
     }
 
-    public function testGetDefaultsDoesNotSetCanonicalUrlForUnrelatedWebspace(): void
+    public function testGetDefaultsThrowsNotFoundForUnrelatedWebspace(): void
     {
         $provider = $this->getArticleRouteDefaultsProviderInstance();
 
@@ -282,15 +283,33 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $resolvedDimensionContent->setAdditionalWebspaces(['blog']);
 
         $this->prepareArticle($article, $resolvedDimensionContent, $locale);
-        $this->prepareTemplateMetadata('ArticleController::indexAction', 'article.html.twig', 'seconds', '3600');
 
         $this->pushRequestWithWebspace('unrelated');
 
-        $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
+        $this->expectException(NotFoundHttpException::class);
 
-        $result = $provider->getDefaults(new Route(Article::RESOURCE_KEY, '123-123-123', $locale, $slug));
+        $provider->getDefaults(new Route(Article::RESOURCE_KEY, '123-123-123', $locale, $slug));
+    }
 
-        $this->assertArrayNotHasKey('_seo', $result);
+    public function testGetDefaultsThrowsNotFoundWhenNoMainWebspaceConfigured(): void
+    {
+        $provider = $this->getArticleRouteDefaultsProviderInstance();
+
+        $locale = 'en';
+        $slug = '/test-article';
+
+        $article = new Article('123-123-123');
+        $resolvedDimensionContent = new ArticleDimensionContent($article);
+        $resolvedDimensionContent->setLocale($locale);
+        $resolvedDimensionContent->setTemplateKey('default');
+
+        $this->prepareArticle($article, $resolvedDimensionContent, $locale);
+
+        $this->pushRequestWithWebspace('sulu-io');
+
+        $this->expectException(NotFoundHttpException::class);
+
+        $provider->getDefaults(new Route(Article::RESOURCE_KEY, '123-123-123', $locale, $slug));
     }
 
     private function prepareArticle(Article $article, ArticleDimensionContent $dimensionContent, string $routeLocale): void
