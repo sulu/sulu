@@ -31,6 +31,8 @@ class FileVersionMeta
      */
     private $description;
 
+    private ?string $aiDisclosureText = null;
+
     /**
      * @var string|null
      */
@@ -107,6 +109,21 @@ class FileVersionMeta
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setAiDisclosureText(?string $aiDisclosureText): self
+    {
+        $this->aiDisclosureText = $aiDisclosureText;
+
+        return $this;
+    }
+
+    public function getAiDisclosureText(): ?string
+    {
+        return $this->aiDisclosureText;
     }
 
     /**

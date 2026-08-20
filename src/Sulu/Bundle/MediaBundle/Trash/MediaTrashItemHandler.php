@@ -109,6 +109,9 @@ final class MediaTrashItemHandler implements
                     'properties' => $fileVersion->getProperties(),
                     'focusPointX' => $fileVersion->getFocusPointX(),
                     'focusPointY' => $fileVersion->getFocusPointY(),
+                    'origin' => $fileVersion->getOrigin(),
+                    'aiDisclosureDisabled' => $fileVersion->getAiDisclosureDisabled(),
+                    'aiDisclosureIconVariant' => $fileVersion->getAiDisclosureIconVariant(),
                     'created' => $file->getCreated()->format('c'),
                     'creatorId' => $creator ? $creator->getId() : null,
                     'contentLanguageLocales' => [],
@@ -140,6 +143,7 @@ final class MediaTrashItemHandler implements
                     $fileVersionData['meta'][] = [
                         'title' => $meta->getTitle(),
                         'description' => $meta->getDescription(),
+                        'aiDisclosureText' => $meta->getAiDisclosureText(),
                         'copyright' => $meta->getCopyright(),
                         'credits' => $meta->getCredits(),
                         'locale' => $meta->getLocale(),
@@ -238,6 +242,9 @@ final class MediaTrashItemHandler implements
                 $fileVersion->setProperties($fileVersionData['properties']);
                 $fileVersion->setFocusPointX($fileVersionData['focusPointX']);
                 $fileVersion->setFocusPointY($fileVersionData['focusPointY']);
+                $fileVersion->setOrigin($fileVersionData['origin'] ?? 'unknown');
+                $fileVersion->setAiDisclosureDisabled($fileVersionData['aiDisclosureDisabled'] ?? false);
+                $fileVersion->setAiDisclosureIconVariant($fileVersionData['aiDisclosureIconVariant'] ?? 'auto');
                 $fileVersion->setCreated(new \DateTime($fileVersionData['created']));
                 $fileVersion->setCreator($this->findEntity(UserInterface::class, $fileVersionData['creatorId']));
 
@@ -270,6 +277,7 @@ final class MediaTrashItemHandler implements
 
                     $meta->setTitle($metaData['title']);
                     $meta->setDescription($metaData['description']);
+                    $meta->setAiDisclosureText($metaData['aiDisclosureText'] ?? null);
                     $meta->setCopyright($metaData['copyright']);
                     $meta->setCredits($metaData['credits']);
                     $meta->setLocale($metaData['locale']);

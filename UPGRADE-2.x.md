@@ -4,6 +4,15 @@ For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upg
 
 ## 2.6.26
 
+### AI Disclosure
+
+The `aiDisclosure` section has been added to the media details form. It allows you to add information about the origin of the media and additional information about the use of AI.
+
+```sql
+ALTER TABLE me_file_version_meta ADD aiDisclosureText LONGTEXT DEFAULT NULL;
+ALTER TABLE me_file_versions ADD origin VARCHAR(31) NOT NULL DEFAULT 'unknown', ADD aiDisclosureDisabled TINYINT(1) NOT NULL DEFAULT 0, ADD aiDisclosureIconVariant VARCHAR(31) NOT NULL DEFAULT 'auto';
+```
+
 ### Deprecated persistence component repositories and traits
 
 The `RelationTrait` and the `OrderByTrait` have been deprecated. We recommend building your own
