@@ -90407,3 +90407,9 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: tests/phpstan/object-manager.php
+
+		-
+			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Sulu/Bundle/PersistenceBundle/DependencyInjection/PersistenceExtensionTrait.php
