@@ -24243,7 +24243,7 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 6
+			count: 7
 			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
 
 		-
@@ -28435,6 +28435,18 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
 
 		-
+			message: '#^Parameter \#1 \$aiDisclosureIconVariant of method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:setAiDisclosureIconVariant\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
+
+		-
+			message: '#^Parameter \#1 \$aiDisclosureText of method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:setAiDisclosureText\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
+
+		-
 			message: '#^Parameter \#1 \$changed of method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:setChanged\(\) expects DateTime\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -28552,6 +28564,12 @@ parameters:
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, mixed given\.$#'
 			identifier: argument.type
 			count: 2
+			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
+
+		-
+			message: '#^Parameter \#1 \$origin of method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:setOrigin\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
 
 		-
@@ -32815,6 +32833,24 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
 
 		-
+			message: '#^Cannot access offset ''aiDisclosureDisabled'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
+			message: '#^Cannot access offset ''aiDisclosureIconVariant'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
+			message: '#^Cannot access offset ''aiDisclosureText'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
 			message: '#^Cannot access offset ''categoryIds'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -32947,6 +32983,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
 
 		-
+			message: '#^Cannot access offset ''origin'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
 			message: '#^Cannot access offset ''originalStorageOptions'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -33003,6 +33045,24 @@ parameters:
 		-
 			message: '#^Expression on left side of \?\? is not nullable\.$#'
 			identifier: nullCoalesce.expr
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
+			message: '#^Parameter \#1 \$aiDisclosureDisabled of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersion\:\:setAiDisclosureDisabled\(\) expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
+			message: '#^Parameter \#1 \$aiDisclosureIconVariant of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersion\:\:setAiDisclosureIconVariant\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
+			message: '#^Parameter \#1 \$aiDisclosureText of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersionMeta\:\:setAiDisclosureText\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
 
@@ -33104,6 +33164,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersion\:\:setName\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
+			message: '#^Parameter \#1 \$origin of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersion\:\:setOrigin\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php

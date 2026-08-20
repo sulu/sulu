@@ -88,7 +88,7 @@
     "sulu_media.unknown": "Unbekannt",
     "sulu_media.ai_disclosure": "KI-Offenlegung",
     "sulu_media.ai_disclosure_disabled": "KI-Hinweis deaktivieren",
-    "sulu_media.ai_disclosure_disabled_info": "Ich habe manuell überprüft, dass die von der KI generierten Medien keine Kennzeichnungspflicht gemäß dem EU-KI-Gesetz erfordern.",
+    "sulu_media.ai_disclosure_disabled_info": "Ich habe manuell überprüft, dass die von der KI generierten oder bearbeiteten Medien keine Kennzeichnungspflicht gemäß dem EU-KI-Gesetz erfordern.",
     "sulu_media.ai_disclosure_text": "KI-Hinweistext",
     "sulu_media.ai_disclosure_icon_variant": "Icon-Variante",
     "sulu_media.ai_disclosure_icon_variant_auto": "Automatisch",

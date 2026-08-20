@@ -88,7 +88,7 @@
     "sulu_media.unknown": "Unknown",
     "sulu_media.ai_disclosure": "AI Disclosure",
     "sulu_media.ai_disclosure_disabled": "Disable AI Hint",
-    "sulu_media.ai_disclosure_disabled_info": "I have manually verified that the AI-generated media do not require labeling under the EU AI Act.",
+    "sulu_media.ai_disclosure_disabled_info": "I have manually verified that the AI-generated or AI-modified media do not require labeling under the EU AI Act.",
     "sulu_media.ai_disclosure_text": "AI hint text",
     "sulu_media.ai_disclosure_icon_variant": "Icon variant",
     "sulu_media.ai_disclosure_icon_variant_auto": "Auto",

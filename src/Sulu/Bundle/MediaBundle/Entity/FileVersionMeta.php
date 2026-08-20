@@ -111,9 +111,6 @@ class FileVersionMeta
         return $this->description;
     }
 
-    /**
-     * Set aiDisclosureText.
-     */
     public function setAiDisclosureText(?string $aiDisclosureText): static
     {
         $this->aiDisclosureText = $aiDisclosureText;
@@ -121,9 +118,6 @@ class FileVersionMeta
         return $this;
     }
 
-    /**
-     * Get aiDisclosureText.
-     */
     public function getAiDisclosureText(): ?string
     {
         return $this->aiDisclosureText;

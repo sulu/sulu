@@ -751,49 +751,31 @@ class FileVersion implements AuditableInterface
         $this->focusPointY = $focusPointY;
     }
 
-    /**
-     * Get origin.
-     */
     public function getOrigin(): string
     {
         return $this->origin;
     }
 
-    /**
-     * Set origin.
-     */
     public function setOrigin(string $origin): void
     {
         $this->origin = $origin;
     }
 
-    /**
-     * Get aiDisclosureDisabled.
-     */
     public function getAiDisclosureDisabled(): bool
     {
         return $this->aiDisclosureDisabled;
     }
 
-    /**
-     * Set aiDisclosureDisabled.
-     */
     public function setAiDisclosureDisabled(bool $aiDisclosureDisabled): void
     {
         $this->aiDisclosureDisabled = $aiDisclosureDisabled;
     }
 
-    /**
-     * Get aiDisclosureIconVariant.
-     */
     public function getAiDisclosureIconVariant(): string
     {
         return $this->aiDisclosureIconVariant;
     }
 
-    /**
-     * Set aiDisclosureIconVariant.
-     */
     public function setAiDisclosureIconVariant(string $aiDisclosureIconVariant): void
     {
         $this->aiDisclosureIconVariant = $aiDisclosureIconVariant;
