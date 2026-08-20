@@ -19,6 +19,8 @@ class FileVersionMeta
 
     private ?string $description = null;
 
+    private ?string $aiDisclosureText = null;
+
     private ?string $copyright = null;
 
     private ?string $credits = null;
@@ -54,6 +56,18 @@ class FileVersionMeta
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    public function setAiDisclosureText(?string $aiDisclosureText): static
+    {
+        $this->aiDisclosureText = $aiDisclosureText;
+
+        return $this;
+    }
+
+    public function getAiDisclosureText(): ?string
+    {
+        return $this->aiDisclosureText;
     }
 
     public function setCopyright(?string $copyright): static

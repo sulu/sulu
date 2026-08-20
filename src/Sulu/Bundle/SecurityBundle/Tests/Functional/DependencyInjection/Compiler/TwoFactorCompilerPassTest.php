@@ -21,6 +21,7 @@ class TwoFactorCompilerPassTest extends SuluTestCase
             [
                 'email',
                 'totp',
+                'google',
                 'trusted_devices',
             ],
             static::getContainer()->getParameter('sulu_security.two_factor_methods')

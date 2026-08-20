@@ -25,6 +25,7 @@ describe('PromptInput Component', () => {
             text: 'Expert Text',
             type: 'text',
         },
+        expertsLabel: 'Experts',
         isLoading: false,
         onAddMessage: jest.fn().mockResolvedValue(undefined),
         predefinedPrompts: null,
@@ -60,22 +61,76 @@ describe('PromptInput Component', () => {
         expect(screen.getAllByText('Option 2')[0]).toBeInTheDocument();
     });
 
-    test('renders the predefined prompts dropdown when predefinedPrompts is provided', async() => {
+    test('renders a button for every predefined prompt', () => {
         const predefinedPrompts = {
             handleClick: jest.fn(),
             label: 'Predefined Prompts',
+            moreLabel: 'More',
             options: [
-                {id: 1, name: 'Prompt 1'},
-                {id: 2, name: 'Prompt 2'},
+                {icon: undefined, id: 1, name: 'Prompt 1'},
+                {icon: undefined, id: 2, name: 'Prompt 2'},
             ],
         };
 
         render(<PromptInput {...defaultProps} predefinedPrompts={predefinedPrompts} />);
 
-        expect(screen.getByText(predefinedPrompts.label)).toBeInTheDocument();
-        await userEvent.click(screen.getByText(predefinedPrompts.label));
+        expect(screen.getByText('Predefined Prompts:')).toBeInTheDocument();
         expect(screen.getByText('Prompt 1')).toBeInTheDocument();
         expect(screen.getByText('Prompt 2')).toBeInTheDocument();
+        expect(screen.queryByText('More')).not.toBeInTheDocument();
+    });
+
+    test('moves every prompt beyond the third one into a dropdown', async() => {
+        const predefinedPrompts = {
+            handleClick: jest.fn(),
+            label: 'Predefined Prompts',
+            moreLabel: 'More',
+            options: [1, 2, 3, 4, 5].map((id) => ({icon: undefined, id, name: 'Prompt ' + id})),
+        };
+
+        render(<PromptInput {...defaultProps} predefinedPrompts={predefinedPrompts} />);
+
+        expect(screen.getByText('Prompt 3')).toBeInTheDocument();
+        expect(screen.queryByText('Prompt 4')).not.toBeInTheDocument();
+
+        await userEvent.click(screen.getByText('More'));
+
+        expect(screen.getByText('Prompt 4')).toBeInTheDocument();
+        expect(screen.getByText('Prompt 5')).toBeInTheDocument();
+    });
+
+    test('calls handleClick with the prompt index when a quick action is clicked', async() => {
+        const predefinedPrompts = {
+            handleClick: jest.fn(),
+            label: 'Predefined Prompts',
+            moreLabel: 'More',
+            options: [
+                {icon: undefined, id: 0, name: 'Prompt 1'},
+                {icon: undefined, id: 1, name: 'Prompt 2'},
+            ],
+        };
+
+        render(<PromptInput {...defaultProps} predefinedPrompts={predefinedPrompts} />);
+
+        await userEvent.click(screen.getByText('Prompt 2'));
+
+        expect(predefinedPrompts.handleClick).toHaveBeenCalledWith(1);
+    });
+
+    test('disables the quick actions and the input when disabled', () => {
+        const predefinedPrompts = {
+            handleClick: jest.fn(),
+            label: 'Predefined Prompts',
+            moreLabel: 'More',
+            options: [
+                {icon: undefined, id: 0, name: 'Prompt 1'},
+            ],
+        };
+
+        render(<PromptInput {...defaultProps} disabled={true} predefinedPrompts={predefinedPrompts} />);
+
+        expect(screen.getByText('Prompt 1').closest('button')).toBeDisabled();
+        expect(screen.getByPlaceholderText('Add Message')).toBeDisabled();
     });
 
     test('calls onAddMessage when the send button is clicked', async() => {
@@ -144,6 +199,7 @@ describe('PromptInput Component', () => {
                 predefinedPrompts={{
                     handleClick: jest.fn(),
                     label: 'Predefined Prompts',
+                    moreLabel: 'More',
                     options: [{id: 1, name: 'Prompt 1'}],
                 }}
             />
@@ -165,6 +221,7 @@ describe('PromptInput Component', () => {
                 predefinedPrompts={{
                     handleClick: jest.fn(),
                     label: 'Predefined Prompts',
+                    moreLabel: 'More',
                     options: [{id: 1, name: 'Prompt 1'}],
                 }}
             />
@@ -186,6 +243,7 @@ describe('PromptInput Component', () => {
                 predefinedPrompts={{
                     handleClick: jest.fn(),
                     label: 'Predefined Prompts',
+                    moreLabel: 'More',
                     options: [{id: 1, name: 'Prompt 1'}],
                 }}
             />

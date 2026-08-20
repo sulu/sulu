@@ -18975,7 +18975,7 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 6
+			count: 7
 			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
 
 		-
@@ -21829,6 +21829,18 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
 
 		-
+			message: '#^Parameter \#1 \$aiDisclosureIconVariant of method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:setAiDisclosureIconVariant\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
+
+		-
+			message: '#^Parameter \#1 \$aiDisclosureText of method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:setAiDisclosureText\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
+
+		-
 			message: '#^Parameter \#1 \$changed of method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:setChanged\(\) expects DateTimeImmutable\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -21922,6 +21934,12 @@ parameters:
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, mixed given\.$#'
 			identifier: argument.type
 			count: 2
+			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
+
+		-
+			message: '#^Parameter \#1 \$origin of method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:setOrigin\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
 
 		-
@@ -24793,6 +24811,24 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
 
 		-
+			message: '#^Cannot access offset ''aiDisclosureDisabled'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
+			message: '#^Cannot access offset ''aiDisclosureIconVariant'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
+			message: '#^Cannot access offset ''aiDisclosureText'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
 			message: '#^Cannot access offset ''categoryIds'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -24807,7 +24843,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''created'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 3
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
 
 		-
@@ -24919,6 +24955,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
 
 		-
+			message: '#^Cannot access offset ''origin'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
 			message: '#^Cannot access offset ''originalStorageOptions'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -24973,13 +25015,43 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
 
 		-
+			message: '#^Parameter \#1 \$aiDisclosureDisabled of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersion\:\:setAiDisclosureDisabled\(\) expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
+			message: '#^Parameter \#1 \$aiDisclosureIconVariant of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersion\:\:setAiDisclosureIconVariant\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
+			message: '#^Parameter \#1 \$aiDisclosureText of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersionMeta\:\:setAiDisclosureText\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
 			message: '#^Parameter \#1 \$copyright of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersionMeta\:\:setCopyright\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
 
 		-
+			message: '#^Parameter \#1 \$created of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersion\:\:setCreated\(\) expects DateTimeImmutable, DateTime given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
 			message: '#^Parameter \#1 \$credits of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersionMeta\:\:setCredits\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
+			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
@@ -25016,6 +25088,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersion\:\:setName\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
+			message: '#^Parameter \#1 \$origin of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersion\:\:setOrigin\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
@@ -28111,12 +28189,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
-			message: '#^Loose comparison using \=\= between null and null will always evaluate to true\.$#'
-			identifier: equal.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager\:\:addUserRole\(\) has parameter \$userRoleData with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -28462,12 +28534,6 @@ parameters:
 			message: '#^Result of && is always false\.$#'
 			identifier: booleanAnd.alwaysFalse
 			count: 3
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
-			identifier: notIdentical.alwaysFalse
-			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
@@ -34285,6 +34351,12 @@ parameters:
 			path: src/Sulu/Component/Rest/RestHelper.php
 
 		-
+			message: '#^Loose comparison using \=\= between null and null will always evaluate to true\.$#'
+			identifier: equal.alwaysTrue
+			count: 1
+			path: src/Sulu/Component/Rest/RestHelper.php
+
+		-
 			message: '#^Method Sulu\\Component\\Rest\\RestHelper\:\:compareData\(\) has parameter \$entities with no value type specified in iterable type Traversable\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -34408,6 +34480,12 @@ parameters:
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
 			count: 2
+			path: src/Sulu/Component/Rest/RestHelper.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
+			identifier: notIdentical.alwaysFalse
+			count: 1
 			path: src/Sulu/Component/Rest/RestHelper.php
 
 		-

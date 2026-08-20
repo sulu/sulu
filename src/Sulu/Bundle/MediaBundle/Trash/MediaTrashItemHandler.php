@@ -106,6 +106,9 @@ final class MediaTrashItemHandler implements
                     'properties' => $fileVersion->getProperties(),
                     'focusPointX' => $fileVersion->getFocusPointX(),
                     'focusPointY' => $fileVersion->getFocusPointY(),
+                    'origin' => $fileVersion->getOrigin(),
+                    'aiDisclosureDisabled' => $fileVersion->getAiDisclosureDisabled(),
+                    'aiDisclosureIconVariant' => $fileVersion->getAiDisclosureIconVariant(),
                     'created' => $file->getCreated()->format('c'),
                     'creatorId' => $creator ? $creator->getId() : null,
                     'meta' => [],
@@ -125,6 +128,7 @@ final class MediaTrashItemHandler implements
                     $fileVersionData['meta'][] = [
                         'title' => $meta->getTitle(),
                         'description' => $meta->getDescription(),
+                        'aiDisclosureText' => $meta->getAiDisclosureText(),
                         'copyright' => $meta->getCopyright(),
                         'credits' => $meta->getCredits(),
                         'locale' => $meta->getLocale(),
@@ -231,6 +235,9 @@ final class MediaTrashItemHandler implements
                 $focusPointY = $fileVersionData['focusPointY'] ?? null;
                 $fileVersion->setFocusPointY($focusPointY);
                 $fileVersion->setCreated(new \DateTimeImmutable($fileVersionData['created']));
+                $fileVersion->setOrigin($fileVersionData['origin'] ?? 'unknown');
+                $fileVersion->setAiDisclosureDisabled($fileVersionData['aiDisclosureDisabled'] ?? false);
+                $fileVersion->setAiDisclosureIconVariant($fileVersionData['aiDisclosureIconVariant'] ?? 'auto');
                 $fileVersion->setCreator($this->findEntity(UserInterface::class, $fileVersionData['creatorId']));
 
                 foreach ($fileVersionData['meta'] as $metaData) {
@@ -246,6 +253,7 @@ final class MediaTrashItemHandler implements
 
                     $meta->setTitle($metaData['title']);
                     $meta->setDescription($metaData['description']);
+                    $meta->setAiDisclosureText($metaData['aiDisclosureText'] ?? null);
                     $meta->setCopyright($metaData['copyright']);
                     $meta->setCredits($metaData['credits']);
                     $meta->setLocale($metaData['locale']);

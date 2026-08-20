@@ -25,13 +25,20 @@ const mockProps = {
     messages: {
         title: 'Translate',
         insert: 'Insert',
+        allLanguages: 'All languages',
+        contactAdmin: 'Contact Admin',
         detected: 'Detected',
+        searchLanguages: 'Search languages',
+        sourceLanguage: 'Source language',
+        targetLanguage: 'Target language',
+        suggestedLanguages: 'Suggested languages',
         errorTranslatingText: 'Error translating text',
     },
     sourceLanguages: [
         {locale: 'en', label: 'English'},
         {locale: 'de', label: 'German'},
     ],
+    suggestedLocales: ['de', 'en'],
     targetLanguages: [
         {locale: 'fr', label: 'French'},
         {locale: 'es', label: 'Spanish'},
@@ -133,12 +140,12 @@ describe('Translator', () => {
             response: {text: 'Hello', sourceLanguage: 'de', targetLanguage: 'en'},
         });
 
-        await userEvent.click(screen.getAllByTitle('sulu_admin.please_choose')[0]);
+        await userEvent.click(screen.getByRole('button', {name: 'Source language'}));
         await waitFor(() => {
-            expect(screen.getByText('German')).toBeInTheDocument();
+            expect(screen.getAllByText('German').length).toBeGreaterThan(0);
         });
 
-        await userEvent.click(screen.getByText('German'));
+        await userEvent.click(screen.getAllByText('German')[0]);
 
         await waitFor(() => {
             expect(Requester.post).toHaveBeenCalledWith('/api/translate', {
@@ -167,12 +174,12 @@ describe('Translator', () => {
             response: {text: 'Hola', sourceLanguage: undefined, targetLanguage: 'fr'},
         });
 
-        await userEvent.click(screen.getAllByTitle('sulu_admin.please_choose')[1]);
+        await userEvent.click(screen.getByRole('button', {name: 'Target language'}));
         await waitFor(() => {
-            expect(screen.getByText('French')).toBeInTheDocument();
+            expect(screen.getAllByText('French').length).toBeGreaterThan(0);
         });
 
-        await userEvent.click(screen.getByText('French'));
+        await userEvent.click(screen.getAllByText('French')[0]);
 
         await waitFor(() => {
             expect(Requester.post).toHaveBeenCalledWith('/api/translate', {
@@ -201,6 +208,38 @@ describe('Translator', () => {
 
             expect(errorElement).toBeInTheDocument();
         });
+    });
+
+    test('names the account condition the platform reported and disables inserting', async() => {
+        Requester.post.mockRejectedValue({
+            json: () => Promise.resolve({messageKey: 'sulu_ai.out_of_credits'}),
+        });
+
+        render(<Translator {...mockProps} contactEmail="admin@example.com" />);
+
+        await waitFor(() => {
+            expect(screen.getByText('sulu_ai.out_of_credits')).toBeInTheDocument();
+        });
+
+        expect(screen.getAllByText((content, element) => {
+            return element.textContent.includes('sulu_ai.out_of_credits_description');
+        })[0]).toBeInTheDocument();
+        expect(screen.getByText('Contact Admin')).toBeInTheDocument();
+        expect(screen.getByText('Insert').closest('button')).toBeDisabled();
+    });
+
+    test('leaves out the contact action when no contact email is configured', async() => {
+        Requester.post.mockRejectedValue({
+            json: () => Promise.resolve({messageKey: 'sulu_ai.platform_unauthorized'}),
+        });
+
+        render(<Translator {...mockProps} />);
+
+        await waitFor(() => {
+            expect(screen.getByText('sulu_ai.platform_unauthorized')).toBeInTheDocument();
+        });
+
+        expect(screen.queryByText('Contact Admin')).not.toBeInTheDocument();
     });
 
     test('calls onConfirm with translated text', async() => {

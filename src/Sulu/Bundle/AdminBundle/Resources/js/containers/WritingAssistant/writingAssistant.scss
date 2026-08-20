@@ -1,14 +1,37 @@
+@import '../../components/Overlay/variables.scss';
+
 .content {
     display: flex;
     flex-direction: row;
 }
 
+/* the dialog keeps the same size no matter how long the conversation is, so nothing jumps while working */
 .chat {
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     width: 100%;
+    height: $overlayContentMaxHeight;
     z-index: 2;
     box-sizing: border-box;
+}
+
+/* slides out from behind the prompt, which covers it while it travels because it paints above */
+.account-limit {
+    padding: 0 50px;
+    animation: account-limit-reveal 300ms ease-out;
+
+    > div {
+        border-radius: 4px 4px 0 0;
+    }
+}
+
+@keyframes account-limit-reveal {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
 }

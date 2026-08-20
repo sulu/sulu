@@ -27,7 +27,7 @@ describe('Loader Component', () => {
             element.classList.contains(loaderStyles.skeletonLoader)
         );
 
-        expect(skeletonLoaders).toHaveLength(6);
+        expect(skeletonLoaders).toHaveLength(3);
     });
 
     test('applies the correct classes to the skeleton loaders', () => {
@@ -37,7 +37,16 @@ describe('Loader Component', () => {
             element.classList.contains(loaderStyles.short)
         );
 
-        expect(shortLoaders).toHaveLength(2);
+        expect(shortLoaders).toHaveLength(1);
+    });
+
+    test('renders as a reply so it matches a finished answer', () => {
+        render(<Loader {...defaultProps} />);
+
+        const reply = screen.getByText(defaultProps.commandTitle).closest(`.${messageStyles.reply}`);
+
+        expect(reply).toBeInTheDocument();
+        expect(reply.querySelector(`.${messageStyles.replyIcon} svg`)).toBeInTheDocument();
     });
 
     test('applies the correct classes to the command and expert elements', () => {

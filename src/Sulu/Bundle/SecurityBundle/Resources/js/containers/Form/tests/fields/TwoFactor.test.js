@@ -28,6 +28,7 @@ const schemaOptions = {
             {name: '', title: 'None'},
             {name: 'email', title: 'Email'},
             {name: 'totp', title: 'Totp'},
+            {name: 'google', title: 'Google Authenticator'},
         ],
     },
 };
@@ -52,7 +53,7 @@ test('Render a SingleSelect with the given values and value', () => {
     );
 
     expect(twoFactor.find(SingleSelect).prop('value')).toEqual('email');
-    expect(twoFactor.find(SingleSelect.Option)).toHaveLength(3);
+    expect(twoFactor.find(SingleSelect.Option)).toHaveLength(4);
     expect(twoFactor.find(Overlay).at(0).prop('open')).toEqual(false);
 });
 
@@ -77,7 +78,72 @@ test('Call onChange and onFinish directly for methods without setup', () => {
     expect(Requester.post).not.toHaveBeenCalled();
 });
 
-test('Start the setup flow when an authenticator app method is selected', () => {
+test.each(['totp', 'google'])('Start the setup flow when the %s method is selected', (method) => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const setupPromise = Promise.resolve({secret: 'SECRET', qrContent: 'otpauth://totp/test'});
+    Requester.post.mockReturnValue(setupPromise);
+
+    const twoFactor = shallow(
+        <TwoFactor
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    twoFactor.find(SingleSelect).prop('onChange')(method);
+
+    expect(Requester.post).toHaveBeenCalledWith('/setup', {method});
+    expect(changeSpy).not.toHaveBeenCalled();
+
+    return setupPromise.then(() => {
+        twoFactor.update();
+        expect(twoFactor.find(Overlay).at(0).prop('open')).toEqual(true);
+        expect(twoFactor.find(QRCode).prop('value')).toEqual('otpauth://totp/test');
+    });
+});
+
+test('Ignore stale setup responses when another method was selected in the meantime', () => {
+    let resolveFirstSetup = jest.fn();
+    const firstSetupPromise = new Promise((resolve) => {
+        resolveFirstSetup = resolve;
+    });
+    let resolveSecondSetup = jest.fn();
+    const secondSetupPromise = new Promise((resolve) => {
+        resolveSecondSetup = resolve;
+    });
+    Requester.post.mockReturnValueOnce(firstSetupPromise).mockReturnValueOnce(secondSetupPromise);
+
+    const twoFactor = shallow(
+        <TwoFactor
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    twoFactor.find(SingleSelect).prop('onChange')('totp');
+    twoFactor.find(SingleSelect).prop('onChange')('google');
+
+    // the response of the superseded totp request arrives after the google response
+    resolveSecondSetup({secret: 'GOOGLE', qrContent: 'otpauth://totp/google'});
+
+    return secondSetupPromise.then(() => {
+        resolveFirstSetup({secret: 'TOTP', qrContent: 'otpauth://totp/totp'});
+
+        return firstSetupPromise.then(() => {
+            twoFactor.update();
+
+            expect(twoFactor.find(QRCode).prop('value')).toEqual('otpauth://totp/google');
+        });
+    });
+});
+
+test('Do not open the overlay when a method without setup was selected in the meantime', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
@@ -95,14 +161,14 @@ test('Start the setup flow when an authenticator app method is selected', () => 
     );
 
     twoFactor.find(SingleSelect).prop('onChange')('totp');
+    twoFactor.find(SingleSelect).prop('onChange')('email');
 
-    expect(Requester.post).toHaveBeenCalledWith('/setup', {method: 'totp'});
-    expect(changeSpy).not.toHaveBeenCalled();
+    expect(changeSpy).toHaveBeenCalledWith('email');
 
     return setupPromise.then(() => {
         twoFactor.update();
-        expect(twoFactor.find(Overlay).at(0).prop('open')).toEqual(true);
-        expect(twoFactor.find(QRCode).prop('value')).toEqual('otpauth://totp/test');
+
+        expect(twoFactor.find(Overlay).at(0).prop('open')).toEqual(false);
     });
 });
 

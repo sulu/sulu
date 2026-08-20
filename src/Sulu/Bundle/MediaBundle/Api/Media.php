@@ -283,6 +283,66 @@ class Media extends ApiWrapper
         return $this->getLocalizedMeta()->getDescription();
     }
 
+    public function setAiDisclosureText(?string $aiDisclosureText): static
+    {
+        $this->getMeta(true)->setAiDisclosureText($aiDisclosureText);
+
+        return $this;
+    }
+
+    #[VirtualProperty]
+    #[SerializedName('aiDisclosureText')]
+    public function getAiDisclosureText(): ?string
+    {
+        if (!$this->getLocalizedMeta()) {
+            return null;
+        }
+
+        return $this->getLocalizedMeta()->getAiDisclosureText();
+    }
+
+    public function setAiDisclosureDisabled(bool $aiDisclosureDisabled): static
+    {
+        $this->getFileVersion()->setAiDisclosureDisabled($aiDisclosureDisabled);
+
+        return $this;
+    }
+
+    #[VirtualProperty]
+    #[SerializedName('aiDisclosureDisabled')]
+    public function getAiDisclosureDisabled(): bool
+    {
+        return $this->getFileVersion()->getAiDisclosureDisabled();
+    }
+
+    public function setAiDisclosureIconVariant(string $aiDisclosureIconVariant): static
+    {
+        $this->getFileVersion()->setAiDisclosureIconVariant($aiDisclosureIconVariant);
+
+        return $this;
+    }
+
+    #[VirtualProperty]
+    #[SerializedName('aiDisclosureIconVariant')]
+    public function getAiDisclosureIconVariant(): string
+    {
+        return $this->getFileVersion()->getAiDisclosureIconVariant();
+    }
+
+    public function setOrigin(string $origin): static
+    {
+        $this->getFileVersion()->setOrigin($origin);
+
+        return $this;
+    }
+
+    #[VirtualProperty]
+    #[SerializedName('origin')]
+    public function getOrigin(): string
+    {
+        return $this->getFileVersion()->getOrigin();
+    }
+
     /**
      * @param string|null $copyright
      *
