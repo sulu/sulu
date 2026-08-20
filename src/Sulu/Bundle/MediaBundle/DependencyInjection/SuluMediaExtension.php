@@ -122,6 +122,17 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             );
         }
 
+        if ($container->hasExtension('doctrine_migrations')) {
+            $container->prependExtensionConfig(
+                'doctrine_migrations',
+                [
+                    'migrations_paths' => [
+                        'Sulu\\Bundle\\MediaBundle\\Migrations' => __DIR__ . '/../Migrations',
+                    ],
+                ]
+            );
+        }
+
         if ($container->hasExtension('sulu_admin')) {
             $container->prependExtensionConfig(
                 'sulu_admin',

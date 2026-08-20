@@ -14,7 +14,8 @@ namespace Sulu\Page\Domain\Repository;
 interface NavigationRepositoryInterface
 {
     /**
-     * @param array<string, string> $properties
+     * @param array<string, string> $properties Maps result keys to content property paths (e.g. ['title' => 'title']);
+     *                                          when empty, no content properties are resolved
      *
      * @return array<string, mixed>[]
      */
@@ -28,7 +29,8 @@ interface NavigationRepositoryInterface
     ): array;
 
     /**
-     * @param array<string, string> $properties
+     * @param array<string, string> $properties Maps result keys to content property paths (e.g. ['title' => 'title']);
+     *                                          when empty, no content properties are resolved
      *
      * @return array<string, mixed>[]
      */
@@ -42,7 +44,8 @@ interface NavigationRepositoryInterface
     ): array;
 
     /**
-     * @param array<string, string> $properties
+     * @param array<string, string> $properties Maps result keys to content property paths (e.g. ['title' => 'title']);
+     *                                          when empty, no content properties are resolved
      *
      * @return array<string, mixed>[]
      */
@@ -56,7 +59,8 @@ interface NavigationRepositoryInterface
     ): array;
 
     /**
-     * @param array<string, string> $properties
+     * @param array<string, string> $properties Maps result keys to content property paths (e.g. ['title' => 'title']);
+     *                                          when empty, no content properties are resolved
      *
      * @return array<string, mixed>[]
      */
@@ -70,7 +74,8 @@ interface NavigationRepositoryInterface
     ): array;
 
     /**
-     * @param array<string, string> $properties
+     * @param array<string, string> $properties Maps result keys to content property paths (e.g. ['title' => 'title']);
+     *                                          when empty, no content properties are resolved
      *
      * @return array<string, mixed>[]
      */

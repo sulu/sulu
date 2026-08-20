@@ -1,6 +1,6 @@
 # Upgrade
 
-## 3.0.8
+## 3.0.9
 
 ### Widened webspace, slug and template key column lengths
 
@@ -13,6 +13,18 @@ bin/console doctrine:migrations:migrate
 ```
 
 If your database does not support the widened length you can set the `sulu_persistence.legacy_length` to true in your `config/packages/sulu_persistence.yaml`.
+
+### Origin and AI disclosure information for media
+
+Media file versions gained an origin and AI disclosure information, which adds the `origin`, `aiDisclosureDisabled` and
+`aiDisclosureIconVariant` columns to `me_file_versions` and the `aiDisclosureText` column to `me_file_version_meta`.
+Run the new migration to apply the schema change:
+
+```bash
+bin/console doctrine:migrations:migrate
+```
+
+## 3.0.8
 
 ### Route value is required when saving routable content
 
