@@ -1,6 +1,6 @@
 # Upgrade
 
-## 3.0.8
+## 3.0.9
 
 ### Widened webspace, slug and template key column lengths
 
@@ -13,6 +13,8 @@ bin/console doctrine:migrations:migrate
 ```
 
 If your database does not support the widened length you can set the `sulu_persistence.legacy_length` to true in your `config/packages/sulu_persistence.yaml`.
+
+## 3.0.8
 
 ### Route value is required when saving routable content
 
