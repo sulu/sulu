@@ -1,0 +1,37 @@
+.collapsibleCollection {
+    display: block;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+.toolbarButton {
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+}
+
+.toolbarButtonIcon {
+    display: inline-block;
+    font-size: 14px;
+    margin-right: 7px;
+}
+
+.toolbarButtonText {
+    text-decoration: underline;
+}
+
+.items > * + * {
+    margin-top: 10px;
+}
+
+.addButtonContainer {
+    text-align: center;
+    margin-top: 20px;
+}

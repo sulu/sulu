@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Render an expanded collapsible with title, subtitle, extra node and handle 1`] = `
+<div>
+  <section
+    class="collapsible expanded"
+    role="switch"
+  >
+    <div
+      class="handle"
+    >
+      <span>
+        Handle
+      </span>
+    </div>
+    <div
+      class="content"
+    >
+      <header
+        class="header"
+      >
+        <span
+          class="title"
+        >
+          General
+        </span>
+        <span
+          class="subtitle"
+        >
+          3 attributes
+        </span>
+        <div
+          class="spacer"
+        />
+        <div
+          class="extra"
+        >
+          <span>
+            4/7
+          </span>
+        </div>
+        <button
+          aria-label="Delete"
+          class="action"
+          type="button"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </button>
+        <button
+          aria-expanded="true"
+          class="toggle"
+          type="button"
+        >
+          <span
+            aria-label="su-collapse-vertical"
+            class="su-collapse-vertical"
+          />
+        </button>
+      </header>
+      <article
+        class="children"
+      >
+        Some collapsible content
+      </article>
+    </div>
+  </section>
+</div>
+`;

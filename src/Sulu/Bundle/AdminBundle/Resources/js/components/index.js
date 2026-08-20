@@ -7,6 +7,8 @@ import ButtonGroup from './ButtonGroup';
 import Checkbox, {CheckboxGroup} from './Checkbox';
 import CircleSelection from './CircleSelection';
 import CircularProgressbar from './CircularProgressbar';
+import Collapsible from './Collapsible';
+import CollapsibleCollection from './CollapsibleCollection';
 import CroppedText from './CroppedText';
 import DatePicker from './DatePicker';
 import Dialog from './Dialog';
@@ -54,6 +56,8 @@ export {
     CheckboxGroup,
     CircleSelection,
     CircularProgressbar,
+    Collapsible,
+    CollapsibleCollection,
     CroppedText,
     DatePicker,
     Dialog,

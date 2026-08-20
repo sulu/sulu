@@ -1,0 +1,108 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Render two expanded collapsibles 1`] = `
+<div>
+  <section
+    class="collapsibleCollection"
+  >
+    <div
+      class="toolbar"
+    >
+      <button
+        class="toolbarButton"
+        type="button"
+      >
+        <span
+          aria-label="su-collapse-vertical"
+          class="su-collapse-vertical toolbarButtonIcon"
+        />
+        <span
+          class="toolbarButtonText"
+        >
+          sulu_admin.collapse_all
+        </span>
+      </button>
+    </div>
+    <div
+      class="items"
+    >
+      <section
+        class="collapsible expanded"
+        role="switch"
+      >
+        <div
+          class="content"
+        >
+          <header
+            class="header"
+          >
+            <span
+              class="title"
+            >
+              General
+            </span>
+            <div
+              class="spacer"
+            />
+            <button
+              aria-expanded="true"
+              class="toggle"
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
+          </header>
+          <article
+            class="children"
+          >
+            <div>
+              General content
+            </div>
+          </article>
+        </div>
+      </section>
+      <section
+        class="collapsible expanded"
+        role="switch"
+      >
+        <div
+          class="content"
+        >
+          <header
+            class="header"
+          >
+            <span
+              class="title"
+            >
+              Marketing
+            </span>
+            <div
+              class="spacer"
+            />
+            <button
+              aria-expanded="true"
+              class="toggle"
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
+          </header>
+          <article
+            class="children"
+          >
+            <div>
+              Marketing content
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+  </section>
+</div>
+`;

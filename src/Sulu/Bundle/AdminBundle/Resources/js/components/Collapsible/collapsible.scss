@@ -1,0 +1,80 @@
+@import '../../containers/Application/colors.scss';
+
+$collapsibleBackgroundColor: $white;
+$collapsibleBorderColor: $silver;
+$collapsibleHandleColor: $black;
+$collapsibleHandleBackgroundColor: $silver;
+$collapsibleSubtitleColor: $gray;
+$collapsibleIconColor: $gray;
+
+.collapsible {
+    display: flex;
+    background-color: $collapsibleBackgroundColor;
+    border: 1px solid $collapsibleBorderColor;
+    border-radius: 3px;
+
+    &:not(.expanded) {
+        cursor: pointer;
+    }
+}
+
+.handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 0;
+    flex-shrink: 0;
+    color: $collapsibleHandleColor;
+    background-color: $collapsibleHandleBackgroundColor;
+    overflow: hidden;
+    width: fit-content;
+}
+
+.content {
+    flex-grow: 1;
+    font-size: 12px;
+    line-height: 18px;
+    width: 0;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    height: 56px;
+    padding: 0 20px;
+}
+
+.title {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.subtitle {
+    color: $collapsibleSubtitleColor;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.spacer {
+    flex-grow: 1;
+}
+
+.extra {
+    display: flex;
+    align-items: center;
+}
+
+.action,
+.toggle {
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: $collapsibleIconColor;
+    font-size: 14px;
+    margin-left: 20px;
+    padding: 0;
+}
+
+.children {
+    border-top: 1px solid $collapsibleBorderColor;
+}
