@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\Manager;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
