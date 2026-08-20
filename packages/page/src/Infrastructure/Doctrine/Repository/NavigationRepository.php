@@ -383,12 +383,12 @@ final class NavigationRepository implements NavigationRepositoryInterface
         }
 
         /** @var array{
-         *     nav: array<string, mixed>,
+         *     nav?: array<string, mixed>,
          * } $resolvedContent
          */
         $resolvedContent = $this->contentResolver->resolve($pageDimensionContent, $properties);
 
-        $result = $resolvedContent['nav'];
+        $result = $resolvedContent['nav'] ?? [];
 
         if ($this->isUnresolvedLink($pageDimensionContent, $result, $urlKeys)) {
             return null;

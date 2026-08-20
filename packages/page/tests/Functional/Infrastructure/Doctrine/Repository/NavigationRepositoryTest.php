@@ -109,6 +109,40 @@ class NavigationRepositoryTest extends SuluTestCase
         self::getEntityManager()->flush();
     }
 
+    public function testGetNavigationTreeWithEmptyProperties(): void
+    {
+        $result = $this->navigationRepository->getNavigationTree(
+            'main',
+            'en',
+            'sulu-io',
+            null,
+            2
+        );
+
+        $this->assertCount(1, $result);
+        // no content properties are resolved, only the targetType fallback is added
+        $this->assertSame('page', $result[0]['targetType']);
+        \assert(\is_array($result[0]['children']));
+        $this->assertCount(1, $result[0]['children']);
+    }
+
+    public function testGetNavigationTreeDoesNotCrashOnFalsyPropertyValues(): void
+    {
+        foreach (['', '0'] as $falsyValue) {
+            $result = $this->navigationRepository->getNavigationTree(
+                'main',
+                'en',
+                'sulu-io',
+                null,
+                2,
+                ['title' => $falsyValue]
+            );
+
+            $this->assertCount(1, $result);
+            $this->assertArrayNotHasKey('title', $result[0]);
+        }
+    }
+
     public function testGetNavigationFlatByUuid(): void
     {
         $result = $this->navigationRepository->getNavigationFlatByUuid(
