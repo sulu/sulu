@@ -221,6 +221,7 @@
         "php-ffmpeg/php-ffmpeg": "Needed (as in require-dev) to generate preview images for videos",
         "scheb/2fa-bundle": "Needed for two factor authentication.",
         "scheb/2fa-totp": "Needed for two factor authentication via authenticator apps (TOTP).",
+        "scheb/2fa-google-authenticator": "Needed for two factor authentication via authenticator apps (Google Authenticator).",
         "scheb/2fa-backup-code": "Needed for two factor authentication backup codes.",
         "scheb/2fa-trusted-device": "Needed to allow trusted devices to skip the two factor authentication.",
         "symfony/monolog-bundle": "^3.1"
