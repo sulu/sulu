@@ -45,6 +45,29 @@ class LocalStorageTest extends TestCase
         \rmdir(\dirname($pathName));
     }
 
+    public function testSaveGivesTheFileTheDefaultPermissionsOfANewFile(): void
+    {
+        if ('/' !== \DIRECTORY_SEPARATOR) {
+            self::markTestSkipped('File permissions are not supported on Windows.');
+        }
+
+        $tempPath = \tempnam(\sys_get_temp_dir(), 'sulu_media_test');
+        self::assertNotFalse($tempPath);
+        \file_put_contents($tempPath, 'test');
+        // an uploaded file is only readable by its owner
+        \chmod($tempPath, 0600);
+
+        $storageOptions = $this->localStorage->save($tempPath, 'permissions-test.jpg', ['segment' => '02']);
+        $pathName = $this->localStorage->getPath($storageOptions);
+
+        try {
+            self::assertSame(0666 & ~\umask(), \fileperms($pathName) & 0777);
+        } finally {
+            \unlink($pathName);
+            \unlink($tempPath);
+        }
+    }
+
     public function testLoadThrowsExceptionOnNonExistingFile(): void
     {
         self::expectException(IOException::class);
