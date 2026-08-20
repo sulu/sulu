@@ -2,6 +2,7 @@
 import {mount} from 'enzyme';
 import symfonyRouting from 'fos-jsrouting/router';
 import UpdateFormStoreToolbarAction from '../../toolbarActions/UpdateFormStoreToolbarAction';
+import {setAccountLimitContactEmail} from '../../../../containers/AiApplication/accountLimits';
 import {ResourceFormStore} from '../../../../containers/Form';
 import memoryFormStoreFactory from '../../../../containers/Form/stores/memoryFormStoreFactory';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -69,7 +70,8 @@ jest.mock('../../../../services/Router', () => jest.fn(function() {
 jest.mock('../../../../views/Form', () => jest.fn(function() {
     this.submit = jest.fn();
     this.showSuccessSnackbar = jest.fn();
-    this.errors = [];
+    this.errors = require('mobx').observable([]);
+    this.warnings = require('mobx').observable([]);
 }));
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions) {
@@ -272,6 +274,66 @@ test('Handle error on fetch', async() => {
     expect(action.loading).toBe(false);
     expect(action.showDialog).toBe(false);
     expect(action.form.errors).toContain('error.message');
+});
+
+test('Turn a temporary messageKey into a warning whose action retries the request', async() => {
+    const action = createUpdateFormStoreToolbarAction();
+    action.showDialog = true;
+
+    const error = new Error('Test Error');
+    // $FlowFixMe
+    error.json = jest.fn().mockResolvedValue({messageKey: 'sulu_ai.ai_request_failed'});
+    Requester.post.mockRejectedValue(error);
+
+    const element = mount(action.getNode());
+    element.find('Button[skin="primary"]').simulate('click');
+
+    await new Promise((resolve) => setTimeout(resolve));
+
+    expect(action.form.errors).toHaveLength(0);
+    expect(action.form.warnings).toHaveLength(1);
+    const warning = action.form.warnings[0];
+    // $FlowFixMe
+    expect(warning.title).toEqual('sulu_admin.request_failed');
+    // $FlowFixMe
+    expect(warning.actions[0].label).toEqual('sulu_admin.try_again');
+
+    // $FlowFixMe
+    warning.actions[0].onClick();
+    await new Promise((resolve) => setTimeout(resolve));
+
+    expect(action.form.warnings).toHaveLength(1);
+    expect(action.form.warnings[0]).not.toBe(warning);
+    expect(Requester.post).toHaveBeenCalledTimes(2);
+});
+
+test('Turn an account limit messageKey into a titled error with a contact action', async() => {
+    setAccountLimitContactEmail('admin@example.com');
+
+    const action = createUpdateFormStoreToolbarAction();
+    action.showDialog = true;
+
+    const error = new Error('Test Error');
+    // $FlowFixMe
+    error.json = jest.fn().mockResolvedValue({messageKey: 'sulu_ai.out_of_credits'});
+    Requester.post.mockRejectedValue(error);
+
+    const element = mount(action.getNode());
+    element.find('Button[skin="primary"]').simulate('click');
+
+    await new Promise((resolve) => setTimeout(resolve));
+
+    const lastError = action.form.errors[action.form.errors.length - 1];
+    expect(lastError).toEqual(expect.objectContaining({
+        title: 'sulu_ai.out_of_credits',
+        message: 'sulu_ai.out_of_credits_description',
+    }));
+    // $FlowFixMe
+    expect(lastError.actions).toHaveLength(1);
+    // $FlowFixMe
+    expect(lastError.actions[0].label).toEqual('sulu_admin.contact_admin');
+
+    setAccountLimitContactEmail(undefined);
 });
 
 test('Handle plain object error on fetch', async() => {

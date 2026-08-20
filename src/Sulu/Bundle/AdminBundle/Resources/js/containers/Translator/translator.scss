@@ -1,33 +1,58 @@
 .translator {
     display: flex;
+    gap: 24px;
     margin: 40px 50px;
-    background-color: #fff;
-    border: 1px solid #ccc;
 }
 
+/* slides out from behind the footer, which covers it while it travels because it paints above */
+.account-limit {
+    padding: 0 50px;
+    animation: account-limit-reveal 300ms ease-out;
+
+    > div {
+        border-radius: 4px 4px 0 0;
+    }
+}
+
+@keyframes account-limit-reveal {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* the banner forms the edge to the footer itself, so the footer's separating line would read as a gap.
+   the :has() is doubled so the selector outweighs the overlay's own footer rule */
+:global(article):has(.account-limit):has(.account-limit) + :global(footer) {
+    border-top-color: transparent;
+}
+
+/* source and result are separate cards so they read as two documents rather than one split field */
 .column {
     flex: 1;
     display: flex;
     flex-direction: column;
-    max-width: 50%;
-
-    &:first-child {
-        border-right: 1px solid #ccc;
-    }
+    min-width: 0;
+    padding: 16px;
+    background-color: #fff;
+    border-radius: 4px;
 }
 
 .select {
-    max-width: 50%;
-    height: 37px;
-    padding-top: 10px;
+    align-self: flex-start;
+    max-width: 100%;
 }
 
 .input {
-    margin-top: 10px;
+    margin-top: 12px;
     width: 100%;
     height: 200px;
     resize: vertical;
-    border-top: 1px solid #ccc;
+    border: 1px solid #ccc;
+    border-radius: 3px;
     background-color: #fff;
 }
 
@@ -41,6 +66,12 @@
 }
 
 .texteditor {
+    /* same trimming as the textarea, so both field kinds show only the divider below the language select */
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    border-radius: 0;
+
     :global(.ck-editor__top) {
         display: none;
     }

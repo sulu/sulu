@@ -5,6 +5,10 @@ import symfonyRouting from 'fos-jsrouting/router';
 import jexl from 'jexl';
 import Dialog from '../../../components/Dialog';
 import {Requester} from '../../../services';
+import {
+    ACCOUNT_LIMIT_MESSAGE_KEYS,
+    getAccountLimitContactEmail,
+} from '../../../containers/AiApplication/accountLimits';
 import {translate} from '../../../utils';
 import FormContainer, {memoryFormStoreFactory} from '../../../containers/Form';
 import Router from '../../../services/Router';
@@ -12,6 +16,9 @@ import Form from '../Form';
 import {ResourceStore} from '../../../stores';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 import type {ResourceFormStore, FormStoreInterface} from '../../../containers';
+
+// conditions the platform reports as temporary, where trying again is the sensible reaction
+const TEMPORARY_MESSAGE_KEYS = ['sulu_ai.ai_request_failed', 'sulu_ai.ai_response_invalid'];
 
 /**
  * @experimental We can not yet give BC Promise for this new component in Sulu 2.6.
@@ -270,6 +277,8 @@ export default class UpdateFormStoreToolbarAction extends AbstractFormToolbarAct
         this.fetchData();
     };
 
+    retryWarning: ?Object;
+
     @action fetchData = async() => {
         const {
             locale,
@@ -278,6 +287,7 @@ export default class UpdateFormStoreToolbarAction extends AbstractFormToolbarAct
             },
         } = this.resourceFormStore;
 
+        this.clearRetryWarning();
         this.loading = true;
 
         const url = symfonyRouting.generate(this.options.route, {
@@ -326,7 +336,49 @@ export default class UpdateFormStoreToolbarAction extends AbstractFormToolbarAct
         return {};
     }
 
+    @action clearRetryWarning = () => {
+        if (this.retryWarning) {
+            this.form.warnings = this.form.warnings.filter((warning) => warning !== this.retryWarning);
+            this.retryWarning = undefined;
+        }
+    };
+
+    @action handleRetry = () => {
+        this.fetchData();
+    };
+
     @action setError = (messageKey: ?string) => {
+        if (messageKey && TEMPORARY_MESSAGE_KEYS.includes(messageKey)) {
+            this.form.warnings = [...this.form.warnings, {
+                title: translate('sulu_admin.request_failed'),
+                message: translate('sulu_admin.request_failed_description'),
+                actions: [{label: translate('sulu_admin.try_again'), onClick: this.handleRetry}],
+            }];
+            // the observable array wraps what it stores, so the reference to remove has to come out of it
+            this.retryWarning = this.form.warnings[this.form.warnings.length - 1];
+
+            return;
+        }
+
+        if (messageKey && ACCOUNT_LIMIT_MESSAGE_KEYS.includes(messageKey)) {
+            const contactEmail = getAccountLimitContactEmail();
+
+            this.form.errors = [...this.form.errors, {
+                title: translate(messageKey),
+                message: translate(messageKey + '_description'),
+                actions: contactEmail
+                    ? [{
+                        label: translate('sulu_admin.contact_admin'),
+                        onClick: () => {
+                            window.location.href = 'mailto:' + contactEmail;
+                        },
+                    }]
+                    : undefined,
+            }];
+
+            return;
+        }
+
         this.form.errors = [...this.form.errors, translate(messageKey || 'sulu_admin.error')];
     };
 

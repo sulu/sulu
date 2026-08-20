@@ -4,10 +4,13 @@ import {observer} from 'mobx-react';
 import {action, observable, computed, toJS} from 'mobx';
 import {Requester} from '../../services';
 import {Overlay} from '../../components';
+import Snackbar from '../../components/Snackbar';
+import {translate} from '../../utils';
+import {ACCOUNT_LIMIT_MESSAGE_KEYS, readMessageKey} from '../AiApplication/accountLimits';
 import writingAssistantStyles from './writingAssistant.scss';
 import Messages from './Messages';
 import PromptInput from './PromptInput';
-import type {ExpertType, MessageType} from './types';
+import type {ExpertType, MessageType, RequestErrorType} from './types';
 
 type Props = {|
     action?: React$ComponentType<Object>,
@@ -17,16 +20,24 @@ type Props = {|
             [string]: ExpertType,
         },
     },
+    contactEmail?: ?string,
     contentData?: ?Object,
     dataPath?: ?string,
     locale: string,
     messages: {
         addMessage: string,
+        contactAdmin: string,
         copiedToClipboard: string,
+        experts: string,
         includeContentContext: string,
+        includeContentContextInfo: string,
         initialMessage: string,
+        morePredefinedPrompts: string,
         predefinedPrompts: string,
+        requestFailed: string,
+        requestFailedDescription: string,
         send: string,
+        tryAgain: string,
         writingAssistant: string,
     },
     onConfirm: (text: string) => void,
@@ -51,6 +62,7 @@ export default class WritingAssistant extends React.Component<Props> {
     } = undefined;
     @observable selectedExpert: string;
     @observable snackbarMessage = undefined;
+    @observable requestError: ?RequestErrorType = undefined;
     @observable lastResponse = undefined;
     @observable currentValue: string;
     @observable includeContentContext: boolean = false;
@@ -77,7 +89,17 @@ export default class WritingAssistant extends React.Component<Props> {
 
     @action handleAddMessage = async(prompt: string, title: ?string) => {
         const {type} = this.props;
+
+        if (this.accountLimit) {
+            return;
+        }
+
         const result = await this.optimizeText(prompt, title);
+
+        if (!result) {
+            return;
+        }
+
         this.currentValue = result.text;
 
         this.addMessage(
@@ -94,10 +116,14 @@ export default class WritingAssistant extends React.Component<Props> {
     };
 
     @action addMessage = (message: MessageType) => {
-        this.messages = [this.messages[0], message, ...this.messages.slice(1)];
-        if (this.messages.length >= 3) {
-            this.messages[2].collapsed = true;
-        }
+        // index 0 is the selected text, which never collapses
+        this.messages.forEach((olderMessage, index) => {
+            if (index > 0) {
+                olderMessage.collapsed = true;
+            }
+        });
+
+        this.messages = [...this.messages, message];
     };
 
     @action optimizeText = async(prompt: string, title: ?string) => {
@@ -110,6 +136,7 @@ export default class WritingAssistant extends React.Component<Props> {
             commandTitle: title ?? prompt,
             expert: this.props.configuration.experts[this.selectedExpert].name,
         };
+        this.requestError = undefined;
 
         const body: Object = {
             text: this.currentValue,
@@ -130,10 +157,42 @@ export default class WritingAssistant extends React.Component<Props> {
             this.loader = undefined;
             this.lastResponse = data;
             return data.response;
-        })).catch(action((error) => {
+        })).catch((error) => this.handleRequestFailure(error, prompt, title));
+    };
+
+    handleRequestFailure = (error: Object, prompt: string, title: ?string) => {
+        return readMessageKey(error).then(action((messageKey: ?string) => {
             this.loader = undefined;
             this.lastResponse = {error};
+            this.requestError = {messageKey, prompt, title};
+
+            return undefined;
         }));
+    };
+
+    @computed get accountLimit(): ?string {
+        const messageKey = this.requestError?.messageKey;
+
+        return messageKey && ACCOUNT_LIMIT_MESSAGE_KEYS.includes(messageKey) ? messageKey : undefined;
+    }
+
+    @action handleErrorRetry = () => {
+        const requestError = this.requestError;
+
+        if (!requestError) {
+            return;
+        }
+
+        this.requestError = undefined;
+        void this.handleAddMessage(requestError.prompt, requestError.title);
+    };
+
+    handleContactAdminClick = () => {
+        const {contactEmail} = this.props;
+
+        if (contactEmail) {
+            window.location.href = 'mailto:' + contactEmail;
+        }
     };
 
     handlePredefinedPromptButtonClick = (action: {name: string, prompt: string}) => {
@@ -177,7 +236,7 @@ export default class WritingAssistant extends React.Component<Props> {
     }
 
     @computed get expertsButton() {
-        if (this.experts === 1) {
+        if (this.experts.length === 1) {
             return {
                 name: 'experts',
                 type: 'text',
@@ -203,18 +262,21 @@ export default class WritingAssistant extends React.Component<Props> {
         const {
             configuration,
             messages: {
+                morePredefinedPrompts: morePredefinedPromptsMessage,
                 predefinedPrompts: predefinedPromptsMessage,
             },
         } = this.props;
 
         const predefinedPrompts = configuration.experts[this.selectedExpert].options.predefinedPrompts || [];
 
-        return predefinedPrompts.length > 1 ? {
+        return predefinedPrompts.length > 0 ? {
             label: predefinedPromptsMessage,
+            moreLabel: morePredefinedPromptsMessage,
             options: predefinedPrompts.map((predefinedPrompt, index) => ({
+                icon: predefinedPrompt.icon,
                 id: index,
                 name: predefinedPrompt.name,
-            })) ?? [],
+            })),
             handleClick: this.handlePredefinedPromptSelectClick,
         } : undefined;
     }
@@ -251,14 +313,22 @@ export default class WritingAssistant extends React.Component<Props> {
     };
 
     render() {
+        const {accountLimit} = this;
         const {
             action: Action,
             locale,
+            contactEmail,
             messages: {
                 writingAssistant: writingAssistantMessage,
                 addMessage: addMessageMessage,
+                contactAdmin: contactAdminMessage,
+                experts: expertsMessage,
                 includeContentContext: includeContentContextMessage,
+                includeContentContextInfo: includeContentContextInfoMessage,
+                requestFailed: requestFailedMessage,
+                requestFailedDescription: requestFailedDescriptionMessage,
                 send: sendMessage,
+                tryAgain: tryAgainMessage,
             },
         } = this.props;
 
@@ -285,19 +355,44 @@ export default class WritingAssistant extends React.Component<Props> {
                 <div className={writingAssistantStyles.content}>
                     <div className={writingAssistantStyles.chat}>
                         <Messages
+                            error={this.requestError && !this.accountLimit
+                                ? {
+                                    actionLabel: tryAgainMessage,
+                                    message: requestFailedDescriptionMessage,
+                                    title: requestFailedMessage,
+                                }
+                                : undefined
+                            }
                             isLoading={!!this.loader}
                             loader={this.loader}
                             locale={locale}
                             messages={toJS(this.messages)}
                             onCopy={this.handleOnCopy}
+                            onErrorActionClick={this.handleErrorRetry}
                             onInsert={this.handleOnInsert}
                             onMessageClicked={this.handleOnMessageClicked}
                             onRetry={this.handleOnRetry}
                         />
+                        {accountLimit &&
+                            <div className={writingAssistantStyles.accountLimit}>
+                                <Snackbar
+                                    actions={contactEmail
+                                        ? [{label: contactAdminMessage, onClick: this.handleContactAdminClick}]
+                                        : undefined
+                                    }
+                                    message={translate(accountLimit + '_description')}
+                                    title={translate(accountLimit)}
+                                    type="error"
+                                />
+                            </div>
+                        }
                         <PromptInput
                             canIncludeContentContext={this.canIncludeContentContext}
+                            disabled={!!this.accountLimit}
                             experts={this.expertsButton}
+                            expertsLabel={expertsMessage}
                             includeContentContext={this.includeContentContext}
+                            includeContentContextInfo={includeContentContextInfoMessage}
                             includeContentContextLabel={includeContentContextMessage}
                             isLoading={!!this.loader}
                             messages={{
