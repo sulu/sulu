@@ -14,9 +14,13 @@ declare(strict_types=1);
 namespace Sulu\Page\Tests\Functional\Infrastructure\Doctrine\Repository;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Content\Domain\Model\WorkflowInterface;
+use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
+use Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Repository\NavigationRepositoryInterface;
 use Sulu\Page\Tests\Traits\CreatePageTrait;
+use Symfony\Component\Messenger\Envelope;
 
 class NavigationRepositoryTest extends SuluTestCase
 {
@@ -141,6 +145,87 @@ class NavigationRepositoryTest extends SuluTestCase
             $this->assertCount(1, $result);
             $this->assertArrayNotHasKey('title', $result[0]);
         }
+    }
+
+    public function testGetNavigationTreeSkipsUnpublishedPages(): void
+    {
+        $draftOnly = self::createPage([
+            'en' => [
+                'draft' => [
+                    'parentId' => $this->parent->getUuid(),
+                    'template' => 'default',
+                    'title' => 'Draft Only Page',
+                    'url' => '/draft-only',
+                    'navigationContexts' => ['main'],
+                ],
+            ],
+        ]);
+
+        $unpublished = self::createPage([
+            'en' => [
+                'live' => [
+                    'parentId' => $this->parent->getUuid(),
+                    'template' => 'default',
+                    'title' => 'Unpublished Page',
+                    'url' => '/unpublished',
+                    'navigationContexts' => ['main'],
+                ],
+            ],
+        ]);
+
+        $messageBus = self::getContainer()->get('sulu_message_bus');
+        $messageBus->dispatch(new Envelope(
+            new ApplyWorkflowTransitionPageMessage(
+                identifier: ['uuid' => $unpublished->getUuid()],
+                locale: 'en',
+                transitionName: WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH
+            ),
+            [new EnableFlushStamp()]
+        ));
+
+        $result = $this->navigationRepository->getNavigationTree(
+            'main',
+            'en',
+            'sulu-io',
+            null,
+            2,
+            $this->getDefaultProperties()
+        );
+
+        $this->assertCount(1, $result);
+        $this->assertSame('Parent Page', $result[0]['title']);
+        \assert(\is_array($result[0]['children']));
+        $childTitles = \array_column($result[0]['children'], 'title');
+        $this->assertNotContains('Unpublished Page', $childTitles);
+        $this->assertNotContains('Draft Only Page', $childTitles);
+    }
+
+    public function testGetNavigationTreeSkipsPagesNotPublishedInTheRequestedLocale(): void
+    {
+        self::createPage([
+            'de' => [
+                'live' => [
+                    'parentId' => $this->parent->getUuid(),
+                    'template' => 'default',
+                    'title' => 'Nur Deutsch',
+                    'url' => '/nur-deutsch',
+                    'navigationContexts' => ['main'],
+                ],
+            ],
+        ]);
+
+        $result = $this->navigationRepository->getNavigationTree(
+            'main',
+            'en',
+            'sulu-io',
+            null,
+            2,
+            $this->getDefaultProperties()
+        );
+
+        $this->assertCount(1, $result);
+        \assert(\is_array($result[0]['children']));
+        $this->assertNotContains('Nur Deutsch', \array_column($result[0]['children'], 'title'));
     }
 
     public function testGetNavigationFlatByUuid(): void
