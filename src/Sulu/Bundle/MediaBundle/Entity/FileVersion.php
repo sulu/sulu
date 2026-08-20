@@ -756,7 +756,10 @@ class FileVersion implements AuditableInterface
         return $this->origin;
     }
 
-    public function setOrigin(string $origin): static
+    /**
+     * @return $this
+     */
+    public function setOrigin(string $origin): self
     {
         $this->origin = $origin;
 
@@ -768,7 +771,10 @@ class FileVersion implements AuditableInterface
         return $this->aiDisclosureDisabled;
     }
 
-    public function setAiDisclosureDisabled(bool $aiDisclosureDisabled): static
+    /**
+     * @return $this
+     */
+    public function setAiDisclosureDisabled(bool $aiDisclosureDisabled): self
     {
         $this->aiDisclosureDisabled = $aiDisclosureDisabled;
 
@@ -780,7 +786,10 @@ class FileVersion implements AuditableInterface
         return $this->aiDisclosureIconVariant;
     }
 
-    public function setAiDisclosureIconVariant(string $aiDisclosureIconVariant): static
+    /**
+     * @return $this
+     */
+    public function setAiDisclosureIconVariant(string $aiDisclosureIconVariant): self
     {
         $this->aiDisclosureIconVariant = $aiDisclosureIconVariant;
 
