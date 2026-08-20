@@ -28,7 +28,7 @@ class LinkPropertyResolver implements PropertyResolverInterface
             || !(\is_string($data['href']) || \is_integer($data['href']))
             || !\is_string($data['provider'])
         ) {
-            return ContentView::create($data, [...$params]);
+            return ContentView::create(null, [...$params]);
         }
 
         /** @var string $resourceLoaderKey */
