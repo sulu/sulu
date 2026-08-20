@@ -667,39 +667,32 @@ class MediaManagerTest extends TestCase
 
     public function testSaveWithOriginAndAiDisclosure(): void
     {
-        $media = $this->prophesize(Media::class);
-        $media->getId()->willReturn(1);
-        $media->getPreviewImage()->willReturn(null);
-        $file = $this->prophesize(File::class);
-        $fileVersion = $this->prophesize(FileVersion::class);
-        $fileVersion->getName()->willReturn('test');
-        $fileVersion->getStorageOptions()->willReturn([]);
-        $fileVersion->getSubVersion()->willReturn(1);
-        $fileVersion->getVersion()->willReturn(1);
-        $fileVersion->getMimeType()->willReturn('image/jpeg');
-        $fileVersion->getProperties()->willReturn([]);
-        $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
-        $fileVersionMeta->getLocale()->willReturn('en');
-        $fileVersion->getMeta()->willReturn(new ArrayCollection([$fileVersionMeta->reveal()]));
-        $file->getFileVersion(1)->willReturn($fileVersion->reveal());
-        $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
-        $file->getLatestFileVersion()->willReturn($fileVersion->reveal());
-        $file->getVersion()->willReturn(1);
-        $media->getFiles()->willReturn([$file->reveal()]);
-        $this->mediaRepository->findMediaById(1)->willReturn($media);
+        $media = new Media();
+        static::setPrivateProperty($media, 'id', 1);
 
-        $media->setChanger(Argument::any())->shouldBeCalled();
-        $media->setChanged(Argument::any())->shouldBeCalled();
-        $file->setChanger(Argument::any())->shouldBeCalled();
-        $file->setChanged(Argument::any())->shouldBeCalled();
-        $fileVersion->setProperties([])->shouldBeCalled();
-        $fileVersion->setChanged(Argument::any())->shouldBeCalled();
-        $fileVersion->setOrigin('ai_generated')->shouldBeCalled();
-        // false must still reach the setter, it must not be swallowed by the outer `if ($value || ...)` whitelist check
-        $fileVersion->setAiDisclosureDisabled(false)->shouldBeCalled();
-        $fileVersion->setAiDisclosureIconVariant('dark')->shouldBeCalled();
-        $fileVersionMeta->setAiDisclosureText('Generated with AI')->willReturn($fileVersionMeta)->shouldBeCalled();
-        $fileVersion->increaseSubVersion()->shouldNotBeCalled();
+        $file = new File();
+        $file->setVersion(1);
+        $file->setMedia($media);
+        $media->addFile($file);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setName('test');
+        $fileVersion->setVersion(1);
+        $fileVersion->setMimeType('image/jpeg');
+        // set to true to make sure the given false value is written to the entity
+        $fileVersion->setAiDisclosureDisabled(true);
+        $fileVersion->setFile($file);
+        $file->addFileVersion($fileVersion);
+
+        $fileVersionMeta = new FileVersionMeta();
+        $fileVersionMeta->setLocale('en');
+        $fileVersionMeta->setTitle('test');
+        $fileVersionMeta->setFileVersion($fileVersion);
+        $fileVersion->addMeta($fileVersionMeta);
+        $fileVersion->setDefaultMeta($fileVersionMeta);
+
+        $this->mediaRepository->findMediaById(1)->willReturn($media);
+        $this->formatManager->getFormats(Argument::cetera())->willReturn([]);
 
         $this->domainEventCollector->collect(Argument::type(MediaModifiedEvent::class))->shouldBeCalled();
         $this->domainEventCollector->collect(Argument::type(MediaVersionAddedEvent::class))->shouldNotBeCalled();
@@ -712,6 +705,13 @@ class MediaManagerTest extends TestCase
             'aiDisclosureIconVariant' => 'dark',
             'aiDisclosureText' => 'Generated with AI',
         ], 1);
+
+        $this->assertSame('ai_generated', $fileVersion->getOrigin());
+        // false must still reach the setter, it must not be swallowed by the outer `if ($value || ...)` whitelist check
+        $this->assertFalse($fileVersion->getAiDisclosureDisabled());
+        $this->assertSame('dark', $fileVersion->getAiDisclosureIconVariant());
+        $this->assertSame('Generated with AI', $fileVersionMeta->getAiDisclosureText());
+        $this->assertSame(0, $fileVersion->getSubVersion());
     }
 
     public function testMediaPropertiesProvider(): void
