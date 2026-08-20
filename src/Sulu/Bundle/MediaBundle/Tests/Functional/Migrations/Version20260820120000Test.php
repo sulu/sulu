@@ -67,13 +67,20 @@ class Version20260820120000Test extends SuluTestCase
         $this->runMigration('down');
         $this->runMigration('up');
 
-        $fileVersion = $this->fetchRow('me_file_versions', $fileVersionId);
-        self::assertSame('unknown', $fileVersion['origin']);
-        self::assertFalse((bool) $fileVersion['aiDisclosureDisabled']);
-        self::assertSame('auto', $fileVersion['aiDisclosureIconVariant']);
+        // read back through the entity manager, so neither the identifier casing nor the
+        // boolean representation of the database platform leaks into the assertions
+        $entityManager = self::getEntityManager();
+        $entityManager->clear();
 
-        $fileVersionMeta = $this->fetchRow('me_file_version_meta', $fileVersionMetaId);
-        self::assertNull($fileVersionMeta['aiDisclosureText']);
+        $fileVersion = $entityManager->find(FileVersion::class, $fileVersionId);
+        self::assertInstanceOf(FileVersion::class, $fileVersion);
+        self::assertSame('unknown', $fileVersion->getOrigin());
+        self::assertFalse($fileVersion->getAiDisclosureDisabled());
+        self::assertSame('auto', $fileVersion->getAiDisclosureIconVariant());
+
+        $fileVersionMeta = $entityManager->find(FileVersionMeta::class, $fileVersionMetaId);
+        self::assertInstanceOf(FileVersionMeta::class, $fileVersionMeta);
+        self::assertNull($fileVersionMeta->getAiDisclosureText());
     }
 
     public function testUpIsIdempotent(): void
@@ -110,23 +117,6 @@ class Version20260820120000Test extends SuluTestCase
     private function hasColumn(string $tableName, string $columnName): bool
     {
         return $this->connection->createSchemaManager()->introspectTable($tableName)->hasColumn($columnName);
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    private function fetchRow(string $tableName, int $id): array
-    {
-        $row = $this->connection->createQueryBuilder()
-            ->select('*')
-            ->from($tableName)
-            ->where('id = :id')
-            ->setParameter('id', $id)
-            ->executeQuery()
-            ->fetchAssociative();
-        self::assertIsArray($row);
-
-        return $row;
     }
 
     /**
