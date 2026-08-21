@@ -114,6 +114,67 @@ class PageTeaserProviderTest extends WebsiteTestCase
         $this->assertSame('Page Without Excerpt Title', $teasers[0]->getTitle());
     }
 
+    public function testFindReturnsPageTitleWhenExcerptTitleIsEmptyString(): void
+    {
+        $page = self::createPage([
+            'en' => [
+                'live' => [
+                    'title' => 'Page With Empty Excerpt Title',
+                    'url' => '/empty-excerpt-title',
+                    'template' => 'default',
+                    'excerpt' => [
+                        'title' => '',
+                    ],
+                ],
+            ],
+        ]);
+
+        $teasers = $this->teaserProvider->find([$page->getUuid()], 'en');
+
+        $this->assertCount(1, $teasers);
+        $this->assertSame('Page With Empty Excerpt Title', $teasers[0]->getTitle());
+    }
+
+    public function testFindReturnsPageTitleForInternalPageLinkWithoutTargetExcerptTitle(): void
+    {
+        $targetPage = self::createPage([
+            'en' => [
+                'live' => [
+                    'title' => 'Link Target Page',
+                    'url' => '/link-target-without-excerpt',
+                    'template' => 'default',
+                    'excerpt' => [
+                        'title' => '',
+                    ],
+                ],
+            ],
+        ]);
+
+        $linkPage = self::createPage([
+            'en' => [
+                'live' => [
+                    'title' => 'Internal Link Page',
+                    'url' => '/internal-link-without-excerpt',
+                    'template' => 'default',
+                    'linkOn' => true,
+                    'linkData' => [
+                        'href' => $targetPage->getUuid(),
+                        'provider' => 'page',
+                    ],
+                    'excerpt' => [
+                        'title' => '',
+                    ],
+                ],
+            ],
+        ]);
+
+        $teasers = $this->teaserProvider->find([$linkPage->getUuid()], 'en');
+
+        $this->assertCount(1, $teasers);
+        $this->assertSame('Internal Link Page', $teasers[0]->getTitle());
+        $this->assertStringEndsWith('/link-target-without-excerpt', $teasers[0]->getUrl());
+    }
+
     public function testFindReturnsTeaserWithMediaId(): void
     {
         $collection = self::createCollection();
