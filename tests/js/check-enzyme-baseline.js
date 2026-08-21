@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const babel = require('@babel/core');
 
 // Files that still use Enzyme. THIS LIST ONLY SHRINKS.
 // Do not add entries: new tests are written with @testing-library/react.
@@ -14,6 +15,11 @@ const BASELINE = [
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/FieldBlocks/tests/FieldBlocks.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/FieldBlocks/tests/FieldRenderer.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Form/tests/Field.test.js',
+    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Form/tests/Form.test.js',
+    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Form/tests/GhostDialog.test.js',
+    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Form/tests/MissingTypeDialog.test.js',
+    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Form/tests/Renderer.test.js',
+    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Form/tests/Section.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Form/tests/fields/CardCollection.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Form/tests/fields/ChangelogLine.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Form/tests/fields/Checkbox.test.js',
@@ -36,22 +42,19 @@ const BASELINE = [
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Form/tests/fields/TextArea.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Form/tests/fields/TextEditor.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Form/tests/fields/Url.test.js',
-    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Form/tests/Form.test.js',
-    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Form/tests/GhostDialog.test.js',
-    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Form/tests/MissingTypeDialog.test.js',
-    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Form/tests/Renderer.test.js',
-    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Form/tests/Section.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/FormOverlay/tests/FormOverlay.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Link/tests/Link.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Link/tests/overlays/ExternalLinkTypeOverlay.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Link/tests/overlays/LinkTypeOverlay.test.js',
+    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/AdapterSwitch.test.js',
+    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/FieldFilter.test.js',
+    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/FieldFilterItem.test.js',
+    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/List.test.js',
+    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/Search.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/adapters/ColumnListAdapter.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/adapters/FolderAdapter.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/adapters/TableAdapter.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/adapters/TreeTableAdapter.test.js',
-    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/AdapterSwitch.test.js',
-    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/FieldFilter.test.js',
-    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/FieldFilterItem.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/fieldFilterTypes/BooleanFieldFilterType.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/fieldFilterTypes/DateTimeFieldFilterType.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/fieldFilterTypes/NumberFieldFilterType.test.js',
@@ -59,8 +62,6 @@ const BASELINE = [
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/fieldFilterTypes/SelectionFieldFilterType.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/fieldFilterTypes/TextFieldFilterType.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/fieldTransformers/HtmlFieldTransformer.test.js',
-    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/List.test.js',
-    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/List/tests/Search.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/ListOverlay/tests/ListOverlay.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Login/tests/ForgotPasswordForm.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Login/tests/Login.test.js',
@@ -86,8 +87,8 @@ const BASELINE = [
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/SmartContent/tests/FilterOverlay.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/SmartContent/tests/SmartContent.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/SmartContent/tests/SmartContentItem.test.js',
-    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/TextEditor/tests/adapters/CKEditor5.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/TextEditor/tests/TextEditor.test.js',
+    'src/Sulu/Bundle/AdminBundle/Resources/js/containers/TextEditor/tests/adapters/CKEditor5.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Toolbar/tests/Toolbar.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/Toolbar/tests/withToolbar.test.js',
     'src/Sulu/Bundle/AdminBundle/Resources/js/containers/ViewRenderer/tests/ViewRenderer.test.js',
@@ -113,11 +114,11 @@ const BASELINE = [
     'src/Sulu/Bundle/AudienceTargetingBundle/Resources/js/containers/TargetGroupRules/tests/Condition.test.js',
     'src/Sulu/Bundle/AudienceTargetingBundle/Resources/js/containers/TargetGroupRules/tests/ConditionList.test.js',
     'src/Sulu/Bundle/AudienceTargetingBundle/Resources/js/containers/TargetGroupRules/tests/RuleOverlay.test.js',
+    'src/Sulu/Bundle/AudienceTargetingBundle/Resources/js/containers/TargetGroupRules/tests/TargetGroupRules.test.js',
     'src/Sulu/Bundle/AudienceTargetingBundle/Resources/js/containers/TargetGroupRules/tests/ruleTypes/Input.test.js',
     'src/Sulu/Bundle/AudienceTargetingBundle/Resources/js/containers/TargetGroupRules/tests/ruleTypes/KeyValue.test.js',
     'src/Sulu/Bundle/AudienceTargetingBundle/Resources/js/containers/TargetGroupRules/tests/ruleTypes/SingleSelect.test.js',
     'src/Sulu/Bundle/AudienceTargetingBundle/Resources/js/containers/TargetGroupRules/tests/ruleTypes/SingleSelection.test.js',
-    'src/Sulu/Bundle/AudienceTargetingBundle/Resources/js/containers/TargetGroupRules/tests/TargetGroupRules.test.js',
     'src/Sulu/Bundle/ContactBundle/Resources/js/containers/ContactAccountSelection/tests/ContactAccountSelection.test.js',
     'src/Sulu/Bundle/ContactBundle/Resources/js/containers/Form/tests/fields/Bic.test.js',
     'src/Sulu/Bundle/ContactBundle/Resources/js/containers/Form/tests/fields/ContactAccountSelection.test.js',
@@ -198,8 +199,9 @@ const BASELINE = [
 
 const SCAN_DIRECTORIES = ['src', 'tests'];
 const IGNORED_DIRECTORIES = new Set(['node_modules', 'vendor', 'flow-typed', 'build']);
+const IGNORED_NODE_KEYS = new Set(['loc', 'comments', 'leadingComments', 'trailingComments']);
 const SOURCE_EXTENSIONS = new Set(['.js', '.jsx']);
-const ENZYME_IMPORT = /(?:from|require\()\s*['"](?:enzyme|enzyme-to-json|@wojtekmaj\/enzyme-adapter[^'"]*)(?:\/[^'"]*)?['"]/;
+const ENZYME_MODULE = /^(?:enzyme|enzyme-to-json|@wojtekmaj\/enzyme-adapter[^/]*)(?:\/|$)/;
 
 function collectSourceFiles(directory, files) {
     for (const entry of fs.readdirSync(directory, {withFileTypes: true})) {
@@ -217,10 +219,41 @@ function collectSourceFiles(directory, files) {
     return files;
 }
 
-function findFilesUsingEnzyme() {
-    const files = SCAN_DIRECTORIES.reduce((collected, directory) => collectSourceFiles(directory, collected), []);
+// Collects every module specifier the file references: static imports, re-exports,
+// side-effect imports, dynamic imports and require calls.
+function collectModuleSpecifiers(node, specifiers) {
+    if (Array.isArray(node)) {
+        node.forEach((child) => collectModuleSpecifiers(child, specifiers));
 
-    return files.filter((file) => ENZYME_IMPORT.test(fs.readFileSync(file, 'utf8'))).sort();
+        return specifiers;
+    }
+
+    if (!node || typeof node !== 'object' || !node.type) {
+        return specifiers;
+    }
+
+    if (node.source && node.source.type === 'StringLiteral') {
+        specifiers.push(node.source.value);
+    }
+
+    const isModuleCall = node.type === 'CallExpression' && node.callee
+        && (node.callee.type === 'Import' || node.callee.name === 'require');
+
+    if (isModuleCall && node.arguments[0] && node.arguments[0].type === 'StringLiteral') {
+        specifiers.push(node.arguments[0].value);
+    }
+
+    Object.keys(node)
+        .filter((key) => !IGNORED_NODE_KEYS.has(key))
+        .forEach((key) => collectModuleSpecifiers(node[key], specifiers));
+
+    return specifiers;
+}
+
+function usesEnzyme(file) {
+    const ast = babel.parseSync(fs.readFileSync(file, 'utf8'), {filename: file});
+
+    return collectModuleSpecifiers(ast, []).some((specifier) => ENZYME_MODULE.test(specifier));
 }
 
 function report(headline, files, hint) {
@@ -229,10 +262,22 @@ function report(headline, files, hint) {
     process.stderr.write('\n' + hint + '\n\n');
 }
 
-const filesUsingEnzyme = findFilesUsingEnzyme();
+const sourceFiles = SCAN_DIRECTORIES.reduce((collected, directory) => collectSourceFiles(directory, collected), []);
+const unparseable = [];
+const filesUsingEnzyme = sourceFiles
+    .filter((file) => {
+        try {
+            return usesEnzyme(file);
+        } catch (error) {
+            unparseable.push(file + ' (' + error.message.split('\n')[0] + ')');
+
+            return false;
+        }
+    })
+    .sort();
+
 const baseline = new Set(BASELINE);
 const found = new Set(filesUsingEnzyme);
-
 const added = filesUsingEnzyme.filter((file) => !baseline.has(file));
 const removed = BASELINE.filter((file) => !found.has(file));
 
@@ -252,7 +297,15 @@ if (removed.length > 0) {
     );
 }
 
-if (added.length > 0 || removed.length > 0) {
+if (unparseable.length > 0) {
+    report(
+        'Files could not be parsed and were not checked for Enzyme usage:',
+        unparseable,
+        'Fix the syntax errors so the Enzyme baseline can be verified.'
+    );
+}
+
+if (added.length > 0 || removed.length > 0 || unparseable.length > 0) {
     process.exitCode = 1;
 } else {
     process.stdout.write('No new Enzyme usage. ' + filesUsingEnzyme.length + ' file(s) left to migrate.\n');
