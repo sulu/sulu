@@ -434,6 +434,43 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->assertNull($this->event->getResponse());
     }
 
+    public function testRedirectPartialMatchNotAvailable(): void
+    {
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $webspace = new Webspace();
+        $webspace->setKey('webspace');
+        $webspace->setTheme('theme');
+        $portal->setWebspace($webspace);
+        $this->attributes->getAttribute('portal', null)->willReturn($portal);
+
+        $this->attributes->getAttribute('localization', null)->willReturn(null);
+        $this->attributes->getAttribute('matchType', null)->willReturn(RequestAnalyzer::MATCH_TYPE_PARTIAL);
+        $this->attributes->getAttribute('resourceLocator', null)->willReturn('/page-a');
+        $this->attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('');
+        $this->attributes->getAttribute('redirect', null)->willReturn('sulu.lo/{localization}');
+        $this->attributes->getAttribute('portalUrl', null)->willReturn('sulu.lo');
+
+        $localization = new Localization('de');
+        $this->defaultLocaleProvider->getDefaultLocale()->willReturn($localization);
+
+        $this->urlReplacer->replaceCountry(Argument::cetera())->shouldBeCalled()->willReturn(
+            'sulu.lo/{localization}'
+        );
+        $this->urlReplacer->replaceLanguage(Argument::cetera())->shouldBeCalled()->willReturn(
+            'sulu.lo/{localization}'
+        );
+        $this->urlReplacer->replaceLocalization(Argument::cetera())->shouldBeCalled()->willReturn(
+            'sulu.lo/de'
+        );
+
+        $this->router->matchRequest(Argument::type(Request::class))->willThrow(new NotFoundHttpException());
+
+        $this->exceptionListener->redirectPartialMatch($this->event);
+
+        $this->assertNull($this->event->getResponse());
+    }
+
     public function testRedirectPartialMatchForRedirect(): void
     {
         $portal = new Portal();

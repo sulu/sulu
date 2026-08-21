@@ -152,7 +152,7 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
 
         try {
             return null !== $this->router->matchRequest($request);
-        } catch (ResourceNotFoundException $exception) {
+        } catch (ResourceNotFoundException|NotFoundHttpException $exception) {
             return false;
         }
     }
