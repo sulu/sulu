@@ -11,17 +11,8 @@
 
 namespace Sulu\Content\Infrastructure\Sulu\Route\Exception;
 
-/**
- * @internal
- */
-class WebspaceUrlNotFoundException extends \RuntimeException
+use Sulu\Route\Domain\Exception\WebspaceUrlNotFoundException as RouteWebspaceUrlNotFoundException;
+
+class WebspaceUrlNotFoundException extends RouteWebspaceUrlNotFoundException
 {
-    public function __construct(string $slug, string $locale, string $site, int $code = 0, ?\Throwable $previous = null)
-    {
-        parent::__construct(
-            \sprintf('No url found for "%s" in locale "%s" and site "%s".', $slug, $locale, $site),
-            $code,
-            $previous,
-        );
-    }
 }

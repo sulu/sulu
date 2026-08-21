@@ -2,6 +2,18 @@
 
 ## 3.0.9
 
+### Language switcher resolution moved to the route package
+
+The `localizations` passed to website templates are now resolved by the new `sulu_route.language_switcher_provider`
+service (`Sulu\Route\Application\LanguageSwitcher\LanguageSwitcherProviderInterface`), which relies on the
+`sulu_route.site_locale_provider` service (`SiteLocaleProviderInterface`, decorated by the page package to return the
+localizations of the webspace). The `ContentController` therefore no longer subscribes to the `sulu_route.route_repository`,
+`sulu_route.route_generator` and `sulu_core.webspace.webspace_manager` services: subclasses relying on
+`$this->container->get()` for one of them have to add it back to their own `getSubscribedServices()`.
+
+`Sulu\Content\Infrastructure\Sulu\Route\Exception\WebspaceUrlNotFoundException` now extends the new
+`Sulu\Route\Domain\Exception\WebspaceUrlNotFoundException`, which is the exception the route generator contract declares.
+
 ### Widened webspace, slug and template key column lengths
 
 The `webspace`/`webspaceKey`, `slug`, `templateKey` and navigation-context/additional-webspace `name` columns
