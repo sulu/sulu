@@ -8,6 +8,7 @@ import conditionDataProviderRegistry from '../../registries/conditionDataProvide
 jest.mock('loglevel', () => ({
     warn: jest.fn(),
     info: jest.fn(),
+    error: jest.fn(),
 }));
 
 beforeEach(() => {
@@ -54,6 +55,48 @@ beforeEach(() => {
     metadataStore.getJsonSchema = jest.fn().mockReturnValue(Promise.resolve({}));
     // $FlowFixMe
     metadataStore.getSchemaTypes = jest.fn().mockReturnValue(Promise.resolve(null));
+});
+
+test('Should stop loading and be marked as forbidden if the schema request fails with a 403', () => {
+    const schemaPromise = Promise.reject({status: 403});
+    metadataStore.getSchema.mockReturnValueOnce(schemaPromise);
+
+    const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '1'), 'snippets');
+    expect(resourceFormStore.schemaLoading).toEqual(true);
+
+    return new Promise((resolve) => when(() => !resourceFormStore.schemaLoading, resolve)).then(() => {
+        expect(resourceFormStore.loading).toEqual(false);
+        expect(resourceFormStore.forbidden).toEqual(true);
+        expect(resourceFormStore.notFound).toEqual(false);
+        expect(resourceFormStore.unexpectedError).toEqual(false);
+        resourceFormStore.destroy();
+    });
+});
+
+test('Should stop loading and be marked as not found if the json schema request fails with a 404', () => {
+    const jsonSchemaPromise = Promise.reject({status: 404});
+    metadataStore.getJsonSchema.mockReturnValueOnce(jsonSchemaPromise);
+
+    const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '1'), 'snippets');
+
+    return new Promise((resolve) => when(() => !resourceFormStore.schemaLoading, resolve)).then(() => {
+        expect(resourceFormStore.notFound).toEqual(true);
+        expect(resourceFormStore.forbidden).toEqual(false);
+        resourceFormStore.destroy();
+    });
+});
+
+test('Should stop loading and be marked as unexpected error if the schema types request fails', () => {
+    const schemaTypesPromise = Promise.reject({status: 500});
+    metadataStore.getSchemaTypes.mockReturnValueOnce(schemaTypesPromise);
+
+    const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '1'), 'snippets');
+
+    return new Promise((resolve) => when(() => !resourceFormStore.typesLoading, resolve)).then(() => {
+        expect(resourceFormStore.schemaLoading).toEqual(false);
+        expect(resourceFormStore.unexpectedError).toEqual(true);
+        resourceFormStore.destroy();
+    });
 });
 
 test('Create data object for schema', (done) => {
