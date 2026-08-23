@@ -59,6 +59,7 @@ return $config
         [
             'php-ffmpeg/php-ffmpeg',
             'rokka/imagine-vips',
+            'symfony/semaphore',
             'scheb/2fa-backup-code',
             'scheb/2fa-bundle',
             'scheb/2fa-email',
