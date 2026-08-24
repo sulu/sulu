@@ -4,6 +4,16 @@ For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upg
 
 ## 2.6.26
 
+### Improved reference tracking performance
+
+`ReferenceRepository` filters by `referenceResourceKey`, `referenceResourceId`, `referenceLocale` and
+`referenceContext` when it removes the references a resource holds, which happens on every publish.
+Only the source side of the table was indexed, so that removal was a full table scan:
+
+```sql
+CREATE INDEX reference_resource_idx ON re_references (referenceResourceKey, referenceResourceId, referenceLocale, referenceContext);
+```
+
 ### AI Disclosure
 
 The `aiDisclosure` section has been added to the media details form. It allows you to add information about the origin of the media and additional information about the use of AI.
