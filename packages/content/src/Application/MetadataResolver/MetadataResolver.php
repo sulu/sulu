@@ -100,10 +100,13 @@ class MetadataResolver
     private function nestContentViews(array $contentViews, array $data): array
     {
         $flatSlashRoots = [];
-        foreach (\array_keys($data) as $key) {
-            if (\str_contains($key, '/')) {
+        $nestedRoots = [];
+        foreach ($data as $key => $value) {
+            if (\is_string($key) && \str_contains($key, '/')) {
                 [$root] = \explode('/', $key, 2);
                 $flatSlashRoots[$root] = true;
+            } elseif (\is_array($value)) {
+                $nestedRoots[$key] = true;
             }
         }
 
@@ -118,7 +121,12 @@ class MetadataResolver
             /** @var string $root */
             $root = \array_shift($segments);
 
-            if (isset($flatSlashRoots[$root])) {
+            // Only nest into a root when the data actually provides a nested array
+            // for it. A flat slash key (e.g. "seo/title") keeps the flat structure,
+            // and a root without any data at all stays flat as well - otherwise the
+            // properties would be wrongly nested one level too deep when no value has
+            // been saved yet (e.g. seo data before any seo value is set).
+            if (isset($flatSlashRoots[$root]) || !isset($nestedRoots[$root])) {
                 $result[$key] = $view;
                 continue;
             }
