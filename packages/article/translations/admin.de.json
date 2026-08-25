@@ -23,6 +23,7 @@
     "sulu_activity.description.articles.created": "{userFullName} hat den Artikel \"{resourceTitle}\" erstellt",
     "sulu_activity.description.articles.modified": "{userFullName} hat den Artikel \"{resourceTitle}\" geändert",
     "sulu_activity.description.articles.removed": "{userFullName} hat den Artikel \"{resourceTitle}\" gelöscht",
+    "sulu_activity.description.articles.ordered": "{userFullName} hat den Artikel \"{resourceTitle}\" neu sortiert",
     "sulu_activity.description.articles.workflow_transition.publish": "{userFullName} hat den Artikel \"{resourceTitle}\" veröffentlicht",
     "sulu_activity.description.articles.workflow_transition.unpublish": "{userFullName} hat den Artikel \"{resourceTitle}\" nicht mehr veröffentlicht",
     "sulu_activity.description.articles.workflow_transition.remove_draft": "{userFullName} hat den Entwurf des Artikels \"{resourceTitle}\" verworfen",

@@ -44,9 +44,8 @@ class EventNotifier
                 continue;
             }
 
-            $notification = $factory->create($event, $channels);
-
             try {
+                $notification = $factory->create($event, $channels);
                 $this->symfonyNotifier->send($notification, new NoRecipient());
             } catch (\Throwable $exception) {
                 $this->logger->error('sulu_notifier dispatch failed', [

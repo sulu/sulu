@@ -17,6 +17,10 @@ use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 use Sulu\Notifier\Application\Notifier\EventNotifier;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * @internal no backwards compatibility promise is given for this class, create your own service
+ *           implementing EventSubscriberInterface if you want to overwrite it
+ */
 final class EventNotificationSubscriber implements EventSubscriberInterface
 {
     public function __construct(private readonly EventNotifier $notifier)

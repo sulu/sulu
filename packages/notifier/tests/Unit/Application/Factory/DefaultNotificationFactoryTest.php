@@ -16,10 +16,10 @@ namespace Sulu\Notifier\Tests\Unit\Application\Factory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Notifier\Application\Factory\FallbackNotificationFactory;
+use Sulu\Notifier\Application\Factory\DefaultNotificationFactory;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class FallbackNotificationFactoryTest extends TestCase
+class DefaultNotificationFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -68,8 +68,8 @@ class FallbackNotificationFactoryTest extends TestCase
         self::assertSame(['chat/slack', 'chat/discord'], $notification->getChannels(new \Symfony\Component\Notifier\Recipient\NoRecipient()));
     }
 
-    private function createFactory(): FallbackNotificationFactory
+    private function createFactory(): DefaultNotificationFactory
     {
-        return new FallbackNotificationFactory($this->translator->reveal(), 'en');
+        return new DefaultNotificationFactory($this->translator->reveal(), 'en');
     }
 }

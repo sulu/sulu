@@ -11,18 +11,15 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Notifier\Tests\Unit\Application\Factory;
+namespace Sulu\Notifier\Tests\Unit\Infrastructure\Sulu\Activity;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 use Sulu\Component\Security\Authentication\UserInterface;
-use Sulu\Notifier\Application\Factory\DomainEventNotificationFactory;
+use Sulu\Notifier\Infrastructure\Sulu\Activity\DomainEventNotificationFactory;
 use Symfony\Component\Notifier\Recipient\NoRecipient;
-use Symfony\Component\Translation\MessageCatalogueInterface;
-use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DomainEventNotificationFactoryTest extends TestCase
@@ -32,20 +29,16 @@ class DomainEventNotificationFactoryTest extends TestCase
     /**
      * @var ObjectProphecy<TranslatorInterface>
      */
-    private $translator;
-
-    /**
-     * @var ObjectProphecy<MessageCatalogueInterface>
-     */
-    private $catalogue;
+    private ObjectProphecy $translator;
 
     protected function setUp(): void
     {
         $this->translator = $this->prophesize(TranslatorInterface::class);
-        $this->catalogue = $this->prophesize(MessageCatalogueInterface::class);
+    }
 
-        $this->translator->willImplement(TranslatorBagInterface::class);
-        $this->translator->getCatalogue('en')->willReturn($this->catalogue->reveal());
+    private function createFactory(): DomainEventNotificationFactory
+    {
+        return new DomainEventNotificationFactory($this->translator->reveal(), 'en');
     }
 
     public function testSupportsDomainEvent(): void
@@ -54,6 +47,13 @@ class DomainEventNotificationFactoryTest extends TestCase
 
         self::assertTrue($factory->supports($this->prophesize(DomainEvent::class)->reveal()));
         self::assertFalse($factory->supports(new \stdClass()));
+    }
+
+    public function testCreateThrowsForNonDomainEvent(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->createFactory()->create(new \stdClass(), ['chat/slack']);
     }
 
     public function testCreateRendersTranslatedSubjectAndContent(): void
@@ -68,11 +68,6 @@ class DomainEventNotificationFactoryTest extends TestCase
         $user = $this->prophesize(UserInterface::class);
         $user->getFullName()->willReturn('Adam Ministrator');
         $event->getUser()->willReturn($user->reveal());
-
-        $this->catalogue->has('sulu_notifier.subject.pages.workflow_transition.unpublish', 'admin')
-            ->willReturn(true);
-        $this->catalogue->has('sulu_activity.description.pages.workflow_transition.unpublish', 'admin')
-            ->willReturn(true);
 
         $params = ['{userFullName}' => 'Adam Ministrator', '{resourceTitle}' => 'A great song will win', '{resourceLocale}' => 'de'];
 
@@ -113,9 +108,6 @@ class DomainEventNotificationFactoryTest extends TestCase
         $user->getFullName()->willReturn('Adam Ministrator');
         $event->getUser()->willReturn($user->reveal());
 
-        $this->catalogue->has('sulu_notifier.subject.pages.translation_copied', 'admin')->willReturn(true);
-        $this->catalogue->has('sulu_activity.description.pages.translation_copied', 'admin')->willReturn(true);
-
         $params = [
             '{userFullName}' => 'Adam Ministrator',
             '{resourceTitle}' => 'My page',
@@ -147,9 +139,6 @@ class DomainEventNotificationFactoryTest extends TestCase
         $event->getEventContext()->willReturn([]);
         $event->getUser()->willReturn(null);
 
-        $this->catalogue->has('sulu_notifier.subject.tags.created', 'admin')->willReturn(true);
-        $this->catalogue->has('sulu_activity.description.tags.created', 'admin')->willReturn(true);
-
         $this->translator->trans('sulu_activity.someone', [], 'admin', 'en')->willReturn('Someone');
 
         $params = ['{userFullName}' => 'Someone', '{resourceTitle}' => 'news', '{resourceLocale}' => ''];
@@ -175,9 +164,6 @@ class DomainEventNotificationFactoryTest extends TestCase
         $event->getEventContext()->willReturn([]);
         $event->getUser()->willReturn(null);
 
-        $this->catalogue->has('sulu_notifier.subject.cache.cleared', 'admin')->willReturn(true);
-        $this->catalogue->has('sulu_activity.description.cache.cleared', 'admin')->willReturn(true);
-
         $this->translator->trans('sulu_activity.someone', [], 'admin', 'en')->willReturn('Someone');
 
         $params = ['{userFullName}' => 'Someone', '{resourceTitle}' => '', '{resourceLocale}' => ''];
@@ -193,8 +179,10 @@ class DomainEventNotificationFactoryTest extends TestCase
         self::assertSame('Someone cleared the cache', $notification->getContent());
     }
 
-    public function testCreateUsesFallbackWhenSubjectKeyMissing(): void
+    public function testCreatePassesThroughUntranslatedKeyWhenTranslationMissing(): void
     {
+        // Symfony's translator returns the message id itself when no translation exists
+        // (no strict mode configured) -- this factory no longer special-cases that.
         $event = $this->prophesize(DomainEvent::class);
         $event->getResourceKey()->willReturn('unknown');
         $event->getEventType()->willReturn('frobnicated');
@@ -203,49 +191,82 @@ class DomainEventNotificationFactoryTest extends TestCase
         $event->getResourceLocale()->willReturn(null);
         $event->getEventContext()->willReturn([]);
 
-        $this->catalogue->has('sulu_notifier.subject.unknown.frobnicated', 'admin')->willReturn(false);
-        $this->catalogue->has('sulu_activity.description.unknown.frobnicated', 'admin')->willReturn(true);
+        $this->translator->trans('sulu_activity.someone', [], 'admin', 'en')->willReturn('Someone');
 
-        $this->translator->trans('sulu_notifier.fallback.subject', Argument::any(), 'admin', 'en')
-            ->willReturn('DomainEvent');
-        $this->translator->trans('sulu_notifier.fallback.content', Argument::any(), 'admin', 'en')
-            ->willReturn('Event DomainEvent occurred');
+        $params = ['{userFullName}' => 'Someone', '{resourceTitle}' => '', '{resourceLocale}' => ''];
+
+        $this->translator->trans('sulu_notifier.subject.unknown.frobnicated', $params, 'admin', 'en')
+            ->willReturn('sulu_notifier.subject.unknown.frobnicated');
+        $this->translator->trans('sulu_activity.description.unknown.frobnicated', $params, 'admin', 'en')
+            ->willReturn('sulu_activity.description.unknown.frobnicated');
 
         $notification = $this->createFactory()->create($event->reveal(), ['chat/slack']);
 
-        self::assertSame('DomainEvent', $notification->getSubject());
-        self::assertSame('Event DomainEvent occurred', $notification->getContent());
+        self::assertSame('sulu_notifier.subject.unknown.frobnicated', $notification->getSubject());
+        self::assertSame('sulu_activity.description.unknown.frobnicated', $notification->getContent());
     }
 
-    public function testCreateUsesFallbackWhenContentKeyMissing(): void
+    public function testCreateEscapesChatMarkupInUserControlledValues(): void
     {
         $event = $this->prophesize(DomainEvent::class);
         $event->getResourceKey()->willReturn('pages');
-        $event->getEventType()->willReturn('exotic');
-        $event->getUser()->willReturn(null);
-        $event->getResourceTitle()->willReturn(null);
+        $event->getEventType()->willReturn('modified');
+        $event->getResourceTitle()->willReturn('<!channel> & <https://evil.example|click>');
         $event->getResourceLocale()->willReturn(null);
-        $event->getEventContext()->willReturn([]);
+        $event->getEventContext()->willReturn(['note' => '<b>hi</b>']);
+        $event->getUser()->willReturn(null);
 
-        $this->catalogue->has('sulu_notifier.subject.pages.exotic', 'admin')->willReturn(true);
-        $this->catalogue->has('sulu_activity.description.pages.exotic', 'admin')->willReturn(false);
+        $this->translator->trans('sulu_activity.someone', [], 'admin', 'en')->willReturn('Someone');
 
-        $this->translator->trans('sulu_notifier.fallback.subject', Argument::any(), 'admin', 'en')
-            ->willReturn('DomainEvent');
-        $this->translator->trans('sulu_notifier.fallback.content', Argument::any(), 'admin', 'en')
-            ->willReturn('Event DomainEvent occurred');
+        $params = [
+            '{userFullName}' => 'Someone',
+            '{resourceTitle}' => '&lt;!channel&gt; &amp; &lt;https://evil.example|click&gt;',
+            '{resourceLocale}' => '',
+            '{context_note}' => '&lt;b&gt;hi&lt;/b&gt;',
+        ];
+
+        $this->translator->trans('sulu_notifier.subject.pages.modified', $params, 'admin', 'en')
+            ->willReturn('Page modified');
+        $this->translator->trans('sulu_activity.description.pages.modified', $params, 'admin', 'en')
+            ->willReturn('modified');
 
         $notification = $this->createFactory()->create($event->reveal(), ['chat/slack']);
 
-        self::assertSame('DomainEvent', $notification->getSubject());
-        self::assertSame('Event DomainEvent occurred', $notification->getContent());
+        self::assertSame('Page modified', $notification->getSubject());
     }
 
-    private function createFactory(): DomainEventNotificationFactory
+    public function testCreateStringifiesNonScalarContextValuesSafely(): void
     {
-        /** @var TranslatorInterface&TranslatorBagInterface $translator */
-        $translator = $this->translator->reveal();
+        $event = $this->prophesize(DomainEvent::class);
+        $event->getResourceKey()->willReturn('pages');
+        $event->getEventType()->willReturn('modified');
+        $event->getResourceTitle()->willReturn(null);
+        $event->getResourceLocale()->willReturn(null);
+        $event->getEventContext()->willReturn([
+            'list' => ['a', 'b'],
+            'object' => new \stdClass(),
+        ]);
+        $event->getUser()->willReturn(null);
 
-        return new DomainEventNotificationFactory($translator, 'en');
+        $this->translator->trans('sulu_activity.someone', [], 'admin', 'en')->willReturn('Someone');
+
+        $params = [
+            '{userFullName}' => 'Someone',
+            '{resourceTitle}' => '',
+            '{resourceLocale}' => '',
+            '{context_list}' => '["a","b"]',
+            '{context_object}' => 'stdClass',
+        ];
+
+        $this->translator->trans('sulu_notifier.subject.pages.modified', $params, 'admin', 'en')
+            ->willReturn('Page modified');
+        $this->translator->trans('sulu_activity.description.pages.modified', $params, 'admin', 'en')
+            ->willReturn('modified');
+
+        // Prophecy fails the test if trans() is called with different (unstringified /
+        // uncaught-throwing) parameters than expected above.
+        $notification = $this->createFactory()->create($event->reveal(), ['chat/slack']);
+
+        self::assertSame('Page modified', $notification->getSubject());
     }
 }

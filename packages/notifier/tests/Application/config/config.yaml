@@ -7,6 +7,8 @@ framework:
         log: true
     translator:
         default_path: '%kernel.project_dir%/translations'
+        paths:
+            - '%kernel.project_dir%/../../translations'
         fallbacks: ['en']
     notifier:
         chatter_transports:
@@ -36,3 +38,4 @@ sulu_notifier:
     channels:
         'chat/recording':
             - Sulu\Notifier\Tests\Application\Domain\Event\TestDomainEvent
+            - Sulu\Notifier\Tests\Application\Domain\Event\TestNonDomainEvent

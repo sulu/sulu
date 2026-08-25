@@ -22,6 +22,7 @@
     "sulu_activity.description.articles.created": "{userFullName} has created the article \"{resourceTitle}\"",
     "sulu_activity.description.articles.modified": "{userFullName} has changed the article \"{resourceTitle}\"",
     "sulu_activity.description.articles.removed": "{userFullName} has removed the article \"{resourceTitle}\"",
+    "sulu_activity.description.articles.ordered": "{userFullName} has reordered the article \"{resourceTitle}\"",
     "sulu_activity.description.articles.workflow_transition.publish": "{userFullName} has published the article \"{resourceTitle}\"",
     "sulu_activity.description.articles.workflow_transition.unpublish": "{userFullName} has unpublished the article \"{resourceTitle}\"",
     "sulu_activity.description.articles.workflow_transition.remove_draft": "{userFullName} has discarded the draft of the article \"{resourceTitle}\"",

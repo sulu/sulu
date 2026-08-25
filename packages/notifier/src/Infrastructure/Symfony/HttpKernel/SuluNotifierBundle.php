@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Sulu\Notifier\Infrastructure\Symfony\HttpKernel;
 
-use Sulu\Notifier\Application\Factory\DomainEventNotificationFactory;
+use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
+use Sulu\Notifier\Application\Factory\DefaultNotificationFactory;
 use Sulu\Notifier\Application\Factory\EventNotificationFactoryInterface;
-use Sulu\Notifier\Application\Factory\FallbackNotificationFactory;
 use Sulu\Notifier\Application\Notifier\EventNotifier;
 use Sulu\Notifier\Application\Subscriber\EventNotificationSubscriber;
-use Sulu\Notifier\Infrastructure\Symfony\DependencyInjection\Compiler\RegisterEventListenersPass;
+use Sulu\Notifier\Infrastructure\Sulu\Activity\DomainEventNotificationFactory;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -88,11 +88,13 @@ final class SuluNotifierBundle extends AbstractBundle
 
         $services = $container->services();
 
-        $services->set('sulu_notifier.factory.domain_event', DomainEventNotificationFactory::class)
-            ->args([service('translator'), param('kernel.default_locale')])
-            ->tag('sulu_notifier.notification_factory', ['priority' => -100]);
+        if (\class_exists(DomainEvent::class)) {
+            $services->set('sulu_notifier.factory.domain_event', DomainEventNotificationFactory::class)
+                ->args([service('translator'), param('kernel.default_locale')])
+                ->tag('sulu_notifier.notification_factory', ['priority' => -100]);
+        }
 
-        $services->set('sulu_notifier.factory.fallback', FallbackNotificationFactory::class)
+        $services->set('sulu_notifier.factory.default', DefaultNotificationFactory::class)
             ->args([service('translator'), param('kernel.default_locale')])
             ->tag('sulu_notifier.notification_factory', ['priority' => -1000]);
 
@@ -104,18 +106,24 @@ final class SuluNotifierBundle extends AbstractBundle
                 service('logger'),
             ]);
 
-        $services->set('sulu_notifier.event_subscriber', EventNotificationSubscriber::class)
+        $eventSubscriber = $services->set('sulu_notifier.event_subscriber', EventNotificationSubscriber::class)
             ->args([service('sulu_notifier.event_notifier')])
             ->tag('kernel.event_subscriber');
-    }
 
-    /**
-     * @internal this method is not part of the public API and should only be called by the Symfony framework classes
-     */
-    public function build(ContainerBuilder $container): void
-    {
-        parent::build($container);
-        $container->addCompilerPass(new RegisterEventListenersPass());
+        // DomainEvent subclasses are already covered by the kernel.event_subscriber
+        // tag above (EventNotificationSubscriber::getSubscribedEvents()); every other
+        // configured event class needs its own explicit listener registration.
+        foreach (\array_keys($eventChannelMap) as $eventClass) {
+            if (\is_subclass_of($eventClass, DomainEvent::class) || DomainEvent::class === $eventClass) {
+                continue;
+            }
+
+            $eventSubscriber->tag('kernel.event_listener', [
+                'event' => $eventClass,
+                'method' => 'onEvent',
+                'priority' => -512,
+            ]);
+        }
     }
 
     /**

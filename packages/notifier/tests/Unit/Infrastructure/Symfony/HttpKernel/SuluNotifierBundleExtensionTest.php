@@ -15,11 +15,11 @@ namespace Sulu\Notifier\Tests\Unit\Infrastructure\Symfony\HttpKernel;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
-use Sulu\Notifier\Application\Factory\DomainEventNotificationFactory;
+use Sulu\Notifier\Application\Factory\DefaultNotificationFactory;
 use Sulu\Notifier\Application\Factory\EventNotificationFactoryInterface;
-use Sulu\Notifier\Application\Factory\FallbackNotificationFactory;
 use Sulu\Notifier\Application\Notifier\EventNotifier;
 use Sulu\Notifier\Application\Subscriber\EventNotificationSubscriber;
+use Sulu\Notifier\Infrastructure\Sulu\Activity\DomainEventNotificationFactory;
 use Sulu\Notifier\Infrastructure\Symfony\HttpKernel\SuluNotifierBundle;
 use Sulu\Notifier\Tests\Application\Domain\Event\TestNonDomainEvent;
 use Symfony\Component\Config\FileLocator;
@@ -60,20 +60,50 @@ class SuluNotifierBundleExtensionTest extends TestCase
         self::assertTrue($container->hasDefinition('sulu_notifier.factory.domain_event'));
         self::assertSame(DomainEventNotificationFactory::class, $container->getDefinition('sulu_notifier.factory.domain_event')->getClass());
 
-        self::assertTrue($container->hasDefinition('sulu_notifier.factory.fallback'));
-        self::assertSame(FallbackNotificationFactory::class, $container->getDefinition('sulu_notifier.factory.fallback')->getClass());
+        self::assertTrue($container->hasDefinition('sulu_notifier.factory.default'));
+        self::assertSame(DefaultNotificationFactory::class, $container->getDefinition('sulu_notifier.factory.default')->getClass());
 
         // Built-in factories carry the priority attribute
         $domainTag = $container->getDefinition('sulu_notifier.factory.domain_event')->getTag('sulu_notifier.notification_factory');
         self::assertSame([['priority' => -100]], $domainTag);
 
-        $fallbackTag = $container->getDefinition('sulu_notifier.factory.fallback')->getTag('sulu_notifier.notification_factory');
-        self::assertSame([['priority' => -1000]], $fallbackTag);
+        $defaultTag = $container->getDefinition('sulu_notifier.factory.default')->getTag('sulu_notifier.notification_factory');
+        self::assertSame([['priority' => -1000]], $defaultTag);
 
         // Auto-configuration is registered for the interface
         $autoconfigured = $container->getAutoconfiguredInstanceof();
         self::assertArrayHasKey(EventNotificationFactoryInterface::class, $autoconfigured);
         self::assertNotEmpty($autoconfigured[EventNotificationFactoryInterface::class]->getTag('sulu_notifier.notification_factory'));
+    }
+
+    public function testLoadExtensionTagsListenerForNonDomainEventClass(): void
+    {
+        $container = $this->buildContainer([
+            'channels' => [
+                'chat/slack' => [TestNonDomainEvent::class],
+            ],
+        ]);
+
+        self::assertSame(
+            [['event' => TestNonDomainEvent::class, 'method' => 'onEvent', 'priority' => -512]],
+            $container->getDefinition('sulu_notifier.event_subscriber')->getTag('kernel.event_listener'),
+        );
+    }
+
+    public function testLoadExtensionDoesNotTagDomainEventSubclassAsPlainListener(): void
+    {
+        $container = $this->buildContainer([
+            'channels' => [
+                'chat/slack' => [DomainEvent::class],
+            ],
+        ]);
+
+        // DomainEvent is already covered by the kernel.event_subscriber tag,
+        // it must not also get an explicit kernel.event_listener tag.
+        self::assertSame(
+            [],
+            $container->getDefinition('sulu_notifier.event_subscriber')->getTag('kernel.event_listener'),
+        );
     }
 
     public function testLoadExtensionWithEmptyConfig(): void
@@ -92,6 +122,7 @@ class SuluNotifierBundleExtensionTest extends TestCase
         $builder = new ContainerBuilder(new ParameterBag([
             'kernel.default_locale' => 'en',
         ]));
+        $builder->register('notifier', \Symfony\Component\Notifier\NotifierInterface::class);
         $loader = new PhpFileLoader($builder, new FileLocator());
         $instanceof = [];
         $configurator = new ContainerConfigurator($builder, $loader, $instanceof, '/dev/null', '/dev/null', 'test');

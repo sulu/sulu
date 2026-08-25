@@ -16,7 +16,11 @@ namespace Sulu\Notifier\Application\Factory;
 use Symfony\Component\Notifier\Notification\Notification;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class FallbackNotificationFactory implements EventNotificationFactoryInterface
+/**
+ * @internal no backwards compatibility promise is given for this class, create your own service
+ *           implementing EventNotificationFactoryInterface instead
+ */
+final class DefaultNotificationFactory implements EventNotificationFactoryInterface
 {
     public function __construct(
         private readonly TranslatorInterface $translator,
