@@ -70,6 +70,7 @@ class SuluNotifierBundleConfigurationTest extends TestCase
         $builder = new ContainerBuilder(new ParameterBag([
             'kernel.default_locale' => 'en',
             'kernel.environment' => 'test',
+            'kernel.build_dir' => \sys_get_temp_dir() . '/sulu-notifier-bundle-configuration-test',
         ]));
         $builder->register('notifier', NotifierInterface::class);
 
