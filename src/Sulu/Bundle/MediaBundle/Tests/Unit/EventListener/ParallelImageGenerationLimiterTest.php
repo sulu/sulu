@@ -19,8 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Semaphore\Exception\RuntimeException;
 use Symfony\Component\Semaphore\SemaphoreFactory;
 use Symfony\Component\Semaphore\SemaphoreInterface;
 
@@ -90,7 +90,7 @@ class ParallelImageGenerationLimiterTest extends TestCase
         $limiter = new ParallelImageGenerationLimiter($semaphoreFactory->reveal(), 3, 0);
         $request = $this->createRequest(ParallelImageGenerationLimiter::IMAGE_PROXY_ROUTE);
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(ServiceUnavailableHttpException::class);
 
         $limiter->onKernelRequest($this->createRequestEvent($request));
     }

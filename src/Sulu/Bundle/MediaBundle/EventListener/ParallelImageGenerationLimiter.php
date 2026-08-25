@@ -14,8 +14,8 @@ namespace Sulu\Bundle\MediaBundle\EventListener;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Semaphore\Exception\RuntimeException;
 use Symfony\Component\Semaphore\SemaphoreFactory;
 use Symfony\Component\Semaphore\SemaphoreInterface;
 
@@ -79,7 +79,7 @@ final class ParallelImageGenerationLimiter implements EventSubscriberInterface
         $deadline = \microtime(true) + $this->maxWaitTime;
         while (!$semaphore->acquire()) {
             if (\microtime(true) >= $deadline) {
-                throw new RuntimeException(\sprintf(
+                throw new ServiceUnavailableHttpException($this->maxWaitTime, \sprintf(
                     'No image generation slot became available within %d seconds.',
                     $this->maxWaitTime,
                 ));
