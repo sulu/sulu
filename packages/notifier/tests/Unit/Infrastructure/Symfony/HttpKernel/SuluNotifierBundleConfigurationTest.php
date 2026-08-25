@@ -69,6 +69,7 @@ class SuluNotifierBundleConfigurationTest extends TestCase
     {
         $builder = new ContainerBuilder(new ParameterBag([
             'kernel.default_locale' => 'en',
+            'kernel.environment' => 'test',
         ]));
         $builder->register('notifier', NotifierInterface::class);
 
