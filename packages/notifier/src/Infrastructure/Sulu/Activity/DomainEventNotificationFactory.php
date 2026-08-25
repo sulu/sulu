@@ -88,8 +88,9 @@ final class DomainEventNotificationFactory implements EventNotificationFactoryIn
             return null;
         }
 
-        if (\str_ends_with($event->getEventType(), 'removed')) {
+        if (\str_contains($event->getEventType(), 'removed')) {
             // The resource no longer exists, a detail link would be dead.
+            // str_contains (not str_ends_with) to also catch e.g. "removed_no_trash".
             return null;
         }
 

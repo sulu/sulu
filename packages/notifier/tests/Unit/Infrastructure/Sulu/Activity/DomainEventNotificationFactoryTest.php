@@ -313,6 +313,33 @@ class DomainEventNotificationFactoryTest extends TestCase
         self::assertSame('Someone removed the page "My page"', $notification->getContent());
     }
 
+    public function testCreateSkipsLinkForRemovedNoTrashEvent(): void
+    {
+        $event = $this->prophesize(DomainEvent::class);
+        $event->getResourceKey()->willReturn('media');
+        $event->getEventType()->willReturn('removed_no_trash');
+        $event->getResourceTitle()->willReturn('some-file.jpg');
+        $event->getResourceLocale()->willReturn(null);
+        $event->getEventContext()->willReturn([]);
+        $event->getUser()->willReturn(null);
+
+        $this->translator->trans('sulu_activity.someone', [], 'admin', 'en')->willReturn('Someone');
+
+        $params = ['{userFullName}' => 'Someone', '{resourceTitle}' => 'some-file.jpg', '{resourceLocale}' => ''];
+
+        $this->translator->trans('sulu_notifier.subject.media.removed_no_trash', $params, 'admin', 'en')
+            ->willReturn('Media removed');
+        $this->translator->trans('sulu_activity.description.media.removed_no_trash', $params, 'admin', 'en')
+            ->willReturn('Someone permanently removed the media "some-file.jpg"');
+
+        $resourceViewUrlGenerator = $this->prophesize(ResourceViewUrlGeneratorInterface::class);
+        $resourceViewUrlGenerator->generate(Argument::cetera())->shouldNotBeCalled();
+
+        $notification = $this->createFactory($resourceViewUrlGenerator)->create($event->reveal(), ['chat/slack']);
+
+        self::assertSame('Someone permanently removed the media "some-file.jpg"', $notification->getContent());
+    }
+
     public function testCreateOmitsLinkWhenResourceViewNotConfigured(): void
     {
         $event = $this->prophesize(DomainEvent::class);
