@@ -106,7 +106,7 @@ class PageReferenceRefresherTest extends SuluTestCase
             'referenceResourceKey' => 'pages',
             'referenceResourceId' => $page->getUuid(),
             'referenceLocale' => 'en',
-        ]);
+        ], ['referenceContext' => 'ASC']);
 
         self::assertCount(2, $references);
 
@@ -116,7 +116,7 @@ class PageReferenceRefresherTest extends SuluTestCase
         self::assertSame($page->getUuid(), $references[0]->getReferenceResourceId());
         self::assertSame('pages', $references[0]->getReferenceResourceKey());
         self::assertSame('en', $references[0]->getReferenceLocale());
-        self::assertSame('website', $references[0]->getReferenceContext());
+        self::assertSame('admin', $references[0]->getReferenceContext());
 
         self::assertSame('animals', $references[1]->getReferenceProperty());
         self::assertSame($snippet->getUuid(), $references[1]->getResourceId());
@@ -124,6 +124,6 @@ class PageReferenceRefresherTest extends SuluTestCase
         self::assertSame($page->getUuid(), $references[1]->getReferenceResourceId());
         self::assertSame('pages', $references[1]->getReferenceResourceKey());
         self::assertSame('en', $references[1]->getReferenceLocale());
-        self::assertSame('admin', $references[1]->getReferenceContext());
+        self::assertSame('website', $references[1]->getReferenceContext());
     }
 }

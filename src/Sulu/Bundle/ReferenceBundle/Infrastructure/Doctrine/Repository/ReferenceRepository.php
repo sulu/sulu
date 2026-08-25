@@ -178,22 +178,16 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
                 ->setParameter('id', $id);
         }
 
-        $referenceResourceKey = $filters['referenceResourceKey'] ?? null;
-        if (null !== $referenceResourceKey) {
-            $queryBuilder->andWhere('reference.referenceResourceKey = :referenceResourceKey')
-                ->setParameter('referenceResourceKey', $referenceResourceKey);
+        $resourceKey = $filters['resourceKey'] ?? null;
+        if (null !== $resourceKey) {
+            $queryBuilder->andWhere('reference.resourceKey = :resourceKey')
+                ->setParameter('resourceKey', $resourceKey);
         }
 
         $resourceId = $filters['resourceId'] ?? null;
         if (null !== $resourceId) {
             $queryBuilder->andWhere('reference.resourceId = :resourceId')
                 ->setParameter('resourceId', $resourceId);
-        }
-
-        $resourceKey = $filters['resourceKey'] ?? null;
-        if (null !== $resourceKey) {
-            $queryBuilder->andWhere('reference.resourceKey = :resourceKey')
-                ->setParameter('resourceKey', $resourceKey);
         }
 
         $referenceResourceKey = $filters['referenceResourceKey'] ?? null;
