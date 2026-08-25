@@ -18,6 +18,7 @@ use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverMetadataA
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
 use Sulu\Content\Domain\Exception\ShadowSourceNotPublishedException;
 use Sulu\Content\Infrastructure\Doctrine\EventListener\RouteCleanupListener;
+use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ContentResolverPlacementPass;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ExcerptFormPass;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ResourceLoaderCacheCompilerPass;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\SeoFormPass;
@@ -134,6 +135,7 @@ final class SuluContentBundle extends AbstractBundle
         $container->addCompilerPass(new ExcerptFormPass());
         $container->addCompilerPass(new SeoFormPass());
         $container->addCompilerPass(new ResourceLoaderCacheCompilerPass());
+        $container->addCompilerPass(new ContentResolverPlacementPass());
 
         $container->registerForAutoconfiguration(ResourceLoaderInterface::class)
             ->addTag('sulu_content.resource_loader');

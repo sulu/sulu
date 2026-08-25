@@ -23,6 +23,8 @@ use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Domain\Model\WebspaceInterface;
 
 /**
+ * Adding a key here also requires adding it to ContentResolverPlacementPass::RESERVED_ROOT_KEYS; the two are hand-maintained copies.
+ *
  * @phpstan-type SettingsData array{
  *      availableLocales?: string[]|null,
  *      localizations?: array<string, array{

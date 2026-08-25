@@ -26,8 +26,12 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
  */
 class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
 {
+    /**
+     * @param list<string> $rootResolverKeys resolver keys placed at the root of the envelope instead of under `extension`
+     */
     public function __construct(
-        private PropertyAccessorInterface $propertyAccessor
+        private PropertyAccessorInterface $propertyAccessor,
+        private array $rootResolverKeys = [],
     ) {
     }
 
@@ -43,6 +47,7 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
      *     content: array<string, mixed>,
      *     view: array<string, mixed>,
      *     extension: array<string, array<string, mixed>>,
+     *     ...
      * }
      */
     public function normalizeContentViewData(
@@ -62,10 +67,20 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
         $settingsData = $content['settings'] ?? [];
         unset($content['settings'], $view['settings']);
 
+        $rootData = [];
+        foreach ($this->rootResolverKeys as $rootResolverKey) {
+            if (!\array_key_exists($rootResolverKey, $content)) {
+                continue;
+            }
+
+            $rootData[$rootResolverKey] = $content[$rootResolverKey];
+            unset($content[$rootResolverKey], $view[$rootResolverKey]);
+        }
+
         /** @var array<string, array<string, mixed>> $extensionData */
         $extensionData = $content;
 
-        $result = \array_merge(
+        $withSettings = \array_merge(
             [
                 'resource' => $resource,
                 'content' => $templateData,
@@ -75,7 +90,7 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
             $settingsData,
         );
 
-        return $result;
+        return $withSettings + $rootData;
     }
 
     /**
@@ -85,7 +100,8 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
      *     resource: object,
      *     content: array<string, mixed>,
      *     view: array<string, mixed>,
-     *     extension: array<string, array<string, mixed>>
+     *     extension: array<string, array<string, mixed>>,
+     *     ...
      * } $contentData
      * @param list<int|string> $path
      */
@@ -164,7 +180,8 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
      *     resource: object,
      *     content: array<string, mixed>,
      *     view: array<string, mixed>,
-     *     extension: array<string, array<string, mixed>>
+     *     extension: array<string, array<string, mixed>>,
+     *     ...
      * } &$data
      * @param array<string, mixed> $properties
      * @param list<int|string> $path

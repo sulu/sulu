@@ -151,6 +151,29 @@ class ContentResolverTest extends SuluTestCase
         self::assertTrue($seo['hideInSitemap']);
     }
 
+    public function testExistingResolversStillLandUnderExtension(): void
+    {
+        $example = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'full-content',
+                    'title' => 'Lorem Ipsum',
+                    'url' => '/lorem-ipsum',
+                    'excerpt' => ['title' => 'excerpt-title-1'],
+                    'seo' => ['title' => 'seo-title-1'],
+                ],
+            ],
+        ]);
+
+        $dimensionContent = $this->contentAggregator->aggregate($example, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        self::assertArrayHasKey('seo', $result['extension']);
+        self::assertArrayHasKey('excerpt', $result['extension']);
+        self::assertArrayNotHasKey('seo', $result);
+        self::assertArrayNotHasKey('excerpt', $result);
+    }
+
     public function testResolveContentWithProperties(): void
     {
         $example0 = static::createExample(

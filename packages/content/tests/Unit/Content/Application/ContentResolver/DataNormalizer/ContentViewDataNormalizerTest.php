@@ -207,4 +207,45 @@ class ContentViewDataNormalizerTest extends TestCase
         // When not root, properties should be mapped under [content] path
         self::assertSame('Test Title', $result['content']['title']);
     }
+
+    public function testRootResolverKeyIsPlacedAtRootInsteadOfExtension(): void
+    {
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, ['product']);
+        $resource = new Example();
+
+        $content = [
+            'template' => ['title' => 'Test Title'],
+            'product' => ['code' => 'NL4FX'],
+            'seo' => ['title' => 'SEO Title'],
+        ];
+
+        $result = $normalizer->normalizeContentViewData($content, ['template' => []], $resource);
+
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        self::assertSame(['code' => 'NL4FX'], $result['product']);
+        self::assertSame(['seo' => ['title' => 'SEO Title']], $result['extension']);
+    }
+
+    public function testRootResolverKeyIsAbsentWhenTheResolverEmittedNothing(): void
+    {
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, ['product']);
+        $resource = new Example();
+
+        $result = $normalizer->normalizeContentViewData(['template' => []], ['template' => []], $resource);
+
+        self::assertArrayNotHasKey('product', $result);
+    }
+
+    public function testWithoutRootResolverKeysEverythingStaysInExtension(): void
+    {
+        $resource = new Example();
+
+        $result = $this->normalizer->normalizeContentViewData(
+            ['template' => [], 'product' => ['code' => 'NL4FX']],
+            ['template' => []],
+            $resource,
+        );
+
+        self::assertSame(['product' => ['code' => 'NL4FX']], $result['extension']);
+    }
 }

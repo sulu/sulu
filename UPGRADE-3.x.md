@@ -1,5 +1,16 @@
 # Upgrade
 
+## Unreleased
+
+### Content resolvers can place their output at the root of the content envelope
+
+The `sulu_content.content_resolver` tag accepts an optional `placement` attribute: `root` or
+`extension`. It defaults to `extension`, so existing resolvers are unaffected. A resolver tagged
+`placement: root` additionally requires a `type` attribute and its output lands at `<type>`,
+a sibling of `content`, `view` and `extension`, instead of nested under `extension`. Container
+compilation throws if `type` collides with a reserved envelope/root key or with another
+resolver's root key.
+
 ## 3.0.8
 
 ### Route value is required when saving routable content

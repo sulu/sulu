@@ -124,7 +124,7 @@ use Webmozart\Assert\Assert;
  *           | apply optional root property mapping
  *           |
  *           v
- *  array{resource: object, content: array, view: array, extension: array}
+ *  array{resource: object, content: array, view: array, extension: array, ...root-placed resolver keys}
  *
  * @final
  */

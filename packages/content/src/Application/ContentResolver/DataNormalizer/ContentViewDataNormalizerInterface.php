@@ -34,6 +34,7 @@ interface ContentViewDataNormalizerInterface
      *     content: array<string, mixed>,
      *     view: array<string, mixed>,
      *     extension: array<string, array<string, mixed>>,
+     *     ...
      * }
      */
     public function normalizeContentViewData(
@@ -49,7 +50,8 @@ interface ContentViewDataNormalizerInterface
      *     resource: object,
      *     content: array<string, mixed>,
      *     view: array<string, mixed>,
-     *     extension: array<string, array<string, mixed>>
+     *     extension: array<string, array<string, mixed>>,
+     *     ...
      * } $contentData
      * @param list<int|string> $path
      */
@@ -63,6 +65,7 @@ interface ContentViewDataNormalizerInterface
      *      content: array<string, mixed>,
      *      view: array<string, mixed>,
      *      extension: array<string, array<string, mixed>>,
+     *      ...
      *  } $data
      * @param array<string, string> $properties
      * @param list<int|string> $path
