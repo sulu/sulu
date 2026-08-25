@@ -5,6 +5,7 @@
     <mapped-superclass name="Sulu\Bundle\ReferenceBundle\Domain\Model\Reference" table="re_references">
         <indexes>
             <index name="resource_idx" fields="resourceKey,resourceId"/>
+            <index name="reference_resource_idx" fields="referenceResourceKey,referenceResourceId,referenceLocale,referenceContext"/>
         </indexes>
 
         <id name="id" type="integer" column="id">
