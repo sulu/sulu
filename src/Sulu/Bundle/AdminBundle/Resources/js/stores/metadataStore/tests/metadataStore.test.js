@@ -34,9 +34,6 @@ test('Load metadata for given type and key', () => {
         },
     };
 
-    const snippetMetadataPromise = Promise.resolve(snippetMetadata);
-    const tagMetadataPromise = Promise.resolve(tagMetadata);
-
     const snippetResponse = {
         json: jest.fn(),
         ok: true,
@@ -74,8 +71,8 @@ test('Load metadata for given type and key', () => {
         }
     });
 
-    expect(metadataStore.loadMetadata('form', 'snippets')).toEqual(snippetMetadataPromise);
-    expect(metadataStore.loadMetadata('list', 'tags')).toEqual(tagMetadataPromise);
+    const snippetMetadataPromise = metadataStore.loadMetadata('form', 'snippets');
+    const tagMetadataPromise = metadataStore.loadMetadata('list', 'tags');
 
     return Promise.all([snippetMetadataPromise, tagMetadataPromise])
         .then(([snippetMetadataFromPromise, tagMetadataFromPromise]) => {
@@ -141,7 +138,7 @@ test('Load metadata should not cache metadata if no-store is set in response', (
         expect(metadata1).toBe(metadata);
 
         const metadataPromise2 = metadataStore.loadMetadata('form', 'no_cache');
-        expect(Requester.fetch).toBeCalledTimes(2);
+        expect(Requester.fetch).toHaveBeenCalledTimes(2);
 
         return metadataPromise2.then((metadata2) => {
             expect(metadata2).toBe(metadata);
@@ -172,7 +169,7 @@ test('Load metadata should cache metadata if no-store is not set in response', (
         expect(metadata1).toBe(metadata);
 
         const metadataPromise2 = metadataStore.loadMetadata('form', 'no_cache');
-        expect(Requester.fetch).toBeCalledTimes(1);
+        expect(Requester.fetch).toHaveBeenCalledTimes(1);
 
         return metadataPromise2.then((metadata2) => {
             expect(metadata2).toBe(metadata);

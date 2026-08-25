@@ -27,7 +27,7 @@ test('Render in loading state', () => {
         />
     )).toMatchSnapshot();
 
-    expect(ResourceListStore).toBeCalledWith('test', {limit: ''}, 'id');
+    expect(ResourceListStore).toHaveBeenCalledWith('test', {limit: ''}, 'id');
 });
 
 test('Render in disabled state', () => {
@@ -168,7 +168,7 @@ test('Pass requestParameters to ResourceListStore', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', {limit: '', flat: true}, 'id');
+    expect(ResourceListStore).toHaveBeenCalledWith('test', {limit: '', flat: true}, 'id');
 });
 
 test('Trigger the change callback when the selection changes', () => {
@@ -253,8 +253,8 @@ test('Updated data in EditOverlay should disappear when overlay is closed', () =
     resourceSingleSelect.find('EditLine Input').at(1).prop('onChange')('Test3 Update');
     resourceSingleSelect.find('Icon[name="su-times"]').prop('onClick')();
 
-    expect(resourceSingleSelect.instance().resourceListStore.deleteList).not.toBeCalled();
-    expect(resourceSingleSelect.instance().resourceListStore.patchList).not.toBeCalled();
+    expect(resourceSingleSelect.instance().resourceListStore.deleteList).not.toHaveBeenCalled();
+    expect(resourceSingleSelect.instance().resourceListStore.patchList).not.toHaveBeenCalled();
 });
 
 test('Updated data in EditOverlay should be displayed in Select when overlay is confirmed', () => {
@@ -290,8 +290,8 @@ test('Updated data in EditOverlay should be displayed in Select when overlay is 
     resourceSingleSelect.find('EditLine Input').at(1).prop('onChange')('Test3 Update');
     resourceSingleSelect.find('Button[skin="primary"]').prop('onClick')();
 
-    expect(resourceSingleSelect.instance().resourceListStore.deleteList).toBeCalledWith([2]);
-    expect(resourceSingleSelect.instance().resourceListStore.patchList).toBeCalledWith([
+    expect(resourceSingleSelect.instance().resourceListStore.deleteList).toHaveBeenCalledWith([2]);
+    expect(resourceSingleSelect.instance().resourceListStore.patchList).toHaveBeenCalledWith([
         {name: 'Test3 Update'},
         {id: 1, 'name': 'Test1 Update'},
     ]);

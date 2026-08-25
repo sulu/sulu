@@ -44,22 +44,22 @@ test('Iban should trigger callbacks correctly', () => {
     // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(input, {target: {value: 'xxx'}});
     fireEvent.blur(input);
-    expect(onChange).toBeCalledWith('xxx');
-    expect(onBlur).toBeCalled();
+    expect(onChange).toHaveBeenCalledWith('xxx');
+    expect(onBlur).toHaveBeenCalled();
 
     // provide one more invalid value
     // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(input, {target: {value: 'abc'}});
     fireEvent.blur(input);
-    expect(onChange).toBeCalledWith('abc');
-    expect(onBlur).toBeCalled();
+    expect(onChange).toHaveBeenCalledWith('abc');
+    expect(onBlur).toHaveBeenCalled();
 
     // now add a valid value
     // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(input, {target: {value: 'AT611904300234573201'}});
     fireEvent.blur(input);
-    expect(onChange).toBeCalledWith('AT611904300234573201');
-    expect(onBlur).toBeCalled();
+    expect(onChange).toHaveBeenCalledWith('AT611904300234573201');
+    expect(onBlur).toHaveBeenCalled();
 
     expect(onBlur).toHaveBeenCalledTimes(3);
 });

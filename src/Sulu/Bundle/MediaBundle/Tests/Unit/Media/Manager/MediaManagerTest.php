@@ -664,6 +664,55 @@ class MediaManagerTest extends TestCase
         $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
     }
 
+    public function testSaveWithOriginAndAiDisclosure(): void
+    {
+        $media = new Media();
+        static::setPrivateProperty($media, 'id', 1);
+
+        $file = new File();
+        $file->setVersion(1);
+        $file->setMedia($media);
+        $media->addFile($file);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setName('test');
+        $fileVersion->setVersion(1);
+        $fileVersion->setMimeType('image/jpeg');
+        // set to true to make sure the given false value is written to the entity
+        $fileVersion->setAiDisclosureDisabled(true);
+        $fileVersion->setFile($file);
+        $file->addFileVersion($fileVersion);
+
+        $fileVersionMeta = new FileVersionMeta();
+        $fileVersionMeta->setLocale('en');
+        $fileVersionMeta->setTitle('test');
+        $fileVersionMeta->setFileVersion($fileVersion);
+        $fileVersion->addMeta($fileVersionMeta);
+        $fileVersion->setDefaultMeta($fileVersionMeta);
+
+        $this->mediaRepository->findMediaById(1)->willReturn($media);
+        $this->formatManager->getFormats(Argument::cetera())->willReturn([]);
+
+        $this->domainEventCollector->collect(Argument::type(MediaModifiedEvent::class))->shouldBeCalled();
+        $this->domainEventCollector->collect(Argument::type(MediaVersionAddedEvent::class))->shouldNotBeCalled();
+
+        $this->mediaManager->save(null, [
+            'id' => 1,
+            'locale' => 'en',
+            'origin' => 'ai_generated',
+            'aiDisclosureDisabled' => false,
+            'aiDisclosureIconVariant' => 'dark',
+            'aiDisclosureText' => 'Generated with AI',
+        ], 1);
+
+        $this->assertSame('ai_generated', $fileVersion->getOrigin());
+        // false must still reach the setter, it must not be swallowed by the outer `if ($value || ...)` whitelist check
+        $this->assertFalse($fileVersion->getAiDisclosureDisabled());
+        $this->assertSame('dark', $fileVersion->getAiDisclosureIconVariant());
+        $this->assertSame('Generated with AI', $fileVersionMeta->getAiDisclosureText());
+        $this->assertSame(0, $fileVersion->getSubVersion());
+    }
+
     public function testMediaPropertiesProvider(): void
     {
         $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith([__DIR__ . \DIRECTORY_SEPARATOR . 'test.txt', 1, null, null, 1, true]);

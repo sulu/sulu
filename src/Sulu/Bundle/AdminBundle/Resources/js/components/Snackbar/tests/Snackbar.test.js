@@ -73,7 +73,61 @@ test('Click the snackbar should call the onClick callback', async() => {
     const snackbar = screen.queryByText('- Something went wrong');
     await userEvent.click(snackbar);
 
-    expect(clickSpy).toBeCalled();
+    expect(clickSpy).toHaveBeenCalled();
+});
+
+test('Render a snackbar with a title and an action', () => {
+    const {container} = render(
+        <Snackbar
+            actions={[{label: 'Try Again', onClick: jest.fn()}]}
+            message="Something went wrong"
+            title="Out of Credits"
+            type="error"
+        />
+    );
+
+    expect(container).toMatchSnapshot();
+});
+
+test('Render multiple actions side by side', () => {
+    const {container} = render(
+        <Snackbar
+            actions={[
+                {label: 'Try Again', onClick: jest.fn()},
+                {label: 'Contact Admin', onClick: jest.fn()},
+            ]}
+            message="Something went wrong"
+            type="warning"
+        />
+    );
+
+    expect(screen.getByText('Try Again')).toBeInTheDocument();
+    expect(screen.getByText('Contact Admin')).toBeInTheDocument();
+    expect(container).toMatchSnapshot();
+});
+
+test('Render the type as title when no title is given', () => {
+    render(<Snackbar message="Something went wrong" type="warning" />);
+
+    expect(screen.getByText('sulu_admin.warning')).toBeInTheDocument();
+});
+
+test('Call the action callback without triggering onClick when the action is clicked', async() => {
+    const actionClickSpy = jest.fn();
+    const clickSpy = jest.fn();
+    render(
+        <Snackbar
+            actions={[{label: 'Try Again', onClick: actionClickSpy}]}
+            message="Something went wrong"
+            onClick={clickSpy}
+            type="warning"
+        />
+    );
+
+    await userEvent.click(screen.queryByText('Try Again'));
+
+    expect(actionClickSpy).toHaveBeenCalled();
+    expect(clickSpy).not.toHaveBeenCalled();
 });
 
 test('Call onCloseClick callback when close button is clicked', async() => {
@@ -83,5 +137,5 @@ test('Call onCloseClick callback when close button is clicked', async() => {
     const icon = screen.queryByLabelText('su-times');
     await userEvent.click(icon);
 
-    expect(closeClickSpy).toBeCalledWith();
+    expect(closeClickSpy).toHaveBeenCalledWith();
 });

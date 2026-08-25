@@ -51,5 +51,5 @@ test('Change event should be called correctly', async() => {
     await user.click(screen.getByRole('button'));
     await user.click(screen.getByText('Sulu Blog'));
 
-    expect(handleChange).toBeCalledWith('sulu_blog');
+    expect(handleChange).toHaveBeenCalledWith('sulu_blog');
 });

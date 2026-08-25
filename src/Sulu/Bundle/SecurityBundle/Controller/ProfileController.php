@@ -26,6 +26,7 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Security\Authentication\UserSettingRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -94,7 +95,31 @@ class ProfileController implements ClassResourceInterface
                     $twoFactor = new UserTwoFactor($user);
                 }
 
+                $confirmedSecretOption = ProfileTwoFactorController::SECRET_OPTIONS[$twoFactorMethod]['secret'] ?? null;
+                if ($confirmedSecretOption && !isset($twoFactor->getOptions()[$confirmedSecretOption])) {
+                    // the authenticator app based methods must not be activated before a secret was
+                    // set up and confirmed via the ProfileTwoFactorController, because the user
+                    // would be locked out otherwise
+                    throw new BadRequestHttpException(\sprintf(
+                        'The two factor method "%s" requires a confirmed setup via the "/profile/two-factor/setup" and "/profile/two-factor/confirm" endpoints.',
+                        $twoFactorMethod,
+                    ));
+                }
+
                 $twoFactor->setMethod($twoFactorMethod);
+
+                // the secrets of the other methods are cleared, so switching back to a
+                // previously confirmed method requires a fresh guided setup
+                $options = $twoFactor->getOptions() ?? [];
+                foreach (ProfileTwoFactorController::SECRET_OPTIONS as $method => $secretOptions) {
+                    if ($method === $twoFactorMethod) {
+                        continue;
+                    }
+
+                    unset($options[$secretOptions['secret']], $options[$secretOptions['pendingSecret']]);
+                }
+                $twoFactor->setOptions($options);
+
                 $user->setTwoFactor($twoFactor);
             } else {
                 $twoFactor = $user->getTwoFactor();

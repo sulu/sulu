@@ -217,7 +217,7 @@ test('Should pass correct props to the map, marker and input fields after auto-c
     expect(locationOverlay.find(Input).at(8).props().value).toEqual(autoCompleteResult.town); // town
     expect(locationOverlay.find(Input).at(9).props().value).toEqual(autoCompleteResult.country); // country
 
-    expect(mockedMap.setView).toBeCalledWith([autoCompleteResult.latitude, autoCompleteResult.longitude], 1);
+    expect(mockedMap.setView).toHaveBeenCalledWith([autoCompleteResult.latitude, autoCompleteResult.longitude], 1);
     expect(locationOverlay.find(Marker).props().position).toEqual(
         [autoCompleteResult.latitude, autoCompleteResult.longitude]
     );
@@ -250,7 +250,7 @@ test('Should call onConfirm callback when the Overlay is confirmed after auto-co
     locationOverlay.find(SingleAutoComplete).props().selectionStore.set(autoCompleteResult);
     locationOverlay.find(Overlay).props().onConfirm();
 
-    expect(confirmSpy).toBeCalledWith(expect.objectContaining({
+    expect(confirmSpy).toHaveBeenCalledWith(expect.objectContaining({
         lat: 10,
         long: 20,
         zoom: 1,
@@ -319,7 +319,7 @@ test('Should call onConfirm callback when the Overlay is confirmed after map was
 
     locationOverlay.find(Overlay).props().onConfirm();
 
-    expect(confirmSpy).toBeCalledWith(expect.objectContaining({
+    expect(confirmSpy).toHaveBeenCalledWith(expect.objectContaining({
         lat: 1,
         long: 1,
         zoom: 10,
@@ -352,7 +352,7 @@ test('Should pass correct props to the map, marker and input fields when marker 
     expect(locationOverlay.find(Number).at(0).props().value).toEqual(22); // lat
     expect(locationOverlay.find(Number).at(1).props().value).toEqual(11); // long
     expect(locationOverlay.find(Marker).props().position).toEqual([22, 11]);
-    expect(mockedMap.setView).not.toBeCalled();
+    expect(mockedMap.setView).not.toHaveBeenCalled();
 
     locationOverlay.find(Marker).props().eventHandlers.dragend();
     locationOverlay.update();
@@ -360,7 +360,7 @@ test('Should pass correct props to the map, marker and input fields when marker 
     expect(locationOverlay.find(Number).at(0).props().value).toEqual(22); // lat
     expect(locationOverlay.find(Number).at(1).props().value).toEqual(11); // long
     expect(locationOverlay.find(Marker).props().position).toEqual([22, 11]);
-    expect(mockedMap.setView).toBeCalledWith([22, 11], 1);
+    expect(mockedMap.setView).toHaveBeenCalledWith([22, 11], 1);
 });
 
 test('Should call onConfirm callback when the Overlay is confirmed after marker was dragged', () => {
@@ -391,7 +391,7 @@ test('Should call onConfirm callback when the Overlay is confirmed after marker 
     locationOverlay.find(Marker).props().eventHandlers.dragend();
     locationOverlay.find(Overlay).props().onConfirm();
 
-    expect(confirmSpy).toBeCalledWith(expect.objectContaining({
+    expect(confirmSpy).toHaveBeenCalledWith(expect.objectContaining({
         lat: 22,
         long: 11,
         zoom: 1,
@@ -432,7 +432,7 @@ test('Should call onConfirm callback when the Overlay is confirmed after setting
     locationOverlay.find(Number).at(1).props().onChange(0); // long
     locationOverlay.find(Overlay).props().onConfirm();
 
-    expect(confirmSpy).toBeCalledWith(expect.objectContaining({
+    expect(confirmSpy).toHaveBeenCalledWith(expect.objectContaining({
         lat: 0,
         long: 0,
         zoom: 1,
@@ -484,7 +484,7 @@ test('Should pass correct props to the map, marker and input fields after reset'
     expect(locationOverlay.find(Input).at(8).props().value).toBeNull(); // town
     expect(locationOverlay.find(Input).at(9).props().value).toBeNull(); // country
 
-    expect(mockedMap.setView).toBeCalledWith([0, 0], 1);
+    expect(mockedMap.setView).toHaveBeenCalledWith([0, 0], 1);
     expect(locationOverlay.find(Marker).props().position).toEqual([0, 0]);
 });
 
@@ -515,7 +515,7 @@ test('Should call onConfirm callback when the Overlay is confirmed after reset',
     locationOverlay.find(Overlay).props().actions[0].onClick();
     locationOverlay.find(Overlay).props().onConfirm();
 
-    expect(confirmSpy).toBeCalledWith(null);
+    expect(confirmSpy).toHaveBeenCalledWith(null);
 });
 
 test('Should pass correct props to the map, marker and input fields after input fields are changed', () => {
@@ -553,7 +553,7 @@ test('Should pass correct props to the map, marker and input fields after input 
     expect(locationOverlay.find(Input).at(8).props().value).toEqual('new-town'); // town
     expect(locationOverlay.find(Input).at(9).props().value).toEqual('new-country'); // country
 
-    expect(mockedMap.setView).toBeCalledWith([10, 20], 12);
+    expect(mockedMap.setView).toHaveBeenCalledWith([10, 20], 12);
     expect(locationOverlay.find(Marker).props().position).toEqual([10, 20]);
 });
 
@@ -581,7 +581,7 @@ test('Should call onConfirm callback when the Overlay is confirmed after input f
     locationOverlay.find(Input).at(9).props().onChange('new-country'); // country
     locationOverlay.find(Overlay).props().onConfirm();
 
-    expect(confirmSpy).toBeCalledWith(expect.objectContaining({
+    expect(confirmSpy).toHaveBeenCalledWith(expect.objectContaining({
         lat: 10,
         long: 20,
         zoom: 12,
@@ -609,7 +609,7 @@ test('Should call given onClose callback when onClose callback of Overlay is fir
 
     locationOverlay.find(Overlay).props().onClose();
 
-    expect(closeSpy).toBeCalledWith();
+    expect(closeSpy).toHaveBeenCalledWith();
 });
 
 test('Should enable confirm button if longitude and latitude are both not set or both set', () => {

@@ -14,6 +14,8 @@ export default function getActionIcon(action: string) {
             return 'su-lock';
         case 'live':
             return 'su-publish';
+        case 'archive':
+            return 'su-archive';
         default:
             throw new Error('No icon defined for "' + action + '"');
     }

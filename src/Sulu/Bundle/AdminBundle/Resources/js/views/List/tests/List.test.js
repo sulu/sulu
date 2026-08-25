@@ -313,7 +313,7 @@ test('Get ToolbarActions from listToolbarActionRegistry and instantiate them cor
 
     const list = shallow(<List resourceStore={resourceStore} router={router} />);
 
-    expect(ToolbarActionMock1).toBeCalledWith(
+    expect(ToolbarActionMock1).toHaveBeenCalledWith(
         list.instance().listStore,
         list.instance(),
         router,
@@ -321,7 +321,7 @@ test('Get ToolbarActions from listToolbarActionRegistry and instantiate them cor
         resourceStore,
         {'test1': 'value1'}
     );
-    expect(ToolbarActionMock2).toBeCalledWith(
+    expect(ToolbarActionMock2).toHaveBeenCalledWith(
         list.instance().listStore,
         list.instance(),
         router,
@@ -329,7 +329,7 @@ test('Get ToolbarActions from listToolbarActionRegistry and instantiate them cor
         resourceStore,
         {'test2': 'value2'}
     );
-    expect(ToolbarActionMock3).not.toBeCalled();
+    expect(ToolbarActionMock3).not.toHaveBeenCalled();
 });
 
 test('Get ListItemActions from listItemActionRegistry and instantiate them correct with the arguments', () => {
@@ -381,7 +381,7 @@ test('Get ListItemActions from listItemActionRegistry and instantiate them corre
 
     const list = shallow(<List resourceStore={resourceStore} router={router} />);
 
-    expect(ItemActionMock1).toBeCalledWith(
+    expect(ItemActionMock1).toHaveBeenCalledWith(
         list.instance().listStore,
         list.instance(),
         router,
@@ -389,7 +389,7 @@ test('Get ListItemActions from listItemActionRegistry and instantiate them corre
         resourceStore,
         {'test1': 'value1'}
     );
-    expect(ItemActionMock2).toBeCalledWith(
+    expect(ItemActionMock2).toHaveBeenCalledWith(
         list.instance().listStore,
         list.instance(),
         router,
@@ -397,7 +397,7 @@ test('Get ListItemActions from listItemActionRegistry and instantiate them corre
         resourceStore,
         {'test2': 'value2'}
     );
-    expect(ItemActionMock3).not.toBeCalled();
+    expect(ItemActionMock3).not.toHaveBeenCalled();
 });
 
 test('Throw error if "toolbarActions" route-option is not an array of objects', () => {
@@ -473,9 +473,9 @@ test('Update locales of given ToolbarActions if "locales" prop is changed', () =
 
     const list = shallow(<List router={router} />);
 
-    expect(setLocalesSpy).not.toBeCalled();
+    expect(setLocalesSpy).not.toHaveBeenCalled();
     list.setProps({router: {route: {options: {locales: ['de', 'ru']}}}});
-    expect(setLocalesSpy).toBeCalledWith(['de', 'ru']);
+    expect(setLocalesSpy).toHaveBeenCalledWith(['de', 'ru']);
 });
 
 test('Update locales of given ListItemActions if "locales" prop is changed', () => {
@@ -511,9 +511,9 @@ test('Update locales of given ListItemActions if "locales" prop is changed', () 
 
     const list = shallow(<List router={router} />);
 
-    expect(setLocalesSpy).not.toBeCalled();
+    expect(setLocalesSpy).not.toHaveBeenCalled();
     list.setProps({router: {route: {options: {locales: ['de', 'ru']}}}});
-    expect(setLocalesSpy).toBeCalledWith(['de', 'ru']);
+    expect(setLocalesSpy).toHaveBeenCalledWith(['de', 'ru']);
 });
 
 test('Should pass correct props to move list overlay', () => {
@@ -857,21 +857,21 @@ test('Should destroy the store on unmount', () => {
 
     expect(page.get()).toBe(undefined);
     expect(locale.get()).toBe(undefined);
-    expect(router.bind).toBeCalledWith('page', page, 1);
-    expect(router.bind).toBeCalledWith('locale', locale);
-    expect(router.bind).toBeCalledWith('active', listStore.active);
-    expect(router.bind).toBeCalledWith('sortColumn', listStore.sortColumn);
-    expect(router.bind).toBeCalledWith('sortOrder', listStore.sortOrder);
-    expect(router.bind).toBeCalledWith('limit', listStore.limit, 10);
-    expect(router.bind).toBeCalledWith('filter', listStore.filterOptions, {});
+    expect(router.bind).toHaveBeenCalledWith('page', page, 1);
+    expect(router.bind).toHaveBeenCalledWith('locale', locale);
+    expect(router.bind).toHaveBeenCalledWith('active', listStore.active);
+    expect(router.bind).toHaveBeenCalledWith('sortColumn', listStore.sortColumn);
+    expect(router.bind).toHaveBeenCalledWith('sortOrder', listStore.sortOrder);
+    expect(router.bind).toHaveBeenCalledWith('limit', listStore.limit, 10);
+    expect(router.bind).toHaveBeenCalledWith('filter', listStore.filterOptions, {});
 
     const toolbarActions = list.instance().toolbarActions;
 
     list.unmount();
 
-    expect(listStore.destroy).toBeCalled();
-    expect(toolbarActions[0].destroy).toBeCalledWith();
-    expect(toolbarActions[1].destroy).toBeCalledWith();
+    expect(listStore.destroy).toHaveBeenCalled();
+    expect(toolbarActions[0].destroy).toHaveBeenCalledWith();
+    expect(toolbarActions[1].destroy).toHaveBeenCalledWith();
 });
 
 test('Should navigate to defined route on back button click', () => {
@@ -901,7 +901,7 @@ test('Should navigate to defined route on back button click', () => {
 
     const toolbarConfig = toolbarFunction.call(list.instance());
     toolbarConfig.backButton.onClick();
-    expect(router.restore).toBeCalledWith('backView', {locale: 'de'});
+    expect(router.restore).toHaveBeenCalledWith('backView', {locale: 'de'});
 });
 
 test('Should propagate errors to toolbar', () => {
@@ -953,7 +953,7 @@ test('Should navigate to defined route on back button click without locale', () 
 
     const toolbarConfig = toolbarFunction.call(list.instance());
     toolbarConfig.backButton.onClick();
-    expect(router.restore).toBeCalledWith('backView', {});
+    expect(router.restore).toHaveBeenCalledWith('backView', {});
 });
 
 test('Should not render back button when no backView is configured', () => {
@@ -1047,7 +1047,7 @@ test('Should navigate when add button is clicked and locales have been passed in
 
     toolbarConfig.items[0].onClick();
 
-    expect(router.navigate).toBeCalledWith('addView', {locale: 'de'});
+    expect(router.navigate).toHaveBeenCalledWith('addView', {locale: 'de'});
 });
 
 test('Should navigate without locale when add button is clicked', () => {
@@ -1078,7 +1078,7 @@ test('Should navigate without locale when add button is clicked', () => {
 
     toolbarConfig.items[0].onClick();
 
-    expect(router.navigate).toBeCalledWith('addView', {});
+    expect(router.navigate).toHaveBeenCalledWith('addView', {});
 });
 
 test('Should fire callback instead of navigate when onItemAdd prop is set and add button is clicked', () => {
@@ -1110,8 +1110,8 @@ test('Should fire callback instead of navigate when onItemAdd prop is set and ad
 
     toolbarConfig.items[0].onClick();
 
-    expect(itemAddCallback).toBeCalledWith(undefined);
-    expect(router.navigate).not.toBeCalled();
+    expect(itemAddCallback).toHaveBeenCalledWith(undefined);
+    expect(router.navigate).not.toHaveBeenCalled();
 });
 
 test('Should navigate when pencil button is clicked and locales have been passed in options', () => {
@@ -1137,7 +1137,7 @@ test('Should navigate when pencil button is clicked and locales have been passed
         },
     };
     list.find('ButtonCell button').at(0).simulate('click');
-    expect(router.navigate).toBeCalledWith('editView', {id: 1, locale: 'de'});
+    expect(router.navigate).toHaveBeenCalledWith('editView', {id: 1, locale: 'de'});
 });
 
 test('Should navigate without locale when pencil button is clicked', () => {
@@ -1157,7 +1157,7 @@ test('Should navigate without locale when pencil button is clicked', () => {
 
     const list = mount(<List router={router} />);
     list.find('ButtonCell button').at(0).simulate('click');
-    expect(router.navigate).toBeCalledWith('editView', {id: 1});
+    expect(router.navigate).toHaveBeenCalledWith('editView', {id: 1});
 });
 
 test('Should fire callback instead of navigate when onItemClick prop is set and pencil button is clicked', () => {
@@ -1180,8 +1180,8 @@ test('Should fire callback instead of navigate when onItemClick prop is set and 
     const list = mount(<List onItemClick={onItemClickCallback} router={router} />);
     list.find('ButtonCell button').at(0).simulate('click');
 
-    expect(onItemClickCallback).toBeCalledWith(1);
-    expect(router.navigate).not.toBeCalled();
+    expect(onItemClickCallback).toHaveBeenCalledWith(1);
+    expect(router.navigate).not.toHaveBeenCalled();
 });
 
 test('Should load the route attributes from the ListStore', () => {
@@ -1216,11 +1216,11 @@ test('Should load the route attributes from the ListStore', () => {
         sortOrder: 'desc',
     });
 
-    expect(ListStore.getActiveSetting).toBeCalledWith('list_test', 'list');
-    expect(ListStore.getSortColumnSetting).toBeCalledWith('list_test', 'list');
-    expect(ListStore.getFilterSetting).toBeCalledWith('list_test', 'list');
-    expect(ListStore.getSortOrderSetting).toBeCalledWith('list_test', 'list');
-    expect(ListStore.getLimitSetting).toBeCalledWith('list_test', 'list');
+    expect(ListStore.getActiveSetting).toHaveBeenCalledWith('list_test', 'list');
+    expect(ListStore.getSortColumnSetting).toHaveBeenCalledWith('list_test', 'list');
+    expect(ListStore.getFilterSetting).toHaveBeenCalledWith('list_test', 'list');
+    expect(ListStore.getSortOrderSetting).toHaveBeenCalledWith('list_test', 'list');
+    expect(ListStore.getLimitSetting).toHaveBeenCalledWith('list_test', 'list');
 });
 
 test('Should return the limit route attributes as undefined if ListStore is set to default value', () => {
@@ -1249,11 +1249,11 @@ test('Should return the limit route attributes as undefined if ListStore is set 
         sortOrder: 'desc',
     });
 
-    expect(ListStore.getActiveSetting).toBeCalledWith('list_test', 'list');
-    expect(ListStore.getSortColumnSetting).toBeCalledWith('list_test', 'list');
-    expect(ListStore.getFilterSetting).toBeCalledWith('list_test', 'list');
-    expect(ListStore.getSortOrderSetting).toBeCalledWith('list_test', 'list');
-    expect(ListStore.getLimitSetting).toBeCalledWith('list_test', 'list');
+    expect(ListStore.getActiveSetting).toHaveBeenCalledWith('list_test', 'list');
+    expect(ListStore.getSortColumnSetting).toHaveBeenCalledWith('list_test', 'list');
+    expect(ListStore.getFilterSetting).toHaveBeenCalledWith('list_test', 'list');
+    expect(ListStore.getSortOrderSetting).toHaveBeenCalledWith('list_test', 'list');
+    expect(ListStore.getLimitSetting).toHaveBeenCalledWith('list_test', 'list');
 });
 
 test('Should load the route attributes from the ListStore using the passed userSettingsKey', () => {
@@ -1283,11 +1283,11 @@ test('Should load the route attributes from the ListStore using the passed userS
         sortOrder: 'desc',
     });
 
-    expect(ListStore.getActiveSetting).toBeCalledWith('list_test', 'user_key');
-    expect(ListStore.getSortColumnSetting).toBeCalledWith('list_test', 'user_key');
-    expect(ListStore.getFilterSetting).toBeCalledWith('list_test', 'user_key');
-    expect(ListStore.getSortOrderSetting).toBeCalledWith('list_test', 'user_key');
-    expect(ListStore.getLimitSetting).toBeCalledWith('list_test', 'user_key');
+    expect(ListStore.getActiveSetting).toHaveBeenCalledWith('list_test', 'user_key');
+    expect(ListStore.getSortColumnSetting).toHaveBeenCalledWith('list_test', 'user_key');
+    expect(ListStore.getFilterSetting).toHaveBeenCalledWith('list_test', 'user_key');
+    expect(ListStore.getSortOrderSetting).toHaveBeenCalledWith('list_test', 'user_key');
+    expect(ListStore.getLimitSetting).toHaveBeenCalledWith('list_test', 'user_key');
 });
 
 test('Should render the delete item enabled only if something is selected', () => {
@@ -1657,7 +1657,7 @@ test('Should fire reload method of ListStore when reload method is called', () =
     const listInstance = mount(<List router={router} />).instance();
     listInstance.reload();
 
-    expect(listInstance.listStore.reload).toBeCalled();
+    expect(listInstance.listStore.reload).toHaveBeenCalled();
 });
 
 test('Should delete selected items when delete button is clicked', () => {
@@ -1812,7 +1812,7 @@ test('Should move items after move overlay was confirmed', () => {
     list.update();
     expect(list.find('SingleListOverlay[title="Move items"]').prop('confirmLoading')).toEqual(true);
 
-    expect(listStore.moveSelection).toBeCalledWith(5);
+    expect(listStore.moveSelection).toHaveBeenCalledWith(5);
 
     return moveSelectionPromise.then(() => {
         listStore.movingSelection = false;
@@ -1902,8 +1902,7 @@ test('Export method should be called when the export-button is pressed', () => {
         return toolbarFunction.call(list.instance()).items.find((item) => item.label === 'Export');
     }
 
-    delete window.location;
-    window.location = {assign: jest.fn()};
+    window.location.assign = jest.fn();
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
@@ -1936,7 +1935,7 @@ test('Export method should be called when the export-button is pressed', () => {
     list.update();
 
     list.find('Overlay').find({confirmText: 'Export'}).find('Button').simulate('click');
-    expect(resourceRouteRegistry.getUrl).toBeCalledWith('list', 'test', {
+    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('list', 'test', {
         _format: 'csv',
         locale: list.instance().locale.get(),
         flat: true,
@@ -1945,9 +1944,8 @@ test('Export method should be called when the export-button is pressed', () => {
         enclosure: '"',
         newLine: '\\n',
     });
-    expect(window.location.assign).toBeCalledWith(
+    expect(window.location.assign).toHaveBeenCalledWith(
         'testfile.csv?locale=en&flat=true&delimiter=%3B&escape=%5C&enclosure=%22&newLine=%5Cn'
     );
-
     expect(list.find('Overlay').find({confirmText: 'Export'}).prop('open')).toEqual(false);
 });

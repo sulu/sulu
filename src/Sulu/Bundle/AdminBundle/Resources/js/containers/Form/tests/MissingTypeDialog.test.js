@@ -31,7 +31,7 @@ test('Should call onCancel callback if user chooses not to change type', () => {
 
     missingTypeDialog.find('Button[skin="secondary"]').simulate('click');
 
-    expect(cancelSpy).toBeCalledWith();
+    expect(cancelSpy).toHaveBeenCalledWith();
 });
 
 test('Should call onConfirm callback with chosen type if user chooses to change type', () => {
@@ -51,5 +51,5 @@ test('Should call onConfirm callback with chosen type if user chooses to change 
     expect(missingTypeDialog.find('Dialog').prop('confirmDisabled')).toEqual(false);
     missingTypeDialog.find('Button[skin="primary"]').simulate('click');
 
-    expect(confirmSpy).toBeCalledWith('homepage');
+    expect(confirmSpy).toHaveBeenCalledWith('homepage');
 });

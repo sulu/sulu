@@ -47,5 +47,5 @@ return static function(ContainerConfigurator $container) {
 
     $services->set('sulu_core.proxy_manager.file_locator', FileLocator::class)
         ->private()
-        ->args([expr('service(\'sulu_core.proxy_manager.configuration\').getProxiesTargetDir()')]);
+        ->args(['%sulu_core.proxy_cache_dir%']);
 };

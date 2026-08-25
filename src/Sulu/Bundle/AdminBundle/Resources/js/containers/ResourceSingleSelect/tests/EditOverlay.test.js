@@ -100,8 +100,8 @@ test('Should only delete items from  ResourceStoreList if data is only deleted',
 
     editOverlay.find('Button[skin="primary"]').simulate('click');
 
-    expect(resourceListStore.patchList).not.toBeCalled();
-    expect(resourceListStore.deleteList).toBeCalledWith([1]);
+    expect(resourceListStore.patchList).not.toHaveBeenCalled();
+    expect(resourceListStore.deleteList).toHaveBeenCalledWith([1]);
 });
 
 test('Should only update ResourceStoreList if data is only changed and not deleted', () => {
@@ -134,9 +134,9 @@ test('Should only update ResourceStoreList if data is only changed and not delet
 
     editOverlay.find('Button[skin="primary"]').simulate('click');
 
-    expect(resourceListStore.patchList).not.toBeCalled();
+    expect(resourceListStore.patchList).not.toHaveBeenCalled();
 
-    expect(resourceListStore.deleteList).toBeCalledWith([1]);
+    expect(resourceListStore.deleteList).toHaveBeenCalledWith([1]);
 });
 
 test('Should update ResourceStoreList if data is changed and confirm button is clicked', () => {
@@ -178,13 +178,13 @@ test('Should update ResourceStoreList if data is changed and confirm button is c
 
     editOverlay.find('Button[skin="primary"]').simulate('click');
 
-    expect(resourceListStore.patchList).toBeCalledWith([
+    expect(resourceListStore.patchList).toHaveBeenCalledWith([
         {position: 'Test 3'},
         {position: 'Test 4'},
         {position: 'Test 2 Update', uuid: 2},
     ]);
 
-    expect(resourceListStore.deleteList).toBeCalledWith([1]);
+    expect(resourceListStore.deleteList).toHaveBeenCalledWith([1]);
 });
 
 test('An empty field should not be added', () => {
@@ -224,11 +224,11 @@ test('An empty field should not be added', () => {
 
     editOverlay.find('Button[skin="primary"]').simulate('click');
 
-    expect(resourceListStore.patchList).toBeCalledWith([
+    expect(resourceListStore.patchList).toHaveBeenCalledWith([
         {position: 'Test 3'},
     ]);
 
-    expect(resourceListStore.deleteList).toBeCalledWith([1]);
+    expect(resourceListStore.deleteList).toHaveBeenCalledWith([1]);
 });
 
 test('Adding the same field as already existing should not add it', () => {
@@ -262,7 +262,7 @@ test('Adding the same field as already existing should not add it', () => {
     editOverlay.find('EditLine Button').at(0).prop('onClick')();
     editOverlay.find('Button[skin="primary"]').simulate('click');
 
-    expect(resourceListStore.patchList).not.toBeCalledWith();
+    expect(resourceListStore.patchList).not.toHaveBeenCalledWith();
 });
 
 test('Adding the same field twice should add it only once', () => {
@@ -303,11 +303,11 @@ test('Adding the same field twice should add it only once', () => {
 
     editOverlay.find('Button[skin="primary"]').simulate('click');
 
-    expect(resourceListStore.patchList).toBeCalledWith([
+    expect(resourceListStore.patchList).toHaveBeenCalledWith([
         {position: 'Test 3'},
     ]);
 
-    expect(resourceListStore.deleteList).toBeCalledWith([1]);
+    expect(resourceListStore.deleteList).toHaveBeenCalledWith([1]);
 });
 
 test('Call disposer when component unmounts', () => {
@@ -329,5 +329,5 @@ test('Call disposer when component unmounts', () => {
 
     editOverlay.unmount();
 
-    expect(updateDataDisposerSpy).toBeCalledWith();
+    expect(updateDataDisposerSpy).toHaveBeenCalledWith();
 });

@@ -164,10 +164,10 @@ test('Should apply sortIndex to given actions and pass wrapped actions to Block 
         />
     );
 
-    expect(onActionClickSpy).not.toBeCalled();
+    expect(onActionClickSpy).not.toHaveBeenCalled();
     await user.click(screen.getByLabelText('su-more-circle'));
     await user.click(screen.getByRole('button', {name: /Test Action 1/}));
-    expect(onActionClickSpy).toBeCalledWith(101);
+    expect(onActionClickSpy).toHaveBeenCalledWith(101);
 });
 
 test('Should pass remove action to Block component if depracted onRemove prop is set', async() => {
@@ -196,14 +196,14 @@ test('Should pass remove action to Block component if depracted onRemove prop is
             value={{content: 'Test Content'}}
         />
     );
-    expect(log.warn).toBeCalledWith(
+    expect(log.warn).toHaveBeenCalledWith(
         expect.stringContaining('The "onRemove" prop of the "SortableBlock" component is deprecated')
     );
 
-    expect(removeSpy).not.toBeCalled();
+    expect(removeSpy).not.toHaveBeenCalled();
     await user.click(screen.getByLabelText('su-more-circle'));
     await user.click(screen.getByRole('button', {name: /sulu_admin\.delete/}));
-    expect(removeSpy).toBeCalledWith(101);
+    expect(removeSpy).toHaveBeenCalledWith(101);
 });
 
 test('Should not show the settings icon if no onSettingsClick callback is passed', () => {
@@ -247,9 +247,9 @@ test('Should call onCollapse when the block is being collapsed', async() => {
 
     await user.click(screen.getByLabelText('su-collapse-vertical'));
 
-    expect(collapseSpy).toBeCalledWith(1);
-    expect(expandSpy).not.toBeCalled();
-    expect(removeSpy).not.toBeCalled();
+    expect(collapseSpy).toHaveBeenCalledWith(1);
+    expect(expandSpy).not.toHaveBeenCalled();
+    expect(removeSpy).not.toHaveBeenCalled();
 });
 
 test('Should call onExpand when the block is being expanded', async() => {
@@ -275,9 +275,9 @@ test('Should call onExpand when the block is being expanded', async() => {
 
     await user.click(screen.getByRole('switch'));
 
-    expect(collapseSpy).not.toBeCalled();
-    expect(expandSpy).toBeCalledWith(1);
-    expect(removeSpy).not.toBeCalled();
+    expect(collapseSpy).not.toHaveBeenCalled();
+    expect(expandSpy).toHaveBeenCalledWith(1);
+    expect(removeSpy).not.toHaveBeenCalled();
 });
 
 test('Should call onSettingClick when the block setting icon is clicked', async() => {
@@ -303,9 +303,9 @@ test('Should call onSettingClick when the block setting icon is clicked', async(
 
     await user.click(screen.getByLabelText('su-cog'));
 
-    expect(collapseSpy).not.toBeCalled();
-    expect(expandSpy).not.toBeCalled();
-    expect(settingsClickSpy).toBeCalledWith(1);
+    expect(collapseSpy).not.toHaveBeenCalled();
+    expect(expandSpy).not.toHaveBeenCalled();
+    expect(settingsClickSpy).toHaveBeenCalledWith(1);
 });
 
 test('Should call onTypeChange when the block has changed its type', async() => {
@@ -332,7 +332,7 @@ test('Should call onTypeChange when the block has changed its type', async() => 
     await user.click(screen.getByRole('button', {name: /Editor/}));
     await user.click(screen.getByRole('button', {name: /Type 1/}));
 
-    expect(typeChangeSpy).toBeCalledWith('type1', 1);
+    expect(typeChangeSpy).toHaveBeenCalledWith('type1', 1);
 });
 
 test('Should call renderBlockContent with the correct arguments', () => {
@@ -354,7 +354,7 @@ test('Should call renderBlockContent with the correct arguments', () => {
         />
     );
 
-    expect(renderBlockContentSpy).toBeCalledWith(value, 'editor', 7, true);
+    expect(renderBlockContentSpy).toHaveBeenCalledWith(value, 'editor', 7, true);
 });
 
 test('Should call renderBlockContent with the correct arguments when block is collapsed', () => {
@@ -376,7 +376,7 @@ test('Should call renderBlockContent with the correct arguments when block is co
         />
     );
 
-    expect(renderBlockContentSpy).toBeCalledWith(value, 'editor', 7, false);
+    expect(renderBlockContentSpy).toHaveBeenCalledWith(value, 'editor', 7, false);
 });
 
 test('Should call renderBlockContent with the correct arguments when types are involved', () => {
@@ -398,5 +398,5 @@ test('Should call renderBlockContent with the correct arguments when types are i
         />
     );
 
-    expect(renderBlockContentSpy).toBeCalledWith(value, 'test', 7, true);
+    expect(renderBlockContentSpy).toHaveBeenCalledWith(value, 'test', 7, true);
 });

@@ -42,7 +42,7 @@ test('Pass props correctly to component', () => {
         />
     );
 
-    expect(webspaceStore.getWebspace).not.toBeCalled();
+    expect(webspaceStore.getWebspace).not.toHaveBeenCalled();
 
     expect(rolePermissions.find('RolePermissions').prop('disabled')).toEqual(false);
     expect(rolePermissions.find('RolePermissions').prop('permissionCheck')).toBe(undefined);
@@ -130,6 +130,6 @@ test('Pass disabled prop correctly to component', () => {
 
     rolePermissions.find('RolePermissions').prop('onChange')({});
 
-    expect(changeSpy).toBeCalledWith({});
-    expect(finishSpy).toBeCalledWith();
+    expect(changeSpy).toHaveBeenCalledWith({});
+    expect(finishSpy).toHaveBeenCalledWith();
 });

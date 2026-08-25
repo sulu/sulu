@@ -11,5 +11,5 @@ test.each(['sulu', 'example'])('Load input type for resource locator by webspace
     const inputType = loadResourceLocatorInputTypeByWebspace(webspaceKey);
 
     expect(inputType).toEqual(inputType);
-    expect(webspaceStore.getWebspace).toBeCalledWith(webspaceKey);
+    expect(webspaceStore.getWebspace).toHaveBeenCalledWith(webspaceKey);
 });

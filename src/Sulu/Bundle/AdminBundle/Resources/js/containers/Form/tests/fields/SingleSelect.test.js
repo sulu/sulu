@@ -207,7 +207,7 @@ test('Should call onFinish callback on every onChange', () => {
 
     singleSelect.simulate('change');
 
-    expect(finishSpy).toBeCalledWith();
+    expect(finishSpy).toHaveBeenCalledWith();
 });
 
 test('Default value of null should not call onChange', () => {
@@ -237,7 +237,7 @@ test('Default value of null should not call onChange', () => {
         />
     );
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Default value of empty string should not call onChange', () => {
@@ -267,7 +267,7 @@ test('Default value of empty string should not call onChange', () => {
         />
     );
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Set default value if no value is passed', () => {
@@ -301,7 +301,7 @@ test('Set default value if no value is passed', () => {
         />
     );
 
-    expect(changeSpy).toBeCalledWith('mr', {'isDefaultValue': true});
+    expect(changeSpy).toHaveBeenCalledWith('mr', {'isDefaultValue': true});
 });
 
 test('Allow to pass one value for undefined', () => {
@@ -371,7 +371,7 @@ test('Set default value to a number of 0 should work', () => {
         />
     );
 
-    expect(changeSpy).toBeCalledWith(0, {'isDefaultValue': true});
+    expect(changeSpy).toHaveBeenCalledWith(0, {'isDefaultValue': true});
 });
 
 test('Throw error if no values option is passed', () => {

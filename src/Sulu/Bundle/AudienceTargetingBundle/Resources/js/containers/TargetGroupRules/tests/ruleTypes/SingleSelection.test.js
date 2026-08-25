@@ -67,5 +67,5 @@ test.each([
     const singleSelection = shallow(<SingleSelection onChange={changeSpy} options={options} value={{}} />);
     singleSelection.find('SingleSelection').prop('onChange')(value);
 
-    expect(changeSpy).toBeCalledWith({[name]: value});
+    expect(changeSpy).toHaveBeenCalledWith({[name]: value});
 });

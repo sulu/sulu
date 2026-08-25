@@ -499,6 +499,10 @@ class MediaManager implements MediaManagerInterface
                 || 'targetGroups' === $attribute
                 || 'focusPointX' === $attribute
                 || 'focusPointY' === $attribute
+                || 'origin' === $attribute
+                || 'aiDisclosureDisabled' === $attribute
+                || 'aiDisclosureText' === $attribute
+                || 'aiDisclosureIconVariant' === $attribute
             ) {
                 switch ($attribute) {
                     case 'size':
@@ -607,6 +611,18 @@ class MediaManager implements MediaManagerInterface
                     case 'focusPointY':
                         $media->setFocusPointY($value);
                         break;
+                    case 'origin':
+                        $media->setOrigin($value ?? 'unknown');
+                        break;
+                    case 'aiDisclosureDisabled':
+                        $media->setAiDisclosureDisabled((bool) $value);
+                        break;
+                    case 'aiDisclosureText':
+                        $media->setAiDisclosureText($value);
+                        break;
+                    case 'aiDisclosureIconVariant':
+                        $media->setAiDisclosureIconVariant($value ?? 'auto');
+                        break;
                 }
             }
         }
@@ -712,6 +728,19 @@ class MediaManager implements MediaManagerInterface
         $previousCollectionMeta = $this->getCollectionMeta($previousCollection, $locale);
         $previousCollectionTitle = $previousCollectionMeta ? $previousCollectionMeta->getTitle() : null;
         $previousCollectionTitleLocale = $previousCollectionMeta ? $previousCollectionMeta->getLocale() : null;
+
+        if (null !== $this->securityChecker) {
+            // check the real source collection, not the collection sent in the request,
+            // and the destination the media is moved into
+            $this->securityChecker->checkPermission(
+                new SecurityCondition('sulu.media.collections', null, Collection::class, $previousCollectionId),
+                PermissionTypes::EDIT
+            );
+            $this->securityChecker->checkPermission(
+                new SecurityCondition('sulu.media.collections', null, Collection::class, $destCollection),
+                PermissionTypes::EDIT
+            );
+        }
 
         /** @var CollectionInterface $collection */
         $collection = $this->em->getReference(CollectionInterface::class, $destCollection);

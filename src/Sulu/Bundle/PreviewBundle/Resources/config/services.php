@@ -91,6 +91,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_activity.domain_event_collector'),
             new Reference('sulu_preview.preview_object_provider_registry'),
             new Reference('router'),
+            new Reference('sulu_security.security_checker', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ]);
 
     // Controller

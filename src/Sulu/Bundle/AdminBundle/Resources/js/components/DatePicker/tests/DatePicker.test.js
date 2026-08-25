@@ -78,7 +78,7 @@ test('DatePicker should pass input to inputRef prop', () => {
     render(<DatePicker disabled={true} inputRef={inputRefSpy} onChange={jest.fn()} value={value} />);
 
     const input = screen.queryByDisplayValue('05/23/2017');
-    expect(inputRefSpy).toBeCalledWith(input);
+    expect(inputRefSpy).toHaveBeenCalledWith(input);
 });
 
 test('DatePicker should open overlay on icon-click', async() => {
@@ -138,7 +138,7 @@ test('DatePicker should try to guess incomplete value using format on blur.', as
     await userEvent.type(input, '9');
     await userEvent.tab(); // tab away from input
 
-    expect(onChange).toBeCalledWith(expect.any(Date));
+    expect(onChange).toHaveBeenCalledWith(expect.any(Date));
     const newValue = onChange.mock.calls[0][0];
 
     const expectedMoment = moment('09:00', options.timeFormat);

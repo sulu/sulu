@@ -9,6 +9,7 @@ import MemoryFormStore from '../../../containers/Form/stores/MemoryFormStore';
 import ResourceFormStore from '../../../containers/Form/stores/ResourceFormStore';
 import Form from '../../../containers/Form';
 import Snackbar from '../../../components/Snackbar';
+import Router from '../../../services/Router';
 
 const React = mockReact;
 
@@ -156,6 +157,28 @@ test('Should pass correct props to Form component', () => {
     }));
 });
 
+test('Should pass router to Form component', () => {
+    const formStore = new MemoryFormStore({}, {}, undefined, undefined);
+    const router: Router = ({}: any);
+
+    const formOverlay = shallow(<FormOverlay
+        confirmDisabled={false}
+        confirmLoading={false}
+        confirmText="confirm-text"
+        formStore={formStore}
+        onClose={jest.fn()}
+        onConfirm={jest.fn()}
+        open={true}
+        router={router}
+        size="small"
+        title="overlay-title"
+    />);
+
+    expect(formOverlay.find(Form).props()).toEqual(expect.objectContaining({
+        router,
+    }));
+});
+
 test('Should display confirm button as loading if FormStore is saving', () => {
     const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
 
@@ -200,7 +223,7 @@ test('Should submit Form container when Overlay is confirmed', () => {
 
     formOverlay.find(Overlay).props().onConfirm();
 
-    expect(submitSpy).toBeCalled();
+    expect(submitSpy).toHaveBeenCalled();
 });
 
 test('Should save ResourceFormStore and call onConfirm callback on submit of Form', () => {
@@ -225,8 +248,8 @@ test('Should save ResourceFormStore and call onConfirm callback on submit of For
     formOverlay.find(Form).props().onSubmit();
 
     return savePromise.finally(() => {
-        expect(formStore.save).toBeCalled();
-        expect(confirmSpy).toBeCalled();
+        expect(formStore.save).toHaveBeenCalled();
+        expect(confirmSpy).toHaveBeenCalled();
     });
 });
 
@@ -248,7 +271,7 @@ test('Should call onConfirm callback directly in case of MemoryFormStore on subm
 
     formOverlay.find(Form).props().onSubmit();
 
-    expect(confirmSpy).toBeCalled();
+    expect(confirmSpy).toHaveBeenCalled();
 });
 
 test('Should display Snackbar with generic message if an error happens while saving ResourceFormStore', (done) => {
@@ -274,8 +297,8 @@ test('Should display Snackbar with generic message if an error happens while sav
 
     // wait until rejection of savePromise was handled by component with setTimeout
     setTimeout(() => {
-        expect(formStore.save).toBeCalled();
-        expect(confirmSpy).not.toBeCalled();
+        expect(formStore.save).toHaveBeenCalled();
+        expect(confirmSpy).not.toHaveBeenCalled();
 
         formOverlay.update();
         expect(formOverlay.find(Snackbar).prop('visible')).toBeTruthy();
@@ -308,8 +331,8 @@ test('Should display Snackbar with message from server if an error happens while
 
     // wait until rejection of savePromise was handled by component with setTimeout
     setTimeout(() => {
-        expect(formStore.save).toBeCalled();
-        expect(confirmSpy).not.toBeCalled();
+        expect(formStore.save).toHaveBeenCalled();
+        expect(confirmSpy).not.toHaveBeenCalled();
 
         formOverlay.update();
         expect(formOverlay.find(Snackbar).prop('visible')).toBeTruthy();

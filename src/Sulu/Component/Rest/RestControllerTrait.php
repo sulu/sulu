@@ -17,6 +17,10 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @deprecated since Sulu 2.6, we recommend building your own controllers instead of using this trait
+ *             and injecting the required services yourself.
+ */
 trait RestControllerTrait
 {
     /**

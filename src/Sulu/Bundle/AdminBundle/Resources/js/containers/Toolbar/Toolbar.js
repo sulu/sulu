@@ -103,6 +103,8 @@ class Toolbar extends React.Component<ToolbarProps> {
     render() {
         const {onNavigationButtonClick, navigationOpen} = this.props;
         const {errors, showSuccess, warnings} = this.toolbarStore;
+        const lastError = errors[errors.length - 1];
+        const lastWarning = warnings[warnings.length - 1];
 
         const iconsConfig = this.toolbarStore.getIconsConfig();
         const itemsConfig = this.toolbarStore.getItemsConfig();
@@ -111,13 +113,18 @@ class Toolbar extends React.Component<ToolbarProps> {
         return (
             <Fragment>
                 <Snackbar
-                    message={errors[errors.length - 1]}
+                    actions={typeof lastError === 'object' ? lastError.actions : undefined}
+                    message={typeof lastError === 'object' ? lastError.message : lastError}
                     onCloseClick={this.handleErrorSnackbarCloseClick}
+                    title={typeof lastError === 'object' ? lastError.title : undefined}
                     type="error"
                     visible={errors.length > 0}
                 />
                 <Snackbar
-                    message={warnings[warnings.length - 1]}
+                    actions={typeof lastWarning === 'object' ? lastWarning.actions : undefined}
+                    message={typeof lastWarning === 'object' ? lastWarning.message : lastWarning}
+                    onCloseClick={this.toolbarStore.config?.onWarningCloseClick}
+                    title={typeof lastWarning === 'object' ? lastWarning.title : undefined}
                     type="warning"
                     visible={warnings.length > 0}
                 />

@@ -34,6 +34,23 @@ class UserTest extends TestCase
         $this->assertTrue($user->isBackupCode('Code 2'));
     }
 
+    public function testTwoFactorHashedBackupCodes(): void
+    {
+        $user = $this->createInstance();
+        $user->setTwoFactor(new UserTwoFactor($user));
+
+        $user->addBackUpCode(\password_hash('ABCD1234', \PASSWORD_BCRYPT));
+        $user->addBackUpCode(\password_hash('EFGH5678', \PASSWORD_BCRYPT));
+
+        $this->assertTrue($user->isBackupCode('ABCD1234'));
+        $this->assertTrue($user->isBackupCode('EFGH5678'));
+        $this->assertFalse($user->isBackupCode('ABCD1235'));
+
+        $user->invalidateBackupCode('ABCD1234');
+        $this->assertFalse($user->isBackupCode('ABCD1234'));
+        $this->assertTrue($user->isBackupCode('EFGH5678'));
+    }
+
     public function testTwoFactorEmail(): void
     {
         $user = $this->createInstance();
@@ -73,6 +90,24 @@ class UserTest extends TestCase
 
         $this->assertSame('googleSecret', $user->getGoogleAuthenticatorSecret());
         $this->assertSame('test@google', $user->getGoogleAuthenticatorUsername());
+    }
+
+    public function testTwoFactorGoogleAuthenticatorPendingSecret(): void
+    {
+        $user = $this->createInstance();
+        $user->setUsername('test');
+        $twoFactor = new UserTwoFactor($user);
+        $twoFactor->setOptions([
+            'pendingGoogleAuthenticatorSecret' => 'pendingSecret',
+            'googleAuthenticatorUsername' => '',
+        ]);
+        $user->setTwoFactor($twoFactor);
+
+        // the pending secret is used during the setup and the username falls back to
+        // the user identifier when no or an empty option was set
+        $this->assertSame('pendingSecret', $user->getGoogleAuthenticatorSecret());
+        $this->assertSame('test', $user->getGoogleAuthenticatorUsername());
+        $this->assertFalse($user->isGoogleAuthenticatorEnabled());
     }
 
     public function testTwoFactorTotp(): void

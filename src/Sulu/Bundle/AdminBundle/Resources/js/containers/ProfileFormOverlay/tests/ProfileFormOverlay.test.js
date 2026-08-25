@@ -85,8 +85,8 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
         />
     );
 
-    expect(ResourceStore).toBeCalledWith('profile', '-');
-    expect(ResourceFormStore).toBeCalledWith(expect.anything(), 'profile_details');
+    expect(ResourceStore).toHaveBeenCalledWith('profile', '-');
+    expect(ResourceFormStore).toHaveBeenCalledWith(expect.anything(), 'profile_details');
 });
 
 test('Should construct new ResourceStore and ResourceFormStore when closed and opened again', () => {
@@ -104,9 +104,9 @@ test('Should construct new ResourceStore and ResourceFormStore when closed and o
     profileFormOverlay.setProps({open: true});
 
     expect(ResourceStore).toHaveBeenCalledTimes(2);
-    expect(ResourceStore).lastCalledWith('profile', '-');
+    expect(ResourceStore).toHaveBeenLastCalledWith('profile', '-');
     expect(ResourceFormStore).toHaveBeenCalledTimes(2);
-    expect(ResourceFormStore).lastCalledWith(expect.anything(), 'profile_details');
+    expect(ResourceFormStore).toHaveBeenLastCalledWith(expect.anything(), 'profile_details');
 
     expect(initialFormStore.destroy).toHaveBeenCalled();
     expect(initialFormStore).not.toEqual(profileFormOverlay.instance().formStore);

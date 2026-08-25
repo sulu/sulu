@@ -13,6 +13,7 @@ use Sulu\Bundle\SecurityBundle\SingleSignOn\Adapter\OpenId\OpenIdSingleSignOnAda
 use Sulu\Bundle\SecurityBundle\SingleSignOn\SingleSignOnAdapterFactory;
 use Sulu\Bundle\SecurityBundle\SingleSignOn\SingleSignOnAdapterProvider;
 use Sulu\Bundle\SecurityBundle\SingleSignOn\SingleSignOnLoginRequestSubscriber;
+use Sulu\Bundle\SecurityBundle\SingleSignOn\SingleSignOnLoginSuccessSubscriber;
 use Sulu\Bundle\SecurityBundle\SingleSignOn\SingleSignOnTokenExtractor;
 use Sulu\Bundle\SecurityBundle\SingleSignOn\SingleSignOnTokenHandler;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -31,6 +32,9 @@ return static function(ContainerConfigurator $container) {
             new Reference('router'),
             new Reference('sulu.repository.user'),
         ])
+        ->tag('kernel.event_subscriber');
+
+    $services->set('sulu_security.single_sign_on_login_success_subscriber', SingleSignOnLoginSuccessSubscriber::class)
         ->tag('kernel.event_subscriber');
 
     $services->set('sulu_security.single_sign_on_adapter_factory_open_id', OpenIdSingleSignOnAdapterFactory::class)

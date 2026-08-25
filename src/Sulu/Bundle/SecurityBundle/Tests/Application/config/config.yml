@@ -55,5 +55,13 @@ scheb_two_factor:
     email:
         enabled: true
         sender_email: "example@localhost"
+    totp:
+        enabled: true
+        issuer: "Sulu"
+    google:
+        enabled: true
+        issuer: "Sulu"
+    backup_codes:
+        enabled: true
     trusted_device:
         enabled: true

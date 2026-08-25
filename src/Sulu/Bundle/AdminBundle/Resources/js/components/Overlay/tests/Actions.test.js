@@ -25,6 +25,6 @@ test('The component should call the corresponding callback when an action is cli
 
     await user.click(screen.getByRole('button', {name: 'Action 1'}));
 
-    expect(actions[0].onClick).toBeCalled();
-    expect(actions[1].onClick).not.toBeCalled();
+    expect(actions[0].onClick).toHaveBeenCalled();
+    expect(actions[1].onClick).not.toHaveBeenCalled();
 });

@@ -2,6 +2,74 @@
 
 For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upgrades/upgrade-2.x.html) steps.
 
+## 2.6.26
+
+### AI Disclosure
+
+The `aiDisclosure` section has been added to the media details form. It allows you to add information about the origin of the media and additional information about the use of AI.
+
+```sql
+ALTER TABLE me_file_version_meta ADD aiDisclosureText LONGTEXT DEFAULT NULL;
+ALTER TABLE me_file_versions ADD origin VARCHAR(31) NOT NULL DEFAULT 'unknown', ADD aiDisclosureDisabled TINYINT(1) NOT NULL DEFAULT 0, ADD aiDisclosureIconVariant VARCHAR(31) NOT NULL DEFAULT 'auto';
+```
+
+### Deprecated persistence component repositories and traits
+
+The `RelationTrait` and the `OrderByTrait` have been deprecated. We recommend building your own
+relation and order-by handling logic instead of using these traits.
+
+The `EntityRepository` and the `RepositoryInterface` have been deprecated as well. We recommend
+building your own repositories instead of extending the class or implementing the interface.
+
+The doctrine event subscribers `MetadataSubscriber`, `TimestampableSubscriber` and
+`UserBlameSubscriber` have been marked as `@internal`, so no bc promise is given for them anymore.
+
+### Deprecated `AbstractRestController`, `RestControllerTrait` and `ApiWrapper`
+
+The `AbstractRestController` and the `RestControllerTrait` have been deprecated. We recommend building
+your own controllers instead of extending the class or using the trait, and injecting the services you
+require yourself.
+
+The `ApiWrapper` has been deprecated as well, as wrapping entities into API objects is no longer
+recommended. Use your own DTOs instead, or configure the serializer of your choice.
+
+### Changed `twoFactor/method` Property Type in `profile_details.xml`
+
+If you have overridden the `profile_details.xml` form in your project, update the `twoFactor/method`
+property from `type="single_select"` to `type="two_factor"` to get the guided setup flow. Without
+the new field type the `totp` and `google` methods can not be activated, because the profile
+endpoint rejects activating them without a confirmed setup.
+
+### Changed TOTP Configuration to the Standard Values
+
+The TOTP configuration was changed from a non-standard 20 seconds period with 8 digits to the
+standard 30 seconds period with 6 digits, because common authenticator apps only support the
+standard values. If you enabled the `totp` method before via a custom compiler pass, existing
+users have to set up their authenticator app again.
+
+## 2.6.25
+
+### Deprecated `RequestParametersTrait`
+
+The `RequestParametersTrait` has been deprecated. Specifically, the `getRequestParameter` method should be replaced
+with direct access to the request object, such as:
+
+```php
+$request->query->get('param');
+$request->headers->get('param');
+$request->request->get('param');
+```
+
+For type-safe alternatives, use the appropriate methods on the `ParameterBag`:
+
+```php
+$request->query->getBoolean('param');
+$request->query->getString('param');
+$request->query->getInt('param');
+```
+
+This deprecation also includes the `Sulu\Component\Rest\Exception\MissingParameterException`.
+
 ## 2.6.24
 
 ### CKEditor upgrade to 48

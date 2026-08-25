@@ -70,7 +70,7 @@ class RefreshCommand extends Command
             $counter = 0;
             foreach ($referenceRefreshers as $referenceRefresher) {
                 foreach ($referenceRefresher->refresh() as $object) {
-                    if (0 === $counter % 100) {
+                    if (0 === $counter++ % 100) {
                         $this->referenceRepository->flush();
                     }
 

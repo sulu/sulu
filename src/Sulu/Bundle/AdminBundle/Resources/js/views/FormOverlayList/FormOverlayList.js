@@ -194,6 +194,7 @@ class FormOverlayList extends React.Component<Props> {
                         onClose={this.handleFormOverlayClose}
                         onConfirm={this.handleFormOverlayConfirm}
                         open={!!formStore}
+                        router={this.props.router}
                         size={overlaySize ? overlaySize : 'small'}
                         title={overlayTitle}
                     />

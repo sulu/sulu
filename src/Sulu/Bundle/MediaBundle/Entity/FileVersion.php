@@ -129,6 +129,12 @@ class FileVersion implements AuditableInterface
      */
     private $focusPointY;
 
+    private string $origin = 'unknown';
+
+    private bool $aiDisclosureDisabled = false;
+
+    private string $aiDisclosureIconVariant = 'auto';
+
     /**
      * Constructor.
      */
@@ -743,5 +749,50 @@ class FileVersion implements AuditableInterface
     public function setFocusPointY($focusPointY)
     {
         $this->focusPointY = $focusPointY;
+    }
+
+    public function getOrigin(): string
+    {
+        return $this->origin;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setOrigin(string $origin): self
+    {
+        $this->origin = $origin;
+
+        return $this;
+    }
+
+    public function getAiDisclosureDisabled(): bool
+    {
+        return $this->aiDisclosureDisabled;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setAiDisclosureDisabled(bool $aiDisclosureDisabled): self
+    {
+        $this->aiDisclosureDisabled = $aiDisclosureDisabled;
+
+        return $this;
+    }
+
+    public function getAiDisclosureIconVariant(): string
+    {
+        return $this->aiDisclosureIconVariant;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setAiDisclosureIconVariant(string $aiDisclosureIconVariant): self
+    {
+        $this->aiDisclosureIconVariant = $aiDisclosureIconVariant;
+
+        return $this;
     }
 }

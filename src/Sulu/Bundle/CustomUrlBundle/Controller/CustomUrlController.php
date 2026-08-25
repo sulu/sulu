@@ -19,8 +19,8 @@ use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
+use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
-use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -33,8 +33,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CustomUrlController extends AbstractRestController implements SecuredControllerInterface
 {
-    use RequestParametersTrait;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
         private CustomUrlManagerInterface $customUrlManager,
@@ -97,7 +95,7 @@ class CustomUrlController extends AbstractRestController implements SecuredContr
     public function postAction($webspace, Request $request)
     {
         // throw helpful error message if targetLocale is not set
-        $this->getRequestParameter($request, 'targetLocale', true);
+        $request->request->get('targetLocale') ?? throw new MissingParameterException(self::class, 'targetLocale');
 
         $document = $this->customUrlManager->create(
             $webspace,

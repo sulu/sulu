@@ -119,8 +119,8 @@ test('The component should trigger the close callback when the MultiSelect is cl
         onClose: closeSpy,
     });
 
-    expect(closeSpy).not.toBeCalled();
+    expect(closeSpy).not.toHaveBeenCalled();
     await user.click(getDisplayButton());
     await user.click(screen.getByTestId('backdrop'));
-    expect(closeSpy).toBeCalled();
+    expect(closeSpy).toHaveBeenCalled();
 });

@@ -136,8 +136,8 @@ test('Pass props correctly to Link component with deprecated options', () => {
         />
     );
 
-    expect(log.warn).toBeCalledWith(expect.stringContaining('The "enable_target" schema option is deprecated'));
-    expect(log.warn).toBeCalledWith(expect.stringContaining('The "enable_title" schema option is deprecated'));
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "enable_target" schema option is deprecated'));
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "enable_title" schema option is deprecated'));
 
     expect(link.find('Link').props()).toEqual({
         'disabled': true,

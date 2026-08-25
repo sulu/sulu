@@ -99,7 +99,7 @@ test('The component should reset the value if modifiable rectangle is doubleclic
     });
 
     await user.click(screen.getByRole('button', {name: 'Double click'}));
-    expect(changeSpy).toBeCalledWith({height: 360, left: 140, top: 0, width: 360});
+    expect(changeSpy).toHaveBeenCalledWith({height: 360, left: 140, top: 0, width: 360});
 });
 
 test('The component should center and maximize the selection when a minHeight and minWidth is given', () => {
@@ -128,7 +128,7 @@ test('The component should not allow the selection to move over the borders', ()
             top: -20,
         });
     });
-    expect(changeSpy).toBeCalledWith({width: 640, height: 360, top: 0, left: 0});
+    expect(changeSpy).toHaveBeenCalledWith({width: 640, height: 360, top: 0, left: 0});
 });
 
 test('The component should not allow the selection to be bigger than the container', () => {
@@ -147,7 +147,7 @@ test('The component should not allow the selection to be bigger than the contain
             top: 0,
         });
     });
-    expect(changeSpy).toBeCalledWith({width: 640, height: 360, top: 0, left: 0});
+    expect(changeSpy).toHaveBeenCalledWith({width: 640, height: 360, top: 0, left: 0});
 });
 
 test('The component should enforce a ratio on the selection if minWidth and minHeight are given', () => {
@@ -168,7 +168,7 @@ test('The component should enforce a ratio on the selection if minWidth and minH
             top: 0,
         });
     });
-    expect(changeSpy).toBeCalledWith(expect.objectContaining({width: 55, height: 110}));
+    expect(changeSpy).toHaveBeenCalledWith(expect.objectContaining({width: 55, height: 110}));
 });
 
 test(
@@ -192,7 +192,7 @@ test(
                 top: 360,
             });
         });
-        expect(changeSpy).toBeCalledWith(expect.objectContaining({top: 360 - 90}));
+        expect(changeSpy).toHaveBeenCalledWith(expect.objectContaining({top: 360 - 90}));
     }
 );
 
@@ -223,7 +223,7 @@ test('The component should work with percentage values if told by the properties
         value: undefined,
     });
 
-    expect(changeSpy).toBeCalledWith({top: 0, left: 0, width: 1, height: 1});
+    expect(changeSpy).toHaveBeenCalledWith({top: 0, left: 0, width: 1, height: 1});
 });
 
 test('The component should call onFinish', async() => {
@@ -237,5 +237,5 @@ test('The component should call onFinish', async() => {
     });
 
     await user.click(screen.getByRole('button', {name: 'Finish'}));
-    expect(finishSpy).toBeCalled();
+    expect(finishSpy).toHaveBeenCalled();
 });

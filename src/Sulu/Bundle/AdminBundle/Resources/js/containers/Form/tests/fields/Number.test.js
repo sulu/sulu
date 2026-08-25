@@ -86,5 +86,5 @@ test('Should not pass any arguments to onFinish callback', () => {
 
     input.find('Number').prop('onBlur')('Test');
 
-    expect(finishSpy).toBeCalledWith();
+    expect(finishSpy).toHaveBeenCalledWith();
 });

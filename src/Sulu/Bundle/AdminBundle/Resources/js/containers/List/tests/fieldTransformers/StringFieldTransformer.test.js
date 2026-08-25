@@ -19,3 +19,15 @@ test('Test string', () => {
 test('Test number', () => {
     expect(stringFieldTransformer.transform(5)).toEqual(<span className="textBox" title={5}>{5}</span>);
 });
+
+test('Test zero', () => {
+    expect(stringFieldTransformer.transform(0)).toEqual(<span className="textBox" title={0}>{0}</span>);
+});
+
+test('Test null', () => {
+    expect(stringFieldTransformer.transform(null)).toBe(null);
+});
+
+test('Test empty string', () => {
+    expect(stringFieldTransformer.transform('')).toBe(null);
+});

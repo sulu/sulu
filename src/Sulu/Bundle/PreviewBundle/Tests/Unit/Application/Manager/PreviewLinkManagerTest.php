@@ -24,7 +24,11 @@ use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
 use Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class PreviewLinkManagerTest extends TestCase
 {
@@ -171,5 +175,75 @@ class PreviewLinkManagerTest extends TestCase
         $this->previewLinkRepository->commit()->shouldNotBeCalled();
 
         $this->previewLinkManager->revoke($this->resourceKey, $resourceId, $locale);
+    }
+
+    public function testGenerateDeniedWithoutViewPermission(): void
+    {
+        $resourceId = 'aac8f317-d479-457c-a6e4-d95a3f19c0a6';
+        $locale = 'en';
+        $securityContext = PageAdmin::getPageSecurityContext('example');
+
+        $this->previewObjectProvider->getSecurityContext($resourceId, $locale)
+            ->willReturn($securityContext);
+
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->checkPermission(
+            Argument::that(function(SecurityCondition $condition) use ($securityContext, $locale) {
+                static::assertSame($securityContext, $condition->getSecurityContext());
+                static::assertSame($locale, $condition->getLocale());
+
+                return true;
+            }),
+            PermissionTypes::VIEW
+        )->shouldBeCalled()->willThrow(new AccessDeniedException());
+
+        $manager = new PreviewLinkManager(
+            $this->previewLinkRepository->reveal(),
+            $this->domainEventCollector->reveal(),
+            $this->previewObjectProviderRegistry->reveal(),
+            $this->router->reveal(),
+            $securityChecker->reveal()
+        );
+
+        $this->previewLinkRepository->create(Argument::cetera())->shouldNotBeCalled();
+        $this->previewLinkRepository->add(Argument::cetera())->shouldNotBeCalled();
+        $this->domainEventCollector->collect(Argument::cetera())->shouldNotBeCalled();
+        $this->previewLinkRepository->commit()->shouldNotBeCalled();
+
+        $this->expectException(AccessDeniedException::class);
+
+        $manager->generate($this->resourceKey, $resourceId, $locale, []);
+    }
+
+    public function testRevokeDeniedWithoutViewPermission(): void
+    {
+        $resourceId = 'aac8f317-d479-457c-a6e4-d95a3f19c0a6';
+        $locale = 'en';
+        $securityContext = PageAdmin::getPageSecurityContext('example');
+
+        $this->previewObjectProvider->getSecurityContext($resourceId, $locale)
+            ->willReturn($securityContext);
+
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->checkPermission(Argument::type(SecurityCondition::class), PermissionTypes::VIEW)
+            ->shouldBeCalled()
+            ->willThrow(new AccessDeniedException());
+
+        $manager = new PreviewLinkManager(
+            $this->previewLinkRepository->reveal(),
+            $this->domainEventCollector->reveal(),
+            $this->previewObjectProviderRegistry->reveal(),
+            $this->router->reveal(),
+            $securityChecker->reveal()
+        );
+
+        $this->previewLinkRepository->findByResource(Argument::cetera())->shouldNotBeCalled();
+        $this->previewLinkRepository->remove(Argument::cetera())->shouldNotBeCalled();
+        $this->domainEventCollector->collect(Argument::cetera())->shouldNotBeCalled();
+        $this->previewLinkRepository->commit()->shouldNotBeCalled();
+
+        $this->expectException(AccessDeniedException::class);
+
+        $manager->revoke($this->resourceKey, $resourceId, $locale);
     }
 }

@@ -137,13 +137,13 @@ test('Component should create formStore, load restore data and set it to the for
         />
     );
 
-    expect(SchemaFormStoreDecorator).toBeCalledWith(expect.anything(), 'test-form-key');
-    expect(ResourceRequester.get).toBeCalledWith('trash_items', {'id': 'trash-item-123'});
-    expect(restoreFormOverlay.instance().formStore.changeMultiple).not.toBeCalled();
+    expect(SchemaFormStoreDecorator).toHaveBeenCalledWith(expect.anything(), 'test-form-key');
+    expect(ResourceRequester.get).toHaveBeenCalledWith('trash_items', {'id': 'trash-item-123'});
+    expect(restoreFormOverlay.instance().formStore.changeMultiple).not.toHaveBeenCalled();
     expect(restoreFormOverlay.instance().formStore.loading).toBeTruthy();
 
     return trashItemPromise.then(() => {
-        expect(restoreFormOverlay.instance().formStore.changeMultiple).toBeCalledWith(
+        expect(restoreFormOverlay.instance().formStore.changeMultiple).toHaveBeenCalledWith(
             {key: 'test-key', parentId: 32}, {isServerValue: true}
         );
         expect(restoreFormOverlay.instance().formStore.loading).toBeFalsy();
@@ -164,14 +164,14 @@ test('Component should update formStore on changing form key', () => {
     );
 
     const formStore = restoreFormOverlay.instance().formStore;
-    expect(SchemaFormStoreDecorator).toBeCalledTimes(1);
-    expect(SchemaFormStoreDecorator).toBeCalledWith(expect.anything(), 'test');
+    expect(SchemaFormStoreDecorator).toHaveBeenCalledTimes(1);
+    expect(SchemaFormStoreDecorator).toHaveBeenCalledWith(expect.anything(), 'test');
     expect(formStore.destroy).not.toHaveBeenCalled();
 
     restoreFormOverlay.setProps({formKey: 'other'});
 
-    expect(SchemaFormStoreDecorator).toBeCalledTimes(2);
-    expect(SchemaFormStoreDecorator).toBeCalledWith(expect.anything(), 'other');
+    expect(SchemaFormStoreDecorator).toHaveBeenCalledTimes(2);
+    expect(SchemaFormStoreDecorator).toHaveBeenCalledWith(expect.anything(), 'other');
     expect(formStore.destroy).toHaveBeenCalled();
 
     const newFormStore = restoreFormOverlay.instance().formStore;

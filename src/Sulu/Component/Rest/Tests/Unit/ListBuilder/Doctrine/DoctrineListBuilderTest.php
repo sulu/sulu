@@ -29,8 +29,10 @@ use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
 use Sulu\Component\Rest\Exception\InvalidSearchException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCountFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
@@ -603,7 +605,8 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
 
         $this->queryBuilder->andWhere(
-            '(LOWER(' . self::$translationEntityNameAlias . '.desc) LIKE LOWER(:search) OR LOWER(' . self::$entityNameAlias . '.name) LIKE LOWER(:search))'
+            '(LOWER(CAST(' . self::$translationEntityNameAlias . '.desc AS STRING)) LIKE LOWER(:search)'
+            . ' OR LOWER(CAST(' . self::$entityNameAlias . '.name AS STRING)) LIKE LOWER(:search))'
         )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->setParameter('search', '%value%')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
 
@@ -629,9 +632,69 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->search('val*e');
 
         $this->queryBuilder->andWhere(
-            '(LOWER(' . self::$translationEntityNameAlias . '.desc) LIKE LOWER(:search) OR LOWER(' . self::$entityNameAlias . '.name) LIKE LOWER(:search))'
+            '(LOWER(CAST(' . self::$translationEntityNameAlias . '.desc AS STRING)) LIKE LOWER(:search)'
+            . ' OR LOWER(CAST(' . self::$entityNameAlias . '.name AS STRING)) LIKE LOWER(:search))'
         )->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
         $this->queryBuilder->setParameter('search', '%val%e%')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    /**
+     * @return \Generator<string, array{DoctrineFieldDescriptorInterface, string}>
+     */
+    public static function provideSearchField(): \Generator
+    {
+        yield 'field is casted' => [
+            new DoctrineFieldDescriptor('name', 'name', Role::class),
+            'LOWER(CAST(Sulu_Bundle_SecurityBundle_Entity_Role.name AS STRING)) LIKE LOWER(:search)',
+        ];
+
+        yield 'count field is not casted' => [
+            new DoctrineCountFieldDescriptor('id', 'id', Role::class),
+            'LOWER(COUNT(Sulu_Bundle_SecurityBundle_Entity_Role.id)) LIKE LOWER(:search)',
+        ];
+
+        yield 'concatenation field is not casted' => [
+            new DoctrineConcatenationFieldDescriptor(
+                [
+                    new DoctrineFieldDescriptor('id', 'id', Role::class),
+                    new DoctrineFieldDescriptor('name', 'name', Role::class),
+                ],
+                'name'
+            ),
+            'LOWER(CONCAT(Sulu_Bundle_SecurityBundle_Entity_Role.id, CONCAT(\' \', Sulu_Bundle_SecurityBundle_Entity_Role.name))) LIKE LOWER(:search)',
+        ];
+
+        yield 'case field is not casted' => [
+            new DoctrineCaseFieldDescriptor(
+                'name',
+                new DoctrineDescriptor(Role::class, 'id'),
+                new DoctrineDescriptor(Role::class, 'name')
+            ),
+            'LOWER(Sulu_Bundle_SecurityBundle_Entity_Role.id) LIKE LOWER(:search)'
+                . ' OR (Sulu_Bundle_SecurityBundle_Entity_Role.id IS NULL'
+                . ' AND LOWER(Sulu_Bundle_SecurityBundle_Entity_Role.name) LIKE LOWER(:search))',
+        ];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideSearchField')]
+    public function testSearchWithFieldDescriptor(
+        DoctrineFieldDescriptorInterface $searchField,
+        string $expectedStatement
+    ): void {
+        $this->doctrineListBuilder->addSearchField($searchField);
+        $this->doctrineListBuilder->search('value');
+
+        $this->queryBuilder->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->distinct(false)->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->where(self::$entityNameAlias . '.id IN (:ids)')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+
+        $this->queryBuilder->andWhere('(' . $expectedStatement . ')')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
+        $this->queryBuilder->setParameter('search', '%value%')->willReturn($this->queryBuilder->reveal())->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }

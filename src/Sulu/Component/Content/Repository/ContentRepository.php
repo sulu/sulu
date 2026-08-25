@@ -379,6 +379,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
      * Resolves query results to content.
      *
      * @param string $locale
+     * @param string[] $locales
      *
      * @return Content[]
      */
@@ -614,7 +615,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
      * Resolve a single result row to a content object.
      *
      * @param string $locale
-     * @param string $locales
+     * @param string[] $locales
      *
      * @return Content|null
      */

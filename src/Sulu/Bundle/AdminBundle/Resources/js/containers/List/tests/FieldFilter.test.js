@@ -145,7 +145,7 @@ test('Call onChange with new filter chip when Action in ArrowMenu was clicked', 
     fieldFilter.find('Button[icon="su-filter"]').simulate('click');
     fieldFilter.find('ArrowMenu Action[value="lastName"]').simulate('click');
 
-    expect(changeSpy).toBeCalledWith({firstName: undefined, lastName: undefined});
+    expect(changeSpy).toHaveBeenCalledWith({firstName: undefined, lastName: undefined});
 });
 
 test('Call onChange with new filter value when onChange from FieldFilterItem is called', () => {
@@ -192,7 +192,7 @@ test('Call onChange with new filter value when onChange from FieldFilterItem is 
     fieldFilter.find('FieldFilterItem[column="firstName"]').prop('onChange')('firstName', 'Max');
 
     fieldFilter.update();
-    expect(changeSpy).toBeCalledWith({firstName: 'Max'});
+    expect(changeSpy).toHaveBeenCalledWith({firstName: 'Max'});
     expect(fieldFilter.find('FieldFilterItem[column="firstName"]').prop('open')).toEqual(false);
 });
 
@@ -235,5 +235,5 @@ test('Call onChange without filter chip for which delete icon was clicked', () =
 
     fieldFilter.find('Chip[value="lastName"] Icon[name="su-times"]').simulate('click');
 
-    expect(changeSpy).toBeCalledWith({firstName: 'First Name'});
+    expect(changeSpy).toHaveBeenCalledWith({firstName: 'First Name'});
 });

@@ -219,7 +219,7 @@ test('Copy resource when confirmation dialog is confirmed', () => {
     element.prop('onConfirm')();
     element = mount(copyToolbarAction.getNode());
     expect(element.prop('confirmLoading')).toEqual(true);
-    expect(ResourceRequester.post).toBeCalledWith(
+    expect(ResourceRequester.post).toHaveBeenCalledWith(
         'pages',
         undefined,
         {action: 'copy', id: 3, webspace: 'sulu_io'}
@@ -227,9 +227,9 @@ test('Copy resource when confirmation dialog is confirmed', () => {
 
     return copyPromise.then(() => {
         element = mount(copyToolbarAction.getNode());
-        expect(copyToolbarAction.form.showSuccessSnackbar).toBeCalledWith();
+        expect(copyToolbarAction.form.showSuccessSnackbar).toHaveBeenCalledWith();
         expect(element.prop('confirmLoading')).toEqual(false);
-        expect(copyToolbarAction.router.navigate).toBeCalledWith(
+        expect(copyToolbarAction.router.navigate).toHaveBeenCalledWith(
             'current_route_name',
             {id: 'copied-id', webspace: 'copied-webspace'}
         );

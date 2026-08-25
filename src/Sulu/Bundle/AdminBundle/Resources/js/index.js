@@ -122,10 +122,13 @@ import {navigationRegistry} from './containers/Navigation';
 import {smartContentConfigStore} from './containers/SmartContent';
 import PreviewForm from './views/PreviewForm';
 import FormOverlayList from './views/FormOverlayList';
+import Subscription from './views/Subscription';
+import {setSubscriptionConfig} from './views/Subscription/subscriptionConfig';
 import {initializeJexl} from './utils/jexl';
 import {ExternalLinkTypeOverlay, linkOverlayRegistry, LinkTypeOverlay} from './containers/Link';
 import linkTypeRegistry from './containers/Link/registries/linkTypeRegistry';
 import AiApplication from './containers/AiApplication';
+import {setAccountLimitContactEmail} from './containers/AiApplication/accountLimits';
 
 configure({enforceActions: 'observed'});
 
@@ -198,6 +201,7 @@ function registerViews() {
     viewRegistry.add('sulu_admin.form_overlay_list', FormOverlayList);
     viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs, {disableDefaultSpacing: true});
     viewRegistry.add('sulu_admin.tabs', Tabs, {disableDefaultSpacing: true});
+    viewRegistry.add('sulu_ai_platform.subscription', Subscription);
 }
 
 function registerListAdapters() {
@@ -446,6 +450,10 @@ function startAdmin() {
     );
 }
 
+initializer.addUpdateConfigHook('sulu_ai_platform', (config: Object) => {
+    setSubscriptionConfig(config?.['subscription']);
+});
+
 initializer.addUpdateConfigHook('sulu_ai', (config: Object, initialized: boolean) => {
     if (initialized) {
         return;
@@ -454,6 +462,8 @@ initializer.addUpdateConfigHook('sulu_ai', (config: Object, initialized: boolean
     if (undefined === config){
         return;
     }
+
+    setAccountLimitContactEmail(config['writing_assistant']?.contactEmail);
 
     if (!config['writing_assistant']?.enabled && !config['translation']?.enabled && !config['feedback']?.enabled) {
         return;
@@ -465,6 +475,8 @@ initializer.addUpdateConfigHook('sulu_ai', (config: Object, initialized: boolean
 
     render(<AiApplication
         feedback={config['feedback']}
+        htmlFieldTypes={config['html_field_types']}
+        textFieldTypes={config['text_field_types']}
         translation={config['translation']}
         writingAssistant={config['writing_assistant']}
     />, div);

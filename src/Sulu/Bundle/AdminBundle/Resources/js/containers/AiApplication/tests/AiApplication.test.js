@@ -25,6 +25,8 @@ describe('AiApplication', () => {
                 formKey: 'formKey',
                 route: 'feedbackRoute',
             },
+            htmlFieldTypes: ['text_editor'],
+            textFieldTypes: ['text_line', 'text_area'],
             translation: {
                 enabled: true,
                 route: 'translationRoute',
@@ -94,6 +96,100 @@ describe('AiApplication', () => {
         // Now, hasFocus should be true and FeatureBadge should be rendered
         expect(screen.getByTitle('sulu_admin.translator')).toBeInTheDocument();
         expect(screen.getByTitle('sulu_admin.writing_assistant')).toBeInTheDocument();
+    });
+
+    test('does not render for an unknown schemaType by default', () => {
+        const {container} = render(<AiApplication {...props} />);
+
+        const mockElement = document.createElement('div');
+        Object.defineProperty(mockElement, 'parentElement', {
+            // $FlowFixMe
+            value: {
+                getBoundingClientRect: jest.fn().mockReturnValue({
+                    top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 0,
+                }),
+            },
+        });
+
+        const event = new Event('sulu.focus');
+        Object.defineProperty(event, 'target', {value: mockElement});
+        // $FlowFixMe
+        Object.defineProperty(event, 'detail', {
+            value: {
+                formInspector: {locale: {get: () => 'en'}},
+                getValue: jest.fn(),
+                schemaPath: 'schemaPath',
+                schemaType: 'configurable_text_editor',
+                setValue: jest.fn(),
+            },
+        });
+
+        fireEvent(document, event);
+
+        expect(container).toBeEmptyDOMElement();
+    });
+
+    test('renders FeatureBadge for custom htmlFieldTypes', () => {
+        render(
+            <AiApplication
+                {...props}
+                htmlFieldTypes={['text_editor', 'configurable_text_editor']}
+            />
+        );
+
+        const mockElement = document.createElement('div');
+        Object.defineProperty(mockElement, 'parentElement', {
+            // $FlowFixMe
+            value: {
+                getBoundingClientRect: jest.fn().mockReturnValue({
+                    top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 0,
+                }),
+            },
+        });
+
+        const event = new Event('sulu.focus');
+        Object.defineProperty(event, 'target', {value: mockElement});
+        // $FlowFixMe
+        Object.defineProperty(event, 'detail', {
+            value: {
+                formInspector: {locale: {get: () => 'en'}},
+                getValue: jest.fn(),
+                schemaPath: 'schemaPath',
+                schemaType: 'configurable_text_editor',
+                setValue: jest.fn(),
+            },
+        });
+
+        fireEvent(document, event);
+
+        expect(screen.getByTitle('sulu_admin.translator')).toBeInTheDocument();
+        expect(screen.getByTitle('sulu_admin.writing_assistant')).toBeInTheDocument();
+    });
+
+    test('canonicalFieldType classifies custom html types as text_editor', () => {
+        const instance = new AiApplication({
+            ...props,
+            htmlFieldTypes: ['text_editor', 'configurable_text_editor'],
+            textFieldTypes: ['text_line', 'text_area', 'custom_line'],
+        });
+
+        expect(instance.canonicalFieldType('configurable_text_editor')).toBe('text_editor');
+        expect(instance.canonicalFieldType('text_editor')).toBe('text_editor');
+        expect(instance.canonicalFieldType('text_area')).toBe('text_area');
+        expect(instance.canonicalFieldType('custom_line')).toBe('text_line');
+        expect(instance.canonicalFieldType('text_line')).toBe('text_line');
+    });
+
+    test('canonicalFieldType maps canonical types to themselves regardless of configuration', () => {
+        const instance = new AiApplication({
+            ...props,
+            htmlFieldTypes: ['configurable_text_editor'],
+            textFieldTypes: ['custom_line'],
+        });
+
+        expect(instance.canonicalFieldType('text_editor')).toBe('text_editor');
+        expect(instance.canonicalFieldType('text_area')).toBe('text_area');
+        expect(instance.canonicalFieldType('text_line')).toBe('text_line');
     });
 
     test('handles scroll and resize events', () => {
@@ -381,21 +477,24 @@ describe('AiApplication', () => {
         expect(instance.selectedComponent.dataPath).toBe('/block/0/text');
     });
 
-    test('contentData computed returns form data filtered by schema', () => {
+    test('contentData computed leaves out what the resource records about itself', () => {
         const instance = new AiApplication(props);
         // $FlowFixMe
         instance.selectedComponent = {
             // $FlowFixMe
             formInspector: {
                 formStore: {
-                    schema: {
-                        title: {type: 'text_line'},
-                        description: {type: 'text_area'},
-                    },
                     data: {
                         title: 'My Page',
                         description: 'A description',
-                        internalField: 'should not appear',
+                        customField: 'an unknown field counts as content',
+                        id: 'page-uuid',
+                        template: 'default',
+                        webspace: 'website',
+                        created: '2026-07-29T08:00:00+00:00',
+                        changer: null,
+                        _permissions: {view: true},
+                        _hash: 'abc',
                     },
                 },
             },
@@ -406,35 +505,27 @@ describe('AiApplication', () => {
         expect(result).toEqual({
             title: 'My Page',
             description: 'A description',
+            customField: 'an unknown field counts as content',
         });
     });
 
-    test('contentData computed handles nested sections', () => {
+    test('contentData computed offers content the open form does not describe', () => {
         const instance = new AiApplication(props);
         // $FlowFixMe
         instance.selectedComponent = {
             // $FlowFixMe
             formInspector: {
                 formStore: {
+                    // the seo tab describes only its own fields, yet writing seo text needs the page content
                     schema: {
-                        details: {
-                            type: 'section',
-                            items: {
-                                title: {type: 'text_line'},
-                                summary: {type: 'text_area'},
-                            },
-                        },
-                        metadata: {
-                            type: 'section',
-                            items: {
-                                author: {type: 'text_line'},
-                            },
-                        },
+                        'ext/seo/title': {type: 'text_line'},
+                        'ext/seo/description': {type: 'text_area'},
                     },
                     data: {
                         title: 'Page Title',
-                        summary: 'Page Summary',
-                        author: 'John',
+                        article: 'Page Body',
+                        ext: {seo: {title: '', description: ''}},
+                        id: 'page-uuid',
                     },
                 },
             },
@@ -444,8 +535,8 @@ describe('AiApplication', () => {
 
         expect(result).toEqual({
             title: 'Page Title',
-            summary: 'Page Summary',
-            author: 'John',
+            article: 'Page Body',
+            ext: {seo: {title: '', description: ''}},
         });
     });
 

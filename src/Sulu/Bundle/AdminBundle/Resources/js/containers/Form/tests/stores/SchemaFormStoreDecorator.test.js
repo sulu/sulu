@@ -22,11 +22,11 @@ test('Call given initializer with correct properties', () => {
     const initializerSpy = jest.fn().mockReturnValue(mockedStore);
     const schemaFormStore = new SchemaFormStoreDecorator(initializerSpy, 'test', 'type', {});
 
-    expect(metadataStore.getSchema).toBeCalledWith('test', 'type', {});
-    expect(metadataStore.getJsonSchema).toBeCalledWith('test', 'type', {});
+    expect(metadataStore.getSchema).toHaveBeenCalledWith('test', 'type', {});
+    expect(metadataStore.getJsonSchema).toHaveBeenCalledWith('test', 'type', {});
 
     return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
-        expect(initializerSpy).toBeCalledWith(schema, jsonSchema);
+        expect(initializerSpy).toHaveBeenCalledWith(schema, jsonSchema);
         expect(schemaFormStore.innerFormStore).toEqual(mockedStore);
     });
 });
@@ -63,17 +63,17 @@ test('Forward method calls after inner formstore was initialized', () => {
     schemaFormStore.destroy();
     schemaFormStore.finishField('data-path-123');
 
-    expect(changeSpy).not.toBeCalled();
-    expect(changeTypeSpy).not.toBeCalled();
-    expect(changeMultipleSpy).not.toBeCalled();
-    expect(destroySpy).not.toBeCalled();
-    expect(finishFieldSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
+    expect(changeTypeSpy).not.toHaveBeenCalled();
+    expect(changeMultipleSpy).not.toHaveBeenCalled();
+    expect(destroySpy).not.toHaveBeenCalled();
+    expect(finishFieldSpy).not.toHaveBeenCalled();
 
     return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
-        expect(changeSpy).toBeCalledWith('data-path', 'value', {isServerValue: true});
-        expect(changeTypeSpy).toBeCalledWith('new-type', {isServerValue: true});
-        expect(changeMultipleSpy).toBeCalledWith({propertyName: 'propertyValue'}, {isServerValue: true});
-        expect(destroySpy).toBeCalledWith();
-        expect(finishFieldSpy).toBeCalledWith('data-path-123');
+        expect(changeSpy).toHaveBeenCalledWith('data-path', 'value', {isServerValue: true});
+        expect(changeTypeSpy).toHaveBeenCalledWith('new-type', {isServerValue: true});
+        expect(changeMultipleSpy).toHaveBeenCalledWith({propertyName: 'propertyValue'}, {isServerValue: true});
+        expect(destroySpy).toHaveBeenCalledWith();
+        expect(finishFieldSpy).toHaveBeenCalledWith('data-path-123');
     });
 });

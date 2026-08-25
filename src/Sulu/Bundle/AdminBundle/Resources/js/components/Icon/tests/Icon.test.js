@@ -44,7 +44,7 @@ test('Icon should call the callback on click', async() => {
     const icon = screen.queryByLabelText('su-pen');
     await userEvent.click(icon);
 
-    expect(onClick).toBeCalled();
+    expect(onClick).toHaveBeenCalled();
 });
 
 test('Icon should call the callback on when space is pressed', async() => {
@@ -54,7 +54,7 @@ test('Icon should call the callback on when space is pressed', async() => {
     const icon = screen.queryByLabelText('su-pen');
     await userEvent.type(icon, '[Space]');
 
-    expect(onClick).toBeCalled();
+    expect(onClick).toHaveBeenCalled();
 });
 
 test('Icon should call the callback on when enter is pressed', async() => {
@@ -64,7 +64,7 @@ test('Icon should call the callback on when enter is pressed', async() => {
     const icon = screen.queryByLabelText('su-pen');
     await userEvent.type(icon, '[Enter]');
 
-    expect(onClick).toBeCalled();
+    expect(onClick).toHaveBeenCalled();
 });
 
 test('Should call the given iconRef callback', () => {
@@ -72,5 +72,5 @@ test('Should call the given iconRef callback', () => {
     render(<Icon className="test" iconRef={iconRefSpy} name="su-pen" />);
 
     const icon = screen.queryByLabelText('su-pen');
-    expect(iconRefSpy).toBeCalledWith(icon);
+    expect(iconRefSpy).toHaveBeenCalledWith(icon);
 });

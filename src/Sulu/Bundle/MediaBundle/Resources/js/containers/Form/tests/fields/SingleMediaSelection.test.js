@@ -137,7 +137,7 @@ test('Set default display option if no value is passed', () => {
         />
     );
 
-    expect(changeSpy).toBeCalledWith({displayOption: 'left', id: undefined}, {'isDefaultValue': true});
+    expect(changeSpy).toHaveBeenCalledWith({displayOption: 'left', id: undefined}, {'isDefaultValue': true});
 });
 
 test('Do not set default display option if value is passed', () => {
@@ -170,7 +170,7 @@ test('Do not set default display option if value is passed', () => {
         />
     );
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Should call onChange and onFinish if the selection changes', () => {
@@ -197,8 +197,8 @@ test('Should call onChange and onFinish if the selection changes', () => {
 
     mediaSelection.find(SingleMediaSelectionComponent).props().onChange({id: 44});
 
-    expect(changeSpy).toBeCalledWith({id: 44});
-    expect(finishSpy).toBeCalled();
+    expect(changeSpy).toHaveBeenCalledWith({id: 44});
+    expect(finishSpy).toHaveBeenCalled();
 });
 
 test('Should call onItemClick if item is clicked', () => {
@@ -228,7 +228,7 @@ test('Should call onItemClick if item is clicked', () => {
 
     mediaSelection.find('SingleItemSelection .item').simulate('click');
 
-    expect(router.navigate).toBeCalledWith('sulu_media.form', {id: 6, locale: 'de'});
+    expect(router.navigate).toHaveBeenCalledWith('sulu_media.form', {id: 6, locale: 'de'});
 });
 
 test('Should throw an error if given value is not an object', () => {

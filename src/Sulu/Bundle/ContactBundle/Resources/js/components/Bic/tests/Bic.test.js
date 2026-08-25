@@ -45,28 +45,28 @@ test('Bic should trigger callbacks correctly', () => {
     fireEvent.change(input, {target: {value: 'xxx'}});
     fireEvent.blur(input);
     expect(onChange).toHaveBeenLastCalledWith('xxx');
-    expect(onBlur).toBeCalled();
+    expect(onBlur).toHaveBeenCalled();
 
     // provide one more invalid value
     // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(input, {target: {value: 'BBBBCCLLX'}});
     fireEvent.blur(input);
     expect(onChange).toHaveBeenLastCalledWith('BBBBCCLLX');
-    expect(onBlur).toBeCalled();
+    expect(onBlur).toHaveBeenCalled();
 
     // now add a valid value
     // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(input, {target: {value: 'BBBBCCLLXXX'}});
     fireEvent.blur(input);
     expect(onChange).toHaveBeenLastCalledWith('BBBBCCLLXXX');
-    expect(onBlur).toBeCalled();
+    expect(onBlur).toHaveBeenCalled();
 
     // provide one more valid value
     // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(input, {target: {value: 'BBBBCCLL'}});
     fireEvent.blur(input);
     expect(onChange).toHaveBeenLastCalledWith('BBBBCCLL');
-    expect(onBlur).toBeCalled();
+    expect(onBlur).toHaveBeenCalled();
 
     expect(onBlur).toHaveBeenCalledTimes(4);
 });

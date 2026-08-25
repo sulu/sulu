@@ -128,7 +128,7 @@ test('Call ResourceRequester with correct parameters when button is clicked', ()
     }
     toolbarItemConfig.onClick();
 
-    expect(ResourceRequester.post).toBeCalledWith(
+    expect(ResourceRequester.post).toHaveBeenCalledWith(
         'users',
         undefined,
         {action: 'enable', id: 1234, locale: 'de'}
@@ -181,8 +181,8 @@ test('Set new enabled value to ResourceFormStore and show success-snackbar on su
     toolbarItemConfig.onClick();
 
     return enableUserPromise.then(() => {
-        expect(toolbarAction.resourceFormStore.change).toBeCalledWith('enabled', true, {isServerValue: true});
-        expect(toolbarAction.form.showSuccessSnackbar).toBeCalled();
+        expect(toolbarAction.resourceFormStore.change).toHaveBeenCalledWith('enabled', true, {isServerValue: true});
+        expect(toolbarAction.form.showSuccessSnackbar).toHaveBeenCalled();
     });
 });
 

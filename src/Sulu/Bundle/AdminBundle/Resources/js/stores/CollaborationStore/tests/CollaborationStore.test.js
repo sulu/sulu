@@ -32,7 +32,7 @@ test('Load collaborators repeatedly and stop when destroyed', () => {
     const collaborationStore = new CollaborationStore('pages', 1);
 
     expect(ResourceRequester.put).toHaveBeenLastCalledWith('collaborations', null, {id: 1, resourceKey: 'pages'});
-    expect(ResourceRequester.put).toBeCalledTimes(1);
+    expect(ResourceRequester.put).toHaveBeenCalledTimes(1);
 
     return putPromise1.then(() => {
         expect(collaborationStore.collaborations).toEqual(collaborations1);
@@ -56,7 +56,7 @@ test('Load collaborators repeatedly and stop when destroyed', () => {
 
         jest.runOnlyPendingTimers();
         expect(ResourceRequester.put).toHaveBeenLastCalledWith('collaborations', null, {id: 1, resourceKey: 'pages'});
-        expect(ResourceRequester.put).toBeCalledTimes(2);
+        expect(ResourceRequester.put).toHaveBeenCalledTimes(2);
 
         return putPromise2.then(() => {
             expect(collaborationStore.collaborations).toEqual(collaborations2);
@@ -64,9 +64,9 @@ test('Load collaborators repeatedly and stop when destroyed', () => {
             collaborationStore.destroy();
 
             jest.runOnlyPendingTimers();
-            expect(ResourceRequester.put).toBeCalledTimes(2);
+            expect(ResourceRequester.put).toHaveBeenCalledTimes(2);
 
-            expect(ResourceRequester.delete).toBeCalledTimes(1);
+            expect(ResourceRequester.delete).toHaveBeenCalledTimes(1);
             expect(ResourceRequester.delete).toHaveBeenLastCalledWith('collaborations', {id: 1, resourceKey: 'pages'});
         });
     });

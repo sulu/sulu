@@ -18,7 +18,7 @@ test('Render view returned from ViewRegistry', () => {
     viewRegistry.getConfig.mockReturnValue({});
     const view = mount(<ViewRenderer router={router} />);
     expect(render(view)).toMatchSnapshot();
-    expect(viewRegistry.get).toBeCalledWith('test');
+    expect(viewRegistry.get).toHaveBeenCalledWith('test');
 });
 
 test('Render view returned from ViewRegistry with disableDefaultSpacing true', () => {
@@ -30,7 +30,7 @@ test('Render view returned from ViewRegistry with disableDefaultSpacing true', (
     viewRegistry.getConfig.mockReturnValue({disableDefaultSpacing: true});
     const view = mount(<ViewRenderer router={router} />);
     expect(render(view)).toMatchSnapshot();
-    expect(viewRegistry.get).toBeCalledWith('test');
+    expect(viewRegistry.get).toHaveBeenCalledWith('test');
 });
 
 test('Render view returned from ViewRegistry with passed router', () => {
@@ -47,7 +47,7 @@ test('Render view returned from ViewRegistry with passed router', () => {
     viewRegistry.getConfig.mockReturnValue({});
     const view = render(<ViewRenderer router={router} />);
     expect(view).toMatchSnapshot();
-    expect(viewRegistry.get).toBeCalledWith('test');
+    expect(viewRegistry.get).toHaveBeenCalledWith('test');
 });
 
 test('Render view with parents should nest rendered views', () => {
@@ -279,15 +279,15 @@ test('Clear bindings of router everytime a new view is rendered', () => {
     };
 
     shallow(<ViewRenderer router={router} />);
-    expect(router.addUpdateRouteHook).toBeCalledWith(expect.anything(), 1024);
+    expect(router.addUpdateRouteHook).toHaveBeenCalledWith(expect.anything(), 1024);
 
     const updateRouteHook = router.addUpdateRouteHook.mock.calls[0][0];
 
     updateRouteHook(route1, {});
-    expect(router.clearBindings).not.toBeCalled();
+    expect(router.clearBindings).not.toHaveBeenCalled();
 
     updateRouteHook(route2, {});
-    expect(router.clearBindings).toBeCalledWith();
+    expect(router.clearBindings).toHaveBeenCalledWith();
 });
 
 test('Clear bindings of router when same view with a different rerender attribute is rendered', () => {
@@ -311,13 +311,13 @@ test('Clear bindings of router when same view with a different rerender attribut
     };
 
     shallow(<ViewRenderer router={router} />);
-    expect(router.addUpdateRouteHook).toBeCalledWith(expect.anything(), 1024);
+    expect(router.addUpdateRouteHook).toHaveBeenCalledWith(expect.anything(), 1024);
 
     const updateRouteHook = router.addUpdateRouteHook.mock.calls[0][0];
 
     updateRouteHook(route, {locale: 'en', webspace: 'sulu'});
-    expect(router.clearBindings).not.toBeCalled();
+    expect(router.clearBindings).not.toHaveBeenCalled();
 
     updateRouteHook(route, {locale: 'de', webspace: 'example'});
-    expect(router.clearBindings).toBeCalledWith();
+    expect(router.clearBindings).toHaveBeenCalledWith();
 });

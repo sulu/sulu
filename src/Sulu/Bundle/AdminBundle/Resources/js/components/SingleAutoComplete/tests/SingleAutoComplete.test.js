@@ -102,7 +102,7 @@ test('Should call onChange with undefined if all characters are removed from inp
 
     expect(getInput().value).toEqual('Test');
     fireEvent.change(getInput(), {target: {value: ''}});
-    expect(changeSpy).toBeCalledWith(undefined);
+    expect(changeSpy).toHaveBeenCalledWith(undefined);
 });
 
 test('Should call the onFinish callback when the Input lost focus', () => {
@@ -117,7 +117,7 @@ test('Should call the onFinish callback when the Input lost focus', () => {
     });
 
     fireEvent.blur(getInput());
-    expect(finishSpy).toBeCalled();
+    expect(finishSpy).toHaveBeenCalled();
 });
 
 test('Should update value of Input when the value prop is updated', () => {
@@ -152,11 +152,11 @@ test('Should fire onSearch callback and open popover when input field is focused
         suggestions,
     });
 
-    expect(searchSpy).not.toBeCalled();
+    expect(searchSpy).not.toHaveBeenCalled();
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
 
     fireEvent.focus(getInput());
-    expect(searchSpy).toBeCalledWith('Test');
+    expect(searchSpy).toHaveBeenCalledWith('Test');
     expect(screen.getByRole('list')).toBeInTheDocument();
 });
 
@@ -172,13 +172,13 @@ test('Should close popover when requested and reopen popover when input field is
     });
 
     fireEvent.focus(getInput());
-    expect(searchSpy).nthCalledWith(1, 'Test');
+    expect(searchSpy).toHaveBeenNthCalledWith(1, 'Test');
     expect(screen.getByRole('list')).toBeInTheDocument();
 
     fireEvent.click(screen.getByTestId('backdrop'));
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
 
     fireEvent.change(getInput(), {target: {value: 'search term'}});
-    expect(searchSpy).nthCalledWith(2, 'search term');
+    expect(searchSpy).toHaveBeenNthCalledWith(2, 'search term');
     expect(screen.getByRole('list')).toBeInTheDocument();
 });

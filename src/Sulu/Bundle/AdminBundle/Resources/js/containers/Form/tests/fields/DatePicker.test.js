@@ -171,8 +171,8 @@ test('Should call onFinish callback on every onChange with correctly converted d
 
     datePicker.find(DatePickerComponent).simulate('change', new Date(Date.UTC(2018, 4, 15)));
 
-    expect(finishSpy).toBeCalled();
-    expect(changeSpy).toBeCalledWith('2018-05-15');
+    expect(finishSpy).toHaveBeenCalled();
+    expect(changeSpy).toHaveBeenCalledWith('2018-05-15');
 });
 
 test('Should call onFinish callback on every onChange with correctly converted time value', () => {
@@ -197,8 +197,8 @@ test('Should call onFinish callback on every onChange with correctly converted t
 
     datePicker.find(DatePickerComponent).simulate('change', new Date(Date.UTC(2018, 4, 15)));
 
-    expect(finishSpy).toBeCalled();
-    expect(changeSpy).toBeCalledWith('02:00:00');
+    expect(finishSpy).toHaveBeenCalled();
+    expect(changeSpy).toHaveBeenCalledWith('02:00:00');
 });
 
 test('Should call onFinish callback on every onChange with correctly converted date time value', () => {
@@ -223,6 +223,6 @@ test('Should call onFinish callback on every onChange with correctly converted d
 
     datePicker.find(DatePickerComponent).simulate('change', new Date(Date.UTC(2018, 4, 15, 6, 30, 0)));
 
-    expect(finishSpy).toBeCalled();
-    expect(changeSpy).toBeCalledWith('2018-05-15T08:30:00');
+    expect(finishSpy).toHaveBeenCalled();
+    expect(changeSpy).toHaveBeenCalledWith('2018-05-15T08:30:00');
 });

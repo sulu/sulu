@@ -11,7 +11,7 @@ test('Cancel request when abort is called', () => {
     requestPromise.setAbortController(abortController);
     requestPromise.abort();
 
-    expect(abortController.abort).toBeCalledWith();
+    expect(abortController.abort).toHaveBeenCalledWith();
 });
 
 test('Passing promises via then should also have the AbortController set', () => {

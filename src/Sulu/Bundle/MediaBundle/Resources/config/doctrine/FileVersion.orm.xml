@@ -32,6 +32,21 @@
         <field name="properties" type="string" column="properties" length="1000" nullable="true" />
         <field name="focusPointX" type="integer" column="focusPointX" nullable="true"/>
         <field name="focusPointY" type="integer" column="focusPointY" nullable="true"/>
+        <field name="origin" type="string" column="origin" length="31" nullable="false">
+            <options>
+                <option name="default">unknown</option>
+            </options>
+        </field>
+        <field name="aiDisclosureDisabled" type="boolean" column="aiDisclosureDisabled" nullable="false">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="aiDisclosureIconVariant" type="string" column="aiDisclosureIconVariant" length="31" nullable="false">
+            <options>
+                <option name="default">auto</option>
+            </options>
+        </field>
 
         <one-to-one field="defaultMeta" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionMeta">
             <cascade>

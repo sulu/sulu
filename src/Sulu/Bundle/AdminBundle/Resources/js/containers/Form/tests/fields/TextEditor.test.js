@@ -88,5 +88,5 @@ test('Call onFocus when editor get focus', () => {
 
     textEditor.find('TextEditor').props().onFocus({target});
 
-    expect(focusSpy).toBeCalledWith(target);
+    expect(focusSpy).toHaveBeenCalledWith(target);
 });

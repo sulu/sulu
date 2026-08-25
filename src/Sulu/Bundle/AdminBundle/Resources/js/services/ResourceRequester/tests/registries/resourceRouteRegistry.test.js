@@ -98,13 +98,13 @@ test('Set and get endpoints for given key with date in object parameter', () => 
     });
 
     resourceRouteRegistry.getUrl('detail', 'snippets', {value: {name: 'test', date: new Date('2020-09-07 00:00')}});
-    expect(SymfonyRouting.generate).toBeCalledWith(
+    expect(SymfonyRouting.generate).toHaveBeenCalledWith(
         'get_snippet',
         {'value': {'name': 'test', 'date': '2020-09-07 00:00'}}
     );
 
     resourceRouteRegistry.getUrl('list', 'snippets', {value: {name: 'test', date: new Date('2020-09-07 00:00')}});
-    expect(SymfonyRouting.generate).toBeCalledWith(
+    expect(SymfonyRouting.generate).toHaveBeenCalledWith(
         'get_snippets',
         {'value': {'name': 'test', 'date': '2020-09-07 00:00'}}
     );

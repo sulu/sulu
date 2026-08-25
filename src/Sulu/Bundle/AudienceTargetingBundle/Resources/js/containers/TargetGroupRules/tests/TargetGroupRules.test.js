@@ -112,7 +112,7 @@ test('Add a new rule', () => {
 
     targetGroupRules.find('RuleOverlay Button[skin="primary"]').prop('onClick')();
 
-    expect(changeSpy).toBeCalledWith([
+    expect(changeSpy).toHaveBeenCalledWith([
         {
             conditions: [],
             frequency: 1,
@@ -211,7 +211,7 @@ test('Edit an existing rule', () => {
 
     targetGroupRules.find('RuleOverlay Button[skin="primary"]').prop('onClick')();
 
-    expect(changeSpy).toBeCalledWith([
+    expect(changeSpy).toHaveBeenCalledWith([
         {
             conditions: [
                 {
@@ -261,7 +261,7 @@ test('Close without adding a new rule', () => {
     targetGroupRules.find('RuleOverlay span.su-times').simulate('click');
 
     expect(targetGroupRules.find('RuleOverlay').prop('open')).toEqual(false);
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Remove rules', () => {
@@ -301,7 +301,7 @@ test('Remove rules', () => {
 
     targetGroupRules.find('Button[icon="su-trash-alt"]').prop('onClick')();
 
-    expect(changeSpy).toBeCalledWith([
+    expect(changeSpy).toHaveBeenCalledWith([
         {
             conditions: [],
             frequency: 1,

@@ -434,7 +434,7 @@ EOT;
             return $component->getChildren();
         }
 
-        return $result->getChildren();
+        return $result->getProperties();
     }
 
     private function createIndexNameField(Metadata $documentMetadata, $indexName, $decorate)

@@ -8,7 +8,7 @@ import type {FieldTypeProps} from '../types';
 import type {LinkValue} from '../../Link/types';
 import type {IObservableArray} from 'mobx/lib/mobx';
 
-export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
+export default class Link extends React.Component<FieldTypeProps<?LinkValue>> {
     render() {
         const {
             disabled,
