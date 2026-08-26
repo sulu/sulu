@@ -53,6 +53,11 @@ class LocalStorage implements StorageInterface
             throw new FilenameAlreadyExistsException($filePath);
         }
         $this->filesystem->copy($tempPath, $filePath);
+        // the temporary file of an upload is only readable by its owner (0600) and
+        // symfony/filesystem preserves that mode when copying since 6.4.39: give
+        // the copy the default mode of a newly created file instead (0666 minus
+        // the umask), which also keeps stored media non-executable
+        $this->filesystem->chmod($filePath, 0666, \umask());
 
         return $storageOptions;
     }
