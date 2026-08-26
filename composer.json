@@ -94,7 +94,6 @@
         "symfony/mailer": "^6.4 || ^7.1 || ^8.0",
         "symfony/messenger": "^6.4 || ^7.1 || ^8.0",
         "symfony/mime": "^6.4 || ^7.1 || ^8.0",
-        "symfony/notifier": "^6.4 || ^7.1 || ^8.0",
         "symfony/password-hasher": "^6.4 || ^7.1 || ^8.0",
         "symfony/process": "^6.4 || ^7.1 || ^8.0",
         "symfony/property-access": "^6.4 || ^7.1 || ^8.0",
@@ -154,6 +153,7 @@
         "symfony/emoji": "^7.1 || ^8.0",
         "symfony/lock": "^6.4 || ^7.1 || ^8.0",
         "symfony/monolog-bundle": "^3.7 || ^4.0",
+        "symfony/notifier": "^6.4 || ^7.1 || ^8.0",
         "symfony/phpunit-bridge": "^6.4 || ^7.1 || ^8.0",
         "symfony/runtime": "^6.4 || ^7.1 || ^8.0",
         "symfony/stopwatch": "^6.4 || ^7.1 || ^8.0",
@@ -174,6 +174,7 @@
         "scheb/2fa-totp": "< 6.10 || >= 9.0",
         "scheb/2fa-trusted-device": "< 6.10 || >= 9.0",
         "spomky-labs/otphp": "< 11.1",
+        "symfony/notifier": "< 6.4 || >= 9.0",
         "thecodingmachine/safe": "< 2.0.0"
     },
     "replace": {
@@ -206,6 +207,7 @@
         "scheb/2fa-google-authenticator": "Needed for two factor authentication via authenticator apps (Google Authenticator).",
         "scheb/2fa-backup-code": "Needed for two factor authentication backup codes.",
         "scheb/2fa-trusted-device": "Needed to allow trusted devices to skip the two factor authentication.",
+        "symfony/notifier": "^6.4 || ^7.1 || ^8.0 - Needed by the SuluNotifierBundle to send notifications",
         "symfony/monolog-bundle": "^3.1"
     },
     "autoload": {

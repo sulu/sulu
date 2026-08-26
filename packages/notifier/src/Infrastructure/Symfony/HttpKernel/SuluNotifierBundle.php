@@ -28,6 +28,7 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+use Symfony\Component\Notifier\NotifierInterface;
 
 /**
  * @codeCoverageIgnore
@@ -36,6 +37,10 @@ final class SuluNotifierBundle extends AbstractBundle
 {
     public function __construct()
     {
+        if (!\interface_exists(NotifierInterface::class)) {
+            throw new \LogicException('The "symfony/notifier" package is required to use the SuluNotifierBundle. Try running "composer require symfony/notifier".');
+        }
+
         $this->name = 'SuluNotifierBundle';
         $this->extensionAlias = 'sulu_notifier';
     }

@@ -66,6 +66,7 @@ return $config
             'scheb/2fa-totp',
             'scheb/2fa-trusted-device',
             'symfony/emoji',
+            'symfony/notifier', // optional dependency of the SuluNotifierBundle
             'league/flysystem-memory', // false positiv eonly used in tests
             'symfony/monolog-bundle', // false positive only used in SuluTestKernel
             'coduo/php-matcher', // false positive only used in tests
