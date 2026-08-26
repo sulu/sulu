@@ -156,7 +156,8 @@ class ArticleTeaserProvider implements TeaserProviderInterface
 
     protected function resolveTitle(ArticleDimensionContentInterface $dimensionContent): ?string
     {
-        $title = $dimensionContent->getExcerptTitle() ?? $dimensionContent->getTitle();
+        $excerptTitle = $dimensionContent->getExcerptTitle();
+        $title = '' !== ($excerptTitle ?? '') ? $excerptTitle : $dimensionContent->getTitle();
 
         return '' !== ($title ?? '') ? $title : null;
     }
