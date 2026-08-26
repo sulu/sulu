@@ -125,11 +125,8 @@ class PreviewTest extends TestCase
         $expectedData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
-            'object' => [
-                ...$this->object,
-                'object' => $data,
-            ],
-            'objectClass' => \get_debug_type($this->object),
+            'data' => $data,
+            'context' => [],
             'userId' => 1,
             'html' => null,
             'locale' => $this->locale,
@@ -151,8 +148,8 @@ class PreviewTest extends TestCase
         $expectedData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
-            'object' => [...$this->object, 'object' => []],
-            'objectClass' => \get_debug_type($this->object),
+            'data' => [],
+            'context' => [],
             'userId' => 1,
             'html' => null,
             'locale' => $this->locale,
@@ -224,8 +221,8 @@ class PreviewTest extends TestCase
         $cacheData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
-            'object' => \json_encode(['title' => 'test']),
-            'objectClass' => \get_debug_type($this->object),
+            'data' => ['title' => 'test'],
+            'context' => [],
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
             'locale' => $this->locale,
@@ -238,11 +235,8 @@ class PreviewTest extends TestCase
         $expectedData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
-            'object' => [
-                ...$this->object,
-                'object' => $data,
-            ],
-            'objectClass' => \get_debug_type($this->object),
+            'data' => $data,
+            'context' => [],
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
             'locale' => $this->locale,
@@ -286,11 +280,8 @@ class PreviewTest extends TestCase
         $cacheData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
-            'object' => [
-                ...$this->object,
-                'object' => $data,
-            ],
-            'objectClass' => \get_debug_type($this->object),
+            'data' => $data,
+            'context' => [],
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
             'locale' => $this->locale,
@@ -347,11 +338,8 @@ class PreviewTest extends TestCase
         $cacheData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
-            'object' => [
-                ...$this->object,
-                'object' => $data,
-            ],
-            'objectClass' => \get_debug_type($this->object),
+            'data' => $data,
+            'context' => [],
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
             'locale' => $this->locale,
@@ -411,11 +399,8 @@ class PreviewTest extends TestCase
         $cacheData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
-            'object' => [
-                ...$this->object,
-                'object' => $data,
-            ],
-            'objectClass' => \get_debug_type($this->object),
+            'data' => $data,
+            'context' => [],
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
             'locale' => $this->locale,
@@ -424,13 +409,8 @@ class PreviewTest extends TestCase
         $expectedData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
-            'object' => [
-                ...$this->object,
-                'object' => [
-                    ...$context,
-                ],
-            ],
-            'objectClass' => \get_debug_type($this->object),
+            'data' => $data,
+            'context' => $context,
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
             'locale' => $this->locale,
@@ -444,6 +424,7 @@ class PreviewTest extends TestCase
             [
                 ...$this->object,
                 'object' => [
+                    ...$data,
                     ...$context,
                 ],
             ],
@@ -458,6 +439,7 @@ class PreviewTest extends TestCase
             [
                 ...$this->object,
                 'object' => [
+                    ...$data,
                     ...$context,
                 ],
             ],
@@ -499,11 +481,8 @@ class PreviewTest extends TestCase
         $cacheData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
-            'object' => [
-                ...$this->object,
-                'object' => $data,
-            ],
-            'objectClass' => \get_debug_type($this->object),
+            'data' => $data,
+            'context' => [],
             'userId' => 1,
             'html' => '<html><body><div id="content"></div></body></html>',
             'locale' => $this->locale,
@@ -534,11 +513,8 @@ class PreviewTest extends TestCase
         $cacheData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
-            'object' => [
-                ...$this->object,
-                'object' => $data,
-            ],
-            'objectClass' => \get_debug_type($this->object),
+            'data' => $data,
+            'context' => [],
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
             'locale' => $this->locale,
@@ -584,11 +560,8 @@ class PreviewTest extends TestCase
         $cacheData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
-            'object' => [
-                ...$this->object,
-                'object' => $data,
-            ],
-            'objectClass' => \get_debug_type($this->object),
+            'data' => $data,
+            'context' => [],
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
             'locale' => $this->locale,
@@ -597,13 +570,8 @@ class PreviewTest extends TestCase
         $expectedData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
-            'object' => [
-                ...$this->object,
-                'object' => [
-                    ...$context,
-                ],
-            ],
-            'objectClass' => \get_debug_type($this->object),
+            'data' => $data,
+            'context' => $context,
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
             'locale' => $this->locale,
@@ -617,6 +585,7 @@ class PreviewTest extends TestCase
             [
                 ...$this->object,
                 'object' => [
+                    ...$data,
                     ...$context,
                 ],
             ],
@@ -631,6 +600,7 @@ class PreviewTest extends TestCase
             [
                 ...$this->object,
                 'object' => [
+                    ...$data,
                     ...$context,
                 ],
             ],
@@ -668,11 +638,8 @@ class PreviewTest extends TestCase
         $cacheData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
-            'object' => [
-                ...$this->object,
-                'object' => $data,
-            ],
-            'objectClass' => \get_debug_type($this->object),
+            'data' => $data,
+            'context' => [],
             'userId' => 1,
             'html' => null,
             'locale' => $this->locale,
@@ -680,11 +647,8 @@ class PreviewTest extends TestCase
         $expectedData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
-            'object' => [
-                ...$this->object,
-                'object' => [],
-            ],
-            'objectClass' => \get_debug_type($this->object),
+            'data' => $data,
+            'context' => [],
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
             'locale' => $this->locale,
@@ -695,14 +659,20 @@ class PreviewTest extends TestCase
         $this->cache->save($cacheItem);
 
         $this->renderer->render(
-            $this->object,
+            [
+                ...$this->object,
+                'object' => $data,
+            ],
             1,
             false,
             ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
         )->willReturn('<html><body><div id="content"><!-- CONTENT-REPLACER --><h1 property="title">SULU</h1><!-- CONTENT-REPLACER --></div></body></html>');
 
         $this->renderer->render(
-            $this->object,
+            [
+                ...$this->object,
+                'object' => $data,
+            ],
             1,
             true,
             ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
@@ -724,6 +694,39 @@ class PreviewTest extends TestCase
         );
     }
 
+    public function testRenderAfterUpdateRendersTheEditedState(): void
+    {
+        // https://github.com/sulu/sulu/issues/9043: the reload button of the preview goes
+        // through render(), which used to rebuild the object from the provider defaults and
+        // therefore showed the last saved version instead of what is being edited
+        $data = ['title' => 'Sulu'];
+        $edited = [
+            ...$this->object,
+            'object' => $data,
+        ];
+        $options = ['locale' => $this->locale];
+        $fullHtml = '<html><body><div id="content"><!-- CONTENT-REPLACER --><h1 property="title">SULU</h1><!-- CONTENT-REPLACER --></div></body></html>';
+
+        $this->renderer->render($this->object, 1, false, $options)->willReturn($fullHtml);
+        $this->renderer->render($this->object, 1, true, $options)->willReturn('<h1>Untouched</h1>');
+        $this->renderer->render($edited, 1, true, $options)->willReturn('<h1 property="title">SULU</h1>');
+        $this->renderer->render($edited, 1, false, $options)->shouldBeCalled()->willReturn($fullHtml);
+
+        $token = $this->preview->start($this->providerKey, '1', 1, [], $options);
+
+        // the first render is the one the iframe does when the preview opens
+        $this->preview->render($token, $options);
+
+        // then the form sends what has been typed since
+        $this->preview->update($token, $data, $options);
+
+        // and the reload button renders again, without sending anything
+        $this->assertEquals(
+            '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
+            $this->preview->render($token, $options)
+        );
+    }
+
     public function testRenderWithOptions(): void
     {
         $data = ['title' => 'Sulu'];
@@ -732,11 +735,8 @@ class PreviewTest extends TestCase
         $cacheData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
-            'object' => [
-                ...$this->object,
-                'object' => $data,
-            ],
-            'objectClass' => \get_debug_type($this->object),
+            'data' => $data,
+            'context' => [],
             'userId' => 1,
             'html' => null,
             'locale' => $this->locale,
@@ -744,11 +744,8 @@ class PreviewTest extends TestCase
         $expectedData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
-            'object' => [
-                ...$this->object,
-                'object' => [],
-            ],
-            'objectClass' => \get_debug_type($this->object),
+            'data' => $data,
+            'context' => [],
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
             'locale' => $this->locale,
@@ -759,7 +756,10 @@ class PreviewTest extends TestCase
         $this->cache->save($cacheItem);
 
         $this->renderer->render(
-            $this->object,
+            [
+                ...$this->object,
+                'object' => $data,
+            ],
             1,
             false,
             [
@@ -771,7 +771,10 @@ class PreviewTest extends TestCase
         )->willReturn('<html><body><div id="content"><!-- CONTENT-REPLACER --><h1 property="title">SULU</h1><!-- CONTENT-REPLACER --></div></body></html>');
 
         $this->renderer->render(
-            $this->object,
+            [
+                ...$this->object,
+                'object' => $data,
+            ],
             1,
             true,
             [

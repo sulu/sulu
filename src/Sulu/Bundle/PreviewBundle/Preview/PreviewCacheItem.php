@@ -23,6 +23,8 @@ class PreviewCacheItem
 
     /**
      * @param array<string, mixed> $object
+     * @param array<string, mixed> $data the values the form last sent, replayed onto fresh defaults when the item is read back
+     * @param array<string, mixed> $context the context the form last sent, e.g. the selected template
      */
     public function __construct(
         private string $id,
@@ -30,6 +32,8 @@ class PreviewCacheItem
         private int $userId,
         private string $providerKey,
         private array $object,
+        private array $data = [],
+        private array $context = [],
     ) {
     }
 
@@ -67,6 +71,38 @@ class PreviewCacheItem
     public function setObject(array $object): void
     {
         $this->object = $object;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getData(): array
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function setData(array $data): void
+    {
+        $this->data = $data;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getContext(): array
+    {
+        return $this->context;
+    }
+
+    /**
+     * @param array<string, mixed> $context
+     */
+    public function setContext(array $context): void
+    {
+        $this->context = $context;
     }
 
     public function getHtml(): ?string
