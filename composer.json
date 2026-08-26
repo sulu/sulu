@@ -153,6 +153,7 @@
         "symfony/emoji": "^7.1 || ^8.0",
         "symfony/lock": "^6.4 || ^7.1 || ^8.0",
         "symfony/monolog-bundle": "^3.7 || ^4.0",
+        "symfony/notifier": "^6.4 || ^7.1 || ^8.0",
         "symfony/phpunit-bridge": "^6.4 || ^7.1 || ^8.0",
         "symfony/runtime": "^6.4 || ^7.1 || ^8.0",
         "symfony/stopwatch": "^6.4 || ^7.1 || ^8.0",
@@ -173,6 +174,7 @@
         "scheb/2fa-totp": "< 6.10 || >= 9.0",
         "scheb/2fa-trusted-device": "< 6.10 || >= 9.0",
         "spomky-labs/otphp": "< 11.1",
+        "symfony/notifier": "< 6.4 || >= 9.0",
         "thecodingmachine/safe": "< 2.0.0"
     },
     "replace": {
@@ -181,6 +183,7 @@
         "sulu/page-bundle": "self.version",
         "sulu/document-manager": "self.version",
         "sulu/media-bundle": "self.version",
+        "sulu/notifier-bundle": "self.version",
         "sulu/tag-bundle": "self.version",
         "sulu/category-bundle": "self.version",
         "sulu/test-bundle": "self.version",
@@ -204,6 +207,7 @@
         "scheb/2fa-google-authenticator": "Needed for two factor authentication via authenticator apps (Google Authenticator).",
         "scheb/2fa-backup-code": "Needed for two factor authentication backup codes.",
         "scheb/2fa-trusted-device": "Needed to allow trusted devices to skip the two factor authentication.",
+        "symfony/notifier": "^6.4 || ^7.1 || ^8.0 - Needed by the SuluNotifierBundle to send notifications",
         "symfony/monolog-bundle": "^3.1"
     },
     "autoload": {
@@ -215,7 +219,8 @@
             "Sulu\\Route\\": "packages/route/src",
             "Sulu\\Search\\": "packages/search/src",
             "Sulu\\Content\\": "packages/content/src",
-            "Sulu\\CustomUrl\\": "packages/custom-url/src"
+            "Sulu\\CustomUrl\\": "packages/custom-url/src",
+            "Sulu\\Notifier\\": "packages/notifier/src"
         },
         "exclude-from-classmap": [
             "src/Sulu/Component/*/Tests/",
@@ -235,7 +240,8 @@
             "Sulu\\Route\\Migrations\\": "packages/route/migrations",
             "Sulu\\Search\\Tests\\": "packages/search/tests",
             "Sulu\\Content\\Tests\\": "packages/content/tests",
-            "Sulu\\CustomUrl\\Tests\\": "packages/custom-url/tests"
+            "Sulu\\CustomUrl\\Tests\\": "packages/custom-url/tests",
+            "Sulu\\Notifier\\Tests\\": "packages/notifier/tests"
         }
     },
     "scripts": {

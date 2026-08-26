@@ -1,0 +1,41 @@
+framework:
+    secret: test
+    test: true
+    http_method_override: false
+    handle_all_throwables: true
+    php_errors:
+        log: true
+    translator:
+        default_path: '%kernel.project_dir%/translations'
+        paths:
+            - '%kernel.project_dir%/../../translations'
+        fallbacks: ['en']
+    notifier:
+        chatter_transports:
+            recording: 'recording://test'
+        channel_policy:
+            'chat/recording': ['chat/recording']
+
+services:
+    Sulu\Notifier\Tests\Application\Notifier\RecordingTransport:
+        public: true
+
+    Sulu\Notifier\Tests\Application\Notifier\RecordingTransportFactory:
+        arguments:
+            $transport: '@Sulu\Notifier\Tests\Application\Notifier\RecordingTransport'
+        tags: ['chatter.transport_factory']
+
+    Sulu\Bundle\ActivityBundle\Application\Dispatcher\DomainEventDispatcher:
+        arguments:
+            $eventDispatcher: '@event_dispatcher'
+        public: true
+
+    Sulu\Bundle\ActivityBundle\Application\Dispatcher\DomainEventDispatcherInterface:
+        alias: Sulu\Bundle\ActivityBundle\Application\Dispatcher\DomainEventDispatcher
+        public: true
+
+sulu_notifier:
+    channels:
+        'chat/recording':
+            - Sulu\Notifier\Tests\Application\Domain\Event\TestDomainEvent
+            - Sulu\Notifier\Tests\Application\Domain\Event\TestNonDomainEvent

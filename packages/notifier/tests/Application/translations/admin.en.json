@@ -1,0 +1,5 @@
+{
+    "sulu_activity.someone": "Someone",
+    "sulu_notifier.subject.test_resource.created": "Test created",
+    "sulu_activity.description.test_resource.created": "{userFullName} created \"{resourceTitle}\""
+}
