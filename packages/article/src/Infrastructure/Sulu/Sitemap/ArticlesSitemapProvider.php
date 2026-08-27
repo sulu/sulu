@@ -34,6 +34,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
  *     changed: \DateTimeImmutable,
  *     locale: string,
  *     availableLocales: string[]|null,
+ *     title: string|null,
  *     slug: string,
  *     uuid: string
  * }
@@ -179,6 +180,7 @@ class ArticlesSitemapProvider extends AbstractSitemapProvider
         $queryBuilder->addSelect('dimensionContent.locale');
 
         $queryBuilder->addSelect('unLocalizedDimensionContent.availableLocales');
+        $queryBuilder->addSelect('dimensionContent.title');
 
         $queryBuilder->addSelect('route.slug');
 
@@ -269,6 +271,7 @@ class ArticlesSitemapProvider extends AbstractSitemapProvider
             $article['locale'],
             $defaultLocale,
             $changed,
+            title: $article['title'] ?? null,
         );
 
         if ($alternateArticle[$article['uuid']] ?? null) {
