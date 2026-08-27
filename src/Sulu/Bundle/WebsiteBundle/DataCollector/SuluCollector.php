@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\DataCollector;
 
+use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Portal;
@@ -22,8 +23,10 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 class SuluCollector extends DataCollector
 {
     public function __construct(
-        private string $kernelEnvironment = 'dev'
+        private string $kernelEnvironment = 'dev',
+        private string $adminUrl = '/admin',
     ) {
+        $this->adminUrl = \rtrim('//', $this->adminUrl);
     }
 
     public function data($key)
@@ -110,6 +113,8 @@ class SuluCollector extends DataCollector
             }
         }
         $this->data['structure'] = $structure;
+
+        $this->data['adminUrl'] = $this->getAdminUrlForRequest($request);
     }
 
     /**
@@ -123,6 +128,23 @@ class SuluCollector extends DataCollector
         foreach ($localizations as &$localization) {
             $localization = (string) $localization['language'] . ($localization['default'] ? ' (default)' : '');
         }
+    }
+
+    protected function getAdminUrlForRequest(Request $request): ?string
+    {
+        $locale = $request->getLocale();
+
+        /** @var RequestAttributes $requestAttributes */
+        $requestAttributes = $request->attributes->get('_sulu');
+        /** @var Webspace $webspace */
+        $webspace = $requestAttributes->getAttribute('webspace');
+
+        $object = $request->attributes->get('structure');
+        if (!$object instanceof PageBridge) {
+            return null;
+        }
+
+        return $this->adminUrl . '/#/webspaces/' . $webspace->getKey() . '/pages/' . $locale . '/' . $object->getUuid() . '/details';
     }
 
     public function getName()
