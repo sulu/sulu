@@ -24,7 +24,7 @@ interface StructureManagerInterface
      * @param string $key
      * @param string $type
      *
-     * @return StructureInterface
+     * @return StructureInterface|null
      */
     public function getStructure($key, $type = Structure::TYPE_PAGE);
 
