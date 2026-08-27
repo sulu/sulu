@@ -58717,6 +58717,24 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/ReferenceStore/ReferenceStoreInterface.php
 
 		-
+			message: '#^Cannot access offset ''excerpt'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/WebsiteBundle/Resolver/ParameterResolver.php
+
+		-
+			message: '#^Cannot access offset ''segments'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/WebsiteBundle/Resolver/ParameterResolver.php
+
+		-
+			message: '#^Cannot access offset mixed on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/WebsiteBundle/Resolver/ParameterResolver.php
+
+		-
 			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Resolver\\ParameterResolver\:\:__construct\(\) has parameter \$enabledTwigAttributes with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
