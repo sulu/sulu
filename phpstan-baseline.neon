@@ -37351,12 +37351,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollection.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Manager\\WebspaceCollection\:\:getResources\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Webspace/Manager/WebspaceCollection.php
-
-		-
 			message: '#^Method Sulu\\Component\\Webspace\\Manager\\WebspaceCollection\:\:setPortalInformations\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -37411,22 +37405,10 @@ parameters:
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollection.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Manager\\WebspaceCollectionBuilder\:\:build\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
-
-		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''/'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
 
 		-
 			message: '#^Cannot access offset string on mixed\.$#'
@@ -37441,20 +37423,8 @@ parameters:
 			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
 
 		-
-			message: '#^Cannot call method getResources\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
-
-		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
-
-		-
-			message: '#^Method Sulu\\Component\\Webspace\\Manager\\WebspaceManager\:\:__construct\(\) has parameter \$options with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
 
@@ -37465,25 +37435,7 @@ parameters:
 			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Manager\\WebspaceManager\:\:setOptions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
-
-		-
 			message: '#^Parameter \#1 \$portalUrl of method Sulu\\Component\\Webspace\\Manager\\WebspaceManager\:\:createResourceLocatorUrl\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
-
-		-
-			message: '#^Parameter \#1 \$webspaceCollection of class Sulu\\Component\\Webspace\\Manager\\Dumper\\PhpWebspaceCollectionDumper constructor expects Sulu\\Component\\Webspace\\Manager\\WebspaceCollection, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
-
-		-
-			message: '#^Parameter \#2 \$debug of class Symfony\\Component\\Config\\ConfigCache constructor expects bool, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
@@ -37495,20 +37447,8 @@ parameters:
 			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
 
 		-
-			message: '#^Parameter \#2 \$metadata of method Symfony\\Component\\Config\\ResourceCheckerConfigCache\:\:write\(\) expects array\<Symfony\\Component\\Config\\Resource\\ResourceInterface\>\|null, mixed given\.$#'
+			message: '#^Parameter \#3 \$path of class Sulu\\Component\\Webspace\\Manager\\WebspaceCollectionBuilder constructor expects string, string\|null given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
-
-		-
-			message: '#^Parameter \#3 \$path of class Sulu\\Component\\Webspace\\Manager\\WebspaceCollectionBuilder constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
-
-		-
-			message: '#^Property Sulu\\Component\\Webspace\\Manager\\WebspaceManager\:\:\$options type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
 
@@ -38293,200 +38233,8 @@ parameters:
 			path: src/Sulu/Component/Webspace/Tests/Unit/Loader/XmlFileLoader11Test.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot access offset ''austria\.sulu\.io'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot access offset ''austria\.sulu\.io/de'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot access offset ''sulu\.de'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot access offset ''sulu\.us'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot access offset ''sulu_io'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot access offset ''usa\.sulu\.io'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot access offset ''usa\.sulu\.io/en'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 14
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot access offset 1 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot call method getContexts\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot call method getCustomUrls\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 7
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot call method getEnvironment\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 6
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot call method getKey\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot call method getLocale\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot call method getLocalization\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot call method getMainUrl\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot call method getName\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 5
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot call method getNavigation\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot call method getPortalInformations\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot call method getPortals\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 7
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot call method getPriority\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot call method getRedirect\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot call method getTitle\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 6
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot call method getType\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 10
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot call method getUrl\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 10
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot call method getUrls\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Cannot call method getWebspaces\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Parameter \#1 \$array of function array_keys expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Parameter \#1 \$array of function array_values expects array\<T\>, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
-			identifier: argument.type
-			count: 8
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
 

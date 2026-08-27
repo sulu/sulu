@@ -59,7 +59,12 @@ class WebspaceCollectionBuilder
     ) {
     }
 
-    public function build()
+    /**
+     * @param array<string>|null $availableTemplates
+     *
+     * @return WebspaceCollection
+     */
+    public function build(?array $availableTemplates = null)
     {
         $finder = new Finder();
         $finder->in($this->path)->files()->name('*.xml')->sortByName();
@@ -80,7 +85,7 @@ class WebspaceCollectionBuilder
             $webspace = $this->loader->load($file->getRealPath());
 
             foreach ($webspace->getDefaultTemplates() as $defaultTemplate) {
-                if (!\in_array($defaultTemplate, $this->availableTemplates)) {
+                if (!\in_array($defaultTemplate, $availableTemplates ?? $this->availableTemplates)) {
                     throw new InvalidTemplateException($webspace, $defaultTemplate);
                 }
 
