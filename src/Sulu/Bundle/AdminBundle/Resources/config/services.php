@@ -13,6 +13,8 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
+use Sulu\Bundle\AdminBundle\Admin\View\ResourceViewUrlGenerator;
+use Sulu\Bundle\AdminBundle\Admin\View\ResourceViewUrlGeneratorInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
@@ -311,6 +313,15 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu.context', ['context' => 'admin']);
 
     $services->alias(ViewUrlGeneratorInterface::class, 'sulu_admin.view_url_generator');
+
+    $services->set('sulu_admin.resource_view_url_generator', ResourceViewUrlGenerator::class)
+        ->args([
+            new Reference('sulu_admin.view_url_generator'),
+            '%sulu_admin.resources%',
+        ])
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->alias(ResourceViewUrlGeneratorInterface::class, 'sulu_admin.resource_view_url_generator');
 
     $services->set('sulu_admin.navigation_registry', NavigationRegistry::class)
         ->args([
