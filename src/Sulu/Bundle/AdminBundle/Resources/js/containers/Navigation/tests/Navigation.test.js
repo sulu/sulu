@@ -11,6 +11,7 @@ jest.mock('../../../utils/Translator', () => ({
 
 jest.mock('../../../services/Router/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
+    this.getHref = jest.fn((view) => '#/' + view);
 }));
 
 jest.mock('../registries/navigationRegistry', () => ({
@@ -158,7 +159,17 @@ test('Should call the navigation callback, pin callback and router navigate', ()
         />
     );
 
-    navigation.find('Item').at(4).find('.title').simulate('click');
+    const preventDefault = jest.fn();
+    navigation.find('Item').at(4).find('.title').simulate('click', {
+        button: 0,
+        metaKey: false,
+        altKey: false,
+        ctrlKey: false,
+        shiftKey: false,
+        defaultPrevented: false,
+        preventDefault,
+    });
+    expect(preventDefault).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith('returned_main_route');
     expect(handleNavigate).toHaveBeenCalledWith('returned_main_route');
 

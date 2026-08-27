@@ -317,13 +317,7 @@ export default class Router {
     @action update(name: string, attributes: Object, updateRouteMethod: UpdateRouteMethod): void {
         const route = routeRegistry.get(name);
 
-        const updatedAttributes = {
-            ...this.updateAttributesHooks.reduce((hookAttributes: Object, updateAttributeHook) => ({
-                ...updateAttributeHook(route, attributes),
-                ...hookAttributes,
-            }), {}),
-            ...attributes,
-        };
+        const updatedAttributes = this.getAttributesForRoute(route, attributes);
 
         const attributeDefaults = route.attributeDefaults;
         Object.keys(attributeDefaults).forEach((key) => {
@@ -355,22 +349,57 @@ export default class Router {
         }
     }
 
-    @computed get url(): string {
-        if (!this.route) {
-            return '';
-        }
+    getUrl(name: string, attributes: Object = {}): string {
+        const route = routeRegistry.get(name);
+        const updatedAttributes = this.getAttributesForRoute(route, attributes);
 
-        const attributes = toJS(this.attributes);
+        const attributesWithBindings = {
+            ...updatedAttributes,
+        };
+
         for (const [key, observableValue] of this.bindings.entries()) {
-            const value = observableValue.get();
-            attributes[key] = value;
+            if (attributesWithBindings[key] === undefined) {
+                attributesWithBindings[key] = observableValue.get();
+            }
         }
 
-        const url = compile(this.route.path)(attributes);
+        return this.buildUrl(route, attributesWithBindings);
+    }
+
+    getHref(name: string, attributes: Object = {}): string {
+        return '#' + this.getUrl(name, attributes);
+    }
+
+    getAttributesForRoute(route: Route, attributes: Object): Object {
+        return {
+            ...this.updateAttributesHooks.reduce((hookAttributes: Object, updateAttributeHook) => ({
+                ...updateAttributeHook(route, attributes),
+                ...hookAttributes,
+            }), {}),
+            ...attributes,
+        };
+    }
+
+    buildUrl(route: Route, attributes: Object): string {
+        const attributeDefaults = route.attributeDefaults;
+        const updatedAttributes = {...attributes};
+
+        Object.keys(attributeDefaults).forEach((key) => {
+            // set default attributes if not passed, to automatically set important omitted attributes everywhere
+            // e.g. allows to always pass the default locale if nothing is passed
+            if (updatedAttributes[key] !== undefined) {
+                return;
+            }
+
+            updatedAttributes[key] = attributeDefaults[key];
+        });
+
+        const url = compile(route.path)(updatedAttributes);
         const searchParameters = new URLSearchParams();
-        const {availableAttributes} = this.route;
-        Object.keys(attributes).forEach((key) => {
-            const value = toJS(attributes[key]);
+        const {availableAttributes} = route;
+
+        Object.keys(updatedAttributes).forEach((key) => {
+            const value = toJS(updatedAttributes[key]);
             if (availableAttributes.includes(key) || value == this.bindingDefaults.get(key)) {
                 return;
             }
@@ -381,6 +410,19 @@ export default class Router {
         const queryString = searchParameters.toString();
 
         return url + (queryString ? '?' + queryString : '');
+    }
+
+    @computed get url(): string {
+        if (!this.route) {
+            return '';
+        }
+
+        const attributes = toJS(this.attributes);
+        for (const [key, observableValue] of this.bindings.entries()) {
+            attributes[key] = observableValue.get();
+        }
+
+        return this.buildUrl(this.route, attributes);
     }
 
     createAttributesHistory() {
