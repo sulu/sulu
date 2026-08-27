@@ -206,6 +206,39 @@ class InstanceOfFormMetadataVisitorTest extends TestCase
         $this->assertSame('excerptTitle', $formMetadata->getItems()[0]->getName());
         $this->assertSame('excerptTags', $formMetadata->getItems()[1]->getName());
     }
+
+    public function testVisitFormMetadataCustomFieldsAddedAtBottom(): void
+    {
+        // Base form already has some fields (e.g., from the core SEO/Excerpt form)
+        $formMetadata = new FormMetadata();
+        $formMetadata->setKey('content_excerpt');
+        $formMetadata->setItems([new FieldMetadata('customField1'), new FieldMetadata('customField2')]);
+        $formMetadata->setSchema(new SchemaMetadata());
+
+        $metadataOptions = [
+            'instanceOf' => ExcerptInterface::class,
+        ];
+
+        $subFormMetadata = new FormMetadata();
+        $subFormMetadata->setKey('content_excerpt_metadata');
+        $subFormMetadata->setItems([new FieldMetadata('excerptTitle'), new FieldMetadata('excerptDescription')]);
+        $subFormMetadata->setSchema(new SchemaMetadata());
+
+        $this->xmlFormMetadataLoader->getMetadata('content_excerpt_metadata', 'de', $metadataOptions)
+            ->willReturn($subFormMetadata);
+
+        $this->xmlFormMetadataLoader->getMetadata('content_excerpt_taxonomies', 'de', $metadataOptions)
+            ->willReturn(null);
+
+        $this->instanceOfFormMetadataVisitor->visitFormMetadata($formMetadata, 'de', $metadataOptions);
+
+        // Custom fields should appear at the bottom (after core fields)
+        $this->assertCount(4, $formMetadata->getItems());
+        $this->assertSame('excerptTitle', $formMetadata->getItems()[0]->getName());
+        $this->assertSame('excerptDescription', $formMetadata->getItems()[1]->getName());
+        $this->assertSame('customField1', $formMetadata->getItems()[2]->getName());
+        $this->assertSame('customField2', $formMetadata->getItems()[3]->getName());
+    }
 }
 
 /**
