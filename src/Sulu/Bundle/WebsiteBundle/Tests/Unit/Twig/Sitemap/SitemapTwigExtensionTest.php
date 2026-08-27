@@ -155,13 +155,21 @@ class SitemapTwigExtensionTest extends TestCase
     public function testSitemapAliases(): void
     {
         $this->sitemapProviderPool->getProviders()->willReturn([
-            'pages' => $this->prophesize(SitemapProviderInterface::class)->reveal(),
-            'articles' => $this->prophesize(SitemapProviderInterface::class)->reveal(),
+            'pages' => $this->createProvider('pages'),
+            'articles' => $this->createProvider('articles'),
         ]);
 
         $extension = $this->createExtension();
 
         $this->assertSame(['pages', 'articles'], $extension->sitemapAliasesFunction());
+    }
+
+    private function createProvider(string $alias): SitemapProviderInterface
+    {
+        $provider = $this->prophesize(SitemapProviderInterface::class);
+        $provider->getAlias()->willReturn($alias);
+
+        return $provider->reveal();
     }
 
     private function createExtension(bool $withRequestAnalyzer = true): SitemapTwigExtension
@@ -171,7 +179,7 @@ class SitemapTwigExtensionTest extends TestCase
             $this->sitemapProviderPool->reveal(),
             $this->webspaceManager->reveal(),
             $this->requestStack,
-            new Memoize(new ArrayAdapter(), 3600),
+            new Memoize(new ArrayAdapter(0, false), 3600),
             'prod',
             3600,
             $withRequestAnalyzer ? $this->requestAnalyzer->reveal() : null
