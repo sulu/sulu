@@ -1,0 +1,129 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns:xi="http://www.w3.org/2001/XInclude"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>menu</key>
+    <areas>
+        <area key="menu">
+            <meta>
+                <title lang="en">Menu</title>
+                <title lang="pl">Menu</title>
+                <title lang="hy">Մենյու</title>
+                <title lang="hu">Menü</title>
+            </meta>
+        </area>
+    </areas>
+    <meta>
+        <title lang="en">Menu</title>
+        <title lang="pl">Górna nawigacja</title>
+        <title lang="hy">Մենյու</title>
+        <title lang="hu">Felső navigáció</title>
+    </meta>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title lang="en">Title</title>
+                <title lang="pl">Nazwa</title>
+                <title lang="hy">Անվանում</title>
+                <title lang="hu">Név</title>
+            </meta>
+
+            <tag name="sulu.node.name"/>
+        </property>
+        <section name="logo_and_links">
+            <meta>
+                <title lang="en">Logo and links</title>
+                <title lang="pl">Logo i linki</title>
+                <title lang="hy">Լոգո և հղումներ</title>
+                <title lang="hu">Logó és linkek</title>
+            </meta>
+            <properties>
+                <property name="logo" type="single_media_selection">
+                    <meta>
+                        <title lang="pl">Logo</title>
+                        <title lang="en">Logo</title>
+                        <title lang="hy">Լոգո</title>
+                        <title lang="hu">Logó</title>
+                    </meta>
+                    <params>
+                        <param name="types" value="image"/>
+                    </params>
+                </property>
+                <block name="pages" maxOccurs="6">
+                    <meta>
+                        <title lang="pl">Strony</title>
+                        <title lang="en">Pages</title>
+                        <title lang="hy">Էջեր</title>
+                        <title lang="hu">Oldalak</title>
+                    </meta>
+                    <types>
+                        <type name="page">
+                            <properties>
+                                <xi:include
+                                        href="../fragments/partials/button.xml"
+                                        xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+                                    xpointer(/sulu:properties/sulu:property)"/>
+                                <block name="subpages">
+                                    <meta>
+                                        <title lang="en">Subpages</title>
+                                        <title lang="pl">Podstrony</title>
+                                        <title lang="hy">Ենթէջեր</title>
+                                        <title lang="hu">Aloldalak</title>
+                                    </meta>
+
+                                    <types>
+                                        <type name="subpage">
+                                            <meta>
+                                                <title lang="en">Subpage</title>
+                                                <title lang="pl">Podstrona</title>
+                                                <title lang="hy">Ենթէջ</title>
+                                                <title lang="hu">Aloldal</title>
+                                            </meta>
+
+                                            <properties>
+                                                <xi:include
+                                                        href="../fragments/partials/button.xml"
+                                                        xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+                                                    xpointer(/sulu:properties/sulu:property)"/>
+
+												<block name="subpages2">
+													<meta>
+														<title lang="en">Subpages 2</title>
+														<title lang="pl">Podstrony 2</title>
+                                                        <title lang="hy">Ենթէջեր 2</title>
+                                                        <title lang="hu">Aloldalak 2</title>
+													</meta>
+
+													<types>
+														<type name="subpage2">
+															<meta>
+																<title lang="en">Subpage 2</title>
+																<title lang="pl">Podstrona 2</title>
+                                                                <title lang="hy">Ենթէջ 2</title>
+                                                                <title lang="hu">Aloldal 2</title>
+															</meta>
+
+															<properties>
+																<xi:include
+																	href="../fragments/partials/button.xml"
+																	xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+                                                    xpointer(/sulu:properties/sulu:property)"/>
+															</properties>
+														</type>
+													</types>
+												</block>
+                                            </properties>
+                                        </type>
+                                    </types>
+                                </block>
+                            </properties>
+                        </type>
+                    </types>
+                </block>
+            </properties>
+        </section>
+    </properties>
+</template>
