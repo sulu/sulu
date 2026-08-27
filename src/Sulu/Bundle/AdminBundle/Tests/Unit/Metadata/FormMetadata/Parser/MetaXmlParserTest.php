@@ -48,7 +48,20 @@ class MetaXmlParserTest extends TestCase
             ],
             'info_text' => [],
             'placeholder' => [],
+            'priority' => 10,
         ], $meta);
+    }
+
+    public function testParseWithoutPriority(): void
+    {
+        $resource = $this->getTemplatesDirectory() . 'grouped.xml';
+        $xpath = $this->loadXmlFile($resource);
+        $templateNode = ($xpath->query('/x:template') ?: null)?->item(0);
+        \assert(null !== $templateNode, 'Expected <template> be defined for "' . $resource . '".');
+
+        $meta = $this->metaXmlParser->load($xpath, $templateNode);
+
+        $this->assertArrayNotHasKey('priority', $meta);
     }
 
     private function loadXmlFile(string $resource): \DOMXPath

@@ -6,10 +6,12 @@ Object {
   "types": Object {
     "footer": Object {
       "key": "footer",
+      "priority": 0,
       "title": "footer",
     },
     "sidebar": Object {
       "key": "sidebar",
+      "priority": 0,
       "title": "Sidebar Snippet",
     },
   },
