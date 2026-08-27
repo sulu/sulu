@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle;
 
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler\DeregisterDefaultRouteListenerCompilerPass;
+use Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler\LoadDevelopmentOnlyServicesCompilerPass;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -29,6 +30,7 @@ final class SuluWebsiteBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new DeregisterDefaultRouteListenerCompilerPass());
+        $container->addCompilerPass(new LoadDevelopmentOnlyServicesCompilerPass());
 
         $this->buildPersistence(
             [
