@@ -99,7 +99,7 @@ class CustomUrlController extends AbstractRestController implements SecuredContr
 
         $document = $this->customUrlManager->create(
             $webspace,
-            $request->request->all()
+            $request->getPayload()->all()
         );
         $this->documentManager->flush();
 
@@ -121,7 +121,7 @@ class CustomUrlController extends AbstractRestController implements SecuredContr
     {
         $manager = $this->customUrlManager;
 
-        $document = $manager->save($id, $request->request->all());
+        $document = $manager->save($id, $request->getPayload()->all());
         $this->documentManager->flush();
 
         $context = new Context();

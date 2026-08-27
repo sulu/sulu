@@ -120,7 +120,7 @@ class PositionController extends AbstractRestController implements ClassResource
             $this->entityManager->persist($position);
 
             $this->domainEventCollector->collect(
-                new ContactPositionCreatedEvent($position, $request->request->all())
+                new ContactPositionCreatedEvent($position, $request->getPayload()->all())
             );
 
             $this->entityManager->flush();
@@ -159,7 +159,7 @@ class PositionController extends AbstractRestController implements ClassResource
                     $position->setPosition($name);
 
                     $this->domainEventCollector->collect(
-                        new ContactPositionModifiedEvent($position, $request->request->all())
+                        new ContactPositionModifiedEvent($position, $request->getPayload()->all())
                     );
 
                     $this->entityManager->flush();

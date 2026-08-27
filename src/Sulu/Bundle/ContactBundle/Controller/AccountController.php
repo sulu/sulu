@@ -457,7 +457,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
 
             $account = $this->doPost($request);
             $this->entityManager->persist($account);
-            $this->domainEventCollector->collect(new AccountCreatedEvent($account, $request->request->all()));
+            $this->domainEventCollector->collect(new AccountCreatedEvent($account, $request->getPayload()->all()));
             $this->entityManager->flush();
 
             $locale = $this->getUser()->getLocale();
@@ -510,7 +510,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
         $account->setChanger($this->getUser());
 
         // Add urls, phones, emails, tags, bankAccounts, notes, addresses,..
-        $this->accountManager->addNewContactRelations($account, $request->request->all());
+        $this->accountManager->addNewContactRelations($account, $request->getPayload()->all());
 
         return $account;
     }
@@ -534,7 +534,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
             } else {
                 $this->doPut($account, $request, $this->entityManager);
 
-                $this->domainEventCollector->collect(new AccountModifiedEvent($account, $request->request->all()));
+                $this->domainEventCollector->collect(new AccountModifiedEvent($account, $request->getPayload()->all()));
                 $this->entityManager->flush();
 
                 // get api entity
@@ -713,7 +713,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
         $account->setMainContact($mainContact);
 
         if ($accountModified) {
-            $this->domainEventCollector->collect(new AccountModifiedEvent($account, $request->request->all()));
+            $this->domainEventCollector->collect(new AccountModifiedEvent($account, $request->getPayload()->all()));
         }
     }
 

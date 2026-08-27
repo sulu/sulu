@@ -115,7 +115,7 @@ class SingleSignOnLoginRequestSubscriberTest extends TestCase
     {
         $request = Request::create('/admin/login', Request::METHOD_POST);
         $request->attributes->set('_route', 'sulu_admin.login_check');
-        $request->request->set('username', 'martin');
+        $request->getPayload()->set('username', 'martin');
         $event = $this->createRequestEvent($request);
 
         $this->subscriber->onKernelRequest($event);
@@ -127,8 +127,8 @@ class SingleSignOnLoginRequestSubscriberTest extends TestCase
     {
         $request = Request::create('/admin/login', Request::METHOD_POST);
         $request->attributes->set('_route', 'sulu_admin.login_check');
-        $request->request->set('username', 'martin');
-        $request->request->set('password', '123');
+        $request->getPayload()->set('username', 'martin');
+        $request->getPayload()->set('password', '123');
         $event = $this->createRequestEvent($request);
 
         $this->subscriber->onKernelRequest($event);
@@ -140,7 +140,7 @@ class SingleSignOnLoginRequestSubscriberTest extends TestCase
     {
         $request = Request::create('/admin/login', Request::METHOD_POST);
         $request->attributes->set('_route', 'sulu_security.reset_password.email');
-        $request->request->set('username', 'martin');
+        $request->getPayload()->set('username', 'martin');
         $event = $this->createRequestEvent($request);
 
         $this->subscriber->onKernelRequest($event);
@@ -152,7 +152,7 @@ class SingleSignOnLoginRequestSubscriberTest extends TestCase
     {
         $request = Request::create('/admin/login', Request::METHOD_POST);
         $request->attributes->set('_route', 'sulu_security.reset_password.email');
-        $request->request->set('username', 'hello@sulu.io');
+        $request->getPayload()->set('username', 'hello@sulu.io');
         $event = $this->createRequestEvent($request);
 
         $this->subscriber->onKernelRequest($event);
@@ -164,7 +164,7 @@ class SingleSignOnLoginRequestSubscriberTest extends TestCase
     {
         $request = Request::create('/admin/login', Request::METHOD_POST);
         $request->attributes->set('_route', 'sulu_security.reset_password.email');
-        $request->request->set('username', 'admin');
+        $request->getPayload()->set('username', 'admin');
         $event = $this->createRequestEvent($request);
         $user = new User();
         $user->setEmail('admin@sulu.io');
@@ -178,7 +178,7 @@ class SingleSignOnLoginRequestSubscriberTest extends TestCase
     {
         $request = Request::create('/admin/login', Request::METHOD_POST);
         $request->attributes->set('_route', 'sulu_security.reset_password.email');
-        $request->request->set('username', 'admin');
+        $request->getPayload()->set('username', 'admin');
         $event = $this->createRequestEvent($request);
         $user = new User();
         $user->setEmail('admin@sulu.io');
@@ -193,8 +193,8 @@ class SingleSignOnLoginRequestSubscriberTest extends TestCase
     {
         $request = Request::create('/admin/login', Request::METHOD_POST);
         $request->attributes->set('_route', 'sulu_security.reset_password.email');
-        $request->request->set('username', 'admin');
-        $request->request->set('password', 'admin');
+        $request->getPayload()->set('username', 'admin');
+        $request->getPayload()->set('password', 'admin');
         $event = $this->createRequestEvent($request);
         $user = new User();
         $user->setEmail('admin@sulu.io');
@@ -210,7 +210,7 @@ class SingleSignOnLoginRequestSubscriberTest extends TestCase
         $redirectUrl = 'https://example.com/authorize';
         $request = Request::create('/admin/login', Request::METHOD_POST);
         $request->attributes->set('_route', 'sulu_admin.login_check');
-        $request->request->set('username', 'martin@sulu.io');
+        $request->getPayload()->set('username', 'martin@sulu.io');
         $event = $this->createRequestEvent($request);
         $openIdAdapter = $this->prophesize(OpenIdSingleSignOnAdapter::class);
         $this->urlGenerator->generate('sulu_admin', [], UrlGeneratorInterface::ABSOLUTE_URL)
@@ -229,7 +229,7 @@ class SingleSignOnLoginRequestSubscriberTest extends TestCase
         $redirectUrl = 'https://example.com/authorize';
         $request = Request::create('/admin/login', Request::METHOD_POST);
         $request->attributes->set('_route', 'sulu_security.reset_password.email');
-        $request->request->set('username', 'martin@sulu.io');
+        $request->getPayload()->set('username', 'martin@sulu.io');
         $event = $this->createRequestEvent($request);
         $openIdAdapter = $this->prophesize(OpenIdSingleSignOnAdapter::class);
         $this->urlGenerator->generate('sulu_admin', [], UrlGeneratorInterface::ABSOLUTE_URL)
@@ -248,7 +248,7 @@ class SingleSignOnLoginRequestSubscriberTest extends TestCase
         $redirectUrl = 'https://example.com/authorize';
         $request = Request::create('/admin/login', Request::METHOD_POST);
         $request->attributes->set('_route', 'sulu_admin.login_check');
-        $request->request->set('username', 'admin');
+        $request->getPayload()->set('username', 'admin');
         $event = $this->createRequestEvent($request);
         $openIdAdapter = $this->prophesize(OpenIdSingleSignOnAdapter::class);
         $this->urlGenerator->generate('sulu_admin', [], UrlGeneratorInterface::ABSOLUTE_URL)
@@ -270,7 +270,7 @@ class SingleSignOnLoginRequestSubscriberTest extends TestCase
         $redirectUrl = 'https://example.com/authorize';
         $request = Request::create('/admin/login', Request::METHOD_POST);
         $request->attributes->set('_route', 'sulu_security.reset_password.email');
-        $request->request->set('username', 'admin');
+        $request->getPayload()->set('username', 'admin');
         $event = $this->createRequestEvent($request);
         $openIdAdapter = $this->prophesize(OpenIdSingleSignOnAdapter::class);
         $this->urlGenerator->generate('sulu_admin', [], UrlGeneratorInterface::ABSOLUTE_URL)

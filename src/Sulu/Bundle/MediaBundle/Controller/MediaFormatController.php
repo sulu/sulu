@@ -57,7 +57,7 @@ class MediaFormatController extends AbstractRestController implements ClassResou
      */
     public function putAction($id, $key, Request $request)
     {
-        $options = $request->request->all();
+        $options = $request->getPayload()->all();
 
         if (empty($options)) {
             $this->formatOptionsManager->delete($id, $key);
@@ -78,7 +78,7 @@ class MediaFormatController extends AbstractRestController implements ClassResou
      */
     public function cpatchAction($id, Request $request)
     {
-        $formatOptions = $request->request->all();
+        $formatOptions = $request->getPayload()->all();
         foreach ($formatOptions as $formatKey => $formatOption) {
             if (empty($formatOption)) {
                 $this->formatOptionsManager->delete($id, $formatKey);

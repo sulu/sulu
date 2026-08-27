@@ -512,7 +512,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
 
     private function persistDocument(Request $request, $formType, $document, $locale): void
     {
-        $data = $request->request->all();
+        $data = $request->getPayload()->all();
 
         if ($request->query->has('parentId')) {
             $data['parent'] = $request->query->get('parentId');

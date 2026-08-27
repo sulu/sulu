@@ -423,7 +423,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     private function processForm(Request $request, $document)
     {
         $locale = $this->getLocale($request);
-        $data = $request->request->all();
+        $data = $request->getPayload()->all();
         $data['workflowStage'] = $request->get('state', WorkflowStage::PUBLISHED);
 
         /** @var class-string<FormTypeInterface> $formType */
@@ -461,7 +461,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     private function checkAreaSnippet(Request $request, SnippetDocument $document)
     {
         $force = $request->headers->get('SuluForcePut', false);
-        $structureType = $request->request->get('template');
+        $structureType = $request->getPayload()->get('template');
 
         return $force
             || $structureType === $document->getStructureType()

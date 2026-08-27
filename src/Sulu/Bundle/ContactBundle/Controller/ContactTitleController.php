@@ -113,7 +113,7 @@ class ContactTitleController extends AbstractRestController implements ClassReso
             $this->entityManager->persist($title);
 
             $this->domainEventCollector->collect(
-                new ContactTitleCreatedEvent($title, $request->request->all())
+                new ContactTitleCreatedEvent($title, $request->getPayload()->all())
             );
 
             $this->entityManager->flush();
@@ -152,7 +152,7 @@ class ContactTitleController extends AbstractRestController implements ClassReso
                     $title->setTitle($name);
 
                     $this->domainEventCollector->collect(
-                        new ContactTitleModifiedEvent($title, $request->request->all())
+                        new ContactTitleModifiedEvent($title, $request->getPayload()->all())
                     );
 
                     $this->entityManager->flush();

@@ -81,12 +81,12 @@ class ProfileController implements ClassResourceInterface
         $user = $this->tokenStorage->getToken()->getUser();
         $this->userManager->save($this->getData($request), $request->get('locale'), $user->getId(), true);
 
-        $user->setFirstName($request->request->get('firstName'));
-        $user->setLastName($request->request->get('lastName'));
+        $user->setFirstName($request->getPayload()->get('firstName'));
+        $user->setLastName($request->getPayload()->get('lastName'));
 
         if ($user instanceof TwoFactorInterface) {
             /** @var array{method?: string|null} $twoFactorData */
-            $twoFactorData = $request->request->all('twoFactor');
+            $twoFactorData = $request->getPayload()->all('twoFactor');
             $twoFactorMethod = $twoFactorData['method'] ?? null;
 
             if ($twoFactorMethod) {
@@ -149,7 +149,7 @@ class ProfileController implements ClassResourceInterface
      */
     public function patchSettingsAction(Request $request)
     {
-        $settings = $request->request->all();
+        $settings = $request->getPayload()->all();
 
         try {
             /** @var User $user */
@@ -248,7 +248,7 @@ class ProfileController implements ClassResourceInterface
     {
         $data = [];
 
-        foreach ($request->request->all() as $key => $value) {
+        foreach ($request->getPayload()->all() as $key => $value) {
             if (\in_array($key, ['firstName', 'lastName', 'username', 'email', 'password', 'locale'], true)) {
                 $data[$key] = $value;
             }

@@ -295,6 +295,6 @@ class TagController extends AbstractRestController implements ClassResourceInter
      */
     protected function getData(Request $request)
     {
-        return $request->request->all();
+        return $request->getPayload()->all();
     }
 }

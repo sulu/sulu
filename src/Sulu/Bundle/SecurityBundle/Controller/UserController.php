@@ -144,7 +144,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
         try {
             $this->checkArguments($request);
             $locale = $this->getRequestParameter($request, 'locale', true);
-            $data = $request->request->all();
+            $data = $request->getPayload()->all();
             $data['contactId'] = $request->query->get('contactId');
             $user = $this->userManager->save($data, $locale);
             $view = $this->view($user, 200);
@@ -200,7 +200,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
         try {
             $this->checkArguments($request);
             $locale = $this->getRequestParameter($request, 'locale', true);
-            $user = $this->userManager->save($request->request->all(), $locale, $id);
+            $user = $this->userManager->save($request->getPayload()->all(), $locale, $id);
             $view = $this->view($user, 200);
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
@@ -224,7 +224,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
     {
         try {
             $locale = $this->getRequestParameter($request, 'locale');
-            $user = $this->userManager->save($request->request->all(), $locale, $id, true);
+            $user = $this->userManager->save($request->getPayload()->all(), $locale, $id, true);
             $view = $this->view($user, 200);
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
