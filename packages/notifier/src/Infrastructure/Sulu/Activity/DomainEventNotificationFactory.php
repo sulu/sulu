@@ -13,9 +13,15 @@ declare(strict_types=1);
 
 namespace Sulu\Notifier\Infrastructure\Sulu\Activity;
 
+use Psr\Log\LoggerInterface;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
+use Sulu\Bundle\AdminBundle\Admin\View\ResourceViewUrlGeneratorInterface;
+use Sulu\Bundle\AdminBundle\Exception\ResourceViewNotFoundException;
+use Sulu\Bundle\AdminBundle\Exception\ViewNotFoundException;
+use Sulu\Bundle\AdminBundle\Exception\ViewParameterNotFoundException;
 use Sulu\Notifier\Application\Factory\EventNotificationFactoryInterface;
 use Symfony\Component\Notifier\Notification\Notification;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -27,6 +33,8 @@ final class DomainEventNotificationFactory implements EventNotificationFactoryIn
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly string $locale,
+        private readonly ?ResourceViewUrlGeneratorInterface $resourceViewUrlGenerator = null,
+        private readonly ?LoggerInterface $logger = null,
     ) {
     }
 
@@ -48,6 +56,8 @@ final class DomainEventNotificationFactory implements EventNotificationFactoryIn
             ));
         }
 
+        $link = $this->resolveLink($event);
+
         $subjectKey = \sprintf('sulu_notifier.subject.%s.%s', $event->getResourceKey(), $event->getEventType());
         $contentKey = \sprintf('sulu_activity.description.%s.%s', $event->getResourceKey(), $event->getEventType());
 
@@ -67,7 +77,56 @@ final class DomainEventNotificationFactory implements EventNotificationFactoryIn
         $subject = $this->translator->trans($subjectKey, $parameters, 'admin', $this->locale);
         $content = $this->translator->trans($contentKey, $parameters, 'admin', $this->locale);
 
-        return (new Notification($subject, $channels))->content($content);
+        return (new Notification($subject, $channels))->content($this->appendLink($content, $link));
+    }
+
+    private function resolveLink(DomainEvent $event): ?string
+    {
+        if (null === $this->resourceViewUrlGenerator) {
+            // No admin context available (e.g. a console command or a queue worker) —
+            // sulu_admin.resource_view_url_generator only exists in the admin context.
+            return null;
+        }
+
+        if (\str_ends_with($event->getEventType(), 'removed')) {
+            // The resource no longer exists, a detail link would be dead.
+            return null;
+        }
+
+        $viewParameters = ['id' => $event->getResourceId()];
+
+        if (null !== ($webspaceKey = $event->getResourceWebspaceKey())) {
+            $viewParameters['webspace'] = $webspaceKey;
+        }
+
+        if (null !== ($locale = $event->getResourceLocale())) {
+            $viewParameters['locale'] = $locale;
+        }
+
+        try {
+            return $this->resourceViewUrlGenerator->generate(
+                $event->getResourceKey(),
+                'detail',
+                $viewParameters,
+                UrlGeneratorInterface::ABSOLUTE_URL,
+            );
+        } catch (ResourceViewNotFoundException|ViewNotFoundException|ViewParameterNotFoundException $exception) {
+            $this->logger?->debug('sulu_notifier could not resolve a deep link', [
+                'event' => $event::class,
+                'exception' => $exception,
+            ]);
+
+            return null;
+        }
+    }
+
+    private function appendLink(string $content, ?string $link): string
+    {
+        if (null === $link) {
+            return $content;
+        }
+
+        return $content . "\n\n" . $link;
     }
 
     /**

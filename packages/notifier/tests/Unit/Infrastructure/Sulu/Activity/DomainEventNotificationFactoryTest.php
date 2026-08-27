@@ -14,12 +14,16 @@ declare(strict_types=1);
 namespace Sulu\Notifier\Tests\Unit\Infrastructure\Sulu\Activity;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
+use Sulu\Bundle\AdminBundle\Admin\View\ResourceViewUrlGeneratorInterface;
+use Sulu\Bundle\AdminBundle\Exception\ResourceViewNotFoundException;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Notifier\Infrastructure\Sulu\Activity\DomainEventNotificationFactory;
 use Symfony\Component\Notifier\Recipient\NoRecipient;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DomainEventNotificationFactoryTest extends TestCase
@@ -36,9 +40,19 @@ class DomainEventNotificationFactoryTest extends TestCase
         $this->translator = $this->prophesize(TranslatorInterface::class);
     }
 
-    private function createFactory(): DomainEventNotificationFactory
+    /**
+     * @param ObjectProphecy<ResourceViewUrlGeneratorInterface>|null $resourceViewUrlGenerator
+     */
+    private function createFactory(?ObjectProphecy $resourceViewUrlGenerator = null): DomainEventNotificationFactory
     {
-        return new DomainEventNotificationFactory($this->translator->reveal(), 'en');
+        /** @var ResourceViewUrlGeneratorInterface|null $revealedResourceViewUrlGenerator */
+        $revealedResourceViewUrlGenerator = $resourceViewUrlGenerator?->reveal();
+
+        return new DomainEventNotificationFactory(
+            $this->translator->reveal(),
+            'en',
+            $revealedResourceViewUrlGenerator,
+        );
     }
 
     public function testSupportsDomainEvent(): void
@@ -233,6 +247,100 @@ class DomainEventNotificationFactoryTest extends TestCase
         $notification = $this->createFactory()->create($event->reveal(), ['chat/slack']);
 
         self::assertSame('Page modified', $notification->getSubject());
+    }
+
+    public function testCreateAppendsDeepLinkWhenResolvable(): void
+    {
+        $event = $this->prophesize(DomainEvent::class);
+        $event->getResourceKey()->willReturn('pages');
+        $event->getResourceId()->willReturn('3');
+        $event->getResourceWebspaceKey()->willReturn('sulu');
+        $event->getEventType()->willReturn('modified');
+        $event->getResourceTitle()->willReturn('My page');
+        $event->getResourceLocale()->willReturn('de');
+        $event->getEventContext()->willReturn([]);
+        $event->getUser()->willReturn(null);
+
+        $this->translator->trans('sulu_activity.someone', [], 'admin', 'en')->willReturn('Someone');
+
+        $params = ['{userFullName}' => 'Someone', '{resourceTitle}' => 'My page', '{resourceLocale}' => 'de'];
+
+        $this->translator->trans('sulu_notifier.subject.pages.modified', $params, 'admin', 'en')
+            ->willReturn('Page modified');
+        $this->translator->trans('sulu_activity.description.pages.modified', $params, 'admin', 'en')
+            ->willReturn('Someone modified the page "My page"');
+
+        $resourceViewUrlGenerator = $this->prophesize(ResourceViewUrlGeneratorInterface::class);
+        $resourceViewUrlGenerator->generate(
+            'pages',
+            'detail',
+            ['id' => '3', 'webspace' => 'sulu', 'locale' => 'de'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
+        )->willReturn('https://example.org/admin/#/webspaces/sulu/pages/de/3/details');
+
+        $notification = $this->createFactory($resourceViewUrlGenerator)->create($event->reveal(), ['chat/slack']);
+
+        self::assertSame(
+            'Someone modified the page "My page"' . "\n\n" . 'https://example.org/admin/#/webspaces/sulu/pages/de/3/details',
+            $notification->getContent(),
+        );
+    }
+
+    public function testCreateSkipsLinkForRemovedEvent(): void
+    {
+        $event = $this->prophesize(DomainEvent::class);
+        $event->getResourceKey()->willReturn('pages');
+        $event->getEventType()->willReturn('removed');
+        $event->getResourceTitle()->willReturn('My page');
+        $event->getResourceLocale()->willReturn('de');
+        $event->getEventContext()->willReturn([]);
+        $event->getUser()->willReturn(null);
+
+        $this->translator->trans('sulu_activity.someone', [], 'admin', 'en')->willReturn('Someone');
+
+        $params = ['{userFullName}' => 'Someone', '{resourceTitle}' => 'My page', '{resourceLocale}' => 'de'];
+
+        $this->translator->trans('sulu_notifier.subject.pages.removed', $params, 'admin', 'en')
+            ->willReturn('Page removed');
+        $this->translator->trans('sulu_activity.description.pages.removed', $params, 'admin', 'en')
+            ->willReturn('Someone removed the page "My page"');
+
+        $resourceViewUrlGenerator = $this->prophesize(ResourceViewUrlGeneratorInterface::class);
+        $resourceViewUrlGenerator->generate(Argument::cetera())->shouldNotBeCalled();
+
+        $notification = $this->createFactory($resourceViewUrlGenerator)->create($event->reveal(), ['chat/slack']);
+
+        self::assertSame('Someone removed the page "My page"', $notification->getContent());
+    }
+
+    public function testCreateOmitsLinkWhenResourceViewNotConfigured(): void
+    {
+        $event = $this->prophesize(DomainEvent::class);
+        $event->getResourceKey()->willReturn('pages');
+        $event->getResourceId()->willReturn('3');
+        $event->getResourceWebspaceKey()->willReturn(null);
+        $event->getEventType()->willReturn('modified');
+        $event->getResourceTitle()->willReturn('My page');
+        $event->getResourceLocale()->willReturn(null);
+        $event->getEventContext()->willReturn([]);
+        $event->getUser()->willReturn(null);
+
+        $this->translator->trans('sulu_activity.someone', [], 'admin', 'en')->willReturn('Someone');
+
+        $params = ['{userFullName}' => 'Someone', '{resourceTitle}' => 'My page', '{resourceLocale}' => ''];
+
+        $this->translator->trans('sulu_notifier.subject.pages.modified', $params, 'admin', 'en')
+            ->willReturn('Page modified');
+        $this->translator->trans('sulu_activity.description.pages.modified', $params, 'admin', 'en')
+            ->willReturn('Someone modified the page "My page"');
+
+        $resourceViewUrlGenerator = $this->prophesize(ResourceViewUrlGeneratorInterface::class);
+        $resourceViewUrlGenerator->generate('pages', 'detail', ['id' => '3'], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willThrow(new ResourceViewNotFoundException('pages', 'detail'));
+
+        $notification = $this->createFactory($resourceViewUrlGenerator)->create($event->reveal(), ['chat/slack']);
+
+        self::assertSame('Someone modified the page "My page"', $notification->getContent());
     }
 
     public function testCreateStringifiesNonScalarContextValuesSafely(): void
