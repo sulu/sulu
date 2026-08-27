@@ -385,6 +385,7 @@ return static function(ContainerConfigurator $container) {
             '%sulu_media.format_manager.response_headers%',
             '%sulu_media.image.formats%',
             new Reference('logger', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            '%kernel.debug%',
         ]);
 
     $services->set('sulu_media.type.collection_selection', CollectionSelection::class)

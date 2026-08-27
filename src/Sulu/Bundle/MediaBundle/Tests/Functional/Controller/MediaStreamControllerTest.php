@@ -152,7 +152,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
 
         $this->client->request('GET', $media->getFormats()['small-inset']);
 
-        $this->assertHttpStatusCode(500, $this->client->getResponse());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
     public function testGetImageAction(): void
