@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Notifier\Infrastructure\Sulu\Activity;
 
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\AdminBundle\Admin\View\ResourceViewUrlGeneratorInterface;
 use Sulu\Bundle\AdminBundle\Exception\ResourceViewNotFoundException;
@@ -30,12 +31,21 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 final class DomainEventNotificationFactory implements EventNotificationFactoryInterface
 {
+    /**
+     * Event types that signal the resource itself is gone (not just a sub-entity of it,
+     * e.g. "contact_removed" or "crop_removed" leave the parent resource intact).
+     */
+    private const RESOURCE_REMOVED_EVENT_TYPES = ['removed', 'removed_no_trash'];
+
+    private readonly LoggerInterface $logger;
+
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly string $locale,
         private readonly ?ResourceViewUrlGeneratorInterface $resourceViewUrlGenerator = null,
-        private readonly ?LoggerInterface $logger = null,
+        ?LoggerInterface $logger = null,
     ) {
+        $this->logger = $logger ?? new NullLogger();
     }
 
     public function supports(object $event): bool
@@ -83,14 +93,12 @@ final class DomainEventNotificationFactory implements EventNotificationFactoryIn
     private function resolveLink(DomainEvent $event): ?string
     {
         if (null === $this->resourceViewUrlGenerator) {
-            // No admin context available (e.g. a console command or a queue worker) —
-            // sulu_admin.resource_view_url_generator only exists in the admin context.
+            // sulu_admin.resource_view_url_generator is admin-context only (sulu.context tag).
             return null;
         }
 
-        if (\str_contains($event->getEventType(), 'removed')) {
+        if (\in_array($event->getEventType(), self::RESOURCE_REMOVED_EVENT_TYPES, true)) {
             // The resource no longer exists, a detail link would be dead.
-            // str_contains (not str_ends_with) to also catch e.g. "removed_no_trash".
             return null;
         }
 
@@ -111,10 +119,22 @@ final class DomainEventNotificationFactory implements EventNotificationFactoryIn
                 $viewParameters,
                 UrlGeneratorInterface::ABSOLUTE_URL,
             );
-        } catch (ResourceViewNotFoundException|ViewNotFoundException|ViewParameterNotFoundException $exception) {
-            $this->logger?->debug('sulu_notifier could not resolve a deep link', [
-                'event' => $event::class,
-                'exception' => $exception,
+        } catch (ResourceViewNotFoundException) {
+            // No detail view configured for this resource — an expected gap, not worth logging.
+            return null;
+        } catch (ViewNotFoundException) {
+            // Most commonly caused by the current user lacking access to the view.
+            $this->logger->info('sulu_notifier could not resolve a deep link: view not found', [
+                'resourceKey' => $event->getResourceKey(),
+                'resourceId' => $event->getResourceId(),
+            ]);
+
+            return null;
+        } catch (ViewParameterNotFoundException $exception) {
+            $this->logger->warning('sulu_notifier could not resolve a deep link: missing view parameter', [
+                'resourceKey' => $event->getResourceKey(),
+                'resourceId' => $event->getResourceId(),
+                'parameter' => $exception->getParameter(),
             ]);
 
             return null;
