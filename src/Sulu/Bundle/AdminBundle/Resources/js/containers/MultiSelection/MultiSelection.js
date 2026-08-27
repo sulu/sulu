@@ -85,6 +85,11 @@ class MultiSelection extends React.Component<Props> {
         const newIds = toJS(this.props.value);
         const loadedIds = toJS(this.selectionStore.items.map((item) => item.id));
 
+        if (!Array.isArray(newIds)) {
+            this.selectionStore.loadItems([]);
+            return;
+        }
+
         newIds.sort();
         loadedIds.sort();
         if (!equals(newIds, loadedIds)) {
