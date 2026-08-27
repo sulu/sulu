@@ -38,6 +38,7 @@ use Symfony\Bundle\SecurityBundle\Security;
  *     changed: \DateTimeImmutable,
  *     locale: string,
  *     availableLocales: string[]|null,
+ *     title: string|null,
  *     slug: string,
  *     uuid: string
  * }
@@ -218,6 +219,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
         $queryBuilder->addSelect('dimensionContent.locale');
 
         $queryBuilder->addSelect('unLocalizedDimensionContent.availableLocales');
+        $queryBuilder->addSelect('dimensionContent.title');
 
         $queryBuilder->addSelect('route.slug');
 
@@ -310,7 +312,8 @@ class PagesSitemapProvider extends AbstractSitemapProvider
             $url,
             $page['locale'],
             $defaultLocale,
-            $changed
+            $changed,
+            title: $page['title'] ?? null
         );
 
         if ($alternatePages[$page['uuid']] ?? null) {

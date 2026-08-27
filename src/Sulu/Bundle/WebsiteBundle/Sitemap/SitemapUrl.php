@@ -45,6 +45,7 @@ class SitemapUrl
      * @param SitemapUrl::CHANGE_FREQUENCY_* $changefreq frequency of change
      * @param float $priority priority of page in relation to other domains
      * @param array $attributes
+     * @param string|null $title human readable title of the url, used to render a human readable sitemap
      */
     public function __construct(
         private $loc,
@@ -53,7 +54,8 @@ class SitemapUrl
         private ?\DateTimeInterface $lastmod = null,
         private $changefreq = null,
         private $priority = null,
-        private $attributes = []
+        private $attributes = [],
+        private ?string $title = null
     ) {
         $this->addAlternateLink(new SitemapAlternateLink($this->loc, $this->locale));
     }
@@ -146,5 +148,13 @@ class SitemapUrl
     public function getDefaultLocale()
     {
         return $this->defaultLocale;
+    }
+
+    /**
+     * Human readable title of the url, is only set by providers which support it.
+     */
+    public function getTitle(): ?string
+    {
+        return $this->title;
     }
 }
