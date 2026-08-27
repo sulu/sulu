@@ -281,5 +281,16 @@
     "sulu_admin.link_target_blank": "_blank",
     "sulu_admin.link_target_self": "_self",
     "sulu_admin.link_target_parent": "_parent",
-    "sulu_admin.link_target_top": "_top"
+    "sulu_admin.link_target_top": "_top",
+    "sulu_admin.table.format_bold": "Bold",
+    "sulu_admin.table.format_italic": "Italic",
+    "sulu_admin.table.format_underline": "Underline",
+    "sulu_admin.table.insert_column": "Insert column",
+    "sulu_admin.table.insert_row": "Insert row",
+    "sulu_admin.table.fullscreen": "Fullscreen",
+    "sulu_admin.table.column_title_placeholder": "Column title",
+    "sulu_admin.table.add_row": "Row",
+    "sulu_admin.table.add_column": "Column",
+    "sulu_admin.table.close": "Close",
+    "sulu_admin.table.edit_overlay_title": "Edit table"
 }
