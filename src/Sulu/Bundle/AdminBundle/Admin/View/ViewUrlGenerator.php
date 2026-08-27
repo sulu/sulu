@@ -16,7 +16,7 @@ use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class ViewUrlGenerator implements ViewUrlGeneratorInterface
+final class ViewUrlGenerator implements ViewUrlGeneratorInterface
 {
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
