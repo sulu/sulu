@@ -1864,11 +1864,9 @@ test('Should handle undefined value gracefully', () => {
 test('Should handle blocks with nested object properties when switching templates (menu.xml scenario)', () => {
     // Simulates the menu.xml structure: pages → subpages → subpages2
     // When switching templates, nested block data might temporarily be objects instead of arrays
-    const renderBlockContent = jest.fn((value, type, index, expanded) => {
+    const renderBlockContent = jest.fn((value, type, index) => {
         // Simulate rendering nested BlockCollection for subpages
         // The nested value might be an object {} instead of array []
-        const subpages = value.subpages;
-        // ensureArray should handle this in the actual component
         return <div data-testid={`block-content-${index}`}>{JSON.stringify(value)}</div>;
     });
 
@@ -1904,7 +1902,7 @@ test('Should handle blocks with nested object properties when switching template
 
 test('Should handle deeply nested blocks becoming objects (3-level nesting from menu.xml)', () => {
     // Simulates the 3-level nesting in menu.xml: pages → subpages → subpages2
-    const renderBlockContent = jest.fn((value, type, index, expanded) => {
+    const renderBlockContent = jest.fn((value, type, index) => {
         return <div data-testid={`block-content-${index}`}>{JSON.stringify(value)}</div>;
     });
 
@@ -1936,7 +1934,7 @@ test('Should handle deeply nested blocks becoming objects (3-level nesting from 
                 title: 'Main Page',
                 subpages: {
                     // First level becomes object
-                    0: {
+                    '0': {
                         type: 'subpage',
                         title: 'Subpage',
                         subpages2: {}, // Second level also becomes object
@@ -1952,7 +1950,7 @@ test('Should handle deeply nested blocks becoming objects (3-level nesting from 
 
 test('Should handle footer.xml scenario with multiple nested block types becoming objects', () => {
     // Simulates footer.xml structure with pages and socials nested blocks
-    const renderBlockContent = jest.fn((value, type, index, expanded) => {
+    const renderBlockContent = jest.fn((value, type, index) => {
         return <div data-testid={`block-content-${index}`}>{JSON.stringify(value)}</div>;
     });
 

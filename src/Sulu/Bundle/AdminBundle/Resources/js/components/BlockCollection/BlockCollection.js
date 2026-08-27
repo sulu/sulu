@@ -201,7 +201,9 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
         expandedBlocks.push(...new Array(valueArray.length - expandedBlocks.length).fill(collapsed));
         selectedBlocks.push(...new Array(valueArray.length - selectedBlocks.length).fill(false));
         generatedBlockIds.push(
-            ...new Array(valueArray.length - generatedBlockIds.length).fill(false).map(() => ++BlockCollection.idCounter)
+            ...new Array(valueArray.length - generatedBlockIds.length)
+                .fill(false)
+                .map(() => ++BlockCollection.idCounter)
         );
 
         // Handle minOccurs - add blocks if needed
@@ -567,7 +569,8 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
     };
 
     cutBlocks = (indexes: Array<number>) => {
-        const {generateBlockIds, onDisplaySnackbar, value} = this.props;       const valueArray = ensureArray(value);
+        const {generateBlockIds, onDisplaySnackbar, value} = this.props;
+        const valueArray = ensureArray(value);
 
         if (valueArray.length === 0) {
             return;
