@@ -13,6 +13,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
+use Sulu\Bundle\AdminBundle\Admin\SuluAdmin;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
@@ -100,6 +101,31 @@ return static function(ContainerConfigurator $container) {
             new Reference('twig'),
             new Reference('translator.default'),
             new Reference('sulu_admin.metadata_provider_registry'),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            '%kernel.environment%',
+            '%sulu.version%',
+            '%app.version%',
+            null,
+            '%sulu_core.locales%',
+            '%sulu_core.translations%',
+            '%sulu_core.fallback_locale%',
+            null,
+            null,
+            '%sulu_security.password_policy_pattern%',
+            '%sulu_security.password_policy_info_translation_key%',
+            '%sulu_security.has_single_sign_on_providers%',
+        ])
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_admin.sulu_admin', SuluAdmin::class)
+        ->args([
+            new Reference('security.token_storage'),
             new Reference('sulu_admin.view_registry'),
             new Reference('sulu_admin.navigation_registry'),
             new Reference('sulu_admin.field_type_option_registry'),
@@ -107,23 +133,17 @@ return static function(ContainerConfigurator $container) {
             tagged_iterator('sulu_content.smart_content_provider', indexAttribute: 'type', defaultIndexMethod: 'getType'),
             new Reference('sulu_markup.link_tag.provider_pool'),
             new Reference('sulu.core.localization_manager'),
-            '%kernel.environment%',
-            '%sulu.version%',
-            '%app.version%',
             '%sulu_admin.resources%',
-            '%sulu_core.locales%',
-            '%sulu_core.translations%',
-            '%sulu_core.fallback_locale%',
             '%sulu_admin.collaboration_interval%',
             '%sulu_admin.collaboration_enabled%',
-            '%sulu_security.password_policy_pattern%',
-            '%sulu_security.password_policy_info_translation_key%',
-            '%sulu_security.has_single_sign_on_providers%',
         ])
-        ->tag('sulu.context', ['context' => 'admin']);
+        ->tag('sulu.admin')
+        ->tag('sulu.context', ['context' => 'admin'])
+    ;
 
     $services->set('sulu_admin.admin_pool', AdminPool::class)
         ->public()
+        ->lazy()
         ->args([tagged_iterator('sulu.admin', defaultPriorityMethod: 'getPriority')])
         ->tag('sulu.context', ['context' => 'admin']);
 

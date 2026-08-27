@@ -20,22 +20,12 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
-use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
-use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
-use Sulu\Bundle\AdminBundle\Admin\View\View as SuluView;
-use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
-use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
-use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
-use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
-use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPool;
-use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
-use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -99,38 +89,6 @@ class AdminControllerTest extends TestCase
     private ContainerInterface $metadataProviderContainer;
 
     /**
-     * @var ObjectProphecy<ViewRegistry>
-     */
-    private $viewRegistry;
-
-    /**
-     * @var ObjectProphecy<NavigationRegistry>
-     */
-    private $navigationRegistry;
-
-    /**
-     * @var ObjectProphecy<FieldTypeOptionRegistryInterface>
-     */
-    private $fieldTypeOptionRegistry;
-
-    /**
-     * @var ObjectProphecy<ContactManagerInterface>
-     */
-    private $contactManager;
-
-    /**
-     * @var \ArrayIterator<string, SmartContentProviderInterface>
-     */
-    private $smartContentProviders;
-
-    private LinkProviderPoolInterface $linkProviderPool;
-
-    /**
-     * @var ObjectProphecy<LocalizationManagerInterface>
-     */
-    private $localizationManager;
-
-    /**
      * @var string
      */
     private $environment = 'prod';
@@ -144,15 +102,6 @@ class AdminControllerTest extends TestCase
      * @var string
      */
     private $appVersion = '666';
-
-    private $resources = [
-        'tags' => [
-            'endpoint' => [
-                'list' => 'sulu_tag.get_tags',
-                'detail' => 'sulu_tag.get_tag',
-            ],
-        ],
-    ];
 
     /**
      * @var array
@@ -190,15 +139,6 @@ class AdminControllerTest extends TestCase
 
         $this->metadataProviderContainer = new Container();
         $metadataProviderRegistry = new MetadataProviderRegistry($this->metadataProviderContainer);
-        $this->viewRegistry = $this->prophesize(ViewRegistry::class);
-        $this->navigationRegistry = $this->prophesize(NavigationRegistry::class);
-        $this->fieldTypeOptionRegistry = $this->prophesize(FieldTypeOptionRegistryInterface::class);
-        $this->contactManager = $this->prophesize(ContactManagerInterface::class);
-        $this->smartContentProviders = new \ArrayIterator([]);
-        $this->linkProviderPool = new LinkProviderPool([]);
-        $this->localizationManager = $this->prophesize(LocalizationManagerInterface::class);
-
-        $this->localizationManager->getLocalizations()->willReturn([]);
         $this->tokenStorage->getToken()->willReturn($this->token->reveal());
         $this->token->getUser()->willReturn($this->user->reveal());
 
@@ -211,61 +151,36 @@ class AdminControllerTest extends TestCase
             $this->engine->reveal(),
             $this->translatorBag->reveal(),
             $metadataProviderRegistry,
-            $this->viewRegistry->reveal(),
-            $this->navigationRegistry->reveal(),
-            $this->fieldTypeOptionRegistry->reveal(),
-            $this->contactManager->reveal(),
-            $this->smartContentProviders,
-            $this->linkProviderPool,
-            $this->localizationManager->reveal(),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
             $this->environment,
             $this->suluVersion,
             $this->appVersion,
-            $this->resources,
+            null,
             $this->locales,
             $this->translations,
             $this->fallbackLocale,
-            10,
-            true
+            null,
+            null,
         );
     }
 
     public function testConfigAction(): void
     {
-        $views = [
-            new SuluView('sulu_snippet.list', '/snippets', 'sulu_admin.list'),
-        ];
-        $this->viewRegistry->getViews()->willReturn($views);
-
-        $navigationItem1 = new NavigationItem('navigation_item1');
-        $navigationItem2 = new NavigationItem('navigation_item2');
-        $this->navigationRegistry->getNavigationItems()->willReturn([$navigationItem1, $navigationItem2]);
-
-        $this->urlGenerator->generate('view_id_1')->willReturn('/path1');
-        $this->urlGenerator->generate('view_id_2')->willReturn('/path2');
-        $this->urlGenerator->generate('sulu_admin.metadata', ['type' => ':type', 'key' => ':key'])
-            ->willReturn('/admin/metadata');
-        $this->urlGenerator->generate('sulu_preview.start')->willReturn('/preview/start');
-        $this->urlGenerator->generate('sulu_preview.render')->willReturn('/preview/render');
-        $this->urlGenerator->generate('sulu_preview.update')->willReturn('/preview/update');
-        $this->urlGenerator->generate('sulu_preview.update-context')->willReturn('/preview/update-context');
-        $this->urlGenerator->generate('sulu_preview.stop')->willReturn('/preview/stop');
-        $this->urlGenerator->generate('sulu_website.cache.remove')->willReturn('/admin/website/cache');
-        $this->urlGenerator->generate('sulu_media.redirect', ['id' => ':id'])->willReturn('/media/redirect');
+        $this->user->getLocale()->willReturn('en');
 
         $contact = $this->prophesize(ContactInterface::class);
         $contact->getId()->willReturn(5);
 
-        $this->user->getContact()->willReturn($contact->reveal());
-        $this->user->getLocale()->willReturn('en');
-
-        $fieldTypeOptions = ['selection' => []];
-        $this->fieldTypeOptionRegistry->toArray()->willReturn($fieldTypeOptions);
-
         $admin1 = $this->prophesize(Admin::class);
         $admin1Config = ['test1' => 'value1'];
         $admin1->getConfig()->willReturn($admin1Config);
-        $admin1->getConfigKey()->willReturn('admin1');
+        $admin1->getConfigKey()->willReturn('sulu_admin');
 
         $admin2 = $this->prophesize(Admin::class);
         $admin2Config = ['test2' => 'value2'];
@@ -278,23 +193,15 @@ class AdminControllerTest extends TestCase
 
         $this->adminPool->getAdmins()->willReturn([$admin1, $admin2, $admin3]);
 
-        $smartContentProviders = [];
         $this->viewHandler->handle(
             Argument::that(
-                function(View $view) use ($smartContentProviders, $fieldTypeOptions, $views, $admin1Config, $admin2Config) {
+                function(View $view) {
+                    /** @var array<string, array<string, string>> $data */
                     $data = $view->getData();
 
                     return 'json' === $view->getFormat()
-                        && $data['sulu_admin']['fieldTypeOptions'] === $fieldTypeOptions
-                        && $data['sulu_admin']['smartContent'] === $smartContentProviders
-                        && $data['sulu_admin']['routes'] === $views
-                        && 'navigation_item1' === $data['sulu_admin']['navigation'][0]['title']
-                        && 'navigation_item2' === $data['sulu_admin']['navigation'][1]['title']
-                        && $data['sulu_admin']['resources'] === $this->resources
-                        && true === $data['sulu_admin']['collaborationEnabled']
-                        && 10000 === $data['sulu_admin']['collaborationInterval']
-                        && $data['admin1'] === $admin1Config
-                        && $data['admin2'] === $admin2Config;
+                        && ['test1' => 'value1'] === $data['sulu_admin']
+                        && ['test2' => 'value2'] === $data['admin2'];
                 }
             )
         )->shouldBeCalled()->willReturn(new Response());
