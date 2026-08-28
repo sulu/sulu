@@ -11,16 +11,19 @@
 
 namespace Sulu\Bundle\WebsiteBundle\EventListener;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Bundle\WebsiteBundle\Event\CacheClearEvent;
 use Psr\Cache\CacheItemPoolInterface;
+use Sulu\Bundle\WebsiteBundle\Event\CacheClearEvent;
 use Sulu\Bundle\WebsiteBundle\Events;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class CacheClearListener implements EventSubscriberInterface
+/**
+ * @internal This class should not be instantiated by a project.
+ *           Create your own event subscriber / listener instead.
+ */
+class ErrorPageCacheClearEventSubscriber implements EventSubscriberInterface
 {
     public function __construct(private CacheItemPoolInterface $cache)
     {
-
     }
 
     public static function getSubscribedEvents(): array

@@ -27,14 +27,18 @@ class SuluWebsiteExtensionTest extends AbstractExtensionTestCase
     {
         $this->container->setParameter('sulu.context', null);
         $this->container->setParameter('kernel.bundles', []);
+        $this->container->setParameter('kernel.debug', false);
         $this->load();
+
         $this->assertContainerBuilderNotHasService('sulu_website.data_collector.sulu_collector');
+        $this->assertContainerBuilderHasService('sulu_website.error_page_cache_clear_subscriber');
     }
 
     public function testLoadWithContextWebsite(): void
     {
         $this->container->setParameter('sulu.context', 'website');
         $this->container->setParameter('kernel.bundles', []);
+        $this->container->setParameter('kernel.debug', false);
         $this->load();
         $this->assertContainerBuilderHasService('sulu_website.data_collector.sulu_collector');
     }
@@ -43,6 +47,7 @@ class SuluWebsiteExtensionTest extends AbstractExtensionTestCase
     {
         $this->container->setParameter('sulu.context', 'admin');
         $this->container->setParameter('kernel.bundles', []);
+        $this->container->setParameter('kernel.debug', false);
         $this->load();
         $this->assertContainerBuilderNotHasService('sulu_website.data_collector.sulu_collector');
     }
@@ -51,7 +56,20 @@ class SuluWebsiteExtensionTest extends AbstractExtensionTestCase
     {
         $this->container->setParameter('sulu.context', 'admin');
         $this->container->setParameter('kernel.bundles', ['SuluTrashBundle' => true]);
+        $this->container->setParameter('kernel.debug', false);
         $this->load();
         $this->assertContainerBuilderNotHasService('sulu_website.data_collector.sulu_collector');
+    }
+
+    public function testLoadWithDebugShouldNotRegisterErrorCache(): void
+    {
+        $this->container->setParameter('sulu.context', 'admin');
+        $this->container->setParameter('kernel.bundles', []);
+        $this->container->setParameter('kernel.debug', true);
+
+        $this->load();
+
+        $this->assertContainerBuilderNotHasService('sulu_website.error_page_cache_clear_subscriber');
+        $this->assertContainerBuilderNotHasService('sulu_website.error_page_cache');
     }
 }

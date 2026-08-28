@@ -29857,6 +29857,12 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Controller/SitemapController.php
 
 		-
+			message: '#^Cannot access offset ''cache'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/WebsiteBundle/DependencyInjection/SuluWebsiteExtension.php
+
+		-
 			message: '#^Cannot access offset ''cache_lifetime'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3

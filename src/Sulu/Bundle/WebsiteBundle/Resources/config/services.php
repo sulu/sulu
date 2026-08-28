@@ -20,6 +20,7 @@ use Sulu\Bundle\WebsiteBundle\Controller\ErrorController;
 use Sulu\Bundle\WebsiteBundle\Controller\RedirectController;
 use Sulu\Bundle\WebsiteBundle\Controller\SegmentController;
 use Sulu\Bundle\WebsiteBundle\Controller\SitemapController;
+use Sulu\Bundle\WebsiteBundle\EventListener\ErrorPageCacheClearEventSubscriber;
 use Sulu\Bundle\WebsiteBundle\EventListener\RouterListener;
 use Sulu\Bundle\WebsiteBundle\EventListener\TranslatorListener;
 use Sulu\Bundle\WebsiteBundle\EventSubscriber\DomainEventEventSubscriber;
@@ -32,8 +33,6 @@ use Sulu\Bundle\WebsiteBundle\Twig\Core\UtilTwigExtension;
 use Sulu\Component\Webspace\EventSubscriber\WebspaceTagSubscriber;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Sulu\Bundle\WebsiteBundle\EventListener\CacheClearListener;
 
 return static function(ContainerConfigurator $container) {
     $services = $container->services();
@@ -113,21 +112,14 @@ return static function(ContainerConfigurator $container) {
         ])
         ->tag('kernel.event_subscriber');
 
-    $services->set('sulu_website.error_page_cache', FilesystemAdapter::class)
-        ->args([
-            'error_pages_cache',
-            0,
-            '%kernel.cache_dir%/pools'
-        ]);
-
     $services->set('sulu_website.error_controller', ErrorController::class)
         ->decorate('error_controller')
         ->args([
             new Reference('sulu_website.error_controller.inner'),
             new Reference('sulu_website.resolver.template_attribute'),
             new Reference('twig'),
-            new Reference('sulu_website.error_page_cache'),
             '%kernel.debug%',
+            new Reference('sulu_website.error_page_cache', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
         ->tag('sulu.context', ['context' => 'website']);
 
@@ -185,7 +177,7 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu.context', ['context' => 'website'])
         ->tag('kernel.event_subscriber');
 
-    $services->set('sulu_website.event_listener.cache_clear', CacheClearListener::class)
+    $services->set('sulu_website.error_page_cache_clear_subscriber', ErrorPageCacheClearEventSubscriber::class)
         ->args([
             new Reference('sulu_website.error_page_cache'),
         ])
