@@ -32,6 +32,20 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
 
     public function prepend(ContainerBuilder $container): void
     {
+        if ($container->hasExtension('framework')) {
+            $container->prependExtensionConfig(
+                'framework',
+                [
+                    'cache' => [
+                        'pools' => [
+                            'sulu_website.error_page_cache' => [
+                                'adapter' => 'cache.app',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
         if ($container->hasExtension('doctrine')) {
             $container->prependExtensionConfig(
                 'doctrine',
@@ -153,11 +167,12 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
             ]
         );
 
-        $cacheEnabled = $config['error_pages']['cache'];
-        if (null === $cacheEnabled) {
-            $cacheEnabled = !$container->getParameter('kernel.debug');
+        /** @var bool|null $errorCache */
+        $errorCache = $config['error_pages']['cache'];
+        $cacheEnabled = $errorCache ?? !$container->getParameter('kernel.debug');
+        if (!$cacheEnabled) {
+            $container->removeDefinition('sulu_website.error_page_cache_clear_subscriber');
+            $container->removeDefinition('sulu_website.error_page_cache');
         }
-
-        $container->setParameter('sulu_website.error_pages.cache', $cacheEnabled);
     }
 }

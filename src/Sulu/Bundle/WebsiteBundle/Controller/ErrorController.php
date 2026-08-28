@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
+use Psr\Cache\CacheItemPoolInterface;
 use Sulu\Bundle\WebsiteBundle\Resolver\TemplateAttributeResolverInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Webspace;
@@ -19,7 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ErrorController as SymfonyErrorController;
 use Twig\Environment;
-use Psr\Cache\CacheItemPoolInterface;
 
 class ErrorController
 {
@@ -47,16 +47,24 @@ class ErrorController
             return $this->symfonyErrorController->__invoke($exception);
         }
 
-        $webspaceAttributes = $request->attributes->get("_sulu");
-        $locale = $webspaceAttributes->getAttribute('locale');
-        $webspaceKey = $webspaceAttributes->getAttribute('webspace')->getKey();
+        /** @var RequestAttributes $webspaceAttributes */
+        $webspaceAttributes = $request->attributes->get('_sulu');
+        $locale = $request->getLocale();
 
-        $cacheKey = sprintf('%s-%s-%s', $webspaceKey, $locale, $code);
+        /** @var Webspace|null $webspace */
+        $webspace = $webspaceAttributes->getAttribute('webspace');
+        $webspaceKey = $webspace?->getKey() ?? '';
 
-        $item = $this->cache->getItem($cacheKey);
+        if ($this->cache instanceof CacheItemPoolInterface) {
+            $cacheKey = \sprintf('%s-%s-%s', $webspaceKey, $locale, $code);
+            $item = $this->cache->getItem($cacheKey);
 
-        if ($item->isHit()) {
-            return new Response($item->get(), $code);
+            if ($item->isHit()) {
+                /** @var string $content */
+                $content = $item->get();
+
+                return new Response($content, $code);
+            }
         }
 
         $htmlResponse = $this->twig->render(
@@ -68,8 +76,10 @@ class ErrorController
             ])
         );
 
-        $item->set($htmlResponse);
-        $this->cache->save($item);
+        if ($this->cache instanceof CacheItemPoolInterface) {
+            $item->set($htmlResponse);
+            $this->cache->save($item);
+        }
 
         return new Response($htmlResponse, $code);
     }
