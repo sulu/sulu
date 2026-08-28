@@ -31,12 +31,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 final class DomainEventNotificationFactory implements EventNotificationFactoryInterface
 {
-    /**
-     * Event types that signal the resource itself is gone (not just a sub-entity of it,
-     * e.g. "contact_removed" or "crop_removed" leave the parent resource intact).
-     */
-    private const RESOURCE_REMOVED_EVENT_TYPES = ['removed', 'removed_no_trash'];
-
     private readonly LoggerInterface $logger;
 
     public function __construct(
@@ -94,11 +88,6 @@ final class DomainEventNotificationFactory implements EventNotificationFactoryIn
     {
         if (null === $this->resourceViewUrlGenerator) {
             // sulu_admin.resource_view_url_generator is admin-context only (sulu.context tag).
-            return null;
-        }
-
-        if (\in_array($event->getEventType(), self::RESOURCE_REMOVED_EVENT_TYPES, true)) {
-            // The resource no longer exists, a detail link would be dead.
             return null;
         }
 

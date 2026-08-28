@@ -361,10 +361,15 @@ class DomainEventNotificationFactoryTest extends TestCase
         );
     }
 
-    public function testCreateSkipsLinkForRemovedEvent(): void
+    public function testCreateIncludesLinkForRemovedEvent(): void
     {
+        // A "removed" event still links to the resource's detail view -- soft-deleted
+        // resources (trash) stay reachable, and even a dead link is preferable to
+        // silently dropping the deep link on every removal event.
         $event = $this->prophesize(DomainEvent::class);
         $event->getResourceKey()->willReturn('pages');
+        $event->getResourceId()->willReturn('3');
+        $event->getResourceWebspaceKey()->willReturn('sulu');
         $event->getEventType()->willReturn('removed');
         $event->getResourceTitle()->willReturn('My page');
         $event->getResourceLocale()->willReturn('de');
@@ -380,18 +385,27 @@ class DomainEventNotificationFactoryTest extends TestCase
         $this->translator->trans('sulu_activity.description.pages.removed', $params, 'admin', 'en')
             ->willReturn('Someone removed the page "My page"');
 
-        $this->viewRegistry->findViewByName(Argument::any())->shouldNotBeCalled();
+        $view = new View('sulu_page.page_edit_form.detail', '/webspaces/:webspace/pages/:locale/:id/details', 'form');
+        $this->viewRegistry->findViewByName('sulu_page.page_edit_form.detail')->willReturn($view);
+        $this->requestStack->getCurrentRequest()->willReturn(null);
+        $this->urlGenerator->generate('sulu_admin', [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://example.org/admin/');
 
         $resources = ['pages' => ['views' => ['detail' => 'sulu_page.page_edit_form.detail']]];
         $notification = $this->createFactory(true, $resources)->create($event->reveal(), ['chat/slack']);
 
-        self::assertSame('Someone removed the page "My page"', $notification->getContent());
+        self::assertSame(
+            'Someone removed the page "My page"' . "\n\n" . 'https://example.org/admin/#/webspaces/sulu/pages/de/3/details',
+            $notification->getContent(),
+        );
     }
 
-    public function testCreateSkipsLinkForRemovedNoTrashEvent(): void
+    public function testCreateIncludesLinkForRemovedNoTrashEvent(): void
     {
         $event = $this->prophesize(DomainEvent::class);
         $event->getResourceKey()->willReturn('media');
+        $event->getResourceId()->willReturn('5');
+        $event->getResourceWebspaceKey()->willReturn(null);
         $event->getEventType()->willReturn('removed_no_trash');
         $event->getResourceTitle()->willReturn('some-file.jpg');
         $event->getResourceLocale()->willReturn(null);
@@ -407,12 +421,50 @@ class DomainEventNotificationFactoryTest extends TestCase
         $this->translator->trans('sulu_activity.description.media.removed_no_trash', $params, 'admin', 'en')
             ->willReturn('Someone permanently removed the media "some-file.jpg"');
 
-        $this->viewRegistry->findViewByName(Argument::any())->shouldNotBeCalled();
+        $view = new View('sulu_media.media_edit_form.detail', '/media/:id/details', 'form');
+        $this->viewRegistry->findViewByName('sulu_media.media_edit_form.detail')->willReturn($view);
+        $this->requestStack->getCurrentRequest()->willReturn(null);
+        $this->urlGenerator->generate('sulu_admin', [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://example.org/admin/');
 
         $resources = ['media' => ['views' => ['detail' => 'sulu_media.media_edit_form.detail']]];
         $notification = $this->createFactory(true, $resources)->create($event->reveal(), ['chat/slack']);
 
-        self::assertSame('Someone permanently removed the media "some-file.jpg"', $notification->getContent());
+        self::assertSame(
+            'Someone permanently removed the media "some-file.jpg"' . "\n\n" . 'https://example.org/admin/#/media/5/details',
+            $notification->getContent(),
+        );
+    }
+
+    public function testCreateOmitsLinkWhenNoResourceViewUrlGeneratorInjected(): void
+    {
+        // sulu_admin.resource_view_url_generator is only wired when the AdminBundle
+        // is registered -- console/worker contexts without it must not crash or
+        // attempt to generate a link.
+        $event = $this->prophesize(DomainEvent::class);
+        $event->getResourceKey()->willReturn('pages');
+        $event->getResourceId()->willReturn('3');
+        $event->getResourceWebspaceKey()->willReturn(null);
+        $event->getEventType()->willReturn('modified');
+        $event->getResourceTitle()->willReturn('My page');
+        $event->getResourceLocale()->willReturn(null);
+        $event->getEventContext()->willReturn([]);
+        $event->getUser()->willReturn(null);
+
+        $this->translator->trans('sulu_activity.someone', [], 'admin', 'en')->willReturn('Someone');
+
+        $params = ['{userFullName}' => 'Someone', '{resourceTitle}' => 'My page', '{resourceLocale}' => ''];
+
+        $this->translator->trans('sulu_notifier.subject.pages.modified', $params, 'admin', 'en')
+            ->willReturn('Page modified');
+        $this->translator->trans('sulu_activity.description.pages.modified', $params, 'admin', 'en')
+            ->willReturn('Someone modified the page "My page"');
+
+        $this->urlGenerator->generate(Argument::cetera())->shouldNotBeCalled();
+
+        $notification = $this->createFactory(false)->create($event->reveal(), ['chat/slack']);
+
+        self::assertSame('Someone modified the page "My page"', $notification->getContent());
     }
 
     public function testCreateOmitsLinkWhenResourceViewNotConfigured(): void
