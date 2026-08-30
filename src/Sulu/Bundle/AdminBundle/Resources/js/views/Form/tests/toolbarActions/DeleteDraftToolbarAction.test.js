@@ -94,6 +94,21 @@ test('Return enabled item config', () => {
     }));
 });
 
+test('Return disabled item config when disabled_condition is set', () => {
+    const deleteDraftToolbarAction = createDeleteDraftToolbarAction({
+        disabled_condition: 'true == true',
+    });
+    deleteDraftToolbarAction.resourceFormStore.resourceStore.id = 5;
+    deleteDraftToolbarAction.resourceFormStore.resourceStore.data.published = true;
+    deleteDraftToolbarAction.resourceFormStore.resourceStore.data.publishedState = false;
+
+    expect(deleteDraftToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        disabled: true,
+        label: 'sulu_page.delete_draft',
+        type: 'button',
+    }));
+});
+
 test('Return no item config if deprecated display_condition is not met', () => {
     const deleteDraftToolbarAction = createDeleteDraftToolbarAction({display_condition: '_permission.live'});
 

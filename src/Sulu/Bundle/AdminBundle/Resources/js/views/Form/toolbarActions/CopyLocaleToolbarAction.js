@@ -98,13 +98,11 @@ export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
             visible_condition: visibleCondition,
         } = this.options;
 
-        const {id} = this.resourceFormStore;
-
         const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, this.conditionData);
 
         if (visibleConditionFulfilled) {
             return {
-                disabled: !id,
+                disabled: this.isDisabled(),
                 icon: 'su-copy',
                 label: translate('sulu_admin.copy_locale'),
                 onClick: action(() => {
@@ -177,4 +175,10 @@ export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
             locales: this.locales?.filter((locale) => locale !== this.resourceFormStore.locale?.get()),
         });
     };
+
+    isDisabled(): boolean {
+        const disabled = super.isDisabled();
+
+        return disabled || !this.resourceFormStore.id;
+    }
 }

@@ -76,14 +76,11 @@ export default class DeleteDraftToolbarAction extends AbstractFormToolbarAction 
             visible_condition: visibleCondition,
         } = this.options;
 
-        const {id, data} = this.resourceFormStore;
-        const {published, publishedState} = data;
-
         const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, this.conditionData);
 
         if (visibleConditionFulfilled) {
             return {
-                disabled: !id || !published || publishedState,
+                disabled: this.isDisabled(),
                 label: translate('sulu_page.delete_draft'),
                 onClick: action(() => {
                     this.showDeleteDraftDialog = true;
@@ -132,4 +129,13 @@ export default class DeleteDraftToolbarAction extends AbstractFormToolbarAction 
     @action handleDeleteDraftDialogClose = () => {
         this.showDeleteDraftDialog = false;
     };
+
+    isDisabled(): boolean {
+        const disabled = super.isDisabled();
+
+        const {id, data} = this.resourceFormStore;
+        const {published, publishedState} = data;
+
+        return disabled || !id || !published || publishedState;
+    }
 }

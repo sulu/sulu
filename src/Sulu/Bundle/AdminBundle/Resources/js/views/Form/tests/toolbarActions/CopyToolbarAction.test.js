@@ -96,6 +96,17 @@ test('Return  item config with enabled button if form store contains an id', () 
     }));
 });
 
+test('Return item config with disabled button if form store contains an id but has disabled_condition', () => {
+    const copyToolbarAction = createCopyToolbarAction({
+        disabled_condition: 'true == true',
+    });
+    copyToolbarAction.resourceFormStore.resourceStore.id = 123;
+
+    expect(copyToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        disabled: true,
+    }));
+});
+
 test('Return item config if passed visible_condition is met', () => {
     const copyToolbarAction = createCopyToolbarAction({visible_condition: '_permission.edit'});
     copyToolbarAction.resourceFormStore.resourceStore.data._permission = {edit: true};
