@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentDataMapper\DataMapper;
 
+use Sulu\Bundle\AdminBundle\Application\BlockIdGenerator\BlockIdGeneratorInterface;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
@@ -23,8 +25,10 @@ class TemplateDataMapper implements DataMapperInterface
 {
     public const SKIP_TAG = 'sulu_content.skip_template_data_mapper';
 
-    public function __construct(private MetadataProviderRegistry $metadataProviderRegistry)
-    {
+    public function __construct(
+        private MetadataProviderRegistry $metadataProviderRegistry,
+        private BlockIdGeneratorInterface $blockIdGenerator,
+    ) {
     }
 
     public function map(
@@ -74,7 +78,16 @@ class TemplateDataMapper implements DataMapperInterface
 
         $unlocalizedDimensionContent->setTemplateData($unlocalizedData);
         $localizedDimensionContent->setTemplateKey($template);
-        $localizedDimensionContent->setTemplateData($localizedData);
+
+        // getDimensionContent() may alias both params to the same instance (e.g. preview) - plain
+        // overwrite would then wipe the unlocalized data just written above. Merge instead, mirroring
+        // TemplateMerger's own unlocalized+localized merge pattern; the normal (distinct-instance)
+        // persisted-save path is unaffected since $localizedData already fully replaces that instance.
+        $localizedDimensionContent->setTemplateData(
+            $unlocalizedDimensionContent === $localizedDimensionContent
+                ? \array_merge($unlocalizedData, $localizedData)
+                : $localizedData
+        );
     }
 
     /**
@@ -112,6 +125,8 @@ class TemplateDataMapper implements DataMapperInterface
             if (\array_key_exists($name, $data)) { // values not explicitly given need to stay untouched for e.g. for shadow pages urls
                 $hasAnyValue = true;
                 $value = $data[$name];
+
+                $value = $this->ensureBlockIds($value, $property);
             }
 
             if ($isMultilingual) {
@@ -123,5 +138,100 @@ class TemplateDataMapper implements DataMapperInterface
         }
 
         return [$unlocalizedData, $localizedData, $hasAnyValue];
+    }
+
+    /**
+     * Assigns a generated `_id` to every item of a "typed" property (one that declares `<types>` sub-forms
+     * in its template XML - block, image_map, and any future/custom content type following the same
+     * pattern) that does not already have one, recursing into further nested typed properties (e.g. a
+     * "columns" block type containing its own block property, or a hotspot type containing its own
+     * image_map). Deliberately keyed off `getTypes()` rather than a hardcoded list of type names (like
+     * 'block'/'image_map') so a custom bundle registering its own polymorphic content type is covered too,
+     * without needing to touch this class. This runs on every save regardless of whether the admin UI ever
+     * mounted (i.e. expanded) the item, so ids are guaranteed to exist for the preview-to-admin-form
+     * navigation feature to rely on.
+     */
+    private function ensureBlockIds(mixed $value, FieldMetadata $property): mixed
+    {
+        $types = $property->getTypes();
+
+        if ([] === $types || !\is_array($value)) {
+            return $value;
+        }
+
+        if ($this->isItemList($value)) {
+            return $this->ensureItemIds($value, $property, $types);
+        }
+
+        // A typed property's items don't always live directly in $value - image_map for example wraps
+        // them as $value['hotspots'] alongside its own 'imageId'. Since the wrapping key is defined by
+        // each content type's own storage format (not discoverable from metadata), fall back to
+        // scanning $value's own array entries for the item list instead of hardcoding known keys.
+        foreach ($value as $key => $nested) {
+            if (\is_array($nested) && $this->isItemList($nested)) {
+                $value[$key] = $this->ensureItemIds($nested, $property, $types);
+            }
+        }
+
+        return $value;
+    }
+
+    /**
+     * A "list of typed items" is a sequential array of associative arrays - the shape every block/image_map
+     * -like content type stores its polymorphic items as. Plain lists of scalars (e.g. select/category_selection
+     * values) or single associative values (e.g. link) never match, so they're left untouched.
+     *
+     * @param mixed[] $value
+     */
+    private function isItemList(array $value): bool
+    {
+        if (!\array_is_list($value)) {
+            return false;
+        }
+
+        foreach ($value as $item) {
+            if (!\is_array($item)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param mixed[] $items
+     * @param array<string, FormMetadata> $types
+     *
+     * @return mixed[]
+     */
+    private function ensureItemIds(array $items, FieldMetadata $property, array $types): array
+    {
+        foreach ($items as $index => $item) {
+            if (!\is_array($item)) {
+                continue;
+            }
+
+            if (!isset($item['_id']) || !\is_string($item['_id']) || '' === $item['_id']) {
+                $item['_id'] = $this->blockIdGenerator->generateId();
+            }
+
+            /** @var string|null $itemType */
+            $itemType = $item['type'] ?? $property->getDefaultType();
+            $itemMetadata = null !== $itemType ? ($types[$itemType] ?? null) : null;
+
+            if ($itemMetadata instanceof FormMetadata) {
+                foreach ($itemMetadata->getFlatFieldMetadata() as $subProperty) {
+                    $subName = $subProperty->getName();
+
+                    if (\array_key_exists($subName, $item)) {
+                        $item[$subName] = $this->ensureBlockIds($item[$subName], $subProperty);
+                    }
+                }
+            }
+
+            $items[$index] = $item;
+        }
+
+        return $items;
     }
 }

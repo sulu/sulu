@@ -100,7 +100,10 @@ export default class PreviewStore {
             });
     }
 
-    update(data: Object): Promise<string> {
+    // "data" mirrors back whatever the server-side provider mutated while updating (e.g. block ids
+    // it had to backfill), so the caller can resync its own copy of the data with what was actually
+    // rendered - null when the provider didn't change anything.
+    update(data: Object): Promise<{content: string, data: ?Object}> {
         const route = generateRoute('update', {
             locale: this.locale,
             webspaceKey: this.webspace,
@@ -113,7 +116,7 @@ export default class PreviewStore {
         });
 
         return Requester.post(route, {data}).then((response) => {
-            return response.content;
+            return {content: response.content, data: response.data};
         });
     }
 

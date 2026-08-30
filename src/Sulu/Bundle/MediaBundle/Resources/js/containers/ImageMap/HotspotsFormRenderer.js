@@ -77,7 +77,7 @@ class HotspotsFormRenderer extends React.Component<Props> {
                                 type="inline"
                             >
                                 {value.map((hotspot, index) => (
-                                    <Tabs.Tab key={index}>{'#' + (index + 1)}</Tabs.Tab>
+                                    <Tabs.Tab id={hotspot._id} key={index}>{'#' + (index + 1)}</Tabs.Tab>
                                 ))}
                             </Tabs>
                         </div>

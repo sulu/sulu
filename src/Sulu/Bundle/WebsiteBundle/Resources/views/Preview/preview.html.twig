@@ -4,4 +4,7 @@
     {{ previewContentReplacer|raw }}
     {{ parent() }}
     {{ previewContentReplacer|raw }}
+    {% if app.request.attributes.get('sulu_preview_deep_link', true) %}
+        <script src="{{ asset('bundles/suluwebsite/js/preview-deep-link.js') }}"></script>
+    {% endif %}
 {% endblock %}

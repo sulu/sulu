@@ -90,6 +90,13 @@ class PreviewRenderer implements PreviewRendererInterface
 
         $attributes['preview'] = true;
         $attributes['partial'] = $partial;
+        // Both the admin's own live preview and public/shareable preview links render through
+        // this same method with preview=true, but the preview-navigation deep-link bridge
+        // (sulu_preview_deep_link() Twig function, PreviewBundle's postMessage listener) is only
+        // meaningful for the admin - a public link has no admin form to scroll/expand, so
+        // rendering it there would just expose block ids for no benefit. Defaults to enabled so
+        // the admin's own preview flow (which never sets this option) is unaffected.
+        $attributes['sulu_preview_deep_link'] = $options['deepLinkEnabled'] ?? true;
         $attributes[RequestAttributeEnum::WEBSPACE->value] = $webspaceKey;
         $attributes['_sulu'] = new RequestAttributes(
             [

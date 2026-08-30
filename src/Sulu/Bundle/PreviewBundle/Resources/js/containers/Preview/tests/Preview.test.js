@@ -2,6 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
+import log from 'loglevel';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/ResourceFormStore';
 import Router, {Route} from 'sulu-admin-bundle/services/Router';
@@ -16,6 +17,9 @@ window.ResizeObserver = jest.fn(function() {
     this.observe = jest.fn();
     this.disconnect = jest.fn();
 });
+
+// $FlowFixMe
+window.requestAnimationFrame = (callback) => callback();
 
 // $FlowFixMe
 const constantDate = new Date(2020, 11, 16, 14, 6, 22);
@@ -344,7 +348,7 @@ test('React and update preview when data is changed', () => {
     const preview = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
-    const updatePromise = Promise.resolve('<h1>Sulu is awesome</h1>');
+    const updatePromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>', data: null});
 
     const previewStore = preview.instance().previewStore;
     previewStore.start.mockReturnValue(startPromise);
@@ -362,6 +366,83 @@ test('React and update preview when data is changed', () => {
         expect(previewStore.update).toHaveBeenCalledWith({title: 'New Test'});
 
         expect(preview.render()).toMatchSnapshot();
+    });
+});
+
+test('Ignores a stale preview response superseded by a newer request before it resolves', () => {
+    const resourceStore = new ResourceStore('pages', 1);
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    // $FlowFixMe
+    formStore.data = {blocks: [{type: 'text'}]};
+    // $FlowFixMe
+    formStore.getValueByPath = jest.fn().mockReturnValue(undefined);
+    // $FlowFixMe
+    formStore.change = jest.fn();
+
+    const router = new Router({});
+    const preview = shallow(<Preview formStore={formStore} router={router} />);
+
+    const previewStore = preview.instance().previewStore;
+    previewStore.token = '123-123-123';
+
+    let resolveFirst: (result: Object) => void = () => {};
+    let resolveSecond: (result: Object) => void = () => {};
+    previewStore.update
+        .mockImplementationOnce(() => new Promise((resolve) => {
+            resolveFirst = resolve;
+        }))
+        .mockImplementationOnce(() => new Promise((resolve) => {
+            resolveSecond = resolve;
+        }));
+
+    preview.instance().updatePreview({blocks: [{type: 'text'}]});
+    preview.instance().updatePreview({blocks: [{type: 'text'}]});
+
+    // The second (newer) request resolves first, and its backfilled id is merged in.
+    resolveSecond({content: '<h1>second</h1>', data: {blocks: [{type: 'text', _id: 'second-id'}]}});
+
+    return Promise.resolve().then(() => {
+        expect(formStore.change).toHaveBeenCalledWith('blocks/0/_id', 'second-id');
+        // $FlowFixMe
+        formStore.change.mockClear();
+
+        // The first (now stale) request resolves after being superseded - its id must be dropped.
+        resolveFirst({content: '<h1>first</h1>', data: {blocks: [{type: 'text', _id: 'first-id'}]}});
+
+        return Promise.resolve().then(() => {
+            expect(formStore.change).not.toHaveBeenCalled();
+        });
+    });
+});
+
+test('Does not mutate the form store from a preview response that resolves after the component has unmounted', () => {
+    const resourceStore = new ResourceStore('pages', 1);
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    // $FlowFixMe
+    formStore.data = {blocks: [{type: 'text'}]};
+    // $FlowFixMe
+    formStore.getValueByPath = jest.fn().mockReturnValue(undefined);
+    // $FlowFixMe
+    formStore.change = jest.fn();
+
+    const router = new Router({});
+    const preview = shallow(<Preview formStore={formStore} router={router} />);
+
+    const previewStore = preview.instance().previewStore;
+    previewStore.token = '123-123-123';
+
+    let resolveUpdate: (result: Object) => void = () => {};
+    previewStore.update.mockReturnValue(new Promise((resolve) => {
+        resolveUpdate = resolve;
+    }));
+
+    preview.instance().updatePreview({blocks: [{type: 'text'}]});
+    preview.instance().unmounted = true;
+
+    resolveUpdate({content: '<h1>after unmount</h1>', data: {blocks: [{type: 'text', _id: 'late-id'}]}});
+
+    return Promise.resolve().then(() => {
+        expect(formStore.change).not.toHaveBeenCalled();
     });
 });
 
@@ -395,7 +476,7 @@ test('React and update preview in external window when data is changed', () => {
     const preview = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
-    const updatePromise = Promise.resolve('<h1>Sulu is awesome</h1>');
+    const updatePromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>', data: null});
 
     const previewStore = preview.instance().previewStore;
     previewStore.start.mockReturnValue(startPromise);
@@ -436,7 +517,7 @@ test('Dont react or update preview when data is changed during formstore is load
     const preview = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
-    const updatePromise = Promise.resolve('<h1>Sulu is awesome</h1>');
+    const updatePromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>', data: null});
 
     const previewStore = preview.instance().previewStore;
     previewStore.start.mockReturnValue(startPromise);
@@ -470,7 +551,7 @@ test('Dont react or update preview when data is changed during preview-store is 
     const preview = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
-    const updatePromise = Promise.resolve('<h1>Sulu is awesome</h1>');
+    const updatePromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>', data: null});
 
     const previewStore = preview.instance().previewStore;
     previewStore.start.mockReturnValue(startPromise);
@@ -574,6 +655,7 @@ test('Change target group in PreviewStore when selection of target group has cha
     const startPromise = Promise.resolve();
     const previewStore = preview.instance().previewStore;
     previewStore.start.mockReturnValue(startPromise);
+    previewStore.update.mockReturnValue(Promise.resolve({content: '<h1>Sulu is awesome</h1>', data: null}));
     previewStore.starting = false;
     previewStore.token = '123-123-123';
 
@@ -672,4 +754,218 @@ test('Use mainWebspace when the current locale is a nested localization', () => 
         // $FlowFixMe
         webspaceStore.grantedWebspaces = grantedWebspaces;
     }
+});
+
+test('Scroll to and expand a block referenced by a preview navigate click, mounting nested ' +
+    'content on demand like a real collapsed block would', () => {
+    const resourceStore = new ResourceStore('pages', 1);
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    // $FlowFixMe
+    formStore.data = {blocks: [{_id: 'parent-id', items: [{_id: 'child-id'}]}]};
+    const router = new Router({});
+
+    const preview = shallow(<Preview formStore={formStore} router={router} />);
+
+    const body = document.body;
+    if (!body) {
+        throw new Error('Expected document body');
+    }
+
+    const parent = document.createElement('section');
+    parent.setAttribute('data-sulu-block-id', 'parent-id');
+    body.appendChild(parent);
+
+    // A collapsed block only renders its collapsed preview, not its nested fields (see
+    // FieldBlocks.js), so "child" does not exist in the DOM until "parent" is expanded - mimic
+    // that here by only mounting it once the parent is clicked.
+    const child = document.createElement('section');
+    child.setAttribute('data-sulu-block-id', 'child-id');
+    // $FlowFixMe
+    child.scrollIntoView = jest.fn();
+    const handleParentClick = jest.fn(() => parent.appendChild(child));
+    const handleChildClick = jest.fn();
+    parent.addEventListener('click', handleParentClick);
+    child.addEventListener('click', handleChildClick);
+
+    preview.instance().navigateToBlock('child-id');
+
+    expect(parent.contains(child)).toBe(true);
+    expect(handleParentClick).toHaveBeenCalled();
+    // The target itself must also be clicked/expanded, not just scrolled to - it may be
+    // collapsed too, and scrolling to a collapsed block would show nothing useful.
+    expect(handleChildClick).toHaveBeenCalled();
+    expect(child.scrollIntoView).toHaveBeenCalledWith({behavior: 'smooth', block: 'start'});
+
+    body.removeChild(parent);
+});
+
+test('Expands the target block itself (not just its ancestors) for a top-level, non-nested block', () => {
+    const resourceStore = new ResourceStore('pages', 1);
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    // $FlowFixMe
+    formStore.data = {blocks: [{_id: 'block-1'}]};
+    const router = new Router({});
+
+    const preview = shallow(<Preview formStore={formStore} router={router} />);
+
+    const body = document.body;
+    if (!body) {
+        throw new Error('Expected document body');
+    }
+
+    const block = document.createElement('section');
+    block.setAttribute('data-sulu-block-id', 'block-1');
+    // $FlowFixMe
+    block.scrollIntoView = jest.fn();
+    const handleClick = jest.fn();
+    block.addEventListener('click', handleClick);
+    body.appendChild(block);
+
+    preview.instance().navigateToBlock('block-1');
+
+    expect(handleClick).toHaveBeenCalled();
+    expect(block.scrollIntoView).toHaveBeenCalledWith({behavior: 'smooth', block: 'start'});
+
+    body.removeChild(block);
+});
+
+test('Does nothing when the referenced block is not present in the form data', () => {
+    const resourceStore = new ResourceStore('pages', 1);
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    const router = new Router({});
+
+    const preview = shallow(<Preview formStore={formStore} router={router} />);
+
+    expect(() => preview.instance().navigateToBlock('unknown-id')).not.toThrow();
+});
+
+test('Gives up instead of polling forever when an ancestor never mounts its nested content', () => {
+    const resourceStore = new ResourceStore('pages', 1);
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    // $FlowFixMe
+    formStore.data = {blocks: [{_id: 'parent-id', items: [{_id: 'child-id'}]}]};
+    const router = new Router({});
+
+    const preview = shallow(<Preview formStore={formStore} router={router} />);
+
+    const body = document.body;
+    if (!body) {
+        throw new Error('Expected document body');
+    }
+
+    const parent = document.createElement('section');
+    parent.setAttribute('data-sulu-block-id', 'parent-id');
+    body.appendChild(parent);
+    // "child" is intentionally never appended, simulating a block that never mounts.
+
+    expect(() => preview.instance().navigateToBlock('child-id')).not.toThrow();
+
+    body.removeChild(parent);
+});
+
+test('Reacts to a sulu.preview.navigate message originating from its own preview window', () => {
+    const resourceStore = new ResourceStore('pages', 1);
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    const router = new Router({});
+
+    const preview = shallow(<Preview formStore={formStore} router={router} />);
+    const instance = preview.instance();
+
+    const previewWindow = {};
+    jest.spyOn(instance, 'getPreviewWindow').mockReturnValue(previewWindow);
+    jest.spyOn(instance, 'navigateToBlock').mockImplementation(() => {});
+
+    // $FlowFixMe
+    instance.handleMessage({
+        source: previewWindow,
+        origin: window.location.origin,
+        data: {type: 'sulu.preview.navigate', id: 'block-1'},
+    });
+
+    expect(instance.navigateToBlock).toHaveBeenCalledWith('block-1');
+});
+
+test('Ignores messages that do not originate from its own preview window', () => {
+    const resourceStore = new ResourceStore('pages', 1);
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    const router = new Router({});
+
+    const preview = shallow(<Preview formStore={formStore} router={router} />);
+    const instance = preview.instance();
+
+    jest.spyOn(instance, 'getPreviewWindow').mockReturnValue({});
+    jest.spyOn(instance, 'navigateToBlock').mockImplementation(() => {});
+
+    // $FlowFixMe
+    instance.handleMessage({
+        source: {},
+        origin: window.location.origin,
+        data: {type: 'sulu.preview.navigate', id: 'block-1'},
+    });
+
+    expect(instance.navigateToBlock).not.toHaveBeenCalled();
+});
+
+test('Ignores messages whose source matches but whose origin does not (source survives ' +
+    'cross-origin navigation of the preview window)', () => {
+    const resourceStore = new ResourceStore('pages', 1);
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    const router = new Router({});
+
+    const preview = shallow(<Preview formStore={formStore} router={router} />);
+    const instance = preview.instance();
+
+    const previewWindow = {};
+    jest.spyOn(instance, 'getPreviewWindow').mockReturnValue(previewWindow);
+    jest.spyOn(instance, 'navigateToBlock').mockImplementation(() => {});
+
+    // $FlowFixMe
+    instance.handleMessage({
+        source: previewWindow,
+        origin: 'https://attacker.example',
+        data: {type: 'sulu.preview.navigate', id: 'block-1'},
+    });
+
+    expect(instance.navigateToBlock).not.toHaveBeenCalled();
+});
+
+test('Warns about blocks missing the preview deep-link attribute', () => {
+    const resourceStore = new ResourceStore('pages', 1);
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    // $FlowFixMe
+    formStore.data = {
+        blocks: [
+            {_id: 'block-1', type: 'text'},
+            {_id: 'block-2', type: 'text'},
+        ],
+    };
+    const router = new Router({});
+
+    const preview = shallow(<Preview formStore={formStore} router={router} />);
+    const warnSpy = jest.spyOn(log, 'warn').mockImplementation(() => {});
+
+    preview.instance().warnAboutMissingDeepLinkAttributes(['block-1']);
+
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('block-2'));
+
+    warnSpy.mockRestore();
+});
+
+test('Does not warn when every block carries the preview deep-link attribute', () => {
+    const resourceStore = new ResourceStore('pages', 1);
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    // $FlowFixMe
+    formStore.data = {
+        blocks: [{_id: 'block-1', type: 'text'}],
+    };
+    const router = new Router({});
+
+    const preview = shallow(<Preview formStore={formStore} router={router} />);
+    const warnSpy = jest.spyOn(log, 'warn').mockImplementation(() => {});
+
+    preview.instance().warnAboutMissingDeepLinkAttributes(['block-1']);
+
+    expect(warnSpy).not.toHaveBeenCalled();
+
+    warnSpy.mockRestore();
 });

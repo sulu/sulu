@@ -15,6 +15,7 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ContentDataMapper\DataMapp
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Bundle\AdminBundle\Application\BlockIdGenerator\BlockIdGeneratorInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
@@ -52,7 +53,19 @@ class TemplateDataMapperTest extends TestCase
         });
         $metadataProviderRegistry = new MetadataProviderRegistry($container);
 
-        return new TemplateDataMapper($metadataProviderRegistry);
+        return new TemplateDataMapper($metadataProviderRegistry, $this->createBlockIdGenerator());
+    }
+
+    private function createBlockIdGenerator(): BlockIdGeneratorInterface
+    {
+        return new class() implements BlockIdGeneratorInterface {
+            private int $count = 0;
+
+            public function generateId(): string
+            {
+                return 'generated-id-' . ++$this->count;
+            }
+        };
     }
 
     public function testMapNoTemplateInstance(): void
@@ -151,6 +164,9 @@ class TemplateDataMapperTest extends TestCase
 
     public function testMapDataPreview(): void
     {
+        // Preview passes the same instance for both params (e.g. PreviewDimensionContentCollection
+        // deliberately aliases unlocalized/localized lookups to one merged object) - the unlocalized
+        // and localized data must both survive on that shared instance, not just the last one written.
         $data = [
             'template' => 'template-key',
             'unlocalizedField' => 'Test Unlocalized',
@@ -165,7 +181,10 @@ class TemplateDataMapperTest extends TestCase
         $templateMapper->map($localizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame('template-key', $localizedDimensionContent->getTemplateKey());
-        $this->assertSame(['title' => 'Test Localized'], $localizedDimensionContent->getTemplateData());
+        $this->assertSame(
+            ['unlocalizedField' => 'Test Unlocalized', 'title' => 'Test Localized'],
+            $localizedDimensionContent->getTemplateData(),
+        );
     }
 
     public function testMapNestedPropertyData(): void
@@ -374,6 +393,200 @@ class TemplateDataMapperTest extends TestCase
         $this->assertSame('template-key', $localizedDimensionContent->getTemplateKey());
         $this->assertSame(['unlocalizedField' => 'Test Unlocalized'], $unlocalizedDimensionContent->getTemplateData());
         $this->assertSame(['title' => 'Test Localized'], $localizedDimensionContent->getTemplateData());
+    }
+
+    public function testMapEnsuresBlockIdsRecursively(): void
+    {
+        $data = [
+            'template' => 'template-key',
+            'title' => 'Test Localized',
+            'content' => [
+                [
+                    'type' => 'columns',
+                    'items' => [
+                        ['type' => 'text', 'value' => 'Nested Value'],
+                    ],
+                ],
+                [
+                    '_id' => 'existing-id',
+                    'type' => 'columns',
+                    'items' => [],
+                ],
+            ],
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+
+        $itemsField = new FieldMetadata('items');
+        $itemsField->setType('block');
+        $itemsField->setMultilingual(true);
+        $itemsField->setDefaultType('text');
+        $textForm = new FormMetadata();
+        $textForm->setKey('text');
+        $itemsField->addType($textForm);
+
+        $columnsForm = new FormMetadata();
+        $columnsForm->setKey('columns');
+        $columnsForm->addItem($itemsField);
+
+        $contentField = new FieldMetadata('content');
+        $contentField->setType('block');
+        $contentField->setMultilingual(true);
+        $contentField->setDefaultType('columns');
+        $contentField->addType($columnsForm);
+
+        $templateMapper = $this->createTemplateDataMapperInstance([$contentField]);
+        $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $templateData = $localizedDimensionContent->getTemplateData();
+
+        $content = $templateData['content'];
+        $this->assertIsArray($content);
+        $firstColumn = $content[0];
+        $this->assertIsArray($firstColumn);
+        $this->assertIsString($firstColumn['_id']);
+        $this->assertNotSame('', $firstColumn['_id']);
+        $columnItems = $firstColumn['items'];
+        $this->assertIsArray($columnItems);
+        $firstColumnItem = $columnItems[0];
+        $this->assertIsArray($firstColumnItem);
+        $this->assertIsString($firstColumnItem['_id']);
+        $this->assertNotSame('', $firstColumnItem['_id']);
+
+        // A block that already carries an id keeps it instead of being overwritten.
+        $secondColumn = $content[1];
+        $this->assertIsArray($secondColumn);
+        $this->assertSame('existing-id', $secondColumn['_id']);
+    }
+
+    public function testMapEnsuresImageMapHotspotIds(): void
+    {
+        $data = [
+            'template' => 'template-key',
+            'title' => 'Test Localized',
+            'imageMap' => [
+                'imageId' => 1,
+                'hotspots' => [
+                    [
+                        'type' => 'info',
+                        'hotspot' => ['type' => 'point', 'top' => 10, 'left' => 20],
+                        'title' => 'Hotspot 1',
+                    ],
+                    [
+                        '_id' => 'existing-hotspot-id',
+                        'type' => 'info',
+                        'hotspot' => ['type' => 'point', 'top' => 30, 'left' => 40],
+                        'title' => 'Hotspot 2',
+                    ],
+                ],
+            ],
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+
+        $infoForm = new FormMetadata();
+        $infoForm->setKey('info');
+
+        $imageMapField = new FieldMetadata('imageMap');
+        $imageMapField->setType('image_map');
+        $imageMapField->setMultilingual(true);
+        $imageMapField->setDefaultType('info');
+        $imageMapField->addType($infoForm);
+
+        $templateMapper = $this->createTemplateDataMapperInstance([$imageMapField]);
+        $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $templateData = $localizedDimensionContent->getTemplateData();
+
+        $imageMap = $templateData['imageMap'];
+        $this->assertIsArray($imageMap);
+        $hotspots = $imageMap['hotspots'];
+        $this->assertIsArray($hotspots);
+        $firstHotspot = $hotspots[0];
+        $this->assertIsArray($firstHotspot);
+        $this->assertIsString($firstHotspot['_id']);
+        $this->assertNotSame('', $firstHotspot['_id']);
+
+        // A hotspot that already carries an id keeps it instead of being overwritten.
+        $secondHotspot = $hotspots[1];
+        $this->assertIsArray($secondHotspot);
+        $this->assertSame('existing-hotspot-id', $secondHotspot['_id']);
+    }
+
+    public function testMapEnsuresIdsForArbitraryCustomTypedProperty(): void
+    {
+        // A made-up type name a third-party bundle could register - proves id injection is driven by
+        // the property declaring `<types>` sub-forms, not by hardcoding 'block'/'image_map' by name.
+        $data = [
+            'template' => 'template-key',
+            'title' => 'Test Localized',
+            'customRepeater' => [
+                ['type' => 'entry', 'value' => 'Foo'],
+            ],
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+
+        $entryForm = new FormMetadata();
+        $entryForm->setKey('entry');
+
+        $customRepeaterField = new FieldMetadata('customRepeater');
+        $customRepeaterField->setType('custom_repeater');
+        $customRepeaterField->setMultilingual(true);
+        $customRepeaterField->setDefaultType('entry');
+        $customRepeaterField->addType($entryForm);
+
+        $templateMapper = $this->createTemplateDataMapperInstance([$customRepeaterField]);
+        $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $templateData = $localizedDimensionContent->getTemplateData();
+
+        $customRepeater = $templateData['customRepeater'];
+        $this->assertIsArray($customRepeater);
+        $firstEntry = $customRepeater[0];
+        $this->assertIsArray($firstEntry);
+        $this->assertIsString($firstEntry['_id']);
+        $this->assertNotSame('', $firstEntry['_id']);
+    }
+
+    public function testMapDoesNotInjectIdsForNonTypedProperty(): void
+    {
+        // Shaped exactly like a block's items (list of associative arrays with a "type" key), but the
+        // property never declares `<types>` - e.g. a custom scalar-collection content type. Must be left
+        // completely untouched, not just "no _id added but otherwise mutated".
+        $data = [
+            'template' => 'template-key',
+            'title' => 'Test Localized',
+            'notTyped' => [
+                ['type' => 'whatever', 'value' => 'Foo'],
+            ],
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+
+        $notTypedField = new FieldMetadata('notTyped');
+        $notTypedField->setType('some_custom_type');
+        $notTypedField->setMultilingual(true);
+        // Deliberately no addType() call - getTypes() stays empty.
+
+        $templateMapper = $this->createTemplateDataMapperInstance([$notTypedField]);
+        $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $templateData = $localizedDimensionContent->getTemplateData();
+
+        $this->assertSame([['type' => 'whatever', 'value' => 'Foo']], $templateData['notTyped']);
     }
 
     public function testMapDataSkipsFieldsWithSkipTag(): void

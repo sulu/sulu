@@ -86,13 +86,13 @@ class PreviewController
             $token = $this->preview->start($provider, $id, $this->getUserId(), [], $options);
         }
 
-        $content = $this->preview->update(
+        $result = $this->preview->update(
             $token,
             $data,
             $options
         );
 
-        return new JsonResponse(['content' => $content]);
+        return new JsonResponse($result);
     }
 
     public function updateContextAction(Request $request): Response
