@@ -137,7 +137,7 @@ class ContentResolverPathPassTest extends TestCase
         yield 'path without brackets' => [['a' => ['type' => 'a', 'path' => 'root']], '/invalid/'];
         yield 'path with null-safe segment' => [['a' => ['type' => 'a', 'path' => '[root?][product]']], '/invalid/'];
         yield 'path not anchored at root' => [['a' => ['type' => 'a', 'path' => '[product]']], '/must start with "\[root\]"/'];
-        yield 'path targets resource' => [['a' => ['type' => 'a', 'path' => '[root][resource]']], '/reserved envelope key "resource"/'];
+        yield 'path targets resource' => [['a' => ['type' => 'a', 'path' => '[root][resource]']], '/reserved key "resource"/'];
         yield 'path targets view' => [['a' => ['type' => 'a', 'path' => '[root][view][x]']], '/reserved segment "view"/'];
         yield 'path nested below content' => [['a' => ['type' => 'a', 'path' => '[root][content][x]']], '/non-final segment/'];
         yield 'content as non-final segment' => [['a' => ['type' => 'a', 'path' => '[root][product][content][x]']], '/non-final segment/'];
