@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentResolver\DataNormalizer;
 
 use PHPUnit\Framework\TestCase;
+use Psr\Log\AbstractLogger;
 use Sulu\Content\Application\ContentResolver\DataNormalizer\ContentViewDataNormalizer;
+use Sulu\Content\Application\ContentResolver\Exception\ResolverPlacementException;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
@@ -276,10 +278,12 @@ class ContentViewDataNormalizerTest extends TestCase
 
     public function testRootResolverTargetingAnEnvelopeKeyThrows(): void
     {
-        $this->expectException(\LogicException::class);
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS, debug: true);
+
+        $this->expectException(ResolverPlacementException::class);
         $this->expectExceptionMessage('Content resolver "settings" cannot be placed at "[root]": it returned the reserved envelope key(s) "content", "view", "extension", "resource".');
 
-        $this->normalizer->normalizeContentViewData(
+        $normalizer->normalizeContentViewData(
             ['template' => [], 'settings' => ['content' => 'evil', 'view' => 'evil', 'extension' => 'evil', 'resource' => 'evil', 'author' => 'ok']],
             [],
             new Example(),
@@ -302,10 +306,12 @@ class ContentViewDataNormalizerTest extends TestCase
 
     public function testNonArrayContentAtRootThrows(): void
     {
-        $this->expectException(\LogicException::class);
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS, debug: true);
+
+        $this->expectException(ResolverPlacementException::class);
         $this->expectExceptionMessage('Content resolver "settings" cannot be placed at "[root]": it returned string instead of an array.');
 
-        $this->normalizer->normalizeContentViewData(['template' => [], 'settings' => 'scalar'], [], new Example());
+        $normalizer->normalizeContentViewData(['template' => [], 'settings' => 'scalar'], [], new Example());
     }
 
     public function testTemplateViewIsMergedOnlyForContentPath(): void
@@ -322,9 +328,9 @@ class ContentViewDataNormalizerTest extends TestCase
 
     public function testNullFromHigherPriorityResolverThrowsInsteadOfSwallowingTheOther(): void
     {
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['a' => ['shared'], 'b' => ['shared']]);
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['a' => ['shared'], 'b' => ['shared']], debug: true);
 
-        $this->expectException(\LogicException::class);
+        $this->expectException(ResolverPlacementException::class);
         $this->expectExceptionMessage('Content resolver "b" cannot be placed at "[root][shared]": that slot already holds null and cannot take array.');
 
         $normalizer->normalizeContentViewData(['template' => [], 'a' => null, 'b' => ['y' => 2]], [], new Example());
@@ -332,18 +338,20 @@ class ContentViewDataNormalizerTest extends TestCase
 
     public function testScalarTemplateContentThrowsInsteadOfEmptyingTheEnvelope(): void
     {
-        $this->expectException(\LogicException::class);
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS, debug: true);
+
+        $this->expectException(ResolverPlacementException::class);
         $this->expectExceptionMessage('Content resolver "template" cannot be placed at "[root][content]": that slot already holds array and cannot take string.');
 
-        $this->normalizer->normalizeContentViewData(['template' => 'scalar'], [], new Example());
+        $normalizer->normalizeContentViewData(['template' => 'scalar'], [], new Example());
     }
 
     public function testResolverNestedUnderARootResolversKeyThrows(): void
     {
         // The compiler pass cannot see a [root] resolver's keys.
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['acme_meta' => ['template', 'meta']]);
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['acme_meta' => ['template', 'meta']], debug: true);
 
-        $this->expectException(\LogicException::class);
+        $this->expectException(ResolverPlacementException::class);
         $this->expectExceptionMessage('Content resolver "acme_meta" cannot be placed at "[root][template]": that slot already holds string.');
 
         $normalizer->normalizeContentViewData(
@@ -468,5 +476,50 @@ class ContentViewDataNormalizerTest extends TestCase
             ['untouched' => 'template-value'],
             $this->propertyAccessor->getValue($result, '[view][related]')
         );
+    }
+
+    public function testUnplaceableResolverOutputIsSkippedAndLoggedOutsideDebug(): void
+    {
+        $logger = new class() extends AbstractLogger {
+            /** @var list<array{level: mixed, message: string, context: array<string, mixed>}> */
+            public array $records = [];
+
+            /**
+             * @param array<string, mixed> $context
+             */
+            public function log($level, string|\Stringable $message, array $context = []): void
+            {
+                $this->records[] = ['level' => $level, 'message' => (string) $message, 'context' => $context];
+            }
+        };
+
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS, $logger, false);
+
+        $result = $normalizer->normalizeContentViewData(
+            ['template' => ['title' => 'T'], 'settings' => 'scalar'],
+            [],
+            new Example(),
+        );
+
+        self::assertSame(['title' => 'T'], $result['content']);
+        self::assertInstanceOf(Example::class, $result['resource']);
+
+        self::assertCount(1, $logger->records);
+        self::assertSame('error', $logger->records[0]['level']);
+        self::assertSame('settings', $logger->records[0]['context']['type']);
+    }
+
+    public function testUnplaceableResolverOutputIsSkippedWithoutLoggerOutsideDebug(): void
+    {
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS);
+
+        $result = $normalizer->normalizeContentViewData(
+            ['template' => ['title' => 'T'], 'settings' => 'scalar'],
+            [],
+            new Example(),
+        );
+
+        self::assertSame(['title' => 'T'], $result['content']);
+        self::assertInstanceOf(Example::class, $result['resource']);
     }
 }

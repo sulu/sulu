@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentResolver\DataNormalizer;
 
+use Psr\Log\LoggerInterface;
+use Sulu\Content\Application\ContentResolver\Exception\ResolverPlacementException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -32,12 +34,16 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
     public function __construct(
         private PropertyAccessorInterface $propertyAccessor,
         private array $paths,
+        private ?LoggerInterface $logger = null,
+        private bool $debug = false,
     ) {
     }
 
     /**
      * `$content` arrives in resolver priority order. `+` merging keeps existing keys, so the
      * higher priority resolver wins on collision.
+     * Placement failures throw in debug and are logged and skipped otherwise, so broken resolver
+     * output cannot break a rendered page.
      *
      * @template T of DimensionContentInterface
      *
@@ -67,12 +73,25 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
 
         foreach ($content as $type => $data) {
             $segments = $this->paths[$type] ?? ['extension', $type];
-            $this->mergeAt($result, $segments, $data, $type);
 
-            if ([] !== $segments && 'content' === $segments[\count($segments) - 1]) {
-                /** @var array<string, mixed> $typeView */
-                $typeView = $view[$type] ?? [];
-                $this->mergeAt($result, [...\array_slice($segments, 0, -1), 'view'], $typeView, $type);
+            try {
+                $this->mergeAt($result, $segments, $data, $type);
+
+                if ([] !== $segments && 'content' === $segments[\count($segments) - 1]) {
+                    /** @var array<string, mixed> $typeView */
+                    $typeView = $view[$type] ?? [];
+                    $this->mergeAt($result, [...\array_slice($segments, 0, -1), 'view'], $typeView, $type);
+                }
+            } catch (ResolverPlacementException $e) {
+                if ($this->debug) {
+                    throw $e;
+                }
+
+                $this->logger?->error('Skipped content resolver "{type}": {message}', [
+                    'type' => $type,
+                    'message' => $e->getMessage(),
+                    'exception' => $e,
+                ]);
             }
         }
 
@@ -88,13 +107,13 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
     {
         if ([] === $segments) {
             if (!\is_array($data)) {
-                throw $this->cannotPlace($type, [], \sprintf('it returned %s instead of an array', \get_debug_type($data)));
+                throw new ResolverPlacementException($type, [], \sprintf('it returned %s instead of an array', \get_debug_type($data)));
             }
 
             /** @var array<string, mixed> $data */
             $reserved = \array_intersect(\array_keys($data), self::ENVELOPE_KEYS);
             if ([] !== $reserved) {
-                throw $this->cannotPlace($type, [], \sprintf('it returned the reserved envelope key(s) "%s"', \implode('", "', $reserved)));
+                throw new ResolverPlacementException($type, [], \sprintf('it returned the reserved envelope key(s) "%s"', \implode('", "', $reserved)));
             }
 
             $result += $data;
@@ -109,7 +128,7 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
             $walked[] = $segment;
             /** @var array<string, mixed> $target */
             if (\array_key_exists($segment, $target) && !\is_array($target[$segment])) {
-                throw $this->cannotPlace($type, $walked, \sprintf('that slot already holds %s', \get_debug_type($target[$segment])));
+                throw new ResolverPlacementException($type, $walked, \sprintf('that slot already holds %s', \get_debug_type($target[$segment])));
             }
 
             $target[$segment] ??= [];
@@ -124,7 +143,7 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
         }
 
         if (!\is_array($target[$last]) || !\is_array($data)) {
-            throw $this->cannotPlace($type, [...$walked, $last], \sprintf(
+            throw new ResolverPlacementException($type, [...$walked, $last], \sprintf(
                 'that slot already holds %s and cannot take %s',
                 \get_debug_type($target[$last]),
                 \get_debug_type($data),
@@ -132,19 +151,6 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
         }
 
         $target[$last] += $data;
-    }
-
-    /**
-     * @param list<string> $segments
-     */
-    private function cannotPlace(string $type, array $segments, string $reason): \LogicException
-    {
-        return new \LogicException(\sprintf(
-            'Content resolver "%s" cannot be placed at "[root]%s": %s.',
-            $type,
-            \implode('', \array_map(static fn (string $segment) => '[' . $segment . ']', $segments)),
-            $reason,
-        ));
     }
 
     /**

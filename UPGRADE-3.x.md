@@ -11,7 +11,8 @@ Existing resolvers keep their output location. Registering two resolvers with th
 To replace a core resolver, decorate it; the decorator inherits the tag and may re-declare it.
 Re-declaring the tag on a decorator replaces it entirely, so declare `type` again alongside `path`.
 A resolver whose output cannot be placed, for example a non-array at `[root]` or a reserved
-envelope key, now throws a `LogicException` at render time instead of producing a wrong envelope.
+envelope key, now throws a `ResolverPlacementException` in debug mode; outside debug it is logged
+and that resolver is skipped, so a broken resolver does not break the page.
 
 ## 3.0.9
 

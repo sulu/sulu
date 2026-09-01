@@ -64,7 +64,12 @@ return static function(ContainerConfigurator $container) {
         ]);
 
     $services->set('sulu_content.content_view_data_normalizer', ContentViewDataNormalizer::class)
-        ->args([new Reference('property_accessor'), []]); // ContentResolverPathPass replaces the paths map
+        ->args([
+            new Reference('property_accessor'),
+            [], // ContentResolverPathPass replaces the paths map
+            new Reference('logger'),
+            '%kernel.debug%',
+        ]);
 
     $services->set('sulu_content.content_enhancer', ContentEnhancer::class)
         ->args([tagged_iterator('sulu_content.dimension_content_enhancer')]);
