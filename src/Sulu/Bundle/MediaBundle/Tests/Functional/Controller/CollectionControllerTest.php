@@ -388,7 +388,7 @@ class CollectionControllerTest extends SuluTestCase
         /** @var string $responseContent */
         $responseContent = $this->client->getResponse()->getContent();
         /** @var object{_embedded: object{collections: list<\stdClass>}} $response */
-        $response = \json_decode($responseContent, false, 512, JSON_THROW_ON_ERROR);
+        $response = \json_decode($responseContent, false, 512, \JSON_THROW_ON_ERROR);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertNotEmpty($response->_embedded->collections);

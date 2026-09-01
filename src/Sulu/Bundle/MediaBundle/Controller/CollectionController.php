@@ -172,7 +172,7 @@ class CollectionController extends AbstractRestController implements ClassResour
 
         // allow disabling pagination for tree handling
         $limit = $request->query->get('limit', null);
-        if (!is_null($limit)) {
+        if (!\is_null($limit)) {
             $limit = (int) $limit;
         }
 
