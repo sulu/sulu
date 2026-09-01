@@ -66,6 +66,8 @@ $transitionDuration: 300ms;
     border-radius: 0 0 $borderRadius $borderRadius;
     overflow: hidden;
     box-shadow: 0 10px 18px 0 rgba($mineShaft, .5);
+    display: flex;
+    flex-direction: column;
 
     .header {
         background: $primaryBackground;
@@ -133,9 +135,10 @@ $transitionDuration: 300ms;
     }
 }
 
+/* the snackbar takes the first row instead of covering the header; it collapses to no height
+   while hidden, so its own margin transition pushes the overlay down as it appears */
 .snackbar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+    order: -1;
+    display: flex;
+    flex-direction: column;
 }
