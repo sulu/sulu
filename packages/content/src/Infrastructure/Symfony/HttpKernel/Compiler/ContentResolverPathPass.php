@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Reads the `path` and `priority` attributes off `sulu_content.content_resolver` tags and writes
- * the result into the normalizer's `$paths` argument, a map from resolver type to envelope segments
+ * the result into the normalizer's `$paths` argument, a map from resolver type to path segments
  * without the `[root]` anchor. Runs after `DecoratorServicePass`, which has already moved a decorated
  * service's tag onto its decorator, so a decorated service is skipped here and the decorator's tag applies.
  *
@@ -230,7 +230,7 @@ class ContentResolverPathPass implements CompilerPassInterface
         $first = $segments[0] ?? null;
         if ('resource' === $first) {
             throw new \InvalidArgumentException(\sprintf(
-                'Service "%s": path "%s" targets the reserved envelope key "%s".',
+                'Service "%s": path "%s" targets the reserved key "%s".',
                 $id,
                 $path,
                 $first,
@@ -248,7 +248,7 @@ class ContentResolverPathPass implements CompilerPassInterface
         $contentIndex = \array_search('content', $segments, true);
         if (false !== $contentIndex && $contentIndex !== \count($segments) - 1) {
             throw new \InvalidArgumentException(\sprintf(
-                'Service "%s": path "%s" has "content" as a non-final segment; a content slot must be the last segment.',
+                'Service "%s": path "%s" has "content" as a non-final segment; it must be the last segment.',
                 $id,
                 $path,
             ));

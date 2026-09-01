@@ -339,7 +339,7 @@ readonly class ContentResolver implements ContentResolverInterface
             $dimensionContent->getResource(),
         );
 
-        $this->contentViewDataNormalizer->replaceNestedContentViewsAtEnvelopes($normalizedContentData);
+        $this->contentViewDataNormalizer->replaceNestedContentViews($normalizedContentData);
 
         $normalizedContentData = $this->contentViewDataNormalizer->mergeFieldViewDataIntoItems($normalizedContentData, $viewEnhancements);
 

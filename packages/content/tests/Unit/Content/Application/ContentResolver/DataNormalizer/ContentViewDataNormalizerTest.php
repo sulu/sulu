@@ -16,7 +16,7 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ContentResolver\DataNormal
 use PHPUnit\Framework\TestCase;
 use Psr\Log\AbstractLogger;
 use Sulu\Content\Application\ContentResolver\DataNormalizer\ContentViewDataNormalizer;
-use Sulu\Content\Application\ContentResolver\Exception\ResolverPlacementException;
+use Sulu\Content\Application\ContentResolver\Exception\InvalidResolverOutputException;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
@@ -95,7 +95,7 @@ class ContentViewDataNormalizerTest extends TestCase
         self::assertSame('value', $nested['deep']);
     }
 
-    public function testReplaceNestedContentViewsAtEnvelopes(): void
+    public function testReplaceNestedContentViews(): void
     {
         $formattedContentData = [
             'resource' => new \stdClass(),
@@ -109,13 +109,13 @@ class ContentViewDataNormalizerTest extends TestCase
             'extension' => [],
         ];
 
-        $this->normalizer->replaceNestedContentViewsAtEnvelopes($formattedContentData);
+        $this->normalizer->replaceNestedContentViews($formattedContentData);
 
         self::assertSame(['nested' => 'data'], $formattedContentData['content']['items']);
         self::assertSame(['nested' => 'view data'], $formattedContentData['view']['items']);
     }
 
-    public function testReplaceNestedContentViewsAtEnvelopesMergesWithExistingViewData(): void
+    public function testReplaceNestedContentViewsMergesWithExistingViewData(): void
     {
         // existing outer view keys must win on collision; inner-only keys fill gaps
         $formattedContentData = [
@@ -138,7 +138,7 @@ class ContentViewDataNormalizerTest extends TestCase
             'extension' => [],
         ];
 
-        $this->normalizer->replaceNestedContentViewsAtEnvelopes($formattedContentData);
+        $this->normalizer->replaceNestedContentViews($formattedContentData);
 
         self::assertSame(['title' => 'Snippet Title'], $formattedContentData['content']['snippet']);
 
@@ -149,7 +149,7 @@ class ContentViewDataNormalizerTest extends TestCase
         self::assertSame('outerWins', $mergedSnippetView['shared']);
     }
 
-    public function testReplaceNestedContentViewsAtEnvelopesCopiesIntoEmptyView(): void
+    public function testReplaceNestedContentViewsCopiesIntoEmptyView(): void
     {
         $formattedContentData = [
             'resource' => new \stdClass(),
@@ -163,7 +163,7 @@ class ContentViewDataNormalizerTest extends TestCase
             'extension' => [],
         ];
 
-        $this->normalizer->replaceNestedContentViewsAtEnvelopes($formattedContentData);
+        $this->normalizer->replaceNestedContentViews($formattedContentData);
 
         self::assertSame(['title' => 'Snippet Title'], $formattedContentData['content']['snippet']);
         self::assertSame(
@@ -276,12 +276,12 @@ class ContentViewDataNormalizerTest extends TestCase
         self::assertSame(['x' => 1], $result['p']);
     }
 
-    public function testRootResolverTargetingAnEnvelopeKeyThrows(): void
+    public function testRootResolverTargetingAReservedKeyThrows(): void
     {
         $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS, debug: true);
 
-        $this->expectException(ResolverPlacementException::class);
-        $this->expectExceptionMessage('Content resolver "settings" cannot be placed at "[root]": it returned the reserved envelope key(s) "content", "view", "extension", "resource".');
+        $this->expectException(InvalidResolverOutputException::class);
+        $this->expectExceptionMessage('Content resolver "settings" cannot be merged into "[root]": it returned the reserved key(s) "content", "view", "extension", "resource".');
 
         $normalizer->normalizeContentViewData(
             ['template' => [], 'settings' => ['content' => 'evil', 'view' => 'evil', 'extension' => 'evil', 'resource' => 'evil', 'author' => 'ok']],
@@ -308,8 +308,8 @@ class ContentViewDataNormalizerTest extends TestCase
     {
         $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS, debug: true);
 
-        $this->expectException(ResolverPlacementException::class);
-        $this->expectExceptionMessage('Content resolver "settings" cannot be placed at "[root]": it returned string instead of an array.');
+        $this->expectException(InvalidResolverOutputException::class);
+        $this->expectExceptionMessage('Content resolver "settings" cannot be merged into "[root]": it returned string instead of an array.');
 
         $normalizer->normalizeContentViewData(['template' => [], 'settings' => 'scalar'], [], new Example());
     }
@@ -330,18 +330,18 @@ class ContentViewDataNormalizerTest extends TestCase
     {
         $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['a' => ['shared'], 'b' => ['shared']], debug: true);
 
-        $this->expectException(ResolverPlacementException::class);
-        $this->expectExceptionMessage('Content resolver "b" cannot be placed at "[root][shared]": that slot already holds null and cannot take array.');
+        $this->expectException(InvalidResolverOutputException::class);
+        $this->expectExceptionMessage('Content resolver "b" cannot be merged into "[root][shared]": that path already holds null and cannot take array.');
 
         $normalizer->normalizeContentViewData(['template' => [], 'a' => null, 'b' => ['y' => 2]], [], new Example());
     }
 
-    public function testScalarTemplateContentThrowsInsteadOfEmptyingTheEnvelope(): void
+    public function testScalarTemplateContentThrowsInsteadOfEmptyingTheContentViewData(): void
     {
         $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS, debug: true);
 
-        $this->expectException(ResolverPlacementException::class);
-        $this->expectExceptionMessage('Content resolver "template" cannot be placed at "[root][content]": that slot already holds array and cannot take string.');
+        $this->expectException(InvalidResolverOutputException::class);
+        $this->expectExceptionMessage('Content resolver "template" cannot be merged into "[root][content]": that path already holds array and cannot take string.');
 
         $normalizer->normalizeContentViewData(['template' => 'scalar'], [], new Example());
     }
@@ -351,8 +351,8 @@ class ContentViewDataNormalizerTest extends TestCase
         // The compiler pass cannot see a [root] resolver's keys.
         $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['acme_meta' => ['template', 'meta']], debug: true);
 
-        $this->expectException(ResolverPlacementException::class);
-        $this->expectExceptionMessage('Content resolver "acme_meta" cannot be placed at "[root][template]": that slot already holds string.');
+        $this->expectException(InvalidResolverOutputException::class);
+        $this->expectExceptionMessage('Content resolver "acme_meta" cannot be merged into "[root][template]": that path already holds string.');
 
         $normalizer->normalizeContentViewData(
             ['settings' => ['template' => 'full-content'], 'template' => [], 'acme_meta' => ['currency' => 'EUR']],
@@ -361,7 +361,7 @@ class ContentViewDataNormalizerTest extends TestCase
         );
     }
 
-    public function testEnvelopePathGetsViewTwin(): void
+    public function testContentPathGetsViewTwin(): void
     {
         $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['product' => ['product', 'content']]);
 
@@ -390,7 +390,7 @@ class ContentViewDataNormalizerTest extends TestCase
         self::assertSame([], $result['view']);
     }
 
-    public function testEnvelopeViewTwinKeepsHigherPriorityKeys(): void
+    public function testContentPathViewTwinKeepsHigherPriorityKeys(): void
     {
         // "a" has higher priority and runs first.
         $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['a' => ['shop', 'content'], 'b' => ['shop', 'content']]);
@@ -405,7 +405,7 @@ class ContentViewDataNormalizerTest extends TestCase
         self::assertSame(['k' => 'from-a', 'y' => 2], $result['shop']['view']);
     }
 
-    public function testMergeFieldViewDataIntoItemsSkipsTypesWithoutAContentEnvelope(): void
+    public function testMergeFieldViewDataIntoItemsSkipsTypesWithoutAContentPath(): void
     {
         $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['product' => ['product']]);
 
@@ -432,7 +432,7 @@ class ContentViewDataNormalizerTest extends TestCase
         self::assertSame(['id' => 1], $this->propertyAccessor->getValue($result, '[product][items]'));
     }
 
-    public function testMergeFieldViewDataIntoItemsIsScopedByEnvelopeNotByFieldNameAlone(): void
+    public function testMergeFieldViewDataIntoItemsIsScopedByContentPathNotByFieldNameAlone(): void
     {
         $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['exampleRoot' => ['exampleRoot', 'content']]);
 
@@ -440,7 +440,7 @@ class ContentViewDataNormalizerTest extends TestCase
             'resource' => new Example(),
             'content' => [],
             'view' => [
-                // a template property happens to share the field name "related" with the envelope below
+                // a template property happens to share the field name "related" with the content path below
                 'related' => ['untouched' => 'template-value'],
             ],
             'extension' => [],
@@ -465,7 +465,7 @@ class ContentViewDataNormalizerTest extends TestCase
 
         $result = $normalizer->mergeFieldViewDataIntoItems($data, $viewEnhancements);
 
-        // folded into the envelope's own [view], keyed by its type, not by the field name alone
+        // folded into the content path's own [view], keyed by its type, not by the field name alone
         self::assertSame(
             [['id' => 1, 'label' => 'first'], ['id' => 2]],
             $this->propertyAccessor->getValue($result, '[exampleRoot][view][related][items]')

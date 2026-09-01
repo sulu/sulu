@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\ContentResolver\DataNormalizer;
 
 use Psr\Log\LoggerInterface;
-use Sulu\Content\Application\ContentResolver\Exception\ResolverPlacementException;
+use Sulu\Content\Application\ContentResolver\Exception\InvalidResolverOutputException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -25,10 +25,10 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
  */
 class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
 {
-    private const ENVELOPE_KEYS = ['resource', 'content', 'view', 'extension'];
+    private const RESERVED_KEYS = ['resource', 'content', 'view', 'extension'];
 
     /**
-     * @param array<string, list<string>> $paths resolver type to envelope path segments without the
+     * @param array<string, list<string>> $paths resolver type to path segments without the
      *                                           `[root]` anchor, set by ContentResolverPathPass
      */
     public function __construct(
@@ -42,7 +42,7 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
     /**
      * `$content` arrives in resolver priority order. `+` merging keeps existing keys, so the
      * higher priority resolver wins on collision.
-     * Placement failures throw in debug and are logged and skipped otherwise, so broken resolver
+     * Failures throw in debug and are logged and skipped otherwise, so broken resolver
      * output cannot break a rendered page.
      *
      * @template T of DimensionContentInterface
@@ -75,14 +75,14 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
             $segments = $this->paths[$type] ?? ['extension', $type];
 
             try {
-                $this->mergeAt($result, $segments, $data, $type);
+                $result = $this->mergeResolverOutput($result, $segments, $data, $type);
 
                 if ([] !== $segments && 'content' === $segments[\count($segments) - 1]) {
                     /** @var array<string, mixed> $typeView */
                     $typeView = $view[$type] ?? [];
-                    $this->mergeAt($result, [...\array_slice($segments, 0, -1), 'view'], $typeView, $type);
+                    $result = $this->mergeResolverOutput($result, [...\array_slice($segments, 0, -1), 'view'], $typeView, $type);
                 }
-            } catch (ResolverPlacementException $e) {
+            } catch (InvalidResolverOutputException $e) {
                 if ($this->debug) {
                     throw $e;
                 }
@@ -100,57 +100,81 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
     }
 
     /**
-     * @param array<string, mixed> $result
+     * Merges one resolver's output into the content view data at its configured path.
+     *
+     * An empty path means the root itself. An unused path takes the data as is, a path already
+     * holding an array is merged with `+` so the higher priority resolver wins on a key collision.
+     * Anything else is a failure.
+     *
+     * @param array<string, mixed> $target
      * @param list<string> $segments
+     * @param list<string> $walked segments already descended, for the error message
+     *
+     * @return array<string, mixed>
      */
-    private function mergeAt(array &$result, array $segments, mixed $data, string $type): void
+    private function mergeResolverOutput(array $target, array $segments, mixed $data, string $type, array $walked = []): array
     {
         if ([] === $segments) {
-            if (!\is_array($data)) {
-                throw new ResolverPlacementException($type, [], \sprintf('it returned %s instead of an array', \get_debug_type($data)));
+            return $this->mergeResolverOutputIntoRoot($target, $data, $type);
+        }
+
+        $segment = $segments[0];
+        $rest = \array_slice($segments, 1);
+        $walked = [...$walked, $segment];
+
+        if (!\array_key_exists($segment, $target)) {
+            $target[$segment] = [] === $rest ? $data : $this->mergeResolverOutput([], $rest, $data, $type, $walked);
+
+            return $target;
+        }
+
+        $existing = $target[$segment];
+
+        if ([] === $rest) {
+            if (!\is_array($existing) || !\is_array($data)) {
+                throw new InvalidResolverOutputException($type, $walked, \sprintf(
+                    'that path already holds %s and cannot take %s',
+                    \get_debug_type($existing),
+                    \get_debug_type($data),
+                ));
             }
 
-            /** @var array<string, mixed> $data */
-            $reserved = \array_intersect(\array_keys($data), self::ENVELOPE_KEYS);
-            if ([] !== $reserved) {
-                throw new ResolverPlacementException($type, [], \sprintf('it returned the reserved envelope key(s) "%s"', \implode('", "', $reserved)));
-            }
+            $target[$segment] = $existing + $data;
 
-            $result += $data;
-
-            return;
+            return $target;
         }
 
-        $last = \array_pop($segments);
-        $target = &$result;
-        $walked = [];
-        foreach ($segments as $segment) {
-            $walked[] = $segment;
-            /** @var array<string, mixed> $target */
-            if (\array_key_exists($segment, $target) && !\is_array($target[$segment])) {
-                throw new ResolverPlacementException($type, $walked, \sprintf('that slot already holds %s', \get_debug_type($target[$segment])));
-            }
-
-            $target[$segment] ??= [];
-            $target = &$target[$segment];
+        if (!\is_array($existing)) {
+            throw new InvalidResolverOutputException($type, $walked, \sprintf('that path already holds %s', \get_debug_type($existing)));
         }
 
-        /** @var array<string, mixed> $target */
-        if (!\array_key_exists($last, $target)) {
-            $target[$last] = $data;
+        /** @var array<string, mixed> $existing */
+        $target[$segment] = $this->mergeResolverOutput($existing, $rest, $data, $type, $walked);
 
-            return;
+        return $target;
+    }
+
+    /**
+     * The root has no key of its own: the data is merged into the content view data directly, so
+     * it may not carry one of the reserved top level keys.
+     *
+     * @param array<string, mixed> $target
+     *
+     * @return array<string, mixed>
+     */
+    private function mergeResolverOutputIntoRoot(array $target, mixed $data, string $type): array
+    {
+        if (!\is_array($data)) {
+            throw new InvalidResolverOutputException($type, [], \sprintf('it returned %s instead of an array', \get_debug_type($data)));
         }
 
-        if (!\is_array($target[$last]) || !\is_array($data)) {
-            throw new ResolverPlacementException($type, [...$walked, $last], \sprintf(
-                'that slot already holds %s and cannot take %s',
-                \get_debug_type($target[$last]),
-                \get_debug_type($data),
-            ));
+        /** @var array<string, mixed> $data */
+        $reserved = \array_intersect(\array_keys($data), self::RESERVED_KEYS);
+        if ([] !== $reserved) {
+            throw new InvalidResolverOutputException($type, [], \sprintf('it returned the reserved key(s) "%s"', \implode('", "', $reserved)));
         }
 
-        $target[$last] += $data;
+        return $target + $data;
     }
 
     /**
@@ -165,7 +189,7 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
      * } $contentData
      * @param list<int|string> $path
      */
-    private function replaceNestedContentViews(array &$contentData, array $path = ['content'], int $envelopeDepth = 0): void
+    private function replaceNestedContentViewsAtPath(array &$contentData, array $path = ['content'], int $contentDepth = 0): void
     {
         $pathValues = [];
         $iterable = $this->propertyAccessor->getValue($contentData, $this->buildPropertyPath($path)) ?? [];
@@ -177,7 +201,7 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
         foreach ($iterable as $key => $entry) {
             if (\is_array($entry)) {
                 if ([] !== $entry) {
-                    $this->replaceNestedContentViews($contentData, [...$path, $key], $envelopeDepth);
+                    $this->replaceNestedContentViewsAtPath($contentData, [...$path, $key], $contentDepth);
                 }
 
                 if (!$this->isExtractableIterable($iterable)) {
@@ -186,7 +210,7 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
 
                 if ('view' === $key) {
                     // truncate at the next nested 'content' segment so we keep only the outermost resolver wrapper
-                    $nextContentIdx = $this->findSegmentAfter($path, 'content', $envelopeDepth + 1);
+                    $nextContentIdx = $this->findSegmentAfter($path, 'content', $contentDepth + 1);
                     $viewPath = null === $nextContentIdx ? $path : \array_slice($path, 0, $nextContentIdx);
 
                     $value = null;
@@ -199,11 +223,11 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
                         $value = $this->propertyAccessor->getValue($contentData, $this->buildPropertyPath([...$path, $key]));
                     }
 
-                    // swap the segment that roots this envelope for 'view'
+                    // swap the segment that roots this content path for 'view'
                     $viewPath = [
-                        ...\array_slice($viewPath, 0, $envelopeDepth),
+                        ...\array_slice($viewPath, 0, $contentDepth),
                         'view',
-                        ...\array_slice($viewPath, $envelopeDepth + 1),
+                        ...\array_slice($viewPath, $contentDepth + 1),
                     ];
                     $viewPathStr = $this->buildPropertyPath($viewPath);
 
@@ -226,8 +250,8 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
     }
 
     /**
-     * Runs replaceNestedContentViews for the root envelope and every configured `[root][x][content]`
-     * envelope, so those envelopes flatten nested content the same way the root envelope does.
+     * Runs the replacement for the root `content` and every configured `[root][x][content]` path,
+     * so those paths flatten nested content the same way the root does.
      *
      * @param array{
      *     resource: object,
@@ -237,23 +261,23 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
      *     ...
      * } $contentData
      */
-    public function replaceNestedContentViewsAtEnvelopes(array &$contentData): void
+    public function replaceNestedContentViews(array &$contentData): void
     {
-        /** @var array<string, list<string>> $envelopes */
-        $envelopes = ['content' => ['content']];
+        /** @var array<string, list<string>> $contentPaths */
+        $contentPaths = ['content' => ['content']];
 
         foreach ($this->paths as $segments) {
             if ([] !== $segments && 'content' === $segments[\count($segments) - 1]) {
-                $envelopes[\implode('/', $segments)] = $segments;
+                $contentPaths[\implode('/', $segments)] = $segments;
             }
         }
 
-        foreach ($envelopes as $segments) {
+        foreach ($contentPaths as $segments) {
             if (!$this->propertyAccessor->isReadable($contentData, $this->buildPropertyPath($segments))) {
                 continue;
             }
 
-            $this->replaceNestedContentViews($contentData, $segments, \count($segments) - 1);
+            $this->replaceNestedContentViewsAtPath($contentData, $segments, \count($segments) - 1);
         }
     }
 
@@ -338,9 +362,9 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
      * corresponding `items` entry produced by viewEnhancements.
      *
      * An enhancement path starts with the resolver type that produced the field, e.g.
-     * `[template, teasers]` or `[example_root, related]`. The type resolves to its envelope
+     * `[template, teasers]` or `[example_root, related]`. The type resolves to its path
      * segments; if those end in `content`, the field's view lives at the sibling `view` key
-     * of that same envelope. Otherwise the resolver has no view envelope and the enhancement
+     * of that same path. Otherwise the resolver has no view data and the enhancement
      * is dropped.
      *
      * @param array{resource: object, content: array<string, mixed>, view: array<string, mixed>, extension: array<string, array<string, mixed>>, ...} $data

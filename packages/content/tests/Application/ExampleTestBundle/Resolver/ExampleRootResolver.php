@@ -20,7 +20,7 @@ use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\ResourceLoader\ExampleResourceLoader;
 
 /**
- * Test double for a resolver placed at `[root][exampleRoot][content]`, active only for the `root-resolver-example` template.
+ * Test double for a resolver merged into `[root][exampleRoot][content]`, active only for the `root-resolver-example` template.
  */
 final class ExampleRootResolver implements ResolverInterface
 {

@@ -23,8 +23,8 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
  * Register with the `sulu_content.content_resolver` tag. `type` keys the output and defaults
  * to the class's `#[AsTaggedItem]` index or static `getDefaultTypeName()`, then the decorated
  * service id, then the service id, mirroring Symfony's tagged iterator resolution. `path` sets
- * the output location in the resolved envelope and defaults to
- * `[root][extension][<type>]`. A path ending in `content` also places the view at the sibling
+ * the output location in the resolved content view data and defaults to
+ * `[root][extension][<type>]`. A path ending in `content` also writes the view to the sibling
  * `view` key. Higher `priority` runs first and wins on key collisions.
  *
  * Resolvers run for every resolved entity at every depth. When `$properties` is set, filter

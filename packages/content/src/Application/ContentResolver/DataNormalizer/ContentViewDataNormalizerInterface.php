@@ -44,8 +44,8 @@ interface ContentViewDataNormalizerInterface
     ): array;
 
     /**
-     * Runs replaceNestedContentViews for the root envelope and every configured `[root][x][content]`
-     * envelope, so those envelopes flatten nested content the same way the root envelope does.
+     * Runs the replacement for the root `content` and every configured `[root][x][content]` path,
+     * so those paths flatten nested content the same way the root does.
      *
      * @param array{
      *     resource: object,
@@ -55,7 +55,7 @@ interface ContentViewDataNormalizerInterface
      *     ...
      * } $contentData
      */
-    public function replaceNestedContentViewsAtEnvelopes(array &$contentData): void;
+    public function replaceNestedContentViews(array &$contentData): void;
 
     /**
      * Folds per-item field-level view data sitting at numeric indices into the

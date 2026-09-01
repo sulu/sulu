@@ -17,7 +17,7 @@ namespace Sulu\Content\Application\ContentResolver\Exception;
  * @internal This exception is intended for internal use only within the package/library.
  * Modifying or depending on this exception may result in unexpected behavior and is not supported.
  */
-final class ResolverPlacementException extends \LogicException
+final class InvalidResolverOutputException extends \LogicException
 {
     private string $type;
 
@@ -29,7 +29,7 @@ final class ResolverPlacementException extends \LogicException
         $this->type = $type;
 
         parent::__construct(\sprintf(
-            'Content resolver "%s" cannot be placed at "[root]%s": %s.',
+            'Content resolver "%s" cannot be merged into "[root]%s": %s.',
             $type,
             \implode('', \array_map(static fn (string $segment) => '[' . $segment . ']', $segments)),
             $reason,
