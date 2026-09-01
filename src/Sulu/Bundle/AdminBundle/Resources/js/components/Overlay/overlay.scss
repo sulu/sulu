@@ -3,6 +3,7 @@
 
 $primaryBackground: $concrete;
 $secondaryBackground: $white;
+$toolbarBackground: $alabaster;
 $borderRadius: 3px;
 $overlayBorderColor: $silver;
 
@@ -85,13 +86,19 @@ $transitionDuration: 300ms;
     }
 
     .toolbar {
-        background: $primaryBackground;
+        background: $toolbarBackground;
         border-bottom: 1px solid $overlayBorderColor;
 
         /* the application toolbar paints its own bar, in here it continues the header */
         nav {
             background: transparent;
             box-shadow: none;
+        }
+
+        /* the item list is the only one in the toolbar, its bar spans the full line instead */
+        ul {
+            background: transparent;
+            border: 0;
         }
     }
 
