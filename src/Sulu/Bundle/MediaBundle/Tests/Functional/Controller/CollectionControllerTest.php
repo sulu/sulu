@@ -399,6 +399,37 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertCount(26, $collections);
     }
 
+    public function testCGetListsAllCollectionsIfNoLimitIsGivenWithFlatParameterSet(): void
+    {
+        for ($i = 1; $i <= 25; ++$i) {
+            $this->createCollection(
+                $this->collectionType1,
+                ['en-gb' => 'Test Collection ' . $i, 'de' => 'Test Kollektion ' . $i]
+            );
+        }
+
+        $this->client->jsonRequest(
+            'GET',
+            '/api/collections?' . \http_build_query([
+                'locale' => 'en-gb',
+                'flat' => true
+            ])
+        );
+
+        /** @var string $responseContent */
+        $responseContent = $this->client->getResponse()->getContent();
+        /** @var object{_embedded: object{collections: list<\stdClass>}} $response */
+        $response = \json_decode($responseContent, false, 512, \JSON_THROW_ON_ERROR);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $this->assertNotEmpty($response->_embedded->collections);
+
+        /** @var \stdClass[] $collections */
+        $collections = $response->_embedded->collections;
+
+        $this->assertCount(26, $collections);
+    }
+
     public function testCGetPaginatedFlat(): void
     {
         for ($i = 1; $i < 8; ++$i) {
