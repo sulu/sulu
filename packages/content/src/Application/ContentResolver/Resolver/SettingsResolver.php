@@ -25,12 +25,6 @@ use Sulu\Content\Domain\Model\WebspaceInterface;
 /**
  * @phpstan-type SettingsData array{
  *      availableLocales?: string[]|null,
- *      localizations?: array<string, array{
- *          locale: string,
- *          url: string|null,
- *          country: string,
- *          alternate: bool
- *      }>,
  *      mainWebspace?: string|null,
  *      template?: string|null,
  *      author?: ContentView|null,

@@ -1,5 +1,18 @@
 # Upgrade
 
+## 3.0.10
+
+### Content resolvers can declare an output path
+
+The `sulu_content.content_resolver` tag accepts an optional `path` attribute; the tag's
+`priority` now also decides merge precedence.
+Existing resolvers keep their output location. Registering two resolvers with the same
+`type` now fails at container compile time; previously one of them was silently ignored.
+To replace a core resolver, decorate it; the decorator inherits the tag and may re-declare it.
+Re-declaring the tag on a decorator replaces it entirely, so declare `type` again alongside `path`.
+A resolver whose output cannot be placed, for example a non-array at `[root]` or a reserved
+envelope key, now throws a `LogicException` at render time instead of producing a wrong envelope.
+
 ## 3.0.9
 
 ### Widened webspace, slug and template key column lengths
