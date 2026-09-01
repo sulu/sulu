@@ -69,7 +69,7 @@ class ContentResolverTest extends TestCase
 
         $this->resolvableResourceQueueProcessor = new ResolvableResourceQueueProcessor();
         $this->resolvableResourceReplacer = new ResolvableResourceReplacer(new ReferenceStore());
-        $this->contentViewDataNormalizer = new ContentViewDataNormalizer(new PropertyAccessor());
+        $this->contentViewDataNormalizer = new ContentViewDataNormalizer(new PropertyAccessor(), ['template' => ['content'], 'settings' => []]);
 
         $this->templateResolver = new TestTemplateResolver();
 

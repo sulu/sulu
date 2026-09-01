@@ -34,6 +34,7 @@ interface ContentViewDataNormalizerInterface
      *     content: array<string, mixed>,
      *     view: array<string, mixed>,
      *     extension: array<string, array<string, mixed>>,
+     *     ...
      * }
      */
     public function normalizeContentViewData(
@@ -43,17 +44,29 @@ interface ContentViewDataNormalizerInterface
     ): array;
 
     /**
-     * Replaces nested ContentViews in the formatted content data.
+     * Runs replaceNestedContentViews for the root envelope and every configured `[root][x][content]`
+     * envelope, so those envelopes flatten nested content the same way the root envelope does.
      *
      * @param array{
      *     resource: object,
      *     content: array<string, mixed>,
      *     view: array<string, mixed>,
-     *     extension: array<string, array<string, mixed>>
+     *     extension: array<string, array<string, mixed>>,
+     *     ...
      * } $contentData
-     * @param list<int|string> $path
      */
-    public function replaceNestedContentViews(array &$contentData, array $path = ['content']): void;
+    public function replaceNestedContentViewsAtEnvelopes(array &$contentData): void;
+
+    /**
+     * Folds per-item field-level view data sitting at numeric indices into the
+     * corresponding `items` entry produced by viewEnhancements.
+     *
+     * @param array{resource: object, content: array<string, mixed>, view: array<string, mixed>, extension: array<string, array<string, mixed>>, ...} $data
+     * @param array<string, array{path: list<int|string>, itemsPropertyName: ?string, items: list<mixed>}> $viewEnhancements
+     *
+     * @return array{resource: object, content: array<string, mixed>, view: array<string, mixed>, extension: array<string, array<string, mixed>>, ...}
+     */
+    public function mergeFieldViewDataIntoItems(array $data, array $viewEnhancements): array;
 
     /**
      * Recursively maps properties in the content data.
@@ -63,6 +76,7 @@ interface ContentViewDataNormalizerInterface
      *      content: array<string, mixed>,
      *      view: array<string, mixed>,
      *      extension: array<string, array<string, mixed>>,
+     *      ...
      *  } $data
      * @param array<string, string> $properties
      * @param list<int|string> $path

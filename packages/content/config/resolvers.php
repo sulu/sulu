@@ -64,7 +64,7 @@ return static function(ContainerConfigurator $container) {
         ]);
 
     $services->set('sulu_content.content_view_data_normalizer', ContentViewDataNormalizer::class)
-        ->args([new Reference('property_accessor')]);
+        ->args([new Reference('property_accessor'), []]); // ContentResolverPathPass replaces the paths map
 
     $services->set('sulu_content.content_enhancer', ContentEnhancer::class)
         ->args([tagged_iterator('sulu_content.dimension_content_enhancer')]);
@@ -99,10 +99,10 @@ return static function(ContainerConfigurator $container) {
             new Reference('.inner'),
             new Reference('sulu_admin.form_metadata_provider'),
         ])
-        ->tag('sulu_content.content_resolver', ['type' => 'template']);
+        ->tag('sulu_content.content_resolver', ['type' => 'template', 'path' => '[root][content]']);
 
     $services->set('sulu_content.settings_resolver', SettingsResolver::class)
-        ->tag('sulu_content.content_resolver', ['type' => 'settings']);
+        ->tag('sulu_content.content_resolver', ['type' => 'settings', 'path' => '[root]']);
 
     $services->set('sulu_content.excerpt_taxonomy_resolver', ExcerptTaxonomyResolver::class)
         ->args([
