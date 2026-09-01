@@ -1,98 +1,130 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`View should render with closed overlay 1`] = `
-<div>
-  list view mock
-</div>
+<body>
+  <div>
+    <div
+      data-testid="list"
+    >
+      list view mock
+      <button
+        type="button"
+      >
+        add item
+      </button>
+      <button
+        type="button"
+      >
+        click item
+      </button>
+    </div>
+  </div>
+</body>
 `;
 
 exports[`View should render with opened overlay 1`] = `
-Array [
+<body>
   <div>
-    list view mock
-  </div>,
-  <div
-    class="backdrop visible fixed"
-    data-testid="backdrop"
-    role="button"
-  />,
-  <div
-    class="container isDown"
-  >
     <div
-      class="overlay small"
+      data-testid="list"
     >
-      <section
-        class="content"
+      list view mock
+      <button
+        type="button"
       >
-        <header
-          class="header"
+        add item
+      </button>
+      <button
+        type="button"
+      >
+        click item
+      </button>
+    </div>
+  </div>
+  <div>
+    <div
+      class="backdrop visible fixed"
+      data-testid="backdrop"
+      role="button"
+    />
+    <div
+      class="container isDown"
+    >
+      <div
+        class="overlay small"
+      >
+        <section
+          class="content"
         >
-          <h2>
-            app.add_overlay_title
-          </h2>
-          <span
-            aria-label="su-times"
-            class="su-times clickable icon"
-            role="button"
-            tabindex="0"
-          />
-        </header>
-        <article
-          class="article"
-        >
-          <div
-            class="form"
+          <header
+            class="header"
           >
-            <div>
-              form container mock
-            </div>
-          </div>
-        </article>
-        <footer
-          class="footer"
-        >
-          <button
-            class="button primary hasText"
-            disabled=""
-            type="button"
-          >
-            <span
-              class="buttonText"
-            >
-              sulu_admin.save
-            </span>
-          </button>
-        </footer>
-        <div
-          class="snackbar"
-        >
-          <div
-            class="snackbar error"
-            role="button"
-          >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
-            />
-            <div
-              class="text"
-            >
-              <strong>
-                sulu_admin.error
-              </strong>
-               - 
-            </div>
+            <h2>
+              app.add_overlay_title
+            </h2>
             <span
               aria-label="su-times"
-              class="su-times clickable closeIcon"
+              class="su-times clickable icon"
               role="button"
               tabindex="0"
             />
+          </header>
+          <article
+            class="article"
+          >
+            <div
+              class="form"
+            >
+              <div>
+                form container mock
+              </div>
+            </div>
+          </article>
+          <footer
+            class="footer"
+          >
+            <button
+              class="button primary hasText"
+              type="button"
+            >
+              <span
+                class="buttonText"
+              >
+                sulu_admin.save
+              </span>
+            </button>
+          </footer>
+          <div
+            class="snackbar"
+          >
+            <div
+              class="snackbar error"
+              role="button"
+            >
+              <span
+                aria-label="su-exclamation-triangle"
+                class="su-exclamation-triangle icon"
+              />
+              <div
+                class="text"
+              >
+                <strong>
+                  sulu_admin.error
+                </strong>
+                 - 
+                
+              </div>
+              <span
+                aria-label="su-times"
+                class="su-times clickable closeIcon"
+                role="button"
+                tabindex="0"
+              />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
-  </div>,
-]
+  </div>
+</body>
 `;

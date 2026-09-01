@@ -3,14 +3,13 @@ import {computed, toJS} from 'mobx';
 import ResourceStore from '../../../stores/ResourceStore';
 import {ResourceFormStore, FormInspector, conditionDataProviderRegistry} from '../../../containers/Form';
 import Router from '../../../services/Router';
-import Form from '../Form';
-import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
+import type {ToolbarActionFormInterface, ToolbarItemConfig} from '../../../containers/Toolbar/types';
 import type {Node} from 'react';
 
 export default class AbstractFormToolbarAction {
     resourceFormStore: ResourceFormStore;
     formInspector: FormInspector;
-    form: Form;
+    form: ToolbarActionFormInterface;
     router: Router;
     locales: ?Array<string>;
     options: {[key: string]: mixed};
@@ -30,7 +29,7 @@ export default class AbstractFormToolbarAction {
 
     constructor(
         resourceFormStore: ResourceFormStore,
-        form: Form,
+        form: ToolbarActionFormInterface,
         router: Router,
         locales: ?Array<string>,
         options: {[key: string]: mixed},

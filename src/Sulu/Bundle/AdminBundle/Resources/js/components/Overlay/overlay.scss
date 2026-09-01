@@ -79,6 +79,22 @@ $transitionDuration: 300ms;
         }
     }
 
+    /* the toolbar continues the header, so the single separator sits below the actions */
+    .header-with-toolbar {
+        border-bottom: 0;
+    }
+
+    .toolbar {
+        background: $primaryBackground;
+        border-bottom: 1px solid $overlayBorderColor;
+
+        /* the application toolbar paints its own bar, in here it continues the header */
+        nav {
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     .article {
         max-height: $overlayContentMaxHeight;
         overflow: auto;
@@ -89,7 +105,7 @@ $transitionDuration: 300ms;
         background: $secondaryBackground;
         border-top: 1px solid $overlayBorderColor;
         height: $overlayFooterHeight;
-        padding: 0 60px;
+        padding: 0 $overlayHorizontalPadding;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -101,7 +117,7 @@ $transitionDuration: 300ms;
 
     .icon {
         position: absolute;
-        right: 60px;
+        right: $overlayHorizontalPadding;
         font-size: $iconFontSize;
         font-weight: bold;
         line-height: $overlayHeaderHeight;

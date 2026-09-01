@@ -218,3 +218,17 @@ test('The component should call the callback when the snackbar is clicked', asyn
     await user.click(screen.getByRole('button', {name: /sulu_admin.warning/i}));
     expect(onSnackbarClick).toHaveBeenCalled();
 });
+
+test('The component should render the toolbar between the header and the content', () => {
+    renderOverlay({
+        toolbar: <div data-testid="overlay-toolbar">toolbar content</div>,
+    });
+
+    expect(screen.getByTestId('overlay-toolbar')).toBeInTheDocument();
+});
+
+test('The component should not render a toolbar container when no toolbar is passed', () => {
+    renderOverlay();
+
+    expect(screen.queryByTestId('overlay-toolbar')).not.toBeInTheDocument();
+});

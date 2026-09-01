@@ -27,6 +27,13 @@ interface FormOverlayListViewBuilderInterface extends ViewBuilderInterface
 
     public function setEditOverlayTitle(string $editOverlayTitle): self;
 
+    /**
+     * Toolbar actions rendered inside the overlay, resolved through the formToolbarActionRegistry.
+     *
+     * @param ToolbarAction[] $toolbarActions
+     */
+    public function addOverlayToolbarActions(array $toolbarActions): self;
+
     public function setTabOrder(int $tabOrder): self;
 
     public function setTabPriority(int $tabPriority): self;

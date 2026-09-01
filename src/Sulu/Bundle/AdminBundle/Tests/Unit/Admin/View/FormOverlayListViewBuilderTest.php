@@ -471,6 +471,47 @@ class FormOverlayListViewBuilderTest extends TestCase
         );
     }
 
+    public function testBuildAddOverlayToolbarActions(): void
+    {
+        $saveToolbarAction = new ToolbarAction('sulu_admin.save');
+        $deleteToolbarAction = new ToolbarAction('sulu_admin.delete');
+        $listToolbarAction = new ToolbarAction('sulu_admin.add');
+
+        $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
+            ->setListKey('roles')
+            ->setFormKey('role_details')
+            ->addListAdapters(['table'])
+            ->addToolbarActions([$listToolbarAction])
+            ->addOverlayToolbarActions([$saveToolbarAction])
+            ->addOverlayToolbarActions([$deleteToolbarAction])
+            ->getView();
+
+        $this->assertEquals(
+            [$saveToolbarAction, $deleteToolbarAction],
+            $route->getOption('overlayToolbarActions'),
+            'repeated calls append instead of replacing, like addToolbarActions'
+        );
+
+        $this->assertEquals(
+            [$listToolbarAction],
+            $route->getOption('toolbarActions'),
+            'the overlay actions must not leak into the surrounding list toolbar'
+        );
+    }
+
+    public function testBuildWithoutOverlayToolbarActions(): void
+    {
+        $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
+            ->setListKey('roles')
+            ->setFormKey('role_details')
+            ->addListAdapters(['table'])
+            ->getView();
+
+        $this->assertNull($route->getOption('overlayToolbarActions'));
+    }
+
     public function testBuildAddItemActions(): void
     {
         $linkItemAction = new ToolbarAction('sulu_admin.link');
