@@ -99,12 +99,12 @@ class SnippetSmartContentProviderTest extends SuluTestCase
         ]);
     }
 
-    public function testFindFlatByXmlTemplateKeysIntersectsWithUiTypes(): void
+    public function testFindFlatByXmlTemplateKeysIntersectsWithUiGroups(): void
     {
         $result = $this->smartContentProvider->findFlatBy(
             [
                 ...$this->getDefaultFilters(),
-                ...['locale' => 'en', 'types' => ['snippet']],
+                ...['locale' => 'en', 'types' => ['default']],
             ],
             [],
             ['templateKeys' => 'snippet,snippet-alternate'],
@@ -116,7 +116,7 @@ class SnippetSmartContentProviderTest extends SuluTestCase
             $this->smartContentProvider->countBy(
                 [
                     ...$this->getDefaultFilters(),
-                    ...['locale' => 'en', 'types' => ['snippet']],
+                    ...['locale' => 'en', 'types' => ['default']],
                 ],
                 ['templateKeys' => 'snippet,snippet-alternate'],
             ),
@@ -126,12 +126,12 @@ class SnippetSmartContentProviderTest extends SuluTestCase
         $this->assertContains(self::$snippets['default']->getUuid(), $resultIds);
     }
 
-    public function testFindFlatByUiTypeOutsideXmlTemplateKeysReturnsZero(): void
+    public function testFindFlatByUiGroupOutsideXmlTemplateKeysReturnsZero(): void
     {
         $result = $this->smartContentProvider->findFlatBy(
             [
                 ...$this->getDefaultFilters(),
-                ...['locale' => 'en', 'types' => ['snippet-alternate']],
+                ...['locale' => 'en', 'types' => ['alternate-group']],
             ],
             [],
             ['templateKeys' => 'snippet'],
@@ -143,9 +143,50 @@ class SnippetSmartContentProviderTest extends SuluTestCase
             $this->smartContentProvider->countBy(
                 [
                     ...$this->getDefaultFilters(),
-                    ...['locale' => 'en', 'types' => ['snippet-alternate']],
+                    ...['locale' => 'en', 'types' => ['alternate-group']],
                 ],
                 ['templateKeys' => 'snippet'],
+            ),
+        );
+    }
+
+    public function testFindFlatByXmlGroupsRestrictsTheResult(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy(
+            [
+                ...$this->getDefaultFilters(),
+                ...['locale' => 'en'],
+            ],
+            [],
+            ['groups' => 'alternate-group'],
+        );
+
+        $this->assertCount(1, $result);
+
+        $resultIds = \array_map(fn ($snippet) => $snippet['id'], $result);
+        $this->assertContains(self::$snippets['alternate']->getUuid(), $resultIds);
+    }
+
+    public function testFindFlatByUiGroupOutsideXmlGroupsReturnsZero(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy(
+            [
+                ...$this->getDefaultFilters(),
+                ...['locale' => 'en', 'types' => ['default']],
+            ],
+            [],
+            ['groups' => 'alternate-group'],
+        );
+
+        $this->assertCount(0, $result);
+        $this->assertSame(
+            0,
+            $this->smartContentProvider->countBy(
+                [
+                    ...$this->getDefaultFilters(),
+                    ...['locale' => 'en', 'types' => ['default']],
+                ],
+                ['groups' => 'alternate-group'],
             ),
         );
     }

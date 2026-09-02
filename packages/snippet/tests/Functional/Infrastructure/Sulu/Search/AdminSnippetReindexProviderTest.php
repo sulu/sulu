@@ -15,6 +15,7 @@ namespace Sulu\Snippet\Tests\Functional\Infrastructure\Sulu\Search;
 
 use CmsIg\Seal\Reindex\ReindexConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
@@ -33,7 +34,9 @@ class AdminSnippetReindexProviderTest extends SuluTestCase
     protected function setUp(): void
     {
         $this->entityManager = $this->getEntityManager();
-        $this->provider = new AdminSnippetReindexProvider($this->entityManager);
+        /** @var GroupProviderInterface $groupProvider */
+        $groupProvider = self::getContainer()->get('sulu_admin.metadata_group_provider');
+        $this->provider = new AdminSnippetReindexProvider($this->entityManager, $groupProvider);
         $this->purgeDatabase();
     }
 
@@ -106,6 +109,9 @@ class AdminSnippetReindexProviderTest extends SuluTestCase
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
                 'title' => 'Test Schnipsel 2',
                 'locale' => 'de',
+                'metadata' => [
+                    'group' => 'default',
+                ],
                 'securityContext' => SnippetAdmin::SECURITY_CONTEXT,
             ],
             [
@@ -116,6 +122,9 @@ class AdminSnippetReindexProviderTest extends SuluTestCase
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
                 'title' => 'Test Snippet',
                 'locale' => 'en',
+                'metadata' => [
+                    'group' => 'default',
+                ],
                 'securityContext' => SnippetAdmin::SECURITY_CONTEXT,
             ],
             [
@@ -126,6 +135,9 @@ class AdminSnippetReindexProviderTest extends SuluTestCase
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
                 'title' => 'Test Snippet 2',
                 'locale' => 'en',
+                'metadata' => [
+                    'group' => 'default',
+                ],
                 'securityContext' => SnippetAdmin::SECURITY_CONTEXT,
             ],
         ];
@@ -136,6 +148,30 @@ class AdminSnippetReindexProviderTest extends SuluTestCase
         $this->assertSame(
             $expectedResult,
             $results,
+        );
+    }
+
+    public function testProvideUsesThePerGroupSecurityContextForGroupedTemplates(): void
+    {
+        $snippet = $this->createSnippet([
+            'en' => [
+                'draft' => [
+                    'template' => 'snippet-alternate',
+                    'title' => 'Alternate Snippet',
+                ],
+            ],
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('admin');
+        /** @var array<array{resourceId: string, metadata: array{group: string}, securityContext: string}> $results */
+        $results = \iterator_to_array($this->provider->provide($config));
+
+        $this->assertCount(1, $results);
+        $this->assertSame($snippet->getUuid(), $results[0]['resourceId']);
+        $this->assertSame(['group' => 'alternate-group'], $results[0]['metadata']);
+        $this->assertSame(
+            SnippetAdmin::getSnippetSecurityContext('alternate-group'),
+            $results[0]['securityContext'],
         );
     }
 

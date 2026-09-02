@@ -16,11 +16,13 @@ namespace Sulu\Snippet\Infrastructure\Sulu\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
+use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
+use Sulu\Snippet\Domain\Model\SnippetInterface;
 
 /**
  * @final
@@ -38,6 +40,7 @@ class SnippetAreaAdmin extends Admin
         private ViewBuilderFactoryInterface $viewBuilderFactory,
         private SecurityCheckerInterface $securityChecker,
         private WebspaceManagerInterface $webspaceManager,
+        private GroupProviderInterface $groupProvider,
     ) {
     }
 
@@ -50,12 +53,28 @@ class SnippetAreaAdmin extends Admin
         $viewCollection->add(
             $this->viewBuilderFactory
                 ->createViewBuilder('sulu_snippet.snippet_areas', '/snippet-areas', 'sulu_snippet.snippet_areas')
-                ->setOption('snippetEditView', SnippetAdmin::EDIT_TABS_VIEW)
+                ->setOption('snippetEditViews', $this->getSnippetEditViews())
                 ->setOption('tabTitle', 'sulu_snippet.webspace_default_snippets')
                 ->setOption('tabOrder', 3072)
                 ->setParent(PageAdmin::WEBSPACE_TABS_VIEW)
                 ->addRerenderAttribute('webspace'),
         );
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function getSnippetEditViews(): array
+    {
+        $snippetEditViews = [];
+
+        foreach ($this->groupProvider->getGroups(SnippetInterface::TEMPLATE_TYPE) as $group) {
+            foreach ($group->templates as $templateKey) {
+                $snippetEditViews[$templateKey] = SnippetAdmin::EDIT_TABS_VIEW . '_' . $group->identifier;
+            }
+        }
+
+        return $snippetEditViews;
     }
 
     public function getSecurityContexts()

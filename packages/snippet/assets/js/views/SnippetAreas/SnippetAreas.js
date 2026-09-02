@@ -36,9 +36,18 @@ class SnippetAreas extends React.Component<ViewProps> {
         this.cacheClearToolbarAction = new CacheClearToolbarAction(webspace);
     }
 
-    @action handleSnippetClick = (snippetUuid: string) => {
+    @action handleSnippetClick = (areaKey: string) => {
         const {router, route} = this.props;
-        const {snippetEditView} = route.options;
+        const {snippetEditViews = {}} = route.options;
+        const {snippetUuid, templateKey} = this.snippetAreaStore.snippetAreas[areaKey];
+        const snippetEditView = snippetEditViews[templateKey];
+
+        if (!snippetEditView) {
+            throw new Error(
+                'No snippet edit view was registered for the template "' + templateKey + '"! '
+                + 'This should not happen and is likely a bug.'
+            );
+        }
 
         router.navigate(snippetEditView, {id: snippetUuid});
     };
@@ -123,7 +132,7 @@ class SnippetAreas extends React.Component<ViewProps> {
                                                     className={snippetAreasStyles.titleButton}
                                                     onClick={this.handleSnippetClick}
                                                     skin="text"
-                                                    value={snippetUuid}
+                                                    value={key}
                                                 >
                                                     {snippetTitle}
                                                 </Button>

@@ -175,7 +175,7 @@
 
             <filter type="select">
                 <params>
-                    <param name="options" type="expression" value="service('sulu_snippet.template_select_provider').getFilterValues(locale)" />
+                    <param name="options" type="expression" value="service('sulu_snippet.template_select_provider').getFilterValues(locale, templates ?? null)" />
                 </params>
             </filter>
         </case-property>

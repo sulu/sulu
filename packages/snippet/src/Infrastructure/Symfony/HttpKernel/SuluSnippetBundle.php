@@ -243,6 +243,7 @@ final class SuluSnippetBundle extends AbstractBundle
                 new Reference('sulu_security.security_checker'),
                 new Reference('sulu.core.localization_manager'),
                 new Reference('sulu_activity.activity_list_view_builder_factory'),
+                new Reference('sulu_admin.metadata_group_provider'),
             ])
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu.admin');
@@ -253,6 +254,7 @@ final class SuluSnippetBundle extends AbstractBundle
                 new Reference('sulu_admin.view_builder_factory'),
                 new Reference('sulu_security.security_checker'),
                 new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('sulu_admin.metadata_group_provider'),
             ])
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu.admin');
@@ -311,6 +313,7 @@ final class SuluSnippetBundle extends AbstractBundle
                 new Reference('sulu_snippet.snippet_repository'),
                 new Reference('sulu_message_bus'),
                 new Reference('serializer'),
+                new Reference('sulu_admin.metadata_group_provider'),
                 // additional services to be removed when no longer needed
                 new Reference('sulu_content.content_manager'),
                 new Reference('sulu_core.list_builder.field_descriptor_factory'),
@@ -377,6 +380,7 @@ final class SuluSnippetBundle extends AbstractBundle
                 new Reference('sulu_content.dimension_content_query_enhancer'),
                 new Reference('sulu_admin.smart_content_query_enhancer'),
                 new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_admin.metadata_group_provider'),
             ])
             ->tag('sulu_content.smart_content_provider', ['type' => SnippetInterface::RESOURCE_KEY]);
 
@@ -448,6 +452,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->class(AdminSnippetReindexProvider::class)
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_admin.metadata_group_provider'),
                 tagged_iterator('sulu_snippet.admin_snippet_reindex_provider_enhancer'),
             ])
             ->tag('cmsig_seal.reindex_provider');
@@ -568,7 +573,10 @@ final class SuluSnippetBundle extends AbstractBundle
                                 'name' => 'sulu_snippet.snippets',
                                 'icon' => 'su-snippet',
                                 'route' => [
-                                    'name' => 'sulu_snippet.snippet.edit_tabs',
+                                    'name' => SnippetAdmin::EDIT_TABS_VIEW . '_{group}',
+                                    'resultToRouteName' => [
+                                        'metadata.group' => 'group',
+                                    ],
                                     'resultToRoute' => [
                                         'resourceId' => 'id',
                                         'locale' => 'locale',

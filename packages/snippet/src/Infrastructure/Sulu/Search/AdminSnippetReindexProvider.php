@@ -17,6 +17,8 @@ use CmsIg\Seal\Reindex\ReindexConfig;
 use CmsIg\Seal\Reindex\ReindexProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormGroup;
+use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
@@ -30,6 +32,7 @@ use Sulu\Snippet\Infrastructure\Sulu\Search\Visitor\AdminSnippetReindexProviderE
  *     created: \DateTimeImmutable,
  *     title: string,
  *     locale: string,
+ *     templateKey: string,
  * }
  *
  * @internal this class is internal no backwards compatibility promise is given for this class
@@ -47,6 +50,7 @@ final class AdminSnippetReindexProvider implements ReindexProviderInterface
      */
     public function __construct(
         EntityManagerInterface $entityManager,
+        private readonly GroupProviderInterface $groupProvider,
         private readonly iterable $enhancers = [],
     ) {
         $this->dimensionContentRepository = $entityManager->getRepository(SnippetDimensionContentInterface::class);
@@ -61,9 +65,26 @@ final class AdminSnippetReindexProvider implements ReindexProviderInterface
     public function provide(ReindexConfig $reindexConfig): \Generator
     {
         $snippets = $this->loadSnippets($reindexConfig->getIdentifiers());
+        /** @var FormGroup[] $groups */
+        $groups = $this->groupProvider->getGroups(SnippetInterface::TEMPLATE_TYPE);
 
         /** @var Snippet $snippet */
         foreach ($snippets as $snippet) {
+            $groupIdentifier = null;
+
+            foreach ($groups as $group) {
+                if (\in_array($snippet['templateKey'], $group->templates)) {
+                    $groupIdentifier = $group->identifier;
+                    break;
+                }
+            }
+
+            $groupIdentifier ??= GroupProviderInterface::DEFAULT_GROUP;
+            $securityContext = SnippetAdmin::getSnippetSecurityContext($groupIdentifier);
+            if (1 === \count($groups) || GroupProviderInterface::DEFAULT_GROUP === $groupIdentifier) {
+                $securityContext = SnippetAdmin::SECURITY_CONTEXT;
+            }
+
             $data = [
                 'id' => SnippetInterface::RESOURCE_KEY . '__' . ((string) $snippet['snippetId']) . '__' . $snippet['locale'],
                 'resourceKey' => SnippetInterface::RESOURCE_KEY,
@@ -72,7 +93,10 @@ final class AdminSnippetReindexProvider implements ReindexProviderInterface
                 'createdAt' => $snippet['created']->format('c'),
                 'title' => $snippet['title'],
                 'locale' => $snippet['locale'],
-                'securityContext' => SnippetAdmin::SECURITY_CONTEXT,
+                'metadata' => [
+                    'group' => $groupIdentifier,
+                ],
+                'securityContext' => $securityContext,
             ];
 
             foreach ($this->enhancers as $enhancer) {
@@ -96,6 +120,7 @@ final class AdminSnippetReindexProvider implements ReindexProviderInterface
             ->addSelect('dimensionContent.changed')
             ->addSelect('dimensionContent.title')
             ->addSelect('dimensionContent.locale')
+            ->addSelect('dimensionContent.templateKey')
             ->where('dimensionContent.stage = :stage')
             ->andWhere('dimensionContent.locale IS NOT NULL')
             ->andWhere('dimensionContent.version = :version');
