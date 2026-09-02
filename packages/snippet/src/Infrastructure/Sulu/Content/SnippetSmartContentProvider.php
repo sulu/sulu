@@ -14,6 +14,7 @@ namespace Sulu\Snippet\Infrastructure\Sulu\Content;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\Builder;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\BuilderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
@@ -91,6 +92,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         private DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
         private SmartContentQueryEnhancer $smartContentQueryEnhancer,
         EntityManagerInterface $entityManager,
+        private GroupProviderInterface $groupProvider,
     ) {
         $this->entityRepository = $entityManager->getRepository(SnippetInterface::class);
         $this->entityDimensionContentRepository = $entityManager->getRepository(SnippetDimensionContentInterface::class);
@@ -118,7 +120,16 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
                     ['column' => 'created', 'title' => 'sulu_admin.created'],
                     ['column' => 'title', 'title' => 'sulu_admin.title'],
                 ]
-            );
+            )
+            ->enableTypes(\array_values(\array_map(
+                function($group) {
+                    return [
+                        'title' => $group->title,
+                        'type' => $group->identifier,
+                    ];
+                },
+                $this->groupProvider->getGroups(SnippetInterface::TEMPLATE_TYPE),
+            )));
     }
 
     /**
@@ -271,14 +282,34 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
 
     /**
      * @param array<string> $existingTemplateKeys
-     * @param array<string> $filterTemplateKeys
+     * @param array<string> $filterGroupIdentifiers
      * @param array<string, mixed> $params
      *
      * @return list<string>|null null = no overlap with the requested filters
      */
-    private function resolveTemplateKeys(array $existingTemplateKeys, array $filterTemplateKeys, array $params): ?array
+    private function resolveTemplateKeys(array $existingTemplateKeys, array $filterGroupIdentifiers, array $params): ?array
     {
-        $templateKeys = \array_values(\array_unique(\array_merge($existingTemplateKeys, $filterTemplateKeys)));
+        $xmlGroupIdentifiers = $this->parseListParameter($params['groups'] ?? null);
+
+        if ([] !== $xmlGroupIdentifiers && [] !== $filterGroupIdentifiers) {
+            $groupIdentifiers = \array_values(\array_intersect($filterGroupIdentifiers, $xmlGroupIdentifiers));
+            if ([] === $groupIdentifiers) {
+                return null;
+            }
+        } else {
+            $groupIdentifiers = $filterGroupIdentifiers ?: $xmlGroupIdentifiers;
+        }
+
+        $templateKeys = \array_values($existingTemplateKeys);
+        if ([] !== $groupIdentifiers) {
+            $templatesFromGroups = $this->expandGroupsToTemplates($groupIdentifiers);
+            $templateKeys = [] !== $templateKeys
+                ? \array_values(\array_intersect($templateKeys, $templatesFromGroups))
+                : $templatesFromGroups;
+            if ([] === $templateKeys) {
+                return null;
+            }
+        }
 
         $xmlTemplateKeys = $this->parseListParameter($params['templateKeys'] ?? null);
         if ([] !== $xmlTemplateKeys) {
@@ -291,6 +322,23 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         }
 
         return $templateKeys;
+    }
+
+    /**
+     * @param array<string> $identifiers
+     *
+     * @return list<string>
+     */
+    private function expandGroupsToTemplates(array $identifiers): array
+    {
+        $templates = [];
+        foreach ($this->groupProvider->getGroups(SnippetInterface::TEMPLATE_TYPE) as $group) {
+            if (\in_array($group->identifier, $identifiers, true)) {
+                $templates = \array_merge($templates, \array_filter($group->templates, 'is_string'));
+            }
+        }
+
+        return \array_values(\array_unique($templates));
     }
 
     /**

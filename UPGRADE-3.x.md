@@ -2,6 +2,57 @@
 
 ## 3.0.9
 
+### Template groups for snippets
+
+Snippet templates now support the `<group>` element that articles already use. Every group gets its own tab in the
+snippet list, its own add and edit views and its own permission context, and the snippet list, the selection overlays
+and the smart content can be filtered by group.
+
+```diff
+ <!-- config/templates/snippets/footer.xml -->
+ <key>footer</key>
++<group>layout</group>
+```
+
+The group title comes from the translation key `sulu_admin.template_group.<group>` and falls back to
+`ucfirst(<group>)`. Templates without a `<group>` land in the implicit `default` group.
+
+**The admin URLs of snippets changed.** The list is now a tab view at `/snippets` with one child per group, so a
+snippet that used to live at `/snippets/de/<id>` is now at `/snippets/de/<group>/<id>`. Bookmarked links have to be
+recreated. The view names changed the same way: `sulu_snippet.snippet.list`, `sulu_snippet.snippet.add_tabs` and
+`sulu_snippet.snippet.edit_tabs` now carry a `_<group>` suffix, and the unsuffixed edit and add views no longer exist.
+
+As soon as more than one group exists, each custom group registers its own security context
+`sulu.snippet.snippets_<group>` and the navigation entry, the views and the list toolbar actions of that group are
+gated on it. The umbrella `sulu.snippet.snippets` is still required in every setup, because `SnippetController`
+reports it as its security context, and it keeps gating single-group setups and the implicit `default` group, whose
+per-group context is intentionally never registered. Review every role with snippet permissions after upgrading and
+grant the new per-group contexts where needed.
+
+The snippet selection and the snippets smart content accept a new `groups` param next to the existing `templateKeys`:
+
+```xml
+<property name="mySnippets" type="snippet_selection">
+    <params>
+        <param name="groups" value="layout"/>
+    </params>
+</property>
+```
+
+For the snippets smart content provider the UI type filter now selects groups instead of template keys, matching the
+article providers. The deprecated `types` param of a `smart_content` with `provider="snippets"` therefore has to be
+renamed to `groups`, not to `templateKeys`.
+
+The admin search index stores the group of a snippet and its per-group security context, so run the reindex for both
+kernels after deploying:
+
+```bash
+bin/console cmsig:seal:reindex
+```
+
+Restoring a snippet or an article from the trash now returns to the list instead of the edit form, because the edit
+view is split per group and the restore response does not carry the template of the restored entity.
+
 ### Widened webspace, slug and template key column lengths
 
 The `webspace`/`webspaceKey`, `slug`, `templateKey` and navigation-context/additional-webspace `name` columns

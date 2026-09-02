@@ -27,9 +27,10 @@ final class ValidateSmartContentParamsPass implements CompilerPassInterface
 {
     private const DEPRECATED_PARAMS = ['types', 'structureTypes'];
 
-    private const ARTICLE_PROVIDERS = [
+    private const GROUP_PROVIDERS = [
         'articles',
         'articles_page_tree',
+        'snippets',
     ];
 
     private const TEMPLATE_NAMESPACE = 'http://schemas.sulu.io/template/template';
@@ -124,11 +125,11 @@ final class ValidateSmartContentParamsPass implements CompilerPassInterface
             }
         }
 
-        $isArticleProvider = null !== $provider && \in_array($provider, self::ARTICLE_PROVIDERS, true);
+        $isGroupProvider = null !== $provider && \in_array($provider, self::GROUP_PROVIDERS, true);
 
         foreach ($deprecated as $deprecatedName) {
             $replacement = match ($deprecatedName) {
-                'types' => $isArticleProvider ? 'groups' : 'templateKeys',
+                'types' => $isGroupProvider ? 'groups' : 'templateKeys',
                 'structureTypes' => 'templateKeys',
             };
 

@@ -339,6 +339,23 @@ class SnippetControllerTest extends SuluTestCase
     }
 
     #[Depends('testPost')]
+    public function testGetListWithGroupsFilter(): void
+    {
+        // the created snippets use the "snippet" template, which has no group and therefore lands in "default"
+        $this->client->request('GET', '/admin/api/snippets?locale=en&groups=default');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_cget_types_filter_snippet.json', $response, 200);
+
+        $this->client->request('GET', '/admin/api/snippets?locale=en&groups=alternate-group');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_cget_types_filter_nonexistent.json', $response, 200);
+
+        $this->client->request('GET', '/admin/api/snippets?locale=en&groups=alternate-group&templateKeys=snippet');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_cget_types_filter_snippet.json', $response, 200);
+    }
+
+    #[Depends('testPost')]
     public function testDeleteSingleLocale(string $id): string
     {
         $this->client->request('GET', '/admin/api/snippets/' . $id . '?locale=en');

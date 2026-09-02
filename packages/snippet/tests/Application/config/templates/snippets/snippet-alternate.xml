@@ -4,6 +4,7 @@
           xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template.xsd">
 
     <key>snippet-alternate</key>
+    <group>alternate-group</group>
 
     <view>views/snippets/snippet-alternate</view>
     <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>

@@ -45,6 +45,56 @@ class SnippetAdminTest extends SuluTestCase
         $this->assertContains('sulu_admin.copy', $actionNames);
     }
 
+    public function testConfigureViewsCreatesAViewPerTemplateGroup(): void
+    {
+        $viewCollection = new ViewCollection();
+        $this->getSnippetAdmin()->configureViews($viewCollection);
+
+        $this->assertTrue($viewCollection->has(SnippetAdmin::LIST_VIEW));
+
+        foreach (['default', 'alternate-group'] as $groupIdentifier) {
+            $this->assertTrue($viewCollection->has(SnippetAdmin::LIST_VIEW . '_' . $groupIdentifier));
+            $this->assertTrue($viewCollection->has(SnippetAdmin::ADD_TABS_VIEW . '_' . $groupIdentifier));
+            $this->assertTrue($viewCollection->has(SnippetAdmin::EDIT_TABS_VIEW . '_' . $groupIdentifier));
+        }
+
+        $this->assertFalse($viewCollection->has(SnippetAdmin::EDIT_TABS_VIEW));
+    }
+
+    public function testConfigureViewsRestrictsTheListAndFormToTheTemplatesOfTheGroup(): void
+    {
+        $viewCollection = new ViewCollection();
+        $this->getSnippetAdmin()->configureViews($viewCollection);
+
+        $listView = $viewCollection->get(SnippetAdmin::LIST_VIEW . '_alternate-group')->getView();
+        $this->assertSame(
+            ['templateKeys' => 'snippet-alternate'],
+            $listView->getOption('requestParameters'),
+        );
+        $this->assertSame(
+            ['templates' => 'snippet-alternate'],
+            $listView->getOption('metadataRequestParameters'),
+        );
+
+        $formView = $viewCollection->get(SnippetAdmin::EDIT_TABS_VIEW . '_alternate-group.content')->getView();
+        $this->assertSame(
+            ['templates' => 'snippet-alternate'],
+            $formView->getOption('metadataRequestParameters'),
+        );
+    }
+
+    public function testGetSecurityContextsRegistersAContextPerCustomGroup(): void
+    {
+        /** @var array<string, array<string, array<string, string[]>>> $securityContexts */
+        $securityContexts = $this->getSnippetAdmin()->getSecurityContexts();
+
+        $snippetContexts = $securityContexts[SnippetAdmin::SULU_ADMIN_SECURITY_SYSTEM]['Snippet'] ?? [];
+
+        $this->assertArrayHasKey(SnippetAdmin::SECURITY_CONTEXT, $snippetContexts);
+        $this->assertArrayHasKey(SnippetAdmin::getSnippetSecurityContext('alternate-group'), $snippetContexts);
+        $this->assertArrayNotHasKey(SnippetAdmin::getSnippetSecurityContext('default'), $snippetContexts);
+    }
+
     private function getSnippetAdmin(): SnippetAdmin
     {
         /** @var SnippetAdmin $snippetAdmin */
