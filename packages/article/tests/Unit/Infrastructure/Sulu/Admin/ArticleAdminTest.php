@@ -262,6 +262,32 @@ class ArticleAdminTest extends TestCase
         $this->assertContains('sulu_admin.copy_locale', $subActionTypes);
     }
 
+    public function testConfigureViewsKeepsTheGroupOrderOfTheGroupProvider(): void
+    {
+        $this->localizationManager->getLocales()->willReturn(['en']);
+        $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE)->willReturn([
+            'default' => (new FormGroup('default', 'Default'))->withTemplate('article'),
+            'blog-group' => (new FormGroup('blog-group', 'Blog'))->withTemplate('blog'),
+            'news-group' => (new FormGroup('news-group', 'News'))->withTemplate('news'),
+        ]);
+
+        $this->securityChecker->hasPermission(Argument::cetera())->willReturn(true);
+
+        $viewCollection = new ViewCollection();
+        $this->articleAdmin->configureViews($viewCollection);
+
+        $listViewNames = \array_values(\array_filter(
+            \array_keys($viewCollection->all()),
+            static fn (string $viewName) => \str_starts_with($viewName, ArticleAdmin::LIST_VIEW . '_'),
+        ));
+
+        $this->assertSame([
+            ArticleAdmin::LIST_VIEW . '_default',
+            ArticleAdmin::LIST_VIEW . '_blog-group',
+            ArticleAdmin::LIST_VIEW . '_news-group',
+        ], $listViewNames);
+    }
+
     public function testConfigureViewsWithSingleGroupAndNoPermission(): void
     {
         $this->localizationManager->getLocales()->willReturn(['en']);

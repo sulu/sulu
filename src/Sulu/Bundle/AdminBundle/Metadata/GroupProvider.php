@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Metadata;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormGroup;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Component\Util\SortUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final readonly class GroupProvider implements GroupProviderInterface
@@ -39,6 +40,20 @@ final readonly class GroupProvider implements GroupProviderInterface
             }
             $groups[$group] = $groups[$group]->withTemplate($form->getKey());
         }
+
+        $compareTitles = SortUtils::createLocaleAwareComparator($this->translator->getLocale());
+
+        \uasort($groups, static function(FormGroup $a, FormGroup $b) use ($compareTitles): int {
+            if (GroupProviderInterface::DEFAULT_GROUP === $a->identifier) {
+                return -1;
+            }
+
+            if (GroupProviderInterface::DEFAULT_GROUP === $b->identifier) {
+                return 1;
+            }
+
+            return $compareTitles($a->title, $b->title) ?: \strcmp($a->identifier, $b->identifier);
+        });
 
         return $groups;
     }
