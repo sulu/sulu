@@ -95,6 +95,9 @@ class ProfileTwoFactorController
         return $this->confirmAuthenticator($method, $user, $code);
     }
 
+    /**
+     * @param User&\Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface&\Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface $user
+     */
     private function setupAuthenticator(string $method, User $user): Response
     {
         $authenticator = $this->getAuthenticator($method);
@@ -135,6 +138,9 @@ class ProfileTwoFactorController
         );
     }
 
+    /**
+     * @param User&\Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface&\Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface $user
+     */
     private function confirmAuthenticator(string $method, User $user, string $code): Response
     {
         $authenticator = $this->getAuthenticator($method);
@@ -169,6 +175,9 @@ class ProfileTwoFactorController
         return new Response('', 204);
     }
 
+    /**
+     * @param User&\Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface $user
+     */
     private function setupEmail(User $user): Response
     {
         if (!$this->emailCodeGenerator) {
