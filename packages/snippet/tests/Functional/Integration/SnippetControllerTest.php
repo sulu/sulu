@@ -513,6 +513,50 @@ class SnippetControllerTest extends SuluTestCase
         }
     }
 
+    public function testPutShadowLocale(): string
+    {
+        // Uses its own snippet instead of the one from testPost, because that fixture is shared
+        // and mutated by many other dependent tests (including one that purges the database).
+        self::purgeDatabase();
+
+        $this->client->request('POST', '/admin/api/snippets?locale=en', [], [], [], \json_encode([
+            'template' => 'snippet',
+            'title' => 'Test Snippet',
+        ]) ?: null);
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+        /** @var array{id: string} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $id = $content['id'];
+
+        $this->client->request('PUT', '/admin/api/snippets/' . $id . '?locale=de', [], [], [], \json_encode([
+            'template' => 'snippet',
+            'title' => 'Test Snippet (DE)',
+            'shadowOn' => true,
+            'shadowLocale' => 'en',
+        ]) ?: null);
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        return $id;
+    }
+
+    #[Depends('testPutShadowLocale')]
+    public function testGetShadowLocale(string $id): void
+    {
+        $this->client->request('GET', '/admin/api/snippets/' . $id . '?locale=de');
+        $response = $this->client->getResponse();
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertTrue($content['shadowOn']);
+        $this->assertSame('en', $content['shadowLocale']);
+        $this->assertSame(['en', 'de'], $content['availableLocales']);
+        $this->assertSame(['en', 'de'], $content['contentLocales']);
+
+        $this->assertResponseSnapshot('snippet_get_shadow_locale.json', $response, 200);
+    }
+
     protected function getSnapshotFolder(): string
     {
         return 'responses';

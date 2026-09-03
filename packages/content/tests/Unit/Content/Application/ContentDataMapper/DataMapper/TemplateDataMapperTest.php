@@ -127,6 +127,41 @@ class TemplateDataMapperTest extends TestCase
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
     }
 
+    public function testMapNullTemplate(): void
+    {
+        $data = [
+            'template' => null,
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+        $localizedDimensionContent->setTemplateKey('some-existing-template');
+
+        $templateMapper = $this->createTemplateDataMapperInstance([], 'template-key');
+        $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame('some-existing-template', $localizedDimensionContent->getTemplateKey());
+    }
+
+    public function testMapNoTemplateKeyInDataAndNoDefault(): void
+    {
+        $data = [];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+        $localizedDimensionContent->setTemplateKey('some-existing-template');
+
+        // no defaultTemplateKey configured — simulates shadow locale save where template is not sent
+        $templateMapper = $this->createTemplateDataMapperInstance([]);
+        $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame('some-existing-template', $localizedDimensionContent->getTemplateKey());
+    }
+
     public function testMapData(): void
     {
         $data = [
