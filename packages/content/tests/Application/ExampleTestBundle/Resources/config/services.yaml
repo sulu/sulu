@@ -111,7 +111,7 @@ services:
     example_test.example_root_resolver:
         class: Sulu\Content\Tests\Application\ExampleTestBundle\Resolver\ExampleRootResolver
         tags:
-            - { name: 'sulu_content.content_resolver', type: 'example_root', path: '[root][exampleRoot][content]' }
+            - { name: 'sulu_content.content_resolver' }
 
     Sulu\Bundle\ReferenceBundle\Application\MessageHandler\RefreshReferenceMessageHandler:
         alias: sulu_reference.refresh_reference_message_handler

@@ -46,4 +46,14 @@ final class ExampleRootResolver implements ResolverInterface
             ['dropped' => 'unused'],
         );
     }
+
+    public static function getType(): string
+    {
+        return 'example_root';
+    }
+
+    public static function getOutputPath(): string
+    {
+        return '[root][exampleRoot][content]';
+    }
 }

@@ -20,12 +20,9 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 /**
  * Resolves one aspect of a DimensionContent (template data, seo, settings) into a ContentView.
  *
- * Register with the `sulu_content.content_resolver` tag. `type` keys the output and defaults
- * to the class's static `getDefaultTypeName()`, then the decorated service id, then the service
- * id, mirroring Symfony's tagged iterator resolution. `path` sets the output location in the
- * resolved content view data and defaults to `[root][extension][<type>]`. A path ending in
- * `content` also writes the view to the sibling `view` key. Resolvers may share a path: higher
- * `priority` runs first and its values win every collision.
+ * Register with the `sulu_content.content_resolver` tag. `getType()` keys the output and
+ * `getOutputPath()` places it in the resolved content view data. Resolvers may share a path:
+ * higher tag `priority` runs first and its values win every collision.
  *
  * Resolvers run for every resolved entity at every depth. When `$properties` is set, filter
  * by your own prefix and return null or a subset instead of loading unrequested data.
@@ -39,4 +36,16 @@ interface ResolverInterface
      * @param array<string, string>|null $properties
      */
     public function resolve(DimensionContentInterface $dimensionContent, ?array $properties = null): ?ContentView;
+
+    /**
+     * Keys this resolver's output, e.g. `seo`.
+     */
+    public static function getType(): string;
+
+    /**
+     * Where the output lands in the resolved content view data, as a bracket path anchored at
+     * `[root]`, e.g. `[root][extension][seo]`. A path ending in `content` also writes the view
+     * to the sibling `view` key.
+     */
+    public static function getOutputPath(): string;
 }

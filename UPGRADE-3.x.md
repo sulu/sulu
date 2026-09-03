@@ -1,15 +1,32 @@
 # Upgrade
 
-## 3.0.10
+## 3.1.0
 
-### Content resolvers can declare an output path
+### Content resolvers declare their type and output path on the interface
 
-The `sulu_content.content_resolver` tag accepts an optional `path` attribute; the tag's
-`priority` now also decides merge precedence.
-Existing resolvers keep their output location. Registering two resolvers with the same
-`type` now fails at container compile time; previously one of them was silently ignored.
-To replace a core resolver, decorate it; the decorator inherits the tag and may re-declare it.
-Re-declaring the tag on a decorator replaces it entirely, so declare `type` again alongside `path`.
+`ResolverInterface` gained two static methods that every implementation must now provide:
+
+```php
+public static function getType(): string;
+public static function getOutputPath(): string;
+```
+
+`getType()` keys the resolver's output and replaces the tag's `type` attribute. `getOutputPath()`
+is a bracket path anchored at `[root]` that places the output in the resolved content view data;
+the location used before this release is `[root][extension][<type>]`. A path ending in `content`
+also writes the view to the sibling `view` key.
+
+The `type` attribute on the `sulu_content.content_resolver` tag is no longer read, so register
+with the bare tag:
+
+```php
+$services->set('acme_product.product_resolver', ProductResolver::class)
+    ->tag('sulu_content.content_resolver');
+```
+
+Two resolvers may share an output path. The tag's `priority` decides: the higher priority runs
+first and its values win every collision. Registering two resolvers with the same `type` now
+fails at container compile time, where previously one of them was silently ignored.
 
 ## 3.0.9
 

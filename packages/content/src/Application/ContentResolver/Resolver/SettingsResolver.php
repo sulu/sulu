@@ -120,4 +120,14 @@ readonly class SettingsResolver implements ResolverInterface
             'shadowBaseLocale' => $dimensionContent->getShadowLocale(),
         ];
     }
+
+    public static function getType(): string
+    {
+        return 'settings';
+    }
+
+    public static function getOutputPath(): string
+    {
+        return '[root]';
+    }
 }
