@@ -37,6 +37,7 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
 use Sulu\Bundle\SecurityBundle\Entity\UserSettingRepository;
 use Sulu\Bundle\SecurityBundle\EventListener\AuhenticationFailureListener;
+use Sulu\Bundle\SecurityBundle\EventListener\ForceTwoFactorSetupSubscriber;
 use Sulu\Bundle\SecurityBundle\EventListener\LogoutEventSubscriber;
 use Sulu\Bundle\SecurityBundle\EventListener\PermissionInheritanceSubscriber;
 use Sulu\Bundle\SecurityBundle\EventListener\PhpcrSecuritySubscriber;
@@ -51,6 +52,7 @@ use Sulu\Bundle\SecurityBundle\System\SystemStore;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Bundle\SecurityBundle\Twig\UserTwigExtension;
 use Sulu\Bundle\SecurityBundle\TwoFactor\BackupCodeGenerator;
+use Sulu\Bundle\SecurityBundle\TwoFactor\TwoFactorForceChecker;
 use Sulu\Bundle\SecurityBundle\User\UserProvider;
 use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Bundle\SecurityBundle\Util\TokenGenerator;
@@ -128,6 +130,9 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_admin.admin_pool'),
             '%sulu_admin.resources%',
             '%sulu_security.two_factor_backup_codes_enabled%',
+            new Reference('sulu_security.two_factor_force_checker'),
+            new Reference('security.helper', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            '%sulu_security.two_factor_methods%',
         ])
         ->tag('sulu.admin')
         ->tag('sulu.context', ['context' => 'admin']);
@@ -229,10 +234,26 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_security.user_manager'),
             '%sulu.model.user.class%',
             '%sulu.model.contact.class%',
+            new Reference('sulu_security.two_factor_force_checker'),
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 
     $services->set('sulu_security.two_factor_backup_code_generator', BackupCodeGenerator::class);
+
+    $services->set('sulu_security.two_factor_force_checker', TwoFactorForceChecker::class)
+        ->args([
+            '%sulu_security.two_factor_force_pattern%',
+            '%sulu_security.two_factor_force_setup%',
+            '%sulu_security.two_factor_methods%',
+        ]);
+
+    $services->set('sulu_security.force_two_factor_setup_listener', ForceTwoFactorSetupSubscriber::class)
+        ->args([
+            new Reference('security.token_storage'),
+            new Reference('sulu_security.two_factor_force_checker'),
+        ])
+        ->tag('kernel.event_subscriber')
+        ->tag('sulu.context', ['context' => 'admin']);
 
     $services->set('sulu_security.profile_two_factor_controller', ProfileTwoFactorController::class)
         ->public()
@@ -245,6 +266,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('scheb_two_factor.security.google_authenticator', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             '%sulu_security.two_factor_backup_codes_enabled%',
             '%sulu_security.two_factor_force_pattern%',
+            '%sulu_security.two_factor_methods%',
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 

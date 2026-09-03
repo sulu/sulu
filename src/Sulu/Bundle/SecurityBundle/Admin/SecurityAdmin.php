@@ -20,11 +20,15 @@ use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
+use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\SecurityBundle\TwoFactor\TwoFactorForceChecker;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SecurityAdmin extends Admin
@@ -54,6 +58,8 @@ class SecurityAdmin extends Admin
 
     /**
      * TODO: Instead of getting the security contexts from the admin pool, that should be closer to the SecurityBundle.
+     *
+     * @param string[] $twoFactorMethods
      */
     public function __construct(
         private ViewBuilderFactoryInterface $viewBuilderFactory,
@@ -63,6 +69,9 @@ class SecurityAdmin extends Admin
         private AdminPool $adminPool,
         private array $resources,
         private bool $twoFactorBackupCodesEnabled = false,
+        private ?TwoFactorForceChecker $twoFactorForceChecker = null,
+        private Security|SymfonyCoreSecurity|null $security = null,
+        private array $twoFactorMethods = [],
     ) {
     }
 
@@ -203,15 +212,29 @@ class SecurityAdmin extends Admin
                 'contexts' => $this->urlGenerator->generate('sulu_security.cget_security-contexts'),
                 'twoFactorSetup' => $this->urlGenerator->generate('sulu_security.post_profile_two-factor_setup'),
                 'twoFactorConfirm' => $this->urlGenerator->generate('sulu_security.post_profile_two-factor_confirm'),
+                'twoFactorMethod' => $this->urlGenerator->generate('sulu_security.post_profile_two-factor_method'),
                 'twoFactorBackupCodes' => $this->urlGenerator->generate('sulu_security.post_profile_two-factor_backup-codes'),
                 'twoFactorDelete' => $this->urlGenerator->generate('sulu_security.delete_profile_two-factor'),
             ],
             'twoFactorBackupCodesEnabled' => $this->twoFactorBackupCodesEnabled,
+            'twoFactorMethods' => \array_values(\array_diff($this->twoFactorMethods, ['trusted_devices'])),
+            'twoFactorSetupRequired' => $this->isTwoFactorSetupRequired(),
             'resourceKeySecurityContextMapping' => \array_filter(\array_map(function(array $resource) {
                 return $resource['security_context'] ?? null;
             }, $this->resources)),
             'securityContexts' => $this->adminPool->getSecurityContextsWithPlaceholder(),
             'suluSecuritySystem' => self::SULU_ADMIN_SECURITY_SYSTEM,
         ];
+    }
+
+    private function isTwoFactorSetupRequired(): bool
+    {
+        $user = $this->security?->getUser();
+
+        if (!$this->twoFactorForceChecker || !$user instanceof User) {
+            return false;
+        }
+
+        return $this->twoFactorForceChecker->isSetupRequired($user);
     }
 }

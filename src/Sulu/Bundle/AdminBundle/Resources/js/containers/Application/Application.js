@@ -19,6 +19,7 @@ import './global.scss';
 import SnackbarContainer from '../../components/SnackbarContainer';
 import snackbarStore from '../../stores/snackbarStore';
 import Snackbar from '../../components/Snackbar';
+import blockingOverlayRegistry from './registries/blockingOverlayRegistry';
 import applicationStyles from './application.scss';
 
 const NAVIGATION_PINNED_SETTING_KEY = 'sulu_admin.application.navigation_pinned';
@@ -192,7 +193,7 @@ class Application extends React.Component<Props>{
                             <div className={contentClass}>
                                 <main className={applicationStyles.main}>
                                     <div className={applicationStyles.viewContainer}>
-                                        {router.route &&
+                                        {router.route && !userStore.twoFactorSetupRequired &&
                                             <ViewRenderer router={router} />
                                         }
                                     </div>
@@ -221,6 +222,9 @@ class Application extends React.Component<Props>{
                             onClose={this.handleProfileOverlayClose}
                             open={this.openedProfileFormOverlay}
                         />
+                        {blockingOverlayRegistry.getAll().map(({name, overlay: BlockingOverlay}) => (
+                            <BlockingOverlay key={name} />
+                        ))}
                         {
                             snackbarStore.messages.length
                                 ? <SnackbarContainer className={snackbarClass}>

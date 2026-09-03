@@ -21,11 +21,13 @@ use Sulu\Bundle\SecurityBundle\Entity\TwoFactor\TwoFactorInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
 use Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor;
+use Sulu\Bundle\SecurityBundle\TwoFactor\TwoFactorForceChecker;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Security\Authentication\UserSettingRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -44,6 +46,7 @@ class ProfileController implements ClassResourceInterface
         private UserManagerInterface $userManager,
         private string $userClass,
         private string $contactClass,
+        private ?TwoFactorForceChecker $twoFactorForceChecker = null,
     ) {
     }
 
@@ -122,6 +125,10 @@ class ProfileController implements ClassResourceInterface
 
                 $user->setTwoFactor($twoFactor);
             } else {
+                if ($this->twoFactorForceChecker?->isForced($user)) {
+                    throw new AccessDeniedHttpException('Two factor authentication is forced for this user and can not be disabled.');
+                }
+
                 $twoFactor = $user->getTwoFactor();
                 if ($twoFactor) {
                     $user->setTwoFactor(null);

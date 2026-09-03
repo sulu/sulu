@@ -4,6 +4,36 @@ For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upg
 
 ## 2.6.26
 
+### Guided setup for a forced two factor authentication
+
+The forced two factor authentication learned a `setup` mode. It lets the user pick and activate a
+method instead of silently defaulting to `email`:
+
+```yaml
+sulu_security:
+    two_factor:
+        force:
+            enabled: true
+            pattern: '(.+)'
+            setup: true
+```
+
+A user that matches the pattern and has no usable method gets a non closable overlay right after
+the login. It explains why a second factor is needed, lists the enabled methods and runs the guided
+setup for the chosen one. Everything else in the admin stays unreachable meanwhile: the api answers
+every other route with a `403` and the `two_factor_setup_required` error, so the setup can not be
+skipped by a client that ignores the overlay. Disabling the method again is rejected for forced
+users, on the profile endpoint as well as on the two factor endpoint.
+
+Two additions come with it. The new `POST /admin/api/profile/two-factor/method` endpoint activates
+a method that needs no guided setup, currently only `email`, without saving the whole profile. The
+new `blockingOverlayRegistry` of the admin bundle lets a bundle render an overlay on top of the
+whole application, which is how the security bundle brings in its setup overlay.
+
+The mode is enabled automatically when the `email` method is not available, because forcing users
+onto a method without a registered provider left them without a second factor. Nothing changes for
+projects that have `scheb/2fa-email` installed and enabled and that do not set `setup`.
+
 ### Improved reference tracking performance
 
 `ReferenceRepository` filters by `referenceResourceKey`, `referenceResourceId`, `referenceLocale` and

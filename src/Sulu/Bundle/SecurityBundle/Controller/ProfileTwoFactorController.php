@@ -46,6 +46,9 @@ class ProfileTwoFactorController
         ],
     ];
 
+    /**
+     * @param string[] $twoFactorMethods
+     */
     public function __construct(
         private TokenStorageInterface $tokenStorage,
         private ObjectManager $objectManager,
@@ -55,6 +58,7 @@ class ProfileTwoFactorController
         private ?GoogleAuthenticatorInterface $googleAuthenticator,
         private bool $backupCodesEnabled,
         private ?string $twoFactorForcePattern,
+        private array $twoFactorMethods = [],
     ) {
     }
 
@@ -138,6 +142,49 @@ class ProfileTwoFactorController
             unset($options[$methodSecretOptions['secret']], $options[$methodSecretOptions['pendingSecret']]);
         }
         $options[$secretOptions['secret']] = $pendingSecret;
+        $twoFactor->setOptions($options);
+        $twoFactor->setMethod($method);
+
+        $this->objectManager->flush();
+
+        return new Response('', 204);
+    }
+
+    /**
+     * Activates a two factor method that needs no guided setup, currently only "email".
+     *
+     * The methods based on an authenticator app are rejected here, because activating them
+     * without a confirmed secret would lock the user out.
+     */
+    public function postMethodAction(Request $request): Response
+    {
+        $method = (string) $request->request->get('method');
+
+        if (isset(self::SECRET_OPTIONS[$method])) {
+            return $this->viewHandler->handle(
+                View::create(['error' => 'setup_required'], 400),
+            );
+        }
+
+        if (!\in_array($method, $this->twoFactorMethods, true)) {
+            throw new NotFoundHttpException(\sprintf('The two factor method "%s" is not available.', $method));
+        }
+
+        $user = $this->getUser();
+
+        $twoFactor = $user->getTwoFactor();
+        if (!$twoFactor) {
+            $twoFactor = new UserTwoFactor($user);
+            $user->setTwoFactor($twoFactor);
+            $this->objectManager->persist($twoFactor);
+        }
+
+        // the secrets of the authenticator app based methods are cleared, so switching back to one
+        // of them requires a fresh guided setup
+        $options = $twoFactor->getOptions() ?? [];
+        foreach (self::SECRET_OPTIONS as $secretOptions) {
+            unset($options[$secretOptions['secret']], $options[$secretOptions['pendingSecret']]);
+        }
         $twoFactor->setOptions($options);
         $twoFactor->setMethod($method);
 
