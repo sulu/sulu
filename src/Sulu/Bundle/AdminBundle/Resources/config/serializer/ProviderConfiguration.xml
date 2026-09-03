@@ -13,5 +13,6 @@
         <property name="presentAs" type="boolean" expose="true" groups="frontend"/>
         <property name="view" type="string" expose="true" groups="frontend"/>
         <property name="resultToView" type="array" expose="true" groups="frontend"/>
+        <property name="resultToViewName" type="array" expose="true" groups="frontend"/>
     </class>
 </serializer>

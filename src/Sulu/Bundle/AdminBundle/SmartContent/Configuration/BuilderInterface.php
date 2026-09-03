@@ -102,11 +102,15 @@ interface BuilderInterface
     /**
      * Defines where the deep link when clicking on a smart content item should navigate to.
      *
+     * The view name may contain placeholders (e.g. "{group}") that get replaced with a value
+     * resolved from the item via $resultToViewName.
+     *
      * @param array<string, string> $resultToView
+     * @param array<string, string>|null $resultToViewName
      *
      * @return BuilderInterface
      */
-    public function enableView(string $view, array $resultToView);
+    public function enableView(string $view, array $resultToView, ?array $resultToViewName = null);
 
     /**
      * Sets default properties to be included when resolving smart content items.

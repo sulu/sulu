@@ -249,6 +249,35 @@ class ArticleSmartContentProviderTest extends SuluTestCase
         }
     }
 
+    public function testFindFlatByIncludesGroupAndLocaleForDeepLinking(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), ...['locale' => 'en']], []);
+
+        $itemsByUuid = [];
+        foreach ($result as $item) {
+            $itemsByUuid[$item['id']] = $item;
+        }
+
+        // "tech1" uses the default "article" template, which is not part of a configured group
+        $defaultItem = $itemsByUuid[self::$articles['tech1']->getUuid()];
+        $this->assertSame('default', $defaultItem['group']);
+        $this->assertSame('en', $defaultItem['locale']);
+
+        // "tech2" uses the "blog" template, which belongs to the "blog-group"
+        $blogItem = $itemsByUuid[self::$articles['tech2']->getUuid()];
+        $this->assertSame('blog-group', $blogItem['group']);
+        $this->assertSame('en', $blogItem['locale']);
+    }
+
+    public function testGetConfigurationHasGroupAwareView(): void
+    {
+        $configuration = $this->smartContentProvider->getConfiguration();
+
+        $this->assertSame('sulu_article.article.edit_tabs_{group}', $configuration->getView());
+        $this->assertSame(['id' => 'id', 'locale' => 'locale'], $configuration->getResultToView());
+        $this->assertSame(['group' => 'group'], $configuration->getResultToViewName());
+    }
+
     /**
      * @return array<string, array{0: string[], 1: string, 2: int}>
      */
