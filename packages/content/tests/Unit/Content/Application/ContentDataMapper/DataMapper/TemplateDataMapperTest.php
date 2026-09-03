@@ -43,14 +43,14 @@ class TemplateDataMapperTest extends TestCase
         $container->set(
             'form',
             new class ($this->createTypedFormMetadata($properties, $defaultTemplateKey)) implements MetadataProviderInterface {
-            public function __construct(private readonly TypedFormMetadata $typedFormMetadata)
-            {
-            }
+                public function __construct(private readonly TypedFormMetadata $typedFormMetadata)
+                {
+                }
 
-            public function getMetadata(string $key, string $locale, array $metadataOptions): TypedFormMetadata
-            {
-                return $this->typedFormMetadata;
-            }
+                public function getMetadata(string $key, string $locale, array $metadataOptions): TypedFormMetadata
+                {
+                    return $this->typedFormMetadata;
+                }
             }
         );
         $metadataProviderRegistry = new MetadataProviderRegistry($container);
