@@ -80829,13 +80829,13 @@ parameters:
 		-
 			message: '#^Loose comparison using \=\= between null and null will always evaluate to true\.$#'
 			identifier: equal.alwaysTrue
-			count: 1
+			count: 2
 			path: src/Sulu/Component/Persistence/RelationTrait.php
 
 		-
 			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
 			identifier: notIdentical.alwaysFalse
-			count: 1
+			count: 2
 			path: src/Sulu/Component/Persistence/RelationTrait.php
 
 		-
@@ -90411,5 +90411,5 @@ parameters:
 		-
 			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
+			count: 12
 			path: src/Sulu/Bundle/PersistenceBundle/DependencyInjection/PersistenceExtensionTrait.php
