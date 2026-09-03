@@ -67,8 +67,6 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference('property_accessor'),
             [], // ContentResolverPathPass replaces the paths map
-            new Reference('logger'),
-            '%kernel.debug%',
         ]);
 
     $services->set('sulu_content.content_enhancer', ContentEnhancer::class)

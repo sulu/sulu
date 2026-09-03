@@ -14,9 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentResolver\DataNormalizer;
 
 use PHPUnit\Framework\TestCase;
-use Psr\Log\AbstractLogger;
 use Sulu\Content\Application\ContentResolver\DataNormalizer\ContentViewDataNormalizer;
-use Sulu\Content\Application\ContentResolver\Exception\InvalidResolverOutputException;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
@@ -276,18 +274,20 @@ class ContentViewDataNormalizerTest extends TestCase
         self::assertSame(['x' => 1], $result['p']);
     }
 
-    public function testRootResolverTargetingAReservedKeyThrows(): void
+    public function testRootResolverCannotDisplaceTheEnvelopeKeys(): void
     {
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS, debug: true);
-
-        $this->expectException(InvalidResolverOutputException::class);
-        $this->expectExceptionMessage('Content resolver "settings" cannot be merged into "[root]": it returned the reserved key(s) "content", "view", "extension", "resource".');
-
-        $normalizer->normalizeContentViewData(
+        $result = $this->normalizer->normalizeContentViewData(
             ['template' => [], 'settings' => ['content' => 'evil', 'view' => 'evil', 'extension' => 'evil', 'resource' => 'evil', 'author' => 'ok']],
             [],
             new Example(),
         );
+
+        self::assertSame([], $result['content']);
+        self::assertSame([], $result['view']);
+        self::assertSame([], $result['extension']);
+        self::assertInstanceOf(Example::class, $result['resource']);
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        self::assertSame('ok', $result['author']);
     }
 
     public function testRootResolverKeysThatDoNotClashAreMerged(): void
@@ -306,12 +306,10 @@ class ContentViewDataNormalizerTest extends TestCase
 
     public function testNonArrayContentAtRootThrows(): void
     {
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS, debug: true);
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('A content resolver on path "[root]" must return an array, got string.');
 
-        $this->expectException(InvalidResolverOutputException::class);
-        $this->expectExceptionMessage('Content resolver "settings" cannot be merged into "[root]": it returned string instead of an array.');
-
-        $normalizer->normalizeContentViewData(['template' => [], 'settings' => 'scalar'], [], new Example());
+        $this->normalizer->normalizeContentViewData(['template' => [], 'settings' => 'scalar'], [], new Example());
     }
 
     public function testTemplateViewIsMergedOnlyForContentPath(): void
@@ -326,39 +324,36 @@ class ContentViewDataNormalizerTest extends TestCase
         self::assertSame(['seo' => ['title' => 'S']], $result['extension']);
     }
 
-    public function testNullFromHigherPriorityResolverThrowsInsteadOfSwallowingTheOther(): void
+    public function testNullFromHigherPriorityResolverBlocksTheLowerOne(): void
     {
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['a' => ['shared'], 'b' => ['shared']], debug: true);
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['a' => ['shared'], 'b' => ['shared']]);
 
-        $this->expectException(InvalidResolverOutputException::class);
-        $this->expectExceptionMessage('Content resolver "b" cannot be merged into "[root][shared]": that path already holds null and cannot take array.');
+        $result = $normalizer->normalizeContentViewData(['template' => [], 'a' => null, 'b' => ['y' => 2]], [], new Example());
 
-        $normalizer->normalizeContentViewData(['template' => [], 'a' => null, 'b' => ['y' => 2]], [], new Example());
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        self::assertNull($result['shared']);
     }
 
-    public function testScalarTemplateContentThrowsInsteadOfEmptyingTheContentViewData(): void
+    public function testScalarTemplateContentCannotEmptyTheContentViewData(): void
     {
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS, debug: true);
+        $result = $this->normalizer->normalizeContentViewData(['template' => 'scalar'], [], new Example());
 
-        $this->expectException(InvalidResolverOutputException::class);
-        $this->expectExceptionMessage('Content resolver "template" cannot be merged into "[root][content]": that path already holds array and cannot take string.');
-
-        $normalizer->normalizeContentViewData(['template' => 'scalar'], [], new Example());
+        self::assertSame([], $result['content']);
     }
 
-    public function testResolverNestedUnderARootResolversKeyThrows(): void
+    public function testResolverNestedUnderARootResolversScalarKeyIsDropped(): void
     {
-        // The compiler pass cannot see a [root] resolver's keys.
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['acme_meta' => ['template', 'meta']], debug: true);
+        // The compiler pass cannot see a [root] resolver's keys, so this only resolves at runtime.
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['acme_meta' => ['template', 'meta']]);
 
-        $this->expectException(InvalidResolverOutputException::class);
-        $this->expectExceptionMessage('Content resolver "acme_meta" cannot be merged into "[root][template]": that path already holds string.');
-
-        $normalizer->normalizeContentViewData(
+        $result = $normalizer->normalizeContentViewData(
             ['settings' => ['template' => 'full-content'], 'template' => [], 'acme_meta' => ['currency' => 'EUR']],
             [],
             new Example(),
         );
+
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        self::assertSame('full-content', $result['template']);
     }
 
     public function testContentPathGetsViewTwin(): void
@@ -476,50 +471,5 @@ class ContentViewDataNormalizerTest extends TestCase
             ['untouched' => 'template-value'],
             $this->propertyAccessor->getValue($result, '[view][related]')
         );
-    }
-
-    public function testUnplaceableResolverOutputIsSkippedAndLoggedOutsideDebug(): void
-    {
-        $logger = new class() extends AbstractLogger {
-            /** @var list<array{level: mixed, message: string, context: array<string, mixed>}> */
-            public array $records = [];
-
-            /**
-             * @param array<string, mixed> $context
-             */
-            public function log($level, string|\Stringable $message, array $context = []): void
-            {
-                $this->records[] = ['level' => $level, 'message' => (string) $message, 'context' => $context];
-            }
-        };
-
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS, $logger, false);
-
-        $result = $normalizer->normalizeContentViewData(
-            ['template' => ['title' => 'T'], 'settings' => 'scalar'],
-            [],
-            new Example(),
-        );
-
-        self::assertSame(['title' => 'T'], $result['content']);
-        self::assertInstanceOf(Example::class, $result['resource']);
-
-        self::assertCount(1, $logger->records);
-        self::assertSame('error', $logger->records[0]['level']);
-        self::assertSame('settings', $logger->records[0]['context']['type']);
-    }
-
-    public function testUnplaceableResolverOutputIsSkippedWithoutLoggerOutsideDebug(): void
-    {
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS);
-
-        $result = $normalizer->normalizeContentViewData(
-            ['template' => ['title' => 'T'], 'settings' => 'scalar'],
-            [],
-            new Example(),
-        );
-
-        self::assertSame(['title' => 'T'], $result['content']);
-        self::assertInstanceOf(Example::class, $result['resource']);
     }
 }

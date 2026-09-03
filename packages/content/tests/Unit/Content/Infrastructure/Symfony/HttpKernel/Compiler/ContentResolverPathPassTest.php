@@ -17,7 +17,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Sulu\Content\Application\ContentResolver\DataNormalizer\ContentViewDataNormalizer;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ContentResolverPathPass;
-use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -146,22 +145,13 @@ class ContentResolverPathPassTest extends TestCase
             ['a' => ['type' => 'seo'], 'b' => ['type' => 'seo']],
             '/type "seo" which is already declared by "a"/',
         ];
-        yield 'prefix overlap' => [
-            ['a' => ['type' => 'a', 'path' => '[root][product]'], 'b' => ['type' => 'b', 'path' => '[root][product][details]']],
-            '/is a prefix of/',
-        ];
-        yield 'same path same priority' => [
-            ['a' => ['type' => 'a', 'path' => '[root]'], 'b' => ['type' => 'b', 'path' => '[root]']],
-            '/share path "\[root\]" with the same priority 0/',
-        ];
         yield 'empty type' => [['a' => ['type' => '']], '/"type" attribute/'];
         yield 'numeric string type' => [['a' => ['type' => '0']], '/numeric string/'];
-        yield 'non-integer priority' => [['a' => ['type' => 'a', 'priority' => 'high']], '/"priority"/'];
         yield 'type view without path reserved' => [['a' => ['type' => 'view']], '/reserved/'];
         yield 'implicit index collides with explicit type' => [
             [
                 'a' => ['type' => 'fixture_item'],
-                'b' => ['__class' => ContentResolverPathPassTestFixtureWithAsTaggedItem::class],
+                'b' => ['__class' => ContentResolverPathPassTestFixtureWithGetDefaultTypeName::class],
             ],
             '/type "fixture_item" which is already declared by "a"/',
         ];
@@ -181,27 +171,22 @@ class ContentResolverPathPassTest extends TestCase
         (new ContentResolverPathPass())->process($container);
     }
 
-    public function testSamePathWithDistinctPrioritiesIsAllowed(): void
+    public function testResolversMaySharePath(): void
     {
+        // settings already sits on [root], so a bundle adding its own root resolver must compile
         $container = $this->containerWith([
             'a' => ['type' => 'a', 'path' => '[root]'],
-            'b' => ['type' => 'b', 'path' => '[root]', 'priority' => -10],
+            'b' => ['type' => 'b', 'path' => '[root]'],
+            'c' => ['type' => 'c', 'path' => '[root][product]'],
+            'd' => ['type' => 'd', 'path' => '[root][product][details]'],
         ]);
 
         (new ContentResolverPathPass())->process($container);
 
-        self::assertSame(['a' => [], 'b' => []], $this->pathsOf($container));
-    }
-
-    public function testQuotedIntegerPriorityIsAccepted(): void
-    {
-        $container = $this->containerWith([
-            'a' => ['type' => 'a', 'priority' => '10'],
-        ]);
-
-        (new ContentResolverPathPass())->process($container);
-
-        self::assertSame(['a' => ['extension', 'a']], $this->pathsOf($container));
+        self::assertSame(
+            ['a' => [], 'b' => [], 'c' => ['product'], 'd' => ['product', 'details']],
+            $this->pathsOf($container),
+        );
     }
 
     public function testDecoratorReDeclaringTagCompiles(): void
@@ -296,18 +281,6 @@ class ContentResolverPathPassTest extends TestCase
         self::assertSame(['sulu_content.seo_resolver' => ['seo']], $this->pathsOf($container));
     }
 
-    public function testUntypedTagOnClassWithAsTaggedItemAttributeUsesItsIndex(): void
-    {
-        $container = $this->containerWith([]);
-        $definition = new Definition(ContentResolverPathPassTestFixtureWithAsTaggedItem::class);
-        $definition->addTag('sulu_content.content_resolver', []);
-        $container->setDefinition('acme.tagged_item_resolver', $definition);
-
-        (new ContentResolverPathPass())->process($container);
-
-        self::assertSame(['fixture_item' => ['extension', 'fixture_item']], $this->pathsOf($container));
-    }
-
     public function testUntypedTagOnClassWithGetDefaultTypeNameUsesItsName(): void
     {
         $container = $this->containerWith([]);
@@ -331,11 +304,6 @@ class ContentResolverPathPassTest extends TestCase
 
         self::assertSame(['acme.plain_resolver' => ['extension', 'acme.plain_resolver']], $this->pathsOf($container));
     }
-}
-
-#[AsTaggedItem('fixture_item')]
-class ContentResolverPathPassTestFixtureWithAsTaggedItem
-{
 }
 
 class ContentResolverPathPassTestFixtureWithGetDefaultTypeName
