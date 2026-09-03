@@ -21,11 +21,11 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
  * Resolves one aspect of a DimensionContent (template data, seo, settings) into a ContentView.
  *
  * Register with the `sulu_content.content_resolver` tag. `type` keys the output and defaults
- * to the class's `#[AsTaggedItem]` index or static `getDefaultTypeName()`, then the decorated
- * service id, then the service id, mirroring Symfony's tagged iterator resolution. `path` sets
- * the output location in the resolved content view data and defaults to
- * `[root][extension][<type>]`. A path ending in `content` also writes the view to the sibling
- * `view` key. Higher `priority` runs first and wins on key collisions.
+ * to the class's static `getDefaultTypeName()`, then the decorated service id, then the service
+ * id, mirroring Symfony's tagged iterator resolution. `path` sets the output location in the
+ * resolved content view data and defaults to `[root][extension][<type>]`. A path ending in
+ * `content` also writes the view to the sibling `view` key. Resolvers may share a path: higher
+ * `priority` runs first and its values win every collision.
  *
  * Resolvers run for every resolved entity at every depth. When `$properties` is set, filter
  * by your own prefix and return null or a subset instead of loading unrequested data.

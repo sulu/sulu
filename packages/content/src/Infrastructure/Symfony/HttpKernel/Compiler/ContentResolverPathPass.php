@@ -13,15 +13,15 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler;
 
-use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Reads the `path` and `priority` attributes off `sulu_content.content_resolver` tags and writes
- * the result into the normalizer's `$paths` argument, a map from resolver type to path segments
- * without the `[root]` anchor. Runs after `DecoratorServicePass`, which has already moved a decorated
- * service's tag onto its decorator, so a decorated service is skipped here and the decorator's tag applies.
+ * Reads the `path` attribute off `sulu_content.content_resolver` tags and writes the result into
+ * the normalizer's `$paths` argument, a map from resolver type to path segments without the
+ * `[root]` anchor. Two resolvers may share a path; the normalizer merges them by priority.
+ * Runs after `DecoratorServicePass`, which has already moved a decorated service's tag onto its
+ * decorator, so a decorated service is skipped here and the decorator's tag applies.
  *
  * @internal this class is not part of the public API and should only be called by the Symfony framework classes
  */
@@ -43,8 +43,6 @@ class ContentResolverPathPass implements CompilerPassInterface
         $paths = [];
         /** @var array<string, string> $owners */
         $owners = [];
-        /** @var array<string, int> $priorities */
-        $priorities = [];
 
         // Real shape differs from Symfony's plain `array` type.
         /** @var array<string, list<array<string, mixed>>> $tagged */
@@ -87,21 +85,7 @@ class ContentResolverPathPass implements CompilerPassInterface
                     ? $this->parsePath($id, $attributes['path'])
                     : $this->defaultPath($id, $type);
 
-                $priority = $attributes['priority'] ?? 0;
-                if (\is_string($priority) && 1 === \preg_match('/^-?\d+$/', $priority)) {
-                    $priority = (int) $priority;
-                }
-                if (!\is_int($priority)) {
-                    throw new \InvalidArgumentException(\sprintf(
-                        'Service "%s": the "priority" attribute of tag "%s" must be an integer.',
-                        $id,
-                        self::TAG,
-                    ));
-                }
-
-                if (isset($owners[$type])
-                    && ($owners[$type] !== $id || $paths[$type] !== $segments || $priorities[$type] !== $priority)
-                ) {
+                if (isset($owners[$type]) && ($owners[$type] !== $id || $paths[$type] !== $segments)) {
                     if ($owners[$type] === $id) {
                         throw new \InvalidArgumentException(\sprintf(
                             'Service "%s" declares content resolver type "%s" twice with different attributes.',
@@ -120,38 +104,6 @@ class ContentResolverPathPass implements CompilerPassInterface
 
                 $paths[$type] = $segments;
                 $owners[$type] = $id;
-                $priorities[$type] = $priority;
-            }
-        }
-
-        foreach ($paths as $type => $segments) {
-            foreach ($paths as $otherType => $otherSegments) {
-                if ($type === $otherType) {
-                    continue;
-                }
-
-                if ([] !== $segments
-                    && \count($segments) < \count($otherSegments)
-                    && $segments === \array_slice($otherSegments, 0, \count($segments))
-                ) {
-                    throw new \InvalidArgumentException(\sprintf(
-                        'Content resolver "%s" (path "%s") is a prefix of "%s" (path "%s"); nested resolver paths are not supported.',
-                        $type,
-                        self::format($segments),
-                        $otherType,
-                        self::format($otherSegments),
-                    ));
-                }
-
-                if ($segments === $otherSegments && $priorities[$type] === $priorities[$otherType]) {
-                    throw new \InvalidArgumentException(\sprintf(
-                        'Content resolvers "%s" and "%s" share path "%s" with the same priority %d; set a distinct "priority" on one of them.',
-                        $type,
-                        $otherType,
-                        self::format($segments),
-                        $priorities[$type],
-                    ));
-                }
             }
         }
 
@@ -160,21 +112,13 @@ class ContentResolverPathPass implements CompilerPassInterface
 
     /**
      * Mirrors PriorityTaggedServiceTrait's index resolution for an untagged `type`: the class's
-     * first `#[AsTaggedItem]` index, else its static `getDefaultTypeName()`, else null so the
-     * caller falls back to the decorated id or the service id.
+     * static `getDefaultTypeName()`, else null so the caller falls back to the decorated id or
+     * the service id.
      *
      * @param \ReflectionClass<object> $reflection
      */
     private function resolveImplicitType(\ReflectionClass $reflection): ?string
     {
-        $attributes = $reflection->getAttributes(AsTaggedItem::class);
-        if ([] !== $attributes) {
-            $index = $attributes[0]->newInstance()->index;
-            if (null !== $index) {
-                return $index;
-            }
-        }
-
         if ($reflection->hasMethod('getDefaultTypeName')) {
             $method = $reflection->getMethod('getDefaultTypeName');
             if ($method->isStatic() && $method->isPublic()) {

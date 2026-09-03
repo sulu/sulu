@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentResolver\DataNormalizer;
 
-use Psr\Log\LoggerInterface;
-use Sulu\Content\Application\ContentResolver\Exception\InvalidResolverOutputException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -25,8 +23,6 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
  */
 class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
 {
-    private const RESERVED_KEYS = ['resource', 'content', 'view', 'extension'];
-
     /**
      * @param array<string, list<string>> $paths resolver type to path segments without the
      *                                           `[root]` anchor, set by ContentResolverPathPass
@@ -34,16 +30,12 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
     public function __construct(
         private PropertyAccessorInterface $propertyAccessor,
         private array $paths,
-        private ?LoggerInterface $logger = null,
-        private bool $debug = false,
     ) {
     }
 
     /**
-     * `$content` arrives in resolver priority order. `+` merging keeps existing keys, so the
-     * higher priority resolver wins on collision.
-     * Failures throw in debug and are logged and skipped otherwise, so broken resolver
-     * output cannot break a rendered page.
+     * `$content` arrives in resolver priority order, so a key that is already set stays and the
+     * higher priority resolver wins every collision, whatever the colliding values are.
      *
      * @template T of DimensionContentInterface
      *
@@ -74,24 +66,12 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
         foreach ($content as $type => $data) {
             $segments = $this->paths[$type] ?? ['extension', $type];
 
-            try {
-                $result = $this->mergeResolverOutput($result, $segments, $data, $type);
+            $result = $this->mergeResolverOutput($result, $segments, $data);
 
-                if ([] !== $segments && 'content' === $segments[\count($segments) - 1]) {
-                    /** @var array<string, mixed> $typeView */
-                    $typeView = $view[$type] ?? [];
-                    $result = $this->mergeResolverOutput($result, [...\array_slice($segments, 0, -1), 'view'], $typeView, $type);
-                }
-            } catch (InvalidResolverOutputException $e) {
-                if ($this->debug) {
-                    throw $e;
-                }
-
-                $this->logger?->error('Skipped content resolver "{type}": {message}', [
-                    'type' => $type,
-                    'message' => $e->getMessage(),
-                    'exception' => $e,
-                ]);
+            if ([] !== $segments && 'content' === $segments[\count($segments) - 1]) {
+                /** @var array<string, mixed> $typeView */
+                $typeView = $view[$type] ?? [];
+                $result = $this->mergeResolverOutput($result, [...\array_slice($segments, 0, -1), 'view'], $typeView);
             }
         }
 
@@ -102,79 +82,56 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
     /**
      * Merges one resolver's output into the content view data at its configured path.
      *
-     * An empty path means the root itself. An unused path takes the data as is, a path already
-     * holding an array is merged with `+` so the higher priority resolver wins on a key collision.
-     * Anything else is a failure.
+     * An empty path means the root itself. A free path takes the data as is, two arrays are
+     * merged with `+`, and any other collision keeps what is already there: resolvers run in
+     * descending priority, so the higher priority one wins.
      *
      * @param array<string, mixed> $target
      * @param list<string> $segments
-     * @param list<string> $walked segments already descended, for the error message
      *
      * @return array<string, mixed>
      */
-    private function mergeResolverOutput(array $target, array $segments, mixed $data, string $type, array $walked = []): array
+    private function mergeResolverOutput(array $target, array $segments, mixed $data): array
     {
         if ([] === $segments) {
-            return $this->mergeResolverOutputIntoRoot($target, $data, $type);
+            if (!\is_array($data)) {
+                throw new \LogicException(\sprintf(
+                    'A content resolver on path "[root]" must return an array, got %s.',
+                    \get_debug_type($data),
+                ));
+            }
+
+            // the reserved top level keys are already set, so `+` keeps them
+            /** @var array<string, mixed> $data */
+            return $target + $data;
         }
 
         $segment = $segments[0];
         $rest = \array_slice($segments, 1);
-        $walked = [...$walked, $segment];
 
         if (!\array_key_exists($segment, $target)) {
-            $target[$segment] = [] === $rest ? $data : $this->mergeResolverOutput([], $rest, $data, $type, $walked);
+            $target[$segment] = [] === $rest ? $data : $this->mergeResolverOutput([], $rest, $data);
 
             return $target;
         }
 
         $existing = $target[$segment];
+        if (!\is_array($existing)) {
+            return $target;
+        }
 
         if ([] === $rest) {
-            if (!\is_array($existing) || !\is_array($data)) {
-                throw new InvalidResolverOutputException($type, $walked, \sprintf(
-                    'that path already holds %s and cannot take %s',
-                    \get_debug_type($existing),
-                    \get_debug_type($data),
-                ));
+            if (\is_array($data)) {
+                $target[$segment] = $existing + $data;
             }
-
-            $target[$segment] = $existing + $data;
 
             return $target;
         }
 
-        if (!\is_array($existing)) {
-            throw new InvalidResolverOutputException($type, $walked, \sprintf('that path already holds %s', \get_debug_type($existing)));
-        }
-
         /** @var array<string, mixed> $existing */
-        $target[$segment] = $this->mergeResolverOutput($existing, $rest, $data, $type, $walked);
+        $target[$segment] = $this->mergeResolverOutput($existing, $rest, $data);
 
         return $target;
-    }
-
-    /**
-     * The root has no key of its own: the data is merged into the content view data directly, so
-     * it may not carry one of the reserved top level keys.
-     *
-     * @param array<string, mixed> $target
-     *
-     * @return array<string, mixed>
-     */
-    private function mergeResolverOutputIntoRoot(array $target, mixed $data, string $type): array
-    {
-        if (!\is_array($data)) {
-            throw new InvalidResolverOutputException($type, [], \sprintf('it returned %s instead of an array', \get_debug_type($data)));
-        }
-
-        /** @var array<string, mixed> $data */
-        $reserved = \array_intersect(\array_keys($data), self::RESERVED_KEYS);
-        if ([] !== $reserved) {
-            throw new InvalidResolverOutputException($type, [], \sprintf('it returned the reserved key(s) "%s"', \implode('", "', $reserved)));
-        }
-
-        return $target + $data;
     }
 
     /**
