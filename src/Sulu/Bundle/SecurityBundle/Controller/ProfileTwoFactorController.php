@@ -47,7 +47,7 @@ class ProfileTwoFactorController
     ];
 
     /**
-     * @param string[] $twoFactorMethods
+     * @param string[] $twoFactorSetupMethods the methods a user can activate, without "trusted_devices"
      */
     public function __construct(
         private TokenStorageInterface $tokenStorage,
@@ -58,7 +58,7 @@ class ProfileTwoFactorController
         private ?GoogleAuthenticatorInterface $googleAuthenticator,
         private bool $backupCodesEnabled,
         private ?string $twoFactorForcePattern,
-        private array $twoFactorMethods = [],
+        private array $twoFactorSetupMethods = [],
     ) {
     }
 
@@ -75,20 +75,24 @@ class ProfileTwoFactorController
         $authenticator = $this->getAuthenticator($method);
         $user = $this->getUser();
 
-        if ($method === $user->getTwoFactor()?->getMethod()) {
+        $secretOptions = self::SECRET_OPTIONS[$method];
+
+        // only an already confirmed method is rejected, a stale one without its secret has to stay
+        // replaceable, otherwise a user whose method lost its secret could never set one up again
+        $twoFactor = $user->getTwoFactor();
+        if ($method === $twoFactor?->getMethod()
+            && ($twoFactor->getOptions()[$secretOptions['secret']] ?? null)
+        ) {
             return $this->viewHandler->handle(
                 View::create(['error' => 'method_already_enabled'], 400),
             );
         }
 
-        $twoFactor = $user->getTwoFactor();
         if (!$twoFactor) {
             $twoFactor = new UserTwoFactor($user);
             $user->setTwoFactor($twoFactor);
             $this->objectManager->persist($twoFactor);
         }
-
-        $secretOptions = self::SECRET_OPTIONS[$method];
 
         $pendingSecret = $authenticator->generateSecret();
 
@@ -166,7 +170,7 @@ class ProfileTwoFactorController
             );
         }
 
-        if (!\in_array($method, $this->twoFactorMethods, true)) {
+        if (!\in_array($method, $this->twoFactorSetupMethods, true)) {
             throw new NotFoundHttpException(\sprintf('The two factor method "%s" is not available.', $method));
         }
 

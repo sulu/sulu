@@ -34,6 +34,11 @@ The mode is enabled automatically when the `email` method is not available, beca
 onto a method without a registered provider left them without a second factor. Nothing changes for
 projects that have `scheb/2fa-email` installed and enabled and that do not set `setup`.
 
+`trusted_devices` does not count as a method a user can activate anymore, because trusting a device
+only skips the second factor of a later login and never is one itself. A project that enables
+nothing but the trusted device feature therefore can not force two factor authentication at all,
+where it previously assigned an `email` method no provider answered.
+
 ### Improved reference tracking performance
 
 `ReferenceRepository` filters by `referenceResourceKey`, `referenceResourceId`, `referenceLocale` and

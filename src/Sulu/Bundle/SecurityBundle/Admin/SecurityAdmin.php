@@ -58,7 +58,7 @@ class SecurityAdmin extends Admin
     /**
      * TODO: Instead of getting the security contexts from the admin pool, that should be closer to the SecurityBundle.
      *
-     * @param string[] $twoFactorMethods
+     * @param string[] $twoFactorMethods the methods a user can activate, without "trusted_devices"
      */
     public function __construct(
         private ViewBuilderFactoryInterface $viewBuilderFactory,
@@ -216,7 +216,7 @@ class SecurityAdmin extends Admin
                 'twoFactorDelete' => $this->urlGenerator->generate('sulu_security.delete_profile_two-factor'),
             ],
             'twoFactorBackupCodesEnabled' => $this->twoFactorBackupCodesEnabled,
-            'twoFactorMethods' => \array_values(\array_diff($this->twoFactorMethods, ['trusted_devices'])),
+            'twoFactorMethods' => $this->twoFactorMethods,
             'twoFactorSetupRequired' => $this->isTwoFactorSetupRequired(),
             'resourceKeySecurityContextMapping' => \array_filter(\array_map(function(array $resource) {
                 return $resource['security_context'] ?? null;

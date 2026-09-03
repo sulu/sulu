@@ -31,6 +31,9 @@ class ForceTwoFactorSetupSubscriber implements EventSubscriberInterface
     /**
      * Everything the admin needs to boot and to complete the setup. Missing one of them does not
      * degrade the admin, it stops it from rendering at all, so the list covers the whole bootstrap.
+     *
+     * Saving the profile is deliberately not part of it. It would let the user change the email the
+     * force pattern matches against and walk out of the requirement.
      */
     public const ALLOWED_ROUTES = [
         'sulu_admin',
@@ -42,7 +45,6 @@ class ForceTwoFactorSetupSubscriber implements EventSubscriberInterface
         'fos_js_routing_js',
         '2fa_login_check_admin',
         'sulu_security.get_profile',
-        'sulu_security.put_profile',
         'sulu_security.patch_profile_settings',
         'sulu_security.delete_profile_settings',
         'sulu_security.post_profile_two-factor_method',

@@ -132,7 +132,7 @@ return static function(ContainerConfigurator $container) {
             '%sulu_security.two_factor_backup_codes_enabled%',
             new Reference('sulu_security.two_factor_force_checker'),
             new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
-            '%sulu_security.two_factor_methods%',
+            '%sulu_security.two_factor_setup_methods%',
         ])
         ->tag('sulu.admin')
         ->tag('sulu.context', ['context' => 'admin']);
@@ -244,7 +244,7 @@ return static function(ContainerConfigurator $container) {
         ->args([
             '%sulu_security.two_factor_force_pattern%',
             '%sulu_security.two_factor_force_setup%',
-            '%sulu_security.two_factor_methods%',
+            '%sulu_security.two_factor_setup_methods%',
         ]);
 
     $services->set('sulu_security.force_two_factor_setup_listener', ForceTwoFactorSetupSubscriber::class)
@@ -266,7 +266,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('scheb_two_factor.security.google_authenticator', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             '%sulu_security.two_factor_backup_codes_enabled%',
             '%sulu_security.two_factor_force_pattern%',
-            '%sulu_security.two_factor_methods%',
+            '%sulu_security.two_factor_setup_methods%',
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 

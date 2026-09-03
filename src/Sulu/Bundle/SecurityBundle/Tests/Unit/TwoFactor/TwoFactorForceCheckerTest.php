@@ -71,6 +71,16 @@ class TwoFactorForceCheckerTest extends TestCase
         $this->assertFalse($checker->isSetupRequired($user));
     }
 
+    public function testIsSetupRequiredWithTrustedDevices(): void
+    {
+        // "trusted_devices" is never part of the setup methods, so a user carrying it as method
+        // still has to activate a real second factor
+        $checker = new TwoFactorForceChecker('/(.+)/', true, ['email', 'totp']);
+        $user = $this->createUser('admin@sulu.io', 'trusted_devices');
+
+        $this->assertTrue($checker->isSetupRequired($user));
+    }
+
     public function testIsSetupRequiredWithMethodWithoutSecret(): void
     {
         $checker = new TwoFactorForceChecker('/(.+)/', true, ['email']);

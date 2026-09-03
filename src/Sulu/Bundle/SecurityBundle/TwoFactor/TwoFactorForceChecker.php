@@ -20,12 +20,12 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 class TwoFactorForceChecker
 {
     /**
-     * @param string[] $availableMethods
+     * @param string[] $setupMethods the methods a user can activate, without "trusted_devices"
      */
     public function __construct(
         private ?string $forcePattern,
         private bool $setupEnabled,
-        private array $availableMethods,
+        private array $setupMethods,
     ) {
     }
 
@@ -56,9 +56,9 @@ class TwoFactorForceChecker
         $twoFactor = $user->getTwoFactor();
         $method = $twoFactor?->getMethod();
 
-        // a method that is not available anymore does not authenticate anybody, so it counts as
-        // not configured and the user has to pick one of the remaining methods
-        if (!$method || !\in_array($method, $this->availableMethods, true)) {
+        // a method that is not available anymore does not authenticate anybody, and neither does
+        // "trusted_devices", so both count as not configured and the user has to pick another one
+        if (!$method || !\in_array($method, $this->setupMethods, true)) {
             return false;
         }
 

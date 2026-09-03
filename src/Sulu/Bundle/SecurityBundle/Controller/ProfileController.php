@@ -82,6 +82,12 @@ class ProfileController implements ClassResourceInterface
         $this->checkArguments($request);
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
+
+        // the request may change the email the force pattern matches against, so the state has to
+        // be taken before saving, otherwise a forced user could disable the second factor by
+        // moving the account out of the pattern in the same request
+        $twoFactorForced = (bool) $this->twoFactorForceChecker?->isForced($user);
+
         $this->userManager->save($this->getData($request), $request->get('locale'), $user->getId(), true);
 
         $user->setFirstName($request->request->get('firstName'));
@@ -125,7 +131,7 @@ class ProfileController implements ClassResourceInterface
 
                 $user->setTwoFactor($twoFactor);
             } else {
-                if ($this->twoFactorForceChecker?->isForced($user)) {
+                if ($twoFactorForced) {
                     throw new AccessDeniedHttpException('Two factor authentication is forced for this user and can not be disabled.');
                 }
 

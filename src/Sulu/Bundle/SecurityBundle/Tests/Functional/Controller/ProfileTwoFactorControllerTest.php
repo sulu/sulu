@@ -202,6 +202,97 @@ class ProfileTwoFactorControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
+    public function testSetupReplacesStaleMethodWithoutSecret(): void
+    {
+        /** @var User $user */
+        $user = static::getTestUser();
+        $twoFactor = new UserTwoFactor($user);
+        // a method without its confirmed secret does not authenticate anybody, so a fresh setup
+        // for the very same method has to stay possible
+        $twoFactor->setMethod('totp');
+        $twoFactor->setOptions([]);
+        $user->setTwoFactor($twoFactor);
+
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($twoFactor);
+        $entityManager->flush();
+
+        $client = $this->createLoggedInClient($user);
+        $client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'totp']);
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+    }
+
+    public function testSetupConfirmedMethodAgain(): void
+    {
+        $user = $this->activateTwoFactor();
+        $client = $this->createLoggedInClient($user);
+
+        $client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'totp']);
+
+        $this->assertHttpStatusCode(400, $client->getResponse());
+        /** @var array{error: string} $response */
+        $response = \json_decode((string) $client->getResponse()->getContent(), true);
+        $this->assertSame('method_already_enabled', $response['error']);
+    }
+
+    public function testMethodEmail(): void
+    {
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/method', ['method' => 'email']);
+
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
+
+        $user = $this->refreshTestUser();
+        $this->assertSame('email', $user->getTwoFactor()?->getMethod());
+    }
+
+    public function testMethodEmailClearsAuthenticatorSecrets(): void
+    {
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'totp']);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/method', ['method' => 'email']);
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
+
+        $user = $this->refreshTestUser();
+        $options = $user->getTwoFactor()?->getOptions() ?? [];
+
+        $this->assertArrayNotHasKey('totpSecret', $options);
+        $this->assertArrayNotHasKey('pendingTotpSecret', $options);
+    }
+
+    public function testMethodRejectsAuthenticatorMethod(): void
+    {
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/method', ['method' => 'totp']);
+
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+        /** @var array{error: string} $response */
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame('setup_required', $response['error']);
+
+        $user = $this->refreshTestUser();
+        $this->assertNull($user->getTwoFactor()?->getMethod());
+    }
+
+    public function testMethodRejectsTrustedDevices(): void
+    {
+        // trusting a device only skips the second factor of a later login, activating it as the
+        // method would leave the user without any second factor at all
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/method', ['method' => 'trusted_devices']);
+
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
+
+        $user = $this->refreshTestUser();
+        $this->assertNull($user->getTwoFactor()?->getMethod());
+    }
+
+    public function testMethodRejectsUnknownMethod(): void
+    {
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/method', ['method' => 'carrier-pigeon']);
+
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
+    }
+
     public function testBackupCodes(): void
     {
         $user = $this->activateTwoFactor();
