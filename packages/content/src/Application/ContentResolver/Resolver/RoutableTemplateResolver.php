@@ -133,4 +133,14 @@ readonly class RoutableTemplateResolver implements ResolverInterface
             'suffix' => $suffix,
         ];
     }
+
+    public static function getType(): string
+    {
+        return 'template';
+    }
+
+    public static function getOutputPath(): string
+    {
+        return '[root][content]';
+    }
 }

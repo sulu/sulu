@@ -14,8 +14,12 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Infrastructure\Symfony\HttpKernel\Compiler;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Sulu\Content\Application\ContentResolver\DataNormalizer\ContentViewDataNormalizer;
+use Sulu\Content\Application\ContentResolver\Resolver\ResolverInterface;
+use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ContentResolverPathPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -29,21 +33,16 @@ class ContentResolverPathPassTest extends TestCase
     private const NORMALIZER_ID = 'sulu_content.content_view_data_normalizer';
 
     /**
-     * @param array<string, array<string, mixed>> $services service id => tag attributes
+     * @param array<string, class-string> $services service id => resolver class
      */
     private function containerWith(array $services): ContainerBuilder
     {
         $container = new ContainerBuilder();
         $container->setDefinition(self::NORMALIZER_ID, new Definition(ContentViewDataNormalizer::class, [null, []]));
 
-        foreach ($services as $id => $attributes) {
-            $class = $attributes['__class'] ?? \stdClass::class;
-            unset($attributes['__class']);
-            if (!\is_string($class)) {
-                throw new \LogicException('The "__class" fixture attribute must be a class-string.');
-            }
+        foreach ($services as $id => $class) {
             $definition = new Definition($class);
-            $definition->addTag('sulu_content.content_resolver', $attributes);
+            $definition->addTag('sulu_content.content_resolver');
             $container->setDefinition($id, $definition);
         }
 
@@ -61,59 +60,57 @@ class ContentResolverPathPassTest extends TestCase
         return $paths;
     }
 
-    public function testBuildsMapWithDefaultsAndExplicitPaths(): void
+    public function testBuildsMapFromTheResolverInterface(): void
     {
         $container = $this->containerWith([
-            'template' => ['type' => 'template', 'path' => '[root][content]'],
-            'settings' => ['type' => 'settings', 'path' => '[root]'],
-            'seo' => ['type' => 'seo'],
-            'product' => ['type' => 'product', 'path' => '[root][product][content]'],
-            'shop' => ['type' => 'shop', 'path' => '[root][shop][meta]'],
+            'acme.seo' => SeoTestResolver::class,
+            'acme.settings' => SettingsTestResolver::class,
+            'acme.product' => ProductTestResolver::class,
+            'acme.product_content' => ProductContentTestResolver::class,
         ]);
 
         (new ContentResolverPathPass())->process($container);
 
         self::assertSame([
-            'template' => ['content'],
-            'settings' => [],
             'seo' => ['extension', 'seo'],
-            'product' => ['product', 'content'],
-            'shop' => ['shop', 'meta'],
+            'settings' => [],
+            'product' => ['product'],
+            'product_content' => ['product', 'content'],
         ], $this->pathsOf($container));
     }
 
-    public function testTypeFallsBackToServiceId(): void
+    public function testResolversMaySharePath(): void
     {
-        $container = $this->containerWith(['acme.resolver' => []]);
+        // settings already sits on [root], so a bundle adding its own root resolver must compile
+        $container = $this->containerWith([
+            'acme.settings' => SettingsTestResolver::class,
+            'acme.other_root' => OtherRootTestResolver::class,
+        ]);
 
         (new ContentResolverPathPass())->process($container);
 
-        self::assertSame(['acme.resolver' => ['extension', 'acme.resolver']], $this->pathsOf($container));
+        self::assertSame(['settings' => [], 'other_root' => []], $this->pathsOf($container));
     }
 
-    public function testSameServiceTaggedTwiceIdenticallyIsAllowed(): void
+    public function testDuplicateTypeThrows(): void
     {
-        $container = $this->containerWith([]);
-        $definition = new Definition(\stdClass::class);
-        $definition->addTag('sulu_content.content_resolver', ['type' => 'seo']);
-        $definition->addTag('sulu_content.content_resolver', ['type' => 'seo']);
-        $container->setDefinition('seo', $definition);
-
-        (new ContentResolverPathPass())->process($container);
-
-        self::assertSame(['seo' => ['extension', 'seo']], $this->pathsOf($container));
-    }
-
-    public function testSameServiceTaggedTwiceWithDifferentAttributesThrows(): void
-    {
-        $container = $this->containerWith([]);
-        $definition = new Definition(\stdClass::class);
-        $definition->addTag('sulu_content.content_resolver', ['type' => 'seo']);
-        $definition->addTag('sulu_content.content_resolver', ['type' => 'seo', 'path' => '[root][seo]']);
-        $container->setDefinition('seo', $definition);
+        $container = $this->containerWith([
+            'acme.seo' => SeoTestResolver::class,
+            'acme.seo_clone' => SeoCloneTestResolver::class,
+        ]);
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/twice with different attributes/');
+        $this->expectExceptionMessageMatches('/type "seo" which is already declared by "acme.seo"/');
+
+        (new ContentResolverPathPass())->process($container);
+    }
+
+    public function testTaggedServiceNotImplementingTheInterfaceThrows(): void
+    {
+        $container = $this->containerWith(['acme.plain' => \stdClass::class]);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/does not implement/');
 
         (new ContentResolverPathPass())->process($container);
     }
@@ -128,42 +125,25 @@ class ContentResolverPathPassTest extends TestCase
     }
 
     /**
-     * @return iterable<string, array{array<string, array<string, mixed>>, string}>
+     * @return iterable<string, array{class-string, string}>
      */
-    public static function provideInvalidConfigurations(): iterable
+    public static function provideInvalidOutputPaths(): iterable
     {
-        yield 'path with property notation' => [['a' => ['type' => 'a', 'path' => '[root].product']], '/invalid/'];
-        yield 'path without brackets' => [['a' => ['type' => 'a', 'path' => 'root']], '/invalid/'];
-        yield 'path with null-safe segment' => [['a' => ['type' => 'a', 'path' => '[root?][product]']], '/invalid/'];
-        yield 'path not anchored at root' => [['a' => ['type' => 'a', 'path' => '[product]']], '/must start with "\[root\]"/'];
-        yield 'path targets resource' => [['a' => ['type' => 'a', 'path' => '[root][resource]']], '/reserved key "resource"/'];
-        yield 'path targets view' => [['a' => ['type' => 'a', 'path' => '[root][view][x]']], '/reserved segment "view"/'];
-        yield 'path nested below content' => [['a' => ['type' => 'a', 'path' => '[root][content][x]']], '/non-final segment/'];
-        yield 'content as non-final segment' => [['a' => ['type' => 'a', 'path' => '[root][product][content][x]']], '/non-final segment/'];
-        yield 'view as inner segment' => [['a' => ['type' => 'a', 'path' => '[root][product][view]']], '/reserved segment "view"/'];
-        yield 'same type on two services' => [
-            ['a' => ['type' => 'seo'], 'b' => ['type' => 'seo']],
-            '/type "seo" which is already declared by "a"/',
-        ];
-        yield 'empty type' => [['a' => ['type' => '']], '/"type" attribute/'];
-        yield 'numeric string type' => [['a' => ['type' => '0']], '/numeric string/'];
-        yield 'type view without path reserved' => [['a' => ['type' => 'view']], '/reserved/'];
-        yield 'implicit index collides with explicit type' => [
-            [
-                'a' => ['type' => 'fixture_item'],
-                'b' => ['__class' => ContentResolverPathPassTestFixtureWithGetDefaultTypeName::class],
-            ],
-            '/type "fixture_item" which is already declared by "a"/',
-        ];
+        yield 'property notation' => [PropertyNotationTestResolver::class, '/is invalid/'];
+        yield 'without brackets' => [NoBracketsTestResolver::class, '/is invalid/'];
+        yield 'not anchored at root' => [NotAnchoredTestResolver::class, '/must start with "\[root\]"/'];
+        yield 'targets resource' => [ResourceTargetTestResolver::class, '/reserved key "resource"/'];
+        yield 'view segment' => [ViewSegmentTestResolver::class, '/reserved segment "view"/'];
+        yield 'content as non-final segment' => [ContentNonFinalTestResolver::class, '/non-final segment/'];
     }
 
     /**
-     * @param array<string, array<string, mixed>> $services
+     * @param class-string $class
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('provideInvalidConfigurations')]
-    public function testInvalidConfigurationThrows(array $services, string $messagePattern): void
+    #[DataProvider('provideInvalidOutputPaths')]
+    public function testInvalidOutputPathThrows(string $class, string $messagePattern): void
     {
-        $container = $this->containerWith($services);
+        $container = $this->containerWith(['acme.invalid' => $class]);
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessageMatches($messagePattern);
@@ -171,68 +151,7 @@ class ContentResolverPathPassTest extends TestCase
         (new ContentResolverPathPass())->process($container);
     }
 
-    public function testResolversMaySharePath(): void
-    {
-        // settings already sits on [root], so a bundle adding its own root resolver must compile
-        $container = $this->containerWith([
-            'a' => ['type' => 'a', 'path' => '[root]'],
-            'b' => ['type' => 'b', 'path' => '[root]'],
-            'c' => ['type' => 'c', 'path' => '[root][product]'],
-            'd' => ['type' => 'd', 'path' => '[root][product][details]'],
-        ]);
-
-        (new ContentResolverPathPass())->process($container);
-
-        self::assertSame(
-            ['a' => [], 'b' => [], 'c' => ['product'], 'd' => ['product', 'details']],
-            $this->pathsOf($container),
-        );
-    }
-
-    public function testDecoratorReDeclaringTagCompiles(): void
-    {
-        $container = new ContainerBuilder();
-        $container->setDefinition('property_accessor', new Definition(PropertyAccessor::class));
-        $normalizerDefinition = new Definition(ContentViewDataNormalizer::class, [new Reference('property_accessor'), []]);
-        // Public so RemoveUnusedDefinitionsPass does not prune it.
-        $normalizerDefinition->setPublic(true);
-        $container->setDefinition(self::NORMALIZER_ID, $normalizerDefinition);
-
-        $container->setDefinition('sulu_content.template_resolver', new Definition(\stdClass::class));
-
-        $routableTemplateResolver = new Definition(\stdClass::class);
-        $routableTemplateResolver->setDecoratedService('sulu_content.template_resolver');
-        $routableTemplateResolver->addTag('sulu_content.content_resolver', ['type' => 'template', 'path' => '[root][content]']);
-        $container->setDefinition('sulu_content.routable_template_resolver', $routableTemplateResolver);
-
-        $templateDecorator = new Definition(\stdClass::class);
-        $templateDecorator->setDecoratedService('sulu_content.routable_template_resolver');
-        $templateDecorator->addTag('sulu_content.content_resolver', ['type' => 'template', 'path' => '[root][content]']);
-        $container->setDefinition('app.template_decorator', $templateDecorator);
-
-        $seoResolver = new Definition(\stdClass::class);
-        $seoResolver->addTag('sulu_content.content_resolver', ['type' => 'seo']);
-        $container->setDefinition('sulu_content.seo_resolver', $seoResolver);
-
-        $seoDecorator = new Definition(\stdClass::class);
-        $seoDecorator->setDecoratedService('sulu_content.seo_resolver');
-        $seoDecorator->addTag('sulu_content.content_resolver', ['type' => 'seo', 'path' => '[root][seo]']);
-        $container->setDefinition('app.seo_decorator', $seoDecorator);
-
-        $container->addCompilerPass(new ContentResolverPathPass(), PassConfig::TYPE_BEFORE_REMOVING);
-        $container->compile();
-
-        /** @var array<string, list<string>> $paths */
-        $paths = $container->getDefinition(self::NORMALIZER_ID)->getArgument(1);
-
-        self::assertEqualsCanonicalizing(['template' => ['content'], 'seo' => ['seo']], $paths);
-    }
-
-    /**
-     * Compiles a real container, so DecoratorServicePass runs and collapses the decoration chain
-     * before ContentResolverPathPass reads the tags.
-     */
-    private function compiledContainerWith(callable $configure): ContainerBuilder
+    public function testDecoratorClassIsRead(): void
     {
         $container = new ContainerBuilder();
         $container->setDefinition('property_accessor', new Definition(PropertyAccessor::class));
@@ -240,76 +159,160 @@ class ContentResolverPathPassTest extends TestCase
         $normalizer->setPublic(true); // public so RemoveUnusedDefinitionsPass does not prune it
         $container->setDefinition(self::NORMALIZER_ID, $normalizer);
 
-        $configure($container);
+        $decorated = new Definition(ProductTestResolver::class);
+        $decorated->addTag('sulu_content.content_resolver');
+        $container->setDefinition('acme.product', $decorated);
+
+        // the decorator moves the output somewhere else and its class is what counts
+        $decorator = new Definition(ProductContentTestResolver::class);
+        $decorator->setDecoratedService('acme.product');
+        $container->setDefinition('acme.product_decorator', $decorator);
 
         $container->addCompilerPass(new ContentResolverPathPass(), PassConfig::TYPE_BEFORE_REMOVING);
         $container->compile();
 
-        return $container;
-    }
-
-    public function testTwoDecoratorsOfOneServiceCompile(): void
-    {
-        $container = $this->compiledContainerWith(function(ContainerBuilder $container): void {
-            $container->setDefinition('sulu_content.template_resolver', new Definition(\stdClass::class));
-
-            foreach (['bundle_a.template_decorator' => 10, 'bundle_b.template_decorator' => 5] as $id => $priority) {
-                $decorator = new Definition(\stdClass::class);
-                $decorator->setDecoratedService('sulu_content.template_resolver', null, $priority);
-                $decorator->addTag('sulu_content.content_resolver', ['type' => 'template', 'path' => '[root][content]']);
-                $container->setDefinition($id, $decorator);
-            }
-        });
-
-        self::assertSame(['template' => ['content']], $this->pathsOf($container));
-    }
-
-    public function testDecoratorWithoutTypeIsKeyedLikeTheTaggedIterator(): void
-    {
-        $container = $this->compiledContainerWith(function(ContainerBuilder $container): void {
-            $resolver = new Definition(\stdClass::class);
-            $resolver->addTag('sulu_content.content_resolver', ['type' => 'seo']);
-            $container->setDefinition('sulu_content.seo_resolver', $resolver);
-
-            $decorator = new Definition(\stdClass::class);
-            $decorator->setDecoratedService('sulu_content.seo_resolver');
-            $decorator->addTag('sulu_content.content_resolver', ['path' => '[root][seo]']);
-            $container->setDefinition('app.seo_decorator', $decorator);
-        });
-
-        // PriorityTaggedServiceTrait indexes an untyped tag by the decorated id.
-        self::assertSame(['sulu_content.seo_resolver' => ['seo']], $this->pathsOf($container));
-    }
-
-    public function testUntypedTagOnClassWithGetDefaultTypeNameUsesItsName(): void
-    {
-        $container = $this->containerWith([]);
-        $definition = new Definition(ContentResolverPathPassTestFixtureWithGetDefaultTypeName::class);
-        $definition->addTag('sulu_content.content_resolver', []);
-        $container->setDefinition('acme.default_type_name_resolver', $definition);
-
-        (new ContentResolverPathPass())->process($container);
-
-        self::assertSame(['fixture_item' => ['extension', 'fixture_item']], $this->pathsOf($container));
-    }
-
-    public function testUntypedTagOnClassWithoutImplicitIndexFallsBackToServiceId(): void
-    {
-        $container = $this->containerWith([]);
-        $definition = new Definition(\stdClass::class);
-        $definition->addTag('sulu_content.content_resolver', []);
-        $container->setDefinition('acme.plain_resolver', $definition);
-
-        (new ContentResolverPathPass())->process($container);
-
-        self::assertSame(['acme.plain_resolver' => ['extension', 'acme.plain_resolver']], $this->pathsOf($container));
+        self::assertSame(['product_content' => ['product', 'content']], $this->pathsOf($container));
     }
 }
 
-class ContentResolverPathPassTestFixtureWithGetDefaultTypeName
+abstract class AbstractTestResolver implements ResolverInterface
 {
-    public static function getDefaultTypeName(): string
+    public function resolve(DimensionContentInterface $dimensionContent, ?array $properties = null): ?ContentView
     {
-        return 'fixture_item';
+        return null;
+    }
+}
+
+class SeoTestResolver extends AbstractTestResolver
+{
+    public static function getType(): string
+    {
+        return 'seo';
+    }
+
+    public static function getOutputPath(): string
+    {
+        return '[root][extension][seo]';
+    }
+}
+
+class SeoCloneTestResolver extends AbstractTestResolver
+{
+    public static function getType(): string
+    {
+        return 'seo';
+    }
+
+    public static function getOutputPath(): string
+    {
+        return '[root][extension][seo_clone]';
+    }
+}
+
+class SettingsTestResolver extends AbstractTestResolver
+{
+    public static function getType(): string
+    {
+        return 'settings';
+    }
+
+    public static function getOutputPath(): string
+    {
+        return '[root]';
+    }
+}
+
+class OtherRootTestResolver extends AbstractTestResolver
+{
+    public static function getType(): string
+    {
+        return 'other_root';
+    }
+
+    public static function getOutputPath(): string
+    {
+        return '[root]';
+    }
+}
+
+class ProductTestResolver extends AbstractTestResolver
+{
+    public static function getType(): string
+    {
+        return 'product';
+    }
+
+    public static function getOutputPath(): string
+    {
+        return '[root][product]';
+    }
+}
+
+class ProductContentTestResolver extends AbstractTestResolver
+{
+    public static function getType(): string
+    {
+        return 'product_content';
+    }
+
+    public static function getOutputPath(): string
+    {
+        return '[root][product][content]';
+    }
+}
+
+abstract class AbstractInvalidPathTestResolver extends AbstractTestResolver
+{
+    public static function getType(): string
+    {
+        return 'invalid';
+    }
+}
+
+class PropertyNotationTestResolver extends AbstractInvalidPathTestResolver
+{
+    public static function getOutputPath(): string
+    {
+        return '[root].product';
+    }
+}
+
+class NoBracketsTestResolver extends AbstractInvalidPathTestResolver
+{
+    public static function getOutputPath(): string
+    {
+        return 'root';
+    }
+}
+
+class NotAnchoredTestResolver extends AbstractInvalidPathTestResolver
+{
+    public static function getOutputPath(): string
+    {
+        return '[product]';
+    }
+}
+
+class ResourceTargetTestResolver extends AbstractInvalidPathTestResolver
+{
+    public static function getOutputPath(): string
+    {
+        return '[root][resource]';
+    }
+}
+
+class ViewSegmentTestResolver extends AbstractInvalidPathTestResolver
+{
+    public static function getOutputPath(): string
+    {
+        return '[root][view][x]';
+    }
+}
+
+class ContentNonFinalTestResolver extends AbstractInvalidPathTestResolver
+{
+    public static function getOutputPath(): string
+    {
+        return '[root][content][x]';
     }
 }

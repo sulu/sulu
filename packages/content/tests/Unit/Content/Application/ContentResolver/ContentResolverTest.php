@@ -419,6 +419,16 @@ class TestTemplateResolver implements ResolverInterface
     {
         return $this->contentView;
     }
+
+    public static function getType(): string
+    {
+        return 'template';
+    }
+
+    public static function getOutputPath(): string
+    {
+        return '[root][content]';
+    }
 }
 
 class TestResourceLoader implements ResourceLoaderContentViewEnhancementInterface
