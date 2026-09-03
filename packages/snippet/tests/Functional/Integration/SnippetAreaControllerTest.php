@@ -76,6 +76,12 @@ class SnippetAreaControllerTest extends SuluTestCase
         ]);
         $this->assertResponseStatusCodeSame(200);
 
+        // the frontend resolves the group-specific edit view from this field right after the PUT response,
+        // so it must be present without requiring a follow-up GET request
+        /** @var array{templateKey?: string} $putResponseContent */
+        $putResponseContent = \json_decode((string) $this->client->getResponse()->getContent(), true) ?? [];
+        $this->assertSame('snippet', $putResponseContent['templateKey'] ?? null);
+
         $this->client->jsonRequest('GET', '/admin/api/snippet-areas?webspaceKey=sulu-io');
         $this->assertResponseSnapshot('snippet_area_cget_partially_filled.json', $this->client->getResponse(), 200);
     }

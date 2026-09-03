@@ -356,6 +356,15 @@ class SnippetControllerTest extends SuluTestCase
     }
 
     #[Depends('testPost')]
+    public function testGetListWithUnknownGroupsFilterReturnsNoResults(): void
+    {
+        // an unknown/typo'd group identifier must not be silently dropped and return every snippet
+        $this->client->request('GET', '/admin/api/snippets?locale=en&groups=does-not-exist');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_cget_types_filter_nonexistent.json', $response, 200);
+    }
+
+    #[Depends('testPost')]
     public function testDeleteSingleLocale(string $id): string
     {
         $this->client->request('GET', '/admin/api/snippets/' . $id . '?locale=en');
