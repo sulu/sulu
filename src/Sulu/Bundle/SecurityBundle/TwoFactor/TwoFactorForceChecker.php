@@ -67,6 +67,6 @@ class TwoFactorForceChecker
             return true;
         }
 
-        return (bool) ($twoFactor?->getOptions()[$secretOption] ?? null);
+        return (bool) ($twoFactor->getOptions()[$secretOption] ?? null);
     }
 }

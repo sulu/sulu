@@ -3,19 +3,14 @@ import React, {Fragment} from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import QRCode from 'react-qr-code';
-import {Button, Icon, Input, Overlay} from 'sulu-admin-bundle/components';
+import {Button, Input, Overlay} from 'sulu-admin-bundle/components';
 import {initializer, Requester} from 'sulu-admin-bundle/services';
 import {userStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
+import TwoFactorMethodButton from './TwoFactorMethodButton';
 import twoFactorSetupOverlayStyles from './twoFactorSetupOverlay.scss';
 
 const SETUP_METHODS = ['totp', 'google'];
-
-const METHOD_ICONS = {
-    email: 'su-envelope',
-    google: 'su-mobile',
-    totp: 'su-mobile',
-};
 
 @observer
 class TwoFactorSetupOverlay extends React.Component<{}> {
@@ -94,7 +89,7 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
 
     handleActivated = () => {
         if (!TwoFactorSetupOverlay.backupCodesEnabled) {
-            this.finish();
+            this.handleFinish();
 
             return;
         }
@@ -106,7 +101,7 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
             }))
             // the method is active even without backup codes, so a failure here must not
             // keep the user in the overlay
-            .catch(() => this.finish());
+            .catch(() => this.handleFinish());
     };
 
     handleBackupCodesCopy = () => {
@@ -117,7 +112,7 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
 
     // the second factor is stored on the server already, and only the reloaded config decides
     // whether the setup counts as completed
-    finish = () => {
+    handleFinish = () => {
         initializer.initialize(true);
     };
 
@@ -128,27 +123,12 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
                     {translate('sulu_security.two_factor_required_hint')}
                 </p>
                 {TwoFactorSetupOverlay.methods.map((method) => (
-                    <button
-                        className={twoFactorSetupOverlayStyles.method}
+                    <TwoFactorMethodButton
                         disabled={this.loading}
                         key={method}
-                        onClick={() => this.handleMethodClick(method)}
-                        type="button"
-                    >
-                        <Icon
-                            className={twoFactorSetupOverlayStyles.methodIcon}
-                            name={METHOD_ICONS[method] || 'su-lock'}
-                        />
-                        <span className={twoFactorSetupOverlayStyles.methodText}>
-                            <span className={twoFactorSetupOverlayStyles.methodTitle}>
-                                {translate('sulu_security.two_factor_method_' + method)}
-                            </span>
-                            <span className={twoFactorSetupOverlayStyles.methodDescription}>
-                                {translate('sulu_security.two_factor_method_' + method + '_description')}
-                            </span>
-                        </span>
-                        <Icon className={twoFactorSetupOverlayStyles.methodArrow} name="su-angle-right" />
-                    </button>
+                        method={method}
+                        onClick={this.handleMethodClick}
+                    />
                 ))}
             </div>
         );
@@ -220,7 +200,7 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
         const confirmProps = {
             'backup-codes': {
                 confirmText: translate('sulu_security.two_factor_setup_finish'),
-                onConfirm: this.finish,
+                onConfirm: this.handleFinish,
             },
             method: {},
             setup: {
@@ -234,16 +214,16 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
             <Overlay
                 closable={false}
                 confirmLoading={this.loading}
-                onClose={this.finish}
+                onClose={this.handleFinish}
                 open={this.open}
                 size="small"
                 title={translate('sulu_security.two_factor_required_title')}
                 {...confirmProps}
             >
                 <Fragment>
-                    {'method' === step && this.renderMethods()}
-                    {'setup' === step && this.renderSetup()}
-                    {'backup-codes' === step && this.renderBackupCodes()}
+                    {step === 'method' && this.renderMethods()}
+                    {step === 'setup' && this.renderSetup()}
+                    {step === 'backup-codes' && this.renderBackupCodes()}
                 </Fragment>
             </Overlay>
         );

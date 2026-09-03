@@ -55,8 +55,8 @@ class TwoFactorCompilerPass implements CompilerPassInterface
 
         // without the email method the legacy default of activating "email" for forced users would
         // leave them without any working provider, so they have to set up a method themselves
-        if (!\in_array('email', $methods, true)
-            && null !== $container->getParameter('sulu_security.two_factor_force_pattern')
+        if ($container->getParameter('sulu_security.two_factor_force_pattern')
+            && !\in_array('email', $methods, true)
         ) {
             $container->setParameter('sulu_security.two_factor_force_setup', true);
             $container->removeDefinition('sulu_security.force_two_factor_listener');

@@ -26,9 +26,8 @@ use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SecurityAdmin extends Admin
@@ -70,7 +69,7 @@ class SecurityAdmin extends Admin
         private array $resources,
         private bool $twoFactorBackupCodesEnabled = false,
         private ?TwoFactorForceChecker $twoFactorForceChecker = null,
-        private Security|SymfonyCoreSecurity|null $security = null,
+        private ?TokenStorageInterface $tokenStorage = null,
         private array $twoFactorMethods = [],
     ) {
     }
@@ -229,7 +228,7 @@ class SecurityAdmin extends Admin
 
     private function isTwoFactorSetupRequired(): bool
     {
-        $user = $this->security?->getUser();
+        $user = $this->tokenStorage?->getToken()?->getUser();
 
         if (!$this->twoFactorForceChecker || !$user instanceof User) {
             return false;

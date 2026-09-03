@@ -131,7 +131,7 @@ return static function(ContainerConfigurator $container) {
             '%sulu_admin.resources%',
             '%sulu_security.two_factor_backup_codes_enabled%',
             new Reference('sulu_security.two_factor_force_checker'),
-            new Reference('security.helper', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             '%sulu_security.two_factor_methods%',
         ])
         ->tag('sulu.admin')
