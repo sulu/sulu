@@ -32,7 +32,8 @@ class TemplateDataMapper implements DataMapperInterface
         DimensionContentInterface $localizedDimensionContent,
         array $data
     ): void {
-        if (!$localizedDimensionContent instanceof TemplateInterface
+        if (
+            !$localizedDimensionContent instanceof TemplateInterface
             || !$unlocalizedDimensionContent instanceof TemplateInterface
         ) {
             return;
@@ -72,8 +73,16 @@ class TemplateDataMapper implements DataMapperInterface
             return;
         }
 
-        $unlocalizedDimensionContent->setTemplateData($unlocalizedData);
         $localizedDimensionContent->setTemplateKey($template);
+        // preview uses the same dimension content so we can just merge it, otherwise unlocalizedData is lost/overwritten by localized content
+        if ($unlocalizedDimensionContent === $localizedDimensionContent) {
+            $localizedDimensionContent->setTemplateData(
+                \array_merge($unlocalizedData, $localizedData)
+            );
+
+            return;
+        }
+        $unlocalizedDimensionContent->setTemplateData($unlocalizedData);
         $localizedDimensionContent->setTemplateData($localizedData);
     }
 
