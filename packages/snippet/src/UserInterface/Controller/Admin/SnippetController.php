@@ -117,8 +117,28 @@ final class SnippetController implements SecuredControllerInterface
         }
 
         $templateKeysParam = $request->query->getString('templateKeys');
-        $templateKeys = \array_filter(\explode(',', $templateKeysParam));
-        $templateKeys = \array_unique(\array_merge($templateKeys, $groupTemplateKeys));
+        $requestedTemplateKeys = \array_filter(\explode(',', $templateKeysParam));
+        $templateKeys = \array_unique(\array_merge($requestedTemplateKeys, $groupTemplateKeys));
+
+        $templateFilterRequested = [] !== $groupIdentifiers || [] !== $requestedTemplateKeys;
+        if ($templateFilterRequested && 0 === \count($templateKeys)) {
+            // the requested groups/templateKeys did not resolve to any known template key, so the
+            // filter must not be dropped silently (an empty `in()` call has no effect on the query
+            // and would return every snippet instead of none)
+            $listRepresentation = new PaginatedRepresentation(
+                [],
+                SnippetInterface::RESOURCE_KEY,
+                (int) $listBuilder->getCurrentPage(),
+                (int) $listBuilder->getLimit(),
+                0,
+            );
+
+            return new JsonResponse($this->normalizer->normalize(
+                $listRepresentation->toArray(),
+                'json',
+                ['sulu_admin' => true, 'sulu_admin_snippet' => true, 'sulu_admin_snippet_list' => true],
+            ));
+        }
 
         if (0 !== \count($templateKeys)) {
             $listBuilder->in($fieldDescriptors['templateKey'], $templateKeys);
