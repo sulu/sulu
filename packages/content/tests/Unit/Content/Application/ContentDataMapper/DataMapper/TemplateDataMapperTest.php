@@ -40,7 +40,9 @@ class TemplateDataMapperTest extends TestCase
         ?string $defaultTemplateKey = null,
     ): TemplateDataMapper {
         $container = new Container();
-        $container->set('form', new class($this->createTypedFormMetadata($properties, $defaultTemplateKey)) implements MetadataProviderInterface {
+        $container->set(
+            'form',
+            new class ($this->createTypedFormMetadata($properties, $defaultTemplateKey)) implements MetadataProviderInterface {
             public function __construct(private readonly TypedFormMetadata $typedFormMetadata)
             {
             }
@@ -49,7 +51,8 @@ class TemplateDataMapperTest extends TestCase
             {
                 return $this->typedFormMetadata;
             }
-        });
+            }
+        );
         $metadataProviderRegistry = new MetadataProviderRegistry($container);
 
         return new TemplateDataMapper($metadataProviderRegistry);
@@ -165,7 +168,7 @@ class TemplateDataMapperTest extends TestCase
         $templateMapper->map($localizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame('template-key', $localizedDimensionContent->getTemplateKey());
-        $this->assertSame(['title' => 'Test Localized'], $localizedDimensionContent->getTemplateData());
+        $this->assertSame(['unlocalizedField' => 'Test Unlocalized', 'title' => 'Test Localized'], $localizedDimensionContent->getTemplateData());
     }
 
     public function testMapNestedPropertyData(): void
