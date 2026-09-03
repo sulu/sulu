@@ -25,9 +25,16 @@ every other route with a `403` and the `two_factor_setup_required` error, so the
 skipped by a client that ignores the overlay. Disabling the method again is rejected for forced
 users, on the profile endpoint as well as on the two factor endpoint.
 
-Two additions come with it. The new `POST /admin/api/profile/two-factor/method` endpoint activates
-a method that needs no guided setup, currently only `email`, without saving the whole profile. The
-new `blockingOverlayRegistry` of the admin bundle lets a bundle render an overlay on top of the
+In the guided setup, the `email` method now runs through the same
+`POST /admin/api/profile/two-factor/setup` and `POST /admin/api/profile/two-factor/confirm`
+endpoints as the authenticator app based methods: setup sends a verification code to the user's
+email address, and it only activates the method once that code was confirmed, so a mistyped or
+unreachable address never locks a user out. The overlay skips the method selection step when only
+one method is available, and offers to create backup codes right after a method was activated,
+instead of generating them unasked. The general profile form (the `two_factor` field type) is
+unchanged: it still activates `email` immediately without a code, as it did before.
+
+The new `blockingOverlayRegistry` of the admin bundle lets a bundle render an overlay on top of the
 whole application, which is how the security bundle brings in its setup overlay.
 
 The mode is enabled automatically when the `email` method is not available, because forcing users

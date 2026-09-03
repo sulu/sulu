@@ -10,8 +10,6 @@ import {translate} from 'sulu-admin-bundle/utils';
 import TwoFactorMethodButton from './TwoFactorMethodButton';
 import twoFactorSetupOverlayStyles from './twoFactorSetupOverlay.scss';
 
-const SETUP_METHODS = ['totp', 'google'];
-
 @observer
 class TwoFactorSetupOverlay extends React.Component<{}> {
     static endpoints: {[string]: string} = {};
@@ -24,7 +22,12 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
     @observable code: ?string;
     @observable codeValid: boolean = true;
     @observable loading: boolean = false;
+    @observable activated: boolean = false;
     @observable backupCodes: ?Array<string>;
+
+    // guards the auto-selection of the single available method against retrying forever when
+    // the setup request for it keeps failing
+    autoSelectAttempted: boolean = false;
 
     @computed get open(): boolean {
         return userStore.twoFactorSetupRequired;
@@ -35,30 +38,43 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
             return 'backup-codes';
         }
 
-        return this.qrContent ? 'setup' : 'method';
+        if (this.activated) {
+            return 'backup-codes-ask';
+        }
+
+        return this.method ? 'setup' : 'method';
     }
 
-    @action handleMethodClick = (method: string) => {
-        this.loading = true;
+    componentDidMount() {
+        this.autoSelectMethod();
+    }
 
-        if (!SETUP_METHODS.includes(method)) {
-            Requester.post(TwoFactorSetupOverlay.endpoints.twoFactorMethod, {method})
-                .then(() => this.handleActivated())
-                .catch(action(() => {
-                    this.loading = false;
-                }));
+    componentDidUpdate() {
+        this.autoSelectMethod();
+    }
 
+    // a single available method needs no selection, so its setup starts right away
+    autoSelectMethod = () => {
+        if (this.autoSelectAttempted || !this.open || this.method || TwoFactorSetupOverlay.methods.length !== 1) {
             return;
         }
 
+        this.autoSelectAttempted = true;
+        this.handleMethodClick(TwoFactorSetupOverlay.methods[0]);
+    };
+
+    @action handleMethodClick = (method: string) => {
+        this.loading = true;
+        this.method = method;
+
         Requester.post(TwoFactorSetupOverlay.endpoints.twoFactorSetup, {method})
             .then(action((response) => {
-                this.method = method;
                 this.secret = response.secret;
                 this.qrContent = response.qrContent;
                 this.loading = false;
             }))
             .catch(action(() => {
+                this.method = undefined;
                 this.loading = false;
             }));
     };
@@ -87,12 +103,20 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
             }));
     };
 
-    handleActivated = () => {
+    @action handleActivated = () => {
+        this.loading = false;
+
         if (!TwoFactorSetupOverlay.backupCodesEnabled) {
             this.handleFinish();
 
             return;
         }
+
+        this.activated = true;
+    };
+
+    @action handleCreateBackupCodes = () => {
+        this.loading = true;
 
         Requester.post(TwoFactorSetupOverlay.endpoints.twoFactorBackupCodes)
             .then(action((response) => {
@@ -102,6 +126,10 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
             // the method is active even without backup codes, so a failure here must not
             // keep the user in the overlay
             .catch(() => this.handleFinish());
+    };
+
+    handleSkipBackupCodes = () => {
+        this.handleFinish();
     };
 
     handleBackupCodesCopy = () => {
@@ -135,20 +163,29 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
     }
 
     renderSetup() {
+        const isEmail = this.method === 'email';
+
         return (
             <div className={twoFactorSetupOverlayStyles.setup}>
                 <p className={twoFactorSetupOverlayStyles.hint}>
-                    {translate('sulu_security.two_factor_setup_scan_hint')}
+                    {translate(isEmail
+                        ? 'sulu_security.two_factor_setup_email_hint'
+                        : 'sulu_security.two_factor_setup_scan_hint'
+                    )}
                 </p>
-                <div className={twoFactorSetupOverlayStyles.qrCode}>
-                    <QRCode size={168} value={this.qrContent || ''} />
-                </div>
-                <div className={twoFactorSetupOverlayStyles.section}>
-                    <div className={twoFactorSetupOverlayStyles.label}>
-                        {translate('sulu_security.two_factor_setup_manual_secret')}
-                    </div>
-                    <code className={twoFactorSetupOverlayStyles.secret}>{this.secret}</code>
-                </div>
+                {!isEmail &&
+                    <Fragment>
+                        <div className={twoFactorSetupOverlayStyles.qrCode}>
+                            <QRCode size={168} value={this.qrContent || ''} />
+                        </div>
+                        <div className={twoFactorSetupOverlayStyles.section}>
+                            <div className={twoFactorSetupOverlayStyles.label}>
+                                {translate('sulu_security.two_factor_setup_manual_secret')}
+                            </div>
+                            <code className={twoFactorSetupOverlayStyles.secret}>{this.secret}</code>
+                        </div>
+                    </Fragment>
+                }
                 <div className={twoFactorSetupOverlayStyles.section}>
                     <div className={twoFactorSetupOverlayStyles.label}>
                         {translate('sulu_admin.two_factor_verification_code')}
@@ -169,6 +206,16 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
                         {translate('sulu_security.two_factor_setup_back')}
                     </Button>
                 }
+            </div>
+        );
+    }
+
+    renderBackupCodesAsk() {
+        return (
+            <div className={twoFactorSetupOverlayStyles.setup}>
+                <p className={twoFactorSetupOverlayStyles.hint}>
+                    {translate('sulu_security.two_factor_backup_codes_ask_hint')}
+                </p>
             </div>
         );
     }
@@ -202,6 +249,14 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
                 confirmText: translate('sulu_security.two_factor_setup_finish'),
                 onConfirm: this.handleFinish,
             },
+            'backup-codes-ask': {
+                actions: [{
+                    onClick: this.handleSkipBackupCodes,
+                    title: translate('sulu_security.two_factor_setup_skip_backup_codes'),
+                }],
+                confirmText: translate('sulu_security.two_factor_setup_create_backup_codes'),
+                onConfirm: this.handleCreateBackupCodes,
+            },
             method: {},
             setup: {
                 confirmDisabled: !this.code,
@@ -223,6 +278,7 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
                 <Fragment>
                     {step === 'method' && this.renderMethods()}
                     {step === 'setup' && this.renderSetup()}
+                    {step === 'backup-codes-ask' && this.renderBackupCodesAsk()}
                     {step === 'backup-codes' && this.renderBackupCodes()}
                 </Fragment>
             </Overlay>

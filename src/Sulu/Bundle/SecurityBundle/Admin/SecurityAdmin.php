@@ -211,7 +211,6 @@ class SecurityAdmin extends Admin
                 'contexts' => $this->urlGenerator->generate('sulu_security.cget_security-contexts'),
                 'twoFactorSetup' => $this->urlGenerator->generate('sulu_security.post_profile_two-factor_setup'),
                 'twoFactorConfirm' => $this->urlGenerator->generate('sulu_security.post_profile_two-factor_confirm'),
-                'twoFactorMethod' => $this->urlGenerator->generate('sulu_security.post_profile_two-factor_method'),
                 'twoFactorBackupCodes' => $this->urlGenerator->generate('sulu_security.post_profile_two-factor_backup-codes'),
                 'twoFactorDelete' => $this->urlGenerator->generate('sulu_security.delete_profile_two-factor'),
             ],

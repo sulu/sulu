@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 use Doctrine\Persistence\ObjectManager;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Totp\TotpAuthenticatorInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -46,9 +47,6 @@ class ProfileTwoFactorController
         ],
     ];
 
-    /**
-     * @param string[] $twoFactorSetupMethods the methods a user can activate, without "trusted_devices"
-     */
     public function __construct(
         private TokenStorageInterface $tokenStorage,
         private ObjectManager $objectManager,
@@ -56,25 +54,50 @@ class ProfileTwoFactorController
         private BackupCodeGenerator $backupCodeGenerator,
         private ?TotpAuthenticatorInterface $totpAuthenticator,
         private ?GoogleAuthenticatorInterface $googleAuthenticator,
+        private ?CodeGeneratorInterface $emailCodeGenerator,
         private bool $backupCodesEnabled,
         private ?string $twoFactorForcePattern,
-        private array $twoFactorSetupMethods = [],
     ) {
     }
 
     /**
-     * Generates a new secret for an authenticator app based two factor method
-     * and returns the content for the QR code to be scanned by the app.
-     *
-     * The secret is only stored as pending and does not activate the second factor
-     * until it was confirmed with a valid code.
+     * Starts the setup of a two factor method. An authenticator app based method generates a new
+     * secret and returns the content for its QR code. The email method instead sends a
+     * verification code to the user's email address. Both stay pending until postConfirmAction
+     * verifies them, so a wrong code, a lost QR code or an unreachable inbox never locks a user out.
      */
     public function postSetupAction(Request $request): Response
     {
         $method = (string) $request->request->get('method');
-        $authenticator = $this->getAuthenticator($method);
         $user = $this->getUser();
 
+        if ('email' === $method) {
+            return $this->setupEmail($user);
+        }
+
+        return $this->setupAuthenticator($method, $user);
+    }
+
+    /**
+     * Activates the given two factor method for the current user if the given code
+     * matches the previously generated secret or, for email, the code that was sent.
+     */
+    public function postConfirmAction(Request $request): Response
+    {
+        $method = (string) $request->request->get('method');
+        $user = $this->getUser();
+        $code = (string) $request->request->get('code');
+
+        if ('email' === $method) {
+            return $this->confirmEmail($user, $code);
+        }
+
+        return $this->confirmAuthenticator($method, $user, $code);
+    }
+
+    private function setupAuthenticator(string $method, User $user): Response
+    {
+        $authenticator = $this->getAuthenticator($method);
         $secretOptions = self::SECRET_OPTIONS[$method];
 
         // only an already confirmed method is rejected, a stale one without its secret has to stay
@@ -112,16 +135,9 @@ class ProfileTwoFactorController
         );
     }
 
-    /**
-     * Activates the given two factor method for the current user if the given code
-     * matches the previously generated secret.
-     */
-    public function postConfirmAction(Request $request): Response
+    private function confirmAuthenticator(string $method, User $user, string $code): Response
     {
-        $method = (string) $request->request->get('method');
         $authenticator = $this->getAuthenticator($method);
-        $user = $this->getUser();
-
         $secretOptions = self::SECRET_OPTIONS[$method];
 
         $twoFactor = $user->getTwoFactor();
@@ -133,7 +149,6 @@ class ProfileTwoFactorController
             );
         }
 
-        $code = (string) $request->request->get('code');
         if (!$authenticator->checkCode($user, $code)) {
             return $this->viewHandler->handle(
                 View::create(['error' => 'invalid_code'], 400),
@@ -154,43 +169,59 @@ class ProfileTwoFactorController
         return new Response('', 204);
     }
 
-    /**
-     * Activates a two factor method that needs no guided setup, currently only "email".
-     *
-     * The methods based on an authenticator app are rejected here, because activating them
-     * without a confirmed secret would lock the user out.
-     */
-    public function postMethodAction(Request $request): Response
+    private function setupEmail(User $user): Response
     {
-        $method = (string) $request->request->get('method');
+        if (!$this->emailCodeGenerator) {
+            throw new NotFoundHttpException('The two factor method "email" is not available. Install "scheb/2fa-email" and enable it in the "scheb_two_factor" configuration.');
+        }
 
-        if (isset(self::SECRET_OPTIONS[$method])) {
+        $twoFactor = $user->getTwoFactor();
+        if ('email' === $twoFactor?->getMethod()) {
             return $this->viewHandler->handle(
-                View::create(['error' => 'setup_required'], 400),
+                View::create(['error' => 'method_already_enabled'], 400),
             );
         }
 
-        if (!\in_array($method, $this->twoFactorSetupMethods, true)) {
-            throw new NotFoundHttpException(\sprintf('The two factor method "%s" is not available.', $method));
-        }
-
-        $user = $this->getUser();
-
-        $twoFactor = $user->getTwoFactor();
         if (!$twoFactor) {
             $twoFactor = new UserTwoFactor($user);
             $user->setTwoFactor($twoFactor);
             $this->objectManager->persist($twoFactor);
         }
 
-        // the secrets of the authenticator app based methods are cleared, so switching back to one
-        // of them requires a fresh guided setup
+        $this->emailCodeGenerator->generateAndSend($user);
+        $this->objectManager->flush();
+
+        return new Response('', 204);
+    }
+
+    private function confirmEmail(User $user, string $code): Response
+    {
+        if (!$this->emailCodeGenerator) {
+            throw new NotFoundHttpException('The two factor method "email" is not available. Install "scheb/2fa-email" and enable it in the "scheb_two_factor" configuration.');
+        }
+
+        $twoFactor = $user->getTwoFactor();
+        $authCode = $user->getEmailAuthCode();
+        if (!$twoFactor || null === $authCode) {
+            return $this->viewHandler->handle(
+                View::create(['error' => 'setup_required'], 400),
+            );
+        }
+
+        if (!\hash_equals($authCode, \str_replace(' ', '', $code))) {
+            return $this->viewHandler->handle(
+                View::create(['error' => 'invalid_code'], 400),
+            );
+        }
+
+        // an authenticator app based setup that was abandoned for email loses its pending secret,
+        // so a stale code from it can not be confirmed later anymore
         $options = $twoFactor->getOptions() ?? [];
         foreach (self::SECRET_OPTIONS as $secretOptions) {
             unset($options[$secretOptions['secret']], $options[$secretOptions['pendingSecret']]);
         }
         $twoFactor->setOptions($options);
-        $twoFactor->setMethod($method);
+        $twoFactor->setMethod('email');
 
         $this->objectManager->flush();
 
@@ -285,11 +316,11 @@ class ProfileTwoFactorController
     }
 
     /**
-     * @return User&\Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface&\Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface
+     * @return User&\Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface&\Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface&\Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface
      */
     private function getUser(): User
     {
-        /** @var User&\Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface&\Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface $user */
+        /** @var User&\Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface&\Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface&\Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface $user */
         $user = $this->tokenStorage->getToken()?->getUser();
 
         return $user;

@@ -221,14 +221,6 @@ sulu_security.post_profile_two-factor_confirm:
     requirements:
         _format: json
 
-sulu_security.post_profile_two-factor_method:
-    path: '/profile/two-factor/method.{_format}'
-    methods: POST
-    controller: 'sulu_security.profile_two_factor_controller::postMethodAction'
-    format: json
-    requirements:
-        _format: json
-
 sulu_security.post_profile_two-factor_backup-codes:
     path: '/profile/two-factor/backup-codes.{_format}'
     methods: POST

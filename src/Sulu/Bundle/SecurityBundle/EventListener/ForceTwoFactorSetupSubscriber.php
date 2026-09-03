@@ -47,7 +47,6 @@ class ForceTwoFactorSetupSubscriber implements EventSubscriberInterface
         'sulu_security.get_profile',
         'sulu_security.patch_profile_settings',
         'sulu_security.delete_profile_settings',
-        'sulu_security.post_profile_two-factor_method',
         'sulu_security.post_profile_two-factor_setup',
         'sulu_security.post_profile_two-factor_confirm',
         'sulu_security.post_profile_two-factor_backup-codes',
