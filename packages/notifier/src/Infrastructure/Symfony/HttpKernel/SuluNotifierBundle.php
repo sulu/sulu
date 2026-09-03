@@ -95,7 +95,12 @@ final class SuluNotifierBundle extends AbstractBundle
 
         if (\class_exists(DomainEvent::class)) {
             $services->set('sulu_notifier.factory.domain_event', DomainEventNotificationFactory::class)
-                ->args([service('translator'), param('kernel.default_locale')])
+                ->args([
+                    service('translator'),
+                    param('kernel.default_locale'),
+                    service('sulu_admin.resource_view_url_generator')->nullOnInvalid(),
+                    service('logger'),
+                ])
                 ->tag('sulu_notifier.notification_factory', ['priority' => -100]);
         }
 
