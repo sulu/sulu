@@ -109,6 +109,7 @@ final class ArticleController implements SecuredControllerInterface
         $listBuilder->addSelectField($fieldDescriptors['locale']);
         $listBuilder->addSelectField($fieldDescriptors['published']);
         $listBuilder->addSelectField($fieldDescriptors['publishedState']);
+        $listBuilder->addSelectField($fieldDescriptors['templateKey']);
 
         if (isset($fieldDescriptors['ghostLocale'])) {
             $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);
@@ -130,6 +131,12 @@ final class ArticleController implements SecuredControllerInterface
         $list = $listRepresentation->toArray();
         foreach ($list['_embedded']['articles'] as &$item) {
             $item['publishedState'] = WorkflowInterface::WORKFLOW_PLACE_PUBLISHED === ($item['publishedState'] ?? null);
+            $templateKey = $item['templateKey'] ?? null;
+            $item['group'] = $this->groupProvider->resolveGroup(
+                ArticleInterface::TEMPLATE_TYPE,
+                \is_string($templateKey) ? $templateKey : null,
+            );
+            unset($item['templateKey']);
         }
 
         return new JsonResponse($this->normalizer->normalize(
@@ -203,6 +210,11 @@ final class ArticleController implements SecuredControllerInterface
         //      Instead of calling the content resolver service which triggers an additional query.
         $dimensionContent = $this->contentManager->resolve($article, $dimensionAttributes);
         $normalizedContent = $this->contentManager->normalize($dimensionContent);
+        $template = $normalizedContent['template'] ?? null;
+        $normalizedContent['group'] = $this->groupProvider->resolveGroup(
+            ArticleInterface::TEMPLATE_TYPE,
+            \is_string($template) ? $template : null,
+        );
 
         return new JsonResponse($this->normalizer->normalize(
             $normalizedContent, // TODO this should just be the article entity see comment above
