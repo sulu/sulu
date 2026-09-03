@@ -2,8 +2,8 @@
 import React from 'react';
 import {computed, toJS, reaction, when, isArrayLike} from 'mobx';
 import equals from 'fast-deep-equal';
-import jsonpointer from 'json-pointer';
 import SmartContentComponent, {smartContentConfigStore, SmartContentStore} from '../../SmartContent';
+import resolveItemView from '../../../utils/resolveItemView';
 import smartContentStorePool from './smartContentStorePool';
 import type {FieldTypeProps} from '../../../types';
 import type {FilterCriteria, Presentation} from '../../SmartContent/types';
@@ -89,6 +89,10 @@ class SmartContent extends React.Component<Props> {
 
     @computed get resultToView() {
         return smartContentConfigStore.getConfig(this.provider).resultToView;
+    }
+
+    @computed get resultToViewName() {
+        return smartContentConfigStore.getConfig(this.provider).resultToViewName;
     }
 
     constructor(props: Props) {
@@ -193,19 +197,15 @@ class SmartContent extends React.Component<Props> {
     handleItemClick = (itemId: string | number, item: Object) => {
         const {router} = this.props;
 
-        const {resultToView, viewName} = this;
+        const {resultToView, resultToViewName, viewName} = this;
 
         if (!router || !viewName || !resultToView) {
             return;
         }
 
-        router.navigate(
-            viewName,
-            Object.keys(resultToView).reduce((parameters, resultPath) => {
-                parameters[resultToView[resultPath]] = jsonpointer.get(item, '/' + resultPath);
-                return parameters;
-            }, {})
-        );
+        const {parameters, view} = resolveItemView(viewName, resultToView, resultToViewName, item);
+
+        router.navigate(view, parameters);
     };
 
     render() {

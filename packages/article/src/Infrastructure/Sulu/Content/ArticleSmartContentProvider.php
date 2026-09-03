@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
 use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\Builder;
@@ -137,7 +138,12 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
             ->enableProperties([
                 'title' => 'title',
                 'url' => 'url',
-            ]);
+            ])
+            ->enableView(
+                ArticleAdmin::EDIT_TABS_VIEW . '_{group}',
+                ['id' => 'id', 'locale' => 'locale'],
+                ['group' => 'group'],
+            );
 
         // TODO
         //        if ($this->hasAudienceTargeting) {
@@ -187,7 +193,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      *     changed?: 'asc'|'desc',
      * } $sortBys
      *
-     * @return array<array{id: string, title: string}>
+     * @return array<array{id: string, title: string, group: string, locale: string}>
      */
     public function findFlatBy(array $filters, array $sortBys, array $params = []): array
     {
@@ -217,12 +223,25 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         // we need the distinct here, because joins due to tags/categories can lead to duplicate results
         $queryBuilder->select('DISTINCT ' . $alias . '.uuid as id');
         $queryBuilder->addSelect('filterDimensionContent.title');
+        $queryBuilder->addSelect('filterDimensionContent.templateKey');
         $this->smartContentQueryEnhancer->addOrderBySelects($queryBuilder);
         $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['offset'] ?? 0, $filters['limit']);
 
-        /** @var array{id: string, title: string}[] $result */
+        /** @var array{id: string, title: string, templateKey: string|null}[] $result */
         $result = $queryBuilder->getQuery()->getArrayResult();
 
+        foreach ($result as &$item) {
+            $templateKey = $item['templateKey'];
+            $item['group'] = $this->groupProvider->resolveGroup(
+                ArticleInterface::TEMPLATE_TYPE,
+                \is_string($templateKey) ? $templateKey : null,
+            );
+            $item['locale'] = $filters['locale'];
+            unset($item['templateKey']);
+        }
+        unset($item);
+
+        /** @var array{id: string, title: string, group: string, locale: string}[] $result */
         return $result;
     }
 
