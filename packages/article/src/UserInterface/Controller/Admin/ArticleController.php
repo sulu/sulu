@@ -23,6 +23,7 @@ use Sulu\Article\Domain\Exception\ArticleNotFoundException;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormGroup;
 use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
@@ -76,14 +77,14 @@ final class ArticleController implements SecuredControllerInterface
         $groupTemplates = [];
         $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
         foreach ($groups as $group) {
-            if (\in_array($group->identifier, $groupIdentifiers)) {
+            if (\in_array($group->identifier, $groupIdentifiers, true)) {
                 $groupTemplates = \array_merge($groupTemplates, $group->templates);
             }
         }
 
         $templateKeysParam = $request->query->getString('templateKeys', '');
-        $templateKeys = \array_filter(\explode(',', $templateKeysParam));
-        $templateKeys = \array_unique(\array_merge($templateKeys, $groupTemplates));
+        $requestedTemplateKeys = \array_filter(\explode(',', $templateKeysParam));
+        $templateKeys = \array_unique(\array_merge($requestedTemplateKeys, $groupTemplates));
 
         // TODO this should be ArticleRepository::findFlatBy / ::countFlatBy methods
         //      but first we would need to avoid that the restHelper requires the request.
@@ -115,16 +116,23 @@ final class ArticleController implements SecuredControllerInterface
             $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);
         }
         $listBuilder->setParameter('locale', $this->getLocale($request));
-        if (0 !== \count($templateKeys)) {
+
+        $templateFilterRequested = [] !== $groupIdentifiers || [] !== $requestedTemplateKeys;
+        // the requested groups/templateKeys did not resolve to any known template key, so the
+        // filter must not be dropped silently (an empty `in()` call has no effect on the query
+        // and would return every article instead of none)
+        $filterResolvedToNothing = $templateFilterRequested && 0 === \count($templateKeys);
+
+        if (!$filterResolvedToNothing && 0 !== \count($templateKeys)) {
             $listBuilder->in($fieldDescriptors['templateKey'], $templateKeys);
         }
 
         $listRepresentation = new PaginatedRepresentation(
-            $listBuilder->execute(),
+            $filterResolvedToNothing ? [] : $listBuilder->execute(),
             ArticleInterface::RESOURCE_KEY,
             (int) $listBuilder->getCurrentPage(),
             (int) $listBuilder->getLimit(),
-            $listBuilder->count(),
+            $filterResolvedToNothing ? 0 : $listBuilder->count(),
         );
 
         /** @var array{_embedded: array{articles: mixed[][]}} $list */
@@ -132,10 +140,8 @@ final class ArticleController implements SecuredControllerInterface
         foreach ($list['_embedded']['articles'] as &$item) {
             $item['publishedState'] = WorkflowInterface::WORKFLOW_PLACE_PUBLISHED === ($item['publishedState'] ?? null);
             $templateKey = $item['templateKey'] ?? null;
-            $item['group'] = $this->groupProvider->resolveGroup(
-                ArticleInterface::TEMPLATE_TYPE,
-                \is_string($templateKey) ? $templateKey : null,
-            );
+            // prefixed to avoid colliding with a template property of the same name
+            $item['_group'] = $this->resolveGroup($groups, \is_string($templateKey) ? $templateKey : null);
             unset($item['templateKey']);
         }
 
@@ -210,10 +216,32 @@ final class ArticleController implements SecuredControllerInterface
         //      Instead of calling the content resolver service which triggers an additional query.
         $dimensionContent = $this->contentManager->resolve($article, $dimensionAttributes);
         $normalizedContent = $this->contentManager->normalize($dimensionContent);
-        $template = $normalizedContent['template'] ?? null;
-        $normalizedContent['group'] = $this->groupProvider->resolveGroup(
-            ArticleInterface::TEMPLATE_TYPE,
-            \is_string($template) ? $template : null,
+
+        $templateKey = $dimensionContent->getTemplateKey();
+        $ghostLocale = $dimensionContent->getGhostLocale();
+        if (null === $templateKey && null !== $ghostLocale) {
+            // $article is already managed by the entity manager for the requested locale, so
+            // fetching it again for $ghostLocale would return the same, already-loaded
+            // dimension contents instead of querying them again. Look up just the template
+            // key for the ghosted locale through the list builder instead.
+            /** @var DoctrineFieldDescriptorInterface[] $ghostFieldDescriptors */
+            $ghostFieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(ArticleInterface::RESOURCE_KEY);
+            /** @var DoctrineListBuilder $ghostListBuilder */
+            $ghostListBuilder = $this->listBuilderFactory->create(ArticleInterface::class);
+            $ghostListBuilder->setIdField($ghostFieldDescriptors['id']);
+            $ghostListBuilder->addSelectField($ghostFieldDescriptors['templateKey']);
+            $ghostListBuilder->setIds([$id]);
+            $ghostListBuilder->setParameter('locale', $ghostLocale);
+
+            /** @var array{templateKey?: string|null}[] $ghostResult */
+            $ghostResult = $ghostListBuilder->execute();
+            $templateKey = $ghostResult[0]['templateKey'] ?? null;
+        }
+
+        // prefixed to avoid colliding with a template property of the same name
+        $normalizedContent['_group'] = $this->resolveGroup(
+            $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE),
+            $templateKey,
         );
 
         return new JsonResponse($this->normalizer->normalize(
@@ -299,6 +327,22 @@ final class ArticleController implements SecuredControllerInterface
     public function getLocale(Request $request): string
     {
         return $request->query->getString('locale', $request->getLocale());
+    }
+
+    /**
+     * @param array<string, FormGroup> $groups
+     */
+    private function resolveGroup(array $groups, ?string $templateKey): string
+    {
+        if (null !== $templateKey) {
+            foreach ($groups as $group) {
+                if (\in_array($templateKey, $group->templates, true)) {
+                    return $group->identifier;
+                }
+            }
+        }
+
+        return GroupProviderInterface::DEFAULT_GROUP;
     }
 
     private function handleAction(Request $request, string $uuid): ?ArticleInterface // @phpstan-ignore-line
