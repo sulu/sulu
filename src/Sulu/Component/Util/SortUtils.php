@@ -129,28 +129,40 @@ final class SortUtils
             $getComparableValue = fn ($item) => $item;
         }
 
-        // Collator class requires intl extension
-        $collator = \class_exists(\Collator::class) ? new \Collator($locale) : null;
+        $comparator = self::createLocaleAwareComparator($locale);
 
         $sortMethod = $isList ? '\usort' : '\uasort';
 
-        $sortMethod($array, function(mixed $itemA, mixed $itemB) use ($collator, $getComparableValue) {
+        $sortMethod($array, function(mixed $itemA, mixed $itemB) use ($comparator, $getComparableValue) {
             $valueA = (string) $getComparableValue($itemA);
             $valueB = (string) $getComparableValue($itemB);
 
-            if ($collator) {
-                $result = $collator->compare($valueA, $valueB);
-            } else {
-                $result = \strcmp($valueA, $valueB);
-            }
-
-            if (false === $result) {
-                throw new \InvalidArgumentException('Comparison of the strings "%s" and "%s" failed.');
-            }
-
-            return $result;
+            return $comparator($valueA, $valueB);
         });
 
         return $array;
+    }
+
+    /**
+     * Returns a comparator for two strings that compares locale aware if the intl extension is loaded,
+     * and falls back to a binary comparison otherwise. The returned comparator throws an
+     * \InvalidArgumentException if the comparison of the values fails.
+     *
+     * @return callable(string, string): int
+     */
+    public static function createLocaleAwareComparator(string $locale): callable
+    {
+        // Collator class requires intl extension
+        $collator = \class_exists(\Collator::class) ? new \Collator($locale) : null;
+
+        return static function(string $valueA, string $valueB) use ($collator): int {
+            $result = $collator ? $collator->compare($valueA, $valueB) : \strcmp($valueA, $valueB);
+
+            if (false === $result) {
+                throw new \InvalidArgumentException(\sprintf('Comparison of the strings "%s" and "%s" failed.', $valueA, $valueB));
+            }
+
+            return $result;
+        };
     }
 }

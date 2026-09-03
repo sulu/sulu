@@ -169,6 +169,31 @@ class SortUtilsTest extends TestCase
         SortUtils::multisort($collection, 'somefink');
     }
 
+    public function testCreateLocaleAwareComparatorSortsUmlautsNextToTheirBaseLetter(): void
+    {
+        if (!\class_exists(\Collator::class)) {
+            $this->markTestSkipped('The intl extension is required for locale aware collation.');
+        }
+
+        $comparator = SortUtils::createLocaleAwareComparator('de');
+
+        $array = ['D', 'A', 'Ê', 'E', 'Ä', 'M'];
+        \usort($array, $comparator);
+
+        $this->assertSame(['A', 'Ä', 'D', 'E', 'Ê', 'M'], $array);
+    }
+
+    public function testCreateLocaleAwareComparatorFallsBackToBinaryComparisonWithoutIntl(): void
+    {
+        if (\class_exists(\Collator::class)) {
+            $this->markTestSkipped('This test covers the fallback used when the intl extension is not loaded.');
+        }
+
+        $comparator = SortUtils::createLocaleAwareComparator('de');
+
+        $this->assertSame(\strcmp('A', 'B'), $comparator('A', 'B'));
+    }
+
     public function testSortLocaleAwareSimpleArray(): void
     {
         $array = ['D', 'A', 'Ê', 'E', 'Ä', 'M'];
