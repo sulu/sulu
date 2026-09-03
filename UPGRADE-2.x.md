@@ -4,6 +4,48 @@ For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upg
 
 ## 2.6.26
 
+### Guided setup for a forced two factor authentication
+
+The forced two factor authentication learned a `setup` mode. It lets the user pick and activate a
+method instead of silently defaulting to `email`:
+
+```yaml
+sulu_security:
+    two_factor:
+        force:
+            enabled: true
+            pattern: '(.+)'
+            setup: true
+```
+
+A user that matches the pattern and has no usable method gets a non closable overlay right after
+the login. It explains why a second factor is needed, lists the enabled methods and runs the guided
+setup for the chosen one. Everything else in the admin stays unreachable meanwhile: the api answers
+every other route with a `403` and the `two_factor_setup_required` error, so the setup can not be
+skipped by a client that ignores the overlay. Disabling the method again is rejected for forced
+users, on the profile endpoint as well as on the two factor endpoint.
+
+In the guided setup, the `email` method now runs through the same
+`POST /admin/api/profile/two-factor/setup` and `POST /admin/api/profile/two-factor/confirm`
+endpoints as the authenticator app based methods: setup sends a verification code to the user's
+email address, and it only activates the method once that code was confirmed, so a mistyped or
+unreachable address never locks a user out. The overlay skips the method selection step when only
+one method is available, and offers to create backup codes right after a method was activated,
+instead of generating them unasked. The general profile form (the `two_factor` field type) is
+unchanged: it still activates `email` immediately without a code, as it did before.
+
+The new `blockingOverlayRegistry` of the admin bundle lets a bundle render an overlay on top of the
+whole application, which is how the security bundle brings in its setup overlay.
+
+The mode is enabled automatically when the `email` method is not available, because forcing users
+onto a method without a registered provider left them without a second factor. Nothing changes for
+projects that have `scheb/2fa-email` installed and enabled and that do not set `setup`.
+
+`trusted_devices` does not count as a method a user can activate anymore, because trusting a device
+only skips the second factor of a later login and never is one itself. A project that enables
+nothing but the trusted device feature therefore can not force two factor authentication at all,
+where it previously assigned an `email` method no provider answered.
+
 ### Improved reference tracking performance
 
 `ReferenceRepository` filters by `referenceResourceKey`, `referenceResourceId`, `referenceLocale` and

@@ -65,6 +65,15 @@ test('Should clear the user store', () => {
     expect(userStore.persistentSettings.size).toBe(0);
 });
 
+test('Should reset the forced two factor setup flag when the store is cleared', () => {
+    userStore.setTwoFactorSetupRequired(true);
+    expect(userStore.twoFactorSetupRequired).toBe(true);
+
+    userStore.clear();
+
+    expect(userStore.twoFactorSetupRequired).toBe(false);
+});
+
 test('Should return the locale of the user as system-locale', () => {
     userStore.setUser({
         id: 5,

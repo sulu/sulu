@@ -1,0 +1,121 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+.methods,
+.setup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin: 0 auto;
+    max-width: 420px;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.setup {
+    gap: 30px;
+}
+
+.hint {
+    color: $dustyGray;
+    line-height: 20px;
+    margin: 0;
+}
+
+.method {
+    align-items: center;
+    background: $white;
+    border: 1px solid $silver;
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    text-align: left;
+    width: 100%;
+
+    &:hover:not(:disabled) {
+        border-color: $shakespeare;
+    }
+
+    &:disabled {
+        cursor: default;
+        opacity: .6;
+    }
+}
+
+.method-icon {
+    color: $shakespeare;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.method-text {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 4px;
+}
+
+.method-title {
+    color: $mineShaft;
+    font-weight: bold;
+}
+
+.method-description {
+    color: $dustyGray;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.method-arrow {
+    color: $silver;
+    flex-shrink: 0;
+}
+
+.qr-code {
+    background: $white;
+    border: 1px solid $silver;
+    border-radius: 3px;
+    display: inline-flex;
+    padding: 20px;
+}
+
+.section {
+    width: 100%;
+}
+
+.label {
+    color: $mineShaft;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.secret {
+    background: $concrete;
+    border-radius: 3px;
+    display: block;
+    font-family: monospace;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+    padding: 10px 15px;
+    user-select: all;
+}
+
+.code-input {
+    margin: 0 auto;
+    max-width: 220px;
+}
+
+.backup-codes {
+    display: grid;
+    font-family: monospace;
+    font-size: 16px;
+    gap: 10px 40px;
+    grid-template-columns: repeat(2, 1fr);
+    letter-spacing: 1px;
+    line-height: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}

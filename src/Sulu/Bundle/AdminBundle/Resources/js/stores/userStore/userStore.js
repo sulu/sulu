@@ -23,6 +23,7 @@ class UserStore {
     @observable forgotPasswordSuccess: boolean = false;
     @observable twoFactorMethods: Array<string> = [];
     @observable twoFactorError: boolean = false;
+    @observable twoFactorSetupRequired: boolean = false;
     @observable redirectUrl: string = '';
 
     @action clear() {
@@ -36,6 +37,7 @@ class UserStore {
         this.forgotPasswordSuccess = false;
         this.twoFactorMethods = [];
         this.twoFactorError = false;
+        this.twoFactorSetupRequired = false;
         this.redirectUrl = '';
     }
 
@@ -69,6 +71,10 @@ class UserStore {
 
     @action setTwoFactorError(twoFactorError: boolean) {
         this.twoFactorError = twoFactorError;
+    }
+
+    @action setTwoFactorSetupRequired(twoFactorSetupRequired: boolean) {
+        this.twoFactorSetupRequired = twoFactorSetupRequired;
     }
 
     @action setRedirectUrl(redirectUrl: string) {
