@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`Render an expanded collapsible with title, subtitle, extra node and handle 1`] = `
+exports[`Render an expanded collapsible with title, subtitle and handle 1`] = `
 <div>
   <section
     class="collapsible expanded"
@@ -32,13 +32,6 @@ exports[`Render an expanded collapsible with title, subtitle, extra node and han
         <div
           class="spacer"
         />
-        <div
-          class="extra"
-        >
-          <span>
-            4/7
-          </span>
-        </div>
         <button
           aria-label="Delete"
           class="action"

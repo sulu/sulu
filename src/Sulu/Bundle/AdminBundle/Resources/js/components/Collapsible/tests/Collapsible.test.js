@@ -4,12 +4,11 @@ import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Collapsible from '../Collapsible';
 
-test('Render an expanded collapsible with title, subtitle, extra node and handle', () => {
+test('Render an expanded collapsible with title, subtitle and handle', () => {
     const {container} = render(
         <Collapsible
             actions={[{icon: 'su-trash-alt', label: 'Delete', onClick: jest.fn()}]}
             expanded={true}
-            extra={<span>4/7</span>}
             handle={<span>Handle</span>}
             onCollapse={jest.fn()}
             onExpand={jest.fn()}
@@ -155,18 +154,12 @@ test('Clicking an action should call its callback without expanding the collapsi
     expect(expandSpy).not.toHaveBeenCalled();
 });
 
-test('Render the extra node and the handle in their slots', () => {
+test('Render the handle in its slot', () => {
     render(
-        <Collapsible
-            expanded={true}
-            extra={<span>4/7</span>}
-            handle={<span>Handle</span>}
-            title="General"
-        >
+        <Collapsible expanded={true} handle={<span>Handle</span>} title="General">
             Some collapsible content
         </Collapsible>
     );
 
-    expect(screen.getByText('4/7')).toBeInTheDocument();
     expect(screen.getByText('Handle')).toBeInTheDocument();
 });

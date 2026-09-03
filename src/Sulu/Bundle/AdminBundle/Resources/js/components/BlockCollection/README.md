@@ -72,3 +72,20 @@ const renderBlockContent = (value) => (<p>{value.content || <i>There is no conte
 
 <BlockCollection collapsable={false} onChange={setValue} value={value} renderBlockContent={renderBlockContent} />
 ```
+
+The labels of the control collapsing and expanding all blocks at once can be replaced with
+`collapseAllText` and `expandAllText`.
+
+```javascript
+const [value, setValue] = React.useState([{content: 'That is some content'}, {content: 'That is some more content'}]);
+
+const renderBlockContent = (value) => (<p>{value.content || <i>There is no content</i>}</p>);
+
+<BlockCollection
+    collapseAllText="Collapse all sections"
+    expandAllText="Expand all sections"
+    onChange={setValue}
+    renderBlockContent={renderBlockContent}
+    value={value}
+/>
+```

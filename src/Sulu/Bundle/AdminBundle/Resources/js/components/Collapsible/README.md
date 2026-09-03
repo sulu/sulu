@@ -1,6 +1,5 @@
 A collapsible groups content in a card with a header. The header shows a `title`, an optional grey
-`subtitle`, an optional `extra` node and any number of `actions`, each rendered as an icon
-button. The component is controlled: pass `expanded` together with the `onExpand` and `onCollapse`
+`subtitle` and any number of `actions`, each rendered as an icon button. The component is controlled: pass `expanded` together with the `onExpand` and `onCollapse`
 callbacks.
 
 ```javascript
@@ -19,6 +18,10 @@ const onExpand = () => setExpanded(true);
     That is the content of the collapsible!
 </Collapsible>
 ```
+
+A collapsed collapsible does not render its children, unlike the `Block` component, which keeps them
+mounted and greys them out. Focus and scroll position inside a collapsible are therefore lost when it
+is collapsed.
 
 Actions are shown as icon buttons in the header. Their `label` becomes the button's accessible name,
 and clicking one never expands or collapses the card.
@@ -43,9 +46,8 @@ const actions = [
 </Collapsible>
 ```
 
-The `extra` prop takes arbitrary JSX and is rendered in the header before the actions, which
-makes it a good place for a progress indicator. The `handle` prop works the same way as on the
-`Block` component and renders a separate column on the left, e.g. for a drag handle.
+The `handle` prop works the same way as on the `Block` component and renders a separate column on
+the left, e.g. for a drag handle.
 
 ```javascript
 const Icon = require('../Icon').default;
@@ -57,7 +59,6 @@ const onExpand = () => setExpanded(true);
 
 <Collapsible
     expanded={expanded}
-    extra={<span>4/7</span>}
     handle={<Icon name="su-more" />}
     onCollapse={onCollapse}
     onExpand={onExpand}

@@ -1,93 +1,119 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, reaction} from 'mobx';
 import {observer} from 'mobx-react';
-import {translate} from '../../utils';
+import {arrayMove, translate} from '../../utils';
 import Button from '../Button';
-import Collapsible from '../Collapsible';
 import Icon from '../Icon';
+import SortableCollapsibleList from './SortableCollapsibleList';
 import collapsibleCollectionStyles from './collapsibleCollection.scss';
-import type {ChildrenArray, Element} from 'react';
+import type {
+    CollapsibleActionConfig,
+    CollapsibleConfig,
+    CollapsibleMode,
+    RenderCollapsibleContentCallback,
+} from './types';
 
-type Props = {|
+type Props<T: CollapsibleConfig> = {|
+    actions: Array<CollapsibleActionConfig>,
     addButtonText?: ?string,
-    children?: ChildrenArray<Element<typeof Collapsible> | false>,
     collapseAllText?: ?string,
     expandAllText?: ?string,
+    movable: boolean,
     onAddClick?: () => void,
+    onChange: (value: Array<T>) => void,
+    onSortEnd?: (oldIndex: number, newIndex: number) => void,
+    renderCollapsibleContent: RenderCollapsibleContentCallback<T>,
+    value: Array<T>,
 |};
 
 @observer
-class CollapsibleCollection extends React.Component<Props> {
-    // Keys of removed children linger here; every reader only tests membership against current children.
-    @observable collapsedKeys: Array<string | number> = [];
+class CollapsibleCollection<T: CollapsibleConfig> extends React.Component<Props<T>> {
+    static defaultProps = {
+        actions: [],
+        movable: true,
+        value: [],
+    };
 
-    getChildKey(child: Element<typeof Collapsible>, index: number): string | number {
-        return child.key !== null && child.key !== undefined ? child.key : index;
+    @observable expandedCollapsibles: Array<boolean> = [];
+    @observable mode: CollapsibleMode = 'sortable';
+
+    fillArraysDisposer: ?() => *;
+
+    constructor(props: Props<T>) {
+        super(props);
+
+        this.fillArraysDisposer = reaction(() => this.props.value.length, this.fillArrays, {fireImmediately: true});
+
+        if (props.movable === false) {
+            this.mode = 'static';
+        }
     }
 
-    get childKeys(): Array<string | number> {
-        const {children} = this.props;
-
-        // $FlowFixMe
-        return React.Children.map(children, (child, index) => {
-            if (!child) {
-                return null;
-            }
-
-            return this.getChildKey(child, index);
-        }) || [];
+    componentWillUnmount() {
+        this.fillArraysDisposer?.();
     }
 
-    get allCollapsed(): boolean {
-        const childKeys = this.childKeys;
+    @action fillArrays = () => {
+        const {value} = this.props;
+        const {expandedCollapsibles} = this;
 
-        return childKeys.length > 0 && childKeys.every((key) => this.collapsedKeys.includes(key));
-    }
+        if (expandedCollapsibles.length > value.length) {
+            expandedCollapsibles.splice(value.length);
+        }
 
-    @action handleCollapse = (key: string | number) => {
-        if (!this.collapsedKeys.includes(key)) {
-            this.collapsedKeys.push(key);
+        // A collapsible is expanded when it enters the collection.
+        expandedCollapsibles.push(...new Array(value.length - expandedCollapsibles.length).fill(true));
+    };
+
+    @action handleCollapse = (index: number) => {
+        this.expandedCollapsibles[index] = false;
+    };
+
+    @action handleExpand = (index: number) => {
+        this.expandedCollapsibles[index] = true;
+    };
+
+    @action handleClickCollapseAll = () => {
+        this.expandedCollapsibles.forEach((expanded, index) => {
+            this.expandedCollapsibles[index] = false;
+        });
+    };
+
+    @action handleClickExpandAll = () => {
+        this.expandedCollapsibles.forEach((expanded, index) => {
+            this.expandedCollapsibles[index] = true;
+        });
+    };
+
+    @action handleSortEnd = ({newIndex, oldIndex}: {newIndex: number, oldIndex: number}) => {
+        const {onChange, onSortEnd, value} = this.props;
+
+        this.expandedCollapsibles = arrayMove(this.expandedCollapsibles, oldIndex, newIndex);
+        onChange(arrayMove(value, oldIndex, newIndex));
+
+        if (onSortEnd) {
+            onSortEnd(oldIndex, newIndex);
         }
     };
 
-    @action handleExpand = (key: string | number) => {
-        this.collapsedKeys = this.collapsedKeys.filter((collapsedKey) => collapsedKey !== key);
-    };
-
-    @action handleCollapseAllClick = () => {
-        this.collapsedKeys = this.childKeys;
-    };
-
-    @action handleExpandAllClick = () => {
-        this.collapsedKeys = [];
-    };
-
-    handleAddClick = () => {
-        const {onAddClick} = this.props;
-
-        if (onAddClick) {
-            onAddClick();
-        }
-    };
-
-    renderToggle = () => {
+    renderToggleButton = () => {
         const {collapseAllText, expandAllText} = this.props;
-        const allCollapsed = this.allCollapsed;
+        const allCollapsed = this.expandedCollapsibles.every((expanded) => !expanded);
 
         return (
-            <div className={collapsibleCollectionStyles.toolbar}>
+            <div className={collapsibleCollectionStyles.collapsibleCollectionActionButtonContainer}>
                 <button
-                    className={collapsibleCollectionStyles.toolbarButton}
-                    onClick={allCollapsed ? this.handleExpandAllClick : this.handleCollapseAllClick}
+                    className={collapsibleCollectionStyles.collapsibleCollectionActionButton}
+                    onClick={allCollapsed ? this.handleClickExpandAll : this.handleClickCollapseAll}
                     type="button"
                 >
                     <Icon
                         aria-hidden={true}
-                        className={collapsibleCollectionStyles.toolbarButtonIcon}
+                        className={collapsibleCollectionStyles.collapsibleCollectionActionButtonIcon}
                         name={allCollapsed ? 'su-expand-vertical' : 'su-collapse-vertical'}
                     />
-                    <span className={collapsibleCollectionStyles.toolbarButtonText}>
+                    <span className={collapsibleCollectionStyles.collapsibleCollectionActionButtonText}>
                         {allCollapsed
                             ? (expandAllText ? expandAllText : translate('sulu_admin.expand_all'))
                             : (collapseAllText ? collapseAllText : translate('sulu_admin.collapse_all'))
@@ -99,31 +125,29 @@ class CollapsibleCollection extends React.Component<Props> {
     };
 
     render() {
-        const {addButtonText, children, onAddClick} = this.props;
+        const {actions, addButtonText, onAddClick, renderCollapsibleContent, value} = this.props;
 
         return (
             <section className={collapsibleCollectionStyles.collapsibleCollection}>
-                {this.childKeys.length > 0 && this.renderToggle()}
-                <div className={collapsibleCollectionStyles.items}>
-                    {/* $FlowFixMe */}
-                    {React.Children.map(children, (child, index) => {
-                        if (!child) {
-                            return null;
-                        }
+                {value.length > 1 && this.renderToggleButton()}
 
-                        const key = this.getChildKey(child, index);
+                <div className={collapsibleCollectionStyles.spacer} />
 
-                        // $FlowFixMe
-                        return React.cloneElement(child, {
-                            expanded: !this.collapsedKeys.includes(key),
-                            onCollapse: () => this.handleCollapse(key),
-                            onExpand: () => this.handleExpand(key),
-                        });
-                    })}
-                </div>
+                <SortableCollapsibleList
+                    actions={actions}
+                    expandedCollapsibles={this.expandedCollapsibles}
+                    lockAxis="y"
+                    mode={this.mode}
+                    onCollapse={this.handleCollapse}
+                    onExpand={this.handleExpand}
+                    onSortEnd={this.handleSortEnd}
+                    renderCollapsibleContent={renderCollapsibleContent}
+                    useDragHandle={true}
+                    value={value}
+                />
                 {onAddClick &&
                     <div className={collapsibleCollectionStyles.addButtonContainer}>
-                        <Button icon="su-plus" onClick={this.handleAddClick} skin="secondary">
+                        <Button icon="su-plus" onClick={onAddClick} skin="secondary">
                             {addButtonText ? addButtonText : translate('sulu_admin.add')}
                         </Button>
                     </div>

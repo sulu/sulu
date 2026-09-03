@@ -12,7 +12,7 @@ exports[`Render block with schema 1`] = `
       type="button"
     >
       <span
-        aria-label="su-check"
+        aria-hidden="true"
         class="su-check blockCollectionActionButtonIcon"
       />
       <span
@@ -26,7 +26,7 @@ exports[`Render block with schema 1`] = `
       type="button"
     >
       <span
-        aria-label="su-collapse-vertical"
+        aria-hidden="true"
         class="su-collapse-vertical blockCollectionActionButtonIcon"
       />
       <span
@@ -308,7 +308,7 @@ exports[`Render block with schema and error on fields already being modified 1`]
       type="button"
     >
       <span
-        aria-label="su-check"
+        aria-hidden="true"
         class="su-check blockCollectionActionButtonIcon"
       />
       <span
@@ -322,7 +322,7 @@ exports[`Render block with schema and error on fields already being modified 1`]
       type="button"
     >
       <span
-        aria-label="su-collapse-vertical"
+        aria-hidden="true"
         class="su-collapse-vertical blockCollectionActionButtonIcon"
       />
       <span
@@ -645,7 +645,7 @@ exports[`Render block with schema and error on fields already being modified 2`]
       type="button"
     >
       <span
-        aria-label="su-check"
+        aria-hidden="true"
         class="su-check blockCollectionActionButtonIcon"
       />
       <span
@@ -659,7 +659,7 @@ exports[`Render block with schema and error on fields already being modified 2`]
       type="button"
     >
       <span
-        aria-label="su-collapse-vertical"
+        aria-hidden="true"
         class="su-collapse-vertical blockCollectionActionButtonIcon"
       />
       <span
@@ -985,7 +985,7 @@ exports[`Render collapsed blocks with block previews 1`] = `
       type="button"
     >
       <span
-        aria-label="su-check"
+        aria-hidden="true"
         class="su-check blockCollectionActionButtonIcon"
       />
       <span
@@ -999,7 +999,7 @@ exports[`Render collapsed blocks with block previews 1`] = `
       type="button"
     >
       <span
-        aria-label="su-expand-vertical"
+        aria-hidden="true"
         class="su-expand-vertical blockCollectionActionButtonIcon"
       />
       <span
@@ -1157,7 +1157,7 @@ exports[`Render collapsed blocks with block previews 2`] = `
       type="button"
     >
       <span
-        aria-label="su-check"
+        aria-hidden="true"
         class="su-check blockCollectionActionButtonIcon"
       />
       <span
@@ -1171,7 +1171,7 @@ exports[`Render collapsed blocks with block previews 2`] = `
       type="button"
     >
       <span
-        aria-label="su-expand-vertical"
+        aria-hidden="true"
         class="su-expand-vertical blockCollectionActionButtonIcon"
       />
       <span
@@ -1325,7 +1325,7 @@ exports[`Render collapsed blocks with block previews and sections 1`] = `
       type="button"
     >
       <span
-        aria-label="su-check"
+        aria-hidden="true"
         class="su-check blockCollectionActionButtonIcon"
       />
       <span
@@ -1339,7 +1339,7 @@ exports[`Render collapsed blocks with block previews and sections 1`] = `
       type="button"
     >
       <span
-        aria-label="su-expand-vertical"
+        aria-hidden="true"
         class="su-expand-vertical blockCollectionActionButtonIcon"
       />
       <span
@@ -1487,7 +1487,7 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
       type="button"
     >
       <span
-        aria-label="su-check"
+        aria-hidden="true"
         class="su-check blockCollectionActionButtonIcon"
       />
       <span
@@ -1501,7 +1501,7 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
       type="button"
     >
       <span
-        aria-label="su-expand-vertical"
+        aria-hidden="true"
         class="su-expand-vertical blockCollectionActionButtonIcon"
       />
       <span
@@ -1655,7 +1655,7 @@ exports[`Render collapsed blocks with block previews without tags and with secti
       type="button"
     >
       <span
-        aria-label="su-check"
+        aria-hidden="true"
         class="su-check blockCollectionActionButtonIcon"
       />
       <span
@@ -1669,7 +1669,7 @@ exports[`Render collapsed blocks with block previews without tags and with secti
       type="button"
     >
       <span
-        aria-label="su-expand-vertical"
+        aria-hidden="true"
         class="su-expand-vertical blockCollectionActionButtonIcon"
       />
       <span

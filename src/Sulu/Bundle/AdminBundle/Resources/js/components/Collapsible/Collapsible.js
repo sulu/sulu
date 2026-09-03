@@ -11,7 +11,6 @@ type Props = {|
     actions: Array<ActionConfig>,
     children: Node,
     expanded: boolean,
-    extra?: Node,
     handle?: Node,
     onCollapse?: () => void,
     onExpand?: () => void,
@@ -58,7 +57,7 @@ export default class Collapsible extends React.Component<Props> {
     };
 
     render() {
-        const {actions, children, extra, handle, subtitle, title} = this.props;
+        const {actions, children, handle, subtitle, title} = this.props;
         const expanded = this.expanded;
 
         const collapsibleClass = classNames(
@@ -80,11 +79,8 @@ export default class Collapsible extends React.Component<Props> {
                             <span className={collapsibleStyles.subtitle}>{subtitle}</span>
                         }
                         <div className={collapsibleStyles.spacer} />
-                        {extra &&
-                            <div className={collapsibleStyles.extra}>{extra}</div>
-                        }
-                        {actions.map((action) => (
-                            <Action action={action} key={action.icon + action.label} />
+                        {actions.map((action, index) => (
+                            <Action action={action} key={index} />
                         ))}
                         {this.collapsible &&
                             <button

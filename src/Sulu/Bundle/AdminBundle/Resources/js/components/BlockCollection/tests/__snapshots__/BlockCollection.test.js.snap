@@ -13,7 +13,7 @@ exports[`Should render a fully filled block list 1`] = `
         type="button"
       >
         <span
-          aria-label="su-check"
+          aria-hidden="true"
           class="su-check blockCollectionActionButtonIcon"
         />
         <span
@@ -27,7 +27,7 @@ exports[`Should render a fully filled block list 1`] = `
         type="button"
       >
         <span
-          aria-label="su-expand-vertical"
+          aria-hidden="true"
           class="su-expand-vertical blockCollectionActionButtonIcon"
         />
         <span
@@ -164,7 +164,7 @@ exports[`Should render a non-movable block list 1`] = `
         type="button"
       >
         <span
-          aria-label="su-check"
+          aria-hidden="true"
           class="su-check blockCollectionActionButtonIcon"
         />
         <span
@@ -178,7 +178,7 @@ exports[`Should render a non-movable block list 1`] = `
         type="button"
       >
         <span
-          aria-label="su-collapse-vertical"
+          aria-hidden="true"
           class="su-collapse-vertical blockCollectionActionButtonIcon"
         />
         <span

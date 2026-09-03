@@ -1,44 +1,77 @@
-The collapsible collection renders a set of `Collapsible` components, owns their expanded state and
-adds a control to collapse or expand all of them at once. Every child starts expanded.
+The collapsible collection renders a `Collapsible` for every entry of its `value` array and owns
+their expanded state. Every entry needs a `title` and may bring a `subtitle`, the content of a
+collapsible comes from the `renderCollapsibleContent` callback. As soon as there is more than one
+entry, a control to collapse or expand all of them at once is shown. Every collapsible starts
+expanded.
 
-Each child should be given a stable `key`: the collection tracks a child's collapsed state by its
-React key, so that state stays attached to the right card when children are added, removed or
-reordered. A child without a key falls back to its position, which misattributes collapsed state
-once children are removed from the middle of the list or reordered.
+The collapsibles are sorted by dragging their handle, which reorders `value` and reports the new
+order through `onChange`.
 
 ```javascript
-const Collapsible = require('../Collapsible').default;
+const [value, setValue] = React.useState([
+    {subtitle: '3 attributes', title: 'General'},
+    {subtitle: '2 attributes', title: 'Marketing'},
+]);
 
-<CollapsibleCollection>
-    <Collapsible key="general" subtitle="3 attributes" title="General">
-        That is the content of the first collapsible!
-    </Collapsible>
-    <Collapsible key="marketing" subtitle="2 attributes" title="Marketing">
-        That is the content of the second collapsible!
-    </Collapsible>
-</CollapsibleCollection>
+const renderCollapsibleContent = (collapsible) => (
+    <div>That is the content of the {collapsible.title} collapsible!</div>
+);
+
+<CollapsibleCollection
+    onChange={setValue}
+    renderCollapsibleContent={renderCollapsibleContent}
+    value={value}
+/>
+```
+
+Set `movable` to `false` to render the collapsibles without a drag handle. The `actions` are shown
+as icon buttons in the header of every collapsible, and their `onClick` is called with the index of
+the collapsible it was invoked on.
+
+```javascript
+const [value, setValue] = React.useState([
+    {subtitle: '3 attributes', title: 'General'},
+    {subtitle: '2 attributes', title: 'Marketing'},
+]);
+
+const actions = [
+    {icon: 'su-trash-alt', label: 'Delete', onClick: (index) => alert('Delete was invoked on ' + index)},
+];
+
+const renderCollapsibleContent = (collapsible) => (
+    <div>That is the content of the {collapsible.title} collapsible!</div>
+);
+
+<CollapsibleCollection
+    actions={actions}
+    movable={false}
+    onChange={setValue}
+    renderCollapsibleContent={renderCollapsibleContent}
+    value={value}
+/>
 ```
 
 Passing an `onAddClick` callback renders an add button below the collapsibles. The labels of the add
-button and of the collapse and expand controls can be replaced with `addButtonText`,
-`collapseAllText` and `expandAllText`.
+button and of the control collapsing and expanding all collapsibles at once can be replaced with
+`addButtonText`, `collapseAllText` and `expandAllText`.
 
 ```javascript
-const Collapsible = require('../Collapsible').default;
+const [value, setValue] = React.useState([
+    {subtitle: '3 attributes', title: 'General'},
+    {subtitle: '2 attributes', title: 'Marketing'},
+]);
 
-const onAddClick = () => alert('Add callback was invoked!');
+const renderCollapsibleContent = (collapsible) => (
+    <div>That is the content of the {collapsible.title} collapsible!</div>
+);
 
 <CollapsibleCollection
     addButtonText="Add attributes"
     collapseAllText="Collapse all groups"
     expandAllText="Expand all groups"
-    onAddClick={onAddClick}
->
-    <Collapsible key="general" subtitle="3 attributes" title="General">
-        That is the content of the first collapsible!
-    </Collapsible>
-    <Collapsible key="marketing" subtitle="2 attributes" title="Marketing">
-        That is the content of the second collapsible!
-    </Collapsible>
-</CollapsibleCollection>
+    onAddClick={() => alert('Add callback was invoked!')}
+    onChange={setValue}
+    renderCollapsibleContent={renderCollapsibleContent}
+    value={value}
+/>
 ```

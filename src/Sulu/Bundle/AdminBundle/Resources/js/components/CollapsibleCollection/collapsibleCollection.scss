@@ -1,15 +1,18 @@
 .collapsibleCollection {
-    display: block;
+    position: relative;
 }
 
-.toolbar {
+.spacer {
+    height: 10px;
+}
+
+.collapsibleCollectionActionButtonContainer {
     display: flex;
     justify-content: flex-end;
     gap: 20px;
-    margin-bottom: 10px;
 }
 
-.toolbarButton {
+.collapsibleCollectionActionButton {
     align-items: center;
     background: none;
     border: none;
@@ -17,18 +20,14 @@
     display: flex;
 }
 
-.toolbarButtonIcon {
+.collapsibleCollectionActionButtonIcon {
     display: inline-block;
     font-size: 14px;
     margin-right: 7px;
 }
 
-.toolbarButtonText {
+.collapsibleCollectionActionButtonText {
     text-decoration: underline;
-}
-
-.items > * + * {
-    margin-top: 10px;
 }
 
 .addButtonContainer {

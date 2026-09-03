@@ -387,6 +387,20 @@ test('Should allow to expand all blocks', async() => {
     expect(isBlockExpanded(1)).toEqual(true);
 });
 
+test('Should render the given texts instead of the default translations', async() => {
+    const {user} = renderBlockCollection({
+        collapseAllText: 'Collapse all sections',
+        expandAllText: 'Expand all sections',
+        value: [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}],
+    });
+
+    expect(getButtonByName('Expand all sections')).toBeInTheDocument();
+
+    await user.click(getButtonByName('Expand all sections'));
+
+    expect(getButtonByName('Collapse all sections')).toBeInTheDocument();
+});
+
 test('Should allow to reorder blocks by using drag and drop', async() => {
     const changeSpy = jest.fn();
     const sortEndSpy = jest.fn();
