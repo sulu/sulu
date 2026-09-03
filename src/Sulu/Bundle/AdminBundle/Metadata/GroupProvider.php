@@ -58,6 +58,21 @@ final readonly class GroupProvider implements GroupProviderInterface
         return $groups;
     }
 
+    public function resolveGroup(string $key, ?string $templateKey): string
+    {
+        if (null === $templateKey) {
+            return GroupProviderInterface::DEFAULT_GROUP;
+        }
+
+        foreach ($this->getGroups($key) as $group) {
+            if (\in_array($templateKey, $group->templates, true)) {
+                return $group->identifier;
+            }
+        }
+
+        return GroupProviderInterface::DEFAULT_GROUP;
+    }
+
     private function getGroupTitle(string $groupIdentifier): string
     {
         $translationKey = 'sulu_admin.template_group.' . $groupIdentifier;
