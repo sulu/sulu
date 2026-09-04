@@ -225,6 +225,54 @@ class GroupProviderTest extends TestCase
         $this->assertSame(['blog'], $groups['default']->templates);
     }
 
+    public function testResolveGroupReturnsIdentifierOfTheGroupContainingTheTemplateKey(): void
+    {
+        $typedFormMetadata = new TypedFormMetadata();
+        foreach (['article' => 'content', 'blog' => 'blog', 'news' => 'blog'] as $key => $group) {
+            $formMetadata = new FormMetadata();
+            $formMetadata->setKey($key);
+            $formMetadata->setGroup($group);
+            $typedFormMetadata->addForm($key, $formMetadata);
+        }
+
+        $this->container->has('form')->willReturn(true);
+        $this->container->get('form')->willReturn($this->metadataProvider->reveal());
+
+        $this->metadataProvider
+            ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', [])
+            ->willReturn($typedFormMetadata);
+
+        $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
+            ->willReturnArgument(0);
+
+        $this->assertSame('content', $this->groupProvider->resolveGroup(ArticleInterface::TEMPLATE_TYPE, 'article'));
+        $this->assertSame('blog', $this->groupProvider->resolveGroup(ArticleInterface::TEMPLATE_TYPE, 'news'));
+    }
+
+    public function testResolveGroupFallsBackToDefaultGroupWhenTemplateKeyIsUnknown(): void
+    {
+        $typedFormMetadata = new TypedFormMetadata();
+        $formMetadata = new FormMetadata();
+        $formMetadata->setKey('article');
+        $formMetadata->setGroup('content');
+        $typedFormMetadata->addForm('article', $formMetadata);
+
+        $this->container->has('form')->willReturn(true);
+        $this->container->get('form')->willReturn($this->metadataProvider->reveal());
+
+        $this->metadataProvider
+            ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', [])
+            ->willReturn($typedFormMetadata);
+
+        $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
+            ->willReturnArgument(0);
+
+        $this->assertSame(
+            'default',
+            $this->groupProvider->resolveGroup(ArticleInterface::TEMPLATE_TYPE, 'unknown-template'),
+        );
+    }
+
     public function testGetGroupsAreSortedAlphabeticallyByTitle(): void
     {
         $typedFormMetadata = new TypedFormMetadata();

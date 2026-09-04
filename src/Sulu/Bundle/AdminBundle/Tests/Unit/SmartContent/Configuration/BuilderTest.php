@@ -176,6 +176,23 @@ class BuilderTest extends TestCase
 
         $this->assertSame('edit_form', $configuration->getView());
         $this->assertSame(['id' => 'id'], $configuration->getResultToView());
+        $this->assertNull($configuration->getResultToViewName());
+    }
+
+    public function testViewWithResultToViewName(): void
+    {
+        $builder = Builder::create();
+
+        $this->assertSame(
+            $builder,
+            $builder->enableView('edit_form_{group}', ['id' => 'id'], ['group' => 'group']),
+        );
+
+        $configuration = $builder->getConfiguration();
+
+        $this->assertSame('edit_form_{group}', $configuration->getView());
+        $this->assertSame(['id' => 'id'], $configuration->getResultToView());
+        $this->assertSame(['group' => 'group'], $configuration->getResultToViewName());
     }
 
     public function testTypes(): void

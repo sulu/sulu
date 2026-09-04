@@ -49,6 +49,7 @@ export type SmartContentConfig = {
     limit: boolean,
     presentAs: boolean,
     resultToView?: {[string]: string},
+    resultToViewName?: {[string]: string},
     sorting: Array<Sorting>,
     tags: boolean,
     types: Array<Type>,

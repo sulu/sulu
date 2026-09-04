@@ -460,6 +460,52 @@ test('Should navigate to view if item is clicked', () => {
     expect(router.navigate).toHaveBeenLastCalledWith('sulu_media.form', {id: 3});
 });
 
+test('Should navigate to templated view if item with resultToViewName is clicked', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const schemaOptions = {
+        provider: {
+            name: 'provider',
+            value: 'articles',
+        },
+    };
+
+    smartContentConfigStore.getConfig.mockReturnValue({
+        sorting: [],
+        view: 'sulu_article.article.edit_tabs_{group}',
+        resultToView: {id: 'id', locale: 'locale'},
+        resultToViewName: {group: 'group'},
+    });
+
+    const router = new Router();
+
+    const smartContent = mount(
+        <SmartContent
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            router={router}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    smartContent.instance().smartContentStore.items = [
+        {id: 1, locale: 'en', group: 'blog-group'},
+        {id: 2, locale: 'de', group: 'default'},
+    ];
+    smartContent.update();
+
+    smartContent.find('MultiItemSelection .content').at(0).simulate('click');
+    expect(router.navigate).toHaveBeenLastCalledWith(
+        'sulu_article.article.edit_tabs_blog-group',
+        {id: 1, locale: 'en'}
+    );
+    smartContent.find('MultiItemSelection .content').at(1).simulate('click');
+    expect(router.navigate).toHaveBeenLastCalledWith(
+        'sulu_article.article.edit_tabs_default',
+        {id: 2, locale: 'de'}
+    );
+});
+
 test('Should call destroy on SmartContentStore when unmounted', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 

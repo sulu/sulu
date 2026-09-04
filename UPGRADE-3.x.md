@@ -24,6 +24,21 @@ Run the new migration to apply the schema change:
 bin/console doctrine:migrations:migrate
 ```
 
+### Group-aware deep links for smart content
+
+`Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface` gained the method `resolveGroup(string $key, ?string $templateKey): string`,
+which resolves the identifier of the template group a template key belongs to.
+
+`Sulu\Bundle\AdminBundle\SmartContent\Configuration\BuilderInterface::enableView()` gained an optional third parameter
+`?array $resultToViewName`, and `Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface`
+gained the method `getResultToViewName(): ?array`. Together they let a smart content provider navigate to a view name
+with a placeholder (e.g. `{group}`) that gets resolved per item, so clicking a smart content item can deep link into
+the correct template group's edit view.
+
+If you have a custom implementation of one of these interfaces, add the new method. `GroupProviderInterface` and
+`ProviderConfigurationInterface` implementations that do not need group-aware navigation can return `self::DEFAULT_GROUP`
+and `null` respectively.
+
 ## 3.0.8
 
 ### Route value is required when saving routable content

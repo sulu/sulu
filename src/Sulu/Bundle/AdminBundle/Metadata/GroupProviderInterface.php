@@ -21,4 +21,10 @@ interface GroupProviderInterface
      * @return array<string, FormGroup>
      */
     public function getGroups(string $key): array;
+
+    /**
+     * Resolves the identifier of the group a template key belongs to, falling back to
+     * self::DEFAULT_GROUP if the template key is null or not part of any group.
+     */
+    public function resolveGroup(string $key, ?string $templateKey): string;
 }
