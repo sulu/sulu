@@ -251,6 +251,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
 
     public function testFindFlatByIncludesGroupAndLocaleForDeepLinking(): void
     {
+        /** @var array<array{id: string, title: string, group: string, locale: string}> $result */
         $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), ...['locale' => 'en']], []);
 
         $itemsByUuid = [];

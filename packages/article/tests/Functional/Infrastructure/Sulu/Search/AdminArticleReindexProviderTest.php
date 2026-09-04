@@ -175,6 +175,11 @@ class AdminArticleReindexProviderTest extends SuluTestCase
             {
                 return [GroupProviderInterface::DEFAULT_GROUP => new FormGroup(GroupProviderInterface::DEFAULT_GROUP, 'Default', ['article'])];
             }
+
+            public function resolveGroup(string $key, ?string $templateKey): string
+            {
+                return GroupProviderInterface::DEFAULT_GROUP;
+            }
         };
 
         $provider = new AdminArticleReindexProvider($this->entityManager, $singleGroupProvider);
@@ -211,6 +216,15 @@ class AdminArticleReindexProviderTest extends SuluTestCase
                     GroupProviderInterface::DEFAULT_GROUP => new FormGroup(GroupProviderInterface::DEFAULT_GROUP, 'Default', ['article']),
                     'custom-group' => new FormGroup('custom-group', 'Custom', ['custom-template']),
                 ];
+            }
+
+            public function resolveGroup(string $key, ?string $templateKey): string
+            {
+                if ('custom-template' === $templateKey) {
+                    return 'custom-group';
+                }
+
+                return GroupProviderInterface::DEFAULT_GROUP;
             }
         };
 
