@@ -214,10 +214,11 @@ final class ArticleTrashItemHandler implements
 
     public function getConfiguration(): RestoreConfiguration
     {
+        // the restore response carries no template, so the group of the edit view cannot be resolved
         return new RestoreConfiguration(
             null,
-            ArticleAdmin::EDIT_TABS_VIEW,
-            ['id' => 'id'],
+            ArticleAdmin::LIST_VIEW,
+            [],
             null, // TODO serialization group?
         );
     }
