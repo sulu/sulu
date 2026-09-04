@@ -28,15 +28,23 @@ class SnippetTemplateSelectProvider
     }
 
     /**
+     * @param string|null $templates comma separated template keys the list is restricted to
+     *
      * @return mixed[]
      */
-    public function getFilterValues(string $locale): array
+    public function getFilterValues(string $locale, ?string $templates = null): array
     {
         /** @var TypedFormMetadata $metadata */
         $metadata = $this->formMetadataProvider->getMetadata(SnippetDimensionContent::getTemplateType(), $locale, []);
 
+        $templateKeys = null === $templates ? [] : \array_filter(\explode(',', $templates));
+
         $options = [];
         foreach ($metadata->getForms() as $key => $form) {
+            if ([] !== $templateKeys && !\in_array($key, $templateKeys, true)) {
+                continue;
+            }
+
             $options[$key] = $form->getTitle($locale);
         }
 

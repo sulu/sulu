@@ -214,10 +214,11 @@ final class SnippetTrashItemHandler implements
 
     public function getConfiguration(): RestoreConfiguration
     {
+        // the restore response carries no template, so the group of the edit view cannot be resolved
         return new RestoreConfiguration(
             null,
-            SnippetAdmin::EDIT_TABS_VIEW,
-            ['id' => 'id'],
+            SnippetAdmin::LIST_VIEW,
+            [],
             null, // TODO serialization group?
         );
     }

@@ -93,6 +93,21 @@ class ValidateSmartContentParamsPassTest extends TestCase
         (new ValidateSmartContentParamsPass())->process($container);
     }
 
+    public function testDeprecatedTypesParamThrowsForSnippetProvider(): void
+    {
+        $dir = $this->createTempTemplateDir();
+        $this->writeTemplateXml($dir, 'bad.xml', 'bad-template', 'my_property', 'snippets', [
+            'types' => 'layout',
+        ]);
+
+        $container = $this->createContainer([$dir]);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('param "types" is deprecated, rename to "groups"');
+
+        (new ValidateSmartContentParamsPass())->process($container);
+    }
+
     public function testDeprecatedTypesParamThrowsForPageProvider(): void
     {
         $dir = $this->createTempTemplateDir();

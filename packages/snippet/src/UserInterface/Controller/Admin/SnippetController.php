@@ -11,6 +11,7 @@
 
 namespace Sulu\Snippet\UserInterface\Controller\Admin;
 
+use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
@@ -62,6 +63,7 @@ final class SnippetController implements SecuredControllerInterface
         private SnippetRepositoryInterface $snippetRepository,
         MessageBusInterface $messageBus,
         private NormalizerInterface $normalizer,
+        private GroupProviderInterface $groupProvider,
         private ContentManagerInterface $contentManager,
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         private DoctrineListBuilderFactoryInterface $listBuilderFactory,
@@ -104,8 +106,39 @@ final class SnippetController implements SecuredControllerInterface
         }
         $listBuilder->setParameter('locale', $this->getLocale($request));
 
+        $groupsParam = $request->query->getString('groups');
+        $groupIdentifiers = \array_filter(\explode(',', $groupsParam));
+
+        $groupTemplateKeys = [];
+        foreach ($this->groupProvider->getGroups(SnippetInterface::TEMPLATE_TYPE) as $group) {
+            if (\in_array($group->identifier, $groupIdentifiers, true)) {
+                $groupTemplateKeys = \array_merge($groupTemplateKeys, $group->templates);
+            }
+        }
+
         $templateKeysParam = $request->query->getString('templateKeys');
-        $templateKeys = \array_filter(\explode(',', $templateKeysParam));
+        $requestedTemplateKeys = \array_filter(\explode(',', $templateKeysParam));
+        $templateKeys = \array_unique(\array_merge($requestedTemplateKeys, $groupTemplateKeys));
+
+        $templateFilterRequested = [] !== $groupIdentifiers || [] !== $requestedTemplateKeys;
+        if ($templateFilterRequested && 0 === \count($templateKeys)) {
+            // the requested groups/templateKeys did not resolve to any known template key, so the
+            // filter must not be dropped silently (an empty `in()` call has no effect on the query
+            // and would return every snippet instead of none)
+            $listRepresentation = new PaginatedRepresentation(
+                [],
+                SnippetInterface::RESOURCE_KEY,
+                (int) $listBuilder->getCurrentPage(),
+                (int) $listBuilder->getLimit(),
+                0,
+            );
+
+            return new JsonResponse($this->normalizer->normalize(
+                $listRepresentation->toArray(),
+                'json',
+                ['sulu_admin' => true, 'sulu_admin_snippet' => true, 'sulu_admin_snippet_list' => true],
+            ));
+        }
 
         if (0 !== \count($templateKeys)) {
             $listBuilder->in($fieldDescriptors['templateKey'], $templateKeys);

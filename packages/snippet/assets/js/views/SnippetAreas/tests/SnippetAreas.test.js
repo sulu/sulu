@@ -233,7 +233,10 @@ test('Navigate when selected default snippet is clicked', () => {
         path: '/snippet-areas',
         type: 'snippet_areas',
         options: {
-            snippetEditView: 'sulu_snippet.edit_form',
+            snippetEditViews: {
+                'snippet-alternate': 'sulu_snippet.snippet.edit_tabs_alternate-group',
+                'snippet': 'sulu_snippet.snippet.edit_tabs_default',
+            },
         },
     });
     const router = new Router();
@@ -244,7 +247,8 @@ test('Navigate when selected default snippet is clicked', () => {
             default: {
                 snippetTitle: 'Default Snippet',
                 snippetUuid: 'some-uuid',
-                key: 1,
+                key: 'default',
+                templateKey: 'snippet',
                 title: 'Default',
             },
         };
@@ -255,7 +259,51 @@ test('Navigate when selected default snippet is clicked', () => {
     const snippetAreas = mount(<SnippetAreas route={route} router={router} />);
     snippetAreas.find('Button[className="titleButton"] button').simulate('click');
 
-    expect(router.navigate).toHaveBeenCalledWith('sulu_snippet.edit_form', {id: 'some-uuid'});
+    expect(router.navigate).toHaveBeenCalledWith(
+        'sulu_snippet.snippet.edit_tabs_default',
+        {id: 'some-uuid'}
+    );
+});
+
+test('Navigate to the edit view of the template group of the selected default snippet', () => {
+    const SnippetAreas = require('../SnippetAreas').default;
+    const SnippetAreaStore = require('../stores/SnippetAreaStore');
+
+    const route = new Route({
+        name: 'snippet_areas',
+        path: '/snippet-areas',
+        type: 'snippet_areas',
+        options: {
+            snippetEditViews: {
+                'snippet-alternate': 'sulu_snippet.snippet.edit_tabs_alternate-group',
+                'snippet': 'sulu_snippet.snippet.edit_tabs_default',
+            },
+        },
+    });
+    const router = new Router();
+
+    // $FlowFixMe
+    SnippetAreaStore.mockImplementation(function() {
+        this.snippetAreas = {
+            alternate: {
+                snippetTitle: 'Alternate Snippet',
+                snippetUuid: 'other-uuid',
+                key: 'alternate',
+                templateKey: 'snippet-alternate',
+                title: 'Alternate',
+            },
+        };
+
+        this.save = jest.fn();
+    });
+
+    const snippetAreas = mount(<SnippetAreas route={route} router={router} />);
+    snippetAreas.find('Button[className="titleButton"] button').simulate('click');
+
+    expect(router.navigate).toHaveBeenCalledWith(
+        'sulu_snippet.snippet.edit_tabs_alternate-group',
+        {id: 'other-uuid'}
+    );
 });
 
 test('Should use CacheClearToolbarAction for cache clearing', () => {
