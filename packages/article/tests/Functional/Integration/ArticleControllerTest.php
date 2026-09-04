@@ -620,9 +620,54 @@ class ArticleControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
 
+        /** @var array{id: string, group: string, locale: string} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertSame($trashItem->getResourceId(), $content['id']);
+        $this->assertSame('default', $content['group']);
+        $this->assertSame('en', $content['locale']);
+
         $this->client->request('GET', '/admin/api/articles/' . $trashItem->getResourceId() . '?locale=en');
         $response = $this->client->getResponse();
         $this->assertResponseSnapshot('article_post_restore.json', $response, 200);
+    }
+
+    public function testRestoreResolvesConfiguredGroup(): void
+    {
+        self::purgeDatabase();
+
+        $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'blog',
+            'title' => 'Blog Restore Test',
+            'url' => '/blog-restore-test',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(201, $response);
+        /** @var array{id: string} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $id = $content['id'];
+
+        $this->client->request('DELETE', '/admin/api/articles/' . $id . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(204, $response);
+
+        $trashRepository = self::getContainer()->get(TrashItemRepositoryInterface::class);
+        $trashItem = $trashRepository->findOneBy([
+            'resourceKey' => ArticleInterface::RESOURCE_KEY,
+            'resourceId' => $id,
+            'restoreType' => null,
+        ]);
+        $this->assertNotNull($trashItem);
+
+        $this->client->request('POST', '/admin/api/trash-items/' . $trashItem->getId() . '?action=restore');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{id: string, group: string, locale: string} $restoreContent */
+        $restoreContent = \json_decode((string) $response->getContent(), true);
+        $this->assertSame($id, $restoreContent['id']);
+        $this->assertSame('blog-group', $restoreContent['group']);
+        $this->assertSame('en', $restoreContent['locale']);
     }
 
     public function testGetListWithTemplateFiltering(): void
