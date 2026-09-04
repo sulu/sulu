@@ -14,6 +14,14 @@ test('Icon should render', () => {
     expect(container).toMatchSnapshot();
 });
 
+test('Icon should be hidden from the accessibility tree instead of exposing its name', () => {
+    render(<Icon aria-hidden={true} name="su-save" />);
+
+    expect(screen.queryByLabelText('su-save')).not.toBeInTheDocument();
+    // $FlowFixMe
+    expect(document.querySelector('.su-save')).toHaveAttribute('aria-hidden', 'true');
+});
+
 test('Icon should not render with invalid icon', () => {
     const {container} = render(<Icon name="xxx" />);
     expect(container).toMatchSnapshot();

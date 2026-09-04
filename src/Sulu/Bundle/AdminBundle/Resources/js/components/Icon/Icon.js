@@ -9,6 +9,7 @@ import iconStyles from './icon.scss';
 import type {ElementRef} from 'react';
 
 type Props = {
+    'aria-hidden'?: boolean,
     className?: string,
     iconRef?: (ref: ?ElementRef<'span'>) => void,
     name: string,
@@ -47,6 +48,7 @@ export default class Icon extends React.PureComponent<Props> {
 
     render() {
         const {className, name, onClick, iconRef, style} = this.props;
+        const ariaHidden = this.props['aria-hidden'];
         let fontClass = '';
 
         if (!name || name.length <= 0) {
@@ -91,7 +93,14 @@ export default class Icon extends React.PureComponent<Props> {
             : {};
 
         return (
-            <span aria-label={name} className={iconClass} ref={iconRef} style={style} {...onClickProperties} />
+            <span
+                aria-hidden={ariaHidden ? true : undefined}
+                aria-label={ariaHidden ? undefined : name}
+                className={iconClass}
+                ref={iconRef}
+                style={style}
+                {...onClickProperties}
+            />
         );
     }
 }

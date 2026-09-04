@@ -1,0 +1,139 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Render two expanded collapsibles 1`] = `
+<div>
+  <section
+    class="collapsibleCollection"
+  >
+    <div
+      class="collapsibleCollectionActionButtonContainer"
+    >
+      <button
+        class="collapsibleCollectionActionButton"
+        type="button"
+      >
+        <span
+          aria-hidden="true"
+          class="su-collapse-vertical collapsibleCollectionActionButtonIcon"
+        />
+        <span
+          class="collapsibleCollectionActionButtonText"
+        >
+          sulu_admin.collapse_all
+        </span>
+      </button>
+    </div>
+    <div
+      class="spacer"
+    />
+    <div
+      class="sortableCollapsibleList"
+    >
+      <section
+        class="collapsible expanded"
+        role="switch"
+      >
+        <div
+          class="handle"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more sortableHandle"
+          />
+        </div>
+        <div
+          class="content"
+        >
+          <header
+            class="header"
+          >
+            <span
+              class="title"
+            >
+              General
+            </span>
+            <span
+              class="subtitle"
+            >
+              3 attributes
+            </span>
+            <div
+              class="spacer"
+            />
+            <button
+              aria-expanded="true"
+              class="toggle"
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
+          </header>
+          <article
+            class="children"
+          >
+            <div>
+              General
+               content
+            </div>
+          </article>
+        </div>
+      </section>
+      <section
+        class="collapsible expanded"
+        role="switch"
+      >
+        <div
+          class="handle"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more sortableHandle"
+          />
+        </div>
+        <div
+          class="content"
+        >
+          <header
+            class="header"
+          >
+            <span
+              class="title"
+            >
+              Marketing
+            </span>
+            <span
+              class="subtitle"
+            >
+              2 attributes
+            </span>
+            <div
+              class="spacer"
+            />
+            <button
+              aria-expanded="true"
+              class="toggle"
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
+          </header>
+          <article
+            class="children"
+          >
+            <div>
+              Marketing
+               content
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+  </section>
+</div>
+`;

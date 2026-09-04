@@ -15,8 +15,10 @@ import type {RenderBlockContentCallback, BlockMode, Message} from './types';
 type Props<T: string, U: {_id?: string, type: T, ...}> = {|
     addButtonText?: ?string,
     collapsable: boolean,
+    collapseAllText?: ?string,
     defaultType: T,
     disabled: boolean,
+    expandAllText?: ?string,
     generateBlockIds?: (count: number) => Promise<Array<string>>,
     icons?: Array<Array<string>>,
     maxOccurs?: ?number,
@@ -787,6 +789,7 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
     };
 
     renderBlockToolbarButton = () => {
+        const {collapseAllText, expandAllText} = this.props;
         const allCollapsed = this.expandedBlocks.every((v) => !v);
         return (
             <div className={blockCollectionStyles.blockCollectionActionButtonContainer}>
@@ -816,8 +819,8 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
                     />
                     <span className={blockCollectionStyles.blockCollectionActionButtonText}>
                         {allCollapsed
-                            ? translate('sulu_admin.expand_all_blocks')
-                            : translate('sulu_admin.collapse_all_blocks')
+                            ? (expandAllText ? expandAllText : translate('sulu_admin.expand_all_blocks'))
+                            : (collapseAllText ? collapseAllText : translate('sulu_admin.collapse_all_blocks'))
                         }
                     </span>
                 </button>

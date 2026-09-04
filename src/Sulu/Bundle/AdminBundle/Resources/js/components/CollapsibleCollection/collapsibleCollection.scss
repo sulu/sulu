@@ -1,0 +1,36 @@
+.collapsibleCollection {
+    position: relative;
+}
+
+.spacer {
+    height: 10px;
+}
+
+.collapsibleCollectionActionButtonContainer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+}
+
+.collapsibleCollectionActionButton {
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+}
+
+.collapsibleCollectionActionButtonIcon {
+    display: inline-block;
+    font-size: 14px;
+    margin-right: 7px;
+}
+
+.collapsibleCollectionActionButtonText {
+    text-decoration: underline;
+}
+
+.addButtonContainer {
+    text-align: center;
+    margin-top: 20px;
+}
