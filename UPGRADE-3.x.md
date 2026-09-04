@@ -24,9 +24,11 @@ $services->set('acme_product.product_resolver', ProductResolver::class)
     ->tag('sulu_content.content_resolver');
 ```
 
-Two resolvers may share an output path. The tag's `priority` decides: the higher priority runs
-first and its values win every collision. Registering two resolvers with the same `type` now
-fails at container compile time, where previously one of them was silently ignored.
+Two resolvers may share an output path. The tag's `priority` orders them and the first writer of
+a key keeps it, so on a collision the higher priority resolver wins. The envelope keys `content`,
+`view` and `extension` are seeded before any resolver runs, so a `[root]` resolver cannot claim
+them at any priority. Registering two resolvers with the same `type` now fails at container
+compile time, where previously one of them was silently ignored.
 
 ## 3.0.9
 
