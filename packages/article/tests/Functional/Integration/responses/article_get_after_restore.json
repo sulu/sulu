@@ -28,6 +28,7 @@
         "@integer@"
     ],
     "ghostLocale": "en",
+    "_group": "default",
     "id": "@string@",
     "image": null,
     "lastModified": "@datetime@",

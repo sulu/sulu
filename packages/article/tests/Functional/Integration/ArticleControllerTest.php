@@ -498,6 +498,15 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('article_cget.json', $response, 200);
     }
 
+    #[Depends('testPut')]
+    public function testGetListWithUnknownGroupsFilterReturnsNoResults(): void
+    {
+        // an unknown/typo'd group identifier must not be silently dropped and return every article
+        $this->client->request('GET', '/admin/api/articles?locale=en&groups=does-not-exist');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('article_cget_unknown_groups_filter.json', $response, 200);
+    }
+
     #[Depends('testPost')]
     public function testDeleteSingleLocale(string $id): string
     {
@@ -937,6 +946,35 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertIsArray($content['_embedded']['articles']);
         $this->assertIsArray($content['_embedded']['articles'][0]);
         $this->assertSame('Blog Template Test', $content['_embedded']['articles'][0]['title']);
+        $this->assertSame('blog-group', $content['_embedded']['articles'][0]['_group']);
+    }
+
+    public function testGetGhostLocaleReportsSourceLocaleGroup(): void
+    {
+        self::purgeDatabase();
+
+        // article only exists in "en", with a template that belongs to a custom group
+        $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'blog',
+            'title' => 'Ghost Blog Article',
+            'url' => '/ghost-blog-article',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(201, $response);
+        /** @var array{id: string} $created */
+        $created = \json_decode((string) $response->getContent(), true);
+
+        // requesting it in "de" returns a ghost: the normalized content carries no template of
+        // its own, so the group must still resolve from the source locale it ghosts to
+        $this->client->request('GET', '/admin/api/articles/' . $created['id'] . '?locale=de');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{_group: string, ghostLocale: string|null} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertSame('en', $content['ghostLocale']);
+        $this->assertSame('blog-group', $content['_group']);
     }
 
     public function testGetListWithTitleSearch(): void

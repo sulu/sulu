@@ -34,6 +34,7 @@ jest.mock('../../../../stores/MultiSelectionStore', () => jest.fn(
 
 jest.mock('../../../../services/Router', () => jest.fn(() => ({
     navigate: jest.fn(),
+    hasRoute: jest.fn(() => true),
 })));
 
 jest.mock('../../../List', () => jest.fn(() => null));
@@ -604,6 +605,165 @@ test('Should navigate to view when MultiSelection item is clicked with configure
     expect(router.navigate).toHaveBeenLastCalledWith('sulu_page.page_edit_form', {locale: 'de', uuid: 1});
     selection.find('MultiItemSelection Item .content').at(1).prop('onClick')();
     expect(router.navigate).toHaveBeenLastCalledWith('sulu_page.page_edit_form', {locale: 'de', uuid: 2});
+});
+
+test('Should navigate to a templated view when MultiSelection item is clicked with configured view', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const fieldOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'articles',
+        view: {
+            name: 'sulu_article.article.edit_tabs_{group}',
+            result_to_view: {
+                id: 'id',
+                locale: 'locale',
+            },
+            result_to_view_name: {
+                _group: 'group',
+            },
+        },
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                label: 'sulu_article.selection_label',
+            },
+        },
+    };
+
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+
+    const router = new Router();
+
+    const selection = mount(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldOptions}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            router={router}
+            value={[1, 2]}
+        />
+    );
+
+    selection.find('MultiSelection').instance().selectionStore.items = [
+        {id: 1, locale: 'de', _group: 'news'},
+        {id: 2, locale: 'de', _group: 'press'},
+    ];
+
+    selection.update();
+
+    selection.find('MultiItemSelection Item .content').at(0).prop('onClick')();
+    expect(router.navigate).toHaveBeenLastCalledWith('sulu_article.article.edit_tabs_news', {id: 1, locale: 'de'});
+    selection.find('MultiItemSelection Item .content').at(1).prop('onClick')();
+    expect(router.navigate).toHaveBeenLastCalledWith('sulu_article.article.edit_tabs_press', {id: 2, locale: 'de'});
+});
+
+test('Should navigate without a locale parameter when the clicked item is a ghost', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const fieldOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'articles',
+        view: {
+            name: 'sulu_article.article.edit_tabs_{group}',
+            result_to_view: {
+                id: 'id',
+                locale: 'locale',
+            },
+            result_to_view_name: {
+                _group: 'group',
+            },
+        },
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                label: 'sulu_article.selection_label',
+            },
+        },
+    };
+
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+
+    const router = new Router();
+
+    const selection = mount(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldOptions}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            router={router}
+            value={[1]}
+        />
+    );
+
+    // a ghost item carries no locale of its own, only a ghostLocale
+    selection.find('MultiSelection').instance().selectionStore.items = [
+        {id: 1, locale: null, ghostLocale: 'en', _group: 'news'},
+    ];
+
+    selection.update();
+
+    selection.find('MultiItemSelection Item .content').at(0).prop('onClick')();
+    expect(router.navigate).toHaveBeenLastCalledWith('sulu_article.article.edit_tabs_news', {id: 1});
+});
+
+test('Should not navigate when the resolved view is not registered for the current user', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const fieldOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'articles',
+        view: {
+            name: 'sulu_article.article.edit_tabs_{group}',
+            result_to_view: {
+                id: 'id',
+                locale: 'locale',
+            },
+            result_to_view_name: {
+                _group: 'group',
+            },
+        },
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                label: 'sulu_article.selection_label',
+            },
+        },
+    };
+
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+
+    const router = new Router();
+    // $FlowFixMe
+    router.hasRoute.mockReturnValue(false);
+
+    const selection = mount(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldOptions}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            router={router}
+            value={[1]}
+        />
+    );
+
+    selection.find('MultiSelection').instance().selectionStore.items = [
+        {id: 1, locale: 'de', _group: 'news'},
+    ];
+
+    selection.update();
+
+    selection.find('MultiItemSelection Item .content').at(0).prop('onClick')();
+    expect(router.navigate).not.toHaveBeenCalled();
 });
 
 test('Should log warning and use ids of objects if given value is an array of objects', () => {

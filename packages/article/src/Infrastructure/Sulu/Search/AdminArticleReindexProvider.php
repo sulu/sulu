@@ -73,7 +73,7 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
             $groupIdentifier = null;
 
             foreach ($groups as $group) {
-                if (\in_array($article['templateKey'], $group->templates)) {
+                if (\in_array($article['templateKey'], $group->templates, true)) {
                     $groupIdentifier = $group->identifier;
                     break;
                 }

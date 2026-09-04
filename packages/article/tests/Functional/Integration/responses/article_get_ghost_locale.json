@@ -13,6 +13,7 @@
     "excerptSegment": null,
     "excerptTags": [],
     "ghostLocale": "en",
+    "_group": "default",
     "id": "@string@",
     "lastModified": null,
     "lastModifiedEnabled": false,

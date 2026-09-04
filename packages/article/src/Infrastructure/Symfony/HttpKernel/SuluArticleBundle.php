@@ -574,6 +574,16 @@ final class SuluArticleBundle extends AbstractBundle
                             'article_selection' => [
                                 'default_type' => 'list_overlay',
                                 'resource_key' => 'articles',
+                                'view' => [
+                                    'name' => ArticleAdmin::EDIT_TABS_VIEW . '_{group}',
+                                    'result_to_view' => [
+                                        'id' => 'id',
+                                        'locale' => 'locale',
+                                    ],
+                                    'result_to_view_name' => [
+                                        '_group' => 'group',
+                                    ],
+                                ],
                                 'types' => [
                                     'list_overlay' => [
                                         'adapter' => 'table',
@@ -590,6 +600,16 @@ final class SuluArticleBundle extends AbstractBundle
                             'single_article_selection' => [
                                 'default_type' => 'list_overlay',
                                 'resource_key' => 'articles',
+                                'view' => [
+                                    'name' => ArticleAdmin::EDIT_TABS_VIEW . '_{group}',
+                                    'result_to_view' => [
+                                        'id' => 'id',
+                                        'locale' => 'locale',
+                                    ],
+                                    'result_to_view_name' => [
+                                        '_group' => 'group',
+                                    ],
+                                ],
                                 'types' => [
                                     'list_overlay' => [
                                         'adapter' => 'table',

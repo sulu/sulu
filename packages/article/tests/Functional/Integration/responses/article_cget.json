@@ -9,6 +9,7 @@
                 "created": "@datetime@",
                 "creator": "@string@",
                 "ghostLocale": null,
+                "_group": "default",
                 "id": "@string@",
                 "locale": "@string@",
                 "published": null,
