@@ -250,6 +250,9 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         $this->resultToView = $resultToView;
     }
 
+    /**
+     * @return array<string, string>|null
+     */
     public function getResultToViewName(): ?array
     {
         return $this->resultToViewName;
