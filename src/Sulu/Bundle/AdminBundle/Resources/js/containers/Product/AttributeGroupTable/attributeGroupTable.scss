@@ -1,0 +1,87 @@
+@import '../../../containers/Application/colors.scss';
+
+$rowHeight: 44px;
+$labelColumnWidth: 50%;
+$removeColumnWidth: 56px;
+
+.table {
+    overflow-x: auto;
+
+    /* the flat skin's invisible cell border becomes the row separator, last row excluded */
+    tbody tr:not(:last-child) td {
+        border-bottom-color: $mercury;
+    }
+}
+
+/* row hover blanks every cell border in the flat skin, the tripled class outranks it */
+.table.table.table {
+    tbody tr:not(:last-child):hover td {
+        border-bottom-color: $mercury;
+    }
+}
+
+/* doubled to outrank core's two-class flat rules (header background/weight, fixed layout) */
+.table.table {
+    th {
+        background-color: $wildSand;
+        font-weight: normal;
+        padding: 4px 8px;
+    }
+
+    table {
+        table-layout: fixed;
+        width: 100%;
+        border-spacing: 0;
+    }
+
+    tr,
+    th,
+    td {
+        height: $rowHeight;
+    }
+
+    /* core's 250px cap would keep the label column from reaching its share */
+    th.labelCell,
+    td.labelCell {
+        width: $labelColumnWidth;
+        max-width: none;
+    }
+
+    td.labelCell {
+        color: $mineShaft;
+    }
+
+    /* no width: the checkbox columns split what the label column leaves */
+    th.flagCell,
+    td.flagCell {
+        max-width: none;
+        text-align: center;
+    }
+
+    th.removeCell,
+    td.removeCell {
+        width: $removeColumnWidth;
+        padding: 0;
+    }
+}
+
+/* the cell content is a flex container, text-align does not reach the checkbox */
+.flagCell > div {
+    justify-content: center;
+}
+
+/* own styling instead of core's button-cell, whose hover-only opacity is list behaviour */
+.removeButton {
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: $gray;
+
+    &:disabled {
+        cursor: default;
+    }
+
+    &:hover:not(:disabled) {
+        color: $mineShaft;
+    }
+}
