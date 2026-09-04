@@ -34,8 +34,10 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
     }
 
     /**
-     * `$content` arrives in resolver priority order, so a key that is already set stays and the
-     * higher priority resolver wins every collision, whatever the colliding values are.
+     * `$content` arrives in tagged iterator order, so the first resolver to write a key keeps it
+     * and a higher tag `priority` beats a lower one. The envelope keys `content`, `view` and
+     * `extension` are seeded below before any resolver runs, so a `[root]` resolver cannot write
+     * them at any priority.
      *
      * @template T of DimensionContentInterface
      *
@@ -83,8 +85,8 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
      * Merges one resolver's output into the content view data at its configured path.
      *
      * An empty path means the root itself. A free path takes the data as is, two arrays are
-     * merged with `+`, and any other collision keeps what is already there: resolvers run in
-     * descending priority, so the higher priority one wins.
+     * merged with `+`, and any other collision keeps what is already there. The merge knows
+     * nothing about priority: it is first writer wins, and the caller iterates in priority order.
      *
      * @param array<string, mixed> $target
      * @param list<string> $segments
@@ -101,7 +103,7 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
                 ));
             }
 
-            // the reserved top level keys are already set, so `+` keeps them
+            // the envelope keys are already set, so `+` keeps them
             /** @var array<string, mixed> $data */
             return $target + $data;
         }

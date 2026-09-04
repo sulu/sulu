@@ -274,18 +274,23 @@ class ContentViewDataNormalizerTest extends TestCase
         self::assertSame(['x' => 1], $result['p']);
     }
 
-    public function testRootResolverCannotDisplaceTheEnvelopeKeys(): void
+    public function testRootResolverCannotDisplaceTheEnvelopeKeysEvenWhenItRunsFirst(): void
     {
+        // the root resolver runs before "template", so it has the higher priority and still loses
         $result = $this->normalizer->normalizeContentViewData(
-            ['template' => [], 'settings' => ['content' => 'evil', 'view' => 'evil', 'extension' => 'evil', 'resource' => 'evil', 'author' => 'ok']],
+            [
+                'settings' => ['content' => 'evil', 'view' => 'evil', 'extension' => 'evil', 'resource' => 'evil', 'author' => 'ok'],
+                'template' => ['t' => 1],
+            ],
             [],
             new Example(),
         );
 
-        self::assertSame([], $result['content']);
+        self::assertSame(['t' => 1], $result['content']);
         self::assertSame([], $result['view']);
         self::assertSame([], $result['extension']);
         self::assertInstanceOf(Example::class, $result['resource']);
+        // keys that do not clash still land at the root
         // @phpstan-ignore-next-line offsetAccess.notFound
         self::assertSame('ok', $result['author']);
     }
