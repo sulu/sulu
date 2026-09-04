@@ -13,25 +13,32 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentResolver\DataNormalizer;
 
-use Sulu\Content\Application\ContentResolver\Resolver\SettingsResolver;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
- * @phpstan-import-type SettingsData from SettingsResolver
- *
  * @internal This service is intended for internal use only within the package/library.
  * Modifying or depending on this service may result in unexpected behavior and is not supported.
  */
 class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
 {
+    /**
+     * @param array<string, list<string>> $paths resolver type to path segments without the
+     *                                           `[root]` anchor, set by ContentResolverPathPass
+     */
     public function __construct(
-        private PropertyAccessorInterface $propertyAccessor
+        private PropertyAccessorInterface $propertyAccessor,
+        private array $paths,
     ) {
     }
 
     /**
+     * `$content` arrives in tagged iterator order, so the first resolver to write a key keeps it
+     * and a higher tag `priority` beats a lower one. The envelope keys `content`, `view` and
+     * `extension` are seeded below before any resolver runs, so a `[root]` resolver cannot write
+     * them at any priority.
+     *
      * @template T of DimensionContentInterface
      *
      * @param array<string, mixed> $content
@@ -43,6 +50,7 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
      *     content: array<string, mixed>,
      *     view: array<string, mixed>,
      *     extension: array<string, array<string, mixed>>,
+     *     ...
      * }
      */
     public function normalizeContentViewData(
@@ -50,32 +58,82 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
         array $view,
         ContentRichEntityInterface $resource,
     ): array {
-        /** @var array<string, mixed> $templateData */
-        $templateData = $content['template'] ?? [];
-        unset($content['template']);
+        $result = [
+            'resource' => $resource,
+            'content' => [],
+            'view' => [],
+            'extension' => [],
+        ];
 
-        /** @var array<string, mixed> $templateView */
-        $templateView = $view['template'] ?? [];
-        unset($view['template']);
+        foreach ($content as $type => $data) {
+            $segments = $this->paths[$type] ?? ['extension', $type];
 
-        /** @var SettingsData $settingsData */
-        $settingsData = $content['settings'] ?? [];
-        unset($content['settings'], $view['settings']);
+            $result = $this->mergeResolverOutput($result, $segments, $data);
 
-        /** @var array<string, array<string, mixed>> $extensionData */
-        $extensionData = $content;
+            if ([] !== $segments && 'content' === $segments[\count($segments) - 1]) {
+                /** @var array<string, mixed> $typeView */
+                $typeView = $view[$type] ?? [];
+                $result = $this->mergeResolverOutput($result, [...\array_slice($segments, 0, -1), 'view'], $typeView);
+            }
+        }
 
-        $result = \array_merge(
-            [
-                'resource' => $resource,
-                'content' => $templateData,
-                'view' => $templateView,
-                'extension' => $extensionData,
-            ],
-            $settingsData,
-        );
-
+        /** @var array{resource: ContentRichEntityInterface<T>, content: array<string, mixed>, view: array<string, mixed>, extension: array<string, array<string, mixed>>, ...} $result */
         return $result;
+    }
+
+    /**
+     * Merges one resolver's output into the content view data at its configured path.
+     *
+     * An empty path means the root itself. A free path takes the data as is, two arrays are
+     * merged with `+`, and any other collision keeps what is already there. The merge knows
+     * nothing about priority: it is first writer wins, and the caller iterates in priority order.
+     *
+     * @param array<string, mixed> $target
+     * @param list<string> $segments
+     *
+     * @return array<string, mixed>
+     */
+    private function mergeResolverOutput(array $target, array $segments, mixed $data): array
+    {
+        if ([] === $segments) {
+            if (!\is_array($data)) {
+                throw new \LogicException(\sprintf(
+                    'A content resolver on path "[root]" must return an array, got %s.',
+                    \get_debug_type($data),
+                ));
+            }
+
+            // the envelope keys are already set, so `+` keeps them
+            /** @var array<string, mixed> $data */
+            return $target + $data;
+        }
+
+        $segment = $segments[0];
+        $rest = \array_slice($segments, 1);
+
+        if (!\array_key_exists($segment, $target)) {
+            $target[$segment] = [] === $rest ? $data : $this->mergeResolverOutput([], $rest, $data);
+
+            return $target;
+        }
+
+        $existing = $target[$segment];
+        if (!\is_array($existing)) {
+            return $target;
+        }
+
+        if ([] === $rest) {
+            if (\is_array($data)) {
+                $target[$segment] = $existing + $data;
+            }
+
+            return $target;
+        }
+
+        /** @var array<string, mixed> $existing */
+        $target[$segment] = $this->mergeResolverOutput($existing, $rest, $data);
+
+        return $target;
     }
 
     /**
@@ -85,11 +143,12 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
      *     resource: object,
      *     content: array<string, mixed>,
      *     view: array<string, mixed>,
-     *     extension: array<string, array<string, mixed>>
+     *     extension: array<string, array<string, mixed>>,
+     *     ...
      * } $contentData
      * @param list<int|string> $path
      */
-    public function replaceNestedContentViews(array &$contentData, array $path = ['content']): void
+    private function replaceNestedContentViewsAtPath(array &$contentData, array $path = ['content'], int $contentDepth = 0): void
     {
         $pathValues = [];
         $iterable = $this->propertyAccessor->getValue($contentData, $this->buildPropertyPath($path)) ?? [];
@@ -101,7 +160,7 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
         foreach ($iterable as $key => $entry) {
             if (\is_array($entry)) {
                 if ([] !== $entry) {
-                    $this->replaceNestedContentViews($contentData, [...$path, $key]);
+                    $this->replaceNestedContentViewsAtPath($contentData, [...$path, $key], $contentDepth);
                 }
 
                 if (!$this->isExtractableIterable($iterable)) {
@@ -110,7 +169,7 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
 
                 if ('view' === $key) {
                     // truncate at the next nested 'content' segment so we keep only the outermost resolver wrapper
-                    $nextContentIdx = $this->findSegmentAfter($path, 'content', 1);
+                    $nextContentIdx = $this->findSegmentAfter($path, 'content', $contentDepth + 1);
                     $viewPath = null === $nextContentIdx ? $path : \array_slice($path, 0, $nextContentIdx);
 
                     $value = null;
@@ -123,8 +182,12 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
                         $value = $this->propertyAccessor->getValue($contentData, $this->buildPropertyPath([...$path, $key]));
                     }
 
-                    // swap the leading 'content' segment for 'view'
-                    $viewPath[0] = 'view';
+                    // swap the segment that roots this content path for 'view'
+                    $viewPath = [
+                        ...\array_slice($viewPath, 0, $contentDepth),
+                        'view',
+                        ...\array_slice($viewPath, $contentDepth + 1),
+                    ];
                     $viewPathStr = $this->buildPropertyPath($viewPath);
 
                     $existingViewData = $this->propertyAccessor->getValue($contentData, $viewPathStr) ?? [];
@@ -142,6 +205,38 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
 
         foreach ($pathValues as $pathStr => $value) {
             $this->propertyAccessor->setValue($contentData, $pathStr, $value); // @phpstan-ignore-line
+        }
+    }
+
+    /**
+     * Runs the replacement for the root `content` and every configured `[root][x][content]` path,
+     * so those paths flatten nested content the same way the root does.
+     *
+     * @param array{
+     *     resource: object,
+     *     content: array<string, mixed>,
+     *     view: array<string, mixed>,
+     *     extension: array<string, array<string, mixed>>,
+     *     ...
+     * } $contentData
+     */
+    public function replaceNestedContentViews(array &$contentData): void
+    {
+        /** @var array<string, list<string>> $contentPaths */
+        $contentPaths = ['content' => ['content']];
+
+        foreach ($this->paths as $segments) {
+            if ([] !== $segments && 'content' === $segments[\count($segments) - 1]) {
+                $contentPaths[\implode('/', $segments)] = $segments;
+            }
+        }
+
+        foreach ($contentPaths as $segments) {
+            if (!$this->propertyAccessor->isReadable($contentData, $this->buildPropertyPath($segments))) {
+                continue;
+            }
+
+            $this->replaceNestedContentViewsAtPath($contentData, $segments, \count($segments) - 1);
         }
     }
 
@@ -164,7 +259,8 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
      *     resource: object,
      *     content: array<string, mixed>,
      *     view: array<string, mixed>,
-     *     extension: array<string, array<string, mixed>>
+     *     extension: array<string, array<string, mixed>>,
+     *     ...
      * } &$data
      * @param array<string, mixed> $properties
      * @param list<int|string> $path
@@ -218,6 +314,67 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
                 );
             }
         }
+    }
+
+    /**
+     * Folds per-item field-level view data sitting at numeric indices into the
+     * corresponding `items` entry produced by viewEnhancements.
+     *
+     * An enhancement path starts with the resolver type that produced the field, e.g.
+     * `[template, teasers]` or `[example_root, related]`. The type resolves to its path
+     * segments; if those end in `content`, the field's view lives at the sibling `view` key
+     * of that same path. Otherwise the resolver has no view data and the enhancement
+     * is dropped.
+     *
+     * @param array{resource: object, content: array<string, mixed>, view: array<string, mixed>, extension: array<string, array<string, mixed>>, ...} $data
+     * @param array<string, array{path: list<int|string>, itemsPropertyName: ?string, items: list<mixed>}> $viewEnhancements
+     *
+     * @return array{resource: object, content: array<string, mixed>, view: array<string, mixed>, extension: array<string, array<string, mixed>>, ...}
+     */
+    public function mergeFieldViewDataIntoItems(array $data, array $viewEnhancements): array
+    {
+        foreach ($viewEnhancements as $enhancement) {
+            $itemsPropertyName = $enhancement['itemsPropertyName'];
+            if (null === $itemsPropertyName) {
+                continue;
+            }
+
+            $pathSegments = $enhancement['path'];
+            $type = \array_shift($pathSegments);
+            if ([] === $pathSegments || !\is_string($type)) {
+                continue;
+            }
+
+            $segments = $this->paths[$type] ?? ['extension', $type];
+            if ([] === $segments || 'content' !== $segments[\count($segments) - 1]) {
+                continue;
+            }
+
+            $viewPath = $this->buildPropertyPath([...\array_slice($segments, 0, -1), 'view', ...$pathSegments]);
+            if (!$this->propertyAccessor->isReadable($data, $viewPath)) {
+                continue;
+            }
+
+            $viewValue = $this->propertyAccessor->getValue($data, $viewPath);
+            if (!\is_array($viewValue) || !isset($viewValue[$itemsPropertyName])) {
+                continue;
+            }
+
+            /** @var list<array<string, mixed>> $items */
+            $items = $viewValue[$itemsPropertyName];
+            foreach ($items as $index => $item) {
+                if (isset($viewValue[$index]) && \is_array($viewValue[$index])) {
+                    $items[$index] = \array_merge($item, $viewValue[$index]);
+                    unset($viewValue[$index]);
+                }
+            }
+
+            $viewValue[$itemsPropertyName] = $items;
+            $this->propertyAccessor->setValue($data, $viewPath, $viewValue);
+        }
+
+        /** @var array{resource: object, content: array<string, mixed>, view: array<string, mixed>, extension: array<string, array<string, mixed>>, ...} $data */
+        return $data;
     }
 
     /**

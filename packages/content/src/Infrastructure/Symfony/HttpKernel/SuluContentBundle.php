@@ -18,12 +18,14 @@ use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverMetadataA
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
 use Sulu\Content\Domain\Exception\ShadowSourceNotPublishedException;
 use Sulu\Content\Infrastructure\Doctrine\EventListener\RouteCleanupListener;
+use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ContentResolverPathPass;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ExcerptFormPass;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ResourceLoaderCacheCompilerPass;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\SeoFormPass;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\SettingsFormPass;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
@@ -134,6 +136,8 @@ final class SuluContentBundle extends AbstractBundle
         $container->addCompilerPass(new ExcerptFormPass());
         $container->addCompilerPass(new SeoFormPass());
         $container->addCompilerPass(new ResourceLoaderCacheCompilerPass());
+        // Runs after DecoratorServicePass.
+        $container->addCompilerPass(new ContentResolverPathPass(), PassConfig::TYPE_BEFORE_REMOVING);
 
         $container->registerForAutoconfiguration(ResourceLoaderInterface::class)
             ->addTag('sulu_content.resource_loader');

@@ -151,6 +151,91 @@ class ContentResolverTest extends SuluTestCase
         self::assertTrue($seo['hideInSitemap']);
     }
 
+    public function testRootPathResolverLandsAtRoot(): void
+    {
+        $related = static::createExample(
+            [
+                'en' => [
+                    'live' => [
+                        'template' => 'full-content',
+                        'title' => 'Related',
+                        'url' => '/related',
+                        'seo' => ['title' => 'seo-related'],
+                    ],
+                ],
+            ],
+            ['create_route' => true],
+        );
+        static::getEntityManager()->flush();
+
+        $example = static::createExample(
+            [
+                'en' => [
+                    'live' => [
+                        'template' => 'root-resolver-example',
+                        'title' => 'Root',
+                        'url' => '/root',
+                        'related' => [$related->getId()],
+                    ],
+                ],
+            ],
+            ['create_route' => true],
+        );
+        static::getEntityManager()->flush();
+
+        $dimensionContent = $this->contentAggregator->aggregate($example, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        self::assertArrayNotHasKey('exampleRoot', $result['extension']);
+        self::assertArrayHasKey('seo', $result['extension']);
+        self::assertSame('Root', $result['content']['title']);
+        self::assertArrayNotHasKey('dropped', $result['view']);
+
+        /** @var array{content: array{code: string, related: array<string, mixed>}, view: array<string, mixed>} $root */
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        $root = $result['exampleRoot'];
+        self::assertSame('ROOT-' . $example->getId(), $root['content']['code']);
+
+        // a [root][x][content] path flattens nested entities the same way [root][content] does
+        $relatedContent = $root['content']['related'];
+        self::assertSame('Related', $relatedContent['title']);
+        self::assertArrayNotHasKey('resource', $relatedContent);
+        self::assertArrayNotHasKey('extension', $relatedContent);
+
+        // and hoists the flattened entity's view to that path's own [view], not the root [view]
+        self::assertArrayHasKey('related', $root['view']);
+        self::assertIsArray($root['view']['related']);
+        self::assertSame('unused', $root['view']['dropped']);
+    }
+
+    public function testRootPathResolverIsAbsentForOtherTemplates(): void
+    {
+        $example = static::createExample(
+            [
+                'en' => [
+                    'live' => [
+                        'template' => 'full-content',
+                        'title' => 'Lorem Ipsum',
+                        'url' => '/lorem-ipsum',
+                        'excerpt' => ['title' => 'excerpt-title-1'],
+                        'seo' => ['title' => 'seo-title-1'],
+                    ],
+                ],
+            ],
+            ['create_route' => true],
+        );
+        static::getEntityManager()->flush();
+
+        $dimensionContent = $this->contentAggregator->aggregate($example, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        self::assertArrayNotHasKey('exampleRoot', $result);
+        self::assertArrayHasKey('seo', $result['extension']);
+        self::assertArrayHasKey('excerpt', $result['extension']);
+        self::assertArrayNotHasKey('seo', $result);
+        self::assertArrayNotHasKey('excerpt', $result);
+    }
+
     public function testResolveContentWithProperties(): void
     {
         $example0 = static::createExample(

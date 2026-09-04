@@ -25,12 +25,6 @@ use Sulu\Content\Domain\Model\WebspaceInterface;
 /**
  * @phpstan-type SettingsData array{
  *      availableLocales?: string[]|null,
- *      localizations?: array<string, array{
- *          locale: string,
- *          url: string|null,
- *          country: string,
- *          alternate: bool
- *      }>,
  *      mainWebspace?: string|null,
  *      template?: string|null,
  *      author?: ContentView|null,
@@ -125,5 +119,15 @@ readonly class SettingsResolver implements ResolverInterface
         return [
             'shadowBaseLocale' => $dimensionContent->getShadowLocale(),
         ];
+    }
+
+    public static function getType(): string
+    {
+        return 'settings';
+    }
+
+    public static function getOutputPath(): string
+    {
+        return '[root]';
     }
 }

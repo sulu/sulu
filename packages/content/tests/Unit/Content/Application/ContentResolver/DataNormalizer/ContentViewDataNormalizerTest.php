@@ -20,13 +20,16 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class ContentViewDataNormalizerTest extends TestCase
 {
+    /** @var array<string, list<string>> */
+    private const CORE_PATHS = ['template' => ['content'], 'settings' => []];
+
     private ContentViewDataNormalizer $normalizer;
     private PropertyAccessor $propertyAccessor;
 
     protected function setUp(): void
     {
         $this->propertyAccessor = new PropertyAccessor();
-        $this->normalizer = new ContentViewDataNormalizer($this->propertyAccessor);
+        $this->normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS);
     }
 
     public function testFormatContentOutput(): void
@@ -206,5 +209,272 @@ class ContentViewDataNormalizerTest extends TestCase
 
         // When not root, properties should be mapped under [content] path
         self::assertSame('Test Title', $result['content']['title']);
+    }
+
+    public function testRootPathPlacesResolverOutputAtRoot(): void
+    {
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['product' => ['product']]);
+
+        $result = $normalizer->normalizeContentViewData(
+            ['template' => ['title' => 'T'], 'product' => ['code' => 'NL4FX'], 'seo' => ['title' => 'S']],
+            ['template' => [], 'product' => ['code' => 'ignored view']],
+            new Example(),
+        );
+
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        self::assertSame(['code' => 'NL4FX'], $result['product']);
+        self::assertSame(['seo' => ['title' => 'S']], $result['extension']);
+        self::assertSame([], $result['view']);
+    }
+
+    public function testNestedPathCreatesIntermediateArrays(): void
+    {
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['shop' => ['shop', 'meta']]);
+
+        $result = $normalizer->normalizeContentViewData(['template' => [], 'shop' => ['currency' => 'EUR']], [], new Example());
+
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        self::assertSame(['meta' => ['currency' => 'EUR']], $result['shop']);
+    }
+
+    public function testUnknownTypeFallsBackToExtension(): void
+    {
+        $result = $this->normalizer->normalizeContentViewData(['template' => [], 'product' => ['code' => 'X']], [], new Example());
+
+        self::assertSame(['product' => ['code' => 'X']], $result['extension']);
+        self::assertArrayNotHasKey('product', $result);
+    }
+
+    public function testHigherPriorityResolverWinsOnSharedPath(): void
+    {
+        // "a" has higher priority and runs first.
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['a' => ['shared'], 'b' => ['shared']]);
+
+        $result = $normalizer->normalizeContentViewData(
+            ['template' => [], 'a' => ['k' => 'from-a', 'x' => 1], 'b' => ['k' => 'from-b', 'y' => 2]],
+            [],
+            new Example(),
+        );
+
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        self::assertSame(['k' => 'from-a', 'x' => 1, 'y' => 2], $result['shared']);
+    }
+
+    public function testMergeIsShallow(): void
+    {
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['a' => [], 'b' => []]);
+
+        $result = $normalizer->normalizeContentViewData(
+            ['template' => [], 'a' => ['p' => ['x' => 1]], 'b' => ['p' => ['y' => 2]]],
+            [],
+            new Example(),
+        );
+
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        self::assertSame(['x' => 1], $result['p']);
+    }
+
+    public function testRootResolverCannotDisplaceTheEnvelopeKeysEvenWhenItRunsFirst(): void
+    {
+        // the root resolver runs before "template", so it has the higher priority and still loses
+        $result = $this->normalizer->normalizeContentViewData(
+            [
+                'settings' => ['content' => 'evil', 'view' => 'evil', 'extension' => 'evil', 'resource' => 'evil', 'author' => 'ok'],
+                'template' => ['t' => 1],
+            ],
+            [],
+            new Example(),
+        );
+
+        self::assertSame(['t' => 1], $result['content']);
+        self::assertSame([], $result['view']);
+        self::assertSame([], $result['extension']);
+        self::assertInstanceOf(Example::class, $result['resource']);
+        // keys that do not clash still land at the root
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        self::assertSame('ok', $result['author']);
+    }
+
+    public function testRootResolverKeysThatDoNotClashAreMerged(): void
+    {
+        $result = $this->normalizer->normalizeContentViewData(
+            ['template' => [], 'settings' => ['author' => 'ok', 'template' => 'full-content']],
+            [],
+            new Example(),
+        );
+
+        self::assertSame([], $result['content']);
+        self::assertInstanceOf(Example::class, $result['resource']);
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        self::assertSame('ok', $result['author']);
+    }
+
+    public function testNonArrayContentAtRootThrows(): void
+    {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('A content resolver on path "[root]" must return an array, got string.');
+
+        $this->normalizer->normalizeContentViewData(['template' => [], 'settings' => 'scalar'], [], new Example());
+    }
+
+    public function testTemplateViewIsMergedOnlyForContentPath(): void
+    {
+        $result = $this->normalizer->normalizeContentViewData(
+            ['template' => ['title' => 'T'], 'seo' => ['title' => 'S']],
+            ['template' => ['title' => ['type' => 'text_line']], 'seo' => ['title' => ['type' => 'text_line']]],
+            new Example(),
+        );
+
+        self::assertSame(['title' => ['type' => 'text_line']], $result['view']);
+        self::assertSame(['seo' => ['title' => 'S']], $result['extension']);
+    }
+
+    public function testNullFromHigherPriorityResolverBlocksTheLowerOne(): void
+    {
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['a' => ['shared'], 'b' => ['shared']]);
+
+        $result = $normalizer->normalizeContentViewData(['template' => [], 'a' => null, 'b' => ['y' => 2]], [], new Example());
+
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        self::assertNull($result['shared']);
+    }
+
+    public function testScalarTemplateContentCannotEmptyTheContentViewData(): void
+    {
+        $result = $this->normalizer->normalizeContentViewData(['template' => 'scalar'], [], new Example());
+
+        self::assertSame([], $result['content']);
+    }
+
+    public function testResolverNestedUnderARootResolversScalarKeyIsDropped(): void
+    {
+        // The compiler pass cannot see a [root] resolver's keys, so this only resolves at runtime.
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['acme_meta' => ['template', 'meta']]);
+
+        $result = $normalizer->normalizeContentViewData(
+            ['settings' => ['template' => 'full-content'], 'template' => [], 'acme_meta' => ['currency' => 'EUR']],
+            [],
+            new Example(),
+        );
+
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        self::assertSame('full-content', $result['template']);
+    }
+
+    public function testContentPathGetsViewTwin(): void
+    {
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['product' => ['product', 'content']]);
+
+        $result = $normalizer->normalizeContentViewData(
+            ['template' => [], 'product' => ['code' => 'X']],
+            ['product' => ['code' => ['type' => 'text_line']]],
+            new Example(),
+        );
+
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        self::assertSame(['content' => ['code' => 'X'], 'view' => ['code' => ['type' => 'text_line']]], $result['product']);
+    }
+
+    public function testFlatPathStillDropsView(): void
+    {
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['product' => ['product']]);
+
+        $result = $normalizer->normalizeContentViewData(
+            ['template' => [], 'product' => ['code' => 'X']],
+            ['product' => ['code' => ['type' => 'text_line']]],
+            new Example(),
+        );
+
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        self::assertSame(['code' => 'X'], $result['product']);
+        self::assertSame([], $result['view']);
+    }
+
+    public function testContentPathViewTwinKeepsHigherPriorityKeys(): void
+    {
+        // "a" has higher priority and runs first.
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['a' => ['shop', 'content'], 'b' => ['shop', 'content']]);
+
+        $result = $normalizer->normalizeContentViewData(
+            ['template' => [], 'a' => ['title' => 'A'], 'b' => ['title' => 'B']],
+            ['a' => ['k' => 'from-a'], 'b' => ['k' => 'from-b', 'y' => 2]],
+            new Example(),
+        );
+
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        self::assertSame(['k' => 'from-a', 'y' => 2], $result['shop']['view']);
+    }
+
+    public function testMergeFieldViewDataIntoItemsSkipsTypesWithoutAContentPath(): void
+    {
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['product' => ['product']]);
+
+        $data = [
+            'resource' => new Example(),
+            'content' => [],
+            'view' => [],
+            'extension' => [],
+            'product' => ['items' => ['id' => 1]],
+        ];
+
+        $viewEnhancements = [
+            '[product][items]' => [
+                'path' => ['product', 'items'],
+                'itemsPropertyName' => 'items',
+                'items' => [['id' => 1]],
+            ],
+        ];
+
+        $result = $normalizer->mergeFieldViewDataIntoItems($data, $viewEnhancements);
+
+        // "product" has no sibling view (its path does not end in "content"), so the item view is dropped
+        self::assertSame([], $this->propertyAccessor->getValue($result, '[view]'));
+        self::assertSame(['id' => 1], $this->propertyAccessor->getValue($result, '[product][items]'));
+    }
+
+    public function testMergeFieldViewDataIntoItemsIsScopedByContentPathNotByFieldNameAlone(): void
+    {
+        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['exampleRoot' => ['exampleRoot', 'content']]);
+
+        $data = [
+            'resource' => new Example(),
+            'content' => [],
+            'view' => [
+                // a template property happens to share the field name "related" with the content path below
+                'related' => ['untouched' => 'template-value'],
+            ],
+            'extension' => [],
+            'exampleRoot' => [
+                'content' => [],
+                'view' => [
+                    'related' => [
+                        'items' => [['id' => 1], ['id' => 2]],
+                        0 => ['label' => 'first'],
+                    ],
+                ],
+            ],
+        ];
+
+        $viewEnhancements = [
+            '[exampleRoot][content][related]' => [
+                'path' => ['exampleRoot', 'related'],
+                'itemsPropertyName' => 'items',
+                'items' => [['id' => 1], ['id' => 2]],
+            ],
+        ];
+
+        $result = $normalizer->mergeFieldViewDataIntoItems($data, $viewEnhancements);
+
+        // folded into the content path's own [view], keyed by its type, not by the field name alone
+        self::assertSame(
+            [['id' => 1, 'label' => 'first'], ['id' => 2]],
+            $this->propertyAccessor->getValue($result, '[exampleRoot][view][related][items]')
+        );
+
+        // the template property with the same field name keeps its own, unrelated view
+        self::assertSame(
+            ['untouched' => 'template-value'],
+            $this->propertyAccessor->getValue($result, '[view][related]')
+        );
     }
 }

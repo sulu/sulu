@@ -60,11 +60,14 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_content.content_view_resolver', ContentViewResolver::class)
         ->args([
             new Reference('sulu_content.resolvable_resource_queue_processor'),
-            tagged_iterator('sulu_content.content_resolver', indexAttribute: 'type'),
+            tagged_iterator('sulu_content.content_resolver', defaultIndexMethod: 'getType'),
         ]);
 
     $services->set('sulu_content.content_view_data_normalizer', ContentViewDataNormalizer::class)
-        ->args([new Reference('property_accessor')]);
+        ->args([
+            new Reference('property_accessor'),
+            [], // ContentResolverPathPass replaces the paths map
+        ]);
 
     $services->set('sulu_content.content_enhancer', ContentEnhancer::class)
         ->args([tagged_iterator('sulu_content.dimension_content_enhancer')]);
@@ -99,28 +102,28 @@ return static function(ContainerConfigurator $container) {
             new Reference('.inner'),
             new Reference('sulu_admin.form_metadata_provider'),
         ])
-        ->tag('sulu_content.content_resolver', ['type' => 'template']);
+        ->tag('sulu_content.content_resolver');
 
     $services->set('sulu_content.settings_resolver', SettingsResolver::class)
-        ->tag('sulu_content.content_resolver', ['type' => 'settings']);
+        ->tag('sulu_content.content_resolver');
 
     $services->set('sulu_content.excerpt_taxonomy_resolver', ExcerptTaxonomyResolver::class)
         ->args([
             new Reference('sulu_admin.form_metadata_provider'),
             new Reference('sulu_content.metadata_resolver'),
         ])
-        ->tag('sulu_content.content_resolver', ['type' => 'excerpt']);
+        ->tag('sulu_content.content_resolver');
 
     $services->set('sulu_content.seo_resolver', SeoResolver::class)
         ->args([
             new Reference('sulu_admin.form_metadata_provider'),
             new Reference('sulu_content.metadata_resolver'),
         ])
-        ->tag('sulu_content.content_resolver', ['type' => 'seo']);
+        ->tag('sulu_content.content_resolver');
 
     $services->set('sulu_content.dimension_content_resolver', DimensionContentResolver::class)
         ->args([new Reference('property_accessor')])
-        ->tag('sulu_content.content_resolver', ['type' => 'object']);
+        ->tag('sulu_content.content_resolver');
 
     $services->set('sulu_content.metadata_resolver', MetadataResolver::class)
         ->args([new Reference('sulu_content.property_resolver_provider')]);

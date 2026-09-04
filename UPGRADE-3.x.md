@@ -1,5 +1,35 @@
 # Upgrade
 
+## 3.1.0
+
+### Content resolvers declare their type and output path on the interface
+
+`ResolverInterface` gained two static methods that every implementation must now provide:
+
+```php
+public static function getType(): string;
+public static function getOutputPath(): string;
+```
+
+`getType()` keys the resolver's output and replaces the tag's `type` attribute. `getOutputPath()`
+is a bracket path anchored at `[root]` that places the output in the resolved content view data;
+the location used before this release is `[root][extension][<type>]`. A path ending in `content`
+also writes the view to the sibling `view` key.
+
+The `type` attribute on the `sulu_content.content_resolver` tag is no longer read, so register
+with the bare tag:
+
+```php
+$services->set('acme_product.product_resolver', ProductResolver::class)
+    ->tag('sulu_content.content_resolver');
+```
+
+Two resolvers may share an output path. The tag's `priority` orders them and the first writer of
+a key keeps it, so on a collision the higher priority resolver wins. The envelope keys `content`,
+`view` and `extension` are seeded before any resolver runs, so a `[root]` resolver cannot claim
+them at any priority. Registering two resolvers with the same `type` now fails at container
+compile time, where previously one of them was silently ignored.
+
 ## 3.0.9
 
 ### Widened webspace, slug and template key column lengths
