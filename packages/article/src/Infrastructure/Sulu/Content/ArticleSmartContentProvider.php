@@ -230,12 +230,18 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         /** @var array{id: string, title: string, templateKey: string|null}[] $result */
         $result = $queryBuilder->getQuery()->getArrayResult();
 
+        // built once and reused for every result, instead of calling getGroups() per item
+        $groupByTemplateKey = [];
+        foreach ($this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE) as $group) {
+            foreach ($group->templates as $template) {
+                $groupByTemplateKey[$template] = $group->identifier;
+            }
+        }
+
         foreach ($result as &$item) {
             $templateKey = $item['templateKey'];
-            $item['group'] = $this->groupProvider->resolveGroup(
-                ArticleInterface::TEMPLATE_TYPE,
-                \is_string($templateKey) ? $templateKey : null,
-            );
+            $item['group'] = (\is_string($templateKey) ? $groupByTemplateKey[$templateKey] ?? null : null)
+                ?? GroupProviderInterface::DEFAULT_GROUP;
             $item['locale'] = $filters['locale'];
             unset($item['templateKey']);
         }

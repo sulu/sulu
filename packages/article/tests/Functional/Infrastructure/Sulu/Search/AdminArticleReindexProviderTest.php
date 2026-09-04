@@ -220,11 +220,7 @@ class AdminArticleReindexProviderTest extends SuluTestCase
 
             public function resolveGroup(string $key, ?string $templateKey): string
             {
-                if ('custom-template' === $templateKey) {
-                    return 'custom-group';
-                }
-
-                return GroupProviderInterface::DEFAULT_GROUP;
+                return 'custom-template' === $templateKey ? 'custom-group' : GroupProviderInterface::DEFAULT_GROUP;
             }
         };
 

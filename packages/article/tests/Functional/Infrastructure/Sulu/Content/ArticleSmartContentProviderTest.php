@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Sulu\Article\Application\Message\ApplyWorkflowTransitionArticleMessage;
 use Sulu\Article\Application\Message\CreateArticleMessage;
 use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -270,8 +271,28 @@ class ArticleSmartContentProviderTest extends SuluTestCase
         $this->assertSame('en', $blogItem['locale']);
     }
 
+    public function testFindFlatByReturnsRequestedLocaleNotAHardcodedOne(): void
+    {
+        $germanArticle = self::createArticle([
+            'title' => 'Deutscher Artikel',
+            'locale' => 'de',
+        ]);
+
+        /** @var array<array{id: string, title: string, group: string, locale: string}> $result */
+        $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), ...['locale' => 'de']], []);
+
+        $itemsByUuid = [];
+        foreach ($result as $item) {
+            $itemsByUuid[$item['id']] = $item;
+        }
+
+        $this->assertArrayHasKey($germanArticle->getUuid(), $itemsByUuid);
+        $this->assertSame('de', $itemsByUuid[$germanArticle->getUuid()]['locale']);
+    }
+
     public function testGetConfigurationHasGroupAwareView(): void
     {
+        /** @var ProviderConfiguration $configuration */
         $configuration = $this->smartContentProvider->getConfiguration();
 
         $this->assertSame('sulu_article.article.edit_tabs_{group}', $configuration->getView());
