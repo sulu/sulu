@@ -26,9 +26,28 @@ export type TogglerItemConfig = {|
 |};
 export type ToolbarItemConfig<T> = ButtonItemConfig | DropdownItemConfig | SelectItemConfig<T> | TogglerItemConfig;
 
+export type OverlayToolbarAction = {
+    +destroy: () => void,
+    +getNode: (index?: number) => Node,
+    +getToolbarItemConfig: () => ?ToolbarItemConfig<*>,
+};
+
+/**
+ * The "form" a toolbar action calls back into. Implemented by the "Form" view and by the
+ * FormOverlay container, which is why it is an interface instead of the view class.
+ */
+export interface ToolbarActionFormInterface {
+    errors: Array<ToolbarErrorType>,
+    +showSuccessSnackbar: () => void,
+    +submit: (options?: Object) => void,
+    warnings: Array<ToolbarErrorType>,
+}
+
 export type ToolbarProps = {
     navigationOpen?: boolean,
     onNavigationButtonClick?: () => void,
+    /* an overlay renders its own snackbar, the toolbar store is not written to there */
+    showSnackbars: boolean,
     storeKey?: string,
 };
 

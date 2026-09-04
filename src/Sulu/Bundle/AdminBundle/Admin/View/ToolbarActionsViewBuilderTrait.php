@@ -16,12 +16,12 @@ trait ToolbarActionsViewBuilderTrait
     /**
      * @param ToolbarAction[] $toolbarActions
      */
-    private function addToolbarActionsToView(View $view, array $toolbarActions): void
+    private function addToolbarActionsToView(View $view, array $toolbarActions, string $option = 'toolbarActions'): void
     {
-        $oldToolbarActions = $view->getOption('toolbarActions');
+        $oldToolbarActions = $view->getOption($option);
         $newToolbarActions = $oldToolbarActions
             ? \array_merge($oldToolbarActions, $toolbarActions)
             : $toolbarActions;
-        $view->setOption('toolbarActions', $newToolbarActions);
+        $view->setOption($option, $newToolbarActions);
     }
 }

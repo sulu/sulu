@@ -7,6 +7,8 @@ import {ResourceFormStore, resourceFormStoreFactory} from '../../containers/Form
 import FormOverlay from '../../containers/FormOverlay';
 import ResourceStore from '../../stores/ResourceStore';
 import List from '../List';
+import formToolbarActionRegistry from '../Form/registries/formToolbarActionRegistry';
+import type {ToolbarActionFormInterface, OverlayToolbarAction} from '../../containers/Toolbar/types';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import type {IObservableValue} from 'mobx/lib/mobx';
 import type {ElementRef} from 'react';
@@ -14,6 +16,9 @@ import type {ElementRef} from 'react';
 type Props = ViewProps & {
     resourceStore?: ResourceStore,
 };
+
+// These navigate the router, which would move the application behind the overlay.
+const UNSUPPORTED_OVERLAY_TOOLBAR_ACTIONS = ['sulu_admin.copy', 'sulu_admin.delete'];
 
 @observer
 class FormOverlayList extends React.Component<Props> {
@@ -41,6 +46,65 @@ class FormOverlayList extends React.Component<Props> {
 
     handleFormOverlayClose = () => {
         this.destroyFormStore();
+
+        // The overlay toolbar saves without closing, so the list can be out of date by then.
+        if (this.overlayToolbarActions.length > 0 && this.listRef) {
+            this.listRef.reload();
+        }
+    };
+
+    get overlayToolbarActions(): Array<Object> {
+        const {
+            router: {
+                route: {
+                    options: {
+                        overlayToolbarActions = [],
+                    },
+                },
+            },
+        } = this.props;
+
+        return toJS(overlayToolbarActions);
+    }
+
+    componentDidMount() {
+        this.overlayToolbarActions.forEach((toolbarAction) => {
+            if (UNSUPPORTED_OVERLAY_TOOLBAR_ACTIONS.includes(toolbarAction.type)) {
+                throw new Error(
+                    'The toolbar action "' + toolbarAction.type + '" cannot be used in an overlay!'
+                );
+            }
+        });
+    }
+
+    buildToolbarActionsProvider = (formStore: ResourceFormStore) => {
+        const {
+            router,
+            router: {
+                route: {
+                    options: {
+                        locales,
+                    },
+                },
+            },
+        } = this.props;
+
+        const overlayToolbarActions = this.overlayToolbarActions;
+
+        if (overlayToolbarActions.length === 0) {
+            return undefined;
+        }
+
+        return (form: ToolbarActionFormInterface): Array<OverlayToolbarAction> => overlayToolbarActions.map(
+            (toolbarAction) => new (formToolbarActionRegistry.get(toolbarAction.type))(
+                formStore,
+                form,
+                router,
+                locales,
+                toolbarAction.options,
+                formStore.resourceStore
+            )
+        );
     };
 
     @action createFormOverlay = (itemId: ?string | number) => {
@@ -197,6 +261,8 @@ class FormOverlayList extends React.Component<Props> {
                         router={this.props.router}
                         size={overlaySize ? overlaySize : 'small'}
                         title={overlayTitle}
+                        toolbarActionsProvider={this.buildToolbarActionsProvider(formStore)}
+                        toolbarStoreKey={'form_overlay_' + this.props.router.route.name}
                     />
                 )}
             </Fragment>
