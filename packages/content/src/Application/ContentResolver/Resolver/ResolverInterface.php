@@ -22,7 +22,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
  *
  * Register with the `sulu_content.content_resolver` tag. `getType()` keys the output and
  * `getOutputPath()` places it in the resolved content view data. Resolvers may share a path:
- * higher tag `priority` runs first and its values win every collision.
+ * higher tag `priority` runs first and its values win on a key collision.
  *
  * Resolvers run for every resolved entity at every depth. When `$properties` is set, filter
  * by your own prefix and return null or a subset instead of loading unrequested data.
