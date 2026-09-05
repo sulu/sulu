@@ -192,6 +192,43 @@ test('The loading strategy should be called when a request is sent', () => {
     listStore.destroy();
 });
 
+test('The loading strategy should keep a "fields" option coming from the request options', () => {
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    const page = observable.box(1);
+    const locale = observable.box();
+    const listStore = new ListStore(
+        'categories',
+        'categories',
+        'list_test',
+        {
+            page,
+            locale,
+        },
+        {
+            fields: 'key',
+        },
+        undefined
+    );
+    listStore.schema = {};
+
+    listStore.updateLoadingStrategy(loadingStrategy);
+    listStore.updateStructureStrategy(structureStrategy);
+
+    expect(loadingStrategy.load).toHaveBeenCalledWith(
+        'categories',
+        expect.objectContaining({
+            fields: [
+                'id',
+                'key',
+            ],
+        }),
+        undefined
+    );
+
+    listStore.destroy();
+});
+
 test('The user store should be called correctly when changing the schema', () => {
     const page = observable.box(1);
     const locale = observable.box();

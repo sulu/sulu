@@ -566,7 +566,12 @@ export default class ListStore {
         options.sortBy = this.sortColumn.get();
         options.sortOrder = this.sortOrder.get();
         options.limit = this.limit.get();
-        options.fields = this.fields;
+        // "fields" can also arrive through the request options, e.g. a selection field asking for
+        // a property its list does not display. Both sets are requested instead of one winning.
+        const requestedFields = typeof options.fields === 'string'
+            ? options.fields.split(',')
+            : (options.fields || []);
+        options.fields = [...new Set([...this.fields, ...requestedFields])];
         if (Object.keys(this.filterQueryOption).length > 0) {
             options.filter = this.filterQueryOption;
         }
