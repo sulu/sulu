@@ -489,7 +489,10 @@ class MediaManager implements MediaManagerInterface
     protected function setDataToMedia(Media $media, $data, $user)
     {
         foreach ($data as $attribute => $value) {
+            // a scalar is applied whenever it carries something, so that a title of "0" or a
+            // numeric value of 0 is not mistaken for an absent one
             if ($value
+                || (\is_scalar($value) && '' !== $value)
                 || 'tags' === $attribute
                 || 'size' === $attribute
                 || 'description' === $attribute
