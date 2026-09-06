@@ -6,6 +6,7 @@
         "preinstall": "node preinstall.js",
         "lint:js": "eslint . --cache",
         "lint:scss": "stylelint src/Sulu/Bundle/*/Resources/js/**/*.scss",
+        "lint:enzyme": "node tests/js/check-enzyme-baseline.js",
         "flow": "flow",
         "test": "jest",
         "depcruise": "depcruise src/Sulu/Bundle/*/Resources/js -c dependency-cruiser.json",
