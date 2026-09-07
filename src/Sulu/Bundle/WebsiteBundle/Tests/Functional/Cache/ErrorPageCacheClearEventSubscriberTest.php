@@ -30,11 +30,14 @@ class ErrorPageCacheClearEventSubscriberTest extends KernelTestCase
         $this->assertEquals('onCacheClear', $events[Events::CACHE_CLEAR]);
     }
 
-    public function testOnCacheClearDoesNotClearPoolWhenDebugIsTrue(): void
+    public function testOnCacheClearClearsPool(): void
     {
         $cacheMock = $this->createMock(CacheItemPoolInterface::class);
         $eventMock = $this->createMock(CacheClearEvent::class);
 
-        $cacheMock->expects($this->never())->method('clear');
+        $cacheMock->expects($this->once())->method('clear');
+
+        $listener = new ErrorPageCacheClearEventSubscriber($cacheMock);
+        $listener->onCacheClear($eventMock);
     }
 }

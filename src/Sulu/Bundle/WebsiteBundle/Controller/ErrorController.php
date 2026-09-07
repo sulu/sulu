@@ -23,13 +23,17 @@ use Twig\Environment;
 
 class ErrorController
 {
+    /** @var SymfonyErrorController */
+    private $symfonyErrorController;
+
     public function __construct(
-        private SymfonyErrorController $symfonyErrorController,
+        SymfonyErrorController $symfonyErrorController,
         private TemplateAttributeResolverInterface $templateAttributeResolver,
         private Environment $twig,
         private bool $debug = false,
         private ?CacheItemPoolInterface $cache = null,
     ) {
+        $this->symfonyErrorController = $symfonyErrorController;
     }
 
     public function __invoke(Request $request, \Throwable $exception): Response
@@ -38,25 +42,19 @@ class ErrorController
             return $this->symfonyErrorController->__invoke($exception);
         }
 
-        $flattenException = FlattenException::createFromThrowable($exception);
-        $code = $flattenException->getStatusCode();
-        $errorTemplate = $this->getErrorTemplate($request, $code);
-
-        // render the default twig error template when no webspace template found
-        if (!$errorTemplate) {
-            return $this->symfonyErrorController->__invoke($exception);
-        }
-
         /** @var RequestAttributes $webspaceAttributes */
         $webspaceAttributes = $request->attributes->get('_sulu');
         $locale = $request->getLocale();
+
+        $flattenException = FlattenException::createFromThrowable($exception);
+        $code = $flattenException->getStatusCode();
 
         /** @var Webspace|null $webspace */
         $webspace = $webspaceAttributes->getAttribute('webspace');
         $webspaceKey = $webspace?->getKey() ?? '';
 
         if ($this->cache instanceof CacheItemPoolInterface) {
-            $cacheKey = \sprintf('%s-%s-%s', $webspaceKey, $locale, $code);
+            $cacheKey = \sprintf('%s-%s-%s-%s', $webspaceKey, $locale, $request->getRequestFormat(), $code);
             $item = $this->cache->getItem($cacheKey);
 
             if ($item->isHit()) {
@@ -67,13 +65,26 @@ class ErrorController
             }
         }
 
+        $errorTemplate = $this->getErrorTemplate($request, $code);
+
+        // render the default twig error template when no webspace template found
+        if (!$errorTemplate) {
+            return $this->symfonyErrorController->__invoke($exception);
+        }
+
+        $parameters = [
+            'exception' => $flattenException,
+            'status_code' => $flattenException->getStatusCode(),
+            'status_text' => $flattenException->getStatusText(),
+        ];
+
+        if ($this->cache instanceof CacheItemPoolInterface) {
+            unset($parameters['exception']);
+        }
+
         $htmlResponse = $this->twig->render(
             $errorTemplate,
-            $this->templateAttributeResolver->resolve([
-                'exception' => $flattenException,
-                'status_code' => $flattenException->getStatusCode(),
-                'status_text' => $flattenException->getStatusText(),
-            ])
+            $this->templateAttributeResolver->resolve($parameters)
         );
 
         if ($this->cache instanceof CacheItemPoolInterface) {
