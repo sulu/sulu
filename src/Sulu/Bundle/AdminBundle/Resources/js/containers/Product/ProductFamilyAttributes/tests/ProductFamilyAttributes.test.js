@@ -3,16 +3,36 @@ import React from 'react';
 import {render, screen, within} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
+import fieldRegistry from '../../../Form/registries/fieldRegistry';
+import FormInspector from '../../../Form/FormInspector';
 import ProductFamilyAttributes from '../ProductFamilyAttributes';
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key, parameters) => parameters ? key + ':' + JSON.stringify(parameters) : key),
 }));
 
+jest.mock('../../../Form/FormInspector', () => jest.fn());
+
+// The registry hands back a plain checkbox for every type, enough to see the value round-trip.
+jest.mock('../../../Form/registries/fieldRegistry', () => ({
+    get: jest.fn(() => function Field(props) {
+        const React = require('react');
+
+        return React.createElement('input', {
+            checked: !!props.value,
+            disabled: props.disabled,
+            onChange: (event) => props.onChange(event.target.checked),
+            type: 'checkbox',
+        });
+    }),
+    getOptions: jest.fn(() => ({})),
+}));
+
 jest.mock('../../../../stores/MultiSelectionStore', () => jest.fn(function() {
     mockExtendObservable(this, {items: [], loading: false});
-    // eslint-disable-next-line testing-library/prefer-explicit-assert -- store method, not a query
-    this.getById = jest.fn((id) => this.items.find((item) => item.id === id));
+    this.set = jest.fn((items) => {
+        this.items = items;
+    });
     this.loadItems = jest.fn(() => {
         this.loading = true;
     });
@@ -49,10 +69,60 @@ const VALUE = [
     {id: 'a2', required: true, variantSpecific: false},
 ];
 
+// $FlowFixMe
+const formInspector: FormInspector = new FormInspector();
+
+const formProps = {
+    dataPath: '/attributes',
+    formInspector,
+    listKey: 'attributes',
+    resourceKey: 'attributes',
+    router: undefined,
+    schemaPath: '/attributes',
+};
+
 function renderComponent(value = VALUE, onChange = jest.fn()) {
     const view = render(
-        <ProductFamilyAttributes locale={observable.box('en')} onChange={onChange} value={value} />
+        <ProductFamilyAttributes
+            {...formProps}
+            locale={observable.box('en')}
+            onChange={onChange}
+            value={value}
+        />
     );
+    const MultiSelectionStore = require('../../../../stores/MultiSelectionStore');
+    // $FlowFixMe
+    const store = MultiSelectionStore.mock.instances[0];
+    store.items = ITEMS;
+
+    return {...view, store};
+}
+
+// The form hands the changed value straight back as the new prop; mirror that for the overlay tests.
+type ControlledProps = {onChange: Function, value: Array<Object>};
+
+class ControlledProductFamilyAttributes extends React.Component<ControlledProps, {value: Array<Object>}> {
+    state = {value: this.props.value};
+
+    handleChange = (value: Array<Object>) => {
+        this.setState({value});
+        this.props.onChange(value);
+    };
+
+    render() {
+        return (
+            <ProductFamilyAttributes
+                {...formProps}
+                locale={observable.box('en')}
+                onChange={this.handleChange}
+                value={this.state.value}
+            />
+        );
+    }
+}
+
+function renderControlled(value = VALUE, onChange = jest.fn()) {
+    const view = render(<ControlledProductFamilyAttributes onChange={onChange} value={value} />);
     const MultiSelectionStore = require('../../../../stores/MultiSelectionStore');
     // $FlowFixMe
     const store = MultiSelectionStore.mock.instances[0];
@@ -71,18 +141,24 @@ function getCard(title: string) {
     return screen.getByText(title).closest('section');
 }
 
-test('requests the fields needed to resolve names and groups', () => {
+function getCardHeader(title: string) {
+    // $FlowFixMe
+    return screen.getByText(title).closest('header');
+}
+
+test('loads the selected attributes from the resource', () => {
     renderComponent();
 
     const MultiSelectionStore = require('../../../../stores/MultiSelectionStore');
 
-    expect(MultiSelectionStore).toHaveBeenCalledWith(
-        'attributes',
-        ['a3', 'a1', 'a2'],
-        expect.anything(),
-        'ids',
-        {fields: 'id,name,group,groupName,position'}
-    );
+    expect(MultiSelectionStore).toHaveBeenCalledWith('attributes', ['a3', 'a1', 'a2'], expect.anything(), 'ids');
+});
+
+test('renders the flag columns through the registered checkbox field type', () => {
+    renderComponent();
+
+    expect(fieldRegistry.get).toHaveBeenCalledWith('checkbox');
+    expect(within(getRow('Size')).getAllByRole('checkbox')).toHaveLength(2);
 });
 
 test('orders group cards alphabetically by group name', () => {
@@ -156,7 +232,7 @@ test('removing a row emits the value without it', async() => {
 
     renderComponent(VALUE, handleChange);
 
-    await userEvent.click(within(getRow('Size')).getByLabelText('su-trash-alt'));
+    await userEvent.click(within(getRow('Size')).getByRole('button', {name: 'sulu_admin.delete'}));
 
     expect(handleChange).toHaveBeenCalledWith([
         {id: 'a3', required: false, variantSpecific: false},
@@ -169,7 +245,7 @@ test('removing a group removes every resolved entry in it and keeps unresolved i
 
     renderComponent([...VALUE, {id: 'gone', required: false, variantSpecific: false}], handleChange);
 
-    await userEvent.click(within(getCard('General')).getByLabelText('sulu_admin.delete'));
+    await userEvent.click(within(getCardHeader('General')).getByRole('button', {name: 'sulu_admin.delete'}));
 
     expect(handleChange).toHaveBeenCalledWith([
         {id: 'a3', required: false, variantSpecific: false},
@@ -180,14 +256,66 @@ test('removing a group removes every resolved entry in it and keeps unresolved i
 test('confirming the overlay replaces the selection, keeping flags of entries already present', async() => {
     const handleChange = jest.fn();
 
-    const {store} = renderComponent(VALUE, handleChange);
+    const {store} = renderControlled(VALUE, handleChange);
 
     await userEvent.click(screen.getByText('sulu_product.add_attributes_overlay_title'));
     await userEvent.click(screen.getByText('confirm-overlay'));
 
-    expect(store.loadItems).toHaveBeenCalledWith(['a1', 'a4']);
+    expect(store.set).toHaveBeenCalledWith(mockOverlayItems);
+    expect(store.loadItems).toHaveBeenCalledTimes(0);
     expect(handleChange).toHaveBeenCalledWith([
         {id: 'a1', required: false, variantSpecific: true},
         {id: 'a4', required: false, variantSpecific: false},
     ]);
+});
+
+test('renders the overlay rows without a reload', async() => {
+    const {store} = renderControlled();
+
+    await userEvent.click(screen.getByText('sulu_product.add_attributes_overlay_title'));
+    await userEvent.click(screen.getByText('confirm-overlay'));
+
+    expect(screen.queryByText('Marketing')).not.toBeInTheDocument();
+    expect(within(getCard('General')).getByText('Colour')).toBeInTheDocument();
+    expect(store.loadItems).not.toHaveBeenCalled();
+});
+
+function rerenderWithValue(rerender, value) {
+    rerender(
+        <ProductFamilyAttributes
+            {...formProps}
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            value={value}
+        />
+    );
+}
+
+test('loads the attributes when the value receives an id the store has not been asked for', () => {
+    const {rerender, store} = renderComponent();
+
+    rerenderWithValue(rerender, [...VALUE, {id: 'a9', required: false, variantSpecific: false}]);
+
+    expect(store.loadItems).toHaveBeenCalledWith(['a3', 'a1', 'a2', 'a9']);
+});
+
+test('does not reload when the value only loses entries or changes flags', () => {
+    const {rerender, store} = renderComponent();
+
+    rerenderWithValue(rerender, [
+        {id: 'a3', required: true, variantSpecific: false},
+        {id: 'a1', required: false, variantSpecific: true},
+    ]);
+
+    expect(store.loadItems).not.toHaveBeenCalled();
+});
+
+test('does not reload again for an id the resource did not return', () => {
+    const {rerender, store} = renderComponent();
+    const value = [...VALUE, {id: 'gone', required: false, variantSpecific: false}];
+
+    rerenderWithValue(rerender, value);
+    rerenderWithValue(rerender, value.map((entry) => ({...entry, required: true})));
+
+    expect(store.loadItems).toHaveBeenCalledTimes(1);
 });

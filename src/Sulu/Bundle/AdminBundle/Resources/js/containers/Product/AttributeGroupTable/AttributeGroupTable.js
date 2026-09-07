@@ -9,6 +9,9 @@ type Props = {|
     headerCells: Array<Object>,
 |};
 
+/**
+ * @experimental We can not yet give BC Promise for this new container in Sulu 3.1.
+ */
 export default class AttributeGroupTable extends React.Component<Props> {
     render() {
         const {children, headerCells} = this.props;

@@ -1,101 +1,89 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, computed, observable, reaction} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {translate} from '../../../utils/Translator';
 import CollapsibleCollection from '../../../components/CollapsibleCollection';
 import Loader from '../../../components/Loader';
 import Table from '../../../components/Table';
+import Router from '../../../services/Router';
 import MultiListOverlay from '../../MultiListOverlay';
+import FormInspector from '../../Form/FormInspector';
 import MultiSelectionStore from '../../../stores/MultiSelectionStore';
 import AttributeGroupTable from '../AttributeGroupTable';
 import attributeGroupTableStyles from '../AttributeGroupTable/attributeGroupTable.scss';
-import AttributeFlagCheckbox from './AttributeFlagCheckbox';
+import AttributeFieldCell from './AttributeFieldCell';
 import AttributeRemoveButton from './AttributeRemoveButton';
 import type {CollapsibleActionConfig} from '../../../components/CollapsibleCollection/types';
+import type {Entry, FieldColumn, Group} from '../types';
 import type {IObservableValue} from 'mobx/lib/mobx';
 
-export type Entry = {
-    id: string,
-    required: boolean,
-    variantSpecific: boolean,
-};
-
-// "subtitle" is optional because CollapsibleConfig declares it optional and invariant.
-type Group = {
-    entries: Array<{entry: Entry, item: Object}>,
-    id: string,
-    subtitle?: string,
-    title: string,
-};
-
 type Props = {|
+    dataPath: string,
     disabled?: boolean,
+    formInspector: FormInspector,
+    listKey: string,
     locale: IObservableValue<string>,
     onChange: (value: Array<Entry>) => void,
+    resourceKey: string,
+    router: ?Router,
+    schemaPath: string,
     value: ?Array<Entry>,
 |};
 
-const RESOURCE_KEY = 'attributes';
-const LIST_KEY = 'attributes';
+const COLUMNS: Array<FieldColumn> = [
+    {name: 'required', title: 'sulu_product.attribute_required', type: 'checkbox'},
+    {name: 'variantSpecific', title: 'sulu_product.attribute_variant', type: 'checkbox'},
+];
 
+/**
+ * @experimental We can not yet give BC Promise for this new container in Sulu 3.1.
+ */
 @observer
 class ProductFamilyAttributes extends React.Component<Props> {
     selectionStore: MultiSelectionStore<string>;
 
-    disposeInitialLoadReaction: () => void;
+    requestedIds: Set<string>;
 
     @observable overlayOpen: boolean = false;
-
-    // Only the first load blanks the field behind a Loader; a reload triggered by the overlay must
-    // leave the already-rendered cards in place.
-    @observable initialLoadDone: boolean = false;
 
     constructor(props: Props) {
         super(props);
 
-        // "group" and "groupName" are visibility="never" in the bundle's attributes list, so
-        // AbstractListBuilder::setSelectFields() strips them unless named here explicitly.
-        this.selectionStore = new MultiSelectionStore(
-            RESOURCE_KEY,
-            this.value.map((entry) => entry.id),
-            this.props.locale,
-            'ids',
-            {fields: 'id,name,group,groupName,position'}
-        );
+        const ids = this.value.map((entry) => entry.id);
 
-        this.disposeInitialLoadReaction = reaction(
-            () => this.selectionStore.loading,
-            (loading) => {
-                if (!loading) {
-                    this.markInitialLoadDone();
-                }
-            },
-            {fireImmediately: true}
-        );
+        this.requestedIds = new Set(ids);
+        this.selectionStore = new MultiSelectionStore(this.props.resourceKey, ids, this.props.locale, 'ids');
     }
 
-    componentWillUnmount() {
-        this.disposeInitialLoadReaction();
-    }
+    componentDidUpdate() {
+        const ids = this.value.map((entry) => entry.id);
 
-    @action markInitialLoadDone = () => {
-        this.initialLoadDone = true;
-    };
+        if (!ids.some((id) => !this.itemsById.has(id) && !this.requestedIds.has(id))) {
+            return;
+        }
+
+        this.requestedIds = new Set(ids);
+        this.selectionStore.loadItems(ids);
+    }
 
     @computed get value(): Array<Entry> {
         return this.props.value || [];
     }
 
+    @computed get itemsById(): Map<string, Object> {
+        return new Map(this.selectionStore.items.map((item) => [item.id, item]));
+    }
+
     @computed get selectedItems(): Array<Object> {
-        return this.value.map((entry) => this.selectionStore.getById(entry.id)).filter(Boolean);
+        return this.value.map((entry) => this.itemsById.get(entry.id)).filter(Boolean);
     }
 
     @computed get groups(): Array<Group> {
         const groups = {};
 
         this.value.forEach((entry) => {
-            const item = this.selectionStore.getById(entry.id);
+            const item = this.itemsById.get(entry.id);
 
             if (!item) {
                 return;
@@ -139,12 +127,11 @@ class ProductFamilyAttributes extends React.Component<Props> {
             <Table.HeaderCell className={attributeGroupTableStyles.labelCell} key="label">
                 {translate('sulu_product.attribute')}
             </Table.HeaderCell>,
-            <Table.HeaderCell className={attributeGroupTableStyles.flagCell} key="required">
-                {translate('sulu_product.attribute_required')}
-            </Table.HeaderCell>,
-            <Table.HeaderCell className={attributeGroupTableStyles.flagCell} key="variantSpecific">
-                {translate('sulu_product.attribute_variant')}
-            </Table.HeaderCell>,
+            ...COLUMNS.map((column) => (
+                <Table.HeaderCell className={attributeGroupTableStyles.fieldCell} key={column.name}>
+                    {translate(column.title)}
+                </Table.HeaderCell>
+            )),
         ];
 
         // Table.Header clones every child unconditionally, so an omitted cell must never appear as
@@ -157,28 +144,23 @@ class ProductFamilyAttributes extends React.Component<Props> {
     }
 
     renderRowCells(entry: Entry, item: Object): Array<Object> {
-        const {disabled} = this.props;
+        const {dataPath, disabled, formInspector, router, schemaPath} = this.props;
 
         const cells = [
             <Table.Cell className={attributeGroupTableStyles.labelCell} key="label">{item.name}</Table.Cell>,
-            <Table.Cell className={attributeGroupTableStyles.flagCell} key="required">
-                <AttributeFlagCheckbox
-                    checked={entry.required}
+            ...COLUMNS.map((column) => (
+                <AttributeFieldCell
+                    column={column}
+                    dataPath={dataPath}
                     disabled={!!disabled}
-                    flag="required"
-                    id={entry.id}
-                    onChange={this.handleFlagChange}
+                    entry={entry}
+                    formInspector={formInspector}
+                    key={column.name}
+                    onChange={this.handleFieldChange}
+                    router={router}
+                    schemaPath={schemaPath}
                 />
-            </Table.Cell>,
-            <Table.Cell className={attributeGroupTableStyles.flagCell} key="variantSpecific">
-                <AttributeFlagCheckbox
-                    checked={entry.variantSpecific}
-                    disabled={!!disabled}
-                    flag="variantSpecific"
-                    id={entry.id}
-                    onChange={this.handleFlagChange}
-                />
-            </Table.Cell>,
+            )),
         ];
 
         // Table.Row clones every child unconditionally, so an omitted cell must never appear as a
@@ -204,9 +186,9 @@ class ProductFamilyAttributes extends React.Component<Props> {
             existing[entry.id] = entry;
         });
 
-        // The overlay's items lack group/groupName, so setting them directly would flash every row
-        // into one untitled card. Reload from the resource instead.
-        this.selectionStore.loadItems(selectedItems.map((item) => item.id));
+        // The attributes list always returns group, groupName and position.
+        this.requestedIds = new Set(selectedItems.map((item) => item.id));
+        this.selectionStore.set(selectedItems);
         this.overlayOpen = false;
 
         this.props.onChange(selectedItems.map((item) => existing[item.id] || {
@@ -216,8 +198,8 @@ class ProductFamilyAttributes extends React.Component<Props> {
         }));
     };
 
-    handleFlagChange = (id: string, flag: string, checked: boolean) => {
-        this.props.onChange(this.value.map((entry) => entry.id === id ? {...entry, [flag]: checked} : entry));
+    handleFieldChange = (id: string, name: string, value: mixed) => {
+        this.props.onChange(this.value.map((entry) => entry.id === id ? {...entry, [name]: value} : entry));
     };
 
     handleEntryRemove = (id: string) => {
@@ -228,7 +210,7 @@ class ProductFamilyAttributes extends React.Component<Props> {
         const groupId = this.groups[index].id;
 
         this.props.onChange(this.value.filter((entry) => {
-            const item = this.selectionStore.getById(entry.id);
+            const item = this.itemsById.get(entry.id);
 
             // An unresolved id belongs to no group and must survive a group delete.
             return !item || item.group !== groupId;
@@ -250,7 +232,7 @@ class ProductFamilyAttributes extends React.Component<Props> {
     };
 
     render() {
-        if (this.selectionStore.loading && !this.initialLoadDone) {
+        if (this.selectionStore.loading) {
             return <Loader />;
         }
 
@@ -267,13 +249,13 @@ class ProductFamilyAttributes extends React.Component<Props> {
                 />
                 <MultiListOverlay
                     adapter="table"
-                    listKey={LIST_KEY}
+                    listKey={this.props.listKey}
                     locale={this.props.locale}
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}
                     open={this.overlayOpen}
                     preSelectedItems={this.selectedItems}
-                    resourceKey={RESOURCE_KEY}
+                    resourceKey={this.props.resourceKey}
                     title={translate('sulu_product.add_attributes_overlay_title')}
                 />
             </Fragment>

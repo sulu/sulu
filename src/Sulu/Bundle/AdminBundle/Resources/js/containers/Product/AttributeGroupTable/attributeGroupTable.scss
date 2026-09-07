@@ -25,6 +25,11 @@ $removeColumnWidth: 56px;
     th {
         background-color: $wildSand;
         font-weight: normal;
+    }
+
+    /* header and body cells share one padding so the label column lines up */
+    th,
+    td {
         padding: 4px 8px;
     }
 
@@ -51,9 +56,9 @@ $removeColumnWidth: 56px;
         color: $mineShaft;
     }
 
-    /* no width: the checkbox columns split what the label column leaves */
-    th.flagCell,
-    td.flagCell {
+    /* no width: the field columns split what the label column leaves */
+    th.fieldCell,
+    td.fieldCell {
         max-width: none;
         text-align: center;
     }
@@ -65,8 +70,8 @@ $removeColumnWidth: 56px;
     }
 }
 
-/* the cell content is a flex container, text-align does not reach the checkbox */
-.flagCell > div {
+/* the cell content is a flex container, text-align does not reach the field */
+.fieldCell > div {
     justify-content: center;
 }
 
