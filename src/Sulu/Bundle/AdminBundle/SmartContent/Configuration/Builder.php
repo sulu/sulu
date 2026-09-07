@@ -109,10 +109,15 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    public function enableView(string $view, array $resultToView): self
+    /**
+     * @param array<string, string> $resultToView
+     * @param array<string, string>|null $resultToViewName
+     */
+    public function enableView(string $view, array $resultToView, ?array $resultToViewName = null): self
     {
         $this->configuration->setView($view);
         $this->configuration->setResultToView($resultToView);
+        $this->configuration->setResultToViewName($resultToViewName);
 
         return $this;
     }

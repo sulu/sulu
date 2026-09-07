@@ -109,6 +109,13 @@ interface ProviderConfigurationInterface
     public function getResultToView(): ?array;
 
     /**
+     * Returns the mapping from smart content item properties to placeholders in the view name.
+     *
+     * @return array<string, string>|null
+     */
+    public function getResultToViewName(): ?array;
+
+    /**
      * Returns default properties to include when resolving items.
      *
      * @return array<string, string>|null
