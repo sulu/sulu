@@ -41,23 +41,7 @@ class SnippetAreas extends React.Component<ViewProps> {
         const {snippetEditViews = {}} = route.options;
         const {snippetUuid, templateKey} = this.snippetAreaStore.snippetAreas[areaKey];
 
-        if (!templateKey) {
-            throw new Error(
-                'The snippet assigned to the area "' + areaKey + '" has no template key! '
-                + 'This should not happen and is likely a bug.'
-            );
-        }
-
-        const snippetEditView = snippetEditViews[templateKey];
-
-        if (!snippetEditView) {
-            throw new Error(
-                'No snippet edit view was registered for the template "' + templateKey + '"! '
-                + 'This should not happen and is likely a bug.'
-            );
-        }
-
-        router.navigate(snippetEditView, {id: snippetUuid});
+        router.navigate(snippetEditViews[templateKey], {id: snippetUuid});
     };
 
     @action handleAddClick = (areaKey: string) => {
