@@ -1,5 +1,18 @@
 # Upgrade
 
+## 3.0.10
+
+### Reference tracking for teaser selections
+
+The `teaser_selection` content type now registers its items in the reference table, like the
+`single_page_selection` content type already does. Content using teaser selections only gets reference
+rows on its next publish, so refresh existing content once after upgrading:
+
+```bash
+bin/adminconsole sulu:reference:refresh
+bin/websiteconsole sulu:reference:refresh
+```
+
 ## 3.0.9
 
 ### Widened webspace, slug and template key column lengths

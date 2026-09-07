@@ -15,6 +15,7 @@ namespace Sulu\Content\Application\PropertyResolver\Resolver;
 
 use Sulu\Bundle\AdminBundle\Teaser\Teaser;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\ContentResolver\Value\Reference;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\ResourceLoader\Loader\TeaserResourceLoader;
 
@@ -42,6 +43,7 @@ class TeaserSelectionPropertyResolver implements PropertyResolverInterface
         /** @var list<array{id: string, type: string}> $items */
         $items = [];
         $resolvableResources = [];
+        $references = [];
         foreach ($data['items'] as $item) {
             if (!\is_array($item)
                 || !\array_key_exists('id', $item)
@@ -70,11 +72,14 @@ class TeaserSelectionPropertyResolver implements PropertyResolverInterface
                     return $resource->merge($itemData);
                 }
             );
+
+            // the teaser "type" is the provider alias, which matches the resource key of the referenced resource
+            $references[] = new Reference($id, $type);
         }
 
         $view['items'] = $items;
 
-        return ContentView::create($resolvableResources, $view);
+        return ContentView::createWithReferences($resolvableResources, $view, $references);
     }
 
     public static function getType(): string
