@@ -260,6 +260,27 @@ class LinkTagTest extends TestCase
         );
     }
 
+    public function testParseAllWithEscapedAnchor(): void
+    {
+        // twig's escape('html_attr') filter turns the "#" into "&#x23;", which used to be split
+        // on its own "#", leaving a broken uuid and no usable anchor
+        $href = '123-123-123&#x23;my-anchor';
+        $tag = '<sulu-link href="' . $href . '" title="Test-Title" provider="article">Test-Content</sulu-link>';
+
+        $this->providers['article']->preload(['123-123-123'], 'de', true)
+            ->willReturn([new LinkItem('123-123-123', 'Page-Title', '/de/test', true)]);
+
+        $result = $this->linkTag->parseAll(
+            [$tag => ['href' => $href, 'title' => 'Test-Title', 'provider' => 'article', 'content' => 'Test-Content']],
+            'de'
+        );
+
+        $this->assertEquals(
+            [$tag => '<a href="http://sulu.lo/de/test#my-anchor" title="Test-Title">Test-Content</a>'],
+            $result
+        );
+    }
+
     public function testParseAllMultipleTags(): void
     {
         $this->providers['article']->preload(['123-123-123', '312-312-312'], 'de', true)
