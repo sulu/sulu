@@ -24,6 +24,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
+use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoader;
 
 /**
@@ -129,7 +130,12 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
                     ];
                 },
                 $this->groupProvider->getGroups(SnippetInterface::TEMPLATE_TYPE),
-            )));
+            )))
+            ->enableView(
+                SnippetAdmin::EDIT_TABS_VIEW . '_{group}',
+                ['id' => 'id', 'locale' => 'locale'],
+                ['group' => 'group'],
+            );
     }
 
     /**
@@ -170,7 +176,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
      *     changed?: 'asc'|'desc',
      * } $sortBys
      *
-     * @return array<array{id: string, title: string}>
+     * @return array<array{id: string, title: string, group: string, locale: string}>
      */
     public function findFlatBy(array $filters, array $sortBys, array $params = []): array
     {
@@ -200,19 +206,35 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         // We need the distinct here, because joins due to tags/categories can lead to duplicate results
         $queryBuilder->select('DISTINCT snippet.uuid as id');
         $queryBuilder->addSelect('filterDimensionContent.title');
+        $queryBuilder->addSelect('filterDimensionContent.templateKey');
         $this->smartContentQueryEnhancer->addOrderBySelects($queryBuilder);
 
         $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['offset'] ?? 0, $filters['limit']);
 
-        /** @var array{id: string, title: string, changed?: string, authored?: string}[] $queryResult */
+        /** @var array{id: string, title: string, templateKey: string|null, changed?: string, authored?: string}[] $queryResult */
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
 
-        /** @var array{id: string, title: string}[] $result */
+        // built once and reused for every result, instead of calling getGroups() per item
+        $groupByTemplateKey = [];
+        foreach ($this->groupProvider->getGroups(SnippetInterface::TEMPLATE_TYPE) as $group) {
+            foreach ($group->templates as $template) {
+                $groupByTemplateKey[$template] = $group->identifier;
+            }
+        }
+
+        /** @var array{id: string, title: string, group: string, locale: string}[] $result */
         $result = \array_map(
-            static fn (array $item) => [
-                'id' => $item['id'],
-                'title' => $item['title'],
-            ],
+            function(array $item) use ($groupByTemplateKey, $filters) {
+                $templateKey = $item['templateKey'];
+
+                return [
+                    'id' => $item['id'],
+                    'title' => $item['title'],
+                    'group' => (\is_string($templateKey) ? $groupByTemplateKey[$templateKey] ?? null : null)
+                        ?? GroupProviderInterface::DEFAULT_GROUP,
+                    'locale' => $filters['locale'],
+                ];
+            },
             $queryResult
         );
 
