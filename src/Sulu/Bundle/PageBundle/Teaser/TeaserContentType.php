@@ -136,6 +136,10 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
     public function getReferences(PropertyInterface $property, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
     {
         foreach ($this->getItems($property) as $item) {
+            if (!\is_array($item)) {
+                continue;
+            }
+
             $type = $item['type'] ?? null;
             $id = $item['id'] ?? null;
 

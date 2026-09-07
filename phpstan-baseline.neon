@@ -39123,13 +39123,13 @@ parameters:
 		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserContentType.php
 
 		-
 			message: '#^Cannot access offset ''type'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserContentType.php
 
 		-
