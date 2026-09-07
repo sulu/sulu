@@ -74,7 +74,9 @@ class TeaserSelectionPropertyResolver implements PropertyResolverInterface
             );
 
             // the teaser "type" is the provider alias, which matches the resource key of the referenced resource
-            $references[] = new Reference($id, $type);
+            if ('' !== $id && '' !== $type) {
+                $references[] = new Reference($id, $type);
+            }
         }
 
         $view['items'] = $items;
