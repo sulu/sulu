@@ -183,6 +183,30 @@ test('Send request and navigate to view if dialog is confirmed and view is confi
     });
 });
 
+test('Send request and navigate to resolved view if resultToViewName is configured', () => {
+    RestoreItemAction.restoreConfigurationMapping.test = {
+        view: 'test-view_{group}',
+        resultToView: {id: 'id'},
+        resultToViewName: {group: 'group'},
+    };
+
+    const postPromise = Promise.resolve({id: '1234-1234-1234', group: 'press'});
+    ResourceRequester.post.mockReturnValue(postPromise);
+
+    const itemAction = createItemAction();
+
+    const onClick = itemAction.getItemActionConfig({id: 'id-1234', resourceKey: 'test'}).onClick;
+    if (!onClick) {
+        throw new Error('The onClick callback should not be undefined in this case');
+    }
+    onClick('id-1234', 1);
+    mount(itemAction.getNode()).find(Dialog).props().onConfirm();
+
+    return postPromise.then(() => {
+        expect(itemAction.router.navigate).toHaveBeenLastCalledWith('test-view_press', {id: '1234-1234-1234'});
+    });
+});
+
 test('Display RestoreFormOverlay if onClick callback is fired', () => {
     RestoreItemAction.restoreConfigurationMapping.test = {form: 'foo'};
     const itemAction = createItemAction();

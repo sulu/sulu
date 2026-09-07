@@ -43,17 +43,29 @@ export default class RestoreItemAction extends AbstractListItemAction {
             id: this.idToBeRestored,
         })
             .then(action((response) => {
-                const {view, resultToView = {}} = this.restoreConfiguration || {};
+                const {view, resultToView, resultToViewName} = this.restoreConfiguration || {};
+                const definiteResultToView = resultToView || {};
 
                 this.restoring = false;
                 this.idToBeRestored = undefined;
                 this.resourceKeyToBeRestored = undefined;
 
                 if (view) {
+                    let resolvedView = view;
+
+                    if (resultToViewName) {
+                        Object.keys(resultToViewName).forEach((resultPath) => {
+                            resolvedView = resolvedView.replace(
+                                `{${resultToViewName[resultPath]}}`,
+                                `${jsonpointer.get(response, '/' + resultPath)}`
+                            );
+                        });
+                    }
+
                     this.router.navigate(
-                        view,
-                        Object.keys(resultToView).reduce((parameters, resultPath) => {
-                            parameters[resultToView[resultPath]] = jsonpointer.get(response, '/' + resultPath);
+                        resolvedView,
+                        Object.keys(definiteResultToView).reduce((parameters, resultPath) => {
+                            parameters[definiteResultToView[resultPath]] = jsonpointer.get(response, '/' + resultPath);
                             return parameters;
                         }, {})
                     );
