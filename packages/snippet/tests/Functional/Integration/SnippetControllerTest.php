@@ -365,6 +365,43 @@ class SnippetControllerTest extends SuluTestCase
     }
 
     #[Depends('testPost')]
+    public function testGetListWithAreasFilter(): void
+    {
+        // the "hotel" area (config/templates/snippets/snippet.xml) is assigned to the "snippet" template
+        $this->client->request('GET', '/admin/api/snippets?locale=en&areas=hotel');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_cget_types_filter_snippet.json', $response, 200);
+    }
+
+    #[Depends('testPost')]
+    public function testGetListWithUnknownAreasFilterReturnsNoResults(): void
+    {
+        // an unknown/typo'd area identifier must not be silently dropped and return every snippet
+        $this->client->request('GET', '/admin/api/snippets?locale=en&areas=does-not-exist');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_cget_types_filter_nonexistent.json', $response, 200);
+    }
+
+    #[Depends('testPost')]
+    public function testGetListWithGroupsAndAreasFilterCombined(): void
+    {
+        // groups and areas narrow the same templateKey field and must intersect: "default" resolves to
+        // the "snippet" template, and the "hotel" area also resolves to "snippet", so the combination
+        // still returns the snippet
+        $this->client->request('GET', '/admin/api/snippets?locale=en&groups=default&areas=hotel');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_cget_types_filter_snippet.json', $response, 200);
+
+        // a "groups" filter that resolves to a template key must not be silently combined with an
+        // unrelated, unresolved "areas" filter: previously the areas filter used its own separate
+        // `in()` call and was skipped entirely whenever it resolved to no known template key, so the
+        // groups filter alone would have determined the (wrong) result
+        $this->client->request('GET', '/admin/api/snippets?locale=en&groups=default&areas=does-not-exist');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_cget_types_filter_nonexistent.json', $response, 200);
+    }
+
+    #[Depends('testPost')]
     public function testDeleteSingleLocale(string $id): string
     {
         $this->client->request('GET', '/admin/api/snippets/' . $id . '?locale=en');

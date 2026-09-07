@@ -124,35 +124,11 @@ final class SnippetController implements SecuredControllerInterface
         $requestedTemplateKeys = \array_filter(\explode(',', $templateKeysParam));
         $templateKeys = \array_unique(\array_merge($requestedTemplateKeys, $groupTemplateKeys));
 
-        $templateFilterRequested = [] !== $groupIdentifiers || [] !== $requestedTemplateKeys;
-        if ($templateFilterRequested && 0 === \count($templateKeys)) {
-            // the requested groups/templateKeys did not resolve to any known template key, so the
-            // filter must not be dropped silently (an empty `in()` call has no effect on the query
-            // and would return every snippet instead of none)
-            $listRepresentation = new PaginatedRepresentation(
-                [],
-                SnippetInterface::RESOURCE_KEY,
-                (int) $listBuilder->getCurrentPage(),
-                (int) $listBuilder->getLimit(),
-                0,
-            );
-
-            return new JsonResponse($this->normalizer->normalize(
-                $listRepresentation->toArray(),
-                'json',
-                ['sulu_admin' => true, 'sulu_admin_snippet' => true, 'sulu_admin_snippet_list' => true],
-            ));
-        }
-
-        if (0 !== \count($templateKeys)) {
-            $listBuilder->in($fieldDescriptors['templateKey'], $templateKeys);
-        }
-
         $areasParam = $request->query->get('areas');
-        if (null !== $areasParam) {
-            $areas = \explode(',', (string) $areasParam);
+        $areaFilterRequested = null !== $areasParam;
+        if ($areaFilterRequested) {
             $areaTemplateKeys = [];
-            foreach ($areas as $area) {
+            foreach (\explode(',', (string) $areasParam) as $area) {
                 if (!\array_key_exists($area, $this->snippetAreas)) {
                     continue;
                 }
@@ -164,17 +140,28 @@ final class SnippetController implements SecuredControllerInterface
                 $areaTemplateKeys[] = $templateKey;
             }
 
-            if (!empty($areaTemplateKeys)) {
-                $listBuilder->in($fieldDescriptors['templateKey'], $areaTemplateKeys);
-            }
+            // groups/templateKeys and areas each narrow the same templateKey field, so they are
+            // combined into a single set here rather than each issuing their own `in()` call: an
+            // areas filter that resolves to no known template key must still make the whole request
+            // return nothing, not fall back to whatever groups/templateKeys alone would have matched.
+            $templateKeys = [] !== $templateKeys
+                ? \array_intersect($templateKeys, $areaTemplateKeys)
+                : $areaTemplateKeys;
+        }
+
+        $templateFilterRequested = [] !== $groupIdentifiers || [] !== $requestedTemplateKeys || $areaFilterRequested;
+        $filterResolvedToNothing = $templateFilterRequested && 0 === \count($templateKeys);
+
+        if (!$filterResolvedToNothing && 0 !== \count($templateKeys)) {
+            $listBuilder->in($fieldDescriptors['templateKey'], $templateKeys);
         }
 
         $listRepresentation = new PaginatedRepresentation(
-            $listBuilder->execute(),
+            $filterResolvedToNothing ? [] : $listBuilder->execute(),
             SnippetInterface::RESOURCE_KEY,
             (int) $listBuilder->getCurrentPage(),
             (int) $listBuilder->getLimit(),
-            $listBuilder->count(),
+            $filterResolvedToNothing ? 0 : $listBuilder->count(),
         );
 
         /** @var array{_embedded: array{snippets: mixed[][]}} $list */
@@ -184,7 +171,6 @@ final class SnippetController implements SecuredControllerInterface
             $templateKey = $item['templateKey'] ?? null;
             // prefixed to avoid colliding with a template property of the same name
             $item['_group'] = $this->resolveGroup($groups, \is_string($templateKey) ? $templateKey : null);
-            unset($item['templateKey']);
         }
 
         return new JsonResponse($this->normalizer->normalize(

@@ -12,6 +12,7 @@
                 "published": null,
                 "publishedState": false,
                 "title": "Test Snippet 2",
+                "templateKey": "snippet",
                 "_group": "default"
             }
         ]
