@@ -197,9 +197,8 @@ final class SnippetTrashItemHandler implements
             }
         }
 
-        $context = $allLocales ? ['locales' => $allLocales] : [];
-
         Assert::notEmpty($allLocales, 'Expected to find at least one restored locale for the snippet.');
+        $context = ['locales' => $allLocales];
         $result = new SnippetRestoreResult($snippet->getUuid(), $this->resolveGroup($templateKey), $allLocales[0]);
 
         if ('translation' === $trashItem->getRestoreType()) {

@@ -197,9 +197,8 @@ final class ArticleTrashItemHandler implements
             }
         }
 
-        $context = $allLocales ? ['locales' => $allLocales] : [];
-
         Assert::notEmpty($allLocales, 'Expected to find at least one restored locale for the article.');
+        $context = ['locales' => $allLocales];
         $result = new ArticleRestoreResult($article->getUuid(), $this->resolveGroup($templateKey), $allLocales[0]);
 
         if ('translation' === $trashItem->getRestoreType()) {

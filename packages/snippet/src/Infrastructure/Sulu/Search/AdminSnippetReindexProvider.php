@@ -73,7 +73,7 @@ final class AdminSnippetReindexProvider implements ReindexProviderInterface
             $groupIdentifier = null;
 
             foreach ($groups as $group) {
-                if (\in_array($snippet['templateKey'], $group->templates)) {
+                if (\in_array($snippet['templateKey'], $group->templates, true)) {
                     $groupIdentifier = $group->identifier;
                     break;
                 }
