@@ -264,6 +264,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->public()
             ->args([
                 new Reference('sulu_admin.form_metadata_provider'),
+                new Reference('request_stack'),
             ]);
 
         $services->set('sulu_snippet.snippet_area_normalizer', SnippetAreaNormalizer::class)
