@@ -11,8 +11,8 @@
                 "locale": "en",
                 "published": null,
                 "publishedState": false,
-                "templateKey": "snippet",
-                "title": "Test Snippet 2"
+                "title": "Test Snippet 2",
+                "_group": "default"
             }
         ]
     },
