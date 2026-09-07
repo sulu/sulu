@@ -119,6 +119,28 @@ class TeaserSelectionPropertyResolverTest extends TestCase
         $this->assertSame('article', $references[0]->getResourceKey());
     }
 
+    public function testResolveDataWithEmptyIdOrType(): void
+    {
+        $data = [
+            'items' => [
+                ['id' => '', 'type' => 'article'],
+                ['id' => '123', 'type' => ''],
+                ['id' => '456', 'type' => 'page'],
+            ],
+        ];
+
+        $contentView = $this->resolver->resolve($data, 'en');
+
+        $content = $contentView->getContent();
+        $this->assertIsArray($content);
+        $this->assertCount(3, $content);
+
+        $references = $contentView->getReferences();
+        $this->assertCount(1, $references);
+        $this->assertSame('456', $references[0]->getResourceId());
+        $this->assertSame('page', $references[0]->getResourceKey());
+    }
+
     public function testResolveWithResourceCallback(): void
     {
         $data = [

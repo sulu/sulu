@@ -9,8 +9,7 @@ The `teaser_selection` content type now registers its items in the reference tab
 rows on its next publish, so refresh existing content once after upgrading:
 
 ```bash
-bin/adminconsole sulu:reference:refresh
-bin/websiteconsole sulu:reference:refresh
+bin/console sulu:reference:refresh
 ```
 
 ## 3.0.9
