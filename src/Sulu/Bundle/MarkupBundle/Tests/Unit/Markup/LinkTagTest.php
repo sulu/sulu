@@ -301,6 +301,27 @@ class LinkTagTest extends TestCase
         );
     }
 
+    public function testParseAllKeepsEncodedQuotesEncoded(): void
+    {
+        // parseAll() prints the attributes without escaping, so a decoded quote would break
+        // out of the href and inject an attribute
+        $href = '123-123-123&#x23;a&quot; onmouseover=&quot;alert(1)';
+        $tag = '<sulu-link href="' . $href . '" provider="article">Test-Content</sulu-link>';
+
+        $this->providers['article']->preload(['123-123-123'], 'de', true)
+            ->willReturn([new LinkItem('123-123-123', 'Page-Title', '/de/test', true)]);
+
+        $result = $this->linkTag->parseAll(
+            [$tag => ['href' => $href, 'provider' => 'article', 'content' => 'Test-Content']],
+            'de'
+        );
+
+        $this->assertEquals(
+            [$tag => '<a href="http://sulu.lo/de/test#a&quot; onmouseover=&quot;alert(1)">Test-Content</a>'],
+            $result
+        );
+    }
+
     public function testParseAllWithEncodedAmpersandInQuery(): void
     {
         // "&amp;" is how an "&" is written in an html attribute, so it belongs to the query
