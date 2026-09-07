@@ -41,6 +41,10 @@ class SnippetAreas extends React.Component<ViewProps> {
         const {snippetEditViews = {}} = route.options;
         const {snippetUuid, templateKey} = this.snippetAreaStore.snippetAreas[areaKey];
 
+        if (!templateKey) {
+            return;
+        }
+
         router.navigate(snippetEditViews[templateKey], {id: snippetUuid});
     };
 
