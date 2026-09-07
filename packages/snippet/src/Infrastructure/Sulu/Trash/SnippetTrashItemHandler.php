@@ -15,6 +15,7 @@ namespace Sulu\Snippet\Infrastructure\Sulu\Trash;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfiguration;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfigurationProviderInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
@@ -53,6 +54,7 @@ final class SnippetTrashItemHandler implements
         private ContentMergerInterface $contentMerger,
         private iterable $snippetMappers,
         private DomainEventCollectorInterface $domainEventCollector,
+        private GroupProviderInterface $groupProvider,
     ) {
     }
 
@@ -169,6 +171,8 @@ final class SnippetTrashItemHandler implements
         $allLocales = [];
         /** @var string|null $snippetTitle */
         $snippetTitle = null;
+        /** @var string|null $templateKey */
+        $templateKey = null;
         Assert::isArray($dimensionContents, 'Expected dimensionContents to be an array');
         foreach ($dimensionContents as $dimensionContentData) {
             Assert::isArray($dimensionContentData, 'Expected dimensionContentData to be an array');
@@ -183,12 +187,20 @@ final class SnippetTrashItemHandler implements
                 $allLocales[] = $dimensionContentData['locale'];
             }
 
+            if (null === $templateKey && \array_key_exists('template', $dimensionContentData) && $dimensionContentData['template']) {
+                Assert::string($dimensionContentData['template']);
+                $templateKey = $dimensionContentData['template'];
+            }
+
             foreach ($this->snippetMappers as $snippetMapper) {
                 $snippetMapper->mapSnippetData($snippet, $dimensionContentData);
             }
         }
 
         $context = $allLocales ? ['locales' => $allLocales] : [];
+
+        Assert::notEmpty($allLocales, 'Expected to find at least one restored locale for the snippet.');
+        $result = new SnippetRestoreResult($snippet->getUuid(), $this->resolveGroup($templateKey), $allLocales[0]);
 
         if ('translation' === $trashItem->getRestoreType()) {
             foreach ($allLocales as $locale) {
@@ -199,7 +211,7 @@ final class SnippetTrashItemHandler implements
                 ));
             }
 
-            return $snippet;
+            return $result;
         }
 
         $this->domainEventCollector->collect(new SnippetRestoredEvent(
@@ -209,17 +221,35 @@ final class SnippetTrashItemHandler implements
             $restoreData,
         ));
 
-        return $snippet;
+        return $result;
     }
 
     public function getConfiguration(): RestoreConfiguration
     {
-        // the restore response carries no template, so the group of the edit view cannot be resolved
         return new RestoreConfiguration(
             null,
-            SnippetAdmin::LIST_VIEW,
-            [],
-            null, // TODO serialization group?
+            SnippetAdmin::EDIT_TABS_VIEW . '_{group}',
+            ['id' => 'id', 'locale' => 'locale'],
+            null,
+            ['group' => 'group'],
         );
+    }
+
+    private function resolveGroup(?string $templateKey): string
+    {
+        if (null === $templateKey) {
+            return GroupProviderInterface::DEFAULT_GROUP;
+        }
+
+        // resolve the template key -> group identifier mapping once instead of per item,
+        // to avoid re-fetching and re-sorting the groups for every single result
+        $groupByTemplateKey = [];
+        foreach ($this->groupProvider->getGroups(SnippetInterface::TEMPLATE_TYPE) as $group) {
+            foreach ($group->templates as $template) {
+                $groupByTemplateKey[$template] = $group->identifier;
+            }
+        }
+
+        return $groupByTemplateKey[$templateKey] ?? GroupProviderInterface::DEFAULT_GROUP;
     }
 }

@@ -426,6 +426,7 @@ final class SuluSnippetBundle extends AbstractBundle
                     new Reference('sulu_content.content_merger'),
                     tagged_iterator('sulu_snippet.snippet_mapper'),
                     new Reference('sulu_activity.domain_event_collector'),
+                    new Reference('sulu_admin.metadata_group_provider'),
                 ])
                 ->tag('sulu_trash.store_trash_item_handler')
                 ->tag('sulu_trash.restore_trash_item_handler')
