@@ -21,6 +21,7 @@ jest.mock('../../../../containers/SingleListOverlay', () => jest.fn(() => null))
 
 jest.mock('../../../../services/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
+    this.hasRoute = jest.fn(() => true);
 }));
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, locale) {
@@ -1133,6 +1134,180 @@ test('Navigate when SingleItemSelection item is clicked with configured view', (
     singleSelection.find('SingleItemSelection .item').simulate('click');
 
     expect(router.navigate).toHaveBeenCalledWith('sulu_contact.account_edit_form', {id: 6});
+});
+
+test('Navigate when SingleItemSelection item is clicked with a templated view name', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const value = 6;
+
+    const router = new Router();
+
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'articles',
+        view: {
+            name: 'sulu_article.article.edit_tabs_{group}',
+            result_to_view: {
+                id: 'id',
+                locale: 'locale',
+            },
+            result_to_view_name: {
+                _group: 'group',
+            },
+        },
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                display_properties: ['title'],
+                empty_text: 'sulu_article.nothing',
+                icon: 'su-newspaper',
+                overlay_title: 'sulu_article.overlay_title',
+            },
+        },
+    };
+
+    // $FlowFixMe
+    SingleSelectionStore.mockImplementation(function() {
+        this.item = {id: 6, _group: 'news', locale: 'en'};
+    });
+
+    const singleSelection = mount(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            router={router}
+            value={value}
+        />
+    );
+
+    singleSelection.find('SingleItemSelection .item').simulate('click');
+
+    expect(router.navigate).toHaveBeenCalledWith(
+        'sulu_article.article.edit_tabs_news',
+        {id: 6, locale: 'en'}
+    );
+});
+
+test('Navigate without a locale parameter when the selected item is a ghost', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const value = 6;
+
+    const router = new Router();
+
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'articles',
+        view: {
+            name: 'sulu_article.article.edit_tabs_{group}',
+            result_to_view: {
+                id: 'id',
+                locale: 'locale',
+            },
+            result_to_view_name: {
+                _group: 'group',
+            },
+        },
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                display_properties: ['title'],
+                empty_text: 'sulu_article.nothing',
+                icon: 'su-newspaper',
+                overlay_title: 'sulu_article.overlay_title',
+            },
+        },
+    };
+
+    // a ghost detail response carries no locale of its own, only a ghostLocale
+    // $FlowFixMe
+    SingleSelectionStore.mockImplementation(function() {
+        this.item = {id: 6, _group: 'news', locale: null, ghostLocale: 'en'};
+    });
+
+    const singleSelection = mount(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            router={router}
+            value={value}
+        />
+    );
+
+    singleSelection.find('SingleItemSelection .item').simulate('click');
+
+    expect(router.navigate).toHaveBeenCalledWith(
+        'sulu_article.article.edit_tabs_news',
+        {id: 6}
+    );
+});
+
+test('Should not navigate when the resolved view is not registered for the current user', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const value = 6;
+
+    const router = new Router();
+    // $FlowFixMe
+    router.hasRoute.mockReturnValue(false);
+
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'articles',
+        view: {
+            name: 'sulu_article.article.edit_tabs_{group}',
+            result_to_view: {
+                id: 'id',
+                locale: 'locale',
+            },
+            result_to_view_name: {
+                _group: 'group',
+            },
+        },
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                display_properties: ['title'],
+                empty_text: 'sulu_article.nothing',
+                icon: 'su-newspaper',
+                overlay_title: 'sulu_article.overlay_title',
+            },
+        },
+    };
+
+    // $FlowFixMe
+    SingleSelectionStore.mockImplementation(function() {
+        this.item = {id: 6, _group: 'news', locale: 'en'};
+    });
+
+    const singleSelection = mount(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            router={router}
+            value={value}
+        />
+    );
+
+    singleSelection.find('SingleItemSelection .item').simulate('click');
+
+    expect(router.navigate).not.toHaveBeenCalled();
 });
 
 test('Should throw an error if "types" schema option is not a string', () => {

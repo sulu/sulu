@@ -45,6 +45,10 @@ class RouteRegistry {
         return this.routes[name];
     }
 
+    has(name: string): boolean {
+        return name in this.routes;
+    }
+
     getAll(): RouteMap {
         return this.routes;
     }

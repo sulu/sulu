@@ -190,3 +190,19 @@ test('Set parent and children routes based on passed RouteConfig', () => {
 test('Get a non-existing route should throw an exception', () => {
     expect(() => routeRegistry.get('test')).toThrow(/"test"/);
 });
+
+test('Check if a route exists', () => {
+    routeRegistry.addCollection([
+        {
+            name: 'route',
+            path: '/route',
+            options: {},
+            attributeDefaults: {},
+            rerenderAttributes: [],
+            type: 'view',
+        },
+    ]);
+
+    expect(routeRegistry.has('route')).toEqual(true);
+    expect(routeRegistry.has('other-route')).toEqual(false);
+});

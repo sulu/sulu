@@ -284,6 +284,10 @@ export default class Router {
         this.handleNavigation(name, attributes, this.navigate);
     };
 
+    hasRoute = (name: string): boolean => {
+        return routeRegistry.has(name);
+    };
+
     @action navigateToResourceView = (view: string, resourceKey: string, attributes: Object = {}): void => {
         const route = resourceViewRegistry.get(view, resourceKey);
 

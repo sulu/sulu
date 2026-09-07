@@ -1,0 +1,9 @@
+{
+    "_embedded": {
+        "articles": []
+    },
+    "limit": 10,
+    "total": 0,
+    "page": 1,
+    "pages": 1
+}

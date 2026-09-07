@@ -2,7 +2,6 @@
 import React from 'react';
 import {computed, isArrayLike, observable, reaction, toJS} from 'mobx';
 import log from 'loglevel';
-import jsonpointer from 'json-pointer';
 import equals from 'fast-deep-equal';
 import {observer} from 'mobx-react';
 import ResourceSingleSelect from '../../../containers/ResourceSingleSelect';
@@ -12,6 +11,7 @@ import userStore from '../../../stores/userStore';
 import {translate} from '../../../utils/Translator';
 import FormInspector from '../FormInspector';
 import SingleSelectionStore from '../../../stores/SingleSelectionStore';
+import resolveItemView from '../../../utils/resolveItemView';
 import type {SchemaOption} from '../types';
 import type {FieldTypeProps} from '../../../types';
 import type {IObservableArray, IObservableValue} from 'mobx/lib/mobx';
@@ -211,22 +211,36 @@ class SingleSelection extends React.Component<Props>
         return resultToView;
     }
 
+    @computed get resultToViewName() {
+        const {
+            fieldTypeOptions: {
+                view: {
+                    result_to_view_name: resultToViewName,
+                } = {},
+            },
+        } = this.props;
+
+        return resultToViewName;
+    }
+
     handleItemClick = (itemId: Value, item: ?Object) => {
         const {router} = this.props;
 
-        const {resultToView, viewName} = this;
+        const {resultToView, resultToViewName, viewName} = this;
 
-        if (!router) {
+        if (!router || !item) {
             return;
         }
 
-        router.navigate(
-            viewName,
-            Object.keys(resultToView).reduce((parameters, resultPath) => {
-                parameters[resultToView[resultPath]] = jsonpointer.get(item, '/' + resultPath);
-                return parameters;
-            }, {})
-        );
+        const {parameters, view} = resolveItemView(viewName, resultToView, resultToViewName, item);
+
+        // the item can belong to a group the current user has no access to, in which case the
+        // resolved view was never registered for them, so navigating to it would throw
+        if (!router.hasRoute(view)) {
+            return;
+        }
+
+        router.navigate(view, parameters);
     };
 
     render() {

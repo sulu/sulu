@@ -3,7 +3,6 @@ import React from 'react';
 import {computed, observable, intercept, toJS, reaction, isArrayLike} from 'mobx';
 import equals from 'fast-deep-equal';
 import {observer} from 'mobx-react';
-import jsonpointer from 'json-pointer';
 import log from 'loglevel';
 import FormInspector from '../FormInspector';
 import List from '../../../containers/List';
@@ -11,6 +10,7 @@ import ListStore from '../../../containers/List/stores/ListStore';
 import MultiSelectionStore from '../../../stores/MultiSelectionStore';
 import MultiAutoComplete from '../../../containers/MultiAutoComplete';
 import {translate} from '../../../utils/Translator';
+import resolveItemView from '../../../utils/resolveItemView';
 import MultiSelectionComponent from '../../MultiSelection';
 import userStore from '../../../stores/userStore';
 import selectionStyles from './selection.scss';
@@ -320,22 +320,36 @@ class Selection extends React.Component<Props> {
         return resultToView;
     }
 
+    @computed get resultToViewName() {
+        const {
+            fieldTypeOptions: {
+                view: {
+                    result_to_view_name: resultToViewName,
+                } = {},
+            },
+        } = this.props;
+
+        return resultToViewName;
+    }
+
     handleItemClick = (itemId: string | number, item: Object) => {
         const {router} = this.props;
 
-        const {resultToView, viewName} = this;
+        const {resultToView, resultToViewName, viewName} = this;
 
         if (!router) {
             return;
         }
 
-        router.navigate(
-            viewName,
-            Object.keys(resultToView).reduce((parameters, resultPath) => {
-                parameters[resultToView[resultPath]] = jsonpointer.get(item, '/' + resultPath);
-                return parameters;
-            }, {})
-        );
+        const {parameters, view} = resolveItemView(viewName, resultToView, resultToViewName, item);
+
+        // the item can belong to a group the current user has no access to, in which case the
+        // resolved view was never registered for them, so navigating to it would throw
+        if (!router.hasRoute(view)) {
+            return;
+        }
+
+        router.navigate(view, parameters);
     };
 
     render() {
