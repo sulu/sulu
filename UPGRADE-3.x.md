@@ -2,21 +2,6 @@
 
 ## 3.0.9
 
-### Template groups for snippets
-
-Snippet templates can now declare a `<group>` element, mirroring articles. This changes existing snippet admin
-behavior:
-
-- The snippet list, add and edit view names now carry a `_<group>` suffix (e.g. `sulu_snippet.snippet.edit_tabs_default`),
-  and the list URL gained a `/<group>` segment: `/snippets/de/<id>` becomes `/snippets/de/default/<id>`.
-- Every group beyond the implicit `default` registers its own security context `sulu.snippet.snippets_<group>`. Review
-  roles with snippet permissions after upgrading and grant the new contexts where needed.
-- The admin search index now stores each snippet's group, so run the reindex for both kernels after deploying:
-
-```bash
-bin/console cmsig:seal:reindex
-```
-
 ### Widened webspace, slug and template key column lengths
 
 The `webspace`/`webspaceKey`, `slug`, `templateKey` and navigation-context/additional-webspace `name` columns
