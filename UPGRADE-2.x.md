@@ -11,7 +11,8 @@ reference table, like the snippet and media selections already do. Content that 
 gets reference rows on its next publish, so refresh existing content once after upgrading:
 
 ```bash
-bin/console sulu:reference:refresh
+bin/adminconsole sulu:reference:refresh
+bin/websiteconsole sulu:reference:refresh
 ```
 
 ## 2.6.26
