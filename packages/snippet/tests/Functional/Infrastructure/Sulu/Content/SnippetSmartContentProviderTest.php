@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Snippet\Tests\Functional\Infrastructure\Sulu\Content;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -99,12 +100,12 @@ class SnippetSmartContentProviderTest extends SuluTestCase
         ]);
     }
 
-    public function testFindFlatByXmlTemplateKeysIntersectsWithUiTypes(): void
+    public function testFindFlatByXmlTemplateKeysIntersectsWithUiGroups(): void
     {
         $result = $this->smartContentProvider->findFlatBy(
             [
                 ...$this->getDefaultFilters(),
-                ...['locale' => 'en', 'types' => ['snippet']],
+                ...['locale' => 'en', 'types' => ['default']],
             ],
             [],
             ['templateKeys' => 'snippet,snippet-alternate'],
@@ -116,7 +117,7 @@ class SnippetSmartContentProviderTest extends SuluTestCase
             $this->smartContentProvider->countBy(
                 [
                     ...$this->getDefaultFilters(),
-                    ...['locale' => 'en', 'types' => ['snippet']],
+                    ...['locale' => 'en', 'types' => ['default']],
                 ],
                 ['templateKeys' => 'snippet,snippet-alternate'],
             ),
@@ -126,12 +127,12 @@ class SnippetSmartContentProviderTest extends SuluTestCase
         $this->assertContains(self::$snippets['default']->getUuid(), $resultIds);
     }
 
-    public function testFindFlatByUiTypeOutsideXmlTemplateKeysReturnsZero(): void
+    public function testFindFlatByUiGroupOutsideXmlTemplateKeysReturnsZero(): void
     {
         $result = $this->smartContentProvider->findFlatBy(
             [
                 ...$this->getDefaultFilters(),
-                ...['locale' => 'en', 'types' => ['snippet-alternate']],
+                ...['locale' => 'en', 'types' => ['alternate-group']],
             ],
             [],
             ['templateKeys' => 'snippet'],
@@ -143,9 +144,50 @@ class SnippetSmartContentProviderTest extends SuluTestCase
             $this->smartContentProvider->countBy(
                 [
                     ...$this->getDefaultFilters(),
-                    ...['locale' => 'en', 'types' => ['snippet-alternate']],
+                    ...['locale' => 'en', 'types' => ['alternate-group']],
                 ],
                 ['templateKeys' => 'snippet'],
+            ),
+        );
+    }
+
+    public function testFindFlatByXmlGroupsRestrictsTheResult(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy(
+            [
+                ...$this->getDefaultFilters(),
+                ...['locale' => 'en'],
+            ],
+            [],
+            ['groups' => 'alternate-group'],
+        );
+
+        $this->assertCount(1, $result);
+
+        $resultIds = \array_map(fn ($snippet) => $snippet['id'], $result);
+        $this->assertContains(self::$snippets['alternate']->getUuid(), $resultIds);
+    }
+
+    public function testFindFlatByUiGroupOutsideXmlGroupsReturnsZero(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy(
+            [
+                ...$this->getDefaultFilters(),
+                ...['locale' => 'en', 'types' => ['default']],
+            ],
+            [],
+            ['groups' => 'alternate-group'],
+        );
+
+        $this->assertCount(0, $result);
+        $this->assertSame(
+            0,
+            $this->smartContentProvider->countBy(
+                [
+                    ...$this->getDefaultFilters(),
+                    ...['locale' => 'en', 'types' => ['default']],
+                ],
+                ['groups' => 'alternate-group'],
             ),
         );
     }
@@ -176,6 +218,60 @@ class SnippetSmartContentProviderTest extends SuluTestCase
         $this->assertCount(1, $result);
         $this->assertSame(self::$snippets['alternate']->getUuid(), $result[0]['id']);
         $this->assertSame(1, $this->smartContentProvider->countBy($filters));
+    }
+
+    public function testFindFlatByIncludesGroupAndLocaleForDeepLinking(): void
+    {
+        /** @var array<array{id: string, title: string, group: string, locale: string}> $result */
+        $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), ...['locale' => 'en']], []);
+
+        $itemsByUuid = [];
+        foreach ($result as $item) {
+            $itemsByUuid[$item['id']] = $item;
+        }
+
+        // "default" uses the "snippet" template, which is not part of a configured group
+        $defaultItem = $itemsByUuid[self::$snippets['default']->getUuid()];
+        $this->assertSame('default', $defaultItem['group']);
+        $this->assertSame('en', $defaultItem['locale']);
+
+        // "alternate" uses the "snippet-alternate" template, which belongs to the "alternate-group"
+        $alternateItem = $itemsByUuid[self::$snippets['alternate']->getUuid()];
+        $this->assertSame('alternate-group', $alternateItem['group']);
+        $this->assertSame('en', $alternateItem['locale']);
+    }
+
+    public function testFindFlatByReturnsRequestedLocaleNotAHardcodedOne(): void
+    {
+        $germanSnippet = self::createSnippet([
+            'de' => [
+                'live' => [
+                    'template' => 'snippet',
+                    'title' => 'Deutsches Snippet',
+                ],
+            ],
+        ]);
+
+        /** @var array<array{id: string, title: string, group: string, locale: string}> $result */
+        $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), ...['locale' => 'de']], []);
+
+        $itemsByUuid = [];
+        foreach ($result as $item) {
+            $itemsByUuid[$item['id']] = $item;
+        }
+
+        $this->assertArrayHasKey($germanSnippet->getUuid(), $itemsByUuid);
+        $this->assertSame('de', $itemsByUuid[$germanSnippet->getUuid()]['locale']);
+    }
+
+    public function testGetConfigurationHasGroupAwareView(): void
+    {
+        /** @var ProviderConfiguration $configuration */
+        $configuration = $this->smartContentProvider->getConfiguration();
+
+        $this->assertSame('sulu_snippet.snippet.edit_tabs_{group}', $configuration->getView());
+        $this->assertSame(['id' => 'id', 'locale' => 'locale'], $configuration->getResultToView());
+        $this->assertSame(['group' => 'group'], $configuration->getResultToViewName());
     }
 
     /**

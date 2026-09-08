@@ -81,8 +81,11 @@ final class SnippetAreaNormalizer implements NormalizerInterface
 
         /** @var SnippetInterface|null $snippet */
         $snippet = $data->getSnippet();
-        $normalizedData['snippetTitle'] = $this->getTitle($snippet, $locale);
+        $snippetDimensionContent = $this->resolveDimensionContent($snippet, $locale);
+        $normalizedData['snippetTitle'] = $snippetDimensionContent?->getTitle();
         $normalizedData['snippetUuid'] = $snippet?->getId();
+        // required by the frontend to resolve the group-specific edit view after assigning a snippet
+        $normalizedData['templateKey'] = $snippetDimensionContent?->getTemplateKey();
         $normalizedData['title'] = $title;
 
         // Why would this would be false?
@@ -91,7 +94,7 @@ final class SnippetAreaNormalizer implements NormalizerInterface
         return $normalizedData;
     }
 
-    private function getTitle(?SnippetInterface $snippet, string $locale): ?string
+    private function resolveDimensionContent(?SnippetInterface $snippet, string $locale): ?SnippetDimensionContentInterface
     {
         if (null === $snippet) {
             return null;
@@ -109,7 +112,7 @@ final class SnippetAreaNormalizer implements NormalizerInterface
 
         $localizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $locale]);
         if (null !== $localizedDimensionContent) {
-            return $localizedDimensionContent->getTitle();
+            return $localizedDimensionContent;
         }
 
         $unlocalizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => null]);
@@ -117,10 +120,9 @@ final class SnippetAreaNormalizer implements NormalizerInterface
             return null;
         }
 
-        $locale = $unlocalizedDimensionContent->getGhostLocale() ?? $unlocalizedDimensionContent->getAvailableLocales()[0] ?? null;
-        $ghostLocaleDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $locale]);
+        $ghostLocale = $unlocalizedDimensionContent->getGhostLocale() ?? $unlocalizedDimensionContent->getAvailableLocales()[0] ?? null;
 
-        return $ghostLocaleDimensionContent?->getTitle();
+        return $dimensionContentCollection->getDimensionContent(['locale' => $ghostLocale]);
     }
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool

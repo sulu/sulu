@@ -36,11 +36,16 @@ class SnippetAreas extends React.Component<ViewProps> {
         this.cacheClearToolbarAction = new CacheClearToolbarAction(webspace);
     }
 
-    @action handleSnippetClick = (snippetUuid: string) => {
+    @action handleSnippetClick = (areaKey: string) => {
         const {router, route} = this.props;
-        const {snippetEditView} = route.options;
+        const {snippetEditViews = {}} = route.options;
+        const {snippetUuid, templateKey} = this.snippetAreaStore.snippetAreas[areaKey];
 
-        router.navigate(snippetEditView, {id: snippetUuid});
+        if (!templateKey) {
+            return;
+        }
+
+        router.navigate(snippetEditViews[templateKey], {id: snippetUuid});
     };
 
     @action handleAddClick = (areaKey: string) => {
@@ -123,7 +128,7 @@ class SnippetAreas extends React.Component<ViewProps> {
                                                     className={snippetAreasStyles.titleButton}
                                                     onClick={this.handleSnippetClick}
                                                     skin="text"
-                                                    value={snippetUuid}
+                                                    value={key}
                                                 >
                                                     {snippetTitle}
                                                 </Button>

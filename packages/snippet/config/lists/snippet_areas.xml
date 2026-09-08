@@ -90,11 +90,22 @@
             <joins ref="ghostDimensionContent"/>
         </property>
 
-        <property name="templateKey" translation="sulu_admin.type" visibility="yes">
-            <field-name>templateKey</field-name>
-            <entity-name>dimensionContent</entity-name>
+        <case-property name="templateKey" translation="sulu_admin.type" visibility="yes">
+            <field>
+                <field-name>templateKey</field-name>
+                <entity-name>dimensionContent</entity-name>
 
-            <joins ref="dimensionContent"/>
-        </property>
+                <joins ref="dimensionContent"/>
+            </field>
+
+            <field>
+                <field-name>templateKey</field-name>
+                <entity-name>ghostDimensionContent</entity-name>
+
+                <joins ref="ghostDimensionContent"/>
+            </field>
+
+            <transformer type="string"/>
+        </case-property>
     </properties>
 </list>

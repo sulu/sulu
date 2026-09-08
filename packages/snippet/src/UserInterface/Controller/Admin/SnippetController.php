@@ -11,6 +11,8 @@
 
 namespace Sulu\Snippet\UserInterface\Controller\Admin;
 
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormGroup;
+use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
@@ -62,6 +64,7 @@ final class SnippetController implements SecuredControllerInterface
         private SnippetRepositoryInterface $snippetRepository,
         MessageBusInterface $messageBus,
         private NormalizerInterface $normalizer,
+        private GroupProviderInterface $groupProvider,
         private ContentManagerInterface $contentManager,
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         private DoctrineListBuilderFactoryInterface $listBuilderFactory,
@@ -98,24 +101,34 @@ final class SnippetController implements SecuredControllerInterface
         $listBuilder->addSelectField($fieldDescriptors['locale']);
         $listBuilder->addSelectField($fieldDescriptors['published']);
         $listBuilder->addSelectField($fieldDescriptors['publishedState']);
+        $listBuilder->addSelectField($fieldDescriptors['templateKey']);
 
         if (isset($fieldDescriptors['ghostLocale'])) {
             $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);
         }
         $listBuilder->setParameter('locale', $this->getLocale($request));
 
-        $templateKeysParam = $request->query->getString('templateKeys');
-        $templateKeys = \array_filter(\explode(',', $templateKeysParam));
+        $groupsParam = $request->query->getString('groups');
+        $groupIdentifiers = \array_filter(\explode(',', $groupsParam));
 
-        if (0 !== \count($templateKeys)) {
-            $listBuilder->in($fieldDescriptors['templateKey'], $templateKeys);
+        $groups = $this->groupProvider->getGroups(SnippetInterface::TEMPLATE_TYPE);
+
+        $groupTemplateKeys = [];
+        foreach ($groups as $group) {
+            if (\in_array($group->identifier, $groupIdentifiers, true)) {
+                $groupTemplateKeys = \array_merge($groupTemplateKeys, $group->templates);
+            }
         }
 
+        $templateKeysParam = $request->query->getString('templateKeys');
+        $requestedTemplateKeys = \array_filter(\explode(',', $templateKeysParam));
+        $templateKeys = \array_unique(\array_merge($requestedTemplateKeys, $groupTemplateKeys));
+
         $areasParam = $request->query->get('areas');
-        if (null !== $areasParam) {
-            $areas = \explode(',', (string) $areasParam);
+        $areaFilterRequested = null !== $areasParam;
+        if ($areaFilterRequested) {
             $areaTemplateKeys = [];
-            foreach ($areas as $area) {
+            foreach (\explode(',', (string) $areasParam) as $area) {
                 if (!\array_key_exists($area, $this->snippetAreas)) {
                     continue;
                 }
@@ -127,23 +140,37 @@ final class SnippetController implements SecuredControllerInterface
                 $areaTemplateKeys[] = $templateKey;
             }
 
-            if (!empty($areaTemplateKeys)) {
-                $listBuilder->in($fieldDescriptors['templateKey'], $areaTemplateKeys);
-            }
+            // groups/templateKeys and areas each narrow the same templateKey field, so they are
+            // combined into a single set here rather than each issuing their own `in()` call: an
+            // areas filter that resolves to no known template key must still make the whole request
+            // return nothing, not fall back to whatever groups/templateKeys alone would have matched.
+            $templateKeys = [] !== $templateKeys
+                ? \array_intersect($templateKeys, $areaTemplateKeys)
+                : $areaTemplateKeys;
+        }
+
+        $templateFilterRequested = [] !== $groupIdentifiers || [] !== $requestedTemplateKeys || $areaFilterRequested;
+        $filterResolvedToNothing = $templateFilterRequested && 0 === \count($templateKeys);
+
+        if (!$filterResolvedToNothing && 0 !== \count($templateKeys)) {
+            $listBuilder->in($fieldDescriptors['templateKey'], $templateKeys);
         }
 
         $listRepresentation = new PaginatedRepresentation(
-            $listBuilder->execute(),
+            $filterResolvedToNothing ? [] : $listBuilder->execute(),
             SnippetInterface::RESOURCE_KEY,
             (int) $listBuilder->getCurrentPage(),
             (int) $listBuilder->getLimit(),
-            $listBuilder->count(),
+            $filterResolvedToNothing ? 0 : $listBuilder->count(),
         );
 
         /** @var array{_embedded: array{snippets: mixed[][]}} $list */
         $list = $listRepresentation->toArray();
         foreach ($list['_embedded']['snippets'] as &$item) {
             $item['publishedState'] = WorkflowInterface::WORKFLOW_PLACE_PUBLISHED === ($item['publishedState'] ?? null);
+            $templateKey = $item['templateKey'] ?? null;
+            // prefixed to avoid colliding with a template property of the same name
+            $item['_group'] = $this->resolveGroup($groups, \is_string($templateKey) ? $templateKey : null);
         }
 
         return new JsonResponse($this->normalizer->normalize(
@@ -217,6 +244,33 @@ final class SnippetController implements SecuredControllerInterface
         //      Instead of calling the content resolver service which triggers an additional query.
         $dimensionContent = $this->contentManager->resolve($snippet, $dimensionAttributes);
         $normalizedContent = $this->contentManager->normalize($dimensionContent);
+
+        $templateKey = $dimensionContent->getTemplateKey();
+        $ghostLocale = $dimensionContent->getGhostLocale();
+        if (null === $templateKey && null !== $ghostLocale) {
+            // $snippet is already managed by the entity manager for the requested locale, so
+            // fetching it again for $ghostLocale would return the same, already-loaded
+            // dimension contents instead of querying them again. Look up just the template
+            // key for the ghosted locale through the list builder instead.
+            /** @var DoctrineFieldDescriptorInterface[] $ghostFieldDescriptors */
+            $ghostFieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetInterface::RESOURCE_KEY);
+            /** @var DoctrineListBuilder $ghostListBuilder */
+            $ghostListBuilder = $this->listBuilderFactory->create(SnippetInterface::class);
+            $ghostListBuilder->setIdField($ghostFieldDescriptors['id']);
+            $ghostListBuilder->addSelectField($ghostFieldDescriptors['templateKey']);
+            $ghostListBuilder->setIds([$id]);
+            $ghostListBuilder->setParameter('locale', $ghostLocale);
+
+            /** @var array{templateKey?: string|null}[] $ghostResult */
+            $ghostResult = $ghostListBuilder->execute();
+            $templateKey = $ghostResult[0]['templateKey'] ?? null;
+        }
+
+        // prefixed to avoid colliding with a template property of the same name
+        $normalizedContent['_group'] = $this->resolveGroup(
+            $this->groupProvider->getGroups(SnippetInterface::TEMPLATE_TYPE),
+            $templateKey,
+        );
 
         return new JsonResponse($this->normalizer->normalize(
             $normalizedContent, // TODO this should just be the snippet entity see comment above
@@ -301,6 +355,22 @@ final class SnippetController implements SecuredControllerInterface
     public function getLocale(Request $request): string
     {
         return $request->query->getString('locale', $request->getLocale());
+    }
+
+    /**
+     * @param array<string, FormGroup> $groups
+     */
+    private function resolveGroup(array $groups, ?string $templateKey): string
+    {
+        if (null !== $templateKey) {
+            foreach ($groups as $group) {
+                if (\in_array($templateKey, $group->templates, true)) {
+                    return $group->identifier;
+                }
+            }
+        }
+
+        return GroupProviderInterface::DEFAULT_GROUP;
     }
 
     private function handleAction(Request $request, string $uuid): ?SnippetInterface // @phpstan-ignore-line

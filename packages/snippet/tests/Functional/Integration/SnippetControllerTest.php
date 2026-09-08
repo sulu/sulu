@@ -339,6 +339,69 @@ class SnippetControllerTest extends SuluTestCase
     }
 
     #[Depends('testPost')]
+    public function testGetListWithGroupsFilter(): void
+    {
+        // the created snippets use the "snippet" template, which has no group and therefore lands in "default"
+        $this->client->request('GET', '/admin/api/snippets?locale=en&groups=default');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_cget_types_filter_snippet.json', $response, 200);
+
+        $this->client->request('GET', '/admin/api/snippets?locale=en&groups=alternate-group');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_cget_types_filter_nonexistent.json', $response, 200);
+
+        $this->client->request('GET', '/admin/api/snippets?locale=en&groups=alternate-group&templateKeys=snippet');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_cget_types_filter_snippet.json', $response, 200);
+    }
+
+    #[Depends('testPost')]
+    public function testGetListWithUnknownGroupsFilterReturnsNoResults(): void
+    {
+        // an unknown/typo'd group identifier must not be silently dropped and return every snippet
+        $this->client->request('GET', '/admin/api/snippets?locale=en&groups=does-not-exist');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_cget_types_filter_nonexistent.json', $response, 200);
+    }
+
+    #[Depends('testPost')]
+    public function testGetListWithAreasFilter(): void
+    {
+        // the "hotel" area (config/templates/snippets/snippet.xml) is assigned to the "snippet" template
+        $this->client->request('GET', '/admin/api/snippets?locale=en&areas=hotel');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_cget_types_filter_snippet.json', $response, 200);
+    }
+
+    #[Depends('testPost')]
+    public function testGetListWithUnknownAreasFilterReturnsNoResults(): void
+    {
+        // an unknown/typo'd area identifier must not be silently dropped and return every snippet
+        $this->client->request('GET', '/admin/api/snippets?locale=en&areas=does-not-exist');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_cget_types_filter_nonexistent.json', $response, 200);
+    }
+
+    #[Depends('testPost')]
+    public function testGetListWithGroupsAndAreasFilterCombined(): void
+    {
+        // groups and areas narrow the same templateKey field and must intersect: "default" resolves to
+        // the "snippet" template, and the "hotel" area also resolves to "snippet", so the combination
+        // still returns the snippet
+        $this->client->request('GET', '/admin/api/snippets?locale=en&groups=default&areas=hotel');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_cget_types_filter_snippet.json', $response, 200);
+
+        // a "groups" filter that resolves to a template key must not be silently combined with an
+        // unrelated, unresolved "areas" filter: previously the areas filter used its own separate
+        // `in()` call and was skipped entirely whenever it resolved to no known template key, so the
+        // groups filter alone would have determined the (wrong) result
+        $this->client->request('GET', '/admin/api/snippets?locale=en&groups=default&areas=does-not-exist');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_cget_types_filter_nonexistent.json', $response, 200);
+    }
+
+    #[Depends('testPost')]
     public function testDeleteSingleLocale(string $id): string
     {
         $this->client->request('GET', '/admin/api/snippets/' . $id . '?locale=en');
@@ -450,9 +513,52 @@ class SnippetControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
 
+        /** @var array{id: string, group: string, locale: string} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertSame($trashItem->getResourceId(), $content['id']);
+        $this->assertSame('default', $content['group']);
+        $this->assertSame('en', $content['locale']);
+
         $this->client->request('GET', '/admin/api/snippets/' . $trashItem->getResourceId() . '?locale=en');
         $response = $this->client->getResponse();
         $this->assertResponseSnapshot('snippet_post_restore.json', $response, 200);
+    }
+
+    public function testRestoreResolvesConfiguredGroup(): void
+    {
+        self::purgeDatabase();
+
+        $this->client->request('POST', '/admin/api/snippets?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'snippet-alternate',
+            'title' => 'Alternate Restore Test',
+        ]) ?: null);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(201, $response);
+        /** @var array{id: string} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $id = $content['id'];
+
+        $this->client->request('DELETE', '/admin/api/snippets/' . $id . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(204, $response);
+
+        $trashRepository = self::getContainer()->get(TrashItemRepositoryInterface::class);
+        $trashItem = $trashRepository->findOneBy([
+            'resourceKey' => SnippetInterface::RESOURCE_KEY,
+            'resourceId' => $id,
+            'restoreType' => null,
+        ]);
+        $this->assertNotNull($trashItem);
+
+        $this->client->request('POST', '/admin/api/trash-items/' . $trashItem->getId() . '?action=restore');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{id: string, group: string, locale: string} $restoreContent */
+        $restoreContent = \json_decode((string) $response->getContent(), true);
+        $this->assertSame($id, $restoreContent['id']);
+        $this->assertSame('alternate-group', $restoreContent['group']);
+        $this->assertSame('en', $restoreContent['locale']);
     }
 
     public function testGetListWithGhostLocaleAndTypesFiltering(): void

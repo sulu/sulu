@@ -16,6 +16,7 @@ namespace Sulu\Snippet\Infrastructure\Sulu\Admin\Provider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @internal
@@ -23,11 +24,17 @@ use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
 class SnippetTemplateSelectProvider
 {
     public function __construct(
-        private MetadataProviderInterface $formMetadataProvider
+        private MetadataProviderInterface $formMetadataProvider,
+        private RequestStack $requestStack,
     ) {
     }
 
     /**
+     * The "templates" request parameter, restricting the options to a group's template keys, is optional:
+     * it is only present when this endpoint is called for a grouped snippet list view. Reading it from the
+     * current request (instead of an expression-language argument) keeps the metadata list expression in
+     * snippets.xml free of an undefined-variable lookup when the parameter is absent.
+     *
      * @return mixed[]
      */
     public function getFilterValues(string $locale): array
@@ -35,8 +42,15 @@ class SnippetTemplateSelectProvider
         /** @var TypedFormMetadata $metadata */
         $metadata = $this->formMetadataProvider->getMetadata(SnippetDimensionContent::getTemplateType(), $locale, []);
 
+        $templates = $this->requestStack->getCurrentRequest()?->query->get('templates');
+        $templateKeys = null === $templates ? [] : \array_filter(\explode(',', $templates));
+
         $options = [];
         foreach ($metadata->getForms() as $key => $form) {
+            if ([] !== $templateKeys && !\in_array($key, $templateKeys, true)) {
+                continue;
+            }
+
             $options[$key] = $form->getTitle($locale);
         }
 

@@ -14,6 +14,7 @@ namespace Sulu\Snippet\Infrastructure\Sulu\Content;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\Builder;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\BuilderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
@@ -23,6 +24,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
+use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoader;
 
 /**
@@ -91,6 +93,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         private DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
         private SmartContentQueryEnhancer $smartContentQueryEnhancer,
         EntityManagerInterface $entityManager,
+        private GroupProviderInterface $groupProvider,
     ) {
         $this->entityRepository = $entityManager->getRepository(SnippetInterface::class);
         $this->entityDimensionContentRepository = $entityManager->getRepository(SnippetDimensionContentInterface::class);
@@ -118,6 +121,20 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
                     ['column' => 'created', 'title' => 'sulu_admin.created'],
                     ['column' => 'title', 'title' => 'sulu_admin.title'],
                 ]
+            )
+            ->enableTypes(\array_values(\array_map(
+                function($group) {
+                    return [
+                        'title' => $group->title,
+                        'type' => $group->identifier,
+                    ];
+                },
+                $this->groupProvider->getGroups(SnippetInterface::TEMPLATE_TYPE),
+            )))
+            ->enableView(
+                SnippetAdmin::EDIT_TABS_VIEW . '_{group}',
+                ['id' => 'id', 'locale' => 'locale'],
+                ['group' => 'group'],
             );
     }
 
@@ -159,7 +176,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
      *     changed?: 'asc'|'desc',
      * } $sortBys
      *
-     * @return array<array{id: string, title: string}>
+     * @return array<array{id: string, title: string, group: string, locale: string}>
      */
     public function findFlatBy(array $filters, array $sortBys, array $params = []): array
     {
@@ -189,19 +206,35 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         // We need the distinct here, because joins due to tags/categories can lead to duplicate results
         $queryBuilder->select('DISTINCT snippet.uuid as id');
         $queryBuilder->addSelect('filterDimensionContent.title');
+        $queryBuilder->addSelect('filterDimensionContent.templateKey');
         $this->smartContentQueryEnhancer->addOrderBySelects($queryBuilder);
 
         $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['offset'] ?? 0, $filters['limit']);
 
-        /** @var array{id: string, title: string, changed?: string, authored?: string}[] $queryResult */
+        /** @var array{id: string, title: string, templateKey: string|null, changed?: string, authored?: string}[] $queryResult */
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
 
-        /** @var array{id: string, title: string}[] $result */
+        // built once and reused for every result, instead of calling getGroups() per item
+        $groupByTemplateKey = [];
+        foreach ($this->groupProvider->getGroups(SnippetInterface::TEMPLATE_TYPE) as $group) {
+            foreach ($group->templates as $template) {
+                $groupByTemplateKey[$template] = $group->identifier;
+            }
+        }
+
+        /** @var array{id: string, title: string, group: string, locale: string}[] $result */
         $result = \array_map(
-            static fn (array $item) => [
-                'id' => $item['id'],
-                'title' => $item['title'],
-            ],
+            function(array $item) use ($groupByTemplateKey, $filters) {
+                $templateKey = $item['templateKey'];
+
+                return [
+                    'id' => $item['id'],
+                    'title' => $item['title'],
+                    'group' => (\is_string($templateKey) ? $groupByTemplateKey[$templateKey] ?? null : null)
+                        ?? GroupProviderInterface::DEFAULT_GROUP,
+                    'locale' => $filters['locale'],
+                ];
+            },
             $queryResult
         );
 
@@ -271,14 +304,34 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
 
     /**
      * @param array<string> $existingTemplateKeys
-     * @param array<string> $filterTemplateKeys
+     * @param array<string> $filterGroupIdentifiers
      * @param array<string, mixed> $params
      *
      * @return list<string>|null null = no overlap with the requested filters
      */
-    private function resolveTemplateKeys(array $existingTemplateKeys, array $filterTemplateKeys, array $params): ?array
+    private function resolveTemplateKeys(array $existingTemplateKeys, array $filterGroupIdentifiers, array $params): ?array
     {
-        $templateKeys = \array_values(\array_unique(\array_merge($existingTemplateKeys, $filterTemplateKeys)));
+        $xmlGroupIdentifiers = $this->parseListParameter($params['groups'] ?? null);
+
+        if ([] !== $xmlGroupIdentifiers && [] !== $filterGroupIdentifiers) {
+            $groupIdentifiers = \array_values(\array_intersect($filterGroupIdentifiers, $xmlGroupIdentifiers));
+            if ([] === $groupIdentifiers) {
+                return null;
+            }
+        } else {
+            $groupIdentifiers = $filterGroupIdentifiers ?: $xmlGroupIdentifiers;
+        }
+
+        $templateKeys = \array_values($existingTemplateKeys);
+        if ([] !== $groupIdentifiers) {
+            $templatesFromGroups = $this->expandGroupsToTemplates($groupIdentifiers);
+            $templateKeys = [] !== $templateKeys
+                ? \array_values(\array_intersect($templateKeys, $templatesFromGroups))
+                : $templatesFromGroups;
+            if ([] === $templateKeys) {
+                return null;
+            }
+        }
 
         $xmlTemplateKeys = $this->parseListParameter($params['templateKeys'] ?? null);
         if ([] !== $xmlTemplateKeys) {
@@ -291,6 +344,23 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         }
 
         return $templateKeys;
+    }
+
+    /**
+     * @param array<string> $identifiers
+     *
+     * @return list<string>
+     */
+    private function expandGroupsToTemplates(array $identifiers): array
+    {
+        $templates = [];
+        foreach ($this->groupProvider->getGroups(SnippetInterface::TEMPLATE_TYPE) as $group) {
+            if (\in_array($group->identifier, $identifiers, true)) {
+                $templates = \array_merge($templates, \array_filter($group->templates, 'is_string'));
+            }
+        }
+
+        return \array_values(\array_unique($templates));
     }
 
     /**

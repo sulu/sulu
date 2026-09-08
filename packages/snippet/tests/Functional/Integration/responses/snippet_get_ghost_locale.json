@@ -1,5 +1,6 @@
 {
     "_hash": "@string@",
+    "_group": "default",
     "availableLocales": ["en"],
     "changed": "@datetime@",
     "changer" : "@integer@",
