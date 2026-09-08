@@ -283,5 +283,10 @@
     "sulu_admin.link_target_blank": "_blank",
     "sulu_admin.link_target_self": "_self",
     "sulu_admin.link_target_parent": "_parent",
-    "sulu_admin.link_target_top": "_top"
+    "sulu_admin.link_target_top": "_top",
+    "sulu_admin.attribute": "Attribute",
+    "sulu_admin.attribute_required": "Required",
+    "sulu_admin.attribute_variant": "Variant",
+    "sulu_admin.choose_attributes": "Choose attributes",
+    "sulu_admin.attribute_count": "{count} {count, plural, =1 {attribute} other {attributes}}"
 }

@@ -45,18 +45,18 @@ function getCollapsible(title: string) {
     return screen.getByText(title).closest('section');
 }
 
-test('Render two expanded collapsibles', () => {
+test('Render two collapsed collapsibles', () => {
     const {container} = renderCollapsibleCollection();
 
     expect(container).toMatchSnapshot();
 });
 
-test('Render all collapsibles expanded by default', () => {
+test('Render all collapsibles collapsed by default', () => {
     renderCollapsibleCollection();
 
-    expect(screen.getByText('General content')).toBeInTheDocument();
-    expect(screen.getByText('Marketing content')).toBeInTheDocument();
-    expect(screen.getByText('sulu_admin.collapse_all')).toBeInTheDocument();
+    expect(screen.queryByText('General content')).not.toBeInTheDocument();
+    expect(screen.queryByText('Marketing content')).not.toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.expand_all')).toBeInTheDocument();
 });
 
 test('Render the title and the subtitle of every collapsible', () => {
@@ -72,24 +72,13 @@ test('Call the renderCollapsibleContent callback with the value, the index and t
     const renderSpy = jest.fn((collapsible) => <div>{collapsible.title} content</div>);
     renderCollapsibleCollection({renderCollapsibleContent: renderSpy});
 
-    expect(renderSpy).toHaveBeenCalledWith(TWO_COLLAPSIBLES[0], 0, true);
-    expect(renderSpy).toHaveBeenCalledWith(TWO_COLLAPSIBLES[1], 1, true);
+    expect(renderSpy).toHaveBeenCalledWith(TWO_COLLAPSIBLES[0], 0, false);
+    expect(renderSpy).toHaveBeenCalledWith(TWO_COLLAPSIBLES[1], 1, false);
 });
 
-test('Clicking collapse all should collapse every collapsible and flip the toggle', async() => {
+test('Clicking expand all should expand every collapsible and flip the toggle', async() => {
     const {user} = renderCollapsibleCollection();
 
-    await user.click(screen.getByText('sulu_admin.collapse_all'));
-
-    expect(screen.queryByText('General content')).not.toBeInTheDocument();
-    expect(screen.queryByText('Marketing content')).not.toBeInTheDocument();
-    expect(screen.getByText('sulu_admin.expand_all')).toBeInTheDocument();
-});
-
-test('Clicking expand all should expand every collapsible again', async() => {
-    const {user} = renderCollapsibleCollection();
-
-    await user.click(screen.getByText('sulu_admin.collapse_all'));
     await user.click(screen.getByText('sulu_admin.expand_all'));
 
     expect(screen.getByText('General content')).toBeInTheDocument();
@@ -97,32 +86,42 @@ test('Clicking expand all should expand every collapsible again', async() => {
     expect(screen.getByText('sulu_admin.collapse_all')).toBeInTheDocument();
 });
 
-test('Collapsing a single collapsible should leave the other ones untouched', async() => {
+test('Clicking collapse all should collapse every collapsible again', async() => {
     const {user} = renderCollapsibleCollection();
 
-    await user.click(within(getCollapsible('General')).getByLabelText('su-collapse-vertical'));
+    await user.click(screen.getByText('sulu_admin.expand_all'));
+    await user.click(screen.getByText('sulu_admin.collapse_all'));
 
     expect(screen.queryByText('General content')).not.toBeInTheDocument();
-    expect(screen.getByText('Marketing content')).toBeInTheDocument();
-    expect(screen.getByText('sulu_admin.collapse_all')).toBeInTheDocument();
+    expect(screen.queryByText('Marketing content')).not.toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.expand_all')).toBeInTheDocument();
 });
 
-test('Expanding a single collapsible again should render its content', async() => {
+test('Expanding a single collapsible should leave the other ones untouched', async() => {
     const {user} = renderCollapsibleCollection();
 
-    await user.click(within(getCollapsible('General')).getByLabelText('su-collapse-vertical'));
     await user.click(within(getCollapsible('General')).getByLabelText('su-expand-vertical'));
 
     expect(screen.getByText('General content')).toBeInTheDocument();
+    expect(screen.queryByText('Marketing content')).not.toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.collapse_all')).toBeInTheDocument();
 });
 
-test('Show the expand all toggle when every collapsible was collapsed individually', async() => {
+test('Collapsing a single collapsible again should hide its content', async() => {
     const {user} = renderCollapsibleCollection();
 
+    await user.click(within(getCollapsible('General')).getByLabelText('su-expand-vertical'));
     await user.click(within(getCollapsible('General')).getByLabelText('su-collapse-vertical'));
-    await user.click(within(getCollapsible('Marketing')).getByLabelText('su-collapse-vertical'));
 
-    expect(screen.getByText('sulu_admin.expand_all')).toBeInTheDocument();
+    expect(screen.queryByText('General content')).not.toBeInTheDocument();
+});
+
+test('Show the collapse all toggle as soon as one collapsible was expanded individually', async() => {
+    const {user} = renderCollapsibleCollection();
+
+    await user.click(within(getCollapsible('General')).getByLabelText('su-expand-vertical'));
+
+    expect(screen.getByText('sulu_admin.collapse_all')).toBeInTheDocument();
 });
 
 test('Do not render the collapse all toggle for a single collapsible', () => {
@@ -148,7 +147,7 @@ test('Render the actions and call their callback with the index of the collapsib
     await user.click(within(getCollapsible('Marketing')).getByLabelText('Delete'));
 
     expect(deleteSpy).toHaveBeenCalledWith(1);
-    expect(screen.getByText('Marketing content')).toBeInTheDocument();
+    expect(screen.queryByText('Marketing content')).not.toBeInTheDocument();
 });
 
 test('Render a drag handle for every collapsible', () => {
@@ -173,7 +172,7 @@ test('Sorting a collapsible should reorder the value and move its expanded state
         value,
     });
 
-    await user.click(within(getCollapsible('General')).getByLabelText('su-collapse-vertical'));
+    await user.click(within(getCollapsible('General')).getByLabelText('su-expand-vertical'));
 
     act(() => {
         ref.current.handleSortEnd({newIndex: 2, oldIndex: 0});
@@ -184,9 +183,9 @@ test('Sorting a collapsible should reorder the value and move its expanded state
 
     rerenderCollapsibleCollection({value: [{title: 'Marketing'}, {title: 'Shipping'}, {title: 'General'}]});
 
-    expect(screen.queryByText('General content')).not.toBeInTheDocument();
-    expect(screen.getByText('Marketing content')).toBeInTheDocument();
-    expect(screen.getByText('Shipping content')).toBeInTheDocument();
+    expect(screen.getByText('General content')).toBeInTheDocument();
+    expect(screen.queryByText('Marketing content')).not.toBeInTheDocument();
+    expect(screen.queryByText('Shipping content')).not.toBeInTheDocument();
 });
 
 test('Render the given texts instead of the default translations', async() => {
@@ -198,11 +197,11 @@ test('Render the given texts instead of the default translations', async() => {
     });
 
     expect(screen.getByText('Add attributes')).toBeInTheDocument();
-    expect(screen.getByText('Collapse all groups')).toBeInTheDocument();
-
-    await user.click(screen.getByText('Collapse all groups'));
-
     expect(screen.getByText('Expand all groups')).toBeInTheDocument();
+
+    await user.click(screen.getByText('Expand all groups'));
+
+    expect(screen.getByText('Collapse all groups')).toBeInTheDocument();
 });
 
 test('Do not render an add button when no onAddClick callback is given', () => {
@@ -226,26 +225,26 @@ test('Render the given add button text instead of the default translation', () =
     expect(screen.getByText('Add attributes')).toBeInTheDocument();
 });
 
-test('An appended collapsible should start expanded while collapsed siblings stay collapsed', async() => {
+test('An appended collapsible should start collapsed while expanded siblings stay expanded', async() => {
     const {rerenderCollapsibleCollection, user} = renderCollapsibleCollection();
 
-    await user.click(screen.getByText('sulu_admin.collapse_all'));
+    await user.click(screen.getByText('sulu_admin.expand_all'));
 
     rerenderCollapsibleCollection({value: [...TWO_COLLAPSIBLES, {title: 'Shipping'}]});
 
-    expect(screen.getByText('Shipping content')).toBeInTheDocument();
-    expect(screen.queryByText('General content')).not.toBeInTheDocument();
-    expect(screen.queryByText('Marketing content')).not.toBeInTheDocument();
+    expect(screen.queryByText('Shipping content')).not.toBeInTheDocument();
+    expect(screen.getByText('General content')).toBeInTheDocument();
+    expect(screen.getByText('Marketing content')).toBeInTheDocument();
 });
 
 test('A removed collapsible should not leave its expanded state behind', async() => {
     const value = [{title: 'General'}, {title: 'Marketing'}, {title: 'Shipping'}];
     const {rerenderCollapsibleCollection, user} = renderCollapsibleCollection({value});
 
-    await user.click(within(getCollapsible('Shipping')).getByLabelText('su-collapse-vertical'));
+    await user.click(within(getCollapsible('Shipping')).getByLabelText('su-expand-vertical'));
 
     rerenderCollapsibleCollection({value: [{title: 'General'}, {title: 'Marketing'}]});
     rerenderCollapsibleCollection({value});
 
-    expect(screen.getByText('Shipping content')).toBeInTheDocument();
+    expect(screen.queryByText('Shipping content')).not.toBeInTheDocument();
 });

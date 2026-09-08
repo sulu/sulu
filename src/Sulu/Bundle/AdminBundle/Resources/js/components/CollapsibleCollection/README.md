@@ -2,7 +2,7 @@ The collapsible collection renders a `Collapsible` for every entry of its `value
 their expanded state. Every entry needs a `title` and may bring a `subtitle`, the content of a
 collapsible comes from the `renderCollapsibleContent` callback. As soon as there is more than one
 entry, a control to collapse or expand all of them at once is shown. Every collapsible starts
-expanded.
+collapsed.
 
 The collapsibles are sorted by dragging their handle, which reorders `value` and reports the new
 order through `onChange`.
