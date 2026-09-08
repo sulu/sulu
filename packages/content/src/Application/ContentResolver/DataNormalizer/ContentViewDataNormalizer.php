@@ -88,6 +88,10 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
      * merged with `+`, and any other collision keeps what is already there. The merge knows
      * nothing about priority: it is first writer wins, and the caller iterates in priority order.
      *
+     * `null` at the root is the resolved value of a resource that could not be loaded, so it is
+     * skipped. Any other non-array means the resolver does not return what its `[root]` output
+     * path promises, which is a bug in the resolver.
+     *
      * @param array<string, mixed> $target
      * @param list<string> $segments
      *
@@ -96,6 +100,10 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
     private function mergeResolverOutput(array $target, array $segments, mixed $data): array
     {
         if ([] === $segments) {
+            if (null === $data) {
+                return $target;
+            }
+
             if (!\is_array($data)) {
                 throw new \LogicException(\sprintf(
                     'A content resolver on path "[root]" must return an array, got %s.',

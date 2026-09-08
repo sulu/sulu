@@ -317,6 +317,19 @@ class ContentViewDataNormalizerTest extends TestCase
         $this->normalizer->normalizeContentViewData(['template' => [], 'settings' => 'scalar'], [], new Example());
     }
 
+    public function testNullContentAtRootIsSkipped(): void
+    {
+        $result = $this->normalizer->normalizeContentViewData(
+            ['template' => ['title' => 'T'], 'settings' => null],
+            [],
+            new Example(),
+        );
+
+        self::assertSame(['title' => 'T'], $result['content']);
+        // the skipped resolver adds nothing beyond the envelope
+        self::assertCount(4, $result);
+    }
+
     public function testTemplateViewIsMergedOnlyForContentPath(): void
     {
         $result = $this->normalizer->normalizeContentViewData(
