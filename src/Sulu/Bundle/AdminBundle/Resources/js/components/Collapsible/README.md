@@ -19,6 +19,9 @@ const onExpand = () => setExpanded(true);
 </Collapsible>
 ```
 
+The children render below the header without padding: the content draws its rows edge to edge, a
+table for example, and carries its own inset.
+
 A collapsed collapsible does not render its children, unlike the `Block` component, which keeps them
 mounted and greys them out. Focus and scroll position inside a collapsible are therefore lost when it
 is collapsed.

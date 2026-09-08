@@ -3,7 +3,7 @@ import {action, computed, isArrayLike, observable, set, toJS} from 'mobx';
 import jsonpointer from 'json-pointer';
 import log from 'loglevel';
 import type {IObservableValue} from 'mobx/lib/mobx';
-import type {Schema, SchemaEntry} from '../types';
+import type {ErrorCollection, FieldValidator, Schema, SchemaEntry} from '../types';
 
 export const SECTION_TYPE = 'section';
 
@@ -155,6 +155,7 @@ export default class AbstractFormStore
     modifiedFields: Array<string> = [];
     @observable errors: Object = {};
     validator: ?(data: Object) => boolean;
+    fieldValidators: Array<{dataPath: string, validator: FieldValidator}> = [];
     pathsByTag: {[tagName: string]: Array<string>} = {};
 
     get forbidden(): boolean {
@@ -177,6 +178,17 @@ export default class AbstractFormStore
         if (!this.modifiedFields.includes(dataPath)) {
             this.modifiedFields.push(dataPath);
         }
+    }
+
+    // A field type validates what the JSON schema cannot describe, e.g. a schema loaded at runtime.
+    // The returned errors are nested below the field's data path.
+    addFieldValidator(dataPath: string, validator: FieldValidator): () => void {
+        const fieldValidator = {dataPath, validator};
+        this.fieldValidators.push(fieldValidator);
+
+        return () => {
+            this.fieldValidators = this.fieldValidators.filter((entry) => entry !== fieldValidator);
+        };
     }
 
     @action validate() {
@@ -211,6 +223,14 @@ export default class AbstractFormStore
                             {keyword: error.keyword, parameters: error.params}
                         );
                 }
+            }
+        }
+
+        for (const {dataPath, validator: fieldValidator} of this.fieldValidators) {
+            const fieldErrors: ?ErrorCollection = fieldValidator(toJS(this.getValueByPath(dataPath)));
+
+            if (fieldErrors) {
+                jsonpointer.set(errors, dataPath, fieldErrors);
             }
         }
 

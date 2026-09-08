@@ -2,7 +2,7 @@
 import {computed} from 'mobx';
 import log from 'loglevel';
 import type {IObservableValue} from 'mobx/lib/mobx';
-import type {FinishFieldHandler, FormStoreInterface, SaveHandler} from './types';
+import type {FieldValidator, FinishFieldHandler, FormStoreInterface, SaveHandler} from './types';
 
 export default class FormInspector {
     formStore: FormStoreInterface;
@@ -66,6 +66,10 @@ export default class FormInspector {
         }
 
         this.saveHandlers.forEach((saveHandler) => saveHandler(options));
+    }
+
+    addFieldValidator(dataPath: string, validator: FieldValidator): () => void {
+        return this.formStore.addFieldValidator(dataPath, validator);
     }
 
     addFinishFieldHandler(finishFieldHandler: FinishFieldHandler): () => void {

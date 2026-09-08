@@ -6,7 +6,7 @@ import type {Node} from 'react';
 
 type Props = {|
     children: Node,
-    headerCells: Array<Object>,
+    headerCells?: Array<Object>,
 |};
 
 /**
@@ -19,9 +19,10 @@ export default class AttributeGroupTable extends React.Component<Props> {
         return (
             <div className={attributeGroupTableStyles.table}>
                 <Table skin="flat">
-                    <Table.Header>
-                        {headerCells}
-                    </Table.Header>
+                    {headerCells
+                        ? <Table.Header>{headerCells}</Table.Header>
+                        : null
+                    }
                     <Table.Body>
                         {/* $FlowFixMe */}
                         {children}

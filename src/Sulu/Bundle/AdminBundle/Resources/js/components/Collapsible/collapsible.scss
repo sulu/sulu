@@ -70,7 +70,7 @@ $collapsibleIconColor: $gray;
     padding: 0;
 }
 
+/* no padding: the content draws its rows edge to edge, the cells carry the inset */
 .children {
     border-top: 1px solid $collapsibleBorderColor;
-    padding: 20px;
 }
