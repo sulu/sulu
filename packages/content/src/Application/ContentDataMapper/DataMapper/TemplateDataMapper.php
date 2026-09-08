@@ -51,15 +51,9 @@ class TemplateDataMapper implements DataMapperInterface
             throw new \RuntimeException(\sprintf('Could not find metadata "%s" of type "%s".', 'form', $type));
         }
 
-        if (\array_key_exists('template', $data) && null === $data['template']) {
-            return;
-        }
-
         if (\array_key_exists('template', $data)) {
+            /** @var string|null $template */
             $template = $data['template'];
-            if (!\is_string($template)) {
-                throw new \InvalidArgumentException(\sprintf('Expected "template" to be a string, got "%s".', \get_debug_type($template)));
-            }
         } else {
             try {
                 $template = $typedMetadata->getDefaultType();

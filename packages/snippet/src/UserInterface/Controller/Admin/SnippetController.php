@@ -127,10 +127,10 @@ final class SnippetController implements SecuredControllerInterface
 
         if (isset($fieldDescriptors['shadowLocale'])) {
             $listBuilder->addSelectField($fieldDescriptors['shadowLocale']);
-        }
 
-        if ($excludeShadows) {
-            $listBuilder->where($fieldDescriptors['shadowLocale'], null);
+            if ($excludeShadows) {
+                $listBuilder->where($fieldDescriptors['shadowLocale'], null);
+            }
         }
 
         $listBuilder->setParameter('locale', $this->getLocale($request));
