@@ -461,8 +461,10 @@ class SnippetAreaTwigExtensionTest extends TestCase
         $result = $this->extension->loadSnippetByArea($areaKey, [], $webspaceKey, $locale);
 
         $this->assertSame($resolvedContent, $result);
-        $this->assertSame($locale, $sourceDimensionContent->getLocale());
-        $this->assertSame($shadowLocale, $sourceDimensionContent->getShadowLocale());
+        // The shadow source is resolved in its own locale (like ContentObjectProvider::resolveContent),
+        // the content is not mutated to carry the requested locale.
+        $this->assertSame($shadowLocale, $sourceDimensionContent->getLocale());
+        $this->assertNull($sourceDimensionContent->getShadowLocale());
     }
 
     public function testLoadSnippetByAreaWithShadowLocaleCycle(): void

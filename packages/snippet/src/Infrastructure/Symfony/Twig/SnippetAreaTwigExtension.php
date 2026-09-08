@@ -79,7 +79,6 @@ class SnippetAreaTwigExtension extends AbstractExtension
             $properties,
             $webspaceKey,
             $locale,
-            $locale,
             []
         );
     }
@@ -95,7 +94,6 @@ class SnippetAreaTwigExtension extends AbstractExtension
         ?array $properties,
         string $webspaceKey,
         string $locale,
-        string $requestedLocale,
         array $visitedLocales,
     ): ?array {
         // The only recursive call site below already guards against revisiting a locale,
@@ -152,22 +150,14 @@ class SnippetAreaTwigExtension extends AbstractExtension
             // dimensionContents collection is for the source locale, not this shadow locale.
             $this->entityManager->detach($snippet);
 
+            // Resolve the shadow source in its own locale, like ContentObjectProvider::resolveContent.
             return $this->loadSnippetByAreaForLocale(
                 $areaKey,
                 $properties,
                 $webspaceKey,
                 $shadowLocale,
-                $requestedLocale,
                 $visitedLocales
             );
-        }
-
-        if ($locale !== $requestedLocale) {
-            // The source content supplies the shadow area's data, but nested resources must
-            // still be resolved in the locale requested by the caller. Keep the source locale
-            // as the fallback for nested resources which do not exist in that locale.
-            $dimensionContent->setLocale($requestedLocale);
-            $dimensionContent->setShadowLocale($locale);
         }
 
         $resolvedContent = $this->contentResolver->resolve($dimensionContent, $properties);
