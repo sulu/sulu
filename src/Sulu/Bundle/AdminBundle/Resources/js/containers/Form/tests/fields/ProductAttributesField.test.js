@@ -70,10 +70,15 @@ test('passes value, data path, showAllErrors and disabled through to the contain
 });
 
 test('reads the variant schema option', () => {
-    renderField({schemaOptions: {variant: {name: 'variant', value: 'true'}}});
+    renderField({schemaOptions: {variant: {name: 'variant', value: true}}});
 
     // eslint-disable-next-line jest-dom/prefer-to-have-text-content
     expect(screen.getByTestId('container').textContent).toContain('"variant":true');
+});
+
+test('throws when the variant schema option is not a boolean', () => {
+    expect(() => renderField({schemaOptions: {variant: {name: 'variant', value: 'true'}}}))
+        .toThrow('The "variant" schema option must be a boolean if given!');
 });
 
 test('calls onChange with the new value and onFinish when a row finishes', async() => {

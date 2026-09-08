@@ -181,7 +181,7 @@ export default class AbstractFormStore
     }
 
     // A field type validates what the JSON schema cannot describe, e.g. a schema loaded at runtime.
-    // The returned errors are nested below the field's data path.
+    // The returned errors are merged into the field's own errors below its data path.
     addFieldValidator(dataPath: string, validator: FieldValidator): () => void {
         const fieldValidator = {dataPath, validator};
         this.fieldValidators.push(fieldValidator);
@@ -227,10 +227,11 @@ export default class AbstractFormStore
         }
 
         for (const {dataPath, validator: fieldValidator} of this.fieldValidators) {
-            const fieldErrors: ?ErrorCollection = fieldValidator(toJS(this.getValueByPath(dataPath)));
+            const fieldErrors: ?ErrorCollection = fieldValidator();
 
             if (fieldErrors) {
-                jsonpointer.set(errors, dataPath, fieldErrors);
+                const schemaErrors = jsonpointer.has(errors, dataPath) ? jsonpointer.get(errors, dataPath) : {};
+                jsonpointer.set(errors, dataPath, {...schemaErrors, ...fieldErrors});
             }
         }
 

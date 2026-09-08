@@ -68,6 +68,7 @@ function renderComponent(props: Object = {}) {
         <ProductAttributesRenderer
             data={DATA}
             disabled={false}
+            filter=""
             formInspector={formInspector}
             hideEmpty={false}
             onChange={jest.fn()}
@@ -146,6 +147,14 @@ test('hides empty rows and empty groups when hideEmpty is set', () => {
     expect(screen.getByText('Weight (kg) *')).toBeInTheDocument();
     expect(screen.queryByText('Colour')).not.toBeInTheDocument();
     expect(screen.queryByText('Electrical')).not.toBeInTheDocument();
+});
+
+test('keeps only rows whose label contains the filter and drops empty groups', () => {
+    renderComponent({filter: 'volt'});
+
+    expect(screen.getByText('Voltage (V)')).toBeInTheDocument();
+    expect(screen.queryByText('Weight (kg) *')).not.toBeInTheDocument();
+    expect(screen.queryByText('Dimensions')).not.toBeInTheDocument();
 });
 
 test('disables every field when disabled', () => {

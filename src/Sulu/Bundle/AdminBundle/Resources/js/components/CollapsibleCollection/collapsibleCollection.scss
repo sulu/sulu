@@ -13,11 +13,14 @@
     gap: 20px;
 }
 
+/* the toolbar may shrink, the toggle button keeps its size */
 .toolbar {
     margin-right: auto;
+    min-width: 0;
 }
 
 .collapsibleCollectionActionButton {
+    flex: 0 0 auto;
     align-items: center;
     background: none;
     border: none;

@@ -69,7 +69,15 @@ export default class FormInspector {
     }
 
     addFieldValidator(dataPath: string, validator: FieldValidator): () => void {
-        return this.formStore.addFieldValidator(dataPath, validator);
+        const {formStore} = this;
+
+        if (!formStore.addFieldValidator) {
+            log.warn('The form store does not support field validators, the validator will be ignored.');
+
+            return () => {};
+        }
+
+        return formStore.addFieldValidator(dataPath, validator);
     }
 
     addFinishFieldHandler(finishFieldHandler: FinishFieldHandler): () => void {

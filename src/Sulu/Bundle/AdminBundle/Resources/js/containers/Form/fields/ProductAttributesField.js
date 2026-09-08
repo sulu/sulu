@@ -32,6 +32,10 @@ export default class ProductAttributesField extends React.Component<Props> {
             value,
         } = this.props;
 
+        if (variant !== undefined && typeof variant !== 'boolean') {
+            throw new Error('The "variant" schema option must be a boolean if given!');
+        }
+
         return (
             <ProductAttributes
                 dataPath={dataPath}
@@ -42,7 +46,7 @@ export default class ProductAttributesField extends React.Component<Props> {
                 router={router}
                 showAllErrors={showAllErrors}
                 value={value}
-                variant={variant === true || variant === 'true'}
+                variant={!!variant}
             />
         );
     }

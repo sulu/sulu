@@ -639,14 +639,14 @@ test('Store slash-named properties with a numeric segment as nested objects and 
 
 test('Validate should merge the errors of a field validator under its data path', () => {
     const memoryFormStore = new MemoryFormStore({attributes: {'7': 999}}, {}, {type: 'object'});
-    const validator = jest.fn((value: Object) => value['7'] > 10
+    const validator = jest.fn(() => memoryFormStore.data.attributes['7'] > 10
         ? {'7': {keyword: 'maximum', parameters: {limit: 10}}}
         : undefined
     );
     memoryFormStore.addFieldValidator('/attributes', validator);
 
     expect(memoryFormStore.validate()).toEqual(false);
-    expect(validator).toHaveBeenCalledWith({'7': 999});
+    expect(validator).toHaveBeenCalledWith();
     expect(memoryFormStore.errors).toEqual({attributes: {'7': {keyword: 'maximum', parameters: {limit: 10}}}});
 
     memoryFormStore.change('/attributes/7', 5);
@@ -662,6 +662,21 @@ test('Validate should keep the schema errors next to the field validator errors'
     expect(memoryFormStore.validate()).toEqual(false);
     expect(memoryFormStore.errors.title).toEqual({keyword: 'required', parameters: {missingProperty: 'title'}});
     expect(memoryFormStore.errors.attributes).toEqual({'7': {keyword: 'required', parameters: {}}});
+});
+
+test('Validate should merge the field validator errors into the schema errors at the same path', () => {
+    const jsonSchema = {
+        properties: {attributes: {properties: {'8': {type: 'number', maximum: 1}}, type: 'object'}},
+        type: 'object',
+    };
+    const memoryFormStore = new MemoryFormStore({attributes: {'8': 5}}, {}, jsonSchema);
+    memoryFormStore.addFieldValidator('/attributes', () => ({'7': {keyword: 'required', parameters: {}}}));
+
+    expect(memoryFormStore.validate()).toEqual(false);
+    expect(memoryFormStore.errors.attributes['8']).toEqual(
+        {keyword: 'maximum', parameters: {comparison: '<=', limit: 1}}
+    );
+    expect(memoryFormStore.errors.attributes['7']).toEqual({keyword: 'required', parameters: {}});
 });
 
 test('A removed field validator should not run any more', () => {

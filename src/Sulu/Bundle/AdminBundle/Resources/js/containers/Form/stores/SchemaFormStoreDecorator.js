@@ -130,8 +130,8 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         const disposer = when(
             () => !!this.innerFormStore,
             (): void => {
-                if (!removed) {
-                    removeValidator = this.innerFormStore?.addFieldValidator(dataPath, validator);
+                if (!removed && this.innerFormStore?.addFieldValidator) {
+                    removeValidator = this.innerFormStore.addFieldValidator(dataPath, validator);
                 }
             }
         );

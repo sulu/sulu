@@ -122,6 +122,15 @@ test('Should register a field validator on the formStore and return its remover'
     expect(formStore.addFieldValidator).toHaveBeenCalledWith('/attributes', validator);
 });
 
+test('Should ignore a field validator when the formStore does not support them', () => {
+    const formStore = new ResourceFormStore(new ResourceStore('test', 3), 'test');
+    // $FlowFixMe: a store from before field validators existed
+    formStore.addFieldValidator = undefined;
+    const formInspector = new FormInspector(formStore);
+
+    expect(formInspector.addFieldValidator('/attributes', jest.fn())).toEqual(expect.any(Function));
+});
+
 test('Should call finishField method from formStore', () => {
     const formStore = new ResourceFormStore(new ResourceStore('test', 3), 'test');
     const formInspector = new FormInspector(formStore);

@@ -71,3 +71,21 @@ $cellPaddingVertical: calc(($rowHeight - $inputHeight - 2 * $cellBorderWidth) / 
 .hint {
     color: $gray;
 }
+
+/* one line at every width: the search gives way, the toggler keeps its size and its single line */
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-width: 0;
+}
+
+.search {
+    flex: 0 1 260px;
+    min-width: 0;
+}
+
+.hideEmpty {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}

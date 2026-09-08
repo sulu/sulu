@@ -38,7 +38,7 @@ export type Error = PropertyError | ErrorCollection | Array<?Error>;
 
 export type ErrorCollection = {[key: string]: Error};
 
-export type FieldValidator = (value: mixed) => ?ErrorCollection;
+export type FieldValidator = () => ?ErrorCollection;
 
 export type SchemaOption = {
     infoText?: string,
@@ -86,7 +86,8 @@ export type ConditionDataProvider = (
 ) => {[string]: any};
 
 export interface FormStoreInterface {
-    +addFieldValidator: (dataPath: string, validator: FieldValidator) => () => void,
+    // Optional: a store that predates it stays a valid implementation.
+    +addFieldValidator?: (dataPath: string, validator: FieldValidator) => () => void,
     +change: (dataPath: string, value: mixed, context?: ChangeContext) => void,
     +changeMultiple: (values: {[dataPath: string]: mixed}, context?: ChangeContext) => void,
     +changeType: (type: string, context?: ChangeContext) => void,

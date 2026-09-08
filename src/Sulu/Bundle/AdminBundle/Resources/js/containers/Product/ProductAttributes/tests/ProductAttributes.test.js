@@ -55,6 +55,7 @@ jest.mock('../ProductAttributesRenderer', () => function ProductAttributesRender
         React.createElement('span', {'data-testid': 'renderer-props'}, JSON.stringify({
             data: props.data,
             disabled: props.disabled,
+            filter: props.filter,
             hideEmpty: props.hideEmpty,
             schema: props.schema,
             showAllErrors: props.showAllErrors,
@@ -159,6 +160,7 @@ test('shows a loader until the metadata resolved, then the renderer with the inn
     expect(JSON.parse(screen.getByTestId('renderer-props').textContent)).toEqual({
         data: {attribute_7: 3},
         disabled: false,
+        filter: '',
         hideEmpty: false,
         schema: SCHEMA,
         showAllErrors: false,
@@ -257,6 +259,8 @@ test('follows a value replaced from outside without marking the inner store dirt
 test('validates the inner store when a row finishes and finishes the host field', async() => {
     const onFinish = jest.fn();
     await renderLoaded({onFinish, value: {'7': 999}});
+    const finishFieldHandler = jest.fn();
+    rendererProps.formInspector.addFinishFieldHandler(finishFieldHandler);
 
     await userEvent.click(screen.getByText('finish'));
 
@@ -264,6 +268,8 @@ test('validates the inner store when a row finishes and finishes the host field'
         {attribute_7: {keyword: 'maximum', parameters: {comparison: '<=', limit: 10}}}
     );
     expect(rendererProps.formInspector.isFieldModified('/attribute_7')).toEqual(true);
+    // the inner inspector's finish-field handlers run, like the host form's do
+    expect(finishFieldHandler).toHaveBeenCalledWith('/attribute_7', '/attribute_group_1/items/attribute_7');
     expect(onFinish).toHaveBeenCalledTimes(1);
 });
 
@@ -312,6 +318,15 @@ test('toggles hide empty', async() => {
 
     // eslint-disable-next-line jest-dom/prefer-to-have-text-content
     expect(screen.getByTestId('renderer-props').textContent).toContain('"hideEmpty":true');
+});
+
+test('passes the typed filter to the renderer', async() => {
+    await renderLoaded();
+
+    await userEvent.type(screen.getByPlaceholderText('sulu_product.filter_attributes'), 'vol');
+
+    // eslint-disable-next-line jest-dom/prefer-to-have-text-content
+    expect(screen.getByTestId('renderer-props').textContent).toContain('"filter":"vol"');
 });
 
 test('passes showAllErrors to the renderer', async() => {

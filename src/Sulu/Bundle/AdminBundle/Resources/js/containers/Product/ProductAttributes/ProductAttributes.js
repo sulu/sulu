@@ -3,17 +3,19 @@ import React from 'react';
 import {action, computed, observable, reaction, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import {translate} from '../../../utils/Translator';
+import Input from '../../../components/Input';
 import Loader from '../../../components/Loader';
 import Toggler from '../../../components/Toggler';
 import Router from '../../../services/Router';
 import FormInspector from '../../Form/FormInspector';
 import memoryFormStoreFactory from '../../Form/stores/memoryFormStoreFactory';
 import ProductAttributesRenderer from './ProductAttributesRenderer';
+import isEmpty from './isEmpty';
 import {NAME_PREFIX} from './namePrefix';
 import productAttributesRendererStyles from './productAttributesRenderer.scss';
 import type {ErrorCollection, FormStoreInterface} from '../../Form/types';
 
-export const FORM_KEY = 'product_attributes';
+const FORM_KEY = 'product_attributes';
 
 type Props = {|
     dataPath: string,
@@ -29,17 +31,12 @@ type Props = {|
 
 type Selector = {productFamily: string} | {product: string};
 
-function isEmpty(value: mixed): boolean {
-    return value === undefined || value === null || value === '';
-}
-
 /**
- * Renders a product's attribute values through its own memory form store, loaded from the
- * product_attributes form of the product's family. The family is read from the host form value, or
- * from the parent product for a new variant. The store validates the values against the form's JSON
- * schema; the host form fails its own validation while this store has errors.
+ * Edits a product's attribute values in its own form store, built from the product_attributes form
+ * of the selected family (or the parent's family for a new variant). Errors in this store block
+ * the save of the host form.
  *
- * The store's data is keyed by field name (attribute_<id>), the host value by attribute id.
+ * The store keys its data by field name (attribute_<id>), the host value by attribute id.
  *
  * @experimental We can not yet give BC Promise for this new container in Sulu 3.1.
  */
@@ -48,6 +45,7 @@ class ProductAttributes extends React.Component<Props> {
     @observable formStore: ?FormStoreInterface = undefined;
     @observable formInspector: ?FormInspector = undefined;
     @observable hideEmpty: boolean = false;
+    @observable filter: string = '';
 
     selectorDisposer: () => void;
     removeFieldValidator: () => void;
@@ -175,22 +173,22 @@ class ProductAttributes extends React.Component<Props> {
     handleChange = (name: string, fieldValue: mixed) => {
         const {formStore} = this;
         if (!formStore) {
-            return;
+            throw new Error('A row changed without a form store. This should not happen and is likely a bug.');
         }
 
         formStore.change('/' + name, fieldValue);
         this.props.onChange({...this.value, [name.substring(NAME_PREFIX.length)]: fieldValue});
     };
 
-    // Same steps as Form.handleFieldFinish on the inner store, then the host field finishes.
-    handleFinish = (dataPath: string) => {
-        const {formStore} = this;
-        if (!formStore) {
-            return;
+    // Same steps as Form.handleFieldFinish on the inner form, then the host field finishes.
+    handleFinish = (dataPath: string, schemaPath: string) => {
+        const {formInspector, formStore} = this;
+        if (!formStore || !formInspector) {
+            throw new Error('A row finished without a form store. This should not happen and is likely a bug.');
         }
 
         formStore.validate();
-        formStore.finishField(dataPath);
+        formInspector.finishField(dataPath, schemaPath);
         this.props.onFinish();
     };
 
@@ -198,11 +196,32 @@ class ProductAttributes extends React.Component<Props> {
         this.hideEmpty = checked;
     };
 
+    @action handleFilterChange = (filter: ?string) => {
+        this.filter = filter || '';
+    };
+
+    @action handleFilterClear = () => {
+        this.filter = '';
+    };
+
     renderToolbar() {
         return (
-            <Toggler checked={this.hideEmpty} onChange={this.handleHideEmptyChange}>
-                {translate('sulu_product.hide_empty_attributes')}
-            </Toggler>
+            <div className={productAttributesRendererStyles.toolbar}>
+                <div className={productAttributesRendererStyles.search}>
+                    <Input
+                        icon="su-search"
+                        onChange={this.handleFilterChange}
+                        onClearClick={this.handleFilterClear}
+                        placeholder={translate('sulu_product.filter_attributes')}
+                        value={this.filter}
+                    />
+                </div>
+                <div className={productAttributesRendererStyles.hideEmpty}>
+                    <Toggler checked={this.hideEmpty} onChange={this.handleHideEmptyChange}>
+                        {translate('sulu_product.hide_empty_attributes')}
+                    </Toggler>
+                </div>
+            </div>
         );
     }
 
@@ -226,6 +245,7 @@ class ProductAttributes extends React.Component<Props> {
             <ProductAttributesRenderer
                 data={formStore.data}
                 disabled={disabled}
+                filter={this.filter}
                 formInspector={formInspector}
                 hideEmpty={this.hideEmpty}
                 onChange={this.handleChange}

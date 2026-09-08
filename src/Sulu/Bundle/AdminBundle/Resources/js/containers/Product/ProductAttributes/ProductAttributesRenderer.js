@@ -9,6 +9,7 @@ import Field from '../../Form/Field';
 import FormInspector from '../../Form/FormInspector';
 import AttributeGroupTable from '../AttributeGroupTable';
 import productAttributesRendererStyles from './productAttributesRenderer.scss';
+import isEmpty from './isEmpty';
 import {NAME_PREFIX} from './namePrefix';
 import type {Node} from 'react';
 import type {Error, Schema, SchemaEntry} from '../../Form/types';
@@ -18,6 +19,7 @@ type Row = {
     schema: SchemaEntry,
 };
 
+// subtitle is never set, CollapsibleConfig asks for the key
 type Group = {
     rows: Array<Row>,
     sectionKey: string,
@@ -28,6 +30,7 @@ type Group = {
 type Props = {|
     data: Object,
     disabled: boolean,
+    filter: string,
     formInspector: FormInspector,
     hideEmpty: boolean,
     onChange: (name: string, value: mixed) => void,
@@ -38,22 +41,18 @@ type Props = {|
     toolbar?: Node,
 |};
 
-function isEmpty(value: mixed): boolean {
-    return value === undefined || value === null || value === '';
-}
-
 /**
- * Draws a product_attributes form schema as one collapsible card per section and one label/field row
- * per attribute. The field itself is rendered by the form's Field, so every registered field type
- * works here unchanged. Values, errors and the modified state come from the given form inspector,
- * the one of the container's own store, keyed by field name.
+ * Renders a product_attributes form as one collapsible card per attribute group with a label/field
+ * row per attribute. Each row uses the form's Field, so any field type works. Values and errors
+ * come from the given form inspector, the one of the container's own store.
  *
  * @experimental We can not yet give BC Promise for this new container in Sulu 3.1.
  */
 @observer
 class ProductAttributesRenderer extends React.Component<Props> {
     @computed get groups(): Array<Group> {
-        const {formInspector, hideEmpty, schema} = this.props;
+        const {filter, formInspector, hideEmpty, schema} = this.props;
+        const needle = filter.trim().toLowerCase();
 
         return Object.keys(schema)
             .map((sectionKey) => {
@@ -63,22 +62,15 @@ class ProductAttributesRenderer extends React.Component<Props> {
                 const rows = Object.keys(items)
                     .filter((name) => name.startsWith(NAME_PREFIX))
                     .map((name) => ({name, schema: items[name]}))
-                    .filter((row) => !hideEmpty || !isEmpty(formInspector.getValueByPath('/' + row.name)));
+                    .filter((row) => !hideEmpty || !isEmpty(formInspector.getValueByPath('/' + row.name)))
+                    .filter((row) => !needle || (row.schema.label || '').toLowerCase().includes(needle));
 
                 return {rows, sectionKey, title: section.label || ''};
             })
             .filter((group) => group.rows.length > 0);
     }
 
-    handleFieldChange = (name: string, fieldValue: mixed) => {
-        this.props.onChange(name, fieldValue);
-    };
-
-    handleFieldFinish = (dataPath: string, schemaPath: string) => {
-        this.props.onFinish(dataPath, schemaPath);
-    };
-
-    // Same rule as the form's Renderer: an error shows once the row was edited or the form asks for all.
+    // An error shows once the row was edited or the form asks for all errors.
     rowError(name: string, rowDataPath: string): Error | typeof undefined {
         const {formInspector, showAllErrors} = this.props;
         const {errors} = formInspector;
@@ -103,7 +95,7 @@ class ProductAttributesRenderer extends React.Component<Props> {
     }
 
     renderRow(row: Row, sectionKey: string) {
-        const {data, formInspector, router} = this.props;
+        const {data, formInspector, onChange, onFinish, router} = this.props;
         const {name, schema} = row;
         const rowDataPath = '/' + name;
 
@@ -119,8 +111,8 @@ class ProductAttributesRenderer extends React.Component<Props> {
                         error={this.rowError(name, rowDataPath)}
                         formInspector={formInspector}
                         name={name}
-                        onChange={this.handleFieldChange}
-                        onFinish={this.handleFieldFinish}
+                        onChange={onChange}
+                        onFinish={onFinish}
                         onSuccess={undefined}
                         router={router}
                         schema={this.rowSchema(schema)}
