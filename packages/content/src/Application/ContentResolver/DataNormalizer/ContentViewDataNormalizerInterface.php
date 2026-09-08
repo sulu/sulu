@@ -44,7 +44,7 @@ interface ContentViewDataNormalizerInterface
     ): array;
 
     /**
-     * Runs the replacement for the root `content` and every configured `[root][x][content]` path,
+     * Runs the replacement for the root `content` and every configured `[x][content]` path,
      * so those paths flatten nested content the same way the root does.
      *
      * @param array{

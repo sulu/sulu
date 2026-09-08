@@ -26,7 +26,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 class ContentViewResolver implements ContentViewResolverInterface
 {
     /**
-     * @param iterable<string, ResolverInterface> $contentResolvers
+     * @param iterable<ResolverInterface> $contentResolvers ordered by tag priority
      */
     public function __construct(
         private ResolvableResourceQueueProcessorInterface $resolvableResourceQueueProcessor,
@@ -41,18 +41,14 @@ class ContentViewResolver implements ContentViewResolverInterface
     {
         $contentViews = [];
 
-        /**
-         * @var string $resolverKey
-         * @var ResolverInterface $contentResolver
-         */
-        foreach ($this->contentResolvers as $resolverKey => $contentResolver) {
+        foreach ($this->contentResolvers as $contentResolver) {
             $contentView = $contentResolver->resolve($dimensionContent, $properties);
 
             if (!$contentView instanceof ContentView) {
                 continue;
             }
 
-            $contentViews[$resolverKey] = $contentView;
+            $contentViews[$contentResolver->getType()] = $contentView;
         }
 
         return $contentViews;

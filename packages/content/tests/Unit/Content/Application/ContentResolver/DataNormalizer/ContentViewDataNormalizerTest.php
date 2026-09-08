@@ -15,6 +15,9 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ContentResolver\DataNormal
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Content\Application\ContentResolver\DataNormalizer\ContentViewDataNormalizer;
+use Sulu\Content\Application\ContentResolver\Resolver\ResolverInterface;
+use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
@@ -29,7 +32,7 @@ class ContentViewDataNormalizerTest extends TestCase
     protected function setUp(): void
     {
         $this->propertyAccessor = new PropertyAccessor();
-        $this->normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS);
+        $this->normalizer = $this->createNormalizer(self::CORE_PATHS);
     }
 
     public function testFormatContentOutput(): void
@@ -213,7 +216,7 @@ class ContentViewDataNormalizerTest extends TestCase
 
     public function testRootPathPlacesResolverOutputAtRoot(): void
     {
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['product' => ['product']]);
+        $normalizer = $this->createNormalizer(self::CORE_PATHS + ['product' => ['product']]);
 
         $result = $normalizer->normalizeContentViewData(
             ['template' => ['title' => 'T'], 'product' => ['code' => 'NL4FX'], 'seo' => ['title' => 'S']],
@@ -229,7 +232,7 @@ class ContentViewDataNormalizerTest extends TestCase
 
     public function testNestedPathCreatesIntermediateArrays(): void
     {
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['shop' => ['shop', 'meta']]);
+        $normalizer = $this->createNormalizer(self::CORE_PATHS + ['shop' => ['shop', 'meta']]);
 
         $result = $normalizer->normalizeContentViewData(['template' => [], 'shop' => ['currency' => 'EUR']], [], new Example());
 
@@ -248,7 +251,7 @@ class ContentViewDataNormalizerTest extends TestCase
     public function testHigherPriorityResolverWinsOnSharedPath(): void
     {
         // "a" has higher priority and runs first.
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['a' => ['shared'], 'b' => ['shared']]);
+        $normalizer = $this->createNormalizer(self::CORE_PATHS + ['a' => ['shared'], 'b' => ['shared']]);
 
         $result = $normalizer->normalizeContentViewData(
             ['template' => [], 'a' => ['k' => 'from-a', 'x' => 1], 'b' => ['k' => 'from-b', 'y' => 2]],
@@ -262,7 +265,7 @@ class ContentViewDataNormalizerTest extends TestCase
 
     public function testMergeIsShallow(): void
     {
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['a' => [], 'b' => []]);
+        $normalizer = $this->createNormalizer(self::CORE_PATHS + ['a' => [], 'b' => []]);
 
         $result = $normalizer->normalizeContentViewData(
             ['template' => [], 'a' => ['p' => ['x' => 1]], 'b' => ['p' => ['y' => 2]]],
@@ -312,7 +315,7 @@ class ContentViewDataNormalizerTest extends TestCase
     public function testNonArrayContentAtRootThrows(): void
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('A content resolver on path "[root]" must return an array, got string.');
+        $this->expectExceptionMessage('A content resolver with an empty output path must return an array, got string.');
 
         $this->normalizer->normalizeContentViewData(['template' => [], 'settings' => 'scalar'], [], new Example());
     }
@@ -344,7 +347,7 @@ class ContentViewDataNormalizerTest extends TestCase
 
     public function testNullFromHigherPriorityResolverBlocksTheLowerOne(): void
     {
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['a' => ['shared'], 'b' => ['shared']]);
+        $normalizer = $this->createNormalizer(self::CORE_PATHS + ['a' => ['shared'], 'b' => ['shared']]);
 
         $result = $normalizer->normalizeContentViewData(['template' => [], 'a' => null, 'b' => ['y' => 2]], [], new Example());
 
@@ -361,8 +364,8 @@ class ContentViewDataNormalizerTest extends TestCase
 
     public function testResolverNestedUnderARootResolversScalarKeyIsDropped(): void
     {
-        // The compiler pass cannot see a [root] resolver's keys, so this only resolves at runtime.
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['acme_meta' => ['template', 'meta']]);
+        // A root resolver's keys are only known at runtime, never at container build time.
+        $normalizer = $this->createNormalizer(self::CORE_PATHS + ['acme_meta' => ['template', 'meta']]);
 
         $result = $normalizer->normalizeContentViewData(
             ['settings' => ['template' => 'full-content'], 'template' => [], 'acme_meta' => ['currency' => 'EUR']],
@@ -376,7 +379,7 @@ class ContentViewDataNormalizerTest extends TestCase
 
     public function testContentPathGetsViewTwin(): void
     {
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['product' => ['product', 'content']]);
+        $normalizer = $this->createNormalizer(self::CORE_PATHS + ['product' => ['product', 'content']]);
 
         $result = $normalizer->normalizeContentViewData(
             ['template' => [], 'product' => ['code' => 'X']],
@@ -390,7 +393,7 @@ class ContentViewDataNormalizerTest extends TestCase
 
     public function testFlatPathStillDropsView(): void
     {
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['product' => ['product']]);
+        $normalizer = $this->createNormalizer(self::CORE_PATHS + ['product' => ['product']]);
 
         $result = $normalizer->normalizeContentViewData(
             ['template' => [], 'product' => ['code' => 'X']],
@@ -406,7 +409,7 @@ class ContentViewDataNormalizerTest extends TestCase
     public function testContentPathViewTwinKeepsHigherPriorityKeys(): void
     {
         // "a" has higher priority and runs first.
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['a' => ['shop', 'content'], 'b' => ['shop', 'content']]);
+        $normalizer = $this->createNormalizer(self::CORE_PATHS + ['a' => ['shop', 'content'], 'b' => ['shop', 'content']]);
 
         $result = $normalizer->normalizeContentViewData(
             ['template' => [], 'a' => ['title' => 'A'], 'b' => ['title' => 'B']],
@@ -420,7 +423,7 @@ class ContentViewDataNormalizerTest extends TestCase
 
     public function testMergeFieldViewDataIntoItemsSkipsTypesWithoutAContentPath(): void
     {
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['product' => ['product']]);
+        $normalizer = $this->createNormalizer(self::CORE_PATHS + ['product' => ['product']]);
 
         $data = [
             'resource' => new Example(),
@@ -447,7 +450,7 @@ class ContentViewDataNormalizerTest extends TestCase
 
     public function testMergeFieldViewDataIntoItemsIsScopedByContentPathNotByFieldNameAlone(): void
     {
-        $normalizer = new ContentViewDataNormalizer($this->propertyAccessor, self::CORE_PATHS + ['exampleRoot' => ['exampleRoot', 'content']]);
+        $normalizer = $this->createNormalizer(self::CORE_PATHS + ['exampleRoot' => ['exampleRoot', 'content']]);
 
         $data = [
             'resource' => new Example(),
@@ -489,5 +492,55 @@ class ContentViewDataNormalizerTest extends TestCase
             ['untouched' => 'template-value'],
             $this->propertyAccessor->getValue($result, '[view][related]')
         );
+    }
+
+    public function testNullOutputPathUsesTheExtensionDefault(): void
+    {
+        $normalizer = $this->createNormalizer(self::CORE_PATHS + ['seo' => null]);
+
+        $result = $normalizer->normalizeContentViewData(
+            ['seo' => ['title' => 'SEO Title']],
+            [],
+            new Example()
+        );
+
+        self::assertSame(['seo' => ['title' => 'SEO Title']], $result['extension']);
+    }
+
+    /**
+     * @param array<string, list<string>|null> $paths resolver type to output path, null for the default location
+     */
+    private function createNormalizer(array $paths): ContentViewDataNormalizer
+    {
+        $resolvers = [];
+        foreach ($paths as $type => $segments) {
+            $outputPath = null === $segments
+                ? null
+                : \implode('', \array_map(static fn (string $segment) => '[' . $segment . ']', $segments));
+            $resolvers[] = new class($type, $outputPath) implements ResolverInterface {
+                public function __construct(
+                    private string $type,
+                    private ?string $outputPath,
+                ) {
+                }
+
+                public function resolve(DimensionContentInterface $dimensionContent, ?array $properties = null): ?ContentView
+                {
+                    return null;
+                }
+
+                public function getType(): string
+                {
+                    return $this->type;
+                }
+
+                public function getOutputPath(): ?string
+                {
+                    return $this->outputPath;
+                }
+            };
+        }
+
+        return new ContentViewDataNormalizer($this->propertyAccessor, $resolvers);
     }
 }

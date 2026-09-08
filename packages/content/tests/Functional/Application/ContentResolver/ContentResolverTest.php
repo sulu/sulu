@@ -196,7 +196,7 @@ class ContentResolverTest extends SuluTestCase
         $root = $result['exampleRoot'];
         self::assertSame('ROOT-' . $example->getId(), $root['content']['code']);
 
-        // a [root][x][content] path flattens nested entities the same way [root][content] does
+        // a [x][content] path flattens nested entities the same way [content] does
         $relatedContent = $root['content']['related'];
         self::assertSame('Related', $relatedContent['title']);
         self::assertArrayNotHasKey('resource', $relatedContent);

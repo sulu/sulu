@@ -60,13 +60,13 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_content.content_view_resolver', ContentViewResolver::class)
         ->args([
             new Reference('sulu_content.resolvable_resource_queue_processor'),
-            tagged_iterator('sulu_content.content_resolver', defaultIndexMethod: 'getType'),
+            tagged_iterator('sulu_content.content_resolver'),
         ]);
 
     $services->set('sulu_content.content_view_data_normalizer', ContentViewDataNormalizer::class)
         ->args([
             new Reference('property_accessor'),
-            [], // ContentResolverPathPass replaces the paths map
+            tagged_iterator('sulu_content.content_resolver'),
         ]);
 
     $services->set('sulu_content.content_enhancer', ContentEnhancer::class)

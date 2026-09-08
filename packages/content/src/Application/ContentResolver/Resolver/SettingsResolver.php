@@ -121,13 +121,13 @@ readonly class SettingsResolver implements ResolverInterface
         ];
     }
 
-    public static function getType(): string
+    public function getType(): string
     {
         return 'settings';
     }
 
-    public static function getOutputPath(): string
+    public function getOutputPath(): ?string
     {
-        return '[root]';
+        return '';
     }
 }

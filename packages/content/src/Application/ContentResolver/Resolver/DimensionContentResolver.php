@@ -76,13 +76,13 @@ readonly class DimensionContentResolver implements ResolverInterface
         return 'object.';
     }
 
-    public static function getType(): string
+    public function getType(): string
     {
         return 'object';
     }
 
-    public static function getOutputPath(): string
+    public function getOutputPath(): ?string
     {
-        return '[root][extension][object]';
+        return null;
     }
 }

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentResolver\DataNormalizer;
 
+use Sulu\Content\Application\ContentResolver\Resolver\ResolverInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -24,19 +25,52 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
 {
     /**
-     * @param array<string, list<string>> $paths resolver type to path segments without the
-     *                                           `[root]` anchor, set by ContentResolverPathPass
+     * Resolver type to output path segments, built once on first use.
+     *
+     * @var array<string, list<string>>|null
+     */
+    private ?array $paths = null;
+
+    /**
+     * @param iterable<ResolverInterface> $resolvers the same resolvers the ContentViewResolver
+     *                                               runs, so type keys and paths cannot diverge
      */
     public function __construct(
         private PropertyAccessorInterface $propertyAccessor,
-        private array $paths,
+        private iterable $resolvers,
     ) {
+    }
+
+    /**
+     * @return array<string, list<string>>
+     */
+    private function getPaths(): array
+    {
+        if (null !== $this->paths) {
+            return $this->paths;
+        }
+
+        $paths = [];
+        foreach ($this->resolvers as $resolver) {
+            $outputPath = $resolver->getOutputPath();
+
+            // a resolver on the default location stays out of the map, so the `[extension][<type>]`
+            // fallback below covers it along with every type no resolver claims
+            if (null === $outputPath) {
+                continue;
+            }
+
+            \preg_match_all('/\[([^\[\]]+)\]/', $outputPath, $matches);
+            $paths[$resolver->getType()] = $matches[1];
+        }
+
+        return $this->paths = $paths;
     }
 
     /**
      * `$content` arrives in tagged iterator order, so the first resolver to write a key keeps it
      * and a higher tag `priority` beats a lower one. The envelope keys `content`, `view` and
-     * `extension` are seeded below before any resolver runs, so a `[root]` resolver cannot write
+     * `extension` are seeded below before any resolver runs, so a root resolver cannot write
      * them at any priority.
      *
      * @template T of DimensionContentInterface
@@ -65,8 +99,12 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
             'extension' => [],
         ];
 
+        $paths = $this->getPaths();
+
         foreach ($content as $type => $data) {
-            $segments = $this->paths[$type] ?? ['extension', $type];
+            // array keys coerce a numeric type such as '0' to int
+            $type = (string) $type;
+            $segments = $paths[$type] ?? ['extension', $type];
 
             $result = $this->mergeResolverOutput($result, $segments, $data);
 
@@ -89,7 +127,7 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
      * nothing about priority: it is first writer wins, and the caller iterates in priority order.
      *
      * `null` at the root is the resolved value of a resource that could not be loaded, so it is
-     * skipped. Any other non-array means the resolver does not return what its `[root]` output
+     * skipped. Any other non-array means the resolver does not return what its empty output
      * path promises, which is a bug in the resolver.
      *
      * @param array<string, mixed> $target
@@ -106,7 +144,7 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
 
             if (!\is_array($data)) {
                 throw new \LogicException(\sprintf(
-                    'A content resolver on path "[root]" must return an array, got %s.',
+                    'A content resolver with an empty output path must return an array, got %s.',
                     \get_debug_type($data),
                 ));
             }
@@ -217,7 +255,7 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
     }
 
     /**
-     * Runs the replacement for the root `content` and every configured `[root][x][content]` path,
+     * Runs the replacement for the root `content` and every configured `[x][content]` path,
      * so those paths flatten nested content the same way the root does.
      *
      * @param array{
@@ -233,7 +271,7 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
         /** @var array<string, list<string>> $contentPaths */
         $contentPaths = ['content' => ['content']];
 
-        foreach ($this->paths as $segments) {
+        foreach ($this->getPaths() as $segments) {
             if ([] !== $segments && 'content' === $segments[\count($segments) - 1]) {
                 $contentPaths[\implode('/', $segments)] = $segments;
             }
@@ -353,7 +391,7 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
                 continue;
             }
 
-            $segments = $this->paths[$type] ?? ['extension', $type];
+            $segments = $this->getPaths()[$type] ?? ['extension', $type];
             if ([] === $segments || 'content' !== $segments[\count($segments) - 1]) {
                 continue;
             }

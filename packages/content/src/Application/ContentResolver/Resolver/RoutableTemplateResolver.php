@@ -134,13 +134,13 @@ readonly class RoutableTemplateResolver implements ResolverInterface
         ];
     }
 
-    public static function getType(): string
+    public function getType(): string
     {
-        return 'template';
+        return $this->inner->getType();
     }
 
-    public static function getOutputPath(): string
+    public function getOutputPath(): ?string
     {
-        return '[root][content]';
+        return $this->inner->getOutputPath();
     }
 }

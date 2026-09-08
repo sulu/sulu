@@ -164,13 +164,13 @@ readonly class SeoResolver implements ResolverInterface
         return 'seo.';
     }
 
-    public static function getType(): string
+    public function getType(): string
     {
         return 'seo';
     }
 
-    public static function getOutputPath(): string
+    public function getOutputPath(): ?string
     {
-        return '[root][extension][seo]';
+        return null;
     }
 }

@@ -69,9 +69,12 @@ class ContentResolverTest extends TestCase
 
         $this->resolvableResourceQueueProcessor = new ResolvableResourceQueueProcessor();
         $this->resolvableResourceReplacer = new ResolvableResourceReplacer(new ReferenceStore());
-        $this->contentViewDataNormalizer = new ContentViewDataNormalizer(new PropertyAccessor(), ['template' => ['content'], 'settings' => []]);
-
         $this->templateResolver = new TestTemplateResolver();
+
+        $this->contentViewDataNormalizer = new ContentViewDataNormalizer(
+            new PropertyAccessor(),
+            [$this->templateResolver, new TestSettingsResolver()]
+        );
 
         $this->contentViewResolver = new ContentViewResolver(
             $this->resolvableResourceQueueProcessor,
@@ -420,14 +423,32 @@ class TestTemplateResolver implements ResolverInterface
         return $this->contentView;
     }
 
-    public static function getType(): string
+    public function getType(): string
     {
         return 'template';
     }
 
-    public static function getOutputPath(): string
+    public function getOutputPath(): ?string
     {
-        return '[root][content]';
+        return '[content]';
+    }
+}
+
+class TestSettingsResolver implements ResolverInterface
+{
+    public function resolve(DimensionContentInterface $dimensionContent, ?array $properties = null): ?ContentView
+    {
+        return null;
+    }
+
+    public function getType(): string
+    {
+        return 'settings';
+    }
+
+    public function getOutputPath(): ?string
+    {
+        return '';
     }
 }
 

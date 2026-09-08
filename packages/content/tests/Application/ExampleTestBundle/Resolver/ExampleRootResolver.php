@@ -20,7 +20,7 @@ use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\ResourceLoader\ExampleResourceLoader;
 
 /**
- * Test double for a resolver merged into `[root][exampleRoot][content]`, active only for the `root-resolver-example` template.
+ * Test double for a resolver merged into `[exampleRoot][content]`, active only for the `root-resolver-example` template.
  */
 final class ExampleRootResolver implements ResolverInterface
 {
@@ -47,13 +47,13 @@ final class ExampleRootResolver implements ResolverInterface
         );
     }
 
-    public static function getType(): string
+    public function getType(): string
     {
         return 'example_root';
     }
 
-    public static function getOutputPath(): string
+    public function getOutputPath(): string
     {
-        return '[root][exampleRoot][content]';
+        return '[exampleRoot][content]';
     }
 }

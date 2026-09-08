@@ -41,7 +41,9 @@ class ContentViewResolverTest extends TestCase
         $this->resolvableResourceQueueProcessor = new ResolvableResourceQueueProcessor();
 
         $templateResolver = $this->prophesize(ResolverInterface::class);
+        $templateResolver->getType()->willReturn('template');
         $settingsResolver = $this->prophesize(ResolverInterface::class);
+        $settingsResolver->getType()->willReturn('settings');
 
         $this->contentResolvers = [
             'template' => $templateResolver,

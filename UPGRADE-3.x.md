@@ -4,31 +4,40 @@
 
 ### Content resolvers declare their type and output path on the interface
 
-`ResolverInterface` gained two static methods that every implementation must now provide:
+`ResolverInterface` gained two methods that every implementation must now provide:
 
 ```php
-public static function getType(): string;
-public static function getOutputPath(): string;
+public function getType(): string;
+public function getOutputPath(): ?string;
 ```
 
 `getType()` keys the resolver's output and replaces the tag's `type` attribute. `getOutputPath()`
-is a bracket path anchored at `[root]` that places the output in the resolved content view data;
-the location used before this release is `[root][extension][<type>]`. A path ending in `content`
-also writes the view to the sibling `view` key.
+is a bracket path relative to the root that places the output in the resolved content view data.
+Return `null` to keep the location used before this release, `[extension][<type>]`; the empty
+string merges the output into the root itself. A path ending in `content` also writes the view to
+the sibling `view` key.
 
-The `type` attribute on the `sulu_content.content_resolver` tag is no longer read, so register
-with the bare tag:
+Both are instance methods, unlike the static `getType()` on `PropertyResolverInterface` and
+`SmartResolverInterface`. Content resolvers are keyed at runtime rather than by the container, so
+a decorator can delegate to the resolver it decorates instead of repeating its type and path.
+
+Implementations are now tagged by autoconfiguration, so an explicit tag is only needed when
+autoconfiguration is off for the service:
 
 ```php
+// nothing to register when the bundle's services are autoconfigured
 $services->set('acme_product.product_resolver', ProductResolver::class)
-    ->tag('sulu_content.content_resolver');
+    ->tag('sulu_content.content_resolver'); // only when autoconfigure is disabled
 ```
 
-Two resolvers may share an output path. The tag's `priority` orders them and the first writer of
-a key keeps it, so on a collision the higher priority resolver wins. The envelope keys `content`,
-`view` and `extension` are seeded before any resolver runs, so a `[root]` resolver cannot claim
-them at any priority. Registering two resolvers with the same `type` now fails at container
-compile time, where previously one of them was silently ignored.
+The `type` attribute on the `sulu_content.content_resolver` tag is no longer read. Set a
+`priority` with `#[AsTaggedItem(priority: 10)]` or the tag's `priority` attribute.
+
+Two resolvers may share an output path. The `priority` orders them and the first writer of a key
+keeps it, so on a collision the higher priority resolver wins. The envelope keys `content`, `view`
+and `extension` are seeded before any resolver runs, so a `[root]` resolver cannot claim them at
+any priority. Two resolvers returning the same `type` are not rejected; the later one replaces the
+earlier, as before this release.
 
 ## 3.0.9
 
