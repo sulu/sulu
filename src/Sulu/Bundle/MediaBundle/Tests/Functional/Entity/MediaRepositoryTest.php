@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Entity;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\PersistentCollection;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
@@ -208,6 +209,34 @@ class MediaRepositoryTest extends SuluTestCase
         $this->em->persist($formatOptions);
 
         return $media;
+    }
+
+    private function createFileVersion(File $file, int $version, string $title): FileVersion
+    {
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion($version);
+        $fileVersion->setName($title . '.jpeg');
+        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setFile($file);
+        $fileVersion->setSize(1124214);
+        $fileVersion->setDownloadCounter(0);
+        $fileVersion->setChanged(new \DateTime('1937-04-20'));
+        $fileVersion->setCreated(new \DateTime('1937-04-20'));
+        $fileVersion->setStorageOptions(['segment' => '1', 'fileName' => $title . '.jpeg']);
+
+        $fileVersionMeta = new FileVersionMeta();
+        $fileVersionMeta->setLocale('en-gb');
+        $fileVersionMeta->setTitle($title);
+        $fileVersionMeta->setDescription('decription');
+        $fileVersionMeta->setFileVersion($fileVersion);
+
+        $fileVersion->addMeta($fileVersionMeta);
+        $fileVersion->setDefaultMeta($fileVersionMeta);
+
+        $this->em->persist($fileVersion);
+        $this->em->persist($fileVersionMeta);
+
+        return $fileVersion;
     }
 
     private function createUser(?RoleInterface $role = null)
@@ -541,6 +570,52 @@ class MediaRepositoryTest extends SuluTestCase
         $this->assertCount(2, $result);
         $this->assertEquals($media1->getId(), $result[0]->getId());
         $this->assertEquals($media3->getId(), $result[1]->getId());
+    }
+
+    public function testFindMediaWithCurrentFileVersion(): void
+    {
+        $collection = $this->createCollection('default');
+
+        $this->em->flush();
+
+        $media1 = $this->createMedia('test-1', 'test-1', $collection);
+        $media2 = $this->createMedia('test-2', 'test-2', $collection);
+
+        // the second version is the one the file points at, the first one must not be loaded
+        $file = $media1->getFiles()[0];
+        $file->setVersion(2);
+        $file->addFileVersion($this->createFileVersion($file, 2, 'test-1-version-2'));
+
+        $this->em->flush();
+
+        $mediaId1 = $media1->getId();
+        $mediaId2 = $media2->getId();
+
+        $this->em->clear();
+
+        $result = [];
+        foreach ($this->mediaRepository->findMediaWithCurrentFileVersion([$mediaId1, $mediaId2]) as $media) {
+            $result[$media->getId()] = $media;
+        }
+
+        $this->assertCount(2, $result);
+        $this->assertArrayHasKey($mediaId1, $result);
+        $this->assertArrayHasKey($mediaId2, $result);
+
+        $fileVersions = $result[$mediaId1]->getFiles()[0]->getFileVersions();
+        $this->assertInstanceOf(PersistentCollection::class, $fileVersions);
+        $this->assertTrue($fileVersions->isInitialized());
+        $this->assertCount(1, $fileVersions);
+
+        $latestFileVersion = $result[$mediaId1]->getFiles()[0]->getLatestFileVersion();
+        $this->assertNotNull($latestFileVersion);
+        $this->assertSame(2, $latestFileVersion->getVersion());
+        $this->assertSame('test-1-version-2', $latestFileVersion->getDefaultMeta()->getTitle());
+    }
+
+    public function testFindMediaWithCurrentFileVersionWithoutIds(): void
+    {
+        $this->assertSame([], $this->mediaRepository->findMediaWithCurrentFileVersion([]));
     }
 
     public function testFindMediaForUserWithoutPermissions(): void

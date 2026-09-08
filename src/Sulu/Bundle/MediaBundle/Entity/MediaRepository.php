@@ -480,6 +480,29 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             ->getArrayResult();
     }
 
+    public function findMediaWithCurrentFileVersion(array $ids): array
+    {
+        if (0 === \count($ids)) {
+            return [];
+        }
+
+        // the file versions are joined on the version the file points at, so the collection
+        // is hydrated with the single version the callers read, instead of being loaded
+        // lazily once per media
+        /** @var MediaInterface[] */
+        return $this->createQueryBuilder('media')
+            ->leftJoin('media.files', 'file')
+            ->leftJoin('file.fileVersions', 'fileVersion', Join::WITH, 'fileVersion.version = file.version')
+            ->leftJoin('fileVersion.defaultMeta', 'fileVersionDefaultMeta')
+            ->addSelect('file')
+            ->addSelect('fileVersion')
+            ->addSelect('fileVersionDefaultMeta')
+            ->where('media.id IN (:mediaIds)')
+            ->setParameter('mediaIds', $ids)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function setAccessControlQueryEnhancer(AccessControlQueryEnhancerInterface $accessControlQueryEnhancer)
     {
         $this->accessControlQueryEnhancer = $accessControlQueryEnhancer;
