@@ -25,6 +25,7 @@ import Input from './fields/Input';
 import Number from './fields/Number';
 import PasswordConfirmation from './fields/PasswordConfirmation';
 import Phone from './fields/Phone';
+import ProductFamilyAttributesField from './fields/ProductFamilyAttributesField';
 import QRCode from './fields/QRCode';
 import SingleSelect from './fields/SingleSelect';
 import Select from './fields/Select';
@@ -62,6 +63,7 @@ export {
     Number,
     PasswordConfirmation,
     Phone,
+    ProductFamilyAttributesField,
     QRCode,
     Renderer,
     Select,
