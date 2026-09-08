@@ -59,6 +59,12 @@ function transformRequestObject(data: Object): Object {
             return transformedData;
         }
 
+        if (value instanceof Date) {
+            transformedData[key] = value;
+
+            return transformedData;
+        }
+
         if (isArrayLike(value)) {
             transformedData[key] = transformRequestArray(value);
 
@@ -79,6 +85,10 @@ function transformRequestObject(data: Object): Object {
 
 function transformRequestArray(data) {
     return data.map((value) => {
+        if (value instanceof Date) {
+            return value;
+        }
+
         if (isArrayLike(value)) {
             return transformRequestArray(value);
         }

@@ -23,6 +23,34 @@ const USER_SETTING_FILTER = 'filter';
 const USER_SETTING_LIMIT = 'limit';
 const USER_SETTING_SCHEMA = 'schema';
 
+const ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/;
+
+// Dates are stored as ISO strings in the user settings and have to be restored as Date objects,
+// because the filter types and the router work with Date objects.
+function reviveDates(value: mixed) {
+    if (typeof value === 'string' && ISO_DATE_REGEX.test(value)) {
+        const date = new Date(value);
+
+        return isNaN(date.getTime()) ? value : date;
+    }
+
+    if (Array.isArray(value)) {
+        return value.map(reviveDates);
+    }
+
+    if (value instanceof Object) {
+        const objectValue: {[string]: mixed} = (value: any);
+
+        return Object.keys(objectValue).reduce((revivedValue, key) => {
+            revivedValue[key] = reviveDates(objectValue[key]);
+
+            return revivedValue;
+        }, {});
+    }
+
+    return value;
+}
+
 export default class ListStore {
     @observable pageCount: ?number = 0;
     @observable selections: Array<Object> = [];
@@ -74,10 +102,10 @@ export default class ListStore {
         userStore.setPersistentSetting(key, value);
     }
 
-    static getFilterSetting(listKey: string, userSettingsKey: string): string {
+    static getFilterSetting(listKey: string, userSettingsKey: string): Object {
         const key = [USER_SETTING_PREFIX, listKey, userSettingsKey, USER_SETTING_FILTER].join('.');
 
-        return userStore.getPersistentSetting(key);
+        return reviveDates(userStore.getPersistentSetting(key));
     }
 
     static setFilterSetting(listKey: string, userSettingsKey: string, value: *) {

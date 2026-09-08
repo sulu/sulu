@@ -107,6 +107,41 @@ test('The filter value should be updated when set from the outside and only a si
         .toHaveBeenCalledWith('sulu_admin.list_store.tests.list_test.filter', {});
 });
 
+test('The filter setting should restore dates as Date objects', () => {
+    userStore.getPersistentSetting.mockReturnValueOnce({
+        birthday: {from: '1990-01-01T00:00:00.000Z', to: '2005-12-31T00:00:00.000Z'},
+    });
+
+    const filter = ListStore.getFilterSetting('tests', 'list_test');
+
+    expect(userStore.getPersistentSetting).toHaveBeenCalledWith('sulu_admin.list_store.tests.list_test.filter');
+    expect(filter).toEqual({
+        birthday: {from: new Date(Date.UTC(1990, 0, 1)), to: new Date(Date.UTC(2005, 11, 31))},
+    });
+    expect(filter.birthday.from).toBeInstanceOf(Date);
+    expect(filter.birthday.to).toBeInstanceOf(Date);
+});
+
+test('The filter setting should leave values that are not dates untouched', () => {
+    userStore.getPersistentSetting.mockReturnValueOnce({
+        salutation: {eq: 'Dear'},
+        tagId: [1, 2],
+        name: {eq: '1990-01-01'},
+    });
+
+    expect(ListStore.getFilterSetting('tests', 'list_test')).toEqual({
+        salutation: {eq: 'Dear'},
+        tagId: [1, 2],
+        name: {eq: '1990-01-01'},
+    });
+});
+
+test('The filter setting should return undefined if nothing was stored', () => {
+    userStore.getPersistentSetting.mockReturnValueOnce(undefined);
+
+    expect(ListStore.getFilterSetting('tests', 'list_test')).toEqual(undefined);
+});
+
 test('The limit value should be updated when set from the outside', () => {
     const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
     expect(listStore.limit.get()).toEqual(10);
