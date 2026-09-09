@@ -33,7 +33,6 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     oldIconValue: ?Object;
     computedIcons: Array<Array<string>> = [];
     generatingBlockIds: boolean = false;
-    finishFieldDisposer: ?() => void;
 
     constructor(props: FieldTypeProps<Array<BlockEntry>>) {
         super(props);
@@ -42,10 +41,10 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     }
 
     @action componentDidMount() {
-        // Backfill missing block ids on any change to the page (not just this block field): every
-        // field's finish routes through the form inspector, so a title/url/any-field edit heals
-        // id-less blocks too. Never fires on mount, so opening a page stays clean.
-        this.finishFieldDisposer = this.props.formInspector.addFinishFieldHandler(this.handleFinishField);
+        // Inject missing block ids when the form opens, the same way field types apply their
+        // defaults: written with the isDefaultValue context so the form does not become dirty. This
+        // fills ids regardless of how the stored data was created (fixtures, imports, legacy data).
+        this.generateMissingBlockIds(this.value);
 
         if (this.settingsFormKey) {
             // initialize empty blockSettingsFormStore because schema of the store is used for determining iconsMapping
@@ -70,6 +69,10 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
             if (!this.value || equals(toJS(this.value), toJS(prevProps.value))) {
                 this.setValue(value);
             }
+
+            // Retry the injection when the value (re)loaded still has blocks without an id. Since
+            // ensureBlockIds is a no-op when nothing is missing, this cannot loop on injected values.
+            this.generateMissingBlockIds(value);
         }
 
         if (!types || !oldTypes) {
@@ -104,12 +107,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
     componentWillUnmount() {
         this.blockSettingsFormStore?.destroy();
-        this.finishFieldDisposer?.();
     }
-
-    handleFinishField = () => {
-        this.generateMissingBlockIds(this.value);
-    };
 
     @computed get settingsFormKey() {
         const {
@@ -317,7 +315,9 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         onChange(newValues, context);
     };
 
-    // Backfills ids on blocks that have none, triggered from the finish-field handler on any page change
+    // Injects ids into blocks that have none. Written with the isDefaultValue context (like a field
+    // type applying its default) so it never marks the form dirty; on the happy path every block
+    // already carries an id and this stays silent.
     generateMissingBlockIds = async(value: Object) => {
         const {onChange, types} = this.props;
 
@@ -331,7 +331,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
             if (updatedValue) {
                 this.setValue(updatedValue);
-                onChange(updatedValue);
+                onChange(updatedValue, {isDefaultValue: true});
             }
         } finally {
             this.generatingBlockIds = false;
