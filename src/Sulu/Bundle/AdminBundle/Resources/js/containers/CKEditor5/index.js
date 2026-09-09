@@ -13,31 +13,15 @@ import pluginRegistry from './registries/pluginRegistry';
 
 const HEADING_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 
-// The toolbar is built by appending to it, so a higher priority places an item further to the left. The values below
-// reproduce the toolbar order Sulu shipped before the text editor configs were introduced.
-const PRIORITY_HEADING = 140;
-const PRIORITY_BOLD = 130;
-const PRIORITY_ITALIC = 120;
-const PRIORITY_UNDERLINE = 110;
-const PRIORITY_STRIKETHROUGH = 100;
-const PRIORITY_SUBSCRIPT = 90;
-const PRIORITY_SUPERSCRIPT = 80;
-const PRIORITY_BULLETED_LIST = 70;
-const PRIORITY_NUMBERED_LIST = 60;
-const PRIORITY_LINK = 50;
-const PRIORITY_ALIGNMENT = 40;
-const PRIORITY_TABLE = 30;
-const PRIORITY_CODE = 20;
+// Core registrations are applied before third-party ones, which default to priority 0. Within the core the
+// toolbar order follows the registration order below, because Array.prototype.sort is stable.
+const PRIORITY_CORE = 10;
 
 /**
  * Maps the tags and features of a text editor config to the CKEditor 5 plugins and config implementing them. Anything
  * registered here is only loaded if the config of the edited property enables the given key.
  */
 export function registerCKEditor5Plugins() {
-    // "br" needs no plugin, the Essentials plugin always provides shift-enter. It is registered so that a config
-    // enabling it is not reported as unknown.
-    configRegistry.add((config) => config, 'br');
-
     pluginRegistry.add(Heading, HEADING_TAGS);
     configRegistry.add((config, {tags}) => ({
         heading: {
@@ -60,40 +44,40 @@ export function registerCKEditor5Plugins() {
             ],
         },
         toolbar: [...config.toolbar, 'heading'],
-    }), HEADING_TAGS, PRIORITY_HEADING);
+    }), HEADING_TAGS, PRIORITY_CORE);
 
     pluginRegistry.add(Bold, 'strong');
-    configRegistry.add((config) => ({toolbar: [...config.toolbar, 'bold']}), 'strong', PRIORITY_BOLD);
+    configRegistry.add((config) => ({toolbar: [...config.toolbar, 'bold']}), 'strong', PRIORITY_CORE);
 
     pluginRegistry.add(Italic, 'em');
-    configRegistry.add((config) => ({toolbar: [...config.toolbar, 'italic']}), 'em', PRIORITY_ITALIC);
+    configRegistry.add((config) => ({toolbar: [...config.toolbar, 'italic']}), 'em', PRIORITY_CORE);
 
     pluginRegistry.add(Underline, 'u');
-    configRegistry.add((config) => ({toolbar: [...config.toolbar, 'underline']}), 'u', PRIORITY_UNDERLINE);
+    configRegistry.add((config) => ({toolbar: [...config.toolbar, 'underline']}), 'u', PRIORITY_CORE);
 
     pluginRegistry.add(Strikethrough, 's');
     configRegistry.add(
         (config) => ({toolbar: [...config.toolbar, 'strikethrough']}),
         's',
-        PRIORITY_STRIKETHROUGH
+        PRIORITY_CORE
     );
 
     pluginRegistry.add(Subscript, 'sub');
-    configRegistry.add((config) => ({toolbar: [...config.toolbar, 'subscript']}), 'sub', PRIORITY_SUBSCRIPT);
+    configRegistry.add((config) => ({toolbar: [...config.toolbar, 'subscript']}), 'sub', PRIORITY_CORE);
 
     pluginRegistry.add(Superscript, 'sup');
-    configRegistry.add((config) => ({toolbar: [...config.toolbar, 'superscript']}), 'sup', PRIORITY_SUPERSCRIPT);
+    configRegistry.add((config) => ({toolbar: [...config.toolbar, 'superscript']}), 'sup', PRIORITY_CORE);
 
     pluginRegistry.add(List, ['ul', 'ol']);
     configRegistry.add(
         (config) => ({toolbar: [...config.toolbar, 'bulletedlist']}),
         'ul',
-        PRIORITY_BULLETED_LIST
+        PRIORITY_CORE
     );
     configRegistry.add(
         (config) => ({toolbar: [...config.toolbar, 'numberedlist']}),
         'ol',
-        PRIORITY_NUMBERED_LIST
+        PRIORITY_CORE
     );
 
     // Both link plugins bind their button to the command of the other one, so they can only be loaded together.
@@ -102,11 +86,11 @@ export function registerCKEditor5Plugins() {
     configRegistry.add(
         (config) => ({toolbar: [...config.toolbar, 'externalLink', 'internalLink']}),
         'a',
-        PRIORITY_LINK
+        PRIORITY_CORE
     );
 
     pluginRegistry.add(Alignment, 'align');
-    configRegistry.add((config) => ({toolbar: [...config.toolbar, 'alignment']}), 'align', PRIORITY_ALIGNMENT);
+    configRegistry.add((config) => ({toolbar: [...config.toolbar, 'alignment']}), 'align', PRIORITY_CORE);
 
     pluginRegistry.add(Table, 'table');
     pluginRegistry.add(TableToolbar, 'table');
@@ -119,10 +103,10 @@ export function registerCKEditor5Plugins() {
             ],
         },
         toolbar: [...config.toolbar, 'insertTable'],
-    }), 'table', PRIORITY_TABLE);
+    }), 'table', PRIORITY_CORE);
 
     pluginRegistry.add(Code, 'code');
-    configRegistry.add((config) => ({toolbar: [...config.toolbar, 'code']}), 'code', PRIORITY_CODE);
+    configRegistry.add((config) => ({toolbar: [...config.toolbar, 'code']}), 'code', PRIORITY_CORE);
 }
 
 export default CKEditor5;

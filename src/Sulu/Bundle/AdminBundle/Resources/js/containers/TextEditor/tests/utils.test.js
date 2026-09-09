@@ -98,7 +98,7 @@ test('Ignore a non-heading value in the deprecated formats param', () => {
     expect(resolveTextEditorConfig(options).tags).toEqual(['strong', 'em', 'h4']);
 });
 
-test('Keep the config tags when the deprecated formats param holds no heading at all', () => {
+test('Drop the heading tags when the deprecated formats param names no heading at all', () => {
     const options = {
         formats: {
             name: 'formats',

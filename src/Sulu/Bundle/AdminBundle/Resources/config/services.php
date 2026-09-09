@@ -166,6 +166,7 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference('sulu_admin.tag_xml_parser'),
             new Reference('sulu_admin.meta_xml_parser'),
+            '%sulu_admin.text_editor_configs%',
         ]);
 
     $services->set('sulu_admin.meta_xml_parser', MetaXmlParser::class)

@@ -291,6 +291,7 @@ class AdminControllerTest extends TestCase
                         && 'navigation_item1' === $data['sulu_admin']['navigation'][0]['title']
                         && 'navigation_item2' === $data['sulu_admin']['navigation'][1]['title']
                         && $data['sulu_admin']['resources'] === $this->resources
+                        && ['configs' => []] === $data['sulu_admin']['textEditor']
                         && true === $data['sulu_admin']['collaborationEnabled']
                         && 10000 === $data['sulu_admin']['collaborationInterval']
                         && $data['admin1'] === $admin1Config

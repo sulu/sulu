@@ -29,7 +29,8 @@ const handleBlur = () => alert('Text editing finished!');
 A text editor config describes which HTML the editor may produce. It deliberately contains nothing specific to a
 concrete editor implementation, so that the same config can drive a different editor later:
 
-* `tags`: the HTML tags the editor may produce, e.g. `a`, `strong`, `h2`, `table`.
+* `tags`: the HTML tags the editor may produce, e.g. `a`, `strong`, `h2`, `table`. Only tags a plugin can switch
+  off appear here; `p` and `br` are always available and are controlled by `enterMode`, not by `tags`.
 * `features`: capabilities that are not an HTML tag, e.g. `align`, which writes a `text-align` style on an existing
   element.
 * `enterMode`: whether the editor produces paragraphs (`p`) or line breaks (`br`).

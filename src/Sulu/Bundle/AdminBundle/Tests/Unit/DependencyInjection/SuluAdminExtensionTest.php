@@ -45,7 +45,7 @@ class SuluAdminExtensionTest extends TestCase
         $this->assertSame('p', $configs['default']['enterMode']);
         $this->assertSame('br', $configs['mini']['enterMode']);
         $this->assertSame(['align'], $configs['default']['features']);
-        $this->assertSame(['br', 'a', 'strong', 'em'], $configs['mini']['tags']);
+        $this->assertSame(['a', 'strong', 'em'], $configs['mini']['tags']);
     }
 
     public function testDefaultConfigMatchesTheToolbarSuluShippedBefore(): void
@@ -53,7 +53,7 @@ class SuluAdminExtensionTest extends TestCase
         $configs = $this->loadTextEditorConfigs([]);
 
         $this->assertSame(
-            ['br', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em', 'u', 's', 'sub', 'sup', 'ul', 'ol', 'a', 'table', 'code'],
+            ['h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em', 'u', 's', 'sub', 'sup', 'ul', 'ol', 'a', 'table', 'code'],
             $configs['default']['tags']
         );
     }
@@ -76,7 +76,7 @@ class SuluAdminExtensionTest extends TestCase
             'mini' => ['tags' => ['h2' => true]],
         ]);
 
-        $this->assertSame(['br', 'a', 'strong', 'em', 'h2'], $configs['mini']['tags']);
+        $this->assertSame(['a', 'strong', 'em', 'h2'], $configs['mini']['tags']);
         $this->assertSame('br', $configs['mini']['enterMode'], 'the shipped enter mode is kept when not overridden');
     }
 
@@ -107,5 +107,28 @@ class SuluAdminExtensionTest extends TestCase
         ]);
 
         $this->assertSame(['a'], $configs['teaser']['tags']);
+    }
+
+    /**
+     * Pins the shipped vocabulary. The same lists are mirrored by the CKEditor 5 registrations in
+     * Resources/js/containers/CKEditor5/index.js, which registerCKEditor5Plugins.test.js checks them against. Changing
+     * a list here without registering the key there makes every editor mount warn, so both sides must move together.
+     *
+     * "br" and "p" are intentionally absent: the editor always produces them and no plugin gates them.
+     */
+    public function testShippedConfigsExposeTheDocumentedVocabulary(): void
+    {
+        $configs = $this->loadTextEditorConfigs([]);
+
+        $this->assertSame([
+            'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em', 'u', 's',
+            'sub', 'sup', 'ul', 'ol', 'a', 'table', 'code',
+        ], $configs['default']['tags']);
+        $this->assertSame(['align'], $configs['default']['features']);
+        $this->assertSame('p', $configs['default']['enterMode']);
+
+        $this->assertSame(['a', 'strong', 'em'], $configs['mini']['tags']);
+        $this->assertSame([], $configs['mini']['features']);
+        $this->assertSame('br', $configs['mini']['enterMode']);
     }
 }

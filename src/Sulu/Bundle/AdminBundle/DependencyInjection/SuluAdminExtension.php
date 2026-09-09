@@ -158,13 +158,15 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
      * The text editor configs Sulu ships. A project config of the same name is merged into these, so a single tag can
      * be switched off with "false" without restating the whole list.
      *
+     * "br" and "p" are deliberately absent: the editor always produces them and no plugin gates them, so offering
+     * them as switches would promise a restriction that cannot be applied.
+     *
      * @var array<string, array{enter_mode: string, tags: array<string, bool>, features: array<string, bool>}>
      */
     private const DEFAULT_TEXT_EDITOR_CONFIGS = [
         'default' => [
             'enter_mode' => 'p',
             'tags' => [
-                'br' => true,
                 'h2' => true,
                 'h3' => true,
                 'h4' => true,
@@ -189,7 +191,6 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         'mini' => [
             'enter_mode' => 'br',
             'tags' => [
-                'br' => true,
                 'a' => true,
                 'strong' => true,
                 'em' => true,

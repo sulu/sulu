@@ -66,6 +66,20 @@ priority. Registering without a key keeps the previous behaviour of applying to 
 unaffected. Their `plugins` and `configs` properties were replaced by `getPlugins(enabledKeys)` and
 `getConfigs(enabledKeys)`, because the result depends on the config of the edited property.
 
+### The text editor registry is typed against the adapter props
+
+`textEditorRegistry.add()` now expects a `ComponentType<TextEditorAdapterProps>` instead of a
+`ComponentType<TextEditorProps>`, because every adapter receives the resolved `config` prop. A custom text editor
+adapter has to widen its own props type accordingly; there is no runtime change, `TextEditor` still passes every
+prop it passed before.
+
+### Heading and table config moved out of the CKEditor5 defaults
+
+The `heading` and `table` keys are no longer part of the default config the `CKEditor5` component builds; they are
+contributed by the registrations keyed on the respective tags. A config function that read `config.heading.options`
+or `config.table.contentToolbar` to extend them now has to guard against them being undefined, and should register
+itself under the same tag so it only runs when that tag is enabled.
+
 ### The CKEditor5 component takes a config instead of formats
 
 The `CKEditor5` container component replaced its `formats` and `options` props with a single `config` prop holding the

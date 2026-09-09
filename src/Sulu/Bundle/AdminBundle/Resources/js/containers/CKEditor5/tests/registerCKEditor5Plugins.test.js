@@ -20,17 +20,25 @@ const DEFAULT_CONFIG = {
     enterMode: 'p',
     features: ['align'],
     tags: [
-        'br', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em', 'u', 's',
+        'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em', 'u', 's',
         'sub', 'sup', 'ul', 'ol', 'a', 'table', 'code',
     ],
 };
 
-function buildConfig(textEditorConfig) {
+// The tags and features the "mini" config Sulu ships enables.
+const MINI_CONFIG = {
+    enterMode: 'br',
+    features: [],
+    tags: ['a', 'strong', 'em'],
+};
+
+function buildConfig(textEditorConfig): Object {
     const enabledKeys = [...textEditorConfig.tags, ...textEditorConfig.features];
+    const seed: Object = {toolbar: []};
 
     return configRegistry.getConfigs(enabledKeys).reduce((previousConfig, config) => {
         return {...previousConfig, ...config(previousConfig, textEditorConfig)};
-    }, {toolbar: []});
+    }, seed);
 }
 
 beforeEach(() => {
@@ -63,9 +71,12 @@ test('Load the list plugin once for ul and ol together', () => {
         .toEqual(['bulletedlist', 'numberedlist']);
 });
 
-test('Load no plugin for the br tag but claim the key so it is not reported as unknown', () => {
+test('Do not offer br as a configurable tag, because no plugin can switch it off', () => {
+    // The editor always provides shift-enter, so a "br" switch could never be honoured. It is left out of the
+    // vocabulary rather than accepted and ignored.
+    expect(pluginRegistry.keys).not.toContain('br');
+    expect(configRegistry.keys).not.toContain('br');
     expect(pluginRegistry.getPlugins(['br'])).toEqual([]);
-    expect(configRegistry.keys).toContain('br');
     expect(buildConfig({enterMode: 'br', features: [], tags: ['br']}).toolbar).toEqual([]);
 });
 
@@ -152,4 +163,15 @@ test('Both link plugins require the contextual balloon they use', () => {
     // A config without the table tag has to keep working, so both plugins declare the dependency themselves.
     expect(ExternalLinkPlugin.requires).toContain(ContextualBalloon);
     expect(InternalLinkPlugin.requires).toContain(ContextualBalloon);
+});
+
+test('Every tag and feature the shipped configs enable is claimed by a plugin or config', () => {
+    // Guards the three hand-maintained copies of this list against drifting apart: the PHP defaults in
+    // SuluAdminExtension::DEFAULT_TEXT_EDITOR_CONFIGS, the registrations in index.js, and MINI_CONFIG/DEFAULT_CONFIG
+    // here. A key added on one side without the other makes every editor mount warn, which this test turns red first.
+    const claimedKeys = [...pluginRegistry.keys, ...configRegistry.keys];
+
+    for (const {features, tags} of [DEFAULT_CONFIG, MINI_CONFIG]) {
+        expect([...tags, ...features].filter((key) => !claimedKeys.includes(key))).toEqual([]);
+    }
 });

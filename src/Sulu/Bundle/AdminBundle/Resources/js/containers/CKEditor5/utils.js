@@ -63,7 +63,7 @@ function addPTags(htmlString: string): string {
 }
 
 function normalizeKeys(keys: ?string | Array<string>): ?Array<string> {
-    if (undefined === keys || null === keys) {
+    if (keys === undefined || keys === null) {
         return undefined;
     }
 
