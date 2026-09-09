@@ -32,11 +32,12 @@ use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapperInterface;
+use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
+use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
-use Sulu\Content\Infrastructure\Sulu\Preview\PreviewDimensionContentCollection;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Admin\ExampleAdmin;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
@@ -69,6 +70,11 @@ class ContentObjectProviderTest extends TestCase
     private $contentDataMapper;
 
     /**
+     * @var ObjectProphecy<ContentMergerInterface>
+     */
+    private $contentMerger;
+
+    /**
      * @var ContentObjectProvider<ExampleDimensionContent, Example>
      */
     private $contentObjectProvider;
@@ -83,12 +89,14 @@ class ContentObjectProviderTest extends TestCase
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->contentDataMapper = $this->prophesize(ContentDataMapperInterface::class);
+        $this->contentMerger = $this->prophesize(ContentMergerInterface::class);
 
         $this->contentObjectProvider = new ContentObjectProvider(
             $metadataProviderRegistry,
             $this->entityManager->reveal(),
             $this->contentAggregator->reveal(),
             $this->contentDataMapper->reveal(),
+            $this->contentMerger->reveal(),
             Example::class,
             ExampleAdmin::SECURITY_CONTEXT
         );
@@ -324,6 +332,22 @@ class ContentObjectProviderTest extends TestCase
     ): void {
         $example = new Example();
         $exampleDimensionContent = new ExampleDimensionContent($example);
+        $mergedDimensionContent = new ExampleDimensionContent($example);
+
+        $this->contentDataMapper->map(
+            Argument::that(
+                function($dimensionContentCollection) {
+                    return $dimensionContentCollection instanceof DimensionContentCollection
+                        && ExampleDimensionContent::class === $dimensionContentCollection->getDimensionContentClass();
+                }
+            ),
+            Argument::type('array'),
+            $data
+        )->shouldBeCalledTimes(1);
+
+        $this->contentMerger->merge(Argument::type(DimensionContentCollection::class))
+            ->willReturn($mergedDimensionContent)
+            ->shouldBeCalledTimes(1);
 
         $previewContext = new PreviewContext(1, $locale);
         $defaults = [
@@ -331,17 +355,10 @@ class ContentObjectProviderTest extends TestCase
             '_controller' => ContentController::class . '::indexAction',
             'view' => 'pages/default',
         ];
-        $this->contentObjectProvider->updateValues($previewContext, $defaults, $data);
 
-        $this->contentDataMapper->map(
-            Argument::that(
-                function(PreviewDimensionContentCollection $dimensionContentCollection) use ($exampleDimensionContent) {
-                    return $exampleDimensionContent === $dimensionContentCollection->getDimensionContent([]);
-                }
-            ),
-            ['locale' => 'de', 'stage' => 'draft', 'version' => 0],
-            $data
-        )->shouldBeCalledTimes(1);
+        $result = $this->contentObjectProvider->updateValues($previewContext, $defaults, $data);
+
+        $this->assertSame($mergedDimensionContent, $result['object']);
     }
 
     /**
@@ -429,6 +446,7 @@ class ContentObjectProviderTest extends TestCase
             $this->entityManager->reveal(),
             $this->contentAggregator->reveal(),
             $this->contentDataMapper->reveal(),
+            $this->contentMerger->reveal(),
             Example::class,
             null
         );
