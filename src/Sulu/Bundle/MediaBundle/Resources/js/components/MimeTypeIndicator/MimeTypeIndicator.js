@@ -42,7 +42,10 @@ export default class MimeTypeIndicator extends React.PureComponent<Props> {
         }
 
         return (
-            <div className={mimeTypeIndicatorStyles.mimeTypeIndicator} style={mimeTypeStyles}>
+            <div
+                className={mimeTypeIndicatorStyles.mimeTypeIndicator}
+                style={mimeTypeStyles}
+            >
                 <Icon name={icon} />
             </div>
         );
