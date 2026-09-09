@@ -109,13 +109,18 @@ const blockIdGenerator = {
             return null;
         }
 
+        // Read-only scan first: this runs on every user change, so bail without cloning when nothing is missing.
+        const missing = [];
+        collectFromValue(value, types, missing);
+
+        if (missing.length === 0) {
+            return null;
+        }
+
+        // Something is missing: clone and re-collect the references into the clone before mutating
         const clone = deepClone(value);
         const pending = [];
         collectFromValue(clone, types, pending);
-
-        if (pending.length === 0) {
-            return null;
-        }
 
         const ids = await this.generateBlockIds(pending.length);
 
