@@ -59,7 +59,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         const {defaultType, onChange, types, value} = this.props;
         const {types: oldTypes} = prevProps;
 
-        if (!equals(toJS(prevProps.value), toJS(value))){
+        if (!equals(toJS(prevProps.value), toJS(value))) {
             // Only sync from props if no local changes were made since the last render.
             // This prevents stale echoed values from overwriting local changes
             // (e.g., default values applied by field components during mount).
@@ -279,7 +279,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         return this.computedIcons;
     }
 
-    getConditionData(data: {[string]: any}, dataPath: ?string) {
+    getConditionData(data: { [string]: any }, dataPath: ?string) {
         const {formInspector} = this.props;
 
         return conditionDataProviderRegistry.getAll().reduce(
@@ -310,11 +310,6 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         onChange(newValues, context);
     };
 
-    // Backfills a generated `_id` on every block that lacks one - including blocks nested inside a
-    // collapsed/never-expanded ancestor, which the mounted BlockCollections never reach - so the
-    // preview-to-admin navigation can always resolve a block to its form. BlockCollection keeps
-    // generating ids for interactively added blocks (add/paste/duplicate); this only closes the
-    // gap for blocks that arrive with the loaded data.
     generateMissingBlockIds = async() => {
         const {onChange, types, value} = this.props;
 
@@ -535,8 +530,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         if (!blockSettingsFormStore
             || openedBlockSettingsIndex === undefined
             || openedBlockSettingsIndex === null
-            || !oldValues)
-        {
+            || !oldValues) {
             return;
         }
 
