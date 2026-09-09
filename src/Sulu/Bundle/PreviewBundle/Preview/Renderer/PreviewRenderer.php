@@ -90,9 +90,6 @@ class PreviewRenderer implements PreviewRendererInterface
 
         $attributes['preview'] = true;
         $attributes['partial'] = $partial;
-        // Deep-link block ids only help the admin preview (a public link has no form to navigate to),
-        // so public preview links can disable them; defaults to enabled.
-        $attributes['sulu_preview_deep_link'] = $options['deepLinkEnabled'] ?? true;
         $attributes[RequestAttributeEnum::WEBSPACE->value] = $webspaceKey;
         $attributes['_sulu'] = new RequestAttributes(
             [
